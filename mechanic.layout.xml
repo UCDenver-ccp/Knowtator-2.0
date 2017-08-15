@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+    <VSNode splits="0.5">
+        <HSNode splits="0.25">
+            <VSNode splits="0.010183852901080096 0.05164650504699784 4.850689291146463E-5">
+                <CNode>
+                    <Component label="Class hierarchy">
+                        <Property id="pluginId" value="org.protege.editor.owl.OWLAssertedClassHierarchy"/>
+                    </Component>
+                </CNode>
+                <HSNode splits="0.019206643036952173 0.0066166094865467455">
+                    <CNode>
+                        <Component label="MechAnIC">
+                            <Property id="pluginId" value="***CHANGE ME*** edu.ucdenver.anschutz.cpbs.hunter.mechanic.MechAnIC"/>
+                        </Component>
+                    </CNode>
+                    <CNode>
+                        <Component label="Annotations">
+                            <Property id="pluginId" value="org.protege.editor.owl.OWLClassAnnotations"/>
+                        </Component>
+                    </CNode>
+                </HSNode>
+                <CNode>
+                    <Component label="OWLViz">
+                        <Property id="pluginId" value="org.coode.owlviz.OWLVizView"/>
+                    </Component>
+                </CNode>
+            </VSNode>
+        </HSNode>
+    </VSNode>
+</layout>

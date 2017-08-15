@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+    <extension id="MechAnIC"
+               point="org.protege.editor.core.application.ViewComponent">
+        <label value="MechAnIC"/>
+        <class value="edu.ucdenver.cpbs.mechanic.MechAnICView"/>
+        <headerColor value="@org.protege.ontologycolor"/>
+        <category value="@org.protege.ontologycategory" />
+    </extension>
+</plugin>

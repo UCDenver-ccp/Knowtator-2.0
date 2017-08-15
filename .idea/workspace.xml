@@ -1,0 +1,744 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="Knowtator-2.0" />
+    </artifacts-to-build>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b029c94f-db1a-4d52-a291-6cd98d2d839a" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/icon/icons8-Close Window-48.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/icon/icons8-Create.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/icon/icons8-Decrease Font.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/icon/icons8-Edit Profile.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/icon/icons8-Edit.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/icon/icons8-Fill Color.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/icon/icons8-Increase Font.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/icon/icons8-No Edit.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/icon/icons8-Open-48.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/icon/icons8-Paint Palette-48.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/icon/icons8-Save.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/icon/icons8-TXT.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/icon/icons8-Trash Can.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/icon/icons8-User-48.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/icon/icons8-XML-48.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/icon/icons8-Zoom In.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/icon/icons8-Zoom Out.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Java_EE_6_Java_EE_6.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__aopalliance_aopalliance_1_0.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_annotations_2_5_1.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_core_2_5_1.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_databind_2_5_1.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_github_jsonld_java_jsonld_java_0_5_0.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_github_jsonld_java_jsonld_java_sesame_0_5_0.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_code_findbugs_jsr305_3_0_1.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_guava_guava_18_0.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_inject_extensions_guice_assistedinject_4_0.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_inject_extensions_guice_multibindings_4_0.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_inject_guice_4_0.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_codec_commons_codec_1_6.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_io_commons_io_2_4.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_lang_commons_lang_2_6.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_inject_javax_inject_1.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_sf_trove4j_trove4j_3_0_3.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpclient_4_2_5.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpclient_cache_4_2_5.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpcore_4_2_4.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_openrdf_sesame_sesame_model_2_7_12.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_openrdf_sesame_sesame_rio_api_2_7_12.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_openrdf_sesame_sesame_rio_binary_2_7_12.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_openrdf_sesame_sesame_rio_datatypes_2_7_12.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_openrdf_sesame_sesame_rio_languages_2_7_12.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_openrdf_sesame_sesame_rio_n3_2_7_12.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_openrdf_sesame_sesame_rio_nquads_2_7_12.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_openrdf_sesame_sesame_rio_ntriples_2_7_12.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_openrdf_sesame_sesame_rio_rdfjson_2_7_12.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_openrdf_sesame_sesame_rio_rdfxml_2_7_12.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_openrdf_sesame_sesame_rio_trig_2_7_12.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_openrdf_sesame_sesame_rio_trix_2_7_12.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_openrdf_sesame_sesame_rio_turtle_2_7_12.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_openrdf_sesame_sesame_util_2_7_12.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_semarglproject_semargl_core_0_6_1.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_semarglproject_semargl_rdf_0_6_1.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_semarglproject_semargl_rdfa_0_6_1.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_semarglproject_semargl_sesame_0_6_1.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_jcl_over_slf4j_1_7_7.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_api_1_7_10.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_tukaani_xz_1_5.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/sl/app/ConnectorPropertiesPanel.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/sl/app/DraggableLabel.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/sl/app/TestApplication.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/sl/connector/ConnectorContainer.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/sl/connector/JConnector.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/sl/line/ConnectLine.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/AddTextAnnotationCommand.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/DecreaseTextSizeCommand.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/IncreaseTextSizeCommand.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/LoadAnnotationsCommand.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/NewHighlighterCommand.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/NewProfileCommand.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/RemoveTextAnnotationCommand.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/SaveAnnotationsToXmlCommand.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/SwitchProfileCommand.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/MechAnICSelectionListener.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/MechAnICSelectionModel.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ProfileManager.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Profiles/Profile.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/TextAnnotation/TextAnnotation.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/TextAnnotation/TextAnnotationManager.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/owl/OWLAPIDataExtractor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ui/ListDialog.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ui/MechAnICIcons.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ui/MechAnICProfileViewer.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ui/MechAnICTextViewer.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/xml/XmlUtil.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/file/test_annotations.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/file/test_article.txt" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_sourceforge_owlapi_owlapi_api_3_4_3.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_sourceforge_owlapi_owlapi_apibinding_3_4_3.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_sourceforge_owlapi_owlapi_contract_3_4_3.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_sourceforge_owlapi_owlapi_impl_3_4_3.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_sourceforge_owlapi_owlapi_parsers_3_4_3.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_sourceforge_owlapi_owlapi_tools_3_4_3.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ReadMe.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/mkyong/HelloExample.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/SaveCommand.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ui/MechAnICSelectionListener.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ui/MechAnICSelectionModel.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ui/TextViewer.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/resources/example.html" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/.idea/artifacts/mechanic.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/Knowtator_2_0.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_sourceforge_owlapi_owlapi_distribution_3_4_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_sourceforge_owlapi_owlapi_distribution_4_1_3.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/CloseCommand.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/CloseDocumentCommand.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/OpenCommand.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/OpenDocumentCommand.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/MechAnICView.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/MechAnICView.java" />
+    </list>
+    <ignored path="$PROJECT_DIR$/target/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="MechAnICView.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/MechAnICView.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="202">
+              <caret line="122" column="32" lean-forward="true" selection-start-line="122" selection-start-column="32" selection-end-line="122" selection-end-column="32" />
+              <folding>
+                <element signature="e#680#721#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TextAnnotationManager.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/TextAnnotation/TextAnnotationManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="336">
+              <caret line="81" column="26" lean-forward="true" selection-start-line="81" selection-start-column="26" selection-end-line="81" selection-end-column="26" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="XmlUtil.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/xml/XmlUtil.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="425">
+              <caret line="157" column="29" lean-forward="true" selection-start-line="157" selection-start-column="29" selection-end-line="157" selection-end-column="29" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>manager</find>
+      <find>kpu</find>
+      <find>getKnowledgeBase</find>
+      <find>get</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GradleLocalSettings">
+    <option name="externalProjectsViewState">
+      <projects_view />
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/MANIFEST.MF" />
+        <option value="$PROJECT_DIR$/build.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/org/protege/editor/owl/examples/tab/ExampleViewComponent.java" />
+        <option value="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/xml/XMLImport.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/AnnotationUtil.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/wizards/IAAWizard.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/DisplayColors.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/MentionUtil.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/util/ConsensusAnnotations.java" />
+        <option value="$PROJECT_DIR$/plugin.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/Knowtator.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/anschutz/cpbs/hunter/textViewer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/anschutz/cpbs/hunter/Metrics.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/anschutz/cpbs/hunter/TextViewer.form" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/anschutz/cpbs/hunter/TextViewer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/mkyong/HelloExample.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/log4j.properties" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/anschutz/cpbs/hunter/MechAnIC.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/TextAnnotation/TextAnnotationManager.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/xml/XmlUtil.java" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="950" />
+    <option name="width" value="980" />
+    <option name="height" value="1090" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>OSGi</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>NonOsgiMavenDependency</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="MechAnIC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MechAnIC" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MechAnIC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MechAnIC" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MechAnIC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MechAnIC" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MechAnIC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MechAnIC" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MechAnIC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MechAnIC" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="mechanic" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MechAnIC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MechAnIC" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="mechanic" type="462c0819:PsiDirectoryNode" />
+              <item name="TextAnnotation" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MechAnIC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MechAnIC" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="mechanic" type="462c0819:PsiDirectoryNode" />
+              <item name="ui" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MechAnIC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MechAnIC" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="mechanic" type="462c0819:PsiDirectoryNode" />
+              <item name="xml" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+      <pane id="AndroidView" />
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../Costello Lab/GSEARerank/gsearerank" />
+    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
+    <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
+    <property name="GenerateAntBuildDialog.backupFiles" value="true" />
+    <property name="GenerateAntBuildDialog.outputFileNameProperty" value="mechanic" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.Mechanic_Test">
+    <configuration name="Mechanic_Test" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.cpbs.mechanic.MechAnICView" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="MechAnIC" />
+      <envs />
+      <method>
+        <option name="Make" enabled="false" />
+        <option name="BuildArtifacts" enabled="true">
+          <artifact name="Knowtator-2.0" />
+        </option>
+        <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_Protege" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <module />
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+    </configuration>
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+      <option name="PROGRAM_PARAMETERS" />
+      <predefined_log_file id="idea.log" enabled="true" />
+    </configuration>
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
+    </configuration>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b029c94f-db1a-4d52-a291-6cd98d2d839a" name="Default" comment="" />
+      <created>1500945173950</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1500945173950</updated>
+      <workItem from="1500945177074" duration="145000" />
+      <workItem from="1500945435998" duration="1488000" />
+      <workItem from="1500947267805" duration="577000" />
+      <workItem from="1500947926368" duration="1017000" />
+      <workItem from="1500949218730" duration="13000" />
+      <workItem from="1500949336420" duration="3379000" />
+      <workItem from="1500952911947" duration="2376000" />
+      <workItem from="1500955336152" duration="14760000" />
+      <workItem from="1501020048655" duration="36000" />
+      <workItem from="1501190717047" duration="1968000" />
+      <workItem from="1501706843418" duration="824000" />
+      <workItem from="1502136008283" duration="179000" />
+      <workItem from="1502753761080" duration="746000" />
+      <workItem from="1502819923205" duration="3133000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="30641000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-11" y="-11" width="1942" height="1102" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32914925" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3277592" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32887402" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2496732" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32914925" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="1" />
+    </breakpoint-manager>
+    <watches-manager />
+  </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
+    <buildFile url="file://$PROJECT_DIR$/build.xml">
+      <targetFilters>
+        <filter targetName="init" isVisible="false" />
+        <filter targetName="checkProtegeLibsAndReport" isVisible="false" />
+        <filter targetName="checkProtegeLibs" isVisible="false" />
+        <filter targetName="buildlibs" isVisible="false" />
+        <filter targetName="copy.resources" isVisible="false" />
+        <filter targetName="compile" isVisible="false" />
+        <filter targetName="use.existing.manifest" isVisible="false" />
+        <filter targetName="bundlor.manifest" isVisible="false" />
+        <filter targetName="jar" isVisible="false" />
+        <filter targetName="install" isVisible="false" />
+        <filter targetName="run" isVisible="false" />
+        <filter targetName="debug" isVisible="false" />
+        <filter targetName="clean" isVisible="false" />
+        <filter targetName="usage" isVisible="false" />
+        <filter targetName="dist" isVisible="false" />
+      </targetFilters>
+      <expanded value="true" />
+    </buildFile>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main/java/template/TemplateView.java" />
+    <entry file="file://$PROJECT_DIR$/MANIFEST.MF" />
+    <entry file="file://$PROJECT_DIR$/build.xml" />
+    <entry file="file://$PROJECT_DIR$/pom.xml" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/template/TemplateMenu.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/template/TemplateView.java" />
+    <entry file="file://$PROJECT_DIR$/MANIFEST.MF" />
+    <entry file="file://$PROJECT_DIR$/build.xml" />
+    <entry file="file://$PROJECT_DIR$/pom.xml" />
+    <entry file="file://$PROJECT_DIR$/MANIFEST.MF" />
+    <entry file="file://$PROJECT_DIR$/build.xml" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/template/TemplateMenu.java" />
+    <entry file="file://E:/Downloads/knowtator-1.9_beta2-src/edu.uchsc.ccp.knowtator/knowtator-1.9_beta2-src/src/edu/uchsc/ccp/knowtator/Knowtator.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/template/TemplateView.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/KnowtatorManager.java" />
+    <entry file="jar://E:/Downloads/core-1.0.8.jar!/commonsrc/com/languageExplorer/widgets/ScrollableBar.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/SlotMentionWidget.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/xml/XMLExport.java" />
+    <entry file="jar://E:/Downloads/protege-3.5.0.jar/protege-3.5.0.jar!/edu/stanford/smi/protege/model/KnowledgeBase.class" />
+    <entry file="jar://E:/Downloads/protege-3.5.0.jar/protege-3.5.0.jar!/edu/stanford/smi/protege/model/FrameID.class" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/xml/XMLImport.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/wizards/IAAWizard.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/DisplayColors.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/MentionUtil.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/util/ConsensusAnnotations.java" />
+    <entry file="jar://$MAVEN_REPOSITORY$/com/jgoodies/forms/1.2.1/forms-1.2.1.jar!/com/jgoodies/forms/layout/RowSpec.class" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/AnnotationUtil.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/protege/editor/owl/examples/tab/ExampleViewComponent.java" />
+    <entry file="file://$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+    <entry file="jar://E:/Downloads/protege-3.5.0.jar/protege-3.5.0.jar!/edu/stanford/smi/protege/widget/AbstractWidget.class" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/KnowtatorProjectUtil.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/Knowtator.java" />
+    <entry file="file://$PROJECT_DIR$/plugin.xml" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/anschutz/cpbs/hunter/Metrics.java" />
+    <entry file="jar://$MAVEN_REPOSITORY$/edu/stanford/protege/org.protege.editor.core.application/4.3.0/org.protege.editor.core.application-4.3.0.jar!/org/protege/editor/core/Disposable.class" />
+    <entry file="jar://$MAVEN_REPOSITORY$/edu/stanford/protege/org.protege.editor.core.application/4.3.0/org.protege.editor.core.application-4.3.0.jar!/org/protege/editor/core/ModelManager.class" />
+    <entry file="jar://$MAVEN_REPOSITORY$/edu/stanford/protege/org.protege.editor.owl/4.3.0/org.protege.editor.owl-4.3.0.jar!/org/protege/editor/owl/model/OWLModelManager.class" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/anschutz/cpbs/hunter/TextViewer.form" />
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_121/src.zip!/javax/swing/plaf/basic/BasicTreeUI.java" />
+    <entry file="file://$PROJECT_DIR$/../protege/protege-editor-core/src/main/java/org/protege/editor/core/ui/tree/ProtegeTreeUI.java" />
+    <entry file="jar://E:/Downloads/examplelib.jar!/org/protege/owl/example/Metrics.class" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/anschutz/cpbs/hunter/TextViewer.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/resources/log4j.properties" />
+    <entry file="jar://$MAVEN_REPOSITORY$/edu/stanford/protege/org.protege.editor.owl/4.3.0/org.protege.editor.owl-4.3.0.jar!/org/protege/editor/owl/ui/view/AbstractOWLViewComponent.class" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/anschutz/cpbs/hunter/MechAnIC.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/mkyong/HelloExample.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/wizards/FindAnnotateDialog.java" />
+    <entry file="file://$PROJECT_DIR$/pom.xml" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/MechAnICView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="122" column="32" lean-forward="true" selection-start-line="122" selection-start-column="32" selection-end-line="122" selection-end-column="32" />
+          <folding>
+            <element signature="e#680#721#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/TextAnnotation/TextAnnotationManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="81" column="26" lean-forward="true" selection-start-line="81" selection-start-column="26" selection-end-line="81" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/xml/XmlUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="157" column="29" lean-forward="true" selection-start-line="157" selection-start-column="29" selection-end-line="157" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <last-edited>Knowtator-2.0</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.5" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>OSGi</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>MechAnIC</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Maven: com.beust:jcommander:1.27</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

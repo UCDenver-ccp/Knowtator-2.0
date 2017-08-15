@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+      <!-- Change me!  Remove this and the corresponding java class when you start adding real plugin content of your own. -->
+       <extension id="example.menu"
+               point="org.protege.editor.core.application.EditorKitMenuAction">
+        <name value="Example..."/>
+        <class value="template.TemplateMenu"/>
+        <toolTip value="A menu plugin to bootstrap the new plugin process"/>
+        <path value="org.protege.editor.owl.menu.tools/SlotZ-Z"/>
+        <editorKitId value="OWLEditorKit"/>
+    </extension>
+
+      <!-- Change me!  Remove this and the corresponding java class when you start adding real plugin content of your own. -->
+    <extension id="example.view"
+               point="org.protege.editor.core.application.ViewComponent">
+        <label value="Example"/>
+        <class value="template.TemplateView"/>
+       	<headerColor value="@org.protege.ontologycolor"/>
+        <category value="@org.protege.ontologycategory"/>
+    </extension>
+</plugin>
