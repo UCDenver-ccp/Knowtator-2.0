@@ -3,8 +3,8 @@ Plugin for Protege: Mechanism Annotation and Inference Console
 
 ## Installation and Setup:
 
-1. Install [Protege 5.X.X][protege link]
-2. Copy Knowtator-2.0.jar to Protege.X.X/plugins/
+1. Install [Desktop Protege 5.X.X][protege link]
+2. Copy Knowtator-2.0.jar to Protege-5.X.X/plugins/
 3. Launch Protege.exe
 4. Create a new tab (Window -> Create new tab...)
 5. Add a Class Hierarchy view (Window -> Views -> Class views -> Class Hierarchy)
