@@ -9,8 +9,7 @@
   <component name="ChangeListManager">
     <list default="true" id="b029c94f-db1a-4d52-a291-6cd98d2d839a" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Knowtator-2.0.jar" afterPath="$PROJECT_DIR$/Knowtator-2.0.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/artifacts/Knowtator_2_0.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/Knowtator_2_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/installation_image.jpg" afterPath="$PROJECT_DIR$/installation_image.jpg" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/TextAnnotation/TextAnnotationManager.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/TextAnnotation/TextAnnotationManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/file/test_annotations.xml" afterPath="$PROJECT_DIR$/src/main/resources/file/test_annotations.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/file/test_article.txt" afterPath="$PROJECT_DIR$/src/main/resources/file/test_article.txt" />
@@ -47,13 +46,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_annotations.xml" pinned="false" current-in-tab="true">
+      <file leaf-file-name="test_annotations.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/file/test_annotations.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="50">
               <caret line="2" column="2" lean-forward="false" selection-start-line="2" selection-start-column="2" selection-end-line="2" selection-end-column="2" />
               <folding />
             </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="installation_image.jpg" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/installation_image.jpg">
+          <provider selected="true" editor-type-id="images">
+            <state />
           </provider>
         </entry>
       </file>
@@ -396,12 +402,12 @@
       <workItem from="1502753761080" duration="746000" />
       <workItem from="1502819923205" duration="3133000" />
       <workItem from="1502833761470" duration="944000" />
-      <workItem from="1502836829108" duration="2650000" />
+      <workItem from="1502836829108" duration="3018000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="34235000" />
+    <option name="totallyTimeSpent" value="34603000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -425,7 +431,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32887402" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32887402" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -482,7 +488,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/template/TemplateMenu.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/template/TemplateView.java" />
     <entry file="file://$PROJECT_DIR$/MANIFEST.MF" />
     <entry file="file://$PROJECT_DIR$/build.xml" />
@@ -588,6 +593,11 @@
           <caret line="2" column="2" lean-forward="false" selection-start-line="2" selection-start-column="2" selection-end-line="2" selection-end-column="2" />
           <folding />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/installation_image.jpg">
+      <provider selected="true" editor-type-id="images">
+        <state />
       </provider>
     </entry>
   </component>

@@ -4,14 +4,15 @@ import edu.ucdenver.cpbs.mechanic.MechAnICView;
 import edu.ucdenver.cpbs.mechanic.ProfileManager;
 import edu.ucdenver.cpbs.mechanic.owl.OWLAPIDataExtractor;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICTextViewer;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
-import java.io.InputStream;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public final class TextAnnotationManager {
 
