@@ -6,12 +6,12 @@ import com.sl.line.ConnectLine;
 import javax.swing.*;
 import java.awt.*;
 
-class ConnectorPropertiesPanel extends JPanel {
+public class ConnectorPropertiesPanel extends JPanel {
     private JComboBox<String> cbxType = new JComboBox<>(new String[] {"Simple", "Rectangular"});
     private JComboBox<String> cbxArrow = new JComboBox<>(new String[] {"No arrow", "Source", "Dest", "Both"});
     private JButton btnColor = new JButton("...");
     private JConnector connector;
-    ConnectorPropertiesPanel(JConnector connector) {
+    public ConnectorPropertiesPanel(JConnector connector) {
         this.connector = connector;
         setLayout(new GridBagLayout());
         add(new JLabel("Line type:"), new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));

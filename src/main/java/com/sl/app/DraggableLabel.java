@@ -5,11 +5,11 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-class DraggableLabel extends JLabel {
+public class DraggableLabel extends JLabel {
     private Point pressPoint;
     private Point releasePoint;
     private DragProcessor dragProcessor = new DragProcessor();
-    DraggableLabel(String title) {
+    public DraggableLabel(String title) {
         super(title);
         setBorder(new CompoundBorder(new EtchedBorder(EtchedBorder.LOWERED), new EmptyBorder(1, 5, 1, 1)));
         addMouseListener(dragProcessor);
