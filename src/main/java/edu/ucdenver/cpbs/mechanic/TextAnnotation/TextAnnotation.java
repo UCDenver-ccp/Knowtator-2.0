@@ -1,5 +1,7 @@
 package edu.ucdenver.cpbs.mechanic.TextAnnotation;
 
+import org.semanticweb.owlapi.model.OWLClass;
+
 @SuppressWarnings("FieldCanBeLocal")
 public class TextAnnotation {
 
@@ -11,6 +13,7 @@ public class TextAnnotation {
     private String spannedText;
     private String classID;
     private String className;
+    private OWLClass owlClass;
 
     public TextAnnotation(String annotatorID,
                           String annotator,
@@ -18,7 +21,8 @@ public class TextAnnotation {
                           Integer spanEnd,
                           String spannedText,
                           String classID,
-                          String className) {
+                          String className,
+                          OWLClass owlClass) {
         this.annotatorID = annotatorID;
         this.annotator = annotator;
         this.spanStart = spanStart;
@@ -26,6 +30,7 @@ public class TextAnnotation {
         this.spannedText = spannedText;
         this.classID = classID;
         this.className = className;
+        this.owlClass = owlClass;
     }
 
     public TextAnnotation(String annotatorID,
@@ -75,5 +80,9 @@ public class TextAnnotation {
 
     public void setClassName(String className) {
         this.className = className;
+    }
+
+    public OWLClass getOwlClass() {
+        return owlClass;
     }
 }

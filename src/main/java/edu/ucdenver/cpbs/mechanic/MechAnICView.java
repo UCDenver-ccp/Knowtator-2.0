@@ -11,9 +11,13 @@ import org.semanticweb.owlapi.model.*;
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Utilities;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.dnd.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.*;
 
 
@@ -32,6 +36,7 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
     private TextAnnotationManager textAnnotationManager;
     private MechAnICSelectionModel selectionModel;
     private XmlUtil xmlUtil;
+    private MechAnICTextViewer textViewer;
 
     /**
      *
@@ -54,6 +59,7 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
         dt.setActive(true);
 
         setupInitial();
+        setupListeners();
 
         log.warn("Initialized MechAnIC");
     }
@@ -109,7 +115,7 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
          */
         try {
             String fileName = "/file/test_article.txt";
-            MechAnICTextViewer textViewer = new MechAnICTextViewer();
+            textViewer = new MechAnICTextViewer();
             textViewer.setName(fileName);
             JScrollPane sp = new JScrollPane(textViewer);
             tabbedPane.add(sp);
@@ -159,6 +165,56 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
         addAction(new NewProfileCommand(profileManager), "C", "A");
         addAction(new SwitchProfileCommand(profileManager), "C", "B");
         addAction(new NewHighlighterCommand(profileManager), "C", "C");
+    }
+
+    public void setGlobalSelection1(OWLEntity selObj) {
+        setGlobalSelection(selObj);
+    }
+
+    private void setupListeners() {
+        textViewer.addMouseListener(
+                new MouseListener() {
+                    int start;
+                    int end;
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+
+                    }
+
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        int offset = textViewer.viewToModel(e.getPoint());
+                        try {
+                            start = Utilities.getWordStart(textViewer, offset);
+                        } catch (BadLocationException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void mouseReleased(MouseEvent e) {
+                        int offset = textViewer.viewToModel(e.getPoint());
+                        try {
+                            end = Utilities.getWordEnd(textViewer, offset);
+                            textAnnotationManager.setSelectedAnnotation(start, end);
+                        } catch (BadLocationException e1) {
+                            e1.printStackTrace();
+                        }
+                        textViewer.setSelectionStart(start);
+                        textViewer.setSelectionEnd(end);
+                    }
+
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+
+                    }
+                }
+        );
     }
 
     @Override

@@ -14,10 +14,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public final class TextAnnotationManager {
 
 
    private HashMap<String, HashMap<Integer, TextAnnotation>> textAnnotations;
+   private TextAnnotation selectedAnnotation;
 
    private MechAnICView view;
    private ProfileManager profileManager;
@@ -51,12 +53,14 @@ public final class TextAnnotationManager {
                 spanEnd,
                 spannedText,
                 classID,
-                className
+                className,
+                cls
         );
         if (!textAnnotations.containsKey(mentionSource)) {
             textAnnotations.put(mentionSource, new HashMap<>());
         }
         textAnnotations.get(mentionSource).put(mentionID, newTextAnnotation);
+        setSelectedAnnotation(newTextAnnotation);
     }
 
     public void removeTextAnnotation(Integer spanStart, Integer spanEnd, MechAnICTextViewer textViewer) {
@@ -111,5 +115,26 @@ public final class TextAnnotationManager {
 
     public HashMap<String, HashMap<Integer, TextAnnotation>> getTextAnnotations() {
         return textAnnotations;
+    }
+
+    public TextAnnotation getSelectedAnnotation() {
+        return selectedAnnotation;
+    }
+
+    private void setSelectedAnnotation(TextAnnotation selectedAnnotation) {
+        this.selectedAnnotation = selectedAnnotation;
+        view.setGlobalSelection1(selectedAnnotation.getOwlClass());
+    }
+
+    public void setSelectedAnnotation(Integer spanStart, Integer spanEnd) {
+        textAnnotations.forEach((String key, HashMap<Integer, TextAnnotation> value) -> {
+            for (Map.Entry<Integer, TextAnnotation> instance : value.entrySet()) {
+                TextAnnotation textAnnotation = instance.getValue();
+                if (Objects.equals(spanStart, textAnnotation.getSpanStart()) && Objects.equals(spanEnd, textAnnotation.getSpanEnd())) {
+                    setSelectedAnnotation(textAnnotation);
+                    return;
+                }
+            }
+        });
     }
 }
