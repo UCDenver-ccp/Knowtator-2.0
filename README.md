@@ -24,7 +24,7 @@ Plugin for Protege: Mechanism Annotation and Inference Console
 3. Click "Show Package Contents"
 4. Go to Contents -> Java -> Plugins
 5. You should see the other plugins included in Protege 5 in that folder. If so, copy the Knowtator-2.0.jar into it.
-(See this comment thread for more help http://protege-project.136.n4.nabble.com/Installing-Plugins-on-Protege-5-MacOSX-td4665874.html) 
+(See [this comment thread][mac osx comment thread] for more help) 
 
 ## Setup:
 1. Launch Protege.exe
@@ -33,6 +33,7 @@ Plugin for Protege: Mechanism Annotation and Inference Console
 4. Add an Annotations view (Window -> Views -> Annotation property views -> Annotations)
 5. Add a MechAnIC view (Window -> Ontology views -> MechAnIC)
 6. Load an ontology (e.g. [GO-Basic][ontology example])
+(A sample file and its annotation xml file can be found [here][sample files location])
 
 ![After installation][installation image]
 Add as a View to a Protege tab by going to Menu -> Views -> Ontology Views -> MechAnIC
@@ -64,4 +65,6 @@ Annotations are reloaded and automatically highlight the text using the color of
 [protege link]:http://protege.stanford.edu/products.php#desktop-protege
 [installation image]:installation_image.jpg
 [ontology example]:http://purl.obolibrary.org/obo/go/go-basic.obo
+[mac osx intallation comment thread]:http://protege-project.136.n4.nabble.com/Installing-Plugins-on-Protege-5-MacOSX-td4665874.html
+[sample files location]:https://github.com/tuh8888/Knowtator-2.0/tree/master/src/main/resources/file
 
