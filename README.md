@@ -1,3 +1,17 @@
+**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+
+- [MechAnIC](#)
+	- [Installation (Windows):](#)
+	- [Installation (Mac):](#)
+	- [Setup:](#)
+	- [Features](#)
+			- [Annotation highlighting](#)
+			- [Load plain text documents](#)
+			- [Annotation profiles](#)
+			- [Save annotations to XML file](#)
+			- [Reload annotations](#)
+		- [Known bugs](#)
+
 # MechAnIC
 Plugin for Protege: Mechanism Annotation and Inference Console
 
