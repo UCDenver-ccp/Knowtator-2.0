@@ -25,7 +25,7 @@ Plugin for Protege: Mechanism Annotation and Inference Console
 4. Go to Contents -> Java -> Plugins
 5. You should see the other plugins included in Protege 5 in that folder. If so, copy the Knowtator-2.0.jar into it.
 
-(See [this comment thread][mac osx plugin installation comment thread] for more help) 
+(See [this comment thread][mac osx plugin intallation comment thread] for more help) 
 
 ## Setup:
 1. Launch Protege.exe
