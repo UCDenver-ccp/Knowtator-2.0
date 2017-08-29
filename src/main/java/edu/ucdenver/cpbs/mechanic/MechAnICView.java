@@ -174,8 +174,8 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
     private void setupListeners() {
         textViewer.addMouseListener(
                 new MouseListener() {
-                    int start;
-                    int end;
+                    int press_offset;
+                    int release_offset;
                     @Override
                     public void mouseClicked(MouseEvent e) {
 
@@ -183,25 +183,29 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
 
                     @Override
                     public void mousePressed(MouseEvent e) {
-                        int offset = textViewer.viewToModel(e.getPoint());
-                        try {
-                            start = Utilities.getWordStart(textViewer, offset);
-                        } catch (BadLocationException e1) {
-                            e1.printStackTrace();
-                        }
+                        press_offset = textViewer.viewToModel(e.getPoint());
                     }
 
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        int offset = textViewer.viewToModel(e.getPoint());
+                        release_offset = textViewer.viewToModel(e.getPoint());
+
+                        int start, end;
                         try {
-                            end = Utilities.getWordEnd(textViewer, offset);
+                            if (press_offset < release_offset) {
+
+                                    start = Utilities.getWordStart(textViewer, press_offset);
+                                    end = Utilities.getWordEnd(textViewer, release_offset);
+                            } else {
+                                start = Utilities.getWordStart(textViewer, release_offset);
+                                end = Utilities.getWordEnd(textViewer, press_offset);
+                            }
                             textAnnotationManager.setSelectedAnnotation(start, end);
+                            textViewer.setSelectionStart(start);
+                            textViewer.setSelectionEnd(end);
                         } catch (BadLocationException e1) {
                             e1.printStackTrace();
                         }
-                        textViewer.setSelectionStart(start);
-                        textViewer.setSelectionEnd(end);
                     }
 
                     @Override
