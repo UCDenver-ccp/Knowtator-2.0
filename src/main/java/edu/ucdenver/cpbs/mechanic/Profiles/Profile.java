@@ -22,6 +22,7 @@ public class Profile {
     }
 
     public DefaultHighlighter.DefaultHighlightPainter getHighlighter(OWLClass cls) {
+        //TODO: Associate highlighter with all decendents of cls
         return highlighters.get(cls);
     }
 

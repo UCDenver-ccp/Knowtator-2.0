@@ -84,7 +84,7 @@ public final class TextAnnotationManager {
     }
 
 
-    public void highlightAllAnnotations(MechAnICTextViewer textViewer) {
+    private void highlightAllAnnotations(MechAnICTextViewer textViewer) {
         textViewer.getHighlighter().removeAllHighlights();
         for (Map.Entry<String, HashMap<Integer, TextAnnotation>> instance1 : textAnnotations.entrySet()) {
             String mentionSource = instance1.getKey();
