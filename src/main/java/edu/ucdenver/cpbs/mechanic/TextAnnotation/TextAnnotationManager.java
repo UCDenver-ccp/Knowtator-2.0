@@ -1,5 +1,6 @@
 package edu.ucdenver.cpbs.mechanic.TextAnnotation;
 
+import edu.ucdenver.cpbs.mechanic.MechAnICSelectionModel;
 import edu.ucdenver.cpbs.mechanic.MechAnICView;
 import edu.ucdenver.cpbs.mechanic.ProfileManager;
 import edu.ucdenver.cpbs.mechanic.owl.OWLAPIDataExtractor;
@@ -22,11 +23,13 @@ public final class TextAnnotationManager {
    private TextAnnotation selectedAnnotation;
 
    private MechAnICView view;
-   private ProfileManager profileManager;
+    private MechAnICSelectionModel selectionModel;
+    private ProfileManager profileManager;
    private OWLAPIDataExtractor dataExtractor;
 
-    public TextAnnotationManager(MechAnICView view, ProfileManager profileManager) {
+    public TextAnnotationManager(MechAnICView view, MechAnICSelectionModel selectionModel, ProfileManager profileManager) {
         this.view = view;
+        this.selectionModel = selectionModel;
         this.profileManager = profileManager;
 
         dataExtractor = new OWLAPIDataExtractor(this.view.getOWLModelManager());
@@ -40,8 +43,8 @@ public final class TextAnnotationManager {
 
         dataExtractor.extractOWLClassData(cls);
 
-
-        String mentionSource = profileManager.getCurrentHighlighterName();
+        //TODO: Figure out what mention is
+        String mentionSource = "Default";
         int mentionID = textAnnotations.size();
         String classID = dataExtractor.getClassID();
         String className = dataExtractor.getClassName();
@@ -64,7 +67,9 @@ public final class TextAnnotationManager {
     }
 
     public void removeTextAnnotation(Integer spanStart, Integer spanEnd, MechAnICTextViewer textViewer) {
-        String mentionSource = profileManager.getCurrentHighlighterName();
+
+        //TODO: figure out what mention is
+        String mentionSource = "Default";
         if (textAnnotations.containsKey(mentionSource)) {
             for (Map.Entry<Integer, TextAnnotation> instance : textAnnotations.get(mentionSource).entrySet()) {
                 int mentionID = instance.getKey();
@@ -85,19 +90,19 @@ public final class TextAnnotationManager {
             String mentionSource = instance1.getKey();
             for (Map.Entry<Integer, TextAnnotation> instance2 : instance1.getValue().entrySet() ){
                 TextAnnotation textAnnotation = instance2.getValue();
-                highlightAnnotation(textAnnotation.getSpanStart(), textAnnotation.getSpanEnd(), textViewer, mentionSource);
+                highlightAnnotation(textAnnotation.getSpanStart(), textAnnotation.getSpanEnd(), textViewer, textAnnotation.getOwlClass());
             }
         }
     }
 
-    public void highlightAnnotation(int spanStart, int spanEnd, MechAnICTextViewer textViewer, String mentionSource) {
-        DefaultHighlighter.DefaultHighlightPainter highlighter = profileManager.getCurrentProfile().getHighlighter(mentionSource);
+    public void highlightAnnotation(int spanStart, int spanEnd, MechAnICTextViewer textViewer, OWLClass cls) {
+        DefaultHighlighter.DefaultHighlightPainter highlighter = profileManager.getCurrentProfile().getHighlighter(cls);
         if (highlighter == null) {
-            Color c = JColorChooser.showDialog(null, String.format("Pick a color for %s", mentionSource), Color.BLUE);
+            Color c = JColorChooser.showDialog(null, String.format("Pick a color for %s", cls.toString()), Color.CYAN);
             if (c != null) {
-                profileManager.addHighlighter(mentionSource, c, profileManager.getCurrentProfile());
+                profileManager.addHighlighter(cls, c, profileManager.getCurrentProfile());
             }
-            highlighter = profileManager.getCurrentHighlighter();
+            highlighter = profileManager.getCurrentProfile().getHighlighter(cls);
         }
 
         try {

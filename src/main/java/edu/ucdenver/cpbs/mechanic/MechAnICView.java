@@ -1,24 +1,26 @@
 package edu.ucdenver.cpbs.mechanic;
 
-import edu.ucdenver.cpbs.mechanic.TextAnnotation.TextAnnotationManager;
 import edu.ucdenver.cpbs.mechanic.Commands.*;
+import edu.ucdenver.cpbs.mechanic.TextAnnotation.TextAnnotationManager;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICProfileViewer;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICTextViewer;
 import edu.ucdenver.cpbs.mechanic.xml.XmlUtil;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
-import org.semanticweb.owlapi.model.*;
-import org.xml.sax.SAXException;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Utilities;
-import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.dnd.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 /**
@@ -50,7 +52,7 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
          */
         selectionModel = new MechAnICSelectionModel();  //helps get the selected OWL API classes
         profileManager = new ProfileManager();  //manipulates profiles and highlighters
-        textAnnotationManager = new TextAnnotationManager(this, profileManager);  //manipulates the annotations
+        textAnnotationManager = new TextAnnotationManager(this, selectionModel, profileManager);  //manipulates the annotations
         xmlUtil = new XmlUtil(textAnnotationManager);  //reads and writes to XML
 
         createUI();
@@ -85,7 +87,7 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
         /*
         Create a viewer to see the highlighters for the current profile
          */
-        MechAnICProfileViewer profileViewer = new MechAnICProfileViewer(profileManager);
+        MechAnICProfileViewer profileViewer = new MechAnICProfileViewer();
         profileViewer.setMinimumSize(new Dimension(100, 50));
         profileManager.setProfileViewer(profileViewer);
         profileManager.setupDefault();
@@ -129,14 +131,14 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
             e.printStackTrace();
         }
 
-        try {
-            String fileName = "/file/test_annotations.xml";
-            InputStream is = getClass().getResourceAsStream(fileName);
-            MechAnICTextViewer textViewer = (MechAnICTextViewer)((JScrollPane)tabbedPane.getSelectedComponent()).getViewport().getView();
-            xmlUtil.loadTextAnnotationsFromXML(is, textViewer);
-        } catch (ParserConfigurationException | IOException | SAXException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            String fileName = "/file/test_annotations.xml";
+//            InputStream is = getClass().getResourceAsStream(fileName);
+//            MechAnICTextViewer textViewer = (MechAnICTextViewer)((JScrollPane)tabbedPane.getSelectedComponent()).getViewport().getView();
+//            xmlUtil.loadTextAnnotationsFromXML(is, textViewer);
+//        } catch (ParserConfigurationException | IOException | SAXException e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**
@@ -164,7 +166,7 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
          */
         addAction(new NewProfileCommand(profileManager), "C", "A");
         addAction(new SwitchProfileCommand(profileManager), "C", "B");
-        addAction(new NewHighlighterCommand(profileManager), "C", "C");
+        addAction(new NewHighlighterCommand(selectionModel, profileManager), "C", "C");
     }
 
     public void setGlobalSelection1(OWLEntity selObj) {

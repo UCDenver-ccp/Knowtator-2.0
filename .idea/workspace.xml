@@ -9,8 +9,14 @@
   <component name="ChangeListManager">
     <list default="true" id="b029c94f-db1a-4d52-a291-6cd98d2d839a" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Knowtator-2.0.jar" afterPath="$PROJECT_DIR$/Knowtator-2.0.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/AddTextAnnotationCommand.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/AddTextAnnotationCommand.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/NewHighlighterCommand.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/NewHighlighterCommand.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/MechAnICView.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/MechAnICView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ProfileManager.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ProfileManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Profiles/Profile.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Profiles/Profile.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/TextAnnotation/TextAnnotationManager.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/TextAnnotation/TextAnnotationManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ui/MechAnICProfileViewer.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ui/MechAnICProfileViewer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/xml/XmlUtil.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/xml/XmlUtil.java" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,40 +26,21 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
       <file leaf-file-name="MechAnICView.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/MechAnICView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="194" column="29" lean-forward="true" selection-start-line="194" selection-start-column="29" selection-end-line="194" selection-end-column="29" />
+            <state relative-caret-position="354">
+              <caret line="128" column="0" lean-forward="true" selection-start-line="128" selection-start-column="0" selection-end-line="128" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#832#873#0" expanded="true" />
-                <element signature="e#6306#6307#0" expanded="true" />
-                <element signature="e#6405#6406#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TextAnnotation.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/TextAnnotation/TextAnnotation.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="15" column="24" lean-forward="false" selection-start-line="15" selection-start-column="24" selection-end-line="15" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TextAnnotationManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/TextAnnotation/TextAnnotationManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2675">
-              <caret line="125" column="67" lean-forward="false" selection-start-line="125" selection-start-column="67" selection-end-line="125" selection-end-column="67" />
-              <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#901#942#0" expanded="true" />
+                <element signature="e#6409#6410#0" expanded="true" />
+                <element signature="e#6508#6509#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -78,6 +65,11 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
   </component>
   <component name="GradleLocalSettings">
     <option name="externalProjectsViewState">
@@ -106,12 +98,17 @@
         <option value="$PROJECT_DIR$/src/main/java/com/mkyong/HelloExample.java" />
         <option value="$PROJECT_DIR$/src/main/resources/log4j.properties" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/anschutz/cpbs/hunter/MechAnIC.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/xml/XmlUtil.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/resources/file/test_article.txt" />
         <option value="$PROJECT_DIR$/src/main/resources/file/test_annotations.xml" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/TextAnnotation/TextAnnotation.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Profiles/Profile.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ProfileManager.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/NewHighlighterCommand.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/TextAnnotation/TextAnnotationManager.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ui/MechAnICProfileViewer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/AddTextAnnotationCommand.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/xml/XmlUtil.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/MechAnICView.java" />
       </list>
     </option>
@@ -237,7 +234,7 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="mechanic" type="462c0819:PsiDirectoryNode" />
-              <item name="Commands" type="462c0819:PsiDirectoryNode" />
+              <item name="Profiles" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Knowtator-2.0" type="b2602c69:ProjectViewProjectNode" />
@@ -449,7 +446,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="40393000" />
+    <option name="totallyTimeSpent" value="42542000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -473,7 +470,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26867336" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26867336" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -530,11 +527,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/build.xml" />
-    <entry file="file://$PROJECT_DIR$/pom.xml" />
-    <entry file="file://$PROJECT_DIR$/MANIFEST.MF" />
-    <entry file="file://$PROJECT_DIR$/build.xml" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/template/TemplateMenu.java" />
     <entry file="file://E:/Downloads/knowtator-1.9_beta2-src/edu.uchsc.ccp.knowtator/knowtator-1.9_beta2-src/src/edu/uchsc/ccp/knowtator/Knowtator.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/template/TemplateView.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/KnowtatorManager.java" />
@@ -570,13 +562,6 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/anschutz/cpbs/hunter/MechAnIC.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/com/mkyong/HelloExample.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/uchsc/ccp/knowtator/wizards/FindAnnotateDialog.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/xml/XmlUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3425">
-          <caret line="157" column="29" lean-forward="false" selection-start-line="157" selection-start-column="29" selection-end-line="157" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_144/src.zip!/java/lang/ClassLoader.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="714">
@@ -623,37 +608,96 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="125">
           <caret line="5" column="13" lean-forward="false" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/TextAnnotation/TextAnnotation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
+        <state relative-caret-position="147">
           <caret line="15" column="24" lean-forward="false" selection-start-line="15" selection-start-column="24" selection-end-line="15" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Profiles/Profile.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="4" column="42" lean-forward="false" selection-start-line="4" selection-start-column="42" selection-end-line="4" selection-end-column="42" />
+          <folding>
+            <element signature="e#781#782#0" expanded="true" />
+            <element signature="e#825#826#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ProfileManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="196">
+          <caret line="27" column="9" lean-forward="false" selection-start-line="27" selection-start-column="9" selection-end-line="27" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#491#492#0" expanded="true" />
+            <element signature="e#533#534#0" expanded="true" />
+            <element signature="e#676#677#0" expanded="true" />
+            <element signature="e#724#725#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/NewHighlighterCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/TextAnnotation/TextAnnotationManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2675">
-          <caret line="125" column="67" lean-forward="false" selection-start-line="125" selection-start-column="67" selection-end-line="125" selection-end-column="67" />
+        <state relative-caret-position="196">
+          <caret line="100" column="0" lean-forward="false" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ui/MechAnICProfileViewer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="50">
+          <caret line="2" column="5" lean-forward="true" selection-start-line="2" selection-start-column="5" selection-end-line="2" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/xml/XmlUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="496">
+          <caret line="157" column="10" lean-forward="false" selection-start-line="157" selection-start-column="10" selection-end-line="157" selection-end-column="10" />
+          <folding>
+            <element signature="e#1557#1558#0" expanded="true" />
+            <element signature="e#1623#1624#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/AddTextAnnotationCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="379">
+          <caret line="32" column="21" lean-forward="true" selection-start-line="32" selection-start-column="21" selection-end-line="32" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/MechAnICView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="194" column="29" lean-forward="true" selection-start-line="194" selection-start-column="29" selection-end-line="194" selection-end-column="29" />
+        <state relative-caret-position="354">
+          <caret line="128" column="0" lean-forward="true" selection-start-line="128" selection-start-column="0" selection-end-line="128" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#832#873#0" expanded="true" />
-            <element signature="e#6306#6307#0" expanded="true" />
-            <element signature="e#6405#6406#0" expanded="true" />
+            <element signature="e#901#942#0" expanded="true" />
+            <element signature="e#6409#6410#0" expanded="true" />
+            <element signature="e#6508#6509#0" expanded="true" />
           </folding>
         </state>
       </provider>

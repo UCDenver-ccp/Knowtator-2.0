@@ -67,7 +67,7 @@ public class AddTextAnnotationCommand extends DisposableAction {
             String spannedText = textViewer.getSelectedText();
             try {
                 textAnnotationManager.addTextAnnotation(cls, spanStart, spanEnd, spannedText);
-                textAnnotationManager.highlightAnnotation(spanStart, spanEnd, textViewer, textAnnotationManager.getProfileManager().getCurrentHighlighterName());
+                textAnnotationManager.highlightAnnotation(spanStart, spanEnd, textViewer, cls);
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();
             }

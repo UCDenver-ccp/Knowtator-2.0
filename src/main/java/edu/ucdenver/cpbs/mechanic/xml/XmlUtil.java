@@ -1,18 +1,20 @@
 package edu.ucdenver.cpbs.mechanic.xml;
 
-import java.io.*;
-import java.util.*;
-
 import edu.ucdenver.cpbs.mechanic.TextAnnotation.TextAnnotation;
 import edu.ucdenver.cpbs.mechanic.TextAnnotation.TextAnnotationManager;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICTextViewer;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
+import java.util.*;
 
 public final class XmlUtil {
     private static String TAG_ANNOTATIONS = "annotations";
@@ -34,7 +36,7 @@ public final class XmlUtil {
     private static String TAG_MENTION_CLASS_ID = "id";
     private TextAnnotationManager textAnnotationManager;
 
-    public XmlUtil(TextAnnotationManager textAnnotationManager){
+    public XmlUtil(TextAnnotationManager textAnnotationManager) {
         this.textAnnotationManager = textAnnotationManager;
     }
 
@@ -124,13 +126,15 @@ public final class XmlUtil {
                 String mentionSource = getMentionSourceFromXML(fullMention);
                 int mentionID = getMentionIDFromXML(fullMention);
 
+                //TODO: Figure out how to get the OWL classes from annotation instances
+                //OWLClass cls = view.getOWLModelManager().getOWLEntityFinder().getOWLClass()
                 TextAnnotation newAnnotation = new TextAnnotation(annotatorID, annotatorName, spanStart, spanEnd, spannedText);
 
                 if(!textAnnotationManager.getTextAnnotations().containsKey(mentionSource)) {
                     textAnnotationManager.getTextAnnotations().put(mentionSource, new HashMap<>());
                 }
                 textAnnotationManager.getTextAnnotations().get(mentionSource).put(mentionID, newAnnotation);
-                textAnnotationManager.highlightAnnotation(spanStart, spanEnd, textViewer, mentionSource);
+                //textAnnotationManager.highlightAnnotation(spanStart, spanEnd, textViewer, );
             }
         }
         for (Node node : asList(doc.getElementsByTagName("classMention"))) {
@@ -151,7 +155,7 @@ public final class XmlUtil {
                 textAnnotation.setClassName(className);
             }
         }
-        textAnnotationManager.highlightAllAnnotations(textViewer);
+        //textAnnotationManager.highlightAllAnnotations(textViewer);
     }
 
     private String getMentionSourceFromXML(String fullMention) {
