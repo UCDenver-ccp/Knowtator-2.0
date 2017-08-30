@@ -37,6 +37,12 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
     private MechAnICSelectionModel selectionModel;
     private XmlUtil xmlUtil;
 
+    public MechAnICGraphViewer getGraphViewer() {
+        return graphViewer;
+    }
+
+    private MechAnICGraphViewer graphViewer;
+
     /**
      *
      */
@@ -86,6 +92,11 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
         profileViewer.setMinimumSize(new Dimension(100, 50));
         profileManager.setProfileViewer(profileViewer);
         profileManager.setupDefault();
+
+        /*
+        Create a viewer to see the annotations as a graph
+         */
+        graphViewer = new MechAnICGraphViewer();
 
         /*
         Place the tabbed text viewers and the profile viewer in a split pane
