@@ -35,6 +35,12 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
     private MechAnICSelectionModel selectionModel;
     private XmlUtil xmlUtil;
 
+    public MechAnICGraphViewer getGraphViewer() {
+        return graphViewer;
+    }
+
+    private MechAnICGraphViewer graphViewer;
+
     /**
      *
      */
@@ -89,7 +95,7 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
         /*
         Create a viewer to see the annotations as a graph
          */
-        MechAnICGraphViewer graphViewer = new MechAnICGraphViewer();
+        graphViewer = new MechAnICGraphViewer();
 
         /*
         Place the tabbed text viewers and the profile viewer in a split pane

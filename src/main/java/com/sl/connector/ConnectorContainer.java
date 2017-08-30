@@ -1,7 +1,11 @@
 package com.sl.connector;
 
+import com.sl.app.DraggableLabel;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * The collateral class contains array of connectors and renders them.
@@ -16,20 +20,33 @@ import java.awt.*;
  */
 @SuppressWarnings("unused")
 public class ConnectorContainer extends JPanel {
-    private JConnector[] connectors;
+    private ArrayList<JConnector> connectors;
+    private HashMap<String, DraggableLabel> nodes;
+
     public ConnectorContainer() {
+        nodes = new HashMap<>();
     }
 
-    public ConnectorContainer(JConnector[] connectors) {
+    public ConnectorContainer(ArrayList<JConnector> connectors) {
+        this.connectors = connectors;
+        nodes = new HashMap<>();
+    }
+
+    public void setConnectors(ArrayList<JConnector> connectors) {
         this.connectors = connectors;
     }
 
-    public void setConnectors(JConnector[] connectors) {
-        this.connectors = connectors;
-    }
-
-    public JConnector[] getConnectors() {
+    public ArrayList<JConnector> getConnectors() {
         return connectors;
+    }
+
+    public void addNode(String name, DraggableLabel node) {
+        nodes.put(name, node);
+        add(node);
+    }
+
+    public DraggableLabel getNode(String name) {
+        return nodes.get(name);
     }
 
     public void paint(Graphics g) {
