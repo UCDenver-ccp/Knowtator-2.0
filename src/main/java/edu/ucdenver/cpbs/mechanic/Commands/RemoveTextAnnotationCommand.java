@@ -1,7 +1,6 @@
 package edu.ucdenver.cpbs.mechanic.Commands;
 
-import edu.ucdenver.cpbs.mechanic.TextAnnotation.TextAnnotationManager;
-import edu.ucdenver.cpbs.mechanic.MechAnICSelectionModel;
+import edu.ucdenver.cpbs.mechanic.MechAnICView;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICIcons;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICTextViewer;
 import org.protege.editor.core.ui.view.DisposableAction;
@@ -12,15 +11,11 @@ import java.awt.event.ActionEvent;
 @SuppressWarnings("PackageAccessibility")
 public class RemoveTextAnnotationCommand extends DisposableAction {
 
-    private TextAnnotationManager textAnnotationManager;
     private JTabbedPane tabbedPane;
-    private MechAnICSelectionModel selectionModel;
 
-    public RemoveTextAnnotationCommand(TextAnnotationManager textAnnotationManager, JTabbedPane tabbedPane, MechAnICSelectionModel selectionModel) {
+    public RemoveTextAnnotationCommand(MechAnICView view) {
         super("Add TextAnnotation", MechAnICIcons.getIcon(MechAnICIcons.REMOVE_TEXT_ANNOTATION_ICON));
-        this.textAnnotationManager = textAnnotationManager;
-        this.tabbedPane = tabbedPane;
-        this.selectionModel = selectionModel;
+        this.tabbedPane = view.getTabbedPane();
 
         this.putValue(AbstractAction.SHORT_DESCRIPTION, "Add an annotation");
 
@@ -40,7 +35,7 @@ public class RemoveTextAnnotationCommand extends DisposableAction {
         MechAnICTextViewer textViewer = (MechAnICTextViewer)((JScrollPane)tabbedPane.getSelectedComponent()).getViewport().getView();
         Integer spanStart = textViewer.getSelectionStart();
         Integer spanEnd = textViewer.getSelectionEnd();
-        textAnnotationManager.removeTextAnnotation(spanStart, spanEnd, textViewer);
+        textViewer.getTextAnnotationManager().removeTextAnnotation(spanStart, spanEnd, textViewer);
     }
 
 }

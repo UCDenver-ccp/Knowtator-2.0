@@ -15,9 +15,11 @@ public class ProfileManager {
 
     private Map<String, Profile> profiles;
     private MechAnICProfileViewer profileViewer;
+    private MechAnICView view;
 
 
-    ProfileManager() {
+    ProfileManager(MechAnICView view) {
+        this.view = view;
         profiles = new HashMap<>();
     }
 
@@ -39,7 +41,13 @@ public class ProfileManager {
     public void addHighlighter(OWLClass cls, Color c, Profile profile) {
         DefaultHighlighter.DefaultHighlightPainter newHighlighter = new DefaultHighlighter.DefaultHighlightPainter(c);
         profile.addHighlighter(cls, newHighlighter);
+        int i = 0;
 
+        for(OWLClass decendent: view.getOWLModelManager().getOWLHierarchyManager().getOWLClassHierarchyProvider().getDescendants(cls)) {
+            i++;
+            profile.addHighlighter(decendent, newHighlighter);
+        }
+        System.out.println(i);
     }
 
     private void removeCurrentProfile() {

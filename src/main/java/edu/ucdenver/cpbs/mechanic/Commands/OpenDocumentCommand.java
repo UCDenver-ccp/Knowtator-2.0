@@ -1,5 +1,6 @@
 package edu.ucdenver.cpbs.mechanic.Commands;
 
+import edu.ucdenver.cpbs.mechanic.MechAnICView;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICIcons;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICTextViewer;
 import org.protege.editor.core.ui.view.DisposableAction;
@@ -15,11 +16,13 @@ import java.io.IOException;
 public class OpenDocumentCommand extends DisposableAction {
 
     private JTabbedPane tabbedPane;
+    private MechAnICView view;
 
-    public OpenDocumentCommand(JTabbedPane tabbedPane) {
+    public OpenDocumentCommand(MechAnICView view) {
         super("Open Document", MechAnICIcons.getIcon(MechAnICIcons.OPEN_DOCUMENT_ICON));
+        this.view = view;
         this.putValue(AbstractAction.SHORT_DESCRIPTION, "Open a text document");
-        this.tabbedPane = tabbedPane;
+        this.tabbedPane = view.getTabbedPane();
     }
 
     @Override
@@ -34,7 +37,7 @@ public class OpenDocumentCommand extends DisposableAction {
 
     private void openFile(String fileName) {
         try {
-            MechAnICTextViewer textViewer = new MechAnICTextViewer();
+            MechAnICTextViewer textViewer = new MechAnICTextViewer(view);
             textViewer.setName(fileName);
             JScrollPane sp = new JScrollPane(textViewer);
             if (tabbedPane.getTabCount() == 1 && tabbedPane.getTitleAt(0).equals("Untitled")) {

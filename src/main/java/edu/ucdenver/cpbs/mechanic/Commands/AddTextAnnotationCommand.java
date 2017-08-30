@@ -1,8 +1,7 @@
 package edu.ucdenver.cpbs.mechanic.Commands;
 
-import edu.ucdenver.cpbs.mechanic.MechAnICView;
-import edu.ucdenver.cpbs.mechanic.TextAnnotation.TextAnnotationManager;
 import edu.ucdenver.cpbs.mechanic.MechAnICSelectionModel;
+import edu.ucdenver.cpbs.mechanic.MechAnICView;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICIcons;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICTextViewer;
 import org.apache.log4j.Logger;
@@ -20,20 +19,13 @@ public class AddTextAnnotationCommand extends DisposableAction {
 
     private static final Logger log = Logger.getLogger(MechAnICView.class);
 
-    private TextAnnotationManager textAnnotationManager;
     private JTabbedPane tabbedPane;
     private MechAnICSelectionModel selectionModel;
 
-    /**
-     * @param textAnnotationManager The annotation management tool
-     * @param tabbedPane The tabbedPane containing the TextViewer
-     * @param selectionModel Protege view SelectionModel
-     */
-    public AddTextAnnotationCommand(TextAnnotationManager textAnnotationManager, JTabbedPane tabbedPane, MechAnICSelectionModel selectionModel) {
+    public AddTextAnnotationCommand(MechAnICView view) {
         super("Add TextAnnotation", MechAnICIcons.getIcon(MechAnICIcons.ADD_TEXT_ANNOTATION_ICON));
-        this.textAnnotationManager = textAnnotationManager;
-        this.tabbedPane = tabbedPane;
-        this.selectionModel = selectionModel;
+        this.tabbedPane = view.getTabbedPane();
+        this.selectionModel = view.getSelectionModel();
 
         this.putValue(AbstractAction.SHORT_DESCRIPTION, "Add an annotation");
 
@@ -66,8 +58,8 @@ public class AddTextAnnotationCommand extends DisposableAction {
             Integer spanEnd = textViewer.getSelectionEnd();
             String spannedText = textViewer.getSelectedText();
             try {
-                textAnnotationManager.addTextAnnotation(cls, spanStart, spanEnd, spannedText);
-                textAnnotationManager.highlightAnnotation(spanStart, spanEnd, textViewer, cls);
+                textViewer.getTextAnnotationManager().addTextAnnotation(cls, spanStart, spanEnd, spannedText);
+                textViewer.getTextAnnotationManager().highlightAnnotation(spanStart, spanEnd, textViewer, cls);
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();
             }

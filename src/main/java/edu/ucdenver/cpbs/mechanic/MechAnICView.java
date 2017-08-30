@@ -1,7 +1,6 @@
 package edu.ucdenver.cpbs.mechanic;
 
 import edu.ucdenver.cpbs.mechanic.Commands.*;
-import edu.ucdenver.cpbs.mechanic.TextAnnotation.TextAnnotationManager;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICProfileViewer;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICTextViewer;
 import edu.ucdenver.cpbs.mechanic.xml.XmlUtil;
@@ -11,12 +10,8 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Utilities;
 import java.awt.*;
 import java.awt.dnd.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,13 +27,15 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
     private static final Logger log = Logger.getLogger(MechAnICView.class);
 
     private JSplitPane splitPane;
+
+    public JTabbedPane getTabbedPane() {
+        return tabbedPane;
+    }
+
     private JTabbedPane tabbedPane;
     private ProfileManager profileManager;
-
-    private TextAnnotationManager textAnnotationManager;
     private MechAnICSelectionModel selectionModel;
     private XmlUtil xmlUtil;
-    private MechAnICTextViewer textViewer;
 
     /**
      *
@@ -51,9 +48,8 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
         Initialize the managers, models, and utils
          */
         selectionModel = new MechAnICSelectionModel();  //helps get the selected OWL API classes
-        profileManager = new ProfileManager();  //manipulates profiles and highlighters
-        textAnnotationManager = new TextAnnotationManager(this, selectionModel, profileManager);  //manipulates the annotations
-        xmlUtil = new XmlUtil(textAnnotationManager);  //reads and writes to XML
+        profileManager = new ProfileManager(this);  //manipulates profiles and highlighters
+        xmlUtil = new XmlUtil(this);  //reads and writes to XML
 
         createUI();
 
@@ -61,7 +57,6 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
         dt.setActive(true);
 
         setupInitial();
-        setupListeners();
 
         log.warn("Initialized MechAnIC");
     }
@@ -117,7 +112,7 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
          */
         try {
             String fileName = "/file/test_article.txt";
-            textViewer = new MechAnICTextViewer();
+            MechAnICTextViewer textViewer = new MechAnICTextViewer(this);
             textViewer.setName(fileName);
             JScrollPane sp = new JScrollPane(textViewer);
             tabbedPane.add(sp);
@@ -148,8 +143,8 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
         /*
         Text document related actions
          */
-        addAction(new OpenDocumentCommand(tabbedPane), "A", "A");
-        addAction(new CloseDocumentCommand(tabbedPane), "A", "B");
+        addAction(new OpenDocumentCommand(this), "A", "A");
+        addAction(new CloseDocumentCommand(this), "A", "B");
         addAction(new IncreaseTextSizeCommand(tabbedPane), "A", "C");
         addAction(new DecreaseTextSizeCommand(tabbedPane), "A", "D");
 
@@ -158,8 +153,8 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
          */
         addAction(new LoadAnnotationsCommand(tabbedPane, xmlUtil), "B", "A");
         addAction(new SaveAnnotationsToXmlCommand(tabbedPane, xmlUtil), "B", "B");
-        addAction(new AddTextAnnotationCommand(textAnnotationManager, tabbedPane, selectionModel), "B", "C");
-        addAction(new RemoveTextAnnotationCommand(textAnnotationManager, tabbedPane, selectionModel), "B", "D");
+        addAction(new AddTextAnnotationCommand(this), "B", "C");
+        addAction(new RemoveTextAnnotationCommand(this), "B", "D");
 
         /*
         Profile and highlighter related commands
@@ -173,54 +168,12 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
         setGlobalSelection(selObj);
     }
 
-    private void setupListeners() {
-        textViewer.addMouseListener(
-                new MouseListener() {
-                    int press_offset;
-                    int release_offset;
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
+    public ProfileManager getProfileManager() {
+        return profileManager;
+    }
 
-                    }
-
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                        press_offset = textViewer.viewToModel(e.getPoint());
-                    }
-
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                        release_offset = textViewer.viewToModel(e.getPoint());
-
-                        int start, end;
-                        try {
-                            if (press_offset < release_offset) {
-
-                                    start = Utilities.getWordStart(textViewer, press_offset);
-                                    end = Utilities.getWordEnd(textViewer, release_offset);
-                            } else {
-                                start = Utilities.getWordStart(textViewer, release_offset);
-                                end = Utilities.getWordEnd(textViewer, press_offset);
-                            }
-                            textAnnotationManager.setSelectedAnnotation(start, end);
-                            textViewer.setSelectionStart(start);
-                            textViewer.setSelectionEnd(end);
-                        } catch (BadLocationException e1) {
-                            e1.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-
-                    }
-
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-
-                    }
-                }
-        );
+    public MechAnICSelectionModel getSelectionModel() {
+        return selectionModel;
     }
 
     @Override
