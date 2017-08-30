@@ -4,6 +4,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("unused")
 public class MechAnICSelectionModel {
 
     private OWLClass selectedClass;
@@ -11,8 +12,8 @@ public class MechAnICSelectionModel {
     private ArrayList<MechAnICSelectionListener> listeners;
 
 
-    public MechAnICSelectionModel() {
-        listeners = new ArrayList<MechAnICSelectionListener>();
+    MechAnICSelectionModel() {
+        listeners = new ArrayList<>();
     }
 
 
@@ -22,7 +23,7 @@ public class MechAnICSelectionModel {
     }
 
 
-    public void setSelectedClass(OWLClass selectedClass) {
+    void setSelectedClass(OWLClass selectedClass) {
         boolean changed = false;
         if (selectedClass != null) {
             if (this.selectedClass == null) {

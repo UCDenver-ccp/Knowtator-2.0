@@ -1,59 +1,37 @@
 package edu.ucdenver.cpbs.mechanic.Profiles;
 
-import javafx.scene.control.RadioButton;
+import org.semanticweb.owlapi.model.OWLClass;
 
-import javax.swing.*;
 import javax.swing.text.DefaultHighlighter;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Profile {
     private String annotatorName;
     private String annotatorID;
-    private HashMap<String, DefaultHighlighter.DefaultHighlightPainter>  highlighters;
-    private ArrayList<JRadioButton> radioButtons;
-    private ButtonGroup buttonGroup;
+    private HashMap<OWLClass, DefaultHighlighter.DefaultHighlightPainter>  highlighters;
 
     public Profile(String annotatorName, String annotatorID) {
         this.annotatorName = annotatorName;
         this.annotatorID = annotatorID;
 
-        highlighters = new HashMap<String, DefaultHighlighter.DefaultHighlightPainter>();
-        radioButtons = new ArrayList<JRadioButton>();
-        buttonGroup = new ButtonGroup();
+        highlighters = new HashMap<>();
     }
 
-    public void addHighlighter(String highlighterName, DefaultHighlighter.DefaultHighlightPainter newHighlighter, JRadioButton btn) {
-
-        highlighters.put(highlighterName, newHighlighter);
-        radioButtons.add(btn);
+    public void addHighlighter(OWLClass cls, DefaultHighlighter.DefaultHighlightPainter newHighlighter) {
+        highlighters.put(cls, newHighlighter);
     }
 
-    public ArrayList<JRadioButton> getRadioButtons() {
-        return radioButtons;
-    }
-
-    public DefaultHighlighter.DefaultHighlightPainter getHighlighter(String highlighterName) {
-        return highlighters.get(highlighterName);
+    public DefaultHighlighter.DefaultHighlightPainter getHighlighter(OWLClass cls) {
+        //TODO: Associate highlighter with all decendents of cls
+        return highlighters.get(cls);
     }
 
     public String getAnnotatorID() {
         return annotatorID;
     }
 
-    public void setAnnotatorID(String annotatorID) {
-        this.annotatorID = annotatorID;
-    }
-
     public String getAnnotatorName() {
         return annotatorName;
-    }
-
-    public void setAnnotatorName(String annotatorName) {
-        this.annotatorName = annotatorName;
     }
 
 }

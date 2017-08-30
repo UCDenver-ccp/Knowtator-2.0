@@ -2,10 +2,11 @@ package edu.ucdenver.cpbs.mechanic.TextAnnotation;
 
 import org.semanticweb.owlapi.model.OWLClass;
 
-@SuppressWarnings("FieldCanBeLocal")
 public class TextAnnotation {
 
-
+    private String textSource;
+    private String mentionSource;
+    private Integer mentionID;
     private String annotatorID;
     private String annotator;
     private Integer spanStart;
@@ -15,7 +16,10 @@ public class TextAnnotation {
     private String className;
     private OWLClass owlClass;
 
-    public TextAnnotation(String annotatorID,
+    public TextAnnotation(String textSource,
+                          String mentionSource,
+                          Integer mentionID,
+                          String annotatorID,
                           String annotator,
                           Integer spanStart,
                           Integer spanEnd,
@@ -23,6 +27,9 @@ public class TextAnnotation {
                           String classID,
                           String className,
                           OWLClass owlClass) {
+        this.textSource = textSource;
+        this.mentionSource = mentionSource;
+        this.mentionID = mentionID;
         this.annotatorID = annotatorID;
         this.annotator = annotator;
         this.spanStart = spanStart;
@@ -33,11 +40,17 @@ public class TextAnnotation {
         this.owlClass = owlClass;
     }
 
-    public TextAnnotation(String annotatorID,
+    public TextAnnotation(String document,
+                          String mentionSource,
+                          Integer mentionID,
+                          String annotatorID,
                           String annotator,
                           Integer spanStart,
                           Integer spanEnd,
                           String spannedText) {
+        this.textSource = document;
+        this.mentionSource = mentionSource;
+        this.mentionID = mentionID;
         this.annotatorID = annotatorID;
         this.annotator = annotator;
         this.spanStart = spanStart;
@@ -82,7 +95,23 @@ public class TextAnnotation {
         this.className = className;
     }
 
-    public OWLClass getOwlClass() {
+    OWLClass getOwlClass() {
         return owlClass;
+    }
+
+    public String getTextSource() {
+        return textSource;
+    }
+
+    public String getMentionSource() {
+        return mentionSource;
+    }
+
+    public Integer getMentionID() {
+        return mentionID;
+    }
+
+    public void setOwlClass(OWLClass OWLClass) {
+        this.owlClass = OWLClass;
     }
 }

@@ -41,7 +41,7 @@ public class SaveAnnotationsToXmlCommand extends DisposableAction {
             try {
 
                 fw = new FileWriter(fileChooser.getSelectedFile().getAbsolutePath());
-                xmlUtil.writeTextAnnotationsToXML(fw, tabbedPane);
+                xmlUtil.writeTextAnnotationsToXML(fw);
                 fw.close();
             } catch (IOException | NoSuchFieldException e1) {
                 e1.printStackTrace();
