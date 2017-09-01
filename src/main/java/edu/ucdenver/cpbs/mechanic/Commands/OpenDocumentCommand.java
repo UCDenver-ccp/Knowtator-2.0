@@ -22,7 +22,7 @@ public class OpenDocumentCommand extends DisposableAction {
         super("Open Document", MechAnICIcons.getIcon(MechAnICIcons.OPEN_DOCUMENT_ICON));
         this.view = view;
         this.putValue(AbstractAction.SHORT_DESCRIPTION, "Open a text document");
-        this.tabbedPane = view.getTabbedPane();
+        this.tabbedPane = view.getTextViewerTabbedPane();
     }
 
     @Override

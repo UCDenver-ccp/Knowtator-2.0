@@ -24,7 +24,7 @@ public class AddTextAnnotationCommand extends DisposableAction {
 
     public AddTextAnnotationCommand(MechAnICView view) {
         super("Add TextAnnotation", MechAnICIcons.getIcon(MechAnICIcons.ADD_TEXT_ANNOTATION_ICON));
-        this.tabbedPane = view.getTabbedPane();
+        this.tabbedPane = view.getTextViewerTabbedPane();
         this.selectionModel = view.getSelectionModel();
 
         this.putValue(AbstractAction.SHORT_DESCRIPTION, "Add an annotation");

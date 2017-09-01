@@ -16,7 +16,7 @@ public class CloseDocumentCommand extends DisposableAction {
     public CloseDocumentCommand(MechAnICView view) {
         super("Close", MechAnICIcons.getIcon(MechAnICIcons.CLOSE_DOCUMENT_ICON));
         this.putValue(AbstractAction.SHORT_DESCRIPTION, "Close");
-        this.tabbedPane = view.getTabbedPane();
+        this.tabbedPane = view.getTextViewerTabbedPane();
         this.view = view;
     }
 

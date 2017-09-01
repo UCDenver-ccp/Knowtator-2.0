@@ -15,7 +15,7 @@ public class RemoveTextAnnotationCommand extends DisposableAction {
 
     public RemoveTextAnnotationCommand(MechAnICView view) {
         super("Add TextAnnotation", MechAnICIcons.getIcon(MechAnICIcons.REMOVE_TEXT_ANNOTATION_ICON));
-        this.tabbedPane = view.getTabbedPane();
+        this.tabbedPane = view.getTextViewerTabbedPane();
 
         this.putValue(AbstractAction.SHORT_DESCRIPTION, "Add an annotation");
 

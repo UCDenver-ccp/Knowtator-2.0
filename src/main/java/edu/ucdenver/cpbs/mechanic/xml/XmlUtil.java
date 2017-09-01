@@ -86,8 +86,8 @@ public final class XmlUtil {
         bw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         bw.newLine();
 
-        for (int i = 0; i < view.getTabbedPane().getTabCount(); i++) {
-            MechAnICTextViewer textViewer = (MechAnICTextViewer) view.getTabbedPane().getTabComponentAt(i);
+        for (int i = 0; i < view.getTextViewerTabbedPane().getTabCount(); i++) {
+            MechAnICTextViewer textViewer = (MechAnICTextViewer) view.getTextViewerTabbedPane().getTabComponentAt(i);
             bw.write(String.format("<%s %s=\"%s\">", TAG_ANNOTATIONS, TAG_TEXTSOURCE, textViewer.getName().replace(".txt", "")));
             bw.newLine();
             textViewer.getTextAnnotationManager().getTextAnnotations().forEach((Integer mentionID, TextAnnotation textAnnotation) ->  {
