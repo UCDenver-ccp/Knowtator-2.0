@@ -1,6 +1,7 @@
 package edu.ucdenver.cpbs.mechanic;
 
 import edu.ucdenver.cpbs.mechanic.Commands.*;
+import edu.ucdenver.cpbs.mechanic.ui.MechAnICGraphViewer;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICProfileViewer;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICTextViewer;
 import edu.ucdenver.cpbs.mechanic.xml.XmlUtil;
@@ -26,13 +27,15 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
 
     private static final Logger log = Logger.getLogger(MechAnICView.class);
 
-    private JSplitPane splitPane;
 
-    public JTabbedPane getTabbedPane() {
-        return tabbedPane;
+    private JSplitPane mainSplitPane;
+    private JSplitPane annotationSplitPane;
+
+    public JTabbedPane getTextViewerTabbedPane() {
+        return textViewerTabbedPane;
     }
 
-    private JTabbedPane tabbedPane;
+    private JTabbedPane textViewerTabbedPane;
     private ProfileManager profileManager;
     private MechAnICSelectionModel selectionModel;
     private XmlUtil xmlUtil;
@@ -82,8 +85,8 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
         /*
         Create a tabbed pane containing the text viewer for each document
          */
-        tabbedPane = new JTabbedPane();
-        tabbedPane.setMinimumSize(new Dimension(100, 50));
+        textViewerTabbedPane = new JTabbedPane();
+        textViewerTabbedPane.setMinimumSize(new Dimension(100, 50));
 
         /*
         Create a viewer to see the highlighters for the current profile
@@ -101,13 +104,19 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
         /*
         Place the tabbed text viewers and the profile viewer in a split pane
          */
-        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitPane.setOneTouchExpandable(true);
-        add(splitPane);
-        splitPane.add(tabbedPane);
-        splitPane.add(profileViewer);
-        splitPane.setDividerLocation(1200);
+        annotationSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        annotationSplitPane.setOneTouchExpandable(true);
+        add(annotationSplitPane);
+        annotationSplitPane.add(textViewerTabbedPane);
+        annotationSplitPane.add(profileViewer);
+        annotationSplitPane.setDividerLocation(1200);
 
+
+        mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        mainSplitPane.setOneTouchExpandable(true);
+        add(mainSplitPane);
+        mainSplitPane.add(annotationSplitPane);
+        mainSplitPane.add(graphViewer);
         /*
         Make the toolbar seen at the top of the view
          */
@@ -126,8 +135,8 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
             MechAnICTextViewer textViewer = new MechAnICTextViewer(this);
             textViewer.setName(fileName);
             JScrollPane sp = new JScrollPane(textViewer);
-            tabbedPane.add(sp);
-            tabbedPane.setTitleAt(0, fileName);
+            textViewerTabbedPane.add(sp);
+            textViewerTabbedPane.setTitleAt(0, fileName);
 
             InputStream is = getClass().getResourceAsStream(fileName);
             textViewer.read(new BufferedReader(new InputStreamReader(is)), fileName);
@@ -140,7 +149,7 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
 //        try {
 //            String fileName = "/file/test_annotations.xml";
 //            InputStream is = getClass().getResourceAsStream(fileName);
-//            MechAnICTextViewer textViewer = (MechAnICTextViewer)((JScrollPane)tabbedPane.getSelectedComponent()).getViewport().getView();
+//            MechAnICTextViewer textViewer = (MechAnICTextViewer)((JScrollPane)textViewerTabbedPane.getSelectedComponent()).getViewport().getView();
 //            xmlUtil.loadTextAnnotationsFromXML(is, textViewer);
 //        } catch (ParserConfigurationException | IOException | SAXException e) {
 //            e.printStackTrace();
@@ -156,14 +165,14 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
          */
         addAction(new OpenDocumentCommand(this), "A", "A");
         addAction(new CloseDocumentCommand(this), "A", "B");
-        addAction(new IncreaseTextSizeCommand(tabbedPane), "A", "C");
-        addAction(new DecreaseTextSizeCommand(tabbedPane), "A", "D");
+        addAction(new IncreaseTextSizeCommand(textViewerTabbedPane), "A", "C");
+        addAction(new DecreaseTextSizeCommand(textViewerTabbedPane), "A", "D");
 
         /*
         Text annotation related actions
          */
-        addAction(new LoadAnnotationsCommand(tabbedPane, xmlUtil), "B", "A");
-        addAction(new SaveAnnotationsToXmlCommand(tabbedPane, xmlUtil), "B", "B");
+        addAction(new LoadAnnotationsCommand(textViewerTabbedPane, xmlUtil), "B", "A");
+        addAction(new SaveAnnotationsToXmlCommand(textViewerTabbedPane, xmlUtil), "B", "B");
         addAction(new AddTextAnnotationCommand(this), "B", "C");
         addAction(new RemoveTextAnnotationCommand(this), "B", "D");
 

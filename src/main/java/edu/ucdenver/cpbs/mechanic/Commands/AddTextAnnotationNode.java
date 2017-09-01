@@ -2,18 +2,19 @@ package edu.ucdenver.cpbs.mechanic.Commands;
 
 import edu.ucdenver.cpbs.mechanic.MechAnICView;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICIcons;
+import edu.ucdenver.cpbs.mechanic.ui.MechAnICTextViewer;
 import org.apache.log4j.Logger;
 import org.protege.editor.core.ui.view.DisposableAction;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class AddNode extends DisposableAction {
+public class AddTextAnnotationNode extends DisposableAction {
 
     private static final Logger log = Logger.getLogger(MechAnICView.class);
     private MechAnICView view;
 
-    public AddNode(MechAnICView view) {
+    public AddTextAnnotationNode(MechAnICView view) {
         super("Add Node", MechAnICIcons.getIcon("None"));
         this.view = view;
 
