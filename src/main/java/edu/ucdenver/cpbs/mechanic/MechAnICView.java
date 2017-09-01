@@ -28,6 +28,11 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
 
     private JSplitPane mainSplitPane;
     private JSplitPane annotationSplitPane;
+
+    public JTabbedPane getTextViewerTabbedPane() {
+        return textViewerTabbedPane;
+    }
+
     private JTabbedPane textViewerTabbedPane;
     private ProfileManager profileManager;
 

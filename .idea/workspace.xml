@@ -8,13 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b029c94f-db1a-4d52-a291-6cd98d2d839a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/AddNode.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/com/sl/app/TestApplication.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Knowtator-2.0.jar" afterPath="$PROJECT_DIR$/Knowtator-2.0.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/sl/connector/ConnectorContainer.java" afterPath="$PROJECT_DIR$/src/main/java/com/sl/connector/ConnectorContainer.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/AddNode.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/MechAnICView.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/MechAnICView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ui/MechAnICGraphViewer.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ui/MechAnICGraphViewer.java" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,24 +24,38 @@
       <file leaf-file-name="MechAnICView.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/MechAnICView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="118" column="0" lean-forward="true" selection-start-line="118" selection-start-column="0" selection-end-line="118" selection-end-column="0" />
+            <state relative-caret-position="400">
+              <caret line="31" column="50" lean-forward="false" selection-start-line="31" selection-start-column="50" selection-end-line="31" selection-end-column="50" />
               <folding>
                 <element signature="e#738#779#0" expanded="true" />
-                <element signature="e#1312#1313#0" expanded="true" />
-                <element signature="e#1346#1347#0" expanded="true" />
+                <element signature="e#1129#1130#0" expanded="true" />
+                <element signature="e#1408#1409#0" expanded="true" />
+                <element signature="e#1442#1443#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MechAnICGraphViewer.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MechAnICGraphViewer.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ui/MechAnICGraphViewer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="294">
+            <state relative-caret-position="1224">
               <caret line="62" column="5" lean-forward="false" selection-start-line="62" selection-start-column="5" selection-end-line="62" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AddTextAnnotationNode.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/AddTextAnnotationNode.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="365">
+              <caret line="36" column="49" lean-forward="true" selection-start-line="36" selection-start-column="49" selection-end-line="36" selection-end-column="49" />
+              <folding>
+                <element signature="e#907#908#0" expanded="true" />
+                <element signature="e#963#964#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -139,9 +148,10 @@
         <option value="$PROJECT_DIR$/src/main/java/com/sl/app/ConnectorPropertiesPanel.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/AddNode.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/sl/app/TestApplication.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/MechAnICView.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/sl/connector/ConnectorContainer.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ui/MechAnICGraphViewer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/MechAnICView.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/AddTextAnnotationNode.java" />
       </list>
     </option>
   </component>
@@ -165,10 +175,10 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-1931" />
-    <option name="y" value="-413" />
+    <option name="x" value="-11" />
+    <option name="y" value="-11" />
     <option name="width" value="1942" />
-    <option name="height" value="997" />
+    <option name="height" value="1102" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -534,7 +544,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="44226000" />
+    <option name="totallyTimeSpent" value="44702000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -546,7 +556,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1931" y="-413" width="1942" height="1102" extended-state="6" />
+    <frame x="-11" y="-11" width="1942" height="1102" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -774,20 +784,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/AddNode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#767#768#0" expanded="true" />
-            <element signature="e#792#793#0" expanded="true" />
-            <element signature="e#822#823#0" expanded="true" />
-            <element signature="e#878#879#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/sl/line/ConnectLine.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-875">
@@ -812,18 +808,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/MechAnICView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="118" column="0" lean-forward="true" selection-start-line="118" selection-start-column="0" selection-end-line="118" selection-end-column="0" />
-          <folding>
-            <element signature="e#738#779#0" expanded="true" />
-            <element signature="e#1312#1313#0" expanded="true" />
-            <element signature="e#1346#1347#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/sl/connector/ConnectorContainer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="115">
@@ -841,10 +825,34 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/ui/MechAnICGraphViewer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
+        <state relative-caret-position="1224">
           <caret line="62" column="5" lean-forward="false" selection-start-line="62" selection-start-column="5" selection-end-line="62" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/MechAnICView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="31" column="50" lean-forward="false" selection-start-line="31" selection-start-column="50" selection-end-line="31" selection-end-column="50" />
+          <folding>
+            <element signature="e#738#779#0" expanded="true" />
+            <element signature="e#1129#1130#0" expanded="true" />
+            <element signature="e#1408#1409#0" expanded="true" />
+            <element signature="e#1442#1443#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/cpbs/mechanic/Commands/AddTextAnnotationNode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="365">
+          <caret line="36" column="49" lean-forward="true" selection-start-line="36" selection-start-column="49" selection-end-line="36" selection-end-column="49" />
+          <folding>
+            <element signature="e#907#908#0" expanded="true" />
+            <element signature="e#963#964#0" expanded="true" />
           </folding>
         </state>
       </provider>
