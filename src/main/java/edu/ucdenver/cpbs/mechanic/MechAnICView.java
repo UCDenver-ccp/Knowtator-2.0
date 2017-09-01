@@ -165,6 +165,7 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
          */
         addAction(new OpenDocumentCommand(this), "A", "A");
         addAction(new CloseDocumentCommand(this), "A", "B");
+
         addAction(new IncreaseTextSizeCommand(textViewerTabbedPane), "A", "C");
         addAction(new DecreaseTextSizeCommand(textViewerTabbedPane), "A", "D");
 
@@ -173,6 +174,7 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
          */
         addAction(new LoadAnnotationsCommand(textViewerTabbedPane, xmlUtil), "B", "A");
         addAction(new SaveAnnotationsToXmlCommand(textViewerTabbedPane, xmlUtil), "B", "B");
+
         addAction(new AddTextAnnotationCommand(this), "B", "C");
         addAction(new RemoveTextAnnotationCommand(this), "B", "D");
 
