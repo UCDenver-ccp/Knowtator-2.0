@@ -60,6 +60,17 @@
     <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-impl:3.4.3" level="project" />
     <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-parsers:3.4.3" level="project" />
     <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-tools:3.4.3" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../Code/jgraphx/classes/artifacts/jgraphx_jar/jgraphx.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../Code/jgraphx/classes/artifacts/jgraphx_jar/jgraphx.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: edu.stanford.protege:org.protege.common:4.3.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.felix:org.apache.felix.main:4.0.3" level="project" />
@@ -135,16 +146,5 @@
     <orderEntry type="library" name="Maven: asm:asm-analysis:3.2" level="project" />
     <orderEntry type="library" name="Maven: asm:asm-tree:3.2" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.1" level="project" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../Code/jgraphx/classes/artifacts/jgraphx_jar/jgraphx.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/../Code/jgraphx/classes/artifacts/jgraphx_jar/jgraphx.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
   </component>
 </module>

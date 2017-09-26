@@ -1,8 +1,12 @@
 package edu.ucdenver.cpbs.mechanic.ui;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
+import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
+import edu.ucdenver.cpbs.mechanic.MechAnICView;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +19,7 @@ public class MechAnICGraphViewer extends JPanel {
 
     private mxGraphComponent graphComponent;
 
-    public MechAnICGraphViewer() {
+    public MechAnICGraphViewer(MechAnICView view) {
         graph = new mxGraph();
         parent = graph.getDefaultParent();
 
@@ -25,6 +29,20 @@ public class MechAnICGraphViewer extends JPanel {
         graphComponent.setPreferredSize(new Dimension(1200, 200));
         add(graphComponent);
 
+        graph.addListener(mxEvent.ADD_CELLS, (sender, evt) -> {
+            Object[] cells = (Object[])evt.getProperty("cells");
+            for (Object cell : cells) {
+                if (graph.getModel().isEdge(cell)) {
+                    OWLObjectProperty property = view.getOWLWorkspace().getOWLSelectionModel().getLastSelectedObjectProperty();
+                    if (property != null) {
+                        ((mxCell) cell).setValue(property);
+                    } else {
+                        graph.getModel().remove(cell);
+                    }
+                }
+            }
+        });
+
         addNode("hello");
         addNode("bye");
 
@@ -33,7 +51,7 @@ public class MechAnICGraphViewer extends JPanel {
     public void addNode(Object value) {
         graph.getModel().beginUpdate();
         try {
-            Object v1 = graph.insertVertex(parent, null, value, 20, 20,
+            graph.insertVertex(parent, null, value, 20, 20,
                     80, 30);
 
             // apply layout to graph
@@ -45,4 +63,5 @@ public class MechAnICGraphViewer extends JPanel {
             graph.getModel().endUpdate();
         }
     }
+
 }

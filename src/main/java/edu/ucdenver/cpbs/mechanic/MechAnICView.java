@@ -99,7 +99,7 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
         /*
         Create a viewer to see the annotations as a graph
          */
-        graphViewer = new MechAnICGraphViewer();
+        graphViewer = new MechAnICGraphViewer(this);
 
         /*
         Place the tabbed text viewers and the profile viewer in a split pane
