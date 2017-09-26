@@ -10,6 +10,7 @@
       <element id="dir-copy" path="$PROJECT_DIR$/src/main/resources" />
       <element id="file-copy" path="$PROJECT_DIR$/installation_image.jpg" />
       <element id="file-copy" path="$PROJECT_DIR$/README.md" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../Code/jgraphx/classes/artifacts/jgraphx_jar/jgraphx.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

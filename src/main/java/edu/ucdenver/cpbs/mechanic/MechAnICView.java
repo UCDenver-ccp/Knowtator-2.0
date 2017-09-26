@@ -184,6 +184,11 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
         addAction(new NewProfileCommand(profileManager), "C", "A");
         addAction(new SwitchProfileCommand(profileManager), "C", "B");
         addAction(new NewHighlighterCommand(selectionModel, profileManager), "C", "C");
+
+        /*
+        Graph Viewer related commands
+         */
+        addAction(new AddTextAnnotationNodeCommand(this), "D", "A");
     }
 
     public void setGlobalSelection1(OWLEntity selObj) {

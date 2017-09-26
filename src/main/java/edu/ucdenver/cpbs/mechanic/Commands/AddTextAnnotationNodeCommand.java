@@ -1,20 +1,20 @@
 package edu.ucdenver.cpbs.mechanic.Commands;
 
 import edu.ucdenver.cpbs.mechanic.MechAnICView;
+import edu.ucdenver.cpbs.mechanic.TextAnnotation.TextAnnotation;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICIcons;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICTextViewer;
-import org.apache.log4j.Logger;
 import org.protege.editor.core.ui.view.DisposableAction;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class AddTextAnnotationNode extends DisposableAction {
+public class AddTextAnnotationNodeCommand extends DisposableAction {
 
-    private static final Logger log = Logger.getLogger(MechAnICView.class);
+//    private static final Logger log = Logger.getLogger(MechAnICView.class);
     private MechAnICView view;
 
-    public AddTextAnnotationNode(MechAnICView view) {
+    public AddTextAnnotationNodeCommand(MechAnICView view) {
         super("Add Node", MechAnICIcons.getIcon("None"));
         this.view = view;
 
@@ -34,6 +34,7 @@ public class AddTextAnnotationNode extends DisposableAction {
     }
 
     private void addNode() {
-        view.getGraphViewer().addNode("Default");
+        TextAnnotation selectedAnnotation = ((MechAnICTextViewer)((JScrollPane)(view.getTextViewerTabbedPane().getSelectedComponent())).getViewport().getView()).getTextAnnotationManager().getSelectedAnnotation();
+//        view.getGraphViewer().getGraphComponent().getGraph().getModel().in
     }
 }
