@@ -99,10 +99,6 @@ public class TextAnnotation {
         return owlClass;
     }
 
-    public String getTextSource() {
-        return textSource;
-    }
-
     public String getMentionSource() {
         return mentionSource;
     }
@@ -113,5 +109,10 @@ public class TextAnnotation {
 
     public void setOwlClass(OWLClass OWLClass) {
         this.owlClass = OWLClass;
+    }
+
+    @Override
+    public String toString() {
+        return getClassName();
     }
 }

@@ -36,6 +36,7 @@ public final class TextAnnotationManager {
         dataExtractor = new OWLAPIDataExtractor(view.getOWLModelManager());
         this.textSource = textSource;
 
+        selectedAnnotation = null;
         textAnnotations = new HashMap<>();
     }
 

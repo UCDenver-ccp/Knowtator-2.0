@@ -109,7 +109,7 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
         add(annotationSplitPane);
         annotationSplitPane.add(textViewerTabbedPane);
         annotationSplitPane.add(profileViewer);
-        annotationSplitPane.setDividerLocation(1200);
+        annotationSplitPane.setDividerLocation(1000);
 
 
         mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -117,6 +117,7 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
         add(mainSplitPane);
         mainSplitPane.add(annotationSplitPane);
         mainSplitPane.add(graphViewer);
+        mainSplitPane.setDividerLocation(300);
         /*
         Make the toolbar seen at the top of the view
          */
