@@ -176,8 +176,8 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
 //        addAction(new LoadAnnotationsCommand(textViewerTabbedPane, xmlUtil), "B", "A");
 //        addAction(new SaveAnnotationsToXmlCommand(textViewerTabbedPane, xmlUtil), "B", "B");
 
-        addAction(new AddTextAnnotationCommand(this), "B", "A");
-        addAction(new RemoveTextAnnotationCommand(this), "B", "B");
+//        addAction(new AddTextAnnotationCommand(this), "B", "A");
+//        addAction(new RemoveTextAnnotationCommand(this), "B", "B");
         addAction(new RunIAACommand(this), "B", "C");
 
         /*
@@ -188,9 +188,17 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
         addAction(new NewHighlighterCommand(selectionModel, profileManager), "C", "C");
 
         /*
+        Modify selection commands
+         */
+        addAction(new IncrementSelectionLeftCommand(this), "D", "A");
+        addAction(new DecrementSelectionLeftCommand(this), "D", "B");
+        addAction(new DecrementSelectionRightCommand(this), "D", "D");
+        addAction(new IncrementSelectionRightCommand(this), "D", "D");
+
+        /*
         Graph Viewer related commands
          */
-        addAction(new AddTextAnnotationNodeCommand(this), "D", "A");
+//        addAction(new AddTextAnnotationNodeCommand(this), "D", "A");
     }
 
     public void setGlobalSelection1(OWLEntity selObj) {

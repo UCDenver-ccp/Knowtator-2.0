@@ -17,7 +17,8 @@ public class MechAnICIcons {
     public static final String SWITCH_PROFILE_ICON = "icons8-User-48.png";
     public static final String INCREASE_TEXT_SIZE_ICON = "icons8-Increase Font.png";
     public static final String DECREASE_TEXT_SIZE_ICON = "icons8-Decrease Font.png";
-    public static String RUN_IAA_ICON = "NULL.png";
+    public static final String INCREMENT_RIGT = "icons8-Increment Right.png";
+    public static String RUN_IAA_ICON = "icons9-Run IAA.png";
 
     private static final String UGLY_ICON = "";
 

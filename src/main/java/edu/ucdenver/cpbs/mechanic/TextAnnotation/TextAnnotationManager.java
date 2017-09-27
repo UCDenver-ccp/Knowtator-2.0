@@ -1,6 +1,5 @@
 package edu.ucdenver.cpbs.mechanic.TextAnnotation;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import edu.ucdenver.cpbs.mechanic.MechAnICSelectionModel;
 import edu.ucdenver.cpbs.mechanic.MechAnICView;
 import edu.ucdenver.cpbs.mechanic.ProfileManager;
@@ -18,7 +17,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 
 @SuppressWarnings("unused")
 public final class TextAnnotationManager {
@@ -32,15 +32,17 @@ public final class TextAnnotationManager {
    private ProfileManager profileManager;
    private OWLAPIDataExtractor dataExtractor;
    private String textSource;
+    private MechAnICTextViewer textViewer;
 
     private ArrayList<AssertionRelationship> assertionRelationships;
 
-    public TextAnnotationManager(MechAnICView view, String textSource) {
+    public TextAnnotationManager(MechAnICView view, String textSource, MechAnICTextViewer textViewer) {
         this.view = view;
         selectionModel = view.getSelectionModel();
         profileManager = view.getProfileManager();
         dataExtractor = new OWLAPIDataExtractor(view.getOWLModelManager());
         this.textSource = textSource;
+        this.textViewer = textViewer;
 
         selectedAnnotation = null;
         textAnnotations = new ArrayList<>();
@@ -76,20 +78,9 @@ public final class TextAnnotationManager {
         view.getGraphViewer().addAnnotationNode(newTextAnnotation);
     }
 
-    public void removeTextAnnotation(Integer spanStart, Integer spanEnd, MechAnICTextViewer textViewer) {
-
-        //String mentionSource = "Default";
-        for (Annotation textAnnotation : textAnnotations) {
-
-            for (Span span : textAnnotation.getSpans()) {
-                if (Objects.equals(spanStart, span.getStart()) && Objects.equals(spanEnd, span.getEnd())) {
-                    textAnnotations.remove(textAnnotation);
-                    highlightAllAnnotations(textViewer);
-                    return;
-                }
-            }
-        }
-
+    public void removeTextAnnotation(Annotation textAnnotation) {
+        textAnnotations.remove(textAnnotation);
+        highlightAllAnnotations(textViewer);
     }
 
 
@@ -102,7 +93,7 @@ public final class TextAnnotationManager {
         }
     }
 
-    public void highlightAnnotation(int spanStart, int spanEnd, MechAnICTextViewer textViewer, OWLClass cls) {
+    private void highlightAnnotation(int spanStart, int spanEnd, MechAnICTextViewer textViewer, OWLClass cls) {
         DefaultHighlighter.DefaultHighlightPainter highlighter = profileManager.getCurrentAnnotator().getHighlighter(cls);
         if (highlighter == null) {
             Color c = JColorChooser.showDialog(null, String.format("Pick a color for %s", cls.toString()), Color.CYAN);
@@ -133,20 +124,18 @@ public final class TextAnnotationManager {
         return selectedAnnotation;
     }
 
-    private void setSelectedAnnotation(Annotation selectedAnnotation) {
-        this.selectedAnnotation = selectedAnnotation;
-        view.setGlobalSelection1(selectedAnnotation.getOwlClass());
-    }
+    public Set<Annotation> getAnnotationsInRange(Integer spanStart, Integer spanEnd) {
+        Set<Annotation> annotationsInRange = new HashSet<>();
 
-    public void setSelectedAnnotation(Integer spanStart, Integer spanEnd) {
         for (Annotation textAnnotation : textAnnotations) {
             for (Span span : textAnnotation.getSpans()) {
-                if (Objects.equals(spanStart, span.getStart()) && Objects.equals(spanEnd, span.getEnd())) {
-                    setSelectedAnnotation(textAnnotation);
-                    return;
+                if (spanStart >= span.getStart() && spanEnd <= span.getEnd()) {
+                    annotationsInRange.add(textAnnotation);
                 }
             }
         }
+
+        return annotationsInRange;
     }
 
     public AssertionRelationship addAssertion() {
@@ -155,5 +144,10 @@ public final class TextAnnotationManager {
         AssertionRelationship newAssertionRelationship = new AssertionRelationship(property, dataExtractor.getClassName());
         assertionRelationships.add(newAssertionRelationship);
         return newAssertionRelationship;
+    }
+
+    public void setSelectedAnnotation(Annotation selectedAnnotation) {
+        this.selectedAnnotation = selectedAnnotation;
+        view.setGlobalSelection1(selectedAnnotation.getOwlClass());
     }
 }

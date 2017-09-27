@@ -3,6 +3,9 @@ package edu.ucdenver.cpbs.mechanic.ui;
 
 import edu.ucdenver.cpbs.mechanic.MechAnICView;
 import edu.ucdenver.cpbs.mechanic.TextAnnotation.TextAnnotationManager;
+import edu.ucdenver.cpbs.mechanic.iaa.Annotation;
+import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -12,12 +15,15 @@ import java.awt.event.MouseListener;
 
 public class MechAnICTextViewer extends JTextPane {
 	private TextAnnotationManager textAnnotationManager;
+	private MechAnICView view;
+    private Logger log = Logger.getLogger(MechAnICView.class);
 
-	public MechAnICTextViewer(MechAnICView view) {
+    public MechAnICTextViewer(MechAnICView view) {
 		super();
+		this.view = view;
 		this.setName("Untitled");
 		this.setEditable(false);
-		textAnnotationManager = new TextAnnotationManager(view, getName());
+		textAnnotationManager = new TextAnnotationManager(view, getName(), this);
 		setupListeners(this);
 	}
 
@@ -39,6 +45,7 @@ public class MechAnICTextViewer extends JTextPane {
 					@Override
 					public void mouseReleased(MouseEvent e) {
 						release_offset = viewToModel(e.getPoint());
+                        JPopupMenu popupMenu = new JPopupMenu();
 
 						int start, end;
 						try {
@@ -50,12 +57,29 @@ public class MechAnICTextViewer extends JTextPane {
 								start = Utilities.getWordStart(textViewer, release_offset);
 								end = Utilities.getWordEnd(textViewer, press_offset);
 							}
-							textViewer.getTextAnnotationManager().setSelectedAnnotation(start, end);
-							textViewer.setSelectionStart(start);
-							textViewer.setSelectionEnd(end);
-						} catch (BadLocationException e1) {
-							e1.printStackTrace();
-						}
+                            textViewer.setSelectionStart(start);
+                            textViewer.setSelectionEnd(end);
+
+                            // Menu item to create new annotation
+                            JMenuItem annotateWithCurrentSelectedClass = new JMenuItem("Annotate with current selected class");
+                            annotateWithCurrentSelectedClass.addActionListener(e12 -> addTextAnnotation());
+                            popupMenu.add(annotateWithCurrentSelectedClass);
+
+                            // Menu items to select and remove annotations
+                            for (Annotation a : textViewer.getTextAnnotationManager().getAnnotationsInRange(start, end)) {
+                                JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s", a.getAnnotationClass()));
+                                selectAnnotationMenuItem.addActionListener(e3 -> textAnnotationManager.setSelectedAnnotation(a));
+                                popupMenu.add(selectAnnotationMenuItem);
+
+                                JMenuItem removeAnnotationMenuItem = new JMenuItem(String.format("Remove %s", a.getAnnotationClass()));
+                                removeAnnotationMenuItem.addActionListener(e4 -> textAnnotationManager.removeTextAnnotation(a));
+                                popupMenu.add(removeAnnotationMenuItem);
+                            }
+
+                            popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                        } catch (BadLocationException e1) {
+                            e1.printStackTrace();
+                        }
 					}
 
 					@Override
@@ -69,6 +93,19 @@ public class MechAnICTextViewer extends JTextPane {
 					}
 				}
 		);
+	}
+
+	private void addTextAnnotation() {
+		OWLClass cls = view.getSelectionModel().getSelectedClass();
+		if (cls != null) {
+			try {
+				textAnnotationManager.addTextAnnotation(cls, getSelectionStart(), getSelectionEnd());
+			} catch (NoSuchFieldException e) {
+				e.printStackTrace();
+			}
+		} else {
+			log.error("No OWLClass selected");
+		}
 	}
 
 

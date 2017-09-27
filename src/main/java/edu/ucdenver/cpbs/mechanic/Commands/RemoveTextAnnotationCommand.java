@@ -28,14 +28,14 @@ public class RemoveTextAnnotationCommand extends DisposableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        addTextAnnotation();
+        removeTextAnnotation();
     }
 
-    private void addTextAnnotation() {
+    private void removeTextAnnotation() {
         MechAnICTextViewer textViewer = (MechAnICTextViewer)((JScrollPane)tabbedPane.getSelectedComponent()).getViewport().getView();
         Integer spanStart = textViewer.getSelectionStart();
         Integer spanEnd = textViewer.getSelectionEnd();
-        textViewer.getTextAnnotationManager().removeTextAnnotation(spanStart, spanEnd, textViewer);
+//        textViewer.getTextAnnotationManager().removeTextAnnotation(spanStart, spanEnd, textViewer);
     }
 
 }
