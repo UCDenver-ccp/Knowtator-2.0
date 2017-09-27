@@ -1,6 +1,6 @@
 package edu.ucdenver.cpbs.mechanic;
 
-import edu.ucdenver.cpbs.mechanic.Profiles.Profile;
+import edu.ucdenver.cpbs.mechanic.Profiles.Annotator;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICProfileViewer;
 import org.semanticweb.owlapi.model.OWLClass;
 
@@ -11,9 +11,9 @@ import java.util.Map;
 
 public class ProfileManager {
 
-    private Profile currentProfile;
+    private Annotator currentAnnotator;
 
-    private Map<String, Profile> profiles;
+    private Map<String, Annotator> profiles;
     private MechAnICProfileViewer profileViewer;
     private MechAnICView view;
 
@@ -32,20 +32,20 @@ public class ProfileManager {
     }
 
     public void newProfile(String profileName, String profileID) {
-        Profile newProfile = new Profile(profileName, profileID);
-        profiles.put(profileName, newProfile);
+        Annotator newAnnotator = new Annotator(profileName, profileID);
+        profiles.put(profileName, newAnnotator);
 
         loadProfile(profileName);
     }
 
-    public void addHighlighter(OWLClass cls, Color c, Profile profile) {
+    public void addHighlighter(OWLClass cls, Color c, Annotator annotator) {
         DefaultHighlighter.DefaultHighlightPainter newHighlighter = new DefaultHighlighter.DefaultHighlightPainter(c);
-        profile.addHighlighter(cls, newHighlighter);
+        annotator.addHighlighter(cls, newHighlighter);
         int i = 0;
 
         for(OWLClass decendent: view.getOWLModelManager().getOWLHierarchyManager().getOWLClassHierarchyProvider().getDescendants(cls)) {
             i++;
-            profile.addHighlighter(decendent, newHighlighter);
+            annotator.addHighlighter(decendent, newHighlighter);
         }
         System.out.println(i);
     }
@@ -54,23 +54,23 @@ public class ProfileManager {
     }
 
     public void loadProfile(String profileName) {
-        if (currentProfile != null) {
+        if (currentAnnotator != null) {
             removeCurrentProfile();
         }
 
         // Change active profile
-        currentProfile = profiles.get(profileName);
-        profileViewer.getProfileLabel().setText(String.format("<html>Name: %s<br>ID: %s<html>", currentProfile.getAnnotatorName(), currentProfile.getAnnotatorID()));
+        currentAnnotator = profiles.get(profileName);
+        profileViewer.getProfileLabel().setText(String.format("<html>Name: %s<br>ID: %s<html>", currentAnnotator.getAnnotatorName(), currentAnnotator.getAnnotatorID()));
 
         profileViewer.repaint();
     }
 
-    public Profile getCurrentProfile() {
-        return currentProfile;
+    public Annotator getCurrentAnnotator() {
+        return currentAnnotator;
     }
 
 
-    public Map<String,Profile> getProfiles() {
+    public Map<String,Annotator> getProfiles() {
         return profiles;
     }
 }

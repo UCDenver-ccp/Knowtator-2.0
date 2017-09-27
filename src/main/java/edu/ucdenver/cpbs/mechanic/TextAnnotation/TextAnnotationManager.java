@@ -3,6 +3,7 @@ package edu.ucdenver.cpbs.mechanic.TextAnnotation;
 import edu.ucdenver.cpbs.mechanic.MechAnICSelectionModel;
 import edu.ucdenver.cpbs.mechanic.MechAnICView;
 import edu.ucdenver.cpbs.mechanic.ProfileManager;
+import edu.ucdenver.cpbs.mechanic.Profiles.Annotator;
 import edu.ucdenver.cpbs.mechanic.iaa.Annotation;
 import edu.ucdenver.cpbs.mechanic.iaa.Span;
 import edu.ucdenver.cpbs.mechanic.owl.OWLAPIDataExtractor;
@@ -60,8 +61,8 @@ public final class TextAnnotationManager {
 
         Annotation newTextAnnotation = new Annotation();
         newTextAnnotation.setSimpleFeature("Text Source", textSource);
-        newTextAnnotation.setSimpleFeature("Annotator ID", profileManager.getCurrentProfile().getAnnotatorID());
-        newTextAnnotation.setSimpleFeature("Annotator Name", profileManager.getCurrentProfile().getAnnotatorName());
+        newTextAnnotation.setSimpleFeature("Annotator ID", profileManager.getCurrentAnnotator().getAnnotatorID());
+        newTextAnnotation.setSimpleFeature("Annotator Name", profileManager.getCurrentAnnotator().getAnnotatorName());
         newTextAnnotation.setSimpleFeature("Class ID", classID);
         newTextAnnotation.setSimpleFeature("Class Name", className);
         newTextAnnotation.setSimpleFeature("OWLClass", cls);
@@ -99,13 +100,13 @@ public final class TextAnnotationManager {
     }
 
     public void highlightAnnotation(int spanStart, int spanEnd, MechAnICTextViewer textViewer, OWLClass cls) {
-        DefaultHighlighter.DefaultHighlightPainter highlighter = profileManager.getCurrentProfile().getHighlighter(cls);
+        DefaultHighlighter.DefaultHighlightPainter highlighter = profileManager.getCurrentAnnotator().getHighlighter(cls);
         if (highlighter == null) {
             Color c = JColorChooser.showDialog(null, String.format("Pick a color for %s", cls.toString()), Color.CYAN);
             if (c != null) {
-                profileManager.addHighlighter(cls, c, profileManager.getCurrentProfile());
+                profileManager.addHighlighter(cls, c, profileManager.getCurrentAnnotator());
             }
-            highlighter = profileManager.getCurrentProfile().getHighlighter(cls);
+            highlighter = profileManager.getCurrentAnnotator().getHighlighter(cls);
         }
 
         try {

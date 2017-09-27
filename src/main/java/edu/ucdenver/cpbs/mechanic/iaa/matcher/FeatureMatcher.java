@@ -48,7 +48,7 @@ public class FeatureMatcher implements Matcher {
 		this("Feature Matcher");
 	}
 
-	private FeatureMatcher(String name) {
+	public FeatureMatcher(String name) {
 		this.name = name;
 	}
 

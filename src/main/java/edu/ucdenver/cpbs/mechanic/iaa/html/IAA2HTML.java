@@ -374,7 +374,7 @@ public class IAA2HTML {
 		}
 	}
 
-	static Set<Annotation> getSingleSet(Map<String, Set<Annotation>> annotations) {
+	public static Set<Annotation> getSingleSet(Map<String, Set<Annotation>> annotations) {
 		Set<Annotation> returnValues = new HashSet<>();
 		for (String setName : annotations.keySet()) {
 			returnValues.addAll(annotations.get(setName));
@@ -507,7 +507,7 @@ public class IAA2HTML {
 		html.println("</tr>");
 	}
 
-	static String initHTML(String title, String description) {
+	public static String initHTML(String title, String description) {
 		return "<html>\n" +
 				"<head><title>" + title + "</title></head>\n" +
 				"<body>\n" +

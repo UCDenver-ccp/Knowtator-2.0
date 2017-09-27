@@ -5,12 +5,12 @@ import org.semanticweb.owlapi.model.OWLClass;
 import javax.swing.text.DefaultHighlighter;
 import java.util.HashMap;
 
-public class Profile {
+public class Annotator {
     private String annotatorName;
     private String annotatorID;
     private HashMap<OWLClass, DefaultHighlighter.DefaultHighlightPainter>  highlighters;
 
-    public Profile(String annotatorName, String annotatorID) {
+    public Annotator(String annotatorName, String annotatorID) {
         this.annotatorName = annotatorName;
         this.annotatorID = annotatorID;
 

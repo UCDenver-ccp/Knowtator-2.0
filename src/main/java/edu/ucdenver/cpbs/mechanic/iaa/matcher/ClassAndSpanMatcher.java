@@ -36,7 +36,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-@SuppressWarnings("JavadocReference")
+@SuppressWarnings({"JavadocReference", "JavaDoc", "Duplicates"})
 public class ClassAndSpanMatcher implements Matcher {
 
 	/**
@@ -101,13 +101,13 @@ public class ClassAndSpanMatcher implements Matcher {
 	public static Set<Annotation> matches(Annotation annotation, String compareSetName, IAA iaa,
 			Set<Annotation> excludeAnnotations, boolean returnFirst) {
 		String type = annotation.getAnnotationClass();
-		Set<Annotation> candidateAnnotations = new HashSet<Annotation>(iaa.getExactlyOverlappingAnnotations(annotation,
+		Set<Annotation> candidateAnnotations = new HashSet<>(iaa.getExactlyOverlappingAnnotations(annotation,
 				compareSetName));
 		candidateAnnotations.removeAll(excludeAnnotations);
 		if (candidateAnnotations.size() == 0)
 			return Collections.emptySet();
 
-		Set<Annotation> returnValues = new HashSet<Annotation>();
+		Set<Annotation> returnValues = new HashSet<>();
 		for (Annotation candidateAnnotation : candidateAnnotations) {
 			if (!excludeAnnotations.contains(candidateAnnotation)
 					&& candidateAnnotation.getAnnotationClass().equals(type)) {

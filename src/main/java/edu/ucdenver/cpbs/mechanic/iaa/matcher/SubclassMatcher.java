@@ -129,7 +129,7 @@ public class SubclassMatcher implements Matcher {
 	 * 
 	 * @param className
 	 */
-	private void setIAAClass(String className) {
+    public void setIAAClass(String className) {
 		this.className = className;
 		subclassNames = hierarchy.getSubclasses(className);
 	}

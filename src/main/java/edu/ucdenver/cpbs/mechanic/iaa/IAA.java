@@ -121,7 +121,7 @@ public class IAA {
 		reset();
 	}
 
-	private void reset() {
+	public void reset() {
 		allwayMatches = new HashMap<>();
 		trivialAllwayMatches = new HashMap<>();
 		nontrivialAllwayMatches = new HashMap<>();
@@ -214,7 +214,7 @@ public class IAA {
 		allwayIAA(matcher);
 	}
 
-	private void allwayIAA(Matcher matcher) throws IAAException {
+	public void allwayIAA(Matcher matcher) throws IAAException {
 		/*
 		 * At the moment an annotation is found to be a match, there are n-1
 		 * other annotations that are also found to be a match (an annotation
@@ -298,7 +298,7 @@ public class IAA {
 		pairwiseIAA(matcher);
 	}
 
-	private void pairwiseIAA(Matcher matcher) throws IAAException {
+	public void pairwiseIAA(Matcher matcher) throws IAAException {
 		for (Annotation annotation : annotations) {
 			String setName = annotation.getSetName();
 			for (String compareSetName : annotationSets.keySet()) {

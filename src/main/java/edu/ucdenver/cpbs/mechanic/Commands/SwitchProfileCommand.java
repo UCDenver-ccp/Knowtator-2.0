@@ -13,7 +13,7 @@ public class SwitchProfileCommand extends DisposableAction {
     private ProfileManager profileManager;
 
     public SwitchProfileCommand(ProfileManager profileManager) {
-        super("Switch Profile", MechAnICIcons.getIcon(MechAnICIcons.SWITCH_PROFILE_ICON));
+        super("Switch Annotator", MechAnICIcons.getIcon(MechAnICIcons.SWITCH_PROFILE_ICON));
         this.profileManager = profileManager;
 
         this.putValue(AbstractAction.SHORT_DESCRIPTION, "Switch between profiles");
@@ -32,7 +32,7 @@ public class SwitchProfileCommand extends DisposableAction {
 
     private void switchProfile() {
         String[] profiles = profileManager.getProfiles().keySet().toArray(new String[profileManager.getProfiles().keySet().size()]);
-        String profileName = ListDialog.showDialog(null, null, "Profiles", "Profile Chooser", profiles, profiles[0], null);
+        String profileName = ListDialog.showDialog(null, null, "Profiles", "Annotator Chooser", profiles, profiles[0], null);
 
         if (profileName != null)
         {

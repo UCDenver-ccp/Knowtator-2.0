@@ -176,11 +176,12 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
 //        addAction(new LoadAnnotationsCommand(textViewerTabbedPane, xmlUtil), "B", "A");
 //        addAction(new SaveAnnotationsToXmlCommand(textViewerTabbedPane, xmlUtil), "B", "B");
 
-        addAction(new AddTextAnnotationCommand(this), "B", "C");
-        addAction(new RemoveTextAnnotationCommand(this), "B", "D");
+        addAction(new AddTextAnnotationCommand(this), "B", "A");
+        addAction(new RemoveTextAnnotationCommand(this), "B", "B");
+        addAction(new RunIAACommand(this), "B", "C");
 
         /*
-        Profile and highlighter related commands
+        Annotator and highlighter related commands
          */
         addAction(new NewProfileCommand(profileManager), "C", "A");
         addAction(new SwitchProfileCommand(profileManager), "C", "B");

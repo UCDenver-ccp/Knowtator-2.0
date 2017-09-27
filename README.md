@@ -54,13 +54,13 @@ Create annotation profiles and assign them different colors. Switch between them
 Annotations can be saved as an XML file. This stores the annotation instance, the text span, the ontology term ID and the ontology term RDFS label.
 
 ### Reload annotations
-Annotations are reloaded and automatically highlight the text using the color of the current profile.
+Annotations are reloaded and automatically highlight the text using the color of the current annotator.
 
 ## Known bugs
 1. When the first ontology is loaded, all current work and profiles are lost.
-2. When a new annotation profile is added, it is not displayed until view panes are resized.
+2. When a new annotation annotator is added, it is not displayed until view panes are resized.
 3. Can only add annotations to one document at a time since the annotations do not yet know for which file they apply to.
-4. Cannot turn off annotation profile to remove highlighting.
+4. Cannot turn off annotation annotator to remove highlighting.
 5. When MechAnIC view is added, the split between panes is too far to the left.
 6. Cannot remove annotations or annotation profiles.
 

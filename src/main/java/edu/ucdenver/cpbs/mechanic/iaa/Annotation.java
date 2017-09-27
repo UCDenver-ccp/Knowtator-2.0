@@ -521,7 +521,7 @@ public class Annotation {
 
 	public static final int SPANS_EXACT_COMPARISON = 2;
 
-	private static final int IGNORE_SPANS_COMPARISON = 3;
+	public static final int IGNORE_SPANS_COMPARISON = 3;
 
 	/**
 	 * This method compares two annotations with respect to their spans,

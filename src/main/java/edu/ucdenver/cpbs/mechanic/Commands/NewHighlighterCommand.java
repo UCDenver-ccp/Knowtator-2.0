@@ -15,7 +15,7 @@ public class NewHighlighterCommand extends DisposableAction {
     private MechAnICSelectionModel selectionModel;
 
     public NewHighlighterCommand(MechAnICSelectionModel selectionModel, ProfileManager profileManager) {
-        super("Add Highlighter Profile", MechAnICIcons.getIcon(MechAnICIcons.NEW_HIGHLIGHTER_ICON));
+        super("Add Highlighter Annotator", MechAnICIcons.getIcon(MechAnICIcons.NEW_HIGHLIGHTER_ICON));
         this.selectionModel = selectionModel;
         this.profileManager = profileManager;
         this.putValue(AbstractAction.SHORT_DESCRIPTION, "Add a new highlighter profile");
@@ -37,7 +37,7 @@ public class NewHighlighterCommand extends DisposableAction {
 
         Color c = JColorChooser.showDialog(null, "Highlighter color", Color.BLUE);
         if (c != null) {
-            profileManager.addHighlighter(selectionModel.getSelectedClass(), c, profileManager.getCurrentProfile());
+            profileManager.addHighlighter(selectionModel.getSelectedClass(), c, profileManager.getCurrentAnnotator());
         }
     }
 

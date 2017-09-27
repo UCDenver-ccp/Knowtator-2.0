@@ -12,7 +12,7 @@ public class NewProfileCommand extends DisposableAction {
     private ProfileManager profileManager;
 
     public NewProfileCommand(ProfileManager profileManager) {
-        super("New Profile", MechAnICIcons.getIcon(MechAnICIcons.NEW_PROFILE_ICON));
+        super("New Annotator", MechAnICIcons.getIcon(MechAnICIcons.NEW_PROFILE_ICON));
         this.profileManager = profileManager;
 
         this.putValue(AbstractAction.SHORT_DESCRIPTION, "Add new annotator profile");
