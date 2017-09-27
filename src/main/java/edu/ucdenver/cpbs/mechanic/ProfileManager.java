@@ -47,7 +47,6 @@ public class ProfileManager {
             i++;
             annotator.addHighlighter(decendent, newHighlighter);
         }
-        System.out.println(i);
     }
 
     private void removeCurrentProfile() {

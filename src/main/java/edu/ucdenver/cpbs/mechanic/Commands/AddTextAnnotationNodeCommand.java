@@ -36,7 +36,7 @@ public class AddTextAnnotationNodeCommand extends DisposableAction {
     private void addNode() {
         Annotation selectedAnnotation = ((MechAnICTextViewer) ((JScrollPane) (view.getTextViewerTabbedPane().getSelectedComponent())).getViewport().getView()).getTextAnnotationManager().getSelectedAnnotation();
         if (selectedAnnotation != null) {
-            view.getGraphViewer().addNode(selectedAnnotation);
+            view.getGraphViewer().addAnnotationNode(selectedAnnotation);
         }
     }
 }

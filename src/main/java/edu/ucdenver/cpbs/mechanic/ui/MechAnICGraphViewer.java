@@ -43,12 +43,12 @@ public class MechAnICGraphViewer extends JPanel {
             }
         });
 
-        addNode("hello");
-        addNode("bye");
+        addAnnotationNode("hello");
+        addAnnotationNode("bye");
 
     }
 
-    public void addNode(Object value) {
+    public void addAnnotationNode(Object value) {
         graph.getModel().beginUpdate();
         try {
             graph.insertVertex(parent, null, value, 20, 20,

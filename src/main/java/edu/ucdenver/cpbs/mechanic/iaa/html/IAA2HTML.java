@@ -428,9 +428,6 @@ public class IAA2HTML {
 					mark = span.getEnd();
 				} catch (StringIndexOutOfBoundsException sioobe) {
 					sioobe.printStackTrace();
-					System.out.println("annotationText=" + annotationText);
-					System.out.println("annotation = " + annotation.getSpans().get(0));
-					System.out.println("annotationTextName = " + annotationTextName);
 
 				}
 

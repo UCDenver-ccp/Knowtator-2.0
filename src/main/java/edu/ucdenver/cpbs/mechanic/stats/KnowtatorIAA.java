@@ -115,7 +115,6 @@ public class KnowtatorIAA {
 
 	private void initHTML() throws IAAException {
 		try {
-			System.out.println("Making IAA HTML in " + outputDirectory);
 			html = new PrintStream(new File(outputDirectory, "index.html"));
 			html.println("<html><head><title>Inter-Annotator Agreement</title></head>");
 			html.println("<body><ul>");
@@ -129,8 +128,6 @@ public class KnowtatorIAA {
 		html.println("</body></html>");
 		html.flush();
 		html.close();
-
-		System.out.println("Closing IAA HTML");
 	}
 
 	private void initTextSourceAnnotations() throws IAAException {

@@ -693,4 +693,8 @@ public class Annotation {
 		return sb.toString();
 	}
 
+	@Override
+	public String toString() {
+		return String.format("%s\n%s", super.toString(), owlClass.toStringID());
+	}
 }
