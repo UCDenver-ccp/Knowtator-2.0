@@ -1,7 +1,7 @@
 package edu.ucdenver.cpbs.mechanic.Commands;
 
 import edu.ucdenver.cpbs.mechanic.MechAnICView;
-import edu.ucdenver.cpbs.mechanic.TextAnnotation.TextAnnotation;
+import edu.ucdenver.cpbs.mechanic.iaa.Annotation;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICIcons;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICTextViewer;
 import org.protege.editor.core.ui.view.DisposableAction;
@@ -34,7 +34,7 @@ public class AddTextAnnotationNodeCommand extends DisposableAction {
     }
 
     private void addNode() {
-        TextAnnotation selectedAnnotation = ((MechAnICTextViewer) ((JScrollPane) (view.getTextViewerTabbedPane().getSelectedComponent())).getViewport().getView()).getTextAnnotationManager().getSelectedAnnotation();
+        Annotation selectedAnnotation = ((MechAnICTextViewer) ((JScrollPane) (view.getTextViewerTabbedPane().getSelectedComponent())).getViewport().getView()).getTextAnnotationManager().getSelectedAnnotation();
         if (selectedAnnotation != null) {
             view.getGraphViewer().addNode(selectedAnnotation);
         }

@@ -25,15 +25,16 @@
  * Contributor(s):
  *   Philip V. Ogren <philip@ogren.info> (Original Author)
  */
-package edu.uchsc.ccp.iaa.matcher;
+package edu.ucdenver.cpbs.mechanic.iaa.matcher;
+
+import edu.ucdenver.cpbs.mechanic.iaa.Annotation;
+import edu.ucdenver.cpbs.mechanic.iaa.IAA;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.uchsc.ccp.iaa.Annotation;
-import edu.uchsc.ccp.iaa.IAA;
-
+@SuppressWarnings({"JavadocReference", "unused", "JavaDoc"})
 public class SpanMatcher implements Matcher {
 	/**
 	 * This method will return an annotation with the same class and spans. If
@@ -56,14 +57,14 @@ public class SpanMatcher implements Matcher {
 	 */
 
 	public Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
-			MatchResult matchResult) {
+							MatchResult matchResult) {
 		Annotation spanAndClassMatch = ClassAndSpanMatcher.match(annotation, compareSetName, iaa, excludeAnnotations);
 		if (spanAndClassMatch != null) {
 			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 			return spanAndClassMatch;
 		}
 
-		Set<Annotation> candidateAnnotations = new HashSet<Annotation>(iaa.getExactlyOverlappingAnnotations(annotation,
+		Set<Annotation> candidateAnnotations = new HashSet<>(iaa.getExactlyOverlappingAnnotations(annotation,
 				compareSetName));
 		candidateAnnotations.remove(excludeAnnotations);
 

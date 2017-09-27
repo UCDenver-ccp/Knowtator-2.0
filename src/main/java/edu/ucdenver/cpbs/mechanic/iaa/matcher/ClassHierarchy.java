@@ -26,10 +26,10 @@
  *   Philip V. Ogren <philip@ogren.info> (Original Author)
  */
 
-package edu.uchsc.ccp.iaa.matcher;
+package edu.ucdenver.cpbs.mechanic.iaa.matcher;
 
 import java.util.Set;
 
 public interface ClassHierarchy {
-	public Set<String> getSubclasses(String className);
+	Set<String> getSubclasses(String className);
 }

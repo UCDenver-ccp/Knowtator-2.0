@@ -26,8 +26,9 @@
  *   Philip V. Ogren <philip@ogren.info> (Original Author)
  */
 
-package edu.uchsc.ccp.iaa;
+package edu.ucdenver.cpbs.mechanic.iaa;
 
+@SuppressWarnings("unused")
 public class IAAException extends Exception {
 
 	public IAAException() {

@@ -25,22 +25,23 @@
  * Contributor(s):
  *   Philip V. Ogren <philip@ogren.info> (Original Author)
  */
-package edu.uchsc.ccp.iaa.matcher;
+package edu.ucdenver.cpbs.mechanic.iaa.matcher;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("unused")
 public class ClassHierarchyImpl implements ClassHierarchy {
 
-	Map<String, Set<String>> subclassMap;
+	private Map<String, Set<String>> subclassMap;
 
 	public ClassHierarchyImpl(Map<String, Set<String>> subclassMap) {
 		this.subclassMap = subclassMap;
 	}
 
 	public Set<String> getSubclasses(String className) {
-		Set<String> returnValues = new HashSet<String>();
+		Set<String> returnValues = new HashSet<>();
 		returnValues.add(className);
 		collectSubclasses(className, returnValues);
 		return returnValues;

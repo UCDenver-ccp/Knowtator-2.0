@@ -56,9 +56,9 @@ public class AddTextAnnotationCommand extends DisposableAction {
             MechAnICTextViewer textViewer = (MechAnICTextViewer) ((JScrollPane) tabbedPane.getSelectedComponent()).getViewport().getView();
             Integer spanStart = textViewer.getSelectionStart();
             Integer spanEnd = textViewer.getSelectionEnd();
-            String spannedText = textViewer.getSelectedText();
+//            String spannedText = textViewer.getSelectedText();
             try {
-                textViewer.getTextAnnotationManager().addTextAnnotation(cls, spanStart, spanEnd, spannedText);
+                textViewer.getTextAnnotationManager().addTextAnnotation(cls, spanStart, spanEnd);
                 textViewer.getTextAnnotationManager().highlightAnnotation(spanStart, spanEnd, textViewer, cls);
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();

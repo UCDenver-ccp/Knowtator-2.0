@@ -26,15 +26,17 @@
  *   Philip V. Ogren <philip@ogren.info> (Original Author)
  */
 
-package edu.uchsc.ccp.iaa.matcher;
+package edu.ucdenver.cpbs.mechanic.iaa.matcher;
+
+import edu.ucdenver.cpbs.mechanic.iaa.Annotation;
+import edu.ucdenver.cpbs.mechanic.iaa.IAA;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.uchsc.ccp.iaa.Annotation;
-import edu.uchsc.ccp.iaa.IAA;
 
+@SuppressWarnings("JavadocReference")
 public class ClassAndSpanMatcher implements Matcher {
 
 	/**
@@ -52,7 +54,7 @@ public class ClassAndSpanMatcher implements Matcher {
 	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
 	 */
 	public Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
-			MatchResult matchResult) {
+							MatchResult matchResult) {
 		Annotation match = match(annotation, compareSetName, iaa, excludeAnnotations);
 		if (match != null) {
 			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);

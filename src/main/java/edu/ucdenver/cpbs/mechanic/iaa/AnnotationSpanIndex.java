@@ -26,7 +26,7 @@
  *   Philip V. Ogren <philip@ogren.info> (Original Author)
  */
 
-package edu.uchsc.ccp.iaa;
+package edu.ucdenver.cpbs.mechanic.iaa;
 
 import java.util.Collection;
 import java.util.HashMap;

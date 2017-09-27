@@ -25,16 +25,17 @@
  * Contributor(s):
  *   Philip V. Ogren <philip@ogren.info> (Original Author)
  */
-package edu.uchsc.ccp.iaa.matcher;
+package edu.ucdenver.cpbs.mechanic.iaa.matcher;
+
+import edu.ucdenver.cpbs.mechanic.iaa.Annotation;
+import edu.ucdenver.cpbs.mechanic.iaa.IAA;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import edu.uchsc.ccp.iaa.Annotation;
-import edu.uchsc.ccp.iaa.IAA;
-
+@SuppressWarnings({"JavadocReference", "unused"})
 public class SpansOverlapSimpleFeatureMatcher implements Matcher {
 
 	/**
@@ -76,7 +77,7 @@ public class SpansOverlapSimpleFeatureMatcher implements Matcher {
 	 */
 
 	public Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
-			MatchResult matchResult) {
+							MatchResult matchResult) {
 
 		Annotation spansExactSimpleFeatureMatch = SpansExactSimpleFeatureMatcher.match(annotation, compareSetName, iaa,
 				excludeAnnotations, matchResult);
@@ -89,14 +90,14 @@ public class SpansOverlapSimpleFeatureMatcher implements Matcher {
 			return spansExactSimpleFeatureMatch;
 		}
 
-		Set<Annotation> candidateAnnotations = new HashSet<Annotation>(iaa.getOverlappingAnnotations(annotation,
+		Set<Annotation> candidateAnnotations = new HashSet<>(iaa.getOverlappingAnnotations(annotation,
 				compareSetName));
 		candidateAnnotations.removeAll(excludeAnnotations);
 
 		// we are going to collect all matches because we want to return the
 		// shortest of the matches if there is more than one.
-		List<Annotation> nontrivialMatches = new ArrayList<Annotation>();
-		List<Annotation> trivialMatches = new ArrayList<Annotation>();
+		List<Annotation> nontrivialMatches = new ArrayList<>();
+		List<Annotation> trivialMatches = new ArrayList<>();
 
 		boolean nontrivialNonmatch = false;
 

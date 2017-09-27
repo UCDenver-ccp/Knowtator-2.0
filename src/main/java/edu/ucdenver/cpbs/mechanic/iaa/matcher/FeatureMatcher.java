@@ -25,34 +25,30 @@
  * Contributor(s):
  *   Philip V. Ogren <philip@ogren.info> (Original Author)
  */
-package edu.uchsc.ccp.iaa.matcher;
+package edu.ucdenver.cpbs.mechanic.iaa.matcher;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import edu.ucdenver.cpbs.mechanic.iaa.Annotation;
+import edu.ucdenver.cpbs.mechanic.iaa.IAA;
 
-import edu.uchsc.ccp.iaa.Annotation;
-import edu.uchsc.ccp.iaa.IAA;
+import java.util.*;
 
+@SuppressWarnings("unused")
 public class FeatureMatcher implements Matcher {
-	boolean matchClasses = true;
+	private boolean matchClasses = true;
 
-	int matchSpans = Annotation.SPANS_OVERLAP_COMPARISON;
+	private int matchSpans = Annotation.SPANS_OVERLAP_COMPARISON;
 
-	Set<String> comparedSimpleFeatures = new HashSet<String>();
+	private Set<String> comparedSimpleFeatures = new HashSet<>();
 
-	Map<String, ComplexFeatureMatchCriteria> comparedComplexFeatures = new HashMap<String, ComplexFeatureMatchCriteria>();
+	private Map<String, ComplexFeatureMatchCriteria> comparedComplexFeatures = new HashMap<>();
 
-	String name;
+	private String name;
 
 	public FeatureMatcher() {
 		this("Feature Matcher");
 	}
 
-	public FeatureMatcher(String name) {
+	private FeatureMatcher(String name) {
 		this.name = name;
 	}
 
@@ -74,7 +70,7 @@ public class FeatureMatcher implements Matcher {
 
 	public Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
 			MatchResult matchResult) {
-		Set<Annotation> candidateAnnotations = new HashSet<Annotation>();
+		Set<Annotation> candidateAnnotations = new HashSet<>();
 		if (matchClasses) {
 			if (matchSpans == Annotation.SPANS_EXACT_COMPARISON) {
 				candidateAnnotations.addAll(iaa.getAnnotationsOfSameType(annotation, compareSetName));
@@ -115,10 +111,10 @@ public class FeatureMatcher implements Matcher {
 						compareSetName);
 				Set<Annotation> overlappingAnnotations = iaa.getOverlappingAnnotations(annotation, compareSetName);
 
-				Set<Annotation> classAndExactSpanAnnotations = new HashSet<Annotation>(classAnnotations);
+				Set<Annotation> classAndExactSpanAnnotations = new HashSet<>(classAnnotations);
 				classAndExactSpanAnnotations.retainAll(exactlyOverlappingAnnotations);
 
-				Set<Annotation> classAndOverlappingSpanAnnotations = new HashSet<Annotation>(classAnnotations);
+				Set<Annotation> classAndOverlappingSpanAnnotations = new HashSet<>(classAnnotations);
 				classAndOverlappingSpanAnnotations.retainAll(overlappingAnnotations);
 
 				candidateAnnotations.addAll(classAndExactSpanAnnotations);
@@ -139,10 +135,10 @@ public class FeatureMatcher implements Matcher {
 						compareSetName);
 				Set<Annotation> overlappingAnnotations = iaa.getOverlappingAnnotations(annotation, compareSetName);
 
-				Set<Annotation> classAndExactSpanAnnotations = new HashSet<Annotation>(classAnnotations);
+				Set<Annotation> classAndExactSpanAnnotations = new HashSet<>(classAnnotations);
 				classAndExactSpanAnnotations.retainAll(exactlyOverlappingAnnotations);
 
-				Set<Annotation> classAndOverlappingSpanAnnotations = new HashSet<Annotation>(classAnnotations);
+				Set<Annotation> classAndOverlappingSpanAnnotations = new HashSet<>(classAnnotations);
 				classAndOverlappingSpanAnnotations.retainAll(overlappingAnnotations);
 
 				candidateAnnotations.addAll(classAndExactSpanAnnotations);
@@ -163,8 +159,8 @@ public class FeatureMatcher implements Matcher {
 
 		// we are going to collect all matches because we want to return the
 		// shortest of the matches if there is more than one.
-		List<Annotation> nontrivialMatches = new ArrayList<Annotation>();
-		List<Annotation> trivialMatches = new ArrayList<Annotation>();
+		List<Annotation> nontrivialMatches = new ArrayList<>();
+		List<Annotation> trivialMatches = new ArrayList<>();
 		boolean nontrivialNonmatch = false;
 
 		for (Annotation candidateAnnotation : candidateAnnotations) {
@@ -196,15 +192,19 @@ public class FeatureMatcher implements Matcher {
 				}
 			}
 
-			if (result == MatchResult.TRIVIAL_NONMATCH) {
-				continue;
-			} else if (result == MatchResult.NONTRIVIAL_NONMATCH) {
-				nontrivialNonmatch = true;
-			} else if (result == MatchResult.TRIVIAL_MATCH) {
-				trivialMatches.add(candidateAnnotation);
-			} else if (result == MatchResult.NONTRIVIAL_MATCH) {
-				nontrivialMatches.add(candidateAnnotation);
-			}
+            switch (result) {
+                case MatchResult.TRIVIAL_NONMATCH:
+                    break;
+                case MatchResult.NONTRIVIAL_NONMATCH:
+                    nontrivialNonmatch = true;
+                    break;
+                case MatchResult.TRIVIAL_MATCH:
+                    trivialMatches.add(candidateAnnotation);
+                    break;
+                case MatchResult.NONTRIVIAL_MATCH:
+                    nontrivialMatches.add(candidateAnnotation);
+                    break;
+            }
 		}
 
 		if (nontrivialMatches.size() > 0) {

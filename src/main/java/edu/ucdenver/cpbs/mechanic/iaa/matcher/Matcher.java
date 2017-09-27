@@ -25,12 +25,13 @@
  * Contributor(s):
  *   Philip V. Ogren <philip@ogren.info> (Original Author)
  */
-package edu.uchsc.ccp.iaa.matcher;
+package edu.ucdenver.cpbs.mechanic.iaa.matcher;
+
+import edu.ucdenver.cpbs.mechanic.iaa.Annotation;
+import edu.ucdenver.cpbs.mechanic.iaa.IAA;
 
 import java.util.Set;
 
-import edu.uchsc.ccp.iaa.Annotation;
-import edu.uchsc.ccp.iaa.IAA;
 
 public interface Matcher {
 	/**
@@ -49,12 +50,12 @@ public interface Matcher {
 	 *            given in MatchResult.
 	 * @return the annotation that was matched. If none exists then return null.
 	 */
-	public Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
-			MatchResult matchResult);
+	Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
+					 MatchResult matchResult);
 
-	public String getName();
+	String getName();
 
-	public String getDescription();
+	String getDescription();
 
-	public boolean returnsTrivials();
+	boolean returnsTrivials();
 }

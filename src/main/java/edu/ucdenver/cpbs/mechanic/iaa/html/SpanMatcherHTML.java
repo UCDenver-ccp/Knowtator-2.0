@@ -26,7 +26,12 @@
  *   Philip V. Ogren <philip@ogren.info> (Original Author)
  */
 
-package edu.uchsc.ccp.iaa.html;
+package edu.ucdenver.cpbs.mechanic.iaa.html;
+
+import edu.ucdenver.cpbs.mechanic.iaa.Annotation;
+import edu.ucdenver.cpbs.mechanic.iaa.AnnotationSpanIndex;
+import edu.ucdenver.cpbs.mechanic.iaa.IAA;
+import edu.ucdenver.cpbs.mechanic.iaa.matcher.Matcher;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -37,15 +42,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import edu.uchsc.ccp.iaa.Annotation;
-import edu.uchsc.ccp.iaa.AnnotationSpanIndex;
-import edu.uchsc.ccp.iaa.IAA;
-import edu.uchsc.ccp.iaa.matcher.Matcher;
-
+@SuppressWarnings("unused")
 public class SpanMatcherHTML {
 
 	public static void printIAA(IAA iaa, Matcher matcher, File directory, int numberOfDocs,
-			Map<Annotation, String> annotationTexts, Map<Annotation, String> annotationTextNames) throws Exception {
+								Map<Annotation, String> annotationTexts, Map<Annotation, String> annotationTextNames) throws Exception {
 		NumberFormat percentageFormat = NumberFormat.getPercentInstance();
 		percentageFormat.setMinimumFractionDigits(2);
 
@@ -83,7 +84,7 @@ public class SpanMatcherHTML {
 		Map<String, Set<Annotation>> sortedAllwayMatches = IAA2HTML.sortByType(classes, allwayMatchesSingleSet);
 		Map<String, Set<Annotation>> sortedAllwayNonmatches = IAA2HTML.sortByType(classes, allwayNonmatchesSingleSet);
 
-		java.util.List<String> sortedTypes = new ArrayList<String>(classes);
+		java.util.List<String> sortedTypes = new ArrayList<>(classes);
 		Collections.sort(sortedTypes);
 
 		for (String type : sortedTypes) {
@@ -122,8 +123,8 @@ public class SpanMatcherHTML {
 		html.close();
 	}
 
-	public static Map<String, int[]> errorMatrix(Set<Annotation> matches, Map<Annotation, Set<Annotation>> matchSets) {
-		Map<String, int[]> counts = new HashMap<String, int[]>();
+	private static Map<String, int[]> errorMatrix(Set<Annotation> matches, Map<Annotation, Set<Annotation>> matchSets) {
+		Map<String, int[]> counts = new HashMap<>();
 
 		for (Annotation match : matches) {
 			Set<Annotation> matchedAnnotations = matchSets.get(match);

@@ -26,7 +26,10 @@
  *   Philip V. Ogren <philip@ogren.info> (Original Author)
  */
 
-package edu.uchsc.ccp.iaa;
+package edu.ucdenver.cpbs.mechanic.iaa;
+
+import edu.ucdenver.cpbs.mechanic.iaa.matcher.MatchResult;
+import org.semanticweb.owlapi.model.OWLClass;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,28 +40,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import edu.uchsc.ccp.iaa.matcher.MatchResult;
-
+@SuppressWarnings({"JavadocReference", "unused", "JavaDoc", "unchecked"})
 public class Annotation {
-	String setName = "Set name not specified";
+	private String setName = "Set name not specified";
 
-	String docID = "Document id not specified";
+	private String docID = "Document id not specified";
 
-	String annotationClass;
+	private String annotationClass;
 
-	List<Span> spans;
+	private List<Span> spans;
 
 	// key is a feature name, value is the value of the feature
-	Map<String, Set<Object>> simpleFeatures;
+	private Map<String, Set<Object>> simpleFeatures;
 
-	Map<String, Set<Annotation>> complexFeatures;
+	private Map<String, Set<Annotation>> complexFeatures;
 
 	private int size = 0;
+	private OWLClass owlClass;
 
 	public Annotation() {
-		spans = new ArrayList<Span>();
-		simpleFeatures = new HashMap<String, Set<Object>>();
-		complexFeatures = new HashMap<String, Set<Annotation>>();
+		spans = new ArrayList<>();
+		simpleFeatures = new HashMap<>();
+		complexFeatures = new HashMap<>();
 	}
 
 	public String getSetName() {
@@ -81,8 +84,13 @@ public class Annotation {
 		return annotationClass;
 	}
 
-	public void setAnnotationClass(String type) {
-		this.annotationClass = type;
+	public OWLClass getOwlClass() {
+		return owlClass;
+	}
+
+	public void setOwlClass(OWLClass owlClass) {
+		this.owlClass = owlClass;
+		annotationClass = owlClass.toStringID();
 	}
 
 	public List<Span> getSpans() {
@@ -100,11 +108,11 @@ public class Annotation {
 		this.spans.add(span);
 	}
 
-	public Set<String> getSimpleFeatureNames() {
+	private Set<String> getSimpleFeatureNames() {
 		return Collections.unmodifiableSet(simpleFeatures.keySet());
 	}
 
-	public Set<Object> getSimpleFeatureValues(String featureName) {
+	private Set<Object> getSimpleFeatureValues(String featureName) {
 		if (simpleFeatures.get(featureName) == null)
 			return Collections.emptySet();
 		return Collections.unmodifiableSet(simpleFeatures.get(featureName));
@@ -118,23 +126,23 @@ public class Annotation {
 		if (featureValues == null)
 			return;
 		complexFeatures.remove(featureName);
-		simpleFeatures.put(featureName, new HashSet<Object>(featureValues));
+		simpleFeatures.put(featureName, new HashSet<>(featureValues));
 	}
 
 	public void setSimpleFeature(String featureName, Object featureValue) {
 		if (featureValue == null)
 			return;
 		complexFeatures.remove(featureName);
-		HashSet<Object> featureValues = new HashSet<Object>();
+		HashSet<Object> featureValues = new HashSet<>();
 		featureValues.add(featureValue);
 		simpleFeatures.put(featureName, featureValues);
 	}
 
-	public Set<String> getComplexFeatureNames() {
+	private Set<String> getComplexFeatureNames() {
 		return Collections.unmodifiableSet(complexFeatures.keySet());
 	}
 
-	public Set<Annotation> getComplexFeatureValues(String featureName) {
+	private Set<Annotation> getComplexFeatureValues(String featureName) {
 		if (complexFeatures.get(featureName) == null)
 			return Collections.emptySet();
 		return Collections.unmodifiableSet(complexFeatures.get(featureName));
@@ -146,18 +154,18 @@ public class Annotation {
 
 	public void setComplexFeature(String featureName, Set<Annotation> featureValues) {
 		simpleFeatures.remove(featureName);
-		complexFeatures.put(featureName, new HashSet<Annotation>(featureValues));
+		complexFeatures.put(featureName, new HashSet<>(featureValues));
 	}
 
 	public void setComplexFeature(String featureName, Annotation featureValue) {
 		simpleFeatures.remove(featureName);
-		HashSet<Annotation> featureValues = new HashSet<Annotation>();
+		HashSet<Annotation> featureValues = new HashSet<>();
 		featureValues.add(featureValue);
 		complexFeatures.put(featureName, featureValues);
 	}
 
-	public Set<String> getFeatureNames() {
-		Set<String> featureNames = new HashSet<String>(simpleFeatures.keySet());
+	private Set<String> getFeatureNames() {
+		Set<String> featureNames = new HashSet<>(simpleFeatures.keySet());
 		featureNames.addAll(complexFeatures.keySet());
 		return Collections.unmodifiableSet(featureNames);
 	}
@@ -167,7 +175,7 @@ public class Annotation {
 	 * @param annotation2
 	 * @return true if the annotations have the same spans
 	 */
-	public static boolean spansMatch(Annotation annotation1, Annotation annotation2) {
+	static boolean spansMatch(Annotation annotation1, Annotation annotation2) {
 		return Span.spansMatch(annotation1.getSpans(), annotation2.getSpans());
 	}
 
@@ -183,17 +191,15 @@ public class Annotation {
 	 * returns true only if both annotations have the same non-null
 	 * annotationClass.
 	 */
-	public static boolean classesMatch(Annotation annotation1, Annotation annotation2) {
+	private static boolean classesMatch(Annotation annotation1, Annotation annotation2) {
 		String cls1 = annotation1.getAnnotationClass();
 		String cls2 = annotation2.getAnnotationClass();
 
-		if (cls1 == null || cls2 == null)
-			return false;
+		return cls1 != null && cls2 != null && cls1.equals(cls2);
 
-		return cls1.equals(cls2);
 	}
 
-	public static boolean spansOverlap(Annotation annotation1, Annotation annotation2) {
+	static boolean spansOverlap(Annotation annotation1, Annotation annotation2) {
 		return Span.intersects(annotation1.getSpans(), annotation2.getSpans());
 	}
 
@@ -256,7 +262,7 @@ public class Annotation {
 	 * 
 	 */
 
-	public static int trivialCompare(Set values1, Set values2) {
+	private static int trivialCompare(Set values1, Set values2) {
 		if (values1 == null && values2 == null)
 			return MatchResult.TRIVIAL_MATCH; // if both are null than it is a
 											  // trivial match
@@ -302,7 +308,7 @@ public class Annotation {
 	 * @see #trivialCompare(Set, Set)
 	 */
 
-	public static int compareSimpleFeature(Annotation annotation1, Annotation annotation2, String featureName) {
+	private static int compareSimpleFeature(Annotation annotation1, Annotation annotation2, String featureName) {
 		// if(!annotation1.isSimpleFeature(featureName) ||
 		// !annotation2.isSimpleFeature(featureName)) return
 		// MatchResult.TRIVIAL_NONMATCH;
@@ -313,7 +319,7 @@ public class Annotation {
 			return trivialResult;
 
 		Set<Object> featureValues1 = annotation1.getSimpleFeatureValues(featureName);
-		Set<Object> featureValues2 = new HashSet<Object>(annotation2.getSimpleFeatureValues(featureName));
+		Set<Object> featureValues2 = new HashSet<>(annotation2.getSimpleFeatureValues(featureName));
 
 		for (Object featureValue : featureValues1) {
 			if (!featureValues2.contains(featureValue)) {
@@ -348,7 +354,7 @@ public class Annotation {
 	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#TRIVIAL_NONMATCH
 	 */
 	public static int compareSimpleFeatures(Annotation annotation1, Annotation annotation2) {
-		Set<String> featureNames = new HashSet<String>(annotation1.getSimpleFeatureNames());
+		Set<String> featureNames = new HashSet<>(annotation1.getSimpleFeatureNames());
 		featureNames.addAll(annotation2.getSimpleFeatureNames());
 
 		if (featureNames.size() == 0)
@@ -468,7 +474,7 @@ public class Annotation {
 		// MatchResult.TRIVIAL_NONMATCH;
 
 		Set<Annotation> featureValues1 = annotation1.getComplexFeatureValues(complexFeatureName);
-		Set<Annotation> featureValues2 = new HashSet<Annotation>(annotation2
+		Set<Annotation> featureValues2 = new HashSet<>(annotation2
 				.getComplexFeatureValues(complexFeatureName));
 
 		int trivialResult = trivialCompare(featureValues1, featureValues2);
@@ -515,7 +521,7 @@ public class Annotation {
 
 	public static final int SPANS_EXACT_COMPARISON = 2;
 
-	public static final int IGNORE_SPANS_COMPARISON = 3;
+	private static final int IGNORE_SPANS_COMPARISON = 3;
 
 	/**
 	 * This method compares two annotations with respect to their spans,
@@ -545,8 +551,8 @@ public class Annotation {
 	 *      Annotation, Set)
 	 */
 
-	public static int compareAnnotations(Annotation annotation1, Annotation annotation2, int spanComparison,
-			boolean compareClass, Set<String> simpleFeatureNames) {
+	private static int compareAnnotations(Annotation annotation1, Annotation annotation2, int spanComparison,
+										  boolean compareClass, Set<String> simpleFeatureNames) {
 		boolean spansMatch = false;
 		boolean classesMatch = false;
 
@@ -597,7 +603,7 @@ public class Annotation {
 		else if (spans.size() == 1) {
 			return Span.substring(annotationText, spans.get(0));
 		} else {
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			sb.append(Span.substring(annotationText, spans.get(0)));
 			for (int i = 1; i < spans.size(); i++) {
 				sb.append(spanSeparator);
@@ -660,23 +666,23 @@ public class Annotation {
 		return toHTML(true);
 	}
 
-	public String toHTML(boolean printComplexFeatures) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("<ul><li>" + setName + "</li>");
-		sb.append("<li>class = " + annotationClass + "</li>");
+	private String toHTML(boolean printComplexFeatures) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<ul><li>").append(setName).append("</li>");
+		sb.append("<li>class = ").append(annotationClass).append("</li>");
 		sb.append("<li>spans = ");
 		for (Span span : spans)
-			sb.append(span.toString() + " ");
+			sb.append(span.toString()).append(" ");
 		sb.append("</li>");
 
 		if (simpleFeatures.size() > 0) {
 			for (String featureName : simpleFeatures.keySet()) {
-				sb.append("<li>" + featureName + " = <b>" + simpleFeatures.get(featureName) + "</b></li>");
+				sb.append("<li>").append(featureName).append(" = <b>").append(simpleFeatures.get(featureName)).append("</b></li>");
 			}
 		}
 		if (printComplexFeatures && complexFeatures.size() > 0) {
 			for (String featureName : complexFeatures.keySet()) {
-				sb.append("<li>" + featureName + " = ");
+				sb.append("<li>").append(featureName).append(" = ");
 				Set<Annotation> features = complexFeatures.get(featureName);
 				for (Annotation feature : features) {
 					sb.append(feature.toHTML(false));

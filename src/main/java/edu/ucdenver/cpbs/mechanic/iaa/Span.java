@@ -24,15 +24,16 @@
  *   Jeremy LaCivita <lacivita@linc.cis.upenn.edu>
  */
 
-/**
+/*
  *  This code was taken from the wordfreak project and modified for Knowtator.  See
  *  license above for more information.
  *
  */
-package edu.uchsc.ccp.iaa;
+package edu.ucdenver.cpbs.mechanic.iaa;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class Span implements Comparable {
 	private int start;
 
@@ -53,9 +54,7 @@ public class Span implements Comparable {
 	}
 
 	public static boolean isValid(int start, int end) {
-		if (start > end || start < 0)
-			return false;
-		return true;
+		return start <= end && start >= 0;
 	}
 
 	public int length() {
@@ -83,13 +82,7 @@ public class Span implements Comparable {
 		if (getStart() < span.getStart()) {
 			return -1;
 		} else if (getStart() == span.getStart()) {
-			if (getEnd() > span.getEnd()) {
-				return -1;
-			} else if (getEnd() < span.getEnd()) {
-				return 1;
-			} else {
-				return 0;
-			}
+			return Integer.compare(span.getEnd(), getEnd());
 		} else {
 			return 1;
 		}
@@ -122,7 +115,7 @@ public class Span implements Comparable {
 	/**
 	 * we need some junit tests
 	 */
-	public boolean intersects(Span span) {
+	private boolean intersects(Span span) {
 		int spanStart = span.getStart();
 		// either span's start is in this or this' start is in span
 		return this.contains(span)
@@ -157,7 +150,7 @@ public class Span implements Comparable {
 		return new Span(start, end);
 	}
 
-	public static boolean intersects(List<Span> spans1, List<Span> spans2) {
+	static boolean intersects(List<Span> spans1, List<Span> spans2) {
 		for (Span span1 : spans1) {
 			for (Span span2 : spans2) {
 				if (span1.intersects(span2))
@@ -178,7 +171,7 @@ public class Span implements Comparable {
 	 *            sorted list of spans
 	 * @return true if the two lists of spans are the same.
 	 */
-	public static boolean spansMatch(List<Span> spans1, List<Span> spans2) {
+	static boolean spansMatch(List<Span> spans1, List<Span> spans2) {
 		if (spans1.size() == spans2.size()) {
 			for (int i = 0; i < spans1.size(); i++) {
 				if (!spans1.get(i).equals(spans2.get(i))) {

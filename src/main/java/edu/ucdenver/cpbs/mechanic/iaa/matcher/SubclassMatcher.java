@@ -25,14 +25,14 @@
  * Contributor(s):
  *   Philip V. Ogren <philip@ogren.info> (Original Author)
  */
-package edu.uchsc.ccp.iaa.matcher;
+package edu.ucdenver.cpbs.mechanic.iaa.matcher;
+
+import edu.ucdenver.cpbs.mechanic.iaa.Annotation;
+import edu.ucdenver.cpbs.mechanic.iaa.IAA;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
-import edu.uchsc.ccp.iaa.Annotation;
-import edu.uchsc.ccp.iaa.IAA;
 
 /**
  * This matcher is very similar to ClassMatcher.
@@ -41,13 +41,14 @@ import edu.uchsc.ccp.iaa.IAA;
  * 
  */
 
+@SuppressWarnings({"JavadocReference", "JavaDoc", "unused"})
 public class SubclassMatcher implements Matcher {
 
-	String className;
+	private String className;
 
-	Set<String> subclassNames;
+	private Set<String> subclassNames;
 
-	ClassHierarchy hierarchy;
+	private ClassHierarchy hierarchy;
 
 	public SubclassMatcher(ClassHierarchy hierarchy) {
 		this.hierarchy = hierarchy;
@@ -80,7 +81,7 @@ public class SubclassMatcher implements Matcher {
 	 * @see #setIAAClass(String)
 	 */
 	public Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
-			MatchResult matchResult) {
+							MatchResult matchResult) {
 
 		String annotationClassName = annotation.getAnnotationClass();
 		if (!subclassNames.contains(annotationClassName)) {
@@ -94,12 +95,12 @@ public class SubclassMatcher implements Matcher {
 			return classMatch;
 		}
 
-		Set<Annotation> candidateAnnotations = new HashSet<Annotation>();
+		Set<Annotation> candidateAnnotations = new HashSet<>();
 		for (String subclassName : subclassNames) {
 			candidateAnnotations.addAll(iaa.getAnnotationsOfClass(subclassName, compareSetName));
 		}
 
-		Set<Annotation> exactlyOverlappingAnnotations = new HashSet<Annotation>(iaa.getExactlyOverlappingAnnotations(
+		Set<Annotation> exactlyOverlappingAnnotations = new HashSet<>(iaa.getExactlyOverlappingAnnotations(
 				annotation, compareSetName));
 		exactlyOverlappingAnnotations.retainAll(candidateAnnotations);
 		exactlyOverlappingAnnotations.removeAll(excludeAnnotations);
@@ -108,7 +109,7 @@ public class SubclassMatcher implements Matcher {
 			return exactlyOverlappingAnnotations.iterator().next();
 		}
 
-		Set<Annotation> overlappingAnnotations = new HashSet<Annotation>(iaa.getOverlappingAnnotations(annotation,
+		Set<Annotation> overlappingAnnotations = new HashSet<>(iaa.getOverlappingAnnotations(annotation,
 				compareSetName));
 		overlappingAnnotations.retainAll(candidateAnnotations);
 		overlappingAnnotations.removeAll(excludeAnnotations);
@@ -128,7 +129,7 @@ public class SubclassMatcher implements Matcher {
 	 * 
 	 * @param className
 	 */
-	public void setIAAClass(String className) {
+	private void setIAAClass(String className) {
 		this.className = className;
 		subclassNames = hierarchy.getSubclasses(className);
 	}

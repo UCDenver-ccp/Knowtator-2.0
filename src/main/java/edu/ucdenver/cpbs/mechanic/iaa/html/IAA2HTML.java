@@ -26,7 +26,13 @@
  *   Philip V. Ogren <philip@ogren.info> (Original Author)
  */
 
-package edu.uchsc.ccp.iaa.html;
+package edu.ucdenver.cpbs.mechanic.iaa.html;
+
+import edu.ucdenver.cpbs.mechanic.iaa.Annotation;
+import edu.ucdenver.cpbs.mechanic.iaa.AnnotationSpanIndex;
+import edu.ucdenver.cpbs.mechanic.iaa.IAA;
+import edu.ucdenver.cpbs.mechanic.iaa.Span;
+import edu.ucdenver.cpbs.mechanic.iaa.matcher.Matcher;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,16 +47,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import edu.uchsc.ccp.iaa.Annotation;
-import edu.uchsc.ccp.iaa.AnnotationSpanIndex;
-import edu.uchsc.ccp.iaa.IAA;
-import edu.uchsc.ccp.iaa.Span;
-import edu.uchsc.ccp.iaa.matcher.Matcher;
-
+@SuppressWarnings("unused")
 public class IAA2HTML {
 
 	public static void printIAA(IAA iaa, Matcher matcher, File directory, int numberOfDocs,
-			Map<Annotation, String> annotationTexts, Map<Annotation, String> annotationTextNames) throws Exception {
+								Map<Annotation, String> annotationTexts, Map<Annotation, String> annotationTextNames) throws Exception {
 		NumberFormat percentageFormat = NumberFormat.getPercentInstance();
 		percentageFormat.setMinimumFractionDigits(2);
 
@@ -138,7 +139,7 @@ public class IAA2HTML {
 		Map<String, Set<Annotation>> sortedAllwayNontrivialNonmatches = sortByType(classes,
 				nontrivialAllwayNonmatchesSingleSet);
 
-		java.util.List<String> sortedTypes = new ArrayList<String>(classes);
+		List<String> sortedTypes = new ArrayList<>(classes);
 		Collections.sort(sortedTypes);
 
 		for (String type : sortedTypes) {
@@ -274,7 +275,7 @@ public class IAA2HTML {
 			Set<Annotation> nonmatches = allwayNonmatches.get(set);
 			Map<String, Set<Annotation>> sortedNonmatches = sortByType(classes, nonmatches);
 
-			Map<Annotation, Set<Annotation>> comparisonAnnotations = new HashMap<Annotation, Set<Annotation>>();
+			Map<Annotation, Set<Annotation>> comparisonAnnotations = new HashMap<>();
 			for (Annotation nonmatch : nonmatches) {
 				comparisonAnnotations.put(nonmatch, getCandidateAnnotations(nonmatch, spanIndex));
 			}
@@ -329,8 +330,8 @@ public class IAA2HTML {
 		html.println("</ul><hr>");
 	}
 
-	public static Set<Annotation> getCandidateAnnotations(Annotation annotation, AnnotationSpanIndex spanIndex) {
-		Set<Annotation> candidateAnnotations = new HashSet<Annotation>();
+	private static Set<Annotation> getCandidateAnnotations(Annotation annotation, AnnotationSpanIndex spanIndex) {
+		Set<Annotation> candidateAnnotations = new HashSet<>();
 		String set = annotation.getSetName();
 		String docID = annotation.getDocID();
 
@@ -347,9 +348,9 @@ public class IAA2HTML {
 		return candidateAnnotations;
 	}
 
-	public static void printInstances(PrintStream out, Map<String, Set<Annotation>> sortedAnnotations,
-			java.util.List<String> sortedTypes, Map<Annotation, String> annotationTexts,
-			Map<Annotation, String> annotationTextNames, Map<Annotation, Set<Annotation>> comparisonAnnotations) {
+	private static void printInstances(PrintStream out, Map<String, Set<Annotation>> sortedAnnotations,
+									   List<String> sortedTypes, Map<Annotation, String> annotationTexts,
+									   Map<Annotation, String> annotationTextNames, Map<Annotation, Set<Annotation>> comparisonAnnotations) {
 		for (String type : sortedTypes) {
 			out.println("<h2>" + type + "</h2>");
 			Set<Annotation> typeAnnotations = sortedAnnotations.get(type);
@@ -373,15 +374,15 @@ public class IAA2HTML {
 		}
 	}
 
-	public static Set<Annotation> getSingleSet(Map<String, Set<Annotation>> annotations) {
-		Set<Annotation> returnValues = new HashSet<Annotation>();
+	static Set<Annotation> getSingleSet(Map<String, Set<Annotation>> annotations) {
+		Set<Annotation> returnValues = new HashSet<>();
 		for (String setName : annotations.keySet()) {
 			returnValues.addAll(annotations.get(setName));
 		}
 		return returnValues;
 	}
 
-	public static void initHTML(PrintStream html, String title, String link, String linkLabel, String description) {
+	private static void initHTML(PrintStream html, String title, String link, String linkLabel, String description) {
 		html.println("<html>");
 		html.println("<head><title>" + title + "</title></head>");
 		html.println("<body>");
@@ -392,11 +393,11 @@ public class IAA2HTML {
 		html.println("<hr>");
 	}
 
-	public static Map<String, Set<Annotation>> sortByType(Set<String> types, Collection<Annotation> annotations) {
-		Map<String, Set<Annotation>> sortedAnnotations = new HashMap<String, Set<Annotation>>();
+	static Map<String, Set<Annotation>> sortByType(Set<String> types, Collection<Annotation> annotations) {
+		Map<String, Set<Annotation>> sortedAnnotations = new HashMap<>();
 
 		for (String type : types) {
-			sortedAnnotations.put(type, new HashSet<Annotation>());
+			sortedAnnotations.put(type, new HashSet<>());
 		}
 		for (Annotation annotation : annotations) {
 			String type = annotation.getAnnotationClass();
@@ -406,27 +407,24 @@ public class IAA2HTML {
 		return sortedAnnotations;
 	}
 
-	static void writeAnnotationTextSourceHTML(PrintStream out, Annotation annotation, String annotationText,
-			String annotationTextName) {
-		StringBuffer html = new StringBuffer("<hr><p>");
+	private static void writeAnnotationTextSourceHTML(PrintStream out, Annotation annotation, String annotationText,
+													  String annotationTextName) {
+		StringBuilder html = new StringBuilder("<hr><p>");
 		if (annotationTextName != null)
-			html.append("Text source name = " + annotationTextName + "<p>");
+			html.append("Text source name = ").append(annotationTextName).append("<p>");
 
 		if (annotationText != null) {
-			java.util.List<Span> spans = annotation.getSpans();
-			java.util.List<Span> modifiedSpans = new ArrayList<Span>(spans);
+			List<Span> spans = annotation.getSpans();
+			List<Span> modifiedSpans = new ArrayList<>(spans);
 
-			if (spans == null || spans.size() == 0) {
-				// spans should be the recursive spans
-			}
 			annotationText = shortenText(annotationText, modifiedSpans);
 
 			int mark = 0;
 
 			for (Span span : modifiedSpans) {
 				try {
-					html.append(annotationText.substring(mark, span.getStart()) + "<b>");
-					html.append(Span.substring(annotationText, span) + "</b>");
+					html.append(annotationText.substring(mark, span.getStart())).append("<b>");
+					html.append(Span.substring(annotationText, span)).append("</b>");
 					mark = span.getEnd();
 				} catch (StringIndexOutOfBoundsException sioobe) {
 					sioobe.printStackTrace();
@@ -443,7 +441,7 @@ public class IAA2HTML {
 		out.println(html.toString());
 	}
 
-	private static String shortenText(String text, java.util.List<Span> spans) {
+	private static String shortenText(String text, List<Span> spans) {
 		int frontBuffer = 150;
 		int endBuffer = 150;
 		if (spans.size() > 0) {
@@ -462,18 +460,18 @@ public class IAA2HTML {
 		return text;
 	}
 
-	static void printAnnotationHTML(PrintStream out, Annotation annotation, String annotationText) {
-		StringBuffer html = new StringBuffer();
+	private static void printAnnotationHTML(PrintStream out, Annotation annotation, String annotationText) {
+		StringBuilder html = new StringBuilder();
 
 		if (annotationText != null) {
 			String coveredText = Annotation.getCoveredText(annotation, annotationText, " ... ");
 			html.append(coveredText);
 		}
-		html.append("  " + annotation.toHTML());
+		html.append("  ").append(annotation.toHTML());
 		out.print(html.toString());
 	}
 
-	static void printIntro(PrintStream html, IAA iaa, int numberOfDocs, String fileName, Matcher matcher) {
+	private static void printIntro(PrintStream html, IAA iaa, int numberOfDocs, String fileName, Matcher matcher) {
 		html
 				.println("<p>For more detailed documentation on IAA please see the <a href=\"http://knowtator.sourceforge.net//iaa.shtml\">"
 						+ "IAA documentation</a>.");
@@ -492,7 +490,7 @@ public class IAA2HTML {
 
 	}
 
-	static void printTitleRowForAllwayIAA(PrintStream html, Matcher matcher) {
+	private static void printTitleRowForAllwayIAA(PrintStream html, Matcher matcher) {
 		html.println("<table border=1><tr><td><b>Type</b></td>" + "<td><b>IAA</b></td>");
 		if (matcher.returnsTrivials()) {
 			html.println("<td><b>stingy IAA</b></td>" + "<td><b>respectable IAA</b></td>"
@@ -509,28 +507,25 @@ public class IAA2HTML {
 		html.println("</tr>");
 	}
 
-	public static String initHTML(String title, String description) {
-		StringBuffer html = new StringBuffer();
-		html.append("<html>\n");
-		html.append("<head><title>" + title + "</title></head>\n");
-		html.append("<body>\n");
-		html.append("<h1>" + title + "</h1>\n");
-		html.append(description);
-		html
-				.append(" For more detailed documentation on IAA please see the <a href=\"http://knowtator.sourceforge.net//iaa.shtml\">IAA documentation</a>.\n");
-		return html.toString();
+	static String initHTML(String title, String description) {
+		return "<html>\n" +
+				"<head><title>" + title + "</title></head>\n" +
+				"<body>\n" +
+				"<h1>" + title + "</h1>\n" +
+				description +
+				" For more detailed documentation on IAA please see the <a href=\"http://knowtator.sourceforge.net//iaa.shtml\">IAA documentation</a>.\n";
 	}
 
-	public static void printMatchData(PrintStream html, Set<String> sets, String fileName, File directory,
-			Map<String, Set<Annotation>> allwayMatches, Map<Annotation, String> annotationTexts,
-			Map<Annotation, String> annotationTextNames, Set<String> classes, IAA iaa) throws IOException
+	static void printMatchData(PrintStream html, Set<String> sets, String fileName, File directory,
+							   Map<String, Set<Annotation>> allwayMatches, Map<Annotation, String> annotationTexts,
+							   Map<Annotation, String> annotationTextNames, Set<String> classes, IAA iaa) throws IOException
 
 	{
 		html.println("<h2>match data</h2>");
 		html.println("<ul>");
 
 		Map<Annotation, Set<Annotation>> matchSets = iaa.getAllwayMatchSets();
-		java.util.List<String> sortedTypes = new ArrayList<String>(classes);
+		List<String> sortedTypes = new ArrayList<>(classes);
 		Collections.sort(sortedTypes);
 
 		for (String set : sets) {
@@ -552,14 +547,14 @@ public class IAA2HTML {
 		html.println("</ul><hr>");
 	}
 
-	public static void printNonmatchData(PrintStream html, Set<String> sets, String fileName, File directory,
-			Map<String, Set<Annotation>> allwayNonmatches, AnnotationSpanIndex spanIndex,
-			Map<Annotation, String> annotationTexts, Map<Annotation, String> annotationTextNames, Set<String> classes,
-			IAA iaa) throws IOException {
+	static void printNonmatchData(PrintStream html, Set<String> sets, String fileName, File directory,
+								  Map<String, Set<Annotation>> allwayNonmatches, AnnotationSpanIndex spanIndex,
+								  Map<Annotation, String> annotationTexts, Map<Annotation, String> annotationTextNames, Set<String> classes,
+								  IAA iaa) throws IOException {
 		html.println("<h2>non-match data</h2>");
 		html.println("<ul>");
 
-		java.util.List<String> sortedTypes = new ArrayList<String>(classes);
+		List<String> sortedTypes = new ArrayList<>(classes);
 		Collections.sort(sortedTypes);
 
 		for (String set : sets) {
@@ -569,7 +564,7 @@ public class IAA2HTML {
 			Set<Annotation> nonmatches = allwayNonmatches.get(set);
 			Map<String, Set<Annotation>> sortedNonmatches = IAA2HTML.sortByType(classes, nonmatches);
 
-			Map<Annotation, Set<Annotation>> comparisonAnnotations = new HashMap<Annotation, Set<Annotation>>();
+			Map<Annotation, Set<Annotation>> comparisonAnnotations = new HashMap<>();
 			for (Annotation nonmatch : nonmatches) {
 				comparisonAnnotations.put(nonmatch, IAA2HTML.getCandidateAnnotations(nonmatch, spanIndex));
 			}
@@ -587,9 +582,9 @@ public class IAA2HTML {
 		html.println("</ul><hr>");
 	}
 
-	public static void printPairwiseAgreement(PrintStream html, Set<String> sets,
-			Map<String, Map<String, Set<Annotation>>> pairwiseMatches,
-			Map<String, Map<String, Set<Annotation>>> pairwiseNonmatches, NumberFormat percentageFormat) {
+	static void printPairwiseAgreement(PrintStream html, Set<String> sets,
+									   Map<String, Map<String, Set<Annotation>>> pairwiseMatches,
+									   Map<String, Map<String, Set<Annotation>>> pairwiseNonmatches, NumberFormat percentageFormat) {
 		html.println("<h2>Pair-wise agreement</h2>");
 		html.println("<table border=1><tr><td><b>Gold standard set</b></td>" + "<td><b>compared set</b></td>"
 				+ "<td><b>true positives</b></td>" + "<td><b>false positives</b></td>"

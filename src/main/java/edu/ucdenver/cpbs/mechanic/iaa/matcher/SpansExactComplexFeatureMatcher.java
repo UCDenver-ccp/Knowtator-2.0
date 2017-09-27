@@ -25,16 +25,17 @@
  * Contributor(s):
  *   Philip V. Ogren <philip@ogren.info> (Original Author)
  */
-package edu.uchsc.ccp.iaa.matcher;
+package edu.ucdenver.cpbs.mechanic.iaa.matcher;
+
+import edu.ucdenver.cpbs.mechanic.iaa.Annotation;
+import edu.ucdenver.cpbs.mechanic.iaa.IAA;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import edu.uchsc.ccp.iaa.Annotation;
-import edu.uchsc.ccp.iaa.IAA;
-
+@SuppressWarnings({"JavadocReference", "MismatchedQueryAndUpdateOfCollection", "unused", "JavaDoc"})
 public class SpansExactComplexFeatureMatcher implements Matcher {
 	// public static final String FEATURE_NAMES =
 	// SpansExactComplexFeatureMatcher.class.getName()+".FEATURE_NAMES";
@@ -57,7 +58,7 @@ public class SpansExactComplexFeatureMatcher implements Matcher {
 	 * returned.
 	 */
 	public Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
-			MatchResult matchResult) {
+							MatchResult matchResult) {
 		return match(annotation, compareSetName, iaa, excludeAnnotations, matchResult);
 	}
 
@@ -109,12 +110,12 @@ public class SpansExactComplexFeatureMatcher implements Matcher {
 		// excludeAnnotations because they
 		// have already been removed by
 		// ClassAndSpanMatcher
-		Set<Annotation> exactlyOverlappingAnnotations = new HashSet<Annotation>(iaa.getExactlyOverlappingAnnotations(
+		Set<Annotation> exactlyOverlappingAnnotations = new HashSet<>(iaa.getExactlyOverlappingAnnotations(
 				annotation, compareSetName));
 		exactlyOverlappingAnnotations.removeAll(classAndSpanMatches);
 		exactlyOverlappingAnnotations.removeAll(excludeAnnotations);
 
-		List<Annotation> candidateAnnotations = new ArrayList<Annotation>(classAndSpanMatches.size()
+		List<Annotation> candidateAnnotations = new ArrayList<>(classAndSpanMatches.size()
 				+ exactlyOverlappingAnnotations.size());
 		candidateAnnotations.addAll(classAndSpanMatches);
 		candidateAnnotations.addAll(exactlyOverlappingAnnotations);
@@ -142,10 +143,7 @@ public class SpansExactComplexFeatureMatcher implements Matcher {
 		// }
 		// }
 
-		if (nontrivialNonmatch)
-			matchResult.setResult(MatchResult.NONTRIVIAL_NONMATCH);
-		else
-			matchResult.setResult(MatchResult.TRIVIAL_NONMATCH);
+		matchResult.setResult(MatchResult.TRIVIAL_NONMATCH);
 		return null;
 	}
 

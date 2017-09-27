@@ -26,18 +26,17 @@
  *   Philip V. Ogren <philip@ogren.info> (Original Author)
  */
 
-package edu.uchsc.ccp.iaa.html;
+package edu.ucdenver.cpbs.mechanic.iaa.html;
 
+@SuppressWarnings("unused")
 public class HTMLUtil {
 
 	public static String initHTML(String title, String description) {
-		StringBuffer html = new StringBuffer();
-		html.append("<html>\n");
-		html.append("<head><title>" + title + "</title></head>\n");
-		html.append("<body>\n");
-		html.append("<h1>" + title + "</h1>\n");
-		html.append(description + "\n");
-		return html.toString();
+		return "<html>\n" +
+				"<head><title>" + title + "</title></head>\n" +
+				"<body>\n" +
+				"<h1>" + title + "</h1>\n" +
+				description + "\n";
 	}
 
 }

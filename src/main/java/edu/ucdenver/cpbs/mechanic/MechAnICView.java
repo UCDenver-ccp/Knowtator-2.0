@@ -4,7 +4,7 @@ import edu.ucdenver.cpbs.mechanic.Commands.*;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICGraphViewer;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICProfileViewer;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICTextViewer;
-import edu.ucdenver.cpbs.mechanic.xml.XmlUtil;
+//import edu.ucdenver.cpbs.mechanic.xml.XmlUtil;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -38,7 +38,7 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
     private JTabbedPane textViewerTabbedPane;
     private ProfileManager profileManager;
     private MechAnICSelectionModel selectionModel;
-    private XmlUtil xmlUtil;
+//    private XmlUtil xmlUtil;
 
     public MechAnICGraphViewer getGraphViewer() {
         return graphViewer;
@@ -58,7 +58,7 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
          */
         selectionModel = new MechAnICSelectionModel();  //helps get the selected OWL API classes
         profileManager = new ProfileManager(this);  //manipulates profiles and highlighters
-        xmlUtil = new XmlUtil(this);  //reads and writes to XML
+//        xmlUtil = new XmlUtil(this);  //reads and writes to XML
 
         createUI();
 
@@ -173,8 +173,8 @@ public class MechAnICView extends AbstractOWLClassViewComponent implements DropT
         /*
         Text annotation related actions
          */
-        addAction(new LoadAnnotationsCommand(textViewerTabbedPane, xmlUtil), "B", "A");
-        addAction(new SaveAnnotationsToXmlCommand(textViewerTabbedPane, xmlUtil), "B", "B");
+//        addAction(new LoadAnnotationsCommand(textViewerTabbedPane, xmlUtil), "B", "A");
+//        addAction(new SaveAnnotationsToXmlCommand(textViewerTabbedPane, xmlUtil), "B", "B");
 
         addAction(new AddTextAnnotationCommand(this), "B", "C");
         addAction(new RemoveTextAnnotationCommand(this), "B", "D");

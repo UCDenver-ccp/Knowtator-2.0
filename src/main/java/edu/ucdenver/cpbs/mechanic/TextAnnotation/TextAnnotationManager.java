@@ -3,6 +3,8 @@ package edu.ucdenver.cpbs.mechanic.TextAnnotation;
 import edu.ucdenver.cpbs.mechanic.MechAnICSelectionModel;
 import edu.ucdenver.cpbs.mechanic.MechAnICView;
 import edu.ucdenver.cpbs.mechanic.ProfileManager;
+import edu.ucdenver.cpbs.mechanic.iaa.Annotation;
+import edu.ucdenver.cpbs.mechanic.iaa.Span;
 import edu.ucdenver.cpbs.mechanic.owl.OWLAPIDataExtractor;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICTextViewer;
 import org.apache.log4j.Logger;
@@ -12,22 +14,29 @@ import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
 public final class TextAnnotationManager {
     private static final Logger log = Logger.getLogger(MechAnICView.class);
 
-   private HashMap<Integer, TextAnnotation> textAnnotations;
-   private TextAnnotation selectedAnnotation;
+   private ArrayList<Annotation> textAnnotations;
+   private Annotation selectedAnnotation;
 
    private MechAnICView view;
-    private MechAnICSelectionModel selectionModel;
-    private ProfileManager profileManager;
+   private MechAnICSelectionModel selectionModel;
+   private ProfileManager profileManager;
    private OWLAPIDataExtractor dataExtractor;
-    private String textSource;
+   private String textSource;
+
+   private String[] FEATURES = {
+           "Text Source",
+           "Annotator ID",
+           "Annotator Name",
+           "Class ID",
+           "Class Name"
+   };
 
     public TextAnnotationManager(MechAnICView view, String textSource) {
         this.view = view;
@@ -37,48 +46,43 @@ public final class TextAnnotationManager {
         this.textSource = textSource;
 
         selectedAnnotation = null;
-        textAnnotations = new HashMap<>();
+        textAnnotations = new ArrayList<>();
     }
 
 
 
-    public void addTextAnnotation(OWLClass cls, Integer spanStart, Integer spanEnd, String spannedText) throws NoSuchFieldException {
+    public void addTextAnnotation(OWLClass cls, Integer spanStart, Integer spanEnd) throws NoSuchFieldException {
 
         dataExtractor.extractOWLClassData(cls);
 
-        //TODO: Figure out what mention is
-        String mentionSource = "Default";
-        int mentionID = textAnnotations.size();
         String classID = dataExtractor.getClassID();
         String className = dataExtractor.getClassName();
 
-        TextAnnotation newTextAnnotation = new TextAnnotation(
-                textSource,
-                mentionSource,
-                mentionID,
-                profileManager.getCurrentProfile().getAnnotatorID(),
-                profileManager.getCurrentProfile().getAnnotatorName(),
-                spanStart,
-                spanEnd,
-                spannedText,
-                classID,
-                className,
-                cls
-        );
-        textAnnotations.put(mentionID, newTextAnnotation);
+        Annotation newTextAnnotation = new Annotation();
+        newTextAnnotation.setSimpleFeature("Text Source", textSource);
+        newTextAnnotation.setSimpleFeature("Annotator ID", profileManager.getCurrentProfile().getAnnotatorID());
+        newTextAnnotation.setSimpleFeature("Annotator Name", profileManager.getCurrentProfile().getAnnotatorName());
+        newTextAnnotation.setSimpleFeature("Class ID", classID);
+        newTextAnnotation.setSimpleFeature("Class Name", className);
+        newTextAnnotation.setSimpleFeature("OWLClass", cls);
+
+        Span newSpan = new Span(spanStart, spanEnd);
+        newTextAnnotation.setSpan(newSpan);
+        textAnnotations.add(newTextAnnotation);
         setSelectedAnnotation(newTextAnnotation);
     }
 
     public void removeTextAnnotation(Integer spanStart, Integer spanEnd, MechAnICTextViewer textViewer) {
 
         //String mentionSource = "Default";
-        for (Map.Entry<Integer, TextAnnotation> instance : textAnnotations.entrySet()) {
-            int mentionID = instance.getKey();
-            TextAnnotation textAnnotation = instance.getValue();
-            if (Objects.equals(spanStart, textAnnotation.getSpanStart()) && Objects.equals(spanEnd, textAnnotation.getSpanEnd())) {
-                textAnnotations.remove(mentionID);
-                highlightAllAnnotations(textViewer);
-                return;
+        for (Annotation textAnnotation : textAnnotations) {
+
+            for (Span span : textAnnotation.getSpans()) {
+                if (Objects.equals(spanStart, span.getStart()) && Objects.equals(spanEnd, span.getEnd())) {
+                    textAnnotations.remove(textAnnotation);
+                    highlightAllAnnotations(textViewer);
+                    return;
+                }
             }
         }
 
@@ -87,9 +91,10 @@ public final class TextAnnotationManager {
 
     private void highlightAllAnnotations(MechAnICTextViewer textViewer) {
         textViewer.getHighlighter().removeAllHighlights();
-        for (Map.Entry<Integer, TextAnnotation> instance2 : textAnnotations.entrySet() ){
-            TextAnnotation textAnnotation = instance2.getValue();
-            highlightAnnotation(textAnnotation.getSpanStart(), textAnnotation.getSpanEnd(), textViewer, textAnnotation.getOwlClass());
+        for (Annotation textAnnotation: textAnnotations ){
+            for (Span span : textAnnotation.getSpans()) {
+                highlightAnnotation(span.getStart(), span.getEnd(), textViewer, textAnnotation.getOwlClass());
+            }
         }
     }
 
@@ -116,25 +121,26 @@ public final class TextAnnotationManager {
         return profileManager;
     }
 
-    public HashMap<Integer, TextAnnotation> getTextAnnotations() {
+    public ArrayList<Annotation> getTextAnnotations() {
         return textAnnotations;
     }
 
-    public TextAnnotation getSelectedAnnotation() {
+    public Annotation getSelectedAnnotation() {
         return selectedAnnotation;
     }
 
-    private void setSelectedAnnotation(TextAnnotation selectedAnnotation) {
+    private void setSelectedAnnotation(Annotation selectedAnnotation) {
         this.selectedAnnotation = selectedAnnotation;
         view.setGlobalSelection1(selectedAnnotation.getOwlClass());
     }
 
     public void setSelectedAnnotation(Integer spanStart, Integer spanEnd) {
-        for (Map.Entry<Integer, TextAnnotation> instance : textAnnotations.entrySet()) {
-            TextAnnotation textAnnotation = instance.getValue();
-            if (Objects.equals(spanStart, textAnnotation.getSpanStart()) && Objects.equals(spanEnd, textAnnotation.getSpanEnd())) {
-                setSelectedAnnotation(textAnnotation);
-                return;
+        for (Annotation textAnnotation : textAnnotations) {
+            for (Span span : textAnnotation.getSpans()) {
+                if (Objects.equals(spanStart, span.getStart()) && Objects.equals(spanEnd, span.getEnd())) {
+                    setSelectedAnnotation(textAnnotation);
+                    return;
+                }
             }
         }
     }

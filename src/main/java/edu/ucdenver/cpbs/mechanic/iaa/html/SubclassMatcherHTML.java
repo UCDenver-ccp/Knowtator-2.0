@@ -26,7 +26,12 @@
  *   Philip V. Ogren <philip@ogren.info> (Original Author)
  */
 
-package edu.uchsc.ccp.iaa.html;
+package edu.ucdenver.cpbs.mechanic.iaa.html;
+
+import edu.ucdenver.cpbs.mechanic.iaa.Annotation;
+import edu.ucdenver.cpbs.mechanic.iaa.AnnotationSpanIndex;
+import edu.ucdenver.cpbs.mechanic.iaa.IAA;
+import edu.ucdenver.cpbs.mechanic.iaa.matcher.SubclassMatcher;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,15 +40,11 @@ import java.text.NumberFormat;
 import java.util.Map;
 import java.util.Set;
 
-import edu.uchsc.ccp.iaa.Annotation;
-import edu.uchsc.ccp.iaa.AnnotationSpanIndex;
-import edu.uchsc.ccp.iaa.IAA;
-import edu.uchsc.ccp.iaa.matcher.SubclassMatcher;
-
+@SuppressWarnings("unused")
 public class SubclassMatcherHTML {
 
 	public static void printIAA(IAA iaa, SubclassMatcher matcher, File directory, int numberOfDocs,
-			Map<Annotation, String> annotationTexts, Map<Annotation, String> annotationTextNames) throws IOException {
+								Map<Annotation, String> annotationTexts, Map<Annotation, String> annotationTextNames) throws IOException {
 		String fileName = matcher.getName();
 		PrintStream html = new PrintStream(new File(directory, fileName + ".html"));
 
