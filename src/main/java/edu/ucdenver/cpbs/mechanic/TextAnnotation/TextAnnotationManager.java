@@ -1,15 +1,17 @@
 package edu.ucdenver.cpbs.mechanic.TextAnnotation;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import edu.ucdenver.cpbs.mechanic.MechAnICSelectionModel;
 import edu.ucdenver.cpbs.mechanic.MechAnICView;
 import edu.ucdenver.cpbs.mechanic.ProfileManager;
-import edu.ucdenver.cpbs.mechanic.Profiles.Annotator;
 import edu.ucdenver.cpbs.mechanic.iaa.Annotation;
+import edu.ucdenver.cpbs.mechanic.iaa.AssertionRelationship;
 import edu.ucdenver.cpbs.mechanic.iaa.Span;
 import edu.ucdenver.cpbs.mechanic.owl.OWLAPIDataExtractor;
 import edu.ucdenver.cpbs.mechanic.ui.MechAnICTextViewer;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -31,13 +33,7 @@ public final class TextAnnotationManager {
    private OWLAPIDataExtractor dataExtractor;
    private String textSource;
 
-   private String[] FEATURES = {
-           "Text Source",
-           "Annotator ID",
-           "Annotator Name",
-           "Class ID",
-           "Class Name"
-   };
+    private ArrayList<AssertionRelationship> assertionRelationships;
 
     public TextAnnotationManager(MechAnICView view, String textSource) {
         this.view = view;
@@ -48,29 +44,36 @@ public final class TextAnnotationManager {
 
         selectedAnnotation = null;
         textAnnotations = new ArrayList<>();
+        assertionRelationships = new ArrayList<>();
     }
 
 
 
     public void addTextAnnotation(OWLClass cls, Integer spanStart, Integer spanEnd) throws NoSuchFieldException {
 
-        dataExtractor.extractOWLClassData(cls);
-
+        // Extract info from OWLClass
+        dataExtractor.extractOWLObjectData(cls);
         String classID = dataExtractor.getClassID();
         String className = dataExtractor.getClassName();
 
-        Annotation newTextAnnotation = new Annotation();
-        newTextAnnotation.setSimpleFeature("Text Source", textSource);
+        // Make new annotation
+        Annotation newTextAnnotation = new Annotation(textSource, cls, className);
+
         newTextAnnotation.setSimpleFeature("Annotator ID", profileManager.getCurrentAnnotator().getAnnotatorID());
         newTextAnnotation.setSimpleFeature("Annotator Name", profileManager.getCurrentAnnotator().getAnnotatorName());
         newTextAnnotation.setSimpleFeature("Class ID", classID);
         newTextAnnotation.setSimpleFeature("Class Name", className);
-        newTextAnnotation.setSimpleFeature("OWLClass", cls);
 
+        // Assign new annotation the text span
         Span newSpan = new Span(spanStart, spanEnd);
         newTextAnnotation.setSpan(newSpan);
+
+        // Add annotation to annotation manager
         textAnnotations.add(newTextAnnotation);
         setSelectedAnnotation(newTextAnnotation);
+        highlightAnnotation(spanStart, spanEnd, (MechAnICTextViewer) ((JScrollPane) view.getTextViewerTabbedPane().getSelectedComponent()).getViewport().getView(), cls);
+
+        view.getGraphViewer().addAnnotationNode(newTextAnnotation);
     }
 
     public void removeTextAnnotation(Integer spanStart, Integer spanEnd, MechAnICTextViewer textViewer) {
@@ -144,5 +147,13 @@ public final class TextAnnotationManager {
                 }
             }
         }
+    }
+
+    public AssertionRelationship addAssertion() {
+        OWLObjectProperty property = view.getOWLWorkspace().getOWLSelectionModel().getLastSelectedObjectProperty();
+        dataExtractor.extractOWLObjectData(property);
+        AssertionRelationship newAssertionRelationship = new AssertionRelationship(property, dataExtractor.getClassName());
+        assertionRelationships.add(newAssertionRelationship);
+        return newAssertionRelationship;
     }
 }

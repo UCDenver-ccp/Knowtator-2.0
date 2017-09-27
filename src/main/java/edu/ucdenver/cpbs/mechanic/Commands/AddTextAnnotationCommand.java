@@ -52,18 +52,17 @@ public class AddTextAnnotationCommand extends DisposableAction {
      */
     private void addTextAnnotation() {
         OWLClass cls = selectionModel.getSelectedClass();
-        try {
+        if (cls != null) {
             MechAnICTextViewer textViewer = (MechAnICTextViewer) ((JScrollPane) tabbedPane.getSelectedComponent()).getViewport().getView();
             Integer spanStart = textViewer.getSelectionStart();
             Integer spanEnd = textViewer.getSelectionEnd();
-//            String spannedText = textViewer.getSelectedText();
+
             try {
                 textViewer.getTextAnnotationManager().addTextAnnotation(cls, spanStart, spanEnd);
-                textViewer.getTextAnnotationManager().highlightAnnotation(spanStart, spanEnd, textViewer, cls);
             } catch (NoSuchFieldException e) {
                 e.printStackTrace();
             }
-        } catch (NullPointerException e) {
+        } else {
             log.error("No OWLClass selected");
         }
     }

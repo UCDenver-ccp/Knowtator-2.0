@@ -42,11 +42,12 @@ import java.util.Set;
 
 @SuppressWarnings({"JavadocReference", "unused", "JavaDoc", "unchecked"})
 public class Annotation {
+
 	private String setName = "Set name not specified";
 
 	private String docID = "Document id not specified";
 
-	private String annotationClass;
+	private String annotationClass = "Class not specified";
 
 	private List<Span> spans;
 
@@ -58,7 +59,11 @@ public class Annotation {
 	private int size = 0;
 	private OWLClass owlClass;
 
-	public Annotation() {
+	public Annotation(String docID, OWLClass owlClass, String annotationClass) {
+		this.docID = docID;
+		this.owlClass = owlClass;
+		this.annotationClass = annotationClass;
+
 		spans = new ArrayList<>();
 		simpleFeatures = new HashMap<>();
 		complexFeatures = new HashMap<>();
@@ -86,11 +91,6 @@ public class Annotation {
 
 	public OWLClass getOwlClass() {
 		return owlClass;
-	}
-
-	public void setOwlClass(OWLClass owlClass) {
-		this.owlClass = owlClass;
-		annotationClass = owlClass.toStringID();
 	}
 
 	public List<Span> getSpans() {
@@ -695,6 +695,7 @@ public class Annotation {
 
 	@Override
 	public String toString() {
-		return String.format("%s\n%s", super.toString(), owlClass.toStringID());
+		System.out.println();
+		return String.format("Annotation: %s\n%s", super.toString().split("@")[1], annotationClass);
 	}
 }

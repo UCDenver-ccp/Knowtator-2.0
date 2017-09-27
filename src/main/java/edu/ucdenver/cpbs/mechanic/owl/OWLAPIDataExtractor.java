@@ -28,17 +28,17 @@ public class OWLAPIDataExtractor {
         idLabel = entityFinder.getOWLAnnotationProperty("id");
     }
 
-    private Collection<OWLAnnotation> getOWLClassAnnotations(OWLClass cls) {
-        return EntitySearcher.getAnnotations(cls.getIRI(), man.getActiveOntology());
+    private Collection<OWLAnnotation> getOWLObjectAnnotations(OWLEntity ent) {
+        return EntitySearcher.getAnnotations(ent.getIRI(), man.getActiveOntology());
     }
 
     private Collection<OWLAnnotationProperty> getOWLAnnotationProperties(OWLOntology ont) {
         return ont.getAnnotationPropertiesInSignature();
     }
 
-    public void extractOWLClassData(OWLClass cls){
+    public void extractOWLObjectData(OWLEntity ent){
 
-        for (OWLAnnotation anno : getOWLClassAnnotations(cls)){
+        for (OWLAnnotation anno : getOWLObjectAnnotations(ent)){
             if (anno.getProperty() == nameSpaceLabel) {
                 if (anno.getValue() instanceof OWLLiteral) {
                     classNameSpace = ((OWLLiteral) anno.getValue()).getLiteral();
