@@ -3,7 +3,7 @@
 <!-- 
      *** CHANGE ME *** change the project name.
   -->
-<project name = "MechAnIC plugin" default = "install" basedir = ".">    
+<project name = "Knowtator plugin" default = "install" basedir = ".">
 
    <!-- 
         To run this build file set the environment variable
@@ -29,7 +29,7 @@
         This may be the only setting that the developer needs to
         change.
      -->
-   <property name = "plugin"          value = "edu.ucdenver.cpbs.mechanic"/>
+   <property name = "plugin"          value = "edu.ucdenver.ccp.knowtator"/>
 
    
    <!-- 

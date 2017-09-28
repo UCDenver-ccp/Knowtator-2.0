@@ -8,10 +8,10 @@
 		<version>7</version>
 	</parent>
 
-	<groupId>edu.ucdenver.anschutz.cpbs.hunter</groupId>
-	<artifactId>mechanic</artifactId>
+	<groupId>edu.ucdenver.ccp</groupId>
+	<artifactId>knowtator</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
-	<name>MechAnIC</name> 
+	<name>Knowtator</name>
 	<description>A plugin for annotating mechanisms</description> 
 
 

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<annotations textSource="test_article.txt">
+<annotations textSource="test_article">
   <annotation>
     <mention id="one_Instance_0" />
     <annotator id="Default">Default</annotator>
-    <span start="97" end="144" />
+    <span start="98" end="145" />
     <spannedText>This sentence should be annotated in one color.</spannedText>
   </annotation>
   <classMention id="one_Instance_0">
-    <mentionClass id="null">Activity</mentionClass>
+    <mentionClass id="GO:0008150">cellular_component</mentionClass>
   </classMention>
   <annotation>
     <mention id="different_Instance_1" />
     <annotator id="Default">Default</annotator>
-    <span start="146" end="206" />
+    <span start="147" end="207" />
     <spannedText>This next sentence should be annotated in a different color.</spannedText>
   </annotation>
   <classMention id="different_Instance_1">
-    <mentionClass id="null">Activity</mentionClass>
+    <mentionClass id="GO:0005575">gene expression ()</mentionClass>
   </classMention>
 </annotations>

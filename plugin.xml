@@ -2,11 +2,11 @@
 <?eclipse version="3.0"?>
 
 <plugin>
-    <extension id="MechAnIC"
+    <extension id="Knowtator 2.0"
                point="org.protege.editor.core.application.ViewComponent">
-        <label value="MechAnIC"/>
-        <class value="edu.ucdenver.cpbs.mechanic.MechAnICView"/>
-        <headerColor value="@org.protege.ontologycolor"/>
-        <category value="@org.protege.ontologycategory" />
+        <label value="Knowtator"/>
+        <class value="edu.ucdenver.ccp.knowtator.KnowtatorViewImpl"/>
+        <headerColor value="@org.protege.miscellaneouscolor"/>
+        <category value="@org.protege.miscellaneouscategory" />
     </extension>
 </plugin>
