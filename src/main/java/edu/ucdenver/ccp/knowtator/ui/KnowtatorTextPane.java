@@ -110,7 +110,6 @@ public class KnowtatorTextPane extends JTextPane {
 		}
 	}
 
-
 	public TextAnnotationManager getTextAnnotationManager() {
 		return textAnnotationManager;
 	}

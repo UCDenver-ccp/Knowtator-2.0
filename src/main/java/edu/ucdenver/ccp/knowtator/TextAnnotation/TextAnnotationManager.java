@@ -70,7 +70,7 @@ public final class TextAnnotationManager {
         // Add annotation to annotation manager
         textAnnotations.add(newTextAnnotation);
         setSelectedAnnotation(newTextAnnotation);
-        highlightAnnotation(spanStart, spanEnd, (KnowtatorTextPane) ((JScrollPane) view.getTextViewer().getSelectedComponent()).getViewport().getView(), cls);
+        highlightAnnotation(spanStart, spanEnd, cls);
 
         view.getGraphViewer().addAnnotationNode(newTextAnnotation);
     }
@@ -81,7 +81,7 @@ public final class TextAnnotationManager {
         textAnnotations.add(newTextAnnotation);
         setSelectedAnnotation(newTextAnnotation);
         for (Span span : newTextAnnotation.getSpans()) {
-            highlightAnnotation(span.getStart(), span.getEnd(), textPane, newTextAnnotation.getOwlClass());
+            highlightAnnotation(span.getStart(), span.getEnd(), newTextAnnotation.getOwlClass());
         }
 //        view.getGraphViewer().addAnnotationNode(newTextAnnotation);
     }
@@ -94,7 +94,7 @@ public final class TextAnnotationManager {
             for (Span span : textAnnotation.getSpans()) {
                 if (Objects.equals(spanStart, span.getStart()) && Objects.equals(spanEnd, span.getEnd())) {
                     textAnnotations.remove(textAnnotation);
-                    highlightAllAnnotations(textPane);
+                    highlightAllAnnotations();
                     return;
                 }
             }
@@ -105,20 +105,20 @@ public final class TextAnnotationManager {
 
         for (Span span : textAnnotation.getSpans()) {
             textAnnotations.remove(textAnnotation);
-            highlightAllAnnotations(textPane);
+            highlightAllAnnotations();
         }
     }
 
-    private void highlightAllAnnotations(KnowtatorTextPane textViewer) {
-        textViewer.getHighlighter().removeAllHighlights();
+    private void highlightAllAnnotations() {
+        textPane.getHighlighter().removeAllHighlights();
         for (Annotation textAnnotation: textAnnotations ){
             for (Span span : textAnnotation.getSpans()) {
-                highlightAnnotation(span.getStart(), span.getEnd(), textViewer, textAnnotation.getOwlClass());
+                highlightAnnotation(span.getStart(), span.getEnd(), textAnnotation.getOwlClass());
             }
         }
     }
 
-    private void highlightAnnotation(int spanStart, int spanEnd, KnowtatorTextPane textViewer, OWLClass cls) {
+    private void highlightAnnotation(int spanStart, int spanEnd, OWLClass cls) {
         DefaultHighlighter.DefaultHighlightPainter highlighter = profileManager.getCurrentAnnotator().getHighlighter(cls);
         if (highlighter == null) {
             Color c = JColorChooser.showDialog(null, String.format("Pick a color for %s", cls.toString()), Color.CYAN);
@@ -129,7 +129,7 @@ public final class TextAnnotationManager {
         }
 
         try {
-            textViewer.getHighlighter().addHighlight(spanStart, spanEnd, highlighter);
+            textPane.getHighlighter().addHighlight(spanStart, spanEnd, highlighter);
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
