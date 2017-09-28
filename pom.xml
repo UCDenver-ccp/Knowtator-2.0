@@ -8,10 +8,10 @@
 		<version>7</version>
 	</parent>
 
-	<groupId>edu.ucdenver.anschutz.cpbs.hunter</groupId>
-	<artifactId>mechanic</artifactId>
+	<groupId>edu.ucdenver.ccp</groupId>
+	<artifactId>knowtator</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
-	<name>MechAnIC</name> 
+	<name>Knowtator</name>
 	<description>A plugin for annotating mechanisms</description> 
 
 
@@ -72,6 +72,13 @@
 			<artifactId>jsr305</artifactId>
 			<version>3.0.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-io -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+
 
 	</dependencies>
 
@@ -125,8 +132,8 @@
               </configuration>
             </plugin>
 			<plugin>
-				<groupId>edu.ucdenver.anschutz.cpbs.hunter</groupId>
-				<artifactId>mechanic</artifactId>
+				<groupId>edu.ucdenver.ccp</groupId>
+				<artifactId>knowtator</artifactId>
 				<version>0.1.0-SNAPSHOT</version>
 				<configuration>
 					<outputDirectory>"${env.PROTEGE_HOME}/plugins"</outputDirectory>

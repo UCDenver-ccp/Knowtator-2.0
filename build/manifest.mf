@@ -2,9 +2,8 @@ Manifest-Version: 1.0
 Ant-Version: Apache Ant 1.9.4
 Created-By: 1.8.0_121-b13 (Oracle Corporation)
 Bundle-ManifestVersion: 2
-Bundle-Name: ***CHANGE ME*** MechAnIC Plugin
-Bundle-SymbolicName: ***CHANGE ME*** edu.ucdenver.anschutz.cpbs.hunter
- .mechanic;singleton:=true
+Bundle-Name: ***CHANGE ME*** Knowtator Plugin
+Bundle-SymbolicName: ***CHANGE ME*** edu.ucdenver.ccp.knowtator;singleton:=true
 Bundle-Category: protege
 Bundle-Description: ***CHANGE ME*** A plugin for annotating mechanisms
 Bundle-Vendor: ***CHANGE ME*** Harrison Pielke-Lombardo

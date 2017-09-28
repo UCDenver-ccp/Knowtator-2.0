@@ -1,5 +1,5 @@
-# MechAnIC
-Plugin for Protege: Mechanism Annotation and Inference Console
+# Knowtator
+Plugin for Protege
 
 ## Table of Contents
 - [Installation (Windows):](#)
@@ -32,13 +32,13 @@ Plugin for Protege: Mechanism Annotation and Inference Console
 2. Create a new tab (Window -> Create new tab...)
 3. Add a Class Hierarchy view (Window -> Views -> Class views -> Class Hierarchy)
 4. Add an Annotations view (Window -> Views -> Annotation property views -> Annotations)
-5. Add a MechAnIC view (Window -> Ontology views -> MechAnIC)
+5. Add a Knowtator view (Window -> Miscellaneous views -> Knowtator)
 6. Load an ontology (e.g. [GO-Basic][ontology example])
 
 (A sample file and its annotation xml file can be found [here][sample files location])
 
 ![After installation][installation image]
-Add as a View to a Protege tab by going to Menu -> Views -> Ontology Views -> MechAnIC
+Add as a View to a Protege tab by going to Menu -> Views -> Miscellaneous Views -> Knowtator
 
 ## Features
 
@@ -61,7 +61,7 @@ Annotations are reloaded and automatically highlight the text using the color of
 2. When a new annotation annotator is added, it is not displayed until view panes are resized.
 3. Can only add annotations to one document at a time since the annotations do not yet know for which file they apply to.
 4. Cannot turn off annotation annotator to remove highlighting.
-5. When MechAnIC view is added, the split between panes is too far to the left.
+5. When Knowtator view is added, the split between panes is too far to the left.
 6. Cannot remove annotations or annotation profiles.
 
 [protege link]:http://protege.stanford.edu/products.php#desktop-protege
