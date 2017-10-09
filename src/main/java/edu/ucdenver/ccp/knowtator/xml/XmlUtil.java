@@ -13,7 +13,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -36,7 +35,7 @@ public final class XmlUtil {
     private static String TAG_SPAN = "span";
     private static String TAG_SPAN_START = "start";
     private static String TAG_SPAN_END = "end";
-    private static String TAG_SPANNEDTEXT = "spannedText";
+//    private static String TAG_SPANNEDTEXT = "spannedText";
     private static String TAG_ANNOTATION = "annotation";
 
     private static String TAG_CLASS_MENTION = "classMention";
@@ -67,7 +66,7 @@ public final class XmlUtil {
         }
     }
 
-    private ArrayList<String> annotationToXML(Annotation textAnnotation, JTextPane textViewer) {
+    private ArrayList<String> annotationToXML(Annotation textAnnotation) {
         ArrayList<String> toWrite = new ArrayList<>();
 
         toWrite.add(String.format("  <%s>", TAG_ANNOTATION));
@@ -98,7 +97,7 @@ public final class XmlUtil {
 
 //                String mention = String.format("%s_Instance_%d", textAnnotation.getMentionSource(), textAnnotation.getMentionID());
                 try {
-                    for (String tag : annotationToXML(textAnnotation, textPane)) {
+                    for (String tag : annotationToXML(textAnnotation)) {
                         bw.write(tag);
                         bw.newLine();
                     }

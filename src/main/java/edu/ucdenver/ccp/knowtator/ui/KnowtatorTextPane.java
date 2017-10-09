@@ -26,10 +26,11 @@ public class KnowtatorTextPane extends JTextPane {
 		this.setName("Untitled");
 		this.setEditable(false);
 		textAnnotationManager = new TextAnnotationManager(view, getName(), this);
-		setupListeners(this);
+		setupListeners();
 	}
 
-	private void setupListeners(KnowtatorTextPane textViewer) {
+	private void setupListeners() {
+		KnowtatorTextPane textPane = this;
 		addMouseListener(
 				new MouseListener() {
 					int press_offset;
@@ -46,42 +47,30 @@ public class KnowtatorTextPane extends JTextPane {
 
 					@Override
 					public void mouseReleased(MouseEvent e) {
-						release_offset = viewToModel(e.getPoint());
-                        JPopupMenu popupMenu = new JPopupMenu();
+						if(e.isPopupTrigger()) {
+							showPopUpMenu(e);
+						}
+						else {
 
-						int start, end;
-						try {
-							if (press_offset < release_offset) {
+							release_offset = viewToModel(e.getPoint());
 
-								start = Utilities.getWordStart(textViewer, press_offset);
-								end = Utilities.getWordEnd(textViewer, release_offset);
-							} else {
-								start = Utilities.getWordStart(textViewer, release_offset);
-								end = Utilities.getWordEnd(textViewer, press_offset);
+							int start, end;
+							try {
+								if (press_offset < release_offset) {
+
+									start = Utilities.getWordStart(textPane, press_offset);
+									end = Utilities.getWordEnd(textPane, release_offset);
+								} else {
+									start = Utilities.getWordStart(textPane, release_offset);
+									end = Utilities.getWordEnd(textPane, press_offset);
+								}
+								textPane.setSelectionStart(start);
+								textPane.setSelectionEnd(end);
+
+							} catch (BadLocationException e1) {
+								e1.printStackTrace();
 							}
-                            textViewer.setSelectionStart(start);
-                            textViewer.setSelectionEnd(end);
-
-                            // Menu item to create new annotation
-                            JMenuItem annotateWithCurrentSelectedClass = new JMenuItem("Annotate with current selected class");
-                            annotateWithCurrentSelectedClass.addActionListener(e12 -> addTextAnnotation());
-                            popupMenu.add(annotateWithCurrentSelectedClass);
-
-                            // Menu items to select and remove annotations
-                            for (Annotation a : textViewer.getTextAnnotationManager().getAnnotationsInRange(start, end)) {
-                                JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s", a.getOwlClass()));
-                                selectAnnotationMenuItem.addActionListener(e3 -> textAnnotationManager.setSelectedAnnotation(a));
-                                popupMenu.add(selectAnnotationMenuItem);
-
-                                JMenuItem removeAnnotationMenuItem = new JMenuItem(String.format("Remove %s", a.getOwlClass()));
-                                removeAnnotationMenuItem.addActionListener(e4 -> textAnnotationManager.removeTextAnnotation(a));
-                                popupMenu.add(removeAnnotationMenuItem);
-                            }
-
-                            popupMenu.show(e.getComponent(), e.getX(), e.getY());
-                        } catch (BadLocationException e1) {
-                            e1.printStackTrace();
-                        }
+						}
 					}
 
 					@Override
@@ -95,6 +84,28 @@ public class KnowtatorTextPane extends JTextPane {
 					}
 				}
 		);
+	}
+
+	private void showPopUpMenu(MouseEvent e) {
+		JPopupMenu popupMenu = new JPopupMenu();
+
+		// Menu item to create new annotation
+		JMenuItem annotateWithCurrentSelectedClass = new JMenuItem("Annotate with current selected class");
+		annotateWithCurrentSelectedClass.addActionListener(e12 -> addTextAnnotation());
+		popupMenu.add(annotateWithCurrentSelectedClass);
+
+		// Menu items to select and remove annotations
+		for (Annotation a : this.getTextAnnotationManager().getAnnotationsInRange(getSelectionStart(), getSelectionEnd())) {
+			JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s", a.getOwlClass()));
+			selectAnnotationMenuItem.addActionListener(e3 -> textAnnotationManager.setSelectedAnnotation(a));
+			popupMenu.add(selectAnnotationMenuItem);
+
+			JMenuItem removeAnnotationMenuItem = new JMenuItem(String.format("Remove %s", a.getOwlClass()));
+			removeAnnotationMenuItem.addActionListener(e4 -> textAnnotationManager.removeTextAnnotation(a));
+			popupMenu.add(removeAnnotationMenuItem);
+		}
+
+		popupMenu.show(e.getComponent(), e.getX(), e.getY());
 	}
 
 	private void addTextAnnotation() {

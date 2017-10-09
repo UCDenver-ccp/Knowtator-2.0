@@ -4,11 +4,9 @@ import edu.ucdenver.ccp.knowtator.Commands.*;
 import edu.ucdenver.ccp.knowtator.ui.KnowtatorGraphViewer;
 import edu.ucdenver.ccp.knowtator.ui.KnowtatorTextViewer;
 import org.apache.log4j.Logger;
-import org.protege.editor.owl.model.OWLModelManagerImpl;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,9 +94,12 @@ public class KnowtatorViewImpl extends KnowtatorView {
         addAction(new LoadAnnotationsCommand(textViewer, xmlUtil), "B", "A");
         addAction(new SaveAnnotationsToXmlCommand(xmlUtil), "B", "B");
 
-        addAction(new AddTextAnnotationCommand(this), "B", "C");
-        addAction(new RemoveTextAnnotationCommand(this), "B", "D");
         addAction(new RunIAACommand(this), "B", "E");
+
+        addAction(new IncrementSelectionLeftCommand(this), "B", "F");
+        addAction(new DecrementSelectionLeftCommand(this), "B", "G");
+        addAction(new DecrementSelectionRightCommand(this), "B", "H");
+        addAction(new IncrementSelectionRightCommand(this), "B", "I");
 
         /*
         Annotator and highlighter related commands

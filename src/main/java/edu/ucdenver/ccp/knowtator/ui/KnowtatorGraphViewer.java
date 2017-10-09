@@ -11,11 +11,23 @@ import edu.ucdenver.ccp.knowtator.iaa.Annotation;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 @SuppressWarnings("PackageAccessibility")
 public class KnowtatorGraphViewer extends JPanel {
 
     private Object parent;
+
+    mxGraph getGraph() {
+        return graph;
+    }
+
+    private mxGraphComponent getGraphComponent() {
+        return graphComponent;
+    }
+
     private mxGraph graph;
 
     private mxGraphComponent graphComponent;
@@ -46,6 +58,40 @@ public class KnowtatorGraphViewer extends JPanel {
             }
         });
 
+        graphComponent.getGraphControl().addMouseListener(new MouseAdapter()
+        {
+
+            /**
+             *
+             */
+            public void mousePressed(MouseEvent e)
+            {
+                // Handles context menu on the Mac where the trigger is on mousepressed
+                mouseReleased(e);
+            }
+
+            /**
+             *
+             */
+            public void mouseReleased(MouseEvent e)
+            {
+                if (e.isPopupTrigger())
+                {
+                    showGraphPopupMenu(e);
+                }
+            }
+
+        });
+
+        graph.addListener(mxEvent.REMOVE_CELLS, (sender, evt) -> {
+            Object[] cells = (Object[])evt.getProperty("cells");
+            for (Object cell : cells) {
+                if (graph.getModel().isEdge(cell)) {
+                    graph.getModel().remove(cell);
+                }
+            }
+        });
+
     }
 
     public void addAnnotationNode(Annotation value) {
@@ -71,6 +117,38 @@ public class KnowtatorGraphViewer extends JPanel {
         } finally {
             graph.getModel().endUpdate();
         }
+    }
+
+    Action bind(String name, final Action action)
+    {
+        return bind(name, action, null);
+    }
+
+    Action bind(String name, final Action action, String iconUrl)
+    {
+        AbstractAction newAction = new AbstractAction(name, (iconUrl != null) ? new ImageIcon(
+                getClass().getResource(iconUrl)) : null)
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                action.actionPerformed(new ActionEvent(getGraphComponent(), e
+                        .getID(), e.getActionCommand()));
+            }
+        };
+
+        newAction.putValue(Action.SHORT_DESCRIPTION, action.getValue(Action.SHORT_DESCRIPTION));
+
+        return newAction;
+    }
+
+    private void showGraphPopupMenu(MouseEvent e)
+    {
+        Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
+                graphComponent);
+        GraphPopupMenu menu = new GraphPopupMenu(this);
+        menu.show(graphComponent, pt.x, pt.y);
+
+        e.consume();
     }
 
 }

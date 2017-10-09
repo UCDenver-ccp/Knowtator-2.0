@@ -15,7 +15,7 @@ public class AddTextAnnotationNodeCommand extends DisposableAction {
     private KnowtatorView view;
 
     public AddTextAnnotationNodeCommand(KnowtatorView view) {
-        super("Add Node", KnowtatorIcons.getIcon("None"));
+        super("Add Node", KnowtatorIcons.getIcon(KnowtatorIcons.SHOW_NODE_ICON));
         this.view = view;
 
 
