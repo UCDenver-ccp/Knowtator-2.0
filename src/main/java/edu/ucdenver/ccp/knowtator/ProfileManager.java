@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator;
 
 import edu.ucdenver.ccp.knowtator.Profiles.Annotator;
+import edu.ucdenver.ccp.knowtator.ui.ListDialog;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.swing.text.DefaultHighlighter;
@@ -10,10 +11,10 @@ import java.util.Map;
 
 public class ProfileManager {
 
-    private Annotator currentAnnotator;
+    public Annotator currentAnnotator;
 
-    private Map<String, Annotator> profiles;
-    private KnowtatorView view;
+    public Map<String, Annotator> profiles;
+    public KnowtatorView view;
 
 
     ProfileManager(KnowtatorView view) {
@@ -21,7 +22,7 @@ public class ProfileManager {
         profiles = new HashMap<>();
     }
 
-    void setupDefault() {
+    public void setupDefault() {
         addNewProfile("Default", "Default");
     }
 
@@ -34,6 +35,11 @@ public class ProfileManager {
 
     public void addHighlighter(OWLClass cls, Color c, Annotator annotator) {
         DefaultHighlighter.DefaultHighlightPainter newHighlighter = new DefaultHighlighter.DefaultHighlightPainter(c);
+
+        if (annotator == null) {
+            annotator = currentAnnotator;
+        }
+
         annotator.addHighlighter(cls, newHighlighter);
 
         for(OWLClass decendent: view.getOWLModelManager().getOWLHierarchyManager().getOWLClassHierarchyProvider().getDescendants(cls)) {
@@ -41,7 +47,7 @@ public class ProfileManager {
         }
     }
 
-    private void removeCurrentProfile() {
+    public void removeCurrentProfile() {
     }
 
     public void loadProfile(String profileName) {
@@ -55,8 +61,18 @@ public class ProfileManager {
         return currentAnnotator;
     }
 
+    public String[] getProfileNames() {
+        return profiles.keySet().toArray(new String[profiles.keySet().size()]);
+    }
 
-    public Map<String,Annotator> getProfiles() {
-        return profiles;
+    public void switchProfile() {
+        String[] profiles = getProfileNames();
+        String profileName = ListDialog.showDialog(null, null, "Profiles", "Annotator Chooser", profiles, profiles[0], null);
+
+        if (profileName != null)
+        {
+            loadProfile(profileName);
+        }
+
     }
 }

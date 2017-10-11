@@ -1,5 +1,6 @@
 package edu.ucdenver.ccp.knowtator.Commands;
 
+import edu.ucdenver.ccp.knowtator.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.ProfileManager;
 import edu.ucdenver.ccp.knowtator.ui.ListDialog;
 import edu.ucdenver.ccp.knowtator.ui.KnowtatorIcons;
@@ -10,11 +11,11 @@ import java.awt.event.ActionEvent;
 
 public class SwitchProfileCommand extends DisposableAction {
 
-    private ProfileManager profileManager;
+    private KnowtatorView view;
 
-    public SwitchProfileCommand(ProfileManager profileManager) {
+    public SwitchProfileCommand(KnowtatorView view) {
         super("Switch Annotator", KnowtatorIcons.getIcon(KnowtatorIcons.SWITCH_PROFILE_ICON));
-        this.profileManager = profileManager;
+        this.view = view;
 
         this.putValue(AbstractAction.SHORT_DESCRIPTION, "Switch between profiles");
 
@@ -27,17 +28,8 @@ public class SwitchProfileCommand extends DisposableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        switchProfile();
+        view.getProfileManager().switchProfile();
     }
 
-    private void switchProfile() {
-        String[] profiles = profileManager.getProfiles().keySet().toArray(new String[profileManager.getProfiles().keySet().size()]);
-        String profileName = ListDialog.showDialog(null, null, "Profiles", "Annotator Chooser", profiles, profiles[0], null);
 
-        if (profileName != null)
-        {
-            profileManager.loadProfile(profileName);
-        }
-
-    }
 }

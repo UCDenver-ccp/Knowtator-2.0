@@ -1,7 +1,7 @@
 package edu.ucdenver.ccp.knowtator.Commands;
 
+import edu.ucdenver.ccp.knowtator.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.ui.KnowtatorIcons;
-import edu.ucdenver.ccp.knowtator.ProfileManager;
 import org.protege.editor.core.ui.view.DisposableAction;
 
 import javax.swing.*;
@@ -9,11 +9,11 @@ import java.awt.event.ActionEvent;
 
 public class NewProfileCommand extends DisposableAction {
 
-    private ProfileManager profileManager;
+    private KnowtatorView view;
 
-    public NewProfileCommand(ProfileManager profileManager) {
+    public NewProfileCommand(KnowtatorView view) {
         super("New Annotator", KnowtatorIcons.getIcon(KnowtatorIcons.NEW_PROFILE_ICON));
-        this.profileManager = profileManager;
+        this.view = view;
 
         this.putValue(AbstractAction.SHORT_DESCRIPTION, "Add new annotator profile");
 
@@ -29,7 +29,7 @@ public class NewProfileCommand extends DisposableAction {
         setAnnotator();
     }
 
-    private void setAnnotator() {
+    public void setAnnotator() {
         JTextField field1 = new JTextField();
         JTextField field2 = new JTextField();
         Object[] message = {
@@ -41,7 +41,7 @@ public class NewProfileCommand extends DisposableAction {
         {
             String annotator = field1.getText();
             String annotatorID = field2.getText();
-            profileManager.addNewProfile(annotator, annotatorID);
+            view.getProfileManager().addNewProfile(annotator, annotatorID);
         }
 
     }

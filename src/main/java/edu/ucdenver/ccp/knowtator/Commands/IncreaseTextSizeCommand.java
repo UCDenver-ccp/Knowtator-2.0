@@ -1,5 +1,6 @@
 package edu.ucdenver.ccp.knowtator.Commands;
 
+import edu.ucdenver.ccp.knowtator.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.ui.KnowtatorIcons;
 import edu.ucdenver.ccp.knowtator.ui.KnowtatorTextPane;
 import org.protege.editor.core.ui.view.DisposableAction;
@@ -13,12 +14,12 @@ import java.awt.event.ActionEvent;
 
 public class IncreaseTextSizeCommand extends DisposableAction {
 
-    private final JTabbedPane tabbedPane;
+    private KnowtatorView view;
 
-    public IncreaseTextSizeCommand(JTabbedPane tabbedPane) {
+    public IncreaseTextSizeCommand(KnowtatorView view) {
         super("Increase Text Size", KnowtatorIcons.getIcon(KnowtatorIcons.INCREASE_TEXT_SIZE_ICON));
+        this.view = view;
         this.putValue(AbstractAction.SHORT_DESCRIPTION, "Increase the document text size");
-        this.tabbedPane = tabbedPane;
     }
 
     @Override
@@ -26,14 +27,14 @@ public class IncreaseTextSizeCommand extends DisposableAction {
 
     }
 
-    private void increaseTextSize() {
-        KnowtatorTextPane textViewer = (KnowtatorTextPane)((JScrollPane)tabbedPane.getSelectedComponent()).getViewport().getView();
-        StyledDocument doc = textViewer.getStyledDocument();
-        MutableAttributeSet attrs = textViewer.getInputAttributes();
+    public void increaseTextSize() {
+        KnowtatorTextPane textPane = view.getTextViewer().getSelectedTextPane();
+        StyledDocument doc = textPane.getStyledDocument();
+        MutableAttributeSet attrs = textPane.getInputAttributes();
         Font font = doc.getFont(attrs);
         StyleConstants.setFontSize(attrs, font.getSize() + 2);
         doc.setCharacterAttributes(0, doc.getLength() + 1, attrs, false);
-        textViewer.repaint();
+        textPane.repaint();
     }
 
     @Override

@@ -10,15 +10,15 @@ import java.util.Collection;
 @SuppressWarnings("unused")
 public class OWLAPIDataExtractor {
 
-    private OWLModelManager man;
-    private OWLEntityFinder entityFinder;
+    public OWLModelManager man;
+    public OWLEntityFinder entityFinder;
 
-    private OWLAnnotationProperty nameSpaceLabel;
-    private OWLAnnotationProperty idLabel;
+    public OWLAnnotationProperty nameSpaceLabel;
+    public OWLAnnotationProperty idLabel;
 
-    private String classNameSpace;
-    private String classID;
-    private String className;
+    public String classNameSpace;
+    public String classID;
+    public String className;
 
     public OWLAPIDataExtractor(OWLModelManager man) {
         this.man = man;
@@ -28,11 +28,16 @@ public class OWLAPIDataExtractor {
         idLabel = entityFinder.getOWLAnnotationProperty("id");
     }
 
-    private Collection<OWLAnnotation> getOWLObjectAnnotations(OWLEntity ent) {
-        return EntitySearcher.getAnnotations(ent.getIRI(), man.getActiveOntology());
+    public Collection<OWLAnnotation> getOWLObjectAnnotations(OWLEntity ent) {
+        if (ent != null) {
+            return EntitySearcher.getAnnotations(ent.getIRI(), man.getActiveOntology());
+        }
+        else {
+            return null;
+        }
     }
 
-    private Collection<OWLAnnotationProperty> getOWLAnnotationProperties(OWLOntology ont) {
+    public Collection<OWLAnnotationProperty> getOWLAnnotationProperties(OWLOntology ont) {
         return ont.getAnnotationPropertiesInSignature();
     }
 
@@ -65,5 +70,9 @@ public class OWLAPIDataExtractor {
 
     public String getClassName() {
         return className;
+    }
+
+    public OWLClass getOWLClassByID(String classID) {
+        return man.getOWLEntityFinder().getOWLClass(classID);
     }
 }

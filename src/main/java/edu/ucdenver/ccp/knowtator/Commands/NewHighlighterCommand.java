@@ -1,5 +1,6 @@
 package edu.ucdenver.ccp.knowtator.Commands;
 
+import edu.ucdenver.ccp.knowtator.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.ui.KnowtatorIcons;
 import edu.ucdenver.ccp.knowtator.KnowtatorSelectionModel;
 import edu.ucdenver.ccp.knowtator.ProfileManager;
@@ -11,13 +12,11 @@ import java.awt.event.ActionEvent;
 
 public class NewHighlighterCommand extends DisposableAction {
 
-    private ProfileManager profileManager;
-    private KnowtatorSelectionModel selectionModel;
+    private KnowtatorView view;
 
-    public NewHighlighterCommand(KnowtatorSelectionModel selectionModel, ProfileManager profileManager) {
+    public NewHighlighterCommand(KnowtatorView view) {
         super("Add Highlighter Annotator", KnowtatorIcons.getIcon(KnowtatorIcons.NEW_HIGHLIGHTER_ICON));
-        this.selectionModel = selectionModel;
-        this.profileManager = profileManager;
+        this.view = view;
         this.putValue(AbstractAction.SHORT_DESCRIPTION, "Add a new highlighter profile");
 
     }
@@ -32,12 +31,12 @@ public class NewHighlighterCommand extends DisposableAction {
         addHighlighterProfile();
     }
 
-    private void addHighlighterProfile() {
+    public void addHighlighterProfile() {
 
 
         Color c = JColorChooser.showDialog(null, "Highlighter color", Color.BLUE);
         if (c != null) {
-            profileManager.addHighlighter(selectionModel.getSelectedClass(), c, profileManager.getCurrentAnnotator());
+            view.getProfileManager().addHighlighter(view.getSelectionModel().getSelectedClass(), c, null);
         }
     }
 

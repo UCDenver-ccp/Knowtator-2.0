@@ -1,6 +1,5 @@
 package edu.ucdenver.ccp.knowtator.ui;
 
-import com.sun.prism.image.ViewPort;
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
@@ -8,23 +7,31 @@ import org.xml.sax.SAXException;
 
 import javax.swing.*;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
+import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressWarnings("PackageAccessibility")
 public class KnowtatorTextViewer extends JTabbedPane {
-    private static final Logger log = Logger.getLogger(KnowtatorView.class);
-    private KnowtatorView view;
+    public static final Logger log = Logger.getLogger(KnowtatorView.class);
+    public KnowtatorView view;
 
     public KnowtatorTextViewer(KnowtatorView view) {
         super();
         this.view = view;
     }
 
-    private void addNewDocument(String fileName, Boolean fromResources) {
+    public void addNewDocument(String fileName, Boolean fromResources) {
         log.warn(String.format("Name: %s", FilenameUtils.getBaseName(fileName)));
         KnowtatorTextPane textPane = new KnowtatorTextPane(view);
         textPane.setName(FilenameUtils.getBaseName(fileName));
+        view.getTextAnnotationManager().addTextSource(FilenameUtils.getBaseName(fileName));
+
         JScrollPane sp = new JScrollPane(textPane);
         if (getTabCount() == 1 && getTitleAt(0).equals("Untitled")) {
             setComponentAt(0, sp);
@@ -54,9 +61,9 @@ public class KnowtatorTextViewer extends JTabbedPane {
             try {
                 if (fromResources) {
                     log.warn("Loading annotations from resources");
-                    view.getXmlUtil().loadTextAnnotationsFromXML(getClass().getResourceAsStream(annotationFileName));
+                    view.getXmlUtil().read(getClass().getResourceAsStream(annotationFileName));
                 } else {
-                    view.getXmlUtil().loadTextAnnotationsFromXML(new FileInputStream(annotationFileName));
+                    view.getXmlUtil().read(new FileInputStream(annotationFileName));
                 }
             } catch (ParserConfigurationException | IOException | SAXException e) {
                 e.printStackTrace();
@@ -73,6 +80,17 @@ public class KnowtatorTextViewer extends JTabbedPane {
         return null;
     }
 
+    public ArrayList<KnowtatorTextPane> getAllTextPanes() {
+        ArrayList<KnowtatorTextPane> textPanes = new ArrayList<>();
+
+        for (Component component: getComponents()) {
+            textPanes.add((KnowtatorTextPane) ((JScrollPane) component).getViewport().getView());
+        }
+
+        return textPanes;
+    }
+
+    @SuppressWarnings("unused")
     public KnowtatorTextPane getTextPaneByIndex(int i) {
         JScrollPane scrollPane = (JScrollPane) getComponent(i);
         JViewport viewPort = (scrollPane).getViewport();

@@ -6,8 +6,8 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
 import edu.ucdenver.ccp.knowtator.iaa.AssertionRelationship;
-import edu.ucdenver.ccp.knowtator.iaa.Annotation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -94,7 +94,7 @@ public class KnowtatorGraphViewer extends JPanel {
 
     }
 
-    public void addAnnotationNode(Annotation value) {
+    public void addAnnotationNode(TextAnnotation value) {
         graph.getModel().beginUpdate();
         try {
             graph.insertVertex(parent, null, value, 20, 20,

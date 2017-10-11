@@ -12,7 +12,7 @@ import java.util.List;
 
 public class KnowtatorViewImpl extends KnowtatorView {
 
-    private static final Logger log = Logger.getLogger(KnowtatorView.class);
+    public static final Logger log = Logger.getLogger(KnowtatorView.class);
 
     @Override
     public void initialiseClassView() {
@@ -25,7 +25,7 @@ public class KnowtatorViewImpl extends KnowtatorView {
         log.warn("Initialized Knowtator");
     }
 
-    private void createUI() {
+    public void createUI() {
         setLayout(new BorderLayout());
 
         /*
@@ -56,7 +56,7 @@ public class KnowtatorViewImpl extends KnowtatorView {
     /**
      * TODO make initial document the last document that was edited
      */
-    private void setupInitial() {
+    public void setupInitial() {
         /*
         Load GO ontology
          */
@@ -69,6 +69,7 @@ public class KnowtatorViewImpl extends KnowtatorView {
          */
         List<String> testArticles = new ArrayList<>();
         testArticles.add("/file/test_article.txt");
+        testArticles.add("/file/test_article2.txt");
         List<String> testAnnotations = new ArrayList<>();
         testAnnotations.add("/file/test_annotations.xml");
         textViewer.addDocuments(testArticles, testAnnotations, true);
@@ -78,21 +79,21 @@ public class KnowtatorViewImpl extends KnowtatorView {
     /**
      * Add buttons corresponding to each of the actions to the toolbar
      */
-    private void createToolBar() {
+    public void createToolBar() {
         /*
         Text document related actions
          */
         addAction(new OpenDocumentCommand(this), "A", "A");
         addAction(new CloseDocumentCommand(this), "A", "B");
 
-        addAction(new IncreaseTextSizeCommand(textViewer), "A", "C");
-        addAction(new DecreaseTextSizeCommand(textViewer), "A", "D");
+        addAction(new IncreaseTextSizeCommand(this), "A", "C");
+        addAction(new DecreaseTextSizeCommand(this), "A", "D");
 
         /*
         Text annotation related actions
          */
-        addAction(new LoadAnnotationsCommand(textViewer, xmlUtil), "B", "A");
-        addAction(new SaveAnnotationsToXmlCommand(xmlUtil), "B", "B");
+        addAction(new LoadTextAnnotationsCommand(this), "B", "A");
+        addAction(new SaveTextAnnotationsCommand(this), "B", "B");
 
         addAction(new RunIAACommand(this), "B", "E");
 
@@ -104,9 +105,9 @@ public class KnowtatorViewImpl extends KnowtatorView {
         /*
         Annotator and highlighter related commands
          */
-        addAction(new NewProfileCommand(profileManager), "C", "A");
-        addAction(new SwitchProfileCommand(profileManager), "C", "B");
-        addAction(new NewHighlighterCommand(selectionModel, profileManager), "C", "C");
+        addAction(new NewProfileCommand(this), "C", "A");
+        addAction(new SwitchProfileCommand(this), "C", "B");
+        addAction(new NewHighlighterCommand(this), "C", "C");
 
         /*
         Graph Viewer related commands
