@@ -114,4 +114,8 @@ public class KnowtatorViewImpl extends KnowtatorView {
          */
         addAction(new AddTextAnnotationNodeCommand(this), "D", "A");
     }
+
+    public static void main(String[] args) {
+
+    }
 }

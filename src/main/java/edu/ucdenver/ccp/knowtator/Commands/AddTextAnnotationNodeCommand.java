@@ -1,9 +1,8 @@
 package edu.ucdenver.ccp.knowtator.Commands;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
 import edu.ucdenver.ccp.knowtator.ui.KnowtatorIcons;
-import edu.ucdenver.ccp.knowtator.iaa.Annotation;
-import edu.ucdenver.ccp.knowtator.ui.KnowtatorTextPane;
 import org.protege.editor.core.ui.view.DisposableAction;
 
 import javax.swing.*;
@@ -34,9 +33,9 @@ public class AddTextAnnotationNodeCommand extends DisposableAction {
     }
 
     private void addNode() {
-        Annotation selectedAnnotation = ((KnowtatorTextPane) ((JScrollPane) (view.getTextViewer().getSelectedComponent())).getViewport().getView()).getTextAnnotationManager().getSelectedAnnotation();
-        if (selectedAnnotation != null) {
-            view.getGraphViewer().addAnnotationNode(selectedAnnotation);
+        TextAnnotation selectedTextAnnotation = view.getTextAnnotationManager().getSelectedTextAnnotation();
+        if (selectedTextAnnotation != null) {
+            view.getGraphViewer().addAnnotationNode(selectedTextAnnotation);
         }
     }
 }

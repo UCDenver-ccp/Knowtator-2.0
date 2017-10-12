@@ -27,7 +27,7 @@
  */
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
-import edu.ucdenver.ccp.knowtator.iaa.Annotation;
+import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
 
 import java.util.Collection;
@@ -44,24 +44,25 @@ public class ClassMatcher implements Matcher {
 	 * shortest annotation with the same class and overlapping spans will be
 	 * returned. Otherwise, null is returned.
 	 * 
-	 * @param annotation
+	 * @param textAnnotation
 	 * @param compareSetName
-	 * @param excludeAnnotations
+	 * @param excludeTextAnnotations
 	 * @param iaa
 	 * @param matchResult
 	 *            will be set to NONTRIVIAL_MATCH or NONTRIVIAL_NONMATCH.
 	 *            Trivial matches and non-matches are not defined for this
 	 *            matcher.
-	 * @see edu.uchsc.ccp.iaa.matcher.Matcher#match(Annotation, String, Set,
+	 * @see edu.uchsc.ccp.iaa.matcher.Matcher#match(TextAnnotation, String, Set,
 	 *      IAA, MatchResult)
 	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
 	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
 	 * @see edu.uchsc.ccp.iaa.Annotation#getShortestAnnotation(Collection)
 	 */
 
-	public Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
-							MatchResult matchResult) {
-		Annotation match = match(annotation, compareSetName, iaa, excludeAnnotations);
+	@SuppressWarnings("JavaDoc")
+	public TextAnnotation match(TextAnnotation textAnnotation, String compareSetName, Set<TextAnnotation> excludeTextAnnotations, IAA iaa,
+								MatchResult matchResult) {
+		TextAnnotation match = match(textAnnotation, compareSetName, iaa, excludeTextAnnotations);
 		if (match != null) {
 			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 			return match;
@@ -71,37 +72,36 @@ public class ClassMatcher implements Matcher {
 		}
 	}
 
-	public static Annotation match(Annotation annotation, String compareSetName, IAA iaa,
-			Set<Annotation> excludeAnnotations) {
-		Annotation spanAndClassMatch = ClassAndSpanMatcher.match(annotation, compareSetName, iaa, excludeAnnotations);
+	public static TextAnnotation match(TextAnnotation textAnnotation, String compareSetName, IAA iaa,
+                                       Set<TextAnnotation> excludeTextAnnotations) {
+		TextAnnotation spanAndClassMatch = ClassAndSpanMatcher.match(textAnnotation, compareSetName, iaa, excludeTextAnnotations);
 		if (spanAndClassMatch != null) {
 			return spanAndClassMatch;
 		}
 
-		Set<Annotation> matches = matches(annotation, compareSetName, iaa, excludeAnnotations);
+		Set<TextAnnotation> matches = matches(textAnnotation, compareSetName, iaa, excludeTextAnnotations);
 		if (matches.size() > 0) {
 			if (matches.size() == 1)
 				return matches.iterator().next();
 			else {
-				Annotation shortestAnnotation = Annotation.getShortestAnnotation(matches);
-				return shortestAnnotation;
+				return TextAnnotation.getShortestAnnotation(matches);
 			}
 		} else {
 			return null;
 		}
 	}
 
-	public static Set<Annotation> matches(Annotation annotation, String compareSetName, IAA iaa,
-			Set<Annotation> excludeAnnotations) {
+	public static Set<TextAnnotation> matches(TextAnnotation textAnnotation, String compareSetName, IAA iaa,
+											  Set<TextAnnotation> excludeTextAnnotations) {
 
-		Set<Annotation> overlappingAnnotations = iaa.getOverlappingAnnotations(annotation, compareSetName);
-		Set<Annotation> annotationsOfSameType = iaa.getAnnotationsOfSameType(annotation, compareSetName);
-		Set<Annotation> candidateAnnotations = new HashSet<>(overlappingAnnotations);
-		candidateAnnotations.retainAll(annotationsOfSameType);
-		candidateAnnotations.removeAll(excludeAnnotations);
+		Set<TextAnnotation> overlappingTextAnnotations = iaa.getOverlappingAnnotations(textAnnotation, compareSetName);
+		Set<TextAnnotation> annotationsOfSameType = iaa.getAnnotationsOfSameType(textAnnotation, compareSetName);
+		Set<TextAnnotation> candidateTextAnnotations = new HashSet<>(overlappingTextAnnotations);
+		candidateTextAnnotations.retainAll(annotationsOfSameType);
+		candidateTextAnnotations.removeAll(excludeTextAnnotations);
 
-		if (candidateAnnotations.size() > 0) {
-			return Collections.unmodifiableSet(candidateAnnotations);
+		if (candidateTextAnnotations.size() > 0) {
+			return Collections.unmodifiableSet(candidateTextAnnotations);
 		} else {
 			return Collections.emptySet();
 		}

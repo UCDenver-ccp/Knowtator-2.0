@@ -2,7 +2,6 @@ package edu.ucdenver.ccp.knowtator.xml;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
-import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationManager;
 import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -20,15 +19,10 @@ import java.util.HashMap;
 
 public class XmlReader {
     public static final Logger log = Logger.getLogger(KnowtatorView.class);
-    public TextAnnotationManager textAnnotationManager;
-    public OWLAPIDataExtractor dataExtractor;
 
-    public XmlReader(TextAnnotationManager textAnnotationManager, OWLAPIDataExtractor dataExtractor) {
-        this.textAnnotationManager = textAnnotationManager;
-        this.dataExtractor = dataExtractor;
-    }
+    public static void read(InputStream is, KnowtatorView view) throws ParserConfigurationException, IOException, SAXException {
+        log.warn("Reading annotations from XML");
 
-    public void read(InputStream is) throws ParserConfigurationException, IOException, SAXException {
         /*
         doc parses the XML into a graph
          */
@@ -46,11 +40,13 @@ public class XmlReader {
             log.warn(String.format("Text source: %s", textSource));
 
             HashMap<String, Element> mentionTracker = mapMentionToAnnotationElement(textSourceElement);
-            addAnnotationsToKnowtator(textSourceElement, mentionTracker, textSource);
+            addAnnotationsToKnowtator(textSourceElement, mentionTracker, textSource, view);
         }
     }
 
-    public void addAnnotationsToKnowtator(Element textSourceElement, HashMap<String, Element> mentionTracker, String textSource) {
+    public static void addAnnotationsToKnowtator(Element textSourceElement, HashMap<String, Element> mentionTracker, String textSource, KnowtatorView view) {
+        log.warn("Adding annotations to Knowtator");
+
         /*
         Next parse classes and add the annotations
          */
@@ -69,36 +65,31 @@ public class XmlReader {
                 String annotatorName = annotationElement.getElementsByTagName(XmlTags.TAG_ANNOTATOR).item(0).getTextContent();
                 String annotatorID = ((Element) annotationElement.getElementsByTagName(XmlTags.TAG_ANNOTATOR).item(0)).getAttribute(XmlTags.TAG_ANNOTATOR_ID);
 
-                OWLClass cls = dataExtractor.getOWLClassByID(classID);
-                if (cls != null) {
-                    try {
-                        dataExtractor.extractOWLObjectData(cls);
-                        className = dataExtractor.getClassName();
-                        classID = dataExtractor.getClassID();
-                    } catch (NullPointerException e) {
-                        className = classElement.getElementsByTagName(XmlTags.TAG_MENTION_CLASS).item(0).getTextContent();
-                    }
-                    TextAnnotation newTextAnnotation = new TextAnnotation(textSource, cls);
-                    newTextAnnotation.setClassName(className);
-                    newTextAnnotation.setClassID(classID);
-                    newTextAnnotation.setAnnotatorName(annotatorName);
-                    newTextAnnotation.setAnnotatorID(annotatorID);
-                    newTextAnnotation.setTextSpans(XmlUtil.getSpanInfo(annotationElement));
+                OWLClass cls = OWLAPIDataExtractor.getOWLClassByID(view, classID);
+                try {
 
-                    try {
-                        textAnnotationManager.addTextAnnotation(textSource, newTextAnnotation);
-                    } catch (NoSuchFieldException e) {
-                        e.printStackTrace();
-                    }
+                    className = OWLAPIDataExtractor.getClassName(view, cls);
+                    classID = OWLAPIDataExtractor.getClassID(view, cls);
+                } catch (NullPointerException e) {
+                    className = classElement.getElementsByTagName(XmlTags.TAG_MENTION_CLASS).item(0).getTextContent();
+                }
+                TextAnnotation newTextAnnotation = new TextAnnotation(textSource, cls);
+                newTextAnnotation.setClassName(className);
+                newTextAnnotation.setClassID(classID);
+                newTextAnnotation.setAnnotatorName(annotatorName);
+                newTextAnnotation.setAnnotatorID(annotatorID);
+                newTextAnnotation.setTextSpans(XmlUtil.getSpanInfo(annotationElement));
+
+                try {
+                    view.getTextAnnotationManager().addTextAnnotation(textSource, newTextAnnotation);
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
                 }
             }
         }
     }
 
-
-
-
-    public HashMap<String, Element> mapMentionToAnnotationElement(Element textSourceElement) {
+    public static HashMap<String, Element> mapMentionToAnnotationElement(Element textSourceElement) {
         /*
         Parse mentions first and refer to them later after parsing classes
          */

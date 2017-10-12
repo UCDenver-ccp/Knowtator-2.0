@@ -18,21 +18,18 @@ import static edu.ucdenver.ccp.knowtator.xml.XmlTags.TAG_SPAN;
 
 public final class XmlUtil {
     public static final Logger log = Logger.getLogger(KnowtatorView.class);
-
-    public XmlWriter xmlWriter;
-    public XmlReader xmlReader;
+    KnowtatorView view;
 
     public XmlUtil(KnowtatorView view) {
-        xmlReader = new XmlReader(view.getTextAnnotationManager(), view.getDataExtractor());
-        xmlWriter = new XmlWriter(view.getTextAnnotationManager());
+        this.view = view;
     }
 
     public void read(InputStream is) throws IOException, SAXException, ParserConfigurationException {
-        xmlReader.read(is);
+        XmlReader.read(is, view);
     }
 
     public void write(FileWriter fw) throws IOException, NoSuchFieldException {
-        xmlWriter.write(fw);
+        XmlWriter.write(fw, view.getTextAnnotationManager());
     }
 
     public static List<Node> asList(NodeList n) {

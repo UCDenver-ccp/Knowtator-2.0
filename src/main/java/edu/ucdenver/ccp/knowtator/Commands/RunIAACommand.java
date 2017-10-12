@@ -39,7 +39,7 @@ public class RunIAACommand extends DisposableAction{
                 KnowtatorIAA knowtatorIAA = new KnowtatorIAA(outputDirectory, view);
                 SlotMatcherConfig slotMatcherConfig = null; // getSlotMatcherConfig();
 
-                Object[] options = { "Class IAA", "Span IAA", "Class and Span IAA", "Subclass IAA", "Feature Matcher IAA" };
+                Object[] options = { "Class IAA", "TextSpan IAA", "Class and TextSpan IAA", "Subclass IAA", "Feature Matcher IAA" };
                 int response = JOptionPane.showOptionDialog(null, "Choose which type of IAA to perform", "Run IAA",
                         JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
                         null, options, options[0]);

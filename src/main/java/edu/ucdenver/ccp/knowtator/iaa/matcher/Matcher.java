@@ -27,7 +27,7 @@
  */
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
-import edu.ucdenver.ccp.knowtator.iaa.Annotation;
+import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
 
 import java.util.Set;
@@ -35,11 +35,11 @@ import java.util.Set;
 
 public interface Matcher {
 	/**
-	 * @param annotation
-	 *            the annotation that is to be matched
+	 * @param textAnnotation
+	 *            the textAnnotation that is to be matched
 	 * @param compareSetName
 	 *            the set of annotations that we will look for a match in
-	 * @param excludeAnnotations
+	 * @param excludeTextAnnotations
 	 *            a set of annotations that cannot be the return value
 	 * @param iaa
 	 *            an instance of IAA from which to get information about
@@ -48,10 +48,10 @@ public interface Matcher {
 	 *            instantiate a new MatchType and pass it to the method. The
 	 *            method must set the result to one of the four result values
 	 *            given in MatchResult.
-	 * @return the annotation that was matched. If none exists then return null.
+	 * @return the textAnnotation that was matched. If none exists then return null.
 	 */
-	Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
-					 MatchResult matchResult);
+	TextAnnotation match(TextAnnotation textAnnotation, String compareSetName, Set<TextAnnotation> excludeTextAnnotations, IAA iaa,
+						 MatchResult matchResult);
 
 	String getName();
 

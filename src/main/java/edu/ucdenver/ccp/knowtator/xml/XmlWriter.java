@@ -13,13 +13,8 @@ import java.util.ArrayList;
 
 public class XmlWriter {
     public static final Logger log = Logger.getLogger(KnowtatorView.class);
-    public TextAnnotationManager textAnnotationManager;
 
-    public XmlWriter(TextAnnotationManager textAnnotationManager) {
-        this.textAnnotationManager = textAnnotationManager;
-    }
-
-    public ArrayList<String> annotationToXML(TextAnnotation textAnnotation) {
+    public static ArrayList<String> annotationToXML(TextAnnotation textAnnotation) {
         ArrayList<String> toWrite = new ArrayList<>();
 
         toWrite.add(String.format("  <%s>", XmlTags.TAG_ANNOTATION));
@@ -34,7 +29,7 @@ public class XmlWriter {
         return toWrite;
     }
 
-    public void write(FileWriter fw) throws IOException, NoSuchFieldException {
+    public static void write(FileWriter fw, TextAnnotationManager textAnnotationManager) throws IOException, NoSuchFieldException {
         BufferedWriter bw = new BufferedWriter(fw);
 
         bw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");

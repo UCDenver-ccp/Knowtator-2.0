@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<annotations textSource="test_article.txt">
-  <annotation>
+<textAnnotations textSource="test_article.txt">
+  <textAnnotation>
     <mention id="one_Instance_0" />
     <annotator id="Default">Default</annotator>
-    <span start="97" end="144" />
+    <textSpan start="97" end="144" />
     <spannedText>This sentence should be annotated in one color.</spannedText>
-  </annotation>
+  </textAnnotation>
   <classMention id="one_Instance_0">
     <mentionClass id="null">Activity</mentionClass>
   </classMention>
-  <annotation>
+  <textAnnotation>
     <mention id="different_Instance_1" />
     <annotator id="Default">Default</annotator>
-    <span start="146" end="206" />
+    <textSpan start="146" end="206" />
     <spannedText>This next sentence should be annotated in a different color.</spannedText>
-  </annotation>
+  </textAnnotation>
   <classMention id="different_Instance_1">
     <mentionClass id="null">Activity</mentionClass>
   </classMention>
-</annotations>
+</textAnnotations>

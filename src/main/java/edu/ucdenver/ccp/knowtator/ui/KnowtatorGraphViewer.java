@@ -48,7 +48,7 @@ public class KnowtatorGraphViewer extends JPanel {
             Object[] cells = (Object[])evt.getProperty("cells");
             for (Object cell : cells) {
                 if (graph.getModel().isEdge(cell)) {
-                    AssertionRelationship relationship = ((KnowtatorTextPane) ((JScrollPane) view.getTextViewer().getSelectedComponent()).getViewport().getView()).getTextAnnotationManager().addAssertion();
+                    AssertionRelationship relationship = view.getTextAnnotationManager().addAssertion();
                     if (relationship != null) {
                         ((mxCell) cell).setValue(relationship);
                     } else {

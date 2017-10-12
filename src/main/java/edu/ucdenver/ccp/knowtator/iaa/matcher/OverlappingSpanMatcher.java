@@ -27,7 +27,7 @@
  */
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
-import edu.ucdenver.ccp.knowtator.iaa.Annotation;
+import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
 
 import java.util.Set;
@@ -36,25 +36,25 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public class OverlappingSpanMatcher implements Matcher {
 
-	public Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
-							MatchResult matchResult) {
+	public TextAnnotation match(TextAnnotation textAnnotation, String compareSetName, Set<TextAnnotation> excludeTextAnnotations, IAA iaa,
+								MatchResult matchResult) {
 
-		Annotation spanAndClassMatch = ClassAndSpanMatcher.match(annotation, compareSetName, iaa, excludeAnnotations);
+		TextAnnotation spanAndClassMatch = ClassAndSpanMatcher.match(textAnnotation, compareSetName, iaa, excludeTextAnnotations);
 		if (spanAndClassMatch != null) {
 			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 			return spanAndClassMatch;
 		}
 
-		Set<Annotation> classMatches = ClassMatcher.matches(annotation, compareSetName, iaa, excludeAnnotations);
+		Set<TextAnnotation> classMatches = ClassMatcher.matches(textAnnotation, compareSetName, iaa, excludeTextAnnotations);
 		if (classMatches.size() > 0) {
-			Annotation match = Annotation.getShortestAnnotation(classMatches);
+			TextAnnotation match = TextAnnotation.getShortestAnnotation(classMatches);
 			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 			return match;
 		}
 
-		Set<Annotation> overlappingAnnotations = iaa.getOverlappingAnnotations(annotation, compareSetName);
-		if (overlappingAnnotations.size() > 0) {
-			Annotation match = Annotation.getShortestAnnotation(overlappingAnnotations);
+		Set<TextAnnotation> overlappingTextAnnotations = iaa.getOverlappingAnnotations(textAnnotation, compareSetName);
+		if (overlappingTextAnnotations.size() > 0) {
+			TextAnnotation match = TextAnnotation.getShortestAnnotation(overlappingTextAnnotations);
 			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 			return match;
 		}

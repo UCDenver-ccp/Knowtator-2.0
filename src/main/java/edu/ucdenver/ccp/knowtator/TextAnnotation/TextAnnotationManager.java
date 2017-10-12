@@ -23,23 +23,12 @@ public final class TextAnnotationManager {
     public TextAnnotation selectedTextAnnotation;
     public KnowtatorView view;
     public KnowtatorSelectionModel selectionModel;
-    public OWLAPIDataExtractor getDataExtractor() {
-        return dataExtractor;
-    }
-    public OWLAPIDataExtractor dataExtractor;
 
     public ArrayList<AssertionRelationship> assertionRelationships;
 
     public TextAnnotationManager(KnowtatorView view) {
         this.view = view;
-        dataExtractor = new OWLAPIDataExtractor(view.getOWLModelManager());
         selectedTextAnnotation = null;
-        textAnnotations = new HashMap<>();
-        assertionRelationships = new ArrayList<>();
-    }
-
-    public TextAnnotationManager() {
-        dataExtractor = new OWLAPIDataExtractor(view.getOWLModelManager());
         textAnnotations = new HashMap<>();
         assertionRelationships = new ArrayList<>();
     }
@@ -50,13 +39,11 @@ public final class TextAnnotationManager {
 
     public void addTextAnnotation(String textSource, OWLClass cls, Integer spanStart, Integer spanEnd) throws NoSuchFieldException {
 
-        // Extract info from OWLClass
-        dataExtractor.extractOWLObjectData(cls);
 
         // Make new annotation
         TextAnnotation newTextAnnotation = new TextAnnotation(textSource, cls);
-        newTextAnnotation.setClassID(dataExtractor.getClassID());
-        newTextAnnotation.setClassName(dataExtractor.getClassName());
+        newTextAnnotation.setClassID(OWLAPIDataExtractor.getClassID(view, cls));
+        newTextAnnotation.setClassName(OWLAPIDataExtractor.getClassName(view, cls));
         newTextAnnotation.setAnnotatorID(view.getProfileManager().getCurrentAnnotator().getAnnotatorID());
         newTextAnnotation.setAnnotatorName(view.getProfileManager().getCurrentAnnotator().getAnnotatorName());
 
@@ -167,8 +154,8 @@ public final class TextAnnotationManager {
 
     public AssertionRelationship addAssertion() {
         OWLObjectProperty property = view.getOWLWorkspace().getOWLSelectionModel().getLastSelectedObjectProperty();
-        dataExtractor.extractOWLObjectData(property);
-        AssertionRelationship newAssertionRelationship = new AssertionRelationship(property, dataExtractor.getClassName());
+
+        AssertionRelationship newAssertionRelationship = new AssertionRelationship(property, OWLAPIDataExtractor.getClassName(view, property));
         assertionRelationships.add(newAssertionRelationship);
         return newAssertionRelationship;
     }

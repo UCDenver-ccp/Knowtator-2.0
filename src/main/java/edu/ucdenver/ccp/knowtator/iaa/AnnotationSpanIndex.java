@@ -28,6 +28,9 @@
 
 package edu.ucdenver.ccp.knowtator.iaa;
 
+import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
+import edu.ucdenver.ccp.knowtator.TextAnnotation.TextSpan;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,82 +46,82 @@ import java.util.Set;
 
 public class AnnotationSpanIndex {
 
-	Map<Integer, Set<Annotation>> window2AnnotationsMap;
+	Map<Integer, Set<TextAnnotation>> window2AnnotationsMap;
 
 	int windowSize;
 
-	public AnnotationSpanIndex(Collection<Annotation> annotations) {
-		this(annotations, 20);
+	public AnnotationSpanIndex(Collection<TextAnnotation> textAnnotations) {
+		this(textAnnotations, 20);
 	}
 
-	public AnnotationSpanIndex(Collection<Annotation> annotations, int windowSize) {
+	public AnnotationSpanIndex(Collection<TextAnnotation> textAnnotations, int windowSize) {
 		this.windowSize = windowSize;
-		window2AnnotationsMap = new HashMap<Integer, Set<Annotation>>();
-		for (Annotation annotation : annotations) {
-			List<Span> spans = annotation.getSpans();
-			for (Span span : spans) {
-				int startKey = span.getStart() / windowSize;
-				int endKey = span.getEnd() / windowSize;
+		window2AnnotationsMap = new HashMap<>();
+		for (TextAnnotation textAnnotation : textAnnotations) {
+			List<TextSpan> textSpans = textAnnotation.getTextSpans();
+			for (TextSpan textSpan : textSpans) {
+				int startKey = textSpan.getStart() / windowSize;
+				int endKey = textSpan.getEnd() / windowSize;
 				for (int key = startKey; key <= endKey; key++) {
-					addToMap(key, annotation);
+					addToMap(key, textAnnotation);
 				}
 			}
 		}
 
 		// for(Integer window : window2AnnotationsMap.keySet())
 		// {
-		// Set<Annotation> windowAnnotations =
+		// Set<TextAnnotation> windowAnnotations =
 		// window2AnnotationsMap.get(window);
-		// for(Annotation windowAnnotation : windowAnnotations)
+		// for(TextAnnotation windowAnnotation : windowAnnotations)
 		// {
-		// Collection<Span> spans = windowAnnotation.getSpans();
+		// Collection<TextSpan> spans = windowAnnotation.getSpans();
 		// }
 		// }
 	}
 
-	private void addToMap(int key, Annotation annotation) {
+	private void addToMap(int key, TextAnnotation textAnnotation) {
 		if (!window2AnnotationsMap.containsKey(key)) {
-			window2AnnotationsMap.put(key, new HashSet<Annotation>());
+			window2AnnotationsMap.put(key, new HashSet<>());
 		}
-		window2AnnotationsMap.get(key).add(annotation);
+		window2AnnotationsMap.get(key).add(textAnnotation);
 	}
 
-	public Set<Annotation> getNearbyAnnotations(Annotation annotation) {
-		Collection<Span> spans = annotation.getSpans();
-		HashSet<Integer> windows = new HashSet<Integer>();
-		for (Span span : spans) {
-			windows.add(new Integer(span.getStart() / windowSize));
-			windows.add(new Integer(span.getEnd() / windowSize));
+	public Set<TextAnnotation> getNearbyAnnotations(TextAnnotation textAnnotation) {
+		Collection<TextSpan> textSpans = textAnnotation.getTextSpans();
+		HashSet<Integer> windows = new HashSet<>();
+		for (TextSpan textSpan : textSpans) {
+			windows.add(textSpan.getStart() / windowSize);
+			windows.add(textSpan.getEnd() / windowSize);
 		}
 
-		HashSet<Annotation> returnValues = new HashSet<Annotation>();
+		HashSet<TextAnnotation> returnValues = new HashSet<>();
 		for (Integer window : windows) {
-			Set<Annotation> windowAnnotations = window2AnnotationsMap.get(window);
-			if (windowAnnotations != null)
-				returnValues.addAll(windowAnnotations);
+			Set<TextAnnotation> windowTextAnnotations = window2AnnotationsMap.get(window);
+			if (windowTextAnnotations != null)
+				returnValues.addAll(windowTextAnnotations);
 		}
 
-		returnValues.remove(annotation);
+		returnValues.remove(textAnnotation);
 		return returnValues;
 	}
 
-	public Set<Annotation> getOverlappingAnnotations(Annotation annotation) {
-		Set<Annotation> nearbyAnnotations = getNearbyAnnotations(annotation);
-		Set<Annotation> returnValues = new HashSet<Annotation>();
-		for (Annotation nearbyAnnotation : nearbyAnnotations) {
-			if (Annotation.spansOverlap(annotation, nearbyAnnotation)) {
-				returnValues.add(nearbyAnnotation);
+	public Set<TextAnnotation> getOverlappingAnnotations(TextAnnotation textAnnotation) {
+		Set<TextAnnotation> nearbyTextAnnotations = getNearbyAnnotations(textAnnotation);
+		Set<TextAnnotation> returnValues = new HashSet<>();
+		for (TextAnnotation nearbyTextAnnotation : nearbyTextAnnotations) {
+			if (TextAnnotation.spansOverlap(textAnnotation, nearbyTextAnnotation)) {
+				returnValues.add(nearbyTextAnnotation);
 			}
 		}
 		return returnValues;
 	}
 
-	public Set<Annotation> getExactlyOverlappingAnnotations(Annotation annotation) {
-		Set<Annotation> nearbyAnnotations = getNearbyAnnotations(annotation);
-		Set<Annotation> returnValues = new HashSet<Annotation>();
-		for (Annotation nearbyAnnotation : nearbyAnnotations) {
-			if (Annotation.spansMatch(annotation, nearbyAnnotation)) {
-				returnValues.add(nearbyAnnotation);
+	public Set<TextAnnotation> getExactlyOverlappingAnnotations(TextAnnotation textAnnotation) {
+		Set<TextAnnotation> nearbyTextAnnotations = getNearbyAnnotations(textAnnotation);
+		Set<TextAnnotation> returnValues = new HashSet<>();
+		for (TextAnnotation nearbyTextAnnotation : nearbyTextAnnotations) {
+			if (TextAnnotation.spansMatch(textAnnotation, nearbyTextAnnotation)) {
+				returnValues.add(nearbyTextAnnotation);
 			}
 		}
 		return returnValues;

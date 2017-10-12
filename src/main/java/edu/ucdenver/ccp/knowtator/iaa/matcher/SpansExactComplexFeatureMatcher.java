@@ -27,7 +27,7 @@
  */
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
-import edu.ucdenver.ccp.knowtator.iaa.Annotation;
+import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
 
 import java.util.ArrayList;
@@ -51,15 +51,15 @@ public class SpansExactComplexFeatureMatcher implements Matcher {
 	boolean allowTrivialSimpleFeatureMatches;
 
 	/**
-	 * This method will return an annotation that has the exact same spans and
-	 * complex features. It is not required that the annotation class match.
-	 * Preference will be given to an annotation that has the same class as well
+	 * This method will return an textAnnotation that has the exact same spans and
+	 * complex features. It is not required that the textAnnotation class match.
+	 * Preference will be given to an textAnnotation that has the same class as well
 	 * as spans and simple features. If one does not exist, then null is
 	 * returned.
 	 */
-	public Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
-							MatchResult matchResult) {
-		return match(annotation, compareSetName, iaa, excludeAnnotations, matchResult);
+	public TextAnnotation match(TextAnnotation textAnnotation, String compareSetName, Set<TextAnnotation> excludeTextAnnotations, IAA iaa,
+								MatchResult matchResult) {
+		return match(textAnnotation, compareSetName, iaa, excludeTextAnnotations, matchResult);
 	}
 
 	/**
@@ -69,32 +69,32 @@ public class SpansExactComplexFeatureMatcher implements Matcher {
 	 * as spans and simple features. If one does not exist, then null is
 	 * returned.
 	 * 
-	 * @param annotation
+	 * @param textAnnotation
 	 * @param compareSetName
 	 * @param iaa
-	 * @param excludeAnnotations
+	 * @param excludeTextAnnotations
 	 * @param matchResult
 	 *            will be set to:
 	 *            <ul>
 	 *            <li>TRIVIAL_NONMATCH if there are no exactly overlapping
 	 *            annotations with the passed in annotation
 	 *            <li>NONTRIVIAL_MATCH if there is an annotation that is exactly
-	 *            overlapping and the Annotation.compareSimpleFeatures returns
+	 *            overlapping and the TextAnnotation.compareSimpleFeatures returns
 	 *            NONTRIVIAL_MATCH
 	 *            <li>TRIVIAL_MATCH if there is an annotation that is exactly
-	 *            overlapping and the Annotation.compareSimpleFeatures returns
+	 *            overlapping and the TextAnnotation.compareSimpleFeatures returns
 	 *            TRIVIAL_MATCH <br>
 	 *            Note: if there is a trivial_match then there cannot possibly
 	 *            be a NONTRIVIAL_MATCH because one of the simple features of
 	 *            the passed in annotation must have a null value or there are
 	 *            no simple features.
 	 *            <li>NONTRIVIAL_NONMATCH if there an annotation that is exactly
-	 *            overlapping and the Annotation.compareSimpleFeatures returns
+	 *            overlapping and the TextAnnotation.compareSimpleFeatures returns
 	 *            NONTRIVIAL_NONMATCH
 	 *            <li>TRIVIAL_NONMATCH if there is no match or non-trivial
 	 *            non-match found.
 	 * @return will return the first nontrivial match that it finds preferring
-	 * @see edu.uchsc.ccp.iaa.matcher.Matcher#match(Annotation, String, Set,
+	 * @see edu.uchsc.ccp.iaa.matcher.Matcher#match(TextAnnotation, String, Set,
 	 *      IAA, MatchResult)
 	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
 	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
@@ -102,33 +102,33 @@ public class SpansExactComplexFeatureMatcher implements Matcher {
 	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#TRIVIAL_NONMATCH
 	 */
 
-	public static Annotation match(Annotation annotation, String compareSetName, IAA iaa,
-			Set<Annotation> excludeAnnotations, MatchResult matchResult) {
+	public static TextAnnotation match(TextAnnotation textAnnotation, String compareSetName, IAA iaa,
+                                       Set<TextAnnotation> excludeTextAnnotations, MatchResult matchResult) {
 		// prefer class and span matches over just span matches
-		Set<Annotation> classAndSpanMatches = ClassAndSpanMatcher.matches(annotation, compareSetName, iaa,
-				excludeAnnotations, false); // no need to remove
-		// excludeAnnotations because they
+		Set<TextAnnotation> classAndSpanMatches = ClassAndSpanMatcher.matches(textAnnotation, compareSetName, iaa,
+                excludeTextAnnotations, false); // no need to remove
+		// excludeTextAnnotations because they
 		// have already been removed by
 		// ClassAndSpanMatcher
-		Set<Annotation> exactlyOverlappingAnnotations = new HashSet<>(iaa.getExactlyOverlappingAnnotations(
-				annotation, compareSetName));
-		exactlyOverlappingAnnotations.removeAll(classAndSpanMatches);
-		exactlyOverlappingAnnotations.removeAll(excludeAnnotations);
+		Set<TextAnnotation> exactlyOverlappingTextAnnotations = new HashSet<>(iaa.getExactlyOverlappingAnnotations(
+                textAnnotation, compareSetName));
+		exactlyOverlappingTextAnnotations.removeAll(classAndSpanMatches);
+		exactlyOverlappingTextAnnotations.removeAll(excludeTextAnnotations);
 
-		List<Annotation> candidateAnnotations = new ArrayList<>(classAndSpanMatches.size()
-				+ exactlyOverlappingAnnotations.size());
-		candidateAnnotations.addAll(classAndSpanMatches);
-		candidateAnnotations.addAll(exactlyOverlappingAnnotations);
+		List<TextAnnotation> candidateTextAnnotations = new ArrayList<>(classAndSpanMatches.size()
+				+ exactlyOverlappingTextAnnotations.size());
+		candidateTextAnnotations.addAll(classAndSpanMatches);
+		candidateTextAnnotations.addAll(exactlyOverlappingTextAnnotations);
 
 		boolean nontrivialNonmatch = false;
 
-		// for(Annotation candidateAnnotation : candidateAnnotations)
+		// for(TextAnnotation candidateAnnotation : candidateTextAnnotations)
 		// {
-		// int result = Annotation.compareComplexFeature(annotation,
+		// int result = TextAnnotation.compareComplexFeature(textAnnotation,
 		// candidateAnnotation, );
 		// if there is a trivial_match then there cannot possibly be a
 		// NONTRIVIAL_MATCH
-		// because one of the simple features of the passed in annotation must
+		// because one of the simple features of the passed in textAnnotation must
 		// have a null value
 		// or there are no simple features.
 		// if(result == MatchResult.NONTRIVIAL_MATCH ||
