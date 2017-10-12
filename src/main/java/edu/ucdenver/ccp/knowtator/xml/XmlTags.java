@@ -1,20 +1,20 @@
 package edu.ucdenver.ccp.knowtator.xml;
 
 public class XmlTags {
-    public static String TAG_ANNOTATIONS = "annotations";
-    public static String TAG_TEXTSOURCE = "textSource";
+    public static String ANNOTATIONS = "annotations";
+    public static String TEXTSOURCE = "textSource";
 
-    public static String TAG_MENTION = "mention";
-    public static String TAG_MENTION_ID = "id";
-    public static String TAG_ANNOTATOR = "annotator";
-    public static String TAG_ANNOTATOR_ID = "id";
-    public static String TAG_SPAN = "span";
-    public static String TAG_SPAN_START = "start";
-    public static String TAG_SPAN_END = "end";
-    public static String TAG_ANNOTATION = "annotation";
+    public static String MENTION = "mention";
+    public static String MENTION_ID = "id";
+    public static String ANNOTATOR = "annotator";
+    public static String ANNOTATOR_ID = "id";
+    public static String SPAN = "span";
+    public static String SPAN_START = "start";
+    public static String SPAN_END = "end";
+    public static String ANNOTATION = "annotation";
 
-    public static String TAG_CLASS_MENTION = "classMention";
-    public static String TAG_CLASS_MENTION_ID = "id";
-    public static String TAG_MENTION_CLASS = "mentionClass";
-    public static String TAG_MENTION_CLASS_ID = "id";
+    public static String CLASS_MENTION = "classMention";
+    public static String CLASS_MENTION_ID = "id";
+    public static String MENTION_CLASS = "mentionClass";
+    public static String MENTION_CLASS_ID = "id";
 }

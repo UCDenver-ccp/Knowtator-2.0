@@ -9,6 +9,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Utilities;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -115,6 +116,16 @@ public class KnowtatorTextPane extends JTextPane {
 			}
 		} else {
 			log.error("No OWLClass selected");
+		}
+	}
+
+	public void highlightAnnotation(int spanStart, int spanEnd, OWLClass cls) {
+		DefaultHighlighter.DefaultHighlightPainter highlighter = view.getAnnotatorManager().getCurrentAnnotator().getHighlighter(cls);
+
+		try {
+			getHighlighter().addHighlight(spanStart, spanEnd, highlighter);
+		} catch (BadLocationException e) {
+			e.printStackTrace();
 		}
 	}
 

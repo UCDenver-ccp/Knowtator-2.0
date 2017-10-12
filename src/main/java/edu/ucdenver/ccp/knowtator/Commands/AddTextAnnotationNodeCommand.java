@@ -10,8 +10,8 @@ import java.awt.event.ActionEvent;
 
 public class AddTextAnnotationNodeCommand extends DisposableAction {
 
-//    private static final Logger log = Logger.getLogger(KnowtatorView.class);
-    private KnowtatorView view;
+//    public static final Logger log = Logger.getLogger(KnowtatorView.class);
+    public KnowtatorView view;
 
     public AddTextAnnotationNodeCommand(KnowtatorView view) {
         super("Add Node", KnowtatorIcons.getIcon(KnowtatorIcons.SHOW_NODE_ICON));
@@ -32,7 +32,7 @@ public class AddTextAnnotationNodeCommand extends DisposableAction {
         addNode();
     }
 
-    private void addNode() {
+    public void addNode() {
         TextAnnotation selectedTextAnnotation = view.getTextAnnotationManager().getSelectedTextAnnotation();
         if (selectedTextAnnotation != null) {
             view.getGraphViewer().addAnnotationNode(selectedTextAnnotation);

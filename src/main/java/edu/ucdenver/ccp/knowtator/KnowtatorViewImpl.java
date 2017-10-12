@@ -33,11 +33,13 @@ public class KnowtatorViewImpl extends KnowtatorView {
          */
         textViewer = new KnowtatorTextViewer(this);
         textViewer.setMinimumSize(new Dimension(100, 50));
+        textAnnotationListeners.add(textViewer);
 
         /*
         Create a viewer to see the annotations as a graph
          */
         graphViewer = new KnowtatorGraphViewer(this);
+        textAnnotationListeners.add(graphViewer);
 
 
         JSplitPane mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -62,7 +64,7 @@ public class KnowtatorViewImpl extends KnowtatorView {
          */
 //        ((OWLModelManagerImpl) getOWLModelManager()).loadOntologyFromPhysicalURI(URI.create("http://purl.obolibrary.org/obo/go/go-basic.obo"));
 
-        profileManager.setupDefault();
+        annotatorManager.setupDefault();
 
         /*
         An initial document to display

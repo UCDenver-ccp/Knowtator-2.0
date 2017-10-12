@@ -7,6 +7,7 @@ import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
+import edu.ucdenver.ccp.knowtator.listeners.TextAnnotationListener;
 import edu.ucdenver.ccp.knowtator.iaa.AssertionRelationship;
 
 import javax.swing.*;
@@ -16,22 +17,22 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 @SuppressWarnings("PackageAccessibility")
-public class KnowtatorGraphViewer extends JPanel {
+public class KnowtatorGraphViewer extends JPanel implements TextAnnotationListener {
 
-    private Object parent;
+    public Object parent;
 
     mxGraph getGraph() {
         return graph;
     }
 
-    private mxGraphComponent getGraphComponent() {
+    public mxGraphComponent getGraphComponent() {
         return graphComponent;
     }
 
-    private mxGraph graph;
+    public mxGraph graph;
 
-    private mxGraphComponent graphComponent;
-    private KnowtatorView view;
+    public mxGraphComponent graphComponent;
+    public KnowtatorView view;
 
     public KnowtatorGraphViewer(KnowtatorView view) {
         this.view = view;
@@ -102,7 +103,7 @@ public class KnowtatorGraphViewer extends JPanel {
                     String.format(
                             "fillColor=#%s",
                             Integer.toHexString(
-                                    view.getProfileManager().getCurrentAnnotator().getHighlighter(
+                                    view.getAnnotatorManager().getCurrentAnnotator().getHighlighter(
                                             value.getOwlClass()
                                     ).getColor().getRGB()
                             ).substring(2)
@@ -141,7 +142,7 @@ public class KnowtatorGraphViewer extends JPanel {
         return newAction;
     }
 
-    private void showGraphPopupMenu(MouseEvent e)
+    public void showGraphPopupMenu(MouseEvent e)
     {
         Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
                 graphComponent);
@@ -151,4 +152,13 @@ public class KnowtatorGraphViewer extends JPanel {
         e.consume();
     }
 
+    @Override
+    public void textAnnotationsChanged() {
+
+    }
+
+    @Override
+    public void textAnnotationsChanged(TextAnnotation newAnnotation) {
+        addAnnotationNode(newAnnotation);
+    }
 }

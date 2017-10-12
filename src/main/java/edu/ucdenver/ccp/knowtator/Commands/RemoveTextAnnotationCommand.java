@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent;
 @SuppressWarnings("PackageAccessibility")
 public class RemoveTextAnnotationCommand extends DisposableAction {
 
-    private KnowtatorTextViewer textViewer;
+    public KnowtatorTextViewer textViewer;
 
     public RemoveTextAnnotationCommand(KnowtatorView view) {
         super("Add TextAnnotation", KnowtatorIcons.getIcon(KnowtatorIcons.REMOVE_TEXT_ANNOTATION_ICON));
@@ -33,7 +33,7 @@ public class RemoveTextAnnotationCommand extends DisposableAction {
     }
 
 
-    private void removeTextAnnotation() {
+    public void removeTextAnnotation() {
         KnowtatorTextPane textPane = textViewer.getSelectedTextPane();
         Integer spanStart = textPane.getSelectionStart();
         Integer spanEnd = textPane.getSelectionEnd();

@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class SaveTextAnnotationsCommand extends DisposableAction {
 
-    private KnowtatorView view;
+    public KnowtatorView view;
 
     public SaveTextAnnotationsCommand(KnowtatorView view) {
         super("Save to XML", KnowtatorIcons.getIcon(KnowtatorIcons.SAVE_ANNOTATIONS_ICON));

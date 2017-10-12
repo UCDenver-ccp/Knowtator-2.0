@@ -57,9 +57,9 @@ import java.awt.event.*;
  */
 public class ListDialog extends JDialog
         implements ActionListener {
-    private static ListDialog dialog;
-    private static String value = "";
-    private JList list;
+    public static ListDialog dialog;
+    public static String value = "";
+    public JList list;
 
     /**
      * Set up and show the dialog.  The first Component argument
@@ -89,12 +89,12 @@ public class ListDialog extends JDialog
         return value;
     }
 
-    private void setValue(String newValue) {
+    public void setValue(String newValue) {
         value = newValue;
         list.setSelectedValue(value, true);
     }
 
-    private ListDialog(Frame frame,
+    public ListDialog(Frame frame,
                        JComponent locationComp,
                        String labelText,
                        String title,

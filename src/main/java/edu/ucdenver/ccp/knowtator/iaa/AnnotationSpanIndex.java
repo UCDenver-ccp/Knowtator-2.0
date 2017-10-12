@@ -79,7 +79,7 @@ public class AnnotationSpanIndex {
 		// }
 	}
 
-	private void addToMap(int key, TextAnnotation textAnnotation) {
+	public void addToMap(int key, TextAnnotation textAnnotation) {
 		if (!window2AnnotationsMap.containsKey(key)) {
 			window2AnnotationsMap.put(key, new HashSet<>());
 		}

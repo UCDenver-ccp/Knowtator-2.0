@@ -34,15 +34,15 @@ import java.util.*;
 
 @SuppressWarnings("unused")
 public class FeatureMatcher implements Matcher {
-	private boolean matchClasses = true;
+	public boolean matchClasses = true;
 
-	private int matchSpans = TextAnnotation.SPANS_OVERLAP_COMPARISON;
+	public int matchSpans = TextAnnotation.SPANS_OVERLAP_COMPARISON;
 
-	private Set<String> comparedSimpleFeatures = new HashSet<>();
+	public Set<String> comparedSimpleFeatures = new HashSet<>();
 
-	private Map<String, ComplexFeatureMatchCriteria> comparedComplexFeatures = new HashMap<>();
+	public Map<String, ComplexFeatureMatchCriteria> comparedComplexFeatures = new HashMap<>();
 
-	private String name;
+	public String name;
 
 	public FeatureMatcher() {
 		this("Feature Matcher");

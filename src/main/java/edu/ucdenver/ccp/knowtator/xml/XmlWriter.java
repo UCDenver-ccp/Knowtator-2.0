@@ -3,6 +3,7 @@ package edu.ucdenver.ccp.knowtator.xml;
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
 import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationManager;
+import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties;
 import edu.ucdenver.ccp.knowtator.TextAnnotation.TextSpan;
 import org.apache.log4j.Logger;
 
@@ -11,20 +12,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS_ID;
+
 public class XmlWriter {
     public static final Logger log = Logger.getLogger(KnowtatorView.class);
 
     public static ArrayList<String> annotationToXML(TextAnnotation textAnnotation) {
         ArrayList<String> toWrite = new ArrayList<>();
 
-        toWrite.add(String.format("  <%s>", XmlTags.TAG_ANNOTATION));
-        toWrite.add(String.format("    <%s %s=\"%s\">%s</%s>", XmlTags.TAG_ANNOTATOR, XmlTags.TAG_ANNOTATOR_ID, textAnnotation.getAnnotatorID(), textAnnotation.getAnnotatorName(), XmlTags.TAG_ANNOTATOR));
+        toWrite.add(String.format("  <%s>", XmlTags.ANNOTATION));
+        toWrite.add(String.format("    <%s %s=\"%s\">%s</%s>", XmlTags.ANNOTATOR, XmlTags.ANNOTATOR_ID, textAnnotation.getProperty(TextAnnotationProperties.ANNOTATOR_ID), textAnnotation.getProperty(TextAnnotationProperties.ANNOTATOR), XmlTags.ANNOTATOR));
         for (TextSpan textSpan : textAnnotation.getTextSpans()) {
-            toWrite.add(String.format("    <%s %s=\"%s\" %s=\"%s\" />", XmlTags.TAG_SPAN, XmlTags.TAG_SPAN_START, textSpan.getStart(), XmlTags.TAG_SPAN_END, textSpan.getEnd()));
+            toWrite.add(String.format("    <%s %s=\"%s\" %s=\"%s\" />", XmlTags.SPAN, XmlTags.SPAN_START, textSpan.getStart(), XmlTags.SPAN_END, textSpan.getEnd()));
         }
-        toWrite.add(String.format("    <%s %s=\"%s\">%s</%s>", XmlTags.TAG_MENTION_CLASS, XmlTags.TAG_MENTION_CLASS_ID, textAnnotation.getClassID(), textAnnotation.getClassName(), XmlTags.TAG_MENTION_CLASS));
-        toWrite.add(String.format("  </%s>", XmlTags.TAG_CLASS_MENTION));
-        toWrite.add(String.format("  </%s>", XmlTags.TAG_ANNOTATION));
+        toWrite.add(String.format("    <%s %s=\"%s\">%s</%s>", XmlTags.MENTION_CLASS, XmlTags.MENTION_CLASS_ID, textAnnotation.getProperty(CLASS_ID), textAnnotation.getProperty(TextAnnotationProperties.CLASS), XmlTags.MENTION_CLASS));
+        toWrite.add(String.format("  </%s>", XmlTags.CLASS_MENTION));
+        toWrite.add(String.format("  </%s>", XmlTags.ANNOTATION));
 
         return toWrite;
     }
@@ -37,7 +40,7 @@ public class XmlWriter {
 
         textAnnotationManager.getTextAnnotations().forEach((textSource, annotations) -> {
             try {
-                bw.write(String.format("<%s %s=\"%s\">", XmlTags.TAG_ANNOTATIONS, XmlTags.TAG_TEXTSOURCE, textSource));
+                bw.write(String.format("<%s %s=\"%s\">", XmlTags.ANNOTATIONS, XmlTags.TEXTSOURCE, textSource));
                 bw.newLine();
 
                 annotations.forEach(textAnnotation -> {
@@ -51,7 +54,7 @@ public class XmlWriter {
                         e.printStackTrace();
                     }
                 });
-                bw.write(String.format("</%s>", XmlTags.TAG_ANNOTATIONS));
+                bw.write(String.format("</%s>", XmlTags.ANNOTATIONS));
             }
             catch (IOException e) {
                 e.printStackTrace();

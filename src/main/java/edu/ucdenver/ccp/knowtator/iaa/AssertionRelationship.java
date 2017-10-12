@@ -4,8 +4,8 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 public class AssertionRelationship {
 
-    private OWLObjectProperty property;
-    private String propertyName;
+    public OWLObjectProperty property;
+    public String propertyName;
 
     public AssertionRelationship(OWLObjectProperty property, String propertyName) {
         this.property = property;

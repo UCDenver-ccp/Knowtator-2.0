@@ -1,8 +1,6 @@
 package edu.ucdenver.ccp.knowtator.Commands;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.ProfileManager;
-import edu.ucdenver.ccp.knowtator.ui.ListDialog;
 import edu.ucdenver.ccp.knowtator.ui.KnowtatorIcons;
 import org.protege.editor.core.ui.view.DisposableAction;
 
@@ -11,7 +9,7 @@ import java.awt.event.ActionEvent;
 
 public class SwitchProfileCommand extends DisposableAction {
 
-    private KnowtatorView view;
+    public KnowtatorView view;
 
     public SwitchProfileCommand(KnowtatorView view) {
         super("Switch Annotator", KnowtatorIcons.getIcon(KnowtatorIcons.SWITCH_PROFILE_ICON));
@@ -28,7 +26,7 @@ public class SwitchProfileCommand extends DisposableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        view.getProfileManager().switchProfile();
+        view.getAnnotatorManager().switchProfile();
     }
 
 

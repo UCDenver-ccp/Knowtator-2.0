@@ -29,6 +29,7 @@ package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
 import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
+import edu.ucdenver.ccp.knowtator.xml.XmlTags;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -44,11 +45,11 @@ import java.util.Set;
 @SuppressWarnings({"JavadocReference", "JavaDoc", "unused"})
 public class SubclassMatcher implements Matcher {
 
-	private String className;
+	public String className;
 
-	private Set<String> subclassNames;
+	public Set<String> subclassNames;
 
-	private ClassHierarchy hierarchy;
+	public ClassHierarchy hierarchy;
 
 	public SubclassMatcher(ClassHierarchy hierarchy) {
 		this.hierarchy = hierarchy;
@@ -83,7 +84,7 @@ public class SubclassMatcher implements Matcher {
 	public TextAnnotation match(TextAnnotation textAnnotation, String compareSetName, Set<TextAnnotation> excludeTextAnnotations, IAA iaa,
 								MatchResult matchResult) {
 
-		String annotationClassName = textAnnotation.getClassName();
+		String annotationClassName = textAnnotation.getProperty(XmlTags.MENTION_CLASS);
 		if (!subclassNames.contains(annotationClassName)) {
 			matchResult.setResult(MatchResult.TRIVIAL_NONMATCH);
 			return null;

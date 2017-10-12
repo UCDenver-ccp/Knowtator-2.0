@@ -6,7 +6,7 @@ import java.awt.*;
 
 public class KnowtatorProfileViewer extends JPanel {
 
-    private final JLabel profileLabel;
+    public final JLabel profileLabel;
 
     public KnowtatorProfileViewer() {
         super(new GridLayout(10, 2));

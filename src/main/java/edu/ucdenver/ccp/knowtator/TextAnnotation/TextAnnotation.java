@@ -33,76 +33,42 @@ import org.semanticweb.owlapi.model.OWLClass;
 
 import java.util.*;
 
-@SuppressWarnings({"JavadocReference", "unused", "JavaDoc", "unchecked"})
+import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS;
+import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS_ID;
+
 public class TextAnnotation {
 
 	public String setName = "Set name not specified";
 
-	public String docID = "Document id not specified";
-
-	public String classID = "Class ID not specified";
-	public String className = "Class not specified";
-
-	public String getAnnotatorName() {
-		return annotatorName;
-	}
-
-	public void setAnnotatorName(String annotatorName) {
-		setSimpleFeature("Annotator Name", annotatorName);
-		this.annotatorName = annotatorName;
-	}
-
-	public String getAnnotatorID() {
-		return annotatorID;
-	}
-
-	public void setAnnotatorID(String annotatorID) {
-		setSimpleFeature("Annotator ID", annotatorID);
-		this.annotatorID = annotatorID;
-	}
-
-	public String annotatorName = "Annotator not specified";
-
-	public String annotatorID = "AnnotatorID not specified";
+	public Map<String, String> properties;
 
 	public List<TextSpan> textSpans;
-
 	// key is a feature name, value is the value of the feature
 	public Map<String, Set<Object>> simpleFeatures;
-
 	public Map<String, Set<TextAnnotation>> complexFeatures;
-
 	public int size = 0;
 	public OWLClass owlClass;
 
-	public TextAnnotation(String docID, OWLClass owlClass) {
-		this.docID = docID;
-		this.owlClass = owlClass;
+	public TextAnnotation(OWLClass cls, HashMap<String, String> properties) {
+		this.owlClass = cls;
+		this.properties = properties;
 
 		textSpans = new ArrayList<>();
+		for (String span : properties.get(TextAnnotationProperties.SPAN).split(";")) {
+			String[] spanT = span.split(",");
+
+			textSpans.add(new TextSpan(Integer.parseInt(spanT[0]), Integer.parseInt(spanT[1])));
+		}
+
 		simpleFeatures = new HashMap<>();
 		complexFeatures = new HashMap<>();
 	}
+
 
 	public String getSetName() {
 		return setName;
 	}
 
-	public void setSetName(String setName) {
-		this.setName = setName;
-	}
-
-	public String getDocID() {
-		return docID;
-	}
-
-	public void setDocID(String docID) {
-		this.docID = docID;
-	}
-
-	public String getClassName() {
-		return className;
-	}
 
 	public OWLClass getOwlClass() {
 		return owlClass;
@@ -112,10 +78,10 @@ public class TextAnnotation {
 		return Collections.unmodifiableList(textSpans);
 	}
 
+	@SuppressWarnings("unused")
 	public void setTextSpans(List<TextSpan> textSpans) {
 		this.textSpans.clear();
 		this.textSpans.addAll(textSpans);
-		Collections.sort(this.textSpans);
 	}
 
 	public void setSpan(TextSpan span) {
@@ -133,10 +99,12 @@ public class TextAnnotation {
 		return Collections.unmodifiableSet(simpleFeatures.get(featureName));
 	}
 
+	@SuppressWarnings("unused")
 	public boolean isSimpleFeature(String featureName) {
 		return simpleFeatures.containsKey(featureName);
 	}
 
+	@SuppressWarnings("unused")
 	public void setSimpleFeature(String featureName, Set<Object> featureValues) {
 		if (featureValues == null)
 			return;
@@ -144,6 +112,7 @@ public class TextAnnotation {
 		simpleFeatures.put(featureName, new HashSet<>(featureValues));
 	}
 
+	@SuppressWarnings("unused")
 	public void setSimpleFeature(String featureName, Object featureValue) {
 		if (featureValue == null)
 			return;
@@ -163,15 +132,18 @@ public class TextAnnotation {
 		return Collections.unmodifiableSet(complexFeatures.get(featureName));
 	}
 
+	@SuppressWarnings("unused")
 	public boolean isComplexFeature(String featureName) {
 		return complexFeatures.containsKey(featureName);
 	}
 
+	@SuppressWarnings("unused")
 	public void setComplexFeature(String featureName, Set<TextAnnotation> featureValues) {
 		simpleFeatures.remove(featureName);
 		complexFeatures.put(featureName, new HashSet<>(featureValues));
 	}
 
+	@SuppressWarnings("unused")
 	public void setComplexFeature(String featureName, TextAnnotation featureValue) {
 		simpleFeatures.remove(featureName);
 		HashSet<TextAnnotation> featureValues = new HashSet<>();
@@ -190,10 +162,12 @@ public class TextAnnotation {
 	 * @param textAnnotation2
 	 * @return true if the annotations have the same textSpans
 	 */
+	@SuppressWarnings("JavaDoc")
 	public static boolean spansMatch(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2) {
 		return TextSpan.spansMatch(textAnnotation1.getTextSpans(), textAnnotation2.getTextSpans());
 	}
 
+	@SuppressWarnings("unused")
 	public static boolean spansMatch(List<TextAnnotation> textAnnotations) {
 		for (int i = 1; i < textAnnotations.size(); i++) {
 			if (!spansMatch(textAnnotations.get(0), textAnnotations.get(i)))
@@ -207,8 +181,8 @@ public class TextAnnotation {
 	 * annotationClass.
 	 */
 	public static boolean classesMatch(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2) {
-		String cls1 = textAnnotation1.getClassName();
-		String cls2 = textAnnotation2.getClassName();
+		String cls1 = textAnnotation1.getProperty(CLASS);
+		String cls2 = textAnnotation2.getProperty(CLASS);
 
 		return cls1 != null && cls2 != null && cls1.equals(cls2);
 
@@ -237,6 +211,7 @@ public class TextAnnotation {
 	 * @return true if both annotations have the same number of simple features
 	 *         and they have the same names.
 	 */
+	@SuppressWarnings({"JavaDoc", "unused"})
 	public static boolean compareSimpleFeatureNames(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2) {
 		return compareNames(textAnnotation1.getSimpleFeatureNames(), textAnnotation2.getSimpleFeatureNames());
 	}
@@ -250,10 +225,12 @@ public class TextAnnotation {
 	 * @return true if both annotations have the same number of complex features
 	 *         and they have the same names.
 	 */
+	@SuppressWarnings({"JavaDoc", "unused"})
 	public static boolean compareComplexFeatureNames(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2) {
 		return compareNames(textAnnotation1.getComplexFeatureNames(), textAnnotation2.getComplexFeatureNames());
 	}
 
+	@SuppressWarnings("unused")
 	public static boolean compareFeatureNames(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2) {
 		return compareNames(textAnnotation1.getFeatureNames(), textAnnotation2.getFeatureNames());
 	}
@@ -273,11 +250,11 @@ public class TextAnnotation {
 	 *            the value of another feature (simple or complex)
 	 * @return MatchResult.TRIVIAL_MATCH, MatchResult.TRIVIAL_NONMATCH,
 	 *         MatchResult.NONTRIVIAL_NONMATCH, or MATCH_RESULT_UNASSIGNED
-	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult
 	 * 
 	 */
 
-	public static int trivialCompare(Set values1, Set values2) {
+	@SuppressWarnings("JavaDoc")
+	public static int trivialCompare(Set<?> values1, Set<?> values2) {
 		if (values1 == null && values2 == null)
 			return MatchResult.TRIVIAL_MATCH; // if both are null than it is a
 											  // trivial match
@@ -323,6 +300,7 @@ public class TextAnnotation {
 	 * @see #trivialCompare(Set, Set)
 	 */
 
+	@SuppressWarnings("JavaDoc")
 	public static int compareSimpleFeature(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2, String featureName) {
 		// if(!textAnnotation1.isSimpleFeature(featureName) ||
 		// !textAnnotation2.isSimpleFeature(featureName)) return
@@ -363,11 +341,8 @@ public class TextAnnotation {
 	 *         <li>TRIVIAL_MATCH if there are no simple features.
 	 *         <li>NONTRIVIAL_MATH all simple features match and are non-trivial
 	 *         </ul>
-	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
-	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
-	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#TRIVIAL_MATCH
-	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#TRIVIAL_NONMATCH
 	 */
+	@SuppressWarnings("JavaDoc")
 	public static int compareSimpleFeatures(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2) {
 		Set<String> featureNames = new HashSet<>(textAnnotation1.getSimpleFeatureNames());
 		featureNames.addAll(textAnnotation2.getSimpleFeatureNames());
@@ -398,13 +373,8 @@ public class TextAnnotation {
 	 *         <li>TRIVIAL_MATCH if featureNames is an empty set or null.
 	 *         <li>NONTRIVIAL_MATH all simple features match and are non-trivial
 	 *         </ul>
-	 * @see edu.uchsc.ccp.iaa.Annotation#compareSimpleFeature(TextAnnotation,
-	 *      TextAnnotation, String)
-	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
-	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
-	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#TRIVIAL_MATCH
-	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#TRIVIAL_NONMATCH
 	 */
+	@SuppressWarnings("JavaDoc")
 	public static int compareSimpleFeatures(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2, Set<String> featureNames) {
 		if (featureNames == null || featureNames.size() == 0)
 			return MatchResult.TRIVIAL_MATCH;
@@ -481,6 +451,7 @@ public class TextAnnotation {
 	 *         defined by the match parameters.
 	 * 
 	 */
+	@SuppressWarnings("JavaDoc")
 	public static int compareComplexFeature(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2, String complexFeatureName,
 											int complexFeatureSpanComparison, boolean complexFeatureClassComparison,
 											Set<String> simpleFeatureNamesOfComplexFeature, boolean trivialSimpleFeatureMatchesCauseTrivialMatch) {
@@ -562,12 +533,11 @@ public class TextAnnotation {
 	 *         simpleFeatureNames is empty or null. If textSpans and classes match,
 	 *         then the result of compareSimpleFeatures(TextAnnotation, TextAnnotation,
 	 *         Set<String>) is returned.
-	 * @see edu.uchsc.ccp.iaa.Annotation#compareSimpleFeatures(TextAnnotation,
-	 *      TextAnnotation, Set)
 	 */
 
+	@SuppressWarnings("JavaDoc")
 	public static int compareAnnotations(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2, int spanComparison,
-										  boolean compareClass, Set<String> simpleFeatureNames) {
+										 boolean compareClass, Set<String> simpleFeatureNames) {
 		boolean spansMatch = false;
 		boolean classesMatch = false;
 
@@ -655,6 +625,7 @@ public class TextAnnotation {
 	 *         return the first annotation with the smallest size encountered
 	 *         during iteration. Returns null if textAnnotations is null or empty.
 	 */
+	@SuppressWarnings("JavaDoc")
 	public static TextAnnotation getShortestAnnotation(Collection<TextAnnotation> textAnnotations) {
 		if (textAnnotations == null || textAnnotations.size() == 0)
 			return null;
@@ -684,7 +655,7 @@ public class TextAnnotation {
 	public String toHTML(boolean printComplexFeatures) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ul><li>").append(setName).append("</li>");
-		sb.append("<li>class = ").append(className).append("</li>");
+		sb.append("<li>class = ").append(properties.get(CLASS)).append("</li>");
 		sb.append("<li>textSpans = ");
 		for (TextSpan span : textSpans)
 			sb.append(span.toString()).append(" ");
@@ -711,20 +682,10 @@ public class TextAnnotation {
 	@Override
 	public String toString() {
 		System.out.println();
-		return String.format("TextAnnotation: %s\n%s", super.toString().split("@")[1], classID);
+		return String.format("TextAnnotation: %s\n%s", super.toString().split("@")[1], properties.get(CLASS_ID));
 	}
 
-	public void setClassID(String classID) {
-		setSimpleFeature("Class ID", classID);
-		this.classID = classID;
-	}
-
-	public void setClassName(String className) {
-		setSimpleFeature("Class Name", className);
-		this.className = className;
-	}
-
-	public String getClassID() {
-		return classID;
+	public String getProperty(String propertyTag) {
+		return properties.get(propertyTag);
 	}
 }

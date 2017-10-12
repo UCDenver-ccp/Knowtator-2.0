@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 
 public class DecrementSelectionLeftCommand extends DisposableAction {
 
-    private final KnowtatorTextViewer textViewer;
+    public final KnowtatorTextViewer textViewer;
 
     public DecrementSelectionLeftCommand(KnowtatorView view) {
         super("Decrement left selection", KnowtatorIcons.getIcon(KnowtatorIcons.INCREMENT_LEFT));

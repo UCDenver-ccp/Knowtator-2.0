@@ -42,6 +42,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS;
+
 @SuppressWarnings("unused")
 public class SpanMatcherHTML {
 
@@ -123,14 +125,14 @@ public class SpanMatcherHTML {
 		html.close();
 	}
 
-	private static Map<String, int[]> errorMatrix(Set<TextAnnotation> matches, Map<TextAnnotation, Set<TextAnnotation>> matchSets) {
+	public static Map<String, int[]> errorMatrix(Set<TextAnnotation> matches, Map<TextAnnotation, Set<TextAnnotation>> matchSets) {
 		Map<String, int[]> counts = new HashMap<>();
 
 		for (TextAnnotation match : matches) {
 			Set<TextAnnotation> matchedTextAnnotations = matchSets.get(match);
 			for (TextAnnotation matchedTextAnnotation : matchedTextAnnotations) {
 				if (!matchedTextAnnotation.equals(match)) {
-					String annotationClass = matchedTextAnnotation.getClassName();
+					String annotationClass = matchedTextAnnotation.getProperty(CLASS);
 					if (!counts.containsKey(annotationClass)) {
 						counts.put(annotationClass, new int[1]);
 					}

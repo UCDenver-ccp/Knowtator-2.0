@@ -16,7 +16,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class LoadTextAnnotationsCommand extends DisposableAction {
-    private KnowtatorView view;
+    public KnowtatorView view;
 
     public LoadTextAnnotationsCommand(KnowtatorView view) {
         super("Load Annotations", KnowtatorIcons.getIcon(KnowtatorIcons.LOAD_ANNOTATIONS_ICON));

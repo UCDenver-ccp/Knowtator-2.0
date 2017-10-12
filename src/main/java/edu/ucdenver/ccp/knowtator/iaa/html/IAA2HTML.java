@@ -33,6 +33,7 @@ import edu.ucdenver.ccp.knowtator.TextAnnotation.TextSpan;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher;
 import edu.ucdenver.ccp.knowtator.iaa.AnnotationSpanIndex;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
+import edu.ucdenver.ccp.knowtator.xml.XmlTags;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +47,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS;
+import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.TEXTSOURCE;
 
 @SuppressWarnings("unused")
 public class IAA2HTML {
@@ -192,7 +196,7 @@ public class IAA2HTML {
 		tabular.close();
 	}
 
-	private static void printMatchData(PrintStream html, Set<String> sets, String fileName, File directory,
+	public static void printMatchData(PrintStream html, Set<String> sets, String fileName, File directory,
                                        Map<String, Set<TextAnnotation>> allwayMatches, Set<String> classes, AnnotationSpanIndex spanIndex,
                                        List<String> sortedTypes, Map<TextAnnotation, String> annotationTexts,
                                        Map<TextAnnotation, String> annotationTextNames, Matcher matcher,
@@ -259,7 +263,7 @@ public class IAA2HTML {
 
 	}
 
-	private static void printNonmatchData(PrintStream html, Set<String> sets, String fileName, File directory,
+	public static void printNonmatchData(PrintStream html, Set<String> sets, String fileName, File directory,
                                           Map<String, Set<TextAnnotation>> allwayNonmatches, Set<String> classes, AnnotationSpanIndex spanIndex,
                                           List<String> sortedTypes, Map<TextAnnotation, String> annotationTexts,
                                           Map<TextAnnotation, String> annotationTextNames, Matcher matcher,
@@ -330,16 +334,16 @@ public class IAA2HTML {
 		html.println("</ul><hr>");
 	}
 
-	private static Set<TextAnnotation> getCandidateAnnotations(TextAnnotation textAnnotation, AnnotationSpanIndex spanIndex) {
+	public static Set<TextAnnotation> getCandidateAnnotations(TextAnnotation textAnnotation, AnnotationSpanIndex spanIndex) {
 		Set<TextAnnotation> candidateTextAnnotations = new HashSet<>();
 		String set = textAnnotation.getSetName();
-		String docID = textAnnotation.getDocID();
+		String docID = textAnnotation.getProperty(TEXTSOURCE);
 
 		Set<TextAnnotation> overlappingTextAnnotations = spanIndex.getOverlappingAnnotations(textAnnotation);
 		for (TextAnnotation overlappingTextAnnotation : overlappingTextAnnotations) {
 			String candidateAnnotationSet = overlappingTextAnnotation.getSetName();
 			if (!candidateAnnotationSet.equals(set)) {
-				String candidateDocID = overlappingTextAnnotation.getDocID();
+				String candidateDocID = overlappingTextAnnotation.getProperty(TEXTSOURCE);
 				if (candidateDocID.equals(docID)) {
 					candidateTextAnnotations.add(overlappingTextAnnotation);
 				}
@@ -348,7 +352,7 @@ public class IAA2HTML {
 		return candidateTextAnnotations;
 	}
 
-	private static void printInstances(PrintStream out, Map<String, Set<TextAnnotation>> sortedAnnotations,
+	public static void printInstances(PrintStream out, Map<String, Set<TextAnnotation>> sortedAnnotations,
                                        List<String> sortedTypes, Map<TextAnnotation, String> annotationTexts,
                                        Map<TextAnnotation, String> annotationTextNames, Map<TextAnnotation, Set<TextAnnotation>> comparisonAnnotations) {
 		for (String type : sortedTypes) {
@@ -382,7 +386,7 @@ public class IAA2HTML {
 		return returnValues;
 	}
 
-	private static void initHTML(PrintStream html, String title, String link, String linkLabel, String description) {
+	public static void initHTML(PrintStream html, String title, String link, String linkLabel, String description) {
 		html.println("<html>");
 		html.println("<head><title>" + title + "</title></head>");
 		html.println("<body>");
@@ -400,14 +404,14 @@ public class IAA2HTML {
 			sortedAnnotations.put(type, new HashSet<>());
 		}
 		for (TextAnnotation textAnnotation : textAnnotations) {
-			String type = textAnnotation.getClassName();
+			String type = textAnnotation.getProperty(CLASS);
 			if (type != null)
 				sortedAnnotations.get(type).add(textAnnotation);
 		}
 		return sortedAnnotations;
 	}
 
-	private static void writeAnnotationTextSourceHTML(PrintStream out, TextAnnotation textAnnotation, String annotationText,
+	public static void writeAnnotationTextSourceHTML(PrintStream out, TextAnnotation textAnnotation, String annotationText,
                                                       String annotationTextName) {
 		StringBuilder html = new StringBuilder("<hr><p>");
 		if (annotationTextName != null)
@@ -438,7 +442,7 @@ public class IAA2HTML {
 		out.println(html.toString());
 	}
 
-	private static String shortenText(String text, List<TextSpan> textSpans) {
+	public static String shortenText(String text, List<TextSpan> textSpans) {
 		int frontBuffer = 150;
 		int endBuffer = 150;
 		if (textSpans.size() > 0) {
@@ -457,7 +461,7 @@ public class IAA2HTML {
 		return text;
 	}
 
-	private static void printAnnotationHTML(PrintStream out, TextAnnotation textAnnotation, String annotationText) {
+	public static void printAnnotationHTML(PrintStream out, TextAnnotation textAnnotation, String annotationText) {
 		StringBuilder html = new StringBuilder();
 
 		if (annotationText != null) {
@@ -468,7 +472,7 @@ public class IAA2HTML {
 		out.print(html.toString());
 	}
 
-	private static void printIntro(PrintStream html, IAA iaa, int numberOfDocs, String fileName, Matcher matcher) {
+	public static void printIntro(PrintStream html, IAA iaa, int numberOfDocs, String fileName, Matcher matcher) {
 		html
 				.println("<p>For more detailed documentation on IAA please see the <a href=\"http://knowtator.sourceforge.net//iaa.shtml\">"
 						+ "IAA documentation</a>.");
@@ -487,7 +491,7 @@ public class IAA2HTML {
 
 	}
 
-	private static void printTitleRowForAllwayIAA(PrintStream html, Matcher matcher) {
+	public static void printTitleRowForAllwayIAA(PrintStream html, Matcher matcher) {
 		html.println("<table border=1><tr><td><b>Type</b></td>" + "<td><b>IAA</b></td>");
 		if (matcher.returnsTrivials()) {
 			html.println("<td><b>stingy IAA</b></td>" + "<td><b>respectable IAA</b></td>"
@@ -621,7 +625,7 @@ public class IAA2HTML {
 // Set<TextAnnotation> typeNonmatches = sortedNonmatches.get(type);
 // for(TextAnnotation annotation : typeNonmatches)
 // {
-// String docID = annotation.getDocID();
+// String docID = annotation.getProperty(TEXTSOURCE);
 // writeAnnotationTextSourceHTML(errors, annotation,
 // annotationTexts.get(annotation), annotationTextNames.get(annotation));
 // errors.println("<ul><li>");
@@ -634,7 +638,7 @@ public class IAA2HTML {
 // String candidateAnnotationSet = candidateAnnotation.getSetName();
 // if(!candidateAnnotationSet.equals(set))
 // {
-// String candidateDocID = candidateAnnotation.getDocID();
+// String candidateDocID = candidateAnnotation.getProperty(TEXTSOURCE);
 // if(candidateDocID.equals(docID))
 // {
 // errors.println("<li>");

@@ -1,7 +1,6 @@
 package edu.ucdenver.ccp.knowtator.xml;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.TextAnnotation.TextSpan;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -12,9 +11,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
-
-import static edu.ucdenver.ccp.knowtator.xml.XmlTags.TAG_SPAN;
+import java.util.AbstractList;
+import java.util.Collections;
+import java.util.List;
+import java.util.RandomAccess;
 
 public final class XmlUtil {
     public static final Logger log = Logger.getLogger(KnowtatorView.class);
@@ -65,21 +65,5 @@ public final class XmlUtil {
 
     public static Integer getMentionIDFromXML(String fullMention) {
         return Integer.parseInt(fullMention.substring(fullMention.indexOf("_Instance_")+10));
-    }
-
-    public static ArrayList<TextSpan> getSpanInfo(Element annotationElement) {
-        ArrayList<TextSpan> textSpans = new ArrayList<>();
-        for (Node spanNode : XmlUtil.asList(annotationElement.getElementsByTagName(TAG_SPAN))) {
-            if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element spanElement = (Element) spanNode;
-                Integer spanStart = Integer.parseInt(spanElement.getAttribute(XmlTags.TAG_SPAN_START));
-                Integer spanEnd = Integer.parseInt(spanElement.getAttribute(XmlTags.TAG_SPAN_END));
-
-                TextSpan newTextSpan = new TextSpan(spanStart, spanEnd);
-                textSpans.add(newTextSpan);
-            }
-        }
-        log.warn(String.format("\t\tSpans: %d", textSpans.size()));
-        return textSpans;
     }
 }

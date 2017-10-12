@@ -40,47 +40,49 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS;
+
 @SuppressWarnings("unused")
 public class IAA {
-	private Set<String> annotationClasses;
+	public Set<String> annotationClasses;
 
-	private Set<String> setNames;
+	public Set<String> setNames;
 
-	private Set<TextAnnotation> textAnnotations;
+	public Set<TextAnnotation> textAnnotations;
 
-	private Set<TextAnnotation> emptyTextAnnotationSet;
+	public Set<TextAnnotation> emptyTextAnnotationSet;
 
 	// key is the name of an textAnnotations set, value is a set of textAnnotations
-	private Map<String, Set<TextAnnotation>> annotationSets;
+	public Map<String, Set<TextAnnotation>> annotationSets;
 
 	// key is an annotation set, value is a map whose value is an annotation
 	// class
 	// and values is the set of textAnnotations in the set having that class.
-	private Map<String, Map<String, Set<TextAnnotation>>> class2AnnotationsMap;
+	public Map<String, Map<String, Set<TextAnnotation>>> class2AnnotationsMap;
 
 	// key is an annotation set, value is a annotationSpanIndex for the
 	// textAnnotations in that set.
-	private Map<String, AnnotationSpanIndex> spanIndexes;
+	public Map<String, AnnotationSpanIndex> spanIndexes;
 
 	// key is an annotation set, value is a set of textAnnotations that are
 	// considered matches.
-	private Map<String, Set<TextAnnotation>> allwayMatches;
+	public Map<String, Set<TextAnnotation>> allwayMatches;
 
-	private Map<String, Set<TextAnnotation>> trivialAllwayMatches;
+	public Map<String, Set<TextAnnotation>> trivialAllwayMatches;
 
-	private Map<String, Set<TextAnnotation>> nontrivialAllwayMatches;
+	public Map<String, Set<TextAnnotation>> nontrivialAllwayMatches;
 
 	// key is an annotation set, value is a set of textAnnotations that are
 	// considered non-matches.
-	private Map<String, Set<TextAnnotation>> allwayNonmatches;
+	public Map<String, Set<TextAnnotation>> allwayNonmatches;
 
-	private Map<String, Set<TextAnnotation>> trivialAllwayNonmatches;
+	public Map<String, Set<TextAnnotation>> trivialAllwayNonmatches;
 
-	private Map<String, Set<TextAnnotation>> nontrivialAllwayNonmatches;
+	public Map<String, Set<TextAnnotation>> nontrivialAllwayNonmatches;
 
 	// key is an annotation, value is the set of n textAnnotations that it was
 	// matched with in n-way IAA.
-	private Map<TextAnnotation, Set<TextAnnotation>> allwayMatchSets;
+	public Map<TextAnnotation, Set<TextAnnotation>> allwayMatchSets;
 
 	// key is an annotation set that is considered gold standard by which other
 	// annotation sets are compared,
@@ -88,21 +90,21 @@ public class IAA {
 	// standard and whose value are textAnnotations (from the
 	// gold standard set) that are matches.
 
-	private Map<String, Map<String, Set<TextAnnotation>>> pairwiseMatches;
+	public Map<String, Map<String, Set<TextAnnotation>>> pairwiseMatches;
 
-	private Map<String, Map<String, Set<TextAnnotation>>> trivialPairwiseMatches;
+	public Map<String, Map<String, Set<TextAnnotation>>> trivialPairwiseMatches;
 
-	private Map<String, Map<String, Set<TextAnnotation>>> nontrivialPairwiseMatches;
+	public Map<String, Map<String, Set<TextAnnotation>>> nontrivialPairwiseMatches;
 
-	private Map<String, Map<String, Set<TextAnnotation>>> pairwiseNonmatches;
+	public Map<String, Map<String, Set<TextAnnotation>>> pairwiseNonmatches;
 
-	private Map<String, Map<String, Set<TextAnnotation>>> trivialPairwiseNonmatches;
+	public Map<String, Map<String, Set<TextAnnotation>>> trivialPairwiseNonmatches;
 
-	private Map<String, Map<String, Set<TextAnnotation>>> nontrivialPairwiseNonmatches;
+	public Map<String, Map<String, Set<TextAnnotation>>> nontrivialPairwiseNonmatches;
 
-	private Map<TextAnnotation, Set<TextAnnotation>> pairwiseMatchPairs;
+	public Map<TextAnnotation, Set<TextAnnotation>> pairwiseMatchPairs;
 
-	private Map<String, Object> matcherInfo;
+	public Map<String, Object> matcherInfo;
 
 	public IAA(Set<String> setNames) {
 		this.setNames = setNames;
@@ -182,7 +184,7 @@ public class IAA {
 
 		for (TextAnnotation textAnnotation : textAnnotations) {
 			String setName = textAnnotation.getSetName();
-			String annotationClass = textAnnotation.getClassName();
+			String annotationClass = textAnnotation.getProperty(CLASS);
 			if (annotationClass != null)
 				annotationClasses.add(annotationClass);
 			// throw exception here if there is a setName in the textAnnotations
@@ -199,7 +201,7 @@ public class IAA {
 			class2AnnotationsMap.put(setName, classAnnotations);
 
 			for (TextAnnotation setTextAnnotation : setTextAnnotations) {
-				String annotationClass = setTextAnnotation.getClassName();
+				String annotationClass = setTextAnnotation.getProperty(CLASS);
 				if (!classAnnotations.containsKey(annotationClass)) {
 					classAnnotations.put(annotationClass, new HashSet<>());
 				}
@@ -208,10 +210,10 @@ public class IAA {
 		}
 	}
 
-	public void allwayIAA(Class matcherClass) throws NoSuchMethodException, InstantiationException,
+	public void allwayIAA(Class<? extends Matcher> matcherClass) throws NoSuchMethodException, InstantiationException,
 			IllegalAccessException, InvocationTargetException, IAAException {
-		Constructor constructor = matcherClass.getConstructor();
-		Matcher matcher = (Matcher) constructor.newInstance();
+		Constructor<? extends Matcher> constructor = matcherClass.getConstructor();
+		Matcher matcher = constructor.newInstance();
 		allwayIAA(matcher);
 	}
 
@@ -292,10 +294,10 @@ public class IAA {
 	 * This method performs pairwise IAA for each combination of annotators.
 	 * 
 	 */
-	public void pairwiseIAA(Class matchClass) throws NoSuchMethodException, InstantiationException,
+	public void pairwiseIAA(Class<? extends Matcher> matchClass) throws NoSuchMethodException, InstantiationException,
 			IllegalAccessException, InvocationTargetException, IAAException {
-		Constructor constructor = matchClass.getConstructor();
-		Matcher matcher = (Matcher) constructor.newInstance();
+		Constructor<? extends Matcher> constructor = matchClass.getConstructor();
+		Matcher matcher = constructor.newInstance();
 		pairwiseIAA(matcher);
 	}
 
@@ -390,7 +392,7 @@ public class IAA {
 	}
 
 	public Set<TextAnnotation> getAnnotationsOfSameType(TextAnnotation textAnnotation, String compareSetName) {
-		String annotationClass = textAnnotation.getClassName();
+		String annotationClass = textAnnotation.getProperty(CLASS);
 		return safeReturn(class2AnnotationsMap.get(compareSetName).get(annotationClass));
 	}
 
@@ -412,7 +414,7 @@ public class IAA {
 		return safeReturn(spanIndex.getExactlyOverlappingAnnotations(textAnnotation));
 	}
 
-	private Set<TextAnnotation> safeReturn(Set<TextAnnotation> returnValues) {
+	public Set<TextAnnotation> safeReturn(Set<TextAnnotation> returnValues) {
 		if (returnValues == null)
 			return emptyTextAnnotationSet;
 		return returnValues;

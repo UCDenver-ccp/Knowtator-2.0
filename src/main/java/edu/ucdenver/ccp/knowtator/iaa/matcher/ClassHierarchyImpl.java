@@ -34,7 +34,7 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public class ClassHierarchyImpl implements ClassHierarchy {
 
-	private Map<String, Set<String>> subclassMap;
+	public Map<String, Set<String>> subclassMap;
 
 	public ClassHierarchyImpl(Map<String, Set<String>> subclassMap) {
 		this.subclassMap = subclassMap;
@@ -47,7 +47,7 @@ public class ClassHierarchyImpl implements ClassHierarchy {
 		return returnValues;
 	}
 
-	private void collectSubclasses(String className, Set<String> subclassNames) {
+	public void collectSubclasses(String className, Set<String> subclassNames) {
 		Set<String> subNames = subclassMap.get(className);
 		if (subNames != null) {
 			for (String subName : subNames) {

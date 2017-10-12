@@ -10,8 +10,8 @@ import java.awt.event.ActionEvent;
 
 public class CloseDocumentCommand extends DisposableAction {
 
-    private JTabbedPane tabbedPane;
-    private KnowtatorView view;
+    public JTabbedPane tabbedPane;
+    public KnowtatorView view;
 
     public CloseDocumentCommand(KnowtatorView view) {
         super("Close", KnowtatorIcons.getIcon(KnowtatorIcons.CLOSE_DOCUMENT_ICON));

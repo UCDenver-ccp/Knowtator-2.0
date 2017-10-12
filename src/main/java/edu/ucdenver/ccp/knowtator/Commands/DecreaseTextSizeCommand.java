@@ -14,7 +14,7 @@ import java.awt.event.ActionEvent;
 
 public class DecreaseTextSizeCommand extends DisposableAction {
 
-    private KnowtatorView view;
+    public KnowtatorView view;
 
     public DecreaseTextSizeCommand(KnowtatorView view) {
         super("Decrease Text Size", KnowtatorIcons.getIcon(KnowtatorIcons.DECREASE_TEXT_SIZE_ICON));

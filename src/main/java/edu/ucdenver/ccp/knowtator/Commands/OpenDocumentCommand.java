@@ -14,7 +14,7 @@ import java.util.List;
 
 public class OpenDocumentCommand extends DisposableAction {
 
-    private KnowtatorTextViewer textViewer;
+    public KnowtatorTextViewer textViewer;
 
     public OpenDocumentCommand(KnowtatorView view) {
         super("Open Document", KnowtatorIcons.getIcon(KnowtatorIcons.OPEN_DOCUMENT_ICON));

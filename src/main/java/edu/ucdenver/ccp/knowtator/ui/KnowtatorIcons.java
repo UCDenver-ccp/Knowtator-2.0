@@ -22,16 +22,16 @@ public class KnowtatorIcons {
     public static final String RUN_IAA_ICON = "icons8-Exchange-48.png";
     public static final String SHOW_NODE_ICON = "ShowClassIcon.png";
 
-    private static final String UGLY_ICON = "";
+    public static final String UGLY_ICON = "";
 
-    private static final String RELATIVE_PATH = "/icon/";
+    public static final String RELATIVE_PATH = "/icon/";
 
-    private static final Integer MENU_ITEM_WIDTH = 20;
-    private static final Integer MENU_ITEM_HEIGHT = 20;
+    public static final Integer MENU_ITEM_WIDTH = 20;
+    public static final Integer MENU_ITEM_HEIGHT = 20;
 
 
 
-    private static HashMap<String, ImageIcon> iconMap = new HashMap<>();
+    public static HashMap<String, ImageIcon> iconMap = new HashMap<>();
 
 
     static {
@@ -51,7 +51,7 @@ public class KnowtatorIcons {
         return imageIcon;
     }
 
-    private static ImageIcon loadIcon(String iconName) {
+    public static ImageIcon loadIcon(String iconName) {
         ImageIcon imageIcon = null;
         URL iconURL = KnowtatorIcons.class.getResource(RELATIVE_PATH + iconName);
         if (iconURL != null) {

@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 
 public class NewProfileCommand extends DisposableAction {
 
-    private KnowtatorView view;
+    public KnowtatorView view;
 
     public NewProfileCommand(KnowtatorView view) {
         super("New Annotator", KnowtatorIcons.getIcon(KnowtatorIcons.NEW_PROFILE_ICON));
@@ -41,7 +41,7 @@ public class NewProfileCommand extends DisposableAction {
         {
             String annotator = field1.getText();
             String annotatorID = field2.getText();
-            view.getProfileManager().addNewProfile(annotator, annotatorID);
+            view.getAnnotatorManager().addNewProfile(annotator, annotatorID);
         }
 
     }

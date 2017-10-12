@@ -1,13 +1,15 @@
 package edu.ucdenver.ccp.knowtator.owl;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
+import org.apache.log4j.Logger;
+import org.protege.editor.owl.model.find.OWLEntityFinder;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
 
 import java.util.Collection;
 
 public class OWLAPIDataExtractor {
-
+    public static final Logger log = Logger.getLogger(KnowtatorView.class);
     public static String ID_NAME_SPACE = "has_obo_namespace";
     public static String ID_CLASS = "id";
     public static String ID_NAME = null;
@@ -73,8 +75,14 @@ public class OWLAPIDataExtractor {
     }
 
     public static OWLClass getOWLClassByID(KnowtatorView view, String classID) {
-        view.loadOntologyFromLocation(classID);
-        return view.getOWLModelManager().getOWLEntityFinder().getOWLClass(classID);
+        OWLClass cls = view.getOWLModelManager().getOWLEntityFinder().getOWLClass(classID);
+        if (cls == null) {
+            log.warn(String.format("Class %s not found", classID));
+        }
+        else {
+            log.warn(String.format("Class %s found", classID));
+        }
+        return cls;
 
     }
 }

@@ -13,7 +13,7 @@ import java.io.File;
 
 public class RunIAACommand extends DisposableAction{
 
-    private KnowtatorView view;
+    public KnowtatorView view;
 
     public RunIAACommand(KnowtatorView view) {
         super("Run IAA", KnowtatorIcons.getIcon(KnowtatorIcons.RUN_IAA_ICON));

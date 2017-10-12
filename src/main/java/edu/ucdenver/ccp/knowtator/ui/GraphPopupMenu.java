@@ -11,7 +11,7 @@ public class GraphPopupMenu extends JPopupMenu
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3132749140550242191L;
+	public static final long serialVersionUID = -3132749140550242191L;
 
 	public GraphPopupMenu(KnowtatorGraphViewer graphViewer)
 	{

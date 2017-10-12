@@ -43,7 +43,7 @@ import java.util.*;
 
 @SuppressWarnings({"unused", "MismatchedQueryAndUpdateOfCollection", "SameParameterValue"})
 public class KnowtatorIAA {
-	private File outputDirectory;
+	public File outputDirectory;
 //TODO Determine what commentented code should be
 //	SimpleInstance filter;
 
@@ -67,18 +67,18 @@ public class KnowtatorIAA {
 
 //	FilterUtil filterUtil;
 
-	private Map<TextAnnotation, String> annotationTexts;
+	public Map<TextAnnotation, String> annotationTexts;
 
-	private Map<TextAnnotation, String> annotationTextNames;
+	public Map<TextAnnotation, String> annotationTextNames;
 
-	private Map<String, Set<TextAnnotation>> textSourceAnnotationsMap;
+	public Map<String, Set<TextAnnotation>> textSourceAnnotationsMap;
 
-	private PrintStream html;
+	public PrintStream html;
 
-	private boolean setNameDeterminedByAnnotators;
+	public boolean setNameDeterminedByAnnotators;
 
-	private Set<String> setNames;
-	private KnowtatorView view;
+	public Set<String> setNames;
+	public KnowtatorView view;
 
 	public KnowtatorIAA(File outputDirectory, KnowtatorView view) throws IAAException
 
@@ -113,7 +113,7 @@ public class KnowtatorIAA {
 		initHTML();
 	}
 
-	private void initHTML() throws IAAException {
+	public void initHTML() throws IAAException {
 		try {
 			html = new PrintStream(new File(outputDirectory, "index.html"));
 			html.println("<html><head><title>Inter-Annotator Agreement</title></head>");
@@ -130,7 +130,7 @@ public class KnowtatorIAA {
 		html.close();
 	}
 
-	private void initTextSourceAnnotations() throws IAAException {
+	public void initTextSourceAnnotations() throws IAAException {
 		textSourceAnnotationsMap = new HashMap<>();
 //		for (SimpleInstance textSourceInstance : textSources) {
 //			Collection<SimpleInstance> tsAnnotations = annotationUtil.getAnnotations(textSourceInstance);
@@ -140,7 +140,7 @@ public class KnowtatorIAA {
 //		}
 	}
 
-	private void initSetNames() {
+	public void initSetNames() {
 		setNames = new HashSet<>();
 //		Set<SimpleInstance> setNameInstances;
 //		if (setNameDeterminedByAnnotators)
@@ -153,7 +153,7 @@ public class KnowtatorIAA {
 //		}
 	}
 
-//	private String getAnnotationSetName(TextAnnotation knowtatorAnnotation) {
+//	public String getAnnotationSetName(TextAnnotation knowtatorAnnotation) {
 //		if (setNameDeterminedByAnnotators) {
 //			String annotatorName = annotationUtil.getAnnotator(knowtatorAnnotation).getBrowserText();
 //			return annotatorName;
@@ -231,7 +231,7 @@ public class KnowtatorIAA {
 //		}
 //	}
 
-//	private Set<TextAnnotation> convertAnnotations(Collection<SimpleInstance> knowtatorAnnotations) throws IAAException {
+//	public Set<TextAnnotation> convertAnnotations(Collection<SimpleInstance> knowtatorAnnotations) throws IAAException {
 //		Set<TextAnnotation> annotations = new HashSet<>();
 //		for (SimpleInstance knowtatorAnnotation : knowtatorAnnotations) {
 //			annotations.add(convertAnnotation(knowtatorAnnotation, true));
@@ -239,7 +239,7 @@ public class KnowtatorIAA {
 //		return annotations;
 //	}
 
-	private static int convertMatchSpans(String matchSpans) throws IAAException {
+	public static int convertMatchSpans(String matchSpans) throws IAAException {
 		switch (matchSpans) {
 			case "SpansMatchExactly":
 				return TextAnnotation.SPANS_EXACT_COMPARISON;
@@ -253,7 +253,7 @@ public class KnowtatorIAA {
 		}
 	}
 
-//	private static FeatureMatcher createFeatureMatcher(SlotMatcherConfig slotMatcherConfig,
+//	public static FeatureMatcher createFeatureMatcher(SlotMatcherConfig slotMatcherConfig,
 //													   String matcherName) throws IAAException {
 //		FeatureMatcher featureMatcher = new FeatureMatcher(matcherName);
 //		if (!slotMatcherConfig.getDirectType().equals(kpu.getSlotMatcherConfigCls()))
@@ -316,7 +316,7 @@ public class KnowtatorIAA {
 		return runFeatureMatcherIAA(slotMatcherConfig, "Feature Matcher");
 	}
 
-	private IAA runFeatureMatcherIAA(SlotMatcherConfig slotMatcherConfig, String matcherName) throws IAAException {
+	public IAA runFeatureMatcherIAA(SlotMatcherConfig slotMatcherConfig, String matcherName) throws IAAException {
 		try {
 //			FeatureMatcher featureMatcher = createFeatureMatcher(slotMatcherConfig, matcherName);
 			IAA featureIAA = new IAA(setNames);
@@ -454,7 +454,7 @@ public class KnowtatorIAA {
 		}
 	}
 
-	private static void calculateSubclassIAA(OWLClass cls, SubclassMatcher subclassMatcher,
+	public static void calculateSubclassIAA(OWLClass cls, SubclassMatcher subclassMatcher,
 											 IAA subclassIAA, Map<String, Set<TextAnnotation>> textSourceAnnotationsMap)
 			throws IAAException {
 		subclassIAA.reset();
@@ -466,7 +466,7 @@ public class KnowtatorIAA {
 		}
 	}
 
-	private Set<OWLClass> getTopLevelClses() {
+	public Set<OWLClass> getTopLevelClses() {
 		//		Set<OWLClass> topLevelClses = new HashSet<OWLClass>(FilterUtil.getTypes(filter));
 //		if (topLevelClses.size() == 0) {
 //			topLevelClses.addAll(manager.getRootClses());
@@ -474,7 +474,7 @@ public class KnowtatorIAA {
 		return view.getOWLModelManager().getOWLHierarchyManager().getOWLClassHierarchyProvider().getRoots();
 	}
 
-	private ClassHierarchy createClassHierarchy(Set<OWLClass> topLevelClses) {
+	public ClassHierarchy createClassHierarchy(Set<OWLClass> topLevelClses) {
 		Map<String, Set<String>> subclassMap = new HashMap<>();
 		for (OWLClass topLevelCls : topLevelClses) {
 			populateSubclassMap(topLevelCls, subclassMap);
@@ -482,7 +482,7 @@ public class KnowtatorIAA {
 		return new ClassHierarchyImpl(subclassMap);
 	}
 
-	private void populateSubclassMap(OWLClass cls, Map<String, Set<String>> subclassMap) {
+	public void populateSubclassMap(OWLClass cls, Map<String, Set<String>> subclassMap) {
 		String clsName = cls.toStringID();
 		if (!subclassMap.containsKey(clsName)) {
 			Collection<OWLClass> subclses = view.getOWLModelManager().getOWLHierarchyManager().getOWLClassHierarchyProvider().getDescendants(cls);
