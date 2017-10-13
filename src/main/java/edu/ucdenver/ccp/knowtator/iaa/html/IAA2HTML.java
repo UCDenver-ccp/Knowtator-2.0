@@ -33,7 +33,6 @@ import edu.ucdenver.ccp.knowtator.TextAnnotation.TextSpan;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher;
 import edu.ucdenver.ccp.knowtator.iaa.AnnotationSpanIndex;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
-import edu.ucdenver.ccp.knowtator.xml.XmlTags;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +47,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS;
+import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS_NAME;
 import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.TEXTSOURCE;
 
 @SuppressWarnings("unused")
@@ -404,7 +403,7 @@ public class IAA2HTML {
 			sortedAnnotations.put(type, new HashSet<>());
 		}
 		for (TextAnnotation textAnnotation : textAnnotations) {
-			String type = textAnnotation.getProperty(CLASS);
+			String type = textAnnotation.getProperty(CLASS_NAME);
 			if (type != null)
 				sortedAnnotations.get(type).add(textAnnotation);
 		}

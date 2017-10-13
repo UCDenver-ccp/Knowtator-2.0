@@ -1,13 +1,13 @@
 package edu.ucdenver.ccp.knowtator.owl;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class OntologyTranslator {
-    public static final Logger log = Logger.getLogger(KnowtatorView.class);
+    public static final Logger log = Logger.getLogger(KnowtatorManager.class);
 
     public static final String SEP = ":";
 

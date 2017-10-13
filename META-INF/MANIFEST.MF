@@ -32,6 +32,7 @@ Import-Package: org.osgi.framework,
  org.xml.sax,
  org.xml.sax.ext,
  org.xml.sax.helpers,
+ org.semanticweb.owlapi.model,
  javax.xml.parsers,
  com.google.common.base
 Bundle-Version: 1.0.3

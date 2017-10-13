@@ -35,7 +35,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS;
+import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS_NAME;
 
 @SuppressWarnings({"JavadocReference", "JavaDoc", "Duplicates"})
 public class ClassAndSpanMatcher implements Matcher {
@@ -101,7 +101,7 @@ public class ClassAndSpanMatcher implements Matcher {
 
 	public static Set<TextAnnotation> matches(TextAnnotation textAnnotation, String compareSetName, IAA iaa,
                                               Set<TextAnnotation> excludeTextAnnotations, boolean returnFirst) {
-		String type = textAnnotation.getProperty(CLASS);
+		String type = textAnnotation.getProperty(CLASS_NAME);
 		Set<TextAnnotation> candidateTextAnnotations = new HashSet<>(iaa.getExactlyOverlappingAnnotations(textAnnotation,
 				compareSetName));
 		candidateTextAnnotations.removeAll(excludeTextAnnotations);
@@ -111,7 +111,7 @@ public class ClassAndSpanMatcher implements Matcher {
 		Set<TextAnnotation> returnValues = new HashSet<>();
 		for (TextAnnotation candidateTextAnnotation : candidateTextAnnotations) {
 			if (!excludeTextAnnotations.contains(candidateTextAnnotation)
-					&& candidateTextAnnotation.getProperty(CLASS).equals(type)) {
+					&& candidateTextAnnotation.getProperty(CLASS_NAME).equals(type)) {
 				returnValues.add(candidateTextAnnotation);
 				if (returnFirst)
 					return returnValues;

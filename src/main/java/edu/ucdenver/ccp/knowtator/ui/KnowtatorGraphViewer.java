@@ -5,7 +5,7 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
-import edu.ucdenver.ccp.knowtator.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
 import edu.ucdenver.ccp.knowtator.listeners.TextAnnotationListener;
 import edu.ucdenver.ccp.knowtator.iaa.AssertionRelationship;
@@ -32,10 +32,10 @@ public class KnowtatorGraphViewer extends JPanel implements TextAnnotationListen
     public mxGraph graph;
 
     public mxGraphComponent graphComponent;
-    public KnowtatorView view;
+    public KnowtatorManager manager;
 
-    public KnowtatorGraphViewer(KnowtatorView view) {
-        this.view = view;
+    public KnowtatorGraphViewer(KnowtatorManager manager) {
+        this.manager = manager;
         graph = new mxGraph();
         parent = graph.getDefaultParent();
 
@@ -49,7 +49,7 @@ public class KnowtatorGraphViewer extends JPanel implements TextAnnotationListen
             Object[] cells = (Object[])evt.getProperty("cells");
             for (Object cell : cells) {
                 if (graph.getModel().isEdge(cell)) {
-                    AssertionRelationship relationship = view.getTextAnnotationManager().addAssertion();
+                    AssertionRelationship relationship = manager.getTextAnnotationManager().addAssertion();
                     if (relationship != null) {
                         ((mxCell) cell).setValue(relationship);
                     } else {
@@ -103,7 +103,7 @@ public class KnowtatorGraphViewer extends JPanel implements TextAnnotationListen
                     String.format(
                             "fillColor=#%s",
                             Integer.toHexString(
-                                    view.getAnnotatorManager().getCurrentAnnotator().getHighlighter(
+                                    manager.getAnnotatorManager().getCurrentAnnotator().getHighlighter(
                                             value.getOwlClass()
                                     ).getColor().getRGB()
                             ).substring(2)

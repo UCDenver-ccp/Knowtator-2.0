@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator.xml;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.KnowtatorDocumentHandler;
 import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -12,7 +13,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,9 +20,9 @@ import java.util.List;
 import static edu.ucdenver.ccp.knowtator.xml.XmlTags.*;
 
 public class XmlReader {
-    public static final Logger log = Logger.getLogger(KnowtatorView.class);
+    public static final Logger log = Logger.getLogger(KnowtatorManager.class);
 
-    public static void read(InputStream is, KnowtatorView view) throws ParserConfigurationException, IOException, SAXException {
+    public static void read(String fileName, KnowtatorManager manager, Boolean fromResources) throws ParserConfigurationException, IOException, SAXException {
         log.warn("Reading annotations from XML");
 
         /*
@@ -30,7 +30,7 @@ public class XmlReader {
          */
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(is);
+        Document doc = dBuilder.parse(KnowtatorDocumentHandler.getFileInputStream(fileName, fromResources));
         doc.getDocumentElement().normalize();
 
         HashMap<String, List<HashMap<String, String>>> textAnnotations = new HashMap<>();
@@ -48,7 +48,7 @@ public class XmlReader {
             textAnnotations.put(textSource, getAnnotationsFromXml(textSourceElement, classMentionToClassIDMap));
         }
 
-        view.getTextAnnotationManager().addTextAnnotations(textAnnotations);
+        manager.getTextAnnotationManager().addTextAnnotations(textAnnotations);
 
     }
 
@@ -100,7 +100,7 @@ public class XmlReader {
                 HashMap<String, String> annotationProperties = new HashMap<String, String>() {
                     {
                         put(TextAnnotationProperties.CLASS_ID, classMentionToClassIDMap.get(mentionSource + mentionID)[0]);
-                        put(TextAnnotationProperties.CLASS, classMentionToClassIDMap.get(mentionSource + mentionID)[1]);
+                        put(TextAnnotationProperties.CLASS_NAME, classMentionToClassIDMap.get(mentionSource + mentionID)[1]);
                         put(TextAnnotationProperties.ANNOTATOR, annotationElement.getElementsByTagName(ANNOTATOR).item(0).getTextContent());
                         put(TextAnnotationProperties.ANNOTATOR_ID, ((Element) annotationElement.getElementsByTagName(ANNOTATOR).item(0)).getAttribute(ANNOTATOR_ID));
                         put(TextAnnotationProperties.SPAN, getSpanInfo(annotationElement));

@@ -1,8 +1,8 @@
 package edu.ucdenver.ccp.knowtator.TextAnnotation;
 
-import edu.ucdenver.ccp.knowtator.listeners.DocumentListener;
-import edu.ucdenver.ccp.knowtator.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.iaa.AssertionRelationship;
+import edu.ucdenver.ccp.knowtator.listeners.DocumentListener;
 import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
 import edu.ucdenver.ccp.knowtator.owl.OntologyTranslator;
 import edu.ucdenver.ccp.knowtator.ui.KnowtatorTextPane;
@@ -13,15 +13,15 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 import java.util.*;
 
 public final class TextAnnotationManager implements DocumentListener {
-    public static final Logger log = Logger.getLogger(KnowtatorView.class);
+    public static final Logger log = Logger.getLogger(KnowtatorManager.class);
 
     public HashMap<String, Collection<TextAnnotation>> textAnnotations;
     public TextAnnotation selectedTextAnnotation;
-    public KnowtatorView view;
+    public KnowtatorManager manager;
     public List<AssertionRelationship> assertionRelationships;
 
-    public TextAnnotationManager(KnowtatorView view) {
-        this.view = view;
+    public TextAnnotationManager(KnowtatorManager manager) {
+        this.manager = manager;
         selectedTextAnnotation = null;
         textAnnotations = new HashMap<>();
         assertionRelationships = new ArrayList<>();
@@ -36,10 +36,10 @@ public final class TextAnnotationManager implements DocumentListener {
         // Make new annotation
         HashMap<String, String> properties = new HashMap<String, String>() {
             {
-                put(TextAnnotationProperties.CLASS_ID, OWLAPIDataExtractor.getClassID(view, cls));
-                put(TextAnnotationProperties.CLASS, OWLAPIDataExtractor.getClassName(view, cls));
-                put(TextAnnotationProperties.ANNOTATOR_ID, view.getAnnotatorManager().getCurrentAnnotator().getAnnotatorID());
-                put(TextAnnotationProperties.ANNOTATOR, view.getAnnotatorManager().getCurrentAnnotator().getAnnotatorName());
+                put(TextAnnotationProperties.CLASS_ID, OWLAPIDataExtractor.getClassID(manager, cls));
+                put(TextAnnotationProperties.CLASS_NAME, OWLAPIDataExtractor.getClassName(manager, cls));
+                put(TextAnnotationProperties.ANNOTATOR_ID, manager.getAnnotatorManager().getCurrentAnnotator().getAnnotatorID());
+                put(TextAnnotationProperties.ANNOTATOR, manager.getAnnotatorManager().getCurrentAnnotator().getAnnotatorName());
                 put(TextAnnotationProperties.SPAN, String.format("%s,%s", spanStart, spanEnd));
             }
         };
@@ -53,7 +53,7 @@ public final class TextAnnotationManager implements DocumentListener {
         textAnnotations.get(textSource).add(newTextAnnotation);
         setSelectedTextAnnotation(newTextAnnotation);
 
-        view.textAnnotationsChangedEvent();
+        manager.textAnnotationsChangedEvent();
     }
 
 
@@ -64,13 +64,13 @@ public final class TextAnnotationManager implements DocumentListener {
             }
             for (HashMap<String, String> properties : annotations) {
                 OntologyTranslator.translate(properties.get(TextAnnotationProperties.CLASS_ID));
-                view.loadOntologyFromLocation(properties.get(TextAnnotationProperties.CLASS_ID));
-                OWLClass cls = OWLAPIDataExtractor.getOWLClassByID(view, properties.get(TextAnnotationProperties.CLASS));
+                manager.loadOntologyFromLocation(properties.get(TextAnnotationProperties.CLASS_ID));
+                OWLClass cls = OWLAPIDataExtractor.getOWLClassByID(manager, properties.get(TextAnnotationProperties.CLASS_NAME));
                 textAnnotations.get(textSource).add(new TextAnnotation(cls, properties));
             }
         });
 
-        view.textAnnotationsChangedEvent();
+        manager.textAnnotationsChangedEvent();
     }
 
     @SuppressWarnings("unused")
@@ -88,13 +88,13 @@ public final class TextAnnotationManager implements DocumentListener {
             }
         }
 
-        view.textAnnotationsChangedEvent();
+        manager.textAnnotationsChangedEvent();
     }
 
     public void removeTextAnnotation(String textSource, TextAnnotation textTextAnnotation) {
         textAnnotations.get(textSource).remove(textTextAnnotation);
 
-        view.textAnnotationsChangedEvent();
+        manager.textAnnotationsChangedEvent();
     }
 
 
@@ -124,16 +124,16 @@ public final class TextAnnotationManager implements DocumentListener {
     }
 
     public AssertionRelationship addAssertion() {
-        OWLObjectProperty property = view.getOWLWorkspace().getOWLSelectionModel().getLastSelectedObjectProperty();
+        OWLObjectProperty property = manager.getOwlWorkspace().getOWLSelectionModel().getLastSelectedObjectProperty();
 
-        AssertionRelationship newAssertionRelationship = new AssertionRelationship(property, OWLAPIDataExtractor.getClassName(view, property));
+        AssertionRelationship newAssertionRelationship = new AssertionRelationship(property, OWLAPIDataExtractor.getClassName(manager, property));
         assertionRelationships.add(newAssertionRelationship);
         return newAssertionRelationship;
     }
 
     public void setSelectedTextAnnotation(TextAnnotation selectedTextAnnotation) {
         this.selectedTextAnnotation = selectedTextAnnotation;
-        view.setGlobalSelection1(selectedTextAnnotation.getOwlClass());
+        manager.owlSelectionChangedEvent(selectedTextAnnotation.getOwlClass());
     }
 
     @Override

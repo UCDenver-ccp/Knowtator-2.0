@@ -9,6 +9,6 @@ public class TextAnnotationProperties {
     public static String SPAN_START = String.format("%s-start", SPAN);
     public static String SPAN_END = String.format("%s-end", SPAN);
 
-    public static String CLASS = "class";
-    public static String CLASS_ID = String.format("%s-%s", CLASS, ID);
+    public static String CLASS_NAME = "class";
+    public static String CLASS_ID = String.format("%s-%s", CLASS_NAME, ID);
 }

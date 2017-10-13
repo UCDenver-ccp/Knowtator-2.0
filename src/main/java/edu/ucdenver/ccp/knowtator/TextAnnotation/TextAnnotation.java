@@ -33,7 +33,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 
 import java.util.*;
 
-import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS;
+import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS_NAME;
 import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS_ID;
 
 public class TextAnnotation {
@@ -181,8 +181,8 @@ public class TextAnnotation {
 	 * annotationClass.
 	 */
 	public static boolean classesMatch(TextAnnotation textAnnotation1, TextAnnotation textAnnotation2) {
-		String cls1 = textAnnotation1.getProperty(CLASS);
-		String cls2 = textAnnotation2.getProperty(CLASS);
+		String cls1 = textAnnotation1.getProperty(CLASS_NAME);
+		String cls2 = textAnnotation2.getProperty(CLASS_NAME);
 
 		return cls1 != null && cls2 != null && cls1.equals(cls2);
 
@@ -655,7 +655,7 @@ public class TextAnnotation {
 	public String toHTML(boolean printComplexFeatures) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ul><li>").append(setName).append("</li>");
-		sb.append("<li>class = ").append(properties.get(CLASS)).append("</li>");
+		sb.append("<li>class = ").append(properties.get(CLASS_NAME)).append("</li>");
 		sb.append("<li>textSpans = ");
 		for (TextSpan span : textSpans)
 			sb.append(span.toString()).append(" ");

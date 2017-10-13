@@ -40,7 +40,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS;
+import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS_NAME;
 
 @SuppressWarnings("unused")
 public class IAA {
@@ -184,7 +184,7 @@ public class IAA {
 
 		for (TextAnnotation textAnnotation : textAnnotations) {
 			String setName = textAnnotation.getSetName();
-			String annotationClass = textAnnotation.getProperty(CLASS);
+			String annotationClass = textAnnotation.getProperty(CLASS_NAME);
 			if (annotationClass != null)
 				annotationClasses.add(annotationClass);
 			// throw exception here if there is a setName in the textAnnotations
@@ -201,7 +201,7 @@ public class IAA {
 			class2AnnotationsMap.put(setName, classAnnotations);
 
 			for (TextAnnotation setTextAnnotation : setTextAnnotations) {
-				String annotationClass = setTextAnnotation.getProperty(CLASS);
+				String annotationClass = setTextAnnotation.getProperty(CLASS_NAME);
 				if (!classAnnotations.containsKey(annotationClass)) {
 					classAnnotations.put(annotationClass, new HashSet<>());
 				}
@@ -392,7 +392,7 @@ public class IAA {
 	}
 
 	public Set<TextAnnotation> getAnnotationsOfSameType(TextAnnotation textAnnotation, String compareSetName) {
-		String annotationClass = textAnnotation.getProperty(CLASS);
+		String annotationClass = textAnnotation.getProperty(CLASS_NAME);
 		return safeReturn(class2AnnotationsMap.get(compareSetName).get(annotationClass));
 	}
 

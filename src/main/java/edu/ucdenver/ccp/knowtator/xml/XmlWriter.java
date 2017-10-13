@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.xml;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
 import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationManager;
 import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS_ID;
 
 public class XmlWriter {
-    public static final Logger log = Logger.getLogger(KnowtatorView.class);
+    public static final Logger log = Logger.getLogger(KnowtatorManager.class);
 
     public static ArrayList<String> annotationToXML(TextAnnotation textAnnotation) {
         ArrayList<String> toWrite = new ArrayList<>();
@@ -25,7 +25,7 @@ public class XmlWriter {
         for (TextSpan textSpan : textAnnotation.getTextSpans()) {
             toWrite.add(String.format("    <%s %s=\"%s\" %s=\"%s\" />", XmlTags.SPAN, XmlTags.SPAN_START, textSpan.getStart(), XmlTags.SPAN_END, textSpan.getEnd()));
         }
-        toWrite.add(String.format("    <%s %s=\"%s\">%s</%s>", XmlTags.MENTION_CLASS, XmlTags.MENTION_CLASS_ID, textAnnotation.getProperty(CLASS_ID), textAnnotation.getProperty(TextAnnotationProperties.CLASS), XmlTags.MENTION_CLASS));
+        toWrite.add(String.format("    <%s %s=\"%s\">%s</%s>", XmlTags.MENTION_CLASS, XmlTags.MENTION_CLASS_ID, textAnnotation.getProperty(CLASS_ID), textAnnotation.getProperty(TextAnnotationProperties.CLASS_NAME), XmlTags.MENTION_CLASS));
         toWrite.add(String.format("  </%s>", XmlTags.CLASS_MENTION));
         toWrite.add(String.format("  </%s>", XmlTags.ANNOTATION));
 

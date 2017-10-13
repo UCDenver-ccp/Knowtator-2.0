@@ -42,7 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS;
+import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS_NAME;
 
 @SuppressWarnings("unused")
 public class SpanMatcherHTML {
@@ -132,7 +132,7 @@ public class SpanMatcherHTML {
 			Set<TextAnnotation> matchedTextAnnotations = matchSets.get(match);
 			for (TextAnnotation matchedTextAnnotation : matchedTextAnnotations) {
 				if (!matchedTextAnnotation.equals(match)) {
-					String annotationClass = matchedTextAnnotation.getProperty(CLASS);
+					String annotationClass = matchedTextAnnotation.getProperty(CLASS_NAME);
 					if (!counts.containsKey(annotationClass)) {
 						counts.put(annotationClass, new int[1]);
 					}

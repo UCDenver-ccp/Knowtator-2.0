@@ -1,8 +1,7 @@
 package edu.ucdenver.ccp.knowtator.xml;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -10,26 +9,29 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.AbstractList;
 import java.util.Collections;
 import java.util.List;
 import java.util.RandomAccess;
 
 public final class XmlUtil {
-    public static final Logger log = Logger.getLogger(KnowtatorView.class);
-    KnowtatorView view;
+    public static final Logger log = Logger.getLogger(KnowtatorManager.class);
+    KnowtatorManager manager;
 
-    public XmlUtil(KnowtatorView view) {
-        this.view = view;
+    public XmlUtil(KnowtatorManager manager) {
+        this.manager = manager;
     }
 
-    public void read(InputStream is) throws IOException, SAXException, ParserConfigurationException {
-        XmlReader.read(is, view);
+    public void read(String fileName, Boolean fromResources) {
+        try {
+            XmlReader.read(fileName, manager, fromResources);
+        } catch (ParserConfigurationException | IOException | SAXException e) {
+            e.printStackTrace();
+        }
     }
 
     public void write(FileWriter fw) throws IOException, NoSuchFieldException {
-        XmlWriter.write(fw, view.getTextAnnotationManager());
+        XmlWriter.write(fw, manager.getTextAnnotationManager());
     }
 
     public static List<Node> asList(NodeList n) {
