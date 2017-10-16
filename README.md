@@ -38,7 +38,7 @@ Plugin for Protege
 (A sample file and its textAnnotation xml file can be found [here][sample files location])
 
 ![After installation][installation image]
-Add as a View to a Protege tab by going to Menu -> Views -> Miscellaneous Views -> Knowtator
+Add as a View to a Protege tab by going to Window -> Views -> Miscellaneous Views -> Knowtator
 
 ## Features
 

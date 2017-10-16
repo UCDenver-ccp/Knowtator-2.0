@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator.Annotator;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.swing.*;
@@ -25,11 +26,7 @@ public class Annotator {
     public void addHighlighter(OWLClass cls) {
         Color c = JColorChooser.showDialog(null, String.format("Pick a color for %s", cls.toString()), Color.CYAN);
         if (c != null) {
-            DefaultHighlighter.DefaultHighlightPainter newHighlighter = new DefaultHighlighter.DefaultHighlightPainter(c);
-            highlighters.put(cls, newHighlighter);
-            for(OWLClass decendent: manager.getOwlModelManager().getOWLHierarchyManager().getOWLClassHierarchyProvider().getDescendants(cls)) {
-                highlighters.put(decendent, newHighlighter);
-            }
+            addHighlighter(cls, c);
         }
 
     }
@@ -52,4 +49,24 @@ public class Annotator {
         return annotatorName;
     }
 
+    public void addHighlighter(String classID, String className, String color) {
+        Color c = Color.decode(color);
+
+        c = new Color((float) c.getRed()/255, (float)c.getGreen()/255, (float)c.getBlue()/255, 1f);
+
+        manager.loadOntologyFromLocation(classID);
+
+        OWLClass cls = OWLAPIDataExtractor.getOWLClassByID(manager, className);
+
+        addHighlighter(cls, c);
+    }
+
+    public void addHighlighter(OWLClass cls, Color c) {
+        DefaultHighlighter.DefaultHighlightPainter newHighlighter = new DefaultHighlighter.DefaultHighlightPainter(c);
+
+        highlighters.put(cls, newHighlighter);
+        for(OWLClass decendent: manager.getOwlModelManager().getOWLHierarchyManager().getOWLClassHierarchyProvider().getDescendants(cls)) {
+            highlighters.put(decendent, newHighlighter);
+        }
+    }
 }

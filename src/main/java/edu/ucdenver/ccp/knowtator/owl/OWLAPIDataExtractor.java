@@ -73,13 +73,13 @@ public class OWLAPIDataExtractor {
         return extractOWLObjectData(manager, getOWLClassByID(manager, classID), ID_NAME);
     }
 
-    public static OWLClass getOWLClassByID(KnowtatorManager manager, String classID) {
-        OWLClass cls = manager.getOwlModelManager().getOWLEntityFinder().getOWLClass(classID);
+    public static OWLClass getOWLClassByID(KnowtatorManager manager, String className) {
+        OWLClass cls = manager.getOwlModelManager().getOWLEntityFinder().getOWLClass(className);
         if (cls == null) {
-            log.warn(String.format("Class %s not found", classID));
+            log.warn(String.format("Class %s not found", className));
         }
         else {
-            log.warn(String.format("Class %s found", classID));
+            log.warn(String.format("Class %s found", className));
         }
         return cls;
 

@@ -108,15 +108,12 @@ public final class TextAnnotationManager implements DocumentListener {
         return selectedTextAnnotation;
     }
 
-    public Set<TextAnnotation> getAnnotationsInRange(Integer spanStart, Integer spanEnd) {
-        Set<TextAnnotation> annotationsInRange = new HashSet<>();
-        for (Collection<TextAnnotation> textAnnotations : this.textAnnotations.values()) {
-            for (TextAnnotation textTextAnnotation : textAnnotations) {
-                for (TextSpan textSpan : textTextAnnotation.getTextSpans()) {
-                    if (spanStart >= textSpan.getStart() && spanEnd <= textSpan.getEnd()) {
-                        annotationsInRange.add(textTextAnnotation);
-                    }
-                }
+    public List<TextAnnotation> getAnnotationsInRange(String textSource, Integer start, Integer end) {
+        List<TextAnnotation> annotationsInRange = new ArrayList<>();
+
+        for (TextAnnotation textAnnotation : textAnnotations.get(textSource)) {
+            if (textAnnotation.getTextSpanInRange(start, end) != null) {
+                annotationsInRange.add(textAnnotation);
             }
         }
 
@@ -134,6 +131,7 @@ public final class TextAnnotationManager implements DocumentListener {
     public void setSelectedTextAnnotation(TextAnnotation selectedTextAnnotation) {
         this.selectedTextAnnotation = selectedTextAnnotation;
         manager.owlSelectionChangedEvent(selectedTextAnnotation.getOwlClass());
+        manager.textAnnotationsChangedEvent();
     }
 
     @Override

@@ -33,8 +33,8 @@ import org.semanticweb.owlapi.model.OWLClass;
 
 import java.util.*;
 
-import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS_NAME;
 import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS_ID;
+import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS_NAME;
 
 public class TextAnnotation {
 
@@ -687,5 +687,14 @@ public class TextAnnotation {
 
 	public String getProperty(String propertyTag) {
 		return properties.get(propertyTag);
+	}
+
+    public TextSpan getTextSpanInRange(int start, int end) {
+		for (TextSpan textSpan : textSpans) {
+			if (start >= textSpan.getStart() && end <= textSpan.getEnd()) {
+				return textSpan;
+			}
+		}
+		return null;
 	}
 }

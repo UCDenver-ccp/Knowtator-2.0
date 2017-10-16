@@ -2,12 +2,14 @@ package edu.ucdenver.ccp.knowtator.Annotator;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.ui.ListDialog;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class AnnotatorManager {
 
+    public static final Logger log = Logger.getLogger(KnowtatorManager.class);
     public Annotator currentAnnotator;
 
     public Map<String, Annotator> annotatorMap;
@@ -19,21 +21,15 @@ public class AnnotatorManager {
         annotatorMap = new HashMap<>();
     }
 
-    public void addNewAnnotator(String annotatorName, String annotatorID) {
+    public Annotator addNewAnnotator(String annotatorName, String annotatorID) {
+        log.warn(String.format("Profile name: %s  id: %s", annotatorName, annotatorID));
+
         Annotator newAnnotator = new Annotator(manager, annotatorName, annotatorID);
         annotatorMap.put(annotatorName, newAnnotator);
 
-        loadProfile(annotatorName);
-    }
+        currentAnnotator = newAnnotator;
 
-    public void removeCurrentProfile() {
-    }
-
-    public void loadProfile(String profileName) {
-        if (currentAnnotator != null) removeCurrentProfile();
-
-        // Change active annotator
-        currentAnnotator = annotatorMap.get(profileName);
+        return newAnnotator;
     }
 
     public Annotator getCurrentAnnotator() {
@@ -49,7 +45,7 @@ public class AnnotatorManager {
 
         if (annotatorName != null)
         {
-            loadProfile(annotatorName);
+            currentAnnotator = annotatorMap.get(annotatorName);
         }
 
     }

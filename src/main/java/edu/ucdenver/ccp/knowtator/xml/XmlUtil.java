@@ -22,6 +22,7 @@ public final class XmlUtil {
         this.manager = manager;
     }
 
+    //TODO add command to read in profile from xml
     public void read(String fileName, Boolean fromResources) {
         try {
             XmlReader.read(fileName, manager, fromResources);
@@ -30,6 +31,7 @@ public final class XmlUtil {
         }
     }
 
+    //TODO Save profiles to xml
     public void write(FileWriter fw) throws IOException, NoSuchFieldException {
         XmlWriter.write(fw, manager.getTextAnnotationManager());
     }

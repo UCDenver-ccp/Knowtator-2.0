@@ -1,9 +1,9 @@
 package edu.ucdenver.ccp.knowtator.ui;
 
 
-
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
+import edu.ucdenver.ccp.knowtator.TextAnnotation.TextSpan;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
 
@@ -13,6 +13,7 @@ import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Utilities;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.List;
 
 public class KnowtatorTextPane extends JTextPane {
 
@@ -62,8 +63,26 @@ public class KnowtatorTextPane extends JTextPane {
 									start = Utilities.getWordStart(textPane, release_offset);
 									end = Utilities.getWordEnd(textPane, press_offset);
 								}
-								textPane.setSelectionStart(start);
-								textPane.setSelectionEnd(end);
+
+
+								if(e.getClickCount() == 2) {
+									List<TextAnnotation> selectedAnnotations = manager.getTextAnnotationManager().getAnnotationsInRange(getName(), start, end);
+									if (selectedAnnotations.size() == 1) {
+
+										TextSpan selectedSpan = selectedAnnotations.get(0).getTextSpanInRange(start, end);
+
+										textPane.setSelectionStart(selectedSpan.getStart());
+										textPane.setSelectionEnd(selectedSpan.getEnd());
+
+										manager.getTextAnnotationManager().setSelectedTextAnnotation(selectedAnnotations.get(0));
+
+									} else {
+										showPopUpMenu(e);
+									}
+								} else {
+									textPane.setSelectionStart(start);
+									textPane.setSelectionEnd(end);
+								}
 
 							} catch (BadLocationException e1) {
 								e1.printStackTrace();
@@ -93,7 +112,7 @@ public class KnowtatorTextPane extends JTextPane {
 		popupMenu.add(annotateWithCurrentSelectedClass);
 
 		// Menu items to select and remove annotations
-		for (TextAnnotation a : manager.getTextAnnotationManager().getAnnotationsInRange(getSelectionStart(), getSelectionEnd())) {
+		for (TextAnnotation a : manager.getTextAnnotationManager().getAnnotationsInRange(getName(), getSelectionStart(), getSelectionEnd())) {
 			JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s", a.getOwlClass()));
 			selectAnnotationMenuItem.addActionListener(e3 -> manager.getTextAnnotationManager().setSelectedTextAnnotation(a));
 			popupMenu.add(selectAnnotationMenuItem);
@@ -119,8 +138,14 @@ public class KnowtatorTextPane extends JTextPane {
 		}
 	}
 
-	public void highlightAnnotation(int spanStart, int spanEnd, OWLClass cls) {
+	public void highlightAnnotation(int spanStart, int spanEnd, OWLClass cls, Boolean selectAnnotation) {
 		DefaultHighlighter.DefaultHighlightPainter highlighter = manager.getAnnotatorManager().getCurrentAnnotator().getHighlighter(cls);
+		if (selectAnnotation) {
+			if (highlighter == null) {
+				log.warn("wut");
+			}
+			highlighter = new RectanglePainter(highlighter.getColor().darker());
+		}
 
 		try {
 			getHighlighter().addHighlight(spanStart, spanEnd, highlighter);

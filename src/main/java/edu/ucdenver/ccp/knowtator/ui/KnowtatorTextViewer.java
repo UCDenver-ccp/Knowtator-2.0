@@ -83,17 +83,18 @@ public class KnowtatorTextViewer extends JTabbedPane implements TextAnnotationLi
         return (KnowtatorTextPane) ((JScrollPane) getSelectedComponent()).getViewport().getView();
     }
 
-    public void highlightAllAnnotations() {
+    public void refreshHighlights() {
         KnowtatorTextPane textPane = getSelectedTextPane();
 
         textPane.getHighlighter().removeAllHighlights();
-        manager.getTextAnnotationManager().getTextAnnotations().get(textPane.getName()).forEach(textAnnotation -> textAnnotation.getTextSpans().forEach(textSpan ->
-                textPane.highlightAnnotation(
-                        textSpan.getStart(),
-                        textSpan.getEnd(),
-                        textAnnotation.getOwlClass()
-                )
-        ));
+        manager.getTextAnnotationManager().getTextAnnotations().get(textPane.getName()).forEach(
+                textAnnotation -> {
+                    Boolean selectAnnotation = textAnnotation == manager.getTextAnnotationManager().selectedTextAnnotation;
+                    textAnnotation.getTextSpans().forEach(
+                            textSpan -> textPane.highlightAnnotation(textSpan.getStart(), textSpan.getEnd(), textAnnotation.getOwlClass(), selectAnnotation)
+                    );
+                }
+        );
     }
 
     public void closeSelectedDocument() {
@@ -110,7 +111,7 @@ public class KnowtatorTextViewer extends JTabbedPane implements TextAnnotationLi
 
     @Override
     public void textAnnotationsChanged() {
-        highlightAllAnnotations();
+        refreshHighlights();
     }
 
     @Override

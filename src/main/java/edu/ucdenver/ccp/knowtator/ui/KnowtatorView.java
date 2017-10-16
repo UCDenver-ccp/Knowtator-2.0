@@ -51,13 +51,16 @@ public class KnowtatorView extends BasicKnowtatorView {
 
         manager.getAnnotatorManager().addNewAnnotator("Default", "Default");
 
+
+
         /*
         An initial documents to display
          */
         textViewer.addNewDocument("/file/test_article.txt", true);
         textViewer.addNewDocument("/file/test_article2.txt", true);
 
-        manager.getXmlUtil().read("/file/test_annotations.xml", true);
+        manager.getXmlUtil().read("/file/test_profile.xml", true);
+//        manager.getXmlUtil().read("/file/test_annotations.xml", true);
 
     }
 

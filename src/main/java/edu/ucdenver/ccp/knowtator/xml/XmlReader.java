@@ -1,7 +1,8 @@
 package edu.ucdenver.ccp.knowtator.xml;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.Annotator.Annotator;
 import edu.ucdenver.ccp.knowtator.KnowtatorDocumentHandler;
+import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -23,8 +24,6 @@ public class XmlReader {
     public static final Logger log = Logger.getLogger(KnowtatorManager.class);
 
     public static void read(String fileName, KnowtatorManager manager, Boolean fromResources) throws ParserConfigurationException, IOException, SAXException {
-        log.warn("Reading annotations from XML");
-
         /*
         doc parses the XML into a graph
          */
@@ -33,14 +32,30 @@ public class XmlReader {
         Document doc = dBuilder.parse(KnowtatorDocumentHandler.getFileInputStream(fileName, fromResources));
         doc.getDocumentElement().normalize();
 
+        List<Node> textSourceNodes = XmlUtil.asList(doc.getElementsByTagName(XmlTags.ANNOTATIONS));
+        List<Node> profileNodes = XmlUtil.asList(doc.getElementsByTagName(XmlTags.PROFILE));
+
+        if (textSourceNodes.size() > 0) {
+            readAnnotations(textSourceNodes, manager);
+        }
+        if (profileNodes.size() > 0) {
+            readProfiles(profileNodes, manager);
+        }
+    }
+
+    public static void readAnnotations(List<Node> textSourceNodes, KnowtatorManager manager) throws ParserConfigurationException, IOException, SAXException {
+        log.warn("Reading annotations from XML");
+
+
+
         HashMap<String, List<HashMap<String, String>>> textAnnotations = new HashMap<>();
 
         /*
         Get annotations by document
          */
-        for (Node textSourceNode: XmlUtil.asList(doc.getElementsByTagName(ANNOTATIONS))) {
+        for (Node textSourceNode: textSourceNodes) {
             Element textSourceElement = (Element) textSourceNode;
-            String textSource = textSourceElement.getAttribute(TEXTSOURCE);
+            String textSource = textSourceElement.getAttribute(XmlTags.TEXTSOURCE);
             log.warn(String.format("Text source: %s", textSource));
 
 
@@ -50,6 +65,38 @@ public class XmlReader {
 
         manager.getTextAnnotationManager().addTextAnnotations(textAnnotations);
 
+    }
+
+    public static void readProfiles(List<Node> profileNodes, KnowtatorManager manager) throws ParserConfigurationException, IOException, SAXException {
+        log.warn("Reading profiles from XML");
+
+        /*
+        Get annotations by document
+         */
+        for (Node profileNode: profileNodes) {
+            Element profileElement = (Element) profileNode;
+            String profileName = profileElement.getAttribute(XmlTags.PROFILE_NAME);
+            String profileID = profileElement.getAttribute(XmlTags.PROFILE_ID);
+
+            Annotator newAnnotator = manager.getAnnotatorManager().addNewAnnotator(profileName, profileID);
+
+            getHighlightersFromXml(newAnnotator, profileElement);
+        }
+    }
+
+    public static void getHighlightersFromXml(Annotator newAnnotator, Element profileElement) {
+
+        for (Node highlighterNode : XmlUtil.asList(profileElement.getElementsByTagName(XmlTags.HIGHLIGHTER))) {
+            if (highlighterNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element highlighterElement = (Element) highlighterNode;
+
+                String className = highlighterElement.getElementsByTagName(XmlTags.CLASS_NAME).item(0).getTextContent();
+                String classID = highlighterElement.getElementsByTagName(XmlTags.CLASS_ID).item(0).getTextContent();
+                String color = highlighterElement.getElementsByTagName(XmlTags.COLOR).item(0).getTextContent();
+
+                newAnnotator.addHighlighter(classID, className, color);
+            }
+        }
     }
 
     public static HashMap<String, String[]> getClassIDsFromXml(Element textSourceElement) {
