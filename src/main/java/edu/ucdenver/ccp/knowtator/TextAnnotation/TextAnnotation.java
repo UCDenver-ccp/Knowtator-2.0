@@ -28,7 +28,9 @@
 
 package edu.ucdenver.ccp.knowtator.TextAnnotation;
 
+import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult;
+import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import java.util.*;
@@ -38,20 +40,28 @@ import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties
 
 public class TextAnnotation {
 
-	public String setName = "Set name not specified";
-
 	public Map<String, String> properties;
+	private String annotatorID;
 
 	public List<TextSpan> textSpans;
+	public String annotatorName;
+
 	// key is a feature name, value is the value of the feature
 	public Map<String, Set<Object>> simpleFeatures;
 	public Map<String, Set<TextAnnotation>> complexFeatures;
 	public int size = 0;
+	private KnowtatorManager manager;
 	public OWLClass owlClass;
+	private String textSource;
 
-	public TextAnnotation(OWLClass cls, HashMap<String, String> properties) {
+	public TextAnnotation(KnowtatorManager manager, OWLClass cls, HashMap<String, String> properties, String textSource, String annotatorName, String annotatorID) {
+		this.manager = manager;
 		this.owlClass = cls;
 		this.properties = properties;
+		this.annotatorID = annotatorID;
+
+		this.textSource = textSource;
+		this.annotatorName = annotatorName;
 
 		textSpans = new ArrayList<>();
 		for (String span : properties.get(TextAnnotationProperties.SPAN).split(";")) {
@@ -59,19 +69,31 @@ public class TextAnnotation {
 
 			textSpans.add(new TextSpan(Integer.parseInt(spanT[0]), Integer.parseInt(spanT[1])));
 		}
-
-		simpleFeatures = new HashMap<>();
-		complexFeatures = new HashMap<>();
 	}
 
+	public TextAnnotation(KnowtatorManager manager, OWLClass cls, HashMap<String, String> properties, String textSource) {
+		this.manager = manager;
+		this.owlClass = cls;
+		this.properties = properties;
+		this.annotatorID = properties.get(TextAnnotationProperties.ANNOTATOR_ID);
 
-	public String getSetName() {
-		return setName;
+		this.textSource = textSource;
+		this.annotatorName = properties.get(TextAnnotationProperties.ANNOTATOR);
+
+		textSpans = new ArrayList<>();
+		for (String span : properties.get(TextAnnotationProperties.SPAN).split(";")) {
+			String[] spanT = span.split(",");
+
+			textSpans.add(new TextSpan(Integer.parseInt(spanT[0]), Integer.parseInt(spanT[1])));
+		}
 	}
 
-
-	public OWLClass getOwlClass() {
-		return owlClass;
+	public String getOwlClassName() {
+		if (manager.getConfigProperties().getAutoLoadOntologies()) {
+			return OWLAPIDataExtractor.getClassName(manager, owlClass);
+		} else {
+			return properties.get(TextAnnotationProperties.CLASS_NAME);
+		}
 	}
 
 	public List<TextSpan> getTextSpans() {
@@ -654,27 +676,27 @@ public class TextAnnotation {
 
 	public String toHTML(boolean printComplexFeatures) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("<ul><li>").append(setName).append("</li>");
+		sb.append("<ul><li>").append(annotatorName).append("</li>");
 		sb.append("<li>class = ").append(properties.get(CLASS_NAME)).append("</li>");
 		sb.append("<li>textSpans = ");
 		for (TextSpan span : textSpans)
 			sb.append(span.toString()).append(" ");
 		sb.append("</li>");
 
-		if (simpleFeatures.size() > 0) {
-			for (String featureName : simpleFeatures.keySet()) {
-				sb.append("<li>").append(featureName).append(" = <b>").append(simpleFeatures.get(featureName)).append("</b></li>");
-			}
-		}
-		if (printComplexFeatures && complexFeatures.size() > 0) {
-			for (String featureName : complexFeatures.keySet()) {
-				sb.append("<li>").append(featureName).append(" = ");
-				Set<TextAnnotation> features = complexFeatures.get(featureName);
-				for (TextAnnotation feature : features) {
-					sb.append(feature.toHTML(false));
-				}
-			}
-		}
+//		if (simpleFeatures.size() > 0) {
+//			for (String featureName : simpleFeatures.keySet()) {
+//				sb.append("<li>").append(featureName).append(" = <b>").append(simpleFeatures.get(featureName)).append("</b></li>");
+//			}
+//		}
+//		if (printComplexFeatures && complexFeatures.size() > 0) {
+//			for (String featureName : complexFeatures.keySet()) {
+//				sb.append("<li>").append(featureName).append(" = ");
+//				Set<TextAnnotation> features = complexFeatures.get(featureName);
+//				for (TextAnnotation feature : features) {
+//					sb.append(feature.toHTML(false));
+//				}
+//			}
+//		}
 		sb.append("</ul>");
 		return sb.toString();
 	}
@@ -696,5 +718,17 @@ public class TextAnnotation {
 			}
 		}
 		return null;
+	}
+
+	public String getTextSource() {
+		return textSource;
+	}
+
+	public String getAnnotatorName() {
+		return annotatorName;
+	}
+
+	public OWLClass getOwlClass() {
+		return owlClass;
 	}
 }

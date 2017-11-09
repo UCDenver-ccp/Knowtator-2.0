@@ -35,7 +35,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@SuppressWarnings({"JavadocReference", "unused"})
 public class SpansOverlapSimpleFeatureMatcher implements Matcher {
 
 	/**
@@ -68,19 +67,19 @@ public class SpansOverlapSimpleFeatureMatcher implements Matcher {
 	 *            <li>TRIVIAL_NONMATCH if there is no match or non-trivial
 	 *            non-match found.
 	 * @return will return the first nontrivial match that it finds preferring
-	 * @see edu.uchsc.ccp.iaa.matcher.Matcher#match(TextAnnotation, String, Set,
+	 * @seeedu.ucdenver.ccp.knowtator.iaa_original.matcher.Matcher#match(TextAnnotation, String, Set,
 	 *      IAA, MatchResult)
-	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
-	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
-	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#TRIVIAL_MATCH
-	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#TRIVIAL_NONMATCH
+	 * @seeedu.ucdenver.ccp.knowtator.iaa_original.matcher.MatchResult#NONTRIVIAL_MATCH
+	 * @seeedu.ucdenver.ccp.knowtator.iaa_original.matcher.MatchResult#NONTRIVIAL_NONMATCH
+	 * @seeedu.ucdenver.ccp.knowtator.iaa_original.matcher.MatchResult#TRIVIAL_MATCH
+	 * @seeedu.ucdenver.ccp.knowtator.iaa_original.matcher.MatchResult#TRIVIAL_NONMATCH
 	 */
 
-	public TextAnnotation match(TextAnnotation textAnnotation, String compareSetName, Set<TextAnnotation> excludeTextAnnotations, IAA iaa,
-                                MatchResult matchResult) {
+	public TextAnnotation match(TextAnnotation annotation, String compareSetName, Set<TextAnnotation> excludeAnnotations, IAA iaa,
+								MatchResult matchResult) {
 
-		TextAnnotation spansExactSimpleFeatureMatch = SpansExactSimpleFeatureMatcher.match(textAnnotation, compareSetName, iaa,
-                excludeTextAnnotations, matchResult);
+		TextAnnotation spansExactSimpleFeatureMatch = SpansExactSimpleFeatureMatcher.match(annotation, compareSetName, iaa,
+				excludeAnnotations, matchResult);
 
 		// if TRIVIAL_MATCH then we do not have to worry about there being an
 		// overlapping NONTRIVIAL_MATCH further down
@@ -90,9 +89,9 @@ public class SpansOverlapSimpleFeatureMatcher implements Matcher {
 			return spansExactSimpleFeatureMatch;
 		}
 
-		Set<TextAnnotation> candidateTextAnnotations = new HashSet<>(iaa.getOverlappingAnnotations(textAnnotation,
+		Set<TextAnnotation> candidateAnnotations = new HashSet<>(iaa.getOverlappingAnnotations(annotation,
 				compareSetName));
-		candidateTextAnnotations.removeAll(excludeTextAnnotations);
+		candidateAnnotations.removeAll(excludeAnnotations);
 
 		// we are going to collect all matches because we want to return the
 		// shortest of the matches if there is more than one.
@@ -101,13 +100,13 @@ public class SpansOverlapSimpleFeatureMatcher implements Matcher {
 
 		boolean nontrivialNonmatch = false;
 
-		for (TextAnnotation candidateTextAnnotation : candidateTextAnnotations) {
-			if (!excludeTextAnnotations.contains(candidateTextAnnotation)) {
-				int result = TextAnnotation.compareSimpleFeatures(textAnnotation, candidateTextAnnotation);
+		for (TextAnnotation candidateAnnotation : candidateAnnotations) {
+			if (!excludeAnnotations.contains(candidateAnnotation)) {
+				int result = TextAnnotation.compareSimpleFeatures(annotation, candidateAnnotation);
 				if (result == MatchResult.NONTRIVIAL_MATCH) {
-					nontrivialMatches.add(candidateTextAnnotation);
+					nontrivialMatches.add(candidateAnnotation);
 				} else if (result == MatchResult.TRIVIAL_MATCH) {
-					trivialMatches.add(candidateTextAnnotation);
+					trivialMatches.add(candidateAnnotation);
 				}
 				if (result == MatchResult.NONTRIVIAL_NONMATCH) {
 					nontrivialNonmatch = true;

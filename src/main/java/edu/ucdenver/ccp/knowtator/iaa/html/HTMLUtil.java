@@ -28,15 +28,16 @@
 
 package edu.ucdenver.ccp.knowtator.iaa.html;
 
-@SuppressWarnings("unused")
 public class HTMLUtil {
 
 	public static String initHTML(String title, String description) {
-		return "<html>\n" +
-				"<head><title>" + title + "</title></head>\n" +
-				"<body>\n" +
-				"<h1>" + title + "</h1>\n" +
-				description + "\n";
+		StringBuffer html = new StringBuffer();
+		html.append("<html>\n");
+		html.append("<head><title>" + title + "</title></head>\n");
+		html.append("<body>\n");
+		html.append("<h1>" + title + "</h1>\n");
+		html.append(description + "\n");
+		return html.toString();
 	}
 
 }

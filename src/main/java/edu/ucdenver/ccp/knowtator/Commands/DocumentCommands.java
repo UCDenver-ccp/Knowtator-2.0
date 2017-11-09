@@ -9,8 +9,6 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class DocumentCommands {
 
@@ -66,7 +64,7 @@ public class DocumentCommands {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
-                FileFilter fileFilter = new FileNameExtensionFilter(" XML", "xml");
+                FileFilter fileFilter = new FileNameExtensionFilter(manager.getConfigProperties().getFormat().toUpperCase(), manager.getConfigProperties().getFormat());
                 fileChooser.setFileFilter(fileFilter);
 
                 if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -77,24 +75,18 @@ public class DocumentCommands {
     }
 
     public KnowtatorCommand getSaveTextAnnotationsCommand() {
-        return new KnowtatorCommand(manager, "Save to XML", KnowtatorIcons.SAVE_ANNOTATIONS_ICON, "Save annotations to XML file") {
+        return new KnowtatorCommand(manager, "Save", KnowtatorIcons.SAVE_ANNOTATIONS_ICON, "Save annotations") {
 
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
-                FileFilter fileFilter = new FileNameExtensionFilter(" XML", "xml");
+                fileChooser.setCurrentDirectory(new File(manager.getConfigProperties().getDefaultSaveLocation()));
+                FileFilter fileFilter = new FileNameExtensionFilter(manager.getConfigProperties().getFormat().toUpperCase(), manager.getConfigProperties().getFormat());
                 fileChooser.setFileFilter(fileFilter);
-                if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    FileWriter fw;
-                    try {
 
-                        fw = new FileWriter(fileChooser.getSelectedFile().getAbsolutePath());
-                        manager.getXmlUtil().write(fw);
-                        fw.close();
-                    } catch (IOException | NoSuchFieldException e1) {
-                        e1.printStackTrace();
-                    }
+                if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    manager.getXmlUtil().write(fileChooser.getSelectedFile().getAbsolutePath());
                 }
             }
         };

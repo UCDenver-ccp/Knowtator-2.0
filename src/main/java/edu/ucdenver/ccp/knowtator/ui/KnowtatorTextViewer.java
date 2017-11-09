@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,7 +52,6 @@ public class KnowtatorTextViewer extends JTabbedPane implements TextAnnotationLi
         }
     }
 
-    @SuppressWarnings("unused")
     public KnowtatorTextPane getTextPaneByName(String name) {
         for (int i = 0; i < getTabCount(); i++) {
             if (Objects.equals(getTitleAt(i), name)) {
@@ -61,7 +61,6 @@ public class KnowtatorTextViewer extends JTabbedPane implements TextAnnotationLi
         return null;
     }
 
-    @SuppressWarnings("unused")
     public ArrayList<KnowtatorTextPane> getAllTextPanes() {
         ArrayList<KnowtatorTextPane> textPanes = new ArrayList<>();
 
@@ -72,7 +71,6 @@ public class KnowtatorTextViewer extends JTabbedPane implements TextAnnotationLi
         return textPanes;
     }
 
-    @SuppressWarnings("unused")
     public KnowtatorTextPane getTextPaneByIndex(int i) {
         JScrollPane scrollPane = (JScrollPane) getComponent(i);
         JViewport viewPort = (scrollPane).getViewport();
@@ -87,14 +85,16 @@ public class KnowtatorTextViewer extends JTabbedPane implements TextAnnotationLi
         KnowtatorTextPane textPane = getSelectedTextPane();
 
         textPane.getHighlighter().removeAllHighlights();
-        manager.getTextAnnotationManager().getTextAnnotations().get(textPane.getName()).forEach(
-                textAnnotation -> {
-                    Boolean selectAnnotation = textAnnotation == manager.getTextAnnotationManager().selectedTextAnnotation;
-                    textAnnotation.getTextSpans().forEach(
-                            textSpan -> textPane.highlightAnnotation(textSpan.getStart(), textSpan.getEnd(), textAnnotation.getOwlClass(), selectAnnotation)
-                    );
-                }
-        );
+
+        Collection<TextAnnotation> textAnnotations = manager.getTextAnnotationManager().getTextAnnotations().get(textPane.getName());
+        if (textAnnotations != null) {
+            for (TextAnnotation textAnnotation : textAnnotations) {
+                Boolean selectAnnotation = textAnnotation == manager.getTextAnnotationManager().selectedTextAnnotation;
+                textAnnotation.getTextSpans().forEach(
+                        textSpan -> textPane.highlightAnnotation(textSpan.getStart(), textSpan.getEnd(), textAnnotation.getOwlClass(), selectAnnotation)
+                );
+            }
+        }
     }
 
     public void closeSelectedDocument() {

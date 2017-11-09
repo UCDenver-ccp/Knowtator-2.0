@@ -29,26 +29,19 @@
 package edu.ucdenver.ccp.knowtator.iaa.html;
 
 import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
-import edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher;
 import edu.ucdenver.ccp.knowtator.iaa.AnnotationSpanIndex;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
+import edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher;
 
 import java.io.File;
 import java.io.PrintStream;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import static edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationProperties.CLASS_NAME;
-
-@SuppressWarnings("unused")
 public class SpanMatcherHTML {
 
 	public static void printIAA(IAA iaa, Matcher matcher, File directory, int numberOfDocs,
-                                Map<TextAnnotation, String> annotationTexts, Map<TextAnnotation, String> annotationTextNames) throws Exception {
+			Map<TextAnnotation, String> annotationTexts, Map<TextAnnotation, String> annotationTextNames) throws Exception {
 		NumberFormat percentageFormat = NumberFormat.getPercentInstance();
 		percentageFormat.setMinimumFractionDigits(2);
 
@@ -86,7 +79,7 @@ public class SpanMatcherHTML {
 		Map<String, Set<TextAnnotation>> sortedAllwayMatches = IAA2HTML.sortByType(classes, allwayMatchesSingleSet);
 		Map<String, Set<TextAnnotation>> sortedAllwayNonmatches = IAA2HTML.sortByType(classes, allwayNonmatchesSingleSet);
 
-		java.util.List<String> sortedTypes = new ArrayList<>(classes);
+		List<String> sortedTypes = new ArrayList<>(classes);
 		Collections.sort(sortedTypes);
 
 		for (String type : sortedTypes) {
@@ -114,7 +107,7 @@ public class SpanMatcherHTML {
 				classes, iaa);
 
 		IAA2HTML.printNonmatchData(html, sets, fileName, directory, allwayNonmatches, spanIndex, annotationTexts,
-				annotationTextNames, classes, iaa);
+				annotationTextNames, classes);
 
 		Map<String, Map<String, Set<TextAnnotation>>> pairwiseMatches = iaa.getPairwiseMatches();
 		Map<String, Map<String, Set<TextAnnotation>>> pairwiseNonmatches = iaa.getPairwiseNonmatches();
@@ -129,10 +122,10 @@ public class SpanMatcherHTML {
 		Map<String, int[]> counts = new HashMap<>();
 
 		for (TextAnnotation match : matches) {
-			Set<TextAnnotation> matchedTextAnnotations = matchSets.get(match);
-			for (TextAnnotation matchedTextAnnotation : matchedTextAnnotations) {
-				if (!matchedTextAnnotation.equals(match)) {
-					String annotationClass = matchedTextAnnotation.getProperty(CLASS_NAME);
+			Set<TextAnnotation> matchedAnnotations = matchSets.get(match);
+			for (TextAnnotation matchedAnnotation : matchedAnnotations) {
+				if (!matchedAnnotation.equals(match)) {
+					String annotationClass = matchedAnnotation.getOwlClassName();
 					if (!counts.containsKey(annotationClass)) {
 						counts.put(annotationClass, new int[1]);
 					}

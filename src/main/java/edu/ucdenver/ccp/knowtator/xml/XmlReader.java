@@ -14,6 +14,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,17 +30,37 @@ public class XmlReader {
          */
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(KnowtatorDocumentHandler.getFileInputStream(fileName, fromResources));
+
+        InputStream is = KnowtatorDocumentHandler.getFileInputStream(fileName, fromResources);
+
+        Document doc = dBuilder.parse(is);
         doc.getDocumentElement().normalize();
 
         List<Node> textSourceNodes = XmlUtil.asList(doc.getElementsByTagName(XmlTags.ANNOTATIONS));
         List<Node> profileNodes = XmlUtil.asList(doc.getElementsByTagName(XmlTags.PROFILE));
+        List<Node> configNodes = XmlUtil.asList(doc.getElementsByTagName(XmlTags.CONFIG));
 
         if (textSourceNodes.size() > 0) {
             readAnnotations(textSourceNodes, manager);
         }
         if (profileNodes.size() > 0) {
             readProfiles(profileNodes, manager);
+        }
+        if (configNodes.size() > 0) {
+            readConfigFile(configNodes, manager);
+        }
+
+    }
+
+    private static void readConfigFile(List<Node> configNodes, KnowtatorManager manager) {
+        log.warn("Reading configuration from XML");
+
+        for (Node configNode: configNodes) {
+            Element configElement = (Element) configNode;
+
+            manager.getConfigProperties().setAutoLoadOntologies(Boolean.valueOf(configElement.getElementsByTagName(XmlTags.AUTO_LOAD_ONTOLOGIES).item(0).getTextContent()));
+            manager.getConfigProperties().setFormat(configElement.getElementsByTagName(XmlTags.FORMAT).item(0).getTextContent());
+            manager.getConfigProperties().setDefaultSaveLocation(configElement.getElementsByTagName(XmlTags.DEFAULT_SAVE_LOCATION).item(0).getTextContent());
         }
     }
 
@@ -60,7 +81,7 @@ public class XmlReader {
 
 
             HashMap<String, String[]> classMentionToClassIDMap = getClassIDsFromXml(textSourceElement);
-            textAnnotations.put(textSource, getAnnotationsFromXml(textSourceElement, classMentionToClassIDMap));
+            textAnnotations.put(textSource, getAnnotationsFromXml(textSourceElement, classMentionToClassIDMap, manager));
         }
 
         manager.getTextAnnotationManager().addTextAnnotations(textAnnotations);
@@ -131,7 +152,7 @@ public class XmlReader {
         return mentionTracker;
     }
 
-    public static List<HashMap<String, String>>  getAnnotationsFromXml(Element textSourceElement, HashMap<String, String[]> classMentionToClassIDMap) {
+    public static List<HashMap<String, String>>  getAnnotationsFromXml(Element textSourceElement, HashMap<String, String[]> classMentionToClassIDMap, KnowtatorManager manager) {
 
         List<HashMap<String, String>> annotations = new ArrayList<>();
 
@@ -144,12 +165,17 @@ public class XmlReader {
                 String mentionSource = XmlUtil.getMentionSourceFromXML(fullMention);
                 int mentionID = XmlUtil.getMentionIDFromXML(fullMention);
 
+                String annotatorName = annotationElement.getElementsByTagName(ANNOTATOR).item(0).getTextContent();
+                String annotatorID = ((Element) annotationElement.getElementsByTagName(ANNOTATOR).item(0)).getAttribute(ANNOTATOR_ID);
+
+                manager.getAnnotatorManager().addNewAnnotator(annotatorName, annotatorID);
+
                 HashMap<String, String> annotationProperties = new HashMap<String, String>() {
                     {
                         put(TextAnnotationProperties.CLASS_ID, classMentionToClassIDMap.get(mentionSource + mentionID)[0]);
                         put(TextAnnotationProperties.CLASS_NAME, classMentionToClassIDMap.get(mentionSource + mentionID)[1]);
-                        put(TextAnnotationProperties.ANNOTATOR, annotationElement.getElementsByTagName(ANNOTATOR).item(0).getTextContent());
-                        put(TextAnnotationProperties.ANNOTATOR_ID, ((Element) annotationElement.getElementsByTagName(ANNOTATOR).item(0)).getAttribute(ANNOTATOR_ID));
+                        put(TextAnnotationProperties.ANNOTATOR, annotatorName);
+                        put(TextAnnotationProperties.ANNOTATOR_ID, annotatorID);
                         put(TextAnnotationProperties.SPAN, getSpanInfo(annotationElement));
                     }
                 };

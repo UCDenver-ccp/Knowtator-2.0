@@ -7,8 +7,8 @@ import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
-import edu.ucdenver.ccp.knowtator.listeners.TextAnnotationListener;
 import edu.ucdenver.ccp.knowtator.iaa.AssertionRelationship;
+import edu.ucdenver.ccp.knowtator.listeners.TextAnnotationListener;
 
 import javax.swing.*;
 import java.awt.*;

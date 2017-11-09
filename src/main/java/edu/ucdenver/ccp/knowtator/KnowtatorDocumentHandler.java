@@ -9,13 +9,9 @@ public class KnowtatorDocumentHandler {
 
     public static InputStream getFileInputStream(String fileName, Boolean fromResources) throws FileNotFoundException {
         if (fromResources) {
-            return KnowtatorManager.class.getResourceAsStream(fileName);
+            return KnowtatorManager.class.getResourceAsStream("/" + fileName);
         } else {
-            try {
-                return new FileInputStream(fileName);
-            } finally {
-                log.warn(String.format("Could not open %s", fileName));
-            }
+            return new FileInputStream(fileName);
         }
     }
 

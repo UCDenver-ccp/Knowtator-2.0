@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <auto-load-ontologies>false</auto-load-ontologies>
+    <format>xml</format>
+    <default-save-location>${user.home}${file.separator}KnowtatorProjects${file.separator}</default-save-location>
+</config>

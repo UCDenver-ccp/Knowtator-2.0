@@ -38,7 +38,7 @@ public class MatchResult {
 
 	public static final int TRIVIAL_NONMATCH = 3;
 
-	public int result = -1;
+	private int result = -1;
 
 	public MatchResult() {
 	}

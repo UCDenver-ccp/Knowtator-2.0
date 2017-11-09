@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: ***CHANGE ME*** Knowtator Plugin
-Bundle-SymbolicName: ***CHANGE ME*** edu.ucdenver.ccp.knowtator;singleton:=true
+Bundle-Name: Knowtator Plugin
+Bundle-SymbolicName: edu.ucdenver.ccp.knowtator;singleton:=true
 Bundle-Category: protege
-Bundle-Description: ***CHANGE ME*** A plugin for annotating mechanisms
-Bundle-Vendor: ***CHANGE ME*** Harrison Pielke-Lombardo
+Bundle-Description: A plugin for annotating mechanisms
+Bundle-Vendor: Harrison Pielke-Lombardo
 Bundle-ClassPath: .,lib/example.jar
 Import-Package: org.osgi.framework,
  org.apache.log4j,
@@ -35,7 +35,7 @@ Import-Package: org.osgi.framework,
  org.semanticweb.owlapi.model,
  javax.xml.parsers,
  com.google.common.base
-Bundle-Version: 1.0.3
+Bundle-Version: 0.1.0
 Bundle-Activator: org.protege.editor.core.plugin.DefaultPluginActivator 
 Require-Bundle: org.eclipse.equinox.registry,
  org.eclipse.equinox.common,

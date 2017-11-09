@@ -28,7 +28,6 @@
 
 package edu.ucdenver.ccp.knowtator.iaa;
 
-@SuppressWarnings("unused")
 public class IAAException extends Exception {
 
 	public IAAException() {

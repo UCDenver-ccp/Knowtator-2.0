@@ -8,8 +8,8 @@ import edu.ucdenver.ccp.knowtator.listeners.DocumentListener;
 import edu.ucdenver.ccp.knowtator.listeners.OwlSelectionListener;
 import edu.ucdenver.ccp.knowtator.listeners.TextAnnotationListener;
 import edu.ucdenver.ccp.knowtator.owl.OntologyTranslator;
-import edu.ucdenver.ccp.knowtator.ui.KnowtatorTextPane;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
+import edu.ucdenver.ccp.knowtator.ui.KnowtatorTextPane;
 import edu.ucdenver.ccp.knowtator.xml.XmlUtil;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLModelManager;
@@ -42,6 +42,7 @@ public class KnowtatorManager implements OwlSelectionListener {
     public OWLModelManagerImpl owlModelManager;
     public OWLWorkspace owlWorkspace;
     public BasicKnowtatorView view;
+    private ConfigProperties configProperties;
 
     /**
      *
@@ -58,6 +59,28 @@ public class KnowtatorManager implements OwlSelectionListener {
         annotatorManager = new AnnotatorManager(this);  //manipulates annotatorMap and highlighters
         xmlUtil = new XmlUtil(this);  //reads and writes to XML
 
+
+        configProperties = new ConfigProperties();
+        loadConfig();
+
+        textAnnotationListeners = new ArrayList<>();
+        documentListeners = new ArrayList<>();
+        documentListeners.add(textAnnotationManager);
+        owlSelectionListeners = new ArrayList<>();
+        owlSelectionListeners.add(this);
+    }
+
+    public KnowtatorManager() {
+        /*
+        Initialize the managers, models, and utils
+         */
+        textAnnotationManager = new TextAnnotationManager(this);
+        annotatorManager = new AnnotatorManager(this);  //manipulates annotatorMap and highlighters
+        xmlUtil = new XmlUtil(this);  //reads and writes to XML
+
+        configProperties = new ConfigProperties();
+        loadConfig();
+
         textAnnotationListeners = new ArrayList<>();
         documentListeners = new ArrayList<>();
         documentListeners.add(textAnnotationManager);
@@ -72,11 +95,10 @@ public class KnowtatorManager implements OwlSelectionListener {
     }
 
     public void loadOntologyFromLocation(String classID) {
-
         List<String> ontologies = owlModelManager.getActiveOntologies().stream().map(ontology -> {
             OWLOntologyID ontID = ontology.getOntologyID();
             @SuppressWarnings("Guava") Optional<IRI> ontIRI = ontID.getOntologyIRI();
-            if(ontIRI.isPresent()) {
+            if (ontIRI.isPresent()) {
                 return ontIRI.get().toURI().toString();
             } else {
                 return null;
@@ -144,6 +166,11 @@ public class KnowtatorManager implements OwlSelectionListener {
         return view;
     }
 
+    public void loadConfig()
+    {
+        xmlUtil.read("config.xml", true);
+    }
+
     @Override
     public void owlClassSelectionChanged(OWLClass cls) {
 
@@ -158,11 +185,15 @@ public class KnowtatorManager implements OwlSelectionListener {
         }
     }
 
-    public static void main(String[] args) {
-        OWLModelManagerImpl modelManager = new OWLModelManagerImpl();
-        OWLWorkspace workspace = new OWLWorkspace();
-        KnowtatorManager knowtatorManager = new KnowtatorManager(modelManager, workspace);
-        knowtatorManager.getXmlUtil().read("/file/test_annotations.xml", true);
-
+    public ConfigProperties getConfigProperties() {
+        return configProperties;
     }
+
+    public static void main(String[] args) {
+        KnowtatorManager manager = new KnowtatorManager();
+        manager.getXmlUtil().read("file/test_annotations.xml", true);
+        manager.getXmlUtil().write(manager.getConfigProperties().getDefaultSaveLocation() + "test_annotation_output.xml");
+    }
+
+
 }

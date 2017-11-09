@@ -32,8 +32,10 @@ public class XmlWriter {
         return toWrite;
     }
 
-    public static void write(FileWriter fw, TextAnnotationManager textAnnotationManager) throws IOException, NoSuchFieldException {
-        BufferedWriter bw = new BufferedWriter(fw);
+    public static void write(String fileName, TextAnnotationManager textAnnotationManager) throws IOException, NoSuchFieldException {
+        log.warn(String.format("Writing to: %s", fileName));
+
+        BufferedWriter bw = new BufferedWriter(new FileWriter(fileName));
 
         bw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         bw.newLine();
@@ -62,5 +64,6 @@ public class XmlWriter {
         });
 
         bw.flush();
+        bw.close();
     }
 }

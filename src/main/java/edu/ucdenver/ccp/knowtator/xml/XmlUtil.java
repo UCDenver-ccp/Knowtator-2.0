@@ -7,7 +7,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.AbstractList;
 import java.util.Collections;
@@ -32,8 +31,12 @@ public final class XmlUtil {
     }
 
     //TODO Save profiles to xml
-    public void write(FileWriter fw) throws IOException, NoSuchFieldException {
-        XmlWriter.write(fw, manager.getTextAnnotationManager());
+    public void write(String fileName) {
+        try {
+            XmlWriter.write(fileName, manager.getTextAnnotationManager());
+        } catch (IOException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
     }
 
     public static List<Node> asList(NodeList n) {

@@ -32,21 +32,16 @@ import edu.ucdenver.ccp.knowtator.iaa.IAA;
 
 import java.util.*;
 
-@SuppressWarnings("unused")
 public class FeatureMatcher implements Matcher {
-	public boolean matchClasses = true;
+	boolean matchClasses = true;
 
-	public int matchSpans = TextAnnotation.SPANS_OVERLAP_COMPARISON;
+	int matchSpans = TextAnnotation.SPANS_OVERLAP_COMPARISON;
 
-	public Set<String> comparedSimpleFeatures = new HashSet<>();
+	Set<String> comparedSimpleFeatures = new HashSet<>();
 
-	public Map<String, ComplexFeatureMatchCriteria> comparedComplexFeatures = new HashMap<>();
+	Map<String, ComplexFeatureMatchCriteria> comparedComplexFeatures = new HashMap<>();
 
-	public String name;
-
-	public FeatureMatcher() {
-		this("Feature Matcher");
-	}
+	String name;
 
 	public FeatureMatcher(String name) {
 		this.name = name;
@@ -68,25 +63,25 @@ public class FeatureMatcher implements Matcher {
 		comparedComplexFeatures.put(complexFeatureName, matchCriteria);
 	}
 
-	public TextAnnotation match(TextAnnotation textAnnotation, String compareSetName, Set<TextAnnotation> excludeTextAnnotations, IAA iaa,
-                                MatchResult matchResult) {
-		Set<TextAnnotation> candidateTextAnnotations = new HashSet<>();
+	public TextAnnotation match(TextAnnotation annotation, String compareSetName, Set<TextAnnotation> excludeAnnotations, IAA iaa,
+			MatchResult matchResult) {
+		Set<TextAnnotation> candidateAnnotations = new HashSet<>();
 		if (matchClasses) {
 			if (matchSpans == TextAnnotation.SPANS_EXACT_COMPARISON) {
-				candidateTextAnnotations.addAll(iaa.getAnnotationsOfSameType(textAnnotation, compareSetName));
-				candidateTextAnnotations.retainAll(iaa.getExactlyOverlappingAnnotations(textAnnotation, compareSetName));
+				candidateAnnotations.addAll(iaa.getAnnotationsOfSameType(annotation, compareSetName));
+				candidateAnnotations.retainAll(iaa.getExactlyOverlappingAnnotations(annotation, compareSetName));
 			} else if (matchSpans == TextAnnotation.SPANS_OVERLAP_COMPARISON) {
 				// Set<TextAnnotation> someAnnotations =
-				// iaa.getExactlyOverlappingAnnotations(textAnnotation,
+				// iaa.getExactlyOverlappingAnnotations(annotation,
 				// compareSetName);
 				//					
 				// Set<TextAnnotation> someAnnotations =
-				// iaa.getExactlyOverlappingAnnotations(textAnnotation,
+				// iaa.getExactlyOverlappingAnnotations(annotation,
 				// compareSetName);
 				//					
-				candidateTextAnnotations.addAll(iaa.getExactlyOverlappingAnnotations(textAnnotation, compareSetName));
-				candidateTextAnnotations.addAll(iaa.getOverlappingAnnotations(textAnnotation, compareSetName));
-				candidateTextAnnotations.retainAll(iaa.getAnnotationsOfSameType(textAnnotation, compareSetName));
+				candidateAnnotations.addAll(iaa.getExactlyOverlappingAnnotations(annotation, compareSetName));
+				candidateAnnotations.addAll(iaa.getOverlappingAnnotations(annotation, compareSetName));
+				candidateAnnotations.retainAll(iaa.getAnnotationsOfSameType(annotation, compareSetName));
 			}
 		} else {
 			if (matchSpans == TextAnnotation.SPANS_EXACT_COMPARISON) {
@@ -94,11 +89,11 @@ public class FeatureMatcher implements Matcher {
 				// but we want them ordered in the following way:
 				// 1) annotations with the same class and same spans
 				// 2) annotations with the same spans
-				candidateTextAnnotations.addAll(iaa.getAnnotationsOfSameType(textAnnotation, compareSetName));
-				Set<TextAnnotation> exactlyOverlappingTextAnnotations = iaa.getExactlyOverlappingAnnotations(textAnnotation,
+				candidateAnnotations.addAll(iaa.getAnnotationsOfSameType(annotation, compareSetName));
+				Set<TextAnnotation> exactlyOverlappingAnnotations = iaa.getExactlyOverlappingAnnotations(annotation,
 						compareSetName);
-				candidateTextAnnotations.retainAll(exactlyOverlappingTextAnnotations);
-				candidateTextAnnotations.addAll(exactlyOverlappingTextAnnotations);
+				candidateAnnotations.retainAll(exactlyOverlappingAnnotations);
+				candidateAnnotations.addAll(exactlyOverlappingAnnotations);
 			} else if (matchSpans == TextAnnotation.SPANS_OVERLAP_COMPARISON) {
 				// we want all annotations that are overlapping, but we want
 				// them ordered in the following way:
@@ -106,21 +101,21 @@ public class FeatureMatcher implements Matcher {
 				// 2) annotations with the same class and overlapping spans
 				// 3) annotations with the same spans
 				// 4) annotations with overlapping spans
-				Set<TextAnnotation> classTextAnnotations = iaa.getAnnotationsOfSameType(textAnnotation, compareSetName);
-				Set<TextAnnotation> exactlyOverlappingTextAnnotations = iaa.getExactlyOverlappingAnnotations(textAnnotation,
+				Set<TextAnnotation> classAnnotations = iaa.getAnnotationsOfSameType(annotation, compareSetName);
+				Set<TextAnnotation> exactlyOverlappingAnnotations = iaa.getExactlyOverlappingAnnotations(annotation,
 						compareSetName);
-				Set<TextAnnotation> overlappingTextAnnotations = iaa.getOverlappingAnnotations(textAnnotation, compareSetName);
+				Set<TextAnnotation> overlappingAnnotations = iaa.getOverlappingAnnotations(annotation, compareSetName);
 
-				Set<TextAnnotation> classAndExactSpanTextAnnotations = new HashSet<>(classTextAnnotations);
-				classAndExactSpanTextAnnotations.retainAll(exactlyOverlappingTextAnnotations);
+				Set<TextAnnotation> classAndExactSpanAnnotations = new HashSet<>(classAnnotations);
+				classAndExactSpanAnnotations.retainAll(exactlyOverlappingAnnotations);
 
-				Set<TextAnnotation> classAndOverlappingSpanTextAnnotations = new HashSet<>(classTextAnnotations);
-				classAndOverlappingSpanTextAnnotations.retainAll(overlappingTextAnnotations);
+				Set<TextAnnotation> classAndOverlappingSpanAnnotations = new HashSet<>(classAnnotations);
+				classAndOverlappingSpanAnnotations.retainAll(overlappingAnnotations);
 
-				candidateTextAnnotations.addAll(classAndExactSpanTextAnnotations);
-				candidateTextAnnotations.addAll(classAndOverlappingSpanTextAnnotations);
-				candidateTextAnnotations.addAll(exactlyOverlappingTextAnnotations);
-				candidateTextAnnotations.addAll(overlappingTextAnnotations);
+				candidateAnnotations.addAll(classAndExactSpanAnnotations);
+				candidateAnnotations.addAll(classAndOverlappingSpanAnnotations);
+				candidateAnnotations.addAll(exactlyOverlappingAnnotations);
+				candidateAnnotations.addAll(overlappingAnnotations);
 			} else {
 				// we want all annotations that are in the other set, but we
 				// want them ordered in the following way:
@@ -130,29 +125,29 @@ public class FeatureMatcher implements Matcher {
 				// 4) annotations with overlapping spans
 				// 5) annotations with the same class
 				// 6) all other annotations
-				Set<TextAnnotation> classTextAnnotations = iaa.getAnnotationsOfSameType(textAnnotation, compareSetName);
-				Set<TextAnnotation> exactlyOverlappingTextAnnotations = iaa.getExactlyOverlappingAnnotations(textAnnotation,
+				Set<TextAnnotation> classAnnotations = iaa.getAnnotationsOfSameType(annotation, compareSetName);
+				Set<TextAnnotation> exactlyOverlappingAnnotations = iaa.getExactlyOverlappingAnnotations(annotation,
 						compareSetName);
-				Set<TextAnnotation> overlappingTextAnnotations = iaa.getOverlappingAnnotations(textAnnotation, compareSetName);
+				Set<TextAnnotation> overlappingAnnotations = iaa.getOverlappingAnnotations(annotation, compareSetName);
 
-				Set<TextAnnotation> classAndExactSpanTextAnnotations = new HashSet<>(classTextAnnotations);
-				classAndExactSpanTextAnnotations.retainAll(exactlyOverlappingTextAnnotations);
+				Set<TextAnnotation> classAndExactSpanAnnotations = new HashSet<>(classAnnotations);
+				classAndExactSpanAnnotations.retainAll(exactlyOverlappingAnnotations);
 
-				Set<TextAnnotation> classAndOverlappingSpanTextAnnotations = new HashSet<>(classTextAnnotations);
-				classAndOverlappingSpanTextAnnotations.retainAll(overlappingTextAnnotations);
+				Set<TextAnnotation> classAndOverlappingSpanAnnotations = new HashSet<>(classAnnotations);
+				classAndOverlappingSpanAnnotations.retainAll(overlappingAnnotations);
 
-				candidateTextAnnotations.addAll(classAndExactSpanTextAnnotations);
-				candidateTextAnnotations.addAll(classAndOverlappingSpanTextAnnotations);
-				candidateTextAnnotations.addAll(exactlyOverlappingTextAnnotations);
-				candidateTextAnnotations.addAll(overlappingTextAnnotations);
-				candidateTextAnnotations.addAll(classTextAnnotations);
-				candidateTextAnnotations.addAll(iaa.getAnnotationSets().get(compareSetName));
+				candidateAnnotations.addAll(classAndExactSpanAnnotations);
+				candidateAnnotations.addAll(classAndOverlappingSpanAnnotations);
+				candidateAnnotations.addAll(exactlyOverlappingAnnotations);
+				candidateAnnotations.addAll(overlappingAnnotations);
+				candidateAnnotations.addAll(classAnnotations);
+				candidateAnnotations.addAll(iaa.getAnnotationSets().get(compareSetName));
 			}
 		}
 
-		candidateTextAnnotations.removeAll(excludeTextAnnotations);
+		candidateAnnotations.removeAll(excludeAnnotations);
 
-		if (candidateTextAnnotations.size() == 0) {
+		if (candidateAnnotations.size() == 0) {
 			matchResult.setResult(MatchResult.TRIVIAL_NONMATCH);
 			return null;
 		}
@@ -163,10 +158,10 @@ public class FeatureMatcher implements Matcher {
 		List<TextAnnotation> trivialMatches = new ArrayList<>();
 		boolean nontrivialNonmatch = false;
 
-		for (TextAnnotation candidateTextAnnotation : candidateTextAnnotations) {
+		for (TextAnnotation candidateAnnotation : candidateAnnotations) {
 			int result;
 			if (comparedSimpleFeatures.size() > 0)
-				result = TextAnnotation.compareSimpleFeatures(textAnnotation, candidateTextAnnotation, comparedSimpleFeatures);
+				result = TextAnnotation.compareSimpleFeatures(annotation, candidateAnnotation, comparedSimpleFeatures);
 			else
 				result = MatchResult.NONTRIVIAL_MATCH;
 
@@ -176,7 +171,7 @@ public class FeatureMatcher implements Matcher {
 			for (String complexFeatureName : comparedComplexFeatures.keySet()) {
 				ComplexFeatureMatchCriteria matchCriteria = comparedComplexFeatures.get(complexFeatureName);
 
-				int complexResult = TextAnnotation.compareComplexFeature(textAnnotation, candidateTextAnnotation,
+				int complexResult = TextAnnotation.compareComplexFeature(annotation, candidateAnnotation,
 						complexFeatureName, matchCriteria.matchSpans, matchCriteria.matchClasses,
 						matchCriteria.comparedSimpleFeatures,
 						matchCriteria.trivialSimpleFeatureMatchesCauseTrivialMatch);
@@ -192,19 +187,13 @@ public class FeatureMatcher implements Matcher {
 				}
 			}
 
-            switch (result) {
-                case MatchResult.TRIVIAL_NONMATCH:
-                    break;
-                case MatchResult.NONTRIVIAL_NONMATCH:
-                    nontrivialNonmatch = true;
-                    break;
-                case MatchResult.TRIVIAL_MATCH:
-                    trivialMatches.add(candidateTextAnnotation);
-                    break;
-                case MatchResult.NONTRIVIAL_MATCH:
-                    nontrivialMatches.add(candidateTextAnnotation);
-                    break;
-            }
+			if (result == MatchResult.NONTRIVIAL_NONMATCH) {
+				nontrivialNonmatch = true;
+			} else if (result == MatchResult.TRIVIAL_MATCH) {
+				trivialMatches.add(candidateAnnotation);
+			} else if (result == MatchResult.NONTRIVIAL_MATCH) {
+				nontrivialMatches.add(candidateAnnotation);
+			}
 		}
 
 		if (nontrivialMatches.size() > 0) {
@@ -239,10 +228,6 @@ public class FeatureMatcher implements Matcher {
 
 	public boolean returnsTrivials() {
 		return true;
-	}
-
-	public int getMatchSpans() {
-		return matchSpans;
 	}
 
 }

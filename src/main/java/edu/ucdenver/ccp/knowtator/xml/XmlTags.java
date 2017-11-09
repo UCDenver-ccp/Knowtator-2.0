@@ -25,4 +25,10 @@ public class XmlTags {
     public static final String CLASS_NAME = "class-name";
     public static final String CLASS_ID = "class-id";
     public static final String COLOR = "color";
+    public static final String CONFIG = "config";
+    public static final String AUTO_LOAD_ONTOLOGIES = "auto-load-ontologies";
+    public static final String FORMAT = "format";
+    public static final String WRITE = "write";
+    public static final String READ = "read";
+    public static final String DEFAULT_SAVE_LOCATION = "default-save-location";
 }

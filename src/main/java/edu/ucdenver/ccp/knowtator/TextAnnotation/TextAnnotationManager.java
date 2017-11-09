@@ -33,20 +33,26 @@ public final class TextAnnotationManager implements DocumentListener {
 
     public void addTextAnnotation(String textSource, OWLClass cls, Integer spanStart, Integer spanEnd) throws NoSuchFieldException {
 
+
+
         // Make new annotation
         HashMap<String, String> properties = new HashMap<String, String>() {
             {
                 put(TextAnnotationProperties.CLASS_ID, OWLAPIDataExtractor.getClassID(manager, cls));
                 put(TextAnnotationProperties.CLASS_NAME, OWLAPIDataExtractor.getClassName(manager, cls));
-                put(TextAnnotationProperties.ANNOTATOR_ID, manager.getAnnotatorManager().getCurrentAnnotator().getAnnotatorID());
-                put(TextAnnotationProperties.ANNOTATOR, manager.getAnnotatorManager().getCurrentAnnotator().getAnnotatorName());
                 put(TextAnnotationProperties.SPAN, String.format("%s,%s", spanStart, spanEnd));
             }
         };
 
-        TextAnnotation newTextAnnotation = new TextAnnotation(
+        String annotator = manager.getAnnotatorManager().getCurrentAnnotator().getAnnotatorName();
+        String annotatorID = manager.getAnnotatorManager().getCurrentAnnotator().getAnnotatorID();
+
+        TextAnnotation newTextAnnotation = new TextAnnotation(manager,
                 cls,
-                properties
+                properties,
+                textSource,
+                annotator,
+                annotatorID
         );
 
         // Add annotation to annotation manager
@@ -63,10 +69,16 @@ public final class TextAnnotationManager implements DocumentListener {
                 textAnnotations.put(textSource, new ArrayList<>());
             }
             for (HashMap<String, String> properties : annotations) {
-                OntologyTranslator.translate(properties.get(TextAnnotationProperties.CLASS_ID));
-                manager.loadOntologyFromLocation(properties.get(TextAnnotationProperties.CLASS_ID));
-                OWLClass cls = OWLAPIDataExtractor.getOWLClassByID(manager, properties.get(TextAnnotationProperties.CLASS_NAME));
-                textAnnotations.get(textSource).add(new TextAnnotation(cls, properties));
+                if(manager.getConfigProperties().getAutoLoadOntologies()) {
+                    OntologyTranslator.translate(properties.get(TextAnnotationProperties.CLASS_ID));
+                    manager.loadOntologyFromLocation(properties.get(TextAnnotationProperties.CLASS_ID));
+                    OWLClass cls = OWLAPIDataExtractor.getOWLClassByID(manager, properties.get(TextAnnotationProperties.CLASS_NAME));
+                    textAnnotations.get(textSource).add(new TextAnnotation(manager, cls, properties, textSource));
+                } else {
+                    textAnnotations.get(textSource).add(new TextAnnotation(manager, null, properties, textSource));
+                }
+
+
             }
         });
 
@@ -137,5 +149,9 @@ public final class TextAnnotationManager implements DocumentListener {
     @Override
     public void documentChanged(KnowtatorTextPane textPane) {
         addTextSource(textPane.getName());
+    }
+
+    public Collection<TextAnnotation> getTextAnnotations(String name) {
+        return textAnnotations.get(name);
     }
 }

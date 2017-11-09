@@ -6,9 +6,9 @@ Plugin for Protege
 - [Installation (Mac):](#)
 - [Setup:](#)
 - [Features](#)
-	- [Annotation highlighting](#)
+	- [TextAnnotation highlighting](#)
 	- [Load plain text documents](#)
-	- [Annotation profiles](#)
+	- [TextAnnotation profiles](#)
 	- [Save textAnnotations to XML file](#)
 	- [Reload textAnnotations](#)
 - [Known bugs](#)
@@ -33,7 +33,7 @@ Plugin for Protege
 1. Launch Protege.exe
 2. Create a new tab (Window -> Create new tab...)
 3. Add a Class Hierarchy view (Window -> Views -> Class views -> Class Hierarchy)
-4. Add an Annotations view (Window -> Views -> Annotation property views -> Annotations)
+4. Add an Annotations view (Window -> Views -> TextAnnotation property views -> Annotations)
 5. Add a Knowtator view (Window -> Miscellaneous views -> Knowtator)
 6. Load an ontology (e.g. [GO-Basic][ontology example])
 
@@ -44,12 +44,12 @@ Add as a View to a Protege tab by going to Window -> Views -> Miscellaneous View
 
 ## Features
 
-### Annotation highlighting
+### TextAnnotation highlighting
 Click on OWL class in Class hierarchy to select a term. Annotate the text by highlighting it and then clicking "Add TextAnnotation". 
 
 ### Load plain text documents
 
-### Annotation profiles
+### TextAnnotation profiles
 Create textAnnotation profiles and assign them different colors. Switch between them quickly with by selecting them on the right.
 
 ### Save textAnnotations to XML file

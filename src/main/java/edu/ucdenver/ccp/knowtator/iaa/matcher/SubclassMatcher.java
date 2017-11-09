@@ -29,9 +29,7 @@ package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
 import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
-import edu.ucdenver.ccp.knowtator.xml.XmlTags;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,17 +40,14 @@ import java.util.Set;
  * 
  */
 
-@SuppressWarnings({"JavadocReference", "JavaDoc", "unused"})
 public class SubclassMatcher implements Matcher {
 
-	public String className;
+	String className;
 
-	public Set<String> subclassNames;
+	Set<String> subclassNames;
 
-	public ClassHierarchy hierarchy;
 
-	public SubclassMatcher(ClassHierarchy hierarchy) {
-		this.hierarchy = hierarchy;
+	public SubclassMatcher() {
 	}
 
 	/**
@@ -63,9 +58,9 @@ public class SubclassMatcher implements Matcher {
 	 * 
 	 * Otherwise, null is returned.
 	 * 
-	 * @param textAnnotation
+	 * @param annotation
 	 * @param compareSetName
-	 * @param excludeTextAnnotations
+	 * @param excludeAnnotations
 	 * @param iaa
 	 * @param matchResult
 	 *            will be set to NONTRIVIAL_MATCH, NONTRIVIAL_NONMATCH, or
@@ -73,67 +68,66 @@ public class SubclassMatcher implements Matcher {
 	 *            annotation is not of the class specified by setIAAClass or a
 	 *            subclass of it. Trivial non-matches should be ignored and not
 	 *            counted in any IAA metrics.
-	 * @see edu.uchsc.ccp.iaa.matcher.Matcher#match(TextAnnotation, String, Set,
+	 * @seeedu.ucdenver.ccp.knowtator.iaa_original.matcher.Matcher#match(TextAnnotation, String, Set,
 	 *      IAA, MatchResult)
-	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
-	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
-	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#TRIVIAL_NONMATCH
-	 * @see edu.uchsc.ccp.iaa.Annotation#getShortestAnnotation(Collection)
-	 * @see #setIAAClass(String)
+	 * @seeedu.ucdenver.ccp.knowtator.iaa_original.matcher.MatchResult#NONTRIVIAL_MATCH
+	 * @seeedu.ucdenver.ccp.knowtator.iaa_original.matcher.MatchResult#NONTRIVIAL_NONMATCH
+	 * @seeedu.ucdenver.ccp.knowtator.iaa_original.matcher.MatchResult#TRIVIAL_NONMATCH
+	 * @seeedu.ucdenver.ccp.knowtator.iaa_original.TextAnnotation#getShortestAnnotation(Collection)
 	 */
-	public TextAnnotation match(TextAnnotation textAnnotation, String compareSetName, Set<TextAnnotation> excludeTextAnnotations, IAA iaa,
-								MatchResult matchResult) {
+	public TextAnnotation match(TextAnnotation annotation, String compareSetName, Set<TextAnnotation> excludeAnnotations, IAA iaa,
+			MatchResult matchResult) {
 
-		String annotationClassName = textAnnotation.getProperty(XmlTags.MENTION_CLASS);
+		String annotationClassName = annotation.getOwlClassName();
 		if (!subclassNames.contains(annotationClassName)) {
 			matchResult.setResult(MatchResult.TRIVIAL_NONMATCH);
 			return null;
 		}
 
-		TextAnnotation classMatch = ClassMatcher.match(textAnnotation, compareSetName, iaa, excludeTextAnnotations);
+		TextAnnotation classMatch = ClassMatcher.match(annotation, compareSetName, iaa, excludeAnnotations);
 		if (classMatch != null) {
 			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 			return classMatch;
 		}
 
-		Set<TextAnnotation> candidateTextAnnotations = new HashSet<>();
+		Set<TextAnnotation> candidateAnnotations = new HashSet<>();
 		for (String subclassName : subclassNames) {
-			candidateTextAnnotations.addAll(iaa.getAnnotationsOfClass(subclassName, compareSetName));
+			candidateAnnotations.addAll(iaa.getAnnotationsOfClass(subclassName, compareSetName));
 		}
 
-		Set<TextAnnotation> exactlyOverlappingTextAnnotations = new HashSet<>(iaa.getExactlyOverlappingAnnotations(
-                textAnnotation, compareSetName));
-		exactlyOverlappingTextAnnotations.retainAll(candidateTextAnnotations);
-		exactlyOverlappingTextAnnotations.removeAll(excludeTextAnnotations);
-		if (exactlyOverlappingTextAnnotations.size() > 0) {
+		Set<TextAnnotation> exactlyOverlappingAnnotations = new HashSet<>(iaa.getExactlyOverlappingAnnotations(
+				annotation, compareSetName));
+		exactlyOverlappingAnnotations.retainAll(candidateAnnotations);
+		exactlyOverlappingAnnotations.removeAll(excludeAnnotations);
+		if (exactlyOverlappingAnnotations.size() > 0) {
 			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
-			return exactlyOverlappingTextAnnotations.iterator().next();
+			return exactlyOverlappingAnnotations.iterator().next();
 		}
 
-		Set<TextAnnotation> overlappingTextAnnotations = new HashSet<>(iaa.getOverlappingAnnotations(textAnnotation,
+		Set<TextAnnotation> overlappingAnnotations = new HashSet<>(iaa.getOverlappingAnnotations(annotation,
 				compareSetName));
-		overlappingTextAnnotations.retainAll(candidateTextAnnotations);
-		overlappingTextAnnotations.removeAll(excludeTextAnnotations);
-		if (overlappingTextAnnotations.size() > 0) {
+		overlappingAnnotations.retainAll(candidateAnnotations);
+		overlappingAnnotations.removeAll(excludeAnnotations);
+		if (overlappingAnnotations.size() > 0) {
 			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
-			if (overlappingTextAnnotations.size() == 1)
-				return overlappingTextAnnotations.iterator().next();
-			return TextAnnotation.getShortestAnnotation(overlappingTextAnnotations);
+			if (overlappingAnnotations.size() == 1)
+				return overlappingAnnotations.iterator().next();
+			return TextAnnotation.getShortestAnnotation(overlappingAnnotations);
 		}
 
 		matchResult.setResult(MatchResult.NONTRIVIAL_NONMATCH);
 		return null;
 	}
-
-	/**
-	 * Sets the class of the
-	 * 
-	 * @param className
-	 */
-    public void setIAAClass(String className) {
-		this.className = className;
-		subclassNames = hierarchy.getSubclasses(className);
-	}
+//
+//	/**
+//	 * Sets the class of the
+//	 *
+//	 * @param className
+//	 */
+//	public void setIAAClass(String className) {
+//		this.className = className;
+//		subclassNames = hierarchy.getSubclasses(className);
+//	}
 
 	public String getIAAClass() {
 		return className;
@@ -152,7 +146,7 @@ public class SubclassMatcher implements Matcher {
 		return true;
 	}
 
-	public Set<String> getSubclasses() {
-		return hierarchy.getSubclasses(className);
-	}
+//	public Set<String> getSubclasses() {
+//		return hierarchy.getSubclasses(className);
+//	}
 }

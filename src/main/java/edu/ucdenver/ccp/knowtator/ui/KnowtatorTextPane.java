@@ -113,11 +113,11 @@ public class KnowtatorTextPane extends JTextPane {
 
 		// Menu items to select and remove annotations
 		for (TextAnnotation a : manager.getTextAnnotationManager().getAnnotationsInRange(getName(), getSelectionStart(), getSelectionEnd())) {
-			JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s", a.getOwlClass()));
+			JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s", a.getOwlClassName()));
 			selectAnnotationMenuItem.addActionListener(e3 -> manager.getTextAnnotationManager().setSelectedTextAnnotation(a));
 			popupMenu.add(selectAnnotationMenuItem);
 
-			JMenuItem removeAnnotationMenuItem = new JMenuItem(String.format("Remove %s", a.getOwlClass()));
+			JMenuItem removeAnnotationMenuItem = new JMenuItem(String.format("Remove %s", a.getOwlClassName()));
 			removeAnnotationMenuItem.addActionListener(e4 -> manager.getTextAnnotationManager().removeTextAnnotation(getName(), a));
 			popupMenu.add(removeAnnotationMenuItem);
 		}
