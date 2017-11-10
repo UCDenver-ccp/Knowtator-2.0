@@ -28,8 +28,8 @@
 package edu.ucdenver.ccp.knowtator.iaa;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
-import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationManager;
+import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.text.AnnotationManager;
 import edu.ucdenver.ccp.knowtator.iaa.html.IAA2HTML;
 import edu.ucdenver.ccp.knowtator.iaa.html.SpanMatcherHTML;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.ClassAndSpanMatcher;
@@ -55,17 +55,17 @@ public class KnowtatorIAA {
 
 	//KnowtatorProjectUtil kpu;
 
-	TextAnnotationManager textAnnotationManager;
+	AnnotationManager annotationManager;
 
 	//MentionUtil mentionUtil;
 
 //	FilterUtil filterUtil;
 
-	Map<TextAnnotation, String> annotationTexts;
+	Map<Annotation, String> annotationTexts;
 
-	Map<TextAnnotation, String> annotationTextNames;
+	Map<Annotation, String> annotationTextNames;
 
-	Map<String, Set<TextAnnotation>> textSourceAnnotationsMap;
+	Map<String, Set<Annotation>> textSourceAnnotationsMap;
 
 	PrintStream html;
 
@@ -84,10 +84,10 @@ public class KnowtatorIAA {
 
 		this.outputDirectory = outputDirectory;
 		//this.filter = filter;
-		this.textSources = manager.getTextAnnotationManager().getTextAnnotations().keySet();
+		this.textSources = manager.getAnnotationManager().getTextAnnotations().keySet();
 
 		this.manager = manager;
-		this.textAnnotationManager = manager.getTextAnnotationManager();
+		this.annotationManager = manager.getAnnotationManager();
 		annotationTexts = new HashMap<>();
 		annotationTextNames = new HashMap<>();
 
@@ -123,8 +123,8 @@ public class KnowtatorIAA {
 	private void initTextSourceAnnotations() throws IAAException {
 		textSourceAnnotationsMap = new HashMap<>();
 		for (String textPane : textSources) {
-			Collection<TextAnnotation> tsAnnotations = textAnnotationManager.getTextAnnotations(textPane);
-			Set<TextAnnotation> annotations = new HashSet<>(tsAnnotations);
+			Collection<Annotation> tsAnnotations = annotationManager.getTextAnnotations(textPane);
+			Set<Annotation> annotations = new HashSet<>(tsAnnotations);
 			//tsAnnotations = filterUtil.filterAnnotations(tsAnnotations, filter);
 			textSourceAnnotationsMap.put(textPane, annotations);
 		}
@@ -135,14 +135,14 @@ public class KnowtatorIAA {
 	private static int convertMatchSpans(String matchSpans) throws IAAException {
 		switch (matchSpans) {
 			case "SpansMatchExactly":
-				return TextAnnotation.SPANS_EXACT_COMPARISON;
+				return Annotation.SPANS_EXACT_COMPARISON;
 			case "SpansOverlap":
-				return TextAnnotation.SPANS_OVERLAP_COMPARISON;
+				return Annotation.SPANS_OVERLAP_COMPARISON;
 			case "IgnoreSpans":
-				return TextAnnotation.IGNORE_SPANS_COMPARISON;
+				return Annotation.IGNORE_SPANS_COMPARISON;
 			default:
 				throw new IAAException(
-						"TextSpan match criteria of slot matcher must be one of SpansMatchExactly, SpansOverlap, or IgnoreSpans");
+						"Span match criteria of slot matcher must be one of SpansMatchExactly, SpansOverlap, or IgnoreSpans");
 		}
 	}
 
@@ -204,7 +204,7 @@ public class KnowtatorIAA {
 		try {
 			FeatureMatcher featureMatcher = createFeatureMatcher(matcherName);
 			IAA featureIAA = new IAA(setNames);
-			for (Set<TextAnnotation> annotations : textSourceAnnotationsMap.values()) {
+			for (Set<Annotation> annotations : textSourceAnnotationsMap.values()) {
 				featureIAA.setAnnotations(annotations);
 				featureIAA.allwayIAA(featureMatcher);
 				featureIAA.pairwiseIAA(featureMatcher);
@@ -224,7 +224,7 @@ public class KnowtatorIAA {
 			ClassMatcher classMatcher = new ClassMatcher();
 			IAA classIAA = new IAA(setNames);
 
-			for (Set<TextAnnotation> annotations : textSourceAnnotationsMap.values()) {
+			for (Set<Annotation> annotations : textSourceAnnotationsMap.values()) {
 				classIAA.setAnnotations(annotations);
 				classIAA.allwayIAA(classMatcher);
 				classIAA.pairwiseIAA(classMatcher);
@@ -243,7 +243,7 @@ public class KnowtatorIAA {
 			SpanMatcher spanMatcher = new SpanMatcher();
 			IAA spanIAA = new IAA(setNames);
 
-			for (Set<TextAnnotation> annotations : textSourceAnnotationsMap.values()) {
+			for (Set<Annotation> annotations : textSourceAnnotationsMap.values()) {
 				spanIAA.setAnnotations(annotations);
 				spanIAA.allwayIAA(spanMatcher);
 				spanIAA.pairwiseIAA(spanMatcher);
@@ -261,7 +261,7 @@ public class KnowtatorIAA {
 			ClassAndSpanMatcher classAndSpanMatcher = new ClassAndSpanMatcher();
 			IAA classAndSpanIAA = new IAA(setNames);
 
-			for (Set<TextAnnotation> annotations : textSourceAnnotationsMap.values()) {
+			for (Set<Annotation> annotations : textSourceAnnotationsMap.values()) {
 				classAndSpanIAA.setAnnotations(annotations);
 				classAndSpanIAA.allwayIAA(classAndSpanMatcher);
 				classAndSpanIAA.pairwiseIAA(classAndSpanMatcher);
@@ -314,11 +314,11 @@ public class KnowtatorIAA {
 //				SubclassMatcherHTML.printIAA(subclassIAA, subclassMatcher, outputDirectory, textSources.size(),
 //						annotationTexts, annotationTextNames);
 //
-//				Map<String, Set<TextAnnotation>> allwayMatches = subclassIAA.getNontrivialAllwayMatches();
-//				Set<TextAnnotation> matches = IAA2HTML.getSingleSet(allwayMatches);
+//				Map<String, Set<Annotation>> allwayMatches = subclassIAA.getNontrivialAllwayMatches();
+//				Set<Annotation> matches = IAA2HTML.getSingleSet(allwayMatches);
 //
-//				Map<String, Set<TextAnnotation>> allwayNonmatches = subclassIAA.getNontrivialAllwayNonmatches();
-//				Set<TextAnnotation> nonmatches = IAA2HTML.getSingleSet(allwayNonmatches);
+//				Map<String, Set<Annotation>> allwayNonmatches = subclassIAA.getNontrivialAllwayNonmatches();
+//				Set<Annotation> nonmatches = IAA2HTML.getSingleSet(allwayNonmatches);
 //
 //				double subclsIAA = (double) matches.size() / ((double) matches.size() + (double) nonmatches.size());
 //
@@ -336,11 +336,11 @@ public class KnowtatorIAA {
 //	}
 
 //	private static void calculateSubclassIAA(Cls cls, SubclassMatcher subclassMatcher,
-//			IAA subclassIAA, Map<String, Set<TextAnnotation>> textSourceAnnotationsMap)
-//			throwsedu.ucdenver.ccp.knowtator.iaa_original.IAAException {
+//			IAA subclassIAA, Map<String, Set<Annotation>> textSourceAnnotationsMap)
+//			throwsedu.ucdenver.ccp.knowtator.iaa.IAAException {
 //		subclassIAA.reset();
 //		subclassMatcher.setIAAClass(cls.getName());
-//		for (Set<TextAnnotation> annotations : textSourceAnnotationsMap.values()) {
+//		for (Set<Annotation> annotations : textSourceAnnotationsMap.values()) {
 //			subclassIAA.setAnnotations(annotations);
 //			subclassIAA.allwayIAA(subclassMatcher);
 //			subclassIAA.pairwiseIAA(subclassMatcher);
@@ -382,7 +382,7 @@ public class KnowtatorIAA {
 //		return returnValues;
 //	}
 
-	public static void main(String[] args) {
+	public static void simpleTest() {
 		KnowtatorManager manager = new KnowtatorManager();
 		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin/11319941.txt.knowtator.xml", true);
 		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin+Mike/11319941.txt.knowtator.xml", true);
@@ -395,6 +395,10 @@ public class KnowtatorIAA {
 		} catch (IAAException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static void main(String[] args) {
+		simpleTest();
 
 
 

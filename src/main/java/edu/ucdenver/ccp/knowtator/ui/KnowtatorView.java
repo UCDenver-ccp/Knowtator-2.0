@@ -1,6 +1,8 @@
 package edu.ucdenver.ccp.knowtator.ui;
 
-import edu.ucdenver.ccp.knowtator.Commands.*;
+import edu.ucdenver.ccp.knowtator.commands.*;
+import edu.ucdenver.ccp.knowtator.ui.graph.KnowtatorGraphViewer;
+import edu.ucdenver.ccp.knowtator.ui.text.KnowtatorTextViewer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,13 +24,13 @@ public class KnowtatorView extends BasicKnowtatorView {
          */
         textViewer = new KnowtatorTextViewer(manager);
         textViewer.setMinimumSize(new Dimension(100, 50));
-        manager.getTextAnnotationListeners().add(textViewer);
+        manager.getAnnotationListeners().add(textViewer);
 
         /*
         Create a viewer to see the annotations as a graph
          */
         graphViewer = new KnowtatorGraphViewer(manager);
-        manager.getTextAnnotationListeners().add(graphViewer);
+        manager.getAnnotationListeners().add(graphViewer);
 
 
         JSplitPane mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -85,7 +87,7 @@ public class KnowtatorView extends BasicKnowtatorView {
         addAction(textCommands.getDecreaseTextSizeCommand(), "A", "D");
 
         /*
-        Text annotation related actions
+        Text Annotation related actions
          */
         addAction(documentCommands.getLoadTextAnnotationsCommand(), "B", "A");
         addAction(documentCommands.getSaveTextAnnotationsCommand(), "B", "B");

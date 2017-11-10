@@ -27,32 +27,32 @@
  */
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
-import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
+import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
 
 import java.util.Set;
 
 public class OverlappingSpanMatcher implements Matcher {
 
-	public TextAnnotation match(TextAnnotation annotation, String compareSetName, Set<TextAnnotation> excludeAnnotations, IAA iaa,
-			MatchResult matchResult) {
+	public Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
+							MatchResult matchResult) {
 
-		TextAnnotation spanAndClassMatch = ClassAndSpanMatcher.match(annotation, compareSetName, iaa, excludeAnnotations);
+		Annotation spanAndClassMatch = ClassAndSpanMatcher.match(annotation, compareSetName, iaa, excludeAnnotations);
 		if (spanAndClassMatch != null) {
 			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 			return spanAndClassMatch;
 		}
 
-		Set<TextAnnotation> classMatches = ClassMatcher.matches(annotation, compareSetName, iaa, excludeAnnotations);
+		Set<Annotation> classMatches = ClassMatcher.matches(annotation, compareSetName, iaa, excludeAnnotations);
 		if (classMatches.size() > 0) {
-			TextAnnotation match = TextAnnotation.getShortestAnnotation(classMatches);
+			Annotation match = Annotation.getShortestAnnotation(classMatches);
 			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 			return match;
 		}
 
-		Set<TextAnnotation> overlappingAnnotations = iaa.getOverlappingAnnotations(annotation, compareSetName);
+		Set<Annotation> overlappingAnnotations = iaa.getOverlappingAnnotations(annotation, compareSetName);
 		if (overlappingAnnotations.size() > 0) {
-			TextAnnotation match = TextAnnotation.getShortestAnnotation(overlappingAnnotations);
+			Annotation match = Annotation.getShortestAnnotation(overlappingAnnotations);
 			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 			return match;
 		}

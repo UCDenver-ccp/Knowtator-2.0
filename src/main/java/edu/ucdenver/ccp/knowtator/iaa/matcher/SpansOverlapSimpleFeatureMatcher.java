@@ -27,7 +27,7 @@
  */
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
-import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
+import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
 
 import java.util.ArrayList;
@@ -38,47 +38,47 @@ import java.util.Set;
 public class SpansOverlapSimpleFeatureMatcher implements Matcher {
 
 	/**
-	 * This method will return an annotation that has overlapping spans and the
-	 * same simple features. It is not required that the annotation class match.
-	 * Preference will be given to an annotation that has the same class and
-	 * spans. Secondary preference will be given to an annotation with the same
-	 * span followed by an the shortest annotation with overlapping spans and
-	 * the same simple features. If no annotation has overlapping spans and the
+	 * This method will return an Annotation that has overlapping spans and the
+	 * same simple features. It is not required that the Annotation class match.
+	 * Preference will be given to an Annotation that has the same class and
+	 * spans. Secondary preference will be given to an Annotation with the same
+	 * Span followed by an the shortest Annotation with overlapping spans and
+	 * the same simple features. If no Annotation has overlapping spans and the
 	 * same simple features, then null is returned.
 	 * 
 	 * @param matchResult
 	 *            will be set to:
 	 *            <ul>
 	 *            <li>TRIVIAL_NONMATCH if there are no overlapping annotations
-	 *            with the passed in annotation
-	 *            <li>NONTRIVIAL_MATCH if there is an annotation that is
-	 *            overlapping and the TextAnnotation.compareSimpleFeatures returns
+	 *            with the passed in Annotation
+	 *            <li>NONTRIVIAL_MATCH if there is an Annotation that is
+	 *            overlapping and the Annotation.compareSimpleFeatures returns
 	 *            NONTRIVIAL_MATCH
-	 *            <li>TRIVIAL_MATCH if there is an annotation that is
-	 *            overlapping and the TextAnnotation.compareSimpleFeatures returns
+	 *            <li>TRIVIAL_MATCH if there is an Annotation that is
+	 *            overlapping and the Annotation.compareSimpleFeatures returns
 	 *            TRIVIAL_MATCH <br>
 	 *            Note: if there is a trivial_match then there cannot possibly
 	 *            be a NONTRIVIAL_MATCH because one of the simple features of
-	 *            the passed in annotation must have a null value or there are
+	 *            the passed in Annotation must have a null value or there are
 	 *            no simple features.
-	 *            <li>NONTRIVIAL_NONMATCH if there an annotation that is
-	 *            overlapping and the TextAnnotation.compareSimpleFeatures returns
+	 *            <li>NONTRIVIAL_NONMATCH if there an Annotation that is
+	 *            overlapping and the Annotation.compareSimpleFeatures returns
 	 *            NONTRIVIAL_NONMATCH
 	 *            <li>TRIVIAL_NONMATCH if there is no match or non-trivial
 	 *            non-match found.
 	 * @return will return the first nontrivial match that it finds preferring
-	 * @seeedu.ucdenver.ccp.knowtator.iaa_original.matcher.Matcher#match(TextAnnotation, String, Set,
+	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher#match(Annotation, String, Set,
 	 *      IAA, MatchResult)
-	 * @seeedu.ucdenver.ccp.knowtator.iaa_original.matcher.MatchResult#NONTRIVIAL_MATCH
-	 * @seeedu.ucdenver.ccp.knowtator.iaa_original.matcher.MatchResult#NONTRIVIAL_NONMATCH
-	 * @seeedu.ucdenver.ccp.knowtator.iaa_original.matcher.MatchResult#TRIVIAL_MATCH
-	 * @seeedu.ucdenver.ccp.knowtator.iaa_original.matcher.MatchResult#TRIVIAL_NONMATCH
+	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
+	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
+	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#TRIVIAL_MATCH
+	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#TRIVIAL_NONMATCH
 	 */
 
-	public TextAnnotation match(TextAnnotation annotation, String compareSetName, Set<TextAnnotation> excludeAnnotations, IAA iaa,
-								MatchResult matchResult) {
+	public Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
+							MatchResult matchResult) {
 
-		TextAnnotation spansExactSimpleFeatureMatch = SpansExactSimpleFeatureMatcher.match(annotation, compareSetName, iaa,
+		Annotation spansExactSimpleFeatureMatch = SpansExactSimpleFeatureMatcher.match(annotation, compareSetName, iaa,
 				excludeAnnotations, matchResult);
 
 		// if TRIVIAL_MATCH then we do not have to worry about there being an
@@ -89,20 +89,20 @@ public class SpansOverlapSimpleFeatureMatcher implements Matcher {
 			return spansExactSimpleFeatureMatch;
 		}
 
-		Set<TextAnnotation> candidateAnnotations = new HashSet<>(iaa.getOverlappingAnnotations(annotation,
+		Set<Annotation> candidateAnnotations = new HashSet<>(iaa.getOverlappingAnnotations(annotation,
 				compareSetName));
 		candidateAnnotations.removeAll(excludeAnnotations);
 
 		// we are going to collect all matches because we want to return the
 		// shortest of the matches if there is more than one.
-		List<TextAnnotation> nontrivialMatches = new ArrayList<>();
-		List<TextAnnotation> trivialMatches = new ArrayList<>();
+		List<Annotation> nontrivialMatches = new ArrayList<>();
+		List<Annotation> trivialMatches = new ArrayList<>();
 
 		boolean nontrivialNonmatch = false;
 
-		for (TextAnnotation candidateAnnotation : candidateAnnotations) {
+		for (Annotation candidateAnnotation : candidateAnnotations) {
 			if (!excludeAnnotations.contains(candidateAnnotation)) {
-				int result = TextAnnotation.compareSimpleFeatures(annotation, candidateAnnotation);
+				int result = Annotation.compareSimpleFeatures(annotation, candidateAnnotation);
 				if (result == MatchResult.NONTRIVIAL_MATCH) {
 					nontrivialMatches.add(candidateAnnotation);
 				} else if (result == MatchResult.TRIVIAL_MATCH) {
@@ -119,7 +119,7 @@ public class SpansOverlapSimpleFeatureMatcher implements Matcher {
 			if (nontrivialMatches.size() == 1) {
 				return nontrivialMatches.iterator().next();
 			} else {
-				return TextAnnotation.getShortestAnnotation(nontrivialMatches);
+				return Annotation.getShortestAnnotation(nontrivialMatches);
 			}
 		}
 		if (trivialMatches.size() > 0) {
@@ -127,7 +127,7 @@ public class SpansOverlapSimpleFeatureMatcher implements Matcher {
 			if (trivialMatches.size() == 1) {
 				return trivialMatches.iterator().next();
 			} else {
-				return TextAnnotation.getShortestAnnotation(trivialMatches);
+				return Annotation.getShortestAnnotation(trivialMatches);
 			}
 		}
 

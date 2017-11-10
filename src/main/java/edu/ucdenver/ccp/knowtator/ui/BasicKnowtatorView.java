@@ -1,6 +1,8 @@
 package edu.ucdenver.ccp.knowtator.ui;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.ui.graph.KnowtatorGraphViewer;
+import edu.ucdenver.ccp.knowtator.ui.text.KnowtatorTextViewer;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLModelManagerImpl;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;

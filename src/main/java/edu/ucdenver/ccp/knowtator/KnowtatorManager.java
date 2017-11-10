@@ -1,16 +1,16 @@
 package edu.ucdenver.ccp.knowtator;
 
 import com.google.common.base.Optional;
-import edu.ucdenver.ccp.knowtator.Annotator.AnnotatorManager;
-import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
-import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotationManager;
+import edu.ucdenver.ccp.knowtator.annotation.annotator.AnnotatorManager;
+import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.text.AnnotationManager;
+import edu.ucdenver.ccp.knowtator.io.xml.XmlUtil;
+import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
 import edu.ucdenver.ccp.knowtator.listeners.DocumentListener;
 import edu.ucdenver.ccp.knowtator.listeners.OwlSelectionListener;
-import edu.ucdenver.ccp.knowtator.listeners.TextAnnotationListener;
 import edu.ucdenver.ccp.knowtator.owl.OntologyTranslator;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
-import edu.ucdenver.ccp.knowtator.ui.KnowtatorTextPane;
-import edu.ucdenver.ccp.knowtator.xml.XmlUtil;
+import edu.ucdenver.ccp.knowtator.ui.text.KnowtatorTextPane;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.OWLModelManagerImpl;
@@ -33,10 +33,10 @@ public class KnowtatorManager implements OwlSelectionListener {
     public static final Logger log = Logger.getLogger(KnowtatorManager.class);
     public AnnotatorManager annotatorManager;
 //    public OWLSelectionModel selectionModel;
-    public TextAnnotationManager textAnnotationManager;
+    public AnnotationManager annotationManager;
     public XmlUtil xmlUtil;
 
-    public List<TextAnnotationListener> textAnnotationListeners;
+    public List<AnnotationListener> annotationListeners;
     public List<DocumentListener> documentListeners;
     public List<OwlSelectionListener> owlSelectionListeners;
     public OWLModelManagerImpl owlModelManager;
@@ -55,7 +55,7 @@ public class KnowtatorManager implements OwlSelectionListener {
         /*
         Initialize the managers, models, and utils
          */
-        textAnnotationManager = new TextAnnotationManager(this);
+        annotationManager = new AnnotationManager(this);
         annotatorManager = new AnnotatorManager(this);  //manipulates annotatorMap and highlighters
         xmlUtil = new XmlUtil(this);  //reads and writes to XML
 
@@ -63,9 +63,9 @@ public class KnowtatorManager implements OwlSelectionListener {
         configProperties = new ConfigProperties();
         loadConfig();
 
-        textAnnotationListeners = new ArrayList<>();
+        annotationListeners = new ArrayList<>();
         documentListeners = new ArrayList<>();
-        documentListeners.add(textAnnotationManager);
+        documentListeners.add(annotationManager);
         owlSelectionListeners = new ArrayList<>();
         owlSelectionListeners.add(this);
     }
@@ -74,16 +74,16 @@ public class KnowtatorManager implements OwlSelectionListener {
         /*
         Initialize the managers, models, and utils
          */
-        textAnnotationManager = new TextAnnotationManager(this);
+        annotationManager = new AnnotationManager(this);
         annotatorManager = new AnnotatorManager(this);  //manipulates annotatorMap and highlighters
         xmlUtil = new XmlUtil(this);  //reads and writes to XML
 
         configProperties = new ConfigProperties();
         loadConfig();
 
-        textAnnotationListeners = new ArrayList<>();
+        annotationListeners = new ArrayList<>();
         documentListeners = new ArrayList<>();
-        documentListeners.add(textAnnotationManager);
+        documentListeners.add(annotationManager);
         owlSelectionListeners = new ArrayList<>();
         owlSelectionListeners.add(this);
     }
@@ -118,16 +118,16 @@ public class KnowtatorManager implements OwlSelectionListener {
     public XmlUtil getXmlUtil() {
         return xmlUtil;
     }
-    public TextAnnotationManager getTextAnnotationManager() {
-        return textAnnotationManager;
+    public AnnotationManager getAnnotationManager() {
+        return annotationManager;
     }
 
     @SuppressWarnings("unused")
     public OWLModelManager getOwlModelManager() {
         return owlModelManager;
     }
-    public List<TextAnnotationListener> getTextAnnotationListeners() {
-        return textAnnotationListeners;
+    public List<AnnotationListener> getAnnotationListeners() {
+        return annotationListeners;
     }
     @SuppressWarnings("unused")
     public List<DocumentListener> getDocumentListeners() {
@@ -143,16 +143,16 @@ public class KnowtatorManager implements OwlSelectionListener {
         }
     }
 
-    public void textAnnotationsChangedEvent() {
-        for (TextAnnotationListener listener : textAnnotationListeners) {
-            listener.textAnnotationsChanged();
+    public void annotationsChangedEvent() {
+        for (AnnotationListener listener : annotationListeners) {
+            listener.annotationsChanged();
         }
     }
 
     @SuppressWarnings("unused")
-    public void textAnnotationsChangedEvent(TextAnnotation newAnnotation) {
-        for (TextAnnotationListener listener : textAnnotationListeners) {
-            listener.textAnnotationsChanged(newAnnotation);
+    public void annotationsChangedEvent(Annotation annotation) {
+        for (AnnotationListener listener : annotationListeners) {
+            listener.annotationsChanged(annotation);
         }
     }
 
@@ -191,9 +191,11 @@ public class KnowtatorManager implements OwlSelectionListener {
 
     public static void main(String[] args) {
         KnowtatorManager manager = new KnowtatorManager();
-        manager.getXmlUtil().read("file/test_annotations.xml", true);
-        manager.getXmlUtil().write(manager.getConfigProperties().getDefaultSaveLocation() + "test_annotation_output.xml");
+        manager.simpleTest();
     }
 
-
+    public void simpleTest() {
+        getXmlUtil().read("file/test_annotations.xml", true);
+        getXmlUtil().write(configProperties.getDefaultSaveLocation() + "test_annotation_output.xml");
+    }
 }

@@ -9,8 +9,8 @@ Plugin for Protege
 	- [TextAnnotation highlighting](#)
 	- [Load plain text documents](#)
 	- [TextAnnotation profiles](#)
-	- [Save textAnnotations to XML file](#)
-	- [Reload textAnnotations](#)
+	- [Save annotations to XML file](#)
+	- [Reload annotations](#)
 - [Known bugs](#)
 
 ## Installation (Windows):
@@ -37,7 +37,7 @@ Plugin for Protege
 5. Add a Knowtator view (Window -> Miscellaneous views -> Knowtator)
 6. Load an ontology (e.g. [GO-Basic][ontology example])
 
-(A sample file and its textAnnotation xml file can be found [here][sample files location])
+(A sample file and its annotation xml file can be found [here][sample files location])
 
 ![After installation][installation image]
 Add as a View to a Protege tab by going to Window -> Views -> Miscellaneous Views -> Knowtator
@@ -50,21 +50,21 @@ Click on OWL class in Class hierarchy to select a term. Annotate the text by hig
 ### Load plain text documents
 
 ### TextAnnotation profiles
-Create textAnnotation profiles and assign them different colors. Switch between them quickly with by selecting them on the right.
+Create annotation profiles and assign them different colors. Switch between them quickly with by selecting them on the right.
 
-### Save textAnnotations to XML file
-Annotations can be saved as an XML file. This stores the textAnnotation instance, the text textSpan, the ontology term ID and the ontology term RDFS label.
+### Save annotations to XML file
+Annotations can be saved as an XML file. This stores the annotation instance, the text span, the ontology term ID and the ontology term RDFS label.
 
-### Reload textAnnotations
+### Reload annotations
 Annotations are reloaded and automatically highlight the text using the color of the current annotator.
 
 ## Known bugs
 1. When the first ontology is loaded, all current work and profiles are lost.
-2. When a new textAnnotation annotator is added, it is not displayed until view panes are resized.
-3. Can only add textAnnotations to one document at a time since the textAnnotations do not yet know for which file they apply to.
-4. Cannot turn off textAnnotation annotator to remove highlighting.
+2. When a new annotation annotator is added, it is not displayed until view panes are resized.
+3. Can only add annotations to one document at a time since the annotations do not yet know for which file they apply to.
+4. Cannot turn off annotation annotator to remove highlighting.
 5. When Knowtator view is added, the split between panes is too far to the left.
-6. Cannot remove textAnnotations or textAnnotation profiles.
+6. Cannot remove annotations or annotation profiles.
 
 [protege link]:http://protege.stanford.edu/products.php#desktop-protege
 [installation image]:installation_image.jpg

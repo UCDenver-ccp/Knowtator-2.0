@@ -28,7 +28,7 @@
 
 package edu.ucdenver.ccp.knowtator.iaa.html;
 
-import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
+import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
 import edu.ucdenver.ccp.knowtator.iaa.AnnotationSpanIndex;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher;
@@ -41,7 +41,7 @@ import java.util.*;
 public class SpanMatcherHTML {
 
 	public static void printIAA(IAA iaa, Matcher matcher, File directory, int numberOfDocs,
-			Map<TextAnnotation, String> annotationTexts, Map<TextAnnotation, String> annotationTextNames) throws Exception {
+								Map<Annotation, String> annotationTexts, Map<Annotation, String> annotationTextNames) throws Exception {
 		NumberFormat percentageFormat = NumberFormat.getPercentInstance();
 		percentageFormat.setMinimumFractionDigits(2);
 
@@ -58,13 +58,13 @@ public class SpanMatcherHTML {
 		Set<String> classes = iaa.getAnnotationClasses();
 		Set<String> sets = iaa.getSetNames();
 
-		Map<String, Set<TextAnnotation>> allwayMatches = iaa.getAllwayMatches();
-		Map<String, Set<TextAnnotation>> allwayNonmatches = iaa.getAllwayNonmatches();
+		Map<String, Set<Annotation>> allwayMatches = iaa.getAllwayMatches();
+		Map<String, Set<Annotation>> allwayNonmatches = iaa.getAllwayNonmatches();
 
-		Map<TextAnnotation, Set<TextAnnotation>> matchSets = iaa.getAllwayMatchSets();
+		Map<Annotation, Set<Annotation>> matchSets = iaa.getAllwayMatchSets();
 
-		Set<TextAnnotation> allwayMatchesSingleSet = IAA2HTML.getSingleSet(allwayMatches);
-		Set<TextAnnotation> allwayNonmatchesSingleSet = IAA2HTML.getSingleSet(allwayNonmatches);
+		Set<Annotation> allwayMatchesSingleSet = IAA2HTML.getSingleSet(allwayMatches);
+		Set<Annotation> allwayNonmatchesSingleSet = IAA2HTML.getSingleSet(allwayNonmatches);
 
 		AnnotationSpanIndex spanIndex = new AnnotationSpanIndex(allwayNonmatchesSingleSet);
 
@@ -76,8 +76,8 @@ public class SpanMatcherHTML {
 		html.println("<tr><td><b>All classes</b></td>" + "<td>" + percentageFormat.format(iaaScore) + "</td>" + "<td>"
 				+ totalAllwayMatches + "</td>" + "<td>" + totalAllwayNonmatches + "</td></tr>");
 
-		Map<String, Set<TextAnnotation>> sortedAllwayMatches = IAA2HTML.sortByType(classes, allwayMatchesSingleSet);
-		Map<String, Set<TextAnnotation>> sortedAllwayNonmatches = IAA2HTML.sortByType(classes, allwayNonmatchesSingleSet);
+		Map<String, Set<Annotation>> sortedAllwayMatches = IAA2HTML.sortByType(classes, allwayMatchesSingleSet);
+		Map<String, Set<Annotation>> sortedAllwayNonmatches = IAA2HTML.sortByType(classes, allwayNonmatchesSingleSet);
 
 		List<String> sortedTypes = new ArrayList<>(classes);
 		Collections.sort(sortedTypes);
@@ -109,8 +109,8 @@ public class SpanMatcherHTML {
 		IAA2HTML.printNonmatchData(html, sets, fileName, directory, allwayNonmatches, spanIndex, annotationTexts,
 				annotationTextNames, classes);
 
-		Map<String, Map<String, Set<TextAnnotation>>> pairwiseMatches = iaa.getPairwiseMatches();
-		Map<String, Map<String, Set<TextAnnotation>>> pairwiseNonmatches = iaa.getPairwiseNonmatches();
+		Map<String, Map<String, Set<Annotation>>> pairwiseMatches = iaa.getPairwiseMatches();
+		Map<String, Map<String, Set<Annotation>>> pairwiseNonmatches = iaa.getPairwiseNonmatches();
 
 		IAA2HTML.printPairwiseAgreement(html, sets, pairwiseMatches, pairwiseNonmatches, percentageFormat);
 
@@ -118,12 +118,12 @@ public class SpanMatcherHTML {
 		html.close();
 	}
 
-	public static Map<String, int[]> errorMatrix(Set<TextAnnotation> matches, Map<TextAnnotation, Set<TextAnnotation>> matchSets) {
+	public static Map<String, int[]> errorMatrix(Set<Annotation> matches, Map<Annotation, Set<Annotation>> matchSets) {
 		Map<String, int[]> counts = new HashMap<>();
 
-		for (TextAnnotation match : matches) {
-			Set<TextAnnotation> matchedAnnotations = matchSets.get(match);
-			for (TextAnnotation matchedAnnotation : matchedAnnotations) {
+		for (Annotation match : matches) {
+			Set<Annotation> matchedAnnotations = matchSets.get(match);
+			for (Annotation matchedAnnotation : matchedAnnotations) {
 				if (!matchedAnnotation.equals(match)) {
 					String annotationClass = matchedAnnotation.getOwlClassName();
 					if (!counts.containsKey(annotationClass)) {

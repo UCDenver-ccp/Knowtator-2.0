@@ -28,7 +28,7 @@
 
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
-import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
+import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
 
 import java.util.Collections;
@@ -38,22 +38,19 @@ import java.util.Set;
 public class ClassAndSpanMatcher implements Matcher {
 
 	/**
-	 * @param annotation
-	 * @param compareSetName
-	 * @param excludeAnnotations
-	 * @param iaa
 	 * @param matchResult
 	 *            will be set to NONTRIVIAL_MATCH or NONTRIVIAL_NONMATCH.
 	 *            Trivial matches and non-matches are not defined for this
 	 *            matcher.
-	 * @seeedu.ucdenver.ccp.knowtator.iaa_original.matcher.Matcher#match(TextAnnotation, String, Set,
+	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher#match(Annotation, String, Set,
 	 *      IAA, MatchResult)
-	 * @seeedu.ucdenver.ccp.knowtator.iaa_original.matcher.MatchResult#NONTRIVIAL_MATCH
-	 * @seeedu.ucdenver.ccp.knowtator.iaa_original.matcher.MatchResult#NONTRIVIAL_NONMATCH
+	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
+	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
 	 */
-	public TextAnnotation match(TextAnnotation annotation, String compareSetName, Set<TextAnnotation> excludeAnnotations, IAA iaa,
-			MatchResult matchResult) {
-		TextAnnotation match = match(annotation, compareSetName, iaa, excludeAnnotations);
+	@SuppressWarnings("Duplicates")
+	public Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
+							MatchResult matchResult) {
+		Annotation match = match(annotation, compareSetName, iaa, excludeAnnotations);
 		if (match != null) {
 			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 			return match;
@@ -66,16 +63,12 @@ public class ClassAndSpanMatcher implements Matcher {
 	/**
 	 * This is a static version of the above match method that can be called by
 	 * other matcher implementations.
-	 * 
-	 * @param annotation
-	 * @param compareSetName
-	 * @param iaa
-	 * @param excludeAnnotations
-	 * @return an annotation that matches or null.
+	 *
+	 * @return an Annotation that matches or null.
 	 */
-	public static TextAnnotation match(TextAnnotation annotation, String compareSetName, IAA iaa,
-			Set<TextAnnotation> excludeAnnotations) {
-		Set<TextAnnotation> singleMatchSet = matches(annotation, compareSetName, iaa, excludeAnnotations, true);
+	public static Annotation match(Annotation annotation, String compareSetName, IAA iaa,
+								   Set<Annotation> excludeAnnotations) {
+		Set<Annotation> singleMatchSet = matches(annotation, compareSetName, iaa, excludeAnnotations, true);
 		if (singleMatchSet.size() == 1) {
 			return singleMatchSet.iterator().next();
 		} else
@@ -84,11 +77,7 @@ public class ClassAndSpanMatcher implements Matcher {
 	}
 
 	/**
-	 * 
-	 * @param annotation
-	 * @param compareSetName
-	 * @param iaa
-	 * @param excludeAnnotations
+	 *
 	 * @param returnFirst
 	 *            if true then a set of size 1 will be returned as soon as a
 	 *            match is found. If false then all matches will be returned.
@@ -96,17 +85,17 @@ public class ClassAndSpanMatcher implements Matcher {
 	 *         matches are found.
 	 */
 
-	public static Set<TextAnnotation> matches(TextAnnotation annotation, String compareSetName, IAA iaa,
-											  Set<TextAnnotation> excludeAnnotations, boolean returnFirst) {
+	public static Set<Annotation> matches(Annotation annotation, String compareSetName, IAA iaa,
+										  Set<Annotation> excludeAnnotations, boolean returnFirst) {
 		String type = annotation.getOwlClassName();
-		Set<TextAnnotation> candidateAnnotations = new HashSet<>(iaa.getExactlyOverlappingAnnotations(annotation,
+		Set<Annotation> candidateAnnotations = new HashSet<>(iaa.getExactlyOverlappingAnnotations(annotation,
 				compareSetName));
 		candidateAnnotations.removeAll(excludeAnnotations);
 		if (candidateAnnotations.size() == 0)
 			return Collections.emptySet();
 
-		Set<TextAnnotation> returnValues = new HashSet<>();
-		for (TextAnnotation candidateAnnotation : candidateAnnotations) {
+		Set<Annotation> returnValues = new HashSet<>();
+		for (Annotation candidateAnnotation : candidateAnnotations) {
 			if (!excludeAnnotations.contains(candidateAnnotation)
 					&& candidateAnnotation.getOwlClassName().equals(type)) {
 				returnValues.add(candidateAnnotation);
@@ -118,7 +107,7 @@ public class ClassAndSpanMatcher implements Matcher {
 	}
 
 	public String getName() {
-		return "Class and span matcher";
+		return "Class and Span matcher";
 	}
 
 	public String getDescription() {
