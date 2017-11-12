@@ -1,8 +1,11 @@
 package edu.ucdenver.ccp.knowtator.commands;
 
-import edu.ucdenver.ccp.knowtator.annotation.annotator.AnnotatorManager;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.annotation.annotator.Annotator;
+import edu.ucdenver.ccp.knowtator.annotation.annotator.AnnotatorManager;
+import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
 import edu.ucdenver.ccp.knowtator.ui.KnowtatorIcons;
+import org.semanticweb.owlapi.model.OWLClass;
 import other.ListDialog;
 
 import javax.swing.*;
@@ -22,7 +25,14 @@ public class AnnotatorCommands {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                manager.getAnnotatorManager().getCurrentAnnotator().addHighlighter(manager.getOwlWorkspace().getOWLSelectionModel().getLastSelectedClass());
+                OWLClass selectedClass = OWLAPIDataExtractor.getSelectedClass(manager);
+
+                Annotator currentAnnotator = manager.getAnnotatorManager().getCurrentAnnotator();
+                currentAnnotator.getHighlighter(OWLAPIDataExtractor.getClassName(manager, selectedClass));
+
+                for(OWLClass decendent: OWLAPIDataExtractor.getDecendents(manager, selectedClass)) {
+                    currentAnnotator.getHighlighter(OWLAPIDataExtractor.getClassName(manager, decendent));
+                }
             }
 
             //TODO removeProfile

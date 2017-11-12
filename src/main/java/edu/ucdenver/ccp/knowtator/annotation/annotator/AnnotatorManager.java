@@ -21,7 +21,10 @@ public class AnnotatorManager {
     }
 
     public Annotator addNewAnnotator(String annotatorName, String annotatorID) {
-        log.warn(String.format("Profile name: %s  id: %s", annotatorName, annotatorID));
+
+        if (annotatorMap.containsKey(annotatorName)) {
+            return annotatorMap.get(annotatorName);
+        }
 
         Annotator newAnnotator = new Annotator(manager, annotatorName, annotatorID);
         annotatorMap.put(annotatorName, newAnnotator);

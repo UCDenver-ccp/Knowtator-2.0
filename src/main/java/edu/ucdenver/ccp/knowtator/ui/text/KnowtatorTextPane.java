@@ -4,8 +4,8 @@ package edu.ucdenver.ccp.knowtator.ui.text;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
 import edu.ucdenver.ccp.knowtator.annotation.text.Span;
+import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.OWLClass;
 import other.RectanglePainter;
 
 import javax.swing.*;
@@ -42,7 +42,7 @@ public class KnowtatorTextPane extends JTextPane {
 
 					@Override
 					public void mousePressed(MouseEvent e) {
-						press_offset = viewToModel2D(e.getPoint());
+						press_offset = viewToModel(e.getPoint());
 					}
 
 					@Override
@@ -52,7 +52,7 @@ public class KnowtatorTextPane extends JTextPane {
 						}
 						else {
 
-							release_offset = viewToModel2D(e.getPoint());
+							release_offset = viewToModel(e.getPoint());
 
 							int start, end;
 							try {
@@ -114,11 +114,11 @@ public class KnowtatorTextPane extends JTextPane {
 
 		// Menu items to select and remove annotations
 		for (Annotation a : manager.getAnnotationManager().getAnnotationsInRange(getName(), getSelectionStart(), getSelectionEnd())) {
-			JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s", a.getOwlClassName()));
+			JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s", a.getClassName()));
 			selectAnnotationMenuItem.addActionListener(e3 -> manager.getAnnotationManager().setSelectedAnnotation(a));
 			popupMenu.add(selectAnnotationMenuItem);
 
-			JMenuItem removeAnnotationMenuItem = new JMenuItem(String.format("Remove %s", a.getOwlClassName()));
+			JMenuItem removeAnnotationMenuItem = new JMenuItem(String.format("Remove %s", a.getClassName()));
 			removeAnnotationMenuItem.addActionListener(e4 -> manager.getAnnotationManager().removeTextAnnotation(getName(), a));
 			popupMenu.add(removeAnnotationMenuItem);
 		}
@@ -127,24 +127,12 @@ public class KnowtatorTextPane extends JTextPane {
 	}
 
 	public void addTextAnnotation() {
-		OWLClass cls = manager.getOwlWorkspace().getOWLSelectionModel().getLastSelectedClass();
-		if (cls != null) {
-			try {
-				manager.getAnnotationManager().addTextAnnotation(getName(), cls, getSelectionStart(), getSelectionEnd());
-			} catch (NoSuchFieldException e) {
-				e.printStackTrace();
-			}
-		} else {
-			log.error("No OWLClass selected");
-		}
+		manager.getAnnotationManager().addAnnotation(getName(), OWLAPIDataExtractor.getSelectedClassName(manager), getSelectionStart(), getSelectionEnd());
 	}
 
-	public void highlightAnnotation(int spanStart, int spanEnd, OWLClass cls, Boolean selectAnnotation) {
-		DefaultHighlighter.DefaultHighlightPainter highlighter = manager.getAnnotatorManager().getCurrentAnnotator().getHighlighter(cls);
+	public void highlightAnnotation(int spanStart, int spanEnd, String className, Boolean selectAnnotation) {
+		DefaultHighlighter.DefaultHighlightPainter highlighter = manager.getAnnotatorManager().getCurrentAnnotator().getHighlighter(className);
 		if (selectAnnotation) {
-			if (highlighter == null) {
-				log.warn("wut");
-			}
 			if (highlighter != null) {
 				highlighter = new RectanglePainter(highlighter.getColor().darker());
 			}

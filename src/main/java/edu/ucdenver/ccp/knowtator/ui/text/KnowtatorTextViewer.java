@@ -26,7 +26,6 @@ public class KnowtatorTextViewer extends JTabbedPane implements AnnotationListen
     }
 
     public void addNewDocument(String fileName, Boolean fromResources) {
-        log.warn(String.format("Name: %s", FilenameUtils.getBaseName(fileName)));
         KnowtatorTextPane textPane = new KnowtatorTextPane(manager);
         textPane.setName(FilenameUtils.getBaseName(fileName));
         manager.documentChangedEvent(textPane);
@@ -91,7 +90,7 @@ public class KnowtatorTextViewer extends JTabbedPane implements AnnotationListen
             for (Annotation annotation : annotations) {
                 Boolean selectAnnotation = annotation == manager.getAnnotationManager().selectedAnnotation;
                 annotation.getSpans().forEach(
-                        textSpan -> textPane.highlightAnnotation(textSpan.getStart(), textSpan.getEnd(), annotation.getOwlClass(), selectAnnotation)
+                        textSpan -> textPane.highlightAnnotation(textSpan.getStart(), textSpan.getEnd(), annotation.getClassName(), selectAnnotation)
                 );
             }
         }

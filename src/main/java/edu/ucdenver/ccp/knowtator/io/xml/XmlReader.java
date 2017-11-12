@@ -1,9 +1,9 @@
 package edu.ucdenver.ccp.knowtator.io.xml;
 
-import edu.ucdenver.ccp.knowtator.annotation.annotator.Annotator;
 import edu.ucdenver.ccp.knowtator.KnowtatorDocumentHandler;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.annotation.text.AnnotationProperties;
+import edu.ucdenver.ccp.knowtator.annotation.annotator.Annotator;
+import edu.ucdenver.ccp.knowtator.annotation.text.Span;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static edu.ucdenver.ccp.knowtator.io.xml.XmlTags.*;
 
@@ -43,25 +44,25 @@ public class XmlReader {
             List<Node> configNodes = XmlUtil.asList(doc.getElementsByTagName(XmlTags.CONFIG));
 
             if (textSourceNodes.size() > 0) {
+                log.warn("Reading in annotations");
                 readAnnotations(textSourceNodes, manager);
             }
             if (profileNodes.size() > 0) {
+                log.warn("Reading in profiles");
                 readProfiles(profileNodes, manager);
             }
             if (configNodes.size() > 0) {
+                log.warn("Reading in configuration");
                 readConfigFile(configNodes, manager);
             }
 
         } catch (IllegalArgumentException e) {
-            System.out.println(fileName);
             e.printStackTrace();
         }
 
     }
 
     private static void readConfigFile(List<Node> configNodes, KnowtatorManager manager) {
-        log.warn("Reading configuration from XML");
-
         for (Node configNode: configNodes) {
             Element configElement = (Element) configNode;
 
@@ -72,32 +73,19 @@ public class XmlReader {
     }
 
     public static void readAnnotations(List<Node> textSourceNodes, KnowtatorManager manager) throws ParserConfigurationException, IOException, SAXException {
-        log.warn("Reading annotations from XML");
-
-
-
-        HashMap<String, List<HashMap<String, String>>> textAnnotations = new HashMap<>();
-
         /*
         Get annotations by document
          */
         for (Node textSourceNode: textSourceNodes) {
             Element textSourceElement = (Element) textSourceNode;
             String textSource = textSourceElement.getAttribute(XmlTags.TEXTSOURCE);
-            log.warn(String.format("Text source: %s", textSource));
 
-
-            HashMap<String, String[]> classMentionToClassIDMap = getClassIDsFromXml(textSourceElement);
-            textAnnotations.put(textSource, getAnnotationsFromXml(textSourceElement, classMentionToClassIDMap, manager));
+            getAnnotationsFromXml(textSource, textSourceElement, manager);
         }
-
-        manager.getAnnotationManager().addTextAnnotations(textAnnotations);
 
     }
 
     public static void readProfiles(List<Node> profileNodes, KnowtatorManager manager) throws ParserConfigurationException, IOException, SAXException {
-        log.warn("Reading profiles from XML");
-
         /*
         Get annotations by document
          */
@@ -119,97 +107,75 @@ public class XmlReader {
                 Element highlighterElement = (Element) highlighterNode;
 
                 String className = highlighterElement.getElementsByTagName(XmlTags.CLASS_NAME).item(0).getTextContent();
-                String classID = highlighterElement.getElementsByTagName(XmlTags.CLASS_ID).item(0).getTextContent();
                 String color = highlighterElement.getElementsByTagName(XmlTags.COLOR).item(0).getTextContent();
 
-                newAnnotator.addHighlighter(classID, className, color);
+                newAnnotator.addHighlighter(className, color);
             }
         }
     }
 
-    public static HashMap<String, String[]> getClassIDsFromXml(Element textSourceElement) {
-        log.warn("Adding annotations to Knowtator");
-
-
-
+    public static HashMap<String, String> getClassIDsFromXml(Element textSourceElement) {
         /*
         Next parse classes and add the annotations
          */
-        HashMap<String, String[]> mentionTracker = new HashMap<>();
+        HashMap<String, String> mentionTracker = new HashMap<>();
 
         for (Node classNode : XmlUtil.asList(textSourceElement.getElementsByTagName(CLASS_MENTION))) {
             if (classNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element classElement = (Element) classNode;
 
-                String fullMention = classElement.getAttribute(CLASS_MENTION_ID);
+                String mentionKey = getMentionKey(classElement.getAttribute(CLASS_MENTION_ID));
 
-                String mentionSource = XmlUtil.getMentionSourceFromXML(fullMention);
-                int mentionID = XmlUtil.getMentionIDFromXML(fullMention);
-
-                String classID = ((Element) classElement.getElementsByTagName(MENTION_CLASS).item(0)).getAttribute(MENTION_CLASS_ID);
                 String className = classElement.getElementsByTagName(MENTION_CLASS).item(0).getTextContent();
 
-                mentionTracker.put(mentionSource + mentionID, new String[] {
-                        classID,
-                        className
-                });
+                mentionTracker.put(mentionKey, className);
             }
         }
 
         return mentionTracker;
     }
 
-    public static List<HashMap<String, String>>  getAnnotationsFromXml(Element textSourceElement, HashMap<String, String[]> classMentionToClassIDMap, KnowtatorManager manager) {
+    public static String getMentionKey(String fullMention) {
+        String mentionSource = XmlUtil.getMentionSourceFromXML(fullMention);
+        int mentionID = XmlUtil.getMentionIDFromXML(fullMention);
+        return mentionSource + mentionID;
+    }
 
-        List<HashMap<String, String>> annotations = new ArrayList<>();
+    public static void getAnnotationsFromXml(String textSource, Element textSourceElement, KnowtatorManager manager) {
+
+        Map<String, String> classMentionToClassIDMap = getClassIDsFromXml(textSourceElement);
 
         for (Node annotationNode : XmlUtil.asList(textSourceElement.getElementsByTagName(ANNOTATION))) {
             if (annotationNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element annotationElement = (Element) annotationNode;
 
-                String fullMention = ((Element) annotationElement.getElementsByTagName(MENTION).item(0)).getAttribute(MENTION_ID);
-
-                String mentionSource = XmlUtil.getMentionSourceFromXML(fullMention);
-                int mentionID = XmlUtil.getMentionIDFromXML(fullMention);
+                String mentionKey = getMentionKey(((Element) annotationElement.getElementsByTagName(MENTION).item(0)).getAttribute(MENTION_ID));
 
                 String annotatorName = annotationElement.getElementsByTagName(ANNOTATOR).item(0).getTextContent();
                 String annotatorID = ((Element) annotationElement.getElementsByTagName(ANNOTATOR).item(0)).getAttribute(ANNOTATOR_ID);
 
-                manager.getAnnotatorManager().addNewAnnotator(annotatorName, annotatorID);
+                Annotator annotator = manager.getAnnotatorManager().addNewAnnotator(annotatorName, annotatorID);
+                String className = classMentionToClassIDMap.get(mentionKey);
+                List<Span> spans = getSpanInfo(annotationElement);
 
-                HashMap<String, String> annotationProperties = new HashMap<>() {
-                    {
-                        put(AnnotationProperties.CLASS_ID, classMentionToClassIDMap.get(mentionSource + mentionID)[0]);
-                        put(AnnotationProperties.CLASS_NAME, classMentionToClassIDMap.get(mentionSource + mentionID)[1]);
-                        put(AnnotationProperties.ANNOTATOR, annotatorName);
-                        put(AnnotationProperties.ANNOTATOR_ID, annotatorID);
-                        put(AnnotationProperties.SPAN, getSpanInfo(annotationElement));
-                    }
-                };
-
-                annotations.add(annotationProperties);
+                manager.getAnnotationManager().addAnnotation(textSource, annotator, className, spans);
             }
         }
-
-        return annotations;
     }
 
-    public static String getSpanInfo(Element annotationElement) {
-        String textSpans = "";
+    public static List<Span> getSpanInfo(Element annotationElement) {
+        List<Span> spans = new ArrayList<>();
+
         for (Node spanNode : XmlUtil.asList(annotationElement.getElementsByTagName(XmlTags.SPAN))) {
             if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element spanElement = (Element) spanNode;
                 String spanStart = spanElement.getAttribute(XmlTags.SPAN_START);
                 String spanEnd = spanElement.getAttribute(XmlTags.SPAN_END);
 
-                if (textSpans.length() == 0) {
-                    textSpans = String.format("%s,%s", spanStart, spanEnd);
-                } else {
-                    textSpans = String.format("%s;%s,%s", textSpans, spanStart, spanEnd);
-                }
+                spans.add(new Span(Integer.parseInt(spanStart), Integer.parseInt(spanEnd)));
             }
         }
-        return textSpans;
+        return spans;
     }
 
 

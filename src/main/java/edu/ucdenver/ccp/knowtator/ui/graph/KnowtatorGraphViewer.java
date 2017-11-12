@@ -6,12 +6,14 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.annotation.annotator.Annotator;
 import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
 import edu.ucdenver.ccp.knowtator.iaa.AssertionRelationship;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
 import other.GraphPopupMenu;
 
 import javax.swing.*;
+import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -96,17 +98,18 @@ public class KnowtatorGraphViewer extends JPanel implements AnnotationListener {
 
     }
 
-    public void addAnnotationNode(Annotation value) {
+    public void addAnnotationNode(Annotation annotation) {
+        Annotator annotator = annotation.getAnnotator();
+        String className = annotation.getClassName();
+        DefaultHighlighter.DefaultHighlightPainter highlightPainter = annotator.getHighlighter(className);
         graph.getModel().beginUpdate();
         try {
-            graph.insertVertex(parent, null, value, 20, 20,
+            graph.insertVertex(parent, null, annotation, 20, 20,
                     80, 30,
                     String.format(
                             "fillColor=#%s",
                             Integer.toHexString(
-                                    manager.getAnnotatorManager().getCurrentAnnotator().getHighlighter(
-                                            value.getOwlClass()
-                                    ).getColor().getRGB()
+                                    highlightPainter.getColor().getRGB()
                             ).substring(2)
                     )
             );

@@ -73,7 +73,7 @@ public class SubclassMatcher implements Matcher {
 	public Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
 							MatchResult matchResult) {
 
-		String annotationClassName = annotation.getOwlClassName();
+		String annotationClassName = annotation.getClassName();
 		if (!subclassNames.contains(annotationClassName)) {
 			matchResult.setResult(MatchResult.TRIVIAL_NONMATCH);
 			return null;

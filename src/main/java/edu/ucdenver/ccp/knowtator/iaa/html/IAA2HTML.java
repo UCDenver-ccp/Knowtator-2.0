@@ -324,12 +324,12 @@ public class IAA2HTML {
 
 	public static Set<Annotation> getCandidateAnnotations(Annotation annotation, AnnotationSpanIndex spanIndex) {
 		Set<Annotation> candidateAnnotations = new HashSet<>();
-		String set = annotation.getAnnotatorName();
+		String set = annotation.getAnnotator().getName();
 		String docID = annotation.getTextSource();
 
 		Set<Annotation> overlappingAnnotations = spanIndex.getOverlappingAnnotations(annotation);
 		for (Annotation overlappingAnnotation : overlappingAnnotations) {
-			String candidateAnnotationSet = overlappingAnnotation.getAnnotatorName();
+			String candidateAnnotationSet = overlappingAnnotation.getAnnotator().getName();
 			if (!candidateAnnotationSet.equals(set)) {
 				String candidateDocID = overlappingAnnotation.getTextSource();
 				if (candidateDocID.equals(docID)) {
@@ -392,7 +392,7 @@ public class IAA2HTML {
 			sortedAnnotations.put(type, new HashSet<>());
 		}
 		for (Annotation annotation : annotations) {
-			String type = annotation.getOwlClassName();
+			String type = annotation.getClassName();
 			if (type != null)
 				sortedAnnotations.get(type).add(annotation);
 		}
@@ -420,10 +420,6 @@ public class IAA2HTML {
 					mark = span.getEnd();
 				} catch (StringIndexOutOfBoundsException sioobe) {
 					sioobe.printStackTrace();
-					System.out.println("annotationText=" + annotationText);
-					System.out.println("Annotation = " + annotation.getSpans().get(0));
-					System.out.println("annotationTextName = " + annotationTextName);
-
 				}
 
 			}
@@ -625,7 +621,7 @@ public class IAA2HTML {
 // spanIndex.getOverlappingAnnotations(Annotation);
 // for(Annotation candidateAnnotation : candidateAnnotations)
 // {
-// String candidateAnnotationSet = candidateAnnotation.getAnnotatorName();
+// String candidateAnnotationSet = candidateAnnotation.getName();
 // if(!candidateAnnotationSet.equals(set))
 // {
 // String candidateDocID = candidateAnnotation.getDocID();

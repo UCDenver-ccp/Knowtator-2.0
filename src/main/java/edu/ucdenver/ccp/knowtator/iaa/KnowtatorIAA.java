@@ -34,7 +34,6 @@ import edu.ucdenver.ccp.knowtator.iaa.html.IAA2HTML;
 import edu.ucdenver.ccp.knowtator.iaa.html.SpanMatcherHTML;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.ClassAndSpanMatcher;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.ClassMatcher;
-import edu.ucdenver.ccp.knowtator.iaa.matcher.FeatureMatcher;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.SpanMatcher;
 
 import java.io.File;
@@ -145,15 +144,15 @@ public class KnowtatorIAA {
 						"Span match criteria of slot matcher must be one of SpansMatchExactly, SpansOverlap, or IgnoreSpans");
 		}
 	}
-
-	public static FeatureMatcher createFeatureMatcher(String matcherName) throws IAAException {
-		FeatureMatcher featureMatcher = new FeatureMatcher(matcherName);
-
-		//TODO: Provide matchClasses option
-		featureMatcher.setMatchClasses(true);
-
-		//TODO: Provide options for how to match spans
-		featureMatcher.setMatchSpans(convertMatchSpans("SpansMatchExactly"));
+//
+//	public static FeatureMatcher createFeatureMatcher(String matcherName) throws IAAException {
+//		FeatureMatcher featureMatcher = new FeatureMatcher(matcherName);
+//
+//		//TODO: Provide matchClasses option
+//		featureMatcher.setMatchClasses(true);
+//
+//		//TODO: Provide options for how to match spans
+//		featureMatcher.setMatchSpans(convertMatchSpans("SpansMatchExactly"));
 
 
 //		Collection<SimpleInstance> slotMatchCriteria = (Collection<SimpleInstance>) slotMatcherConfig
@@ -192,32 +191,32 @@ public class KnowtatorIAA {
 //				featureMatcher.addComparedComplexFeature(slotMatcherSlot.getBrowserText(), matchCriteria);
 //			}
 //		}
+//
+//		return featureMatcher;
+//	}
 
-		return featureMatcher;
-	}
+//	public void runFeatureMatcherIAA() throws IAAException {
+//		runFeatureMatcherIAA("Feature Matcher");
+//	}
 
-	public void runFeatureMatcherIAA() throws IAAException {
-		runFeatureMatcherIAA("Feature Matcher");
-	}
-
-	public void runFeatureMatcherIAA(String matcherName) throws IAAException {
-		try {
-			FeatureMatcher featureMatcher = createFeatureMatcher(matcherName);
-			IAA featureIAA = new IAA(setNames);
-			for (Set<Annotation> annotations : textSourceAnnotationsMap.values()) {
-				featureIAA.setAnnotations(annotations);
-				featureIAA.allwayIAA(featureMatcher);
-				featureIAA.pairwiseIAA(featureMatcher);
-			}
-
-			IAA2HTML.printIAA(featureIAA, featureMatcher, outputDirectory, textSources.size(), annotationTexts,
-					annotationTextNames);
-			html.println("<li><a href=\"" + featureMatcher.getName() + ".html\">" + featureMatcher.getName()
-					+ "</a></li>");
-		} catch (Exception exception) {
-			throw new IAAException(exception);
-		}
-	}
+//	public void runFeatureMatcherIAA(String matcherName) throws IAAException {
+//		try {
+//			FeatureMatcher featureMatcher = createFeatureMatcher(matcherName);
+//			IAA featureIAA = new IAA(setNames);
+//			for (Set<Annotation> annotations : textSourceAnnotationsMap.values()) {
+//				featureIAA.setAnnotations(annotations);
+//				featureIAA.allwayIAA(featureMatcher);
+//				featureIAA.pairwiseIAA(featureMatcher);
+//			}
+//
+//			IAA2HTML.printIAA(featureIAA, featureMatcher, outputDirectory, textSources.size(), annotationTexts,
+//					annotationTextNames);
+//			html.println("<li><a href=\"" + featureMatcher.getName() + ".html\">" + featureMatcher.getName()
+//					+ "</a></li>");
+//		} catch (Exception exception) {
+//			throw new IAAException(exception);
+//		}
+//	}
 
 	public void runClassIAA() throws IAAException {
 		try {

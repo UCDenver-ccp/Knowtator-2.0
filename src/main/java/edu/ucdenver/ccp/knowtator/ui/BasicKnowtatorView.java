@@ -2,6 +2,7 @@ package edu.ucdenver.ccp.knowtator.ui;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.ui.graph.KnowtatorGraphViewer;
+import edu.ucdenver.ccp.knowtator.ui.info.InfoPane;
 import edu.ucdenver.ccp.knowtator.ui.text.KnowtatorTextViewer;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLModelManagerImpl;
@@ -16,6 +17,7 @@ public class BasicKnowtatorView extends AbstractOWLClassViewComponent implements
     public KnowtatorTextViewer textViewer;
     public KnowtatorManager manager;
     public KnowtatorGraphViewer graphViewer;
+    public InfoPane infoPane;
 
     @Override
     public void initialiseClassView() {
@@ -73,8 +75,5 @@ public class BasicKnowtatorView extends AbstractOWLClassViewComponent implements
     public KnowtatorGraphViewer getGraphViewer() {
         return graphViewer;
     }
-
-
-
 
 }

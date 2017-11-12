@@ -3,18 +3,21 @@ package edu.ucdenver.ccp.knowtator.ui.info;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
 import edu.ucdenver.ccp.knowtator.annotation.text.AnnotationProperties;
+import edu.ucdenver.ccp.knowtator.annotation.text.Span;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class InfoPane extends JPanel implements AnnotationListener, ActionListener {
+
+    private static Logger log = Logger.getLogger(KnowtatorManager.class);
 
     public KnowtatorManager manager;
     public JLabel actionLabel;
@@ -32,12 +35,9 @@ public class InfoPane extends JPanel implements AnnotationListener, ActionListen
         actionLabel = new JLabel("Type text in a field and press Enter.");
         actionLabel.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
         add(actionLabel, c);
-        setBorder(
-                BorderFactory.createCompoundBorder(
+        setBorder(BorderFactory.createCompoundBorder(
                         BorderFactory.createTitledBorder("Text Fields"),
                         BorderFactory.createEmptyBorder(5,5,5,5)));
-
-        displayInfo(manager.getAnnotationManager().getSelectedAnnotation());
     }
 
     @Override
@@ -47,71 +47,88 @@ public class InfoPane extends JPanel implements AnnotationListener, ActionListen
 
     @Override
     public void annotationsChanged(Annotation annotation) {
+        log.warn("Should display here");
         displayInfo(annotation);
     }
 
     public void displayInfo(Annotation annotation) {
         removeAll();
 
-        Map<String, List<JComponent>> annotationComponents = new HashMap<>();
+        List<List<JComponent>> annotationComponents = new ArrayList<>();
 
-        String fieldName;
+        String name;
+        String content;
         // **********************************Meta Data*********************************
         // Annotator field
-        fieldName = AnnotationProperties.ANNOTATOR;
-        annotationComponents.put(fieldName, addField(fieldName));
+        name = AnnotationProperties.ANNOTATOR;
+        content = annotation.getAnnotator().getName();
+        annotationComponents.add(addLabel(name, content));
 
         // Text Source field
-        fieldName = AnnotationProperties.TEXT_SOURCE;
-        annotationComponents.put(fieldName, addField(fieldName));
+        name = AnnotationProperties.TEXT_SOURCE;
+        content = annotation.getTextSource();
+        annotationComponents.add(addLabel(name, content));
 
         // TODO: Date field
 
         // **********************************OWL Class*********************************
         // Class Name field
-        fieldName = AnnotationProperties.CLASS_NAME;
-        annotationComponents.put(fieldName, addField(fieldName));
+        name = AnnotationProperties.CLASS_NAME;
+        content = annotation.getClassName();
+        annotationComponents.add(addLabel(name, content));
 
         // Class ID field
-        fieldName = AnnotationProperties.CLASS_ID;
-        annotationComponents.put(fieldName, addField(fieldName));
+        name = AnnotationProperties.CLASS_ID;
+        content = annotation.getClassID();
+        annotationComponents.add(addLabel(name, content));
 
         // **********************************SPANS*********************************
-        // Span Start field
-        fieldName = AnnotationProperties.SPAN_START;
-        annotationComponents.put(fieldName, addField(fieldName));
+        for (Span span : annotation.getSpans()) {
+            // Span Start field
+            name = AnnotationProperties.SPAN_START;
+            content = Integer.toString(span.getStart());
+            annotationComponents.add(addLabel(name, content));
 
-        // Span End field
-        fieldName = AnnotationProperties.SPAN_END;
-        annotationComponents.put(fieldName, addField(fieldName));
-
+            // Span End field
+            name = AnnotationProperties.SPAN_END;
+            content = Integer.toString(span.getEnd());
+            annotationComponents.add(addLabel(name, content));
+        }
         addLabelTextRows(annotationComponents);
     }
 
-    public List<JComponent> addField(String name) {
-        JTextField field = new JTextField(10);
-        field.setActionCommand(name);
-        field.addActionListener(this);
-        JLabel fieldLabel = new JLabel(name + ": ");
-        fieldLabel.setLabelFor(field);
+    public List<JComponent> addLabel(String name, String content) {
+        JLabel label = new JLabel(content);
+        JLabel labelLabel = new JLabel(name + ": ");
+        labelLabel.setLabelFor(label);
 
-        return Arrays.asList(fieldLabel, field);
+        return Arrays.asList(labelLabel, label);
     }
 
-    private void addLabelTextRows(Map<String, List<JComponent>> componentsMap) {
+//    public List<JComponent> addField(String name) {
+//        JTextField field = new JTextField(10);
+//        field.setActionCommand(name);
+//        field.addActionListener(this);
+//        JLabel fieldLabel = new JLabel(name + ": ");
+//        fieldLabel.setLabelFor(field);
+//
+//        return Arrays.asList(fieldLabel, field);
+//    }
+
+    private void addLabelTextRows(List<List<JComponent>> components) {
         GridBagConstraints c = new GridBagConstraints();
         c.anchor = GridBagConstraints.EAST;
 
-        for (List<JComponent> components : componentsMap.values()) {
+        for (List<JComponent> row : components) {
             c.gridwidth = GridBagConstraints.RELATIVE; //next-to-last
             c.fill = GridBagConstraints.NONE;      //reset to default
             c.weightx = 0.0;                       //reset to default
-            this.add(components.get(0), c);
+            this.add(row.get(0), c);
 
             c.gridwidth = GridBagConstraints.REMAINDER;     //end row
             c.fill = GridBagConstraints.HORIZONTAL;
             c.weightx = 1.0;
-            this.add(components.get(1), c);
+            this.add(row.get(1), c);
         }
     }
 
@@ -126,21 +143,14 @@ public class InfoPane extends JPanel implements AnnotationListener, ActionListen
         KnowtatorManager manager = new KnowtatorManager();
         manager.simpleTest();
 
-        //Schedule a job for the event dispatching thread:
-        //creating and showing this application's GUI.
-        SwingUtilities.invokeLater(() -> {
-            //Turn off metal's use of bold fonts
-            UIManager.put("swing.boldMetal", Boolean.FALSE);
-            //Create and set up the window.
-            JFrame frame = new JFrame("TextSamplerDemo");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JFrame frame = new JFrame("TextSamplerDemo");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            //Add content to the window.
-            frame.add(new InfoPane(manager));
-            //Display the window.
-            frame.pack();
-            frame.setVisible(true);
-        });
+        //Add content to the window.
+        frame.add(new InfoPane(manager));
+        //Display the window.
+        frame.pack();
+        frame.setVisible(true);
     }
 
     public static void main(String[] args) {

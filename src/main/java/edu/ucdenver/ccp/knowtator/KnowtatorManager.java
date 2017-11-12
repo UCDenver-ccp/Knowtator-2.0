@@ -44,49 +44,40 @@ public class KnowtatorManager implements OwlSelectionListener {
     public BasicKnowtatorView view;
     private ConfigProperties configProperties;
 
-    /**
-     *
-     */
-    //TODO add a POS highlighter
+
     public KnowtatorManager(OWLModelManagerImpl owlModelManager, OWLWorkspace owlWorkspace) {
         this.owlModelManager = owlModelManager;
         this.owlWorkspace = owlWorkspace;
 
-        /*
-        Initialize the managers, models, and utils
-         */
-        annotationManager = new AnnotationManager(this);
-        annotatorManager = new AnnotatorManager(this);  //manipulates annotatorMap and highlighters
-        xmlUtil = new XmlUtil(this);  //reads and writes to XML
-
-
-        configProperties = new ConfigProperties();
+        initManagers();
         loadConfig();
-
-        annotationListeners = new ArrayList<>();
-        documentListeners = new ArrayList<>();
-        documentListeners.add(annotationManager);
-        owlSelectionListeners = new ArrayList<>();
-        owlSelectionListeners.add(this);
+        initListeners();
     }
 
     public KnowtatorManager() {
-        /*
+                /*
         Initialize the managers, models, and utils
          */
+        initManagers();
+        loadConfig();
+        initListeners();
+    }
+
+    public void initManagers() {
         annotationManager = new AnnotationManager(this);
         annotatorManager = new AnnotatorManager(this);  //manipulates annotatorMap and highlighters
         xmlUtil = new XmlUtil(this);  //reads and writes to XML
+    }
 
-        configProperties = new ConfigProperties();
-        loadConfig();
-
+    public void initListeners() {
         annotationListeners = new ArrayList<>();
         documentListeners = new ArrayList<>();
         documentListeners.add(annotationManager);
         owlSelectionListeners = new ArrayList<>();
         owlSelectionListeners.add(this);
     }
+
+
 
 
 
@@ -109,6 +100,7 @@ public class KnowtatorManager implements OwlSelectionListener {
         if (!ontologies.contains(ontologyLocation)) {
             owlModelManager.loadOntologyFromPhysicalURI(URI.create(OntologyTranslator.whichOntologyToUse(ontologyLocation)));
         }
+
     }
 
     public void setView(BasicKnowtatorView view) {
@@ -122,17 +114,14 @@ public class KnowtatorManager implements OwlSelectionListener {
         return annotationManager;
     }
 
-    @SuppressWarnings("unused")
+
     public OWLModelManager getOwlModelManager() {
         return owlModelManager;
     }
     public List<AnnotationListener> getAnnotationListeners() {
         return annotationListeners;
     }
-    @SuppressWarnings("unused")
-    public List<DocumentListener> getDocumentListeners() {
-        return documentListeners;
-    }
+
     public OWLWorkspace getOwlWorkspace() {
         return owlWorkspace;
     }
@@ -149,7 +138,6 @@ public class KnowtatorManager implements OwlSelectionListener {
         }
     }
 
-    @SuppressWarnings("unused")
     public void annotationsChangedEvent(Annotation annotation) {
         for (AnnotationListener listener : annotationListeners) {
             listener.annotationsChanged(annotation);
@@ -166,8 +154,8 @@ public class KnowtatorManager implements OwlSelectionListener {
         return view;
     }
 
-    public void loadConfig()
-    {
+    public void loadConfig() {
+        configProperties = new ConfigProperties();
         xmlUtil.read("config.xml", true);
     }
 
@@ -178,9 +166,11 @@ public class KnowtatorManager implements OwlSelectionListener {
 
     @Override
     public void owlEntitySelectionChanged(OWLEntity owlEntity) {
-        if (view.getView() != null) {
-            if (view.getView().isSyncronizing()) {
-                owlWorkspace.getOWLSelectionModel().setSelectedEntity(owlEntity);
+        if (view != null) {
+            if (view.getView() != null) {
+                if (view.getView().isSyncronizing()) {
+                    owlWorkspace.getOWLSelectionModel().setSelectedEntity(owlEntity);
+                }
             }
         }
     }

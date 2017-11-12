@@ -87,7 +87,7 @@ public class ClassAndSpanMatcher implements Matcher {
 
 	public static Set<Annotation> matches(Annotation annotation, String compareSetName, IAA iaa,
 										  Set<Annotation> excludeAnnotations, boolean returnFirst) {
-		String type = annotation.getOwlClassName();
+		String type = annotation.getClassName();
 		Set<Annotation> candidateAnnotations = new HashSet<>(iaa.getExactlyOverlappingAnnotations(annotation,
 				compareSetName));
 		candidateAnnotations.removeAll(excludeAnnotations);
@@ -97,7 +97,7 @@ public class ClassAndSpanMatcher implements Matcher {
 		Set<Annotation> returnValues = new HashSet<>();
 		for (Annotation candidateAnnotation : candidateAnnotations) {
 			if (!excludeAnnotations.contains(candidateAnnotation)
-					&& candidateAnnotation.getOwlClassName().equals(type)) {
+					&& candidateAnnotation.getClassName().equals(type)) {
 				returnValues.add(candidateAnnotation);
 				if (returnFirst)
 					return returnValues;

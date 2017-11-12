@@ -2,6 +2,7 @@ package edu.ucdenver.ccp.knowtator.ui;
 
 import edu.ucdenver.ccp.knowtator.commands.*;
 import edu.ucdenver.ccp.knowtator.ui.graph.KnowtatorGraphViewer;
+import edu.ucdenver.ccp.knowtator.ui.info.InfoPane;
 import edu.ucdenver.ccp.knowtator.ui.text.KnowtatorTextViewer;
 
 import javax.swing.*;
@@ -27,6 +28,19 @@ public class KnowtatorView extends BasicKnowtatorView {
         manager.getAnnotationListeners().add(textViewer);
 
         /*
+        Create an info pane displaying info about the currently selected annotation
+         */
+        infoPane = new InfoPane(manager);
+        infoPane.setMinimumSize(new Dimension(20, 50));
+        manager.getAnnotationListeners().add(textViewer);
+
+        JSplitPane annotationSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        annotationSplitPane.setOneTouchExpandable(true);
+        annotationSplitPane.add(textViewer);
+        annotationSplitPane.add(infoPane);
+
+
+        /*
         Create a viewer to see the annotations as a graph
          */
         graphViewer = new KnowtatorGraphViewer(manager);
@@ -36,7 +50,7 @@ public class KnowtatorView extends BasicKnowtatorView {
         JSplitPane mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         mainSplitPane.setOneTouchExpandable(true);
         add(mainSplitPane);
-        mainSplitPane.add(textViewer);
+        mainSplitPane.add(annotationSplitPane);
         mainSplitPane.add(graphViewer);
         mainSplitPane.setDividerLocation(300);
 
@@ -62,7 +76,7 @@ public class KnowtatorView extends BasicKnowtatorView {
         textViewer.addNewDocument("/file/test_article2.txt", true);
 
         manager.getXmlUtil().read("/file/test_profile.xml", true);
-//        manager.getXmlUtil().read("/file/test_annotations.xml", true);
+        manager.getXmlUtil().read("/file/test_annotations.xml", true);
 
     }
 

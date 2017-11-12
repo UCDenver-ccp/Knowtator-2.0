@@ -31,10 +31,15 @@
  */
 package edu.ucdenver.ccp.knowtator.annotation.text;
 
+import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import org.apache.log4j.Logger;
+
 import java.util.List;
 
 @SuppressWarnings("unused")
 public class Span {
+	public Logger log = Logger.getLogger(KnowtatorManager.class);
+
 	public int start;
 
 	public int end;
@@ -51,6 +56,8 @@ public class Span {
 			throw new IndexOutOfBoundsException(
 					"Span is invalid because the start of the Span is less than zero: start=" + start);
 		}
+
+		log.warn(String.format("%1$-30s %2$30s", "Span", toString()));
 	}
 
 	public static boolean isValid(int start, int end) {
@@ -88,7 +95,7 @@ public class Span {
 	}
 
 	public String toString() {
-		return "" + start + "|" + end;
+		return String.format("Start: %d, End: %d", start, end);
 	}
 
 	public boolean equals(Object object) {

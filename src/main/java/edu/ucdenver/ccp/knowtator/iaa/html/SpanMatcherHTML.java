@@ -125,7 +125,7 @@ public class SpanMatcherHTML {
 			Set<Annotation> matchedAnnotations = matchSets.get(match);
 			for (Annotation matchedAnnotation : matchedAnnotations) {
 				if (!matchedAnnotation.equals(match)) {
-					String annotationClass = matchedAnnotation.getOwlClassName();
+					String annotationClass = matchedAnnotation.getClassName();
 					if (!counts.containsKey(annotationClass)) {
 						counts.put(annotationClass, new int[1]);
 					}

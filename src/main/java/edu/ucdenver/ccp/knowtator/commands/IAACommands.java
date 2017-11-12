@@ -52,8 +52,8 @@ public class IAACommands {
                                 knowtatorIAA.runClassAndSpanIAA();
 //                          case 3:
 //                              knowtatorIAA.runSubclassIAA();
-                            case 4:
-                                knowtatorIAA.runFeatureMatcherIAA();
+//                            case 4:
+//                                knowtatorIAA.runFeatureMatcherIAA();
 
                                 knowtatorIAA.closeHTML();
                         }

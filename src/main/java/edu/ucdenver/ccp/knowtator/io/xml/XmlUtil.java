@@ -33,7 +33,7 @@ public final class XmlUtil {
     //TODO Save profiles to xml
     public void write(String fileName) {
         try {
-            XmlWriter.write(fileName, manager.getAnnotationManager());
+            XmlWriter.write(manager, fileName);
         } catch (IOException | NoSuchFieldException e) {
             e.printStackTrace();
         }
