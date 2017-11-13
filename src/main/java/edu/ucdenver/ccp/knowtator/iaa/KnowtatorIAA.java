@@ -385,6 +385,16 @@ public class KnowtatorIAA {
 		KnowtatorManager manager = new KnowtatorManager();
 		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin/11319941.txt.knowtator.xml", true);
 		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin+Mike/11319941.txt.knowtator.xml", true);
+
+		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin/11532192.txt.knowtator.xml", true);
+		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin+Mike/11532192.txt.knowtator.xml", true);
+
+		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin/11597317.txt.knowtator.xml", true);
+		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin+Mike/11597317.txt.knowtator.xml", true);
+
+		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin/11604102.txt.knowtator.xml", true);
+		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin+Mike/11604102.txt.knowtator.xml", true);
+
 		manager.getXmlUtil().write(String.format("%s %s", manager.getConfigProperties().getDefaultSaveLocation(), "11319941.txt.knowtator2.xml"));
 
 		try {
