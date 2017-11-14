@@ -297,7 +297,7 @@ public class Annotation {
 	}
 
 	public String getClassID() {
-		return OWLAPIDataExtractor.getClassID(manager, className);
+		return OWLAPIDataExtractor.getClassIDByName(manager, className);
 	}
 
 	public Annotator getAnnotator() {

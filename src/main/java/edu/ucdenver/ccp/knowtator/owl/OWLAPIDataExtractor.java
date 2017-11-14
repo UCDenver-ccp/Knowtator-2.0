@@ -1,20 +1,22 @@
 package edu.ucdenver.ccp.knowtator.owl;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
 
-import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Stream;
+
 
 public class OWLAPIDataExtractor {
-    public static final Logger log = Logger.getLogger(KnowtatorManager.class);
-    public static String ID_NAME_SPACE = "has_obo_namespace";
+    public static final Logger log = LogManager.getLogger(OWLAPIDataExtractor.class);
+//    public static String ID_NAME_SPACE = "has_obo_namespace";
     public static String ID_CLASS = "id";
     public static String ID_NAME = null;
 
-    public static Collection<OWLAnnotation> getOWLObjectAnnotations(KnowtatorManager manager, OWLEntity ent) {
+    public static Stream<OWLAnnotation> getOWLObjectAnnotations(KnowtatorManager manager, OWLEntity ent) {
         if (ent != null) {
             return EntitySearcher.getAnnotations(ent.getIRI(), manager.getOwlModelManager().getActiveOntology());
         }
@@ -23,59 +25,41 @@ public class OWLAPIDataExtractor {
         }
     }
 
-    @SuppressWarnings("unused")
-    public static Collection<OWLAnnotationProperty> getOWLAnnotationProperties(OWLOntology ont) {
-        return ont.getAnnotationPropertiesInSignature();
-    }
-
     public static String extractOWLObjectData(KnowtatorManager manager, OWLEntity ent, String annotationPropertyName){
 
-        for (OWLAnnotation anno : getOWLObjectAnnotations(manager, ent)){
-            if (annotationPropertyName == null) {
-                if (anno.getProperty().isLabel()) {
-                    if (anno.getValue() instanceof OWLLiteral) {
-                        return ((OWLLiteral) anno.getValue()).getLiteral();
-                    }
-                }
-            }
-            else {
-                if (anno.getProperty() == manager.getOwlModelManager().getOWLEntityFinder().getOWLAnnotationProperty("has_obo_namespace")) {
-                    if (anno.getValue() instanceof OWLLiteral) {
-                        return ((OWLLiteral) anno.getValue()).getLiteral();
-                    }
-                }
-            }
+        Stream<OWLAnnotation> owlAnnotations = getOWLObjectAnnotations(manager, ent);
 
+        if (owlAnnotations != null) {
+            for (OWLAnnotation anno : (Iterable<OWLAnnotation>) owlAnnotations::iterator) {
+                if (annotationPropertyName == null) {
+                    if (anno.getProperty().isLabel()) {
+                        if (anno.getValue() instanceof OWLLiteral) {
+                            return ((OWLLiteral) anno.getValue()).getLiteral();
+                        }
+                    }
+                } else {
+                    if (anno.getProperty() == manager.getOwlModelManager().getOWLEntityFinder().getOWLAnnotationProperty("has_obo_namespace")) {
+                        if (anno.getValue() instanceof OWLLiteral) {
+                            return ((OWLLiteral) anno.getValue()).getLiteral();
+                        }
+                    }
+                }
+            }
         }
-
-        throw new NullPointerException();
+        return null;
     }
 
-    @SuppressWarnings("unused")
-    public String getClassNameSpace(KnowtatorManager manager, OWLEntity ent) {
-        return extractOWLObjectData(manager, ent, ID_NAME_SPACE);
-    }
-
-    public static String getClassID(KnowtatorManager manager, OWLEntity ent) {
-        return extractOWLObjectData(manager, ent, ID_CLASS);
-    }
-
-    public static String getClassName(KnowtatorManager manager, OWLEntity ent) {
+    public static String getClassNameByOWLClass(KnowtatorManager manager, OWLEntity ent) {
         return extractOWLObjectData(manager, ent, ID_NAME);
     }
 
-    @SuppressWarnings("unused")
-    public static String getClassID(KnowtatorManager manager, String classID) {
-        try {
-            return extractOWLObjectData(manager, getOWLClassByName(manager, classID), ID_CLASS);
-        } catch (NullPointerException e) {
-            return null;
-        }
+    public static String getClassIDByOWLClass(KnowtatorManager manager, OWLEntity ent) {
+        return extractOWLObjectData(manager, ent, ID_CLASS);
     }
 
-    @SuppressWarnings("unused")
-    public static String getClassName(KnowtatorManager manager, String classID) {
-        return extractOWLObjectData(manager, getOWLClassByName(manager, classID), ID_NAME);
+    public static String getClassIDByName(KnowtatorManager manager, String className) {
+        OWLClass cls = getOWLClassByName(manager, className);
+        return getClassIDByOWLClass(manager, cls);
     }
 
     public static OWLClass getOWLClassByName(KnowtatorManager manager, String className) {
@@ -98,10 +82,14 @@ public class OWLAPIDataExtractor {
         OWLClass cls = getSelectedClass(manager);
 
         if (cls != null) {
-            return getClassName(manager, cls);
+            return getClassNameByOWLClass(manager, cls);
         } else {
             log.error("No OWLClass selected");
             return null;
         }
+    }
+
+    public static OWLObjectProperty getSelectedProperty(KnowtatorManager manager) {
+        return manager.getOwlWorkspace().getOWLSelectionModel().getLastSelectedObjectProperty();
     }
 }

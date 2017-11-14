@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-@SuppressWarnings("PackageAccessibility")
+
 public class KnowtatorGraphViewer extends JPanel implements AnnotationListener {
 
     public Object parent;
@@ -154,11 +154,6 @@ public class KnowtatorGraphViewer extends JPanel implements AnnotationListener {
         menu.show(graphComponent, pt.x, pt.y);
 
         e.consume();
-    }
-
-    @Override
-    public void annotationsChanged() {
-
     }
 
     @Override

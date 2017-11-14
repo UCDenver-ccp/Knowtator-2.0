@@ -1,6 +1,5 @@
 package edu.ucdenver.ccp.knowtator;
 
-import com.google.common.base.Optional;
 import edu.ucdenver.ccp.knowtator.annotation.annotator.AnnotatorManager;
 import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
 import edu.ucdenver.ccp.knowtator.annotation.text.AnnotationManager;
@@ -12,17 +11,17 @@ import edu.ucdenver.ccp.knowtator.owl.OntologyTranslator;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
 import edu.ucdenver.ccp.knowtator.ui.text.KnowtatorTextPane;
 import org.apache.log4j.Logger;
+import org.protege.editor.owl.OWLEditorKit;
+import org.protege.editor.owl.OWLEditorKitFactory;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.OWLModelManagerImpl;
 import org.protege.editor.owl.model.OWLWorkspace;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyID;
+import org.semanticweb.owlapi.model.*;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -85,11 +84,12 @@ public class KnowtatorManager implements OwlSelectionListener {
         return annotatorManager;
     }
 
+    @SuppressWarnings("unused")
     public void loadOntologyFromLocation(String classID) {
         List<String> ontologies = owlModelManager.getActiveOntologies().stream().map(ontology -> {
             OWLOntologyID ontID = ontology.getOntologyID();
-            @SuppressWarnings("Guava") Optional<IRI> ontIRI = ontID.getOntologyIRI();
-            if (ontIRI.isPresent()) {
+            Optional<IRI> ontIRI = ontID.getOntologyIRI();
+            if(ontIRI.isPresent()) {
                 return ontIRI.get().toURI().toString();
             } else {
                 return null;
@@ -129,12 +129,6 @@ public class KnowtatorManager implements OwlSelectionListener {
     public void owlSelectionChangedEvent(OWLEntity owlEntity) {
         for (OwlSelectionListener listener : owlSelectionListeners) {
             listener.owlEntitySelectionChanged(owlEntity);
-        }
-    }
-
-    public void annotationsChangedEvent() {
-        for (AnnotationListener listener : annotationListeners) {
-            listener.annotationsChanged();
         }
     }
 
@@ -181,11 +175,23 @@ public class KnowtatorManager implements OwlSelectionListener {
 
     public static void main(String[] args) {
         KnowtatorManager manager = new KnowtatorManager();
-        manager.simpleTest();
+        try {
+            manager.simpleTestWithOnotlogy();
+        } catch (OWLOntologyCreationException e) {
+            e.printStackTrace();
+        }
     }
 
     public void simpleTest() {
         getXmlUtil().read("file/test_annotations.xml", true);
         getXmlUtil().write(configProperties.getDefaultSaveLocation() + "test_annotation_output.xml");
+    }
+
+    public void simpleTestWithOnotlogy() throws OWLOntologyCreationException {
+        String goLoc = "http://purl.obolibrary.org/obo/go/go-basic.obo";
+
+        OWLEditorKitFactory owlEditorKitFactory = new OWLEditorKitFactory();
+//        OWLEditorKit owlEditorKit = owlEditorKitFactory.createEditorKit();
+        simpleTest();
     }
 }

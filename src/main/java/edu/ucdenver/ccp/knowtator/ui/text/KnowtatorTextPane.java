@@ -119,7 +119,7 @@ public class KnowtatorTextPane extends JTextPane {
 			popupMenu.add(selectAnnotationMenuItem);
 
 			JMenuItem removeAnnotationMenuItem = new JMenuItem(String.format("Remove %s", a.getClassName()));
-			removeAnnotationMenuItem.addActionListener(e4 -> manager.getAnnotationManager().removeTextAnnotation(getName(), a));
+			removeAnnotationMenuItem.addActionListener(e4 -> manager.getAnnotationManager().removeAnnotation(getName(), a));
 			popupMenu.add(removeAnnotationMenuItem);
 		}
 

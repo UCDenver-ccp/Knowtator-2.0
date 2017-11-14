@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator.ui.info;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.annotation.annotator.Annotator;
 import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
 import edu.ucdenver.ccp.knowtator.annotation.text.AnnotationProperties;
 import edu.ucdenver.ccp.knowtator.annotation.text.Span;
@@ -36,13 +37,9 @@ public class InfoPane extends JPanel implements AnnotationListener, ActionListen
         actionLabel.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
         add(actionLabel, c);
         setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createTitledBorder("Text Fields"),
+                        BorderFactory.createTitledBorder("Annotation Info"),
                         BorderFactory.createEmptyBorder(5,5,5,5)));
-    }
-
-    @Override
-    public void annotationsChanged() {
-
+        displayInfo(new Annotation(manager, "hello.txt", new Annotator(manager, "yo", "boi"), "hey there"));
     }
 
     @Override
@@ -52,7 +49,8 @@ public class InfoPane extends JPanel implements AnnotationListener, ActionListen
     }
 
     public void displayInfo(Annotation annotation) {
-        removeAll();
+
+        this.removeAll();
 
         List<List<JComponent>> annotationComponents = new ArrayList<>();
 
@@ -71,17 +69,6 @@ public class InfoPane extends JPanel implements AnnotationListener, ActionListen
 
         // TODO: Date field
 
-        // **********************************OWL Class*********************************
-        // Class Name field
-        name = AnnotationProperties.CLASS_NAME;
-        content = annotation.getClassName();
-        annotationComponents.add(addLabel(name, content));
-
-        // Class ID field
-        name = AnnotationProperties.CLASS_ID;
-        content = annotation.getClassID();
-        annotationComponents.add(addLabel(name, content));
-
         // **********************************SPANS*********************************
         for (Span span : annotation.getSpans()) {
             // Span Start field
@@ -95,6 +82,8 @@ public class InfoPane extends JPanel implements AnnotationListener, ActionListen
             annotationComponents.add(addLabel(name, content));
         }
         addLabelTextRows(annotationComponents);
+        this.revalidate();
+        this.repaint();
     }
 
     public List<JComponent> addLabel(String name, String content) {
@@ -130,6 +119,7 @@ public class InfoPane extends JPanel implements AnnotationListener, ActionListen
             c.weightx = 1.0;
             this.add(row.get(1), c);
         }
+
     }
 
     @Override
@@ -144,7 +134,7 @@ public class InfoPane extends JPanel implements AnnotationListener, ActionListen
         manager.simpleTest();
 
         JFrame frame = new JFrame("TextSamplerDemo");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         //Add content to the window.
         frame.add(new InfoPane(manager));

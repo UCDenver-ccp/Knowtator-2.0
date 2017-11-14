@@ -19,6 +19,7 @@
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
+    <option name="createStubs" value="true" />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
@@ -26,91 +27,50 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/jgraphx-3.7.5.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/lib/jgraphx-3.7.5.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
-    <orderEntry type="library" name="Maven: edu.stanford.protege:org.protege.common:4.3.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.felix:org.apache.felix.main:4.0.3" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.felix:org.apache.felix.framework:4.0.3" level="project" />
-    <orderEntry type="library" name="Maven: log4j:log4j:1.2.16" level="project" />
-    <orderEntry type="library" name="Maven: com.jgoodies:looks:2.2.2" level="project" />
-    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-distribution:4.1.3" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.5.1" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.5.1" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.5.1" level="project" />
-    <orderEntry type="library" name="Maven: org.tukaani:xz:1.5" level="project" />
-    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-model:2.7.12" level="project" />
-    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-util:2.7.12" level="project" />
-    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-api:2.7.12" level="project" />
-    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-languages:2.7.12" level="project" />
-    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-datatypes:2.7.12" level="project" />
-    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-binary:2.7.12" level="project" />
-    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-n3:2.7.12" level="project" />
-    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-nquads:2.7.12" level="project" />
-    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-ntriples:2.7.12" level="project" />
-    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-rdfjson:2.7.12" level="project" />
-    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-rdfxml:2.7.12" level="project" />
-    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-trix:2.7.12" level="project" />
-    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-turtle:2.7.12" level="project" />
-    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-trig:2.7.12" level="project" />
-    <orderEntry type="library" name="Maven: com.github.jsonld-java:jsonld-java-sesame:0.5.0" level="project" />
-    <orderEntry type="library" name="Maven: com.github.jsonld-java:jsonld-java:0.5.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient-cache:4.2.5" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.2.5" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.2.4" level="project" />
-    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.6" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.slf4j:jcl-over-slf4j:1.7.7" level="project" />
-    <orderEntry type="library" name="Maven: org.semarglproject:semargl-sesame:0.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.semarglproject:semargl-core:0.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.semarglproject:semargl-rdfa:0.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.semarglproject:semargl-rdf:0.6.1" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-api:5.1.3" level="project" />
+    <orderEntry type="library" name="Maven: org.tukaani:xz:1.6" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-rdf-api:0.3.0-incubating" level="project" />
     <orderEntry type="library" name="Maven: net.sf.trove4j:trove4j:3.0.3" level="project" />
-    <orderEntry type="library" name="Maven: com.google.inject:guice:4.0" level="project" />
+    <orderEntry type="library" name="Maven: com.github.ben-manes.caffeine:caffeine:2.5.6" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:20.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.inject:guice:4.1.0" level="project" />
     <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
     <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
-    <orderEntry type="library" name="Maven: com.google.inject.extensions:guice-assistedinject:4.0" level="project" />
-    <orderEntry type="library" name="Maven: com.google.inject.extensions:guice-multibindings:4.0" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.10" level="project" />
-    <orderEntry type="library" name="Maven: edu.stanford.protege:org.protege.editor.core.application:4.3.0" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.equinox:registry:3.3.0-v20070522" level="project" />
-    <orderEntry type="library" name="Maven: org.eclipse.equinox:common:3.6.200-v20130402-1505" level="project" />
-    <orderEntry type="library" name="Maven: com.googlecode.mdock:mdock:1.1" level="project" />
-    <orderEntry type="library" name="Maven: org.testng:testng:6.8" level="project" />
-    <orderEntry type="library" name="Maven: junit:junit:4.10" level="project" />
-    <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
-    <orderEntry type="library" name="Maven: org.beanshell:bsh:2.0b4" level="project" />
-    <orderEntry type="library" name="Maven: com.beust:jcommander:1.27" level="project" />
-    <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.6" level="project" />
-    <orderEntry type="library" name="Maven: edu.stanford.protege:org.protege.editor.owl:4.3.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.inject.extensions:guice-assistedinject:4.1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.inject.extensions:guice-multibindings:4.1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.1" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
+    <orderEntry type="library" name="Maven: commons-io:commons-io:2.5" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:org.protege.editor.owl:5.0.0-beta-05-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:org.protege.common:5.0.0-beta-05-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.felix:org.apache.felix.main:4.2.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.felix:org.apache.felix.framework:4.2.1" level="project" />
+    <orderEntry type="library" name="Maven: com.jgoodies:looks:2.2.2" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:org.protege.editor.core.application:5.0.0-beta-05-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.registry:3.5.0.v20100503" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.core:org.eclipse.core.jobs:3.5.0.v20100515" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.common:3.6.0.v20100503" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.osgi:org.eclipse.osgi:3.6.0.v20100517" level="project" />
-    <orderEntry type="library" name="Maven: edu.stanford.protege:protege-owlapi-extensions:3.2.4" level="project" />
+    <orderEntry type="library" name="Maven: com.googlecode.mdock:mdock:1.1" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:protege-owlapi-extensions:3.2.6" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-distribution:3.5.0" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-apibinding:3.5.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.felix:org.osgi.core:1.4.0" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-tools:3.5.0" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-impl:3.5.0" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-parsers:3.5.0" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-oboformat:3.5.0" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-contract:3.5.0" level="project" />
     <orderEntry type="library" name="Maven: net.sourceforge.owlapi:jfact:1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: edu.stanford.protege:org.protege.xmlcatalog:1.0.3" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:org.protege.xmlcatalog:1.0.4" level="project" />
     <orderEntry type="library" name="Maven: xml-resolver:xml-resolver:1.2" level="project" />
-    <orderEntry type="library" name="Maven: com.jgoodies:forms:1.2.1" level="project" />
-    <orderEntry type="library" name="Maven: jdom:jdom:1.0" level="project" />
-    <orderEntry type="library" name="Maven: edu.stanford.protege:org.coode.owlviz:4.1.4" level="project" />
-    <orderEntry type="library" name="Maven: org.codehaus.groovy:groovy:1.8.3" level="project" />
-    <orderEntry type="library" name="Maven: antlr:antlr:2.7.7" level="project" />
-    <orderEntry type="library" name="Maven: asm:asm:3.2" level="project" />
-    <orderEntry type="library" name="Maven: asm:asm-commons:3.2" level="project" />
-    <orderEntry type="library" name="Maven: asm:asm-util:3.2" level="project" />
-    <orderEntry type="library" name="Maven: asm:asm-analysis:3.2" level="project" />
-    <orderEntry type="library" name="Maven: asm:asm-tree:3.2" level="project" />
-    <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.1" level="project" />
-    <orderEntry type="library" name="Maven: commons-io:commons-io:1.3.2" level="project" />
-    <orderEntry type="library" name="Maven: com.google.guava:guava:18.0" level="project" />
+    <orderEntry type="library" name="Maven: org.testng:testng:6.8.7" level="project" />
+    <orderEntry type="library" name="Maven: junit:junit:4.10" level="project" />
+    <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.beanshell:bsh:2.0b4" level="project" />
+    <orderEntry type="library" name="Maven: com.beust:jcommander:1.27" level="project" />
+    <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.12" level="project" />
+    <orderEntry type="library" name="Maven: com.mxgraph:jgraphx:3.7.5" level="project" />
   </component>
 </module>

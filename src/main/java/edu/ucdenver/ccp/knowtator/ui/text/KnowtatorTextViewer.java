@@ -1,7 +1,7 @@
 package edu.ucdenver.ccp.knowtator.ui.text;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.KnowtatorDocumentHandler;
+import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
 import org.apache.commons.io.FilenameUtils;
@@ -12,7 +12,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("PackageAccessibility")
@@ -45,12 +44,7 @@ public class KnowtatorTextViewer extends JTabbedPane implements AnnotationListen
         }
     }
 
-    public void addDocuments(List<String> articleFileNames, Boolean fromResources) {
-        for(String articleFileName: articleFileNames) {
-            addNewDocument(articleFileName, fromResources);
-        }
-    }
-
+    @SuppressWarnings("unused")
     public KnowtatorTextPane getTextPaneByName(String name) {
         for (int i = 0; i < getTabCount(); i++) {
             if (Objects.equals(getTitleAt(i), name)) {
@@ -60,6 +54,7 @@ public class KnowtatorTextViewer extends JTabbedPane implements AnnotationListen
         return null;
     }
 
+    @SuppressWarnings("unused")
     public ArrayList<KnowtatorTextPane> getAllTextPanes() {
         ArrayList<KnowtatorTextPane> textPanes = new ArrayList<>();
 
@@ -106,15 +101,8 @@ public class KnowtatorTextViewer extends JTabbedPane implements AnnotationListen
         }
     }
 
-
-
-    @Override
-    public void annotationsChanged() {
-        refreshHighlights();
-    }
-
     @Override
     public void annotationsChanged(Annotation annotation) {
-
+        refreshHighlights();
     }
 }

@@ -42,7 +42,7 @@ public final class AnnotationManager implements DocumentListener {
         textAnnotations.get(textSource).add(newAnnotation);
 
         setSelectedAnnotation(newAnnotation);
-        manager.annotationsChangedEvent();
+        manager.annotationsChangedEvent(newAnnotation);
     }
 
     public void addAnnotation(String textSource, Annotator annotator, String className, List<Span> spans) {
@@ -56,32 +56,16 @@ public final class AnnotationManager implements DocumentListener {
 
         // Add Annotation to Annotation manager
         textAnnotations.get(textSource).add(newAnnotation);
+
         setSelectedAnnotation(newAnnotation);
-
-        manager.annotationsChangedEvent();
+        manager.annotationsChangedEvent(newAnnotation);
     }
 
-    public void removeTextAnnotation(Integer spanStart, Integer spanEnd) {
-
-        for (Collection<Annotation> annotations : this.textAnnotations.values()) {
-            for (Annotation textAnnotation : annotations) {
-
-                for (Span span : textAnnotation.getSpans()) {
-                    if (Objects.equals(spanStart, span.getStart()) && Objects.equals(spanEnd, span.getEnd())) {
-                        annotations.remove(textAnnotation);
-                        return;
-                    }
-                }
-            }
-        }
-
-        manager.annotationsChangedEvent();
-    }
-
-    public void removeTextAnnotation(String textSource, Annotation textAnnotation) {
+    public void removeAnnotation(String textSource, Annotation textAnnotation) {
         textAnnotations.get(textSource).remove(textAnnotation);
 
-        manager.annotationsChangedEvent();
+        setSelectedAnnotation(null);
+        manager.annotationsChangedEvent(null);
     }
 
 
@@ -108,16 +92,18 @@ public final class AnnotationManager implements DocumentListener {
     }
 
     public AssertionRelationship addAssertion() {
-        OWLObjectProperty property = manager.getOwlWorkspace().getOWLSelectionModel().getLastSelectedObjectProperty();
+        OWLObjectProperty property = OWLAPIDataExtractor.getSelectedProperty(manager);
 
-        AssertionRelationship newAssertionRelationship = new AssertionRelationship(property, OWLAPIDataExtractor.getClassName(manager, property));
+        AssertionRelationship newAssertionRelationship = new AssertionRelationship(property, OWLAPIDataExtractor.getClassNameByOWLClass(manager, property));
         assertionRelationships.add(newAssertionRelationship);
         return newAssertionRelationship;
     }
 
     public void setSelectedAnnotation(Annotation selectedAnnotation) {
         this.selectedAnnotation = selectedAnnotation;
-        manager.owlSelectionChangedEvent(selectedAnnotation.getOwlClass());
+        if (selectedAnnotation != null) {
+            manager.owlSelectionChangedEvent(selectedAnnotation.getOwlClass());
+        }
         manager.annotationsChangedEvent(selectedAnnotation);
     }
 

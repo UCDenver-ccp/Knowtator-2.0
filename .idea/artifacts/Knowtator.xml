@@ -5,7 +5,7 @@
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
       </element>
-      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jgraphx-3.7.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/repo/com/mxgraph/jgraphx/3.7.5/jgraphx-3.7.5.jar" path-in-jar="/" />
       <element id="module-output" name="knowtator" />
       <element id="file-copy" path="$PROJECT_DIR$/pom.xml" />
       <element id="file-copy" path="$PROJECT_DIR$/protege.properties" />

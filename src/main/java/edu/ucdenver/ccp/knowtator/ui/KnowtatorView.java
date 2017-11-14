@@ -32,7 +32,7 @@ public class KnowtatorView extends BasicKnowtatorView {
          */
         infoPane = new InfoPane(manager);
         infoPane.setMinimumSize(new Dimension(20, 50));
-        manager.getAnnotationListeners().add(textViewer);
+        manager.getAnnotationListeners().add(infoPane);
 
         JSplitPane annotationSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         annotationSplitPane.setOneTouchExpandable(true);
