@@ -279,9 +279,9 @@ public class Annotation {
 		return String.format("Class Name: %s", className);
 	}
 
-    public Span getTextSpanInRange(int start, int end) {
+    public Span getSpanContainingLocation(int loc) {
 		for (Span span : spans) {
-			if (start >= span.getStart() && end <= span.getEnd()) {
+			if (loc >= span.getStart() && loc <= span.getEnd()) {
 				return span;
 			}
 		}
@@ -310,6 +310,15 @@ public class Annotation {
 
 	public void addAllSpans(List<Span> spans) {
 		this.spans.addAll(spans);
+	}
+
+	public void removeSpan(int selectionStart, int selectionEnd) {
+		for (Span span : spans) {
+			if (span.getStart() == selectionStart && span.getEnd() == selectionEnd) {
+				spans.remove(span);
+				return;
+			}
+		}
 	}
 
 //		public Set<String> getSimpleFeatureNames() {

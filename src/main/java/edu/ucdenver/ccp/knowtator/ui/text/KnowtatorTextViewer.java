@@ -76,19 +76,31 @@ public class KnowtatorTextViewer extends JTabbedPane implements AnnotationListen
     }
 
     public void refreshHighlights() {
-        KnowtatorTextPane textPane = getSelectedTextPane();
+        KnowtatorTextPane selectedTextPane = getSelectedTextPane();
 
-        textPane.getHighlighter().removeAllHighlights();
-
-        Collection<Annotation> annotations = manager.getAnnotationManager().getTextAnnotations().get(textPane.getName());
+        selectedTextPane.getHighlighter().removeAllHighlights();
+//TODO: Check for overlapping regions (highlight those in gray)
+        Collection<Annotation> annotations = manager.getAnnotationManager().getTextAnnotations().get(selectedTextPane.getName());
         if (annotations != null) {
-            for (Annotation annotation : annotations) {
-                Boolean selectAnnotation = annotation == manager.getAnnotationManager().selectedAnnotation;
-                annotation.getSpans().forEach(
-                        textSpan -> textPane.highlightAnnotation(textSpan.getStart(), textSpan.getEnd(), annotation.getClassName(), selectAnnotation)
+            Annotation selectedAnnotation = manager.getAnnotationManager().getSelectedAnnotation();
+
+            // Apply highlights to annotations. Make sure to highlight the selected annotation first.
+            if (selectedAnnotation != null) {
+                selectedAnnotation.getSpans().forEach(
+                        span -> selectedTextPane.highlightAnnotation(span.getStart(), span.getEnd(), selectedAnnotation.getClassName(), true)
                 );
             }
+            for (Annotation annotation : annotations) {
+                if (annotation != selectedAnnotation) {
+                    annotation.getSpans().forEach(
+                            span -> selectedTextPane.highlightAnnotation(span.getStart(), span.getEnd(), annotation.getClassName(), false)
+                    );
+                }
+            }
+
         }
+        selectedTextPane.revalidate();
+        selectedTextPane.repaint();
     }
 
     public void closeSelectedDocument() {

@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
 
+import javax.swing.*;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -84,7 +85,16 @@ public class OWLAPIDataExtractor {
         if (cls != null) {
             return getClassNameByOWLClass(manager, cls);
         } else {
-            log.error("No OWLClass selected");
+            log.warn("No OWLClass selected");
+            JTextField field1 = new JTextField();
+            Object[] message = {
+                    "Class name", field1,
+            };
+            int option = JOptionPane.showConfirmDialog(null, message, "Enter a name for this class", JOptionPane.OK_CANCEL_OPTION);
+            if (option == JOptionPane.OK_OPTION) {
+                return field1.getText();
+
+            }
             return null;
         }
     }

@@ -1,7 +1,6 @@
 package edu.ucdenver.ccp.knowtator.ui.info;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.annotation.annotator.Annotator;
 import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
 import edu.ucdenver.ccp.knowtator.annotation.text.AnnotationProperties;
 import edu.ucdenver.ccp.knowtator.annotation.text.Span;
@@ -21,7 +20,6 @@ public class InfoPane extends JPanel implements AnnotationListener, ActionListen
     private static Logger log = Logger.getLogger(KnowtatorManager.class);
 
     public KnowtatorManager manager;
-    public JLabel actionLabel;
 
 
     public InfoPane(KnowtatorManager manager) {
@@ -33,18 +31,14 @@ public class InfoPane extends JPanel implements AnnotationListener, ActionListen
         c.gridwidth = GridBagConstraints.REMAINDER; //last
         c.anchor = GridBagConstraints.WEST;
         c.weightx = 1.0;
-        actionLabel = new JLabel("Type text in a field and press Enter.");
-        actionLabel.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
-        add(actionLabel, c);
+
         setBorder(BorderFactory.createCompoundBorder(
                         BorderFactory.createTitledBorder("Annotation Info"),
                         BorderFactory.createEmptyBorder(5,5,5,5)));
-        displayInfo(new Annotation(manager, "hello.txt", new Annotator(manager, "yo", "boi"), "hey there"));
     }
 
     @Override
     public void annotationsChanged(Annotation annotation) {
-        log.warn("Should display here");
         displayInfo(annotation);
     }
 
@@ -124,9 +118,6 @@ public class InfoPane extends JPanel implements AnnotationListener, ActionListen
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String prefix = "You typed \"";
-        JTextField source = (JTextField)e.getSource();
-        actionLabel.setText(prefix + source.getText() + "\"");
     }
 
     public static void simpleTest() {

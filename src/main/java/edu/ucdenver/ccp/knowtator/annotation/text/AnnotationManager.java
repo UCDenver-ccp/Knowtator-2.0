@@ -79,11 +79,11 @@ public final class AnnotationManager implements DocumentListener {
         return selectedAnnotation;
     }
 
-    public List<Annotation> getAnnotationsInRange(String textSource, Integer start, Integer end) {
+    public List<Annotation> getAnnotationsContainingLocation(String textSource, Integer loc) {
         List<Annotation> annotationsInRange = new ArrayList<>();
 
         for (Annotation annotation : textAnnotations.get(textSource)) {
-            if (annotation.getTextSpanInRange(start, end) != null) {
+            if (annotation.getSpanContainingLocation(loc) != null) {
                 annotationsInRange.add(annotation);
             }
         }
@@ -114,5 +114,20 @@ public final class AnnotationManager implements DocumentListener {
 
     public Collection<Annotation> getTextAnnotations(String name) {
         return textAnnotations.get(name);
+    }
+
+    public void addSpanToSelectedAnnotation(int selectionStart, int selectionEnd) {
+        selectedAnnotation.addSpan(new Span(selectionStart, selectionEnd));
+        manager.annotationsChangedEvent(selectedAnnotation);
+    }
+
+    public void removeSpanFromSelectedAnnotation(int selectionStart, int selectionEnd) {
+        selectedAnnotation.removeSpan(selectionStart, selectionEnd);
+
+        if (selectedAnnotation.getSpans().size() == 0) {
+            textAnnotations.get(selectedAnnotation.getTextSource()).remove(selectedAnnotation);
+            selectedAnnotation = null;
+            manager.annotationsChangedEvent(null);
+        }
     }
 }

@@ -158,6 +158,6 @@ public class KnowtatorGraphViewer extends JPanel implements AnnotationListener {
 
     @Override
     public void annotationsChanged(Annotation annotation) {
-        addAnnotationNode(annotation);
+//        addAnnotationNode(annotation);
     }
 }

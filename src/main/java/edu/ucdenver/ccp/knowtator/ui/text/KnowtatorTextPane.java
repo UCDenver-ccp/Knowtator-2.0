@@ -12,6 +12,7 @@ import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Utilities;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
@@ -47,47 +48,47 @@ public class KnowtatorTextPane extends JTextPane {
 
 					@Override
 					public void mouseReleased(MouseEvent e) {
-						if(e.isPopupTrigger()) {
-							showPopUpMenu(e);
-						}
-						else {
 
-							release_offset = viewToModel(e.getPoint());
 
-							int start, end;
-							try {
+						release_offset = viewToModel(e.getPoint());
+
+						int start, end;
+						try {
+							if(e.isPopupTrigger()) {
+								showPopUpMenu(e, release_offset);
+							} else {
 								if (press_offset < release_offset) {
 
 									start = Utilities.getWordStart(textPane, press_offset);
 									end = Utilities.getWordEnd(textPane, release_offset);
-								} else {
+									textPane.setSelectionStart(start);
+									textPane.setSelectionEnd(end);
+								} else if (press_offset > release_offset) {
 									start = Utilities.getWordStart(textPane, release_offset);
 									end = Utilities.getWordEnd(textPane, press_offset);
-								}
+									textPane.setSelectionStart(start);
+									textPane.setSelectionEnd(end);
+								} else {
 
 
-								if(e.getClickCount() == 2) {
-									List<Annotation> selectedAnnotations = manager.getAnnotationManager().getAnnotationsInRange(getName(), start, end);
+									List<Annotation> selectedAnnotations = manager.getAnnotationManager().getAnnotationsContainingLocation(getName(), press_offset);
 									if (selectedAnnotations.size() == 1) {
 
-										Span selectedSpan = selectedAnnotations.get(0).getTextSpanInRange(start, end);
+										Span selectedSpan = selectedAnnotations.get(0).getSpanContainingLocation(press_offset);
 
 										textPane.setSelectionStart(selectedSpan.getStart());
 										textPane.setSelectionEnd(selectedSpan.getEnd());
 
 										manager.getAnnotationManager().setSelectedAnnotation(selectedAnnotations.get(0));
 
-									} else {
-										showPopUpMenu(e);
+									} else if (selectedAnnotations.size() > 1) {
+										showSelectAnnotationPopUpMenu(e, selectedAnnotations);
 									}
-								} else {
-									textPane.setSelectionStart(start);
-									textPane.setSelectionEnd(end);
 								}
-
-							} catch (BadLocationException e1) {
-								e1.printStackTrace();
 							}
+
+						} catch (BadLocationException e1) {
+							e1.printStackTrace();
 						}
 					}
 
@@ -104,7 +105,20 @@ public class KnowtatorTextPane extends JTextPane {
 		);
 	}
 
-	public void showPopUpMenu(MouseEvent e) {
+	private void showSelectAnnotationPopUpMenu(MouseEvent e, List<Annotation> selectedAnnotations) {
+		JPopupMenu popupMenu = new JPopupMenu();
+
+		// Menu items to select and remove annotations
+		for (Annotation a : selectedAnnotations) {
+			JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s", a.getClassName()));
+			selectAnnotationMenuItem.addActionListener(e3 -> manager.getAnnotationManager().setSelectedAnnotation(a));
+			popupMenu.add(selectAnnotationMenuItem);
+		}
+
+		popupMenu.show(e.getComponent(), e.getX(), e.getY());
+	}
+
+	public void showPopUpMenu(MouseEvent e, int releaseOffset) {
 		JPopupMenu popupMenu = new JPopupMenu();
 
 		// Menu item to create new Annotation
@@ -112,8 +126,19 @@ public class KnowtatorTextPane extends JTextPane {
 		annotateWithCurrentSelectedClass.addActionListener(e12 -> addTextAnnotation());
 		popupMenu.add(annotateWithCurrentSelectedClass);
 
+		if (manager.getAnnotationManager().getSelectedAnnotation() != null) {
+
+			if (getSelectionStart() != getSelectionEnd()) {
+				JMenuItem addSpanToSelectedAnnotation = new JMenuItem("Add span to selected annotation");
+				addSpanToSelectedAnnotation.addActionListener(e4 -> addSpan());
+				popupMenu.add(addSpanToSelectedAnnotation);
+
+				JMenuItem removeSpanFromSelectedAnnotation = new JMenuItem("Remove span from selected annotation");
+				removeSpanFromSelectedAnnotation.addActionListener(e5 -> removeSpan());
+			}
+		}
 		// Menu items to select and remove annotations
-		for (Annotation a : manager.getAnnotationManager().getAnnotationsInRange(getName(), getSelectionStart(), getSelectionEnd())) {
+		for (Annotation a : manager.getAnnotationManager().getAnnotationsContainingLocation(getName(), releaseOffset)) {
 			JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s", a.getClassName()));
 			selectAnnotationMenuItem.addActionListener(e3 -> manager.getAnnotationManager().setSelectedAnnotation(a));
 			popupMenu.add(selectAnnotationMenuItem);
@@ -126,23 +151,38 @@ public class KnowtatorTextPane extends JTextPane {
 		popupMenu.show(e.getComponent(), e.getX(), e.getY());
 	}
 
+	private void removeSpan() {
+		manager.getAnnotationManager().removeSpanFromSelectedAnnotation(getSelectionStart(), getSelectionEnd());
+	}
+
+	private void addSpan() {
+		manager.getAnnotationManager().addSpanToSelectedAnnotation(getSelectionStart(), getSelectionEnd());
+	}
+
 	public void addTextAnnotation() {
 		manager.getAnnotationManager().addAnnotation(getName(), OWLAPIDataExtractor.getSelectedClassName(manager), getSelectionStart(), getSelectionEnd());
 	}
 
 	public void highlightAnnotation(int spanStart, int spanEnd, String className, Boolean selectAnnotation) {
-		DefaultHighlighter.DefaultHighlightPainter highlighter = manager.getAnnotatorManager().getCurrentAnnotator().getHighlighter(className);
-		if (selectAnnotation) {
-			if (highlighter != null) {
-				highlighter = new RectanglePainter(highlighter.getColor().darker());
-			}
-		}
 
+		DefaultHighlighter.DefaultHighlightPainter highlighter = manager.getAnnotatorManager().getCurrentAnnotator().getHighlighter(className);
 		try {
 			getHighlighter().addHighlight(spanStart, spanEnd, highlighter);
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
+
+		if (selectAnnotation) {
+			try {
+				getHighlighter().addHighlight(spanStart, spanEnd, new RectanglePainter(Color.BLACK));
+			} catch (BadLocationException e) {
+				e.printStackTrace();
+			}
+
+		}
+
+
+
 	}
 
 }

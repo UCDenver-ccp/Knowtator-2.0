@@ -1,5 +1,7 @@
 package other;
 
+import org.apache.log4j.Logger;
+
 import javax.swing.text.*;
 import java.awt.*;
 
@@ -8,8 +10,10 @@ import java.awt.*;
  *  area to be highlighted.
  *
  */
-public class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter
-{
+public class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {
+
+	public static Logger log = Logger.getLogger(RectanglePainter.class);
+
 	public RectanglePainter(Color color)
 	{
 		super( color );
@@ -37,6 +41,8 @@ public class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter
 
 		Color color = getColor();
 		g.setColor(color == null ? c.getSelectionColor() : color);
+
+		((Graphics2D) g).setStroke(new BasicStroke(8));
 
 		//  Code is the same as the default highlighter except we use drawRect(...)
 
