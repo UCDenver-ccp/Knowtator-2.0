@@ -29,41 +29,67 @@ public class KnowtatorTextViewer extends JTabbedPane implements AnnotationListen
         this.manager = manager;
     }
 
-    public void addNewDocument(String textSource, String text) {
+    public void addNewDocument(String title, String text) {
         KnowtatorTextPane textPane = new KnowtatorTextPane(manager);
-        textPane.setName(FilenameUtils.getBaseName(textSource));
+        textPane.setName(title);
+        textPane.setText(text);
         manager.documentChangedEvent(textPane);
 
         JScrollPane sp = new JScrollPane(textPane);
-        if (getTabCount() == 1 && getTitleAt(0).equals("Untitled")) {
-            setComponentAt(0, sp);
-        } else {
-            add(sp);
-        }
-        setTitleAt(getTabCount() - 1, FilenameUtils.getBaseName(textSource));
-
-        textPane.setText(text);
+        addTab(sp, title);
     }
 
     public void addNewDocument(String fileName, Boolean fromResources) {
-        KnowtatorTextPane textPane = new KnowtatorTextPane(manager);
-        textPane.setName(FilenameUtils.getBaseName(fileName));
-        manager.documentChangedEvent(textPane);
 
-        JScrollPane sp = new JScrollPane(textPane);
-        if (getTabCount() == 1 && getTitleAt(0).equals("Untitled")) {
-            setComponentAt(0, sp);
-        } else {
-            add(sp);
-        }
-        setTitleAt(getTabCount() - 1, FilenameUtils.getBaseName(fileName));
+        String title = FilenameUtils.getBaseName(fileName);
+        KnowtatorTextPane textPane = new KnowtatorTextPane(manager);
+        textPane.setName(title);
+        manager.documentChangedEvent(textPane);
 
         try {
             textPane.read(KnowtatorDocumentHandler.getReader(fileName, fromResources), fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        manager.documentChangedEvent(textPane);
+
+        JScrollPane sp = new JScrollPane(textPane);
+        addTab(sp, title);
     }
+
+    public void addTab(Component c, String title) {
+
+
+        addTab(title, c);
+
+        int index = indexOfTab(title);
+        JPanel pnlTab = new JPanel(new GridBagLayout());
+        pnlTab.setOpaque(false);
+        JLabel lblTitle = new JLabel(title);
+        JButton btnClose = new JButton("x");
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1;
+
+        pnlTab.add(lblTitle, gbc);
+
+        gbc.gridx++;
+        gbc.weightx = 0;
+        pnlTab.add(btnClose, gbc);
+
+        setTabComponentAt(index, pnlTab);
+
+        KnowtatorTextViewer tabPane = this;
+
+        btnClose.addActionListener(evt -> tabPane.remove(c));
+
+
+    }
+
+
 
     @SuppressWarnings("unused")
     public KnowtatorTextPane getTextPaneByName(String name) {
@@ -103,7 +129,7 @@ public class KnowtatorTextViewer extends JTabbedPane implements AnnotationListen
         KnowtatorTextPane selectedTextPane = getSelectedTextPane();
         if (selectedTextPane != null) {
             selectedTextPane.getHighlighter().removeAllHighlights();
-//TODO: Check for overlapping regions (highlight those in gray)
+
             Collection<Annotation> annotations = manager.getAnnotationManager().getTextAnnotations().get(selectedTextPane.getName());
 
 
@@ -168,17 +194,6 @@ public class KnowtatorTextViewer extends JTabbedPane implements AnnotationListen
             } catch (BadLocationException e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-
-    public void closeSelectedDocument() {
-
-        if (getTabCount() > 1) {
-            remove(getSelectedIndex());
-        } else {
-            setComponentAt(0, new KnowtatorTextPane(manager));
-            setTitleAt(0, "Untitled");
         }
     }
 

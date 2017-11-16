@@ -21,6 +21,11 @@ public class KnowtatorView extends BasicKnowtatorView {
         setLayout(new BorderLayout());
 
         /*
+        Make the toolbar seen at the top of the view
+         */
+        createToolBar();
+
+        /*
         Create a tabbed pane containing the text viewer for each document
          */
         textViewer = new KnowtatorTextViewer(manager);
@@ -38,6 +43,7 @@ public class KnowtatorView extends BasicKnowtatorView {
         annotationSplitPane.setOneTouchExpandable(true);
         annotationSplitPane.add(textViewer);
         annotationSplitPane.add(infoPane);
+        annotationSplitPane.setDividerLocation(800);
 
 
         /*
@@ -49,20 +55,16 @@ public class KnowtatorView extends BasicKnowtatorView {
 
         JSplitPane mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         mainSplitPane.setOneTouchExpandable(true);
-        add(mainSplitPane);
+
+        add(mainSplitPane, BorderLayout.CENTER);
         mainSplitPane.add(annotationSplitPane);
         mainSplitPane.add(graphViewer);
         mainSplitPane.setDividerLocation(300);
 
-        /*
-        Make the toolbar seen at the top of the view
-         */
-        createToolBar();
+
     }
 
-    /**
-     * TODO make initial document the last document that was edited
-     */
+
     public void setupInitial() {
         manager.getXmlUtil().read("file/test_project.xml", true);
     }
@@ -72,51 +74,46 @@ public class KnowtatorView extends BasicKnowtatorView {
      */
     public void createToolBar() {
         ProjectCommands projectCommands = new ProjectCommands(manager);
-        DocumentCommands documentCommands = new DocumentCommands(manager);
         AnnotatorCommands annotatorCommands = new AnnotatorCommands(manager);
         GraphCommands graphCommands = new GraphCommands(manager);
         IAACommands iaaCommands = new IAACommands(manager);
         TextCommands textCommands = new TextCommands(manager);
 
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(projectCommands.getFileMenu());
+        add(menuBar, BorderLayout.NORTH);
 
-        /*
-        Project related actions
-         */
-        addAction(projectCommands.getSaveProjectCommand(), "A", "A");
+//        addAction(projectCommands.getFileMenuCommand(), "A", "A");
 
-        /*
-        Text document related actions
-         */
-        addAction(documentCommands.openDocumentCommand(), "B", "A");
-        addAction(documentCommands.getCloseDocumentCommand(), "B", "B");
 
-        addAction(textCommands.getIncreaseTextSizeCommand(), "B", "C");
-        addAction(textCommands.getDecreaseTextSizeCommand(), "B", "D");
+
+//        addAction(textCommands.getIncreaseTextSizeCommand(), "B", "C");
+//        addAction(textCommands.getDecreaseTextSizeCommand(), "B", "D");
 
         /*
         Text Annotation related actions
          */
-        addAction(documentCommands.getLoadTextAnnotationsCommand(), "C", "A");
+//        addAction(projectCommands.getLoadAnnotationsCommand(), "C", "A");
 
-        addAction(iaaCommands.getRunIAACommand(), "C", "C");
+//        addAction(iaaCommands.getRunIAACommand(), "C", "C");
 
-        addAction(textCommands.getIncrementSelectionLeftCommand(), "C", "F");
-        addAction(textCommands.getDecrementSelectionLeftCommand(), "C", "G");
-        addAction(textCommands.getDecrementSelectionRightCommand(), "c", "H");
-        addAction(textCommands.getIncrementSelectionRightCommand(), "C", "I");
+//        addAction(textCommands.getIncrementSelectionLeftCommand(), "C", "F");
+//        addAction(textCommands.getDecrementSelectionLeftCommand(), "C", "G");
+//        addAction(textCommands.getDecrementSelectionRightCommand(), "C", "H");
+//        addAction(textCommands.getIncrementSelectionRightCommand(), "C", "I");
 
         /*
         Annotator and highlighter related commands
          */
-        addAction(annotatorCommands.getNewAnnotatorCommand(), "D", "A");
-        addAction(annotatorCommands.getSwitchProfileCommand(), "D", "B");
-        addAction(annotatorCommands.getRemoveAnnotatorCommand(), "D", "C");
-        addAction(annotatorCommands.getAssignHighlighterCommand(), "D", "D");
+//        addAction(annotatorCommands.getNewAnnotatorCommand(), "D", "A");
+//        addAction(annotatorCommands.getSwitchProfileCommand(), "D", "B");
+//        addAction(annotatorCommands.getRemoveAnnotatorCommand(), "D", "C");
+//        addAction(annotatorCommands.getAssignHighlighterCommand(), "D", "D");
 
         /*
         Graph Viewer related commands
          */
-        addAction(graphCommands.getAddTextAnnotationNodeCommand(), "E", "A");
+//        addAction(graphCommands.getAddTextAnnotationNodeCommand(), "E", "A");
     }
 
     public static void main(String[] args) {
