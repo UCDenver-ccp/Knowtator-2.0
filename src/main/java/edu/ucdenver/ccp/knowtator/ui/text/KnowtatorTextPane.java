@@ -165,7 +165,7 @@ public class KnowtatorTextPane extends JTextPane {
 
 	public void highlightAnnotation(int spanStart, int spanEnd, String className, Boolean selectAnnotation) {
 
-		DefaultHighlighter.DefaultHighlightPainter highlighter = manager.getAnnotatorManager().getCurrentAnnotator().getHighlighter(className);
+		DefaultHighlighter.DefaultHighlightPainter highlighter = new DefaultHighlighter.DefaultHighlightPainter(manager.getAnnotatorManager().getCurrentAnnotator().getColor(className));
 		try {
 			getHighlighter().addHighlight(spanStart, spanEnd, highlighter);
 		} catch (BadLocationException e) {

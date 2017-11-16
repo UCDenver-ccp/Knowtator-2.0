@@ -48,34 +48,36 @@ public class InfoPane extends JPanel implements AnnotationListener, ActionListen
 
         List<List<JComponent>> annotationComponents = new ArrayList<>();
 
-        String name;
-        String content;
-        // **********************************Meta Data*********************************
-        // Annotator field
-        name = AnnotationProperties.ANNOTATOR;
-        content = annotation.getAnnotator().getName();
-        annotationComponents.add(addLabel(name, content));
-
-        // Text Source field
-        name = AnnotationProperties.TEXT_SOURCE;
-        content = annotation.getTextSource();
-        annotationComponents.add(addLabel(name, content));
-
-        // TODO: Date field
-
-        // **********************************SPANS*********************************
-        for (Span span : annotation.getSpans()) {
-            // Span Start field
-            name = AnnotationProperties.SPAN_START;
-            content = Integer.toString(span.getStart());
+        if(annotation != null) {
+            String name;
+            String content;
+            // **********************************Meta Data*********************************
+            // Annotator field
+            name = AnnotationProperties.ANNOTATOR;
+            content = annotation.getAnnotator().getName();
             annotationComponents.add(addLabel(name, content));
 
-            // Span End field
-            name = AnnotationProperties.SPAN_END;
-            content = Integer.toString(span.getEnd());
+            // Text Source field
+            name = AnnotationProperties.TEXT_SOURCE;
+            content = annotation.getTextSource();
             annotationComponents.add(addLabel(name, content));
+
+            // TODO: Date field
+
+            // **********************************SPANS*********************************
+            for (Span span : annotation.getSpans()) {
+                // Span Start field
+                name = AnnotationProperties.SPAN_START;
+                content = Integer.toString(span.getStart());
+                annotationComponents.add(addLabel(name, content));
+
+                // Span End field
+                name = AnnotationProperties.SPAN_END;
+                content = Integer.toString(span.getEnd());
+                annotationComponents.add(addLabel(name, content));
+            }
+            addLabelTextRows(annotationComponents);
         }
-        addLabelTextRows(annotationComponents);
         this.revalidate();
         this.repaint();
     }

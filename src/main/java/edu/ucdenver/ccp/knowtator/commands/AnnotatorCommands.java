@@ -28,10 +28,10 @@ public class AnnotatorCommands {
                 OWLClass selectedClass = OWLAPIDataExtractor.getSelectedClass(manager);
 
                 Annotator currentAnnotator = manager.getAnnotatorManager().getCurrentAnnotator();
-                currentAnnotator.getHighlighter(OWLAPIDataExtractor.getClassNameByOWLClass(manager, selectedClass));
+                currentAnnotator.getColor(OWLAPIDataExtractor.getClassNameByOWLClass(manager, selectedClass));
 
                 for(OWLClass decendent: OWLAPIDataExtractor.getDecendents(manager, selectedClass)) {
-                    currentAnnotator.getHighlighter(OWLAPIDataExtractor.getClassNameByOWLClass(manager, decendent));
+                    currentAnnotator.getColor(OWLAPIDataExtractor.getClassNameByOWLClass(manager, decendent));
                 }
             }
 

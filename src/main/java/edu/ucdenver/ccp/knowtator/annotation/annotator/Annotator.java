@@ -4,7 +4,6 @@ import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
-import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
 import java.util.HashMap;
 
@@ -13,7 +12,7 @@ public class Annotator {
 
     public String name;
     public String id;
-    public HashMap<String, DefaultHighlighter.DefaultHighlightPainter>  highlighters;  //<ClassName, Highlighter>
+    public HashMap<String, Color> colors;  //<ClassName, Highlighter>
     public KnowtatorManager manager;
 
     public String getName() {
@@ -25,34 +24,33 @@ public class Annotator {
         this.id = id;
         this.manager = manager;
 
-        highlighters = new HashMap<>();
+        colors = new HashMap<>();
 
         log.warn(String.format("%1$-30s %2$30s", "Annotator", toString()));
     }
 
-    public DefaultHighlighter.DefaultHighlightPainter getHighlighter(String className) {
-        if (highlighters.containsKey(className)) {
-            return highlighters.get(className);
+    public Color getColor(String className) {
+        if (colors.containsKey(className)) {
+            return colors.get(className);
         } else {
             Color c = JColorChooser.showDialog(null, String.format("Pick a color for %s", className), Color.CYAN);
             if (c != null) {
-                addHighlighter(className, c);
+                addColor(className, c);
             }
-            return highlighters.get(className);
+            return colors.get(className);
         }
 
     }
 
-    public void addHighlighter(String className, String color) {
+    public void addColor(String className, String color) {
         Color c = Color.decode(color);
         c = new Color((float) c.getRed()/255, (float)c.getGreen()/255, (float)c.getBlue()/255, 1f);
 
-        addHighlighter(className, c);
+        colors.put(className, c);
     }
 
-    public void addHighlighter(String className, Color c) {
-        DefaultHighlighter.DefaultHighlightPainter newHighlighter = new DefaultHighlighter.DefaultHighlightPainter(c);
-        highlighters.put(className, newHighlighter);
+    public void addColor(String className, Color c) {
+        colors.put(className, c);
 
     }
 

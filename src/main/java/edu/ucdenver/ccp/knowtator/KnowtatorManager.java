@@ -64,7 +64,7 @@ public class KnowtatorManager implements OwlSelectionListener {
 
     public void initManagers() {
         annotationManager = new AnnotationManager(this);
-        annotatorManager = new AnnotatorManager(this);  //manipulates annotatorMap and highlighters
+        annotatorManager = new AnnotatorManager(this);  //manipulates annotatorMap and colors
         xmlUtil = new XmlUtil(this);  //reads and writes to XML
     }
 

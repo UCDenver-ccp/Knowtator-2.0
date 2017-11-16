@@ -109,7 +109,7 @@ public class XmlReader {
                 String className = highlighterElement.getElementsByTagName(XmlTags.CLASS_NAME).item(0).getTextContent();
                 String color = highlighterElement.getElementsByTagName(XmlTags.COLOR).item(0).getTextContent();
 
-                newAnnotator.addHighlighter(className, color);
+                newAnnotator.addColor(className, color);
             }
         }
     }

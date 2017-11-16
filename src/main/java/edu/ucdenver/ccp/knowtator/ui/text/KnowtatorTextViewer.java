@@ -3,16 +3,21 @@ package edu.ucdenver.ccp.knowtator.ui.text;
 import edu.ucdenver.ccp.knowtator.KnowtatorDocumentHandler;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.text.Span;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+import other.RectanglePainter;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
+import java.util.List;
+
+import static java.lang.Math.min;
 
 @SuppressWarnings("PackageAccessibility")
 public class KnowtatorTextViewer extends JTabbedPane implements AnnotationListener {
@@ -81,27 +86,71 @@ public class KnowtatorTextViewer extends JTabbedPane implements AnnotationListen
         selectedTextPane.getHighlighter().removeAllHighlights();
 //TODO: Check for overlapping regions (highlight those in gray)
         Collection<Annotation> annotations = manager.getAnnotationManager().getTextAnnotations().get(selectedTextPane.getName());
+
+
         if (annotations != null) {
             Annotation selectedAnnotation = manager.getAnnotationManager().getSelectedAnnotation();
-
-            // Apply highlights to annotations. Make sure to highlight the selected annotation first.
             if (selectedAnnotation != null) {
-                selectedAnnotation.getSpans().forEach(
-                        span -> selectedTextPane.highlightAnnotation(span.getStart(), span.getEnd(), selectedAnnotation.getClassName(), true)
-                );
+                highlightSelectedAnnotation(selectedTextPane, selectedAnnotation);
             }
-            for (Annotation annotation : annotations) {
-                if (annotation != selectedAnnotation) {
-                    annotation.getSpans().forEach(
-                            span -> selectedTextPane.highlightAnnotation(span.getStart(), span.getEnd(), annotation.getClassName(), false)
-                    );
+
+            // Create a map that is ordered by start of span
+            Map<List<Integer>, Color> spanMap = new TreeMap<>((o1, o2) -> {
+                int firstCompare = o1.get(0).compareTo(o2.get(0));
+                if (firstCompare == 0) {
+                    return o1.get(1).compareTo(o2.get(1));
                 }
+                return firstCompare;
+            });
+
+            // Accumulate all spans
+            for (Annotation annotation : annotations) {
+                for (Span span : annotation.getSpans()) {
+                    spanMap.put(Arrays.asList(span.getStart(), span.getEnd()), annotation.getAnnotator().getColor(annotation.getClassName()));
+                }
+            }
+
+            // Highlight overlaps first, then spans
+            List<Integer> lastSpan = Arrays.asList(0, 0);
+            Color lastColor = Color.WHITE;
+            for(List<Integer> span : spanMap.keySet())  {
+                if (span.get(0) >= lastSpan.get(0) && span.get(0) <= lastSpan.get(1)) {
+                    try {
+                        selectedTextPane.getHighlighter().addHighlight(span.get(0), min(span.get(1), lastSpan.get(1)), new DefaultHighlighter.DefaultHighlightPainter(Color.GRAY));
+                    } catch (BadLocationException e) {
+                        e.printStackTrace();
+                    }
+                }
+                try {
+                    selectedTextPane.getHighlighter().addHighlight(lastSpan.get(0), lastSpan.get(1), new DefaultHighlighter.DefaultHighlightPainter(lastColor));
+                } catch (BadLocationException e) {
+                    e.printStackTrace();
+                }
+                lastSpan = span;
+                lastColor = spanMap.get(span);
+            }
+            // Highlight remaining span
+            try {
+                selectedTextPane.getHighlighter().addHighlight(lastSpan.get(0), lastSpan.get(1), new DefaultHighlighter.DefaultHighlightPainter(lastColor));
+            } catch (BadLocationException e) {
+                e.printStackTrace();
             }
 
         }
         selectedTextPane.revalidate();
         selectedTextPane.repaint();
     }
+
+    private void highlightSelectedAnnotation(KnowtatorTextPane textPane, Annotation annotation) {
+        for (Span span : annotation.getSpans()) {
+            try {
+                textPane.getHighlighter().addHighlight(span.getStart(), span.getEnd(), new RectanglePainter(Color.BLACK));
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     public void closeSelectedDocument() {
 
