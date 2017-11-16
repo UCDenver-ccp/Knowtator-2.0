@@ -6,13 +6,10 @@ import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
 import edu.ucdenver.ccp.knowtator.annotation.text.Span;
 import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
 import org.apache.log4j.Logger;
-import other.RectanglePainter;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Utilities;
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
@@ -162,27 +159,4 @@ public class KnowtatorTextPane extends JTextPane {
 	public void addTextAnnotation() {
 		manager.getAnnotationManager().addAnnotation(getName(), OWLAPIDataExtractor.getSelectedClassName(manager), getSelectionStart(), getSelectionEnd());
 	}
-
-	public void highlightAnnotation(int spanStart, int spanEnd, String className, Boolean selectAnnotation) {
-
-		DefaultHighlighter.DefaultHighlightPainter highlighter = new DefaultHighlighter.DefaultHighlightPainter(manager.getAnnotatorManager().getCurrentAnnotator().getColor(className));
-		try {
-			getHighlighter().addHighlight(spanStart, spanEnd, highlighter);
-		} catch (BadLocationException e) {
-			e.printStackTrace();
-		}
-
-		if (selectAnnotation) {
-			try {
-				getHighlighter().addHighlight(spanStart, spanEnd, new RectanglePainter(Color.BLACK));
-			} catch (BadLocationException e) {
-				e.printStackTrace();
-			}
-
-		}
-
-
-
-	}
-
 }

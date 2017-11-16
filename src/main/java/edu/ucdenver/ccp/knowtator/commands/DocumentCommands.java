@@ -73,24 +73,6 @@ public class DocumentCommands {
             }
         };
     }
-
-    public KnowtatorCommand getSaveTextAnnotationsCommand() {
-        return new KnowtatorCommand(manager, "Save", KnowtatorIcons.SAVE_ANNOTATIONS_ICON, "Save annotations") {
-
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setCurrentDirectory(new File(manager.getConfigProperties().getDefaultSaveLocation()));
-                FileFilter fileFilter = new FileNameExtensionFilter(manager.getConfigProperties().getFormat().toUpperCase(), manager.getConfigProperties().getFormat());
-                fileChooser.setFileFilter(fileFilter);
-
-                if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    manager.getXmlUtil().write(fileChooser.getSelectedFile().getAbsolutePath());
-                }
-            }
-        };
-    }
 }
 
 

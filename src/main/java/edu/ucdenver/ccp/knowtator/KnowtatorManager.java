@@ -11,12 +11,12 @@ import edu.ucdenver.ccp.knowtator.owl.OntologyTranslator;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
 import edu.ucdenver.ccp.knowtator.ui.text.KnowtatorTextPane;
 import org.apache.log4j.Logger;
-import org.protege.editor.owl.OWLEditorKit;
-import org.protege.editor.owl.OWLEditorKitFactory;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.OWLModelManagerImpl;
 import org.protege.editor.owl.model.OWLWorkspace;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -154,11 +154,6 @@ public class KnowtatorManager implements OwlSelectionListener {
     }
 
     @Override
-    public void owlClassSelectionChanged(OWLClass cls) {
-
-    }
-
-    @Override
     public void owlEntitySelectionChanged(OWLEntity owlEntity) {
         if (view != null) {
             if (view.getView() != null) {
@@ -175,23 +170,11 @@ public class KnowtatorManager implements OwlSelectionListener {
 
     public static void main(String[] args) {
         KnowtatorManager manager = new KnowtatorManager();
-        try {
-            manager.simpleTestWithOnotlogy();
-        } catch (OWLOntologyCreationException e) {
-            e.printStackTrace();
-        }
+        manager.simpleTest();
     }
 
     public void simpleTest() {
         getXmlUtil().read("file/test_annotations.xml", true);
-        getXmlUtil().write(configProperties.getDefaultSaveLocation() + "test_annotation_output.xml");
     }
 
-    public void simpleTestWithOnotlogy() throws OWLOntologyCreationException {
-        String goLoc = "http://purl.obolibrary.org/obo/go/go-basic.obo";
-
-        OWLEditorKitFactory owlEditorKitFactory = new OWLEditorKitFactory();
-//        OWLEditorKit owlEditorKit = owlEditorKitFactory.createEditorKit();
-        simpleTest();
-    }
 }

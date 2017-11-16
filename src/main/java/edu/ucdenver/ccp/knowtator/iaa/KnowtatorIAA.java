@@ -130,28 +130,27 @@ public class KnowtatorIAA {
 	}
 
 
-	@SuppressWarnings("SameParameterValue")
-	private static int convertMatchSpans(String matchSpans) throws IAAException {
-		switch (matchSpans) {
-			case "SpansMatchExactly":
-				return Annotation.SPANS_EXACT_COMPARISON;
-			case "SpansOverlap":
-				return Annotation.SPANS_OVERLAP_COMPARISON;
-			case "IgnoreSpans":
-				return Annotation.IGNORE_SPANS_COMPARISON;
-			default:
-				throw new IAAException(
-						"Span match criteria of slot matcher must be one of SpansMatchExactly, SpansOverlap, or IgnoreSpans");
-		}
-	}
+//	@SuppressWarnings("SameParameterValue")
+//	private static int convertMatchSpans(String matchSpans) throws IAAException {
+//		switch (matchSpans) {
+//			case "SpansMatchExactly":
+//				return Annotation.SPANS_EXACT_COMPARISON;
+//			case "SpansOverlap":
+//				return Annotation.SPANS_OVERLAP_COMPARISON;
+//			case "IgnoreSpans":
+//				return Annotation.IGNORE_SPANS_COMPARISON;
+//			default:
+//				throw new IAAException(
+//						"Span match criteria of slot matcher must be one of SpansMatchExactly, SpansOverlap, or IgnoreSpans");
+//		}
+//	}
 //
 //	public static FeatureMatcher createFeatureMatcher(String matcherName) throws IAAException {
 //		FeatureMatcher featureMatcher = new FeatureMatcher(matcherName);
 //
-//		//TODO: Provide matchClasses option
 //		featureMatcher.setMatchClasses(true);
 //
-//		//TODO: Provide options for how to match spans
+
 //		featureMatcher.setMatchSpans(convertMatchSpans("SpansMatchExactly"));
 
 
@@ -394,8 +393,6 @@ public class KnowtatorIAA {
 
 		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin/11604102.txt.knowtator.xml", true);
 		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin+Mike/11604102.txt.knowtator.xml", true);
-
-		manager.getXmlUtil().write(String.format("%s %s", manager.getConfigProperties().getDefaultSaveLocation(), "11319941.txt.knowtator2.xml"));
 
 		try {
 			KnowtatorIAA knowtatorIAA = new KnowtatorIAA(new File(manager.getConfigProperties().getDefaultSaveLocation()), manager);

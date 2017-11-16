@@ -6,12 +6,15 @@ import java.net.URL;
 import java.util.HashMap;
 
 public class KnowtatorIcons {
+    public static final String RELATIVE_PATH = "/icon/";
+
+    public static final Integer MENU_ITEM_WIDTH = 20;
+    public static final Integer MENU_ITEM_HEIGHT = 20;
+    public static final String UGLY_ICON = "";
+
     public static final String OPEN_DOCUMENT_ICON = "icons8-TXT.png";
     public static final String CLOSE_DOCUMENT_ICON = "icons8-Close Window-48.png";
     public static final String LOAD_ANNOTATIONS_ICON = "icons8-XML-48.png";
-    public static final String ADD_TEXT_ANNOTATION_ICON = "icons8-Create.png";
-    public static final String REMOVE_TEXT_ANNOTATION_ICON = "icons8-Trash Can.png";
-    public static final String SAVE_ANNOTATIONS_ICON = "icons8-Save.png";
     public static final String NEW_ANNOTATOR_ICON = "icons8-Edit Profile.png";
     public static final String NEW_HIGHLIGHTER_ICON = "icons8-Paint Palette-48.png";
     public static final String SWITCH_PROFILE_ICON = "icons8-User-48.png";
@@ -21,14 +24,8 @@ public class KnowtatorIcons {
     public static final String INCREMENT_LEFT = "icons8-Last-48.png";
     public static final String RUN_IAA_ICON = "icons8-Exchange-48.png";
     public static final String SHOW_NODE_ICON = "ShowClassIcon.png";
-
-    public static final String UGLY_ICON = "";
-
-    public static final String RELATIVE_PATH = "/icon/";
-
-    public static final Integer MENU_ITEM_WIDTH = 20;
-    public static final Integer MENU_ITEM_HEIGHT = 20;
     public static final String REMOVE_ANNOTATOR_ICON = "remove_annotatorICON.png";
+    public static final String SAVE_PROJECT_ICON = "icons8-Save.png";
 
 
     public static HashMap<String, ImageIcon> iconMap = new HashMap<>();

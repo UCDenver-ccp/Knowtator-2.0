@@ -42,7 +42,7 @@ public class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter
 		Color color = getColor();
 		g.setColor(color == null ? c.getSelectionColor() : color);
 
-		((Graphics2D) g).setStroke(new BasicStroke(8));
+		((Graphics2D) g).setStroke(new BasicStroke(4));
 
 		//  Code is the same as the default highlighter except we use drawRect(...)
 

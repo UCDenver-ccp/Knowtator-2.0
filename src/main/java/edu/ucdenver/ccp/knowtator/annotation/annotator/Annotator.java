@@ -61,4 +61,8 @@ public class Annotator {
     public String toString() {
         return String.format("Name: %s, ID: %s", name, id);
     }
+
+    public HashMap<String, Color> getColors() {
+        return colors;
+    }
 }

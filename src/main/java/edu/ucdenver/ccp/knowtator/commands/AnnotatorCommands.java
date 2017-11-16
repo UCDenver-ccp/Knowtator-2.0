@@ -10,6 +10,7 @@ import other.ListDialog;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
 
 public class AnnotatorCommands {
 
@@ -35,7 +36,6 @@ public class AnnotatorCommands {
                 }
             }
 
-            //TODO removeProfile
         };
     }
 
@@ -55,17 +55,30 @@ public class AnnotatorCommands {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                JTextField field1 = new JTextField();
-                JTextField field2 = new JTextField();
-                Object[] message = {
-                        "Annotator name", field1,
-                        "Annotator ID", field2,
-                };
-                int option = JOptionPane.showConfirmDialog(null, message, "Enter annotator name and ID", JOptionPane.OK_CANCEL_OPTION);
-                if (option == JOptionPane.OK_OPTION) {
-                    String annotator = field1.getText();
-                    String annotatorID = field2.getText();
-                    manager.getAnnotatorManager().addNewAnnotator(annotator, annotatorID);
+                int dialogResult = JOptionPane.showConfirmDialog (null, "Load profile from file(xml)?","New profile", JOptionPane.YES_NO_CANCEL_OPTION);
+                if(dialogResult == JOptionPane.YES_OPTION) {
+                    JFileChooser fileChooser = new JFileChooser();
+                    fileChooser.setCurrentDirectory(new File(manager.getConfigProperties().getDefaultSaveLocation()));
+
+                    if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                        manager.getXmlUtil().read(fileChooser.getSelectedFile().getAbsolutePath(), false);
+                    }
+
+                } else if (dialogResult == JOptionPane.NO_OPTION) {
+
+
+                    JTextField field1 = new JTextField();
+                    JTextField field2 = new JTextField();
+                    Object[] message = {
+                            "Annotator name", field1,
+                            "Annotator ID", field2,
+                    };
+                    int option = JOptionPane.showConfirmDialog(null, message, "Enter annotator name and ID", JOptionPane.OK_CANCEL_OPTION);
+                    if (option == JOptionPane.OK_OPTION) {
+                        String annotator = field1.getText();
+                        String annotatorID = field2.getText();
+                        manager.getAnnotatorManager().addNewAnnotator(annotator, annotatorID);
+                    }
                 }
 
             }

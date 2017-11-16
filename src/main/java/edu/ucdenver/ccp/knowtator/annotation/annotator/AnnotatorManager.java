@@ -54,4 +54,8 @@ public class AnnotatorManager {
             annotatorMap.remove(annotatorName);
         }
     }
+
+    public Map<String, Annotator> getAnnotators() {
+        return annotatorMap;
+    }
 }

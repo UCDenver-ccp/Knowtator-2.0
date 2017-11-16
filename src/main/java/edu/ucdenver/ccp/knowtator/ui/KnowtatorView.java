@@ -64,26 +64,14 @@ public class KnowtatorView extends BasicKnowtatorView {
      * TODO make initial document the last document that was edited
      */
     public void setupInitial() {
-
-        manager.getAnnotatorManager().addNewAnnotator("Default", "Default");
-
-
-
-        /*
-        An initial documents to display
-         */
-        textViewer.addNewDocument("/file/test_article.txt", true);
-        textViewer.addNewDocument("/file/test_article2.txt", true);
-
-        manager.getXmlUtil().read("/file/test_profile.xml", true);
-        manager.getXmlUtil().read("/file/test_annotations.xml", true);
-
+        manager.getXmlUtil().read("file/test_project.xml", true);
     }
 
     /**
      * Add buttons corresponding to each of the actions to the toolbar
      */
     public void createToolBar() {
+        ProjectCommands projectCommands = new ProjectCommands(manager);
         DocumentCommands documentCommands = new DocumentCommands(manager);
         AnnotatorCommands annotatorCommands = new AnnotatorCommands(manager);
         GraphCommands graphCommands = new GraphCommands(manager);
@@ -92,39 +80,43 @@ public class KnowtatorView extends BasicKnowtatorView {
 
 
         /*
+        Project related actions
+         */
+        addAction(projectCommands.getSaveProjectCommand(), "A", "A");
+
+        /*
         Text document related actions
          */
-        addAction(documentCommands.openDocumentCommand(), "A", "A");
-        addAction(documentCommands.getCloseDocumentCommand(), "A", "B");
+        addAction(documentCommands.openDocumentCommand(), "B", "A");
+        addAction(documentCommands.getCloseDocumentCommand(), "B", "B");
 
-        addAction(textCommands.getIncreaseTextSizeCommand(), "A", "C");
-        addAction(textCommands.getDecreaseTextSizeCommand(), "A", "D");
+        addAction(textCommands.getIncreaseTextSizeCommand(), "B", "C");
+        addAction(textCommands.getDecreaseTextSizeCommand(), "B", "D");
 
         /*
         Text Annotation related actions
          */
-        addAction(documentCommands.getLoadTextAnnotationsCommand(), "B", "A");
-        addAction(documentCommands.getSaveTextAnnotationsCommand(), "B", "B");
+        addAction(documentCommands.getLoadTextAnnotationsCommand(), "C", "A");
 
-        addAction(iaaCommands.getRunIAACommand(), "B", "E");
+        addAction(iaaCommands.getRunIAACommand(), "C", "C");
 
-        addAction(textCommands.getIncrementSelectionLeftCommand(), "B", "F");
-        addAction(textCommands.getDecrementSelectionLeftCommand(), "B", "G");
-        addAction(textCommands.getDecrementSelectionRightCommand(), "B", "H");
-        addAction(textCommands.getIncrementSelectionRightCommand(), "B", "I");
+        addAction(textCommands.getIncrementSelectionLeftCommand(), "C", "F");
+        addAction(textCommands.getDecrementSelectionLeftCommand(), "C", "G");
+        addAction(textCommands.getDecrementSelectionRightCommand(), "c", "H");
+        addAction(textCommands.getIncrementSelectionRightCommand(), "C", "I");
 
         /*
         Annotator and highlighter related commands
          */
-        addAction(annotatorCommands.getNewAnnotatorCommand(), "C", "A");
-        addAction(annotatorCommands.getSwitchProfileCommand(), "C", "B");
-        addAction(annotatorCommands.getRemoveAnnotatorCommand(), "C", "C");
-        addAction(annotatorCommands.getAssignHighlighterCommand(), "C", "D");
+        addAction(annotatorCommands.getNewAnnotatorCommand(), "D", "A");
+        addAction(annotatorCommands.getSwitchProfileCommand(), "D", "B");
+        addAction(annotatorCommands.getRemoveAnnotatorCommand(), "D", "C");
+        addAction(annotatorCommands.getAssignHighlighterCommand(), "D", "D");
 
         /*
         Graph Viewer related commands
          */
-        addAction(graphCommands.getAddTextAnnotationNodeCommand(), "D", "A");
+        addAction(graphCommands.getAddTextAnnotationNodeCommand(), "E", "A");
     }
 
     public static void main(String[] args) {

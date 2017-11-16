@@ -29,6 +29,22 @@ public class KnowtatorTextViewer extends JTabbedPane implements AnnotationListen
         this.manager = manager;
     }
 
+    public void addNewDocument(String textSource, String text) {
+        KnowtatorTextPane textPane = new KnowtatorTextPane(manager);
+        textPane.setName(FilenameUtils.getBaseName(textSource));
+        manager.documentChangedEvent(textPane);
+
+        JScrollPane sp = new JScrollPane(textPane);
+        if (getTabCount() == 1 && getTitleAt(0).equals("Untitled")) {
+            setComponentAt(0, sp);
+        } else {
+            add(sp);
+        }
+        setTitleAt(getTabCount() - 1, FilenameUtils.getBaseName(textSource));
+
+        textPane.setText(text);
+    }
+
     public void addNewDocument(String fileName, Boolean fromResources) {
         KnowtatorTextPane textPane = new KnowtatorTextPane(manager);
         textPane.setName(FilenameUtils.getBaseName(fileName));
@@ -77,68 +93,72 @@ public class KnowtatorTextViewer extends JTabbedPane implements AnnotationListen
     }
 
     public KnowtatorTextPane getSelectedTextPane() {
-        return (KnowtatorTextPane) ((JScrollPane) getSelectedComponent()).getViewport().getView();
+        if (getSelectedComponent() != null) {
+            return (KnowtatorTextPane) ((JScrollPane) getSelectedComponent()).getViewport().getView();
+        }
+        return null;
     }
 
     public void refreshHighlights() {
         KnowtatorTextPane selectedTextPane = getSelectedTextPane();
-
-        selectedTextPane.getHighlighter().removeAllHighlights();
+        if (selectedTextPane != null) {
+            selectedTextPane.getHighlighter().removeAllHighlights();
 //TODO: Check for overlapping regions (highlight those in gray)
-        Collection<Annotation> annotations = manager.getAnnotationManager().getTextAnnotations().get(selectedTextPane.getName());
+            Collection<Annotation> annotations = manager.getAnnotationManager().getTextAnnotations().get(selectedTextPane.getName());
 
 
-        if (annotations != null) {
-            Annotation selectedAnnotation = manager.getAnnotationManager().getSelectedAnnotation();
-            if (selectedAnnotation != null) {
-                highlightSelectedAnnotation(selectedTextPane, selectedAnnotation);
-            }
-
-            // Create a map that is ordered by start of span
-            Map<List<Integer>, Color> spanMap = new TreeMap<>((o1, o2) -> {
-                int firstCompare = o1.get(0).compareTo(o2.get(0));
-                if (firstCompare == 0) {
-                    return o1.get(1).compareTo(o2.get(1));
+            if (annotations != null) {
+                Annotation selectedAnnotation = manager.getAnnotationManager().getSelectedAnnotation();
+                if (selectedAnnotation != null) {
+                    highlightSelectedAnnotation(selectedTextPane, selectedAnnotation);
                 }
-                return firstCompare;
-            });
 
-            // Accumulate all spans
-            for (Annotation annotation : annotations) {
-                for (Span span : annotation.getSpans()) {
-                    spanMap.put(Arrays.asList(span.getStart(), span.getEnd()), annotation.getAnnotator().getColor(annotation.getClassName()));
+                // Create a map that is ordered by start of span
+                Map<List<Integer>, Color> spanMap = new TreeMap<>((o1, o2) -> {
+                    int firstCompare = o1.get(0).compareTo(o2.get(0));
+                    if (firstCompare == 0) {
+                        return o1.get(1).compareTo(o2.get(1));
+                    }
+                    return firstCompare;
+                });
+
+                // Accumulate all spans
+                for (Annotation annotation : annotations) {
+                    for (Span span : annotation.getSpans()) {
+                        spanMap.put(Arrays.asList(span.getStart(), span.getEnd()), annotation.getAnnotator().getColor(annotation.getClassName()));
+                    }
                 }
-            }
 
-            // Highlight overlaps first, then spans
-            List<Integer> lastSpan = Arrays.asList(0, 0);
-            Color lastColor = Color.WHITE;
-            for(List<Integer> span : spanMap.keySet())  {
-                if (span.get(0) >= lastSpan.get(0) && span.get(0) <= lastSpan.get(1)) {
+                // Highlight overlaps first, then spans
+                List<Integer> lastSpan = Arrays.asList(0, 0);
+                Color lastColor = Color.WHITE;
+                for (List<Integer> span : spanMap.keySet()) {
+                    if (span.get(0) >= lastSpan.get(0) && span.get(0) <= lastSpan.get(1)) {
+                        try {
+                            selectedTextPane.getHighlighter().addHighlight(span.get(0), min(span.get(1), lastSpan.get(1)), new DefaultHighlighter.DefaultHighlightPainter(Color.GRAY));
+                        } catch (BadLocationException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     try {
-                        selectedTextPane.getHighlighter().addHighlight(span.get(0), min(span.get(1), lastSpan.get(1)), new DefaultHighlighter.DefaultHighlightPainter(Color.GRAY));
+                        selectedTextPane.getHighlighter().addHighlight(lastSpan.get(0), lastSpan.get(1), new DefaultHighlighter.DefaultHighlightPainter(lastColor));
                     } catch (BadLocationException e) {
                         e.printStackTrace();
                     }
+                    lastSpan = span;
+                    lastColor = spanMap.get(span);
                 }
+                // Highlight remaining span
                 try {
                     selectedTextPane.getHighlighter().addHighlight(lastSpan.get(0), lastSpan.get(1), new DefaultHighlighter.DefaultHighlightPainter(lastColor));
                 } catch (BadLocationException e) {
                     e.printStackTrace();
                 }
-                lastSpan = span;
-                lastColor = spanMap.get(span);
-            }
-            // Highlight remaining span
-            try {
-                selectedTextPane.getHighlighter().addHighlight(lastSpan.get(0), lastSpan.get(1), new DefaultHighlighter.DefaultHighlightPainter(lastColor));
-            } catch (BadLocationException e) {
-                e.printStackTrace();
-            }
 
+            }
+            selectedTextPane.revalidate();
+            selectedTextPane.repaint();
         }
-        selectedTextPane.revalidate();
-        selectedTextPane.repaint();
     }
 
     private void highlightSelectedAnnotation(KnowtatorTextPane textPane, Annotation annotation) {

@@ -30,12 +30,14 @@ package edu.ucdenver.ccp.knowtator.annotation.text;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.annotation.annotator.Annotator;
-import edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult;
 import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class Annotation {
 
@@ -103,17 +105,7 @@ public class Annotation {
 	}
 
 
-	/**
-	 * returns true only if both annotations have the same non-null
-	 * annotationClass.
-	 */
-	public static boolean classesMatch(Annotation annotation1, Annotation annotation2) {
-		String cls1 = annotation1.getClassName();
-		String cls2 = annotation2.getClassName();
 
-		return cls1 != null && cls2 != null && cls1.equals(cls2);
-
-	}
 
 
 	public static boolean spansOverlap(Annotation annotation1, Annotation annotation2) {
@@ -121,61 +113,6 @@ public class Annotation {
 	}
 
 
-	public static boolean compareNames(Set<String> names1, Set<String> names2) {
-		if (names1.size() != names2.size())
-			return false;
-		for (String name : names1) {
-			if (!names2.contains(name))
-				return false;
-		}
-		return true;
-	}
-
-	/**
-	 * @return MatchResult.TRIVIAL_MATCH if both values are null, one is null
-	 *         and the other empty, or if both are empty <br>
-	 *         MatchResult.TRIVIAL_NONMATCH if one of the values is empty and
-	 *         they other is not, or if one values is null and the other is not
-	 *         null and not empty <br>
-	 *         MatchResult.NONTRIVIAL_NONMATCH if the sizes of the values are
-	 *         different. <br>
-	 *         MatchResult.MATCH_RESULT_UNASSIGNED is none of the above.
-	 * @param values1
-	 *            the value of a feature (simple or complex)
-	 * @param values2
-	 *            the value of another feature (simple or complex)
-	 * @return MatchResult.TRIVIAL_MATCH, MatchResult.TRIVIAL_NONMATCH,
-	 *         MatchResult.NONTRIVIAL_NONMATCH, or MATCH_RESULT_UNASSIGNED
-	 * 
-	 */
-
-	@SuppressWarnings("JavaDoc")
-	public static int trivialCompare(Set<?> values1, Set<?> values2) {
-		if (values1 == null && values2 == null)
-			return MatchResult.TRIVIAL_MATCH; // if both are null than it is a
-											  // trivial match
-		if (values1 == null && values2.size() == 0)
-			return MatchResult.TRIVIAL_MATCH; // if one is null and the other
-											  // empty, then trivial match
-		if (values2 == null && values1.size() == 0)
-			return MatchResult.TRIVIAL_MATCH;
-		if (values1 == null || values2 == null)
-			return MatchResult.TRIVIAL_NONMATCH; // if one is null and the other
-												 // is not empty, then trivial
-												 // nonmatch
-		if (values1.size() == 0 && values2.size() == 0)
-			return MatchResult.TRIVIAL_MATCH; // if both are empty, then trivial
-											  // nonmatch
-		if (values1.size() == 0 || values2.size() == 0)
-			return MatchResult.TRIVIAL_NONMATCH; // if one is empty and the
-												 // other is not, then trivial
-												 // nonmatch
-		if (values1.size() != values2.size())
-			return MatchResult.NONTRIVIAL_NONMATCH; // if neither are empty and
-													// the sizes are different,
-													// then non-trivial nonmatch
-		return MatchResult.MATCH_RESULT_UNASSIGNED;
-	}
 
 	public static final int SPANS_OVERLAP_COMPARISON = 1;
 
@@ -701,5 +638,70 @@ public class Annotation {
 //
 //		return MatchResult.NONTRIVIAL_MATCH;
 //
+//	}
+// 	/**
+//	 * returns true only if both annotations have the same non-null
+//	 * annotationClass.
+//	 */
+//	public static boolean classesMatch(Annotation annotation1, Annotation annotation2) {
+//		String cls1 = annotation1.getClassName();
+//		String cls2 = annotation2.getClassName();
+//
+//		return cls1 != null && cls2 != null && cls1.equals(cls2);
+//
+//	}
+//public static boolean compareNames(Set<String> names1, Set<String> names2) {
+//	if (names1.size() != names2.size())
+//		return false;
+//	for (String name : names1) {
+//		if (!names2.contains(name))
+//			return false;
+//	}
+//	return true;
+//}
+//	/**
+//	 * @return MatchResult.TRIVIAL_MATCH if both values are null, one is null
+//	 *         and the other empty, or if both are empty <br>
+//	 *         MatchResult.TRIVIAL_NONMATCH if one of the values is empty and
+//	 *         they other is not, or if one values is null and the other is not
+//	 *         null and not empty <br>
+//	 *         MatchResult.NONTRIVIAL_NONMATCH if the sizes of the values are
+//	 *         different. <br>
+//	 *         MatchResult.MATCH_RESULT_UNASSIGNED is none of the above.
+//	 * @param values1
+//	 *            the value of a feature (simple or complex)
+//	 * @param values2
+//	 *            the value of another feature (simple or complex)
+//	 * @return MatchResult.TRIVIAL_MATCH, MatchResult.TRIVIAL_NONMATCH,
+//	 *         MatchResult.NONTRIVIAL_NONMATCH, or MATCH_RESULT_UNASSIGNED
+//	 *
+//	 */
+//
+//	@SuppressWarnings("JavaDoc")
+//	public static int trivialCompare(Set<?> values1, Set<?> values2) {
+//		if (values1 == null && values2 == null)
+//			return MatchResult.TRIVIAL_MATCH; // if both are null than it is a
+//		// trivial match
+//		if (values1 == null && values2.size() == 0)
+//			return MatchResult.TRIVIAL_MATCH; // if one is null and the other
+//		// empty, then trivial match
+//		if (values2 == null && values1.size() == 0)
+//			return MatchResult.TRIVIAL_MATCH;
+//		if (values1 == null || values2 == null)
+//			return MatchResult.TRIVIAL_NONMATCH; // if one is null and the other
+//		// is not empty, then trivial
+//		// nonmatch
+//		if (values1.size() == 0 && values2.size() == 0)
+//			return MatchResult.TRIVIAL_MATCH; // if both are empty, then trivial
+//		// nonmatch
+//		if (values1.size() == 0 || values2.size() == 0)
+//			return MatchResult.TRIVIAL_NONMATCH; // if one is empty and the
+//		// other is not, then trivial
+//		// nonmatch
+//		if (values1.size() != values2.size())
+//			return MatchResult.NONTRIVIAL_NONMATCH; // if neither are empty and
+//		// the sizes are different,
+//		// then non-trivial nonmatch
+//		return MatchResult.MATCH_RESULT_UNASSIGNED;
 //	}
 }

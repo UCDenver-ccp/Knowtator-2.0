@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator.io.xml;
 
 public class XmlTags {
+    public static final String KNOWTATOR_PROJECT = "knowtator-project";
     public static final String PROFILE = "profile";
     public static final String ANNOTATIONS = "annotations";
     public static final String TEXTSOURCE = "textSource";
@@ -17,7 +18,6 @@ public class XmlTags {
     public static final String CLASS_MENTION = "classMention";
     public static final String CLASS_MENTION_ID = "id";
     public static final String MENTION_CLASS = "mentionClass";
-    public static final String MENTION_CLASS_ID = "id";
     public static final String PROFILE_NAME = "name";
     public static final String PROFILE_ID = "id";
     public static final String HIGHLIGHTER = "highlighter";
@@ -28,7 +28,7 @@ public class XmlTags {
     public static final String CONFIG = "config";
     public static final String AUTO_LOAD_ONTOLOGIES = "auto-load-ontologies";
     public static final String FORMAT = "format";
-    public static final String WRITE = "write";
-    public static final String READ = "read";
     public static final String DEFAULT_SAVE_LOCATION = "default-save-location";
+    public static final String DOCUMENT = "document";
+    public static final String TEXT = "text";
 }

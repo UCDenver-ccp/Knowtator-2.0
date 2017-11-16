@@ -5,7 +5,6 @@ import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
 import edu.ucdenver.ccp.knowtator.annotation.text.AnnotationProperties;
 import edu.ucdenver.ccp.knowtator.annotation.text.Span;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
-import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,8 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class InfoPane extends JPanel implements AnnotationListener, ActionListener {
-
-    private static Logger log = Logger.getLogger(KnowtatorManager.class);
 
     public KnowtatorManager manager;
 

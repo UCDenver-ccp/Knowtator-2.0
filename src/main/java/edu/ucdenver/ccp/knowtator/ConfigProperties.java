@@ -1,14 +1,9 @@
 package edu.ucdenver.ccp.knowtator;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ConfigProperties {
-
-    private Logger log = LogManager.getLogger(KnowtatorManager.class);
 
     public String getFormat() {
         return format;

@@ -36,7 +36,6 @@ import org.apache.log4j.Logger;
 
 import java.util.List;
 
-@SuppressWarnings("unused")
 public class Span {
 	public Logger log = Logger.getLogger(KnowtatorManager.class);
 
@@ -60,9 +59,9 @@ public class Span {
 		log.warn(String.format("%1$-30s %2$30s", "Span", toString()));
 	}
 
-	public static boolean isValid(int start, int end) {
-		return start <= end && start >= 0;
-	}
+//	public static boolean isValid(int start, int end) {
+//		return start <= end && start >= 0;
+//	}
 
 	public int length() {
 		return end - start;
@@ -84,15 +83,15 @@ public class Span {
 		return getEnd() - getStart();
 	}
 
-	public int compareTo(Span span) {
-		if (getStart() < span.getStart()) {
-			return -1;
-		} else if (getStart() == span.getStart()) {
-			return Integer.compare(span.getEnd(), getEnd());
-		} else {
-			return 1;
-		}
-	}
+//	public int compareTo(Span span) {
+//		if (getStart() < span.getStart()) {
+//			return -1;
+//		} else if (getStart() == span.getStart()) {
+//			return Integer.compare(span.getEnd(), getEnd());
+//		} else {
+//			return 1;
+//		}
+//	}
 
 	public String toString() {
 		return String.format("Start: %d, End: %d", start, end);
@@ -130,31 +129,31 @@ public class Span {
 						&& getStart() < span.getEnd());
 	}
 
-	public boolean crosses(Span span) {
-		int spanStart = span.getStart();
+//	public boolean crosses(Span span) {
+//		int spanStart = span.getStart();
+//
+//		// either s's start is in this or this' start is in s
+//		return !this.contains(span)
+//				&& !span.contains(this)
+//				&& (getStart() <= spanStart && spanStart < getEnd() || spanStart <= getStart()
+//						&& getStart() < span.getEnd());
+//	}
 
-		// either s's start is in this or this' start is in s
-		return !this.contains(span)
-				&& !span.contains(this)
-				&& (getStart() <= spanStart && spanStart < getEnd() || spanStart <= getStart()
-						&& getStart() < span.getEnd());
-	}
+//	public boolean lessThan(Span span) {
+//		return getStart() < span.getStart() && getEnd() < span.getEnd();
+//	}
 
-	public boolean lessThan(Span span) {
-		return getStart() < span.getStart() && getEnd() < span.getEnd();
-	}
+//	public boolean greaterThan(Span span) {
+//		return getStart() > span.getStart() && getEnd() > span.getEnd();
+//	}
 
-	public boolean greaterThan(Span span) {
-		return getStart() > span.getStart() && getEnd() > span.getEnd();
-	}
-
-	public static Span parseSpan(String spanString) {
-		String startString = spanString.substring(0, spanString.indexOf("|"));
-		String endString = spanString.substring(spanString.indexOf("|") + 1);
-		int start = Integer.parseInt(startString);
-		int end = Integer.parseInt(endString);
-		return new Span(start, end);
-	}
+//	public static Span parseSpan(String spanString) {
+//		String startString = spanString.substring(0, spanString.indexOf("|"));
+//		String endString = spanString.substring(spanString.indexOf("|") + 1);
+//		int start = Integer.parseInt(startString);
+//		int end = Integer.parseInt(endString);
+//		return new Span(start, end);
+//	}
 
 	static boolean intersects(List<Span> spans1, List<Span> spans2) {
 		for (Span span1 : spans1) {
@@ -189,23 +188,23 @@ public class Span {
 		return false;
 	}
 
-	public static Span shortest(List<Span> spans) {
-		if (spans.size() == 0)
-			return null;
-		if (spans.size() == 1)
-			return spans.get(0);
-
-		Span shortestSpan = spans.get(0);
-		int shortestSize = shortestSpan.getSize();
-		for (int i = 1; i < spans.size(); i++) {
-			if (spans.get(i).getSize() < shortestSize) {
-				shortestSpan = spans.get(i);
-				shortestSize = shortestSpan.getSize();
-			}
-		}
-
-		return shortestSpan;
-	}
+//	public static Span shortest(List<Span> spans) {
+//		if (spans.size() == 0)
+//			return null;
+//		if (spans.size() == 1)
+//			return spans.get(0);
+//
+//		Span shortestSpan = spans.get(0);
+//		int shortestSize = shortestSpan.getSize();
+//		for (int i = 1; i < spans.size(); i++) {
+//			if (spans.get(i).getSize() < shortestSize) {
+//				shortestSpan = spans.get(i);
+//				shortestSize = shortestSpan.getSize();
+//			}
+//		}
+//
+//		return shortestSpan;
+//	}
 
 	public static String substring(String string, Span span) {
 		int start = Math.max(0, span.getStart());
