@@ -39,6 +39,17 @@ public class AnnotatorCommands {
         };
     }
 
+    public KnowtatorCommand getRemoveAnnotatorCommand() {
+        return new KnowtatorCommand(manager, "Remove Annotator", KnowtatorIcons.REMOVE_ANNOTATOR_ICON, "Remove an annotator profile") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AnnotatorManager annotatorManager = manager.getAnnotatorManager();
+                String annotatorName = ListDialog.showDialog(null, null, "Profiles", "Annotator Chooser", annotatorManager.getAnnotatorNames(), annotatorManager.getAnnotatorNames()[0], null);
+                annotatorManager.removeAnnotator(annotatorName);
+            }
+        };
+    }
+
     public KnowtatorCommand getNewAnnotatorCommand() {
         return new KnowtatorCommand(manager, "New Annotator", KnowtatorIcons.NEW_ANNOTATOR_ICON, "Add new annotator profile") {
 

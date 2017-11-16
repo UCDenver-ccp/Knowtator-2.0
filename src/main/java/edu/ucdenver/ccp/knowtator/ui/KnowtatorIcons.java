@@ -28,7 +28,7 @@ public class KnowtatorIcons {
 
     public static final Integer MENU_ITEM_WIDTH = 20;
     public static final Integer MENU_ITEM_HEIGHT = 20;
-
+    public static final String REMOVE_ANNOTATOR_ICON = "remove_annotatorICON.png";
 
 
     public static HashMap<String, ImageIcon> iconMap = new HashMap<>();

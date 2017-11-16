@@ -43,11 +43,15 @@ public class AnnotatorManager {
     }
 
     public void switchAnnotator(String annotatorName) {
-        if (annotatorName != null)
-        {
+        if (annotatorName != null) {
             currentAnnotator = annotatorMap.get(annotatorName);
         }
 
     }
 
+    public void removeAnnotator(String annotatorName) {
+        if (annotatorName != null) {
+            annotatorMap.remove(annotatorName);
+        }
+    }
 }

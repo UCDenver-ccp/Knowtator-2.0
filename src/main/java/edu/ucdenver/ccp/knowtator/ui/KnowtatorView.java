@@ -118,7 +118,8 @@ public class KnowtatorView extends BasicKnowtatorView {
          */
         addAction(annotatorCommands.getNewAnnotatorCommand(), "C", "A");
         addAction(annotatorCommands.getSwitchProfileCommand(), "C", "B");
-        addAction(annotatorCommands.getAssignHighlighterCommand(), "C", "C");
+        addAction(annotatorCommands.getRemoveAnnotatorCommand(), "C", "C");
+        addAction(annotatorCommands.getAssignHighlighterCommand(), "C", "D");
 
         /*
         Graph Viewer related commands

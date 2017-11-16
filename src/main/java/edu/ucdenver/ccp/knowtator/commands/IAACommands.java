@@ -8,6 +8,7 @@ import edu.ucdenver.ccp.knowtator.ui.KnowtatorIcons;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.ArrayList;
 
 public class IAACommands {
 
@@ -26,6 +27,7 @@ public class IAACommands {
             public void actionPerformed(ActionEvent e) {
 
                 JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setCurrentDirectory(new File(manager.getConfigProperties().getDefaultSaveLocation()));
                 fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 //
                 // disable the "All files" option.
@@ -37,26 +39,56 @@ public class IAACommands {
                     try {
                         KnowtatorIAA knowtatorIAA = new KnowtatorIAA(outputDirectory, manager);
 
-                        Object[] options = {"Class IAA", "Span IAA", "Class and Span IAA", "Subclass IAA", "Feature Matcher IAA"};
-                        int response = JOptionPane.showOptionDialog(null, "Choose which type of IAA to perform", "Run IAA",
-                                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
-                                null, options, options[0]);
 
-                        //TODO Should not be cases but checkboxes so multiple IAAs can be selected
-                        switch (response) {
-                            case 0:
-                                knowtatorIAA.runClassIAA();
-                            case 1:
-                                knowtatorIAA.runSpanIAA();
-                            case 2:
-                                knowtatorIAA.runClassAndSpanIAA();
-//                          case 3:
-//                              knowtatorIAA.runSubclassIAA();
-//                            case 4:
-//                                knowtatorIAA.runFeatureMatcherIAA();
+                        ArrayList<JCheckBox> checkBoxes = new ArrayList<JCheckBox>() {
+                            {
+                                add(new JCheckBox(new RunnableAction("Class IAA") {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            knowtatorIAA.runClassIAA();
+                                        } catch (IAAException e1) {
+                                            e1.printStackTrace();
+                                        }
+                                    }
+                                }));
+                                add(new JCheckBox(new RunnableAction("Span IAA") {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            knowtatorIAA.runSpanIAA();
+                                        } catch (IAAException e1) {
+                                            e1.printStackTrace();
+                                        }
+                                    }
+                                }));
+                                add(new JCheckBox(new RunnableAction("Class and Span IAA") {
+                                    public void run() {
+                                        try {
+                                            knowtatorIAA.runClassAndSpanIAA();
+                                        } catch (IAAException e1) {
+                                            e1.printStackTrace();
+                                        }
+                                    }
+                                }));
+                            }
+                        };
 
-                                knowtatorIAA.closeHTML();
+                        JPanel checkBoxInterpretter = new JPanel();
+                        for (JCheckBox checkBox : checkBoxes) {
+                            checkBoxInterpretter.add(checkBox);
                         }
+
+                        JOptionPane.showConfirmDialog(null, checkBoxInterpretter);
+
+                        for (JCheckBox checkBox : checkBoxes) {
+                            if (checkBox.isSelected()) {
+                                ((RunnableAction)checkBox.getAction()).run();
+                            }
+                        }
+
+
+                        knowtatorIAA.closeHTML();
                     } catch (IAAException e1) {
                         e1.printStackTrace();
                     }

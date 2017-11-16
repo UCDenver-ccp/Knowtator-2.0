@@ -68,9 +68,6 @@ public final class AnnotationManager implements DocumentListener {
         manager.annotationsChangedEvent(null);
     }
 
-
-    //TODO hover over annotations in text to see what they are
-
     public HashMap<String, List<Annotation>> getTextAnnotations() {
         return textAnnotations;
     }
