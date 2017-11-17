@@ -174,7 +174,7 @@ public class IAA {
 		spanIndexes = new HashMap<>();
 
 		for (Annotation annotation : annotations) {
-			String setName = annotation.getAnnotator().getName();
+			String setName = annotation.getProfile().getName();
 			String annotationClass = annotation.getClassName();
 			if (annotationClass != null)
 				annotationClasses.add(annotationClass);
@@ -208,14 +208,14 @@ public class IAA {
 		 * for each of the other annotators). We will gather all matches as we
 		 * discover them so that a multiple annotations will not match with an
 		 * Annotation that has already been matched. This might happen if, for
-		 * example, one annotator mistakenly created a duplicate Annotation. We
+		 * example, one profile mistakenly created a duplicate Annotation. We
 		 * would only want to consider one of them a match. All annotations that
 		 * have been found to be a match will be put in
 		 * matchedAnnotationsAllway.
 		 */
 		Set<Annotation> matchedAnnotations = new HashSet<>();
 		for (Annotation annotation : annotations) {
-			String setName = annotation.getAnnotator().getName();
+			String setName = annotation.getProfile().getName();
 			if (!matchedAnnotations.contains(annotation)) {
 				MatchResult matchResult = new MatchResult();
 				// just because an Annotation matches with another Annotation
@@ -232,21 +232,21 @@ public class IAA {
 					allwayMatchSets.put(annotation, allMatches);
 
 					for (Annotation match : matches) {
-						String matchedSet = match.getAnnotator().getName();
+						String matchedSet = match.getProfile().getName();
 						allwayMatches.get(matchedSet).add(match);
 						allwayMatchSets.put(match, allMatches);
 					}
 					if (matchResult.getResult() == MatchResult.NONTRIVIAL_MATCH) {
 						nontrivialAllwayMatches.get(setName).add(annotation);
 						for (Annotation match : matches) {
-							String matchedSet = match.getAnnotator().getName();
+							String matchedSet = match.getProfile().getName();
 							nontrivialAllwayMatches.get(matchedSet).add(match);
 						}
 
 					} else if (matchResult.getResult() == MatchResult.TRIVIAL_MATCH) {
 						trivialAllwayMatches.get(setName).add(annotation);
 						for (Annotation match : matches) {
-							String matchedSet = match.getAnnotator().getName();
+							String matchedSet = match.getProfile().getName();
 							trivialAllwayMatches.get(matchedSet).add(match);
 						}
 					} else {
@@ -288,7 +288,7 @@ public class IAA {
 
 	public void pairwiseIAA(Matcher matcher) throws IAAException {
 		for (Annotation annotation : annotations) {
-			String setName = annotation.getAnnotator().getName();
+			String setName = annotation.getProfile().getName();
 			for (String compareSetName : annotationSets.keySet()) {
 				if (!setName.equals(compareSetName)) {
 					Set<Annotation> matchedAnnotations = pairwiseMatches.get(setName).get(compareSetName);
@@ -337,7 +337,7 @@ public class IAA {
 
 	public Set<Annotation> match(Annotation annotation, Set<Annotation> excludeAnnotations, Matcher matcher,
 								 MatchResult matchResult) {
-		String setName = annotation.getAnnotator().getName();
+		String setName = annotation.getProfile().getName();
 		Set<Annotation> matchedAnnotations = new HashSet<>();
 
 		// trivial matches trump non-trivial matches. If there is a single

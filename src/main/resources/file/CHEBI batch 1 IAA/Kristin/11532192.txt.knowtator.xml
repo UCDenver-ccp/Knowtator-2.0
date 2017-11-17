@@ -2,61 +2,61 @@
 <annotations textSource="11532192.txt">
   <annotation>
     <mention id="chebi_Instance_20000" />
-    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
+    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
     <span start="25549" end="25557" />
     <spannedText>terpenes</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30007" />
-    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
+    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
     <span start="25559" end="25566" />
     <spannedText>Terpene</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30010" />
-    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
+    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
     <span start="25611" end="25619" />
     <spannedText>terpenes</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30019" />
-    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
+    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
     <span start="31251" end="31262" />
     <spannedText>Bicarbonate</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30027" />
-    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
+    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
     <span start="34648" end="34653" />
     <spannedText>water</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30035" />
-    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
+    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
     <span start="37924" end="37928" />
     <spannedText>acid</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30038" />
-    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
+    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
     <span start="37929" end="37936" />
     <spannedText>alcohol</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30044" />
-    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
+    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
     <span start="38088" end="38097" />
     <spannedText>phosphate</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30078" />
-    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
+    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
     <span start="38583" end="38586" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30257" />
-    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
+    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
     <span start="12466" end="12476" />
     <spannedText>anesthetic</spannedText>
   </annotation>

@@ -90,7 +90,7 @@ public class KnowtatorIAA {
 		annotationTexts = new HashMap<>();
 		annotationTextNames = new HashMap<>();
 
-		setNameDeterminedByAnnotators = manager.getAnnotatorManager().getAnnotatorNames().length > 1;
+		setNameDeterminedByAnnotators = manager.getProfileManager().getAnnotatorNames().length > 1;
 
 
 		initSetNames();
@@ -99,13 +99,13 @@ public class KnowtatorIAA {
 	}
 
 	private void initSetNames() {
-		setNames = new HashSet<>(Arrays.asList(manager.getAnnotatorManager().getAnnotatorNames()));
+		setNames = new HashSet<>(Arrays.asList(manager.getProfileManager().getAnnotatorNames()));
 	}
 
 	private void initHTML() throws IAAException {
 		try {
 			html = new PrintStream(new File(outputDirectory, "index.html"));
-			html.println("<html><head><title>Inter-Annotator Agreement</title></head>");
+			html.println("<html><head><title>Inter-Profile Agreement</title></head>");
 			html.println("<body><ul>");
 		} catch (IOException ioe) {
 			throw new IAAException(ioe);

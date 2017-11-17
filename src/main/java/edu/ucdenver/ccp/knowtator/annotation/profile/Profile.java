@@ -1,4 +1,4 @@
-package edu.ucdenver.ccp.knowtator.annotation.annotator;
+package edu.ucdenver.ccp.knowtator.annotation.profile;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import org.apache.log4j.Logger;
@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 
-public class Annotator {
+public class Profile {
     public Logger log = Logger.getLogger(KnowtatorManager.class);
 
     public String name;
@@ -19,14 +19,14 @@ public class Annotator {
         return name;
     }
 
-    public Annotator(KnowtatorManager manager, String name, String id) {
+    public Profile(KnowtatorManager manager, String name, String id) {
         this.name = name;
         this.id = id;
         this.manager = manager;
 
         colors = new HashMap<>();
 
-        log.warn(String.format("%1$-30s %2$30s", "Annotator", toString()));
+        log.warn(String.format("%1$-30s %2$30s", "Profile", toString()));
     }
 
     public Color getColor(String className) {
@@ -51,7 +51,6 @@ public class Annotator {
 
     public void addColor(String className, Color c) {
         colors.put(className, c);
-
     }
 
     public String getID() {

@@ -29,7 +29,7 @@
 package edu.ucdenver.ccp.knowtator.annotation.text;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.annotation.annotator.Annotator;
+import edu.ucdenver.ccp.knowtator.annotation.profile.Profile;
 import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -46,15 +46,15 @@ public class Annotation {
 
 	private KnowtatorManager manager;
 	private String textSource;
-	public Annotator annotator;
+	public Profile profile;
 	public String className;
 	public List<Span> spans;
 
 
-	public Annotation(KnowtatorManager manager, String textSource, Annotator annotator, String className) {
+	public Annotation(KnowtatorManager manager, String textSource, Profile profile, String className) {
 		this.manager = manager;
 		this.textSource = textSource;
-		this.annotator = annotator;
+		this.profile = profile;
 		this.className = className;
 
 		spans = new ArrayList<>();
@@ -200,7 +200,7 @@ public class Annotation {
 	 */
 	public String toHTML() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("<ul><li>").append(annotator.getName()).append("</li>");
+		sb.append("<ul><li>").append(profile.getName()).append("</li>");
 		sb.append("<li>class = ").append(className).append("</li>");
 		sb.append("<li>spans = ");
 		for (Span span : spans)
@@ -237,8 +237,8 @@ public class Annotation {
 		return OWLAPIDataExtractor.getClassIDByName(manager, className);
 	}
 
-	public Annotator getAnnotator() {
-		return annotator;
+	public Profile getProfile() {
+		return profile;
 	}
 
 	public void addSpan(Span newSpan) {

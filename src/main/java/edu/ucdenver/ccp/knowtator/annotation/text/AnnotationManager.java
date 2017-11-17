@@ -1,7 +1,7 @@
 package edu.ucdenver.ccp.knowtator.annotation.text;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.annotation.annotator.Annotator;
+import edu.ucdenver.ccp.knowtator.annotation.profile.Profile;
 import edu.ucdenver.ccp.knowtator.iaa.AssertionRelationship;
 import edu.ucdenver.ccp.knowtator.listeners.DocumentListener;
 import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
@@ -33,9 +33,9 @@ public final class AnnotationManager implements DocumentListener {
 
     public void addAnnotation(String textSource, String className, Integer spanStart, Integer spanEnd) {
 
-        Annotator annotator = manager.getAnnotatorManager().getCurrentAnnotator();
+        Profile profile = manager.getProfileManager().getCurrentProfile();
 
-        Annotation newAnnotation = new Annotation(manager, textSource, annotator, className);
+        Annotation newAnnotation = new Annotation(manager, textSource, profile, className);
         newAnnotation.addSpan(new Span(spanStart, spanEnd));
 
         // Add Annotation to Annotation manager
@@ -45,13 +45,13 @@ public final class AnnotationManager implements DocumentListener {
         manager.annotationsChangedEvent(newAnnotation);
     }
 
-    public void addAnnotation(String textSource, Annotator annotator, String className, List<Span> spans) {
+    public void addAnnotation(String textSource, Profile profile, String className, List<Span> spans) {
 
         if (!textAnnotations.containsKey(textSource)) {
             textAnnotations.put(textSource, new ArrayList<>());
         }
 
-        Annotation newAnnotation = new Annotation(manager, textSource, annotator, className);
+        Annotation newAnnotation = new Annotation(manager, textSource, profile, className);
         newAnnotation.addAllSpans(spans);
 
         // Add Annotation to Annotation manager

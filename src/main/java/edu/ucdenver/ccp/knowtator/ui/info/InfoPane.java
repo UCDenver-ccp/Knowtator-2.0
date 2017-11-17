@@ -49,9 +49,9 @@ public class InfoPane extends JPanel implements AnnotationListener, ActionListen
             String name;
             String content;
             // **********************************Meta Data*********************************
-            // Annotator field
+            // Profile field
             name = AnnotationProperties.ANNOTATOR;
-            content = annotation.getAnnotator().getName();
+            content = annotation.getProfile().getName();
             annotationComponents.add(addLabel(name, content));
 
             // Text Source field

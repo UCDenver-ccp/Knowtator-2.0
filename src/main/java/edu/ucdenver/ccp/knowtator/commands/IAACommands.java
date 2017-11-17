@@ -21,7 +21,7 @@ public class IAACommands {
 
 
     public KnowtatorCommand getRunIAACommand() {
-        return new KnowtatorCommand(manager, "Run IAA", KnowtatorIcons.RUN_IAA_ICON, "Run Inter-annotator agreement") {
+        return new KnowtatorCommand(manager, "Run IAA", KnowtatorIcons.RUN_IAA_ICON, "Run Inter-profile agreement") {
 
             @Override
             public void actionPerformed(ActionEvent e) {

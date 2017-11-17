@@ -2,7 +2,7 @@ package edu.ucdenver.ccp.knowtator.io.xml;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorDocumentHandler;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.annotation.annotator.Annotator;
+import edu.ucdenver.ccp.knowtator.annotation.profile.Profile;
 import edu.ucdenver.ccp.knowtator.annotation.text.Span;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -128,13 +128,13 @@ public class XmlReader {
             String profileName = profileElement.getAttribute(XmlTags.PROFILE_NAME);
             String profileID = profileElement.getAttribute(XmlTags.PROFILE_ID);
 
-            Annotator newAnnotator = manager.getAnnotatorManager().addNewAnnotator(profileName, profileID);
+            Profile newProfile = manager.getProfileManager().addNewAnnotator(profileName, profileID);
 
-            getHighlightersFromXml(newAnnotator, profileElement);
+            getHighlightersFromXml(newProfile, profileElement);
         }
     }
 
-    public static void getHighlightersFromXml(Annotator newAnnotator, Element profileElement) {
+    public static void getHighlightersFromXml(Profile newProfile, Element profileElement) {
 
         for (Node highlighterNode : XmlUtil.asList(profileElement.getElementsByTagName(XmlTags.HIGHLIGHTER))) {
             if (highlighterNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -143,7 +143,7 @@ public class XmlReader {
                 String className = highlighterElement.getElementsByTagName(XmlTags.CLASS_NAME).item(0).getTextContent();
                 String color = highlighterElement.getElementsByTagName(XmlTags.COLOR).item(0).getTextContent();
 
-                newAnnotator.addColor(className, color);
+                newProfile.addColor(className, color);
             }
         }
     }
@@ -188,11 +188,11 @@ public class XmlReader {
                 String annotatorName = annotationElement.getElementsByTagName(XmlTags.ANNOTATOR).item(0).getTextContent();
                 String annotatorID = ((Element) annotationElement.getElementsByTagName(XmlTags.ANNOTATOR).item(0)).getAttribute(XmlTags.ANNOTATOR_ID);
 
-                Annotator annotator = manager.getAnnotatorManager().addNewAnnotator(annotatorName, annotatorID);
+                Profile profile = manager.getProfileManager().addNewAnnotator(annotatorName, annotatorID);
                 String className = classMentionToClassIDMap.get(mentionKey);
                 List<Span> spans = getSpanInfo(annotationElement);
 
-                manager.getAnnotationManager().addAnnotation(textSource, annotator, className, spans);
+                manager.getAnnotationManager().addAnnotation(textSource, profile, className, spans);
             }
         }
     }
@@ -204,11 +204,11 @@ public class XmlReader {
             String annotatorName = annotationElement.getElementsByTagName(XmlTags.ANNOTATOR).item(0).getTextContent();
             String annotatorID = ((Element) annotationElement.getElementsByTagName(XmlTags.ANNOTATOR).item(0)).getAttribute(XmlTags.ANNOTATOR_ID);
 
-            Annotator annotator = manager.getAnnotatorManager().addNewAnnotator(annotatorName, annotatorID);
+            Profile profile = manager.getProfileManager().addNewAnnotator(annotatorName, annotatorID);
             String className = annotationElement.getElementsByTagName(XmlTags.CLASS_NAME).item(0).getTextContent();
             List<Span> spans = getSpanInfo(annotationElement);
 
-            manager.getAnnotationManager().addAnnotation(textSource, annotator, className, spans);
+            manager.getAnnotationManager().addAnnotation(textSource, profile, className, spans);
         }
     }
 

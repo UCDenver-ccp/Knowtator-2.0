@@ -74,14 +74,22 @@ public class KnowtatorView extends BasicKnowtatorView {
      */
     public void createToolBar() {
         ProjectCommands projectCommands = new ProjectCommands(manager);
-        AnnotatorCommands annotatorCommands = new AnnotatorCommands(manager);
+        AnnotatorMenu annotatorCommands = new AnnotatorMenu(manager);
         GraphCommands graphCommands = new GraphCommands(manager);
         IAACommands iaaCommands = new IAACommands(manager);
         TextCommands textCommands = new TextCommands(manager);
 
         JMenuBar menuBar = new JMenuBar();
+
         menuBar.add(projectCommands.getFileMenu());
+
+        AnnotatorMenu annotatorMenu = new AnnotatorMenu(manager);
+        manager.addProfileListener(annotatorMenu);
+        menuBar.add(annotatorMenu);
+
         add(menuBar, BorderLayout.NORTH);
+
+
 
 //        addAction(projectCommands.getFileMenuCommand(), "A", "A");
 
@@ -103,7 +111,7 @@ public class KnowtatorView extends BasicKnowtatorView {
 //        addAction(textCommands.getIncrementSelectionRightCommand(), "C", "I");
 
         /*
-        Annotator and highlighter related commands
+        Profile and highlighter related commands
          */
 //        addAction(annotatorCommands.getNewAnnotatorCommand(), "D", "A");
 //        addAction(annotatorCommands.getSwitchProfileCommand(), "D", "B");

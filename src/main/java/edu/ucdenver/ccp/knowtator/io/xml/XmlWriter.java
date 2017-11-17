@@ -27,7 +27,7 @@ public class XmlWriter {
         try {
             bw.write(String.format("\t<%s>", XmlTags.ANNOTATION));
             bw.newLine();
-            bw.write(String.format("\t\t<%s %s=\"%s\">%s</%s>", XmlTags.ANNOTATOR, XmlTags.ANNOTATOR_ID, annotation.getAnnotator().getID(), annotation.getAnnotator().getName(), XmlTags.ANNOTATOR));
+            bw.write(String.format("\t\t<%s %s=\"%s\">%s</%s>", XmlTags.ANNOTATOR, XmlTags.ANNOTATOR_ID, annotation.getProfile().getID(), annotation.getProfile().getName(), XmlTags.ANNOTATOR));
             bw.newLine();
             annotation.getSpans().forEach(span -> spanToXml(bw, span));
             bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.CLASS_NAME, annotation.getClassName(), XmlTags.CLASS_NAME));
@@ -113,7 +113,7 @@ public class XmlWriter {
     }
 
     private static void writeProfiles(KnowtatorManager manager, BufferedWriter bw) {
-        manager.getAnnotatorManager().getAnnotators().forEach((name, annotator) -> {
+        manager.getProfileManager().getAnnotators().forEach((name, annotator) -> {
             try {
                 bw.write(String.format("<%s %s=\"%s\" %s=\"%s\">",
                         XmlTags.PROFILE,

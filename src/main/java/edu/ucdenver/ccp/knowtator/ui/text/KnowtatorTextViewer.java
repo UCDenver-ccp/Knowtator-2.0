@@ -151,7 +151,7 @@ public class KnowtatorTextViewer extends JTabbedPane implements AnnotationListen
                 // Accumulate all spans
                 for (Annotation annotation : annotations) {
                     for (Span span : annotation.getSpans()) {
-                        spanMap.put(Arrays.asList(span.getStart(), span.getEnd()), annotation.getAnnotator().getColor(annotation.getClassName()));
+                        spanMap.put(Arrays.asList(span.getStart(), span.getEnd()), annotation.getProfile().getColor(annotation.getClassName()));
                     }
                 }
 

@@ -8,7 +8,7 @@ public class XmlTags {
 
     public static final String MENTION = "mention";
     public static final String MENTION_ID = "id";
-    public static final String ANNOTATOR = "annotator";
+    public static final String ANNOTATOR = "profile";
     public static final String ANNOTATOR_ID = "id";
     public static final String SPAN = "span";
     public static final String SPAN_START = "start";

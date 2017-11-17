@@ -2,79 +2,79 @@
 <annotations textSource="11319941.txt">
   <annotation>
     <mention id="chebi_Instance_20013" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+    <profile id="chebi_Instance_10016">Mike Bada</profile>
     <span start="26307" end="26318" />
     <spannedText>tert-pentyl</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_20017" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+    <profile id="chebi_Instance_10016">Mike Bada</profile>
     <span start="26319" end="26326" />
     <spannedText>alcohol</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_20026" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+    <profile id="chebi_Instance_10016">Mike Bada</profile>
     <span start="26402" end="26418" />
     <spannedText>sodium phosphate</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30051" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+    <profile id="chebi_Instance_10016">Mike Bada</profile>
     <span start="26330" end="26335" />
     <spannedText>water</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30096" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+    <profile id="chebi_Instance_10016">Mike Bada</profile>
     <span start="21580" end="21587" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30102" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+    <profile id="chebi_Instance_10016">Mike Bada</profile>
     <span start="21850" end="21857" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_70011" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+    <profile id="chebi_Instance_10016">Mike Bada</profile>
     <span start="21235" end="21244" />
     <spannedText>glutamate</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_70016" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+    <profile id="chebi_Instance_10016">Mike Bada</profile>
     <span start="21235" end="21244" />
     <spannedText>glutamate</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_70025" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+    <profile id="chebi_Instance_10016">Mike Bada</profile>
     <span start="21540" end="21547" />
     <spannedText>alanine</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_70031" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+    <profile id="chebi_Instance_10016">Mike Bada</profile>
     <span start="22409" end="22417" />
     <spannedText>molecule</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_70034" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+    <profile id="chebi_Instance_10016">Mike Bada</profile>
     <span start="22626" end="22635" />
     <spannedText>molecules</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_70039" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+    <profile id="chebi_Instance_10016">Mike Bada</profile>
     <span start="22890" end="22893" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_70056" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+    <profile id="chebi_Instance_10016">Mike Bada</profile>
     <span start="30232" end="30235" />
     <spannedText>DNA</spannedText>
   </annotation>

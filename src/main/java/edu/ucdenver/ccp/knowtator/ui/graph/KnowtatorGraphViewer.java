@@ -6,7 +6,7 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.annotation.annotator.Annotator;
+import edu.ucdenver.ccp.knowtator.annotation.profile.Profile;
 import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
 import edu.ucdenver.ccp.knowtator.iaa.AssertionRelationship;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
@@ -98,7 +98,7 @@ public class KnowtatorGraphViewer extends JPanel implements AnnotationListener {
     }
 
     public void addAnnotationNode(Annotation annotation) {
-        Annotator annotator = annotation.getAnnotator();
+        Profile profile = annotation.getProfile();
         String className = annotation.getClassName();
         graph.getModel().beginUpdate();
         try {
@@ -107,7 +107,7 @@ public class KnowtatorGraphViewer extends JPanel implements AnnotationListener {
                     String.format(
                             "fillColor=#%s",
                             Integer.toHexString(
-                                    annotator.getColor(className).getRGB()
+                                    profile.getColor(className).getRGB()
                             ).substring(2)
                     )
             );

@@ -75,6 +75,14 @@ public class OWLAPIDataExtractor {
         return manager.getOwlModelManager().getOWLHierarchyManager().getOWLClassHierarchyProvider().getDescendants(cls);
     }
 
+    public static Set<OWLClass> getDecendents(KnowtatorManager manager, String className) {
+        OWLClass cls = getOWLClassByName(manager, className);
+        if (cls != null) {
+            return getDecendents(manager, cls);
+        }
+        return null;
+    }
+
     public static OWLClass getSelectedClass(KnowtatorManager manager) {
         return manager.getOwlWorkspace().getOWLSelectionModel().getLastSelectedClass();
     }

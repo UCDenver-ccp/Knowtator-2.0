@@ -324,12 +324,12 @@ public class IAA2HTML {
 
 	public static Set<Annotation> getCandidateAnnotations(Annotation annotation, AnnotationSpanIndex spanIndex) {
 		Set<Annotation> candidateAnnotations = new HashSet<>();
-		String set = annotation.getAnnotator().getName();
+		String set = annotation.getProfile().getName();
 		String docID = annotation.getTextSource();
 
 		Set<Annotation> overlappingAnnotations = spanIndex.getOverlappingAnnotations(annotation);
 		for (Annotation overlappingAnnotation : overlappingAnnotations) {
-			String candidateAnnotationSet = overlappingAnnotation.getAnnotator().getName();
+			String candidateAnnotationSet = overlappingAnnotation.getProfile().getName();
 			if (!candidateAnnotationSet.equals(set)) {
 				String candidateDocID = overlappingAnnotation.getTextSource();
 				if (candidateDocID.equals(docID)) {

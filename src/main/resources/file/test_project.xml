@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<knowtator-project>
+<document textSource="test_article">
+	<text>This is a test document. It is intended to demonstrate that Knowtator-2.0 is working correctly.
+
+This sentence should be annotated in one color.
+
+This next sentence should be annotated in a different color.</text>
+	<annotation>
+		<profile id="Default">Default</profile>
+		<span start="97" end="145" />
+		<class-name>sky</class-name>
+	</annotation>
+	<annotation>
+		<profile id="Default">Default</profile>
+		<span start="146" end="206" />
+		<class-name>fire</class-name>
+	</annotation>
+	<annotation>
+		<profile id="Default">Default</profile>
+		<span start="175" end="184" />
+		<span start="85" end="94" />
+		<class-name>grass</class-name>
+	</annotation>
+</document>
+<document textSource="test_article2">
+	<text>This is a second test document.</text>
+</document>
+
+<profile name="Harrison" id="1234">
+	<highlighter>
+		<class-name>biological_process</class-name>
+		<color>#99ffff</color>
+	</highlighter>
+	<highlighter>
+		<class-name>cellular_component</class-name>
+		<color>#ff66ff</color>
+	</highlighter>
+</profile><profile name="Default" id="Default">
+	<highlighter>
+		<class-name>sky</class-name>
+		<color>#00ffff</color>
+	</highlighter>
+	<highlighter>
+		<class-name>grass</class-name>
+		<color>#99ff99</color>
+	</highlighter>
+	<highlighter>
+		<class-name>tree</class-name>
+		<color>#999900</color>
+	</highlighter>
+	<highlighter>
+		<class-name>fire</class-name>
+		<color>#ff6666</color>
+	</highlighter>
+</profile>
+<config>
+	<auto-load-ontologies>false</auto-load-ontologies>
+	<format>xml</format>
+	<default-save-location>${user.home}${file.separator}KnowtatorProjects${file.separator}</default-save-location>
+</config>
+</knowtator-project>

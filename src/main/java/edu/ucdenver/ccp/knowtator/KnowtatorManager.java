@@ -1,12 +1,14 @@
 package edu.ucdenver.ccp.knowtator;
 
-import edu.ucdenver.ccp.knowtator.annotation.annotator.AnnotatorManager;
+import edu.ucdenver.ccp.knowtator.annotation.profile.Profile;
+import edu.ucdenver.ccp.knowtator.annotation.profile.ProfileManager;
 import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
 import edu.ucdenver.ccp.knowtator.annotation.text.AnnotationManager;
 import edu.ucdenver.ccp.knowtator.io.xml.XmlUtil;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
 import edu.ucdenver.ccp.knowtator.listeners.DocumentListener;
 import edu.ucdenver.ccp.knowtator.listeners.OwlSelectionListener;
+import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
 import edu.ucdenver.ccp.knowtator.owl.OntologyTranslator;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
 import edu.ucdenver.ccp.knowtator.ui.text.KnowtatorTextPane;
@@ -30,11 +32,12 @@ import java.util.stream.Collectors;
  */
 public class KnowtatorManager implements OwlSelectionListener {
     public static final Logger log = Logger.getLogger(KnowtatorManager.class);
-    public AnnotatorManager annotatorManager;
+    public ProfileManager profileManager;
 //    public OWLSelectionModel selectionModel;
     public AnnotationManager annotationManager;
     public XmlUtil xmlUtil;
 
+    private List<ProfileListener> profileListeners;
     public List<AnnotationListener> annotationListeners;
     public List<DocumentListener> documentListeners;
     public List<OwlSelectionListener> owlSelectionListeners;
@@ -42,6 +45,7 @@ public class KnowtatorManager implements OwlSelectionListener {
     public OWLWorkspace owlWorkspace;
     public BasicKnowtatorView view;
     private ConfigProperties configProperties;
+
 
 
     public KnowtatorManager(OWLModelManagerImpl owlModelManager, OWLWorkspace owlWorkspace) {
@@ -64,11 +68,12 @@ public class KnowtatorManager implements OwlSelectionListener {
 
     public void initManagers() {
         annotationManager = new AnnotationManager(this);
-        annotatorManager = new AnnotatorManager(this);  //manipulates annotatorMap and colors
+        profileManager = new ProfileManager(this);  //manipulates annotatorMap and colors
         xmlUtil = new XmlUtil(this);  //reads and writes to XML
     }
 
     public void initListeners() {
+        profileListeners = new ArrayList<>();
         annotationListeners = new ArrayList<>();
         documentListeners = new ArrayList<>();
         documentListeners.add(annotationManager);
@@ -80,8 +85,8 @@ public class KnowtatorManager implements OwlSelectionListener {
 
 
 
-    public AnnotatorManager getAnnotatorManager() {
-        return annotatorManager;
+    public ProfileManager getProfileManager() {
+        return profileManager;
     }
 
     @SuppressWarnings("unused")
@@ -144,6 +149,12 @@ public class KnowtatorManager implements OwlSelectionListener {
         }
     }
 
+    public void profileChangedEvent(Profile profile) {
+        for (ProfileListener listener : profileListeners) {
+            listener.profileChanged(profile);
+        }
+    }
+
     public BasicKnowtatorView getKnowtatorView() {
         return view;
     }
@@ -177,4 +188,7 @@ public class KnowtatorManager implements OwlSelectionListener {
         getXmlUtil().read("file/test_annotations.xml", true);
     }
 
+    public void addProfileListener(ProfileListener listener) {
+        profileListeners.add(listener);
+    }
 }
