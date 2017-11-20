@@ -2,343 +2,343 @@
 <annotations textSource="11597317.txt">
   <annotation>
     <mention id="chebi_Instance_30000" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="1190" end="1197" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30065" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="1330" end="1337" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30108" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="1483" end="1490" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30151" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="10146" end="10163" />
     <spannedText>single-strand DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30154" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="10165" end="10170" />
     <spannedText>ssDNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30157" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="10177" end="10194" />
     <spannedText>double-strand DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30160" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="10196" end="10201" />
     <spannedText>dsDNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30163" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="10305" end="10310" />
     <spannedText>dsDNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30166" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="10435" end="10440" />
     <spannedText>ssDNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30169" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="10524" end="10529" />
     <spannedText>ssDNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30181" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="12909" end="12914" />
     <spannedText>dsDNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30184" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="12917" end="12934" />
     <spannedText>double-strand DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30187" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="12990" end="12995" />
     <spannedText>ssDNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30190" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="12998" end="13015" />
     <spannedText>single-strand DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30227" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="2328" end="2335" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30230" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="2336" end="2343" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30236" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="2692" end="2700" />
     <spannedText>proteins</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_30251" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="3645" end="3652" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_40006" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="4454" end="4461" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_40012" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="4776" end="4783" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_40025" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="5648" end="5655" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_40028" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="5979" end="5986" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_40037" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="8355" end="8362" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_40043" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="8808" end="8815" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_40049" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="8923" end="8930" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_40055" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="10968" end="10975" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_40061" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="11192" end="11200" />
     <spannedText>proteins</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_40067" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="12981" end="12988" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_40077" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="7420" end="7427" />
     <spannedText>peptide</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_40089" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="8126" end="8133" />
     <spannedText>peptide</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_40098" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="8224" end="8231" />
     <spannedText>peptide</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_40129" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="10885" end="10892" />
     <spannedText>peptide</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50060" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="322" end="325" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50066" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="455" end="458" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50079" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="1859" end="1862" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50085" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="1955" end="1958" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50094" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="2053" end="2056" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50102" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="2773" end="2776" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50108" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="3079" end="3082" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50116" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="3543" end="3546" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50125" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="3918" end="3921" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50131" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="7585" end="7588" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50139" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="8045" end="8048" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50147" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="8212" end="8215" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50155" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="8420" end="8423" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50159" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="8271" end="8274" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50165" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="10554" end="10557" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50169" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="11281" end="11284" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50173" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="12046" end="12049" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50177" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="19505" end="19508" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50181" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="19529" end="19532" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50185" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="19649" end="19652" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50189" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="19746" end="19749" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50193" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="20128" end="20131" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_80219" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="1344" end="1355" />
     <spannedText>amino acids</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_80227" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="4797" end="4807" />
     <spannedText>amino acid</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_80515" />
-    <profile id="chebi_Instance_10016">Mike Bada</profile>
+    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
     <span start="7572" end="7581" />
     <spannedText>inhibitor</spannedText>
   </annotation>

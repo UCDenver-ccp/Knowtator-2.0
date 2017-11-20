@@ -28,7 +28,7 @@
 
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
-import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
 
 import java.util.Collections;
@@ -64,11 +64,11 @@ public class ClassAndSpanMatcher implements Matcher {
 	 * This is a static version of the above match method that can be called by
 	 * other matcher implementations.
 	 *
-	 * @return an Annotation that matches or null.
+	 * @return an annotation that matches or null.
 	 */
 	public static Annotation match(Annotation annotation, String compareSetName, IAA iaa,
 								   Set<Annotation> excludeAnnotations) {
-		Set<Annotation> singleMatchSet = matches(annotation, compareSetName, iaa, excludeAnnotations, true);
+		Set<Annotation> singleMatchSet = matches(annotation, compareSetName, iaa, excludeAnnotations);
 		if (singleMatchSet.size() == 1) {
 			return singleMatchSet.iterator().next();
 		} else
@@ -78,15 +78,12 @@ public class ClassAndSpanMatcher implements Matcher {
 
 	/**
 	 *
-	 * @param returnFirst
-	 *            if true then a set of size 1 will be returned as soon as a
-	 *            match is found. If false then all matches will be returned.
 	 * @return this method will not return null - but rather an empty set of no
 	 *         matches are found.
 	 */
 
-	public static Set<Annotation> matches(Annotation annotation, String compareSetName, IAA iaa,
-										  Set<Annotation> excludeAnnotations, boolean returnFirst) {
+	private static Set<Annotation> matches(Annotation annotation, String compareSetName, IAA iaa,
+										   Set<Annotation> excludeAnnotations) {
 		String type = annotation.getClassName();
 		Set<Annotation> candidateAnnotations = new HashSet<>(iaa.getExactlyOverlappingAnnotations(annotation,
 				compareSetName));
@@ -99,8 +96,7 @@ public class ClassAndSpanMatcher implements Matcher {
 			if (!excludeAnnotations.contains(candidateAnnotation)
 					&& candidateAnnotation.getClassName().equals(type)) {
 				returnValues.add(candidateAnnotation);
-				if (returnFirst)
-					return returnValues;
+				return returnValues;
 			}
 		}
 		return returnValues;

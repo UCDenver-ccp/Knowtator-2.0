@@ -1,194 +1,82 @@
 package edu.ucdenver.ccp.knowtator;
 
-import edu.ucdenver.ccp.knowtator.annotation.profile.Profile;
-import edu.ucdenver.ccp.knowtator.annotation.profile.ProfileManager;
-import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
-import edu.ucdenver.ccp.knowtator.annotation.text.AnnotationManager;
+import edu.ucdenver.ccp.knowtator.profile.ProfileManager;
+import edu.ucdenver.ccp.knowtator.annotation.TextSourceManager;
+import edu.ucdenver.ccp.knowtator.configuration.ConfigProperties;
 import edu.ucdenver.ccp.knowtator.io.xml.XmlUtil;
-import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
-import edu.ucdenver.ccp.knowtator.listeners.DocumentListener;
-import edu.ucdenver.ccp.knowtator.listeners.OwlSelectionListener;
-import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
-import edu.ucdenver.ccp.knowtator.owl.OntologyTranslator;
-import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
-import edu.ucdenver.ccp.knowtator.ui.text.KnowtatorTextPane;
 import org.apache.log4j.Logger;
-import org.protege.editor.owl.model.OWLModelManager;
-import org.protege.editor.owl.model.OWLModelManagerImpl;
-import org.protege.editor.owl.model.OWLWorkspace;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyID;
-
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 /**
  * @author Harrison Pielke-Lombardo
  */
-public class KnowtatorManager implements OwlSelectionListener {
-    public static final Logger log = Logger.getLogger(KnowtatorManager.class);
-    public ProfileManager profileManager;
-//    public OWLSelectionModel selectionModel;
-    public AnnotationManager annotationManager;
-    public XmlUtil xmlUtil;
+public class KnowtatorManager {
+    private static final Logger log = Logger.getLogger(KnowtatorManager.class);
 
-    private List<ProfileListener> profileListeners;
-    public List<AnnotationListener> annotationListeners;
-    public List<DocumentListener> documentListeners;
-    public List<OwlSelectionListener> owlSelectionListeners;
-    public OWLModelManagerImpl owlModelManager;
-    public OWLWorkspace owlWorkspace;
-    public BasicKnowtatorView view;
+    private XmlUtil xmlUtil;
     private ConfigProperties configProperties;
-
-
-
-    public KnowtatorManager(OWLModelManagerImpl owlModelManager, OWLWorkspace owlWorkspace) {
-        this.owlModelManager = owlModelManager;
-        this.owlWorkspace = owlWorkspace;
-
-        initManagers();
-        loadConfig();
-        initListeners();
-    }
+    private TextSourceManager textSourceManager;
+    private ProfileManager profileManager;
 
     public KnowtatorManager() {
-                /*
-        Initialize the managers, models, and utils
-         */
+        super();
         initManagers();
         loadConfig();
-        initListeners();
+
+        log.warn("Knowtator manager initialized");
     }
 
-    public void initManagers() {
-        annotationManager = new AnnotationManager(this);
-        profileManager = new ProfileManager(this);  //manipulates annotatorMap and colors
+    private void initManagers() {
+        textSourceManager = new TextSourceManager(this);
+        profileManager = new ProfileManager(this);  //manipulates profiles and colors
         xmlUtil = new XmlUtil(this);  //reads and writes to XML
     }
 
-    public void initListeners() {
-        profileListeners = new ArrayList<>();
-        annotationListeners = new ArrayList<>();
-        documentListeners = new ArrayList<>();
-        documentListeners.add(annotationManager);
-        owlSelectionListeners = new ArrayList<>();
-        owlSelectionListeners.add(this);
+    private void loadConfig() {
+        configProperties = new ConfigProperties();
+        xmlUtil.read("config.xml", true);
     }
-
-
-
 
 
     public ProfileManager getProfileManager() {
         return profileManager;
     }
-
-    @SuppressWarnings("unused")
-    public void loadOntologyFromLocation(String classID) {
-        List<String> ontologies = owlModelManager.getActiveOntologies().stream().map(ontology -> {
-            OWLOntologyID ontID = ontology.getOntologyID();
-            Optional<IRI> ontIRI = ontID.getOntologyIRI();
-            if(ontIRI.isPresent()) {
-                return ontIRI.get().toURI().toString();
-            } else {
-                return null;
-            }
-        }).collect(Collectors.toList());
-
-        String ontologyLocation = OntologyTranslator.translate(classID);
-        if (!ontologies.contains(ontologyLocation)) {
-            owlModelManager.loadOntologyFromPhysicalURI(URI.create(OntologyTranslator.whichOntologyToUse(ontologyLocation)));
-        }
-
-    }
-
-    public void setView(BasicKnowtatorView view) {
-        this.view = view;
-    }
-
     public XmlUtil getXmlUtil() {
         return xmlUtil;
     }
-    public AnnotationManager getAnnotationManager() {
-        return annotationManager;
-    }
-
-
-    public OWLModelManager getOwlModelManager() {
-        return owlModelManager;
-    }
-    public List<AnnotationListener> getAnnotationListeners() {
-        return annotationListeners;
-    }
-
-    public OWLWorkspace getOwlWorkspace() {
-        return owlWorkspace;
-    }
-
-    public void owlSelectionChangedEvent(OWLEntity owlEntity) {
-        for (OwlSelectionListener listener : owlSelectionListeners) {
-            listener.owlEntitySelectionChanged(owlEntity);
-        }
-    }
-
-    public void annotationsChangedEvent(Annotation annotation) {
-        for (AnnotationListener listener : annotationListeners) {
-            listener.annotationsChanged(annotation);
-        }
-    }
-
-    public void documentChangedEvent(KnowtatorTextPane textPane) {
-        for (DocumentListener listener : documentListeners) {
-            listener.documentChanged(textPane);
-        }
-    }
-
-    public void profileChangedEvent(Profile profile) {
-        for (ProfileListener listener : profileListeners) {
-            listener.profileChanged(profile);
-        }
-    }
-
-    public BasicKnowtatorView getKnowtatorView() {
-        return view;
-    }
-
-    public void loadConfig() {
-        configProperties = new ConfigProperties();
-        xmlUtil.read("config.xml", true);
-    }
-
-    @Override
-    public void owlEntitySelectionChanged(OWLEntity owlEntity) {
-        if (view != null) {
-            if (view.getView() != null) {
-                if (view.getView().isSyncronizing()) {
-                    owlWorkspace.getOWLSelectionModel().setSelectedEntity(owlEntity);
-                }
-            }
-        }
-    }
-
     public ConfigProperties getConfigProperties() {
         return configProperties;
     }
+    public TextSourceManager getTextSourceManager() {
+        return textSourceManager;
+    }
+
+    // I want to keep this method in case I want to autoLoad ontologies eventually
+//    public void loadOntologyFromLocation(String classID) {
+//        List<String> ontologies = owlModelManager.getActiveOntologies().stream().map(ontology -> {
+//            OWLOntologyID ontID = ontology.getOntologyID();
+//            Optional<IRI> ontIRI = ontID.getOntologyIRI();
+//            if(ontIRI.isPresent()) {
+//                return ontIRI.get().toURI().toString();
+//            } else {
+//                return null;
+//            }
+//        }).collect(Collectors.toList());
+//
+//        String ontologyLocation = OntologyTranslator.translate(classID);
+//        if (!ontologies.contains(ontologyLocation)) {
+//            owlModelManager.loadOntologyFromPhysicalURI(URI.create(OntologyTranslator.whichOntologyToUse(ontologyLocation)));
+//        }
+//
+//    }
 
     public static void main(String[] args) {
         KnowtatorManager manager = new KnowtatorManager();
         manager.simpleTest();
     }
 
-    public void simpleTest() {
-        getXmlUtil().read("file/test_annotations.xml", true);
-    }
-
-    public void addProfileListener(ProfileListener listener) {
-        profileListeners.add(listener);
+    private void simpleTest() {
+        getXmlUtil().read("file/test_project.xml", true);
+        getXmlUtil().write(String.format("%stest_project.xml", configProperties.getDefaultSaveLocation()));
     }
 }

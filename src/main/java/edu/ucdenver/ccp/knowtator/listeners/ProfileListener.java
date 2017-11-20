@@ -1,7 +1,11 @@
 package edu.ucdenver.ccp.knowtator.listeners;
 
-import edu.ucdenver.ccp.knowtator.annotation.profile.Profile;
+import edu.ucdenver.ccp.knowtator.profile.Profile;
 
-public interface ProfileListener {
-    void profileChanged(Profile profile);
+public interface ProfileListener extends Listener {
+    void profileAdded(Profile profile);
+
+    void profileRemoved();
+
+    void profileSelectionChanged(Profile profile);
 }

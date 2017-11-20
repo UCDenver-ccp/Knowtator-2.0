@@ -28,8 +28,8 @@
 
 package edu.ucdenver.ccp.knowtator.iaa;
 
-import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
-import edu.ucdenver.ccp.knowtator.annotation.text.Span;
+import edu.ucdenver.ccp.knowtator.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.Span;
 
 import java.util.*;
 
@@ -41,19 +41,19 @@ import java.util.*;
 
 public class AnnotationSpanIndex {
 
-	Map<Integer, Set<Annotation>> window2AnnotationsMap;
+	private Map<Integer, Set<Annotation>> window2AnnotationsMap;
 
-	int windowSize;
+	private int windowSize;
 
 	public AnnotationSpanIndex(Collection<Annotation> annotations) {
 		this(annotations, 20);
 	}
 
-	public AnnotationSpanIndex(Collection<Annotation> annotations, int windowSize) {
+	private AnnotationSpanIndex(Collection<Annotation> annotations, int windowSize) {
 		this.windowSize = windowSize;
 		window2AnnotationsMap = new HashMap<>();
 		for (Annotation annotation : annotations) {
-			List<Span> spans = annotation.getSpans();
+			TreeSet<Span> spans = annotation.getSpans();
 			for (Span span : spans) {
 				int startKey = span.getStart() / windowSize;
 				int endKey = span.getEnd() / windowSize;
@@ -65,9 +65,9 @@ public class AnnotationSpanIndex {
 
 		// for(Integer window : window2AnnotationsMap.keySet())
 		// {
-		// Set<Annotation> windowAnnotations =
+		// Set<annotation> windowAnnotations =
 		// window2AnnotationsMap.get(window);
-		// for(Annotation windowAnnotation : windowAnnotations)
+		// for(annotation windowAnnotation : windowAnnotations)
 		// {
 		// Collection<Span> spans = windowAnnotation.getSpans();
 		// }
@@ -81,7 +81,7 @@ public class AnnotationSpanIndex {
 		window2AnnotationsMap.get(key).add(annotation);
 	}
 
-	public Set<Annotation> getNearbyAnnotations(Annotation annotation) {
+	private Set<Annotation> getNearbyAnnotations(Annotation annotation) {
 		Collection<Span> spans = annotation.getSpans();
 		HashSet<Integer> windows = new HashSet<>();
 		for (Span span : spans) {
@@ -104,18 +104,18 @@ public class AnnotationSpanIndex {
 		Set<Annotation> nearbyAnnotations = getNearbyAnnotations(annotation);
 		Set<Annotation> returnValues = new HashSet<>();
 		for (Annotation nearbyAnnotation : nearbyAnnotations) {
-			if (Annotation.spansOverlap(annotation, nearbyAnnotation)) {
+			if (IAA.spansOverlap(annotation, nearbyAnnotation)) {
 				returnValues.add(nearbyAnnotation);
 			}
 		}
 		return returnValues;
 	}
 
-	public Set<Annotation> getExactlyOverlappingAnnotations(Annotation annotation) {
+	Set<Annotation> getExactlyOverlappingAnnotations(Annotation annotation) {
 		Set<Annotation> nearbyAnnotations = getNearbyAnnotations(annotation);
 		Set<Annotation> returnValues = new HashSet<>();
 		for (Annotation nearbyAnnotation : nearbyAnnotations) {
-			if (Annotation.spansMatch(annotation, nearbyAnnotation)) {
+			if (IAA.spansMatch(annotation, nearbyAnnotation)) {
 				returnValues.add(nearbyAnnotation);
 			}
 		}

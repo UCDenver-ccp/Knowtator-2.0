@@ -1,7 +1,7 @@
 package other;
 
 import com.mxgraph.swing.util.mxGraphActions;
-import edu.ucdenver.ccp.knowtator.ui.graph.KnowtatorGraphViewer;
+import edu.ucdenver.ccp.knowtator.ui.graph.GraphViewer;
 
 import javax.swing.*;
 
@@ -13,7 +13,7 @@ public class GraphPopupMenu extends JPopupMenu
 	 */
 	public static final long serialVersionUID = -3132749140550242191L;
 
-	public GraphPopupMenu(KnowtatorGraphViewer graphViewer)
+	public GraphPopupMenu(GraphViewer graphViewer)
 	{
 		boolean selected = !graphViewer.getGraph().isSelectionEmpty();
 

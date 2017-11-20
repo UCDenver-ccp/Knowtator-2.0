@@ -28,7 +28,7 @@
 
 package edu.ucdenver.ccp.knowtator.iaa.html;
 
-import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.iaa.AnnotationSpanIndex;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher;
@@ -118,7 +118,7 @@ public class SpanMatcherHTML {
 		html.close();
 	}
 
-	public static Map<String, int[]> errorMatrix(Set<Annotation> matches, Map<Annotation, Set<Annotation>> matchSets) {
+	private static Map<String, int[]> errorMatrix(Set<Annotation> matches, Map<Annotation, Set<Annotation>> matchSets) {
 		Map<String, int[]> counts = new HashMap<>();
 
 		for (Annotation match : matches) {

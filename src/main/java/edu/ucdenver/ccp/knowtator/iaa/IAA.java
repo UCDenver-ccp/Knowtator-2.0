@@ -28,71 +28,70 @@
 
 package edu.ucdenver.ccp.knowtator.iaa;
 
-import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.Span;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class IAA {
-	Set<String> annotationClasses;
+	private Set<String> annotationClasses;
 
-	Set<String> setNames;
+	private Set<String> setNames;
 
-	Set<Annotation> annotations;
+	private Set<Annotation> annotations;
 
-	Set<Annotation> emptyAnnotationSet;
+	private Set<Annotation> emptyAnnotationSet;
 
-	// key is an Annotation set, value is a map whose value is an Annotation
+	// key is an annotation set, value is a map whose value is an annotation
 	// class
 	// and values is the set of annotations in the set having that class.
-	Map<String, Map<String, Set<Annotation>>> class2AnnotationsMap;
+    private Map<String, Map<String, Set<Annotation>>> class2AnnotationsMap;
 
-	// key is an Annotation set, value is a annotationSpanIndex for the
+	// key is an annotation set, value is a annotationSpanIndex for the
 	// annotations in that set.
-	Map<String, AnnotationSpanIndex> spanIndexes;
+    private Map<String, AnnotationSpanIndex> spanIndexes;
 
-	// key is an Annotation set, value is a set of annotations that are
+	// key is an annotation set, value is a set of annotations that are
 	// considered matches.
-	Map<String, Set<Annotation>> allwayMatches;
+    private Map<String, Set<Annotation>> allwayMatches;
 
-	Map<String, Set<Annotation>> trivialAllwayMatches;
+	private Map<String, Set<Annotation>> trivialAllwayMatches;
 
-	Map<String, Set<Annotation>> nontrivialAllwayMatches;
+	private Map<String, Set<Annotation>> nontrivialAllwayMatches;
 
-	// key is an Annotation set, value is a set of annotations that are
+	// key is an annotation set, value is a set of annotations that are
 	// considered non-matches.
-	Map<String, Set<Annotation>> allwayNonmatches;
+    private Map<String, Set<Annotation>> allwayNonmatches;
 
-	Map<String, Set<Annotation>> trivialAllwayNonmatches;
+	private Map<String, Set<Annotation>> trivialAllwayNonmatches;
 
-	Map<String, Set<Annotation>> nontrivialAllwayNonmatches;
+	private Map<String, Set<Annotation>> nontrivialAllwayNonmatches;
 
-	// key is an Annotation, value is the set of n annotations that it was
+	// key is an annotation, value is the set of n annotations that it was
 	// matched with in n-way IAA.
-	Map<Annotation, Set<Annotation>> allwayMatchSets;
+    private Map<Annotation, Set<Annotation>> allwayMatchSets;
 
-	// key is an Annotation set that is considered gold standard by which other
-	// Annotation sets are compared,
-	// value is a map whose key is the Annotation set being compared to gold
+	// key is an annotation set that is considered gold standard by which other
+	// annotation sets are compared,
+	// value is a map whose key is the annotation set being compared to gold
 	// standard and whose value are annotations (from the
 	// gold standard set) that are matches.
 
-	Map<String, Map<String, Set<Annotation>>> pairwiseMatches;
+	private Map<String, Map<String, Set<Annotation>>> pairwiseMatches;
 
-	Map<String, Map<String, Set<Annotation>>> trivialPairwiseMatches;
+	private Map<String, Map<String, Set<Annotation>>> trivialPairwiseMatches;
 
-	Map<String, Map<String, Set<Annotation>>> nontrivialPairwiseMatches;
+	private Map<String, Map<String, Set<Annotation>>> nontrivialPairwiseMatches;
 
-	Map<String, Map<String, Set<Annotation>>> pairwiseNonmatches;
+	private Map<String, Map<String, Set<Annotation>>> pairwiseNonmatches;
 
-	Map<String, Map<String, Set<Annotation>>> trivialPairwiseNonmatches;
+	private Map<String, Map<String, Set<Annotation>>> trivialPairwiseNonmatches;
 
-	Map<String, Map<String, Set<Annotation>>> nontrivialPairwiseNonmatches;
+	private Map<String, Map<String, Set<Annotation>>> nontrivialPairwiseNonmatches;
 
-	Map<Annotation, Set<Annotation>> pairwiseMatchPairs;
+	private Map<Annotation, Set<Annotation>> pairwiseMatchPairs;
 	private HashMap<String, Collection<Annotation>> annotationSets;
 
 	public IAA(Set<String> setNames) {
@@ -115,7 +114,7 @@ public class IAA {
 		reset();
 	}
 
-	public void reset() {
+	private void reset() {
 		allwayMatches = new HashMap<>();
 		trivialAllwayMatches = new HashMap<>();
 		nontrivialAllwayMatches = new HashMap<>();
@@ -174,7 +173,7 @@ public class IAA {
 		spanIndexes = new HashMap<>();
 
 		for (Annotation annotation : annotations) {
-			String setName = annotation.getProfile().getName();
+			String setName = annotation.getAnnotator().getProfileID();
 			String annotationClass = annotation.getClassName();
 			if (annotationClass != null)
 				annotationClasses.add(annotationClass);
@@ -201,24 +200,24 @@ public class IAA {
 		}
 	}
 
-	public void allwayIAA(Matcher matcher) throws IAAException {
+	void allwayIAA(Matcher matcher) throws IAAException {
 		/*
-		 * At the moment an Annotation is found to be a match, there are n-1
-		 * other annotations that are also found to be a match (an Annotation
+		 * At the moment an annotation is found to be a match, there are n-1
+		 * other annotations that are also found to be a match (an annotation
 		 * for each of the other annotators). We will gather all matches as we
 		 * discover them so that a multiple annotations will not match with an
-		 * Annotation that has already been matched. This might happen if, for
-		 * example, one profile mistakenly created a duplicate Annotation. We
+		 * annotation that has already been matched. This might happen if, for
+		 * example, one profile mistakenly created a duplicate annotation. We
 		 * would only want to consider one of them a match. All annotations that
 		 * have been found to be a match will be put in
 		 * matchedAnnotationsAllway.
 		 */
 		Set<Annotation> matchedAnnotations = new HashSet<>();
 		for (Annotation annotation : annotations) {
-			String setName = annotation.getProfile().getName();
+			String setName = annotation.getAnnotator().getProfileID();
 			if (!matchedAnnotations.contains(annotation)) {
 				MatchResult matchResult = new MatchResult();
-				// just because an Annotation matches with another Annotation
+				// just because an annotation matches with another annotation
 				// from each
 				// of the other sets, that does not mean the other annotations
 				// match with
@@ -232,21 +231,21 @@ public class IAA {
 					allwayMatchSets.put(annotation, allMatches);
 
 					for (Annotation match : matches) {
-						String matchedSet = match.getProfile().getName();
+						String matchedSet = match.getAnnotator().getProfileID();
 						allwayMatches.get(matchedSet).add(match);
 						allwayMatchSets.put(match, allMatches);
 					}
 					if (matchResult.getResult() == MatchResult.NONTRIVIAL_MATCH) {
 						nontrivialAllwayMatches.get(setName).add(annotation);
 						for (Annotation match : matches) {
-							String matchedSet = match.getProfile().getName();
+							String matchedSet = match.getAnnotator().getProfileID();
 							nontrivialAllwayMatches.get(matchedSet).add(match);
 						}
 
 					} else if (matchResult.getResult() == MatchResult.TRIVIAL_MATCH) {
 						trivialAllwayMatches.get(setName).add(annotation);
 						for (Annotation match : matches) {
-							String matchedSet = match.getProfile().getName();
+							String matchedSet = match.getAnnotator().getProfileID();
 							trivialAllwayMatches.get(matchedSet).add(match);
 						}
 					} else {
@@ -274,21 +273,20 @@ public class IAA {
 		}
 	}
 
-	/**
-	 * This method performs pairwise IAA for each combination of annotators.
-	 * 
-	 */
-	@SuppressWarnings("unchecked")
-	public void pairwiseIAA(Class matchClass) throws NoSuchMethodException, InstantiationException,
-			IllegalAccessException, InvocationTargetException, IAAException {
-		Constructor constructor = matchClass.getConstructor();
-		Matcher matcher = (Matcher) constructor.newInstance();
-		pairwiseIAA(matcher);
-	}
+//	/**
+//	 * This method performs pairwise IAA for each combination of annotators.
+//	 *
+//	 */
+//	public void pairwiseIAA(Class matchClass) throws NoSuchMethodException, InstantiationException,
+//			IllegalAccessException, InvocationTargetException, IAAException {
+//		Constructor constructor = matchClass.getConstructor();
+//		Matcher matcher = (Matcher) constructor.newInstance();
+//		pairwiseIAA(matcher);
+//	}
 
-	public void pairwiseIAA(Matcher matcher) throws IAAException {
+	void pairwiseIAA(Matcher matcher) throws IAAException {
 		for (Annotation annotation : annotations) {
-			String setName = annotation.getProfile().getName();
+			String setName = annotation.getAnnotator().getProfileID();
 			for (String compareSetName : annotationSets.keySet()) {
 				if (!setName.equals(compareSetName)) {
 					Set<Annotation> matchedAnnotations = pairwiseMatches.get(setName).get(compareSetName);
@@ -335,9 +333,9 @@ public class IAA {
 		}
 	}
 
-	public Set<Annotation> match(Annotation annotation, Set<Annotation> excludeAnnotations, Matcher matcher,
-								 MatchResult matchResult) {
-		String setName = annotation.getProfile().getName();
+	private Set<Annotation> match(Annotation annotation, Set<Annotation> excludeAnnotations, Matcher matcher,
+                                  MatchResult matchResult) {
+		String setName = annotation.getAnnotator().getProfileID();
 		Set<Annotation> matchedAnnotations = new HashSet<>();
 
 		// trivial matches trump non-trivial matches. If there is a single
@@ -381,13 +379,13 @@ public class IAA {
 		return safeReturn(class2AnnotationsMap.get(compareSetName).get(annotationClass));
 	}
 
-	public Set<Annotation> getAnnotationsOfClass(String className, String compareSetName) {
-		if (class2AnnotationsMap.containsKey(compareSetName)
-				&& class2AnnotationsMap.get(compareSetName).containsKey(className)) {
-			return class2AnnotationsMap.get(compareSetName).get(className);
-		} else
-			return Collections.emptySet();
-	}
+//	public Set<annotation> getAnnotationsOfClass(String className, String compareSetName) {
+//		if (class2AnnotationsMap.containsKey(compareSetName)
+//				&& class2AnnotationsMap.get(compareSetName).containsKey(className)) {
+//			return class2AnnotationsMap.get(compareSetName).get(className);
+//		} else
+//			return Collections.emptySet();
+//	}
 
 	public Set<Annotation> getOverlappingAnnotations(Annotation annotation, String compareSetName) {
 		AnnotationSpanIndex spanIndex = spanIndexes.get(compareSetName);
@@ -422,9 +420,9 @@ public class IAA {
 		return pairwiseNonmatches;
 	}
 
-	public Map<String, Collection<Annotation>> getAnnotationSets() {
-		return annotationSets;
-	}
+//	public Map<String, Collection<annotation>> getAnnotationSets() {
+//		return annotationSets;
+//	}
 
 	public Set<String> getSetNames() {
 		return setNames;
@@ -450,16 +448,98 @@ public class IAA {
 		return nontrivialAllwayNonmatches;
 	}
 
-	public Map<String, Map<String, Set<Annotation>>> getNontrivialPairwiseMatches() {
-		return nontrivialPairwiseMatches;
-	}
-
-	public Map<String, Map<String, Set<Annotation>>> getNontrivialPairwiseNonmatches() {
-		return nontrivialPairwiseNonmatches;
-	}
+//	public Map<String, Map<String, Set<annotation>>> getNontrivialPairwiseMatches() {
+//		return nontrivialPairwiseMatches;
+//	}
+//
+//	public Map<String, Map<String, Set<annotation>>> getNontrivialPairwiseNonmatches() {
+//		return nontrivialPairwiseNonmatches;
+//	}
 
 	public Map<Annotation, Set<Annotation>> getAllwayMatchSets() {
 		return allwayMatchSets;
+	}
+
+	/**
+	 * @param annotation1
+	 * @param annotation2
+	 * @return true if the annotations have the same spans
+	 */
+	@SuppressWarnings("JavaDoc")
+	static boolean spansMatch(Annotation annotation1, Annotation annotation2) {
+		return Span.spansMatch(annotation1.getSpans(), annotation2.getSpans());
+	}
+
+	@SuppressWarnings("unused")
+	public static boolean spansMatch(List<Annotation> annotations) {
+		for (int i = 1; i < annotations.size(); i++) {
+			if (!spansMatch(annotations.get(0), annotations.get(i)))
+				return false;
+		}
+		return true;
+	}
+
+
+	static boolean spansOverlap(Annotation annotation1, Annotation annotation2) {
+		return Span.intersects(annotation1.getSpans(), annotation2.getSpans());
+	}
+
+	/**
+	 * Returns the text covered by an annotation.
+	 *
+	 * @param annotation
+	 *            an annotation that has spans corresponding to extents of
+	 *            annotationText
+	 * @param annotationText
+	 *            the text from which an annotation corresponds to.
+	 * @param spanSeparator
+	 *            if more than one Span exists, then this String will be
+	 *            inserted between each segment of text.
+	 * @return the text covered by an annotation.
+	 */
+	public static String getCoveredText(Annotation annotation, String annotationText, String spanSeparator) {
+		TreeSet<Span> spans = annotation.getSpans();
+		if (spans == null || spans.size() == 0)
+			return "";
+		else if (spans.size() == 1) {
+			return Span.substring(annotationText, spans.first());
+		} else {
+			StringBuilder sb = new StringBuilder();
+			sb.append(Span.substring(annotationText, spans.first()));
+			for (int i = 1; i < spans.size(); i++) {
+				sb.append(spanSeparator);
+				sb.append(Span.substring(annotationText, spans.first()));
+			}
+			return sb.toString();
+		}
+	}
+
+	/**
+	 * This method returns the shortest annotation - that is the annotation
+	 * whose Span is the shortest. If an annotation has more than one Span, then
+	 * its size is the sum of the size of each of its spans.
+	 *
+	 * @param annotations
+	 * @return will only return one annotation. In the case of a tie, will
+	 *         return the first annotation with the smallest size encountered
+	 *         during iteration. Returns null if annotations is null or empty.
+	 */
+	@SuppressWarnings("JavaDoc")
+	public static Annotation getShortestAnnotation(Collection<Annotation> annotations) {
+		if (annotations == null || annotations.size() == 0)
+			return null;
+
+		Annotation shortestAnnotation = null;
+		int shortestAnnotationLength = -1;
+
+		for (Annotation annotation : annotations) {
+			int annotationSize = annotation.getSize();
+			if (shortestAnnotationLength == -1 || annotationSize < shortestAnnotationLength) {
+				shortestAnnotation = annotation;
+				shortestAnnotationLength = annotationSize;
+			}
+		}
+		return shortestAnnotation;
 	}
 
 }

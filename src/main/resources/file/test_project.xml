@@ -7,27 +7,30 @@ This sentence should be annotated in one color.
 
 This next sentence should be annotated in a different color.</text>
 	<annotation>
-		<profile id="Default">Default</profile>
+		<annotator>Default</annotator>
 		<span start="97" end="145" />
 		<class-name>sky</class-name>
+		<class-id>hpl0003</class-id>
 	</annotation>
 	<annotation>
-		<profile id="Default">Default</profile>
+		<annotator>Default</annotator>
 		<span start="146" end="206" />
 		<class-name>fire</class-name>
+		<class-id>hpl0001</class-id>
 	</annotation>
 	<annotation>
-		<profile id="Default">Default</profile>
+		<annotator>Default</annotator>
 		<span start="175" end="184" />
 		<span start="85" end="94" />
 		<class-name>grass</class-name>
+		<class-id>hpl0002</class-id>
 	</annotation>
 </document>
 <document textSource="test_article2">
 	<text>This is a second test document.</text>
 </document>
 
-<profile name="Harrison" id="1234">
+<profile id="Harrison">
 	<highlighter>
 		<class-name>biological_process</class-name>
 		<color>#99ffff</color>
@@ -36,7 +39,8 @@ This next sentence should be annotated in a different color.</text>
 		<class-name>cellular_component</class-name>
 		<color>#ff66ff</color>
 	</highlighter>
-</profile><profile name="Default" id="Default">
+</profile>
+<profile id="Default">
 	<highlighter>
 		<class-name>sky</class-name>
 		<color>#00ffff</color>

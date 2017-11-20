@@ -58,9 +58,9 @@ import java.awt.event.*;
 @SuppressWarnings("unchecked")
 public class ListDialog extends JDialog
         implements ActionListener {
-    public static ListDialog dialog;
-    public static String value = "";
-    public JList list;
+    private static ListDialog dialog;
+    private static String value = "";
+    private JList list;
 
     /**
      * Set up and show the dialog.  The first Component argument
@@ -90,12 +90,12 @@ public class ListDialog extends JDialog
         return value;
     }
 
-    public void setValue(String newValue) {
+    private void setValue(String newValue) {
         value = newValue;
         list.setSelectedValue(value, true);
     }
 
-    public ListDialog(Frame frame,
+    private ListDialog(Frame frame,
                        JComponent locationComp,
                        String labelText,
                        String title,

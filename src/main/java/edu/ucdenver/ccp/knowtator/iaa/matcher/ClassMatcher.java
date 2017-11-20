@@ -27,7 +27,7 @@
  */
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
-import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
 
 import java.util.Collections;
@@ -36,10 +36,10 @@ import java.util.Set;
 
 public class ClassMatcher implements Matcher {
 	/**
-	 * This method will return an Annotation with the same class and spans. If
-	 * one does not exist, then it will return an Annotation with the same class
+	 * This method will return an annotation with the same class and spans. If
+	 * one does not exist, then it will return an annotation with the same class
 	 * and overlapping spans. If more than one of these exists, then the
-	 * shortest Annotation with the same class and overlapping spans will be
+	 * shortest annotation with the same class and overlapping spans will be
 	 * returned. Otherwise, null is returned.
 	 *
 	 * @param matchResult
@@ -65,8 +65,8 @@ public class ClassMatcher implements Matcher {
 		}
 	}
 
-	public static Annotation match(Annotation annotation, String compareSetName, IAA iaa,
-								   Set<Annotation> excludeAnnotations) {
+	private static Annotation match(Annotation annotation, String compareSetName, IAA iaa,
+                                    Set<Annotation> excludeAnnotations) {
 		Annotation spanAndClassMatch = ClassAndSpanMatcher.match(annotation, compareSetName, iaa, excludeAnnotations);
 		if (spanAndClassMatch != null) {
 			return spanAndClassMatch;
@@ -77,15 +77,15 @@ public class ClassMatcher implements Matcher {
 			if (matches.size() == 1)
 				return matches.iterator().next();
 			else {
-				return Annotation.getShortestAnnotation(matches);
+				return IAA.getShortestAnnotation(matches);
 			}
 		} else {
 			return null;
 		}
 	}
 
-	public static Set<Annotation> matches(Annotation annotation, String compareSetName, IAA iaa,
-										  Set<Annotation> excludeAnnotations) {
+	private static Set<Annotation> matches(Annotation annotation, String compareSetName, IAA iaa,
+                                           Set<Annotation> excludeAnnotations) {
 
 		Set<Annotation> overlappingAnnotations = iaa.getOverlappingAnnotations(annotation, compareSetName);
 		Set<Annotation> annotationsOfSameType = iaa.getAnnotationsOfSameType(annotation, compareSetName);

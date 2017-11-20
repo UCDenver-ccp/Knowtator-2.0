@@ -2,715 +2,715 @@
 <annotations textSource="11604102.txt">
   <annotation>
     <mention id="chebi_Instance_50004" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="442" end="449" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50010" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="549" end="556" />
     <spannedText>Protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50016" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="809" end="816" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50022" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="877" end="884" />
     <spannedText>proline</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50031" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="1338" end="1346" />
     <spannedText>proteins</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50039" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="1555" end="1562" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50042" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="3183" end="3191" />
     <spannedText>proteins</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50048" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="430" end="433" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50240" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="1185" end="1192" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50250" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="1919" end="1923" />
     <spannedText>mRNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50257" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="3171" end="3174" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50264" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="3973" end="3977" />
     <spannedText>mRNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50271" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="4184" end="4192" />
     <spannedText>proteins</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50277" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="4280" end="4287" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50283" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="4297" end="4300" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50290" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="4323" end="4330" />
     <spannedText>proline</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50299" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="4367" end="4374" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50305" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="4436" end="4439" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50312" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="4623" end="4627" />
     <spannedText>mRNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50319" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="4916" end="4923" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50325" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="4931" end="4941" />
     <spannedText>amino acid</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50332" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="5334" end="5341" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50338" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="5355" end="5358" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50345" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="5423" end="5430" />
     <spannedText>proline</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50360" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="5506" end="5514" />
     <spannedText>proteins</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50365" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="5527" end="5538" />
     <spannedText>amino acids</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50372" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="5610" end="5618" />
     <spannedText>proteins</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50378" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="5681" end="5688" />
     <spannedText>proline</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50390" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="5694" end="5697" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50397" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="5706" end="5713" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50403" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="5872" end="5880" />
     <spannedText>proteins</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50406" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="6259" end="6267" />
     <spannedText>proteins</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50409" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="9569" end="9576" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50412" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="9690" end="9697" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50415" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="10037" end="10044" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50418" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="10165" end="10172" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50421" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="10573" end="10580" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50424" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="10628" end="10635" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50427" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="11727" end="11735" />
     <spannedText>proteins</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50430" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="12167" end="12174" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50433" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="12233" end="12241" />
     <spannedText>proteins</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50436" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="12353" end="12360" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50439" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="12395" end="12402" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50442" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="12568" end="12576" />
     <spannedText>proteins</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50445" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="12930" end="12938" />
     <spannedText>proteins</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50448" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="12997" end="13004" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50451" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="13237" end="13244" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50454" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="13297" end="13304" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50457" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="14459" end="14467" />
     <spannedText>proteins</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50460" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="14808" end="14816" />
     <spannedText>proteins</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50463" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="15193" end="15200" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50466" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="17904" end="17911" />
     <spannedText>protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50469" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="18267" end="18275" />
     <spannedText>proteins</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50472" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="18397" end="18405" />
     <spannedText>proteins</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50475" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="19142" end="19149" />
     <spannedText>Protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50478" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="19243" end="19250" />
     <spannedText>Protein</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50481" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="3555" end="3559" />
     <spannedText>mRNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50488" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="5910" end="5913" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50492" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="6368" end="6371" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50496" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="8222" end="8226" />
     <spannedText>mRNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50500" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="8301" end="8305" />
     <spannedText>mRNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50504" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="9119" end="9123" />
     <spannedText>RNAs</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50508" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="11715" end="11718" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50512" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="11805" end="11808" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50516" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="11828" end="11832" />
     <spannedText>mRNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50520" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="11845" end="11849" />
     <spannedText>mRNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50524" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="11954" end="11958" />
     <spannedText>mRNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50528" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="12221" end="12224" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50532" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="12341" end="12344" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50536" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="12718" end="12723" />
     <spannedText>mRNAs</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50540" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="12918" end="12921" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50544" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="12985" end="12988" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50548" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="13067" end="13072" />
     <spannedText>mRNAs</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50552" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="13225" end="13228" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50556" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="13965" end="13968" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50560" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="14232" end="14236" />
     <spannedText>mRNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50564" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="14328" end="14332" />
     <spannedText>mRNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50568" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="14529" end="14533" />
     <spannedText>mRNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50572" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="14565" end="14568" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50576" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="14837" end="14840" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50580" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="15012" end="15015" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50584" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="15181" end="15184" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50588" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="15477" end="15481" />
     <spannedText>mRNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50592" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="15847" end="15850" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50596" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="844" end="847" />
     <spannedText>RNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50612" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="5950" end="5957" />
     <spannedText>proline</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50618" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="9724" end="9731" />
     <spannedText>proline</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50624" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="14405" end="14412" />
     <spannedText>proline</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_50649" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="6273" end="6283" />
     <spannedText>amino acid</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60015" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="9430" end="9433" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60022" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="9525" end="9528" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60038" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="9799" end="9811" />
     <spannedText>oligopeptide</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60044" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="9835" end="9845" />
     <spannedText>amino acid</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60064" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="11240" end="11247" />
     <spannedText>sucrose</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60070" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="11395" end="11402" />
     <spannedText>Sucrose</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60076" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="11562" end="11569" />
     <spannedText>sucrose</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60139" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="13102" end="13109" />
     <spannedText>glycine</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60199" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="16708" end="16711" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60206" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="16713" end="16716" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60216" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="17939" end="17951" />
     <spannedText>oligopeptide</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60222" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="18230" end="18233" />
     <spannedText>DNA</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60232" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="18337" end="18340" />
     <spannedText>His</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60241" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="18346" end="18351" />
     <spannedText>metal</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60250" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="18509" end="18521" />
     <spannedText>oligopeptide</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60256" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="18673" end="18680" />
     <spannedText>peptide</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60262" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="18831" end="18843" />
     <spannedText>oligopeptide</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60268" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="18936" end="18940" />
     <spannedText>NaCl</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60274" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="18969" end="18972" />
     <spannedText>SDS</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60281" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="18980" end="18984" />
     <spannedText>Tris</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60294" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="19342" end="19345" />
     <spannedText>SDS</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60301" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="19807" end="19811" />
     <spannedText>Tris</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60308" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="19828" end="19831" />
     <spannedText>KCl</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60314" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="19838" end="19843" />
     <spannedText>MgCl2</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60320" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="19941" end="19960" />
     <spannedText>protease inhibitors</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60326" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="19977" end="19996" />
     <spannedText>Protease Inhibitors</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60332" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="20285" end="20292" />
     <spannedText>sucrose</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60338" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="20312" end="20316" />
     <spannedText>Tris</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60345" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="20325" end="20328" />
     <spannedText>KCl</spannedText>
   </annotation>
   <annotation>
     <mention id="chebi_Instance_60351" />
-    <profile id="chebi_Instance_10015">Kristin Garcia</profile>
+    <annotator id="chebi_Instance_10015">Kristin Garcia</annotator>
     <span start="20338" end="20343" />
     <spannedText>MgCl2</spannedText>
   </annotation>

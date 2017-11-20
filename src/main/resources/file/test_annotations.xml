@@ -2,7 +2,7 @@
 <annotations textSource="test_article">
   <annotation>
     <mention id="one_Instance_0" />
-    <profile id="Default">Harrison</profile>
+    <annotator id="Default">Harrison</annotator>
     <span start="97" end="144" />
     <spannedText>This sentence should be annotated in one color.</spannedText>
   </annotation>
@@ -11,7 +11,7 @@
   </classMention>
   <annotation>
     <mention id="different_Instance_1" />
-    <profile id="Default">Harrison</profile>
+    <annotator id="Default">Harrison</annotator>
     <span start="146" end="206" />
     <spannedText>This next sentence should be annotated in a different color.</spannedText>
   </annotation>

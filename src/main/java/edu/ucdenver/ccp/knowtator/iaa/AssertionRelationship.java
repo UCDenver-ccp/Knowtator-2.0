@@ -2,10 +2,10 @@ package edu.ucdenver.ccp.knowtator.iaa;
 
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
-public class AssertionRelationship {
+class AssertionRelationship {
 
-    public OWLObjectProperty property;
-    public String propertyName;
+    private OWLObjectProperty property;
+    private String propertyName;
 
     public AssertionRelationship(OWLObjectProperty property, String propertyName) {
         this.property = property;

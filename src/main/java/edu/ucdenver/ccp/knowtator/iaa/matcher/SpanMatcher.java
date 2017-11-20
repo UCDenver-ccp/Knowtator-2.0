@@ -27,7 +27,7 @@
  */
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
-import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
 
 import java.util.HashSet;
@@ -35,8 +35,8 @@ import java.util.Set;
 
 public class SpanMatcher implements Matcher {
 	/**
-	 * This method will return an Annotation with the same class and spans. If
-	 * one does not exist, then it will return an Annotation with the same spans
+	 * This method will return an annotation with the same class and spans. If
+	 * one does not exist, then it will return an annotation with the same spans
 	 * (but different class). Otherwise, null is returned.
 	 *
 	 * @param matchResult

@@ -1,8 +1,8 @@
 package edu.ucdenver.ccp.knowtator.io.xml;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.annotation.text.Annotation;
-import edu.ucdenver.ccp.knowtator.annotation.text.Span;
+import edu.ucdenver.ccp.knowtator.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.Span;
 import org.apache.log4j.Logger;
 
 import java.awt.*;
@@ -10,10 +10,10 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class XmlWriter {
-    public static final Logger log = Logger.getLogger(KnowtatorManager.class);
+class XmlWriter {
+    private static final Logger log = Logger.getLogger(KnowtatorManager.class);
 
-    public static void spanToXml(BufferedWriter bw, Span span) {
+    private static void spanToXml(BufferedWriter bw, Span span) {
         try {
             bw.write(String.format("\t\t<%s %s=\"%s\" %s=\"%s\" />", XmlTags.SPAN, XmlTags.SPAN_START, span.getStart(), XmlTags.SPAN_END, span.getEnd()));
             bw.newLine();
@@ -23,15 +23,16 @@ public class XmlWriter {
 
     }
 
-    public static void annotationToXML(BufferedWriter bw, Annotation annotation) {
+    private static void annotationToXML(BufferedWriter bw, Annotation annotation) {
         try {
             bw.write(String.format("\t<%s>", XmlTags.ANNOTATION));
             bw.newLine();
-            bw.write(String.format("\t\t<%s %s=\"%s\">%s</%s>", XmlTags.ANNOTATOR, XmlTags.ANNOTATOR_ID, annotation.getProfile().getID(), annotation.getProfile().getName(), XmlTags.ANNOTATOR));
+            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.ANNOTATOR, annotation.getAnnotator().getProfileID(), XmlTags.ANNOTATOR));
             bw.newLine();
             annotation.getSpans().forEach(span -> spanToXml(bw, span));
             bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.CLASS_NAME, annotation.getClassName(), XmlTags.CLASS_NAME));
             bw.newLine();
+
             if (annotation.getClassID() != null) {
                 bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.CLASS_ID, annotation.getClassID(), XmlTags.CLASS_ID));
                 bw.newLine();
@@ -43,7 +44,7 @@ public class XmlWriter {
         }
     }
 
-    public static void write(KnowtatorManager manager, String fileName) throws IOException, NoSuchFieldException {
+    static void write(KnowtatorManager manager, String fileName) throws IOException, NoSuchFieldException {
         log.warn(String.format("Writing to: %s", fileName));
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(fileName));
@@ -82,13 +83,13 @@ public class XmlWriter {
     }
 
     private static void writeDocuments(KnowtatorManager manager, BufferedWriter bw) {
-        manager.getKnowtatorView().getTextViewer().getAllTextPanes().forEach(textPane -> {
-            try {
-                bw.write(String.format("<%s %s=\"%s\">", XmlTags.DOCUMENT, XmlTags.TEXTSOURCE, textPane.getName()));
+        manager.getTextSourceManager().getTextSources().forEach(textSource -> {
+        try {
+                bw.write(String.format("<%s %s=\"%s\">", XmlTags.DOCUMENT, XmlTags.DOCUMENT_ID, textSource));
                 bw.newLine();
-                bw.write(String.format("\t<%s>%s</%s>", XmlTags.TEXT, textPane.getText(), XmlTags.TEXT));
+                bw.write(String.format("            \t<%s>%s</%s>", XmlTags.TEXT, textSource.getContent(), XmlTags.TEXT));
                 bw.newLine();
-                manager.getAnnotationManager().getTextAnnotations().get(textPane.getName()).forEach(annotation -> annotationToXML(bw, annotation));
+                textSource.getAnnotations().forEach(annotation -> annotationToXML(bw, annotation));
                 bw.write(String.format("</%s>", XmlTags.DOCUMENT));
                 bw.newLine();
             } catch(IOException e) {
@@ -113,17 +114,18 @@ public class XmlWriter {
     }
 
     private static void writeProfiles(KnowtatorManager manager, BufferedWriter bw) {
-        manager.getProfileManager().getAnnotators().forEach((name, annotator) -> {
+        manager.getProfileManager().getProfiles().values().forEach(profile -> {
             try {
-                bw.write(String.format("<%s %s=\"%s\" %s=\"%s\">",
+                bw.write(String.format("<%s %s=\"%s\">",
                         XmlTags.PROFILE,
-                        XmlTags.PROFILE_NAME, annotator.getName(),
-                        XmlTags.PROFILE_ID, annotator.getID()));
+                        XmlTags.PROFILE_ID, profile.getProfileID()
+                ));
                 bw.newLine();
 
-                annotator.getColors().forEach((className, color) -> highlighterToXml(bw, className, color));
+                profile.getColors().forEach((className, color) -> highlighterToXml(bw, className, color));
 
                 bw.write(String.format("</%s>", XmlTags.PROFILE));
+                bw.newLine();
             }
             catch (IOException e) {
                 e.printStackTrace();
