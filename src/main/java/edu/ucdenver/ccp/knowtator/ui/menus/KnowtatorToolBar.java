@@ -8,6 +8,7 @@ import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class KnowtatorToolBar extends JToolBar {
 
@@ -20,17 +21,17 @@ public class KnowtatorToolBar extends JToolBar {
         add(increaseTextSizeCommand());
 
         add(previousSpanCommand());
-        add(incrementSelectionLeftCommand());
-        add(decrementSelectionLeftCommand());
-        add(decrementSelectionRightCommand());
-        add(incrementSelectionRightCommand());
+        add(growSelectionStartCommand());
+        add(shrinkSelectionStartCommand());
+        add(shrinkSelectionEndCommand());
+        add(growSelectionEndCommand());
         add(nextSpanCommand());
     }
 
     private JButton decreaseTextSizeCommand() {
          JButton decreaseTextSize = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.DECREASE_TEXT_SIZE_ICON));
 
-         decreaseTextSize.addActionListener(e -> {
+         decreaseTextSize.addActionListener((ActionEvent e) -> {
 
             TextPane textPane = view.getTextViewer().getSelectedTextPane();
             StyledDocument doc = textPane.getStyledDocument();
@@ -46,7 +47,7 @@ public class KnowtatorToolBar extends JToolBar {
 
     private JButton increaseTextSizeCommand() {
         JButton increaseTextSize = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.INCREASE_TEXT_SIZE_ICON));
-        increaseTextSize.addActionListener(e -> {
+        increaseTextSize.addActionListener((ActionEvent e) -> {
             TextPane textPane = view.getTextViewer().getSelectedTextPane();
             StyledDocument doc = textPane.getStyledDocument();
             MutableAttributeSet attrs = textPane.getInputAttributes();
@@ -59,55 +60,42 @@ public class KnowtatorToolBar extends JToolBar {
         return increaseTextSize;
     }
 
-    private JButton decrementSelectionLeftCommand() {
-        JButton menuItem = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.INCREMENT_LEFT_ICON));
-        menuItem.addActionListener(e -> {
-                JTextPane textPane = view.getTextViewer().getSelectedTextPane();
-                textPane.setSelectionStart(textPane.getSelectionStart() + 1);
-
-        });
+    private JButton shrinkSelectionStartCommand() {
+        JButton menuItem = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.RIGHT_ICON));
+        menuItem.addActionListener((ActionEvent e) -> view.getTextViewer().getSelectedTextPane().shrinkSelectionStart());
         return menuItem;
     }
 
-    private JButton decrementSelectionRightCommand() {
-        JButton menuItem = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.INCREMENT_RIGHT_ICON));
-        menuItem.addActionListener(e -> {
-            TextPane textPane = view.getTextViewer().getSelectedTextPane();
-            textPane.setSelectionEnd(textPane.getSelectionEnd() - 1);});
-
-        return menuItem;
+    private JButton shrinkSelectionEndCommand() {
+        JButton button = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.LEFT_ICON));
+        button.addActionListener((ActionEvent e) -> view.getTextViewer().getSelectedTextPane().shrinkSelectionEnd());
+        return button;
     }
 
-    private JButton incrementSelectionLeftCommand() {
-        JButton menuItem = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.INCREMENT_RIGHT_ICON));
-        menuItem.addActionListener(e -> {
-            JTextPane textPane = view.getTextViewer().getSelectedTextPane();
-            textPane.setSelectionStart(textPane.getSelectionStart() - 1);
-        });
-        return menuItem;
+    private JButton growSelectionStartCommand() {
+        JButton button = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.LEFT_ICON));
+        button.addActionListener((ActionEvent e) -> view.getTextViewer().getSelectedTextPane().growSelectionStart());
+        return button;
     }
 
-    private JButton incrementSelectionRightCommand() {
-        JButton menuItem = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.INCREMENT_LEFT_ICON));
-        menuItem.addActionListener(e -> {
-            JTextPane textPane = view.getTextViewer().getSelectedTextPane();
-            textPane.setSelectionEnd(textPane.getSelectionEnd() + 1);});
-
-        return menuItem;
+    private JButton growSelectionEndCommand() {
+        JButton button = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.RIGHT_ICON));
+        button.addActionListener((ActionEvent e) -> view.getTextViewer().getSelectedTextPane().growSelectionEnd());
+        return button;
     }
 
     private JButton nextSpanCommand() {
-        JButton menuItem = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.SELECT_NEXT_ICON));
-        menuItem.addActionListener(e -> view.getTextViewer().getSelectedTextPane().nextSpan());
+        JButton command = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.NEXT_ICON));
+        command.addActionListener((ActionEvent e) -> view.getTextViewer().getSelectedTextPane().nextSpan());
 
-        return menuItem;
+        return command;
     }
 
     private JButton previousSpanCommand() {
-        JButton menuItem = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.SELECT_NEXT_ICON));
-        menuItem.addActionListener(e ->view.getTextViewer().getSelectedTextPane().previousSpan());
+        JButton command = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.PREVIOUS_ICON));
+        command.addActionListener((ActionEvent e) ->view.getTextViewer().getSelectedTextPane().previousSpan());
 
-        return menuItem;
+        return command;
     }
 }
 

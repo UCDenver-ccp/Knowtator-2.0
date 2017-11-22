@@ -1,35 +1,29 @@
 package edu.ucdenver.ccp.knowtator.ui.info;
 
 import edu.ucdenver.ccp.knowtator.annotation.Annotation;
-import edu.ucdenver.ccp.knowtator.annotation.AnnotationProperties;
 import edu.ucdenver.ccp.knowtator.annotation.Span;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
+import edu.ucdenver.ccp.knowtator.listeners.SpanListener;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class InfoPane extends JPanel implements AnnotationListener, ActionListener {
+public class InfoPane extends JPanel implements SpanListener, AnnotationListener {
 
-    private DateFormat dateFormat = new SimpleDateFormat("yyy/MM/dd HH:mm:ss");
+    private DateFormat dateFormat = new SimpleDateFormat("yyy/MM/dd");
+    private BasicKnowtatorView view;
 
 
     public InfoPane(BasicKnowtatorView view) {
-        view.addAnnotationListener(this);
+        this.view = view;
 
-        //Lay out the text controls and the labels.
-        setLayout(new GridBagLayout());
-
-        setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder("annotation Info"),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setMinimumSize(new Dimension(20, 50));
     }
 
     @Override
@@ -51,84 +45,48 @@ public class InfoPane extends JPanel implements AnnotationListener, ActionListen
 
         removeAll();
 
-        List<List<JComponent>> annotationComponents = new ArrayList<>();
 
         if(annotation != null) {
-            String name;
-            String content;
-            // **********************************Meta Data*********************************
-            // Profile field
-            name = AnnotationProperties.ANNOTATOR;
-            content = annotation.getAnnotator().getProfileID();
-            annotationComponents.add(addLabel(name, content));
+            GridBagConstraints gbc = new GridBagConstraints();
+            JLabel titleLabel = new JLabel(("Annotation Information"));
 
-            // Text Source field
-            name = AnnotationProperties.TEXT_SOURCE;
-            content = annotation.getTextSource().getDocID();
-            annotationComponents.add(addLabel(name, content));
+            JLabel profileLabel = new JLabel(String.format("Profile ID: %s", annotation.getAnnotator().getProfileID()));
 
+            JLabel textSourceLabel = new JLabel(String.format("Document ID: %s", annotation.getTextSource().getDocID()));
 
-            // TODO: Date field
-            name = AnnotationProperties.DATE;
-            content = dateFormat.format(annotation.getDate());
-            annotationComponents.add(addLabel(name, content));
+            JLabel dateLabel = new JLabel(String.format("Date: %s", dateFormat.format(annotation.getDate())));
 
             // **********************************SPANS*********************************
+            List<JLabel> spanLabels = new ArrayList<>();
             for (Span span : annotation.getSpans()) {
-                // Span Start field
-                name = AnnotationProperties.SPAN_START;
-                content = Integer.toString(span.getStart());
-                annotationComponents.add(addLabel(name, content));
 
-                // Span End field
-                name = AnnotationProperties.SPAN_END;
-                content = Integer.toString(span.getEnd());
-                annotationComponents.add(addLabel(name, content));
+                JLabel spanLabel = new JLabel(String.format("Span: %d, %d", span.getStart(), span.getEnd()));
+                spanLabels.add(spanLabel);
             }
-            addLabelTextRows(annotationComponents);
+
+            add(titleLabel, gbc);
+            add(profileLabel, gbc);
+            add(textSourceLabel, gbc);
+            add(dateLabel, gbc);
+            spanLabels.forEach(spanLabel -> add(spanLabel, gbc));
         }
         this.revalidate();
         this.repaint();
     }
 
-    private List<JComponent> addLabel(String name, String content) {
-        JLabel label = new JLabel(content);
-        JLabel labelLabel = new JLabel(name + ": ");
-        labelLabel.setLabelFor(label);
 
-        return Arrays.asList(labelLabel, label);
-    }
-
-//    public List<JComponent> addField(String docID) {
-//        JTextField field = new JTextField(10);
-//        field.setActionCommand(docID);
-//        field.addActionListener(this);
-//        JLabel fieldLabel = new JLabel(docID + ": ");
-//        fieldLabel.setLabelFor(field);
-//
-//        return Arrays.asList(fieldLabel, field);
-//    }
-
-    private void addLabelTextRows(List<List<JComponent>> components) {
-        GridBagConstraints c = new GridBagConstraints();
-        c.anchor = GridBagConstraints.EAST;
-
-        for (List<JComponent> row : components) {
-            c.gridwidth = GridBagConstraints.RELATIVE; //next-to-last
-            c.fill = GridBagConstraints.NONE;      //reset to default
-            c.weightx = 0.0;                       //reset to default
-            this.add(row.get(0), c);
-
-            c.gridwidth = GridBagConstraints.REMAINDER;     //end row
-            c.fill = GridBagConstraints.HORIZONTAL;
-            c.weightx = 1.0;
-            this.add(row.get(1), c);
-        }
-
+    @Override
+    public void spanAdded(Span newSpan) {
+        displayInfo(view.getTextViewer().getSelectedTextPane().getSelectedAnnotation());
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void spanRemoved() {
+        displayInfo(view.getTextViewer().getSelectedTextPane().getSelectedAnnotation());
     }
 
+    @Override
+    public void spanSelectionChanged(Span span) {
+        displayInfo(view.getTextViewer().getSelectedTextPane().getSelectedAnnotation());
+    }
 }

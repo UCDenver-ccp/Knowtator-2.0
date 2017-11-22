@@ -7,14 +7,14 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
 
 import javax.swing.*;
+import java.util.Collection;
 import java.util.Set;
-import java.util.stream.Stream;
 
 
 public class OWLAPIDataExtractor {
     private static final Logger log = LogManager.getLogger(OWLAPIDataExtractor.class);
 
-    private static Stream<OWLAnnotation> getOWLObjectAnnotations(BasicKnowtatorView view, OWLEntity ent) {
+    private static Collection<OWLAnnotation> getOWLObjectAnnotations(BasicKnowtatorView view, OWLEntity ent) {
         if (ent != null) {
             return EntitySearcher.getAnnotations(ent.getIRI(), view.getOWLModelManager().getActiveOntology());
         }
@@ -25,10 +25,10 @@ public class OWLAPIDataExtractor {
 
     private static String extractOWLObjectData(BasicKnowtatorView view, OWLEntity ent, String annotationPropertyName){
 
-        Stream<OWLAnnotation> owlAnnotations = getOWLObjectAnnotations(view, ent);
+        Collection<OWLAnnotation> owlAnnotations = getOWLObjectAnnotations(view, ent);
 
         if (owlAnnotations != null) {
-            for (OWLAnnotation anno : (Iterable<OWLAnnotation>) owlAnnotations::iterator) {
+            for (OWLAnnotation anno : owlAnnotations) {
                 if (annotationPropertyName == null) {
                     if (anno.getProperty().isLabel()) {
                         if (anno.getValue() instanceof OWLLiteral) {
@@ -125,6 +125,7 @@ public class OWLAPIDataExtractor {
     }
 
     public static OWLObjectProperty getSelectedProperty(BasicKnowtatorView view) {
+
         return view.getOWLWorkspace().getOWLSelectionModel().getLastSelectedObjectProperty();
     }
 

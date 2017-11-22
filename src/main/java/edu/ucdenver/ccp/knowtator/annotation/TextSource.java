@@ -1,5 +1,6 @@
 package edu.ucdenver.ccp.knowtator.annotation;
 
+import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
 import edu.ucdenver.ccp.knowtator.profile.Profile;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
@@ -13,14 +14,16 @@ public class TextSource {
     private static Logger log = LogManager.getLogger(TextSource.class);
 
 
+    private KnowtatorManager manager;
     private BasicKnowtatorView view;
     private AnnotationManager annotationManager;
 
     private String docID;
     private String content;
 
-    TextSource(BasicKnowtatorView view, String docID, String content) {
+    TextSource(KnowtatorManager manager, BasicKnowtatorView view, String docID, String content) {
         this.view = view;
+        this.manager = manager;
         this.docID = docID;
         this.content = content;
         this.annotationManager = new AnnotationManager();
@@ -43,18 +46,20 @@ public class TextSource {
     }
 
     public void addAnnotation(int start, int end) {
+        String className = OWLAPIDataExtractor.getSelectedClassName(view);
+        if (className != null) {
 
-        addAnnotation(null, OWLAPIDataExtractor.getSelectedClassName(view),
-                OWLAPIDataExtractor.getSelectedClassID(view),
-                new ArrayList<Span>() {{
-                    add(new Span(start, end));
-                }});
+            addAnnotation(manager.getProfileManager().getCurrentProfile(), className,
+                    OWLAPIDataExtractor.getSelectedClassID(view),
+                    new ArrayList<Span>() {{
+                        add(new Span(start, end));
+                    }});
+        }
     }
 
     public void addAnnotation(Profile profile, String className, String classID, List<Span> spans) {
         Annotation newAnnotation = annotationManager.addAnnotation(this, profile, className, classID, spans);
-
-        if(view != null) view.annotationAddedEvent(newAnnotation);
+        if (view != null) view.annotationAddedEvent(newAnnotation);
     }
 
     public void removeAnnotation(Annotation annotation) {
@@ -62,12 +67,8 @@ public class TextSource {
         if(view != null) view.annotationRemovedEvent();
     }
 
-    public void addSpanToAnnotation(Annotation annotation, int start, int end) {
+    public void addSpanToSelectedAnnotation(Annotation annotation, int start, int end) {
         annotationManager.addSpanToAnnotation(annotation, start, end);
-    }
-
-    public Map<Span, Annotation> getSpanMap() {
-        return annotationManager.getSpanMap();
     }
 
     public Set<Annotation> getAnnotations() {
@@ -84,5 +85,9 @@ public class TextSource {
 
     public Map<Span, Annotation> getAnnotationsContainingLocation(int loc) {
         return annotationManager.getAnnotationsContainingLocation(loc);
+    }
+
+    public Set<Assertion> getAssertions() {
+        return annotationManager.getAssertions();
     }
 }

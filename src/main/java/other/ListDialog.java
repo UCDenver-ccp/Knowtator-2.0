@@ -56,7 +56,7 @@ import java.awt.event.*;
  * </pre>
  */
 @SuppressWarnings("unchecked")
-public class ListDialog extends JDialog
+class ListDialog extends JDialog
         implements ActionListener {
     private static ListDialog dialog;
     private static String value = "";

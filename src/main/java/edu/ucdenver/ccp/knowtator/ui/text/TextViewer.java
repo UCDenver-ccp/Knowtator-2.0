@@ -22,14 +22,18 @@ import static java.lang.Math.min;
 
 public class TextViewer extends JTabbedPane implements AnnotationListener, TextSourceListener, SpanListener {
     public static final Logger log = Logger.getLogger(KnowtatorManager.class);
+    private boolean realTabAdded;
+    private KnowtatorManager manager;
     private BasicKnowtatorView view;
 
-    public TextViewer(BasicKnowtatorView view) {
+    public TextViewer(KnowtatorManager manager, BasicKnowtatorView view) {
         super();
+        this.manager = manager;
         this.view = view;
-        view.addSpanListener(this);
-        view.addAnnotationListener(this);
-        view.addTextSourceListener(this);
+
+        add("Untitled", new JTextPane());
+        realTabAdded = false;
+
     }
 
     private void addNewDocument(TextSource textSource) {
@@ -37,14 +41,15 @@ public class TextViewer extends JTabbedPane implements AnnotationListener, TextS
         textPane.setName(textSource.getDocID());
         textPane.setText(textSource.getContent());
 
-        JScrollPane sp = new JScrollPane(textPane);
-        addTab(sp, textSource.getDocID());
+
+        addClosableTab(textPane, textSource.getDocID());
     }
 
-    private void addTab(Component c, String title) {
+    private void addClosableTab(TextPane textPane, String title) {
+        JScrollPane sp = new JScrollPane(textPane);
 
-
-        addTab(title, c);
+        if (!realTabAdded) this.remove(0);
+        addTab(title, sp);
 
         int index = indexOfTab(title);
         JPanel pnlTab = new JPanel(new GridBagLayout());
@@ -65,11 +70,14 @@ public class TextViewer extends JTabbedPane implements AnnotationListener, TextS
 
         setTabComponentAt(index, pnlTab);
 
-        TextViewer tabPane = this;
+        TextViewer textViewer = this;
+        btnClose.addActionListener(evt -> {
+            log.warn(String.format("Closing: %s", title));
+            manager.getTextSourceManager().remove(textPane.getTextSource());
+            textViewer.remove(sp);
+        });
 
-        btnClose.addActionListener(evt -> tabPane.remove(c));
-
-
+        realTabAdded = true;
     }
 
 
@@ -98,6 +106,7 @@ public class TextViewer extends JTabbedPane implements AnnotationListener, TextS
     }
 
     private void refreshHighlights() {
+        log.warn("Refreshing highlights");
         TextPane selectedTextPane = getSelectedTextPane();
 
         // If no textpane is displayed, don't bother refreshing the highlights
@@ -113,8 +122,10 @@ public class TextViewer extends JTabbedPane implements AnnotationListener, TextS
             Span lastSpan = Span.makeDefaultSpan();
             Color lastColor = null;
 
-            Map<Span, Annotation> annotationMap = selectedTextPane.getAnnotationMap();
-            for (Span span : annotationMap.keySet()) {
+            Map<Span, Annotation> annotationMap = selectedTextPane.getTextSource().getAnnotationManager().getAnnotationMap();
+            for (Map.Entry<Span, Annotation> entry : annotationMap.entrySet()) {
+                Span span = entry.getKey();
+                Annotation annotation = entry.getValue();
                 if (span.intersects(lastSpan)) {
                     try {
                         selectedTextPane.getHighlighter().addHighlight(span.getStart(), min(span.getEnd(), lastSpan.getEnd()), new DefaultHighlighter.DefaultHighlightPainter(Color.GRAY));
@@ -129,15 +140,18 @@ public class TextViewer extends JTabbedPane implements AnnotationListener, TextS
                         e.printStackTrace();
                     }
                     lastSpan = span;
-                    lastColor = annotationMap.get(span).getColor();
+                    lastColor = annotation.getColor();
                 }
             }
+
             // Highlight remaining span
             try {
                 selectedTextPane.getHighlighter().addHighlight(lastSpan.getStart(), lastSpan.getEnd(), new DefaultHighlighter.DefaultHighlightPainter(lastColor));
             } catch (BadLocationException e) {
                 e.printStackTrace();
             }
+
+            selectedTextPane.select(selectedTextPane.getSelectedSpan().getStart(), selectedTextPane.getSelectedSpan().getEnd());
 
             selectedTextPane.revalidate();
             selectedTextPane.repaint();
@@ -179,6 +193,7 @@ public class TextViewer extends JTabbedPane implements AnnotationListener, TextS
     @Override
     public void textSourceAdded(TextSource textSource) {
         addNewDocument(textSource);
+        refreshHighlights();
     }
 
     @Override
@@ -193,7 +208,7 @@ public class TextViewer extends JTabbedPane implements AnnotationListener, TextS
 
     @Override
     public void spanRemoved() {
-
+        refreshHighlights();
     }
 
     @Override

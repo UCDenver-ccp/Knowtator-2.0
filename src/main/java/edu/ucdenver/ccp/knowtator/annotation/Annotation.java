@@ -28,18 +28,17 @@
 
 package edu.ucdenver.ccp.knowtator.annotation;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.profile.Profile;
-import org.apache.log4j.Logger;
 
 import java.awt.*;
 import java.util.Date;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.UUID;
 
 public class Annotation {
 
-
+	private final String id;
 	private final Date date;
 
 	private TextSource textSource;
@@ -48,6 +47,7 @@ public class Annotation {
 	private String classID;
 	private TreeSet<Span> spans;
 
+	//TODO: Make s
 
 	Annotation(TextSource textSource, Profile annotator, String className, String classID) {
 		this.textSource = textSource;
@@ -55,6 +55,7 @@ public class Annotation {
 		this.className = className;
 		this.classID = classID;
 		this.date = new Date();
+		this.id = UUID.randomUUID().toString();
 
 		spans = new TreeSet<>((span1, span2) -> {
 			if (span1 == null) {
@@ -69,8 +70,7 @@ public class Annotation {
 			return compare;
 		});
 
-		Logger log = Logger.getLogger(KnowtatorManager.class);
-		log.warn(String.format("%1$-30s %2$30s", "annotation", toString()));
+//		log.warn(String.format("%1$-30s %2$30s", "annotation", toString()));
 	}
 
 	public String getClassName() {
@@ -126,8 +126,6 @@ public class Annotation {
 
 
 
-
-
 	/**
 	 * this needs to be moved out of this class
 	 * 
@@ -148,16 +146,7 @@ public class Annotation {
 
 	@Override
 	public String toString() {
-		return String.format("Class Name: %s", className);
-	}
-
-    public Span getSpanContainingLocation(int loc) {
-		for (Span span : spans) {
-			if (loc >= span.getStart() && loc <= span.getEnd()) {
-				return span;
-			}
-		}
-		return null;
+		return  className;
 	}
 
 	void addSpan(Span newSpan) {
@@ -185,6 +174,10 @@ public class Annotation {
 			}
 		}
 		return false;
+	}
+
+	public String getID() {
+		return id;
 	}
 
 //		public Set<String> getSimpleFeatureNames() {
@@ -638,5 +631,12 @@ public class Annotation {
 //	public static final int SPANS_EXACT_COMPARISON = 2;
 //
 //	public static final int IGNORE_SPANS_COMPARISON = 3;
-
+//public Span getSpanContainingLocation(int loc) {
+//		for (Span span : spans) {
+//			if (loc >= span.getStart() && loc <= span.getEnd()) {
+//				return span;
+//			}
+//		}
+//		return null;
+//	}
 }

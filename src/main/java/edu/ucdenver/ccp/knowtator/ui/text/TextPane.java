@@ -16,7 +16,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Map;
 
-public class TextPane extends JTextPane {
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
+public class TextPane extends JTextPane{
 
 	public static final Logger log = Logger.getLogger(KnowtatorManager.class);
 
@@ -30,6 +33,7 @@ public class TextPane extends JTextPane {
 		this.view = view;
 		this.textSource = textSource;
 
+		selectedSpan = Span.makeDefaultSpan();
 		this.setEditable(false);
 
 		setupListeners();
@@ -69,50 +73,48 @@ public class TextPane extends JTextPane {
 	private void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
 		if(e.isPopupTrigger()) {
 			showPopUpMenu(e, release_offset);
-		} else {
-			if (press_offset == release_offset) {
+			return;
+		}
+		if (press_offset == release_offset) {
 
 
-				Map<Span, Annotation> spansContainingLocation = textSource.getAnnotationsContainingLocation(press_offset);
-				if (spansContainingLocation.size() == 1) {
-					Map.Entry<Span, Annotation> entry = spansContainingLocation.entrySet().iterator().next();
-					setSelection(entry.getKey(), entry.getValue());
+			Map<Span, Annotation> spansContainingLocation = textSource.getAnnotationsContainingLocation(press_offset);
+			if (spansContainingLocation.size() == 1) {
+				Map.Entry<Span, Annotation> entry = spansContainingLocation.entrySet().iterator().next();
+				setSelection(entry.getKey(), entry.getValue());
 
-				} else if (spansContainingLocation.size() > 1) {
-					showSelectAnnotationPopUpMenu(e, spansContainingLocation);
-				}
-			} else {
-				setSelectionAtWordLimits(press_offset, release_offset);
+			} else if (spansContainingLocation.size() > 1) {
+				showSelectAnnotationPopUpMenu(e, spansContainingLocation);
 			}
+		} else {
+			setSelectionAtWordLimits(press_offset, release_offset);
 		}
 	}
 
-	private void setSelection(Span span, Annotation annotation) {
+	private void setSelectedSpan(Span span) {
 		selectedSpan = span;
-		view.spanSelectionChangedEvent(span);
-		requestFocus();
-		select(selectedSpan.getStart(), selectedSpan.getEnd());
+		view.spanSelectionChangedEvent(selectedSpan);
+	}
 
+	private void setSelectedAnnotation(Annotation annotation) {
 		selectedAnnotation = annotation;
-		view.owlEntitySelectionChanged(OWLAPIDataExtractor.getOWLClassByName(view, selectedAnnotation.getClassName()));
+		if (selectedAnnotation != null) view.owlEntitySelectionChanged(OWLAPIDataExtractor.getOWLClassByName(view, selectedAnnotation.getClassName()));
 		view.annotationSelectionChangedEvent(selectedAnnotation);
+	}
+
+	private void setSelection(Span span, Annotation annotation) {
+		setSelectedSpan(span);
+
+		setSelectedAnnotation(annotation);
 	}
 
 	private void setSelectionAtWordLimits(int press_offset, int release_offset) {
 
 		try {
-			int start, end;
-			if (press_offset < release_offset) {
+			int start = Utilities.getWordStart(this, min(press_offset, release_offset));
+			int end = Utilities.getWordEnd(this, max(press_offset, release_offset));
 
-				start = Utilities.getWordStart(this, press_offset);
-				end = Utilities.getWordEnd(this, release_offset);
-
-			} else {
-				start = Utilities.getWordStart(this, release_offset);
-				end = Utilities.getWordEnd(this, press_offset);
-			}
-
-			select(start, end);
+			setSelectedSpan(new Span(start, end));
 
 		} catch (BadLocationException e) {
 			e.printStackTrace();
@@ -172,7 +174,7 @@ public class TextPane extends JTextPane {
 	}
 
 	private void addSpan() {
-		textSource.addSpanToAnnotation(selectedAnnotation, getSelectionStart(), getSelectionEnd());
+		textSource.addSpanToSelectedAnnotation(selectedAnnotation, getSelectionStart(), getSelectionEnd());
 	}
 
 	private void addAnnotation() {
@@ -197,8 +199,25 @@ public class TextPane extends JTextPane {
 		setSelection(next.getKey(), next.getValue());
 	}
 
-	Map<Span,Annotation> getAnnotationMap() {
-		return textSource.getSpanMap();
+	public void shrinkSelectionEnd() {
+		textSource.getAnnotationManager().shrinkSpanEnd(selectedSpan);
+		setSelectedSpan(selectedSpan);
+
+	}
+	public void shrinkSelectionStart() {
+		textSource.getAnnotationManager().shrinkSpanStart(selectedSpan);
+		setSelectedSpan(selectedSpan);
+	}
+	public void growSelectionEnd() {
+		textSource.getAnnotationManager().growSpanEnd(selectedSpan, getText().length());
+		setSelectedSpan(selectedSpan);
+	}
+	public void growSelectionStart() {
+		textSource.getAnnotationManager().growSpanStart(selectedSpan);
+		setSelectedSpan(selectedSpan);
 	}
 
+	public Span getSelectedSpan() {
+		return selectedSpan;
+	}
 }

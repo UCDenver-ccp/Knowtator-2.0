@@ -29,7 +29,7 @@ public class FileMenu extends JMenu {
         JMenuItem open = new JMenuItem("Open");
         open.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
-
+            fileChooser.setCurrentDirectory(new File(manager.getConfigProperties().getDefaultSaveLocation()));
             if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 File directory = fileChooser.getSelectedFile();
                 File[] files = directory.listFiles();
@@ -43,6 +43,15 @@ public class FileMenu extends JMenu {
                             case ("xml"):
                                 manager.getXmlUtil().read(file.getAbsolutePath(), false);
                         }
+                    }
+                } else {
+                    switch (Files.getFileExtension(directory.getAbsolutePath())) {
+                        case ("txt"):
+                            String content = KnowtatorDocumentHandler.read(directory.getAbsolutePath(), false);
+                            String docID = FilenameUtils.getBaseName(directory.getAbsolutePath());
+                            manager.getTextSourceManager().addTextSource(docID, content);
+                        case ("xml"):
+                            manager.getXmlUtil().read(directory.getAbsolutePath(), false);
                     }
                 }
             }
@@ -79,6 +88,7 @@ public class FileMenu extends JMenu {
 
             if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
                 manager.getXmlUtil().write(fileChooser.getSelectedFile().getAbsolutePath());
+                manager.getConfigProperties().setDefaultSaveLocation(fileChooser.getSelectedFile().getAbsolutePath());
             }
         });
 

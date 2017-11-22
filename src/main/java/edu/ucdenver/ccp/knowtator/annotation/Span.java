@@ -57,10 +57,6 @@ public class Span {
 			throw new IndexOutOfBoundsException(
 					"Span is invalid because the start of the Span is less than zero: start=" + start);
 		}
-
-		if (start != 0 && end != 0) {
-			log.warn(String.format("%1$-30s %2$30s", "Span", toString()));
-		}
 	}
 
 	public static Span makeDefaultSpan() {
@@ -221,5 +217,21 @@ public class Span {
 		int end = Math.max(0, span.getEnd());
 		end = Math.min(end, string.length() - 1);
 		return string.substring(start, end);
+	}
+
+	public void shrinkEnd() {
+		if (end > start) end -= 1;
+	}
+
+	public void shrinkStart() {
+		if (start < end) start += 1;
+	}
+
+	public void growEnd(int limit) {
+		if (end < limit) end += 1;
+	}
+
+	public void growStart() {
+		if (start > 0) start -= 1;
 	}
 }

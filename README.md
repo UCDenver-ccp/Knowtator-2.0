@@ -66,6 +66,9 @@ Annotations are reloaded and automatically highlight the text using the color of
 5. When Knowtator view is added, the split between panes is too far to the left.
 6. Cannot remove annotations or annotation profiles.
 
+
+All icons used are from https://icons8.com/
+
 [protege link]:http://protege.stanford.edu/products.php#desktop-protege
 [installation image]:installation_image.jpg
 [ontology example]:http://purl.obolibrary.org/obo/go/go-basic.obo

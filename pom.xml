@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--suppress NonOsgiMavenDependency -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	
@@ -10,15 +11,48 @@
 
 	<groupId>edu.ucdenver.ccp</groupId>
 	<artifactId>knowtator</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.5.0-SNAPSHOT</version>
 	<name>Knowtator</name>
-	<description>A plugin for annotating mechanisms</description> 
+	<description>A plug-in for the Protege Desktop ontology editor for editing in-text annotations</description>
+	<url>https://github.com/tuh8888/Knowtator-2.0</url>
 
+	<developers>
+		<developer>
+			<name>Harrison Pielke-Lombarod</name>
+			<email>harrison.pielke-lombardo@ucdenver.edu</email>
+		</developer>
+	</developers>
 
 	<packaging>bundle</packaging>
-	
-	<dependencies>
 
+	<properties>
+		<jdk.version>1.8</jdk.version>
+	</properties>
+
+
+
+
+	<dependencies>
+		<dependency>
+			<groupId>edu.stanford.protege</groupId>
+			<artifactId>protege-common</artifactId>
+			<version>5.0.0-RC1</version>
+		</dependency>
+		<dependency>
+			<groupId>edu.stanford.protege</groupId>
+			<artifactId>protege-editor-core</artifactId>
+			<version>5.0.0-RC1</version>
+		</dependency>
+		<dependency>
+			<groupId>edu.stanford.protege</groupId>
+			<artifactId>protege-editor-owl</artifactId>
+			<version>5.0.0-RC1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.12</version>
+		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.owlapi</groupId>
 			<artifactId>owlapi-api</artifactId>
@@ -30,44 +64,60 @@
 			<version>5.0.0-beta-05-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>com.mxgraph</groupId>
+			<groupId>org.tinyjee.jgraphx</groupId>
 			<artifactId>jgraphx</artifactId>
-			<version>3.7.5</version>
+			<version>3.4.1.3</version>
 		</dependency>
 	</dependencies>
 
 
 	<build>
+		<directory>${env.PROTEGE_HOME}/plugins/</directory>
+
+		<resources>
+			<resource>
+				<!-- Use resource filtering to replace references to the artifactId in the plugin.xml file -->
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
 		<plugins>
             <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-compiler-plugin</artifactId>
-              <version>3.0</version>
+              <version>3.3</version>
               <configuration>
                 <source>1.8</source>
                 <target>1.8</target>
               </configuration>
             </plugin>
+
             <plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
-				<version>2.3.7</version>
+				<version>3.0.0</version>
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
+						<Bundle-Name>Knowtator Plugin</Bundle-Name>
+						<Bundle-Category>protege</Bundle-Category>
+						<Bundle-Description>A plugin for annotating mechanisms</Bundle-Description>
+						<Bundle-Activator>org.protege.editor.owl.ProtegeOWL</Bundle-Activator>
 						<Bundle-ClassPath>.</Bundle-ClassPath>
 						<Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
 						<Bundle-Vendor>The Protege Development Team</Bundle-Vendor>
 						<Import-Package>
-							org.apache.log4j.*;version="[1.2,2)", 
-							org.protege.editor.core.*;version="4.3",
-							org.protege.editor.owl.*;version="4.3",
 							*
 						</Import-Package>
-						<Include-Resource>plugin.xml, {maven-resources}</Include-Resource>
+						<Embed-Dependency>jgraphx</Embed-Dependency>
+						<Include-Resource>README.md,
+							plugin.xml,
+							installation_image.jpg,
+							protege.properties,
+							{maven-resources}</Include-Resource>
 						<Private-Package>skeleton</Private-Package>
 					</instructions>
-
 				</configuration>
 				<executions>
 					<execution>
@@ -83,17 +133,20 @@
               <artifactId>maven-eclipse-plugin</artifactId>
               <version>2.9</version>
               <configuration>
+				  <downloadSources>true</downloadSources>
+				  <downloadJavadocs>false</downloadJavadocs>
                 <pde>true</pde>
               </configuration>
             </plugin>
-			<plugin>
-				<groupId>edu.ucdenver.ccp</groupId>
-				<artifactId>knowtator</artifactId>
-				<version>0.1.0-SNAPSHOT</version>
-				<configuration>
-					<outputDirectory>"${env.PROTEGE_HOME}/plugins"</outputDirectory>
-				</configuration>
-			</plugin>
+			<!--<plugin>-->
+				<!--<groupId>edu.ucdenver.ccp</groupId>-->
+				<!--<artifactId>knowtator</artifactId>-->
+				<!--<version>0.5.0-SNAPSHOT</version>-->
+				<!--<configuration>-->
+					<!--<outputDirectory>"${env.PROTEGE_HOME}/plugins"</outputDirectory>-->
+				<!--</configuration>-->
+			<!--</plugin>-->
 		</plugins>
 	</build>
+
 </project>

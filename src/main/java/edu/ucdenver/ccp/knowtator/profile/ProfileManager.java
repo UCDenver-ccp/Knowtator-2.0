@@ -2,7 +2,6 @@ package edu.ucdenver.ccp.knowtator.profile;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
-import edu.ucdenver.ccp.knowtator.ui.KnowtatorView;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -15,18 +14,11 @@ public class ProfileManager {
     private BasicKnowtatorView view;
 
     private Map<String, Profile> profiles;
-    private KnowtatorManager manager;
 
 
-
-    public ProfileManager(KnowtatorManager manager) {
-        this.manager = manager;
+    public ProfileManager() {
         profiles = new HashMap<>();
         addNewProfile("Default");
-    }
-
-    private void setKnowtatorView(KnowtatorView view) {
-        this.view = view;
     }
 
     public Profile addNewProfile(String profileID) {
@@ -34,7 +26,7 @@ public class ProfileManager {
             return profiles.get(profileID);
         }
 
-        Profile newProfile = new Profile(manager, profileID);
+        Profile newProfile = new Profile(profileID);
         profiles.put(profileID, newProfile);
 
         currentProfile = newProfile;

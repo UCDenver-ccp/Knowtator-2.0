@@ -1,6 +1,5 @@
 package edu.ucdenver.ccp.knowtator.annotation;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.profile.Profile;
 import org.apache.log4j.Logger;
 
@@ -9,9 +8,12 @@ import java.util.stream.Collectors;
 
 
 public final class AnnotationManager {
-    private static final Logger log = Logger.getLogger(KnowtatorManager.class);
+
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(AnnotationManager.class);
 
     private TreeMap<Span, Annotation> annotationMap;
+    private Set<Assertion> assertions;
 
     AnnotationManager() {
 
@@ -27,8 +29,21 @@ public final class AnnotationManager {
             }
             return compare;
         });
+
+        assertions = new HashSet<>();
     }
 
+    public void addAssertion(Annotation source, Annotation target, String relationship) {
+        assertions.add(new Assertion(source, target, relationship));
+    }
+
+    public void removeAssertion(Annotation annotation1, Annotation annotation2) {
+        assertions.forEach(assertion -> {
+            if (assertion.getSource().equals(annotation1) && assertion.getTarget().equals(annotation2)) {
+                assertions.remove(assertion);
+            }
+        });
+    }
     Annotation addAnnotation(TextSource textSource, Profile profile, String className, String classID, List<Span> spans) {
 
 
@@ -69,7 +84,8 @@ public final class AnnotationManager {
 
 
     Map.Entry<Span, Annotation> getNextSpan(Span span) {
-        Map.Entry<Span, Annotation> next = annotationMap.higherEntry(span);
+        Map.Entry<Span, Annotation> next =
+                annotationMap.containsKey(span) ? annotationMap.higherEntry(span) : annotationMap.ceilingEntry(span);
 
         if (next == null) next = annotationMap.firstEntry();
         return next;
@@ -78,18 +94,69 @@ public final class AnnotationManager {
     }
 
     Map.Entry<Span, Annotation> getPreviousSpan(Span span) {
-        Map.Entry<Span, Annotation> next = annotationMap.lowerEntry(span);
 
-        if (next == null) {
-            next = annotationMap.lastEntry();
+
+        Map.Entry<Span, Annotation> previous =
+                annotationMap.containsKey(span) ? annotationMap.lowerEntry(span) : annotationMap.floorEntry(span);
+
+        if (previous == null) {
+            previous = annotationMap.lastEntry();
         }
 
-        return next;
+        return previous;
 
 
     }
 
-    TreeMap<Span, Annotation> getSpanMap() {
+    public TreeMap<Span, Annotation> getAnnotationMap() {
         return annotationMap;
+    }
+
+    public void growSpanStart(Span span) {
+        if (annotationMap.containsKey(span)) {
+            Annotation annotation = annotationMap.get(span);
+            annotationMap.remove(span);
+            span.growStart();
+            annotationMap.put(span, annotation);
+        } else {
+            span.growStart();
+        }
+    }
+
+    public void growSpanEnd(Span span, int limit) {
+        if (annotationMap.containsKey(span)) {
+            Annotation annotation = annotationMap.get(span);
+            annotationMap.remove(span);
+            span.growEnd(limit);
+            annotationMap.put(span, annotation);
+        } else {
+            span.growEnd(limit);
+        }
+    }
+
+    public void shrinkSpanEnd(Span span) {
+        if (annotationMap.containsKey(span)) {
+            Annotation annotation = annotationMap.get(span);
+            annotationMap.remove(span);
+            span.shrinkEnd();
+            annotationMap.put(span, annotation);
+        } else {
+            span.shrinkEnd();
+        }
+    }
+
+    public void shrinkSpanStart(Span span) {
+        if (annotationMap.containsKey(span)) {
+            Annotation annotation = annotationMap.get(span);
+            annotationMap.remove(span);
+            span.shrinkStart();
+            annotationMap.put(span, annotation);
+        } else {
+            span.shrinkStart();
+        }
+    }
+
+    Set<Assertion> getAssertions() {
+        return assertions;
     }
 }

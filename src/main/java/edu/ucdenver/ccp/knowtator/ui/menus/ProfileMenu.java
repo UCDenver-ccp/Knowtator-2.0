@@ -13,21 +13,19 @@ import javax.swing.*;
 import java.io.File;
 import java.util.Set;
 
-public class AnnotatorMenu extends JMenu implements ProfileListener {
+public class ProfileMenu extends JMenu implements ProfileListener {
 
-    public static Logger log = Logger.getLogger(AnnotatorMenu.class);
+    public static Logger log = Logger.getLogger(ProfileMenu.class);
 
     private KnowtatorManager manager;
     private BasicKnowtatorView view;
     private JMenu switchAnnotatorMenu;
     private JMenu removeAnnotatorMenu;
 
-    public AnnotatorMenu(KnowtatorManager manager, BasicKnowtatorView view) {
+    public ProfileMenu(KnowtatorManager manager, BasicKnowtatorView view) {
         super("Profile");
         this.manager = manager;
         this.view = view;
-
-        view.addProfileListener(this);
 
         switchAnnotatorMenu = new JMenu("Switch profile");
         removeAnnotatorMenu = new JMenu("Remove profile");

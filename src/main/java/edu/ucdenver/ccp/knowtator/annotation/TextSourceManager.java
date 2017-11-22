@@ -25,7 +25,7 @@ public class TextSourceManager {
                 return t;
             }
         }
-        TextSource newTextSource = new TextSource(view, docID, content);
+        TextSource newTextSource = new TextSource(manager, view, docID, content);
         textSources.add(newTextSource);
         if (view != null) view.textSourceAddedEvent(newTextSource);
         return newTextSource;
@@ -38,5 +38,9 @@ public class TextSourceManager {
     public void setView(BasicKnowtatorView view) {
         this.view = view;
         textSources.forEach(textSource -> textSource.setView(view));
+    }
+
+    public void remove(TextSource textSource) {
+        textSources.remove(textSource);
     }
 }

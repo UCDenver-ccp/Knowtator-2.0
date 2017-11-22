@@ -2,6 +2,7 @@ package edu.ucdenver.ccp.knowtator.io.xml;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.Assertion;
 import edu.ucdenver.ccp.knowtator.annotation.Span;
 import org.apache.log4j.Logger;
 
@@ -13,7 +14,7 @@ import java.io.IOException;
 class XmlWriter {
     private static final Logger log = Logger.getLogger(KnowtatorManager.class);
 
-    private static void spanToXml(BufferedWriter bw, Span span) {
+    private static void writeSpan(BufferedWriter bw, Span span) {
         try {
             bw.write(String.format("\t\t<%s %s=\"%s\" %s=\"%s\" />", XmlTags.SPAN, XmlTags.SPAN_START, span.getStart(), XmlTags.SPAN_END, span.getEnd()));
             bw.newLine();
@@ -23,13 +24,15 @@ class XmlWriter {
 
     }
 
-    private static void annotationToXML(BufferedWriter bw, Annotation annotation) {
+    private static void writeAnnotation(BufferedWriter bw, Annotation annotation) {
         try {
             bw.write(String.format("\t<%s>", XmlTags.ANNOTATION));
             bw.newLine();
+            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.ANNOTATION_ID, annotation.getID(), XmlTags.ANNOTATION_ID));
+            bw.newLine();
             bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.ANNOTATOR, annotation.getAnnotator().getProfileID(), XmlTags.ANNOTATOR));
             bw.newLine();
-            annotation.getSpans().forEach(span -> spanToXml(bw, span));
+            annotation.getSpans().forEach(span -> writeSpan(bw, span));
             bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.CLASS_NAME, annotation.getClassName(), XmlTags.CLASS_NAME));
             bw.newLine();
 
@@ -85,11 +88,12 @@ class XmlWriter {
     private static void writeDocuments(KnowtatorManager manager, BufferedWriter bw) {
         manager.getTextSourceManager().getTextSources().forEach(textSource -> {
         try {
-                bw.write(String.format("<%s %s=\"%s\">", XmlTags.DOCUMENT, XmlTags.DOCUMENT_ID, textSource));
+                bw.write(String.format("<%s %s=\"%s\">", XmlTags.DOCUMENT, XmlTags.DOCUMENT_ID, textSource.getDocID()));
                 bw.newLine();
                 bw.write(String.format("            \t<%s>%s</%s>", XmlTags.TEXT, textSource.getContent(), XmlTags.TEXT));
                 bw.newLine();
-                textSource.getAnnotations().forEach(annotation -> annotationToXML(bw, annotation));
+                textSource.getAnnotations().forEach(annotation -> writeAnnotation(bw, annotation));
+                textSource.getAssertions().forEach(assertion -> writeAssertion(bw, assertion));
                 bw.write(String.format("</%s>", XmlTags.DOCUMENT));
                 bw.newLine();
             } catch(IOException e) {
@@ -98,7 +102,7 @@ class XmlWriter {
         });
     }
 
-    private static void highlighterToXml(BufferedWriter bw, String className, Color color) {
+    private static void writeHighlighter(BufferedWriter bw, String className, Color color) {
         try {
             bw.write(String.format("\t<%s>", XmlTags.HIGHLIGHTER));
             bw.newLine();
@@ -122,7 +126,7 @@ class XmlWriter {
                 ));
                 bw.newLine();
 
-                profile.getColors().forEach((className, color) -> highlighterToXml(bw, className, color));
+                profile.getColors().forEach((className, color) -> writeHighlighter(bw, className, color));
 
                 bw.write(String.format("</%s>", XmlTags.PROFILE));
                 bw.newLine();
@@ -131,5 +135,21 @@ class XmlWriter {
                 e.printStackTrace();
             }
         });
+    }
+
+    private static void writeAssertion(BufferedWriter bw, Assertion assertion) {
+        try {
+            bw.write(String.format("\t<%s>", XmlTags.ASSERTION));
+            bw.newLine();
+            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.ASSERTION_SOURCE, assertion.getSource().getID(), XmlTags.ASSERTION_SOURCE));
+            bw.newLine();
+            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.ASSERTION_TARGET, assertion.getTarget().getID(), XmlTags.ASSERTION_TARGET));
+            bw.newLine();
+            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.ASSERTION_RELATIONSHIP, assertion.getRelationship(), XmlTags.ASSERTION_RELATIONSHIP));
+            bw.newLine();
+            bw.write(String.format("\t</%s>", XmlTags.ASSERTION));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

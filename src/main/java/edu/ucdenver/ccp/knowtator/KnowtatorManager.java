@@ -28,7 +28,7 @@ public class KnowtatorManager {
 
     private void initManagers() {
         textSourceManager = new TextSourceManager(this);
-        profileManager = new ProfileManager(this);  //manipulates profiles and colors
+        profileManager = new ProfileManager();  //manipulates profiles and colors
         xmlUtil = new XmlUtil(this);  //reads and writes to XML
     }
 

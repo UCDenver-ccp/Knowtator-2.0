@@ -2,9 +2,9 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+      <profile name="Annotation profile for Knowtator" enabled="true">
+        <sourceOutputDir name="../../../../Program Files/Protege-5.2.0/plugins/generated-sources/annotations" />
+        <sourceTestOutputDir name="../../../../Program Files/Protege-5.2.0/plugins/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="knowtator" />
       </profile>

@@ -30,4 +30,9 @@ class XmlTags {
     static final String DOCUMENT = "document";
     static final String TEXT = "text";
     static final String MENTION_CLASS_ID = "id";
+    static final String ANNOTATION_ID = "id";
+    static final String ASSERTION = "assertion";
+    static final String ASSERTION_SOURCE = "source";
+    static final String ASSERTION_TARGET = "target";
+    static final String ASSERTION_RELATIONSHIP = "relationship";
 }
