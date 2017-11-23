@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<annotator docID="Harrison" id="1234">
-    <highlighter>
-        <class-docID>biological_process</class-docID>
-        <class-id>GO:0008150</class-id>
-        <color>#99FFFF</color>
-    </highlighter>
-</annotator>

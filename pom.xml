@@ -11,14 +11,14 @@
 
 	<groupId>edu.ucdenver.ccp</groupId>
 	<artifactId>knowtator</artifactId>
-	<version>0.5.0-SNAPSHOT</version>
+	<version>2.0.0</version>
 	<name>Knowtator</name>
 	<description>A plug-in for the Protege Desktop ontology editor for editing in-text annotations</description>
-	<url>https://github.com/tuh8888/Knowtator-2.0</url>
+	<url>https://github.com/UCDenver-ccp/Knowtator-2.0</url>
 
 	<developers>
 		<developer>
-			<name>Harrison Pielke-Lombarod</name>
+			<name>Harrison Pielke-Lombardo</name>
 			<email>harrison.pielke-lombardo@ucdenver.edu</email>
 		</developer>
 	</developers>
@@ -102,7 +102,7 @@
 					<instructions>
 						<Bundle-Name>Knowtator Plugin</Bundle-Name>
 						<Bundle-Category>protege</Bundle-Category>
-						<Bundle-Description>A plugin for annotating mechanisms</Bundle-Description>
+						<Bundle-Description>A plugin for annotating text</Bundle-Description>
 						<Bundle-Activator>org.protege.editor.owl.ProtegeOWL</Bundle-Activator>
 						<Bundle-ClassPath>.</Bundle-ClassPath>
 						<Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
@@ -113,7 +113,7 @@
 						<Embed-Dependency>jgraphx</Embed-Dependency>
 						<Include-Resource>README.md,
 							plugin.xml,
-							installation_image.jpg,
+							installation_image.PNG,
 							protege.properties,
 							{maven-resources}</Include-Resource>
 						<Private-Package>skeleton</Private-Package>
@@ -138,14 +138,6 @@
                 <pde>true</pde>
               </configuration>
             </plugin>
-			<!--<plugin>-->
-				<!--<groupId>edu.ucdenver.ccp</groupId>-->
-				<!--<artifactId>knowtator</artifactId>-->
-				<!--<version>0.5.0-SNAPSHOT</version>-->
-				<!--<configuration>-->
-					<!--<outputDirectory>"${env.PROTEGE_HOME}/plugins"</outputDirectory>-->
-				<!--</configuration>-->
-			<!--</plugin>-->
 		</plugins>
 	</build>
 

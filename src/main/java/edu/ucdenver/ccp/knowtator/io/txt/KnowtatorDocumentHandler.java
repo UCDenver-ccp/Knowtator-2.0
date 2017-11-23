@@ -4,6 +4,10 @@ import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class KnowtatorDocumentHandler {
     public static final Logger log = Logger.getLogger(KnowtatorManager.class);
@@ -21,17 +25,12 @@ public class KnowtatorDocumentHandler {
     }
 
     public static String read(String fileName, Boolean fromResources) {
-        StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader reader = getReader(fileName, fromResources);
-            while(reader.readLine() != null) {
-                stringBuilder.append(reader.readLine());
-            }
-            reader.close();
+        try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
+            return stream.collect(Collectors.joining());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return stringBuilder.toString();
+        return null;
     }
 
 }

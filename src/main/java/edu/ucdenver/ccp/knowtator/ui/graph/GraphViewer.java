@@ -1,18 +1,21 @@
 package edu.ucdenver.ccp.knowtator.ui.graph;
 
-import com.mxgraph.io.mxCodec;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxGraphModel;
+import com.mxgraph.model.mxICell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxEvent;
-import com.mxgraph.util.mxUtils;
-import com.mxgraph.util.mxXmlUtils;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.Assertion;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
+import edu.ucdenver.ccp.knowtator.listeners.AssertionListener;
 import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
-import org.w3c.dom.Document;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 import other.GraphPopupMenu;
 
 import javax.swing.*;
@@ -20,20 +23,20 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.URLEncoder;
 
 
-public class GraphViewer extends JDialog implements AnnotationListener {
+public class GraphViewer extends JDialog implements AnnotationListener, AssertionListener {
+    @SuppressWarnings("unused")
+    private static Logger log = LogManager.getLogger(GraphViewer.class);
 
     private final BasicKnowtatorView view;
     private Object parent;
     private mxGraph graph;
     private mxGraphComponent graphComponent;
 
-    public GraphViewer(BasicKnowtatorView view) {
+
+    public GraphViewer(JFrame frame, BasicKnowtatorView view) {
+        super(frame, "Graph Viewer");
         this.view = view;
         setName("Graph Viewer");
         graph = new mxGraph();
@@ -56,17 +59,29 @@ public class GraphViewer extends JDialog implements AnnotationListener {
             Object[] cells = (Object[])evt.getProperty("cells");
             for (Object cell : cells) {
                 if (graph.getModel().isEdge(cell)) {
-                    String relationship = OWLAPIDataExtractor.getSelectedProperty(view).toString();
-                    if (relationship != null) {
-                        // Set the value
-                        ((mxCell) cell).setValue(relationship);
+                    if (((mxCell) cell).getValue().equals("")) {
+                        OWLObjectProperty property = OWLAPIDataExtractor.getSelectedProperty(view);
+                        if (property != null) {
 
-                        Annotation sourceAnnotation = (Annotation)((mxCell) cell).getSource().getValue();
-                        Annotation targetAnnotation = (Annotation)((mxCell) cell).getTarget().getValue();
-                        view.getTextViewer().getSelectedTextPane().getTextSource().getAnnotationManager()
-                                .addAssertion(sourceAnnotation, targetAnnotation, relationship);
-                    } else {
-                        graph.getModel().remove(cell);
+
+                            // Set the value
+                            String relationship = property.toString();
+                            ((mxCell) cell).setValue(relationship);
+                            ((mxCell) cell).setStyle("startArrow=dash;startSize=12;endArrow=block;labelBackgroundColor=#FFFFFF;");
+
+                            mxICell source = ((mxCell) cell).getSource();
+                            mxICell target = ((mxCell) cell).getTarget();
+
+                            graph.insertEdge(parent, null, relationship, source, target);
+
+                            Annotation sourceAnnotation = (Annotation) source.getValue();
+                            Annotation targetAnnotation = (Annotation) target.getValue();
+                            view.getTextViewer().getSelectedTextPane().getTextSource().getAnnotationManager()
+                                    .addAssertion(sourceAnnotation, targetAnnotation, relationship);
+
+                        } else {
+                            graph.getModel().remove(cell);
+                        }
                     }
                 }
             }
@@ -101,9 +116,12 @@ public class GraphViewer extends JDialog implements AnnotationListener {
     }
 
     private void createGraphComponent() {
+
         graphComponent = new mxGraphComponent(graph);
         graphComponent.setDragEnabled(false);
         graphComponent.setPreferredSize(new Dimension(1200, 200));
+        JScrollPane sp = new JScrollPane();
+        graphComponent.getGraphControl().add(sp, 0);
         add(graphComponent);
     }
 
@@ -115,10 +133,11 @@ public class GraphViewer extends JDialog implements AnnotationListener {
     }
 
 
-    public void addAnnotationNode(Annotation annotation) {
+    public Object addAnnotationNode(Annotation annotation) {
         graph.getModel().beginUpdate();
+        Object node;
         try {
-            graph.insertVertex(parent, null, annotation, 20, 20,
+            node = graph.insertVertex(parent, annotation.getClassID(), annotation, 20, 20,
                     80, 30,
                     String.format(
                             "fillColor=#%s",
@@ -136,15 +155,26 @@ public class GraphViewer extends JDialog implements AnnotationListener {
         } finally {
             graph.getModel().endUpdate();
         }
+        return node;
     }
 
-    public Action bind(String name, final Action action)
-    {
-        return bind(name, action, null);
+    private void addAssertionEdge(Assertion assertion) {
+        graph.getModel().beginUpdate();
+        try {
+            Object source =  addAnnotationNode(assertion.getSource());
+            Object target =  addAnnotationNode(assertion.getTarget());
+            graph.insertEdge(parent, null, assertion.getRelationship(), source, target, "startArrow=dash;startSize=12;endArrow=block;labelBackgroundColor=#FFFFFF;");
+            mxHierarchicalLayout layout = new mxHierarchicalLayout(
+                    graph);
+            layout.setOrientation(SwingConstants.WEST);
+            layout.execute(parent);
+        } finally {
+            graph.getModel().endUpdate();
+        }
     }
 
-    public Action bind(String name, final Action action, String iconUrl) {
-        AbstractAction newAction = new AbstractAction(name, (iconUrl != null) ? new ImageIcon(getClass().getResource(iconUrl)) : null) {
+    public Action bind(String name, final Action action) {
+        AbstractAction newAction = new AbstractAction(name) {
             public void actionPerformed(ActionEvent e) {
                 action.actionPerformed(new ActionEvent(getGraphComponent(), e.getID(), e.getActionCommand()));
             }
@@ -179,24 +209,40 @@ public class GraphViewer extends JDialog implements AnnotationListener {
 
     }
 
-    public void readFromXml(String path) {
-        try {
-            Document doc = mxXmlUtils.parseXml(mxUtils.readFile(path));
-            mxCodec codec = new mxCodec(doc);
-            codec.decode(doc.getDocumentElement(), graph.getModel());
-        } catch (IOException e1) {
-            e1.printStackTrace();
+//    public void readFromXml(String path) {
+//        try {
+//            Document doc = mxXmlUtils.parseXml(mxUtils.readFile(path));
+//            mxCodec codec = new mxCodec(doc);
+//            codec.decode(doc.getDocumentElement(), graph.getModel());
+//        } catch (IOException e1) {
+//            e1.printStackTrace();
+//        }
+//    }
+
+//    public void saveToXml(String path) {
+//        try {
+//            mxCodec codec = new mxCodec();
+//            String xml = URLEncoder.encode(mxXmlUtils.getXml(codec.encode(graph.getModel())), "UTF-8");
+//            BufferedWriter bw = new BufferedWriter(new FileWriter(path));
+//            bw.write(xml);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    public void goToNode(Annotation annotation) {
+        Object cellToGoTo = ((mxGraphModel)graph.getModel()).getCell(annotation.getClassID());
+        if (cellToGoTo == null) {
+            JOptionPane.showMessageDialog(null, "No node found in graph for current annotation");
+            return;
         }
+        requestFocusInWindow();
+        graph.setSelectionCell(cellToGoTo);
     }
 
-    public void saveToXml(String path) {
-        try {
-            mxCodec codec = new mxCodec();
-            String xml = URLEncoder.encode(mxXmlUtils.getXml(codec.encode(graph.getModel())), "UTF-8");
-            BufferedWriter bw = new BufferedWriter(new FileWriter(path));
-            bw.write(xml);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void assertionAdded(Assertion assertion) {
+        addAssertionEdge(assertion);
     }
+
 }

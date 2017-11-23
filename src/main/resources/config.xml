@@ -2,5 +2,5 @@
 <config>
     <auto-load-ontologies>false</auto-load-ontologies>
     <format>xml</format>
-    <default-save-location>${user.home}${file.separator}KnowtatorProjects${file.separator}</default-save-location>
+    <default-save-location>${user.home}${file.separator}KnowtatorProjects${file.separator}my_knowatator_project.xml</default-save-location>
 </config>

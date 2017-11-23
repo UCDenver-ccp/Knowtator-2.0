@@ -7,7 +7,10 @@ import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class TextSource {
     @SuppressWarnings("unused")
@@ -49,7 +52,7 @@ public class TextSource {
         String className = OWLAPIDataExtractor.getSelectedClassName(view);
         if (className != null) {
 
-            addAnnotation(manager.getProfileManager().getCurrentProfile(), className,
+            addAnnotation(null, manager.getProfileManager().getCurrentProfile(), className,
                     OWLAPIDataExtractor.getSelectedClassID(view),
                     new ArrayList<Span>() {{
                         add(new Span(start, end));
@@ -57,8 +60,8 @@ public class TextSource {
         }
     }
 
-    public void addAnnotation(Profile profile, String className, String classID, List<Span> spans) {
-        Annotation newAnnotation = annotationManager.addAnnotation(this, profile, className, classID, spans);
+    public void addAnnotation(String annotationID, Profile profile, String className, String classID, List<Span> spans) {
+        Annotation newAnnotation = annotationManager.addAnnotation(annotationID, this, profile, className, classID, spans);
         if (view != null) view.annotationAddedEvent(newAnnotation);
     }
 
@@ -67,8 +70,9 @@ public class TextSource {
         if(view != null) view.annotationRemovedEvent();
     }
 
-    public void addSpanToSelectedAnnotation(Annotation annotation, int start, int end) {
-        annotationManager.addSpanToAnnotation(annotation, start, end);
+    public Span addSpanToSelectedAnnotation(Annotation annotation, int start, int end) {
+        return annotationManager.addSpanToAnnotation(annotation, start, end);
+
     }
 
     public Set<Annotation> getAnnotations() {
@@ -83,11 +87,16 @@ public class TextSource {
         return annotationManager.getPreviousSpan(span);
     }
 
-    public Map<Span, Annotation> getAnnotationsContainingLocation(int loc) {
-        return annotationManager.getAnnotationsContainingLocation(loc);
-    }
-
     public Set<Assertion> getAssertions() {
         return annotationManager.getAssertions();
+    }
+
+    public Map<Span, Annotation> getAnnotationMap(Integer loc, Boolean filterByProfile) {
+        return annotationManager.getAnnotationMap(loc, filterByProfile ? manager.getProfileManager().getCurrentProfile() : null);
+    }
+
+    public void addAssertion(String source, String target, String relationship) {
+        Assertion assertion = annotationManager.addAssertion(source, target, relationship);
+        if(view != null && assertion != null) view.assertionAddedEvent(assertion);
     }
 }

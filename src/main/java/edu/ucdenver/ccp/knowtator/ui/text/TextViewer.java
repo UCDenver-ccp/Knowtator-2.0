@@ -5,22 +5,17 @@ import edu.ucdenver.ccp.knowtator.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.annotation.Span;
 import edu.ucdenver.ccp.knowtator.annotation.TextSource;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
+import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
 import edu.ucdenver.ccp.knowtator.listeners.SpanListener;
 import edu.ucdenver.ccp.knowtator.listeners.TextSourceListener;
+import edu.ucdenver.ccp.knowtator.profile.Profile;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
 import org.apache.log4j.Logger;
-import other.RectanglePainter;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
-import java.util.Map;
-import java.util.Objects;
 
-import static java.lang.Math.min;
-
-public class TextViewer extends JTabbedPane implements AnnotationListener, TextSourceListener, SpanListener {
+public class TextViewer extends JTabbedPane implements AnnotationListener, TextSourceListener, SpanListener, ProfileListener {
     public static final Logger log = Logger.getLogger(KnowtatorManager.class);
     private boolean realTabAdded;
     private KnowtatorManager manager;
@@ -31,9 +26,13 @@ public class TextViewer extends JTabbedPane implements AnnotationListener, TextS
         this.manager = manager;
         this.view = view;
 
-        add("Untitled", new JTextPane());
-        realTabAdded = false;
+        addDefaultTab();
 
+    }
+
+    private void addDefaultTab() {
+        add("Untitled", new JScrollPane(new JTextPane()));
+        realTabAdded = false;
     }
 
     private void addNewDocument(TextSource textSource) {
@@ -72,101 +71,32 @@ public class TextViewer extends JTabbedPane implements AnnotationListener, TextS
 
         TextViewer textViewer = this;
         btnClose.addActionListener(evt -> {
+            if (getTabCount() == 1) {
+                addDefaultTab();
+            }
             log.warn(String.format("Closing: %s", title));
             manager.getTextSourceManager().remove(textPane.getTextSource());
             textViewer.remove(sp);
         });
 
+        setSelectedComponent(sp);
+
         realTabAdded = true;
-    }
-
-
-
-    @SuppressWarnings("unused")
-    public TextPane getTextPaneByName(String name) {
-        for (int i = 0; i < getTabCount(); i++) {
-            if (Objects.equals(getTitleAt(i), name)) {
-                return getTextPaneByIndex(i);
-            }
-        }
-        return null;
-    }
-
-    private TextPane getTextPaneByIndex(int i) {
-        JScrollPane scrollPane = (JScrollPane) getComponent(i);
-        JViewport viewPort = (scrollPane).getViewport();
-        return (TextPane) viewPort.getView();
     }
 
     public TextPane getSelectedTextPane() {
         if (getSelectedComponent() != null) {
-            return (TextPane) ((JScrollPane) getSelectedComponent()).getViewport().getView();
+            Component c = ((JScrollPane) getSelectedComponent()).getViewport().getView();
+            if (c.getClass() == TextPane.class) {
+                return (TextPane) ((JScrollPane) getSelectedComponent()).getViewport().getView();
+            }
         }
         return null;
     }
 
     private void refreshHighlights() {
-        log.warn("Refreshing highlights");
-        TextPane selectedTextPane = getSelectedTextPane();
-
-        // If no textpane is displayed, don't bother refreshing the highlights
-        if (selectedTextPane != null) {
-
-            //Remove all previous highlights in case a span has been deleted
-            selectedTextPane.getHighlighter().removeAllHighlights();
-
-            //Always highlight the selected annotation first so its color and border show up
-            highlightSelectedAnnotation(selectedTextPane, selectedTextPane.getSelectedAnnotation());
-
-            // Highlight overlaps first, then spans
-            Span lastSpan = Span.makeDefaultSpan();
-            Color lastColor = null;
-
-            Map<Span, Annotation> annotationMap = selectedTextPane.getTextSource().getAnnotationManager().getAnnotationMap();
-            for (Map.Entry<Span, Annotation> entry : annotationMap.entrySet()) {
-                Span span = entry.getKey();
-                Annotation annotation = entry.getValue();
-                if (span.intersects(lastSpan)) {
-                    try {
-                        selectedTextPane.getHighlighter().addHighlight(span.getStart(), min(span.getEnd(), lastSpan.getEnd()), new DefaultHighlighter.DefaultHighlightPainter(Color.GRAY));
-                    } catch (BadLocationException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (span.getEnd() > lastSpan.getEnd()) {
-                    try {
-                        selectedTextPane.getHighlighter().addHighlight(lastSpan.getStart(), lastSpan.getEnd(), new DefaultHighlighter.DefaultHighlightPainter(lastColor));
-                    } catch (BadLocationException e) {
-                        e.printStackTrace();
-                    }
-                    lastSpan = span;
-                    lastColor = annotation.getColor();
-                }
-            }
-
-            // Highlight remaining span
-            try {
-                selectedTextPane.getHighlighter().addHighlight(lastSpan.getStart(), lastSpan.getEnd(), new DefaultHighlighter.DefaultHighlightPainter(lastColor));
-            } catch (BadLocationException e) {
-                e.printStackTrace();
-            }
-
-            selectedTextPane.select(selectedTextPane.getSelectedSpan().getStart(), selectedTextPane.getSelectedSpan().getEnd());
-
-            selectedTextPane.revalidate();
-            selectedTextPane.repaint();
-        }
-    }
-
-    private void highlightSelectedAnnotation(TextPane textPane, Annotation annotation) {
-        if (annotation != null) {
-            for (Span span : annotation.getSpans()) {
-                try {
-                    textPane.getHighlighter().addHighlight(span.getStart(), span.getEnd(), new RectanglePainter(Color.BLACK));
-                } catch (BadLocationException e) {
-                    e.printStackTrace();
-                }
-            }
+        if (getSelectedTextPane() != null) {
+            getSelectedTextPane().refreshHighlights();
         }
     }
 
@@ -186,19 +116,9 @@ public class TextViewer extends JTabbedPane implements AnnotationListener, TextS
     }
 
     @Override
-    public void textSourceChanged(TextSource textSource) {
-        refreshHighlights();
-    }
-
-    @Override
     public void textSourceAdded(TextSource textSource) {
         addNewDocument(textSource);
         refreshHighlights();
-    }
-
-    @Override
-    public void textSourceRemoved() {
-
     }
 
     @Override
@@ -214,5 +134,25 @@ public class TextViewer extends JTabbedPane implements AnnotationListener, TextS
     @Override
     public void spanSelectionChanged(Span span) {
         refreshHighlights();
+    }
+
+    @Override
+    public void profileAdded(Profile profile) {
+        refreshHighlights();
+    }
+
+    @Override
+    public void profileRemoved() {
+        refreshHighlights();
+    }
+
+    @Override
+    public void profileSelectionChanged(Profile profile) {
+        refreshHighlights();
+    }
+
+    @Override
+    public void profileFilterSelectionChanged(boolean filterByProfile) {
+        getSelectedTextPane().setFilterByProfile(filterByProfile);
     }
 }

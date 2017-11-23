@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 class OntologyTranslator {
     public static final Logger log = Logger.getLogger(KnowtatorManager.class);
 

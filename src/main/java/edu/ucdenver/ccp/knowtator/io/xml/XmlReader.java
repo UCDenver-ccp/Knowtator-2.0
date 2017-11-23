@@ -93,8 +93,22 @@ class XmlReader {
             TextSource newTextSource = manager.getTextSourceManager().addTextSource(documentID, text.toString());
 
             getAnnotationsFromXml_NEW(manager, newTextSource, documentElement);
+            getAssertionsFromXml(newTextSource, documentElement);
         }
     }
+
+    private static void getAssertionsFromXml(TextSource textSource, Element documentElement) {
+        for (Node assertionNode : XmlUtil.asList(documentElement.getElementsByTagName(XmlTags.ASSERTION))) {
+            Element assertionElement = (Element) assertionNode;
+
+            String source = assertionElement.getElementsByTagName(XmlTags.ASSERTION_SOURCE).item(0).getTextContent();
+            String target = assertionElement.getElementsByTagName(XmlTags.ASSERTION_TARGET).item(0).getTextContent();
+            String relationship = assertionElement.getElementsByTagName(XmlTags.ASSERTION_RELATIONSHIP).item(0).getTextContent();
+
+            textSource.addAssertion(source, target, relationship);
+        }
+    }
+
 
     private static void readConfigFile(KnowtatorManager manager, List<Node> configNodes) {
         for (Node configNode: configNodes) {
@@ -191,7 +205,7 @@ class XmlReader {
                 String className = classElement.getElementsByTagName(XmlTags.MENTION_CLASS).item(0).getTextContent();
                 String classID = ((Element) classElement.getElementsByTagName(XmlTags.MENTION_CLASS).item(0)).getAttribute(XmlTags.MENTION_CLASS_ID);
 
-                textSource.addAnnotation(profile, className, classID, spans);
+                textSource.addAnnotation(null, profile, className, classID, spans);
             }
         }
     }
@@ -200,6 +214,7 @@ class XmlReader {
         for (Node annotationNode : XmlUtil.asList(documentElement.getElementsByTagName(XmlTags.ANNOTATION))) {
             Element annotationElement = (Element) annotationNode;
 
+            String annotationID = annotationElement.getElementsByTagName(XmlTags.ANNOTATION_ID).item(0).getTextContent();
             String profileID = annotationElement.getElementsByTagName(XmlTags.ANNOTATOR).item(0).getTextContent();
 
             Profile profile = manager.getProfileManager().addNewProfile(profileID);
@@ -207,7 +222,7 @@ class XmlReader {
             String classID = annotationElement.getElementsByTagName(XmlTags.CLASS_ID).item(0).getTextContent();
             List<Span> spans = getSpanInfo(annotationElement);
 
-            textSource.addAnnotation(profile, className, classID, spans);
+            textSource.addAnnotation(annotationID, profile, className, classID, spans);
         }
     }
 

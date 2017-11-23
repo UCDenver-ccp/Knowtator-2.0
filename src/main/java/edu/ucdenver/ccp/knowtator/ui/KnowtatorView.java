@@ -43,6 +43,7 @@ public class KnowtatorView extends BasicKnowtatorView {
 
         menuBar.add(fileMenu);
         menuBar.add(profileMenu);
+        menuBar.add(annotationMenu);
         menuBar.add(iaaMenu);
         menuBar.add(graphMenu);
         menuBar.add(toolBar);

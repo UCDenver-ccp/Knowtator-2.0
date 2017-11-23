@@ -55,11 +55,6 @@ public class OWLAPIDataExtractor {
         return extractOWLObjectData(view, ent, "id");
     }
 
-    public static String getClassIDByName(BasicKnowtatorView view, String className) {
-        OWLClass cls = getOWLClassByName(view, className);
-        return getClassIDByOWLClass(view, cls);
-    }
-
     public static OWLClass getOWLClassByName(BasicKnowtatorView view, String className) {
         try {
             return view.getOWLModelManager().getOWLEntityFinder().getOWLClass(className);

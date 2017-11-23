@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 
 <plugin>
-    <extension id="Knowtator 2.0"
+    <extension id="Knowtator"
                point="org.protege.editor.core.application.ViewComponent">
         <label value="Knowtator"/>
         <class value="edu.ucdenver.ccp.knowtator.ui.KnowtatorView"/>

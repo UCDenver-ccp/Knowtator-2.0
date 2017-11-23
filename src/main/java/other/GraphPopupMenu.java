@@ -39,8 +39,7 @@ public class GraphPopupMenu extends JPopupMenu
 
 		add(graphViewer.bind(
 				"delete",
-				mxGraphActions.getDeleteAction(),
-				"/com/mxgraph/examples/swing/images/delete.gif"
+				mxGraphActions.getDeleteAction()
 		)).setEnabled(selected);
 
 		addSeparator();

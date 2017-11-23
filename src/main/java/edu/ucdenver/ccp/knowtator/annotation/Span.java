@@ -39,6 +39,7 @@ import java.util.Objects;
 import java.util.TreeSet;
 
 public class Span {
+	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(KnowtatorManager.class);
 
 	private int start;
@@ -219,19 +220,32 @@ public class Span {
 		return string.substring(start, end);
 	}
 
-	public void shrinkEnd() {
+	void shrinkEnd() {
 		if (end > start) end -= 1;
 	}
 
-	public void shrinkStart() {
+	void shrinkStart() {
 		if (start < end) start += 1;
 	}
 
-	public void growEnd(int limit) {
+	void growEnd(int limit) {
 		if (end < limit) end += 1;
 	}
 
-	public void growStart() {
+	void growStart() {
 		if (start > 0) start -= 1;
+	}
+
+	static int compare(Span span1, Span span2) {
+		if (span1 == null) {
+			return span2 == null ? 0 : -1;
+		} else if (span2 == null) {
+			return 1;
+		}
+		int compare = span1.getStart().compareTo(span2.getStart());
+		if (compare == 0) {
+			compare = span1.getEnd().compareTo(span2.getEnd());
+		}
+		return compare;
 	}
 }

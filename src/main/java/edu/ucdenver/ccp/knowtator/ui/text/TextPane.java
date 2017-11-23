@@ -8,10 +8,13 @@ import edu.ucdenver.ccp.knowtator.annotation.TextSource;
 import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
 import org.apache.log4j.Logger;
+import other.RectanglePainter;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Utilities;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Map;
@@ -27,14 +30,18 @@ public class TextPane extends JTextPane{
 	private TextSource textSource;
 	private Span selectedSpan;
 	private Annotation selectedAnnotation;
+	private boolean filterByProfile;
+	private boolean focusOnSelectedSpan;
 
 	TextPane(BasicKnowtatorView view, TextSource textSource) {
 		super();
 		this.view = view;
 		this.textSource = textSource;
 
-		selectedSpan = Span.makeDefaultSpan();
 		this.setEditable(false);
+
+		filterByProfile = false;
+		focusOnSelectedSpan = false;
 
 		setupListeners();
 	}
@@ -78,7 +85,7 @@ public class TextPane extends JTextPane{
 		if (press_offset == release_offset) {
 
 
-			Map<Span, Annotation> spansContainingLocation = textSource.getAnnotationsContainingLocation(press_offset);
+			Map<Span, Annotation> spansContainingLocation = textSource.getAnnotationMap(press_offset, filterByProfile);
 			if (spansContainingLocation.size() == 1) {
 				Map.Entry<Span, Annotation> entry = spansContainingLocation.entrySet().iterator().next();
 				setSelection(entry.getKey(), entry.getValue());
@@ -93,6 +100,7 @@ public class TextPane extends JTextPane{
 
 	private void setSelectedSpan(Span span) {
 		selectedSpan = span;
+		focusOnSelectedSpan = true;
 		view.spanSelectionChangedEvent(selectedSpan);
 	}
 
@@ -114,7 +122,8 @@ public class TextPane extends JTextPane{
 			int start = Utilities.getWordStart(this, min(press_offset, release_offset));
 			int end = Utilities.getWordEnd(this, max(press_offset, release_offset));
 
-			setSelectedSpan(new Span(start, end));
+			focusOnSelectedSpan = false;
+			select(start, end);
 
 		} catch (BadLocationException e) {
 			e.printStackTrace();
@@ -141,7 +150,7 @@ public class TextPane extends JTextPane{
 
 		// Menu item to create new annotation
 		JMenuItem annotateWithCurrentSelectedClass = new JMenuItem("Annotate with current selected class");
-		annotateWithCurrentSelectedClass.addActionListener(e12 -> addAnnotation());
+		annotateWithCurrentSelectedClass.addActionListener(e12 -> addSelectedAnnotation());
 		popupMenu.add(annotateWithCurrentSelectedClass);
 
 		if (selectedSpan != null) {
@@ -156,7 +165,7 @@ public class TextPane extends JTextPane{
 			}
 		}
 		// Menu items to select and remove annotations
-		textSource.getAnnotationManager().getAnnotationsContainingLocation(releaseOffset).forEach((span, annotation) -> {
+		textSource.getAnnotationMap(releaseOffset, filterByProfile).forEach((span, annotation) -> {
 			JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s", annotation.getClassName()));
 			selectAnnotationMenuItem.addActionListener(e3 -> setSelection(span, annotation));
 			popupMenu.add(selectAnnotationMenuItem);
@@ -174,10 +183,11 @@ public class TextPane extends JTextPane{
 	}
 
 	private void addSpan() {
-		textSource.addSpanToSelectedAnnotation(selectedAnnotation, getSelectionStart(), getSelectionEnd());
+		Span newSpan = textSource.addSpanToSelectedAnnotation(selectedAnnotation, getSelectionStart(), getSelectionEnd());
+		view.spanAddedEvent(newSpan);
 	}
 
-	private void addAnnotation() {
+	public void addSelectedAnnotation() {
 		textSource.addAnnotation(getSelectionStart(), getSelectionEnd());
 	}
 
@@ -200,24 +210,111 @@ public class TextPane extends JTextPane{
 	}
 
 	public void shrinkSelectionEnd() {
-		textSource.getAnnotationManager().shrinkSpanEnd(selectedSpan);
-		setSelectedSpan(selectedSpan);
+		if (focusOnSelectedSpan) {
+			textSource.getAnnotationManager().shrinkSpanEnd(selectedSpan);
+			setSelectedSpan(selectedSpan);
+		} else {
+			requestFocusInWindow();
+			select(getSelectionStart(), getSelectionEnd() - 1);
+		}
 
 	}
 	public void shrinkSelectionStart() {
-		textSource.getAnnotationManager().shrinkSpanStart(selectedSpan);
-		setSelectedSpan(selectedSpan);
+		if (focusOnSelectedSpan) {
+			textSource.getAnnotationManager().shrinkSpanStart(selectedSpan);
+			setSelectedSpan(selectedSpan);
+		} else {
+			requestFocusInWindow();
+			select(getSelectionStart() + 1, getSelectionEnd());
+		}
 	}
 	public void growSelectionEnd() {
-		textSource.getAnnotationManager().growSpanEnd(selectedSpan, getText().length());
-		setSelectedSpan(selectedSpan);
+		if (focusOnSelectedSpan) {
+			textSource.getAnnotationManager().growSpanEnd(selectedSpan, getText().length());
+			setSelectedSpan(selectedSpan);
+		} else {
+			requestFocusInWindow();
+			select(getSelectionStart(), getSelectionEnd() + 1);
+		}
 	}
 	public void growSelectionStart() {
-		textSource.getAnnotationManager().growSpanStart(selectedSpan);
-		setSelectedSpan(selectedSpan);
+		if (focusOnSelectedSpan) {
+			textSource.getAnnotationManager().growSpanStart(selectedSpan);
+			setSelectedSpan(selectedSpan);
+		} else {
+			requestFocusInWindow();
+			select(getSelectionStart() - 1, getSelectionEnd());
+		}
 	}
 
-	public Span getSelectedSpan() {
-		return selectedSpan;
+	void setFilterByProfile(boolean filterByProfile) {
+		this.filterByProfile = filterByProfile;
+		setSelection(null, null);
+	}
+
+	void refreshHighlights() {
+
+		//Remove all previous highlights in case a span has been deleted
+		getHighlighter().removeAllHighlights();
+
+		//Always highlight the selected annotation first so its color and border show up
+		highlightSelectedAnnotation();
+
+		// Highlight overlaps first, then spans
+		Span lastSpan = Span.makeDefaultSpan();
+		Color lastColor = null;
+
+		Map<Span, Annotation> annotationMap = textSource.getAnnotationMap(null, filterByProfile);
+		for (Map.Entry<Span, Annotation> entry : annotationMap.entrySet()) {
+			Span span = entry.getKey();
+			Annotation annotation = entry.getValue();
+			if (span.intersects(lastSpan)) {
+				try {
+					getHighlighter().addHighlight(span.getStart(), min(span.getEnd(), lastSpan.getEnd()), new DefaultHighlighter.DefaultHighlightPainter(Color.GRAY));
+				} catch (BadLocationException e) {
+					e.printStackTrace();
+				}
+			}
+			if (span.getEnd() > lastSpan.getEnd()) {
+				try {
+					getHighlighter().addHighlight(lastSpan.getStart(), lastSpan.getEnd(), new DefaultHighlighter.DefaultHighlightPainter(lastColor));
+				} catch (BadLocationException e) {
+					e.printStackTrace();
+				}
+				lastSpan = span;
+				lastColor = annotation.getColor();
+			}
+		}
+
+		// Highlight remaining span
+		try {
+			getHighlighter().addHighlight(lastSpan.getStart(), lastSpan.getEnd(), new DefaultHighlighter.DefaultHighlightPainter(lastColor));
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
+
+		revalidate();
+		repaint();
+	}
+
+	private void highlightSelectedAnnotation() {
+		if (selectedAnnotation != null) {
+			for (Span span : selectedAnnotation.getSpans()) {
+				try {
+					if (span.equals(selectedSpan))
+						getHighlighter().addHighlight(span.getStart(), span.getEnd(), new RectanglePainter(Color.BLACK));
+					else
+						getHighlighter().addHighlight(span.getStart(), span.getEnd(), new RectanglePainter(Color.DARK_GRAY));
+				} catch (BadLocationException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
+	}
+
+	public void removeSelectedAnnotation() {
+		textSource.removeAnnotation(selectedAnnotation);
+		setSelection(null, null);
 	}
 }

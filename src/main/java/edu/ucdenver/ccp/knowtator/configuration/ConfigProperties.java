@@ -5,6 +5,8 @@ import java.util.regex.Pattern;
 
 public class ConfigProperties {
 
+    private String lastWritePath;
+
     public String getFormat() {
         return format;
     }
@@ -61,5 +63,13 @@ public class ConfigProperties {
         }
         m.appendTail(sb);
         return sb.toString();
+    }
+
+    public void setLastWritePath(String lastWritePath) {
+        this.lastWritePath = lastWritePath;
+    }
+
+    public String getLastWritePath() {
+        return lastWritePath;
     }
 }

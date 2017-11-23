@@ -8,4 +8,6 @@ public interface ProfileListener extends Listener {
     void profileRemoved();
 
     void profileSelectionChanged(Profile profile);
+
+    void profileFilterSelectionChanged(boolean filterByProfile);
 }

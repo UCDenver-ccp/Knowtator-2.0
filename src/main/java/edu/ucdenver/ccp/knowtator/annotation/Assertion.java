@@ -25,5 +25,9 @@ public class Assertion {
         this.relationship = relationship;
     }
 
+    @Override
+    public String toString() {
+        return String.format("Assertion: %s, %s, %s", source, target, relationship);
+    }
 
 }

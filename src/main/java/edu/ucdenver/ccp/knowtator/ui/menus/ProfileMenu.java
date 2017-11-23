@@ -94,8 +94,12 @@ public class ProfileMenu extends JMenu implements ProfileListener {
         removeAnnotatorMenu.removeAll();
         ProfileManager profileManager = manager.getProfileManager();
         for (Profile profile : profileManager.getProfiles().values()) {
-            JMenuItem switchAnnotator = new JMenuItem(profile.getProfileID());
+
+            JCheckBoxMenuItem switchAnnotator = new JCheckBoxMenuItem(profile.getProfileID());
             switchAnnotator.addActionListener(e -> profileManager.switchAnnotator(profile));
+            if (manager.getProfileManager().getCurrentProfile().equals(profile)) {
+                switchAnnotator.setState(true);
+            } else switchAnnotator.setState(false);
             switchAnnotatorMenu.add(switchAnnotator);
 
             JMenuItem removeAnnotator = new JMenuItem(profile.getProfileID());
@@ -117,5 +121,10 @@ public class ProfileMenu extends JMenu implements ProfileListener {
     @Override
     public void profileSelectionChanged(Profile profile) {
         updateMenus();
+    }
+
+    @Override
+    public void profileFilterSelectionChanged(boolean filterByProfile) {
+
     }
 }

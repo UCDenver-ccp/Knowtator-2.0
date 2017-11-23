@@ -38,7 +38,7 @@ import java.util.UUID;
 
 public class Annotation {
 
-	private final String id;
+	private String id;
 	private final Date date;
 
 	private TextSource textSource;
@@ -47,15 +47,16 @@ public class Annotation {
 	private String classID;
 	private TreeSet<Span> spans;
 
-	//TODO: Make s
-
-	Annotation(TextSource textSource, Profile annotator, String className, String classID) {
+	Annotation(String annotationID, TextSource textSource, Profile annotator, String className, String classID) {
 		this.textSource = textSource;
 		this.annotator = annotator;
 		this.className = className;
 		this.classID = classID;
 		this.date = new Date();
-		this.id = UUID.randomUUID().toString();
+		if (annotationID == null) this.id = UUID.randomUUID().toString();
+		else this.id = annotationID;
+
+
 
 		spans = new TreeSet<>((span1, span2) -> {
 			if (span1 == null) {

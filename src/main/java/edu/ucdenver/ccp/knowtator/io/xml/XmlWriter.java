@@ -49,6 +49,7 @@ class XmlWriter {
 
     static void write(KnowtatorManager manager, String fileName) throws IOException, NoSuchFieldException {
         log.warn(String.format("Writing to: %s", fileName));
+        manager.getConfigProperties().setLastWritePath(fileName);
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(fileName));
 
@@ -90,7 +91,15 @@ class XmlWriter {
         try {
                 bw.write(String.format("<%s %s=\"%s\">", XmlTags.DOCUMENT, XmlTags.DOCUMENT_ID, textSource.getDocID()));
                 bw.newLine();
-                bw.write(String.format("            \t<%s>%s</%s>", XmlTags.TEXT, textSource.getContent(), XmlTags.TEXT));
+                bw.write(String.format("\t<%s>", XmlTags.TEXT));
+                bw.write(textSource.getContent()
+                        .replace("&", "&amp;")
+                        .replace("<", "&lt;")
+                        .replace(">", "&gt;")
+                        .replace("\"", "&quot;")
+                        .replace("\'", "&apos;")
+                );
+                bw.write(String.format("</%s>", XmlTags.TEXT));
                 bw.newLine();
                 textSource.getAnnotations().forEach(annotation -> writeAnnotation(bw, annotation));
                 textSource.getAssertions().forEach(assertion -> writeAssertion(bw, assertion));

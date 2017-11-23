@@ -1,23 +1,25 @@
-package edu.ucdenver.ccp.knowtator.ui.menus;
+package edu.ucdenver.ccp.knowtator.ui;
 
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 import java.util.HashMap;
 
-class KnowtatorIcons {
+public class KnowtatorIcons {
     private static final String RELATIVE_PATH = "/icon/";
 
     private static final Integer MENU_ITEM_WIDTH = 20;
     private static final Integer MENU_ITEM_HEIGHT = 20;
     private static final String UGLY_ICON = "";
 
-    static final String RIGHT_ICON = "icons8-forward-50.png";
-    static final String LEFT_ICON = "icons8-back-50.png";
-    static final String NEXT_ICON = "icons8-right-filled-50.png";
-    static final String PREVIOUS_ICON = "icons8-left-filled-50.png";
-    static final String INCREASE_TEXT_SIZE_ICON = "icons8-Increase Font.png";
-    static final String DECREASE_TEXT_SIZE_ICON = "icons8-Decrease Font.png";
+    public static final String RIGHT_ICON = "icons8-forward-50.png";
+    public static final String LEFT_ICON = "icons8-back-50.png";
+    public static final String NEXT_ICON = "icons8-right-filled-50.png";
+    public static final String PREVIOUS_ICON = "icons8-left-filled-50.png";
+    public static final String INCREASE_TEXT_SIZE_ICON = "icons8-Increase Font.png";
+    public static final String DECREASE_TEXT_SIZE_ICON = "icons8-Decrease Font.png";
+    public static final String ADD_ICON = "icons8-plus-50.png";
+    public static final String REMOVE_ICON = "icons8-minus-50.png";
 
 
     private static HashMap<String, ImageIcon> iconMap = new HashMap<>();
@@ -28,7 +30,7 @@ class KnowtatorIcons {
         iconMap.put(UGLY_ICON, uglyIcon);
     }
 
-    static ImageIcon getIcon(String iconName) {
+    public static ImageIcon getIcon(String iconName) {
         ImageIcon imageIcon = iconMap.get(iconName);
         if (imageIcon == null) {
             imageIcon = loadIcon(iconName);
