@@ -27,15 +27,13 @@
  */
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
-import edu.ucdenver.ccp.knowtator.TextAnnotation.TextAnnotation;
+import edu.ucdenver.ccp.knowtator.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-@SuppressWarnings("JavadocReference")
 public class ClassMatcher implements Matcher {
 	/**
 	 * This method will return an annotation with the same class and spans. If
@@ -43,26 +41,21 @@ public class ClassMatcher implements Matcher {
 	 * and overlapping spans. If more than one of these exists, then the
 	 * shortest annotation with the same class and overlapping spans will be
 	 * returned. Otherwise, null is returned.
-	 * 
-	 * @param textAnnotation
-	 * @param compareSetName
-	 * @param excludeTextAnnotations
-	 * @param iaa
+	 *
 	 * @param matchResult
 	 *            will be set to NONTRIVIAL_MATCH or NONTRIVIAL_NONMATCH.
 	 *            Trivial matches and non-matches are not defined for this
 	 *            matcher.
-	 * @see edu.uchsc.ccp.iaa.matcher.Matcher#match(TextAnnotation, String, Set,
+	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher#match(Annotation, String, Set,
 	 *      IAA, MatchResult)
-	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
-	 * @see edu.uchsc.ccp.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
-	 * @see edu.uchsc.ccp.iaa.Annotation#getShortestAnnotation(Collection)
+	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
+	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
 	 */
 
-	@SuppressWarnings("JavaDoc")
-	public TextAnnotation match(TextAnnotation textAnnotation, String compareSetName, Set<TextAnnotation> excludeTextAnnotations, IAA iaa,
-								MatchResult matchResult) {
-		TextAnnotation match = match(textAnnotation, compareSetName, iaa, excludeTextAnnotations);
+	@SuppressWarnings("Duplicates")
+	public Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
+							MatchResult matchResult) {
+		Annotation match = match(annotation, compareSetName, iaa, excludeAnnotations);
 		if (match != null) {
 			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 			return match;
@@ -72,36 +65,36 @@ public class ClassMatcher implements Matcher {
 		}
 	}
 
-	public static TextAnnotation match(TextAnnotation textAnnotation, String compareSetName, IAA iaa,
-                                       Set<TextAnnotation> excludeTextAnnotations) {
-		TextAnnotation spanAndClassMatch = ClassAndSpanMatcher.match(textAnnotation, compareSetName, iaa, excludeTextAnnotations);
+	private static Annotation match(Annotation annotation, String compareSetName, IAA iaa,
+                                    Set<Annotation> excludeAnnotations) {
+		Annotation spanAndClassMatch = ClassAndSpanMatcher.match(annotation, compareSetName, iaa, excludeAnnotations);
 		if (spanAndClassMatch != null) {
 			return spanAndClassMatch;
 		}
 
-		Set<TextAnnotation> matches = matches(textAnnotation, compareSetName, iaa, excludeTextAnnotations);
+		Set<Annotation> matches = matches(annotation, compareSetName, iaa, excludeAnnotations);
 		if (matches.size() > 0) {
 			if (matches.size() == 1)
 				return matches.iterator().next();
 			else {
-				return TextAnnotation.getShortestAnnotation(matches);
+				return IAA.getShortestAnnotation(matches);
 			}
 		} else {
 			return null;
 		}
 	}
 
-	public static Set<TextAnnotation> matches(TextAnnotation textAnnotation, String compareSetName, IAA iaa,
-											  Set<TextAnnotation> excludeTextAnnotations) {
+	private static Set<Annotation> matches(Annotation annotation, String compareSetName, IAA iaa,
+                                           Set<Annotation> excludeAnnotations) {
 
-		Set<TextAnnotation> overlappingTextAnnotations = iaa.getOverlappingAnnotations(textAnnotation, compareSetName);
-		Set<TextAnnotation> annotationsOfSameType = iaa.getAnnotationsOfSameType(textAnnotation, compareSetName);
-		Set<TextAnnotation> candidateTextAnnotations = new HashSet<>(overlappingTextAnnotations);
-		candidateTextAnnotations.retainAll(annotationsOfSameType);
-		candidateTextAnnotations.removeAll(excludeTextAnnotations);
+		Set<Annotation> overlappingAnnotations = iaa.getOverlappingAnnotations(annotation, compareSetName);
+		Set<Annotation> annotationsOfSameType = iaa.getAnnotationsOfSameType(annotation, compareSetName);
+		Set<Annotation> candidateAnnotations = new HashSet<>(overlappingAnnotations);
+		candidateAnnotations.retainAll(annotationsOfSameType);
+		candidateAnnotations.removeAll(excludeAnnotations);
 
-		if (candidateTextAnnotations.size() > 0) {
-			return Collections.unmodifiableSet(candidateTextAnnotations);
+		if (candidateAnnotations.size() > 0) {
+			return Collections.unmodifiableSet(candidateAnnotations);
 		} else {
 			return Collections.emptySet();
 		}

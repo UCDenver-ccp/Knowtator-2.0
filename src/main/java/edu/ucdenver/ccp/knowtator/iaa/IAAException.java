@@ -28,20 +28,19 @@
 
 package edu.ucdenver.ccp.knowtator.iaa;
 
-@SuppressWarnings("unused")
 public class IAAException extends Exception {
 
-	public IAAException() {
-		super();
-	}
+//	public IAAException() {
+//		super();
+//	}
 
 	public IAAException(String message) {
 		super(message);
 	}
 
-	public IAAException(String message, Throwable cause) {
-		super(message, cause);
-	}
+//	public IAAException(String message, Throwable cause) {
+//		super(message, cause);
+//	}
 
 	public IAAException(Throwable cause) {
 		super(cause);

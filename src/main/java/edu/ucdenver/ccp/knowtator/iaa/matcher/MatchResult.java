@@ -28,7 +28,7 @@
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
 public class MatchResult {
-	public static final int MATCH_RESULT_UNASSIGNED = -1;
+//	public static final int MATCH_RESULT_UNASSIGNED = -1;
 
 	public static final int NONTRIVIAL_MATCH = 0;
 
@@ -38,7 +38,7 @@ public class MatchResult {
 
 	public static final int TRIVIAL_NONMATCH = 3;
 
-	public int result = -1;
+	private int result = -1;
 
 	public MatchResult() {
 	}

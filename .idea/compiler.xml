@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <excludeFromCompile>
-      <directory url="file://$PROJECT_DIR$/src/main/java/edu/uchsc" includeSubdirectories="true" />
-    </excludeFromCompile>
     <annotationProcessing>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+      <profile name="Annotation profile for Knowtator" enabled="true">
+        <sourceOutputDir name="../../../../Program Files/Protege-5.2.0/plugins/generated-sources/annotations" />
+        <sourceTestOutputDir name="../../../../Program Files/Protege-5.2.0/plugins/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="MechAnIC" />
+        <module name="knowtator" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="1.8">
-      <module name="MechAnIC" target="1.8" />
+    <bytecodeTargetLevel>
+      <module name="knowtator" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

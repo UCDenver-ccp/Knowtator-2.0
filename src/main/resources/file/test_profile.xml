@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<profile name="Harrison" id="1234">
-    <highlighter>
-        <class-name>biological_process</class-name>
-        <class-id>GO:0008150</class-id>
-        <color>#99FFFF</color>
-    </highlighter>
-</profile>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="Osmorc" name="OSGi">
+      <configuration manifestGenerationMode="OsmorcControlled" manifestLocation="" jarfileLocation="knowtator-2.0.0.jar" outputPathType="CompilerOutputPath" bndFileLocation="" bundlorFileLocation="" bundleActivator="org.protege.editor.owl.ProtegeOWL" bundleSymbolicName="knowtator;singleton:=true" bundleVersion="2.0.0" ignoreFilePattern="" useProjectDefaultManifestFileLocation="true" alwaysRebuildBundleJAR="false" doNotSynchronizeWithMaven="false">
+        <additionalProperties>
+          <property key="Bundle-Description" value="A plugin for annotating text" />
+          <property key="Bundle-Name" value="Knowtator Plugin" />
+          <property key="Bundle-Category" value="protege" />
+          <property key="Bundle-ClassPath" value=".,jgraphx-3.4.1.3.jar" />
+          <property key="Bundle-Vendor" value="The Protege Development Team" />
+          <property key="Import-Package" value="*" />
+          <property key="Embed-Dependency" value="jgraphx" />
+          <property key="Include-Resource" value="jgraphx-3.4.1.3.jar=$MAVEN_REPOSITORY$/org/tinyjee/jgraphx/jgraphx/3.4.1.3/jgraphx-3.4.1.3.jar,$MODULE_DIR$/README.md,$MODULE_DIR$/plugin.xml,$MODULE_DIR$/installation_image.PNG,$MODULE_DIR$/protege.properties,{config.xml=$MODULE_DIR$/src/main/resources/config.xml},{file/test_project.xml=$MODULE_DIR$/src/main/resources/file/test_project.xml},{icon/icons8-back-50.png=$MODULE_DIR$/src/main/resources/icon/icons8-back-50.png},{icon/icons8-Decrease Font.png=$MODULE_DIR$/src/main/resources/icon/icons8-Decrease Font.png},{icon/icons8-forward-50.png=$MODULE_DIR$/src/main/resources/icon/icons8-forward-50.png},{icon/icons8-Increase Font.png=$MODULE_DIR$/src/main/resources/icon/icons8-Increase Font.png},{icon/icons8-left-filled-50.png=$MODULE_DIR$/src/main/resources/icon/icons8-left-filled-50.png},{icon/icons8-minus-50.png=$MODULE_DIR$/src/main/resources/icon/icons8-minus-50.png},{icon/icons8-plus-50.png=$MODULE_DIR$/src/main/resources/icon/icons8-plus-50.png},{icon/icons8-right-filled-50.png=$MODULE_DIR$/src/main/resources/icon/icons8-right-filled-50.png},{log4j.properties=$MODULE_DIR$/src/main/resources/log4j.properties}" />
+          <property key="Private-Package" value="skeleton" />
+          <property key="Embedded-Artifacts" value="jgraphx-3.4.1.3.jar;g=&quot;org.tinyjee.jgraphx&quot;;a=&quot;jgraphx&quot;;v=&quot;3.4.1.3&quot;" />
+        </additionalProperties>
+        <additionalJARContents />
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
+    <output url="file://C:/Program Files/Protege-5.2.0/plugins/classes" />
+    <output-test url="file://C:/Program Files/Protege-5.2.0/plugins/test-classes" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:protege-common:5.0.0-RC1" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:1.1.3" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:1.1.3" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:log4j-over-slf4j:1.7.12" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:jul-to-slf4j:1.7.12" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.felix:org.apache.felix.main:4.4.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.felix:org.apache.felix.framework:4.4.1" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:18.0" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:protege-editor-core:5.0.0-RC1" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.registry:3.5.0.v20100503" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.core:org.eclipse.core.jobs:3.5.0.v20100515" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.common:3.6.0.v20100503" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.osgi:org.eclipse.osgi:3.6.0.v20100517" level="project" />
+    <orderEntry type="library" name="Maven: com.googlecode.mdock:mdock:2.0.1" level="project" />
+    <orderEntry type="library" name="Maven: com.jgoodies:jgoodies-looks:2.5.3" level="project" />
+    <orderEntry type="library" name="Maven: com.jgoodies:jgoodies-common:1.6.0" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:protege-editor-owl:5.0.0-RC1" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:org.protege.xmlcatalog:1.0.5" level="project" />
+    <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
+    <orderEntry type="library" name="Maven: xml-resolver:xml-resolver:1.2" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-osgidistribution:4.2.3" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.5.1" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.5.1" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.5.1" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-model:2.7.16" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-api:2.7.16" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-languages:2.7.16" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-datatypes:2.7.16" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-binary:2.7.16" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-n3:2.7.16" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-nquads:2.7.16" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-ntriples:2.7.16" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-rdfjson:2.7.16" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-rdfxml:2.7.16" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-trix:2.7.16" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-turtle:2.7.16" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-rio-trig:2.7.16" level="project" />
+    <orderEntry type="library" name="Maven: org.openrdf.sesame:sesame-util:2.7.16" level="project" />
+    <orderEntry type="library" name="Maven: com.github.jsonld-java:jsonld-java-sesame:0.5.0" level="project" />
+    <orderEntry type="library" name="Maven: com.github.jsonld-java:jsonld-java:0.5.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.slf4j:jcl-over-slf4j:1.7.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient-cache:4.5.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.3" level="project" />
+    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.9" level="project" />
+    <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.semarglproject:semargl-sesame:0.6.1" level="project" />
+    <orderEntry type="library" name="Maven: org.semarglproject:semargl-core:0.6.1" level="project" />
+    <orderEntry type="library" name="Maven: org.semarglproject:semargl-rdfa:0.6.1" level="project" />
+    <orderEntry type="library" name="Maven: org.semarglproject:semargl-rdf:0.6.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.servicemix.bundles:org.apache.servicemix.bundles.aopalliance:1.0_6" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.servicemix.bundles:org.apache.servicemix.bundles.javax-inject:1_2" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.12" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-api:5.1.3" level="project" />
+    <orderEntry type="library" name="Maven: org.tukaani:xz:1.6" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-rdf-api:0.3.0-incubating" level="project" />
+    <orderEntry type="library" name="Maven: net.sf.trove4j:trove4j:3.0.3" level="project" />
+    <orderEntry type="library" name="Maven: com.github.ben-manes.caffeine:caffeine:2.5.6" level="project" />
+    <orderEntry type="library" name="Maven: com.google.inject:guice:4.1.0" level="project" />
+    <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
+    <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.inject.extensions:guice-assistedinject:4.1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.inject.extensions:guice-multibindings:4.1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.1" level="project" />
+    <orderEntry type="library" name="Maven: commons-io:commons-io:2.5" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:org.protege.editor.owl:5.0.0-beta-05-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:org.protege.common:5.0.0-beta-05-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.jgoodies:looks:2.2.2" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:org.protege.editor.core.application:5.0.0-beta-05-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:protege-owlapi-extensions:3.2.6" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-distribution:3.5.0" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-apibinding:3.5.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.felix:org.osgi.core:1.4.0" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-tools:3.5.0" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-impl:3.5.0" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-parsers:3.5.0" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-oboformat:3.5.0" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:owlapi-contract:3.5.0" level="project" />
+    <orderEntry type="library" name="Maven: net.sourceforge.owlapi:jfact:1.0.0" level="project" />
+    <orderEntry type="library" name="Maven: org.testng:testng:6.8.7" level="project" />
+    <orderEntry type="library" name="Maven: junit:junit:4.10" level="project" />
+    <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.beanshell:bsh:2.0b4" level="project" />
+    <orderEntry type="library" name="Maven: com.beust:jcommander:1.27" level="project" />
+    <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.12" level="project" />
+    <orderEntry type="library" name="Maven: org.tinyjee.jgraphx:jgraphx:3.4.1.3" level="project" />
+  </component>
+</module>

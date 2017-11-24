@@ -1,7 +1,5 @@
 package edu.ucdenver.ccp.knowtator.ui;
 
-import edu.ucdenver.ccp.knowtator.Commands.*;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,105 +7,49 @@ public class KnowtatorView extends BasicKnowtatorView {
 
     @Override
     public void initialiseClassView() {
+        log.warn("************************Initializing Knowtator");
         super.initialiseClassView();
         createUI();
         setupInitial();
+
+        log.warn("*************************Done initializing Knowtator");
     }
 
-    public void createUI() {
+    private void createUI() {
         setLayout(new BorderLayout());
 
-        /*
-        Create a tabbed pane containing the text viewer for each document
-         */
-        textViewer = new KnowtatorTextViewer(manager);
-        textViewer.setMinimumSize(new Dimension(100, 50));
-        manager.getTextAnnotationListeners().add(textViewer);
+        createMenuBar();
 
-        /*
-        Create a viewer to see the annotations as a graph
-         */
-        graphViewer = new KnowtatorGraphViewer(manager);
-        manager.getTextAnnotationListeners().add(graphViewer);
+        JScrollPane infoPaneSP = new JScrollPane(infoPane);
 
+        JSplitPane annotationSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        annotationSplitPane.setOneTouchExpandable(true);
+        annotationSplitPane.setDividerLocation(800);
 
-        JSplitPane mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-        mainSplitPane.setOneTouchExpandable(true);
-        add(mainSplitPane);
-        mainSplitPane.add(textViewer);
-        mainSplitPane.add(graphViewer);
-        mainSplitPane.setDividerLocation(300);
+        annotationSplitPane.add(textViewer);
+        annotationSplitPane.add(infoPaneSP);
+        add(annotationSplitPane);
 
-        /*
-        Make the toolbar seen at the top of the view
-         */
-        createToolBar();
-    }
-
-    /**
-     * TODO make initial document the last document that was edited
-     */
-    public void setupInitial() {
-
-        manager.getAnnotatorManager().addNewAnnotator("Default", "Default");
-
-
-
-        /*
-        An initial documents to display
-         */
-        textViewer.addNewDocument("/file/test_article.txt", true);
-        textViewer.addNewDocument("/file/test_article2.txt", true);
-
-        manager.getXmlUtil().read("/file/test_profile.xml", true);
-//        manager.getXmlUtil().read("/file/test_annotations.xml", true);
 
     }
 
-    /**
-     * Add buttons corresponding to each of the actions to the toolbar
-     */
-    public void createToolBar() {
-        DocumentCommands documentCommands = new DocumentCommands(manager);
-        AnnotatorCommands annotatorCommands = new AnnotatorCommands(manager);
-        GraphCommands graphCommands = new GraphCommands(manager);
-        IAACommands iaaCommands = new IAACommands(manager);
-        TextCommands textCommands = new TextCommands(manager);
 
+    private void setupInitial() {
+//        manager.getXmlUtil().read("file/test_project.xml", true);
+    }
 
-        /*
-        Text document related actions
-         */
-        addAction(documentCommands.openDocumentCommand(), "A", "A");
-        addAction(documentCommands.getCloseDocumentCommand(), "A", "B");
+    private void createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
 
-        addAction(textCommands.getIncreaseTextSizeCommand(), "A", "C");
-        addAction(textCommands.getDecreaseTextSizeCommand(), "A", "D");
+        menuBar.add(fileMenu);
+        menuBar.add(profileMenu);
+        menuBar.add(annotationMenu);
+        menuBar.add(iaaMenu);
+        menuBar.add(graphMenu);
+        menuBar.add(toolBar);
 
-        /*
-        Text annotation related actions
-         */
-        addAction(documentCommands.getLoadTextAnnotationsCommand(), "B", "A");
-        addAction(documentCommands.getSaveTextAnnotationsCommand(), "B", "B");
+        add(menuBar, BorderLayout.NORTH);
 
-        addAction(iaaCommands.getRunIAACommand(), "B", "E");
-
-        addAction(textCommands.getIncrementSelectionLeftCommand(), "B", "F");
-        addAction(textCommands.getDecrementSelectionLeftCommand(), "B", "G");
-        addAction(textCommands.getDecrementSelectionRightCommand(), "B", "H");
-        addAction(textCommands.getIncrementSelectionRightCommand(), "B", "I");
-
-        /*
-        Annotator and highlighter related commands
-         */
-        addAction(annotatorCommands.getNewAnnotatorCommand(), "C", "A");
-        addAction(annotatorCommands.getSwitchProfileCommand(), "C", "B");
-        addAction(annotatorCommands.getAssignHighlighterCommand(), "C", "C");
-
-        /*
-        Graph Viewer related commands
-         */
-        addAction(graphCommands.getAddTextAnnotationNodeCommand(), "D", "A");
     }
 
     public static void main(String[] args) {
