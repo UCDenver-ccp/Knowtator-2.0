@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1511304023398
+Build-Jdk: 1.8.0_151
+Built-By: pielk
+Bundle-Description: A plugin for annotating mechanisms
+Bundle-ManifestVersion: 2
+Bundle-Name: Knowtator
+Bundle-SymbolicName: knowtator;singleton:=true
+Bundle-Vendor: UCDenver-CCP
+Bundle-Version: 0.5.0.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Tool: Bnd-3.3.0.201609221906

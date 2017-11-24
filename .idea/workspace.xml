@@ -71,8 +71,8 @@
       <file leaf-file-name="Span.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/annotation/Span.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="327">
-              <caret line="243" column="9" lean-forward="true" selection-start-line="243" selection-start-column="9" selection-end-line="243" selection-end-column="9" />
+            <state relative-caret-position="285">
+              <caret line="241" column="35" lean-forward="true" selection-start-line="241" selection-start-column="35" selection-end-line="241" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -1268,7 +1268,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="301573000" />
+    <option name="totallyTimeSpent" value="302191000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1280,7 +1280,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1431" y="-80" width="1698" height="1068" extended-state="6" />
+    <frame x="1591" y="-9" width="1698" height="1068" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1520,7 +1520,7 @@
         <state relative-caret-position="84">
           <caret line="9" column="22" lean-forward="false" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
           <folding>
-            <element signature="e#175#202#1" expanded="true" />
+            <element signature="e#175#202#1" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1652,10 +1652,10 @@
         <state relative-caret-position="2">
           <caret line="69" column="130" lean-forward="false" selection-start-line="69" selection-start-column="130" selection-end-line="69" selection-end-column="130" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1075#1102#0" expanded="true" />
-            <element signature="e#8884#8885#0" expanded="true" />
-            <element signature="e#8927#8928#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#1075#1102#0" expanded="false" />
+            <element signature="e#8884#8885#0" expanded="false" />
+            <element signature="e#8927#8928#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1826,8 +1826,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/annotation/Span.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="327">
-          <caret line="243" column="9" lean-forward="true" selection-start-line="243" selection-start-column="9" selection-end-line="243" selection-end-column="9" />
+        <state relative-caret-position="285">
+          <caret line="241" column="35" lean-forward="true" selection-start-line="241" selection-start-column="35" selection-end-line="241" selection-end-column="35" />
           <folding />
         </state>
       </provider>
