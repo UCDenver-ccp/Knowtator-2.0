@@ -10,6 +10,8 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("Duplicates")
 public class FileMenu extends JMenu {
@@ -89,6 +91,14 @@ public class FileMenu extends JMenu {
             fileChooser.setFileFilter(fileFilter);
 
             if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+
+                // TODO: Provide save options
+                List<JCheckBox> textSourceOptions = new ArrayList<>(); // Which textSources to save
+                List<JCheckBox> profileOptions = new ArrayList<>();  // Annotations for which profile to save
+                List<JCheckBox> annotationOptions = new ArrayList<>();  // Just annotations, annotations and assertions, etc.
+
+
+
                 manager.getXmlUtil().write(fileChooser.getSelectedFile().getAbsolutePath());
                 manager.getConfigProperties().setDefaultSaveLocation(fileChooser.getSelectedFile().getAbsolutePath());
             }
