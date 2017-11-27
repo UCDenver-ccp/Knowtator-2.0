@@ -7,24 +7,37 @@ This sentence should be annotated in one color.
 
 This next sentence should be annotated in a different color.</text>
 	<annotation>
+		<id>1</id>
 		<annotator>Default</annotator>
 		<span start="97" end="145" />
 		<class-name>sky</class-name>
 		<class-id>hpl0003</class-id>
 	</annotation>
 	<annotation>
+		<id>2</id>
 		<annotator>Default</annotator>
 		<span start="146" end="206" />
 		<class-name>fire</class-name>
 		<class-id>hpl0001</class-id>
 	</annotation>
 	<annotation>
+		<id>3</id>
 		<annotator>Default</annotator>
 		<span start="175" end="184" />
 		<span start="85" end="94" />
 		<class-name>grass</class-name>
 		<class-id>hpl0002</class-id>
 	</annotation>
+	<assertion>
+		<source>1</source>
+		<target>2</target>
+		<relationship>fromTo</relationship>
+	</assertion>
+	<assertion>
+		<source>1</source>
+		<target>3</target>
+		<relationship>fromTo</relationship>
+	</assertion>
 </document>
 <document textSource="test_article2">
 	<text>This is a second test document.</text>
