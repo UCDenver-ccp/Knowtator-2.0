@@ -174,7 +174,7 @@ public class IAA {
 
 		for (Annotation annotation : annotations) {
 			String setName = annotation.getAnnotator().getProfileID();
-			String annotationClass = annotation.getClassName();
+			String annotationClass = annotation.getClassID();
 			if (annotationClass != null)
 				annotationClasses.add(annotationClass);
 			// throw exception here if there is a setName in the annotations
@@ -191,7 +191,7 @@ public class IAA {
 			class2AnnotationsMap.put(setName, classAnnotations);
 
 			for (Annotation setAnnotation : setAnnotations) {
-				String annotationClass = setAnnotation.getClassName();
+				String annotationClass = setAnnotation.getClassID();
 				if (!classAnnotations.containsKey(annotationClass)) {
 					classAnnotations.put(annotationClass, new HashSet<>());
 				}
@@ -375,7 +375,7 @@ public class IAA {
 	}
 
 	public Set<Annotation> getAnnotationsOfSameType(Annotation annotation, String compareSetName) {
-		String annotationClass = annotation.getClassName();
+		String annotationClass = annotation.getClassID();
 		return safeReturn(class2AnnotationsMap.get(compareSetName).get(annotationClass));
 	}
 

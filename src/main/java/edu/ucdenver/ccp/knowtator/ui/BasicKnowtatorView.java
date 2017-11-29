@@ -211,4 +211,8 @@ public class BasicKnowtatorView extends AbstractOWLClassViewComponent implements
     public void assertionAddedEvent(Assertion assertion) {
         assertionListeners.forEach(assertionListener -> assertionListener.assertionAdded(assertion));
     }
+
+    public void spanRemovedEvent() {
+        spanListeners.forEach(SpanListener::spanRemoved);
+    }
 }

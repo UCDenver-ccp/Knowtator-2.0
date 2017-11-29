@@ -43,9 +43,9 @@ public class OWLAPIDataExtractor {
         return ent.getIRI().getShortForm();
     }
 
-    public static OWLClass getOWLClassByName(BasicKnowtatorView view, String className) {
+    public static OWLClass getOWLClassByID(BasicKnowtatorView view, String classID) {
         try {
-            return view.getOWLModelManager().getOWLEntityFinder().getOWLClass(className);
+            return view.getOWLModelManager().getOWLEntityFinder().getOWLClass(classID);
         } catch (NullPointerException e) {
             return null;
         }

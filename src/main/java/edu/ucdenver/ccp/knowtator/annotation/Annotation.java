@@ -156,14 +156,8 @@ public class Annotation {
 		this.spans.addAll(spans);
 	}
 
-	Span removeSpan(int selectionStart, int selectionEnd) {
-		for (Span span : spans) {
-			if (span.getStart() == selectionStart && span.getEnd() == selectionEnd) {
-				spans.remove(span);
-				return span;
-			}
-		}
-		return null;
+	void removeSpan(Span span) {
+		spans.remove(span);
 	}
 
 	public boolean contains(Integer loc) {
@@ -565,8 +559,8 @@ public class Annotation {
 //	 * annotationClass.
 //	 */
 //	public static boolean classesMatch(annotation annotation1, annotation annotation2) {
-//		String cls1 = annotation1.getClassName();
-//		String cls2 = annotation2.getClassName();
+//		String cls1 = annotation1.getClassID();
+//		String cls2 = annotation2.getClassID();
 //
 //		return cls1 != null && cls2 != null && cls1.equals(cls2);
 //

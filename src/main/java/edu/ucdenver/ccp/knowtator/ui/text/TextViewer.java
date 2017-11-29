@@ -124,6 +124,7 @@ public class TextViewer extends JTabbedPane implements AnnotationListener, TextS
 
     @Override
     public void annotationAdded(Annotation newAnnotation) {
+        getSelectedTextPane().setSelection(newAnnotation.getSpans().first(), newAnnotation);
         refreshHighlights();
     }
 
@@ -150,6 +151,7 @@ public class TextViewer extends JTabbedPane implements AnnotationListener, TextS
 
     @Override
     public void spanRemoved() {
+        getSelectedTextPane().setSelection(null, null);
         refreshHighlights();
     }
 

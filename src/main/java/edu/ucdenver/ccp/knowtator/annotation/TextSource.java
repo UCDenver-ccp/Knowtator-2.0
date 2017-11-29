@@ -118,4 +118,9 @@ public class TextSource {
     public Set<Annotation> getAnnotations() {
         return annotationManager.getAnnotations(null);
     }
+
+    public void removeSpanFromSelectedAnnotation(Annotation annotation, Span span) {
+        annotationManager.removeSpanFromSelectedAnnotation(annotation, span);
+        if (view != null) view.spanRemovedEvent();
+    }
 }

@@ -44,22 +44,31 @@ public final class AnnotationManager {
     }
     Annotation addAnnotation(String annotationID, TextSource textSource, String classID, Profile profile, String className, List<Span> spans) {
 
+
         if (annotationID == null) {
             annotationID = String.format("annotation_%d", annotationCounter++);
+        } else {
+            int annotationIDIndex = Integer.parseInt(annotationID.split("annotation_")[1]);
+            if (annotationIDIndex > annotationCounter) {
+                annotationCounter = annotationIDIndex + 1;
+            }
         }
 
         Annotation newAnnotation = new Annotation(annotationID, textSource, classID, profile, className);
-        newAnnotation.addAllSpans(spans);
+        for (Span span: spans) {
+            addSpanToAnnotation(newAnnotation, span);
+        }
 
-
-
-        newAnnotation.getSpans().forEach(span -> annotationMap.put(span, newAnnotation));
+//        newAnnotation.getSpans().forEach(span -> annotationMap.put(span, newAnnotation));
         return newAnnotation;
     }
 
     Span addSpanToAnnotation(Annotation annotation, int start, int end) {
         Span newSpan = new Span(start, end);
 
+        return addSpanToAnnotation(annotation, newSpan);
+    }
+    private Span addSpanToAnnotation(Annotation annotation, Span newSpan){
         annotation.addSpan(newSpan);
         annotationMap.put(newSpan, annotation);
         return newSpan;
@@ -69,9 +78,9 @@ public final class AnnotationManager {
         annotationToRemove.getSpans().forEach(span -> annotationMap.remove(span));
     }
 
-    public void removeSpanFromSelectedAnnotation(Annotation annotation, int selectionStart, int selectionEnd) {
-        Span toRemove = annotation.removeSpan(selectionStart, selectionEnd);
-        annotationMap.remove(toRemove);
+    void removeSpanFromSelectedAnnotation(Annotation annotation, Span span) {
+        annotation.removeSpan(span);
+        annotationMap.remove(span);
     }
 
     Set<Annotation> getAnnotations(Set<Profile> profileFilters) {
@@ -117,7 +126,7 @@ public final class AnnotationManager {
             Span span = entry.getKey();
             Annotation annotation = entry.getValue();
             if ((loc == null || span.contains(loc)) && (profile == null || annotation.getAnnotator().equals(profile) )) {
-                filteredAnnotations.put(entry.getKey(), entry.getValue());
+                filteredAnnotations.put(span, annotation);
             }
         }
         return filteredAnnotations;

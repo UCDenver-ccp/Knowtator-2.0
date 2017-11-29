@@ -106,11 +106,11 @@ public class TextPane extends JTextPane{
 
 	private void setSelectedAnnotation(Annotation annotation) {
 		selectedAnnotation = annotation;
-		if (selectedAnnotation != null) view.owlEntitySelectionChanged(OWLAPIDataExtractor.getOWLClassByName(view, selectedAnnotation.getClassName()));
+		if (selectedAnnotation != null) view.owlEntitySelectionChanged(OWLAPIDataExtractor.getOWLClassByID(view, selectedAnnotation.getClassID()));
 		view.annotationSelectionChangedEvent(selectedAnnotation);
 	}
 
-	private void setSelection(Span span, Annotation annotation) {
+	void setSelection(Span span, Annotation annotation) {
 		setSelectedSpan(span);
 
 		setSelectedAnnotation(annotation);
@@ -137,7 +137,7 @@ public class TextPane extends JTextPane{
 
 		// Menu items to select and remove annotations
 		spansContationLocation.forEach((span, annotation) -> {
-			JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s", annotation.getClassName()));
+			JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s - %s", annotation.getClassID(), annotation.getClassName()));
 			selectAnnotationMenuItem.addActionListener(e3 -> setSelection(span, annotation));
 			popupMenu.add(selectAnnotationMenuItem);
 		});
@@ -148,29 +148,31 @@ public class TextPane extends JTextPane{
 	private void showPopUpMenu(MouseEvent e, int releaseOffset) {
 		JPopupMenu popupMenu = new JPopupMenu();
 
-		// Menu item to create new annotation
-		JMenuItem annotateWithCurrentSelectedClass = new JMenuItem("Annotate with current selected class");
-		annotateWithCurrentSelectedClass.addActionListener(e12 -> addSelectedAnnotation());
-		popupMenu.add(annotateWithCurrentSelectedClass);
+		if (getSelectionStart() < getSelectionEnd()) {
+			// Menu item to create new annotation
+			JMenuItem annotateWithCurrentSelectedClass = new JMenuItem("Annotate with current selected class");
+			annotateWithCurrentSelectedClass.addActionListener(e12 -> addSelectedAnnotation());
+			popupMenu.add(annotateWithCurrentSelectedClass);
+		}
 
 		if (selectedSpan != null) {
-
-			if (getSelectionStart() != getSelectionEnd()) {
+			if (getSelectionStart() < getSelectionEnd()) {
 				JMenuItem addSpanToSelectedAnnotation = new JMenuItem("Add span to selected annotation");
 				addSpanToSelectedAnnotation.addActionListener(e4 -> addSpan());
 				popupMenu.add(addSpanToSelectedAnnotation);
-
-				JMenuItem removeSpanFromSelectedAnnotation = new JMenuItem("Remove span from selected annotation");
-				removeSpanFromSelectedAnnotation.addActionListener(e5 -> removeSpan());
 			}
+
+			JMenuItem removeSpanFromSelectedAnnotation = new JMenuItem("Remove span from selected annotation");
+			removeSpanFromSelectedAnnotation.addActionListener(e5 -> removeSpan());
+			popupMenu.add(removeSpanFromSelectedAnnotation);
 		}
 		// Menu items to select and remove annotations
 		textSource.getAnnotationMap(releaseOffset, filterByProfile).forEach((span, annotation) -> {
-			JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s", annotation.getClassName()));
+			JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s - %s", annotation.getClassID(), annotation.getClassName()));
 			selectAnnotationMenuItem.addActionListener(e3 -> setSelection(span, annotation));
 			popupMenu.add(selectAnnotationMenuItem);
 
-			JMenuItem removeAnnotationMenuItem = new JMenuItem(String.format("Remove %s", annotation.getClassName()));
+			JMenuItem removeAnnotationMenuItem = new JMenuItem(String.format("Remove %s - %s", annotation.getClassID(), annotation.getClassName()));
 			removeAnnotationMenuItem.addActionListener(e4 -> {
 				setSelection(null, null);
 				textSource.removeAnnotation(annotation);
@@ -182,7 +184,7 @@ public class TextPane extends JTextPane{
 	}
 
 	private void removeSpan() {
-		textSource.getAnnotationManager().removeSpanFromSelectedAnnotation(selectedAnnotation, getSelectionStart(), getSelectionEnd());
+		textSource.removeSpanFromSelectedAnnotation(selectedAnnotation, selectedSpan);
 	}
 
 	private void addSpan() {
@@ -273,7 +275,7 @@ public class TextPane extends JTextPane{
 			Annotation annotation = entry.getValue();
 			if (span.intersects(lastSpan)) {
 				try {
-					getHighlighter().addHighlight(span.getStart(), min(span.getEnd(), lastSpan.getEnd()), new DefaultHighlighter.DefaultHighlightPainter(Color.GRAY));
+					getHighlighter().addHighlight(span.getStart(), min(span.getEnd(), lastSpan.getEnd()), new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY));
 				} catch (BadLocationException e) {
 					e.printStackTrace();
 				}
@@ -307,7 +309,7 @@ public class TextPane extends JTextPane{
 					if (span.equals(selectedSpan))
 						getHighlighter().addHighlight(span.getStart(), span.getEnd(), new RectanglePainter(Color.BLACK));
 					else
-						getHighlighter().addHighlight(span.getStart(), span.getEnd(), new RectanglePainter(Color.DARK_GRAY));
+						getHighlighter().addHighlight(span.getStart(), span.getEnd(), new RectanglePainter(Color.GRAY));
 				} catch (BadLocationException e) {
 					e.printStackTrace();
 				}
