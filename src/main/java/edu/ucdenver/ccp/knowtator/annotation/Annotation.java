@@ -34,7 +34,6 @@ import java.awt.*;
 import java.util.Date;
 import java.util.List;
 import java.util.TreeSet;
-import java.util.UUID;
 
 public class Annotation {
 
@@ -47,14 +46,13 @@ public class Annotation {
 	private String classID;
 	private TreeSet<Span> spans;
 
-	Annotation(String annotationID, TextSource textSource, Profile annotator, String className, String classID) {
+	Annotation(String annotationID, TextSource textSource, String classID, Profile annotator, String className) {
 		this.textSource = textSource;
 		this.annotator = annotator;
 		this.className = className;
 		this.classID = classID;
 		this.date = new Date();
-		if (annotationID == null) this.id = UUID.randomUUID().toString();
-		else this.id = annotationID;
+		this.id = annotationID;
 
 
 
@@ -93,7 +91,7 @@ public class Annotation {
 		return date;
 	}
 	public Color getColor() {
-		return annotator.getColor(className);
+		return annotator.getColor(classID, className);
 	}
 
 	/**

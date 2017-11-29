@@ -171,7 +171,10 @@ public class TextPane extends JTextPane{
 			popupMenu.add(selectAnnotationMenuItem);
 
 			JMenuItem removeAnnotationMenuItem = new JMenuItem(String.format("Remove %s", annotation.getClassName()));
-			removeAnnotationMenuItem.addActionListener(e4 -> textSource.removeAnnotation(annotation));
+			removeAnnotationMenuItem.addActionListener(e4 -> {
+				setSelection(null, null);
+				textSource.removeAnnotation(annotation);
+			});
 			popupMenu.add(removeAnnotationMenuItem);
 		});
 

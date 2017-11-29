@@ -13,13 +13,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InfoPane extends JPanel implements SpanListener, AnnotationListener {
+public class InfoPanel extends JPanel implements SpanListener, AnnotationListener {
 
     private DateFormat dateFormat = new SimpleDateFormat("yyy/MM/dd");
     private BasicKnowtatorView view;
 
 
-    public InfoPane(BasicKnowtatorView view) {
+    public InfoPanel(BasicKnowtatorView view) {
         this.view = view;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -49,11 +49,12 @@ public class InfoPane extends JPanel implements SpanListener, AnnotationListener
         if(annotation != null) {
             GridBagConstraints gbc = new GridBagConstraints();
             JLabel titleLabel = new JLabel(("Annotation Information"));
+            add(titleLabel, gbc);
 
+            JLabel idLabel = new JLabel(String.format("Annotation ID: %s", annotation.getID()));
+            JLabel classLabel = new JLabel(String.format("Class ID: %s  Name: %s", annotation.getClassID(), annotation.getClassName()));
             JLabel profileLabel = new JLabel(String.format("Profile ID: %s", annotation.getAnnotator().getProfileID()));
-
             JLabel textSourceLabel = new JLabel(String.format("Document ID: %s", annotation.getTextSource().getDocID()));
-
             JLabel dateLabel = new JLabel(String.format("Date: %s", dateFormat.format(annotation.getDate())));
 
             // **********************************SPANS*********************************
@@ -64,7 +65,8 @@ public class InfoPane extends JPanel implements SpanListener, AnnotationListener
                 spanLabels.add(spanLabel);
             }
 
-            add(titleLabel, gbc);
+            add(idLabel, gbc);
+            add(classLabel);
             add(profileLabel, gbc);
             add(textSourceLabel, gbc);
             add(dateLabel, gbc);

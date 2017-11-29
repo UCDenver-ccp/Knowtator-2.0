@@ -2,6 +2,7 @@ package edu.ucdenver.ccp.knowtator.annotation;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
+import org.apache.commons.io.FilenameUtils;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -18,6 +19,19 @@ public class TextSourceManager {
         textSources = new HashSet<>();
     }
 
+    public void addTextSource(String fileLocation) {
+        String docID = FilenameUtils.getBaseName(fileLocation);
+        for (TextSource t : textSources) {
+            if (Objects.equals(t.getDocID(), docID)) {
+                t.setView(view);
+                return;
+            }
+        }
+        TextSource newTextSource = new TextSource(manager, view, fileLocation, docID);
+        textSources.add(newTextSource);
+        if (view != null) view.textSourceAddedEvent(newTextSource);
+    }
+
     public TextSource addTextSource(String docID, String content) {
         for (TextSource t : textSources) {
             if (Objects.equals(t.getDocID(), docID)) {
@@ -25,7 +39,8 @@ public class TextSourceManager {
                 return t;
             }
         }
-        TextSource newTextSource = new TextSource(manager, view, docID, content);
+        TextSource newTextSource = new TextSource(manager, view, null, docID);
+        newTextSource.setContent(content);
         textSources.add(newTextSource);
         if (view != null) view.textSourceAddedEvent(newTextSource);
         return newTextSource;

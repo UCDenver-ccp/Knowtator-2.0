@@ -123,5 +123,6 @@ public class KnowtatorToolBar extends JToolBar {
 
         return command;
     }
+
 }
 

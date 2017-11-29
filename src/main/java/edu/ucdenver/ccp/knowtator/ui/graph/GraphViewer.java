@@ -24,7 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-
+//TODO: Add a menu bar
 public class GraphViewer extends JDialog implements AnnotationListener, AssertionListener {
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(GraphViewer.class);
@@ -76,7 +76,7 @@ public class GraphViewer extends JDialog implements AnnotationListener, Assertio
 
                             Annotation sourceAnnotation = (Annotation) source.getValue();
                             Annotation targetAnnotation = (Annotation) target.getValue();
-                            view.getTextViewer().getSelectedTextPane().getTextSource().getAnnotationManager()
+                            view.getTextViewer().getSelectedTextPane().getTextSource()
                                     .addAssertion(sourceAnnotation, targetAnnotation, relationship);
 
                         } else {

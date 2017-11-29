@@ -87,8 +87,8 @@ class XmlWriter {
     }
 
     private static void writeDocuments(KnowtatorManager manager, BufferedWriter bw) {
-        manager.getTextSourceManager().getTextSources().forEach(textSource -> {
-        try {
+        manager.getConfigProperties().getTextSourceFilters().forEach(textSource -> {
+            try {
                 bw.write(String.format("<%s %s=\"%s\">", XmlTags.DOCUMENT, XmlTags.DOCUMENT_ID, textSource.getDocID()));
                 bw.newLine();
                 bw.write(String.format("\t<%s>", XmlTags.TEXT));
@@ -101,8 +101,8 @@ class XmlWriter {
                 );
                 bw.write(String.format("</%s>", XmlTags.TEXT));
                 bw.newLine();
-                textSource.getAnnotations().forEach(annotation -> writeAnnotation(bw, annotation));
-                textSource.getAssertions().forEach(assertion -> writeAssertion(bw, assertion));
+                if (manager.getConfigProperties().getSaveAnnotations()) textSource.getAnnotations(manager.getConfigProperties().getProfileFilters()).forEach(annotation -> writeAnnotation(bw, annotation));
+                if (manager.getConfigProperties().getSaveAssertions()) textSource.getAssertions(manager.getConfigProperties().getProfileFilters()).forEach(assertion -> writeAssertion(bw, assertion));
                 bw.write(String.format("</%s>", XmlTags.DOCUMENT));
                 bw.newLine();
             } catch(IOException e) {
@@ -115,7 +115,7 @@ class XmlWriter {
         try {
             bw.write(String.format("\t<%s>", XmlTags.HIGHLIGHTER));
             bw.newLine();
-            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.CLASS_NAME, className, XmlTags.CLASS_NAME));
+            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.CLASS_ID, className, XmlTags.CLASS_ID));
             bw.newLine();
             bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.COLOR, String.format("#%06x", color.getRGB() & 0x00FFFFFF), XmlTags.COLOR));
             bw.newLine();
@@ -127,7 +127,7 @@ class XmlWriter {
     }
 
     private static void writeProfiles(KnowtatorManager manager, BufferedWriter bw) {
-        manager.getProfileManager().getProfiles().values().forEach(profile -> {
+        manager.getConfigProperties().getProfileFilters().forEach(profile -> {
             try {
                 bw.write(String.format("<%s %s=\"%s\">",
                         XmlTags.PROFILE,
@@ -150,6 +150,10 @@ class XmlWriter {
         try {
             bw.write(String.format("\t<%s>", XmlTags.ASSERTION));
             bw.newLine();
+            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.ASSERTION_ID, assertion.getID(), XmlTags.ASSERTION_ID));
+            bw.newLine();
+            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.ANNOTATOR, assertion.getAnnotator().getProfileID(), XmlTags.ANNOTATOR));
+            bw.newLine();
             bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.ASSERTION_SOURCE, assertion.getSource().getID(), XmlTags.ASSERTION_SOURCE));
             bw.newLine();
             bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.ASSERTION_TARGET, assertion.getTarget().getID(), XmlTags.ASSERTION_TARGET));
@@ -157,6 +161,7 @@ class XmlWriter {
             bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.ASSERTION_RELATIONSHIP, assertion.getRelationship(), XmlTags.ASSERTION_RELATIONSHIP));
             bw.newLine();
             bw.write(String.format("\t</%s>", XmlTags.ASSERTION));
+            bw.newLine();
         } catch (IOException e) {
             e.printStackTrace();
         }

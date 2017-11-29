@@ -1,11 +1,19 @@
 package edu.ucdenver.ccp.knowtator.configuration;
 
+import edu.ucdenver.ccp.knowtator.annotation.TextSource;
+import edu.ucdenver.ccp.knowtator.profile.Profile;
+
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ConfigProperties {
 
     private String lastWritePath;
+    private Set<Profile> profileFilters;
+    private Set<TextSource> textSourceFilters;
+    private boolean saveAnnotations;
+    private boolean saveAssertions;
 
     public String getFormat() {
         return format;
@@ -71,5 +79,37 @@ public class ConfigProperties {
 
     public String getLastWritePath() {
         return lastWritePath;
+    }
+
+    public void setProfileFilters(Set<Profile> profileFilters) {
+        this.profileFilters = profileFilters;
+    }
+
+    public void setTextSourceFilters(Set<TextSource> textSourceFilters) {
+        this.textSourceFilters = textSourceFilters;
+    }
+
+    public void setSaveAnnotations(boolean saveAnnotations) {
+        this.saveAnnotations = saveAnnotations;
+    }
+
+    public void setSaveAssertions(boolean saveAssertions) {
+        this.saveAssertions = saveAssertions;
+    }
+
+    public Set<Profile> getProfileFilters() {
+        return profileFilters;
+    }
+
+    public Set<TextSource> getTextSourceFilters() {
+        return textSourceFilters;
+    }
+
+    public boolean getSaveAnnotations() {
+        return saveAnnotations;
+    }
+
+    public boolean getSaveAssertions() {
+        return saveAssertions;
     }
 }

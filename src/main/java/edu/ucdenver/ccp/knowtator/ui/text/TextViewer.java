@@ -4,6 +4,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.annotation.Span;
 import edu.ucdenver.ccp.knowtator.annotation.TextSource;
+import edu.ucdenver.ccp.knowtator.io.txt.KnowtatorDocumentHandler;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
 import edu.ucdenver.ccp.knowtator.listeners.SpanListener;
@@ -14,6 +15,7 @@ import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class TextViewer extends JTabbedPane implements AnnotationListener, TextSourceListener, SpanListener, ProfileListener {
     public static final Logger log = Logger.getLogger(KnowtatorManager.class);
@@ -38,7 +40,27 @@ public class TextViewer extends JTabbedPane implements AnnotationListener, TextS
     private void addNewDocument(TextSource textSource) {
         TextPane textPane = new TextPane(view, textSource);
         textPane.setName(textSource.getDocID());
-        textPane.setText(textSource.getContent());
+        if (textSource.getContent() == null) {
+            try {
+                textPane.read(KnowtatorDocumentHandler.getFileInputStream(textSource.getFileLocation(), false), null);
+                textSource.setContent(textPane.getText());
+            } catch (IOException | NullPointerException e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle(String.format("Select the location of the text document for %s", textSource.getDocID()));
+
+                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    try {
+                        textPane.read(KnowtatorDocumentHandler.getFileInputStream(fileChooser.getSelectedFile().getAbsolutePath(), false), null);
+                        textSource.setContent(textPane.getText());
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+
+                }
+            }
+        } else {
+            textPane.setText(textSource.getContent());
+        }
 
 
         addClosableTab(textPane, textSource.getDocID());
