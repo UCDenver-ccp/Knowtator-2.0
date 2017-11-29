@@ -1,17 +1,16 @@
 package edu.ucdenver.ccp.knowtator.ui.menus;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.profile.Profile;
-import edu.ucdenver.ccp.knowtator.profile.ProfileManager;
 import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
 import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
+import edu.ucdenver.ccp.knowtator.profile.Profile;
+import edu.ucdenver.ccp.knowtator.profile.ProfileManager;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
-import java.util.Set;
 
 public class ProfileMenu extends JMenu implements ProfileListener {
 
@@ -40,19 +39,15 @@ public class ProfileMenu extends JMenu implements ProfileListener {
 
         JMenuItem assignColorToClass = new JMenuItem("Assign color to current class");
         assignColorToClass.addActionListener(e -> {
-            String className = OWLAPIDataExtractor.getSelectedClassName(view);
+            String classID = OWLAPIDataExtractor.getSelectedOwlClassID(view);
+            String className = OWLAPIDataExtractor.getSelectedOwlEntName(view);
             Profile currentProfile = manager.getProfileManager().getCurrentProfile();
 
-            currentProfile.getColors().remove(className);
+            currentProfile.getColors().remove(classID);
 
-            currentProfile.getColor(className);
+            Color c = currentProfile.getColor(classID, className);
 
-            Set<OWLClass> decendents = OWLAPIDataExtractor.getDecendents(view, className);
-            if (decendents != null) {
-                for (OWLClass decendent : decendents) {
-                    currentProfile.getColor(OWLAPIDataExtractor.getClassNameByOWLClass(view, decendent));
-                }
-            }
+
         });
         return assignColorToClass;
     }

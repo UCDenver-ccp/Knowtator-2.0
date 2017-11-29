@@ -392,7 +392,7 @@ public class IAA2HTML {
 			sortedAnnotations.put(type, new HashSet<>());
 		}
 		for (Annotation annotation : annotations) {
-			String type = annotation.getClassName();
+			String type = annotation.getClassID();
 			if (type != null)
 				sortedAnnotations.get(type).add(annotation);
 		}

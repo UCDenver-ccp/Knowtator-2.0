@@ -57,5 +57,6 @@ public class ProfileManager {
 
     public void setView(BasicKnowtatorView view) {
         this.view = view;
+        profiles.values().forEach(profile -> profile.setView(view));
     }
 }

@@ -1,6 +1,8 @@
 package edu.ucdenver.ccp.knowtator.ui;
 
+import com.google.common.base.Optional;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.actions.ProjectActions;
 import edu.ucdenver.ccp.knowtator.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.annotation.Assertion;
 import edu.ucdenver.ccp.knowtator.annotation.Span;
@@ -8,27 +10,31 @@ import edu.ucdenver.ccp.knowtator.annotation.TextSource;
 import edu.ucdenver.ccp.knowtator.listeners.*;
 import edu.ucdenver.ccp.knowtator.profile.Profile;
 import edu.ucdenver.ccp.knowtator.ui.graph.GraphViewer;
-import edu.ucdenver.ccp.knowtator.ui.info.InfoPane;
+import edu.ucdenver.ccp.knowtator.ui.info.FindPanel;
+import edu.ucdenver.ccp.knowtator.ui.info.InfoPanel;
 import edu.ucdenver.ccp.knowtator.ui.menus.*;
 import edu.ucdenver.ccp.knowtator.ui.text.TextViewer;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.*;
 
 import javax.swing.*;
 import java.awt.dnd.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BasicKnowtatorView extends AbstractOWLClassViewComponent implements DropTargetListener {
 
     static final Logger log = Logger.getLogger(KnowtatorManager.class);
     TextViewer textViewer;
     private GraphViewer graphViewer;
-    InfoPane infoPane;
+    InfoPanel infoPanel;
+    FindPanel findPanel;
 
-    FileMenu fileMenu;
+
+    ProjectMenu projectMenu;
     ProfileMenu profileMenu;
     AnnotationMenu annotationMenu;
     IAAMenu iaaMenu;
@@ -51,10 +57,11 @@ public class BasicKnowtatorView extends AbstractOWLClassViewComponent implements
         manager.getTextSourceManager().setView(this);
 
         textViewer = new TextViewer(manager, this);
-        infoPane = new InfoPane(this);
+        infoPanel = new InfoPanel(this);
+        findPanel = new FindPanel(this);
         graphViewer = new GraphViewer((JFrame)SwingUtilities.getWindowAncestor(this), this);
 
-        fileMenu = new FileMenu(manager);
+        projectMenu = new ProjectMenu(manager);
         profileMenu = new ProfileMenu(manager, this);
         annotationMenu = new AnnotationMenu(this);
         iaaMenu = new IAAMenu(manager);
@@ -74,10 +81,10 @@ public class BasicKnowtatorView extends AbstractOWLClassViewComponent implements
         assertionListeners = new HashSet<>();
 
         spanListeners.add(textViewer);
-        spanListeners.add(infoPane);
+        spanListeners.add(infoPanel);
         annotationListeners.add(textViewer);
         annotationListeners.add(graphViewer);
-        annotationListeners.add(infoPane);
+        annotationListeners.add(infoPanel);
         textSourceListeners.add(textViewer);
         profileListeners.add(profileMenu);
         profileListeners.add(textViewer);
@@ -92,6 +99,32 @@ public class BasicKnowtatorView extends AbstractOWLClassViewComponent implements
         }
     }
 
+    // I want to keep this method in case I want to autoLoad ontologies eventually
+    @SuppressWarnings("unused")
+    void loadOntologyFromLocation(String ontologyLocation) {
+        List<String> ontologies = getOWLModelManager().getActiveOntologies().stream().map(ontology -> {
+            OWLOntologyID ontID = ontology.getOntologyID();
+            //noinspection Guava
+            Optional<IRI> ontIRI = ontID.getOntologyIRI();
+            if(ontIRI.isPresent()) {
+                return ontIRI.get().toURI().toString();
+            } else {
+                return null;
+            }
+        }).collect(Collectors.toList());
+
+//        String ontologyLocation = OntologyTranslator.translate(classID);
+        if (!ontologies.contains(ontologyLocation)) {
+            try {
+                OWLOntology newOntology = getOWLModelManager().getOWLOntologyManager().loadOntology((IRI.create(ontologyLocation)));
+                getOWLModelManager().setActiveOntology(newOntology);
+            } catch (OWLOntologyCreationException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
     @Override
     protected OWLClass updateView(OWLClass selectedClass) {
 
@@ -100,8 +133,8 @@ public class BasicKnowtatorView extends AbstractOWLClassViewComponent implements
 
     @Override
     public void disposeView() {
-        if (manager.getConfigProperties().getLastWritePath() != null) {
-            manager.getXmlUtil().write(manager.getConfigProperties().getLastWritePath());
+        if (JOptionPane.showConfirmDialog(null, "Save changes?") == JOptionPane.OK_OPTION) {
+            ProjectActions.saveProject(manager);
         }
     }
 
@@ -177,5 +210,9 @@ public class BasicKnowtatorView extends AbstractOWLClassViewComponent implements
 
     public void assertionAddedEvent(Assertion assertion) {
         assertionListeners.forEach(assertionListener -> assertionListener.assertionAdded(assertion));
+    }
+
+    public void spanRemovedEvent() {
+        spanListeners.forEach(SpanListener::spanRemoved);
     }
 }

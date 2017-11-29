@@ -4,6 +4,7 @@ import edu.ucdenver.ccp.knowtator.profile.Profile;
 import org.apache.log4j.Logger;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public final class AnnotationManager {
@@ -13,16 +14,23 @@ public final class AnnotationManager {
 
     private TreeMap<Span, Annotation> annotationMap;
     private Set<Assertion> assertions;
+    private int annotationCounter;
+    private int assertionCounter;
 
     AnnotationManager() {
-
+        annotationCounter = 0;
+        assertionCounter = 0;
         annotationMap = new TreeMap<>(Span::compare);
 
         assertions = new HashSet<>();
     }
 
-    public Assertion addAssertion(Annotation source, Annotation target, String relationship) {
-        Assertion newAssertion = new Assertion(source, target, relationship);
+    Assertion addAssertion(String assertionID, Profile profile, Annotation source, Annotation target, String relationship) {
+        if (assertionID == null) {
+            assertionID = String.format("assertion_%d", assertionCounter++);
+        }
+
+        Assertion newAssertion = new Assertion(assertionID, profile, source, target, relationship);
         assertions.add(newAssertion);
         return newAssertion;
     }
@@ -34,21 +42,33 @@ public final class AnnotationManager {
             }
         });
     }
-    Annotation addAnnotation(String annotationID, TextSource textSource, Profile profile, String className, String classID, List<Span> spans) {
+    Annotation addAnnotation(String annotationID, TextSource textSource, String classID, Profile profile, String className, List<Span> spans) {
 
 
-        Annotation newAnnotation = new Annotation(annotationID, textSource, profile, className, classID);
-        newAnnotation.addAllSpans(spans);
+        if (annotationID == null) {
+            annotationID = String.format("annotation_%d", annotationCounter++);
+        } else {
+            int annotationIDIndex = Integer.parseInt(annotationID.split("annotation_")[1]);
+            if (annotationIDIndex > annotationCounter) {
+                annotationCounter = annotationIDIndex + 1;
+            }
+        }
 
+        Annotation newAnnotation = new Annotation(annotationID, textSource, classID, profile, className);
+        for (Span span: spans) {
+            addSpanToAnnotation(newAnnotation, span);
+        }
 
-
-        newAnnotation.getSpans().forEach(span -> annotationMap.put(span, newAnnotation));
+//        newAnnotation.getSpans().forEach(span -> annotationMap.put(span, newAnnotation));
         return newAnnotation;
     }
 
     Span addSpanToAnnotation(Annotation annotation, int start, int end) {
         Span newSpan = new Span(start, end);
 
+        return addSpanToAnnotation(annotation, newSpan);
+    }
+    private Span addSpanToAnnotation(Annotation annotation, Span newSpan){
         annotation.addSpan(newSpan);
         annotationMap.put(newSpan, annotation);
         return newSpan;
@@ -58,13 +78,14 @@ public final class AnnotationManager {
         annotationToRemove.getSpans().forEach(span -> annotationMap.remove(span));
     }
 
-    public void removeSpanFromSelectedAnnotation(Annotation annotation, int selectionStart, int selectionEnd) {
-        Span toRemove = annotation.removeSpan(selectionStart, selectionEnd);
-        annotationMap.remove(toRemove);
+    void removeSpanFromSelectedAnnotation(Annotation annotation, Span span) {
+        annotation.removeSpan(span);
+        annotationMap.remove(span);
     }
 
-    HashSet<Annotation> getAnnotations() {
-        return new HashSet<>(annotationMap.values());
+    Set<Annotation> getAnnotations(Set<Profile> profileFilters) {
+        if (profileFilters == null) return new HashSet<>(annotationMap.values());
+        return annotationMap.values().stream().filter(annotation -> profileFilters.contains(annotation.getAnnotator())).collect(Collectors.toSet());
     }
 
 
@@ -105,7 +126,7 @@ public final class AnnotationManager {
             Span span = entry.getKey();
             Annotation annotation = entry.getValue();
             if ((loc == null || span.contains(loc)) && (profile == null || annotation.getAnnotator().equals(profile) )) {
-                filteredAnnotations.put(entry.getKey(), entry.getValue());
+                filteredAnnotations.put(span, annotation);
             }
         }
         return filteredAnnotations;
@@ -155,11 +176,11 @@ public final class AnnotationManager {
         }
     }
 
-    Set<Assertion> getAssertions() {
-        return assertions;
+    Set<Assertion> getAssertions(Set<Profile> profileFilters) {
+        return assertions.stream().filter(assertion -> profileFilters.contains(assertion.getAnnotator())).collect(Collectors.toSet());
     }
 
-    Assertion addAssertion(String source, String target, String relationship) {
+    Assertion addAssertion(String assertionID, Profile profile, String source, String target, String relationship) {
         Annotation sourceAnnotation = null, targetAnnotation = null;
         for(Annotation annotation : annotationMap.values()) {
             if (Objects.equals(annotation.getID(), source)) {
@@ -172,7 +193,7 @@ public final class AnnotationManager {
         }
 
         if (sourceAnnotation != null && targetAnnotation != null) {
-            return addAssertion(sourceAnnotation, targetAnnotation, relationship);
+             return addAssertion(assertionID, profile, sourceAnnotation, targetAnnotation, relationship);
         }
         return null;
     }

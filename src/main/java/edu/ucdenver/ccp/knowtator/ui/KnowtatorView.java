@@ -15,33 +15,39 @@ public class KnowtatorView extends BasicKnowtatorView {
         log.warn("*************************Done initializing Knowtator");
     }
 
+    private void setupInitial() {
+//        loadOntologyFromLocation("http://purl.obolibrary.org/obo/go/go-basic.obo");
+//        ProjectActions.loadProject(manager, "file/test_project.xml", true);
+    }
+
     private void createUI() {
         setLayout(new BorderLayout());
 
         createMenuBar();
 
-        JScrollPane infoPaneSP = new JScrollPane(infoPane);
+        JScrollPane infoPanelSP = new JScrollPane(infoPanel);
 
         JSplitPane annotationSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         annotationSplitPane.setOneTouchExpandable(true);
         annotationSplitPane.setDividerLocation(800);
 
-        annotationSplitPane.add(textViewer);
-        annotationSplitPane.add(infoPaneSP);
+        JSplitPane infoSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        infoSplitPane.setDividerLocation(100);
+
+        annotationSplitPane.add(textViewer, JSplitPane.LEFT);
+        annotationSplitPane.add(infoSplitPane, JSplitPane.RIGHT);
+        infoSplitPane.add(findPanel, JSplitPane.TOP);
+        infoSplitPane.add(infoPanelSP, JSplitPane.BOTTOM);
         add(annotationSplitPane);
 
 
     }
 
 
-    private void setupInitial() {
-//        manager.getXmlUtil().read("file/test_project.xml", true);
-    }
-
     private void createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
-        menuBar.add(fileMenu);
+        menuBar.add(projectMenu);
         menuBar.add(profileMenu);
         menuBar.add(annotationMenu);
         menuBar.add(iaaMenu);

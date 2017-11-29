@@ -21,14 +21,15 @@ public class TextSource {
     private BasicKnowtatorView view;
     private AnnotationManager annotationManager;
 
+    private String fileLocation;
     private String docID;
     private String content;
 
-    TextSource(KnowtatorManager manager, BasicKnowtatorView view, String docID, String content) {
+    TextSource(KnowtatorManager manager, BasicKnowtatorView view, String fileLocation, String docID) {
         this.view = view;
         this.manager = manager;
+        this.fileLocation = fileLocation;
         this.docID = docID;
-        this.content = content;
         this.annotationManager = new AnnotationManager();
     }
 
@@ -48,20 +49,21 @@ public class TextSource {
         return annotationManager;
     }
 
-    public void addAnnotation(int start, int end) {
-        String className = OWLAPIDataExtractor.getSelectedClassName(view);
-        if (className != null) {
 
-            addAnnotation(null, manager.getProfileManager().getCurrentProfile(), className,
-                    OWLAPIDataExtractor.getSelectedClassID(view),
+    //TODO: Add annotations as subclasses of their assigned classes as well as of the AO
+    public void addAnnotation(int start, int end) {
+        String classID = OWLAPIDataExtractor.getSelectedOwlClassID(view);
+        if (classID != null) {
+            addAnnotation(null, classID, manager.getProfileManager().getCurrentProfile(),
+                    OWLAPIDataExtractor.getSelectedOwlEntName(view),
                     new ArrayList<Span>() {{
                         add(new Span(start, end));
                     }});
         }
     }
 
-    public void addAnnotation(String annotationID, Profile profile, String className, String classID, List<Span> spans) {
-        Annotation newAnnotation = annotationManager.addAnnotation(annotationID, this, profile, className, classID, spans);
+    public void addAnnotation(String annotationID, String classID, Profile profile, String className, List<Span> spans) {
+        Annotation newAnnotation = annotationManager.addAnnotation(annotationID, this, classID, profile, className, spans);
         if (view != null) view.annotationAddedEvent(newAnnotation);
     }
 
@@ -75,8 +77,8 @@ public class TextSource {
 
     }
 
-    public Set<Annotation> getAnnotations() {
-        return annotationManager.getAnnotations();
+    public Set<Annotation> getAnnotations(Set<Profile> profileFilters) {
+        return annotationManager.getAnnotations(profileFilters);
     }
 
     public Map.Entry<Span, Annotation> getNextSpan(Span span) {
@@ -87,16 +89,38 @@ public class TextSource {
         return annotationManager.getPreviousSpan(span);
     }
 
-    public Set<Assertion> getAssertions() {
-        return annotationManager.getAssertions();
+    public Set<Assertion> getAssertions(Set<Profile> profileFilters) {
+        return annotationManager.getAssertions(profileFilters);
     }
 
     public Map<Span, Annotation> getAnnotationMap(Integer loc, Boolean filterByProfile) {
         return annotationManager.getAnnotationMap(loc, filterByProfile ? manager.getProfileManager().getCurrentProfile() : null);
     }
 
-    public void addAssertion(String source, String target, String relationship) {
-        Assertion assertion = annotationManager.addAssertion(source, target, relationship);
+    public void addAssertion(String assertionID, Profile profile, String source, String target, String relationship) {
+        Assertion assertion = annotationManager.addAssertion(assertionID, profile, source, target, relationship);
         if(view != null && assertion != null) view.assertionAddedEvent(assertion);
+    }
+
+    public void addAssertion(Annotation source, Annotation target, String relationship) {
+        Assertion assertion = annotationManager.addAssertion(null, manager.getProfileManager().getCurrentProfile(), source, target, relationship);
+        if(view != null && assertion != null) view.assertionAddedEvent(assertion);
+    }
+
+    public String getFileLocation() {
+        return fileLocation;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Set<Annotation> getAnnotations() {
+        return annotationManager.getAnnotations(null);
+    }
+
+    public void removeSpanFromSelectedAnnotation(Annotation annotation, Span span) {
+        annotationManager.removeSpanFromSelectedAnnotation(annotation, span);
+        if (view != null) view.spanRemovedEvent();
     }
 }

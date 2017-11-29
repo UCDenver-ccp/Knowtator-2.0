@@ -35,4 +35,5 @@ class XmlTags {
     static final String ASSERTION_SOURCE = "source";
     static final String ASSERTION_TARGET = "target";
     static final String ASSERTION_RELATIONSHIP = "relationship";
+    static final String ASSERTION_ID = "id";
 }

@@ -33,47 +33,49 @@ class XmlReader {
 
         InputStream is = KnowtatorDocumentHandler.getFileInputStream(fileName, fromResources);
 
-        Document doc;
-        try {
-            doc = dBuilder.parse(is);
-            doc.getDocumentElement().normalize();
+        if (is != null) {
+            Document doc;
+            try {
+                doc = dBuilder.parse(is);
+                doc.getDocumentElement().normalize();
 
-            List<Node> knowtatorNodes = XmlUtil.asList(doc.getElementsByTagName(XmlTags.KNOWTATOR_PROJECT));
-            if (knowtatorNodes.size() > 0) {
-                Element knowtatorElement = (Element) knowtatorNodes.get(0);
+                List<Node> knowtatorNodes = XmlUtil.asList(doc.getElementsByTagName(XmlTags.KNOWTATOR_PROJECT));
+                if (knowtatorNodes.size() > 0) {
+                    Element knowtatorElement = (Element) knowtatorNodes.get(0);
 
 
+                    List<Node> profileNodes = XmlUtil.asList(knowtatorElement.getElementsByTagName(XmlTags.PROFILE));
+                    List<Node> configNodes = XmlUtil.asList(knowtatorElement.getElementsByTagName(XmlTags.CONFIG));
+                    List<Node> documentNodes = XmlUtil.asList(knowtatorElement.getElementsByTagName(XmlTags.DOCUMENT));
 
-                List<Node> profileNodes = XmlUtil.asList(knowtatorElement.getElementsByTagName(XmlTags.PROFILE));
-                List<Node> configNodes = XmlUtil.asList(knowtatorElement.getElementsByTagName(XmlTags.CONFIG));
-                List<Node> documentNodes = XmlUtil.asList(knowtatorElement.getElementsByTagName(XmlTags.DOCUMENT));
+                    if (configNodes.size() > 0) {
+                        log.warn("Reading in configuration");
+                        readConfigFile(manager, configNodes);
+                    }
+                    if (profileNodes.size() > 0) {
+                        log.warn("Reading in profiles");
+                        readProfiles(manager, profileNodes);
+                    }
+                    if (documentNodes.size() > 0) {
+                        log.warn("Reading in documents");
+                        readDocuments(manager, documentNodes);
+                    }
 
-                if (configNodes.size() > 0) {
-                    log.warn("Reading in configuration");
-                    readConfigFile(manager, configNodes);
                 }
-                if (profileNodes.size() > 0) {
-                    log.warn("Reading in profiles");
-                    readProfiles(manager, profileNodes);
-                }
-                if (documentNodes.size() > 0) {
-                    log.warn("Reading in documents");
-                    readDocuments(manager, documentNodes);
+
+                List<Node> annotationNodes = XmlUtil.asList(doc.getElementsByTagName(XmlTags.ANNOTATIONS));
+                if (annotationNodes.size() > 0) {
+                    log.warn("Reading in old Knowtator project");
+                    readAnnotations(manager, annotationNodes);
                 }
 
+
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
             }
-
-            List<Node> annotationNodes = XmlUtil.asList(doc.getElementsByTagName(XmlTags.ANNOTATIONS));
-            if (annotationNodes.size() > 0) {
-                log.warn("Reading in annotations");
-                readAnnotations(manager, annotationNodes);
-            }
-
-
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+        } else {
+            log.warn(String.format("Could not read %s", fileName));
         }
-
     }
 
     private static void readDocuments(KnowtatorManager manager, List<Node> documentNodes) {
@@ -93,19 +95,23 @@ class XmlReader {
             TextSource newTextSource = manager.getTextSourceManager().addTextSource(documentID, text.toString());
 
             getAnnotationsFromXml_NEW(manager, newTextSource, documentElement);
-            getAssertionsFromXml(newTextSource, documentElement);
+            getAssertionsFromXml(manager, newTextSource, documentElement);
         }
     }
 
-    private static void getAssertionsFromXml(TextSource textSource, Element documentElement) {
+    private static void getAssertionsFromXml(KnowtatorManager manager, TextSource textSource, Element documentElement) {
         for (Node assertionNode : XmlUtil.asList(documentElement.getElementsByTagName(XmlTags.ASSERTION))) {
             Element assertionElement = (Element) assertionNode;
 
+            String assertionID = assertionElement.getElementsByTagName(XmlTags.ASSERTION_ID).item(0).getTextContent();
+            String profileID = assertionElement.getElementsByTagName(XmlTags.ANNOTATOR).item(0).getTextContent();
+
+            Profile profile = manager.getProfileManager().addNewProfile(profileID);
             String source = assertionElement.getElementsByTagName(XmlTags.ASSERTION_SOURCE).item(0).getTextContent();
             String target = assertionElement.getElementsByTagName(XmlTags.ASSERTION_TARGET).item(0).getTextContent();
             String relationship = assertionElement.getElementsByTagName(XmlTags.ASSERTION_RELATIONSHIP).item(0).getTextContent();
 
-            textSource.addAssertion(source, target, relationship);
+            textSource.addAssertion(assertionID, profile, source, target, relationship);
         }
     }
 
@@ -154,10 +160,10 @@ class XmlReader {
             if (highlighterNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element highlighterElement = (Element) highlighterNode;
 
-                String className = highlighterElement.getElementsByTagName(XmlTags.CLASS_NAME).item(0).getTextContent();
+                String classID = highlighterElement.getElementsByTagName(XmlTags.CLASS_ID).item(0).getTextContent();
                 String color = highlighterElement.getElementsByTagName(XmlTags.COLOR).item(0).getTextContent();
 
-                newProfile.addColor(className, color);
+                newProfile.addColor(classID, color);
             }
         }
     }
@@ -186,6 +192,7 @@ class XmlReader {
         return mentionSource + mentionID;
     }
 
+    //TODO: Parse complexSlotMentions
     private static void getAnnotationsFromXml_OLD(KnowtatorManager manager, TextSource textSource, Element textSourceElement) {
 
         Map<String, Element> classMentionToClassIDMap = getClassIDsFromXml(textSourceElement);
@@ -205,7 +212,7 @@ class XmlReader {
                 String className = classElement.getElementsByTagName(XmlTags.MENTION_CLASS).item(0).getTextContent();
                 String classID = ((Element) classElement.getElementsByTagName(XmlTags.MENTION_CLASS).item(0)).getAttribute(XmlTags.MENTION_CLASS_ID);
 
-                textSource.addAnnotation(null, profile, className, classID, spans);
+                textSource.addAnnotation(null, classID, profile, className, spans);
             }
         }
     }
@@ -222,7 +229,7 @@ class XmlReader {
             String classID = annotationElement.getElementsByTagName(XmlTags.CLASS_ID).item(0).getTextContent();
             List<Span> spans = getSpanInfo(annotationElement);
 
-            textSource.addAnnotation(annotationID, profile, className, classID, spans);
+            textSource.addAnnotation(annotationID, classID, profile, className, spans);
         }
     }
 

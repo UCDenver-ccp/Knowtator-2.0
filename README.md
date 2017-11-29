@@ -32,11 +32,11 @@ Plugin for Protege
 ## Setup:
 1. Launch Protege.exe
 2. Add a Knowtator view (Window -> Miscellaneous views -> Knowtator). Click somewhere in Protege to add it in.
-3. Open a txt file (File -> Open Document)
+3. Open a txt file (Project -> Open Document)
 4. Add a profile (Profile -> New Profile)
-5. To save (File -> Save Project)
-6. To open a pre-existing project (File -> Open Project)
-7. To load annotations from the old Knowtator (File -> Open Project) 
+5. To save (Project -> Save Project)
+6. To open a pre-existing project (Project -> Open Project)
+7. To load annotations from the old Knowtator (Project -> Open Project) 
 
 ![After installation][installation image]
 Add as a View to a Protege tab by going to Window -> Views -> Miscellaneous Views -> Knowtator
@@ -60,7 +60,7 @@ Open the graph viewer by clicking Graph -> Show graph viewer. To add the selecte
 Graph -> Add annotation no to graph. You will see the node apear in the viewer. Select an object property (these can be found
 in the Object property hierarchy view in Window -> Views -> Object property views -> Object property hierarchy), then hover
 over a node in the viewer until a pointer hand appears. Click and drag between nodes to make a connection. Graphs are saved
-in the project (File -> Save Project).
+in the project (Project -> Save Project).
 
 ### Annotation Information
 

@@ -40,7 +40,7 @@ import java.util.TreeSet;
 
 public class Span {
 	@SuppressWarnings("unused")
-	private Logger log = Logger.getLogger(KnowtatorManager.class);
+	private static Logger log = Logger.getLogger(KnowtatorManager.class);
 
 	private int start;
 
@@ -67,10 +67,6 @@ public class Span {
 //	public static boolean isValid(int start, int end) {
 //		return start <= end && start >= 0;
 //	}
-
-	public int length() {
-		return end - start;
-	}
 
 	public Integer getStart() {
 		return start;
@@ -176,7 +172,7 @@ public class Span {
 	 * should be the same.
 	 * 
 	 * @param spans1
-	 *            sorted list of spans
+	 *            sorted list of c
 	 * @param spans2
 	 *            sorted list of spans
 	 * @return true if the two lists of spans are the same.
@@ -245,6 +241,9 @@ public class Span {
 		int compare = span1.getStart().compareTo(span2.getStart());
 		if (compare == 0) {
 			compare = span1.getEnd().compareTo(span2.getEnd());
+		}
+		if (compare == 0) {
+			compare = span1 == span2 ? 0 : -1;
 		}
 		return compare;
 	}

@@ -51,32 +51,10 @@ public class KnowtatorManager {
         return textSourceManager;
     }
 
-    // I want to keep this method in case I want to autoLoad ontologies eventually
-//    public void loadOntologyFromLocation(String classID) {
-//        List<String> ontologies = owlModelManager.getActiveOntologies().stream().map(ontology -> {
-//            OWLOntologyID ontID = ontology.getOntologyID();
-//            Optional<IRI> ontIRI = ontID.getOntologyIRI();
-//            if(ontIRI.isPresent()) {
-//                return ontIRI.get().toURI().toString();
-//            } else {
-//                return null;
-//            }
-//        }).collect(Collectors.toList());
-//
-//        String ontologyLocation = OntologyTranslator.translate(classID);
-//        if (!ontologies.contains(ontologyLocation)) {
-//            owlModelManager.loadOntologyFromPhysicalURI(URI.create(OntologyTranslator.whichOntologyToUse(ontologyLocation)));
-//        }
-//
-//    }
 
-    public static void main(String[] args) {
-        KnowtatorManager manager = new KnowtatorManager();
-        manager.simpleTest();
-    }
+    //TODO: Autoload the AO or at least provide the functionality to convert to it if desired.
 
-    private void simpleTest() {
-        getXmlUtil().read("file/test_project.xml", true);
-        getXmlUtil().write(String.format("%stest_project.xml", configProperties.getDefaultSaveLocation()));
-    }
+    public static void main(String[] args) { }
+
+
 }

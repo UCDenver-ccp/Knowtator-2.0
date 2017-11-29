@@ -23,23 +23,15 @@ public class OWLAPIDataExtractor {
         }
     }
 
-    private static String extractOWLObjectData(BasicKnowtatorView view, OWLEntity ent, String annotationPropertyName){
+    private static String extractOWLObjectData(BasicKnowtatorView view, OWLEntity ent){
 
         Collection<OWLAnnotation> owlAnnotations = getOWLObjectAnnotations(view, ent);
 
         if (owlAnnotations != null) {
             for (OWLAnnotation anno : owlAnnotations) {
-                if (annotationPropertyName == null) {
-                    if (anno.getProperty().isLabel()) {
-                        if (anno.getValue() instanceof OWLLiteral) {
-                            return ((OWLLiteral) anno.getValue()).getLiteral();
-                        }
-                    }
-                } else {
-                    if (anno.getProperty() == view.getOWLModelManager().getOWLEntityFinder().getOWLAnnotationProperty("has_obo_namespace")) {
-                        if (anno.getValue() instanceof OWLLiteral) {
-                            return ((OWLLiteral) anno.getValue()).getLiteral();
-                        }
+                if (anno.getProperty().isLabel()) {
+                    if (anno.getValue() instanceof OWLLiteral) {
+                        return ((OWLLiteral) anno.getValue()).getLiteral();
                     }
                 }
             }
@@ -47,17 +39,13 @@ public class OWLAPIDataExtractor {
         return null;
     }
 
-    public static String getClassNameByOWLClass(BasicKnowtatorView view, OWLEntity ent) {
-        return extractOWLObjectData(view, ent, null);
+    public static String getIDByOwlEnt(OWLEntity ent) {
+        return ent.getIRI().getShortForm();
     }
 
-    private static String getClassIDByOWLClass(BasicKnowtatorView view, OWLEntity ent) {
-        return extractOWLObjectData(view, ent, "id");
-    }
-
-    public static OWLClass getOWLClassByName(BasicKnowtatorView view, String className) {
+    public static OWLClass getOWLClassByID(BasicKnowtatorView view, String classID) {
         try {
-            return view.getOWLModelManager().getOWLEntityFinder().getOWLClass(className);
+            return view.getOWLModelManager().getOWLEntityFinder().getOWLClass(classID);
         } catch (NullPointerException e) {
             return null;
         }
@@ -67,23 +55,15 @@ public class OWLAPIDataExtractor {
         return view.getOWLModelManager().getOWLHierarchyManager().getOWLClassHierarchyProvider().getDescendants(cls);
     }
 
-    public static Set<OWLClass> getDecendents(BasicKnowtatorView view, String className) {
-        OWLClass cls = getOWLClassByName(view, className);
-        if (cls != null) {
-            return getDecendents(view, cls);
-        }
-        return null;
-    }
-
     private static OWLClass getSelectedClass(BasicKnowtatorView view) {
         return view.getOWLWorkspace().getOWLSelectionModel().getLastSelectedClass();
     }
 
-    public static String getSelectedClassID(BasicKnowtatorView view) {
+    public static String getSelectedOwlClassID(BasicKnowtatorView view) {
         OWLClass cls = getSelectedClass(view);
 
         if (cls != null) {
-            return getClassIDByOWLClass(view, cls);
+            return getIDByOwlEnt(cls);
         } else {
             log.warn("No OWLClass selected");
             JTextField field1 = new JTextField();
@@ -99,11 +79,20 @@ public class OWLAPIDataExtractor {
         }
     }
 
-    public static String getSelectedClassName(BasicKnowtatorView view) {
+    public static OWLObjectProperty getSelectedProperty(BasicKnowtatorView view) {
+
+        return view.getOWLWorkspace().getOWLSelectionModel().getLastSelectedObjectProperty();
+    }
+
+    private static String getOwlEntName(BasicKnowtatorView view, OWLEntity ent) {
+        return extractOWLObjectData(view, ent);
+    }
+
+    public static String getSelectedOwlEntName(BasicKnowtatorView view) {
         OWLClass cls = getSelectedClass(view);
 
         if (cls != null) {
-            return getClassNameByOWLClass(view, cls);
+            return getOwlEntName(view, cls);
         } else {
             log.warn("No OWLClass selected");
             JTextField field1 = new JTextField();
@@ -119,10 +108,8 @@ public class OWLAPIDataExtractor {
         }
     }
 
-    public static OWLObjectProperty getSelectedProperty(BasicKnowtatorView view) {
-
-        return view.getOWLWorkspace().getOWLSelectionModel().getLastSelectedObjectProperty();
+    public static Set<OWLClass> getSelectedOWLClassDecendents(BasicKnowtatorView view) {
+        OWLClass cls = getSelectedClass(view);
+        return getDecendents(view, cls);
     }
-
-
 }
