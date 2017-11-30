@@ -25,6 +25,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 //TODO: Add a menu bar
+//TODO: Adding edges adds the relation to the ontology
+
 public class GraphViewer extends JDialog implements AnnotationListener, AssertionListener {
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(GraphViewer.class);

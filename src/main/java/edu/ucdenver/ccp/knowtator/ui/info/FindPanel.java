@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 
+//TODO: Find from cursor position
 public class FindPanel extends JPanel {
     private static Logger log = LogManager.getLogger(FindPanel.class);
     private JTextField textField;
