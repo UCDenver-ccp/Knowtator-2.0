@@ -79,16 +79,30 @@ public class OWLAPIDataExtractor {
         }
     }
 
-    public static OWLObjectProperty getSelectedProperty(BasicKnowtatorView view) {
+    public static String getSelectedPropertyID(BasicKnowtatorView view) {
+        OWLObjectProperty property = view.getOWLWorkspace().getOWLSelectionModel().getLastSelectedObjectProperty();
+        if (property == null) {
+            log.warn("No Object property selected");
+            JTextField field1 = new JTextField();
+            Object[] message = {
+                    "Relationship ID", field1,
+            };
+            int option = JOptionPane.showConfirmDialog(null, message, "Enter an ID for this property", JOptionPane.OK_CANCEL_OPTION);
+            if (option == JOptionPane.OK_OPTION) {
+                return field1.getText();
 
-        return view.getOWLWorkspace().getOWLSelectionModel().getLastSelectedObjectProperty();
+            }
+            return null;
+        } else {
+            return getOwlEntName(view, property);
+        }
     }
 
     private static String getOwlEntName(BasicKnowtatorView view, OWLEntity ent) {
         return extractOWLObjectData(view, ent);
     }
 
-    public static String getSelectedOwlEntName(BasicKnowtatorView view) {
+    public static String getSelectedOwlClassName(BasicKnowtatorView view) {
         OWLClass cls = getSelectedClass(view);
 
         if (cls != null) {

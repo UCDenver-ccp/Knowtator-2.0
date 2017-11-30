@@ -40,7 +40,7 @@ public class ProfileMenu extends JMenu implements ProfileListener {
         JMenuItem assignColorToClass = new JMenuItem("Assign color to current class");
         assignColorToClass.addActionListener(e -> {
             String classID = OWLAPIDataExtractor.getSelectedOwlClassID(view);
-            String className = OWLAPIDataExtractor.getSelectedOwlEntName(view);
+            String className = OWLAPIDataExtractor.getSelectedOwlClassName(view);
             Profile currentProfile = manager.getProfileManager().getCurrentProfile();
 
             currentProfile.getColors().remove(classID);

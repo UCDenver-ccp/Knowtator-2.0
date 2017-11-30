@@ -145,15 +145,11 @@ public class Annotation {
 
 	@Override
 	public String toString() {
-		return  className;
+		return  String.format("%s\n%s\n%s", id, classID, textSource.getSpannedText(spans));
 	}
 
 	void addSpan(Span newSpan) {
 		spans.add(newSpan);
-	}
-
-	void addAllSpans(List<Span> spans) {
-		this.spans.addAll(spans);
 	}
 
 	void removeSpan(Span span) {

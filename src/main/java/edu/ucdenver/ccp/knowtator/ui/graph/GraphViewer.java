@@ -1,14 +1,11 @@
 package edu.ucdenver.ccp.knowtator.ui.graph;
 
-import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxCell;
-import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxICell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.annotation.Annotation;
-import edu.ucdenver.ccp.knowtator.annotation.Assertion;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
 import edu.ucdenver.ccp.knowtator.listeners.AssertionListener;
 import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
@@ -16,15 +13,17 @@ import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
-import other.GraphPopupMenu;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 //TODO: Add a menu bar
+//TODO: Fix adding of edges
+//TODO: Fix show text within span in node
+//TODO: Add OWLClass nodes
+//TODO: Allow typing of my own relationships when adding an edge
 public class GraphViewer extends JDialog implements AnnotationListener, AssertionListener {
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(GraphViewer.class);
@@ -47,7 +46,7 @@ public class GraphViewer extends JDialog implements AnnotationListener, Assertio
 
         setVisible(false);
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        setSize(new Dimension(300, 300));
+        setSize(new Dimension(600, 600));
         setLocationRelativeTo(view);
     }
 
@@ -60,28 +59,26 @@ public class GraphViewer extends JDialog implements AnnotationListener, Assertio
             for (Object cell : cells) {
                 if (graph.getModel().isEdge(cell)) {
                     if (((mxCell) cell).getValue().equals("")) {
-                        OWLObjectProperty property = OWLAPIDataExtractor.getSelectedProperty(view);
-                        if (property != null) {
+                        String propertyName = OWLAPIDataExtractor.getSelectedPropertyID(view);
 
+                        mxICell source = ((mxCell) cell).getSource();
+                        mxICell target = ((mxCell) cell).getTarget();
+                        graph.getModel().remove(cell);
+                        // Set the value
+                        String relationship = property.toString();
+                        ((mxCell) cell).setValue(relationship);
+                        ((mxCell) cell).setStyle("startArrow=dash;startSize=12;endArrow=block;labelBackgroundColor=#FFFFFF;");
 
-                            // Set the value
-                            String relationship = property.toString();
-                            ((mxCell) cell).setValue(relationship);
-                            ((mxCell) cell).setStyle("startArrow=dash;startSize=12;endArrow=block;labelBackgroundColor=#FFFFFF;");
+                        mxICell source = ((mxCell) cell).getSource();
+                        mxICell target = ((mxCell) cell).getTarget();
 
-                            mxICell source = ((mxCell) cell).getSource();
-                            mxICell target = ((mxCell) cell).getTarget();
+                        graph.insertEdge(parent, null, relationship, source, target);
 
-                            graph.insertEdge(parent, null, relationship, source, target);
+                        Annotation sourceAnnotation = (Annotation) source.getValue();
+                        Annotation targetAnnotation = (Annotation) target.getValue();
+                        view.getTextViewer().getSelectedTextPane().getTextSource()
+                                .addAssertion(sourceAnnotation, targetAnnotation, relationship);
 
-                            Annotation sourceAnnotation = (Annotation) source.getValue();
-                            Annotation targetAnnotation = (Annotation) target.getValue();
-                            view.getTextViewer().getSelectedTextPane().getTextSource()
-                                    .addAssertion(sourceAnnotation, targetAnnotation, relationship);
-
-                        } else {
-                            graph.getModel().remove(cell);
-                        }
                     }
                 }
             }
@@ -133,11 +130,10 @@ public class GraphViewer extends JDialog implements AnnotationListener, Assertio
     }
 
 
-    public Object addAnnotationNode(Annotation annotation) {
+    public void addAnnotationNode(Annotation annotation) {
         graph.getModel().beginUpdate();
-        Object node;
         try {
-            node = graph.insertVertex(parent, annotation.getClassID(), annotation, 20, 20,
+            graph.insertVertex(parent, annotation.getID(), annotation, 20, 20,
                     80, 30,
                     String.format(
                             "fillColor=#%s",
@@ -155,14 +151,13 @@ public class GraphViewer extends JDialog implements AnnotationListener, Assertio
         } finally {
             graph.getModel().endUpdate();
         }
-        return node;
     }
 
     private void addAssertionEdge(Assertion assertion) {
         graph.getModel().beginUpdate();
         try {
-            Object source =  addAnnotationNode(assertion.getSource());
-            Object target =  addAnnotationNode(assertion.getTarget());
+            Object source = ((mxGraphModel) graph.getModel()).getCell(assertion.getSource().getID());
+            Object target =  ((mxGraphModel) graph.getModel()).getCell(assertion.getTarget().getID());
             graph.insertEdge(parent, null, assertion.getRelationship(), source, target, "startArrow=dash;startSize=12;endArrow=block;labelBackgroundColor=#FFFFFF;");
             mxHierarchicalLayout layout = new mxHierarchicalLayout(
                     graph);
@@ -196,12 +191,16 @@ public class GraphViewer extends JDialog implements AnnotationListener, Assertio
 
     @Override
     public void annotationAdded(Annotation newAnnotation) {
-
+        addAnnotationNode(newAnnotation);
     }
 
     @Override
-    public void annotationRemoved() {
+    public void annotationRemoved(Annotation removedAnnotation) {
+        removeAnnotationNode(removedAnnotation);
+    }
 
+    private void removeAnnotationNode(Annotation removedAnnotation) {
+        graph.getModel().remove(((mxGraphModel) graph.getModel()).getCell(removedAnnotation.getID()));
     }
 
     @Override

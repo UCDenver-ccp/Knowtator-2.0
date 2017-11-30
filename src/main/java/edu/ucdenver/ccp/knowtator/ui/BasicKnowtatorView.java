@@ -192,8 +192,8 @@ public class BasicKnowtatorView extends AbstractOWLClassViewComponent implements
         annotationListeners.forEach(listener -> listener.annotationSelectionChanged(selectedAnnotation));
     }
 
-    public void annotationRemovedEvent() {
-        annotationListeners.forEach(AnnotationListener::annotationRemoved);
+    public void annotationRemovedEvent(Annotation removedAnnotation) {
+        annotationListeners.forEach(annotationListener -> annotationListener.annotationRemoved(removedAnnotation));
     }
     public void profileRemovedEvent() {
         profileListeners.forEach(ProfileListener::profileRemoved);

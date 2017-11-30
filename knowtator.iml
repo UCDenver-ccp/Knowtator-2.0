@@ -22,6 +22,7 @@
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://C:/Program Files/Protege-5.2.0/plugins/classes" />
     <output-test url="file://C:/Program Files/Protege-5.2.0/plugins/test-classes" />
+    <option name="createStubs" value="true" />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />

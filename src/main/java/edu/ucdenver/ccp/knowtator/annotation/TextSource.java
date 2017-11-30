@@ -7,10 +7,7 @@ import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TextSource {
     @SuppressWarnings("unused")
@@ -55,7 +52,7 @@ public class TextSource {
         String classID = OWLAPIDataExtractor.getSelectedOwlClassID(view);
         if (classID != null) {
             addAnnotation(null, classID, manager.getProfileManager().getCurrentProfile(),
-                    OWLAPIDataExtractor.getSelectedOwlEntName(view),
+                    OWLAPIDataExtractor.getSelectedOwlClassName(view),
                     new ArrayList<Span>() {{
                         add(new Span(start, end));
                     }});
@@ -69,7 +66,7 @@ public class TextSource {
 
     public void removeAnnotation(Annotation annotation) {
         annotationManager.removeAnnotation(annotation);
-        if(view != null) view.annotationRemovedEvent();
+        if(view != null) view.annotationRemovedEvent(annotation);
     }
 
     public Span addSpanToSelectedAnnotation(Annotation annotation, int start, int end) {
@@ -122,5 +119,14 @@ public class TextSource {
     public void removeSpanFromSelectedAnnotation(Annotation annotation, Span span) {
         annotationManager.removeSpanFromSelectedAnnotation(annotation, span);
         if (view != null) view.spanRemovedEvent();
+    }
+
+    String getSpannedText(TreeSet<Span> spans) {
+        StringBuilder sb = new StringBuilder();
+        spans.forEach(span -> {
+            sb.append(content.substring(span.getStart(), span.getEnd()));
+            sb.append("\n");
+        });
+        return sb.toString();
     }
 }
