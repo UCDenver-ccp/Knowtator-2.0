@@ -39,7 +39,7 @@ public class OWLAPIDataExtractor {
         return null;
     }
 
-    public static String getIDByOwlEnt(OWLEntity ent) {
+    public static String getOwlEntID(OWLEntity ent) {
         return ent.getIRI().getShortForm();
     }
 
@@ -63,7 +63,7 @@ public class OWLAPIDataExtractor {
         OWLClass cls = getSelectedClass(view);
 
         if (cls != null) {
-            return getIDByOwlEnt(cls);
+            return getOwlEntID(cls);
         } else {
             log.warn("No OWLClass selected");
             JTextField field1 = new JTextField();
@@ -94,7 +94,7 @@ public class OWLAPIDataExtractor {
             }
             return null;
         } else {
-            return getOwlEntName(view, property);
+            return getOwlEntID(property);
         }
     }
 

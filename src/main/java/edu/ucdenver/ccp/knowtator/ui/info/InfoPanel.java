@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.ui.info;
 
-import edu.ucdenver.ccp.knowtator.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.annotation.Span;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
 import edu.ucdenver.ccp.knowtator.listeners.SpanListener;
@@ -27,31 +27,31 @@ public class InfoPanel extends JPanel implements SpanListener, AnnotationListene
     }
 
     @Override
-    public void annotationAdded(Annotation newAnnotation) {
+    public void annotationAdded(ConceptAnnotation newAnnotation) {
         displayInfo(newAnnotation);
     }
 
     @Override
-    public void annotationRemoved() {
+    public void annotationRemoved(ConceptAnnotation removedAnnotation) {
         displayInfo(null);
     }
 
     @Override
-    public void annotationSelectionChanged(Annotation annotation) {
+    public void annotationSelectionChanged(ConceptAnnotation annotation) {
         displayInfo(annotation);
     }
 
-    private void displayInfo(Annotation annotation) {
+    private void displayInfo(ConceptAnnotation annotation) {
 
         removeAll();
 
 
         if(annotation != null) {
             GridBagConstraints gbc = new GridBagConstraints();
-            JLabel titleLabel = new JLabel(("Annotation Information"));
+            JLabel titleLabel = new JLabel(("ConceptAnnotation Information"));
             add(titleLabel, gbc);
 
-            JLabel idLabel = new JLabel(String.format("Annotation ID: %s", annotation.getID()));
+            JLabel idLabel = new JLabel(String.format("ConceptAnnotation ID: %s", annotation.getID()));
             JLabel classLabel = new JLabel(String.format("Class ID: %s  Name: %s", annotation.getClassID(), annotation.getClassName()));
             JLabel profileLabel = new JLabel(String.format("Profile ID: %s", annotation.getAnnotator().getProfileID()));
             JLabel textSourceLabel = new JLabel(String.format("Document ID: %s", annotation.getTextSource().getDocID()));

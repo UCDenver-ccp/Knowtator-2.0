@@ -1,11 +1,11 @@
 package edu.ucdenver.ccp.knowtator.listeners;
 
-import edu.ucdenver.ccp.knowtator.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.ConceptAnnotation;
 
 public interface AnnotationListener extends Listener {
-    void annotationAdded(Annotation newAnnotation);
+    void annotationAdded(ConceptAnnotation newAnnotation);
 
-    void annotationRemoved(Annotation removedAnnotation);
+    void annotationRemoved(ConceptAnnotation removedAnnotation);
 
-    void annotationSelectionChanged(Annotation annotation);
+    void annotationSelectionChanged(ConceptAnnotation annotation);
 }

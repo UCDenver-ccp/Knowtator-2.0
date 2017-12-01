@@ -100,18 +100,19 @@ class XmlReader {
     }
 
     private static void getAssertionsFromXml(KnowtatorManager manager, TextSource textSource, Element documentElement) {
-        for (Node assertionNode : XmlUtil.asList(documentElement.getElementsByTagName(XmlTags.ASSERTION))) {
+        for (Node assertionNode : XmlUtil.asList(documentElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION))) {
             Element assertionElement = (Element) assertionNode;
 
-            String assertionID = assertionElement.getElementsByTagName(XmlTags.ASSERTION_ID).item(0).getTextContent();
+            String assertionID = assertionElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION_ID).item(0).getTextContent();
+            String graphTitle = assertionElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION_GRAPH_TITLE).item(0).getTextContent();
             String profileID = assertionElement.getElementsByTagName(XmlTags.ANNOTATOR).item(0).getTextContent();
 
             Profile profile = manager.getProfileManager().addNewProfile(profileID);
-            String source = assertionElement.getElementsByTagName(XmlTags.ASSERTION_SOURCE).item(0).getTextContent();
-            String target = assertionElement.getElementsByTagName(XmlTags.ASSERTION_TARGET).item(0).getTextContent();
-            String relationship = assertionElement.getElementsByTagName(XmlTags.ASSERTION_RELATIONSHIP).item(0).getTextContent();
+            String source = assertionElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION_SOURCE).item(0).getTextContent();
+            String target = assertionElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION_TARGET).item(0).getTextContent();
+            String relationship = assertionElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION_RELATIONSHIP).item(0).getTextContent();
 
-            textSource.addAssertion(assertionID, profile, source, target, relationship);
+            textSource.getAnnotationManager().addCompositionalAnnotation(graphTitle, source, target, relationship, assertionID, profile);
         }
     }
 
@@ -212,13 +213,13 @@ class XmlReader {
                 String className = classElement.getElementsByTagName(XmlTags.MENTION_CLASS).item(0).getTextContent();
                 String classID = ((Element) classElement.getElementsByTagName(XmlTags.MENTION_CLASS).item(0)).getAttribute(XmlTags.MENTION_CLASS_ID);
 
-                textSource.addAnnotation(null, classID, profile, className, spans);
+                textSource.getAnnotationManager().addAnnotation(classID, className, spans, null, profile);
             }
         }
     }
 
     private static void getAnnotationsFromXml_NEW(KnowtatorManager manager, TextSource textSource, Element documentElement) {
-        for (Node annotationNode : XmlUtil.asList(documentElement.getElementsByTagName(XmlTags.ANNOTATION))) {
+        for (Node annotationNode : XmlUtil.asList(documentElement.getElementsByTagName(XmlTags.CONCEPT_ANNOTATION))) {
             Element annotationElement = (Element) annotationNode;
 
             String annotationID = annotationElement.getElementsByTagName(XmlTags.ANNOTATION_ID).item(0).getTextContent();
@@ -229,7 +230,7 @@ class XmlReader {
             String classID = annotationElement.getElementsByTagName(XmlTags.CLASS_ID).item(0).getTextContent();
             List<Span> spans = getSpanInfo(annotationElement);
 
-            textSource.addAnnotation(annotationID, classID, profile, className, spans);
+            textSource.getAnnotationManager().addAnnotation(classID, className, spans, annotationID, profile);
         }
     }
 

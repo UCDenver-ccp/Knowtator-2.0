@@ -1,7 +1,7 @@
 package edu.ucdenver.ccp.knowtator.ui.text;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.annotation.Span;
 import edu.ucdenver.ccp.knowtator.annotation.TextSource;
 import edu.ucdenver.ccp.knowtator.io.txt.KnowtatorDocumentHandler;
@@ -38,7 +38,7 @@ public class TextViewer extends JTabbedPane implements AnnotationListener, TextS
     }
 
     private void addNewDocument(TextSource textSource) {
-        TextPane textPane = new TextPane(view, textSource);
+        TextPane textPane = new TextPane(manager, view, textSource);
         textPane.setName(textSource.getDocID());
         if (textSource.getContent() == null) {
             try {
@@ -123,18 +123,19 @@ public class TextViewer extends JTabbedPane implements AnnotationListener, TextS
     }
 
     @Override
-    public void annotationAdded(Annotation newAnnotation) {
+    public void annotationAdded(ConceptAnnotation newAnnotation) {
         getSelectedTextPane().setSelection(newAnnotation.getSpans().first(), newAnnotation);
         refreshHighlights();
     }
 
     @Override
-    public void annotationRemoved() {
+    public void annotationRemoved(ConceptAnnotation removedAnnotation) {
         refreshHighlights();
     }
 
     @Override
-    public void annotationSelectionChanged(Annotation annotation) {
+    public void annotationSelectionChanged(ConceptAnnotation annotation) {
+        getSelectedTextPane().setSelectedAnnotation(annotation);
         refreshHighlights();
     }
 

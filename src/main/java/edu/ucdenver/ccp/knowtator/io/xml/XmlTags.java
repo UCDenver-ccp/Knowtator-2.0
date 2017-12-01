@@ -12,6 +12,7 @@ class XmlTags {
     static final String SPAN = "span";
     static final String SPAN_START = "start";
     static final String SPAN_END = "end";
+    static final String CONCEPT_ANNOTATION = "concept-annotation";
     static final String ANNOTATION = "annotation";
 
     static final String CLASS_MENTION = "classMention";
@@ -31,9 +32,11 @@ class XmlTags {
     static final String TEXT = "text";
     static final String MENTION_CLASS_ID = "id";
     static final String ANNOTATION_ID = "id";
-    static final String ASSERTION = "assertion";
-    static final String ASSERTION_SOURCE = "source";
-    static final String ASSERTION_TARGET = "target";
-    static final String ASSERTION_RELATIONSHIP = "relationship";
-    static final String ASSERTION_ID = "id";
+
+    static final String COMPOSITIONAL_ANNOTATION = "compositional-annotation";
+    static final String COMPOSITIONAL_ANNOTATION_SOURCE = "source";
+    static final String COMPOSITIONAL_ANNOTATION_TARGET = "target";
+    static final String COMPOSITIONAL_ANNOTATION_RELATIONSHIP = "relationship";
+    static final String COMPOSITIONAL_ANNOTATION_ID = "id";
+    static final String COMPOSITIONAL_ANNOTATION_GRAPH_TITLE = "graph";
 }

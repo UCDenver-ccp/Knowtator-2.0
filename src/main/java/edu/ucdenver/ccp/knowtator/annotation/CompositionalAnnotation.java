@@ -2,10 +2,7 @@ package edu.ucdenver.ccp.knowtator.annotation;
 
 import edu.ucdenver.ccp.knowtator.profile.Profile;
 
-public class Assertion {
-
-    private Profile annotator;
-    private String id;
+public class CompositionalAnnotation extends Annotation {
 
     public Annotation getSource() {
         return source;
@@ -19,29 +16,26 @@ public class Assertion {
         return relationship;
     }
 
+    private final String graphTitle;
     private Annotation source;
     private Annotation target;
     private String relationship;
 
-    Assertion(String id, Profile profile, Annotation source, Annotation target, String relationship) {
-        this.id = id;
-        this.annotator = profile;
-        this.source = source;
+    CompositionalAnnotation(String graphTitle, Annotation source, Annotation target, String relationship, String id, TextSource textSource, Profile annotator) {
+        super(id, textSource, annotator);
+        this.graphTitle = graphTitle;
 
+        this.source = source;
         this.target = target;
         this.relationship = relationship;
     }
 
     @Override
     public String toString() {
-        return String.format("Assertion: %s, %s, %s", source, target, relationship);
+        return String.format("CompositionalAnnotation: %s, %s, %s", source, target, relationship);
     }
 
-    public Profile getAnnotator() {
-        return annotator;
-    }
-
-    public String getID() {
-        return id;
+    public String getGraphTitle() {
+        return graphTitle;
     }
 }

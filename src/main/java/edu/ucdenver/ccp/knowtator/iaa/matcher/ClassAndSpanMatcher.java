@@ -28,7 +28,7 @@
 
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
-import edu.ucdenver.ccp.knowtator.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
 
 import java.util.Collections;
@@ -42,15 +42,15 @@ public class ClassAndSpanMatcher implements Matcher {
 	 *            will be set to NONTRIVIAL_MATCH or NONTRIVIAL_NONMATCH.
 	 *            Trivial matches and non-matches are not defined for this
 	 *            matcher.
-	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher#match(Annotation, String, Set,
+	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher#match(ConceptAnnotation, String, Set,
 	 *      IAA, MatchResult)
 	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
 	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
 	 */
 	@SuppressWarnings("Duplicates")
-	public Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
-							MatchResult matchResult) {
-		Annotation match = match(annotation, compareSetName, iaa, excludeAnnotations);
+	public ConceptAnnotation match(ConceptAnnotation annotation, String compareSetName, Set<ConceptAnnotation> excludeAnnotations, IAA iaa,
+                                   MatchResult matchResult) {
+		ConceptAnnotation match = match(annotation, compareSetName, iaa, excludeAnnotations);
 		if (match != null) {
 			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 			return match;
@@ -66,9 +66,9 @@ public class ClassAndSpanMatcher implements Matcher {
 	 *
 	 * @return an annotation that matches or null.
 	 */
-	public static Annotation match(Annotation annotation, String compareSetName, IAA iaa,
-								   Set<Annotation> excludeAnnotations) {
-		Set<Annotation> singleMatchSet = matches(annotation, compareSetName, iaa, excludeAnnotations);
+	public static ConceptAnnotation match(ConceptAnnotation annotation, String compareSetName, IAA iaa,
+                                          Set<ConceptAnnotation> excludeAnnotations) {
+		Set<ConceptAnnotation> singleMatchSet = matches(annotation, compareSetName, iaa, excludeAnnotations);
 		if (singleMatchSet.size() == 1) {
 			return singleMatchSet.iterator().next();
 		} else
@@ -82,17 +82,17 @@ public class ClassAndSpanMatcher implements Matcher {
 	 *         matches are found.
 	 */
 
-	private static Set<Annotation> matches(Annotation annotation, String compareSetName, IAA iaa,
-										   Set<Annotation> excludeAnnotations) {
+	private static Set<ConceptAnnotation> matches(ConceptAnnotation annotation, String compareSetName, IAA iaa,
+                                                  Set<ConceptAnnotation> excludeAnnotations) {
 		String type = annotation.getClassID();
-		Set<Annotation> candidateAnnotations = new HashSet<>(iaa.getExactlyOverlappingAnnotations(annotation,
+		Set<ConceptAnnotation> candidateAnnotations = new HashSet<>(iaa.getExactlyOverlappingAnnotations(annotation,
 				compareSetName));
 		candidateAnnotations.removeAll(excludeAnnotations);
 		if (candidateAnnotations.size() == 0)
 			return Collections.emptySet();
 
-		Set<Annotation> returnValues = new HashSet<>();
-		for (Annotation candidateAnnotation : candidateAnnotations) {
+		Set<ConceptAnnotation> returnValues = new HashSet<>();
+		for (ConceptAnnotation candidateAnnotation : candidateAnnotations) {
 			if (!excludeAnnotations.contains(candidateAnnotation)
 					&& candidateAnnotation.getClassID().equals(type)) {
 				returnValues.add(candidateAnnotation);

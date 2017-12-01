@@ -27,7 +27,7 @@
  */
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
-import edu.ucdenver.ccp.knowtator.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
 
 import java.util.Set;
@@ -49,8 +49,8 @@ public interface Matcher {
 	 *            given in MatchResult.
 	 * @return the annotation that was matched. If none exists then return null.
 	 */
-	Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
-					 MatchResult matchResult);
+	ConceptAnnotation match(ConceptAnnotation annotation, String compareSetName, Set<ConceptAnnotation> excludeAnnotations, IAA iaa,
+                            MatchResult matchResult);
 
 	String getName();
 

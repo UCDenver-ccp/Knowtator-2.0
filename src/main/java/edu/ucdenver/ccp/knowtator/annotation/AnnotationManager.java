@@ -1,6 +1,9 @@
 package edu.ucdenver.ccp.knowtator.annotation;
 
+import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
 import edu.ucdenver.ccp.knowtator.profile.Profile;
+import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -12,37 +15,32 @@ public final class AnnotationManager {
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(AnnotationManager.class);
 
-    private TreeMap<Span, Annotation> annotationMap;
-    private Set<Assertion> assertions;
+    private final KnowtatorManager manager;
+
+    private TreeMap<Span, ConceptAnnotation> conceptAnnotationMap;
+    private Set<CompositionalAnnotation> compositionalAnnotations;
     private int annotationCounter;
-    private int assertionCounter;
+    private BasicKnowtatorView view;
+    private TextSource textSource;
 
-    AnnotationManager() {
+    AnnotationManager(KnowtatorManager manager, BasicKnowtatorView view, TextSource textSource) {
+        this.manager = manager;
+        this.view = view;
+        this.textSource = textSource;
         annotationCounter = 0;
-        assertionCounter = 0;
-        annotationMap = new TreeMap<>(Span::compare);
+        conceptAnnotationMap = new TreeMap<>(Span::compare);
 
-        assertions = new HashSet<>();
+        compositionalAnnotations = new HashSet<>();
     }
 
-    Assertion addAssertion(String assertionID, Profile profile, Annotation source, Annotation target, String relationship) {
-        if (assertionID == null) {
-            assertionID = String.format("assertion_%d", assertionCounter++);
-        }
-
-        Assertion newAssertion = new Assertion(assertionID, profile, source, target, relationship);
-        assertions.add(newAssertion);
-        return newAssertion;
-    }
-
-    public void removeAssertion(Annotation annotation1, Annotation annotation2) {
-        assertions.forEach(assertion -> {
+    public void removeAssertion(ConceptAnnotation annotation1, ConceptAnnotation annotation2) {
+        compositionalAnnotations.forEach(assertion -> {
             if (assertion.getSource().equals(annotation1) && assertion.getTarget().equals(annotation2)) {
-                assertions.remove(assertion);
+                compositionalAnnotations.remove(assertion);
             }
         });
     }
-    Annotation addAnnotation(String annotationID, TextSource textSource, String classID, Profile profile, String className, List<Span> spans) {
+    public void addAnnotation(String classID, String className, List<Span> spans, String annotationID, Profile profile) {
 
 
         if (annotationID == null) {
@@ -54,77 +52,50 @@ public final class AnnotationManager {
             }
         }
 
-        Annotation newAnnotation = new Annotation(annotationID, textSource, classID, profile, className);
+        ConceptAnnotation newAnnotation = new ConceptAnnotation( classID, className, annotationID, textSource, profile);
         for (Span span: spans) {
             addSpanToAnnotation(newAnnotation, span);
         }
+        if (view != null) view.annotationAddedEvent(newAnnotation);
 
-//        newAnnotation.getSpans().forEach(span -> annotationMap.put(span, newAnnotation));
-        return newAnnotation;
     }
 
-    Span addSpanToAnnotation(Annotation annotation, int start, int end) {
-        Span newSpan = new Span(start, end);
-
-        return addSpanToAnnotation(annotation, newSpan);
-    }
-    private Span addSpanToAnnotation(Annotation annotation, Span newSpan){
+    public Span addSpanToAnnotation(ConceptAnnotation annotation, Span newSpan){
         annotation.addSpan(newSpan);
-        annotationMap.put(newSpan, annotation);
+        conceptAnnotationMap.put(newSpan, annotation);
         return newSpan;
     }
 
-    void removeAnnotation(Annotation annotationToRemove) {
-        annotationToRemove.getSpans().forEach(span -> annotationMap.remove(span));
+    public void removeAnnotation(ConceptAnnotation annotationToRemove) {
+        annotationToRemove.getSpans().forEach(span -> conceptAnnotationMap.remove(span));
+        if(view != null) view.annotationRemovedEvent(annotationToRemove);
     }
 
-    void removeSpanFromSelectedAnnotation(Annotation annotation, Span span) {
+    public void removeSpanFromAnnotation(ConceptAnnotation annotation, Span span) {
         annotation.removeSpan(span);
-        annotationMap.remove(span);
+        conceptAnnotationMap.remove(span);
+        if (view != null) view.spanRemovedEvent();
     }
 
-    Set<Annotation> getAnnotations(Set<Profile> profileFilters) {
-        if (profileFilters == null) return new HashSet<>(annotationMap.values());
-        return annotationMap.values().stream().filter(annotation -> profileFilters.contains(annotation.getAnnotator())).collect(Collectors.toSet());
+    public Set<ConceptAnnotation> getConceptAnnotations(Set<Profile> profileFilters) {
+        if (profileFilters == null) return new HashSet<>(conceptAnnotationMap.values());
+        return conceptAnnotationMap.values().stream().filter(annotation -> profileFilters.contains(annotation.getAnnotator())).collect(Collectors.toSet());
     }
 
 
-    Map.Entry<Span, Annotation> getNextSpan(Span span) {
-        Map.Entry<Span, Annotation> next =
-                annotationMap.containsKey(span) ? annotationMap.higherEntry(span) : annotationMap.ceilingEntry(span);
 
-        if (next == null) next = annotationMap.firstEntry();
-        return next;
-
-
-    }
-
-    Map.Entry<Span, Annotation> getPreviousSpan(Span span) {
-
-
-        Map.Entry<Span, Annotation> previous =
-                annotationMap.containsKey(span) ? annotationMap.lowerEntry(span) : annotationMap.floorEntry(span);
-
-        if (previous == null) {
-            previous = annotationMap.lastEntry();
-        }
-
-        return previous;
-
-
-    }
 
     /**
      * @param loc  Location filter
      * @param profile  Profile filter
      *
      */
-    TreeMap<Span, Annotation> getAnnotationMap(Integer loc, Profile profile) {
-        TreeMap<Span, Annotation> filteredAnnotations = new TreeMap<>(Span::compare);
+    public TreeMap<Span, ConceptAnnotation> getAnnotationMap(Integer loc, Profile profile) {
+        TreeMap<Span, ConceptAnnotation> filteredAnnotations = new TreeMap<>(Span::compare);
 
-        for (Map.Entry<Span, Annotation> entry : annotationMap.entrySet()) {
+        for (Map.Entry<Span, ConceptAnnotation> entry : conceptAnnotationMap.entrySet()) {
             Span span = entry.getKey();
-            Annotation annotation = entry.getValue();
+            ConceptAnnotation annotation = entry.getValue();
             if ((loc == null || span.contains(loc)) && (profile == null || annotation.getAnnotator().equals(profile) )) {
                 filteredAnnotations.put(span, annotation);
             }
@@ -133,56 +104,56 @@ public final class AnnotationManager {
     }
 
     public void growSpanStart(Span span) {
-        if (annotationMap.containsKey(span)) {
-            Annotation annotation = annotationMap.get(span);
-            annotationMap.remove(span);
+        if (conceptAnnotationMap.containsKey(span)) {
+            ConceptAnnotation annotation = conceptAnnotationMap.get(span);
+            conceptAnnotationMap.remove(span);
             span.growStart();
-            annotationMap.put(span, annotation);
+            conceptAnnotationMap.put(span, annotation);
         } else {
             span.growStart();
         }
     }
 
     public void growSpanEnd(Span span, int limit) {
-        if (annotationMap.containsKey(span)) {
-            Annotation annotation = annotationMap.get(span);
-            annotationMap.remove(span);
+        if (conceptAnnotationMap.containsKey(span)) {
+            ConceptAnnotation annotation = conceptAnnotationMap.get(span);
+            conceptAnnotationMap.remove(span);
             span.growEnd(limit);
-            annotationMap.put(span, annotation);
+            conceptAnnotationMap.put(span, annotation);
         } else {
             span.growEnd(limit);
         }
     }
 
     public void shrinkSpanEnd(Span span) {
-        if (annotationMap.containsKey(span)) {
-            Annotation annotation = annotationMap.get(span);
-            annotationMap.remove(span);
+        if (conceptAnnotationMap.containsKey(span)) {
+            ConceptAnnotation annotation = conceptAnnotationMap.get(span);
+            conceptAnnotationMap.remove(span);
             span.shrinkEnd();
-            annotationMap.put(span, annotation);
+            conceptAnnotationMap.put(span, annotation);
         } else {
             span.shrinkEnd();
         }
     }
 
     public void shrinkSpanStart(Span span) {
-        if (annotationMap.containsKey(span)) {
-            Annotation annotation = annotationMap.get(span);
-            annotationMap.remove(span);
+        if (conceptAnnotationMap.containsKey(span)) {
+            ConceptAnnotation annotation = conceptAnnotationMap.get(span);
+            conceptAnnotationMap.remove(span);
             span.shrinkStart();
-            annotationMap.put(span, annotation);
+            conceptAnnotationMap.put(span, annotation);
         } else {
             span.shrinkStart();
         }
     }
 
-    Set<Assertion> getAssertions(Set<Profile> profileFilters) {
-        return assertions.stream().filter(assertion -> profileFilters.contains(assertion.getAnnotator())).collect(Collectors.toSet());
+    public Set<CompositionalAnnotation> getCompositionalAnnotations(Set<Profile> profileFilters) {
+        return compositionalAnnotations.stream().filter(assertion -> profileFilters.contains(assertion.getAnnotator())).collect(Collectors.toSet());
     }
 
-    Assertion addAssertion(String assertionID, Profile profile, String source, String target, String relationship) {
-        Annotation sourceAnnotation = null, targetAnnotation = null;
-        for(Annotation annotation : annotationMap.values()) {
+    public void addCompositionalAnnotation(String graphTitle, String source, String target, String relationship, String assertionID, Profile profile) {
+        ConceptAnnotation sourceAnnotation = null, targetAnnotation = null;
+        for(ConceptAnnotation annotation : conceptAnnotationMap.values()) {
             if (Objects.equals(annotation.getID(), source)) {
                 sourceAnnotation = annotation;
             }
@@ -193,8 +164,31 @@ public final class AnnotationManager {
         }
 
         if (sourceAnnotation != null && targetAnnotation != null) {
-             return addAssertion(assertionID, profile, sourceAnnotation, targetAnnotation, relationship);
+            addCompositionalAnnotation(graphTitle, sourceAnnotation, targetAnnotation, relationship, assertionID, profile);
         }
-        return null;
+    }
+
+    public void addCompositionalAnnotation(String graphTitle, Annotation source, Annotation target, String relationship, String assertionID, Profile profile) {
+        if (assertionID == null) {
+            assertionID = String.format("annotation_%d", annotationCounter++);
+        }
+
+        CompositionalAnnotation newCompositionalAnnotation = new CompositionalAnnotation(graphTitle, source, target, relationship, assertionID, textSource, profile);
+        compositionalAnnotations.add(newCompositionalAnnotation);
+        if(view != null) view.assertionAddedEvent(newCompositionalAnnotation);
+    }
+
+    //TODO: Add annotations as subclasses of their assigned classes as well as of the AO
+    public void addAnnotation(Span span) {
+        String classID = OWLAPIDataExtractor.getSelectedOwlClassID(view);
+        String className = OWLAPIDataExtractor.getSelectedOwlClassName(view);
+        List<Span> spans = Collections.singletonList(span);
+        if (classID != null) {
+            addAnnotation(classID, className, spans, null, manager.getProfileManager().getCurrentProfile());
+        }
+    }
+
+    public void setView(BasicKnowtatorView view) {
+        this.view = view;
     }
 }

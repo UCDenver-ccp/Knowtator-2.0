@@ -16,7 +16,8 @@ public class KnowtatorView extends BasicKnowtatorView {
     }
 
     private void setupInitial() {
-//        loadOntologyFromLocation("http://purl.obolibrary.org/obo/go/go-basic.obo");
+//        loadOntologyFromLocation(new File("C:/Users/pielk/KnowtatorProjects/CPBS_7785/Nucleus2Cytosol_Transport_Project/CPBS7785_ontology_3.owl").toURI().toString());
+//        ProjectActions.loadProject(manager, "C:/Users/pielk/KnowtatorProjects/CPBS_7785/Nucleus2Cytosol_Transport_Project/NBK26932.txt.xml", false);
 //        ProjectActions.loadProject(manager, "file/test_project.xml", true);
     }
 
@@ -49,7 +50,6 @@ public class KnowtatorView extends BasicKnowtatorView {
 
         menuBar.add(projectMenu);
         menuBar.add(profileMenu);
-        menuBar.add(annotationMenu);
         menuBar.add(iaaMenu);
         menuBar.add(graphMenu);
         menuBar.add(toolBar);

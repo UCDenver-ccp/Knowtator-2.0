@@ -66,7 +66,7 @@ public class ProjectActions {
             }
 
             gbc.gridx = 3;
-            optionPanel.add(new JLabel("Annotation Options"), gbc);
+            optionPanel.add(new JLabel("ConceptAnnotation Options"), gbc);
             for (String annotationOption : annotationChoiceList) {
                 JCheckBox checkBox = new JCheckBox(annotationOption);
                 checkBox.setSelected(true);

@@ -1,8 +1,8 @@
 package edu.ucdenver.ccp.knowtator.io.xml;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.annotation.Annotation;
-import edu.ucdenver.ccp.knowtator.annotation.Assertion;
+import edu.ucdenver.ccp.knowtator.annotation.CompositionalAnnotation;
+import edu.ucdenver.ccp.knowtator.annotation.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.annotation.Span;
 import org.apache.log4j.Logger;
 
@@ -24,9 +24,9 @@ class XmlWriter {
 
     }
 
-    private static void writeAnnotation(BufferedWriter bw, Annotation annotation) {
+    private static void writeAnnotation(BufferedWriter bw, ConceptAnnotation annotation) {
         try {
-            bw.write(String.format("\t<%s>", XmlTags.ANNOTATION));
+            bw.write(String.format("\t<%s>", XmlTags.CONCEPT_ANNOTATION));
             bw.newLine();
             bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.ANNOTATION_ID, annotation.getID(), XmlTags.ANNOTATION_ID));
             bw.newLine();
@@ -40,7 +40,7 @@ class XmlWriter {
                 bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.CLASS_ID, annotation.getClassID(), XmlTags.CLASS_ID));
                 bw.newLine();
             }
-            bw.write(String.format("\t</%s>", XmlTags.ANNOTATION));
+            bw.write(String.format("\t</%s>", XmlTags.CONCEPT_ANNOTATION));
             bw.newLine();
         } catch (IOException e) {
             e.printStackTrace();
@@ -49,7 +49,6 @@ class XmlWriter {
 
     static void write(KnowtatorManager manager, String fileName) throws IOException, NoSuchFieldException {
         log.warn(String.format("Writing to: %s", fileName));
-        manager.getConfigProperties().setLastWritePath(fileName);
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(fileName));
 
@@ -101,8 +100,8 @@ class XmlWriter {
                 );
                 bw.write(String.format("</%s>", XmlTags.TEXT));
                 bw.newLine();
-                if (manager.getConfigProperties().getSaveAnnotations()) textSource.getAnnotations(manager.getConfigProperties().getProfileFilters()).forEach(annotation -> writeAnnotation(bw, annotation));
-                if (manager.getConfigProperties().getSaveAssertions()) textSource.getAssertions(manager.getConfigProperties().getProfileFilters()).forEach(assertion -> writeAssertion(bw, assertion));
+                if (manager.getConfigProperties().getSaveAnnotations()) textSource.getAnnotationManager().getConceptAnnotations(manager.getConfigProperties().getProfileFilters()).forEach(annotation -> writeAnnotation(bw, annotation));
+                if (manager.getConfigProperties().getSaveAssertions()) textSource.getAnnotationManager().getCompositionalAnnotations(manager.getConfigProperties().getProfileFilters()).forEach(assertion -> writeAssertion(bw, assertion));
                 bw.write(String.format("</%s>", XmlTags.DOCUMENT));
                 bw.newLine();
             } catch(IOException e) {
@@ -146,21 +145,23 @@ class XmlWriter {
         });
     }
 
-    private static void writeAssertion(BufferedWriter bw, Assertion assertion) {
+    private static void writeAssertion(BufferedWriter bw, CompositionalAnnotation compositionalAnnotation) {
         try {
-            bw.write(String.format("\t<%s>", XmlTags.ASSERTION));
+            bw.write(String.format("\t<%s>", XmlTags.COMPOSITIONAL_ANNOTATION));
             bw.newLine();
-            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.ASSERTION_ID, assertion.getID(), XmlTags.ASSERTION_ID));
+            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.COMPOSITIONAL_ANNOTATION_ID, compositionalAnnotation.getID(), XmlTags.COMPOSITIONAL_ANNOTATION_ID));
             bw.newLine();
-            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.ANNOTATOR, assertion.getAnnotator().getProfileID(), XmlTags.ANNOTATOR));
+            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.COMPOSITIONAL_ANNOTATION_GRAPH_TITLE, compositionalAnnotation.getGraphTitle(), XmlTags.COMPOSITIONAL_ANNOTATION_GRAPH_TITLE));
             bw.newLine();
-            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.ASSERTION_SOURCE, assertion.getSource().getID(), XmlTags.ASSERTION_SOURCE));
+            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.ANNOTATOR, compositionalAnnotation.getAnnotator().getProfileID(), XmlTags.ANNOTATOR));
             bw.newLine();
-            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.ASSERTION_TARGET, assertion.getTarget().getID(), XmlTags.ASSERTION_TARGET));
+            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.COMPOSITIONAL_ANNOTATION_SOURCE, compositionalAnnotation.getSource().getID(), XmlTags.COMPOSITIONAL_ANNOTATION_SOURCE));
             bw.newLine();
-            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.ASSERTION_RELATIONSHIP, assertion.getRelationship(), XmlTags.ASSERTION_RELATIONSHIP));
+            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.COMPOSITIONAL_ANNOTATION_TARGET, compositionalAnnotation.getTarget().getID(), XmlTags.COMPOSITIONAL_ANNOTATION_TARGET));
             bw.newLine();
-            bw.write(String.format("\t</%s>", XmlTags.ASSERTION));
+            bw.write(String.format("\t\t<%s>%s</%s>", XmlTags.COMPOSITIONAL_ANNOTATION_RELATIONSHIP, compositionalAnnotation.getRelationship(), XmlTags.COMPOSITIONAL_ANNOTATION_RELATIONSHIP));
+            bw.newLine();
+            bw.write(String.format("\t</%s>", XmlTags.COMPOSITIONAL_ANNOTATION));
             bw.newLine();
         } catch (IOException e) {
             e.printStackTrace();

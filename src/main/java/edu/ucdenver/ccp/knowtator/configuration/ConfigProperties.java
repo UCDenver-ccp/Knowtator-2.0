@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 
 public class ConfigProperties {
 
-    private String lastWritePath;
     private Set<Profile> profileFilters;
     private Set<TextSource> textSourceFilters;
     private boolean saveAnnotations;
@@ -71,14 +70,6 @@ public class ConfigProperties {
         }
         m.appendTail(sb);
         return sb.toString();
-    }
-
-    public void setLastWritePath(String lastWritePath) {
-        this.lastWritePath = lastWritePath;
-    }
-
-    public String getLastWritePath() {
-        return lastWritePath;
     }
 
     public void setProfileFilters(Set<Profile> profileFilters) {

@@ -28,7 +28,7 @@
 package edu.ucdenver.ccp.knowtator.iaa;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.annotation.TextSource;
 import edu.ucdenver.ccp.knowtator.annotation.TextSourceManager;
 import edu.ucdenver.ccp.knowtator.iaa.html.IAA2HTML;
@@ -61,11 +61,11 @@ public class KnowtatorIAA {
 
 //	FilterUtil filterUtil;
 
-	private Map<Annotation, String> annotationTexts;
+	private Map<ConceptAnnotation, String> annotationTexts;
 
-	private Map<Annotation, String> annotationTextNames;
+	private Map<ConceptAnnotation, String> annotationTextNames;
 
-	private Map<TextSource, Set<Annotation>> textSourceAnnotationsMap;
+	private Map<TextSource, Set<ConceptAnnotation>> textSourceAnnotationsMap;
 
 	private PrintStream html;
 
@@ -117,7 +117,7 @@ public class KnowtatorIAA {
 	private void initTextSourceAnnotations(TextSourceManager textSourceManager) throws IAAException {
 		textSourceAnnotationsMap = new HashMap<>();
 		for (TextSource textSource : textSourceManager.getTextSources()) {
-			textSourceAnnotationsMap.put(textSource, textSource.getAnnotations());
+			textSourceAnnotationsMap.put(textSource, textSource.getAnnotationManager().getConceptAnnotations(null));
 		}
 	}
 
@@ -214,7 +214,7 @@ public class KnowtatorIAA {
 			ClassMatcher classMatcher = new ClassMatcher();
 			IAA classIAA = new IAA(setNames);
 
-			for (Set<Annotation> annotations : textSourceAnnotationsMap.values()) {
+			for (Set<ConceptAnnotation> annotations : textSourceAnnotationsMap.values()) {
 				classIAA.setAnnotations(annotations);
 				classIAA.allwayIAA(classMatcher);
 				classIAA.pairwiseIAA(classMatcher);
@@ -233,7 +233,7 @@ public class KnowtatorIAA {
 			SpanMatcher spanMatcher = new SpanMatcher();
 			IAA spanIAA = new IAA(setNames);
 
-			for (Set<Annotation> annotations : textSourceAnnotationsMap.values()) {
+			for (Set<ConceptAnnotation> annotations : textSourceAnnotationsMap.values()) {
 				spanIAA.setAnnotations(annotations);
 				spanIAA.allwayIAA(spanMatcher);
 				spanIAA.pairwiseIAA(spanMatcher);
@@ -251,7 +251,7 @@ public class KnowtatorIAA {
 			ClassAndSpanMatcher classAndSpanMatcher = new ClassAndSpanMatcher();
 			IAA classAndSpanIAA = new IAA(setNames);
 
-			for (Set<Annotation> annotations : textSourceAnnotationsMap.values()) {
+			for (Set<ConceptAnnotation> annotations : textSourceAnnotationsMap.values()) {
 				classAndSpanIAA.setAnnotations(annotations);
 				classAndSpanIAA.allwayIAA(classAndSpanMatcher);
 				classAndSpanIAA.pairwiseIAA(classAndSpanMatcher);

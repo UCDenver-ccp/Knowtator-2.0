@@ -43,7 +43,7 @@ public class Profile {
                     Set<OWLClass> decendents = OWLAPIDataExtractor.getSelectedOWLClassDecendents(view);
                     if (decendents != null) {
                         for (OWLClass decendent : decendents) {
-                            String decClassID = OWLAPIDataExtractor.getIDByOwlEnt(decendent);
+                            String decClassID = OWLAPIDataExtractor.getOwlEntID(decendent);
 
                             addColor(decClassID, c);
                         }

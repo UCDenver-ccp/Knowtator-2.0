@@ -1,7 +1,6 @@
 package edu.ucdenver.ccp.knowtator.ui.menus;
 
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
-import edu.ucdenver.ccp.knowtator.ui.KnowtatorIcons;
 import edu.ucdenver.ccp.knowtator.ui.text.TextPane;
 
 import javax.swing.*;
@@ -34,7 +33,7 @@ public class KnowtatorToolBar extends JToolBar {
     private JButton addAnnotationCommand() {
         JButton addAnnotationButton = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.ADD_ICON));
         addAnnotationButton.setToolTipText("Add annotation");
-        addAnnotationButton.addActionListener(e -> view.getTextViewer().getSelectedTextPane().addSelectedAnnotation());
+        addAnnotationButton.addActionListener(e -> view.getTextViewer().getSelectedTextPane().addAnnotation());
 
         return addAnnotationButton;
     }

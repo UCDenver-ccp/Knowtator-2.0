@@ -33,6 +33,17 @@ public class ProfileMenu extends JMenu implements ProfileListener {
         add(newAnnotator());
         add(assignColorToClassMenu());
         add(removeAnnotatorMenu);
+        add(showForCurrentProfileCommand());
+    }
+
+    private JCheckBoxMenuItem showForCurrentProfileCommand() {
+        JCheckBoxMenuItem showForCurrentProfile = new JCheckBoxMenuItem("Show only annotations for current profile");
+        showForCurrentProfile.addActionListener(e -> {
+            if(showForCurrentProfile.getState()) view.profileFilterEvent(true);
+            else view.profileFilterEvent(false);
+        });
+
+        return  showForCurrentProfile;
     }
 
     private JMenuItem assignColorToClassMenu() {

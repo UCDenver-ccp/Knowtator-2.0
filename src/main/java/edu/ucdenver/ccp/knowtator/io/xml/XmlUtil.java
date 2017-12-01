@@ -1,8 +1,6 @@
 package edu.ucdenver.ccp.knowtator.io.xml;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.annotation.TextSource;
-import edu.ucdenver.ccp.knowtator.profile.Profile;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -10,7 +8,10 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.*;
+import java.util.AbstractList;
+import java.util.Collections;
+import java.util.List;
+import java.util.RandomAccess;
 
 public final class XmlUtil {
     public static final Logger log = Logger.getLogger(KnowtatorManager.class);

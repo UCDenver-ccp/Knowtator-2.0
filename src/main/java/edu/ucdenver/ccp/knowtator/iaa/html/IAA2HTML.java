@@ -28,7 +28,7 @@
 
 package edu.ucdenver.ccp.knowtator.iaa.html;
 
-import edu.ucdenver.ccp.knowtator.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.annotation.Span;
 import edu.ucdenver.ccp.knowtator.iaa.AnnotationSpanIndex;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
@@ -43,7 +43,7 @@ import java.util.*;
 public class IAA2HTML {
 
 	public static void printIAA(IAA iaa, Matcher matcher, File directory, int numberOfDocs,
-								Map<Annotation, String> annotationTexts, Map<Annotation, String> annotationTextNames) throws Exception {
+                                Map<ConceptAnnotation, String> annotationTexts, Map<ConceptAnnotation, String> annotationTextNames) throws Exception {
 		NumberFormat percentageFormat = NumberFormat.getPercentInstance();
 		percentageFormat.setMinimumFractionDigits(2);
 
@@ -73,19 +73,19 @@ public class IAA2HTML {
 		Set<String> classes = iaa.getAnnotationClasses();
 		Set<String> sets = iaa.getSetNames();
 
-		Map<String, Set<Annotation>> allwayMatches = iaa.getAllwayMatches();
-		Map<String, Set<Annotation>> nontrivialAllwayMatches = iaa.getNontrivialAllwayMatches();
-		Map<String, Set<Annotation>> trivialAllwayMatches = iaa.getTrivialAllwayMatches();
-		Map<String, Set<Annotation>> allwayNonmatches = iaa.getAllwayNonmatches();
-		Map<String, Set<Annotation>> nontrivialAllwayNonmatches = iaa.getNontrivialAllwayNonmatches();
-		Map<String, Set<Annotation>> trivialAllwayNonmatches = iaa.getTrivialAllwayNonmatches();
+		Map<String, Set<ConceptAnnotation>> allwayMatches = iaa.getAllwayMatches();
+		Map<String, Set<ConceptAnnotation>> nontrivialAllwayMatches = iaa.getNontrivialAllwayMatches();
+		Map<String, Set<ConceptAnnotation>> trivialAllwayMatches = iaa.getTrivialAllwayMatches();
+		Map<String, Set<ConceptAnnotation>> allwayNonmatches = iaa.getAllwayNonmatches();
+		Map<String, Set<ConceptAnnotation>> nontrivialAllwayNonmatches = iaa.getNontrivialAllwayNonmatches();
+		Map<String, Set<ConceptAnnotation>> trivialAllwayNonmatches = iaa.getTrivialAllwayNonmatches();
 
-		Set<Annotation> allwayMatchesSingleSet = getSingleSet(allwayMatches);
-		Set<Annotation> trivialAllwayMatchesSingleSet = getSingleSet(trivialAllwayMatches);
-		Set<Annotation> nontrivialAllwayMatchesSingleSet = getSingleSet(nontrivialAllwayMatches);
-		Set<Annotation> allwayNonmatchesSingleSet = getSingleSet(allwayNonmatches);
-		Set<Annotation> trivialAllwayNonmatchesSingleSet = getSingleSet(trivialAllwayNonmatches);
-		Set<Annotation> nontrivialAllwayNonmatchesSingleSet = getSingleSet(nontrivialAllwayNonmatches);
+		Set<ConceptAnnotation> allwayMatchesSingleSet = getSingleSet(allwayMatches);
+		Set<ConceptAnnotation> trivialAllwayMatchesSingleSet = getSingleSet(trivialAllwayMatches);
+		Set<ConceptAnnotation> nontrivialAllwayMatchesSingleSet = getSingleSet(nontrivialAllwayMatches);
+		Set<ConceptAnnotation> allwayNonmatchesSingleSet = getSingleSet(allwayNonmatches);
+		Set<ConceptAnnotation> trivialAllwayNonmatchesSingleSet = getSingleSet(trivialAllwayNonmatches);
+		Set<ConceptAnnotation> nontrivialAllwayNonmatchesSingleSet = getSingleSet(nontrivialAllwayNonmatches);
 
 		AnnotationSpanIndex spanIndex = new AnnotationSpanIndex(allwayNonmatchesSingleSet);
 
@@ -121,14 +121,14 @@ public class IAA2HTML {
 			tabular.println("All classes\t" + totalAllwayMatches + "\t" + totalAllwayNonmatches);
 		}
 
-		Map<String, Set<Annotation>> sortedAllwayMatches = sortByType(classes, allwayMatchesSingleSet);
-		Map<String, Set<Annotation>> sortedAllwayTrivialMatches = sortByType(classes, trivialAllwayMatchesSingleSet);
-		Map<String, Set<Annotation>> sortedAllwayNontrivialMatches = sortByType(classes,
+		Map<String, Set<ConceptAnnotation>> sortedAllwayMatches = sortByType(classes, allwayMatchesSingleSet);
+		Map<String, Set<ConceptAnnotation>> sortedAllwayTrivialMatches = sortByType(classes, trivialAllwayMatchesSingleSet);
+		Map<String, Set<ConceptAnnotation>> sortedAllwayNontrivialMatches = sortByType(classes,
 				nontrivialAllwayMatchesSingleSet);
-		Map<String, Set<Annotation>> sortedAllwayNonmatches = sortByType(classes, allwayNonmatchesSingleSet);
-		Map<String, Set<Annotation>> sortedAllwayTrivialNonmatches = sortByType(classes,
+		Map<String, Set<ConceptAnnotation>> sortedAllwayNonmatches = sortByType(classes, allwayNonmatchesSingleSet);
+		Map<String, Set<ConceptAnnotation>> sortedAllwayTrivialNonmatches = sortByType(classes,
 				trivialAllwayNonmatchesSingleSet);
-		Map<String, Set<Annotation>> sortedAllwayNontrivialNonmatches = sortByType(classes,
+		Map<String, Set<ConceptAnnotation>> sortedAllwayNontrivialNonmatches = sortByType(classes,
 				nontrivialAllwayNonmatchesSingleSet);
 
 		List<String> sortedTypes = new ArrayList<>(classes);
@@ -173,8 +173,8 @@ public class IAA2HTML {
 		printNonmatchData(html, sets, fileName, directory, allwayNonmatches, classes, spanIndex, sortedTypes,
 				annotationTexts, annotationTextNames, matcher, trivialAllwayNonmatches, nontrivialAllwayNonmatches);
 
-		Map<String, Map<String, Set<Annotation>>> pairwiseMatches = iaa.getPairwiseMatches();
-		Map<String, Map<String, Set<Annotation>>> pairwiseNonmatches = iaa.getPairwiseNonmatches();
+		Map<String, Map<String, Set<ConceptAnnotation>>> pairwiseMatches = iaa.getPairwiseMatches();
+		Map<String, Map<String, Set<ConceptAnnotation>>> pairwiseNonmatches = iaa.getPairwiseNonmatches();
 
 		printPairwiseAgreement(html, sets, pairwiseMatches, pairwiseNonmatches, percentageFormat);
 
@@ -185,22 +185,22 @@ public class IAA2HTML {
 	}
 
 	private static void printMatchData(PrintStream html, Set<String> sets, String fileName, File directory,
-									   Map<String, Set<Annotation>> allwayMatches, Set<String> classes,
-									   List<String> sortedTypes, Map<Annotation, String> annotationTexts,
-									   Map<Annotation, String> annotationTextNames, Matcher matcher,
-									   Map<String, Set<Annotation>> trivialAllwayMatches, Map<String, Set<Annotation>> nontrivialAllwayMatches,
-									   IAA iaa) throws Exception {
+                                       Map<String, Set<ConceptAnnotation>> allwayMatches, Set<String> classes,
+                                       List<String> sortedTypes, Map<ConceptAnnotation, String> annotationTexts,
+                                       Map<ConceptAnnotation, String> annotationTextNames, Matcher matcher,
+                                       Map<String, Set<ConceptAnnotation>> trivialAllwayMatches, Map<String, Set<ConceptAnnotation>> nontrivialAllwayMatches,
+                                       IAA iaa) throws Exception {
 		html.println("<h2>match data</h2>");
 		html.println("<ul>");
 
-		Map<Annotation, Set<Annotation>> matchSets = iaa.getAllwayMatchSets();
+		Map<ConceptAnnotation, Set<ConceptAnnotation>> matchSets = iaa.getAllwayMatchSets();
 
 		for (String set : sets) {
 			String matchesFileName = fileName + ".matches." + set + ".html";
 			html.println("<li><a href=\"" + matchesFileName + "\">matches for " + set + "</a></li>");
 			PrintStream matchesStream = new PrintStream(new File(directory, matchesFileName));
-			Set<Annotation> matches = allwayMatches.get(set);
-			Map<String, Set<Annotation>> sortedMatches = sortByType(classes, matches);
+			Set<ConceptAnnotation> matches = allwayMatches.get(set);
+			Map<String, Set<ConceptAnnotation>> sortedMatches = sortByType(classes, matches);
 
 			initHTML(
 					matchesStream,
@@ -216,8 +216,8 @@ public class IAA2HTML {
 				String trivialMatchesFileName = fileName + ".trivial.matches." + set + ".html";
 				html.println("<li><a href=\"" + trivialMatchesFileName + "\">trivial matches for " + set + "</a></li>");
 				PrintStream trivialMatchesStream = new PrintStream(new File(directory, trivialMatchesFileName));
-				Set<Annotation> trivialMatches = trivialAllwayMatches.get(set);
-				Map<String, Set<Annotation>> sortedTrivialMatches = sortByType(classes, trivialMatches);
+				Set<ConceptAnnotation> trivialMatches = trivialAllwayMatches.get(set);
+				Map<String, Set<ConceptAnnotation>> sortedTrivialMatches = sortByType(classes, trivialMatches);
 				initHTML(
 						trivialMatchesStream,
 						"Trivial matches for " + set,
@@ -233,8 +233,8 @@ public class IAA2HTML {
 				html.println("<li><a href=\"" + nontrivialMatchesFileName + "\">non-trivial matches for " + set
 						+ "</a></li>");
 				PrintStream nontrivialMatchesStream = new PrintStream(new File(directory, nontrivialMatchesFileName));
-				Set<Annotation> nontrivialMatches = nontrivialAllwayMatches.get(set);
-				Map<String, Set<Annotation>> sortedNontrivialMatches = sortByType(classes, nontrivialMatches);
+				Set<ConceptAnnotation> nontrivialMatches = nontrivialAllwayMatches.get(set);
+				Map<String, Set<ConceptAnnotation>> sortedNontrivialMatches = sortByType(classes, nontrivialMatches);
 				initHTML(
 						nontrivialMatchesStream,
 						"non-trivial non-matches for " + set,
@@ -252,11 +252,11 @@ public class IAA2HTML {
 	}
 
 	private static void printNonmatchData(PrintStream html, Set<String> sets, String fileName, File directory,
-										  Map<String, Set<Annotation>> allwayNonmatches, Set<String> classes, AnnotationSpanIndex spanIndex,
-										  List<String> sortedTypes, Map<Annotation, String> annotationTexts,
-										  Map<Annotation, String> annotationTextNames, Matcher matcher,
-										  Map<String, Set<Annotation>> trivialAllwayNonmatches,
-										  Map<String, Set<Annotation>> nontrivialAllwayNonmatches) throws Exception {
+                                          Map<String, Set<ConceptAnnotation>> allwayNonmatches, Set<String> classes, AnnotationSpanIndex spanIndex,
+                                          List<String> sortedTypes, Map<ConceptAnnotation, String> annotationTexts,
+                                          Map<ConceptAnnotation, String> annotationTextNames, Matcher matcher,
+                                          Map<String, Set<ConceptAnnotation>> trivialAllwayNonmatches,
+                                          Map<String, Set<ConceptAnnotation>> nontrivialAllwayNonmatches) throws Exception {
 		html.println("<h2>non-match data</h2>");
 		html.println("<ul>");
 
@@ -264,11 +264,11 @@ public class IAA2HTML {
 			String errorsFileName = fileName + ".nonmatches." + set + ".html";
 			html.println("<li><a href=\"" + errorsFileName + "\">non-matches for " + set + "</a></li>");
 			PrintStream errors = new PrintStream(new File(directory, errorsFileName));
-			Set<Annotation> nonmatches = allwayNonmatches.get(set);
-			Map<String, Set<Annotation>> sortedNonmatches = sortByType(classes, nonmatches);
+			Set<ConceptAnnotation> nonmatches = allwayNonmatches.get(set);
+			Map<String, Set<ConceptAnnotation>> sortedNonmatches = sortByType(classes, nonmatches);
 
-			Map<Annotation, Set<Annotation>> comparisonAnnotations = new HashMap<>();
-			for (Annotation nonmatch : nonmatches) {
+			Map<ConceptAnnotation, Set<ConceptAnnotation>> comparisonAnnotations = new HashMap<>();
+			for (ConceptAnnotation nonmatch : nonmatches) {
 				comparisonAnnotations.put(nonmatch, getCandidateAnnotations(nonmatch, spanIndex));
 			}
 
@@ -288,8 +288,8 @@ public class IAA2HTML {
 				html.println("<li><a href=\"" + trivialNonMatchesFileName + "\">trivial non-matches for " + set
 						+ "</a></li>");
 				PrintStream trivialErrors = new PrintStream(new File(directory, trivialNonMatchesFileName));
-				Set<Annotation> trivialNonmatches = trivialAllwayNonmatches.get(set);
-				Map<String, Set<Annotation>> sortedTrivialNonmatches = sortByType(classes, trivialNonmatches);
+				Set<ConceptAnnotation> trivialNonmatches = trivialAllwayNonmatches.get(set);
+				Map<String, Set<ConceptAnnotation>> sortedTrivialNonmatches = sortByType(classes, trivialNonmatches);
 				initHTML(
 						trivialErrors,
 						"Trivial non-matches for " + set,
@@ -305,8 +305,8 @@ public class IAA2HTML {
 				html.println("<li><a href=\"" + nontrivialNonMatchesFileName + "\">non-trivial non-matches for " + set
 						+ "</a></li>");
 				PrintStream nontrivialErrors = new PrintStream(new File(directory, nontrivialNonMatchesFileName));
-				Set<Annotation> nontrivialNonmatches = nontrivialAllwayNonmatches.get(set);
-				Map<String, Set<Annotation>> sortedNontrivialNonmatches = sortByType(classes, nontrivialNonmatches);
+				Set<ConceptAnnotation> nontrivialNonmatches = nontrivialAllwayNonmatches.get(set);
+				Map<String, Set<ConceptAnnotation>> sortedNontrivialNonmatches = sortByType(classes, nontrivialNonmatches);
 				initHTML(
 						nontrivialErrors,
 						"non-trivial non-matches for " + set,
@@ -322,13 +322,13 @@ public class IAA2HTML {
 		html.println("</ul><hr>");
 	}
 
-	private static Set<Annotation> getCandidateAnnotations(Annotation annotation, AnnotationSpanIndex spanIndex) {
-		Set<Annotation> candidateAnnotations = new HashSet<>();
+	private static Set<ConceptAnnotation> getCandidateAnnotations(ConceptAnnotation annotation, AnnotationSpanIndex spanIndex) {
+		Set<ConceptAnnotation> candidateAnnotations = new HashSet<>();
 		String set = annotation.getAnnotator().getProfileID();
 		String docID = annotation.getTextSource().getDocID();
 
-		Set<Annotation> overlappingAnnotations = spanIndex.getOverlappingAnnotations(annotation);
-		for (Annotation overlappingAnnotation : overlappingAnnotations) {
+		Set<ConceptAnnotation> overlappingAnnotations = spanIndex.getOverlappingAnnotations(annotation);
+		for (ConceptAnnotation overlappingAnnotation : overlappingAnnotations) {
 			String candidateAnnotationSet = overlappingAnnotation.getAnnotator().getProfileID();
 			if (!candidateAnnotationSet.equals(set)) {
 				String candidateDocID = overlappingAnnotation.getTextSource().getDocID();
@@ -340,21 +340,21 @@ public class IAA2HTML {
 		return candidateAnnotations;
 	}
 
-	private static void printInstances(PrintStream out, Map<String, Set<Annotation>> sortedAnnotations,
-									   List<String> sortedTypes, Map<Annotation, String> annotationTexts,
-									   Map<Annotation, String> annotationTextNames, Map<Annotation, Set<Annotation>> comparisonAnnotations) {
+	private static void printInstances(PrintStream out, Map<String, Set<ConceptAnnotation>> sortedAnnotations,
+                                       List<String> sortedTypes, Map<ConceptAnnotation, String> annotationTexts,
+                                       Map<ConceptAnnotation, String> annotationTextNames, Map<ConceptAnnotation, Set<ConceptAnnotation>> comparisonAnnotations) {
 		for (String type : sortedTypes) {
 			out.println("<h2>" + type + "</h2>");
-			Set<Annotation> typeAnnotations = sortedAnnotations.get(type);
-			for (Annotation annotation : typeAnnotations) {
+			Set<ConceptAnnotation> typeAnnotations = sortedAnnotations.get(type);
+			for (ConceptAnnotation annotation : typeAnnotations) {
 				writeAnnotationTextSourceHTML(out, annotation, annotationTexts.get(annotation), annotationTextNames
 						.get(annotation));
 				out.println("<ul><li>");
 				printAnnotationHTML(out, annotation, annotationTexts.get(annotation));
 
-				Set<Annotation> comparisons = comparisonAnnotations.get(annotation);
+				Set<ConceptAnnotation> comparisons = comparisonAnnotations.get(annotation);
 				if (comparisons != null) {
-					for (Annotation comparisonAnnotation : comparisons) {
+					for (ConceptAnnotation comparisonAnnotation : comparisons) {
 						if (!comparisonAnnotation.equals(annotation)) {
 							out.println("<li>");
 							printAnnotationHTML(out, comparisonAnnotation, annotationTexts.get(comparisonAnnotation));
@@ -366,8 +366,8 @@ public class IAA2HTML {
 		}
 	}
 
-	static Set<Annotation> getSingleSet(Map<String, Set<Annotation>> annotations) {
-		Set<Annotation> returnValues = new HashSet<>();
+	static Set<ConceptAnnotation> getSingleSet(Map<String, Set<ConceptAnnotation>> annotations) {
+		Set<ConceptAnnotation> returnValues = new HashSet<>();
 		for (String setName : annotations.keySet()) {
 			returnValues.addAll(annotations.get(setName));
 		}
@@ -385,13 +385,13 @@ public class IAA2HTML {
 		html.println("<hr>");
 	}
 
-	static Map<String, Set<Annotation>> sortByType(Set<String> types, Collection<Annotation> annotations) {
-		Map<String, Set<Annotation>> sortedAnnotations = new HashMap<>();
+	static Map<String, Set<ConceptAnnotation>> sortByType(Set<String> types, Collection<ConceptAnnotation> annotations) {
+		Map<String, Set<ConceptAnnotation>> sortedAnnotations = new HashMap<>();
 
 		for (String type : types) {
 			sortedAnnotations.put(type, new HashSet<>());
 		}
-		for (Annotation annotation : annotations) {
+		for (ConceptAnnotation annotation : annotations) {
 			String type = annotation.getClassID();
 			if (type != null)
 				sortedAnnotations.get(type).add(annotation);
@@ -399,8 +399,8 @@ public class IAA2HTML {
 		return sortedAnnotations;
 	}
 
-	private static void writeAnnotationTextSourceHTML(PrintStream out, Annotation annotation, String annotationText,
-													  String annotationTextName) {
+	private static void writeAnnotationTextSourceHTML(PrintStream out, ConceptAnnotation annotation, String annotationText,
+                                                      String annotationTextName) {
 		StringBuilder html = new StringBuilder("<hr><p>");
 		if (annotationTextName != null)
 			html.append("Text source docID = ").append(annotationTextName).append("<p>");
@@ -448,7 +448,7 @@ public class IAA2HTML {
 		return text;
 	}
 
-	private static void printAnnotationHTML(PrintStream out, Annotation annotation, String annotationText) {
+	private static void printAnnotationHTML(PrintStream out, ConceptAnnotation annotation, String annotationText) {
 		StringBuilder html = new StringBuilder();
 
 		if (annotationText != null) {
@@ -505,14 +505,14 @@ public class IAA2HTML {
 	}
 
 	static void printMatchData(PrintStream html, Set<String> sets, String fileName, File directory,
-							   Map<String, Set<Annotation>> allwayMatches, Map<Annotation, String> annotationTexts,
-							   Map<Annotation, String> annotationTextNames, Set<String> classes, IAA iaa) throws IOException
+                               Map<String, Set<ConceptAnnotation>> allwayMatches, Map<ConceptAnnotation, String> annotationTexts,
+                               Map<ConceptAnnotation, String> annotationTextNames, Set<String> classes, IAA iaa) throws IOException
 
 	{
 		html.println("<h2>match data</h2>");
 		html.println("<ul>");
 
-		Map<Annotation, Set<Annotation>> matchSets = iaa.getAllwayMatchSets();
+		Map<ConceptAnnotation, Set<ConceptAnnotation>> matchSets = iaa.getAllwayMatchSets();
 		List<String> sortedTypes = new ArrayList<>(classes);
 		Collections.sort(sortedTypes);
 
@@ -520,8 +520,8 @@ public class IAA2HTML {
 			String matchesFileName = fileName + ".matches." + set + ".html";
 			html.println("<li><a href=\"" + matchesFileName + "\">matches for " + set + "</a></li>");
 			PrintStream matchesStream = new PrintStream(new File(directory, matchesFileName));
-			Set<Annotation> matches = allwayMatches.get(set);
-			Map<String, Set<Annotation>> sortedMatches = IAA2HTML.sortByType(classes, matches);
+			Set<ConceptAnnotation> matches = allwayMatches.get(set);
+			Map<String, Set<ConceptAnnotation>> sortedMatches = IAA2HTML.sortByType(classes, matches);
 
 			matchesStream
 					.println(initHTML(
@@ -536,8 +536,8 @@ public class IAA2HTML {
 	}
 
 	static void printNonmatchData(PrintStream html, Set<String> sets, String fileName, File directory,
-								  Map<String, Set<Annotation>> allwayNonmatches, AnnotationSpanIndex spanIndex,
-								  Map<Annotation, String> annotationTexts, Map<Annotation, String> annotationTextNames, Set<String> classes) throws IOException {
+                                  Map<String, Set<ConceptAnnotation>> allwayNonmatches, AnnotationSpanIndex spanIndex,
+                                  Map<ConceptAnnotation, String> annotationTexts, Map<ConceptAnnotation, String> annotationTextNames, Set<String> classes) throws IOException {
 		html.println("<h2>non-match data</h2>");
 		html.println("<ul>");
 
@@ -548,11 +548,11 @@ public class IAA2HTML {
 			String errorsFileName = fileName + ".nonmatches." + set + ".html";
 			html.println("<li><a href=\"" + errorsFileName + "\">non-matches for " + set + "</a></li>");
 			PrintStream errors = new PrintStream(new File(directory, errorsFileName));
-			Set<Annotation> nonmatches = allwayNonmatches.get(set);
-			Map<String, Set<Annotation>> sortedNonmatches = IAA2HTML.sortByType(classes, nonmatches);
+			Set<ConceptAnnotation> nonmatches = allwayNonmatches.get(set);
+			Map<String, Set<ConceptAnnotation>> sortedNonmatches = IAA2HTML.sortByType(classes, nonmatches);
 
-			Map<Annotation, Set<Annotation>> comparisonAnnotations = new HashMap<>();
-			for (Annotation nonmatch : nonmatches) {
+			Map<ConceptAnnotation, Set<ConceptAnnotation>> comparisonAnnotations = new HashMap<>();
+			for (ConceptAnnotation nonmatch : nonmatches) {
 				comparisonAnnotations.put(nonmatch, IAA2HTML.getCandidateAnnotations(nonmatch, spanIndex));
 			}
 
@@ -570,8 +570,8 @@ public class IAA2HTML {
 	}
 
 	static void printPairwiseAgreement(PrintStream html, Set<String> sets,
-									   Map<String, Map<String, Set<Annotation>>> pairwiseMatches,
-									   Map<String, Map<String, Set<Annotation>>> pairwiseNonmatches, NumberFormat percentageFormat) {
+                                       Map<String, Map<String, Set<ConceptAnnotation>>> pairwiseMatches,
+                                       Map<String, Map<String, Set<ConceptAnnotation>>> pairwiseNonmatches, NumberFormat percentageFormat) {
 		html.println("<h2>Pair-wise agreement</h2>");
 		html.println("<table border=1><tr><td><b>Gold standard set</b></td>" + "<td><b>compared set</b></td>"
 				+ "<td><b>true positives</b></td>" + "<td><b>false positives</b></td>"
@@ -582,9 +582,9 @@ public class IAA2HTML {
 			for (String setName2 : sets) {
 
 				if (!setName.equals(setName2)) {
-					Set<Annotation> truePositives = pairwiseMatches.get(setName).get(setName2);
-					Set<Annotation> falseNegatives = pairwiseNonmatches.get(setName).get(setName2);
-					Set<Annotation> falsePositives = pairwiseNonmatches.get(setName2).get(setName);
+					Set<ConceptAnnotation> truePositives = pairwiseMatches.get(setName).get(setName2);
+					Set<ConceptAnnotation> falseNegatives = pairwiseNonmatches.get(setName).get(setName2);
+					Set<ConceptAnnotation> falsePositives = pairwiseNonmatches.get(setName2).get(setName);
 					double precision = (double) truePositives.size()
 							/ ((double) truePositives.size() + (double) falsePositives.size());
 					double recall = (double) truePositives.size()

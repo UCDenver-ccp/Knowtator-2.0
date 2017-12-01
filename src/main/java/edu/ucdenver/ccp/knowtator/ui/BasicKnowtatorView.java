@@ -3,13 +3,13 @@ package edu.ucdenver.ccp.knowtator.ui;
 import com.google.common.base.Optional;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.actions.ProjectActions;
-import edu.ucdenver.ccp.knowtator.annotation.Annotation;
-import edu.ucdenver.ccp.knowtator.annotation.Assertion;
+import edu.ucdenver.ccp.knowtator.annotation.CompositionalAnnotation;
+import edu.ucdenver.ccp.knowtator.annotation.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.annotation.Span;
 import edu.ucdenver.ccp.knowtator.annotation.TextSource;
 import edu.ucdenver.ccp.knowtator.listeners.*;
 import edu.ucdenver.ccp.knowtator.profile.Profile;
-import edu.ucdenver.ccp.knowtator.ui.graph.GraphViewer;
+import edu.ucdenver.ccp.knowtator.ui.graph.GraphDialog;
 import edu.ucdenver.ccp.knowtator.ui.info.FindPanel;
 import edu.ucdenver.ccp.knowtator.ui.info.InfoPanel;
 import edu.ucdenver.ccp.knowtator.ui.menus.*;
@@ -29,14 +29,13 @@ public class BasicKnowtatorView extends AbstractOWLClassViewComponent implements
 
     static final Logger log = Logger.getLogger(KnowtatorManager.class);
     TextViewer textViewer;
-    private GraphViewer graphViewer;
+    private GraphDialog graphDialog;
     InfoPanel infoPanel;
     FindPanel findPanel;
 
 
     ProjectMenu projectMenu;
     ProfileMenu profileMenu;
-    AnnotationMenu annotationMenu;
     IAAMenu iaaMenu;
     GraphMenu graphMenu;
 
@@ -59,11 +58,10 @@ public class BasicKnowtatorView extends AbstractOWLClassViewComponent implements
         textViewer = new TextViewer(manager, this);
         infoPanel = new InfoPanel(this);
         findPanel = new FindPanel(this);
-        graphViewer = new GraphViewer((JFrame)SwingUtilities.getWindowAncestor(this), this);
+        graphDialog = new GraphDialog(manager, (JFrame)SwingUtilities.getWindowAncestor(this), this);
 
         projectMenu = new ProjectMenu(manager);
         profileMenu = new ProfileMenu(manager, this);
-        annotationMenu = new AnnotationMenu(this);
         iaaMenu = new IAAMenu(manager);
         graphMenu = new GraphMenu(this);
 
@@ -83,12 +81,12 @@ public class BasicKnowtatorView extends AbstractOWLClassViewComponent implements
         spanListeners.add(textViewer);
         spanListeners.add(infoPanel);
         annotationListeners.add(textViewer);
-        annotationListeners.add(graphViewer);
+        annotationListeners.add(graphDialog);
         annotationListeners.add(infoPanel);
         textSourceListeners.add(textViewer);
         profileListeners.add(profileMenu);
         profileListeners.add(textViewer);
-        assertionListeners.add(graphViewer);
+        assertionListeners.add(graphDialog);
     }
 
     public void owlEntitySelectionChanged(OWLEntity owlEntity) {
@@ -136,6 +134,8 @@ public class BasicKnowtatorView extends AbstractOWLClassViewComponent implements
         if (JOptionPane.showConfirmDialog(null, "Save changes?") == JOptionPane.OK_OPTION) {
             ProjectActions.saveProject(manager);
         }
+        graphDialog.setVisible(false);
+        graphDialog.dispose();
     }
 
     @Override
@@ -167,15 +167,15 @@ public class BasicKnowtatorView extends AbstractOWLClassViewComponent implements
         return textViewer;
     }
 
-    public GraphViewer getGraphViewer() {
-        return graphViewer;
+    public GraphDialog getGraphDialog() {
+        return graphDialog;
     }
 
     public void textSourceAddedEvent(TextSource textSource) {
         textSourceListeners.forEach(textSourceListener -> textSourceListener.textSourceAdded(textSource));
     }
 
-    public void annotationAddedEvent(Annotation newAnnotation) {
+    public void annotationAddedEvent(ConceptAnnotation newAnnotation) {
         annotationListeners.forEach(listener -> listener.annotationAdded(newAnnotation));
     }
     public void profileAddedEvent(Profile profile) {
@@ -188,11 +188,11 @@ public class BasicKnowtatorView extends AbstractOWLClassViewComponent implements
     public void profileSelectionChangedEvent(Profile profile) {
         profileListeners.forEach(profileListener -> profileListener.profileSelectionChanged(profile));
     }
-    public void annotationSelectionChangedEvent(Annotation selectedAnnotation) {
+    public void annotationSelectionChangedEvent(ConceptAnnotation selectedAnnotation) {
         annotationListeners.forEach(listener -> listener.annotationSelectionChanged(selectedAnnotation));
     }
 
-    public void annotationRemovedEvent(Annotation removedAnnotation) {
+    public void annotationRemovedEvent(ConceptAnnotation removedAnnotation) {
         annotationListeners.forEach(annotationListener -> annotationListener.annotationRemoved(removedAnnotation));
     }
     public void profileRemovedEvent() {
@@ -208,8 +208,8 @@ public class BasicKnowtatorView extends AbstractOWLClassViewComponent implements
         spanListeners.forEach(spanListener -> spanListener.spanAdded(newSpan));
     }
 
-    public void assertionAddedEvent(Assertion assertion) {
-        assertionListeners.forEach(assertionListener -> assertionListener.assertionAdded(assertion));
+    public void assertionAddedEvent(CompositionalAnnotation compositionalAnnotation) {
+        assertionListeners.forEach(assertionListener -> assertionListener.assertionAdded(compositionalAnnotation));
     }
 
     public void spanRemovedEvent() {

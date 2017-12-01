@@ -28,7 +28,7 @@
 
 package edu.ucdenver.ccp.knowtator.iaa;
 
-import edu.ucdenver.ccp.knowtator.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.annotation.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.annotation.Span;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher;
@@ -40,14 +40,14 @@ public class IAA {
 
 	private Set<String> setNames;
 
-	private Set<Annotation> annotations;
+	private Set<ConceptAnnotation> annotations;
 
-	private Set<Annotation> emptyAnnotationSet;
+	private Set<ConceptAnnotation> emptyAnnotationSet;
 
 	// key is an annotation set, value is a map whose value is an annotation
 	// class
 	// and values is the set of annotations in the set having that class.
-    private Map<String, Map<String, Set<Annotation>>> class2AnnotationsMap;
+    private Map<String, Map<String, Set<ConceptAnnotation>>> class2AnnotationsMap;
 
 	// key is an annotation set, value is a annotationSpanIndex for the
 	// annotations in that set.
@@ -55,23 +55,23 @@ public class IAA {
 
 	// key is an annotation set, value is a set of annotations that are
 	// considered matches.
-    private Map<String, Set<Annotation>> allwayMatches;
+    private Map<String, Set<ConceptAnnotation>> allwayMatches;
 
-	private Map<String, Set<Annotation>> trivialAllwayMatches;
+	private Map<String, Set<ConceptAnnotation>> trivialAllwayMatches;
 
-	private Map<String, Set<Annotation>> nontrivialAllwayMatches;
+	private Map<String, Set<ConceptAnnotation>> nontrivialAllwayMatches;
 
 	// key is an annotation set, value is a set of annotations that are
 	// considered non-matches.
-    private Map<String, Set<Annotation>> allwayNonmatches;
+    private Map<String, Set<ConceptAnnotation>> allwayNonmatches;
 
-	private Map<String, Set<Annotation>> trivialAllwayNonmatches;
+	private Map<String, Set<ConceptAnnotation>> trivialAllwayNonmatches;
 
-	private Map<String, Set<Annotation>> nontrivialAllwayNonmatches;
+	private Map<String, Set<ConceptAnnotation>> nontrivialAllwayNonmatches;
 
 	// key is an annotation, value is the set of n annotations that it was
 	// matched with in n-way IAA.
-    private Map<Annotation, Set<Annotation>> allwayMatchSets;
+    private Map<ConceptAnnotation, Set<ConceptAnnotation>> allwayMatchSets;
 
 	// key is an annotation set that is considered gold standard by which other
 	// annotation sets are compared,
@@ -79,20 +79,20 @@ public class IAA {
 	// standard and whose value are annotations (from the
 	// gold standard set) that are matches.
 
-	private Map<String, Map<String, Set<Annotation>>> pairwiseMatches;
+	private Map<String, Map<String, Set<ConceptAnnotation>>> pairwiseMatches;
 
-	private Map<String, Map<String, Set<Annotation>>> trivialPairwiseMatches;
+	private Map<String, Map<String, Set<ConceptAnnotation>>> trivialPairwiseMatches;
 
-	private Map<String, Map<String, Set<Annotation>>> nontrivialPairwiseMatches;
+	private Map<String, Map<String, Set<ConceptAnnotation>>> nontrivialPairwiseMatches;
 
-	private Map<String, Map<String, Set<Annotation>>> pairwiseNonmatches;
+	private Map<String, Map<String, Set<ConceptAnnotation>>> pairwiseNonmatches;
 
-	private Map<String, Map<String, Set<Annotation>>> trivialPairwiseNonmatches;
+	private Map<String, Map<String, Set<ConceptAnnotation>>> trivialPairwiseNonmatches;
 
-	private Map<String, Map<String, Set<Annotation>>> nontrivialPairwiseNonmatches;
+	private Map<String, Map<String, Set<ConceptAnnotation>>> nontrivialPairwiseNonmatches;
 
-	private Map<Annotation, Set<Annotation>> pairwiseMatchPairs;
-	private HashMap<String, Collection<Annotation>> annotationSets;
+	private Map<ConceptAnnotation, Set<ConceptAnnotation>> pairwiseMatchPairs;
+	private HashMap<String, Collection<ConceptAnnotation>> annotationSets;
 
 	public IAA(Set<String> setNames) {
 		this.setNames = setNames;
@@ -100,14 +100,14 @@ public class IAA {
 
 		annotationSets = new HashMap<>();
 
-		emptyAnnotationSet = Collections.unmodifiableSet(new HashSet<Annotation>());
+		emptyAnnotationSet = Collections.unmodifiableSet(new HashSet<ConceptAnnotation>());
 
-		Set<Annotation> emptySet = Collections.emptySet();
+		Set<ConceptAnnotation> emptySet = Collections.emptySet();
 		setAnnotations(emptySet);
 		reset();
 	}
 
-	public IAA(Set<String> setNames, Set<Annotation> annotations) {
+	public IAA(Set<String> setNames, Set<ConceptAnnotation> annotations) {
 		this.setNames = setNames;
 		annotationClasses = new HashSet<>();
 		setAnnotations(annotations);
@@ -162,7 +162,7 @@ public class IAA {
 
 	}
 
-	public void setAnnotations(Set<Annotation> annotations) {
+	public void setAnnotations(Set<ConceptAnnotation> annotations) {
 		this.annotations = annotations;
 
 		for (String setName : setNames) {
@@ -172,7 +172,7 @@ public class IAA {
 		class2AnnotationsMap = new HashMap<>();
 		spanIndexes = new HashMap<>();
 
-		for (Annotation annotation : annotations) {
+		for (ConceptAnnotation annotation : annotations) {
 			String setName = annotation.getAnnotator().getProfileID();
 			String annotationClass = annotation.getClassID();
 			if (annotationClass != null)
@@ -183,14 +183,14 @@ public class IAA {
 		}
 
 		for (String setName : setNames) {
-			Collection<Annotation> setAnnotations = annotationSets.get(setName);
+			Collection<ConceptAnnotation> setAnnotations = annotationSets.get(setName);
 
 			spanIndexes.put(setName, new AnnotationSpanIndex(setAnnotations));
 
-			Map<String, Set<Annotation>> classAnnotations = new HashMap<>();
+			Map<String, Set<ConceptAnnotation>> classAnnotations = new HashMap<>();
 			class2AnnotationsMap.put(setName, classAnnotations);
 
-			for (Annotation setAnnotation : setAnnotations) {
+			for (ConceptAnnotation setAnnotation : setAnnotations) {
 				String annotationClass = setAnnotation.getClassID();
 				if (!classAnnotations.containsKey(annotationClass)) {
 					classAnnotations.put(annotationClass, new HashSet<>());
@@ -212,8 +212,8 @@ public class IAA {
 		 * have been found to be a match will be put in
 		 * matchedAnnotationsAllway.
 		 */
-		Set<Annotation> matchedAnnotations = new HashSet<>();
-		for (Annotation annotation : annotations) {
+		Set<ConceptAnnotation> matchedAnnotations = new HashSet<>();
+		for (ConceptAnnotation annotation : annotations) {
 			String setName = annotation.getAnnotator().getProfileID();
 			if (!matchedAnnotations.contains(annotation)) {
 				MatchResult matchResult = new MatchResult();
@@ -223,28 +223,28 @@ public class IAA {
 				// match with
 				// each other. This is particularly true for 'overlapping' Span
 				// criteria.
-				Set<Annotation> matches = match(annotation, matchedAnnotations, matcher, matchResult);
+				Set<ConceptAnnotation> matches = match(annotation, matchedAnnotations, matcher, matchResult);
 				if (matches != null) {
 					allwayMatches.get(setName).add(annotation);
-					Set<Annotation> allMatches = new HashSet<>(matches);
+					Set<ConceptAnnotation> allMatches = new HashSet<>(matches);
 					allMatches.add(annotation);
 					allwayMatchSets.put(annotation, allMatches);
 
-					for (Annotation match : matches) {
+					for (ConceptAnnotation match : matches) {
 						String matchedSet = match.getAnnotator().getProfileID();
 						allwayMatches.get(matchedSet).add(match);
 						allwayMatchSets.put(match, allMatches);
 					}
 					if (matchResult.getResult() == MatchResult.NONTRIVIAL_MATCH) {
 						nontrivialAllwayMatches.get(setName).add(annotation);
-						for (Annotation match : matches) {
+						for (ConceptAnnotation match : matches) {
 							String matchedSet = match.getAnnotator().getProfileID();
 							nontrivialAllwayMatches.get(matchedSet).add(match);
 						}
 
 					} else if (matchResult.getResult() == MatchResult.TRIVIAL_MATCH) {
 						trivialAllwayMatches.get(setName).add(annotation);
-						for (Annotation match : matches) {
+						for (ConceptAnnotation match : matches) {
 							String matchedSet = match.getAnnotator().getProfileID();
 							trivialAllwayMatches.get(matchedSet).add(match);
 						}
@@ -285,17 +285,17 @@ public class IAA {
 //	}
 
 	void pairwiseIAA(Matcher matcher) throws IAAException {
-		for (Annotation annotation : annotations) {
+		for (ConceptAnnotation annotation : annotations) {
 			String setName = annotation.getAnnotator().getProfileID();
 			for (String compareSetName : annotationSets.keySet()) {
 				if (!setName.equals(compareSetName)) {
-					Set<Annotation> matchedAnnotations = pairwiseMatches.get(setName).get(compareSetName);
+					Set<ConceptAnnotation> matchedAnnotations = pairwiseMatches.get(setName).get(compareSetName);
 					if (matchedAnnotations.contains(annotation))
 						continue;
 
-					Set<Annotation> excludeAnnotations = pairwiseMatches.get(compareSetName).get(setName);
+					Set<ConceptAnnotation> excludeAnnotations = pairwiseMatches.get(compareSetName).get(setName);
 					MatchResult matchResult = new MatchResult();
-					Annotation match = matcher.match(annotation, compareSetName, excludeAnnotations, this, matchResult);
+					ConceptAnnotation match = matcher.match(annotation, compareSetName, excludeAnnotations, this, matchResult);
 					if (match != null) {
 						pairwiseMatches.get(setName).get(compareSetName).add(annotation);
 						pairwiseMatches.get(compareSetName).get(setName).add(match);
@@ -333,10 +333,10 @@ public class IAA {
 		}
 	}
 
-	private Set<Annotation> match(Annotation annotation, Set<Annotation> excludeAnnotations, Matcher matcher,
-                                  MatchResult matchResult) {
+	private Set<ConceptAnnotation> match(ConceptAnnotation annotation, Set<ConceptAnnotation> excludeAnnotations, Matcher matcher,
+                                         MatchResult matchResult) {
 		String setName = annotation.getAnnotator().getProfileID();
-		Set<Annotation> matchedAnnotations = new HashSet<>();
+		Set<ConceptAnnotation> matchedAnnotations = new HashSet<>();
 
 		// trivial matches trump non-trivial matches. If there is a single
 		// trivial match, then trivial_match is the match result.
@@ -348,7 +348,7 @@ public class IAA {
 		for (String compareSetName : annotationSets.keySet()) {
 			if (!setName.equals(compareSetName)) {
 				MatchResult result = new MatchResult();
-				Annotation match = matcher.match(annotation, compareSetName, excludeAnnotations, this, result);
+				ConceptAnnotation match = matcher.match(annotation, compareSetName, excludeAnnotations, this, result);
 				if (match != null) {
 					matchedAnnotations.add(match);
 					if (result.getResult() == MatchResult.TRIVIAL_MATCH) {
@@ -374,7 +374,7 @@ public class IAA {
 		}
 	}
 
-	public Set<Annotation> getAnnotationsOfSameType(Annotation annotation, String compareSetName) {
+	public Set<ConceptAnnotation> getAnnotationsOfSameType(ConceptAnnotation annotation, String compareSetName) {
 		String annotationClass = annotation.getClassID();
 		return safeReturn(class2AnnotationsMap.get(compareSetName).get(annotationClass));
 	}
@@ -387,36 +387,36 @@ public class IAA {
 //			return Collections.emptySet();
 //	}
 
-	public Set<Annotation> getOverlappingAnnotations(Annotation annotation, String compareSetName) {
+	public Set<ConceptAnnotation> getOverlappingAnnotations(ConceptAnnotation annotation, String compareSetName) {
 		AnnotationSpanIndex spanIndex = spanIndexes.get(compareSetName);
 		return safeReturn(spanIndex.getOverlappingAnnotations(annotation));
 	}
 
-	public Set<Annotation> getExactlyOverlappingAnnotations(Annotation annotation, String compareSetName) {
+	public Set<ConceptAnnotation> getExactlyOverlappingAnnotations(ConceptAnnotation annotation, String compareSetName) {
 		AnnotationSpanIndex spanIndex = spanIndexes.get(compareSetName);
 		return safeReturn(spanIndex.getExactlyOverlappingAnnotations(annotation));
 	}
 
-	private Set<Annotation> safeReturn(Set<Annotation> returnValues) {
+	private Set<ConceptAnnotation> safeReturn(Set<ConceptAnnotation> returnValues) {
 		if (returnValues == null)
 			return emptyAnnotationSet;
 		return returnValues;
 		// return Collections.unmodifiableSet(returnValues);
 	}
 
-	public Map<String, Set<Annotation>> getAllwayMatches() {
+	public Map<String, Set<ConceptAnnotation>> getAllwayMatches() {
 		return allwayMatches;
 	}
 
-	public Map<String, Set<Annotation>> getAllwayNonmatches() {
+	public Map<String, Set<ConceptAnnotation>> getAllwayNonmatches() {
 		return allwayNonmatches;
 	}
 
-	public Map<String, Map<String, Set<Annotation>>> getPairwiseMatches() {
+	public Map<String, Map<String, Set<ConceptAnnotation>>> getPairwiseMatches() {
 		return pairwiseMatches;
 	}
 
-	public Map<String, Map<String, Set<Annotation>>> getPairwiseNonmatches() {
+	public Map<String, Map<String, Set<ConceptAnnotation>>> getPairwiseNonmatches() {
 		return pairwiseNonmatches;
 	}
 
@@ -432,19 +432,19 @@ public class IAA {
 		return annotationClasses;
 	}
 
-	public Map<String, Set<Annotation>> getTrivialAllwayMatches() {
+	public Map<String, Set<ConceptAnnotation>> getTrivialAllwayMatches() {
 		return trivialAllwayMatches;
 	}
 
-	public Map<String, Set<Annotation>> getTrivialAllwayNonmatches() {
+	public Map<String, Set<ConceptAnnotation>> getTrivialAllwayNonmatches() {
 		return trivialAllwayNonmatches;
 	}
 
-	public Map<String, Set<Annotation>> getNontrivialAllwayMatches() {
+	public Map<String, Set<ConceptAnnotation>> getNontrivialAllwayMatches() {
 		return nontrivialAllwayMatches;
 	}
 
-	public Map<String, Set<Annotation>> getNontrivialAllwayNonmatches() {
+	public Map<String, Set<ConceptAnnotation>> getNontrivialAllwayNonmatches() {
 		return nontrivialAllwayNonmatches;
 	}
 
@@ -456,7 +456,7 @@ public class IAA {
 //		return nontrivialPairwiseNonmatches;
 //	}
 
-	public Map<Annotation, Set<Annotation>> getAllwayMatchSets() {
+	public Map<ConceptAnnotation, Set<ConceptAnnotation>> getAllwayMatchSets() {
 		return allwayMatchSets;
 	}
 
@@ -466,12 +466,12 @@ public class IAA {
 	 * @return true if the annotations have the same spans
 	 */
 	@SuppressWarnings("JavaDoc")
-	static boolean spansMatch(Annotation annotation1, Annotation annotation2) {
+	static boolean spansMatch(ConceptAnnotation annotation1, ConceptAnnotation annotation2) {
 		return Span.spansMatch(annotation1.getSpans(), annotation2.getSpans());
 	}
 
 	@SuppressWarnings("unused")
-	public static boolean spansMatch(List<Annotation> annotations) {
+	public static boolean spansMatch(List<ConceptAnnotation> annotations) {
 		for (int i = 1; i < annotations.size(); i++) {
 			if (!spansMatch(annotations.get(0), annotations.get(i)))
 				return false;
@@ -480,7 +480,7 @@ public class IAA {
 	}
 
 
-	static boolean spansOverlap(Annotation annotation1, Annotation annotation2) {
+	static boolean spansOverlap(ConceptAnnotation annotation1, ConceptAnnotation annotation2) {
 		return Span.intersects(annotation1.getSpans(), annotation2.getSpans());
 	}
 
@@ -497,7 +497,7 @@ public class IAA {
 	 *            inserted between each segment of text.
 	 * @return the text covered by an annotation.
 	 */
-	public static String getCoveredText(Annotation annotation, String annotationText, String spanSeparator) {
+	public static String getCoveredText(ConceptAnnotation annotation, String annotationText, String spanSeparator) {
 		TreeSet<Span> spans = annotation.getSpans();
 		if (spans == null || spans.size() == 0)
 			return "";
@@ -525,14 +525,14 @@ public class IAA {
 	 *         during iteration. Returns null if annotations is null or empty.
 	 */
 	@SuppressWarnings("JavaDoc")
-	public static Annotation getShortestAnnotation(Collection<Annotation> annotations) {
+	public static ConceptAnnotation getShortestAnnotation(Collection<ConceptAnnotation> annotations) {
 		if (annotations == null || annotations.size() == 0)
 			return null;
 
-		Annotation shortestAnnotation = null;
+		ConceptAnnotation shortestAnnotation = null;
 		int shortestAnnotationLength = -1;
 
-		for (Annotation annotation : annotations) {
+		for (ConceptAnnotation annotation : annotations) {
 			int annotationSize = annotation.getSize();
 			if (shortestAnnotationLength == -1 || annotationSize < shortestAnnotationLength) {
 				shortestAnnotation = annotation;
