@@ -16,7 +16,7 @@ Plugin for Protege
 ## Installation (Windows):
 
 1. Install [Desktop Protege 5.X.X][protege link]
-2. Copy Knowtator-2.0.0.jar to Protege-5.X.X/plugins/
+2. Copy Knowtator-2.X.X.jar to Protege-5.X.X/plugins/
 3. Restart Protege
 
 ## Installation (Mac):
@@ -24,7 +24,7 @@ Plugin for Protege
 2. In Finder, right click the Protege 5 app icon
 3. Click "Show Package Contents"
 4. Go to Contents -> Java -> Plugins
-5. You should see the other plugins included in Protege 5 in that folder. If so, copy the Knowtator-2.0.0.jar into it.
+5. You should see the other plugins included in Protege 5 in that folder. If so, copy the Knowtator-2.X.X.jar into it.
 6. Restart Protege
 
 (See [this comment thread][mac osx plugin intallation comment thread] for more help) 
