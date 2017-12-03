@@ -38,11 +38,11 @@ public class ProjectActions {
 
             List<JCheckBox> textSourceOptions = new ArrayList<>(); // Which textSources to save
             List<JCheckBox> profileOptions = new ArrayList<>();  // Annotations for which profiles to save
-            List<JCheckBox> annotationChoiceOptions = new ArrayList<>();  // Just annotations, annotations and assertions, etc.
+            List<JCheckBox> annotationChoiceOptions = new ArrayList<>();  // Which types of annotations to save
 
             List<TextSource> textSourceList = new ArrayList<>(manager.getTextSourceManager().getTextSources());
             List<Profile> profileList = new ArrayList<>(manager.getProfileManager().getProfiles().values());
-            List<String> annotationChoiceList = Arrays.asList("Annotations", "Assertions");
+            List<String> annotationChoiceList = Arrays.asList("Concept Annotations", "Compositional Annotations");
 
             JPanel optionPanel = new JPanel(new GridBagLayout());
             GridBagConstraints gbc = new GridBagConstraints();
@@ -66,7 +66,7 @@ public class ProjectActions {
             }
 
             gbc.gridx = 3;
-            optionPanel.add(new JLabel("ConceptAnnotation Options"), gbc);
+            optionPanel.add(new JLabel("Annotation Options"), gbc);
             for (String annotationOption : annotationChoiceList) {
                 JCheckBox checkBox = new JCheckBox(annotationOption);
                 checkBox.setSelected(true);
@@ -89,14 +89,14 @@ public class ProjectActions {
                     }
                 }
 
-                boolean saveAnnotations = annotationChoiceOptions.get(0).isSelected();
-                boolean saveAssertions = annotationChoiceOptions.get(1).isSelected();
+                boolean saveConceptAnnotations = annotationChoiceOptions.get(0).isSelected();
+                boolean saveCompositionalAnnotations = annotationChoiceOptions.get(1).isSelected();
 
                 manager.getConfigProperties().setDefaultSaveLocation(fileChooser.getSelectedFile().getAbsolutePath());
                 manager.getConfigProperties().setProfileFilters(profileFilters);
                 manager.getConfigProperties().setTextSourceFilters(textSourceFilters);
-                manager.getConfigProperties().setSaveAnnotations(saveAnnotations);
-                manager.getConfigProperties().setSaveAssertions(saveAssertions);
+                manager.getConfigProperties().setSaveConceptAnnotations(saveConceptAnnotations);
+                manager.getConfigProperties().setSaveCompositionalAnnotations(saveCompositionalAnnotations);
 
                 ProjectActions.saveProject(manager, fileChooser.getSelectedFile().getAbsolutePath());
 

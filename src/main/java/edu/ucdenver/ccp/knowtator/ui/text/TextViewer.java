@@ -1,23 +1,20 @@
 package edu.ucdenver.ccp.knowtator.ui.text;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.annotation.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.annotation.Span;
 import edu.ucdenver.ccp.knowtator.annotation.TextSource;
 import edu.ucdenver.ccp.knowtator.io.txt.KnowtatorDocumentHandler;
-import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
-import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
-import edu.ucdenver.ccp.knowtator.listeners.SpanListener;
 import edu.ucdenver.ccp.knowtator.listeners.TextSourceListener;
-import edu.ucdenver.ccp.knowtator.profile.Profile;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
 import org.apache.log4j.Logger;
+import other.DnDTabbedPane;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class TextViewer extends JTabbedPane implements AnnotationListener, TextSourceListener, SpanListener, ProfileListener {
+public class TextViewer extends DnDTabbedPane implements TextSourceListener {
     public static final Logger log = Logger.getLogger(KnowtatorManager.class);
     private boolean realTabAdded;
     private KnowtatorManager manager;
@@ -116,68 +113,21 @@ public class TextViewer extends JTabbedPane implements AnnotationListener, TextS
         return null;
     }
 
-    private void refreshHighlights() {
-        if (getSelectedTextPane() != null) {
-            getSelectedTextPane().refreshHighlights();
+    public List<TextPane> getAllTextPanes() {
+        List<TextPane> textPaneList = new ArrayList<>();
+        for (int i=0; i<getTabCount(); i++) {
+            Component c = ((JScrollPane) getComponentAt(i)).getViewport().getView();
+            if (c.getClass() == TextPane.class) {
+                textPaneList.add((TextPane) c);
+            }
         }
-    }
-
-    @Override
-    public void annotationAdded(ConceptAnnotation newAnnotation) {
-        getSelectedTextPane().setSelection(newAnnotation.getSpans().first(), newAnnotation);
-        refreshHighlights();
-    }
-
-    @Override
-    public void annotationRemoved(ConceptAnnotation removedAnnotation) {
-        refreshHighlights();
-    }
-
-    @Override
-    public void annotationSelectionChanged(ConceptAnnotation annotation) {
-        getSelectedTextPane().setSelectedAnnotation(annotation);
-        refreshHighlights();
+        return textPaneList;
     }
 
     @Override
     public void textSourceAdded(TextSource textSource) {
         addNewDocument(textSource);
-        refreshHighlights();
+        getSelectedTextPane().refreshHighlights();
     }
 
-    @Override
-    public void spanAdded(Span newSpan) {
-        refreshHighlights();
-    }
-
-    @Override
-    public void spanRemoved() {
-        getSelectedTextPane().setSelection(null, null);
-        refreshHighlights();
-    }
-
-    @Override
-    public void spanSelectionChanged(Span span) {
-        refreshHighlights();
-    }
-
-    @Override
-    public void profileAdded(Profile profile) {
-        refreshHighlights();
-    }
-
-    @Override
-    public void profileRemoved() {
-        refreshHighlights();
-    }
-
-    @Override
-    public void profileSelectionChanged(Profile profile) {
-        refreshHighlights();
-    }
-
-    @Override
-    public void profileFilterSelectionChanged(boolean filterByProfile) {
-        getSelectedTextPane().setFilterByProfile(filterByProfile);
-    }
 }

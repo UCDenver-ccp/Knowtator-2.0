@@ -2,7 +2,7 @@ package edu.ucdenver.ccp.knowtator.ui.info;
 
 import edu.ucdenver.ccp.knowtator.annotation.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.annotation.Span;
-import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
+import edu.ucdenver.ccp.knowtator.listeners.ConceptAnnotationListener;
 import edu.ucdenver.ccp.knowtator.listeners.SpanListener;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
 
@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InfoPanel extends JPanel implements SpanListener, AnnotationListener {
+public class InfoPanel extends JPanel implements SpanListener, ConceptAnnotationListener {
 
     private DateFormat dateFormat = new SimpleDateFormat("yyy/MM/dd");
     private BasicKnowtatorView view;

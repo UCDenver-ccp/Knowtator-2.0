@@ -117,7 +117,7 @@ public class KnowtatorIAA {
 	private void initTextSourceAnnotations(TextSourceManager textSourceManager) throws IAAException {
 		textSourceAnnotationsMap = new HashMap<>();
 		for (TextSource textSource : textSourceManager.getTextSources()) {
-			textSourceAnnotationsMap.put(textSource, textSource.getAnnotationManager().getConceptAnnotations(null));
+			textSourceAnnotationsMap.put(textSource, textSource.getAnnotationManager().getAllConceptAnnotations());
 		}
 	}
 

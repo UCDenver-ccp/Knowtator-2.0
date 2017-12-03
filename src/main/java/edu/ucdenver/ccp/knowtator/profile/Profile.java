@@ -78,4 +78,10 @@ public class Profile {
     public void setView(BasicKnowtatorView view) {
         this.view = view;
     }
+
+    public void reassignColor(String classID, String className) {
+        colors.remove(classID);
+        getColor(classID, className);
+        view.colorChangedEvent();
+    }
 }

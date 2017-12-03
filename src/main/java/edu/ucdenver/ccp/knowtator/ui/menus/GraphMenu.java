@@ -1,28 +1,30 @@
 package edu.ucdenver.ccp.knowtator.ui.menus;
 
-import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
+import edu.ucdenver.ccp.knowtator.ui.graph.GraphDialog;
 
 import javax.swing.*;
 
 public class GraphMenu extends JMenu {
 
-    private BasicKnowtatorView view;
+    private GraphDialog graphDialog;
 
-    public GraphMenu(BasicKnowtatorView view) {
+    public GraphMenu(GraphDialog graphDialog) {
         super("Graph");
-        this.view = view;
+        this.graphDialog = graphDialog;
 
-        add(showGraphViewerCommand());
-        addSeparator();
         add(addNewGraphCommand());
-
+        add(deleteGraphCommand());
     }
 
-    private JMenuItem showGraphViewerCommand() {
-        JMenuItem menuItem = new JMenuItem("Show graph viewer");
-        menuItem.addActionListener(e -> view.getGraphDialog().setVisible(true));
+    private JMenuItem deleteGraphCommand() {
+        JMenuItem deleteGraphMenuItem = new JMenuItem("Delete graph");
+        deleteGraphMenuItem.addActionListener(e -> {
+            if (JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this graph?") == JOptionPane.YES_OPTION) {
+                graphDialog.getGraphViewer().deleteSelectedGraph();
+            }
+        });
 
-        return menuItem;
+        return deleteGraphMenuItem;
     }
 
     private JMenuItem addNewGraphCommand() {
@@ -34,7 +36,7 @@ public class GraphMenu extends JMenu {
             };
             int option = JOptionPane.showConfirmDialog(null, message, "Enter a name for this graph", JOptionPane.OK_CANCEL_OPTION);
             if (option == JOptionPane.OK_OPTION) {
-                view.getGraphDialog().getGraphViewer().addNewGraph(field1.getText());
+                graphDialog.getGraphViewer().addNewGraph(field1.getText());
 
             }
 

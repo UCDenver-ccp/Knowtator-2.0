@@ -56,8 +56,8 @@ and click IAA -> Run IAA. Select a folder for the results to be written to.
 
 ### Graphical Annotations
 
-Open the graph viewer by clicking Graph -> Show graph viewer. To add the selected annotation to the graph viewer click
-Graph -> Add annotation no to graph. You will see the node apear in the viewer. Select an object property (these can be found
+Open the graph viewer by clicking View -> Show graph viewer. To add the selected annotation to the graph viewer, right click on it
+and select Add annotation no to graph. You will see the node apear in the viewer. Select an object property (these can be found
 in the Object property hierarchy view in Window -> Views -> Object property views -> Object property hierarchy), then hover
 over a node in the viewer until a pointer hand appears. Click and drag between nodes to make a connection. Graphs are saved
 in the project (Project -> Save Project).

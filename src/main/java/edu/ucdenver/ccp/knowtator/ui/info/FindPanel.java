@@ -27,7 +27,7 @@ public class FindPanel extends JPanel {
         add(previousButton, BorderLayout.WEST);
 
         textField = new JTextField(20);
-        textField.setPreferredSize(new Dimension(20, 5));
+        textField.setPreferredSize(new Dimension(20, 1));
         add(textField, BorderLayout.CENTER);
 
         JButton nextButton = new JButton("Next");

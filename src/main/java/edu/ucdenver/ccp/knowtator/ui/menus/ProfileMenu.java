@@ -9,7 +9,6 @@ import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 
 public class ProfileMenu extends JMenu implements ProfileListener {
@@ -18,32 +17,15 @@ public class ProfileMenu extends JMenu implements ProfileListener {
 
     private KnowtatorManager manager;
     private BasicKnowtatorView view;
-    private JMenu switchAnnotatorMenu;
-    private JMenu removeAnnotatorMenu;
 
     public ProfileMenu(KnowtatorManager manager, BasicKnowtatorView view) {
         super("Profile");
         this.manager = manager;
         this.view = view;
 
-        switchAnnotatorMenu = new JMenu("Switch profile");
-        removeAnnotatorMenu = new JMenu("Remove profile");
-
-        add(switchAnnotatorMenu);
-        add(newAnnotator());
+        add(newProfile());
+        addSeparator();
         add(assignColorToClassMenu());
-        add(removeAnnotatorMenu);
-        add(showForCurrentProfileCommand());
-    }
-
-    private JCheckBoxMenuItem showForCurrentProfileCommand() {
-        JCheckBoxMenuItem showForCurrentProfile = new JCheckBoxMenuItem("Show only annotations for current profile");
-        showForCurrentProfile.addActionListener(e -> {
-            if(showForCurrentProfile.getState()) view.profileFilterEvent(true);
-            else view.profileFilterEvent(false);
-        });
-
-        return  showForCurrentProfile;
     }
 
     private JMenuItem assignColorToClassMenu() {
@@ -54,16 +36,13 @@ public class ProfileMenu extends JMenu implements ProfileListener {
             String className = OWLAPIDataExtractor.getSelectedOwlClassName(view);
             Profile currentProfile = manager.getProfileManager().getCurrentProfile();
 
-            currentProfile.getColors().remove(classID);
-
-            Color c = currentProfile.getColor(classID, className);
-
+            currentProfile.reassignColor(classID, className);
 
         });
         return assignColorToClass;
     }
 
-    private JMenuItem newAnnotator() {
+    private JMenuItem newProfile() {
         JMenuItem newAnnotator = new JMenuItem("New profile");
         newAnnotator.addActionListener(e -> {
             int dialogResult = JOptionPane.showConfirmDialog (null, "Load profile from file(xml)?","New profile", JOptionPane.YES_NO_CANCEL_OPTION);
@@ -96,22 +75,34 @@ public class ProfileMenu extends JMenu implements ProfileListener {
     }
 
     private void updateMenus() {
-        switchAnnotatorMenu.removeAll();
-        removeAnnotatorMenu.removeAll();
+        removeAll();
+
+        add(newProfile());
+
         ProfileManager profileManager = manager.getProfileManager();
-        for (Profile profile : profileManager.getProfiles().values()) {
 
-            JCheckBoxMenuItem switchAnnotator = new JCheckBoxMenuItem(profile.getProfileID());
-            switchAnnotator.addActionListener(e -> profileManager.switchAnnotator(profile));
-            if (manager.getProfileManager().getCurrentProfile().equals(profile)) {
-                switchAnnotator.setState(true);
-            } else switchAnnotator.setState(false);
-            switchAnnotatorMenu.add(switchAnnotator);
+        if (profileManager.getProfiles().size() > 1) {
+            JMenu switchProfileMenu = new JMenu("Switch profile");
+            JMenu removeProfileMenu = new JMenu("Remove profile");
+            for (Profile profile : profileManager.getProfiles().values()) {
 
-            JMenuItem removeAnnotator = new JMenuItem(profile.getProfileID());
-            removeAnnotator.addActionListener(e -> profileManager.removeProfile(profile));
-            removeAnnotatorMenu.add(removeAnnotator);
+                JCheckBoxMenuItem switchAnnotator = new JCheckBoxMenuItem(profile.getProfileID());
+                switchAnnotator.addActionListener(e -> profileManager.switchAnnotator(profile));
+                if (manager.getProfileManager().getCurrentProfile().equals(profile)) {
+                    switchAnnotator.setState(true);
+                } else switchAnnotator.setState(false);
+                switchProfileMenu.add(switchAnnotator);
+
+                JMenuItem removeAnnotator = new JMenuItem(profile.getProfileID());
+                removeAnnotator.addActionListener(e -> profileManager.removeProfile(profile));
+                removeProfileMenu.add(removeAnnotator);
+            }
+            add(switchProfileMenu);
+            add(removeProfileMenu);
         }
+
+        addSeparator();
+        add(assignColorToClassMenu());
     }
 
     @Override
@@ -131,6 +122,11 @@ public class ProfileMenu extends JMenu implements ProfileListener {
 
     @Override
     public void profileFilterSelectionChanged(boolean filterByProfile) {
+
+    }
+
+    @Override
+    public void colorChanged() {
 
     }
 }

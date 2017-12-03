@@ -40,4 +40,8 @@ public class Annotation {
     public String toString() {
         return  String.format("%s", id);
     }
+
+    void setID(String id) {
+        this.id = id;
+    }
 }

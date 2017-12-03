@@ -33,7 +33,7 @@ public class KnowtatorView extends BasicKnowtatorView {
         annotationSplitPane.setDividerLocation(800);
 
         JSplitPane infoSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-        infoSplitPane.setDividerLocation(100);
+        infoSplitPane.setDividerLocation(50);
 
         annotationSplitPane.add(textViewer, JSplitPane.LEFT);
         annotationSplitPane.add(infoSplitPane, JSplitPane.RIGHT);
@@ -49,9 +49,9 @@ public class KnowtatorView extends BasicKnowtatorView {
         JMenuBar menuBar = new JMenuBar();
 
         menuBar.add(projectMenu);
+        menuBar.add(viewMenu);
         menuBar.add(profileMenu);
         menuBar.add(iaaMenu);
-        menuBar.add(graphMenu);
         menuBar.add(toolBar);
 
         add(menuBar, BorderLayout.NORTH);

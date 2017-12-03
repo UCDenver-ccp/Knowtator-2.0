@@ -34,7 +34,7 @@ public class IAAMenu extends JMenu {
 
 
     private JMenuItem getRunIAACommand() {
-        JMenuItem runIAA = new JMenuItem("IAA");
+        JMenuItem runIAA = new JMenuItem("Run IAA");
 
         runIAA.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();

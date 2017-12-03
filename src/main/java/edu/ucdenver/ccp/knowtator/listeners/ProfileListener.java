@@ -10,4 +10,6 @@ public interface ProfileListener extends Listener {
     void profileSelectionChanged(Profile profile);
 
     void profileFilterSelectionChanged(boolean filterByProfile);
+
+    void colorChanged();
 }

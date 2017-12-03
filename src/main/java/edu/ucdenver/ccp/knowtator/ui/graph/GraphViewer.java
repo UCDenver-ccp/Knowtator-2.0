@@ -14,6 +14,7 @@ import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import other.DnDTabbedPane;
 import other.GraphPopupMenu;
 
 import javax.swing.*;
@@ -21,11 +22,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
-public class GraphViewer extends JTabbedPane {
+public class GraphViewer extends DnDTabbedPane {
 
+    @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(GraphViewer.class);
     private final KnowtatorManager manager;
     private final BasicKnowtatorView view;
@@ -50,6 +54,7 @@ public class GraphViewer extends JTabbedPane {
         graph.setCellsEditable(false);
         graph.setConnectableEdges(false);
         graph.setCellsBendable(false);
+        graph.setResetEdgesOnMove(true);
 
         mxGraphComponent graphComponent = new mxGraphComponent(graph);
         graphComponent.setBackground(Color.white);
@@ -58,6 +63,7 @@ public class GraphViewer extends JTabbedPane {
         graphComponent.setSize(new Dimension(800, 800));
         JScrollPane sp = new JScrollPane();
         graphComponent.getGraphControl().add(sp, 0);
+        graphComponent.zoomAndCenter();
 
         graphComponent.setName(title);
 
@@ -80,20 +86,21 @@ public class GraphViewer extends JTabbedPane {
         gbc.weightx = 0;
         pnlTab.add(btnClose, gbc);
 
+
         setTabComponentAt(index, pnlTab);
 
-        GraphViewer graphViewer = this;
-        btnClose.addActionListener(evt -> {
-            if (getTabCount() == 1) {
-                addNewGraph(String.format("Graph %d", graphCounter++));
-            }
-            log.warn(String.format("Closing: %s", title));
-            graphViewer.remove(graphComponent);
-        });
+        btnClose.addActionListener(evt -> closeGraph(graphComponent));
 
         setSelectedComponent(graphComponent);
 
         return graph;
+    }
+
+    private void closeGraph(mxGraphComponent graphComponent) {
+        if (getTabCount() == 1) {
+            addNewGraph(String.format("Graph %d", graphCounter++));
+        }
+        remove(graphComponent);
     }
 
     mxGraph getSelectedGraph() {
@@ -151,10 +158,10 @@ public class GraphViewer extends JTabbedPane {
             Object[] cells = (Object[])evt.getProperty("cells");
             for (Object cell : cells) {
                 if (graph.getModel().isEdge(cell)) {
-                    ConceptAnnotation sourceAnnotation = (ConceptAnnotation)((mxCell) cell).getSource().getValue();
-                    ConceptAnnotation targetAnnotation = (ConceptAnnotation)((mxCell) cell).getTarget().getValue();
+//                    ConceptAnnotation sourceAnnotation = (ConceptAnnotation)((mxCell) cell).getSource().getValue();
+//                    ConceptAnnotation targetAnnotation = (ConceptAnnotation)((mxCell) cell).getTarget().getValue();
                     view.getTextViewer().getSelectedTextPane().getTextSource().getAnnotationManager()
-                            .removeAssertion(sourceAnnotation, targetAnnotation);
+                            .removeAnnotation(((mxCell) cell).getId());
                     graph.getModel().remove(cell);
                 }
             }
@@ -170,7 +177,7 @@ public class GraphViewer extends JTabbedPane {
                         ConceptAnnotation annotation = (ConceptAnnotation) ((mxCell) cell).getValue();
                         graph.getModel().setStyle(cell,
                                 String.format(
-                                        "strokeWidth=4;strokeColor=black;fillColor=#%s",
+                                        "fontSize=16;strokeWidth=4;strokeColor=black;fillColor=#%s",
                                         Integer.toHexString(
                                                 annotation.getColor().getRGB()
                                         ).substring(2)
@@ -186,7 +193,7 @@ public class GraphViewer extends JTabbedPane {
                     if (graph.getModel().isVertex(cell)) {
                         graph.getModel().setStyle(cell,
                                 String.format(
-                                        "strokeWidth=0;strokeColor=black;fillColor=#%s",
+                                        "fontSize=16;strokeWidth=0;strokeColor=black;fillColor=#%s",
                                         Integer.toHexString(
                                                 ((ConceptAnnotation) ((mxCell) cell).getValue()).getColor().getRGB()
                                         ).substring(2)
@@ -220,7 +227,7 @@ public class GraphViewer extends JTabbedPane {
                 Object vertex = graph.insertVertex(graph.getDefaultParent(), annotation.getID(), annotation, 20, 20,
                         80, 30,
                         String.format(
-                                "fillColor=#%s",
+                                "fontSize=16;fillColor=#%s",
                                 Integer.toHexString(
                                         annotation.getColor().getRGB()
                                 ).substring(2)
@@ -229,8 +236,7 @@ public class GraphViewer extends JTabbedPane {
                 graph.updateCellSize(vertex);
 
                 // apply layout to graph
-                mxHierarchicalLayout layout = new mxHierarchicalLayout(
-                        graph);
+                mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
                 layout.setOrientation(SwingConstants.WEST);
                 layout.execute(graph.getDefaultParent());
             } finally {
@@ -258,7 +264,7 @@ public class GraphViewer extends JTabbedPane {
 
             graph.insertEdge(graph.getDefaultParent(),
                     compositionalAnnotation.getID(),
-                    compositionalAnnotation.getRelationship(),
+                    compositionalAnnotation,
                     source,
                     target,
                     "straight=1;" +
@@ -315,5 +321,55 @@ public class GraphViewer extends JTabbedPane {
     void removeVertex(ConceptAnnotation removedAnnotation) {
         mxGraph graph = getSelectedGraph();
         graph.getModel().remove(((mxGraphModel) graph.getModel()).getCell(removedAnnotation.getID()));
+    }
+
+    public void deleteSelectedGraph() {
+        mxGraph graph = getSelectedGraph();
+
+        for (Object cell : graph.getAllEdges(graph.getChildCells(graph.getDefaultParent()))) {
+            view.getTextViewer().getSelectedTextPane().getTextSource().getAnnotationManager().removeAnnotation(((mxCell) cell).getId());
+        }
+
+        closeGraph((mxGraphComponent) getSelectedComponent());
+
+    }
+
+    private java.util.List<mxGraphComponent> getAllGraphComponents() {
+        List<mxGraphComponent> graphComponentList = new ArrayList<>();
+        for (Component component : getComponents()) {
+            if (component.getClass() == mxGraphComponent.class) {
+                graphComponentList.add((mxGraphComponent) component);
+            }
+        }
+        return graphComponentList;
+    }
+
+    void reDrawVertices() {
+        for (mxGraphComponent graphComponent : getAllGraphComponents()) {
+            mxGraph graph = graphComponent.getGraph();
+
+            graph.getModel().beginUpdate();
+            try {
+                for (Object cell : graph.getChildVertices(graph.getDefaultParent())) {
+
+                    Annotation annotation = (Annotation) ((mxCell) cell).getValue();
+                    graph.getModel().setStyle(cell, String.format(
+                            "fillColor=#%s",
+                            Integer.toHexString(
+                                    annotation.getColor().getRGB()
+                            ).substring(2)
+                    ));
+                    graph.getView().validateCell(cell);
+
+                }
+                // apply layout to graph
+                mxHierarchicalLayout layout = new mxHierarchicalLayout(
+                        graph);
+                layout.setOrientation(SwingConstants.WEST);
+                layout.execute(graph.getDefaultParent());
+            } finally {
+                graph.getModel().endUpdate();
+            }
+        }
     }
 }

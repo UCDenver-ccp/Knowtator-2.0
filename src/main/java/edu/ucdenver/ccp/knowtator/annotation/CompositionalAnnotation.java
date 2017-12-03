@@ -32,7 +32,7 @@ public class CompositionalAnnotation extends Annotation {
 
     @Override
     public String toString() {
-        return String.format("CompositionalAnnotation: %s, %s, %s", source, target, relationship);
+        return relationship;
     }
 
     public String getGraphTitle() {

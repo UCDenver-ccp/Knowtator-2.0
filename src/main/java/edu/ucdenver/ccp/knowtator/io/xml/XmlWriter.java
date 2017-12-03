@@ -24,7 +24,7 @@ class XmlWriter {
 
     }
 
-    private static void writeAnnotation(BufferedWriter bw, ConceptAnnotation annotation) {
+    private static void writeConceptAnnotation(BufferedWriter bw, ConceptAnnotation annotation) {
         try {
             bw.write(String.format("\t<%s>", XmlTags.CONCEPT_ANNOTATION));
             bw.newLine();
@@ -100,8 +100,11 @@ class XmlWriter {
                 );
                 bw.write(String.format("</%s>", XmlTags.TEXT));
                 bw.newLine();
-                if (manager.getConfigProperties().getSaveAnnotations()) textSource.getAnnotationManager().getConceptAnnotations(manager.getConfigProperties().getProfileFilters()).forEach(annotation -> writeAnnotation(bw, annotation));
-                if (manager.getConfigProperties().getSaveAssertions()) textSource.getAnnotationManager().getCompositionalAnnotations(manager.getConfigProperties().getProfileFilters()).forEach(assertion -> writeAssertion(bw, assertion));
+                if (manager.getConfigProperties().getSaveConceptAnnotations()) textSource.getAnnotationManager().getAnnotations(manager.getConfigProperties().getProfileFilters())
+                        .forEach(annotation -> {
+                            if (annotation instanceof ConceptAnnotation) writeConceptAnnotation(bw, (ConceptAnnotation) annotation);
+                            else if (annotation instanceof CompositionalAnnotation) writeCompositionalAnnotation(bw, (CompositionalAnnotation) annotation);
+                        });
                 bw.write(String.format("</%s>", XmlTags.DOCUMENT));
                 bw.newLine();
             } catch(IOException e) {
@@ -145,7 +148,7 @@ class XmlWriter {
         });
     }
 
-    private static void writeAssertion(BufferedWriter bw, CompositionalAnnotation compositionalAnnotation) {
+    private static void writeCompositionalAnnotation(BufferedWriter bw, CompositionalAnnotation compositionalAnnotation) {
         try {
             bw.write(String.format("\t<%s>", XmlTags.COMPOSITIONAL_ANNOTATION));
             bw.newLine();

@@ -11,8 +11,8 @@ public class ConfigProperties {
 
     private Set<Profile> profileFilters;
     private Set<TextSource> textSourceFilters;
-    private boolean saveAnnotations;
-    private boolean saveAssertions;
+    private boolean saveConceptAnnotations;
+    private boolean saveCompositionalAnnotations;
 
     public String getFormat() {
         return format;
@@ -80,12 +80,12 @@ public class ConfigProperties {
         this.textSourceFilters = textSourceFilters;
     }
 
-    public void setSaveAnnotations(boolean saveAnnotations) {
-        this.saveAnnotations = saveAnnotations;
+    public void setSaveConceptAnnotations(boolean saveAnnotations) {
+        this.saveConceptAnnotations = saveAnnotations;
     }
 
-    public void setSaveAssertions(boolean saveAssertions) {
-        this.saveAssertions = saveAssertions;
+    public void setSaveCompositionalAnnotations(boolean value) {
+        this.saveCompositionalAnnotations = value;
     }
 
     public Set<Profile> getProfileFilters() {
@@ -96,11 +96,11 @@ public class ConfigProperties {
         return textSourceFilters;
     }
 
-    public boolean getSaveAnnotations() {
-        return saveAnnotations;
+    public boolean getSaveConceptAnnotations() {
+        return saveConceptAnnotations;
     }
 
-    public boolean getSaveAssertions() {
-        return saveAssertions;
+    public boolean getSaveCompositionalAnnotations() {
+        return saveCompositionalAnnotations;
     }
 }

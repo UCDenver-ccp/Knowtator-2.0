@@ -95,24 +95,24 @@ class XmlReader {
             TextSource newTextSource = manager.getTextSourceManager().addTextSource(documentID, text.toString());
 
             getAnnotationsFromXml_NEW(manager, newTextSource, documentElement);
-            getAssertionsFromXml(manager, newTextSource, documentElement);
+            getCompositionalAnnotationsFromXml(manager, newTextSource, documentElement);
         }
     }
 
-    private static void getAssertionsFromXml(KnowtatorManager manager, TextSource textSource, Element documentElement) {
-        for (Node assertionNode : XmlUtil.asList(documentElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION))) {
-            Element assertionElement = (Element) assertionNode;
+    private static void getCompositionalAnnotationsFromXml(KnowtatorManager manager, TextSource textSource, Element documentElement) {
+        for (Node compositionalAnnotationNode : XmlUtil.asList(documentElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION))) {
+            Element compositionalAnnotationElement = (Element) compositionalAnnotationNode;
 
-            String assertionID = assertionElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION_ID).item(0).getTextContent();
-            String graphTitle = assertionElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION_GRAPH_TITLE).item(0).getTextContent();
-            String profileID = assertionElement.getElementsByTagName(XmlTags.ANNOTATOR).item(0).getTextContent();
+            String annotationID = compositionalAnnotationElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION_ID).item(0).getTextContent();
+            String graphTitle = compositionalAnnotationElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION_GRAPH_TITLE).item(0).getTextContent();
+            String profileID = compositionalAnnotationElement.getElementsByTagName(XmlTags.ANNOTATOR).item(0).getTextContent();
 
             Profile profile = manager.getProfileManager().addNewProfile(profileID);
-            String source = assertionElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION_SOURCE).item(0).getTextContent();
-            String target = assertionElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION_TARGET).item(0).getTextContent();
-            String relationship = assertionElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION_RELATIONSHIP).item(0).getTextContent();
+            String source = compositionalAnnotationElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION_SOURCE).item(0).getTextContent();
+            String target = compositionalAnnotationElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION_TARGET).item(0).getTextContent();
+            String relationship = compositionalAnnotationElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION_RELATIONSHIP).item(0).getTextContent();
 
-            textSource.getAnnotationManager().addCompositionalAnnotation(graphTitle, source, target, relationship, assertionID, profile);
+            textSource.getAnnotationManager().addCompositionalAnnotation(graphTitle, source, target, relationship, annotationID, profile);
         }
     }
 
@@ -213,7 +213,7 @@ class XmlReader {
                 String className = classElement.getElementsByTagName(XmlTags.MENTION_CLASS).item(0).getTextContent();
                 String classID = ((Element) classElement.getElementsByTagName(XmlTags.MENTION_CLASS).item(0)).getAttribute(XmlTags.MENTION_CLASS_ID);
 
-                textSource.getAnnotationManager().addAnnotation(classID, className, spans, null, profile);
+                textSource.getAnnotationManager().addConceptAnnotation(classID, className, spans, null, profile);
             }
         }
     }
@@ -230,7 +230,7 @@ class XmlReader {
             String classID = annotationElement.getElementsByTagName(XmlTags.CLASS_ID).item(0).getTextContent();
             List<Span> spans = getSpanInfo(annotationElement);
 
-            textSource.getAnnotationManager().addAnnotation(classID, className, spans, annotationID, profile);
+            textSource.getAnnotationManager().addConceptAnnotation(classID, className, spans, annotationID, profile);
         }
     }
 
