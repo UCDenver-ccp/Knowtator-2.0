@@ -51,6 +51,14 @@ public class OWLAPIDataExtractor {
         }
     }
 
+    public static OWLObjectProperty getOWLObjectPropertyByID(BasicKnowtatorView view, String classID) {
+        try {
+            return view.getOWLModelManager().getOWLEntityFinder().getOWLObjectProperty(classID);
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
+
     private static Set<OWLClass> getDecendents(BasicKnowtatorView view, OWLClass cls) {
         return view.getOWLModelManager().getOWLHierarchyManager().getOWLClassHierarchyProvider().getDescendants(cls);
     }

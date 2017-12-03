@@ -54,10 +54,10 @@ public class GraphViewer extends DnDTabbedPane {
         graph.setCellsEditable(false);
         graph.setConnectableEdges(false);
         graph.setCellsBendable(false);
-        graph.setResetEdgesOnMove(true);
 
         mxGraphComponent graphComponent = new mxGraphComponent(graph);
-        graphComponent.setBackground(Color.white);
+        graphComponent.getViewport().setOpaque(true);
+        graphComponent.getViewport().setBackground(Color.white);
         setupListeners(graphComponent);
         graphComponent.setDragEnabled(false);
         graphComponent.setSize(new Dimension(800, 800));
@@ -185,6 +185,10 @@ public class GraphViewer extends DnDTabbedPane {
                         );
                         view.annotationSelectionChangedEvent(annotation);
                     }
+                    if (graph.getModel().isEdge(cell)) {
+                        CompositionalAnnotation annotation = (CompositionalAnnotation) ((mxCell) cell).getValue();
+                        view.owlEntitySelectionChanged(OWLAPIDataExtractor.getOWLObjectPropertyByID(view, annotation.getRelationship()));
+                    }
                 }
             }
 
@@ -270,8 +274,7 @@ public class GraphViewer extends DnDTabbedPane {
                     "straight=1;" +
                             "startArrow=dash;" +
                             "startSize=12;" +
-                            "endArrow=block;" +
-                            "labelBackgroundColor=#FFFFFF;"
+                            "endArrow=block;"
             );
 
             mxHierarchicalLayout layout = new mxHierarchicalLayout(

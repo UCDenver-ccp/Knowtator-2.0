@@ -24,6 +24,7 @@ public class InfoPanel extends JPanel implements SpanListener, ConceptAnnotation
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setMinimumSize(new Dimension(20, 50));
+        setBackground(Color.white);
     }
 
     @Override
@@ -48,28 +49,34 @@ public class InfoPanel extends JPanel implements SpanListener, ConceptAnnotation
 
         if(annotation != null) {
             GridBagConstraints gbc = new GridBagConstraints();
-            JLabel titleLabel = new JLabel(("ConceptAnnotation Information"));
-            add(titleLabel, gbc);
+            JLabel titleLabel = new JLabel(("Annotation Information"));
+            titleLabel.setFont(new Font(titleLabel.getFont().getName(), Font.BOLD, titleLabel.getFont().getSize() + 5));
 
-            JLabel idLabel = new JLabel(String.format("ConceptAnnotation ID: %s", annotation.getID()));
-            JLabel classLabel = new JLabel(String.format("Class ID: %s  Name: %s", annotation.getClassID(), annotation.getClassName()));
+            JLabel idLabel = new JLabel(String.format("Annotation ID: %s", annotation.getID()));
+            JLabel classLabel = new JLabel(String.format("Class ID: %s", annotation.getClassID()));
+            JLabel classNameLabel = new JLabel(String.format("Class Name: %s", annotation.getClassName()));
             JLabel profileLabel = new JLabel(String.format("Profile ID: %s", annotation.getAnnotator().getProfileID()));
             JLabel textSourceLabel = new JLabel(String.format("Document ID: %s", annotation.getTextSource().getDocID()));
             JLabel dateLabel = new JLabel(String.format("Date: %s", dateFormat.format(annotation.getDate())));
 
             // **********************************SPANS*********************************
+            JLabel spanTitleLabel = new JLabel(("Spans"));
+            spanTitleLabel.setFont(new Font(spanTitleLabel.getFont().getName(), Font.BOLD, spanTitleLabel.getFont().getSize() + 2));
             List<JLabel> spanLabels = new ArrayList<>();
             for (Span span : annotation.getSpans()) {
 
-                JLabel spanLabel = new JLabel(String.format("Span: %d, %d", span.getStart(), span.getEnd()));
+                JLabel spanLabel = new JLabel(String.format("%d, %d", span.getStart(), span.getEnd()));
                 spanLabels.add(spanLabel);
             }
 
+            add(titleLabel, gbc);
             add(idLabel, gbc);
-            add(classLabel);
+            add(classLabel, gbc);
+            add(classNameLabel, gbc);
             add(profileLabel, gbc);
             add(textSourceLabel, gbc);
             add(dateLabel, gbc);
+            add(spanTitleLabel, gbc);
             spanLabels.forEach(spanLabel -> add(spanLabel, gbc));
         }
         this.revalidate();
