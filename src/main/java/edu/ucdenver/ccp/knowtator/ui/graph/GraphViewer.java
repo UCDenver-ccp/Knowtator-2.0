@@ -4,6 +4,7 @@ import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.swing.util.mxMorphing;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
@@ -45,7 +46,7 @@ public class GraphViewer extends DnDTabbedPane {
     }
 
 
-    public mxGraph addNewGraph(String title) {
+    public mxGraphComponent addNewGraph(String title) {
 
         mxGraph graph = new mxGraph();
         graph.setCellsResizable(false);
@@ -55,17 +56,18 @@ public class GraphViewer extends DnDTabbedPane {
         graph.setConnectableEdges(false);
         graph.setCellsBendable(false);
 
+        JScrollPane sp = new JScrollPane();
+        sp.getVerticalScrollBar().setUnitIncrement(20);
+
         mxGraphComponent graphComponent = new mxGraphComponent(graph);
         graphComponent.getViewport().setOpaque(true);
         graphComponent.getViewport().setBackground(Color.white);
-        setupListeners(graphComponent);
         graphComponent.setDragEnabled(false);
         graphComponent.setSize(new Dimension(800, 800));
-        JScrollPane sp = new JScrollPane();
         graphComponent.getGraphControl().add(sp, 0);
-        graphComponent.zoomAndCenter();
-
         graphComponent.setName(title);
+
+        setupListeners(graphComponent);
 
         addTab(title, graphComponent);
 
@@ -93,7 +95,7 @@ public class GraphViewer extends DnDTabbedPane {
 
         setSelectedComponent(graphComponent);
 
-        return graph;
+        return graphComponent;
     }
 
     private void closeGraph(mxGraphComponent graphComponent) {
@@ -103,20 +105,20 @@ public class GraphViewer extends DnDTabbedPane {
         remove(graphComponent);
     }
 
-    mxGraph getSelectedGraph() {
+    public mxGraphComponent getSelectedGraphComponent() {
         if (getSelectedComponent() != null) {
             if (getSelectedComponent().getClass() == mxGraphComponent.class) {
-                return ((mxGraphComponent) getSelectedComponent()).getGraph();
+                return ((mxGraphComponent) getSelectedComponent());
             }
         }
         return null;
     }
 
-    private mxGraph getGraph(String title) {
+    private mxGraphComponent getGraphComponent(String title) {
         for (Component component : getComponents()) {
             if (Objects.equals(component.getName(), title)) {
                 setSelectedComponent(component);
-                return ((mxGraphComponent) getSelectedComponent()).getGraph();
+                return ((mxGraphComponent) getSelectedComponent());
             }
         }
         return addNewGraph(title);
@@ -158,11 +160,10 @@ public class GraphViewer extends DnDTabbedPane {
             Object[] cells = (Object[])evt.getProperty("cells");
             for (Object cell : cells) {
                 if (graph.getModel().isEdge(cell)) {
-//                    ConceptAnnotation sourceAnnotation = (ConceptAnnotation)((mxCell) cell).getSource().getValue();
-//                    ConceptAnnotation targetAnnotation = (ConceptAnnotation)((mxCell) cell).getTarget().getValue();
                     view.getTextViewer().getSelectedTextPane().getTextSource().getAnnotationManager()
                             .removeAnnotation(((mxCell) cell).getId());
                     graph.getModel().remove(cell);
+                    executeLayout(graphComponent);
                 }
             }
         });
@@ -175,14 +176,20 @@ public class GraphViewer extends DnDTabbedPane {
                 for (Object cell : selectedCells) {
                     if (graph.getModel().isVertex(cell)) {
                         ConceptAnnotation annotation = (ConceptAnnotation) ((mxCell) cell).getValue();
-                        graph.getModel().setStyle(cell,
-                                String.format(
-                                        "fontSize=16;strokeWidth=4;strokeColor=black;fillColor=#%s",
-                                        Integer.toHexString(
-                                                annotation.getColor().getRGB()
-                                        ).substring(2)
-                                )
-                        );
+                        graph.getModel().beginUpdate();
+                        try {
+
+                            graph.getModel().setStyle(cell,
+                                    String.format(
+                                            "fontSize=16;strokeWidth=4;strokeColor=black;fillColor=#%s",
+                                            Integer.toHexString(
+                                                    annotation.getColor().getRGB()
+                                            ).substring(2)
+                                    )
+                            );
+                        } finally {
+                            graph.refresh();
+                        }
                         view.annotationSelectionChangedEvent(annotation);
                     }
                     if (graph.getModel().isEdge(cell)) {
@@ -195,14 +202,17 @@ public class GraphViewer extends DnDTabbedPane {
             if (deselectedCells != null) {
                 for (Object cell : deselectedCells) {
                     if (graph.getModel().isVertex(cell)) {
-                        graph.getModel().setStyle(cell,
-                                String.format(
-                                        "fontSize=16;strokeWidth=0;strokeColor=black;fillColor=#%s",
-                                        Integer.toHexString(
-                                                ((ConceptAnnotation) ((mxCell) cell).getValue()).getColor().getRGB()
-                                        ).substring(2)
-                                )
-                        );
+                        graph.getModel().beginUpdate();
+                        try {
+                            graph.getModel().setStyle(cell,
+                                    String.format(
+                                            "fontSize=16;strokeWidth=0;strokeColor=black;fillColor=#%s",
+                                            Integer.toHexString(((ConceptAnnotation) ((mxCell) cell).getValue()).getColor().getRGB()).substring(2)
+                                    )
+                            );
+                        } finally {
+                            graph.refresh();
+                        }
                     }
                 }
             }
@@ -224,7 +234,7 @@ public class GraphViewer extends DnDTabbedPane {
     }
 
     public Object addVertex(Annotation annotation) {
-        mxGraph graph = getSelectedGraph();
+        mxGraph graph = getSelectedGraphComponent().getGraph();
         if (((mxGraphModel) graph.getModel()).getCell(annotation.getID()) == null) {
             graph.getModel().beginUpdate();
             try {
@@ -232,17 +242,13 @@ public class GraphViewer extends DnDTabbedPane {
                         80, 30,
                         String.format(
                                 "fontSize=16;fillColor=#%s",
-                                Integer.toHexString(
-                                        annotation.getColor().getRGB()
-                                ).substring(2)
+                                Integer.toHexString(annotation.getColor().getRGB()).substring(2)
                         )
                 );
                 graph.updateCellSize(vertex);
 
                 // apply layout to graph
-                mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
-                layout.setOrientation(SwingConstants.WEST);
-                layout.execute(graph.getDefaultParent());
+                executeLayout(getSelectedGraphComponent());
             } finally {
                 graph.getModel().endUpdate();
             }
@@ -252,7 +258,7 @@ public class GraphViewer extends DnDTabbedPane {
 
     void addEdge(CompositionalAnnotation compositionalAnnotation) {
 
-        mxGraph graph = getGraph(compositionalAnnotation.getGraphTitle());
+        mxGraph graph = getGraphComponent(compositionalAnnotation.getGraphTitle()).getGraph();
         graph.getModel().beginUpdate();
         try {
             Object source = ((mxGraphModel) graph.getModel()).getCell(compositionalAnnotation.getSource().getID());
@@ -274,13 +280,13 @@ public class GraphViewer extends DnDTabbedPane {
                     "straight=1;" +
                             "startArrow=dash;" +
                             "startSize=12;" +
-                            "endArrow=block;"
+                            "endArrow=block;" +
+                            "verticalAlign=top;" +
+                            "verticalLabelPosition=top;" +
+                            "fontSize=16"
             );
 
-            mxHierarchicalLayout layout = new mxHierarchicalLayout(
-                    graph);
-            layout.setOrientation(SwingConstants.WEST);
-            layout.execute(graph.getDefaultParent());
+            executeLayout(getGraphComponent(compositionalAnnotation.getGraphTitle()));
         } finally {
             graph.getModel().endUpdate();
         }
@@ -309,7 +315,7 @@ public class GraphViewer extends DnDTabbedPane {
 
 
     public Object goToVertex(Annotation annotation) {
-        mxGraph graph = getSelectedGraph();
+        mxGraph graph = getSelectedGraphComponent().getGraph();
         Object cellToGoTo = ((mxGraphModel) graph.getModel()).getCell(annotation.getID());
 
         if (!graph.getSelectionModel().isSelected(cellToGoTo)) graph.setSelectionCell(cellToGoTo);
@@ -322,12 +328,12 @@ public class GraphViewer extends DnDTabbedPane {
     }
 
     void removeVertex(ConceptAnnotation removedAnnotation) {
-        mxGraph graph = getSelectedGraph();
+        mxGraph graph = getSelectedGraphComponent().getGraph();
         graph.getModel().remove(((mxGraphModel) graph.getModel()).getCell(removedAnnotation.getID()));
     }
 
     public void deleteSelectedGraph() {
-        mxGraph graph = getSelectedGraph();
+        mxGraph graph = getSelectedGraphComponent().getGraph();
 
         for (Object cell : graph.getAllEdges(graph.getChildCells(graph.getDefaultParent()))) {
             view.getTextViewer().getSelectedTextPane().getTextSource().getAnnotationManager().removeAnnotation(((mxCell) cell).getId());
@@ -365,14 +371,49 @@ public class GraphViewer extends DnDTabbedPane {
                     graph.getView().validateCell(cell);
 
                 }
-                // apply layout to graph
-                mxHierarchicalLayout layout = new mxHierarchicalLayout(
-                        graph);
-                layout.setOrientation(SwingConstants.WEST);
-                layout.execute(graph.getDefaultParent());
+//                // apply layout to graph
+                executeLayout(graphComponent);
+
+
+//
             } finally {
                 graph.getModel().endUpdate();
+                graph.refresh();
             }
+        }
+    }
+
+    private void executeLayout(mxGraphComponent graphComponent) {
+        mxHierarchicalLayout layout = new mxHierarchicalLayout(graphComponent.getGraph());
+        layout.setOrientation(SwingConstants.WEST);
+        layout.setIntraCellSpacing(50);
+        layout.setInterRankCellSpacing(250);
+
+//        mxFastOrganicLayout layout = new mxFastOrganicLayout(graphComponent.getGraph());
+//        layout.setForceConstant(250); // the higher, the more separated
+//        layout.setMinDistanceLimit(500);
+//        layout.setDisableEdgeStyle( false); // true transforms the edges and makes them direct lines
+
+//        layout.execute(graphComponent.getGraph().getDefaultParent());
+
+        // layout using morphing
+        try {
+            graphComponent.getGraph().getModel().beginUpdate();
+            try {
+                layout.execute(graphComponent.getGraph().getDefaultParent());
+            } finally {
+                mxMorphing morph = new mxMorphing(graphComponent, 20, 1.2, 20);
+
+                morph.addListener(mxEvent.DONE, (arg0, arg1) -> {
+                    graphComponent.getGraph().getModel().endUpdate();
+                    // fitViewport();
+                });
+
+                morph.startAnimation();
+            }
+        } finally {
+            graphComponent.getGraph().getModel().endUpdate();
+            graphComponent.zoomAndCenter();
         }
     }
 }

@@ -1,7 +1,10 @@
 package edu.ucdenver.ccp.knowtator.ui;
 
+import edu.ucdenver.ccp.knowtator.actions.ProjectActions;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 
 public class KnowtatorView extends BasicKnowtatorView {
 
@@ -16,8 +19,8 @@ public class KnowtatorView extends BasicKnowtatorView {
     }
 
     private void setupInitial() {
-//        loadOntologyFromLocation(new File("C:/Users/pielk/KnowtatorProjects/CPBS_7785/Nucleus2Cytosol_Transport_Project/CPBS7785_ontology_3.owl").toURI().toString());
-//        ProjectActions.loadProject(manager, "C:/Users/pielk/KnowtatorProjects/CPBS_7785/Nucleus2Cytosol_Transport_Project/NBK26932.txt.xml", false);
+        loadOntologyFromLocation(new File("C:/Users/pielk/KnowtatorProjects/CPBS_7785/Nucleus2Cytosol_Transport_Project/CPBS7785_ontology_3.owl").toURI().toString());
+        ProjectActions.loadProject(manager, "C:/Users/pielk/KnowtatorProjects/CPBS_7785/Nucleus2Cytosol_Transport_Project/NBK26932.txt.xml", false);
 //        ProjectActions.loadProject(manager, "file/test_project.xml", true);
     }
 
@@ -30,7 +33,7 @@ public class KnowtatorView extends BasicKnowtatorView {
 
         JSplitPane annotationSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         annotationSplitPane.setOneTouchExpandable(true);
-        annotationSplitPane.setDividerLocation(800);
+        annotationSplitPane.setDividerLocation(700);
 
         JSplitPane infoSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         infoSplitPane.setDividerLocation(50);

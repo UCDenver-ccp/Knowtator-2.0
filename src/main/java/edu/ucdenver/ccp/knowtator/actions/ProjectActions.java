@@ -24,7 +24,7 @@ public class ProjectActions {
         }
     }
 
-    private static void loadProject(KnowtatorManager manager, String fileName, @SuppressWarnings("SameParameterValue") Boolean fromResources) {
+    public static void loadProject(KnowtatorManager manager, String fileName, @SuppressWarnings("SameParameterValue") Boolean fromResources) {
         manager.getXmlUtil().read(fileName, fromResources);
     }
 

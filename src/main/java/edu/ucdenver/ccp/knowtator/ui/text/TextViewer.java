@@ -95,6 +95,7 @@ public class TextViewer extends DnDTabbedPane implements TextSourceListener {
             }
             log.warn(String.format("Closing: %s", title));
             manager.getTextSourceManager().remove(textPane.getTextSource());
+            textPane.getGraphDialog().setVisible(false);
             textViewer.remove(sp);
         });
 

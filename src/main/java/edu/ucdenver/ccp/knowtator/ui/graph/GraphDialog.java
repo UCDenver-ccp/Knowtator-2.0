@@ -30,7 +30,7 @@ public class GraphDialog extends JDialog implements ConceptAnnotationListener, C
         setLocationRelativeTo(view);
 
         JMenuBar menuBar = new JMenuBar();
-        menuBar.add(new GraphMenu(this));
+        menuBar.add(new GraphMenu(manager, this));
         menuBar.add(new GraphViewMenu(this));
         setJMenuBar(menuBar);
 
@@ -40,22 +40,22 @@ public class GraphDialog extends JDialog implements ConceptAnnotationListener, C
 
     @Override
     public void annotationAdded(ConceptAnnotation newAnnotation) {
-//        if (graphViewer.getSelectedGraph() != null) graphViewer.addVertex(newAnnotation);
+//        if (graphViewer.getSelectedGraphComponent() != null) graphViewer.addVertex(newAnnotation);
     }
 
     @Override
     public void annotationRemoved(ConceptAnnotation removedAnnotation) {
-        if (graphViewer.getSelectedGraph() != null) graphViewer.removeVertex(removedAnnotation);
+        if (graphViewer.getSelectedGraphComponent() != null) graphViewer.removeVertex(removedAnnotation);
     }
 
     @Override
     public void annotationSelectionChanged(ConceptAnnotation annotation) {
-        if (graphViewer.getSelectedGraph() != null && annotation != null) graphViewer.goToVertex(annotation);
+        if (graphViewer.getSelectedGraphComponent() != null && annotation != null) graphViewer.goToVertex(annotation);
     }
 
     @Override
     public void compositionalAnnotationAdded(CompositionalAnnotation compositionalAnnotation) {
-        if (graphViewer.getSelectedGraph() != null) graphViewer.addEdge(compositionalAnnotation);
+        if (graphViewer.getSelectedGraphComponent() != null) graphViewer.addEdge(compositionalAnnotation);
     }
 
     public GraphViewer getGraphViewer() {
