@@ -31,7 +31,7 @@ Plugin for Protege
 
 ## Setup:
 1. Launch Protege.exe
-2. Add a Knowtator view (Window -> Miscellaneous views -> Knowtator). Click somewhere in Protege to add it in.
+2. Add a Knowtator view (Window -> Views -> Miscellaneous views -> Knowtator). Click somewhere in Protege to add it in.
 3. Open a txt file (Project -> Open Document)
 4. Add a profile (Profile -> New Profile)
 5. To save (Project -> Save Project)
