@@ -11,6 +11,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.annotation.CompositionalAnnotation;
 import edu.ucdenver.ccp.knowtator.annotation.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.annotation.TextSource;
 import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
 import org.apache.log4j.LogManager;
@@ -28,18 +29,21 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+//TODO: Display coreferences
 public class GraphViewer extends DnDTabbedPane {
 
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(GraphViewer.class);
     private final KnowtatorManager manager;
     private final BasicKnowtatorView view;
+    private TextSource textSource;
     private int graphCounter;
 
-    public GraphViewer(KnowtatorManager manager, BasicKnowtatorView view) {
+    public GraphViewer(KnowtatorManager manager, BasicKnowtatorView view, TextSource textSource) {
 
         this.manager = manager;
         this.view = view;
+        this.textSource = textSource;
 
         graphCounter = 0;
         addNewGraph(String.format("Graph %d", graphCounter++));
@@ -136,14 +140,14 @@ public class GraphViewer extends DnDTabbedPane {
                         if (((mxCell) cell).getValue().equals("")) {
                             String propertyName = OWLAPIDataExtractor.getSelectedPropertyID(view);
 
-                            Annotation sourceAnnotation = (Annotation) ((mxCell) cell).getSource().getValue();
-                            Annotation targetAnnotation = (Annotation) ((mxCell) cell).getTarget().getValue();
+                            String sourceAnnotationID = ((mxCell) cell).getSource().getId();
+                            String targetAnnotationID = ((mxCell) cell).getTarget().getId();
 
                             view.getTextViewer().getSelectedTextPane().getTextSource().getAnnotationManager()
                                     .addCompositionalAnnotation(
                                             getSelectedComponent().getName(),
-                                            sourceAnnotation,
-                                            targetAnnotation,
+                                            sourceAnnotationID,
+                                            targetAnnotationID,
                                             propertyName,
                                             null,
                                             manager.getProfileManager().getCurrentProfile()
@@ -233,17 +237,19 @@ public class GraphViewer extends DnDTabbedPane {
         });
     }
 
-    public Object addVertex(Annotation annotation) {
+    public Object addVertex(String annotationID) {
+        Annotation annotation = textSource.getAnnotationManager().getAnnotation(annotationID);
         mxGraph graph = getSelectedGraphComponent().getGraph();
-        if (((mxGraphModel) graph.getModel()).getCell(annotation.getID()) == null) {
+        if (((mxGraphModel) graph.getModel()).getCell(annotationID) == null) {
             graph.getModel().beginUpdate();
             try {
-                Object vertex = graph.insertVertex(graph.getDefaultParent(), annotation.getID(), annotation, 20, 20,
+                String color = "D3D3D3";
+                if (annotation instanceof ConceptAnnotation) {
+                    color = Integer.toHexString(((ConceptAnnotation) annotation).getColor().getRGB()).substring(2);
+                }
+                Object vertex = graph.insertVertex(graph.getDefaultParent(), annotationID, annotation, 20, 20,
                         80, 30,
-                        String.format(
-                                "fontSize=16;fillColor=#%s",
-                                Integer.toHexString(annotation.getColor().getRGB()).substring(2)
-                        )
+                        String.format("fontSize=16;fillColor=#%s", color)
                 );
                 graph.updateCellSize(vertex);
 
@@ -261,14 +267,14 @@ public class GraphViewer extends DnDTabbedPane {
         mxGraph graph = getGraphComponent(compositionalAnnotation.getGraphTitle()).getGraph();
         graph.getModel().beginUpdate();
         try {
-            Object source = ((mxGraphModel) graph.getModel()).getCell(compositionalAnnotation.getSource().getID());
-            Object target =  ((mxGraphModel) graph.getModel()).getCell(compositionalAnnotation.getTarget().getID());
+            Object source = ((mxGraphModel) graph.getModel()).getCell(compositionalAnnotation.getSourceAnnotationID());
+            Object target =  ((mxGraphModel) graph.getModel()).getCell(compositionalAnnotation.getTargetAnnotationID());
 
             if (source == null) {
-                source = addVertex(compositionalAnnotation.getSource());
+                source = addVertex(compositionalAnnotation.getSourceAnnotationID());
             }
             if (target == null) {
-                target = addVertex(compositionalAnnotation.getTarget());
+                target = addVertex(compositionalAnnotation.getTargetAnnotationID());
             }
 
 
@@ -362,12 +368,11 @@ public class GraphViewer extends DnDTabbedPane {
                 for (Object cell : graph.getChildVertices(graph.getDefaultParent())) {
 
                     Annotation annotation = (Annotation) ((mxCell) cell).getValue();
-                    graph.getModel().setStyle(cell, String.format(
-                            "fillColor=#%s",
-                            Integer.toHexString(
-                                    annotation.getColor().getRGB()
-                            ).substring(2)
-                    ));
+                    String color = "D3D3D3";
+                    if (annotation instanceof ConceptAnnotation) {
+                        color = Integer.toHexString(((ConceptAnnotation) annotation).getColor().getRGB()).substring(2);
+                    }
+                    graph.getModel().setStyle(cell, String.format("fontSize=16;fillColor=#%s", color));
                     graph.getView().validateCell(cell);
 
                 }

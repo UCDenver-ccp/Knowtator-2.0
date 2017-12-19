@@ -72,7 +72,6 @@ public class ConceptAnnotation extends Annotation {
 		return spans;
 	}
 
-	@Override
 	public Color getColor() {
 		return annotator.getColor(classID, className);
 	}

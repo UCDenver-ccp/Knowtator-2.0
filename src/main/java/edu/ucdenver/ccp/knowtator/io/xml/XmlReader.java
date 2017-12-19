@@ -1,5 +1,7 @@
 package edu.ucdenver.ccp.knowtator.io.xml;
 
+import edu.ucdenver.ccp.knowtator.annotation.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.annotation.IdentityChainAnnotation;
 import edu.ucdenver.ccp.knowtator.io.txt.KnowtatorDocumentHandler;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.profile.Profile;
@@ -78,9 +80,6 @@ class XmlReader {
         }
     }
 
-    //TODO: Read coreferences from old Knowtator
-    //TODO: Read coreferences from new Knowtator
-
     private static void readDocuments(KnowtatorManager manager, List<Node> documentNodes) {
         for (Node documentNode : documentNodes) {
             Element documentElement = (Element) documentNode;
@@ -97,7 +96,8 @@ class XmlReader {
 
             TextSource newTextSource = manager.getTextSourceManager().addTextSource(documentID, text.toString());
 
-            getAnnotationsFromXml_NEW(manager, newTextSource, documentElement);
+            getConceptAnnotationsFromXml(manager, newTextSource, documentElement);
+            getIdentityAnnotationsFromXml(manager, newTextSource, documentElement);
             getCompositionalAnnotationsFromXml(manager, newTextSource, documentElement);
         }
     }
@@ -106,7 +106,7 @@ class XmlReader {
         for (Node compositionalAnnotationNode : XmlUtil.asList(documentElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION))) {
             Element compositionalAnnotationElement = (Element) compositionalAnnotationNode;
 
-            String annotationID = compositionalAnnotationElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION_ID).item(0).getTextContent();
+            String annotationID = compositionalAnnotationElement.getElementsByTagName(XmlTags.ANNOTATION_ID).item(0).getTextContent();
             String graphTitle = compositionalAnnotationElement.getElementsByTagName(XmlTags.COMPOSITIONAL_ANNOTATION_GRAPH_TITLE).item(0).getTextContent();
             String profileID = compositionalAnnotationElement.getElementsByTagName(XmlTags.ANNOTATOR).item(0).getTextContent();
 
@@ -130,13 +130,13 @@ class XmlReader {
         }
     }
 
-    private static void readAnnotations(KnowtatorManager manager, List<Node> textSourceNodes) throws ParserConfigurationException, IOException, SAXException {
+    private static void readAnnotations(KnowtatorManager manager, List<Node> textSourceNodes) {
         /*
         Get annotations by document
          */
         for (Node textSourceNode: textSourceNodes) {
             Element textSourceElement = (Element) textSourceNode;
-            String docID = textSourceElement.getAttribute(XmlTags.DOCUMENT_ID);
+            String docID = textSourceElement.getAttribute(XmlTags.DOCUMENT_ID).replace(".txt", "");
 
             TextSource newTextSource = manager.getTextSourceManager().addTextSource(docID, null);
             getAnnotationsFromXml_OLD(manager, newTextSource, textSourceElement);
@@ -144,7 +144,7 @@ class XmlReader {
 
     }
 
-    private static void readProfiles(KnowtatorManager manager, List<Node> profileNodes) throws ParserConfigurationException, IOException, SAXException {
+    private static void readProfiles(KnowtatorManager manager, List<Node> profileNodes) {
         /*
         Get annotations by document
          */
@@ -172,6 +172,24 @@ class XmlReader {
         }
     }
 
+    private static HashMap<String, Element> getComplexSlotsFromXml(Element textSourceElement) {
+        /*
+        Next parse classes and add the annotations
+         */
+        HashMap<String, Element> mentionTracker = new HashMap<>();
+
+        for (Node complexSlotNode : XmlUtil.asList(textSourceElement.getElementsByTagName(XmlTags.COMPLEX_SLOT_MENTION))) {
+            if (complexSlotNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element complexSlotElement = (Element) complexSlotNode;
+
+                String annotationID = complexSlotElement.getAttribute(XmlTags.CLASS_MENTION_ID);
+                mentionTracker.put(annotationID, complexSlotElement);
+            }
+        }
+
+        return mentionTracker;
+    }
+
     private static HashMap<String, Element> getClassIDsFromXml(Element textSourceElement) {
         /*
         Next parse classes and add the annotations
@@ -182,24 +200,24 @@ class XmlReader {
             if (classNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element classElement = (Element) classNode;
 
-                String mentionKey = getMentionKey(classElement.getAttribute(XmlTags.CLASS_MENTION_ID));
-                mentionTracker.put(mentionKey, classElement);
+                String annotationID = classElement.getAttribute(XmlTags.CLASS_MENTION_ID);
+                mentionTracker.put(annotationID, classElement);
             }
         }
 
         return mentionTracker;
     }
 
-    private static String getMentionKey(String fullMention) {
-        String mentionSource = XmlUtil.getMentionSourceFromXML(fullMention);
-        int mentionID = XmlUtil.getMentionIDFromXML(fullMention);
-        return mentionSource + mentionID;
-    }
+//    private static String getMentionKey(String fullMention) {
+//        String mentionSource = XmlUtil.getMentionSourceFromXML(fullMention);
+//        int mentionID = XmlUtil.getMentionIDFromXML(fullMention);
+//        return mentionSource + mentionID;
+//    }
 
-    //TODO: Parse complexSlotMentions
     private static void getAnnotationsFromXml_OLD(KnowtatorManager manager, TextSource textSource, Element textSourceElement) {
 
         Map<String, Element> classMentionToClassIDMap = getClassIDsFromXml(textSourceElement);
+        Map<String, Element> complexSlotMentionToClassIDMap = getComplexSlotsFromXml(textSourceElement);
 
         for (Node annotationNode : XmlUtil.asList(textSourceElement.getElementsByTagName(XmlTags.ANNOTATION))) {
             if (annotationNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -209,19 +227,32 @@ class XmlReader {
                 List<Span> spans = getSpanInfo(annotationElement);
 
 
-                String mentionKey = getMentionKey(((Element) annotationElement.getElementsByTagName(XmlTags.MENTION).item(0)).getAttribute(XmlTags.MENTION_ID));
-                Element classElement = classMentionToClassIDMap.get(mentionKey);
-
+                String annotationID = ((Element) annotationElement.getElementsByTagName(XmlTags.MENTION).item(0)).getAttribute(XmlTags.MENTION_ID);
+                Element classElement = classMentionToClassIDMap.get(annotationID);
 
                 String className = classElement.getElementsByTagName(XmlTags.MENTION_CLASS).item(0).getTextContent();
                 String classID = ((Element) classElement.getElementsByTagName(XmlTags.MENTION_CLASS).item(0)).getAttribute(XmlTags.MENTION_CLASS_ID);
 
-                textSource.getAnnotationManager().addConceptAnnotation(classID, className, spans, null, profile);
+                ConceptAnnotation newAnnotation;
+                if (classID.equals(XmlTags.MENTION_CLASS_ID_IDENTITY)) {
+                    newAnnotation = new IdentityChainAnnotation(annotationID, textSource, profile);
+                    Element complexSlotElement = complexSlotMentionToClassIDMap.get(((Element) classElement.getElementsByTagName(XmlTags.HAS_SLOT_MENTION).item(0)).getAttribute(XmlTags.HAS_SLOT_MENTION_ID));
+                    if (((Element) complexSlotElement.getElementsByTagName(XmlTags.MENTION_SLOT).item(0)).getAttribute(XmlTags.MENTION_SLOT_ID).equals(XmlTags.MENTION_SLOT_ID_COREFERENCE)) {
+                        for (Node complexSlotMentionValueNode : XmlUtil.asList(complexSlotElement.getElementsByTagName(XmlTags.COMPLEX_SLOT_MENTION_VALUE))) {
+                            ((IdentityChainAnnotation)newAnnotation).addCoreferringAnnotation(((Element) complexSlotMentionValueNode).getAttribute(XmlTags.COMPLEX_SLOT_MENTION_VALUE_VALUE));
+                        }
+                    }
+
+                } else {
+                    newAnnotation = new ConceptAnnotation(classID, className, annotationID, textSource, profile);
+                }
+
+                textSource.getAnnotationManager().addConceptAnnotation(newAnnotation, spans);
             }
         }
     }
 
-    private static void getAnnotationsFromXml_NEW(KnowtatorManager manager, TextSource textSource, Element documentElement) {
+    private static void getConceptAnnotationsFromXml(KnowtatorManager manager, TextSource textSource, Element documentElement) {
         for (Node annotationNode : XmlUtil.asList(documentElement.getElementsByTagName(XmlTags.CONCEPT_ANNOTATION))) {
             Element annotationElement = (Element) annotationNode;
 
@@ -233,7 +264,25 @@ class XmlReader {
             String classID = annotationElement.getElementsByTagName(XmlTags.CLASS_ID).item(0).getTextContent();
             List<Span> spans = getSpanInfo(annotationElement);
 
-            textSource.getAnnotationManager().addConceptAnnotation(classID, className, spans, annotationID, profile);
+            textSource.getAnnotationManager().addConceptAnnotation(new ConceptAnnotation(classID, className, annotationID, textSource, profile), spans);
+        }
+    }
+
+    private static void getIdentityAnnotationsFromXml(KnowtatorManager manager, TextSource textSource, Element documentElement) {
+        for (Node annotationNode : XmlUtil.asList(documentElement.getElementsByTagName(XmlTags.IDENTITY_ANNOTATION))) {
+            Element annotationElement = (Element) annotationNode;
+
+            String annotationID = annotationElement.getElementsByTagName(XmlTags.ANNOTATION_ID).item(0).getTextContent();
+            String profileID = annotationElement.getElementsByTagName(XmlTags.ANNOTATOR).item(0).getTextContent();
+
+            Profile profile = manager.getProfileManager().addNewProfile(profileID);
+
+            List<Span> spans = getSpanInfo(annotationElement);
+
+            IdentityChainAnnotation newAnnotation = new IdentityChainAnnotation(annotationID, textSource, profile);
+            XmlUtil.asList(annotationElement.getElementsByTagName(XmlTags.COREFERRENCE)).forEach(coreferenceNode -> newAnnotation.addCoreferringAnnotation(coreferenceNode.getTextContent()));
+
+            textSource.getAnnotationManager().addConceptAnnotation(newAnnotation, spans);
         }
     }
 

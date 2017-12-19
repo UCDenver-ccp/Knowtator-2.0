@@ -32,7 +32,7 @@ public final class XmlUtil {
     public void write(String filename) {
         try {
             XmlWriter.write(manager, filename);
-        } catch (IOException | NoSuchFieldException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

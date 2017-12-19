@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator.ui.info;
 
 import edu.ucdenver.ccp.knowtator.annotation.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.annotation.IdentityChainAnnotation;
 import edu.ucdenver.ccp.knowtator.annotation.Span;
 import edu.ucdenver.ccp.knowtator.listeners.ConceptAnnotationListener;
 import edu.ucdenver.ccp.knowtator.listeners.SpanListener;
@@ -69,6 +70,9 @@ public class InfoPanel extends JPanel implements SpanListener, ConceptAnnotation
                 spanLabels.add(spanLabel);
             }
 
+
+
+
             add(titleLabel, gbc);
             add(idLabel, gbc);
             add(classLabel, gbc);
@@ -78,6 +82,19 @@ public class InfoPanel extends JPanel implements SpanListener, ConceptAnnotation
             add(dateLabel, gbc);
             add(spanTitleLabel, gbc);
             spanLabels.forEach(spanLabel -> add(spanLabel, gbc));
+
+            if (annotation instanceof IdentityChainAnnotation) {
+                JLabel coreferenceTitleLabel = new JLabel(("Coreferrences"));
+                coreferenceTitleLabel.setFont(new Font(coreferenceTitleLabel.getFont().getName(), Font.BOLD, coreferenceTitleLabel.getFont().getSize() + 2));
+                List<JLabel> coreferenceLabels = new ArrayList<>();
+                for (Span span : annotation.getSpans()) {
+                    JLabel spanLabel = new JLabel(String.format("%d, %d", span.getStart(), span.getEnd()));
+                    coreferenceLabels.add(spanLabel);
+                }
+                add(coreferenceTitleLabel, gbc);
+                coreferenceLabels.forEach(coreferenceLabel -> add(coreferenceLabel, gbc));
+            }
+
         }
         this.revalidate();
         this.repaint();

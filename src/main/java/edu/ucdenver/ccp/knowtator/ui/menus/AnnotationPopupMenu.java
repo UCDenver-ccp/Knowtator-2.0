@@ -93,7 +93,7 @@ public class AnnotationPopupMenu extends JPopupMenu {
         menuItem.addActionListener(e -> {
             view.getTextViewer().getSelectedTextPane().getGraphDialog().setVisible(true);
             if (textPane.getSelectedAnnotation() != null) {
-                view.getTextViewer().getSelectedTextPane().getGraphDialog().getGraphViewer().addVertex(textPane.getSelectedAnnotation());
+                view.getTextViewer().getSelectedTextPane().getGraphDialog().getGraphViewer().addVertex(textPane.getSelectedAnnotation().getID());
             }
         });
 

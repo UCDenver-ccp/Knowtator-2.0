@@ -34,7 +34,7 @@ public class GraphDialog extends JDialog implements ConceptAnnotationListener, C
         menuBar.add(new GraphViewMenu(this));
         setJMenuBar(menuBar);
 
-        graphViewer = new GraphViewer(manager, view);
+        graphViewer = new GraphViewer(manager, view, textSource);
         add(graphViewer);
     }
 

@@ -17,7 +17,6 @@ public final class AnnotationManager {
 
     private final KnowtatorManager manager;
 
-    //TODO: Store coreferences
     private TreeMap<Span, ConceptAnnotation> spanMap;
     private BasicKnowtatorView view;
     private TextSource textSource;
@@ -32,12 +31,8 @@ public final class AnnotationManager {
 
     }
 
-    public void addConceptAnnotation(String classID, String className, List<Span> spans, String annotationID, Profile profile) {
+    public void addConceptAnnotation(ConceptAnnotation newAnnotation, List<Span> spans) {
 
-
-
-
-        ConceptAnnotation newAnnotation = new ConceptAnnotation( classID, className, annotationID, textSource, profile);
         for (Span span: spans) {
             addSpanToConceptAnnotation(newAnnotation, span);
         }
@@ -48,16 +43,16 @@ public final class AnnotationManager {
     }
 
     private void addAnnotation(Annotation newAnnotation) {
-        String annotationID = newAnnotation.getID();
-        if (annotationID == null) {
-            annotationID = String.format("annotation_%d", annotationMap.size());
+        String id = newAnnotation.getID();
+        if (id == null) {
+            id = String.format("annotation_%d", annotationMap.size());
         }
 
-        while(annotationMap.containsKey(annotationID)) {
-            int annotationIDIndex = Integer.parseInt(annotationID.split("annotation_")[1]);
-            annotationID = String.format("annotation_%d", ++annotationIDIndex);
+        while(annotationMap.containsKey(id)) {
+            int annotationIDIndex = Integer.parseInt(id.split("annotation_")[1]);
+            id = String.format("annotation_%d", ++annotationIDIndex);
         }
-        newAnnotation.setID(annotationID);
+        newAnnotation.setID(id);
         annotationMap.put(newAnnotation.getID(), newAnnotation);
 
     }
@@ -156,27 +151,12 @@ public final class AnnotationManager {
         }
     }
 
-    public void addCompositionalAnnotation(String graphTitle, String sourceID, String targetID, String relationship, String annotationID, Profile profile) {
-        ConceptAnnotation sourceAnnotation = null, targetAnnotation = null;
-        for(ConceptAnnotation annotation : spanMap.values()) {
-            if (Objects.equals(annotation.getID(), sourceID)) {
-                sourceAnnotation = annotation;
-            }
-            if (annotation.getID().equals(targetID)) {
-                targetAnnotation = annotation;
-            }
-
+    public void addCompositionalAnnotation(String graphTitle, String sourceAnnotationID, String targetAnnotationID, String relationship, String annotationID, Profile profile) {
+        if (annotationMap.containsKey(sourceAnnotationID) && annotationMap.containsKey(targetAnnotationID)) {
+            CompositionalAnnotation newCompositionalAnnotation = new CompositionalAnnotation(graphTitle, sourceAnnotationID, targetAnnotationID, relationship, annotationID, textSource, profile);
+            addAnnotation(newCompositionalAnnotation);
+            if (view != null) view.compositionalAnnotationAddedEvent(newCompositionalAnnotation);
         }
-
-        if (sourceAnnotation != null && targetAnnotation != null) {
-            addCompositionalAnnotation(graphTitle, sourceAnnotation, targetAnnotation, relationship, annotationID, profile);
-        }
-    }
-
-    public void addCompositionalAnnotation(String graphTitle, Annotation source, Annotation target, String relationship, String annotationID, Profile profile) {
-        CompositionalAnnotation newCompositionalAnnotation = new CompositionalAnnotation(graphTitle, source, target, relationship, annotationID, textSource, profile);
-        addAnnotation(newCompositionalAnnotation);
-        if(view != null) view.compositionalAnnotationAddedEvent(newCompositionalAnnotation);
     }
 
     //TODO: Add annotations as subclasses of their assigned classes as well as of the AO
@@ -185,11 +165,15 @@ public final class AnnotationManager {
         String className = OWLAPIDataExtractor.getSelectedOwlClassName(view);
         List<Span> spans = Collections.singletonList(span);
         if (classID != null) {
-            addConceptAnnotation(classID, className, spans, null, manager.getProfileManager().getCurrentProfile());
+            addConceptAnnotation(new ConceptAnnotation(classID, className, null, textSource, manager.getProfileManager().getCurrentProfile()), spans);
         }
     }
 
     public void setView(BasicKnowtatorView view) {
         this.view = view;
+    }
+
+    public Annotation getAnnotation(String annotationID) {
+        return annotationMap.get(annotationID);
     }
 }

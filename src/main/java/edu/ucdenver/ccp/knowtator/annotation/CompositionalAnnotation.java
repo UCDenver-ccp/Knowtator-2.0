@@ -4,12 +4,12 @@ import edu.ucdenver.ccp.knowtator.profile.Profile;
 
 public class CompositionalAnnotation extends Annotation {
 
-    public Annotation getSource() {
-        return source;
+    public String getSourceAnnotationID() {
+        return sourceAnnotationID;
     }
 
-    public Annotation getTarget() {
-        return target;
+    public String getTargetAnnotationID() {
+        return targetAnnotationID;
     }
 
     public String getRelationship() {
@@ -17,16 +17,16 @@ public class CompositionalAnnotation extends Annotation {
     }
 
     private final String graphTitle;
-    private Annotation source;
-    private Annotation target;
+    private String sourceAnnotationID;
+    private String targetAnnotationID;
     private String relationship;
 
-    CompositionalAnnotation(String graphTitle, Annotation source, Annotation target, String relationship, String id, TextSource textSource, Profile annotator) {
+    CompositionalAnnotation(String graphTitle, String sourceAnnotationID, String targetAnnotationID, String relationship, String id, TextSource textSource, Profile annotator) {
         super(id, textSource, annotator);
         this.graphTitle = graphTitle;
 
-        this.source = source;
-        this.target = target;
+        this.sourceAnnotationID = sourceAnnotationID;
+        this.targetAnnotationID = targetAnnotationID;
         this.relationship = relationship;
     }
 

@@ -2,23 +2,21 @@ package edu.ucdenver.ccp.knowtator.annotation;
 
 import edu.ucdenver.ccp.knowtator.profile.Profile;
 
-import java.awt.*;
 import java.util.Date;
 
 public class Annotation {
 
-    //TODO Coreference annnotation
     public String id;
     private final Date date;
     TextSource textSource;
     Profile annotator;
 
 
-    Annotation(String annotationID, TextSource textSource, Profile annotator) {
+    Annotation(String id, TextSource textSource, Profile annotator) {
         this.textSource = textSource;
         this.annotator = annotator;
         this.date = new Date();
-        this.id = annotationID;
+        this.id = id;
     }
 
     public TextSource getTextSource() {
@@ -32,9 +30,6 @@ public class Annotation {
     }
     public String getID() {
         return id;
-    }
-    public Color getColor () {
-        return annotator.getColor(id, null);
     }
 
     @Override
