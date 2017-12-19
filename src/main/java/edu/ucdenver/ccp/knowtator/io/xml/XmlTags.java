@@ -39,4 +39,5 @@ class XmlTags {
     static final String COMPOSITIONAL_ANNOTATION_RELATIONSHIP = "relationship";
     static final String COMPOSITIONAL_ANNOTATION_ID = "id";
     static final String COMPOSITIONAL_ANNOTATION_GRAPH_TITLE = "graph";
+    //TODO: Add coreference tag
 }

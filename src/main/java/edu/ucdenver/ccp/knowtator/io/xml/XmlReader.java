@@ -78,6 +78,9 @@ class XmlReader {
         }
     }
 
+    //TODO: Read coreferences from old Knowtator
+    //TODO: Read coreferences from new Knowtator
+
     private static void readDocuments(KnowtatorManager manager, List<Node> documentNodes) {
         for (Node documentNode : documentNodes) {
             Element documentElement = (Element) documentNode;

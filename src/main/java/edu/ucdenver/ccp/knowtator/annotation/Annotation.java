@@ -7,6 +7,7 @@ import java.util.Date;
 
 public class Annotation {
 
+    //TODO Coreference annnotation
     public String id;
     private final Date date;
     TextSource textSource;

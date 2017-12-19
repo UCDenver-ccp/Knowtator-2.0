@@ -17,6 +17,7 @@ public final class AnnotationManager {
 
     private final KnowtatorManager manager;
 
+    //TODO: Store coreferences
     private TreeMap<Span, ConceptAnnotation> spanMap;
     private BasicKnowtatorView view;
     private TextSource textSource;

@@ -47,6 +47,8 @@ class XmlWriter {
         }
     }
 
+    //TODO: Write coreferences under "document" level
+
     static void write(KnowtatorManager manager, String fileName) throws IOException, NoSuchFieldException {
         log.warn(String.format("Writing to: %s", fileName));
 
