@@ -5,6 +5,8 @@ import edu.ucdenver.ccp.knowtator.ui.graph.GraphDialog;
 
 import javax.swing.*;
 
+//TODO: Toggle expand to show ontology terms as separate nodes
+//TODO; Toggle expand to show coreference
 public class GraphViewMenu extends JMenu {
 
     private GraphDialog graphDialog;

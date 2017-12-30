@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Objects;
 
 //TODO: Display coreferences
+//TODO: Expand to show ontology terms as nodes
 public class GraphViewer extends DnDTabbedPane {
 
     @SuppressWarnings("unused")
@@ -38,6 +39,8 @@ public class GraphViewer extends DnDTabbedPane {
     private final BasicKnowtatorView view;
     private TextSource textSource;
     private int graphCounter;
+    private boolean includeOntologyTerms;
+    private String defaultVertexColor = "D3D3D3";
 
     public GraphViewer(KnowtatorManager manager, BasicKnowtatorView view, TextSource textSource) {
 
@@ -47,6 +50,7 @@ public class GraphViewer extends DnDTabbedPane {
 
         graphCounter = 0;
         addNewGraph(String.format("Graph %d", graphCounter++));
+        includeOntologyTerms = true;
     }
 
 
@@ -179,22 +183,22 @@ public class GraphViewer extends DnDTabbedPane {
             if (selectedCells != null) {
                 for (Object cell : selectedCells) {
                     if (graph.getModel().isVertex(cell)) {
-                        ConceptAnnotation annotation = (ConceptAnnotation) ((mxCell) cell).getValue();
-                        graph.getModel().beginUpdate();
-                        try {
+                        if (((mxCell) cell).getValue() instanceof ConceptAnnotation) {
+                            ConceptAnnotation annotation = (ConceptAnnotation) ((mxCell) cell).getValue();
+                            graph.getModel().beginUpdate();
+                            try {
 
-                            graph.getModel().setStyle(cell,
-                                    String.format(
-                                            "fontSize=16;strokeWidth=4;strokeColor=black;fillColor=#%s",
-                                            Integer.toHexString(
-                                                    annotation.getColor().getRGB()
-                                            ).substring(2)
-                                    )
-                            );
-                        } finally {
-                            graph.refresh();
+                                graph.getModel().setStyle(cell,
+                                        String.format(
+                                                "fontSize=16;strokeWidth=4;strokeColor=black;fillColor=#%s",
+                                                includeOntologyTerms ? defaultVertexColor : Integer.toHexString(annotation.getColor().getRGB()).substring(2)
+                                        )
+                                );
+                            } finally {
+                                graph.refresh();
+                            }
+                            view.annotationSelectionChangedEvent(annotation);
                         }
-                        view.annotationSelectionChangedEvent(annotation);
                     }
                     if (graph.getModel().isEdge(cell)) {
                         CompositionalAnnotation annotation = (CompositionalAnnotation) ((mxCell) cell).getValue();
@@ -206,16 +210,18 @@ public class GraphViewer extends DnDTabbedPane {
             if (deselectedCells != null) {
                 for (Object cell : deselectedCells) {
                     if (graph.getModel().isVertex(cell)) {
-                        graph.getModel().beginUpdate();
-                        try {
-                            graph.getModel().setStyle(cell,
-                                    String.format(
-                                            "fontSize=16;strokeWidth=0;strokeColor=black;fillColor=#%s",
-                                            Integer.toHexString(((ConceptAnnotation) ((mxCell) cell).getValue()).getColor().getRGB()).substring(2)
-                                    )
-                            );
-                        } finally {
-                            graph.refresh();
+                        if (((mxCell) cell).getValue() instanceof ConceptAnnotation) {
+                            graph.getModel().beginUpdate();
+                            try {
+                                graph.getModel().setStyle(cell,
+                                        String.format(
+                                                "fontSize=16;strokeWidth=0;strokeColor=black;fillColor=#%s",
+                                                includeOntologyTerms ? defaultVertexColor : Integer.toHexString(((ConceptAnnotation) ((mxCell) cell).getValue()).getColor().getRGB()).substring(2)
+                                        )
+                                );
+                            } finally {
+                                graph.refresh();
+                            }
                         }
                     }
                 }
@@ -243,15 +249,52 @@ public class GraphViewer extends DnDTabbedPane {
         if (((mxGraphModel) graph.getModel()).getCell(annotationID) == null) {
             graph.getModel().beginUpdate();
             try {
-                String color = "D3D3D3";
+
                 if (annotation instanceof ConceptAnnotation) {
-                    color = Integer.toHexString(((ConceptAnnotation) annotation).getColor().getRGB()).substring(2);
+                    String conceptColor = Integer.toHexString(((ConceptAnnotation) annotation).getColor().getRGB()).substring(2);
+
+                    Object annotationVertex = graph.insertVertex(graph.getDefaultParent(), annotationID, annotation, 20, 20,
+                            80, 30,
+                            String.format("fontSize=16;fillColor=#%s", includeOntologyTerms ? defaultVertexColor : conceptColor)
+                    );
+                    graph.updateCellSize(annotationVertex);
+
+                    if (includeOntologyTerms) {
+                        Object conceptVertex = ((mxGraphModel) graph.getModel()).getCell(((ConceptAnnotation) annotation).getClassID());
+                        if (conceptVertex == null) {
+                            String value = ((ConceptAnnotation) annotation).getClassName();
+                            if (value.equals("null")) value = ((ConceptAnnotation) annotation).getClassID();
+                            conceptVertex = graph.insertVertex(graph.getDefaultParent(), ((ConceptAnnotation) annotation).getClassID(), value, 20, 20,
+                                    80, 30,
+                                    String.format("fontSize=16;fillColor=#%s", conceptColor)
+                            );
+                            graph.updateCellSize(conceptVertex);
+                        }
+                        graph.insertEdge(graph.getDefaultParent(),
+                                null,
+                                "denotes_concept",
+                                annotationVertex,
+                                conceptVertex,
+                                "straight=1;" +
+                                        "startArrow=dash;" +
+                                        "startSize=12;" +
+                                        "endArrow=block;" +
+                                        "verticalAlign=top;" +
+                                        "verticalLabelPosition=top;" +
+                                        "fontSize=16"
+                        );
+                    }
+
+
+                } else {
+                    Object vertex = graph.insertVertex(graph.getDefaultParent(), annotationID, annotation, 20, 20,
+                            80, 30,
+                            String.format("fontSize=16;fillColor=#%s", defaultVertexColor)
+                    );
+                    graph.updateCellSize(vertex);
+
                 }
-                Object vertex = graph.insertVertex(graph.getDefaultParent(), annotationID, annotation, 20, 20,
-                        80, 30,
-                        String.format("fontSize=16;fillColor=#%s", color)
-                );
-                graph.updateCellSize(vertex);
+
 
                 // apply layout to graph
                 executeLayout(getSelectedGraphComponent());
@@ -367,12 +410,17 @@ public class GraphViewer extends DnDTabbedPane {
             try {
                 for (Object cell : graph.getChildVertices(graph.getDefaultParent())) {
 
-                    Annotation annotation = (Annotation) ((mxCell) cell).getValue();
-                    String color = "D3D3D3";
-                    if (annotation instanceof ConceptAnnotation) {
-                        color = Integer.toHexString(((ConceptAnnotation) annotation).getColor().getRGB()).substring(2);
+
+                    if (((mxCell) cell).getValue() instanceof ConceptAnnotation) {
+                        Annotation annotation = (Annotation) ((mxCell) cell).getValue();
+                        String conceptColor = Integer.toHexString(((ConceptAnnotation) annotation).getColor().getRGB()).substring(2);
+                        graph.getModel().setStyle(cell, String.format("fontSize=16;fillColor=#%s", includeOntologyTerms ? defaultVertexColor : conceptColor));
+                    } else if (((mxCell) cell).getValue() instanceof  String) {
+                        String conceptColor = Integer.toHexString(manager.getProfileManager().getCurrentProfile().getColor(((mxCell) cell).getId(), ((String)((mxCell) cell).getValue())).getRGB()).substring(2);
+                        graph.getModel().setStyle(cell, String.format("fontSize=16;fillColor=#%s", conceptColor));
+                    } else {
+                        graph.getModel().setStyle(cell, String.format("fontSize=16;fillColor=#%s", defaultVertexColor));
                     }
-                    graph.getModel().setStyle(cell, String.format("fontSize=16;fillColor=#%s", color));
                     graph.getView().validateCell(cell);
 
                 }
