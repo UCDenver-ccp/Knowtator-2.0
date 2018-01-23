@@ -31,7 +31,9 @@ package edu.ucdenver.ccp.knowtator.annotation;
 import edu.ucdenver.ccp.knowtator.profile.Profile;
 
 import java.awt.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 public class ConceptAnnotation extends Annotation {
@@ -39,6 +41,7 @@ public class ConceptAnnotation extends Annotation {
 	private String className;
 	private String classID;
 	private TreeSet<Span> spans;
+	private Set<String> overlappingAnnotations;
 
 
 	public ConceptAnnotation(String classID, String className, String annotationID, TextSource textSource, Profile annotator) {
@@ -59,7 +62,9 @@ public class ConceptAnnotation extends Annotation {
 			return compare;
 		});
 
-//		log.warn(String.format("%1$-30s %2$30s", "annotation", toString()));
+		overlappingAnnotations = new HashSet<>();
+
+		//		log.warn(String.format("%1$-30s %2$30s", "annotation", toString()));
 	}
 
 	public String getClassID() {
@@ -127,10 +132,10 @@ public class ConceptAnnotation extends Annotation {
 
 	@Override
 	public String toString() {
-		return  String.format("%s\n%s - %s\n%s", id, classID, className, getSpannedText(spans));
+		return  String.format("%s\n%s", id, getSpannedText());
 	}
 
-	private String getSpannedText(TreeSet<Span> spans) {
+	public String getSpannedText() {
 		StringBuilder sb = new StringBuilder();
 		spans.forEach(span -> {
 			sb.append(textSource.getContent().substring(span.getStart(), span.getEnd()));
@@ -156,6 +161,13 @@ public class ConceptAnnotation extends Annotation {
 		return false;
 	}
 
+	public void addOverlappingAnnotation(String annotationID) {
+		overlappingAnnotations.add(annotationID);
+	}
+
+	public Set<String> getOverlappingAnnotations() {
+		return overlappingAnnotations;
+	}
 
 
 //		public Set<String> getSimpleFeatureNames() {

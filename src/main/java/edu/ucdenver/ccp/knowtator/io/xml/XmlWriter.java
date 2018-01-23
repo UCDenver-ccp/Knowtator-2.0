@@ -101,7 +101,8 @@ class XmlWriter {
                 );
                 bw.write(String.format("</%s>", XmlTags.TEXT));
                 bw.newLine();
-                if (manager.getConfigProperties().getSaveConceptAnnotations()) textSource.getAnnotationManager().getAnnotations(manager.getConfigProperties().getProfileFilters())
+                if (manager.getConfigProperties().getSaveConceptAnnotations())
+                    textSource.getAnnotationManager().getAnnotations(manager.getConfigProperties().getProfileFilters())
                         .forEach(annotation -> {
                             if (annotation instanceof IdentityChainAnnotation) writeIdentityChainAnnotation(bw, (IdentityChainAnnotation) annotation);
                             else if (annotation instanceof ConceptAnnotation) writeConceptAnnotation(bw, (ConceptAnnotation) annotation);

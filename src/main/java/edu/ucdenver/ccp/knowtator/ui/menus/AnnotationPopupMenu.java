@@ -91,9 +91,9 @@ public class AnnotationPopupMenu extends JPopupMenu {
     private JMenuItem displayAnnotationVertexCommand() {
         JMenuItem menuItem = new JMenuItem("Add annotation as a vertex in graph");
         menuItem.addActionListener(e -> {
-            view.getTextViewer().getSelectedTextPane().getGraphDialog().setVisible(true);
+            textPane.getGraphDialog().setVisible(true);
             if (textPane.getSelectedAnnotation() != null) {
-                view.getTextViewer().getSelectedTextPane().getGraphDialog().getGraphViewer().addVertex(textPane.getSelectedAnnotation().getID());
+                textPane.getGraphDialog().getGraphViewer().addAnnotationVertex(textPane.getSelectedAnnotation().getID());
             }
         });
 

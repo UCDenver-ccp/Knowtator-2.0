@@ -10,6 +10,7 @@ import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
 import edu.ucdenver.ccp.knowtator.profile.Profile;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
 import edu.ucdenver.ccp.knowtator.ui.menus.GraphMenu;
+import edu.ucdenver.ccp.knowtator.ui.menus.GraphOptionsMenu;
 import edu.ucdenver.ccp.knowtator.ui.menus.GraphViewMenu;
 
 import javax.swing.*;
@@ -32,6 +33,7 @@ public class GraphDialog extends JDialog implements ConceptAnnotationListener, C
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(new GraphMenu(manager, this));
         menuBar.add(new GraphViewMenu(this));
+        menuBar.add(new GraphOptionsMenu(this));
         setJMenuBar(menuBar);
 
         graphViewer = new GraphViewer(manager, view, textSource);
@@ -55,7 +57,7 @@ public class GraphDialog extends JDialog implements ConceptAnnotationListener, C
 
     @Override
     public void compositionalAnnotationAdded(CompositionalAnnotation compositionalAnnotation) {
-        if (graphViewer.getSelectedGraphComponent() != null) graphViewer.addEdge(compositionalAnnotation);
+        if (graphViewer.getSelectedGraphComponent() != null) graphViewer.addEdge(compositionalAnnotation, false);
     }
 
     public GraphViewer getGraphViewer() {
@@ -74,7 +76,7 @@ public class GraphDialog extends JDialog implements ConceptAnnotationListener, C
 
     @Override
     public void profileSelectionChanged(Profile profile) {
-        graphViewer.reDrawVertices();
+        graphViewer.getAllGraphComponents().forEach(graphViewer::reDrawVertices);
     }
 
     @Override
@@ -84,6 +86,6 @@ public class GraphDialog extends JDialog implements ConceptAnnotationListener, C
 
     @Override
     public void colorChanged() {
-        graphViewer.reDrawVertices();
+        graphViewer.getAllGraphComponents().forEach(graphViewer::reDrawVertices);
     }
 }

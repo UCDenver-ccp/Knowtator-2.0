@@ -80,8 +80,8 @@ public final class AnnotationManager {
         if (view != null) view.spanRemovedEvent();
     }
 
-    public Set<Annotation> getAnnotations(Set<Profile> profileFilters) {
-        if (profileFilters == null) return new HashSet<>(annotationMap.values());
+    public Collection<Annotation> getAnnotations(Set<Profile> profileFilters) {
+        if (profileFilters == null) return annotationMap.values();
         return annotationMap.values().stream().filter(annotation -> profileFilters.contains(annotation.getAnnotator())).collect(Collectors.toSet());
     }
 
@@ -167,6 +167,25 @@ public final class AnnotationManager {
         if (classID != null) {
             addConceptAnnotation(new ConceptAnnotation(classID, className, null, textSource, manager.getProfileManager().getCurrentProfile()), spans);
         }
+    }
+
+    public void findOverlaps() {
+        Map<Span, ConceptAnnotation> overlappingSpans = new HashMap<>();
+        spanMap.forEach((span, annotation) -> {
+            List<Span> toRemove = new ArrayList<>();
+            overlappingSpans.forEach((span1, annotation1) -> {
+                if (span.intersects(span1)) {
+                    annotation.addOverlappingAnnotation(
+                            annotation1.getID());
+                    annotation1.addOverlappingAnnotation(annotation.getID());
+                } else {
+                    toRemove.add(span1);
+                }
+            });
+            overlappingSpans.keySet().removeAll(toRemove);
+
+            overlappingSpans.put(span, annotation);
+        });
     }
 
     public void setView(BasicKnowtatorView view) {

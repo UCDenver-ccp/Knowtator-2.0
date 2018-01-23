@@ -13,6 +13,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,10 +24,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//TODO: Add dialog to show that annotations are being loaded
 class XmlReader {
     private static final Logger log = Logger.getLogger(KnowtatorManager.class);
 
     static void read(String fileName, KnowtatorManager manager, Boolean fromResources) throws ParserConfigurationException, IOException, SAXException {
+        JDialog progressDialog = new JDialog((JFrame) null, "Progress");
+        JLabel progressLabel = new JLabel();
+        progressDialog.add(progressLabel);
+        progressDialog.setVisible(true);
+
         /*
         doc parses the XML into a graph
          */
@@ -67,6 +74,7 @@ class XmlReader {
 
                 List<Node> annotationNodes = XmlUtil.asList(doc.getElementsByTagName(XmlTags.ANNOTATIONS));
                 if (annotationNodes.size() > 0) {
+                    progressLabel.setText("Reading in old Knowtator project");
                     log.warn("Reading in old Knowtator project");
                     readAnnotations(manager, annotationNodes);
                 }
@@ -78,6 +86,7 @@ class XmlReader {
         } else {
             log.warn(String.format("Could not read %s", fileName));
         }
+        progressDialog.dispose();
     }
 
     private static void readDocuments(KnowtatorManager manager, List<Node> documentNodes) {
@@ -221,33 +230,36 @@ class XmlReader {
 
         for (Node annotationNode : XmlUtil.asList(textSourceElement.getElementsByTagName(XmlTags.ANNOTATION))) {
             if (annotationNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element annotationElement = (Element) annotationNode;
-                String profileID = annotationElement.getElementsByTagName(XmlTags.ANNOTATOR).item(0).getTextContent();
-                Profile profile = manager.getProfileManager().addNewProfile(profileID);
-                List<Span> spans = getSpanInfo(annotationElement);
+                try {
+                    Element annotationElement = (Element) annotationNode;
+                    String profileID = annotationElement.getElementsByTagName(XmlTags.ANNOTATOR).item(0).getTextContent();
+                    Profile profile = manager.getProfileManager().addNewProfile(profileID);
+                    List<Span> spans = getSpanInfo(annotationElement);
 
 
-                String annotationID = ((Element) annotationElement.getElementsByTagName(XmlTags.MENTION).item(0)).getAttribute(XmlTags.MENTION_ID);
-                Element classElement = classMentionToClassIDMap.get(annotationID);
+                    String annotationID = ((Element) annotationElement.getElementsByTagName(XmlTags.MENTION).item(0)).getAttribute(XmlTags.MENTION_ID);
+                    Element classElement = classMentionToClassIDMap.get(annotationID);
 
-                String className = classElement.getElementsByTagName(XmlTags.MENTION_CLASS).item(0).getTextContent();
-                String classID = ((Element) classElement.getElementsByTagName(XmlTags.MENTION_CLASS).item(0)).getAttribute(XmlTags.MENTION_CLASS_ID);
+                    String className = classElement.getElementsByTagName(XmlTags.MENTION_CLASS).item(0).getTextContent();
+                    String classID = ((Element) classElement.getElementsByTagName(XmlTags.MENTION_CLASS).item(0)).getAttribute(XmlTags.MENTION_CLASS_ID);
 
-                ConceptAnnotation newAnnotation;
-                if (classID.equals(XmlTags.MENTION_CLASS_ID_IDENTITY)) {
-                    newAnnotation = new IdentityChainAnnotation(annotationID, textSource, profile);
-                    Element complexSlotElement = complexSlotMentionToClassIDMap.get(((Element) classElement.getElementsByTagName(XmlTags.HAS_SLOT_MENTION).item(0)).getAttribute(XmlTags.HAS_SLOT_MENTION_ID));
-                    if (((Element) complexSlotElement.getElementsByTagName(XmlTags.MENTION_SLOT).item(0)).getAttribute(XmlTags.MENTION_SLOT_ID).equals(XmlTags.MENTION_SLOT_ID_COREFERENCE)) {
-                        for (Node complexSlotMentionValueNode : XmlUtil.asList(complexSlotElement.getElementsByTagName(XmlTags.COMPLEX_SLOT_MENTION_VALUE))) {
-                            ((IdentityChainAnnotation)newAnnotation).addCoreferringAnnotation(((Element) complexSlotMentionValueNode).getAttribute(XmlTags.COMPLEX_SLOT_MENTION_VALUE_VALUE));
+                    ConceptAnnotation newAnnotation;
+                    if (classID.equals(XmlTags.MENTION_CLASS_ID_IDENTITY)) {
+                        newAnnotation = new IdentityChainAnnotation(annotationID, textSource, profile);
+                        Element complexSlotElement = complexSlotMentionToClassIDMap.get(((Element) classElement.getElementsByTagName(XmlTags.HAS_SLOT_MENTION).item(0)).getAttribute(XmlTags.HAS_SLOT_MENTION_ID));
+                        if (((Element) complexSlotElement.getElementsByTagName(XmlTags.MENTION_SLOT).item(0)).getAttribute(XmlTags.MENTION_SLOT_ID).equals(XmlTags.MENTION_SLOT_ID_COREFERENCE)) {
+                            for (Node complexSlotMentionValueNode : XmlUtil.asList(complexSlotElement.getElementsByTagName(XmlTags.COMPLEX_SLOT_MENTION_VALUE))) {
+                                ((IdentityChainAnnotation) newAnnotation).addCoreferringAnnotation(((Element) complexSlotMentionValueNode).getAttribute(XmlTags.COMPLEX_SLOT_MENTION_VALUE_VALUE));
+                            }
                         }
+
+                    } else {
+                        newAnnotation = new ConceptAnnotation(classID, className, annotationID, textSource, profile);
                     }
 
-                } else {
-                    newAnnotation = new ConceptAnnotation(classID, className, annotationID, textSource, profile);
+                    textSource.getAnnotationManager().addConceptAnnotation(newAnnotation, spans);
+                } catch (NullPointerException ignored) {
                 }
-
-                textSource.getAnnotationManager().addConceptAnnotation(newAnnotation, spans);
             }
         }
     }

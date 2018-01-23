@@ -5,13 +5,11 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.util.mxMorphing;
+import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.annotation.Annotation;
-import edu.ucdenver.ccp.knowtator.annotation.CompositionalAnnotation;
-import edu.ucdenver.ccp.knowtator.annotation.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.annotation.TextSource;
+import edu.ucdenver.ccp.knowtator.annotation.*;
 import edu.ucdenver.ccp.knowtator.owl.OWLAPIDataExtractor;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
 import org.apache.log4j.LogManager;
@@ -38,9 +36,13 @@ public class GraphViewer extends DnDTabbedPane {
     private final KnowtatorManager manager;
     private final BasicKnowtatorView view;
     private TextSource textSource;
+
     private int graphCounter;
     private boolean includeOntologyTerms;
-    private String defaultVertexColor = "D3D3D3";
+    private boolean includeCoreferences;
+    private boolean includeOverlaps;
+
+    private String edgeOptions = "straight=1;startArrow=dash;startSize=12;endArrow=block;verticalAlign=top;verticalLabelPosition=top;fontSize=%d";
 
     public GraphViewer(KnowtatorManager manager, BasicKnowtatorView view, TextSource textSource) {
 
@@ -51,12 +53,15 @@ public class GraphViewer extends DnDTabbedPane {
         graphCounter = 0;
         addNewGraph(String.format("Graph %d", graphCounter++));
         includeOntologyTerms = true;
+        includeCoreferences = true;
+        includeOverlaps = true;
     }
 
 
     public mxGraphComponent addNewGraph(String title) {
 
         mxGraph graph = new mxGraph();
+
         graph.setCellsResizable(false);
         graph.setEdgeLabelsMovable(false);
         graph.setAllowDanglingEdges(false);
@@ -86,16 +91,15 @@ public class GraphViewer extends DnDTabbedPane {
         JButton btnClose = new JButton("x");
 
         GridBagConstraints gbc = new GridBagConstraints();
+
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1;
-
         pnlTab.add(lblTitle, gbc);
 
         gbc.gridx++;
         gbc.weightx = 0;
         pnlTab.add(btnClose, gbc);
-
 
         setTabComponentAt(index, pnlTab);
 
@@ -147,15 +151,14 @@ public class GraphViewer extends DnDTabbedPane {
                             String sourceAnnotationID = ((mxCell) cell).getSource().getId();
                             String targetAnnotationID = ((mxCell) cell).getTarget().getId();
 
-                            view.getTextViewer().getSelectedTextPane().getTextSource().getAnnotationManager()
-                                    .addCompositionalAnnotation(
-                                            getSelectedComponent().getName(),
-                                            sourceAnnotationID,
-                                            targetAnnotationID,
-                                            propertyName,
-                                            null,
-                                            manager.getProfileManager().getCurrentProfile()
-                                    );
+                            textSource.getAnnotationManager().addCompositionalAnnotation(
+                                    getSelectedComponent().getName(),
+                                    sourceAnnotationID,
+                                    targetAnnotationID,
+                                    propertyName,
+                                    null,
+                                    manager.getProfileManager().getCurrentProfile()
+                            );
 
                             graph.getModel().remove(cell);
                         }
@@ -164,14 +167,21 @@ public class GraphViewer extends DnDTabbedPane {
             }
         });
 
+        //TODO: Check if I really want removing a cell to remove the annotation
         graph.addListener(mxEvent.REMOVE_CELLS, (sender, evt) -> {
             Object[] cells = (Object[])evt.getProperty("cells");
             for (Object cell : cells) {
                 if (graph.getModel().isEdge(cell)) {
-                    view.getTextViewer().getSelectedTextPane().getTextSource().getAnnotationManager()
-                            .removeAnnotation(((mxCell) cell).getId());
-                    graph.getModel().remove(cell);
-                    executeLayout(graphComponent);
+                    graph.getModel().beginUpdate();
+                    try {
+                        textSource.getAnnotationManager().removeAnnotation(((mxCell) cell).getId());
+                        graph.getModel().remove(cell);
+                    }
+                    finally {
+                        executeLayout(graphComponent);
+                        graph.getModel().endUpdate();
+                    }
+
                 }
             }
         });
@@ -183,47 +193,32 @@ public class GraphViewer extends DnDTabbedPane {
             if (selectedCells != null) {
                 for (Object cell : selectedCells) {
                     if (graph.getModel().isVertex(cell)) {
-                        if (((mxCell) cell).getValue() instanceof ConceptAnnotation) {
-                            ConceptAnnotation annotation = (ConceptAnnotation) ((mxCell) cell).getValue();
-                            graph.getModel().beginUpdate();
-                            try {
-
-                                graph.getModel().setStyle(cell,
-                                        String.format(
-                                                "fontSize=16;strokeWidth=4;strokeColor=black;fillColor=#%s",
-                                                includeOntologyTerms ? defaultVertexColor : Integer.toHexString(annotation.getColor().getRGB()).substring(2)
-                                        )
-                                );
-                            } finally {
-                                graph.refresh();
-                            }
-                            view.annotationSelectionChangedEvent(annotation);
+                        graph.getModel().beginUpdate();
+                        try {
+                            setVertexStyle(graph, (mxCell) cell, true);
+                        } finally {
+                            graph.getModel().endUpdate();
                         }
+                        view.annotationSelectionChangedEvent(textSource.getAnnotationManager().getAnnotation(((mxCell) cell).getId()));
+                        view.owlEntitySelectionChanged(OWLAPIDataExtractor.getOWLClassByID(view, ((mxCell) cell).getId()));
                     }
                     if (graph.getModel().isEdge(cell)) {
-                        CompositionalAnnotation annotation = (CompositionalAnnotation) ((mxCell) cell).getValue();
-                        view.owlEntitySelectionChanged(OWLAPIDataExtractor.getOWLObjectPropertyByID(view, annotation.getRelationship()));
+                        view.owlEntitySelectionChanged(OWLAPIDataExtractor.getOWLObjectPropertyByID(view, (String) ((mxCell) cell).getValue()));
                     }
+                    executeLayout(graphComponent);
                 }
             }
 
             if (deselectedCells != null) {
                 for (Object cell : deselectedCells) {
                     if (graph.getModel().isVertex(cell)) {
-                        if (((mxCell) cell).getValue() instanceof ConceptAnnotation) {
                             graph.getModel().beginUpdate();
                             try {
-                                graph.getModel().setStyle(cell,
-                                        String.format(
-                                                "fontSize=16;strokeWidth=0;strokeColor=black;fillColor=#%s",
-                                                includeOntologyTerms ? defaultVertexColor : Integer.toHexString(((ConceptAnnotation) ((mxCell) cell).getValue()).getColor().getRGB()).substring(2)
-                                        )
-                                );
+                                setVertexStyle(graph, (mxCell) cell, false);
                             } finally {
                                 graph.refresh();
                             }
                         }
-                    }
                 }
             }
      });
@@ -243,31 +238,86 @@ public class GraphViewer extends DnDTabbedPane {
         });
     }
 
-    public Object addVertex(String annotationID) {
+    public Object addAnnotationVertex(String annotationID) {
         Annotation annotation = textSource.getAnnotationManager().getAnnotation(annotationID);
-        mxGraph graph = getSelectedGraphComponent().getGraph();
+        mxGraphComponent graphComponent = getSelectedGraphComponent();
+        mxGraph graph = graphComponent.getGraph();
         if (((mxGraphModel) graph.getModel()).getCell(annotationID) == null) {
             graph.getModel().beginUpdate();
             try {
 
                 if (annotation instanceof ConceptAnnotation) {
-                    String conceptColor = Integer.toHexString(((ConceptAnnotation) annotation).getColor().getRGB()).substring(2);
-
-                    Object annotationVertex = graph.insertVertex(graph.getDefaultParent(), annotationID, annotation, 20, 20,
-                            80, 30,
-                            String.format("fontSize=16;fillColor=#%s", includeOntologyTerms ? defaultVertexColor : conceptColor)
+                    Object annotationVertex = graph.insertVertex(
+                            graph.getDefaultParent(),
+                            annotationID,
+                            includeOntologyTerms ? ((ConceptAnnotation) annotation).getSpannedText():
+                                    String.format ("%s\n%s\n%s",
+                                            ((ConceptAnnotation) annotation).getSpannedText(),
+                                            ((ConceptAnnotation) annotation).getClassID(),
+                                            ((ConceptAnnotation) annotation).getClassName()
+                                    ),
+                            20, 20,
+                            80, 30
                     );
+                    setVertexStyle(graph, (mxCell) annotationVertex, false);
                     graph.updateCellSize(annotationVertex);
 
-                    if (includeOntologyTerms) {
+                    if (includeOverlaps) {
+                        ((ConceptAnnotation) annotation).getOverlappingAnnotations().forEach(overlappingAnnotationID -> {
+                            Object overlappingAnnotationVertex = ((mxGraphModel) graph.getModel()).getCell(overlappingAnnotationID);
+                            if (overlappingAnnotationVertex == null) {
+                                overlappingAnnotationVertex = addAnnotationVertex(overlappingAnnotationID);
+                            }
+                            Boolean addOverlapEdge = true;
+                            for(Object edge : graph.getEdges(overlappingAnnotationVertex)) {
+                                if (((mxCell) edge).getValue().equals("overlaps_with")) {
+                                    if (((mxCell) edge).getSource().equals(annotationVertex) || ((mxCell) edge).getTarget().equals(annotationVertex)) {
+                                        addOverlapEdge = false;
+                                    }
+                                }
+                            }
+                            if (addOverlapEdge) {
+                                graph.insertEdge(graph.getDefaultParent(),
+                                        null,
+                                        "overlaps_with",
+                                        annotationVertex,
+                                        overlappingAnnotationVertex,
+                                        String.format("straight=1;dashed=1;startArrow=dash;startSize=12;endArrow=none;verticalAlign=top;verticalLabelPosition=top;fontSize=%d",
+                                                16
+                                        )
+                                );
+                            }
+                        });
+                    }
+
+                    if (annotation instanceof IdentityChainAnnotation) {
+                        if (includeCoreferences) {
+                            ((IdentityChainAnnotation) annotation).getCoreferringAnnotations().forEach(coreferringAnnotationID -> {
+                                Object coreferringAnnotationVertex = ((mxGraphModel) graph.getModel()).getCell(coreferringAnnotationID);
+                                if (coreferringAnnotationVertex == null) {
+                                    coreferringAnnotationVertex = addAnnotationVertex(coreferringAnnotationID);
+                                }
+                                graph.insertEdge(graph.getDefaultParent(),
+                                        null,
+                                        "refers_to",
+                                        annotationVertex,
+                                        coreferringAnnotationVertex,
+                                        String.format(edgeOptions,
+                                                16
+                                        )
+                                );
+                            });
+                        }
+                    }
+                    else if (includeOntologyTerms) {
                         Object conceptVertex = ((mxGraphModel) graph.getModel()).getCell(((ConceptAnnotation) annotation).getClassID());
                         if (conceptVertex == null) {
-                            String value = ((ConceptAnnotation) annotation).getClassName();
-                            if (value.equals("null")) value = ((ConceptAnnotation) annotation).getClassID();
-                            conceptVertex = graph.insertVertex(graph.getDefaultParent(), ((ConceptAnnotation) annotation).getClassID(), value, 20, 20,
-                                    80, 30,
-                                    String.format("fontSize=16;fillColor=#%s", conceptColor)
+                            conceptVertex = graph.insertVertex(graph.getDefaultParent(),
+                                    ((ConceptAnnotation) annotation).getClassID(),
+                                    String.format("%s\n%s", ((ConceptAnnotation) annotation).getClassID(), ((ConceptAnnotation) annotation).getClassName()), 20, 20,
+                                    80, 30
                             );
+                            setVertexStyle(graph, (mxCell) conceptVertex, false);
                             graph.updateCellSize(conceptVertex);
                         }
                         graph.insertEdge(graph.getDefaultParent(),
@@ -275,49 +325,38 @@ public class GraphViewer extends DnDTabbedPane {
                                 "denotes_concept",
                                 annotationVertex,
                                 conceptVertex,
-                                "straight=1;" +
-                                        "startArrow=dash;" +
-                                        "startSize=12;" +
-                                        "endArrow=block;" +
-                                        "verticalAlign=top;" +
-                                        "verticalLabelPosition=top;" +
-                                        "fontSize=16"
+                                String.format(edgeOptions,
+                                    16
+                                )
                         );
                     }
 
 
-                } else {
-                    Object vertex = graph.insertVertex(graph.getDefaultParent(), annotationID, annotation, 20, 20,
-                            80, 30,
-                            String.format("fontSize=16;fillColor=#%s", defaultVertexColor)
-                    );
-                    graph.updateCellSize(vertex);
-
                 }
 
-
-                // apply layout to graph
-                executeLayout(getSelectedGraphComponent());
             } finally {
+                executeLayout(graphComponent);
                 graph.getModel().endUpdate();
             }
+
         }
         return goToVertex(annotation);
     }
 
-    void addEdge(CompositionalAnnotation compositionalAnnotation) {
+    void addEdge(CompositionalAnnotation compositionalAnnotation, boolean ignoreGraphTitle) {
 
-        mxGraph graph = getGraphComponent(compositionalAnnotation.getGraphTitle()).getGraph();
+        mxGraphComponent graphComponent = ignoreGraphTitle ? getSelectedGraphComponent() : getGraphComponent(compositionalAnnotation.getGraphTitle());
+        mxGraph graph = graphComponent.getGraph();
         graph.getModel().beginUpdate();
         try {
             Object source = ((mxGraphModel) graph.getModel()).getCell(compositionalAnnotation.getSourceAnnotationID());
             Object target =  ((mxGraphModel) graph.getModel()).getCell(compositionalAnnotation.getTargetAnnotationID());
 
             if (source == null) {
-                source = addVertex(compositionalAnnotation.getSourceAnnotationID());
+                source = addAnnotationVertex(compositionalAnnotation.getSourceAnnotationID());
             }
             if (target == null) {
-                target = addVertex(compositionalAnnotation.getTargetAnnotationID());
+                target = addAnnotationVertex(compositionalAnnotation.getTargetAnnotationID());
             }
 
 
@@ -335,8 +374,8 @@ public class GraphViewer extends DnDTabbedPane {
                             "fontSize=16"
             );
 
-            executeLayout(getGraphComponent(compositionalAnnotation.getGraphTitle()));
         } finally {
+            executeLayout(graphComponent);
             graph.getModel().endUpdate();
         }
     }
@@ -385,14 +424,14 @@ public class GraphViewer extends DnDTabbedPane {
         mxGraph graph = getSelectedGraphComponent().getGraph();
 
         for (Object cell : graph.getAllEdges(graph.getChildCells(graph.getDefaultParent()))) {
-            view.getTextViewer().getSelectedTextPane().getTextSource().getAnnotationManager().removeAnnotation(((mxCell) cell).getId());
+            textSource.getAnnotationManager().removeAnnotation(((mxCell) cell).getId());
         }
 
         closeGraph((mxGraphComponent) getSelectedComponent());
 
     }
 
-    private java.util.List<mxGraphComponent> getAllGraphComponents() {
+    java.util.List<mxGraphComponent> getAllGraphComponents() {
         List<mxGraphComponent> graphComponentList = new ArrayList<>();
         for (Component component : getComponents()) {
             if (component.getClass() == mxGraphComponent.class) {
@@ -402,41 +441,35 @@ public class GraphViewer extends DnDTabbedPane {
         return graphComponentList;
     }
 
-    void reDrawVertices() {
-        for (mxGraphComponent graphComponent : getAllGraphComponents()) {
-            mxGraph graph = graphComponent.getGraph();
+    void reDrawVertices(mxGraphComponent graphComponent) {
+        mxGraph graph = graphComponent.getGraph();
 
-            graph.getModel().beginUpdate();
-            try {
-                for (Object cell : graph.getChildVertices(graph.getDefaultParent())) {
+        graph.getModel().beginUpdate();
+        try {
+            for (Object c : graph.getChildVertices(graph.getDefaultParent())) {
+                mxCell cell = (mxCell) c;
+                setVertexStyle(graph, cell, graph.isCellSelected(cell));
+                graph.updateCellSize(cell);
+//                mxRectangle bounds = graph.getView().getState(cell).getLabelBounds();
+//                graph.resizeCell(cell,
+//                        new mxRectangle(
+//                                bounds.getCenterX(),
+//                                bounds.getCenterY(),
+//                                bounds.getWidth(),
+//                                bounds.getHeight() + 20
+//                        )
+//                );
 
-
-                    if (((mxCell) cell).getValue() instanceof ConceptAnnotation) {
-                        Annotation annotation = (Annotation) ((mxCell) cell).getValue();
-                        String conceptColor = Integer.toHexString(((ConceptAnnotation) annotation).getColor().getRGB()).substring(2);
-                        graph.getModel().setStyle(cell, String.format("fontSize=16;fillColor=#%s", includeOntologyTerms ? defaultVertexColor : conceptColor));
-                    } else if (((mxCell) cell).getValue() instanceof  String) {
-                        String conceptColor = Integer.toHexString(manager.getProfileManager().getCurrentProfile().getColor(((mxCell) cell).getId(), ((String)((mxCell) cell).getValue())).getRGB()).substring(2);
-                        graph.getModel().setStyle(cell, String.format("fontSize=16;fillColor=#%s", conceptColor));
-                    } else {
-                        graph.getModel().setStyle(cell, String.format("fontSize=16;fillColor=#%s", defaultVertexColor));
-                    }
-                    graph.getView().validateCell(cell);
-
-                }
-//                // apply layout to graph
-                executeLayout(graphComponent);
-
-
-//
-            } finally {
-                graph.getModel().endUpdate();
-                graph.refresh();
+                graph.getView().validateCell(cell);
             }
+        } finally {
+            graph.getModel().endUpdate();
+            graph.refresh();
         }
     }
 
     private void executeLayout(mxGraphComponent graphComponent) {
+        reDrawVertices(graphComponent);
         mxHierarchicalLayout layout = new mxHierarchicalLayout(graphComponent.getGraph());
         layout.setOrientation(SwingConstants.WEST);
         layout.setIntraCellSpacing(50);
@@ -468,5 +501,64 @@ public class GraphViewer extends DnDTabbedPane {
             graphComponent.getGraph().getModel().endUpdate();
             graphComponent.zoomAndCenter();
         }
+    }
+
+    public void addAllAnnotations() {
+        getGraphComponent("All annotations");
+
+        textSource.getAnnotationManager().findOverlaps();
+        Collection<Annotation> annotations = textSource.getAnnotationManager().getAnnotations(null);
+
+        //TODO: Fix progress bar
+        for(Annotation annotation : annotations) {
+            if (annotation instanceof ConceptAnnotation) {
+                addAnnotationVertex(annotation.getID());
+            }
+            if (annotation instanceof CompositionalAnnotation) addEdge((CompositionalAnnotation) annotation, true);
+        }
+    }
+
+    private void setVertexStyle(mxGraph graph, mxCell cell, boolean isSelected) {
+        String vertexType = getVertexTypeFromCellID(cell.getId());
+
+        String defaultVertexColor = "D3D3D3";
+        String vertexColor = defaultVertexColor;
+        String vertexShape = mxConstants.SHAPE_ELLIPSE;
+
+        switch (vertexType) {
+            case "NA":
+                vertexColor = Integer.toHexString(manager.getProfileManager().getCurrentProfile().getColor(cell.getId(), null).getRGB()).substring(2);
+                vertexShape = mxConstants.SHAPE_ELLIPSE;
+                break;
+            case "IA":
+                vertexColor = defaultVertexColor;
+                vertexShape = mxConstants.SHAPE_HEXAGON;
+                break;
+            case "CA":
+                vertexColor = includeOntologyTerms ? defaultVertexColor : Integer.toHexString(manager.getProfileManager().getCurrentProfile().getColor(cell.getId(), null).getRGB()).substring(2);
+                vertexShape = mxConstants.SHAPE_RECTANGLE;
+                break;
+        }
+
+        String vertexOptions = "fontSize=16;fontColor=black;strokeColor=black;strokeWidth=%d;fillColor=#%s;shape=%s";
+        int selectedStrokeWidth = 4;
+        int unselectedStrokeWidth = 1;
+        graph.getModel().setStyle(cell, String.format(
+                vertexOptions,
+                isSelected ? selectedStrokeWidth : unselectedStrokeWidth,
+                vertexColor,
+                vertexShape
+        ));
+
+    }
+
+    private String getVertexTypeFromCellID(String cellID) {
+        if (textSource.getAnnotationManager().getAnnotation(cellID) instanceof IdentityChainAnnotation) {
+            return "IA";
+        } else if (textSource.getAnnotationManager().getAnnotation(cellID) instanceof ConceptAnnotation) {
+            return "CA";
+        }
+
+        return "NA";
     }
 }

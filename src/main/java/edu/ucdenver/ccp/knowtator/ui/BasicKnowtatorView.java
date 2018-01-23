@@ -3,10 +3,7 @@ package edu.ucdenver.ccp.knowtator.ui;
 import com.google.common.base.Optional;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.actions.ProjectActions;
-import edu.ucdenver.ccp.knowtator.annotation.CompositionalAnnotation;
-import edu.ucdenver.ccp.knowtator.annotation.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.annotation.Span;
-import edu.ucdenver.ccp.knowtator.annotation.TextSource;
+import edu.ucdenver.ccp.knowtator.annotation.*;
 import edu.ucdenver.ccp.knowtator.listeners.*;
 import edu.ucdenver.ccp.knowtator.profile.Profile;
 import edu.ucdenver.ccp.knowtator.ui.info.FindPanel;
@@ -182,8 +179,8 @@ public class BasicKnowtatorView extends AbstractOWLClassViewComponent implements
     public void profileSelectionChangedEvent(Profile profile) {
         profileListeners.forEach(profileListener -> profileListener.profileSelectionChanged(profile));
     }
-    public void annotationSelectionChangedEvent(ConceptAnnotation selectedAnnotation) {
-        conceptAnnotationListeners.forEach(listener -> listener.annotationSelectionChanged(selectedAnnotation));
+    public void annotationSelectionChangedEvent(Annotation selectedAnnotation) {
+        if (selectedAnnotation instanceof ConceptAnnotation) conceptAnnotationListeners.forEach(listener -> listener.annotationSelectionChanged((ConceptAnnotation) selectedAnnotation));
     }
 
     public void annotationRemovedEvent(ConceptAnnotation removedAnnotation) {
