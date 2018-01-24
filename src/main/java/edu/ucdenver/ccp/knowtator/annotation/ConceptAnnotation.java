@@ -138,7 +138,7 @@ public class ConceptAnnotation extends Annotation {
 	public String getSpannedText() {
 		StringBuilder sb = new StringBuilder();
 		spans.forEach(span -> {
-			sb.append(textSource.getContent().substring(span.getStart(), span.getEnd()));
+			sb.append(String.format("%s, Text: %s", span.toString(), textSource.getContent().substring(span.getStart(), span.getEnd())));
 			sb.append("\n");
 		});
 		return sb.toString();

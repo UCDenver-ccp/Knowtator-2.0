@@ -81,19 +81,13 @@ public class TextPane extends JTextPane implements ConceptAnnotationListener, Sp
 					public void mouseReleased(MouseEvent e) { handleMouseRelease(e, press_offset, viewToModel(e.getPoint())); }
 
 					@Override
-					public void mouseEntered(MouseEvent e) {
-
-					}
+					public void mouseEntered(MouseEvent e) { }
 
 					@Override
-					public void mouseExited(MouseEvent e) {
-
-					}
+					public void mouseExited(MouseEvent e) { }
 
 					@Override
-					public void mouseClicked(MouseEvent e) {
-
-					}
+					public void mouseClicked(MouseEvent e) { }
 				}
 		);
 	}
@@ -101,9 +95,10 @@ public class TextPane extends JTextPane implements ConceptAnnotationListener, Sp
 	private void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
 		AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e, view, this);
 
-		Map<Span, ConceptAnnotation> spansContainingLocation = textSource.getAnnotationManager().getSpanMap(press_offset, filterByProfile ? manager.getProfileManager().getCurrentProfile() : null);
-
-
+		Map<Span, ConceptAnnotation> spansContainingLocation = textSource.getAnnotationManager().getSpanMap(
+				press_offset,
+				filterByProfile ? manager.getProfileManager().getCurrentProfile() : null
+		);
 
 		if (SwingUtilities.isRightMouseButton(e)) {
 			if (spansContainingLocation.size() == 1) {

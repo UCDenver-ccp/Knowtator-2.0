@@ -2,6 +2,7 @@ package edu.ucdenver.ccp.knowtator.ui.graph;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.util.mxMorphing;
@@ -257,10 +258,10 @@ public class GraphViewer extends DnDTabbedPane {
                                             ((ConceptAnnotation) annotation).getClassName()
                                     ),
                             20, 20,
-                            80, 30
+                            80, 80
                     );
                     setVertexStyle(graph, (mxCell) annotationVertex, false);
-                    graph.updateCellSize(annotationVertex);
+//                    graph.updateCellSize(annotationVertex);
 
                     if (includeOverlaps) {
                         ((ConceptAnnotation) annotation).getOverlappingAnnotations().forEach(overlappingAnnotationID -> {
@@ -300,8 +301,8 @@ public class GraphViewer extends DnDTabbedPane {
                                 graph.insertEdge(graph.getDefaultParent(),
                                         null,
                                         "refers_to",
-                                        annotationVertex,
                                         coreferringAnnotationVertex,
+                                        annotationVertex,
                                         String.format(edgeOptions,
                                                 16
                                         )
@@ -314,11 +315,12 @@ public class GraphViewer extends DnDTabbedPane {
                         if (conceptVertex == null) {
                             conceptVertex = graph.insertVertex(graph.getDefaultParent(),
                                     ((ConceptAnnotation) annotation).getClassID(),
-                                    String.format("%s\n%s", ((ConceptAnnotation) annotation).getClassID(), ((ConceptAnnotation) annotation).getClassName()), 20, 20,
-                                    80, 30
+                                    String.format("%s\n%s", ((ConceptAnnotation) annotation).getClassID(), ((ConceptAnnotation) annotation).getClassName()),
+                                    20, 20,
+                                    80, 80
                             );
                             setVertexStyle(graph, (mxCell) conceptVertex, false);
-                            graph.updateCellSize(conceptVertex);
+//                            graph.updateCellSize(conceptVertex);
                         }
                         graph.insertEdge(graph.getDefaultParent(),
                                 null,
@@ -450,6 +452,9 @@ public class GraphViewer extends DnDTabbedPane {
                 mxCell cell = (mxCell) c;
                 setVertexStyle(graph, cell, graph.isCellSelected(cell));
                 graph.updateCellSize(cell);
+                mxGeometry g = cell.getGeometry();
+                g.setHeight(g.getHeight() + 50);
+                g.setWidth(g.getWidth() + 50);
 //                mxRectangle bounds = graph.getView().getState(cell).getLabelBounds();
 //                graph.resizeCell(cell,
 //                        new mxRectangle(
@@ -473,7 +478,8 @@ public class GraphViewer extends DnDTabbedPane {
         mxHierarchicalLayout layout = new mxHierarchicalLayout(graphComponent.getGraph());
         layout.setOrientation(SwingConstants.WEST);
         layout.setIntraCellSpacing(50);
-        layout.setInterRankCellSpacing(250);
+        layout.setInterRankCellSpacing(125);
+        layout.setOrientation(SwingConstants.NORTH);
 
 //        mxFastOrganicLayout layout = new mxFastOrganicLayout(graphComponent.getGraph());
 //        layout.setForceConstant(250); // the higher, the more separated

@@ -6,6 +6,7 @@ import edu.ucdenver.ccp.knowtator.annotation.Span;
 import edu.ucdenver.ccp.knowtator.listeners.ConceptAnnotationListener;
 import edu.ucdenver.ccp.knowtator.listeners.SpanListener;
 import edu.ucdenver.ccp.knowtator.ui.BasicKnowtatorView;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InfoPanel extends JPanel implements SpanListener, ConceptAnnotationListener {
-
+    @SuppressWarnings("unused")
+    private Logger log = Logger.getLogger(InfoPanel.class);
     private DateFormat dateFormat = new SimpleDateFormat("yyy/MM/dd");
     private BasicKnowtatorView view;
 
@@ -35,6 +37,7 @@ public class InfoPanel extends JPanel implements SpanListener, ConceptAnnotation
 
     @Override
     public void annotationRemoved(ConceptAnnotation removedAnnotation) {
+
         displayInfo(null);
     }
 
@@ -48,7 +51,7 @@ public class InfoPanel extends JPanel implements SpanListener, ConceptAnnotation
         removeAll();
 
 
-        if(annotation != null) {
+        if (annotation != null) {
             GridBagConstraints gbc = new GridBagConstraints();
             JLabel titleLabel = new JLabel(("Annotation Information"));
             titleLabel.setFont(new Font(titleLabel.getFont().getName(), Font.BOLD, titleLabel.getFont().getSize() + 5));

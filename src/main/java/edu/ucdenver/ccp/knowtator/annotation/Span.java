@@ -45,6 +45,7 @@ public class Span {
 	private int start;
 
 	private int end;
+	private ConceptAnnotation annotation;
 
 	public Span(int start, int end) {
 		this.start = start;
@@ -233,18 +234,25 @@ public class Span {
 	}
 
 	static int compare(Span span1, Span span2) {
-		if (span1 == null) {
-			return span2 == null ? 0 : -1;
-		} else if (span2 == null) {
-			return 1;
+		if (span1 == span2) {
+			return 0;
 		}
+
 		int compare = span1.getStart().compareTo(span2.getStart());
 		if (compare == 0) {
 			compare = span1.getEnd().compareTo(span2.getEnd());
 		}
 		if (compare == 0) {
-			compare = span1 == span2 ? 0 : -1;
+			return -1;
 		}
 		return compare;
+	}
+
+	public void setAnnotation(ConceptAnnotation annotation) {
+		this.annotation = annotation;
+	}
+
+	public ConceptAnnotation getAnnotation() {
+		return annotation;
 	}
 }

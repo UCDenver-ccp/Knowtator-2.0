@@ -59,13 +59,15 @@ public final class AnnotationManager {
 
     public void addSpanToConceptAnnotation(ConceptAnnotation annotation, Span newSpan){
         annotation.addSpan(newSpan);
+        newSpan.setAnnotation(annotation);
         spanMap.put(newSpan, annotation);
         if (view != null) view.spanAddedEvent(newSpan);
     }
 
     private void removeConceptAnnotationFromSpanMap(ConceptAnnotation annotationToRemove) {
-        annotationToRemove.getSpans().forEach(span -> spanMap.remove(span));
+        spanMap.values().remove(annotationToRemove);
         if(view != null) view.annotationRemovedEvent(annotationToRemove);
+
     }
 
     public void removeAnnotation(String annotationToRemoveID) {
@@ -76,7 +78,6 @@ public final class AnnotationManager {
 
     public void removeSpanFromConceptAnnotation(ConceptAnnotation annotation, Span span) {
         annotation.removeSpan(span);
-        spanMap.remove(span);
         if (view != null) view.spanRemovedEvent();
     }
 
@@ -170,21 +171,24 @@ public final class AnnotationManager {
     }
 
     public void findOverlaps() {
-        Map<Span, ConceptAnnotation> overlappingSpans = new HashMap<>();
+        List<Span> overlappingSpans = new ArrayList<>();
         spanMap.forEach((span, annotation) -> {
+            log.warn(span);
+            log.warn(overlappingSpans.size());
             List<Span> toRemove = new ArrayList<>();
-            overlappingSpans.forEach((span1, annotation1) -> {
+            overlappingSpans.forEach(span1 -> {
+                log.warn(String.format("Compare: %s, %s", span, span1));
                 if (span.intersects(span1)) {
-                    annotation.addOverlappingAnnotation(
-                            annotation1.getID());
-                    annotation1.addOverlappingAnnotation(annotation.getID());
+                    log.warn(String.format("intersects: %s", span1));
+                    annotation.addOverlappingAnnotation(span1.getAnnotation().getID());
+                    span1.getAnnotation().addOverlappingAnnotation(annotation.getID());
                 } else {
                     toRemove.add(span1);
                 }
             });
-            overlappingSpans.keySet().removeAll(toRemove);
+            overlappingSpans.removeAll(toRemove);
 
-            overlappingSpans.put(span, annotation);
+            overlappingSpans.add(span);
         });
     }
 
