@@ -1,46 +1,42 @@
 /*
- * The contents of this file are subject to the Mozilla Public
- * License Version 1.1 (the "License"); you may not use this file
- * except in compliance with the License. You may obtain a copy of
- * the License at http://www.mozilla.org/MPL/
+ * MIT License
  *
- * Software distributed under the License is distributed on an "AS
- * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
- * implied. See the License for the specific language governing
- * rights and limitations under the License.
+ * Copyright (c) 2018 Harrison Pielke-Lombardo
  *
- * The Original Code is Knowtator.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The Initial Developer of the Original Code is University of Colorado.  
- * Copyright (C) 2005 - 2008.  All Rights Reserved.
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
- * Knowtator was developed by the Center for Computational Pharmacology
- * (http://compbio.uchcs.edu) at the University of Colorado Health 
- *  Sciences Center School of Medicine with support from the National 
- *  Library of Medicine.  
- *
- * Current information about Knowtator can be obtained at 
- * http://knowtator.sourceforge.net/
- *
- * Contributor(s):
- *   Philip V. Ogren <philip@ogren.info> (Original Author)
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 package edu.ucdenver.ccp.knowtator.iaa;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.annotation.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.annotation.TextSource;
-import edu.ucdenver.ccp.knowtator.annotation.TextSourceManager;
 import edu.ucdenver.ccp.knowtator.iaa.html.IAA2HTML;
 import edu.ucdenver.ccp.knowtator.iaa.html.SpanMatcherHTML;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.ClassAndSpanMatcher;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.ClassMatcher;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.SpanMatcher;
+import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.model.annotation.TextSource;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -61,11 +57,11 @@ public class KnowtatorIAA {
 
 //	FilterUtil filterUtil;
 
-	private Map<ConceptAnnotation, String> annotationTexts;
+	private Map<Annotation, String> annotationTexts;
 
-	private Map<ConceptAnnotation, String> annotationTextNames;
+	private Map<Annotation, String> annotationTextNames;
 
-	private Map<TextSource, Set<ConceptAnnotation>> textSourceAnnotationsMap;
+	private Map<TextSource, Set<Annotation>> textSourceAnnotationsMap;
 
 	private PrintStream html;
 
@@ -82,14 +78,14 @@ public class KnowtatorIAA {
 
 		this.outputDirectory = outputDirectory;
 		//this.filter = filter;
-		this.textSources = manager.getTextSourceManager().getTextSources();
+		this.textSources = new HashSet<>(manager.getTextSourceManager().getTextSources().values());
 
 		this.manager = manager;
 		annotationTexts = new HashMap<>();
 		annotationTextNames = new HashMap<>();
 
 		initSetNames();
-		initTextSourceAnnotations(manager.getTextSourceManager());
+		initTextSourceAnnotations();
 		initHTML();
 	}
 
@@ -114,10 +110,10 @@ public class KnowtatorIAA {
 		html.close();
 	}
 
-	private void initTextSourceAnnotations(TextSourceManager textSourceManager) throws IAAException {
+	private void initTextSourceAnnotations() {
 		textSourceAnnotationsMap = new HashMap<>();
-		for (TextSource textSource : textSourceManager.getTextSources()) {
-			textSourceAnnotationsMap.put(textSource, textSource.getAnnotationManager().getAllConceptAnnotations());
+		for (TextSource textSource : textSources) {
+			textSourceAnnotationsMap.put(textSource, textSource.getAnnotationManager().getAllAnnotations());
 		}
 	}
 
@@ -214,7 +210,7 @@ public class KnowtatorIAA {
 			ClassMatcher classMatcher = new ClassMatcher();
 			IAA classIAA = new IAA(setNames);
 
-			for (Set<ConceptAnnotation> annotations : textSourceAnnotationsMap.values()) {
+			for (Set<Annotation> annotations : textSourceAnnotationsMap.values()) {
 				classIAA.setAnnotations(annotations);
 				classIAA.allwayIAA(classMatcher);
 				classIAA.pairwiseIAA(classMatcher);
@@ -233,7 +229,7 @@ public class KnowtatorIAA {
 			SpanMatcher spanMatcher = new SpanMatcher();
 			IAA spanIAA = new IAA(setNames);
 
-			for (Set<ConceptAnnotation> annotations : textSourceAnnotationsMap.values()) {
+			for (Set<Annotation> annotations : textSourceAnnotationsMap.values()) {
 				spanIAA.setAnnotations(annotations);
 				spanIAA.allwayIAA(spanMatcher);
 				spanIAA.pairwiseIAA(spanMatcher);
@@ -251,7 +247,7 @@ public class KnowtatorIAA {
 			ClassAndSpanMatcher classAndSpanMatcher = new ClassAndSpanMatcher();
 			IAA classAndSpanIAA = new IAA(setNames);
 
-			for (Set<ConceptAnnotation> annotations : textSourceAnnotationsMap.values()) {
+			for (Set<Annotation> annotations : textSourceAnnotationsMap.values()) {
 				classAndSpanIAA.setAnnotations(annotations);
 				classAndSpanIAA.allwayIAA(classAndSpanMatcher);
 				classAndSpanIAA.pairwiseIAA(classAndSpanMatcher);
@@ -371,35 +367,4 @@ public class KnowtatorIAA {
 //		}
 //		return returnValues;
 //	}
-
-	private static void simpleTest() {
-		KnowtatorManager manager = new KnowtatorManager();
-		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin/11319941.txt.knowtator.xml", true);
-		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin+Mike/11319941.txt.knowtator.xml", true);
-
-		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin/11532192.txt.knowtator.xml", true);
-		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin+Mike/11532192.txt.knowtator.xml", true);
-
-		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin/11597317.txt.knowtator.xml", true);
-		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin+Mike/11597317.txt.knowtator.xml", true);
-
-		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin/11604102.txt.knowtator.xml", true);
-		manager.getXmlUtil().read("file/CHEBI batch 1 IAA/Kristin+Mike/11604102.txt.knowtator.xml", true);
-
-		try {
-			KnowtatorIAA knowtatorIAA = new KnowtatorIAA(new File(manager.getConfigProperties().getDefaultSaveLocation()), manager);
-			knowtatorIAA.runClassIAA();
-			knowtatorIAA.closeHTML();
-		} catch (IAAException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static void main(String[] args) {
-		simpleTest();
-
-
-
-	}
-
 }

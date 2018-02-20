@@ -2,24 +2,25 @@
 Plugin for Protege
 
 ## Table of Contents
-- [Installation (Windows):](#)
-- [Installation (Mac):](#)
-- [Setup:](#)
-- [Features](#)
-	- [TextAnnotation highlighting](#)
-	- [Load plain text documents](#)
-	- [TextAnnotation profiles](#)
-	- [Save annotations to XML file](#)
-	- [Reload annotations](#)
-- [Known bugs](#)
+- [Installation Windows:](# Installation-Windows)
+- [Installation Mac:](# Installation-Mac)
+- [Installation from source:](# Installation-from-source)
+- [Setup:](# Setup)
+- [Features](# Features)
+	- [TextAnnotation highlighting](# TextAnnotation-highlighting)
+	- [Load plain text documents](# Load-plain-text-documets)
+	- [TextAnnotation profiles](# TextAnnotation-profiles)
+	- [Save annotations to XML test_project](# Save-annotations-to-XML-t)
+	- [Reload annotations](# Reload-annotations)
+- [Known bugs](# Known-bugs)
 
-## Installation (Windows):
+## Installation Windows:
 
 1. Install [Desktop Protege 5.X.X][protege link]
 2. Copy Knowtator-2.X.X.jar to Protege-5.X.X/plugins/
 3. Restart Protege
 
-## Installation (Mac):
+## Installation Mac:
 1. Install [Desktop Protege 5.X.X][protege link]
 2. In Finder, right click the Protege 5 app icon
 3. Click "Show Package Contents"
@@ -29,11 +30,22 @@ Plugin for Protege
 
 (See [this comment thread][mac osx plugin intallation comment thread] for more help) 
 
+## Installation from source:
+1. Download source files
+2. `cd` into project directory
+3. `mvn clean install`
+
 ## Setup:
 1. Launch Protege.exe
 2. Add a Knowtator view (Window -> Miscellaneous views -> Knowtator). Click somewhere in Protege to add it in.
-3. Open a txt file (Project -> Open Document)
+3. Make a new project. Enter a name for the project. Select parent directory. Knowtator will make
+a directory tree that looks like this:
+Project
+-Articles
+-Ontologies
+-project.xml
 4. Add a profile (Profile -> New Profile)
+5. Load a document (Project -> Add Document)
 5. To save (Project -> Save Project)
 6. To open a pre-existing project (Project -> Open Project)
 7. To load annotations from the old Knowtator (Project -> Open Project) 

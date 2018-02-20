@@ -1,35 +1,31 @@
 /*
- * The contents of this file are subject to the Mozilla Public
- * License Version 1.1 (the "License"); you may not use this file
- * except in compliance with the License. You may obtain a copy of
- * the License at http://www.mozilla.org/MPL/
+ * MIT License
  *
- * Software distributed under the License is distributed on an "AS
- * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
- * implied. See the License for the specific language governing
- * rights and limitations under the License.
+ * Copyright (c) 2018 Harrison Pielke-Lombardo
  *
- * The Original Code is Knowtator.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The Initial Developer of the Original Code is University of Colorado.  
- * Copyright (C) 2005 - 2008.  All Rights Reserved.
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
- * Knowtator was developed by the Center for Computational Pharmacology
- * (http://compbio.uchcs.edu) at the University of Colorado Health 
- *  Sciences Center School of Medicine with support from the National 
- *  Library of Medicine.  
- *
- * Current information about Knowtator can be obtained at 
- * http://knowtator.sourceforge.net/
- *
- * Contributor(s):
- *   Philip V. Ogren <philip@ogren.info> (Original Author)
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
-import edu.ucdenver.ccp.knowtator.annotation.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
+import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -38,37 +34,14 @@ import java.util.Set;
 public class ClassAndSpanMatcher implements Matcher {
 
 	/**
-	 * @param matchResult
-	 *            will be set to NONTRIVIAL_MATCH or NONTRIVIAL_NONMATCH.
-	 *            Trivial matches and non-matches are not defined for this
-	 *            matcher.
-	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher#match(ConceptAnnotation, String, Set,
-	 *      IAA, MatchResult)
-	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
-	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
-	 */
-	@SuppressWarnings("Duplicates")
-	public ConceptAnnotation match(ConceptAnnotation annotation, String compareSetName, Set<ConceptAnnotation> excludeAnnotations, IAA iaa,
-                                   MatchResult matchResult) {
-		ConceptAnnotation match = match(annotation, compareSetName, iaa, excludeAnnotations);
-		if (match != null) {
-			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
-			return match;
-		} else {
-			matchResult.setResult(MatchResult.NONTRIVIAL_NONMATCH);
-			return null;
-		}
-	}
-
-	/**
 	 * This is a static version of the above match method that can be called by
 	 * other matcher implementations.
 	 *
 	 * @return an annotation that matches or null.
 	 */
-	public static ConceptAnnotation match(ConceptAnnotation annotation, String compareSetName, IAA iaa,
-                                          Set<ConceptAnnotation> excludeAnnotations) {
-		Set<ConceptAnnotation> singleMatchSet = matches(annotation, compareSetName, iaa, excludeAnnotations);
+	public static Annotation match(Annotation annotation, String compareSetName, IAA iaa,
+								   Set<Annotation> excludeAnnotations) {
+		Set<Annotation> singleMatchSet = matches(annotation, compareSetName, iaa, excludeAnnotations);
 		if (singleMatchSet.size() == 1) {
 			return singleMatchSet.iterator().next();
 		} else
@@ -82,17 +55,17 @@ public class ClassAndSpanMatcher implements Matcher {
 	 *         matches are found.
 	 */
 
-	private static Set<ConceptAnnotation> matches(ConceptAnnotation annotation, String compareSetName, IAA iaa,
-                                                  Set<ConceptAnnotation> excludeAnnotations) {
+	private static Set<Annotation> matches(Annotation annotation, String compareSetName, IAA iaa,
+										   Set<Annotation> excludeAnnotations) {
 		String type = annotation.getClassID();
-		Set<ConceptAnnotation> candidateAnnotations = new HashSet<>(iaa.getExactlyOverlappingAnnotations(annotation,
+		Set<Annotation> candidateAnnotations = new HashSet<>(iaa.getExactlyOverlappingAnnotations(annotation,
 				compareSetName));
 		candidateAnnotations.removeAll(excludeAnnotations);
 		if (candidateAnnotations.size() == 0)
 			return Collections.emptySet();
 
-		Set<ConceptAnnotation> returnValues = new HashSet<>();
-		for (ConceptAnnotation candidateAnnotation : candidateAnnotations) {
+		Set<Annotation> returnValues = new HashSet<>();
+		for (Annotation candidateAnnotation : candidateAnnotations) {
 			if (!excludeAnnotations.contains(candidateAnnotation)
 					&& candidateAnnotation.getClassID().equals(type)) {
 				returnValues.add(candidateAnnotation);
@@ -100,6 +73,28 @@ public class ClassAndSpanMatcher implements Matcher {
 			}
 		}
 		return returnValues;
+	}
+
+	/**
+	 * @param matchResult will be set to NONTRIVIAL_MATCH or NONTRIVIAL_NONMATCH.
+	 *                    Trivial matches and non-matches are not defined for this
+	 *                    matcher.
+	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher#match(Annotation, String, Set,
+	 * IAA, MatchResult)
+	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
+	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
+	 */
+	@SuppressWarnings("Duplicates")
+	public Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
+							MatchResult matchResult) {
+		Annotation match = match(annotation, compareSetName, iaa, excludeAnnotations);
+		if (match != null) {
+			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
+			return match;
+		} else {
+			matchResult.setResult(MatchResult.NONTRIVIAL_NONMATCH);
+			return null;
+		}
 	}
 
 	public String getName() {
