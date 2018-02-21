@@ -56,7 +56,7 @@ public class GraphMenu extends JMenu {
         JMenuItem menuItem = new JMenuItem("Save as PNG");
         menuItem.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(manager.getConfigProperties().getProjectLocation());
+            fileChooser.setCurrentDirectory(manager.getProjectManager().getProjectLocation());
             FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
             fileChooser.setFileFilter(fileFilter);
             if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {

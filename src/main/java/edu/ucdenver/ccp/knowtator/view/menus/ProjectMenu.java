@@ -30,6 +30,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
+import java.io.File;
 
 @SuppressWarnings("Duplicates")
 public class ProjectMenu extends JMenu {
@@ -49,21 +50,35 @@ public class ProjectMenu extends JMenu {
         add(openProjectCommand());
         add(saveProjectCommand());
         addSeparator();
-        addSeparator();
         add(addDocumentCommand());
+        add(importAnnotationsCommand());
 
+    }
+
+    private JMenuItem importAnnotationsCommand() {
+        JMenuItem menuItem = new JMenuItem("Import Annotations");
+        menuItem.addActionListener(e -> manager.getProjectManager().importAnnotations());
+        return menuItem;
     }
 
     private JMenuItem addDocumentCommand() {
         JMenuItem menuItem = new JMenuItem("Add Document");
-        menuItem.addActionListener(e -> manager.addDocument());
+        menuItem.addActionListener(e -> manager.getProjectManager().addDocument());
         return menuItem;
 
     }
 
     private JMenuItem newProjectCommand() {
         JMenuItem menuItem = new JMenuItem("New Project");
-        menuItem.addActionListener(e -> manager.newProject());
+        menuItem.addActionListener(e -> {
+            String projectName = JOptionPane.showInputDialog("Enter project name");
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
+                manager.getProjectManager().newProject(projectDirectory);
+            }
+        });
 
         return menuItem;
     }
@@ -71,7 +86,7 @@ public class ProjectMenu extends JMenu {
     private JMenuItem openProjectCommand() {
 
         JMenuItem open = new JMenuItem("Open Project");
-        open.addActionListener(e -> manager.loadProject(view));
+        open.addActionListener(e -> manager.getProjectManager().loadProject(view));
 
         return open;
 
@@ -79,7 +94,7 @@ public class ProjectMenu extends JMenu {
 
     private JMenuItem saveProjectCommand() {
         JMenuItem save = new JMenuItem("Save Project");
-        save.addActionListener(e -> manager.saveProject());
+        save.addActionListener(e -> manager.getProjectManager().saveProject());
 
         return save;
     }

@@ -76,11 +76,8 @@ public class FindPanel extends JPanel {
                 textToSearch = textToSearch.toLowerCase();
             }
 
-            log.warn(String.format("Text to find: %s", textToFind));
             int matchLoc = textToSearch.indexOf(textToFind, currentTextPane.getSelectionStart()+1);
 
-
-            log.warn(String.format("Match loc: %d", matchLoc));
             if (matchLoc != -1) {
                 currentTextPane.requestFocusInWindow();
                 currentTextPane.select(matchLoc, matchLoc + textToFind.length());
@@ -101,11 +98,8 @@ public class FindPanel extends JPanel {
             }
 
 
-            log.warn(String.format("Text to find: %s", textToFind));
             int matchLoc = textToSearch.lastIndexOf(textToFind, currentTextPane.getSelectionStart()-1);
 
-
-            log.warn(String.format("Match loc: %d", matchLoc));
             if (matchLoc != -1) {
                 currentTextPane.requestFocusInWindow();
                 currentTextPane.select(matchLoc, matchLoc + textToFind.length());

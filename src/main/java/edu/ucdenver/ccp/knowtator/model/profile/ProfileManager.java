@@ -25,9 +25,9 @@
 package edu.ucdenver.ccp.knowtator.model.profile;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.model.io.Savable;
-import edu.ucdenver.ccp.knowtator.model.io.XmlTags;
-import edu.ucdenver.ccp.knowtator.model.io.XmlUtil;
+import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
+import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -91,13 +91,12 @@ public class ProfileManager implements Savable {
 
     @Override
     public void readFromXml(Element parent) {
-        log.warn("Reading profiles");
         for (Node profileNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.PROFILE))) {
             Element profileElement = (Element) profileNode;
             String profileID = profileElement.getAttribute(XmlTags.ID);
 
             Profile newProfile = addNewProfile(profileID);
-            log.warn(newProfile);
+            log.warn("\tXML: " + newProfile);
             newProfile.readFromXml(profileElement);
         }
     }

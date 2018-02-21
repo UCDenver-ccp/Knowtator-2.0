@@ -25,9 +25,9 @@
 package edu.ucdenver.ccp.knowtator.model.profile;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.model.io.Savable;
-import edu.ucdenver.ccp.knowtator.model.io.XmlTags;
-import edu.ucdenver.ccp.knowtator.model.io.XmlUtil;
+import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
+import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLAPIDataExtractor;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -54,8 +54,6 @@ public class Profile implements Savable {
         this.manager = manager;
 
         colors = new HashMap<>();
-
-//        log.warn(String.format("%1$-30s %2$30s", "Profile", toString()));
     }
 
     public String getId() {

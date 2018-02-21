@@ -22,41 +22,66 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.annotation;
+package edu.ucdenver.ccp.knowtator.model.annotation;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
-import edu.ucdenver.ccp.knowtator.model.annotation.AnnotationManager;
-import edu.ucdenver.ccp.knowtator.model.annotation.Span;
-import edu.ucdenver.ccp.knowtator.model.annotation.TextSource;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import org.apache.log4j.Logger;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 
 public class AnnotationManagerTest {
+    private static final Logger log = Logger.getLogger(AnnotationManagerTest.class);
 
-    private String projectFileName = "test_project";
-    private File project = new File(getClass().getResource("/" + projectFileName + "/" + projectFileName + ".xml").getFile());
+
+    private String[] projectFileNames = new String[]{"test_project", "old_project"};
+    private String[] articleFileNames = new String[]{"document1", "document2"};
+    private String[] articleContent = new String[]{
+            "This is a test document.",
+            "A second test document has appeared!"
+    };
+    private String[] profileFileNames = new String[]{"profile1", "profile2"};
     private AnnotationManager annotationManager;
     private TextSource textSource;
     private Profile profile;
-    private Logger log = Logger.getLogger(AnnotationManagerTest.class);
 
-    @Before
+    private File getProjectFile(String projectName) {
+        return new File(getClass().getResource(String.format(
+                "/%s/%s.knowtator",
+                projectName,
+                projectName)
+        ).getFile());
+    }
+
+    private File getArticleFile(String projectName, String articleName) {
+        return new File(getClass().getResource(String.format(
+                "/%s/Articles/%s.txt",
+                projectName,
+                articleName)
+        ).getFile());
+    }
+
     public void setUp() {
         KnowtatorManager manager = new KnowtatorManager();
-        manager.loadProject(project);
-        String docFileName = "test_document";
-        textSource = manager.getTextSourceManager().getTextSources().get(docFileName);
+
+        int projectID = 0;
+        int articleID = 0;
+        String projectFileName = projectFileNames[projectID];
+        File project = getProjectFile(projectFileName);
+        String articleName = articleFileNames[articleID];
+
+        manager.getProjectManager().loadProject(project);
+
+        textSource = manager.getTextSourceManager().getTextSources().get(articleName);
         annotationManager = textSource.getAnnotationManager();
-        profile = manager.getProfileManager().getCurrentProfile();
+        profile = manager.getProfileManager().addNewProfile("Default");
+
     }
 
     @Test
     public void addAnnotation() {
+        setUp();
         Annotation annotation1 = new Annotation("class_2", "class_2", "mention_3", textSource, profile, "identity");
         annotationManager.addAnnotation(annotation1);
 
@@ -69,6 +94,7 @@ public class AnnotationManagerTest {
 
     @Test
     public void addSpanToAnnotation() {
+        setUp();
         Annotation annotation1 = new Annotation("class_2", "class_2", "mention_3", textSource, profile, "identity");
         annotationManager.addAnnotation(annotation1);
 
@@ -84,6 +110,7 @@ public class AnnotationManagerTest {
 
     @Test
     public void removeAnnotation() {
+        setUp();
         annotationManager.removeAnnotation("mention_1");
 
         int numAnnotations = annotationManager.getAnnotations().size();
@@ -100,6 +127,7 @@ public class AnnotationManagerTest {
 
     @Test
     public void removeSpanFromAnnotation() {
+        setUp();
         Annotation annotation1 = new Annotation("class_2", "class_2", "mention_3", textSource, profile, "identity");
         annotationManager.addAnnotation(annotation1);
 
@@ -117,42 +145,5 @@ public class AnnotationManagerTest {
             annotationManager.getSpanMap(null, null).forEach(((span, annotation) -> log.warn(String.format("%s, %s", span, annotation))));
             throw new AssertionError();
         }
-    }
-
-    @Test
-    public void getSpanMap() {
-    }
-
-    @Test
-    public void growSpanStart() {
-    }
-
-    @Test
-    public void growSpanEnd() {
-    }
-
-    @Test
-    public void shrinkSpanEnd() {
-    }
-
-    @Test
-    public void shrinkSpanStart() {
-    }
-
-    @Test
-    public void addAnnotation1() {
-    }
-
-    @Test
-    public void findOverlaps() {
-    }
-
-    @Test
-    public void getAnnotation() {
-    }
-
-    @Test
-    public void removeGraphSpace() {
-
     }
 }

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.io;
+package edu.ucdenver.ccp.knowtator.model.xml;
 
 public class XmlTags {
 

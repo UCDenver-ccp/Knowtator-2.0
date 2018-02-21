@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.io;
+package edu.ucdenver.ccp.knowtator.model.xml;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.model.io.forOld.OldXmlReader;
-import edu.ucdenver.ccp.knowtator.model.io.forOld.OldXmlTags;
+import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.annotation.TextSourceManager;
+import edu.ucdenver.ccp.knowtator.model.xml.forOld.OldXmlReader;
+import edu.ucdenver.ccp.knowtator.model.xml.forOld.OldXmlTags;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -50,18 +51,14 @@ import java.util.List;
 import java.util.RandomAccess;
 
 public final class XmlUtil {
-    public static final Logger log = Logger.getLogger(KnowtatorManager.class);
-    private KnowtatorManager manager;
+    public static final Logger log = Logger.getLogger(XmlUtil.class);
 
-    public XmlUtil(KnowtatorManager manager) {
-        this.manager = manager;
-    }
 
     public static List<Node> asList(NodeList n) {
         return n.getLength() == 0 ? Collections.emptyList() : new NodeListWrapper(n);
     }
 
-    public void read(File file) {
+    public static void readXML(Savable savable, File file) {
         try {
             /*
             doc parses the XML into a graph
@@ -73,23 +70,19 @@ public final class XmlUtil {
 
             Document doc;
             try {
-                log.warn("****************Reading from " + file.getAbsolutePath());
                 doc = db.parse(is);
                 doc.getDocumentElement().normalize();
 
                 List<Node> knowtatorNodes = XmlUtil.asList(doc.getElementsByTagName(XmlTags.KNOWTATOR_PROJECT));
                 if (knowtatorNodes.size() > 0) {
                     Element knowtatorElement = (Element) knowtatorNodes.get(0);
-                    manager.readFromXml(knowtatorElement);
+                    savable.readFromXml(knowtatorElement);
                 }
 
                 List<Node> annotationNodes = XmlUtil.asList(doc.getElementsByTagName(OldXmlTags.ANNOTATIONS));
                 if (annotationNodes.size() > 0) {
-                    log.warn("Reading in old Knowtator project");
-                    OldXmlReader.readAnnotations(manager, annotationNodes);
+                    OldXmlReader.readAnnotations((TextSourceManager) savable, annotationNodes);
                 }
-
-                log.warn("***************************");
             } catch (IllegalArgumentException | IOException | SAXException e) {
                 e.printStackTrace();
             }
@@ -98,19 +91,20 @@ public final class XmlUtil {
         }
     }
 
-    public void write(File file) {
+
+    public static void createXML(Savable savable, File file) {
         Document dom;
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
         try {
-            log.warn("********************Writing to " + file.getAbsolutePath());
+            log.warn("Writing to " + file.getAbsolutePath());
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.newDocument();
 
             Element root = dom.createElement(XmlTags.KNOWTATOR_PROJECT);
             dom.appendChild(root);
-            manager.writeToXml(dom, root);
+            savable.writeToXml(dom, root);
 
             try {
                 Transformer tr = TransformerFactory.newInstance().newTransformer();
@@ -120,8 +114,12 @@ public final class XmlUtil {
                 tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
                 // send DOM to test_project
+                PrintWriter pw = new PrintWriter(file);
+                pw.close();
+                OutputStream os = new FileOutputStream(file, false);
                 tr.transform(new DOMSource(dom),
-                        new StreamResult(new FileOutputStream(file)));
+                        new StreamResult(os));
+                os.close();
 
             } catch (TransformerException | IOException te) {
                 System.out.println(te.getMessage());
@@ -129,8 +127,6 @@ public final class XmlUtil {
         } catch (ParserConfigurationException e1) {
             e1.printStackTrace();
         }
-
-        log.warn("*************************");
 
     }
 

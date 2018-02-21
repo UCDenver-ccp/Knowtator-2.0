@@ -25,8 +25,8 @@
 package edu.ucdenver.ccp.knowtator.model.graph;
 
 import com.mxgraph.model.mxCell;
-import edu.ucdenver.ccp.knowtator.model.io.Savable;
-import edu.ucdenver.ccp.knowtator.model.io.XmlTags;
+import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

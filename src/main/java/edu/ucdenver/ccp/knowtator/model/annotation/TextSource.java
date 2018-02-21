@@ -25,8 +25,8 @@
 package edu.ucdenver.ccp.knowtator.model.annotation;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.model.io.Savable;
-import edu.ucdenver.ccp.knowtator.model.io.XmlTags;
+import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -50,12 +50,12 @@ public class TextSource implements Savable {
         this.docID = docID;
         this.annotationManager = new AnnotationManager(manager, this);
 
-        File file = new File(manager.getConfigProperties().getArticlesLocation(), docID + ".txt");
-        log.warn("File location: " + file.getAbsolutePath());
+        File file = new File(manager.getProjectManager().getArticlesLocation(), docID + ".txt");
         while (!file.exists()) {
             JFileChooser fileChooser = new JFileChooser();
             if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 file = fileChooser.getSelectedFile();
+
             }
         }
 
@@ -79,7 +79,10 @@ public class TextSource implements Savable {
     public AnnotationManager getAnnotationManager() {
         return annotationManager;
     }
-
+    @Override
+    public String toString() {
+        return String.format("TextSource: docID: %s", docID);
+    }
     @Override
     public void writeToXml(Document dom, Element parent) {
         Element textSourceElement = dom.createElement(XmlTags.DOCUMENT);

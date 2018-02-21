@@ -25,9 +25,9 @@
 package edu.ucdenver.ccp.knowtator.model.annotation;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.model.io.Savable;
-import edu.ucdenver.ccp.knowtator.model.io.XmlTags;
-import edu.ucdenver.ccp.knowtator.model.io.XmlUtil;
+import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
+import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -50,8 +50,13 @@ public class TextSourceManager implements Savable {
 
     public TextSource addTextSource(String fileLocation) {
         String docID = FilenameUtils.getBaseName(fileLocation);
-        TextSource newTextSource = new TextSource(manager, docID);
-        textSources.put(docID, newTextSource);
+        TextSource newTextSource = textSources.get(docID);
+        if (newTextSource == null) {
+            newTextSource = new TextSource(manager, docID);
+            textSources.put(docID, newTextSource);
+        } else {
+            log.warn(docID + " is not null");
+        }
         manager.textSourceAddedEvent(newTextSource);
         return newTextSource;
     }
@@ -60,10 +65,7 @@ public class TextSourceManager implements Savable {
         return textSources;
     }
 
-    public void remove(TextSource textSource) {
-        textSources.remove(textSource.getDocID());
-    }
-
+    @Override
     public void writeToXml(Document dom, Element parent) {
         textSources.values().forEach(textSource -> textSource.writeToXml(dom, parent));
 
@@ -71,12 +73,16 @@ public class TextSourceManager implements Savable {
 
     @Override
     public void readFromXml(Element parent) {
-        log.warn("Reading documents");
         for (Node documentNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.DOCUMENT))) {
             Element documentElement = (Element) documentNode;
             String documentID = documentElement.getAttribute(XmlTags.ID);
             TextSource newTextSource = addTextSource(documentID);
+            log.warn("\tXML: " + newTextSource);
             newTextSource.readFromXml(documentElement);
         }
+    }
+
+    public KnowtatorManager getManager() {
+        return manager;
     }
 }

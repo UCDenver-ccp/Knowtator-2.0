@@ -25,31 +25,20 @@
 package edu.ucdenver.ccp.knowtator;
 
 import edu.ucdenver.ccp.knowtator.listeners.*;
-import edu.ucdenver.ccp.knowtator.model.ConfigProperties;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
 import edu.ucdenver.ccp.knowtator.model.annotation.TextSource;
 import edu.ucdenver.ccp.knowtator.model.annotation.TextSourceManager;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.io.Savable;
-import edu.ucdenver.ccp.knowtator.model.io.XmlUtil;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLAPIDataExtractor;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileManager;
-import org.apache.commons.io.FileUtils;
+import edu.ucdenver.ccp.knowtator.model.project.ProjectManager;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.OWLWorkspace;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -59,11 +48,10 @@ import java.util.Set;
  * @version 2.0.6
  */
 
-public class KnowtatorManager implements Savable {
+public class KnowtatorManager {
     private static final Logger log = Logger.getLogger(KnowtatorManager.class);
 
-    private XmlUtil xmlUtil;
-    private ConfigProperties configProperties;
+    private ProjectManager projectManager;
     private TextSourceManager textSourceManager;
     private ProfileManager profileManager;
     private OWLAPIDataExtractor owlDataExtractor;
@@ -82,15 +70,12 @@ public class KnowtatorManager implements Savable {
         super();
         initListeners();
         initManagers();
-        loadConfig();
-
-        log.warn("Knowtator manager initialized");
     }
 
     private void initManagers() {
         textSourceManager = new TextSourceManager(this);
         profileManager = new ProfileManager(this);  //manipulates profiles and colors
-        xmlUtil = new XmlUtil(this);  //reads and writes to XML
+        projectManager = new ProjectManager(this);  //reads and writes to XML
         owlDataExtractor = new OWLAPIDataExtractor();
     }
 
@@ -102,21 +87,14 @@ public class KnowtatorManager implements Savable {
         graphListeners = new HashSet<>();
     }
 
-    private void loadConfig() {
-        configProperties = new ConfigProperties();
-    }
-
     public ProfileManager getProfileManager() {
         return profileManager;
     }
 
-    public XmlUtil getXmlUtil() {
-        return xmlUtil;
+    public ProjectManager getProjectManager() {
+        return projectManager;
     }
 
-    public ConfigProperties getConfigProperties() {
-        return configProperties;
-    }
 
     public TextSourceManager getTextSourceManager() {
         return textSourceManager;
@@ -127,120 +105,12 @@ public class KnowtatorManager implements Savable {
 
     public static void main(String[] args) { }
 
-
-    @Override
-    public void writeToXml(Document dom, Element parent) {
-        textSourceManager.writeToXml(dom, parent);
-        profileManager.writeToXml(dom, parent);
-    }
-
-    @Override
-    public void readFromXml(Element parent) {
-        profileManager.readFromXml(parent);
-        textSourceManager.readFromXml(parent);
-    }
-
-    public void close() {
+    public void close(File file) {
         initManagers();
-        loadConfig();
-
-        log.warn("Knowtator manager initialized");
+        projectManager.loadProject(file);
     }
 
-    public void newProject() {
-        String projectName = JOptionPane.showInputDialog("Enter project name");
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
-            File projectFile = new File(projectDirectory, projectName + ".xml");
-            File articleDirectory = new File(projectDirectory, "Articles");
-            File ontologiesDirectory = new File(projectDirectory, "Ontologies");
 
-            makeFileStructure(projectDirectory, projectFile, articleDirectory, ontologiesDirectory);
-        }
-    }
-
-    public void loadProject(KnowtatorView view) {
-        JFileChooser fileChooser = new JFileChooser();
-        FileFilter fileFilter = new FileNameExtensionFilter("XML", "xml");
-        fileChooser.setFileFilter(fileFilter);
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            saveProject();
-            closeProject(view, fileChooser.getSelectedFile());
-            loadProject(fileChooser.getSelectedFile());
-        }
-    }
-
-    public void closeProject(KnowtatorView view, File file) {
-        if (view != null) view.close(file);
-        else close();
-    }
-
-    public void loadProject(File projectFile) {
-        File projectDirectory = projectFile.getParentFile();
-        File articleDirectory = new File(projectDirectory, "Articles");
-        File ontologiesDirectory = new File(projectDirectory, "Ontologies");
-
-        makeFileStructure(projectDirectory, projectFile, articleDirectory, ontologiesDirectory);
-        loadOntologies();
-        xmlUtil.read(projectFile);
-    }
-
-    private void loadOntologies() {
-        try {
-            Files.newDirectoryStream(Paths.get(configProperties.getOntologiesLocation().toURI()),
-                    path -> path.toString().endsWith(".owl"))
-                    .forEach(file -> owlDataExtractor.loadOntologyFromLocation(file.toFile().toURI().toString()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void makeFileStructure(File projectDirectory, File projectFile, File articleDirectory, File ontologiesDirectory) {
-        try {
-            Files.createDirectories(projectDirectory.toPath());
-            Files.createDirectories(articleDirectory.toPath());
-            Files.createDirectories(ontologiesDirectory.toPath());
-            configProperties.setProjectLocation(projectFile);
-            configProperties.setArticlesLocation(articleDirectory);
-            configProperties.setOntologiesLocation(ontologiesDirectory);
-        } catch (IOException e) {
-            System.err.println("Cannot create directories - " + e);
-        }
-    }
-
-    public void saveProject() {
-        if (configProperties.getProjectLocation() != null) {
-            saveProject(configProperties.getProjectLocation());
-        }
-    }
-
-    public void saveProject(File file) {
-        xmlUtil.write(file);
-    }
-
-    public void addDocument() {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(configProperties.getArticlesLocation());
-        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            if (!file.getParentFile().equals(configProperties.getArticlesLocation())) {
-                try {
-                    FileUtils.copyDirectory(file, new File(configProperties.getArticlesLocation(), file.getName()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            addDocument(file);
-        }
-    }
-
-    public void addDocument(File file) {
-        textSourceManager.addTextSource(file.getName());
-    }
 
     public void textSourceAddedEvent(TextSource textSource) {
         textSourceListeners.forEach(textSourceListener -> textSourceListener.textSourceAdded(textSource));
