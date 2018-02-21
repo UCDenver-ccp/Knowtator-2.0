@@ -3,24 +3,24 @@ Plugin for Protege
 
 ## Table of Contents
 - [Installation Windows](#installation-windows)
-- [Installation Mac:](#Installation-Mac)
-- [Installation from source:](#Installation-from-source)
-- [Setup:](#Setup)
-- [Features](#Features)
-	- [TextAnnotation highlighting](#TextAnnotation-highlighting)
-	- [Load plain text documents](#Load-plain-text-documets)
-	- [TextAnnotation profiles](#TextAnnotation-profiles)
-	- [Save annotations to XML test_project](#Save-annotations-to-XML-t)
-	- [Reload annotations](#Reload-annotations)
-- [Known bugs](#Known-bugs)
+- [Installation Mac](#installation-mac)
+- [Installation from source](#installation-from-source)
+- [Setup](#setup)
+- [Features](#features)
+	- [TextAnnotation highlighting](#texttnnotation-highlighting)
+	- [Load plain text documents](#load-plain-text-documets)
+	- [TextAnnotation profiles](#textannotation-profiles)
+	- [Save annotations to XML](#save-annotations-to-xml)
+	- [Reload annotations](#reload-annotations)
+- [Known bugs](#known-bugs)
 
-# Installation Windows
+## Installation Windows
 
 1. Install [Desktop Protege 5.X.X][protege link]
 2. Copy Knowtator-2.X.X.jar to Protege-5.X.X/plugins/
 3. Restart Protege
 
-## Installation Mac:
+## Installation Mac
 1. Install [Desktop Protege 5.X.X][protege link]
 2. In Finder, right click the Protege 5 app icon
 3. Click "Show Package Contents"
@@ -30,12 +30,12 @@ Plugin for Protege
 
 (See [this comment thread][mac osx plugin intallation comment thread] for more help) 
 
-## Installation from source:
+## Installation from source
 1. Download source files
 2. `cd` into project directory
 3. `mvn clean install`
 
-## Setup:
+## Setup
 1. Launch Protege.exe
 2. Add a Knowtator view (Window -> Miscellaneous views -> Knowtator). Click somewhere in Protege to add it in.
 3. Make a new project. Enter a name for the project. Select parent directory. Knowtator will make
