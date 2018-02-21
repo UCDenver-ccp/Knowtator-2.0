@@ -2,7 +2,7 @@
 Plugin for Protege
 
 ## Table of Contents
-- [Installation Windows:](#Installation-Windows)
+- [Installation Windows:](#Installation-Windows:)
 - [Installation Mac:](#Installation-Mac)
 - [Installation from source:](#Installation-from-source)
 - [Setup:](#Setup)
@@ -14,7 +14,7 @@ Plugin for Protege
 	- [Reload annotations](#Reload-annotations)
 - [Known bugs](#Known-bugs)
 
-#Installation Windows:
+# Installation Windows:
 
 1. Install [Desktop Protege 5.X.X][protege link]
 2. Copy Knowtator-2.X.X.jar to Protege-5.X.X/plugins/
