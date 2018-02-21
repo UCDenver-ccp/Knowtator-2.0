@@ -2,7 +2,7 @@
 Plugin for Protege
 
 ## Table of Contents
-- [Installation Windows](#Installation-Windows)
+- [Installation Windows](# installation-windows)
 - [Installation Mac:](#Installation-Mac)
 - [Installation from source:](#Installation-from-source)
 - [Setup:](#Setup)
