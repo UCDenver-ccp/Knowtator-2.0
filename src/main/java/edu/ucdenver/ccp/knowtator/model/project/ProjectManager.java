@@ -168,6 +168,7 @@ public class ProjectManager {
             });
 
             for (File file : Objects.requireNonNull(annotationsLocation.listFiles())) {
+                //noinspection ResultOfMethodCallIgnored
                 file.delete();
             }
 
