@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ MIT License
   ~
@@ -23,26 +23,26 @@
   ~ SOFTWARE.
   -->
 
-<knowtator-project>
-    <document id="document1">
-        <annotation annotator="Default" id="mention_1" type="identity">
-            <class id="class_1">Class 1</class>
-            <span end="14" start="10">test</span>
-            <span end="24" start="15">document.</span>
-        </annotation>
-        <annotation annotator="Default" id="mention_0" type="identity">
-            <class id="class_0">Class 0</class>
-            <span end="4" start="0">This</span>
-        </annotation>
-        <graph-space id="graph_0">
-            <vertex annotation="mention_0" id="node_0"/>
-            <vertex annotation="mention_1" id="node_1"/>
-            <triple annotator="Default" id="edge_0" object="node_1" property="property_0" quantifier="" subject="node_0"
-                    value=""/>
-        </graph-space>
-    </document>
-    <profile id="Default">
-        <highlighter class="class_0" color="#00ffff"/>
-        <highlighter class="class_1" color="#ff3333"/>
-    </profile>
-</knowtator-project>
+<annotations textSource="document1_old.txt">
+    <annotation>
+        <mention id="mention_1"/>
+        <annotator id="nonDefault">Default</annotator>
+        <span start="10" end="14"/>
+        <spannedText>test</spannedText>
+        <span start="15" end="24"/>
+        <spannedText>document.</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="mention_0"/>
+        <annotator id="nonDefault">Default</annotator>
+        <span start="0" end="4"/>
+        <spannedText>This</spannedText>
+    </annotation>
+    <classMention id="mention_0">
+        <mentionClass id="class_0">Class 0</mentionClass>
+    </classMention>
+    <classMention id="mention_1">
+        <mentionClass id="class_1">Class 1</mentionClass>
+    </classMention>
+</annotations>
+

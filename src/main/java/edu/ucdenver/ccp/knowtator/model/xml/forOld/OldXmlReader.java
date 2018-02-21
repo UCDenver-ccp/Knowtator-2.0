@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.io.forOld;
+package edu.ucdenver.ccp.knowtator.model.xml.forOld;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
 import edu.ucdenver.ccp.knowtator.model.annotation.TextSource;
-import edu.ucdenver.ccp.knowtator.model.io.XmlUtil;
+import edu.ucdenver.ccp.knowtator.model.annotation.TextSourceManager;
+import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 public class OldXmlReader {
-    public static void readAnnotations(KnowtatorManager manager, List<Node> textSourceNodes) {
+    public static void readAnnotations(TextSourceManager textSourceManager, List<Node> textSourceNodes) {
         /*
         Get annotations by document
          */
@@ -47,13 +47,13 @@ public class OldXmlReader {
             Element textSourceElement = (Element) textSourceNode;
             String docID = textSourceElement.getAttribute(OldXmlTags.TEXT_SOURCE).replace(".txt", "");
 
-            TextSource newTextSource = manager.getTextSourceManager().addTextSource(docID);
-            getAnnotationsFromXml_OLD(manager, newTextSource, textSourceElement);
+            TextSource newTextSource = textSourceManager.addTextSource(docID);
+            getAnnotationsFromXml_OLD(textSourceManager, newTextSource, textSourceElement);
         }
 
     }
 
-    private static void getAnnotationsFromXml_OLD(KnowtatorManager manager, TextSource textSource, Element textSourceElement) {
+    private static void getAnnotationsFromXml_OLD(TextSourceManager textSourceManager, TextSource textSource, Element textSourceElement) {
 
         Map<String, Element> classMentionToClassIDMap = getClassIDsFromXml(textSourceElement);
 //        Map<String, Element> complexSlotMentionToClassIDMap = getComplexSlotsFromXml(textSourceElement);
@@ -63,7 +63,7 @@ public class OldXmlReader {
                 try {
                     Element annotationElement = (Element) annotationNode;
                     String profileID = annotationElement.getElementsByTagName(OldXmlTags.ANNOTATOR).item(0).getTextContent();
-                    Profile profile = manager.getProfileManager().addNewProfile(profileID);
+                    Profile profile = textSourceManager.getManager().getProfileManager().addNewProfile(profileID);
                     List<Span> spans = getSpanInfo(textSource, annotationElement);
 
 

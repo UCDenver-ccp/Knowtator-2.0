@@ -24,9 +24,9 @@
 
 package edu.ucdenver.ccp.knowtator.model.annotation;
 
-import edu.ucdenver.ccp.knowtator.model.io.Savable;
-import edu.ucdenver.ccp.knowtator.model.io.XmlTags;
-import edu.ucdenver.ccp.knowtator.model.io.XmlUtil;
+import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
+import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -70,7 +70,6 @@ public class Annotation extends BasicAnnotation implements Savable {
 
 		overlappingAnnotations = new HashSet<>();
 
-		//		log.warn(String.format("%1$-30s %2$30s", "annotation", toString()));
 	}
 
 	public String getClassID() {
@@ -201,7 +200,6 @@ public class Annotation extends BasicAnnotation implements Savable {
 				String spanEnd = spanElement.getAttribute(XmlTags.SPAN_END);
 
 				Span newSpan = new Span(textSource, Integer.parseInt(spanStart), Integer.parseInt(spanEnd));
-				log.warn(newSpan);
 				addSpan(newSpan);
 			}
 		}

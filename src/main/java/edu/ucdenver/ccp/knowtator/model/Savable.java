@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.io;
+package edu.ucdenver.ccp.knowtator.model;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

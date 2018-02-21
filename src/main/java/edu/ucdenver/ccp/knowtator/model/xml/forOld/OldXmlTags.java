@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.io.forOld;
+package edu.ucdenver.ccp.knowtator.model.xml.forOld;
 
 public class OldXmlTags {
     // ******************OLD Tags*****************

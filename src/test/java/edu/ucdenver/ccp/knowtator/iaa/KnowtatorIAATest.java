@@ -31,17 +31,17 @@ public class KnowtatorIAATest {
 
     @Before
     public void setUp() {
-//        manager.getXmlUtil().read(new File("test_project/CHEBI batch 1 IAA/Kristin/11319941.txt.knowtator.xml"));
-//        manager.getXmlUtil().read(new File("test_project/CHEBI batch 1 IAA/Kristin+Mike/11319941.txt.knowtator.xml"));
+//        manager.getProjectManager().read(new File("test_project/CHEBI batch 1 IAA/Kristin/11319941.txt.knowtator.xml"));
+//        manager.getProjectManager().read(new File("test_project/CHEBI batch 1 IAA/Kristin+Mike/11319941.txt.knowtator.xml"));
 //
-//        manager.getXmlUtil().read(new File("test_project/CHEBI batch 1 IAA/Kristin/11532192.txt.knowtator.xml"));
-//        manager.getXmlUtil().read(new File("test_project/CHEBI batch 1 IAA/Kristin+Mike/11532192.txt.knowtator.xml"));
+//        manager.getProjectManager().read(new File("test_project/CHEBI batch 1 IAA/Kristin/11532192.txt.knowtator.xml"));
+//        manager.getProjectManager().read(new File("test_project/CHEBI batch 1 IAA/Kristin+Mike/11532192.txt.knowtator.xml"));
 //
-//        manager.getXmlUtil().read(new File("test_project/CHEBI batch 1 IAA/Kristin/11597317.txt.knowtator.xml"));
-//        manager.getXmlUtil().read(new File("test_project/CHEBI batch 1 IAA/Kristin+Mike/11597317.txt.knowtator.xml"));
+//        manager.getProjectManager().read(new File("test_project/CHEBI batch 1 IAA/Kristin/11597317.txt.knowtator.xml"));
+//        manager.getProjectManager().read(new File("test_project/CHEBI batch 1 IAA/Kristin+Mike/11597317.txt.knowtator.xml"));
 //
-//        manager.getXmlUtil().read(new File("test_project/CHEBI batch 1 IAA/Kristin/11604102.txt.knowtator.xml"));
-//        manager.getXmlUtil().read(new File("test_project/CHEBI batch 1 IAA/Kristin+Mike/11604102.txt.knowtator.xml"));
+//        manager.getProjectManager().read(new File("test_project/CHEBI batch 1 IAA/Kristin/11604102.txt.knowtator.xml"));
+//        manager.getProjectManager().read(new File("test_project/CHEBI batch 1 IAA/Kristin+Mike/11604102.txt.knowtator.xml"));
 
 //        try {
 //            KnowtatorIAA knowtatorIAA = new KnowtatorIAA(manager.getConfigProperties().getProjectLocation(), manager);

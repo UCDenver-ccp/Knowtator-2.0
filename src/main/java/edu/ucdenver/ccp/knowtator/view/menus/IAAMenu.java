@@ -62,7 +62,7 @@ public class IAAMenu extends JMenu {
 
         runIAA.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(manager.getConfigProperties().getProjectLocation());
+            fileChooser.setCurrentDirectory(manager.getProjectManager().getProjectLocation());
             fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             //
             // disable the "All files" option.

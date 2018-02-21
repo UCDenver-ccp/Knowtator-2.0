@@ -94,12 +94,11 @@ public class TextViewer extends DnDTabbedPane implements TextSourceListener {
             int result = JOptionPane.showConfirmDialog(null, String.format("Would you like to save changes to %s", title), "Closing document", JOptionPane.YES_NO_CANCEL_OPTION);
             switch (result) {
                 case JOptionPane.YES_OPTION:
-                    manager.saveProject();
+                    manager.getProjectManager().saveProject();
                 case JOptionPane.NO_OPTION:
                     if (getTabCount() == 1) {
                         addDefaultTab();
                     }
-                    log.warn(String.format("Closing: %s", title));
                     manager.getTextSourceManager().remove(textPane.getTextSource());
                     textPane.getGraphDialog().setVisible(false);
                     textViewer.remove(sp);
@@ -139,7 +138,7 @@ public class TextViewer extends DnDTabbedPane implements TextSourceListener {
         getSelectedTextPane().refreshHighlights();
     }
 
-    public void refreshAll() {
-        getAllTextPanes().forEach(TextPane::refreshHighlights);
-    }
+//    public void refreshAll() {
+//        getAllTextPanes().forEach(TextPane::refreshHighlights);
+//    }
 }

@@ -1,4 +1,3 @@
-edu\ucdenver\ccp\knowtator\model\io\Savable.class
 edu\ucdenver\ccp\knowtator\KnowtatorManager.class
 edu\ucdenver\ccp\knowtator\model\annotation\TextSource.class
 edu\ucdenver\ccp\knowtator\model\annotation\AnnotationManager.class
@@ -27,7 +26,5 @@ edu\ucdenver\ccp\knowtator\listeners\GraphListener.class
 edu\ucdenver\ccp\knowtator\listeners\SpanListener.class
 edu\ucdenver\ccp\knowtator\model\profile\Profile.class
 edu\ucdenver\ccp\knowtator\listeners\ProfileListener.class
-edu\ucdenver\ccp\knowtator\model\io\XmlUtil$NodeListWrapper.class
 other\DnDTabbedPane.class
-edu\ucdenver\ccp\knowtator\model\io\XmlUtil.class
 edu\ucdenver\ccp\knowtator\model\annotation\Span.class

@@ -26,9 +26,9 @@ package edu.ucdenver.ccp.knowtator.model.annotation;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.io.Savable;
-import edu.ucdenver.ccp.knowtator.model.io.XmlTags;
-import edu.ucdenver.ccp.knowtator.model.io.XmlUtil;
+import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
+import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -62,12 +62,12 @@ public final class AnnotationManager implements Savable {
     public void addAnnotation(Annotation newAnnotation) {
         String id = newAnnotation.getID();
         if (id == null) {
-            id = String.format("annotation_%d", annotationMap.size());
+            id = String.format("mention_%d", annotationMap.size());
         }
 
         while (annotationMap.containsKey(id)) {
-            int annotationIDIndex = Integer.parseInt(id.split("annotation_")[1]);
-            id = String.format("annotation_%d", ++annotationIDIndex);
+            int annotationIDIndex = Integer.parseInt(id.split("mention_")[1]);
+            id = String.format("mention_%d", ++annotationIDIndex);
         }
         newAnnotation.setID(id);
         annotationMap.put(newAnnotation.getID(), newAnnotation);
@@ -186,13 +186,9 @@ public final class AnnotationManager implements Savable {
     public void findOverlaps() {
         List<Span> overlappingSpans = new ArrayList<>();
         spanMap.forEach((span, annotation) -> {
-            log.warn(span);
-            log.warn(overlappingSpans.size());
             List<Span> toRemove = new ArrayList<>();
             overlappingSpans.forEach(span1 -> {
-                log.warn(String.format("Compare: %s, %s", span, span1));
                 if (span.intersects(span1)) {
-                    log.warn(String.format("intersects: %s", span1));
                     annotation.addOverlappingAnnotation(span1.getAnnotation().getID());
                     span1.getAnnotation().addOverlappingAnnotation(annotation.getID());
                 } else {
@@ -221,7 +217,6 @@ public final class AnnotationManager implements Savable {
 
     @Override
     public void readFromXml(Element parent) {
-        log.warn("Reading annotations");
         for (Node annotationNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.ANNOTATION))) {
             Element annotationElement = (Element) annotationNode;
 
@@ -234,14 +229,12 @@ public final class AnnotationManager implements Savable {
             String classID = ((Element) annotationElement.getElementsByTagName(XmlTags.CLASS).item(0)).getAttribute(XmlTags.ID);
 
             Annotation newAnnotation = new Annotation(classID, className, annotationID, textSource, profile, type);
-            log.warn(newAnnotation);
 
             newAnnotation.readFromXml(annotationElement);
 
             addAnnotation(newAnnotation);
         }
 
-        log.warn("Reading graph spaces");
         for (Node graphSpaceNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.GRAPH))) {
             Element graphSpaceElem = (Element) graphSpaceNode;
 
