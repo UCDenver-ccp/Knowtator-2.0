@@ -200,6 +200,7 @@ public class Annotation extends BasicAnnotation implements Savable {
 				String spanEnd = spanElement.getAttribute(XmlTags.SPAN_END);
 
 				Span newSpan = new Span(textSource, Integer.parseInt(spanStart), Integer.parseInt(spanEnd));
+				log.warn("\t\t\tXML: " + newSpan);
 				addSpan(newSpan);
 			}
 		}

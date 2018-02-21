@@ -163,6 +163,7 @@ public class OWLAPIDataExtractor {
 
 //        String ontologyLocation = OntologyTranslator.translate(classID);
             if (!ontologies.contains(ontologyLocation)) {
+                log.warn("Loading ontology: " + ontologyLocation);
                 try {
                     OWLOntology newOntology = owlModelManager.getOWLOntologyManager().loadOntology((IRI.create(ontologyLocation)));
                     owlModelManager.setActiveOntology(newOntology);

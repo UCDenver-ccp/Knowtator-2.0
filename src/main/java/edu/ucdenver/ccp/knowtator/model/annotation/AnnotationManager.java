@@ -229,7 +229,7 @@ public final class AnnotationManager implements Savable {
             String classID = ((Element) annotationElement.getElementsByTagName(XmlTags.CLASS).item(0)).getAttribute(XmlTags.ID);
 
             Annotation newAnnotation = new Annotation(classID, className, annotationID, textSource, profile, type);
-
+            log.warn("\t\tXML: " + newAnnotation);
             newAnnotation.readFromXml(annotationElement);
 
             addAnnotation(newAnnotation);

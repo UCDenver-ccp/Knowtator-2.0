@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 public class ProjectManager {
     public static final Logger log = Logger.getLogger(ProjectManager.class);
@@ -93,35 +94,49 @@ public class ProjectManager {
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             saveProject();
-            closeProject(view, fileChooser.getSelectedFile());
+            log.warn("1: " + fileChooser.getSelectedFile());
+            //TODO: Figure out how to close project before loading
+//            closeProject(view, fileChooser.getSelectedFile());
             loadProject(fileChooser.getSelectedFile());
         }
     }
 
     public void closeProject(KnowtatorView view, File file) {
-        if (view != null) view.close(file);
-        else manager.close();
+        if (view != null){
+            log.warn("2.a: " + file);
+            view.close(file);
+        }
+        else {
+            log.warn("2.b: " + file);
+            manager.close(file);
+        }
     }
 
     public void loadProject(File projectFile) {
-        File projectDirectory = projectFile.getParentFile();
+        if (projectFile != null) {
+            log.warn("4: " + projectFile);
+            File projectDirectory = projectFile.getParentFile();
 
-        makeFileStructure(projectDirectory);
+            makeFileStructure(projectDirectory);
 
-        try {
-            Files.newDirectoryStream(Paths.get(ontologiesLocation.toURI()),
-                    path -> path.toString().endsWith(".owl"))
-                    .forEach(file -> manager.getOWLAPIDataExtractor().loadOntologyFromLocation(file.toFile().toURI().toString()));
+            try {
+                log.warn("Loading ontologies");
+                Files.newDirectoryStream(Paths.get(ontologiesLocation.toURI()),
+                        path -> path.toString().endsWith(".owl"))
+                        .forEach(file -> manager.getOWLAPIDataExtractor().loadOntologyFromLocation(file.toFile().toURI().toString()));
 
-            Files.newDirectoryStream(Paths.get(profilesLocation.toURI()),
-                    path -> path.toString().endsWith(".xml"))
-                    .forEach(file -> XmlUtil.readXML(manager.getProfileManager(), file.toFile()));
+                log.warn("Loading profiles");
+                Files.newDirectoryStream(Paths.get(profilesLocation.toURI()),
+                        path -> path.toString().endsWith(".xml"))
+                        .forEach(file -> XmlUtil.readXML(manager.getProfileManager(), file.toFile()));
 
-            Files.newDirectoryStream(Paths.get(annotationsLocation.toURI()),
-                    path -> path.toString().endsWith(".xml"))
-                    .forEach(file -> XmlUtil.readXML(manager.getTextSourceManager(), file.toFile()));
-        } catch (IOException e) {
-            e.printStackTrace();
+                log.warn("Loading annotations");
+                Files.newDirectoryStream(Paths.get(annotationsLocation.toURI()),
+                        path -> path.toString().endsWith(".xml"))
+                        .forEach(file -> XmlUtil.readXML(manager.getTextSourceManager(), file.toFile()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -151,6 +166,10 @@ public class ProjectManager {
                 File profileFile = new File(profilesLocation, profile.getId() + ".xml");
                 XmlUtil.createXML(profile, profileFile);
             });
+
+            for (File file : Objects.requireNonNull(annotationsLocation.listFiles())) {
+                file.delete();
+            }
 
             manager.getTextSourceManager().getTextSources().values().forEach(textSource -> {
                 File textSourceFile = new File(annotationsLocation, textSource.getDocID() + ".xml");

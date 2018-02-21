@@ -96,6 +96,7 @@ public class ProfileManager implements Savable {
             String profileID = profileElement.getAttribute(XmlTags.ID);
 
             Profile newProfile = addNewProfile(profileID);
+            log.warn("\tXML: " + newProfile);
             newProfile.readFromXml(profileElement);
         }
     }

@@ -41,13 +41,14 @@ public class IOTests {
     private KnowtatorManager manager;
 
     private String[] projectFileNames = new String[]{"test_project", "old_project"};
-    private String[] articleFileNames = new String[]{"document1", "document2", "document3"};
+    private String[] articleFileNames = new String[]{"document1", "document2", "document3", "document1_old"};
     private String[] articleContent = new String[]{
             "This is a test document.",
             "A second test document has appeared!",
-            "And another one!"
+            "And another one!",
+            "This is a test document."
     };
-    private String[] profileFileNames = new String[]{"profile1", "profile2"};
+//    private String[] profileFileNames = new String[]{"profile1", "profile2"};
 
     private File getProjectFile(String projectName) {
         return new File(getClass().getResource(String.format(
@@ -173,14 +174,13 @@ public class IOTests {
         manager = new KnowtatorManager();
 
         int projectID = 1;
-        int articleID = 0;
+        int articleID = 3;
 
         String projectFileName = projectFileNames[projectID];
         File projectFile = getProjectFile(projectFileName);
 
         manager.getProjectManager().loadProject(projectFile);
         TextSource textSource = manager.getTextSourceManager().getTextSources().get(articleFileNames[articleID]);
-
         assert textSource.getContent().equals(articleContent[articleID]);
 
         AnnotationManager annotationManager1 = textSource.getAnnotationManager();

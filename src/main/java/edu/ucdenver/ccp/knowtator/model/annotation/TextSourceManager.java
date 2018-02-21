@@ -49,25 +49,20 @@ public class TextSourceManager implements Savable {
     }
 
     public TextSource addTextSource(String fileLocation) {
-        textSources.values().forEach(t -> log.warn(t));
         String docID = FilenameUtils.getBaseName(fileLocation);
         TextSource newTextSource = textSources.get(docID);
         if (newTextSource == null) {
             newTextSource = new TextSource(manager, docID);
             textSources.put(docID, newTextSource);
-            manager.textSourceAddedEvent(newTextSource);
         } else {
             log.warn(docID + " is not null");
         }
+        manager.textSourceAddedEvent(newTextSource);
         return newTextSource;
     }
 
     public Map<String, TextSource> getTextSources() {
         return textSources;
-    }
-
-    public void remove(TextSource textSource) {
-        textSources.remove(textSource.getDocID());
     }
 
     @Override
@@ -82,6 +77,7 @@ public class TextSourceManager implements Savable {
             Element documentElement = (Element) documentNode;
             String documentID = documentElement.getAttribute(XmlTags.ID);
             TextSource newTextSource = addTextSource(documentID);
+            log.warn("\tXML: " + newTextSource);
             newTextSource.readFromXml(documentElement);
         }
     }

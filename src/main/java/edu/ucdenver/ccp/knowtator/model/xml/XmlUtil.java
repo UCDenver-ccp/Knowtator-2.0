@@ -116,8 +116,10 @@ public final class XmlUtil {
                 // send DOM to test_project
                 PrintWriter pw = new PrintWriter(file);
                 pw.close();
+                OutputStream os = new FileOutputStream(file, false);
                 tr.transform(new DOMSource(dom),
-                        new StreamResult(new FileOutputStream(file)));
+                        new StreamResult(os));
+                os.close();
 
             } catch (TransformerException | IOException te) {
                 System.out.println(te.getMessage());

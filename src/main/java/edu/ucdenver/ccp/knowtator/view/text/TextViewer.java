@@ -57,6 +57,7 @@ public class TextViewer extends DnDTabbedPane implements TextSourceListener {
     }
 
     private void addNewDocument(TextSource textSource) {
+
         TextPane textPane = new TextPane(manager, view, textSource);
         textPane.setName(textSource.getDocID());
         textPane.setText(textSource.getContent());
@@ -65,6 +66,8 @@ public class TextViewer extends DnDTabbedPane implements TextSourceListener {
     }
 
     private void addClosableTab(TextPane textPane, String title) {
+
+        log.warn("TextViewer: adding: " + title);
         JScrollPane sp = new JScrollPane(textPane);
 
         if (!realTabAdded) this.remove(0);
@@ -99,7 +102,6 @@ public class TextViewer extends DnDTabbedPane implements TextSourceListener {
                     if (getTabCount() == 1) {
                         addDefaultTab();
                     }
-                    manager.getTextSourceManager().remove(textPane.getTextSource());
                     textPane.getGraphDialog().setVisible(false);
                     textViewer.remove(sp);
                     break;

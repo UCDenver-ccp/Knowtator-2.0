@@ -81,7 +81,7 @@ public class TextSource implements Savable {
     }
     @Override
     public String toString() {
-        return String.format("TextSource: docID: %s content: %s", docID, content);
+        return String.format("TextSource: docID: %s", docID);
     }
     @Override
     public void writeToXml(Document dom, Element parent) {

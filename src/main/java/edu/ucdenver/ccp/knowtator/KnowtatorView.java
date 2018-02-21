@@ -74,9 +74,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     public void disposeView() {
 
         // For some reason, clicking yes here discards changes, even saved ones...
-//        if (JOptionPane.showConfirmDialog(null, "Save changes to Knowtator project?") == JOptionPane.OK_OPTION) {
-//            manager.getProjectManager().saveProject();
-//        }
+        if (JOptionPane.showConfirmDialog(null, "Save changes to Knowtator project?") == JOptionPane.OK_OPTION) {
+            manager.getProjectManager().saveProject();
+        }
         for (TextPane textPane : textViewer.getAllTextPanes()) {
             textPane.getGraphDialog().setVisible(false);
             textPane.getGraphDialog().dispose();
@@ -115,7 +115,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     public void close(File file) {
         initialiseClassView();
-        manager.getProjectManager().loadProject(file);
+        log.warn("3.a: " + file);
+        this.manager.getProjectManager().loadProject(file);
     }
 
     @Override

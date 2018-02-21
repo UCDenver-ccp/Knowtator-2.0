@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.OWLWorkspace;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -104,8 +105,9 @@ public class KnowtatorManager {
 
     public static void main(String[] args) { }
 
-    public void close() {
+    public void close(File file) {
         initManagers();
+        projectManager.loadProject(file);
     }
 
 

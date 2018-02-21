@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1519181473814
+Bnd-LastModified: 1519186021734
 Build-Jdk: 1.8.0_151
 Built-By: pielk
 Bundle-Activator: org.protege.editor.owl.ProtegeOWL
