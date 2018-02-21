@@ -2,17 +2,17 @@
 Plugin for Protege
 
 ## Table of Contents
-- [Installation Windows:](# Installation-Windows)
-- [Installation Mac:](# Installation-Mac)
-- [Installation from source:](# Installation-from-source)
-- [Setup:](# Setup)
-- [Features](# Features)
-	- [TextAnnotation highlighting](# TextAnnotation-highlighting)
-	- [Load plain text documents](# Load-plain-text-documets)
-	- [TextAnnotation profiles](# TextAnnotation-profiles)
-	- [Save annotations to XML test_project](# Save-annotations-to-XML-t)
-	- [Reload annotations](# Reload-annotations)
-- [Known bugs](# Known-bugs)
+- [Installation Windows:](#Installation-Windows)
+- [Installation Mac:](#Installation-Mac)
+- [Installation from source:](#Installation-from-source)
+- [Setup:](#Setup)
+- [Features](#Features)
+	- [TextAnnotation highlighting](#TextAnnotation-highlighting)
+	- [Load plain text documents](#Load-plain-text-documets)
+	- [TextAnnotation profiles](#TextAnnotation-profiles)
+	- [Save annotations to XML test_project](#Save-annotations-to-XML-t)
+	- [Reload annotations](#Reload-annotations)
+- [Known bugs](#Known-bugs)
 
 ## Installation Windows:
 
