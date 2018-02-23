@@ -44,7 +44,7 @@ public class KnowtatorIcons {
     public static final String DECREASE_TEXT_SIZE_ICON = "icons8-Decrease Font.png";
     public static final String GRAPH_VIEWER = "icons8-edit-node-50.png";
     public static final String ADD = "icons8-plus-50.png";
-    public static final String REMOVE = "icons8-remove-50.png";
+    public static final String REMOVE = "icons8-minus-50.png";
 
 
     private static HashMap<String, ImageIcon> iconMap = new HashMap<>();

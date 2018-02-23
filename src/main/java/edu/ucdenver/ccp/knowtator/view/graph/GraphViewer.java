@@ -74,6 +74,7 @@ public class GraphViewer extends DnDTabbedPane implements AnnotationListener, Pr
         makeDialog(frame);
 
         graphCounter = 0;
+        //TODO: Remove the default graph
         addNewGraphSpace(String.format("Graph %d", graphCounter++));
     }
 
