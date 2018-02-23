@@ -27,7 +27,7 @@ package edu.ucdenver.ccp.knowtator.model;
 import com.google.common.io.Files;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.annotation.AnnotationManager;
-import edu.ucdenver.ccp.knowtator.model.annotation.TextSource;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -214,8 +214,8 @@ public class IOTests {
         assert textSource.getContent().equals(articleContent[articleID]);
 
         AnnotationManager annotationManager = textSource.getAnnotationManager();
-        GraphSpace graphSpace = new GraphSpace(manager, annotationManager, "graph_1");
-        annotationManager.addGraphSpace(graphSpace);
+        GraphSpace graphSpace = annotationManager.addGraphSpace("graph_1");
+
 
         graphSpace.addVertex("node_0", annotationManager.getAnnotation("mention_0"));
         graphSpace.addVertex("node_1", annotationManager.getAnnotation("mention_1"));

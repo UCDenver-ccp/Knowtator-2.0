@@ -56,32 +56,37 @@ public class ProfileMenu extends JMenu implements ProfileListener {
         JMenuItem assignColorToClass = new JMenuItem("Assign color to current class");
         assignColorToClass.addActionListener(e -> {
             Map<String, String[]> clsInfo = manager.getOWLAPIDataExtractor().getSelectedOwlClassInfo();
-            String classID = clsInfo.get("identifiers")[1];
-            String[] descendants = clsInfo.get("descendants");
+            if (clsInfo != null) {
+                String classID = clsInfo.get("identifiers")[1];
+                String[] descendants = clsInfo.get("descendants");
 
-            Profile profile = manager.getProfileManager().getCurrentProfile();
+                Profile profile = manager.getProfileManager().getCurrentProfile();
 
-            pickAColor(classID, descendants, profile, manager.getProfileManager());
+                pickAColor(classID, descendants, profile, manager.getProfileManager());
 
-            manager.colorChangedEvent();
+                manager.colorChangedEvent();
+            }
 
         });
         return assignColorToClass;
     }
 
-    static void pickAColor(String classID, String[] descendants, Profile profile, ProfileManager profileManager) {
+    public static Color pickAColor(String classID, String[] descendants, Profile profile, ProfileManager profileManager) {
+        Color c = null;
         if (profile.getColor(classID) == null) {
-            Color c = JColorChooser.showDialog(null, "Pick a color for %s" + classID, Color.CYAN);
+            c = JColorChooser.showDialog(null, "Pick a color for " + classID, Color.CYAN);
             if (c != null) {
                 profileManager.getCurrentProfile().addColor(classID, c);
 
-                if (JOptionPane.showConfirmDialog(null, "Assign color to descendents of %s?" + classID + "?") == JOptionPane.OK_OPTION) {
+                if (JOptionPane.showConfirmDialog(null, "Assign color to descendents of " + classID + "?") == JOptionPane.OK_OPTION) {
                     if (descendants != null) {
-                        Arrays.stream(descendants).forEach(descendant -> profile.addColor(descendant, c));
+                        Color finalC = c;
+                        Arrays.stream(descendants).forEach(descendant -> profile.addColor(descendant, finalC));
                     }
                 }
             }
         }
+        return c;
     }
 
     private JMenuItem newProfile() {

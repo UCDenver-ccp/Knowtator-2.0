@@ -105,8 +105,7 @@ public class GraphSpace extends mxGraph implements Savable {
         return false;
     }
 
-    public void addVertex(String id, Annotation annotation) {
-
+    public mxCell addVertex(String id, Annotation annotation) {
 
         mxCell newVertex = new mxCell(annotation.getSpannedText(), new mxGeometry(20, 20, 80, 80), "fontSize=16;fontColor=black;strokeColor=black");
         newVertex.setVertex(true);
@@ -123,6 +122,7 @@ public class GraphSpace extends mxGraph implements Savable {
 
         vertexToAnnotationMap.put(newVertex, annotation);
         addCell(newVertex, getDefaultParent());
+        return newVertex;
     }
 
     public void removeVertex(mxCell vertex) {
@@ -234,7 +234,7 @@ public class GraphSpace extends mxGraph implements Savable {
         return null;
     }
 
-    public List<Object> getVerticesForAnnotation(Annotation annotation) {
+    public List<mxCell> getVerticesForAnnotation(Annotation annotation) {
         return vertexToAnnotationMap.entrySet().stream()
                 .filter(map -> annotation.equals(map.getValue()))
                 .map(Map.Entry::getKey)

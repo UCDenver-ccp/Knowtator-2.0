@@ -22,14 +22,12 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.menus;
+package edu.ucdenver.ccp.knowtator.view.text;
 
 import com.mxgraph.model.mxCell;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
-import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.view.text.TextPane;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -45,7 +43,7 @@ public class AnnotationPopupMenu extends JPopupMenu {
     private KnowtatorManager manager;
 
 
-    public AnnotationPopupMenu(KnowtatorManager manager, MouseEvent e, TextPane textPane) {
+    AnnotationPopupMenu(KnowtatorManager manager, MouseEvent e, TextPane textPane) {
         this.manager = manager;
         this.e = e;
         this.textPane = textPane;
@@ -55,47 +53,7 @@ public class AnnotationPopupMenu extends JPopupMenu {
 
     private JMenuItem addAnnotationCommand() {
         JMenuItem menuItem = new JMenuItem("Add annotation");
-        menuItem.addActionListener(e12 -> {
-            String className = null;
-            String classID = null;
-            String[] descendants = null;
-
-            Map<String, String[]> clsInfo = manager.getOWLAPIDataExtractor().getSelectedOwlClassInfo();
-
-            if (clsInfo == null) {
-                log.warn("No OWLClass selected");
-
-                JTextField nameField = new JTextField(10);
-                JTextField idField = new JTextField(10);
-                JPanel inputPanel = new JPanel();
-                inputPanel.add(new JLabel("Name:"));
-                inputPanel.add(nameField);
-                inputPanel.add(Box.createHorizontalStrut(15));
-                inputPanel.add(new JLabel("ID:"));
-                inputPanel.add(idField);
-
-
-                int result = JOptionPane.showConfirmDialog(null, inputPanel,
-                        "No OWL Class selected", JOptionPane.DEFAULT_OPTION);
-                if (result == JOptionPane.OK_OPTION) {
-                    className = nameField.getText();
-                    classID = idField.getText();
-                }
-            } else {
-                className = clsInfo.get("identifiers")[0];
-                classID = clsInfo.get("identifiers")[1];
-                descendants = clsInfo.get("descendants");
-            }
-
-            if (className != null) {
-                Profile profile = manager.getProfileManager().getCurrentProfile();
-
-                ProfileMenu.pickAColor(classID, descendants, profile, manager.getProfileManager());
-
-                Span newSpan = new Span(textPane.getTextSource(), textPane.getSelectionStart(), textPane.getSelectionEnd());
-                textPane.getTextSource().getAnnotationManager().addAnnotation(className, classID, newSpan);
-            }
-        });
+        menuItem.addActionListener(e12 -> textPane.addAnnotation());
 
         return menuItem;
     }
@@ -126,7 +84,7 @@ public class AnnotationPopupMenu extends JPopupMenu {
     }
 
     private JMenuItem selectAnnotationCommand(Annotation annotation, Span span) {
-        JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s", annotation.getClassID()));
+        JMenuItem selectAnnotationMenuItem = new JMenuItem("Select " + annotation.getClassID());
         selectAnnotationMenuItem.addActionListener(e3 -> textPane.setSelection(span, annotation));
 
         return  selectAnnotationMenuItem;
@@ -134,13 +92,8 @@ public class AnnotationPopupMenu extends JPopupMenu {
     }
 
     private JMenuItem removeAnnotationCommand() {
-        JMenuItem removeAnnotationMenuItem = new JMenuItem(
-                String.format("Delete %s", textPane.getSelectedAnnotation().getClassID())
-        );
-        removeAnnotationMenuItem.addActionListener(e4 -> {
-            textPane.getTextSource().getAnnotationManager().removeAnnotation(textPane.getSelectedAnnotation().getID());
-            textPane.setSelection(null, null);
-        });
+        JMenuItem removeAnnotationMenuItem = new JMenuItem("Delete " + textPane.getSelectedAnnotation().getClassID());
+        removeAnnotationMenuItem.addActionListener(e4 -> textPane.removeAnnotation());
 
         return removeAnnotationMenuItem;
     }
@@ -153,11 +106,11 @@ public class AnnotationPopupMenu extends JPopupMenu {
     }
 
     private JMenuItem displayAnnotationVertexCommand() {
-        JMenuItem menuItem = new JMenuItem(String.format("Add vertex to %s", textPane.getGraphDialog().getGraphViewer().getSelectedGraphComponent().getName()));
+        JMenuItem menuItem = new JMenuItem(String.format("Add vertex to %s", textPane.getGraphViewer().getSelectedGraphComponent().getName()));
         menuItem.addActionListener(e -> {
-            textPane.getGraphDialog().setVisible(true);
+            textPane.getGraphViewer().setVisible(true);
             if (textPane.getSelectedAnnotation() != null) {
-                textPane.getGraphDialog().getGraphViewer().addAnnotationVertex(textPane.getSelectedAnnotation());
+                textPane.getGraphViewer().addAnnotationVertex(textPane.getSelectedAnnotation());
             }
         });
 
@@ -173,9 +126,9 @@ public class AnnotationPopupMenu extends JPopupMenu {
                     if (vertex != null) {
                         JMenuItem menuItem = new JMenuItem(graphSpace.getId());
                         menuItem.addActionListener(e1 -> {
-                            textPane.getGraphDialog().setVisible(true);
-                            textPane.getGraphDialog().getGraphViewer().getGraphComponent(graphSpace.getId());
-                            textPane.getGraphDialog().getGraphViewer().goToVertex(textPane.getSelectedAnnotation());
+                            textPane.getGraphViewer().setVisible(true);
+                            textPane.getGraphViewer().getGraphComponent(graphSpace.getId());
+                            textPane.getGraphViewer().goToAnnotationVertex(textPane.getSelectedAnnotation());
                         });
                         jMenu.add(menuItem);
                     }

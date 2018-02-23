@@ -31,6 +31,7 @@ package edu.ucdenver.ccp.knowtator.model.annotation;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;

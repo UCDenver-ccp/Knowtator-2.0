@@ -27,120 +27,111 @@ package edu.ucdenver.ccp.knowtator.view.text;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.listeners.TextSourceListener;
-import edu.ucdenver.ccp.knowtator.model.annotation.TextSource;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
+import edu.ucdenver.ccp.knowtator.view.graph.GraphViewer;
 import org.apache.log4j.Logger;
-import other.DnDTabbedPane;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TextViewer extends DnDTabbedPane implements TextSourceListener {
+public class TextViewer extends JPanel implements TextSourceListener {
     public static final Logger log = Logger.getLogger(KnowtatorManager.class);
-    private boolean realTabAdded;
+    private boolean first;
     private KnowtatorManager manager;
     private KnowtatorView view;
+    private int currentTextPaneIndex;
+    private List<TextPane> textPaneList;
+    private JScrollPane scrollPane;
+    private JLabel documentLabel;
 
     public TextViewer(KnowtatorManager manager, KnowtatorView view) {
-        super();
         this.manager = manager;
         this.view = view;
-
-        addDefaultTab();
-
-    }
-
-    private void addDefaultTab() {
-        add("Untitled", new JScrollPane(new JTextPane()));
-        realTabAdded = false;
+        textPaneList = new ArrayList<>();
+        scrollPane = new JScrollPane();
+        documentLabel = new JLabel();
+        setLayout(new BorderLayout());
+        first = true;
     }
 
     private void addNewDocument(TextSource textSource) {
+        TextPane newTextPane = new TextPane(manager, view, textSource);
+        if (textSource != null) {
+            newTextPane.setName(textSource.getDocID());
+            newTextPane.setText(textSource.getContent());
 
-        TextPane textPane = new TextPane(manager, view, textSource);
-        textPane.setName(textSource.getDocID());
-        textPane.setText(textSource.getContent());
-
-        addClosableTab(textPane, textSource.getDocID());
-    }
-
-    private void addClosableTab(TextPane textPane, String title) {
-
-        log.warn("TextViewer: adding: " + title);
-        JScrollPane sp = new JScrollPane(textPane);
-
-        if (!realTabAdded) this.remove(0);
-        addTab(title, sp);
-
-        int index = indexOfTab(title);
-        JPanel pnlTab = new JPanel(new GridBagLayout());
-        pnlTab.setOpaque(false);
-        JLabel lblTitle = new JLabel(title);
-        JButton btnClose = new JButton("x");
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1;
-
-        pnlTab.add(lblTitle, gbc);
-
-        gbc.gridx++;
-        gbc.weightx = 0;
-        pnlTab.add(btnClose, gbc);
-
-        setTabComponentAt(index, pnlTab);
-
-        TextViewer textViewer = this;
-        btnClose.addActionListener(evt -> {
-            int result = JOptionPane.showConfirmDialog(null, String.format("Would you like to save changes to %s", title), "Closing document", JOptionPane.YES_NO_CANCEL_OPTION);
-            switch (result) {
-                case JOptionPane.YES_OPTION:
-                    manager.getProjectManager().saveProject();
-                case JOptionPane.NO_OPTION:
-                    if (getTabCount() == 1) {
-                        addDefaultTab();
-                    }
-                    textPane.getGraphDialog().setVisible(false);
-                    textViewer.remove(sp);
-                    break;
-            }
-        });
-
-        setSelectedComponent(sp);
-
-        realTabAdded = true;
-    }
-
-    public TextPane getSelectedTextPane() {
-        if (getSelectedComponent() != null) {
-            Component c = ((JScrollPane) getSelectedComponent()).getViewport().getView();
-            if (c.getClass() == TextPane.class) {
-                return (TextPane) ((JScrollPane) getSelectedComponent()).getViewport().getView();
-            }
+            log.warn("TextViewer: adding: " + textSource.getDocID());
         }
-        return null;
+
+        textPaneList.add(newTextPane);
+        showTextPane(textPaneList.size() - 1);
     }
 
-    public List<TextPane> getAllTextPanes() {
-        List<TextPane> textPaneList = new ArrayList<>();
-        for (int i=0; i<getTabCount(); i++) {
-            Component c = ((JScrollPane) getComponentAt(i)).getViewport().getView();
-            if (c.getClass() == TextPane.class) {
-                textPaneList.add((TextPane) c);
+    private void showTextPane(int indexToShow) {
+        boolean graphViewerWasVisible = false;
+
+
+        if (first) {
+            log.warn("Adding first document");
+
+            JPanel subPanel = new JPanel();
+            subPanel.setLayout(new BorderLayout());
+            subPanel.add(new KnowtatorToolBar(this), BorderLayout.NORTH);
+            subPanel.add(documentLabel, BorderLayout.SOUTH);
+
+            add(subPanel, BorderLayout.NORTH);
+            add(scrollPane, BorderLayout.CENTER);
+
+            first = false;
+        } else {
+            TextPane previousTextPane = textPaneList.get(currentTextPaneIndex);
+            GraphViewer graphViewer = previousTextPane.getGraphViewer();
+
+            if (graphViewer != null) {
+                graphViewerWasVisible = graphViewer.getDialog().isVisible();
+                graphViewer.getDialog().setVisible(false);
             }
+
+            scrollPane.remove(previousTextPane);
+            previousTextPane.setIsVisible(false);
         }
-        return textPaneList;
+
+        TextPane currentTextPane = textPaneList.get(indexToShow);
+        documentLabel.setText(currentTextPane.getTextSource().getDocID());
+        scrollPane.setViewportView(currentTextPane);
+        currentTextPane.setIsVisible(true);
+
+        currentTextPaneIndex = indexToShow;
+        if (graphViewerWasVisible) currentTextPane.getGraphViewer().getDialog().setVisible(true);
+
+//        currentTextPane.setSelection(null, null);
+        currentTextPane.refreshHighlights();
     }
+
+
+
 
     @Override
     public void textSourceAdded(TextSource textSource) {
         addNewDocument(textSource);
-        getSelectedTextPane().refreshHighlights();
+
     }
 
-//    public void refreshAll() {
-//        getAllTextPanes().forEach(TextPane::refreshHighlights);
-//    }
+    public TextPane getCurrentTextPane() {
+        return textPaneList.get(currentTextPaneIndex);
+    }
+
+    public void showPreviousTextPane() {
+        showTextPane(Math.max(0, currentTextPaneIndex - 1));
+    }
+
+    public void showNextTextPane() {
+        showTextPane(Math.min(textPaneList.size()-1, currentTextPaneIndex + 1));
+    }
+
+    public List<TextPane> getTextPaneList() {
+        return textPaneList;
+    }
 }

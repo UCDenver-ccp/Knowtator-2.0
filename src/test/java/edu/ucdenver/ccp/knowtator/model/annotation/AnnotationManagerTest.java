@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.model.annotation;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 

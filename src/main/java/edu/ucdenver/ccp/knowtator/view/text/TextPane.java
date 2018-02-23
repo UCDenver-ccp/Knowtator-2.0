@@ -32,10 +32,10 @@ import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
 import edu.ucdenver.ccp.knowtator.listeners.SpanListener;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
-import edu.ucdenver.ccp.knowtator.model.annotation.TextSource;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.view.graph.GraphDialog;
-import edu.ucdenver.ccp.knowtator.view.menus.AnnotationPopupMenu;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
+import edu.ucdenver.ccp.knowtator.view.graph.GraphViewer;
+import edu.ucdenver.ccp.knowtator.view.menus.ProfileMenu;
 import org.apache.log4j.Logger;
 import other.RectanglePainter;
 
@@ -55,7 +55,7 @@ import static java.lang.Math.min;
 public class TextPane extends JTextPane implements AnnotationListener, SpanListener, ProfileListener {
 
 	public static final Logger log = Logger.getLogger(KnowtatorManager.class);
-	private final GraphDialog graphDialog;
+	private GraphViewer graphViewer;
 
 	private KnowtatorManager manager;
 	private KnowtatorView view;
@@ -64,8 +64,9 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	private Annotation selectedAnnotation;
 	private boolean filterByProfile;
 	private boolean focusOnSelectedSpan;
+    private boolean isVisible;
 
-	TextPane(KnowtatorManager manager, KnowtatorView view, TextSource textSource) {
+    TextPane(KnowtatorManager manager, KnowtatorView view, TextSource textSource) {
 		super();
 		this.manager = manager;
 		this.view = view;
@@ -76,13 +77,14 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		filterByProfile = false;
 		focusOnSelectedSpan = false;
 
-		graphDialog = new GraphDialog(manager, (JFrame)SwingUtilities.getWindowAncestor(view), view, textSource);
-
+		if (textSource != null) {
+            graphViewer = new GraphViewer((JFrame) SwingUtilities.getWindowAncestor(view), manager, view, textSource);
+            manager.addConceptAnnotationListener(graphViewer);
+            manager.addProfileListener(graphViewer);
+        }
 		manager.addSpanListener(this);
 		manager.addConceptAnnotationListener(this);
-		manager.addConceptAnnotationListener(graphDialog);
 		manager.addProfileListener(this);
-		manager.addProfileListener(graphDialog);
 
 		setupListeners();
 		requestFocusInWindow();
@@ -115,30 +117,32 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	}
 
 	private void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
-		AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(manager, e, this);
+		if (isVisible) {
+            AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(manager, e, this);
 
-		Map<Span, Annotation> spansContainingLocation = textSource.getAnnotationManager().getSpanMap(
-				press_offset,
-				filterByProfile ? manager.getProfileManager().getCurrentProfile() : null
-		);
+            Map<Span, Annotation> spansContainingLocation = textSource.getAnnotationManager().getSpanMap(
+                    press_offset,
+                    filterByProfile ? manager.getProfileManager().getCurrentProfile() : null
+            );
 
-		if (SwingUtilities.isRightMouseButton(e)) {
-			if (spansContainingLocation.size() == 1) {
-				Map.Entry<Span, Annotation> entry = spansContainingLocation.entrySet().iterator().next();
-				setSelection(entry.getKey(), entry.getValue());
-			}
-			popupMenu.showPopUpMenu(release_offset);
-		} else if (press_offset == release_offset) {
-			if (spansContainingLocation.size() == 1) {
-				Map.Entry<Span, Annotation> entry = spansContainingLocation.entrySet().iterator().next();
-				setSelection(entry.getKey(), entry.getValue());
-			}else if (spansContainingLocation.size() > 1) {
-				popupMenu.chooseAnnotation(spansContainingLocation);
-			}
+            if (SwingUtilities.isRightMouseButton(e)) {
+                if (spansContainingLocation.size() == 1) {
+                    Map.Entry<Span, Annotation> entry = spansContainingLocation.entrySet().iterator().next();
+                    setSelection(entry.getKey(), entry.getValue());
+                }
+                popupMenu.showPopUpMenu(release_offset);
+            } else if (press_offset == release_offset) {
+                if (spansContainingLocation.size() == 1) {
+                    Map.Entry<Span, Annotation> entry = spansContainingLocation.entrySet().iterator().next();
+                    setSelection(entry.getKey(), entry.getValue());
+                } else if (spansContainingLocation.size() > 1) {
+                    popupMenu.chooseAnnotation(spansContainingLocation);
+                }
 
-		} else {
-			setSelectionAtWordLimits(press_offset, release_offset);
-		}
+            } else {
+                setSelectionAtWordLimits(press_offset, release_offset);
+            }
+        }
 	}
 
 	private void setSelectedSpan(Span span) {
@@ -148,9 +152,11 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	}
 
 	public void setSelection(Span span, Annotation annotation) {
-		setSelectedSpan(span);
+		if (isVisible) {
+			setSelectedSpan(span);
 
-		setSelectedAnnotation(annotation);
+			setSelectedAnnotation(annotation);
+		}
 	}
 
 	public Annotation getSelectedAnnotation() {
@@ -259,51 +265,56 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	}
 
 	void refreshHighlights() {
-		Profile profile = manager.getProfileManager().getCurrentProfile();
+    	if (isVisible) {
+			Profile profile = manager.getProfileManager().getCurrentProfile();
 
-		//Remove all previous highlights in case a span has been deleted
-		getHighlighter().removeAllHighlights();
+			//Remove all previous highlights in case a span has been deleted
+			getHighlighter().removeAllHighlights();
 
-		//Always highlight the selected annotation first so its color and border show up
-		highlightSelectedAnnotation();
+			//Always highlight the selected annotation first so its color and border show up
+			highlightSelectedAnnotation();
 
-		// Highlight overlaps first, then spans
-		Span lastSpan = Span.makeDefaultSpan(textSource);
-		Color lastColor = null;
+			// Highlight overlaps first, then spans
+			Span lastSpan = Span.makeDefaultSpan(textSource);
+			Color lastColor = null;
 
-		Map<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null, filterByProfile ? manager.getProfileManager().getCurrentProfile() : null);
-		for (Map.Entry<Span, Annotation> entry : annotationMap.entrySet()) {
-			Span span = entry.getKey();
-			Annotation annotation = entry.getValue();
-			if (span.intersects(lastSpan)) {
-				try {
-					getHighlighter().addHighlight(span.getStart(), min(span.getEnd(), lastSpan.getEnd()), new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY));
-				} catch (BadLocationException e) {
-					e.printStackTrace();
+			Map<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null, filterByProfile ? manager.getProfileManager().getCurrentProfile() : null);
+			for (Map.Entry<Span, Annotation> entry : annotationMap.entrySet()) {
+				Span span = entry.getKey();
+				Annotation annotation = entry.getValue();
+				if (span.intersects(lastSpan)) {
+					try {
+						getHighlighter().addHighlight(span.getStart(), min(span.getEnd(), lastSpan.getEnd()), new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY));
+					} catch (BadLocationException e) {
+						e.printStackTrace();
+					}
+				}
+				if (span.getEnd() > lastSpan.getEnd()) {
+					try {
+						getHighlighter().addHighlight(lastSpan.getStart(), lastSpan.getEnd(), new DefaultHighlighter.DefaultHighlightPainter(lastColor));
+					} catch (BadLocationException e) {
+						e.printStackTrace();
+					}
+					lastSpan = span;
+
+					String classID = annotation.getClassID();
+					lastColor = profile.getColor(classID);
+					if (lastColor == null) {
+						lastColor = ProfileMenu.pickAColor(classID, null, profile, manager.getProfileManager());
+					}
 				}
 			}
-			if (span.getEnd() > lastSpan.getEnd()) {
-				try {
-					getHighlighter().addHighlight(lastSpan.getStart(), lastSpan.getEnd(), new DefaultHighlighter.DefaultHighlightPainter(lastColor));
-				} catch (BadLocationException e) {
-					e.printStackTrace();
-				}
-				lastSpan = span;
 
-				String classID = annotation.getClassID();
-				lastColor = profile.getColor(classID);
+			// Highlight remaining span
+			try {
+				getHighlighter().addHighlight(lastSpan.getStart(), lastSpan.getEnd(), new DefaultHighlighter.DefaultHighlightPainter(lastColor));
+			} catch (BadLocationException e) {
+				e.printStackTrace();
 			}
-		}
 
-		// Highlight remaining span
-		try {
-			getHighlighter().addHighlight(lastSpan.getStart(), lastSpan.getEnd(), new DefaultHighlighter.DefaultHighlightPainter(lastColor));
-		} catch (BadLocationException e) {
-			e.printStackTrace();
+			revalidate();
+			repaint();
 		}
-
-		revalidate();
-		repaint();
 	}
 
 	private void highlightSelectedAnnotation() {
@@ -326,8 +337,8 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		return selectedSpan;
 	}
 
-	public GraphDialog getGraphDialog() {
-		return graphDialog;
+	public GraphViewer getGraphViewer() {
+		return graphViewer;
 	}
 
 	@Override
@@ -344,8 +355,10 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 
 	@Override
 	public void annotationSelectionChanged(Annotation annotation) {
-		setSelectedAnnotation(annotation);
-		refreshHighlights();
+		if (isVisible) {
+			setSelectedAnnotation(annotation);
+			refreshHighlights();
+		}
 	}
 
 
@@ -390,4 +403,55 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	public void colorChanged() {
 		refreshHighlights();
 	}
+
+	public void addAnnotation() {
+		String className = null;
+		String classID = null;
+		String[] descendants = null;
+
+		Map<String, String[]> clsInfo = manager.getOWLAPIDataExtractor().getSelectedOwlClassInfo();
+
+		if (clsInfo == null) {
+			log.warn("No OWLClass selected");
+
+			JTextField nameField = new JTextField(10);
+			JTextField idField = new JTextField(10);
+			JPanel inputPanel = new JPanel();
+			inputPanel.add(new JLabel("Name:"));
+			inputPanel.add(nameField);
+			inputPanel.add(Box.createHorizontalStrut(15));
+			inputPanel.add(new JLabel("ID:"));
+			inputPanel.add(idField);
+
+
+			int result = JOptionPane.showConfirmDialog(null, inputPanel,
+					"No OWL Class selected", JOptionPane.DEFAULT_OPTION);
+			if (result == JOptionPane.OK_OPTION) {
+				className = nameField.getText();
+				classID = idField.getText();
+			}
+		} else {
+			className = clsInfo.get("identifiers")[0];
+			classID = clsInfo.get("identifiers")[1];
+			descendants = clsInfo.get("descendants");
+		}
+
+		if (className != null) {
+			Profile profile = manager.getProfileManager().getCurrentProfile();
+
+			ProfileMenu.pickAColor(classID, descendants, profile, manager.getProfileManager());
+
+			Span newSpan = new Span(textSource, getSelectionStart(), getSelectionEnd());
+			textSource.getAnnotationManager().addAnnotation(className, classID, newSpan);
+		}
+	}
+
+	public void removeAnnotation() {
+		textSource.getAnnotationManager().removeAnnotation(selectedAnnotation.getID());
+		setSelection(null, null);
+	}
+
+    public void setIsVisible(boolean isVisible) {
+        this.isVisible = isVisible;
+    }
 }

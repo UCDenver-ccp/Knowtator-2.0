@@ -69,7 +69,7 @@ public class FindPanel extends JPanel {
     private ActionListener getNextMatch() {
         return e -> {
             String textToFind = textField.getText();
-            TextPane currentTextPane = view.getTextViewer().getSelectedTextPane();
+            TextPane currentTextPane = view.getTextViewer().getCurrentTextPane();
 
             String textToSearch = currentTextPane.getText();
             if (!isCaseSensitive.isSelected()) {
@@ -91,7 +91,7 @@ public class FindPanel extends JPanel {
     private ActionListener getPreviousMatch() {
         return e -> {
             String textToFind = textField.getText();
-            TextPane currentTextPane = view.getTextViewer().getSelectedTextPane();
+            TextPane currentTextPane = view.getTextViewer().getCurrentTextPane();
             String textToSearch = currentTextPane.getText();
             if (!isCaseSensitive.isSelected()) {
                 textToSearch = textToSearch.toLowerCase();

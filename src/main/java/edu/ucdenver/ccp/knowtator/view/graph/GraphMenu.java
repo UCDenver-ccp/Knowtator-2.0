@@ -22,11 +22,10 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.menus;
+package edu.ucdenver.ccp.knowtator.view.graph;
 
 import com.mxgraph.util.mxCellRenderer;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.view.graph.GraphDialog;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -37,15 +36,15 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class GraphMenu extends JMenu {
+class GraphMenu extends JMenu {
 
     private KnowtatorManager manager;
-    private GraphDialog graphDialog;
+    private GraphViewer graphViewer;
 
-    public GraphMenu(KnowtatorManager manager, GraphDialog graphDialog) {
+    GraphMenu(KnowtatorManager manager, GraphViewer graphViewer) {
         super("Graph");
         this.manager = manager;
-        this.graphDialog = graphDialog;
+        this.graphViewer = graphViewer;
 
         add(addNewGraphCommand());
         add(saveToImageCommand());
@@ -60,7 +59,7 @@ public class GraphMenu extends JMenu {
             FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
             fileChooser.setFileFilter(fileFilter);
             if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                BufferedImage image = mxCellRenderer.createBufferedImage(graphDialog.getGraphViewer().getSelectedGraphComponent().getGraph(), null, 1, Color.WHITE, true, null);
+                BufferedImage image = mxCellRenderer.createBufferedImage(graphViewer.getSelectedGraphComponent().getGraph(), null, 1, Color.WHITE, true, null);
                 try {
                     ImageIO.write(image, "PNG", new File(fileChooser.getSelectedFile().getAbsolutePath()));
                 } catch (IOException e1) {
@@ -76,7 +75,7 @@ public class GraphMenu extends JMenu {
         JMenuItem deleteGraphMenuItem = new JMenuItem("Delete graph");
         deleteGraphMenuItem.addActionListener(e -> {
             if (JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this graph?") == JOptionPane.YES_OPTION) {
-                graphDialog.getGraphViewer().deleteSelectedGraph();
+                graphViewer.deleteSelectedGraph();
             }
         });
 
@@ -92,7 +91,7 @@ public class GraphMenu extends JMenu {
             };
             int option = JOptionPane.showConfirmDialog(null, message, "Enter a name for this graph", JOptionPane.OK_CANCEL_OPTION);
             if (option == JOptionPane.OK_OPTION) {
-                graphDialog.getGraphViewer().addNewGraph(field1.getText());
+                graphViewer.addNewGraphSpace(field1.getText());
 
             }
 

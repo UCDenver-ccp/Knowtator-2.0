@@ -22,10 +22,11 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.annotation;
+package edu.ucdenver.ccp.knowtator.model.textsource;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.annotation.AnnotationManager;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
@@ -46,25 +47,33 @@ public class TextSource implements Savable {
     private String docID;
     private String content;
 
-    TextSource(KnowtatorManager manager, String docID) {
-        this.docID = docID;
+    public TextSource(KnowtatorManager manager, String docID) {
         this.annotationManager = new AnnotationManager(manager, this);
 
-        File file = new File(manager.getProjectManager().getArticlesLocation(), docID + ".txt");
-        while (!file.exists()) {
-            JFileChooser fileChooser = new JFileChooser();
-            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                file = fileChooser.getSelectedFile();
+        if (docID != null) {
+            this.docID = docID;
+            File file = new File(manager.getProjectManager().getArticlesLocation(), docID + ".txt");
+            while (!file.exists()) {
+                JFileChooser fileChooser = new JFileChooser();
+                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    file = fileChooser.getSelectedFile();
 
+                }
             }
-        }
 
-        try {
-            content = FileUtils.readFileToString(file, "UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                content = FileUtils.readFileToString(file, "UTF-8");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            this.docID = "Instructions";
+            content = "***Instructions:***" +
+                    "\n" +
+                    "Create a new project: Project -> New Project" +
+                    "\n" +
+                    "Load an existing project: Project -> Load Project";
         }
-
 
     }
 

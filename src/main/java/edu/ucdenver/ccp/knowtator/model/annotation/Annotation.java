@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.model.annotation;
 
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
 import org.apache.log4j.Logger;
@@ -33,12 +34,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
-public class Annotation extends BasicAnnotation implements Savable {
+public class Annotation implements Savable {
 
 	private String className;
 	private String classID;
@@ -48,8 +46,19 @@ public class Annotation extends BasicAnnotation implements Savable {
 	private Logger log = Logger.getLogger(Annotation.class);
 
 
+
+
+	private final Date date;
+	public String id;
+	private TextSource textSource;
+	private Profile annotator;
+
 	public Annotation(String classID, String className, String annotationID, TextSource textSource, Profile annotator, String type) {
-		super(annotationID, textSource, annotator);
+		this.textSource = textSource;
+		this.annotator = annotator;
+		this.date = new Date();
+		this.id = annotationID;
+
 		this.className = className;
 		this.classID = classID;
 		this.type = type;
@@ -71,6 +80,21 @@ public class Annotation extends BasicAnnotation implements Savable {
 
 	}
 
+	public TextSource getTextSource() {
+		return textSource;
+	}
+	public Profile getAnnotator() {
+		return annotator;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public String getID() {
+		return id;
+	}
+	void setID(String id) {
+		this.id = id;
+	}
 	public String getClassID() {
 		return classID;
 	}

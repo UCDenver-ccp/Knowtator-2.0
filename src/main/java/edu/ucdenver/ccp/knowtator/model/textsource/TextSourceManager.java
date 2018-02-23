@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.annotation;
+package edu.ucdenver.ccp.knowtator.model.textsource;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
@@ -38,10 +38,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TextSourceManager implements Savable {
-    private Map<String, TextSource> textSources;
-
-    private KnowtatorManager manager;
     private Logger log = Logger.getLogger(TextSourceManager.class);
+
+
+    private Map<String, TextSource> textSources;
+    private KnowtatorManager manager;
 
     public TextSourceManager(KnowtatorManager manager) {
         this.manager = manager;

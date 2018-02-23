@@ -22,28 +22,34 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.menus;
-
-import edu.ucdenver.ccp.knowtator.view.graph.GraphDialog;
+package edu.ucdenver.ccp.knowtator.view.graph;
 
 import javax.swing.*;
 
-public class GraphOptionsMenu extends JMenu {
+class GraphOptionsMenu extends JMenu {
 
-    private GraphDialog graphDialog;
 
-    public GraphOptionsMenu(GraphDialog graphDialog) {
+    private GraphViewer graphViewer;
+
+    GraphOptionsMenu(GraphViewer graphViewer) {
         super("Options");
+        this.graphViewer = graphViewer;
 
-        this.graphDialog = graphDialog;
 
         add(displayAllAnnotationsCommand());
+        add(applyLayoutCommand());
     }
 
     private JMenuItem displayAllAnnotationsCommand() {
         JMenuItem menuItem = new JMenuItem("Display all annotations");
-        menuItem.addActionListener(e -> graphDialog.getGraphViewer().addAllAnnotations());
+        menuItem.addActionListener(e -> graphViewer.addAllAnnotations());
 
+        return menuItem;
+    }
+
+    private JMenuItem applyLayoutCommand() {
+        JMenuItem menuItem = new JMenuItem("Apply layout");
+        menuItem.addActionListener(e -> graphViewer.executeLayout(graphViewer.getSelectedGraphComponent()));
         return menuItem;
     }
 }

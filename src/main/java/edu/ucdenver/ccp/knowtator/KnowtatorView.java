@@ -27,7 +27,6 @@ package edu.ucdenver.ccp.knowtator;
 import edu.ucdenver.ccp.knowtator.view.info.FindPanel;
 import edu.ucdenver.ccp.knowtator.view.info.InfoPanel;
 import edu.ucdenver.ccp.knowtator.view.menus.*;
-import edu.ucdenver.ccp.knowtator.view.text.TextPane;
 import edu.ucdenver.ccp.knowtator.view.text.TextViewer;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
@@ -51,7 +50,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     private ViewMenu viewMenu;
     private ProfileMenu profileMenu;
     private IAAMenu iaaMenu;
-    private KnowtatorToolBar toolBar;
 
     public void owlEntitySelectionChanged(OWLEntity owlEntity) {
         if (getView() != null) {
@@ -76,10 +74,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         // For some reason, clicking yes here discards changes, even saved ones...
         if (JOptionPane.showConfirmDialog(null, "Save changes to Knowtator project?") == JOptionPane.OK_OPTION) {
             manager.getProjectManager().saveProject();
-        }
-        for (TextPane textPane : textViewer.getAllTextPanes()) {
-            textPane.getGraphDialog().setVisible(false);
-            textPane.getGraphDialog().dispose();
         }
     }
 
@@ -127,10 +121,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         textViewer = new TextViewer(manager, this);
         infoPanel = new InfoPanel(this);
         findPanel = new FindPanel(this);
-        toolBar = new KnowtatorToolBar(this);
 
         projectMenu = new ProjectMenu(manager, this);
-        viewMenu = new ViewMenu(this, manager);
+        viewMenu = new ViewMenu(manager);
         profileMenu = new ProfileMenu(manager);
         iaaMenu = new IAAMenu(manager);
 
@@ -182,7 +175,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         menuBar.add(viewMenu);
         menuBar.add(profileMenu);
         menuBar.add(iaaMenu);
-        menuBar.add(toolBar);
 
         add(menuBar, BorderLayout.NORTH);
 

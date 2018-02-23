@@ -117,16 +117,16 @@ public class InfoPanel extends JPanel implements SpanListener, AnnotationListene
 
     @Override
     public void spanAdded(Span newSpan) {
-        displayInfo(view.getTextViewer().getSelectedTextPane().getSelectedAnnotation());
+        displayInfo(view.getTextViewer().getCurrentTextPane().getSelectedAnnotation());
     }
 
     @Override
     public void spanRemoved() {
-        displayInfo(view.getTextViewer().getSelectedTextPane().getSelectedAnnotation());
+        displayInfo(view.getTextViewer().getCurrentTextPane().getSelectedAnnotation());
     }
 
     @Override
     public void spanSelectionChanged(Span span) {
-        displayInfo(view.getTextViewer().getSelectedTextPane().getSelectedAnnotation());
+        displayInfo(view.getTextViewer().getCurrentTextPane().getSelectedAnnotation());
     }
 }

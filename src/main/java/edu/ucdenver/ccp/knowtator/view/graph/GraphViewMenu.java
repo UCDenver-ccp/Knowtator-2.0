@@ -22,12 +22,11 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.menus;
+package edu.ucdenver.ccp.knowtator.view.graph;
 
 import com.mxgraph.swing.mxGraphComponent;
 import edu.ucdenver.ccp.knowtator.listeners.GraphListener;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.view.graph.GraphDialog;
 
 import javax.swing.*;
 
@@ -35,23 +34,24 @@ import javax.swing.*;
 //TODO; Toggle expand to show coreference
 public class GraphViewMenu extends JMenu implements GraphListener {
 
-    private GraphDialog graphDialog;
 
-    public GraphViewMenu(GraphDialog graphDialog) {
+    private GraphViewer graphViewer;
+
+    GraphViewMenu(GraphViewer graphViewer) {
         super("View");
-        this.graphDialog = graphDialog;
+        this.graphViewer = graphViewer;
 
         updateMenus();
     }
 
     private JMenu goToGraphMenu() {
         JMenu menu = new JMenu("Go to graph");
-        graphDialog.getTextSource().getAnnotationManager().getGraphSpaces()
+        graphViewer.getTextSource().getAnnotationManager().getGraphSpaces()
                 .forEach(graphSpace -> {
                     JMenuItem menuItem = new JMenuItem(graphSpace.getId());
                     menuItem.addActionListener(e -> {
-                        if (graphDialog.getGraphViewer().getGraphComponent(graphSpace.getId()) == null) {
-                            graphDialog.getGraphViewer().addGraph(graphSpace);
+                        if (graphViewer.getGraphComponent(graphSpace.getId()) == null) {
+                            graphViewer.addGraph(graphSpace);
                         }
                     });
                     menu.add(menuItem);
@@ -61,13 +61,13 @@ public class GraphViewMenu extends JMenu implements GraphListener {
 
     private JMenuItem zoomInCommand() {
         JMenuItem menuItem = new JMenuItem("Zoom In");
-        menuItem.addActionListener(e -> ((mxGraphComponent) graphDialog.getGraphViewer().getSelectedComponent()).zoomIn());
+        menuItem.addActionListener(e -> ((mxGraphComponent) graphViewer.getSelectedComponent()).zoomIn());
         return menuItem;
     }
 
     private JMenuItem zoomOutCommand() {
         JMenuItem menuItem = new JMenuItem("Zoom Out");
-        menuItem.addActionListener(e -> ((mxGraphComponent) graphDialog.getGraphViewer().getSelectedComponent()).zoomOut());
+        menuItem.addActionListener(e -> ((mxGraphComponent) graphViewer.getSelectedComponent()).zoomOut());
         return menuItem;
     }
 
