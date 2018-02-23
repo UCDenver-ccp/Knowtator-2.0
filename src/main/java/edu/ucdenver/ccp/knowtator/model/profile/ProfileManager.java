@@ -56,7 +56,7 @@ public class ProfileManager implements Savable {
             return profiles.get(profileID);
         }
 
-        Profile newProfile = new Profile(profileID, manager);
+        Profile newProfile = new Profile(profileID);
         profiles.put(profileID, newProfile);
 
         currentProfile = newProfile;

@@ -115,7 +115,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	}
 
 	private void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
-		AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e, this);
+		AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(manager, e, this);
 
 		Map<Span, Annotation> spansContainingLocation = textSource.getAnnotationManager().getSpanMap(
 				press_offset,
@@ -259,6 +259,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	}
 
 	void refreshHighlights() {
+		Profile profile = manager.getProfileManager().getCurrentProfile();
 
 		//Remove all previous highlights in case a span has been deleted
 		getHighlighter().removeAllHighlights();
@@ -288,7 +289,9 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 					e.printStackTrace();
 				}
 				lastSpan = span;
-				lastColor = annotation.getColor();
+
+				String classID = annotation.getClassID();
+				lastColor = profile.getColor(classID);
 			}
 		}
 

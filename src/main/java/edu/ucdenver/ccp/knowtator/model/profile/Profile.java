@@ -24,22 +24,17 @@
 
 package edu.ucdenver.ccp.knowtator.model.profile;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLAPIDataExtractor;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.OWLClass;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
-import java.util.Set;
 
 public class Profile implements Savable {
     @SuppressWarnings("unused")
@@ -47,11 +42,9 @@ public class Profile implements Savable {
 
     private String profileID;
     private HashMap<String, Color> colors;  //<ClassName, Highlighter>
-    private KnowtatorManager manager;
 
-    public Profile(String profileID, KnowtatorManager manager) {
+    public Profile(String profileID) {
         this.profileID = profileID;
-        this.manager = manager;
 
         colors = new HashMap<>();
     }
@@ -60,30 +53,8 @@ public class Profile implements Savable {
         return profileID;
     }
 
-    public Color getColor(String classID, String className) {
-        if (colors.containsKey(classID)) {
-            return colors.get(classID);
-        } else {
-            Color c = JColorChooser.showDialog(null, String.format("Pick a color for %s", className == null ? classID : className), Color.CYAN);
-            if (c != null) {
-                addColor(classID, c);
-
-                if (JOptionPane.showConfirmDialog(null, String.format("Assign color to descendents of %s?", className == null ? classID : className)) == JOptionPane.OK_OPTION) {
-                    Set<OWLClass> descendents = manager.getOWLAPIDataExtractor().getSelectedOWLClassDescendents();
-                    if (descendents != null) {
-                        for (OWLClass descendent : descendents) {
-                            String decClassID = OWLAPIDataExtractor.getOwlEntID(descendent);
-
-                            addColor(decClassID, c);
-                        }
-                    }
-                }
-            } else {
-                return getColor(classID, className);
-            }
-            return colors.get(classID);
-        }
-
+    public Color getColor(String classID) {
+        return colors.get(classID);
     }
 
     private void addColor(String classID, String color) {
@@ -93,7 +64,7 @@ public class Profile implements Savable {
         colors.put(classID, c);
     }
 
-    private void addColor(String classID, Color c) {
+    public void addColor(String classID, Color c) {
         colors.put(classID, c);
     }
 
@@ -101,11 +72,6 @@ public class Profile implements Savable {
         return String.format("Profile: ID: %s", profileID);
     }
 
-    public void reassignColor(String classID, String className) {
-        colors.remove(classID);
-        getColor(classID, className);
-        manager.colorChangedEvent();
-    }
 
     @Override
     public void writeToXml(Document dom, Element root) {

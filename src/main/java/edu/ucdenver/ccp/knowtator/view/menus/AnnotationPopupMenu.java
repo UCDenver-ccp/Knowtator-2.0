@@ -25,20 +25,28 @@
 package edu.ucdenver.ccp.knowtator.view.menus;
 
 import com.mxgraph.model.mxCell;
+import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.view.text.TextPane;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.Map;
 
 public class AnnotationPopupMenu extends JPopupMenu {
+    private static final Logger log = Logger.getLogger(AnnotationPopupMenu.class);
+
 
     private MouseEvent e;
     private TextPane textPane;
+    private KnowtatorManager manager;
 
-    public AnnotationPopupMenu(MouseEvent e, TextPane textPane) {
+
+    public AnnotationPopupMenu(KnowtatorManager manager, MouseEvent e, TextPane textPane) {
+        this.manager = manager;
         this.e = e;
         this.textPane = textPane;
     }
@@ -46,14 +54,50 @@ public class AnnotationPopupMenu extends JPopupMenu {
 
 
     private JMenuItem addAnnotationCommand() {
-        JMenuItem annotateWithCurrentSelectedClass = new JMenuItem("Add annotation");
-        annotateWithCurrentSelectedClass.addActionListener(e12 -> textPane.getTextSource().getAnnotationManager()
-                .addAnnotation(
-                        new Span(textPane.getTextSource(), textPane.getSelectionStart(), textPane.getSelectionEnd())
-                )
-        );
+        JMenuItem menuItem = new JMenuItem("Add annotation");
+        menuItem.addActionListener(e12 -> {
+            String className = null;
+            String classID = null;
+            String[] descendants = null;
 
-        return annotateWithCurrentSelectedClass;
+            Map<String, String[]> clsInfo = manager.getOWLAPIDataExtractor().getSelectedOwlClassInfo();
+
+            if (clsInfo == null) {
+                log.warn("No OWLClass selected");
+
+                JTextField nameField = new JTextField(10);
+                JTextField idField = new JTextField(10);
+                JPanel inputPanel = new JPanel();
+                inputPanel.add(new JLabel("Name:"));
+                inputPanel.add(nameField);
+                inputPanel.add(Box.createHorizontalStrut(15));
+                inputPanel.add(new JLabel("ID:"));
+                inputPanel.add(idField);
+
+
+                int result = JOptionPane.showConfirmDialog(null, inputPanel,
+                        "No OWL Class selected", JOptionPane.DEFAULT_OPTION);
+                if (result == JOptionPane.OK_OPTION) {
+                    className = nameField.getText();
+                    classID = idField.getText();
+                }
+            } else {
+                className = clsInfo.get("identifiers")[0];
+                classID = clsInfo.get("identifiers")[1];
+                descendants = clsInfo.get("descendants");
+            }
+
+            if (className != null) {
+                Profile profile = manager.getProfileManager().getCurrentProfile();
+
+                ProfileMenu.pickAColor(classID, descendants, profile, manager.getProfileManager());
+
+                Span newSpan = new Span(textPane.getTextSource(), textPane.getSelectionStart(), textPane.getSelectionEnd());
+                textPane.getTextSource().getAnnotationManager().addAnnotation(className, classID, newSpan);
+            }
+        });
+
+        return menuItem;
     }
 
     private JMenuItem addSpanToAnnotationCommand() {

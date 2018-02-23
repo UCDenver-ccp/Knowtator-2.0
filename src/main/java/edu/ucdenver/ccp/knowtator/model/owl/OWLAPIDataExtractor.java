@@ -32,10 +32,7 @@ import org.protege.editor.owl.model.OWLWorkspace;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
 
-import javax.swing.*;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -69,7 +66,7 @@ public class OWLAPIDataExtractor {
         return null;
     }
 
-    public static String getOwlEntID(OWLEntity ent) {
+    private String getOwlEntID(OWLEntity ent) {
         return ent.getIRI().getShortForm();
     }
 
@@ -81,8 +78,11 @@ public class OWLAPIDataExtractor {
         return owlModelManager == null ? null : owlModelManager.getOWLEntityFinder().getOWLObjectProperty(classID);
     }
 
-    private Set<OWLClass> getDecendents(OWLClass cls) {
-        return owlModelManager == null ? null : owlModelManager.getOWLHierarchyManager().getOWLClassHierarchyProvider().getDescendants(cls);
+    private String[] getDescendants(OWLClass cls) {
+        Set<OWLClass> descendants = owlModelManager == null ? null :
+                owlModelManager.getOWLHierarchyManager().getOWLClassHierarchyProvider().getDescendants(cls);
+        return descendants == null ? null :
+                descendants.stream().map(this::getOwlEntID).toArray(String[]::new);
     }
 
     private OWLClass getSelectedClass() {
@@ -93,57 +93,26 @@ public class OWLAPIDataExtractor {
         return owlWorkSpace == null ? null : owlWorkSpace.getOWLSelectionModel().getLastSelectedObjectProperty();
     }
 
-    public Set<OWLClass> getSelectedOWLClassDescendents() {
-        OWLClass cls = getSelectedClass();
-        return cls == null ? null : getDecendents(cls);
-
-    }
-
     public String getSelectedPropertyID() {
         OWLObjectProperty property = getSelectedProperty();
         if (property == null) {
-            log.warn("No Object property selected");
-            JTextField field1 = new JTextField();
-            Object[] message = {
-                    "Relationship ID", field1,
-            };
-            int option = JOptionPane.showConfirmDialog(null, message, "Enter an ID for this property", JOptionPane.OK_CANCEL_OPTION);
-            if (option == JOptionPane.OK_OPTION) {
-                return field1.getText();
-
-            }
             return null;
         } else {
             return getOwlEntID(property);
         }
     }
 
-    public String[] getSelectedOwlClassInfo() {
+    public Map<String, String[]> getSelectedOwlClassInfo() {
         OWLClass cls = getSelectedClass();
 
-        String[] clsInfo = new String[2];
+        Map<String, String[]> clsInfo = null;
         if (cls != null) {
-            clsInfo[0] = extractOWLObjectData(cls);
-            clsInfo[1] = getOwlEntID(cls);
-        } else {
-            log.warn("No OWLClass selected");
-
-            JTextField nameField = new JTextField(10);
-            JTextField idField = new JTextField(10);
-            JPanel inputPanel = new JPanel();
-            inputPanel.add(new JLabel("Name:"));
-            inputPanel.add(nameField);
-            inputPanel.add(Box.createHorizontalStrut(15));
-            inputPanel.add(new JLabel("ID:"));
-            inputPanel.add(idField);
-
-
-            int result = JOptionPane.showConfirmDialog(null, inputPanel,
-                    "No OWL Class selected", JOptionPane.DEFAULT_OPTION);
-            if (result == JOptionPane.OK_OPTION) {
-                clsInfo[0] = nameField.getText();
-                clsInfo[1] = idField.getText();
-            }
+            clsInfo = new HashMap<>();
+            clsInfo.put("identifiers", new String[]{
+                    extractOWLObjectData(cls),
+                    getOwlEntID(cls)
+            });
+            clsInfo.put("descendants", getDescendants(cls));
         }
         return clsInfo;
     }

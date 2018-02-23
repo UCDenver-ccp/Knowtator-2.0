@@ -171,11 +171,7 @@ public final class AnnotationManager implements Savable {
     }
 
     //TODO: Add annotations as subclasses of their assigned classes as well as of the AO
-    public void addAnnotation(Span span) {
-        String[] clsInfo = manager.getOWLAPIDataExtractor().getSelectedOwlClassInfo();
-        String className = clsInfo[0];
-        String classID = clsInfo[1];
-
+    public void addAnnotation(String className, String classID, Span span) {
         if (classID != null) {
             Annotation newAnnotation = new Annotation(classID, className, null, textSource, manager.getProfileManager().getCurrentProfile(), "identity");
             newAnnotation.addSpan(span);

@@ -30,18 +30,17 @@ import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.annotation.AnnotationManager;
-import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
-import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import javax.swing.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,35 +71,7 @@ public class GraphSpace extends mxGraph implements Savable {
         setCellsBendable(false);
     }
 
-    public void addTriple(mxCell edge, String property) {
-        JTextField quantifierField = new JTextField(10);
-        JTextField valueField = new JTextField(10);
-        JPanel restrictionPanel = new JPanel();
-        restrictionPanel.add(new JLabel("Quantifier:"));
-        restrictionPanel.add(quantifierField);
-        restrictionPanel.add(Box.createHorizontalStrut(15));
-        restrictionPanel.add(new JLabel("Value:"));
-        restrictionPanel.add(valueField);
-
-        String quantifier = "";
-        String value = "";
-        int result = JOptionPane.showConfirmDialog(null, restrictionPanel,
-                "Restriction options", JOptionPane.OK_CANCEL_OPTION);
-        if (result == JOptionPane.OK_OPTION) {
-            quantifier = quantifierField.getText();
-            value = valueField.getText();
-        }
-
-        addTriple(edge,
-                null,
-                manager.getProfileManager().getCurrentProfile(),
-                property,
-                quantifier,
-                value);
-
-    }
-
-    private void addTriple(mxCell edge, String id, Profile annotator, String property, String quantifier, String value) {
+    public void addTriple(mxCell edge, String id, Profile annotator, String property, String quantifier, String value) {
         if (id == null) {
             id = String.format("edge_%d", edgeToTripleMap.size());
         }
@@ -172,7 +143,9 @@ public class GraphSpace extends mxGraph implements Savable {
     }
 
     private void setVertexStyle(mxCell vertex) {
-        String color = Integer.toHexString(vertexToAnnotationMap.get(vertex).getColor().getRGB()).substring(2);
+        String classID = vertexToAnnotationMap.get(vertex).getClassID();
+        Profile profile = manager.getProfileManager().getCurrentProfile();
+        String color = Integer.toHexString(profile.getColor(classID).getRGB()).substring(2);
         String shape = mxConstants.SHAPE_RECTANGLE;
 
         setCellStyles(mxConstants.STYLE_SHAPE, shape, new Object[]{vertex});

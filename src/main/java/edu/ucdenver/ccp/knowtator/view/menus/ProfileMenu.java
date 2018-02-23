@@ -26,12 +26,15 @@ package edu.ucdenver.ccp.knowtator.view.menus;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
-import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileManager;
+import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
+import java.awt.*;
+import java.util.Arrays;
+import java.util.Map;
 
 public class ProfileMenu extends JMenu implements ProfileListener {
 
@@ -52,15 +55,33 @@ public class ProfileMenu extends JMenu implements ProfileListener {
 
         JMenuItem assignColorToClass = new JMenuItem("Assign color to current class");
         assignColorToClass.addActionListener(e -> {
-            String[] clsInfo = manager.getOWLAPIDataExtractor().getSelectedOwlClassInfo();
-            String className = clsInfo[0];
-            String classID = clsInfo[1];
-            Profile currentProfile = manager.getProfileManager().getCurrentProfile();
+            Map<String, String[]> clsInfo = manager.getOWLAPIDataExtractor().getSelectedOwlClassInfo();
+            String classID = clsInfo.get("identifiers")[1];
+            String[] descendants = clsInfo.get("descendants");
 
-            currentProfile.reassignColor(classID, className);
+            Profile profile = manager.getProfileManager().getCurrentProfile();
+
+            pickAColor(classID, descendants, profile, manager.getProfileManager());
+
+            manager.colorChangedEvent();
 
         });
         return assignColorToClass;
+    }
+
+    static void pickAColor(String classID, String[] descendants, Profile profile, ProfileManager profileManager) {
+        if (profile.getColor(classID) == null) {
+            Color c = JColorChooser.showDialog(null, "Pick a color for %s" + classID, Color.CYAN);
+            if (c != null) {
+                profileManager.getCurrentProfile().addColor(classID, c);
+
+                if (JOptionPane.showConfirmDialog(null, "Assign color to descendents of %s?" + classID + "?") == JOptionPane.OK_OPTION) {
+                    if (descendants != null) {
+                        Arrays.stream(descendants).forEach(descendant -> profile.addColor(descendant, c));
+                    }
+                }
+            }
+        }
     }
 
     private JMenuItem newProfile() {

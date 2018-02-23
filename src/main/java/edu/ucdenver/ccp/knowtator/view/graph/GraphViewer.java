@@ -116,7 +116,45 @@ public class GraphViewer extends DnDTabbedPane {
             for (Object cell : cells) {
                 if (graph.getModel().isEdge(cell) && ((mxCell) cell).getValue() != null && ((mxCell) cell).getValue().equals("")) {
                     String propertyName = manager.getOWLAPIDataExtractor().getSelectedPropertyID();
-                    graph.addTriple((mxCell) cell, propertyName);
+
+                    if (propertyName == null) {
+                        log.warn("No Object property selected");
+                        JTextField field1 = new JTextField();
+                        Object[] message = {
+                                "Relationship ID", field1,
+                        };
+                        if (JOptionPane.showConfirmDialog(null, message, "Enter an ID for this property", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+                            propertyName = field1.getText();
+                        }
+                    }
+                    if (propertyName == null) {
+                        graph.getModel().remove(cell);
+                    } else {
+                        JTextField quantifierField = new JTextField(10);
+                        JTextField valueField = new JTextField(10);
+                        JPanel restrictionPanel = new JPanel();
+                        restrictionPanel.add(new JLabel("Quantifier:"));
+                        restrictionPanel.add(quantifierField);
+                        restrictionPanel.add(Box.createHorizontalStrut(15));
+                        restrictionPanel.add(new JLabel("Value:"));
+                        restrictionPanel.add(valueField);
+
+                        String quantifier = "";
+                        String value = "";
+                        int result = JOptionPane.showConfirmDialog(null, restrictionPanel,
+                                "Restriction options", JOptionPane.OK_CANCEL_OPTION);
+                        if (result == JOptionPane.OK_OPTION) {
+                            quantifier = quantifierField.getText();
+                            value = valueField.getText();
+                        }
+                        graph.addTriple(
+                                (mxCell) cell,
+                                null,
+                                manager.getProfileManager().getCurrentProfile(),
+                                propertyName,
+                                quantifier,
+                                value);
+                    }
                     executeLayout(null);
                 }
             }
