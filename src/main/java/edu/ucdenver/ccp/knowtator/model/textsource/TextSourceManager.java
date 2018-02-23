@@ -22,12 +22,13 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.profile;
+package edu.ucdenver.ccp.knowtator.model.textsource;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -36,68 +37,53 @@ import org.w3c.dom.Node;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProfileManager implements Savable {
+public class TextSourceManager implements Savable {
+    private Logger log = Logger.getLogger(TextSourceManager.class);
 
-    public static final Logger log = Logger.getLogger(KnowtatorManager.class);
-    private Profile currentProfile;
 
-    private Map<String, Profile> profiles;
+    private Map<String, TextSource> textSources;
     private KnowtatorManager manager;
 
-
-    public ProfileManager(KnowtatorManager manager) {
+    public TextSourceManager(KnowtatorManager manager) {
         this.manager = manager;
-        profiles = new HashMap<>();
-        addNewProfile("Default");
+        textSources = new HashMap<>();
     }
 
-    public Profile addNewProfile(String profileID) {
-        if (profiles.containsKey(profileID)) {
-            return profiles.get(profileID);
+    public TextSource addTextSource(String fileLocation) {
+        String docID = FilenameUtils.getBaseName(fileLocation);
+        TextSource newTextSource = textSources.get(docID);
+        if (newTextSource == null) {
+            newTextSource = new TextSource(manager, docID);
+            textSources.put(docID, newTextSource);
+        } else {
+            log.warn(docID + " is not null");
         }
-
-        Profile newProfile = new Profile(profileID);
-        profiles.put(profileID, newProfile);
-
-        currentProfile = newProfile;
-
-        manager.profileAddedEvent(currentProfile);
-
-        return newProfile;
+        manager.textSourceAddedEvent(newTextSource);
+        return newTextSource;
     }
 
-    public Profile getCurrentProfile() {
-        return currentProfile;
+    public Map<String, TextSource> getTextSources() {
+        return textSources;
     }
 
-    public void switchAnnotator(Profile profile) {
-        currentProfile = profile;
-        manager.profileSelectionChangedEvent(currentProfile);
-    }
+    @Override
+    public void writeToXml(Document dom, Element parent) {
+        textSources.values().forEach(textSource -> textSource.writeToXml(dom, parent));
 
-    public void removeProfile(Profile profile) {
-        profiles.remove(profile.getId());
-        manager.profileRemovedEvent();
-
-    }
-
-    public Map<String, Profile> getProfiles() {
-        return profiles;
-    }
-
-    public void writeToXml(Document dom, Element root) {
-        profiles.values().forEach(profile -> profile.writeToXml(dom, root));
     }
 
     @Override
     public void readFromXml(Element parent) {
-        for (Node profileNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.PROFILE))) {
-            Element profileElement = (Element) profileNode;
-            String profileID = profileElement.getAttribute(XmlTags.ID);
-
-            Profile newProfile = addNewProfile(profileID);
-            log.warn("\tXML: " + newProfile);
-            newProfile.readFromXml(profileElement);
+        for (Node documentNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.DOCUMENT))) {
+            Element documentElement = (Element) documentNode;
+            String documentID = documentElement.getAttribute(XmlTags.ID);
+            TextSource newTextSource = addTextSource(documentID);
+            log.warn("\tXML: " + newTextSource);
+            newTextSource.readFromXml(documentElement);
         }
+    }
+
+    public KnowtatorManager getManager() {
+        return manager;
     }
 }

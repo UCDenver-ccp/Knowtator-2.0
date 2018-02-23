@@ -30,7 +30,7 @@ import edu.ucdenver.ccp.knowtator.iaa.matcher.ClassAndSpanMatcher;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.ClassMatcher;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.SpanMatcher;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
-import edu.ucdenver.ccp.knowtator.model.annotation.TextSource;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 
 import java.io.File;
 import java.io.IOException;

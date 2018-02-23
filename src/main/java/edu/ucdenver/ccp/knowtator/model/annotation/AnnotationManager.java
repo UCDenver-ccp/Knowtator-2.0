@@ -27,6 +27,7 @@ package edu.ucdenver.ccp.knowtator.model.annotation;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
@@ -51,7 +52,7 @@ public final class AnnotationManager implements Savable {
     private Map<String, Annotation> annotationMap;
     private List<GraphSpace> graphSpaces;
 
-    AnnotationManager(KnowtatorManager manager, TextSource textSource) {
+    public AnnotationManager(KnowtatorManager manager, TextSource textSource) {
         this.manager = manager;
         this.textSource = textSource;
         annotationMap = new HashMap<>();
@@ -171,11 +172,7 @@ public final class AnnotationManager implements Savable {
     }
 
     //TODO: Add annotations as subclasses of their assigned classes as well as of the AO
-    public void addAnnotation(Span span) {
-        String[] clsInfo = manager.getOWLAPIDataExtractor().getSelectedOwlClassInfo();
-        String className = clsInfo[0];
-        String classID = clsInfo[1];
-
+    public void addAnnotation(String className, String classID, Span span) {
         if (classID != null) {
             Annotation newAnnotation = new Annotation(classID, className, null, textSource, manager.getProfileManager().getCurrentProfile(), "identity");
             newAnnotation.addSpan(span);
@@ -205,9 +202,12 @@ public final class AnnotationManager implements Savable {
         return annotationMap.get(annotationID);
     }
 
-    public void addGraphSpace(GraphSpace graphSpace) {
-        graphSpaces.add(graphSpace);
-        manager.newGraphEvent(graphSpace);
+    public GraphSpace addGraphSpace(String title) {
+        GraphSpace newGraphSpace = new GraphSpace(manager, this, title);
+        graphSpaces.add(newGraphSpace);
+        manager.newGraphEvent(newGraphSpace);
+
+        return newGraphSpace;
     }
 
     public void writeToXml(Document dom, Element textSourceElement) {
@@ -239,8 +239,7 @@ public final class AnnotationManager implements Savable {
             Element graphSpaceElem = (Element) graphSpaceNode;
 
             String id = graphSpaceElem.getAttribute(XmlTags.ID);
-            GraphSpace graphSpace = new GraphSpace(manager, this, id);
-            addGraphSpace(graphSpace);
+            GraphSpace graphSpace = addGraphSpace(id);
 
             graphSpace.readFromXml(graphSpaceElem);
         }

@@ -30,9 +30,6 @@ import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -56,49 +53,12 @@ public class ProjectManager {
         return projectLocation;
     }
 
-    /*
-     * Returns input string with environment variable references expanded, e.g. $SOME_VAR or ${SOME_VAR}
-     */
-//    private String resolveEnvVars(String input)
-//    {
-//        if (null == input)
-//        {
-//            return null;
-//        }
-//        // match ${ENV_VAR_NAME} or $ENV_VAR_NAME
-//        Pattern p = Pattern.compile("\\$[{]*(\\w+\\.\\w+|\\w+)[}]*");
-//        Matcher m = p.matcher(input); // get a matcher object
-//        StringBuffer sb = new StringBuffer();
-//        while (m.find()){
-//            String envVarName = null == m.group(1) ? m.group(2) : m.group(1);
-//            String envVarValue = System.getProperty(envVarName);
-//            envVarValue = envVarValue.replaceAll("\\\\+", "/");
-//            m.appendReplacement(sb, envVarValue);
-//        }
-//        m.appendTail(sb);
-//        return sb.toString();
-//    }
-
     public File getArticlesLocation() {
         return articlesLocation;
     }
 
     public void newProject(File projectDirectory) {
         makeFileStructure(projectDirectory);
-    }
-
-    public void loadProject(KnowtatorView view) {
-        JFileChooser fileChooser = new JFileChooser();
-        javax.swing.filechooser.FileFilter fileFilter = new FileNameExtensionFilter("Knowtator", "knowtator");
-        fileChooser.setFileFilter(fileFilter);
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            saveProject();
-            log.warn("1: " + fileChooser.getSelectedFile());
-            //TODO: Figure out how to close project before loading
-//            closeProject(view, fileChooser.getSelectedFile());
-            loadProject(fileChooser.getSelectedFile());
-        }
     }
 
     public void closeProject(KnowtatorView view, File file) {
@@ -180,39 +140,22 @@ public class ProjectManager {
         }
     }
 
-    public void addDocument() {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(getArticlesLocation());
-        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            if (!file.getParentFile().equals(articlesLocation)) {
-                try {
-                    FileUtils.copyFile(file, new File(articlesLocation, file.getName()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            addDocument(file);
-        }
-    }
-
-    public void importAnnotations() {
-        if (getProjectLocation() == null) {
-            JOptionPane.showMessageDialog(null, "No project selected");
-        } else {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(annotationsLocation);
-            FileFilter fileFilter = new FileNameExtensionFilter("XML", "xml");
-            fileChooser.setFileFilter(fileFilter);
-            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                XmlUtil.readXML(manager.getTextSourceManager(), fileChooser.getSelectedFile());
-            }
-        }
+    public void importAnnotations(File file) {
+        XmlUtil.readXML(manager.getTextSourceManager(), file);
     }
 
     public void addDocument(File file) {
+        if (!file.getParentFile().equals(articlesLocation)) {
+            try {
+                FileUtils.copyFile(file, new File(articlesLocation, file.getName()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         manager.getTextSourceManager().addTextSource(file.getName());
+    }
+
+    public File getAnnotationsLocation() {
+        return annotationsLocation;
     }
 }

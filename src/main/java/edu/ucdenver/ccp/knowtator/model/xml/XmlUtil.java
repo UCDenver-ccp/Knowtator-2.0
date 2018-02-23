@@ -25,7 +25,7 @@
 package edu.ucdenver.ccp.knowtator.model.xml;
 
 import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.annotation.TextSourceManager;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSourceManager;
 import edu.ucdenver.ccp.knowtator.model.xml.forOld.OldXmlReader;
 import edu.ucdenver.ccp.knowtator.model.xml.forOld.OldXmlTags;
 import org.apache.log4j.Logger;

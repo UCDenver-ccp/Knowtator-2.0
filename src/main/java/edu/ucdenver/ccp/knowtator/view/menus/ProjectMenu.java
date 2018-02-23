@@ -30,6 +30,8 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 
 @SuppressWarnings("Duplicates")
@@ -57,13 +59,35 @@ public class ProjectMenu extends JMenu {
 
     private JMenuItem importAnnotationsCommand() {
         JMenuItem menuItem = new JMenuItem("Import Annotations");
-        menuItem.addActionListener(e -> manager.getProjectManager().importAnnotations());
+        menuItem.addActionListener(e -> {
+            if (manager.getProjectManager().getProjectLocation() == null) {
+                JOptionPane.showMessageDialog(null, "Not in a project. Please create or load " +
+                        "a project first. (Project -> New Project or Project -> Load Project)");
+            } else {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setCurrentDirectory(manager.getProjectManager().getAnnotationsLocation());
+                FileFilter fileFilter = new FileNameExtensionFilter("XML", "xml");
+                fileChooser.setFileFilter(fileFilter);
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    manager.getProjectManager().importAnnotations(fileChooser.getSelectedFile());
+                }
+            }
+        });
         return menuItem;
     }
 
     private JMenuItem addDocumentCommand() {
         JMenuItem menuItem = new JMenuItem("Add Document");
-        menuItem.addActionListener(e -> manager.getProjectManager().addDocument());
+        menuItem.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(manager.getProjectManager().getArticlesLocation());
+
+            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                manager.getProjectManager().addDocument(fileChooser.getSelectedFile());
+            }
+        });
         return menuItem;
 
     }
@@ -72,11 +96,16 @@ public class ProjectMenu extends JMenu {
         JMenuItem menuItem = new JMenuItem("New Project");
         menuItem.addActionListener(e -> {
             String projectName = JOptionPane.showInputDialog("Enter project name");
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
-                manager.getProjectManager().newProject(projectDirectory);
+
+            if (projectName != null && !projectName.equals("")) {
+
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
+                    manager.getProjectManager().newProject(projectDirectory);
+                }
             }
         });
 
@@ -86,7 +115,21 @@ public class ProjectMenu extends JMenu {
     private JMenuItem openProjectCommand() {
 
         JMenuItem open = new JMenuItem("Open Project");
-        open.addActionListener(e -> manager.getProjectManager().loadProject(view));
+        open.addActionListener(e -> {
+
+            JFileChooser fileChooser = new JFileChooser();
+            javax.swing.filechooser.FileFilter fileFilter = new FileNameExtensionFilter("Knowtator", "knowtator");
+            fileChooser.setFileFilter(fileFilter);
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                manager.getProjectManager().saveProject();
+                log.warn("1: " + fileChooser.getSelectedFile());
+                //TODO: Figure out how to close project before loading
+//            closeProject(view, fileChooser.getSelectedFile());
+                manager.getProjectManager().loadProject(fileChooser.getSelectedFile());
+            }
+        });
 
         return open;
 

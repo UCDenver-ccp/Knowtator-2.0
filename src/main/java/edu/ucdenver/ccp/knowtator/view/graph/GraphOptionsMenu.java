@@ -22,12 +22,34 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.listeners;
+package edu.ucdenver.ccp.knowtator.view.graph;
 
-import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
+import javax.swing.*;
 
-public interface TextSourceListener extends Listener {
+class GraphOptionsMenu extends JMenu {
 
-    void textSourceAdded(TextSource textSource);
 
+    private GraphViewer graphViewer;
+
+    GraphOptionsMenu(GraphViewer graphViewer) {
+        super("Options");
+        this.graphViewer = graphViewer;
+
+
+        add(displayAllAnnotationsCommand());
+        add(applyLayoutCommand());
+    }
+
+    private JMenuItem displayAllAnnotationsCommand() {
+        JMenuItem menuItem = new JMenuItem("Display all annotations");
+        menuItem.addActionListener(e -> graphViewer.addAllAnnotations());
+
+        return menuItem;
+    }
+
+    private JMenuItem applyLayoutCommand() {
+        JMenuItem menuItem = new JMenuItem("Apply layout");
+        menuItem.addActionListener(e -> graphViewer.executeLayout(graphViewer.getSelectedGraphComponent()));
+        return menuItem;
+    }
 }

@@ -26,8 +26,8 @@ package edu.ucdenver.ccp.knowtator.model.xml.forOld;
 
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
-import edu.ucdenver.ccp.knowtator.model.annotation.TextSource;
-import edu.ucdenver.ccp.knowtator.model.annotation.TextSourceManager;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSourceManager;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import org.w3c.dom.Element;
