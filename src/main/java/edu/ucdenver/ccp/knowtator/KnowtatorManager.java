@@ -45,7 +45,7 @@ import java.util.Set;
 
 /**
  * @author Harrison Pielke-Lombardo
- * @version 2.0.6
+ * @version 2.0.7
  */
 
 public class KnowtatorManager {
