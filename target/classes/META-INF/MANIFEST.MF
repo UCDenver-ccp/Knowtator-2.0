@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1519377445607
+Bnd-LastModified: 1519377852720
 Build-Jdk: 1.8.0_151
 Built-By: pielk
 Bundle-Activator: org.protege.editor.owl.ProtegeOWL
@@ -10,7 +10,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Knowtator Plugin
 Bundle-SymbolicName: knowtator;singleton:=true
 Bundle-Vendor: The Protege Development Team
-Bundle-Version: 2.0.6
+Bundle-Version: 2.0.7
 Created-By: Apache Maven Bundle Plugin
 Embed-Dependency: jgraphx
 Embedded-Artifacts: jgraphx-v3.9.1.jar;g="com.github.jgraph";a="jgraphx"

@@ -49,11 +49,12 @@ class KnowtatorToolBar extends JToolBar {
         add(decreaseTextSizeCommand());
         add(increaseTextSizeCommand());
 
+        add(addAnnotationCommand());
+        add(removeAnnotationCommand());
+
         add(previousSpanCommand());
         add(growSelectionStartCommand());
         add(shrinkSelectionStartCommand());
-        add(addAnnotationCommand());
-        add(removeAnnotationCommand());
         add(shrinkSelectionEndCommand());
         add(growSelectionEndCommand());
         add(nextSpanCommand());
@@ -163,7 +164,7 @@ class KnowtatorToolBar extends JToolBar {
 
 
     private JButton removeAnnotationCommand() {
-        JButton command = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.ADD));
+        JButton command = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.REMOVE));
         command.setToolTipText("Remove annotation");
         command.addActionListener(e -> textViewer.getCurrentTextPane().removeAnnotation());
         return command;
