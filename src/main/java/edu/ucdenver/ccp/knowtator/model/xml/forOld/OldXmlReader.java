@@ -26,10 +26,11 @@ package edu.ucdenver.ccp.knowtator.model.xml.forOld;
 
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSourceManager;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
-import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -39,6 +40,9 @@ import java.util.List;
 import java.util.Map;
 
 public class OldXmlReader {
+
+    private static final Logger log = Logger.getLogger(OldXmlReader.class);
+
     public static void readAnnotations(TextSourceManager textSourceManager, List<Node> textSourceNodes) {
         /*
         Get annotations by document
@@ -59,21 +63,26 @@ public class OldXmlReader {
 //        Map<String, Element> complexSlotMentionToClassIDMap = getComplexSlotsFromXml(textSourceElement);
 
         for (Node annotationNode : XmlUtil.asList(textSourceElement.getElementsByTagName(OldXmlTags.ANNOTATION))) {
-            if (annotationNode.getNodeType() == Node.ELEMENT_NODE) {
-                try {
-                    Element annotationElement = (Element) annotationNode;
-                    String profileID = annotationElement.getElementsByTagName(OldXmlTags.ANNOTATOR).item(0).getTextContent();
-                    Profile profile = textSourceManager.getManager().getProfileManager().addNewProfile(profileID);
-                    List<Span> spans = getSpanInfo(textSource, annotationElement);
+            Element annotationElement = (Element) annotationNode;
+
+            String profileID;
+            try {
+                profileID = annotationElement.getElementsByTagName(OldXmlTags.ANNOTATOR).item(0).getTextContent();
+            } catch (NullPointerException npe) {
+                profileID = "Default";
+            }
+
+            Profile profile = textSourceManager.getManager().getProfileManager().addNewProfile(profileID);
+            List<Span> spans = getSpanInfo(textSource, annotationElement);
 
 
-                    String annotationID = ((Element) annotationElement.getElementsByTagName(OldXmlTags.MENTION).item(0)).getAttribute(OldXmlTags.ID);
-                    Element classElement = classMentionToClassIDMap.get(annotationID);
+            String annotationID = ((Element) annotationElement.getElementsByTagName(OldXmlTags.MENTION).item(0)).getAttribute(OldXmlTags.ID);
+            Element classElement = classMentionToClassIDMap.get(annotationID);
 
-                    String className = classElement.getElementsByTagName(OldXmlTags.MENTION_CLASS).item(0).getTextContent();
-                    String classID = ((Element) classElement.getElementsByTagName(OldXmlTags.MENTION_CLASS).item(0)).getAttribute(OldXmlTags.ID);
+            String className = classElement.getElementsByTagName(OldXmlTags.MENTION_CLASS).item(0).getTextContent();
+            String classID = ((Element) classElement.getElementsByTagName(OldXmlTags.MENTION_CLASS).item(0)).getAttribute(OldXmlTags.ID);
 
-                    Annotation newAnnotation;
+            Annotation newAnnotation;
 //                    if (classID.equals(OldXmlTags.MENTION_CLASS_ID_IDENTITY)) {
 //                        newAnnotation = new Annotation(annotationID, textSource, profile);
 //                        Element complexSlotElement = complexSlotMentionToClassIDMap.get(((Element) classElement.getElementsByTagName(OldXmlTags.HAS_SLOT_MENTION).item(0)).getAttribute(OldXmlTags.HAS_SLOT_MENTION_ID));
@@ -85,12 +94,12 @@ public class OldXmlReader {
 //
 //                    } else {
 //                        
-                    newAnnotation = new Annotation(classID, className, annotationID, textSource, profile, "identity");
-                    spans.forEach(newAnnotation::addSpan);
-                    textSource.getAnnotationManager().addAnnotation(newAnnotation);
-                } catch (NullPointerException ignored) {
-                }
-            }
+            newAnnotation = new Annotation(classID, className, annotationID, textSource, profile, "identity");
+            spans.forEach(newAnnotation::addSpan);
+            textSource.getAnnotationManager().addAnnotation(newAnnotation);
+
+            log.warn("OLD XML: " + newAnnotation);
+
         }
     }
 
