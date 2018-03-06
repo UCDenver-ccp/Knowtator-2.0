@@ -46,7 +46,7 @@ public class GraphViewMenu extends JMenu implements GraphListener {
 
     private JMenu goToGraphMenu() {
         JMenu menu = new JMenu("Go to graph");
-        graphViewer.getTextSource().getAnnotationManager().getGraphSpaces()
+        graphViewer.getTextPane().getTextSource().getAnnotationManager().getGraphSpaces()
                 .forEach(graphSpace -> {
                     JMenuItem menuItem = new JMenuItem(graphSpace.getId());
                     menuItem.addActionListener(e -> {

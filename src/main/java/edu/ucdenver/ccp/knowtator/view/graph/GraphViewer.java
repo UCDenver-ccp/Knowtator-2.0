@@ -32,13 +32,12 @@ import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
 import edu.ucdenver.ccp.knowtator.listeners.GraphListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
-import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import edu.ucdenver.ccp.knowtator.view.text.TextPane;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import other.DnDTabbedPane;
@@ -56,21 +55,21 @@ import java.util.Objects;
 
 //TODO: Display coreferences
 //TODO: Expand to show ontology terms as nodes
-public class GraphViewer extends DnDTabbedPane implements AnnotationListener, ProfileListener, GraphListener {
+public class GraphViewer extends DnDTabbedPane implements ProfileListener, GraphListener {
 
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(GraphViewer.class);
     private final KnowtatorManager manager;
     private final KnowtatorView view;
-    private TextSource textSource;
+    private TextPane textPane;
     private JDialog dialog;
 
     private int graphCounter;
 
-    public GraphViewer(JFrame frame, KnowtatorManager manager, KnowtatorView view, TextSource textSource) {
+    public GraphViewer(JFrame frame, KnowtatorManager manager, KnowtatorView view, TextPane textPane) {
         this.manager = manager;
         this.view = view;
-        this.textSource = textSource;
+        this.textPane = textPane;
         makeDialog(frame);
 
         graphCounter = 0;
@@ -80,7 +79,7 @@ public class GraphViewer extends DnDTabbedPane implements AnnotationListener, Pr
     }
 
     private void makeDialog(JFrame frame) {
-        dialog = new JDialog(frame, "Graph Viewer - " + textSource.getDocID());
+        dialog = new JDialog(frame, "Graph Viewer - " + textPane.getTextSource().getDocID());
 
         dialog.setLayout(new BorderLayout());
 
@@ -101,21 +100,6 @@ public class GraphViewer extends DnDTabbedPane implements AnnotationListener, Pr
         dialog.add(this);
     }
 
-    @Override
-    public void annotationAdded(Annotation newAnnotation) {
-
-    }
-
-    @Override
-    public void annotationRemoved(Annotation removedAnnotation) {
-
-    }
-
-
-    @Override
-    public void annotationSelectionChanged(Annotation annotation) {
-        goToAnnotationVertex(annotation);
-    }
 
     @Override
     public void profileAdded(Profile profile) {
@@ -142,8 +126,8 @@ public class GraphViewer extends DnDTabbedPane implements AnnotationListener, Pr
         getAllGraphComponents().forEach(graphComponent -> ((GraphSpace) graphComponent.getGraph()).reDrawVertices());
     }
 
-    public TextSource getTextSource() {
-        return textSource;
+    public TextPane getTextPane() {
+        return textPane;
     }
 
     @Override
@@ -157,14 +141,8 @@ public class GraphViewer extends DnDTabbedPane implements AnnotationListener, Pr
     }
 
 
-
-
-
-
-
-
     public void addNewGraphSpace(String title) {
-        GraphSpace graphSpace = textSource.getAnnotationManager().addGraphSpace(title);
+        GraphSpace graphSpace = textPane.getTextSource().getAnnotationManager().addGraphSpace(title);
         addGraph(graphSpace);
     }
 
@@ -274,6 +252,8 @@ public class GraphViewer extends DnDTabbedPane implements AnnotationListener, Pr
                         //*** node selection when a one annotation maps to multiple nodes.
 //                        manager.annotationSelectionChangedEvent(annotation);
                         //***
+                        manager.annotationSelectionChangedEvent(annotation);
+//                        textPane.setSelection(null, annotation);
 
                         view.owlEntitySelectionChanged(manager.getOWLAPIDataExtractor().getOWLClassByID(annotation.getClassID()));
                         graph.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
@@ -289,7 +269,7 @@ public class GraphViewer extends DnDTabbedPane implements AnnotationListener, Pr
         graphComponent.getGraphControl().addMouseListener(new MouseAdapter() {
 
             public void mousePressed(MouseEvent e) {
-                // Handles context menu on the Mac where the trigger is on mousepressed
+                // Handles context menu on the Mac where the trigger is on mouse pressed
                 mouseReleased(e);
             }
 
@@ -364,7 +344,7 @@ public class GraphViewer extends DnDTabbedPane implements AnnotationListener, Pr
     public void deleteSelectedGraph() {
         GraphSpace graph = (GraphSpace) getSelectedGraphComponent().getGraph();
 
-        textSource.getAnnotationManager().removeGraphSpace(graph);
+        textPane.getTextSource().getAnnotationManager().removeGraphSpace(graph);
 
         closeGraphSpace((mxGraphComponent) getSelectedComponent());
 
@@ -383,8 +363,8 @@ public class GraphViewer extends DnDTabbedPane implements AnnotationListener, Pr
     public void addAllAnnotations() {
         getGraphComponent("All annotations");
 
-        textSource.getAnnotationManager().findOverlaps();
-        Collection<Annotation> annotations = textSource.getAnnotationManager().getAnnotations();
+        textPane.getTextSource().getAnnotationManager().findOverlaps();
+        Collection<Annotation> annotations = textPane.getTextSource().getAnnotationManager().getAnnotations();
 
         //TODO: Fix progress bar
         for (Annotation annotation : annotations) {

@@ -67,6 +67,8 @@ public class OWLAPIDataExtractor {
     }
 
     private String getOwlEntID(OWLEntity ent) {
+        log.warn("Knowtator: OWLAPIDataExtractor: " + ent.getIRI().getShortForm());
+
         return ent.getIRI().getShortForm();
     }
 

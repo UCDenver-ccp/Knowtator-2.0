@@ -78,8 +78,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		focusOnSelectedSpan = false;
 
 		if (textSource != null) {
-            graphViewer = new GraphViewer((JFrame) SwingUtilities.getWindowAncestor(view), manager, view, textSource);
-            manager.addConceptAnnotationListener(graphViewer);
+            graphViewer = new GraphViewer((JFrame) SwingUtilities.getWindowAncestor(view), manager, view, this);
             manager.addProfileListener(graphViewer);
         }
 		manager.addSpanListener(this);
@@ -193,6 +192,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 					setSelectedSpan(annotation.getSpans().first());
 				}
 			}
+			graphViewer.goToAnnotationVertex(selectedAnnotation);
 			manager.annotationSelectionChangedEvent(selectedAnnotation);
 		}
 		if (selectedAnnotation != null) {
