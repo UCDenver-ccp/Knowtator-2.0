@@ -125,9 +125,12 @@ public class GraphSpace extends mxGraph implements Savable {
         return newVertex;
     }
 
-    public void removeVertex(mxCell vertex) {
-        getModel().remove(vertex);
-        vertexToAnnotationMap.remove(vertex);
+    public void removeCell(mxCell cell) {
+        getModel().remove(cell);
+        if (cell.isVertex()) vertexToAnnotationMap.remove(cell);
+        if (cell.isEdge()) edgeToTripleMap.remove(cell);
+
+        reDrawVertices();
     }
 
     public void writeToXml(Document dom, Element textSourceElement) {
