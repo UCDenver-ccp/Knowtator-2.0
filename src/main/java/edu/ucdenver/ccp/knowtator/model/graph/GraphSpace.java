@@ -127,6 +127,7 @@ public class GraphSpace extends mxGraph implements Savable {
 
     public void removeVertex(mxCell vertex) {
         getModel().remove(vertex);
+        vertexToAnnotationMap.remove(vertex);
     }
 
     public void writeToXml(Document dom, Element textSourceElement) {
@@ -234,10 +235,14 @@ public class GraphSpace extends mxGraph implements Savable {
         return null;
     }
 
-    public List<mxCell> getVerticesForAnnotation(Annotation annotation) {
+    public List<Object> getVerticesForAnnotation(Annotation annotation) {
         return vertexToAnnotationMap.entrySet().stream()
                 .filter(map -> annotation.equals(map.getValue()))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

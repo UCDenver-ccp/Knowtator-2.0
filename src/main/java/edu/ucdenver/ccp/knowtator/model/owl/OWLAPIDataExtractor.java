@@ -67,6 +67,8 @@ public class OWLAPIDataExtractor {
     }
 
     private String getOwlEntID(OWLEntity ent) {
+        log.warn("Knowtator: OWLAPIDataExtractor: " + ent.getIRI().getShortForm());
+
         return ent.getIRI().getShortForm();
     }
 
@@ -137,7 +139,7 @@ public class OWLAPIDataExtractor {
                     OWLOntology newOntology = owlModelManager.getOWLOntologyManager().loadOntology((IRI.create(ontologyLocation)));
                     owlModelManager.setActiveOntology(newOntology);
                 } catch (OWLOntologyCreationException e) {
-                    e.printStackTrace();
+                    log.warn("Knowtator: OWLAPIDataExtractor: Ontology already loaded");
                 }
             }
         }

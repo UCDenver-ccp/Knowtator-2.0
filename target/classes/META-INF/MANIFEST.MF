@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1519421666099
+Bnd-LastModified: 1520326014518
 Build-Jdk: 1.8.0_151
 Built-By: pielk
 Bundle-Activator: org.protege.editor.owl.ProtegeOWL
@@ -54,20 +54,18 @@ Export-Package: edu.ucdenver.ccp.knowtator.iaa;version="2.0.7";uses:="ed
  n="2.0.7";uses:="edu.ucdenver.ccp.knowtator,edu.ucdenver.ccp.knowtator.
  listeners,edu.ucdenver.ccp.knowtator.model.annotation,edu.ucdenver.ccp.
  knowtator.model.graph,edu.ucdenver.ccp.knowtator.model.profile,edu.ucde
- nver.ccp.knowtator.model.textsource,javax.swing,other",edu.ucdenver.ccp
- .knowtator.view.info;version="2.0.7";uses:="edu.ucdenver.ccp.knowtator,
- edu.ucdenver.ccp.knowtator.listeners,edu.ucdenver.ccp.knowtator.model.a
- nnotation,javax.swing",edu.ucdenver.ccp.knowtator.view;version="2.0.7";
- uses:="javax.swing",edu.ucdenver.ccp.knowtator.view.menus;version="2.0.
- 7";uses:="edu.ucdenver.ccp.knowtator,edu.ucdenver.ccp.knowtator.listene
- rs,edu.ucdenver.ccp.knowtator.model.profile,javax.swing,org.apache.log4
- j",edu.ucdenver.ccp.knowtator.view.text;version="2.0.7";uses:="edu.ucde
- nver.ccp.knowtator,edu.ucdenver.ccp.knowtator.listeners,edu.ucdenver.cc
- p.knowtator.model.annotation,edu.ucdenver.ccp.knowtator.model.profile,e
- du.ucdenver.ccp.knowtator.model.textsource,edu.ucdenver.ccp.knowtator.v
- iew.graph,javax.swing,org.apache.log4j",other;version="2.0.7";uses:="ed
- u.ucdenver.ccp.knowtator.view.graph,javax.swing,javax.swing.text,org.ap
- ache.log4j"
+ nver.ccp.knowtator.view.text,javax.swing",edu.ucdenver.ccp.knowtator.vi
+ ew.info;version="2.0.7";uses:="edu.ucdenver.ccp.knowtator,edu.ucdenver.
+ ccp.knowtator.listeners,edu.ucdenver.ccp.knowtator.model.annotation,jav
+ ax.swing",edu.ucdenver.ccp.knowtator.view;version="2.0.7";uses:="javax.
+ swing",edu.ucdenver.ccp.knowtator.view.menus;version="2.0.7";uses:="edu
+ .ucdenver.ccp.knowtator,edu.ucdenver.ccp.knowtator.listeners,edu.ucdenv
+ er.ccp.knowtator.model.profile,javax.swing,org.apache.log4j",edu.ucdenv
+ er.ccp.knowtator.view.text;version="2.0.7";uses:="edu.ucdenver.ccp.know
+ tator,edu.ucdenver.ccp.knowtator.listeners,edu.ucdenver.ccp.knowtator.m
+ odel.annotation,edu.ucdenver.ccp.knowtator.model.profile,edu.ucdenver.c
+ cp.knowtator.model.textsource,edu.ucdenver.ccp.knowtator.view.graph,jav
+ ax.swing,javax.swing.text,org.apache.log4j"
 Import-Package: com.google.common.base;version="[18.0,19)",edu.ucdenver.
  ccp.knowtator;version="[2.0,3)",edu.ucdenver.ccp.knowtator.iaa;version=
  "[2.0,3)",edu.ucdenver.ccp.knowtator.iaa.html;version="[2.0,3)",edu.ucd

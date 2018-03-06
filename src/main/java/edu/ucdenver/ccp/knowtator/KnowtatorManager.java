@@ -27,13 +27,13 @@ package edu.ucdenver.ccp.knowtator;
 import edu.ucdenver.ccp.knowtator.listeners.*;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
-import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
-import edu.ucdenver.ccp.knowtator.model.textsource.TextSourceManager;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLAPIDataExtractor;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileManager;
 import edu.ucdenver.ccp.knowtator.model.project.ProjectManager;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSourceManager;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.OWLWorkspace;
@@ -203,4 +203,5 @@ public class KnowtatorManager {
     public void setUpOWL(OWLWorkspace owlWorkspace, OWLModelManager owlModelManager) {
         owlDataExtractor.setUpOWL(owlWorkspace, owlModelManager);
     }
+
 }
