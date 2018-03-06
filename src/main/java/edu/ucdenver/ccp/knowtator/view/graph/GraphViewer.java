@@ -75,8 +75,6 @@ public class GraphViewer implements ProfileListener, GraphListener {
 
         makeDialog(frame);
 
-        //TODO: Remove this default graph. Will have to make sure nothing requires a current graphcomponent
-//        addNewGraphSpace(String.format("Graph %d", graphCounter++));
     }
 
     private void makeDialog(JFrame frame) {
@@ -275,20 +273,6 @@ public class GraphViewer implements ProfileListener, GraphListener {
             graphViewMenu.updateMenus();
         }
 
-    }
-
-    public void addAllAnnotations() {
-        getGraphComponent("All annotations");
-
-        textPane.getTextSource().getAnnotationManager().findOverlaps();
-        Collection<Annotation> annotations = textPane.getTextSource().getAnnotationManager().getAnnotations();
-
-        //TODO: Fix progress bar
-        for (Annotation annotation : annotations) {
-            if (annotation != null) {
-                addAnnotationVertex(annotation);
-            }
-        }
     }
 
     public void showGraph(mxGraphComponent graphComponent) {

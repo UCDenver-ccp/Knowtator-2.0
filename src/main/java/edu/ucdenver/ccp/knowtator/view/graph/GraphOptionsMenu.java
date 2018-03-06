@@ -40,13 +40,6 @@ class GraphOptionsMenu extends JMenu {
         add(applyLayoutCommand());
     }
 
-    @SuppressWarnings("unused")
-    private JMenuItem displayAllAnnotationsCommand() {
-        JMenuItem menuItem = new JMenuItem("Display all annotations");
-        menuItem.addActionListener(e -> graphViewer.addAllAnnotations());
-
-        return menuItem;
-    }
 
     private JMenuItem applyLayoutCommand() {
         JMenuItem menuItem = new JMenuItem("Apply layout");

@@ -11,25 +11,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="38c7daa5-fc0c-4277-b3d4-57101af6af0c" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphToolBar.java" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/KnowtatorManager.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/KnowtatorManager.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/annotation/AnnotationManager.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/annotation/AnnotationManager.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/graph/GraphSpace.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/graph/GraphSpace.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/owl/OWLAPIDataExtractor.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/owl/OWLAPIDataExtractor.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorIcons.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorIcons.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphMenu.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphMenu.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphOptionsMenu.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphOptionsMenu.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphViewMenu.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphViewMenu.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphViewer.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphViewer.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/text/AnnotationPopupMenu.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/text/AnnotationPopupMenu.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/text/KnowtatorToolBar.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/text/KnowtatorToolBar.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/text/TextPane.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/text/TextPane.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/text/TextViewer.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/text/TextViewer.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/other/DnDTabbedPane.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/other/GraphPopupMenu.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/other/ListDialog.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/other/RectanglePainter.java" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/text/RectanglePainter.java" />
       <change beforePath="$PROJECT_DIR$/target/classes/META-INF/MANIFEST.MF" afterPath="$PROJECT_DIR$/target/classes/META-INF/MANIFEST.MF" />
       <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" />
     </list>
@@ -75,33 +59,32 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-      <file leaf-file-name="GraphViewer.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="GraphViewer.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphViewer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="189">
-              <caret line="356" column="29" lean-forward="false" selection-start-line="356" selection-start-column="29" selection-end-line="356" selection-end-column="29" />
+            <state relative-caret-position="164">
+              <caret line="46" column="25" lean-forward="true" selection-start-line="46" selection-start-column="25" selection-end-line="46" selection-end-column="25" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#4429#4430#0" expanded="true" />
-                <element signature="e#4473#4474#0" expanded="true" />
-                <element signature="e#14105#14106#0" expanded="true" />
-                <element signature="e#14134#14135#0" expanded="true" />
-                <element signature="e#14384#14385#0" expanded="true" />
-                <element signature="e#14425#14426#0" expanded="true" />
-                <element signature="e#14476#14477#0" expanded="true" />
-                <element signature="e#14545#14546#0" expanded="true" />
-                <element signature="e#15539#15540#0" expanded="true" />
-                <element signature="e#15575#15576#0" expanded="true" />
+                <element signature="e#4250#4251#0" expanded="true" />
+                <element signature="e#4294#4295#0" expanded="true" />
+                <element signature="e#13454#13455#0" expanded="true" />
+                <element signature="e#13483#13484#0" expanded="true" />
+                <element signature="e#13733#13734#0" expanded="true" />
+                <element signature="e#13774#13775#0" expanded="true" />
+                <element signature="e#13825#13826#0" expanded="true" />
+                <element signature="e#13894#13895#0" expanded="true" />
+                <element signature="e#14888#14889#0" expanded="true" />
+                <element signature="e#14924#14925#0" expanded="true" />
                 <element signature="method#removeGraph#0;class#GraphViewer#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GraphMenu.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="GraphMenu.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphMenu.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="249">
+            <state relative-caret-position="825">
               <caret line="65" column="55" lean-forward="false" selection-start-line="65" selection-start-column="55" selection-end-line="65" selection-end-column="55" />
               <folding />
             </state>
@@ -149,6 +132,16 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="300">
               <caret line="62" column="59" lean-forward="false" selection-start-line="62" selection-start-column="37" selection-end-line="62" selection-end-column="59" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="GraphOptionsMenu.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphOptionsMenu.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="67">
+              <caret line="41" column="0" lean-forward="false" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -293,7 +286,6 @@
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/menus/ProfileMenu.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/xml/forOld/OldXmlReader.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphOptionsMenu.java" />
         <option value="$PROJECT_DIR$/src/main/java/other/GraphPopupMenu.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/text/RectanglePainter.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/annotation/AnnotationManager.java" />
@@ -309,8 +301,9 @@
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/text/AnnotationPopupMenu.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphToolBar.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/graph/GraphSpace.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphViewer.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphMenu.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphOptionsMenu.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphViewer.java" />
       </list>
     </option>
   </component>
@@ -1426,7 +1419,7 @@
       <workItem from="1520047482015" duration="1216000" />
       <workItem from="1520049848899" duration="866000" />
       <workItem from="1520052900701" duration="3000000" />
-      <workItem from="1520313620005" duration="12547000" />
+      <workItem from="1520313620005" duration="12644000" />
     </task>
     <task id="LOCAL-00001" summary="Fix merge">
       <created>1507751081915</created>
@@ -1638,7 +1631,14 @@
       <option name="project" value="LOCAL" />
       <updated>1520314732215</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Added rename graph and fixed vertex selection issues">
+      <created>1520326238072</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1520326238072</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1674,7 +1674,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="635793000" />
+    <option name="totallyTimeSpent" value="635890000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1781,7 +1781,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added ability to save entire project" />
     <MESSAGE value="Buttons are now menus" />
     <MESSAGE value="Major restructuring" />
     <MESSAGE value="Added assertions" />
@@ -1806,7 +1805,8 @@
     <MESSAGE value="Added a todo to remove default graph" />
     <MESSAGE value="Old Knowtator annotations without annotators get assigned to &quot;Default&quot;" />
     <MESSAGE value="Fixed selecting annotation in graph viewer doesn't select it in text pane bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed selecting annotation in graph viewer doesn't select it in text pane bug" />
+    <MESSAGE value="Added rename graph and fixed vertex selection issues" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added rename graph and fixed vertex selection issues" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1983,16 +1983,6 @@
         <state relative-caret-position="150">
           <caret line="40" column="13" lean-forward="false" selection-start-line="40" selection-start-column="13" selection-end-line="40" selection-end-column="13" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphOptionsMenu.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="267">
-          <caret line="52" column="60" lean-forward="false" selection-start-line="52" selection-start-column="60" selection-end-line="52" selection-end-column="60" />
-          <folding>
-            <element signature="e#1507#1534#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2197,32 +2187,39 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphViewer.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphMenu.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="356" column="29" lean-forward="false" selection-start-line="356" selection-start-column="29" selection-end-line="356" selection-end-column="29" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#4429#4430#0" expanded="true" />
-            <element signature="e#4473#4474#0" expanded="true" />
-            <element signature="e#14105#14106#0" expanded="true" />
-            <element signature="e#14134#14135#0" expanded="true" />
-            <element signature="e#14384#14385#0" expanded="true" />
-            <element signature="e#14425#14426#0" expanded="true" />
-            <element signature="e#14476#14477#0" expanded="true" />
-            <element signature="e#14545#14546#0" expanded="true" />
-            <element signature="e#15539#15540#0" expanded="true" />
-            <element signature="e#15575#15576#0" expanded="true" />
-            <element signature="method#removeGraph#0;class#GraphViewer#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="825">
+          <caret line="65" column="55" lean-forward="false" selection-start-line="65" selection-start-column="55" selection-end-line="65" selection-end-column="55" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphMenu.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphOptionsMenu.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="249">
-          <caret line="65" column="55" lean-forward="false" selection-start-line="65" selection-start-column="55" selection-end-line="65" selection-end-column="55" />
+        <state relative-caret-position="67">
+          <caret line="41" column="0" lean-forward="false" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphViewer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="164">
+          <caret line="46" column="25" lean-forward="true" selection-start-line="46" selection-start-column="25" selection-end-line="46" selection-end-column="25" />
+          <folding>
+            <element signature="e#4250#4251#0" expanded="true" />
+            <element signature="e#4294#4295#0" expanded="true" />
+            <element signature="e#13454#13455#0" expanded="true" />
+            <element signature="e#13483#13484#0" expanded="true" />
+            <element signature="e#13733#13734#0" expanded="true" />
+            <element signature="e#13774#13775#0" expanded="true" />
+            <element signature="e#13825#13826#0" expanded="true" />
+            <element signature="e#13894#13895#0" expanded="true" />
+            <element signature="e#14888#14889#0" expanded="true" />
+            <element signature="e#14924#14925#0" expanded="true" />
+            <element signature="method#removeGraph#0;class#GraphViewer#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
