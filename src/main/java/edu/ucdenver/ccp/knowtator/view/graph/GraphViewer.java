@@ -40,22 +40,16 @@ import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.view.text.TextPane;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import other.DnDTabbedPane;
-import other.GraphPopupMenu;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 //TODO: Display coreferences
 //TODO: Expand to show ontology terms as nodes
-public class GraphViewer extends DnDTabbedPane implements ProfileListener, GraphListener {
+public class GraphViewer implements ProfileListener, GraphListener {
 
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(GraphViewer.class);
@@ -64,18 +58,25 @@ public class GraphViewer extends DnDTabbedPane implements ProfileListener, Graph
     private TextPane textPane;
     private JDialog dialog;
 
-    private int graphCounter;
+    private mxGraphComponent currentGraphComponent;
+    private List<mxGraphComponent> graphComponentList;
+    private JScrollPane scrollPane;
+    private JLabel graphLabel;
+    private GraphViewMenu graphViewMenu;
 
     public GraphViewer(JFrame frame, KnowtatorManager manager, KnowtatorView view, TextPane textPane) {
         this.manager = manager;
         this.view = view;
         this.textPane = textPane;
+        graphComponentList = new ArrayList<>();
+        scrollPane = new JScrollPane();
+        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+        graphLabel = new JLabel();
+
         makeDialog(frame);
 
-        graphCounter = 0;
-
         //TODO: Remove this default graph. Will have to make sure nothing requires a current graphcomponent
-        addNewGraphSpace(String.format("Graph %d", graphCounter++));
+//        addNewGraphSpace(String.format("Graph %d", graphCounter++));
     }
 
     private void makeDialog(JFrame frame) {
@@ -91,82 +92,35 @@ public class GraphViewer extends DnDTabbedPane implements ProfileListener, Graph
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(new GraphMenu(manager, this));
 
-        GraphViewMenu graphViewMenu = new GraphViewMenu(this);
+        graphViewMenu = new GraphViewMenu(this);
         menuBar.add(graphViewMenu);
         menuBar.add(new GraphOptionsMenu(this));
         dialog.setJMenuBar(menuBar);
 
-        manager.addGraphListener(graphViewMenu);
-        dialog.add(this);
+        JPanel subPanel = new JPanel();
+        subPanel.setLayout(new BorderLayout());
+        subPanel.add(new GraphToolBar(this), BorderLayout.NORTH);
+        subPanel.add(graphLabel, BorderLayout.SOUTH);
+
+        dialog.add(subPanel, BorderLayout.NORTH);
+
+//        dialog.add(this);
     }
 
 
-    @Override
-    public void profileAdded(Profile profile) {
-
+    public void addNewGraphSpace(String graphID) {
+        textPane.getTextSource().getAnnotationManager().addGraphSpace(graphID);
     }
 
-    @Override
-    public void profileRemoved() {
-
+    public mxGraphComponent getCurrentGraphComponent() {
+        return currentGraphComponent;
     }
 
-    @Override
-    public void profileSelectionChanged(Profile profile) {
-        getAllGraphComponents().forEach(graphComponent -> ((GraphSpace) graphComponent.getGraph()).reDrawVertices());
-    }
-
-    @Override
-    public void profileFilterSelectionChanged(boolean filterByProfile) {
-
-    }
-
-    @Override
-    public void colorChanged() {
-        getAllGraphComponents().forEach(graphComponent -> ((GraphSpace) graphComponent.getGraph()).reDrawVertices());
-    }
-
-    public TextPane getTextPane() {
-        return textPane;
-    }
-
-    @Override
-    public void newGraph(GraphSpace graphSpace) {
-        addGraph(graphSpace);
-    }
-
-    @Override
-    public void removeGraph(GraphSpace graphSpace) {
-
-    }
-
-
-    public void addNewGraphSpace(String title) {
-        GraphSpace graphSpace = textPane.getTextSource().getAnnotationManager().addGraphSpace(title);
-        addGraph(graphSpace);
-    }
-
-    private void closeGraphSpace(mxGraphComponent graphComponent) {
-        if (getTabCount() == 1) {
-            addNewGraphSpace(String.format("Graph %d", graphCounter++));
-        }
-        remove(graphComponent);
-    }
-
-    public mxGraphComponent getSelectedGraphComponent() {
-        if (getSelectedComponent() != null) {
-            if (getSelectedComponent().getClass() == mxGraphComponent.class) {
-                return ((mxGraphComponent) getSelectedComponent());
-            }
-        }
-        return null;
-    }
-
-    public Component getGraphComponent(String title) {
-        for (Component component : getComponents()) {
-            if (Objects.equals(component.getName(), title)) {
-                setSelectedComponent(component);
-                return getSelectedComponent();
+    private mxGraphComponent getGraphComponent(String graphID) {
+        if (graphID == null) return currentGraphComponent;
+        for (mxGraphComponent graphComponent : graphComponentList) {
+            if (graphComponent.getName().equals(graphID)) {
+                return graphComponent;
             }
         }
         return null;
@@ -247,13 +201,7 @@ public class GraphViewer extends DnDTabbedPane implements ProfileListener, Graph
                         //noinspection SuspiciousMethodCalls
                         Annotation annotation = graph.getVertices().get(cell);
 
-                        //*** This line was disabled because it fired an annotation selection event
-                        //*** which causes a second cell selection event to occur. This interferes with
-                        //*** node selection when a one annotation maps to multiple nodes.
-//                        manager.annotationSelectionChangedEvent(annotation);
-                        //***
                         manager.annotationSelectionChangedEvent(annotation);
-//                        textPane.setSelection(null, annotation);
 
                         view.owlEntitySelectionChanged(manager.getOWLAPIDataExtractor().getOWLClassByID(annotation.getClassID()));
                         graph.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
@@ -265,99 +213,68 @@ public class GraphViewer extends DnDTabbedPane implements ProfileListener, Graph
             graph.reDrawVertices();
 //            executeLayout(null);
         });
+    }
 
-        graphComponent.getGraphControl().addMouseListener(new MouseAdapter() {
+    private void addAnnotationVertex(Annotation annotation) {
+        if (currentGraphComponent != null) {
+            GraphSpace graph = (GraphSpace) currentGraphComponent.getGraph();
+            graph.getModel().beginUpdate();
+            try {
 
-            public void mousePressed(MouseEvent e) {
-                // Handles context menu on the Mac where the trigger is on mouse pressed
-                mouseReleased(e);
-            }
+                if (annotation != null) {
 
-            public void mouseReleased(MouseEvent e) {
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    showGraphPopupMenu(graphComponent, e);
+                    mxCell vertex = graph.addVertex(null, annotation);
+                    goToVertex(vertex);
                 }
-//                graph.reDrawVertices();
-            }
-        });
-    }
 
-    public void addAnnotationVertex(Annotation annotation) {
-        mxGraphComponent graphComponent = getSelectedGraphComponent();
-        GraphSpace graph = (GraphSpace) graphComponent.getGraph();
-        graph.getModel().beginUpdate();
-        try {
-
-            if (annotation != null) {
-                mxCell vertex = graph.addVertex(null, annotation);
-                goToVertex(vertex);
-            }
-
-        } finally {
-            graph.reDrawVertices();
+            } finally {
+                graph.reDrawVertices();
 //            executeLayout(null);
-            graph.getModel().endUpdate();
+                graph.getModel().endUpdate();
+            }
         }
 
-
     }
 
-    public Action bind(mxGraphComponent graphComponent, String name, final Action action) {
-        AbstractAction newAction = new AbstractAction(name) {
-            public void actionPerformed(ActionEvent e) {
-                action.actionPerformed(new ActionEvent(graphComponent, e.getID(), e.getActionCommand()));
-            }
-        };
-
-        newAction.putValue(Action.SHORT_DESCRIPTION, action.getValue(Action.SHORT_DESCRIPTION));
-
-        return newAction;
-    }
-
-    private void showGraphPopupMenu(mxGraphComponent graphComponent, MouseEvent e) {
-        Point pt = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(),
-                graphComponent);
-        GraphPopupMenu menu = new GraphPopupMenu(this);
-        menu.show(graphComponent, pt.x, pt.y);
-
-        e.consume();
-    }
-
-    public void goToAnnotationVertex(Annotation annotation) {
-        if (getSelectedGraphComponent() != null && annotation != null) {
-            GraphSpace graphSpace = (GraphSpace) getSelectedGraphComponent().getGraph();
-            List<mxCell> vertices = graphSpace.getVerticesForAnnotation(annotation);
-            if (vertices.size() > 0) {
-                goToVertex(vertices.get(0));
+    public void goToAnnotationVertex(String graphID, Annotation annotation) {
+        if (annotation != null) {
+            currentGraphComponent = getGraphComponent(graphID);
+            if (currentGraphComponent != null) {
+                GraphSpace graphSpace = (GraphSpace) currentGraphComponent.getGraph();
+                List<Object> vertices = graphSpace.getVerticesForAnnotation(annotation);
+                if (vertices.size() > 0) {
+                    graphSpace.setSelectionCells(vertices);
+                    goToVertex(vertices.get(0));
+                }
             }
         }
     }
 
-    private void goToVertex(mxCell vertex) {
-        GraphSpace graph = (GraphSpace) getSelectedGraphComponent().getGraph();
+    private void goToVertex(Object vertex) {
+        if (currentGraphComponent != null) {
+//            GraphSpace graph = (GraphSpace) currentGraphComponent.getGraph();
 
-        if (!graph.getSelectionModel().isSelected(vertex)) graph.setSelectionCell(vertex);
-        requestFocusInWindow();
-        ((mxGraphComponent) getSelectedComponent()).scrollCellToVisible(vertex, true);
+//            if (!graph.getSelectionModel().isSelected(vertex)) graph.setSelectionCell(vertex);
+            dialog.requestFocusInWindow();
+            currentGraphComponent.scrollCellToVisible(vertex, true);
+
+        }
     }
 
     public void deleteSelectedGraph() {
-        GraphSpace graph = (GraphSpace) getSelectedGraphComponent().getGraph();
+        if (currentGraphComponent != null) {
+            GraphSpace graph = (GraphSpace) currentGraphComponent.getGraph();
 
-        textPane.getTextSource().getAnnotationManager().removeGraphSpace(graph);
+            textPane.getTextSource().getAnnotationManager().removeGraphSpace(graph);
 
-        closeGraphSpace((mxGraphComponent) getSelectedComponent());
-
-    }
-
-    private java.util.List<mxGraphComponent> getAllGraphComponents() {
-        List<mxGraphComponent> graphComponentList = new ArrayList<>();
-        for (Component component : getComponents()) {
-            if (component.getClass() == mxGraphComponent.class) {
-                graphComponentList.add((mxGraphComponent) component);
+            int index = graphComponentList.indexOf(currentGraphComponent);
+            graphComponentList.remove(currentGraphComponent);
+            if (graphComponentList.size() > 0) {
+                showGraph(graphComponentList.get(index == 0 ? 0 : index - 1));
             }
+            graphViewMenu.updateMenus();
         }
-        return graphComponentList;
+
     }
 
     public void addAllAnnotations() {
@@ -374,76 +291,123 @@ public class GraphViewer extends DnDTabbedPane implements ProfileListener, Graph
         }
     }
 
-    public void addGraph(GraphSpace graph) {
-        JScrollPane sp = new JScrollPane();
-        sp.getVerticalScrollBar().setUnitIncrement(20);
+    public void showGraph(mxGraphComponent graphComponent) {
+        if (currentGraphComponent != null) {
+            dialog.remove(currentGraphComponent);
+        }
+        currentGraphComponent = graphComponent;
+        dialog.add(currentGraphComponent, BorderLayout.CENTER);
+        graphLabel.setText(currentGraphComponent.getName());
+        ((GraphSpace) graphComponent.getGraph()).reDrawVertices();
+    }
+
+    private void addGraph(GraphSpace graph) {
+
 
         mxGraphComponent graphComponent = new mxGraphComponent(graph);
         graphComponent.getViewport().setOpaque(true);
         graphComponent.getViewport().setBackground(Color.white);
         graphComponent.setDragEnabled(false);
         graphComponent.setSize(new Dimension(800, 800));
-        graphComponent.getGraphControl().add(sp, 0);
+        graphComponent.getGraphControl().add(scrollPane, 0);
         graphComponent.setName(graph.getId());
 
         setupListeners(graphComponent);
 
-        addTab(graph.getId(), graphComponent);
 
-        int index = indexOfTab(graph.getId());
-        JPanel pnlTab = new JPanel(new GridBagLayout());
-        pnlTab.setOpaque(false);
-        JLabel lblTitle = new JLabel(graph.getId());
-        JButton btnClose = new JButton("x");
+        graphComponentList.add(graphComponent);
 
-        GridBagConstraints gbc = new GridBagConstraints();
+        showGraph(graphComponent);
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1;
-        pnlTab.add(lblTitle, gbc);
-
-        gbc.gridx++;
-        gbc.weightx = 0;
-        pnlTab.add(btnClose, gbc);
-
-        setTabComponentAt(index, pnlTab);
-
-        btnClose.addActionListener(evt -> closeGraphSpace(graphComponent));
-
-        setSelectedComponent(graphComponent);
-        graph.reDrawVertices();
-//        executeLayout(null);
+        graphViewMenu.updateMenus();
     }
 
-    void executeLayout(mxGraphComponent graphComponent) {
-        if (graphComponent == null) graphComponent = getSelectedGraphComponent();
-        GraphSpace graph = (GraphSpace) graphComponent.getGraph();
-        graph.reDrawVertices();
-        mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
-        layout.setOrientation(SwingConstants.WEST);
-        layout.setIntraCellSpacing(50);
-        layout.setInterRankCellSpacing(125);
-        layout.setOrientation(SwingConstants.NORTH);
+    void executeLayout() {
+        if (currentGraphComponent != null) {
+            GraphSpace graph = (GraphSpace) currentGraphComponent.getGraph();
+            graph.reDrawVertices();
+            mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
+            layout.setOrientation(SwingConstants.WEST);
+            layout.setIntraCellSpacing(50);
+            layout.setInterRankCellSpacing(125);
+            layout.setOrientation(SwingConstants.NORTH);
 
-        try {
-            graph.getModel().beginUpdate();
             try {
-                layout.execute(graph.getDefaultParent());
+                graph.getModel().beginUpdate();
+                try {
+                    layout.execute(graph.getDefaultParent());
+                } finally {
+                    mxMorphing morph = new mxMorphing(currentGraphComponent, 20, 1.2, 20);
+
+                    morph.addListener(mxEvent.DONE, (arg0, arg1) -> graph.getModel().endUpdate());
+
+                    morph.startAnimation();
+                }
             } finally {
-                mxMorphing morph = new mxMorphing(graphComponent, 20, 1.2, 20);
-
-                morph.addListener(mxEvent.DONE, (arg0, arg1) -> graph.getModel().endUpdate());
-
-                morph.startAnimation();
+                graph.getModel().endUpdate();
+                currentGraphComponent.zoomAndCenter();
             }
-        } finally {
-            graph.getModel().endUpdate();
-            graphComponent.zoomAndCenter();
         }
     }
 
     public JDialog getDialog() {
         return dialog;
+    }
+
+    public void renameCurrentGraph(String newGraphID) {
+        ((GraphSpace) currentGraphComponent.getGraph()).setId(newGraphID);
+        currentGraphComponent.setName(newGraphID);
+    }
+
+    public List<mxGraphComponent> getGraphComponentList() {
+        return graphComponentList;
+    }
+
+    public void addSelectedAnnotationAsVertex() {
+        addAnnotationVertex(textPane.getSelectedAnnotation());
+    }
+
+    public void removeSelectedVertex() {
+        if (currentGraphComponent != null) {
+            GraphSpace graphSpace = (GraphSpace) currentGraphComponent.getGraph();
+            Object cell = graphSpace.getSelectionModel().getCell();
+            graphSpace.removeVertex((mxCell) cell);
+            graphSpace.reDrawVertices();
+        }
+    }
+
+    @Override
+    public void profileAdded(Profile profile) {
+
+    }
+
+    @Override
+    public void profileRemoved() {
+
+    }
+
+    @Override
+    public void profileSelectionChanged(Profile profile) {
+        graphComponentList.forEach(graphComponent -> ((GraphSpace) graphComponent.getGraph()).reDrawVertices());
+    }
+
+    @Override
+    public void profileFilterSelectionChanged(boolean filterByProfile) {
+
+    }
+
+    @Override
+    public void colorChanged() {
+        graphComponentList.forEach(graphComponent -> ((GraphSpace) graphComponent.getGraph()).reDrawVertices());
+    }
+
+    @Override
+    public void newGraph(GraphSpace graphSpace) {
+        addGraph(graphSpace);
+    }
+
+    @Override
+    public void removeGraph(GraphSpace graphSpace) {
+
     }
 }

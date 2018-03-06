@@ -37,7 +37,6 @@ import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewer;
 import edu.ucdenver.ccp.knowtator.view.menus.ProfileMenu;
 import org.apache.log4j.Logger;
-import other.RectanglePainter;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -80,6 +79,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		if (textSource != null) {
             graphViewer = new GraphViewer((JFrame) SwingUtilities.getWindowAncestor(view), manager, view, this);
             manager.addProfileListener(graphViewer);
+            manager.addGraphListener(graphViewer);
         }
 		manager.addSpanListener(this);
 		manager.addConceptAnnotationListener(this);
@@ -117,7 +117,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 
 	private void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
 		if (isVisible) {
-            AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(manager, e, this);
+            AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e, this);
 
             Map<Span, Annotation> spansContainingLocation = textSource.getAnnotationManager().getSpanMap(
                     press_offset,
@@ -192,7 +192,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 					setSelectedSpan(annotation.getSpans().first());
 				}
 			}
-			graphViewer.goToAnnotationVertex(selectedAnnotation);
+			graphViewer.goToAnnotationVertex(null, selectedAnnotation);
 			manager.annotationSelectionChangedEvent(selectedAnnotation);
 		}
 		if (selectedAnnotation != null) {
@@ -266,6 +266,14 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 
 	void refreshHighlights() {
     	if (isVisible) {
+    		if (selectedSpan != null) {
+				try {
+					scrollRectToVisible(modelToView(selectedSpan.getStart()));
+				} catch (BadLocationException | NullPointerException ignored) {
+
+				}
+			}
+
 			Profile profile = manager.getProfileManager().getCurrentProfile();
 
 			//Remove all previous highlights in case a span has been deleted
@@ -321,10 +329,11 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		if (selectedAnnotation != null) {
 			for (Span span : selectedAnnotation.getSpans()) {
 				try {
-					if (span.equals(selectedSpan))
+					if (span.equals(selectedSpan)) {
 						getHighlighter().addHighlight(span.getStart(), span.getEnd(), new RectanglePainter(Color.BLACK));
-					else
+					} else {
 						getHighlighter().addHighlight(span.getStart(), span.getEnd(), new RectanglePainter(Color.GRAY));
+					}
 				} catch (BadLocationException e) {
 					e.printStackTrace();
 				}
@@ -376,6 +385,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 
 	@Override
 	public void spanSelectionChanged(Span span) {
+
 		refreshHighlights();
 	}
 

@@ -163,7 +163,7 @@ class KnowtatorToolBar extends JToolBar {
 
 
     private JButton removeAnnotationCommand() {
-        JButton command = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.ADD));
+        JButton command = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.REMOVE));
         command.setToolTipText("Remove annotation");
         command.addActionListener(e -> textViewer.getCurrentTextPane().removeAnnotation());
         return command;

@@ -25,7 +25,6 @@
 package edu.ucdenver.ccp.knowtator.view.text;
 
 import com.mxgraph.model.mxCell;
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
 import org.apache.log4j.Logger;
@@ -35,16 +34,15 @@ import java.awt.event.MouseEvent;
 import java.util.Map;
 
 public class AnnotationPopupMenu extends JPopupMenu {
+    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(AnnotationPopupMenu.class);
 
 
     private MouseEvent e;
     private TextPane textPane;
-    private KnowtatorManager manager;
 
 
-    AnnotationPopupMenu(KnowtatorManager manager, MouseEvent e, TextPane textPane) {
-        this.manager = manager;
+    AnnotationPopupMenu(MouseEvent e, TextPane textPane) {
         this.e = e;
         this.textPane = textPane;
     }
@@ -105,18 +103,6 @@ public class AnnotationPopupMenu extends JPopupMenu {
         show(e.getComponent(), e.getX(), e.getY());
     }
 
-    private JMenuItem displayAnnotationVertexCommand() {
-        JMenuItem menuItem = new JMenuItem(String.format("Add vertex to %s", textPane.getGraphViewer().getSelectedGraphComponent().getName()));
-        menuItem.addActionListener(e -> {
-            textPane.getGraphViewer().setVisible(true);
-            if (textPane.getSelectedAnnotation() != null) {
-                textPane.getGraphViewer().addAnnotationVertex(textPane.getSelectedAnnotation());
-            }
-        });
-
-        return menuItem;
-    }
-
     private JMenu goToAnnotationInGraphCommand() {
         JMenu jMenu = new JMenu("Graphs");
 
@@ -126,9 +112,8 @@ public class AnnotationPopupMenu extends JPopupMenu {
                     if (vertex != null) {
                         JMenuItem menuItem = new JMenuItem(graphSpace.getId());
                         menuItem.addActionListener(e1 -> {
-                            textPane.getGraphViewer().setVisible(true);
-                            textPane.getGraphViewer().getGraphComponent(graphSpace.getId());
-                            textPane.getGraphViewer().goToAnnotationVertex(textPane.getSelectedAnnotation());
+                            textPane.getGraphViewer().getDialog().setVisible(true);
+                            textPane.getGraphViewer().goToAnnotationVertex(graphSpace.getId(), textPane.getSelectedAnnotation());
                         });
                         jMenu.add(menuItem);
                     }
@@ -156,7 +141,6 @@ public class AnnotationPopupMenu extends JPopupMenu {
 
             if (textPane.getSelectedAnnotation() != null) {
                 addSeparator();
-                add(displayAnnotationVertexCommand());
                 add(goToAnnotationInGraphCommand());
             }
         } else {

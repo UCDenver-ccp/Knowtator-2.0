@@ -25,12 +25,12 @@
 package edu.ucdenver.ccp.knowtator.model.annotation;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
-import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

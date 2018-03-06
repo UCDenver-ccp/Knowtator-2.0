@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package other;
+package edu.ucdenver.ccp.knowtator.view.text;
 
 import org.apache.log4j.Logger;
 
@@ -38,7 +38,7 @@ public class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter
 
     public static Logger log = Logger.getLogger(RectanglePainter.class);
 
-    public RectanglePainter(Color color) {
+    RectanglePainter(Color color) {
         super( color );
     }
 

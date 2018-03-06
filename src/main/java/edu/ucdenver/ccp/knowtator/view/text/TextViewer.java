@@ -102,7 +102,6 @@ public class TextViewer extends JPanel implements TextSourceListener {
         documentLabel.setText(currentTextPane.getTextSource().getDocID());
         scrollPane.setViewportView(currentTextPane);
         currentTextPane.setIsVisible(true);
-
         currentTextPaneIndex = indexToShow;
         if (graphViewerWasVisible) currentTextPane.getGraphViewer().getDialog().setVisible(true);
 
