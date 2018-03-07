@@ -49,6 +49,7 @@ import java.util.Set;
  */
 
 public class KnowtatorManager {
+    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(KnowtatorManager.class);
 
     private ProjectManager projectManager;
@@ -61,6 +62,7 @@ public class KnowtatorManager {
     private Set<AnnotationListener> annotationListeners;
     private Set<SpanListener> spanListeners;
     private Set<GraphListener> graphListeners;
+    private Set<ProjectListener> projectListeners;
 
 
     /**
@@ -80,6 +82,7 @@ public class KnowtatorManager {
     }
 
     private void initListeners() {
+        projectListeners = new HashSet<>();
         textSourceListeners = new HashSet<>();
         profileListeners = new HashSet<>();
         annotationListeners = new HashSet<>();
@@ -204,4 +207,11 @@ public class KnowtatorManager {
         owlDataExtractor.setUpOWL(owlWorkspace, owlModelManager);
     }
 
+    public void projectLoadedEvent() {
+        projectListeners.forEach(ProjectListener::projectLoaded);
+    }
+
+    public void addProjectListener(ProjectListener listener) {
+        projectListeners.add(listener);
+    }
 }

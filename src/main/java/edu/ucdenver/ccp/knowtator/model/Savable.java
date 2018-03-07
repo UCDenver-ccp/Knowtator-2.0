@@ -30,5 +30,5 @@ import org.w3c.dom.Element;
 public interface Savable {
     void writeToXml(Document dom, Element parent);
 
-    void readFromXml(Element parent);
+    void readFromXml(Element parent, String content);
 }

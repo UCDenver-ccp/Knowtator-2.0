@@ -81,8 +81,13 @@ public class IOTests {
         manager.getProjectManager().loadProject(projectFile);
 
         TextSource textSource = manager.getTextSourceManager().getTextSources().get(articleFileNames[articleID]);
-
-        assert textSource.getContent().equals(articleContent[articleID]);
+        String content;
+        try {
+            content = FileUtils.readFileToString(textSource.getFile(), "UTF-8");
+            assert content.equals(articleContent[articleID]);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         AnnotationManager annotationManager = textSource.getAnnotationManager();
         int numAnnotations = annotationManager.getAnnotations().size();
@@ -100,7 +105,12 @@ public class IOTests {
 
         textSource = manager.getTextSourceManager().getTextSources().get(articleFileNames[articleID2]);
 
-        assert textSource.getContent().equals(articleContent[articleID2]);
+        try {
+            content = FileUtils.readFileToString(textSource.getFile(), "UTF-8");
+            assert content.equals(articleContent[articleID2]);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         annotationManager = textSource.getAnnotationManager();
         numAnnotations = annotationManager.getAnnotations().size();
@@ -134,8 +144,13 @@ public class IOTests {
         manager.getProjectManager().addDocument(articleFile);
 
         TextSource textSource = manager.getTextSourceManager().getTextSources().get(articleFileNames[articleID]);
-
-        assert textSource.getContent().equals(articleContent[articleID]);
+        String content;
+        try {
+            content = FileUtils.readFileToString(textSource.getFile(), "UTF-8");
+            assert content.equals(articleContent[articleID]);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -183,7 +198,13 @@ public class IOTests {
 
         manager.getProjectManager().loadProject(projectFile);
         TextSource textSource = manager.getTextSourceManager().getTextSources().get(articleFileNames[articleID]);
-        assert textSource.getContent().equals(articleContent[articleID]);
+        String content;
+        try {
+            content = FileUtils.readFileToString(textSource.getFile(), "UTF-8");
+            assert content.equals(articleContent[articleID]);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         AnnotationManager annotationManager1 = textSource.getAnnotationManager();
         int numAnnotations = annotationManager1.getAnnotations().size();
@@ -210,8 +231,13 @@ public class IOTests {
         manager.getProjectManager().loadProject(projectFile);
 
         TextSource textSource = manager.getTextSourceManager().getTextSources().get(articleFileNames[articleID]);
-
-        assert textSource.getContent().equals(articleContent[articleID]);
+        String content;
+        try {
+            content = FileUtils.readFileToString(textSource.getFile(), "UTF-8");
+            assert content.equals(articleContent[articleID]);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         AnnotationManager annotationManager = textSource.getAnnotationManager();
         GraphSpace graphSpace = annotationManager.addGraphSpace("graph_1");

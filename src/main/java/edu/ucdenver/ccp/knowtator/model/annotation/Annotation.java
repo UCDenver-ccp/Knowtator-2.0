@@ -37,16 +37,15 @@ import org.w3c.dom.Node;
 import java.util.*;
 
 public class Annotation implements Savable {
-
-	private String className;
-	private String classID;
-	private String type;
-	private TreeSet<Span> spans;
-	private Set<String> overlappingAnnotations;
-	private Logger log = Logger.getLogger(Annotation.class);
+    @SuppressWarnings("unused")
+    private Logger log = Logger.getLogger(Annotation.class);
 
 
-
+    private String className;
+    private String classID;
+    private String type;
+    private TreeSet<Span> spans;
+    private Set<String> overlappingAnnotations;
 
 	private final Date date;
 	public String id;
@@ -190,6 +189,7 @@ public class Annotation implements Savable {
 		overlappingAnnotations.add(annotationID);
 	}
 
+	@SuppressWarnings("unused")
 	public Set<String> getOverlappingAnnotations() {
 		return overlappingAnnotations;
 	}
@@ -211,16 +211,23 @@ public class Annotation implements Savable {
 	}
 
 	@Override
-	public void readFromXml(Element parent) {
-		for (Node spanNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.SPAN))) {
-			if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
-				Element spanElement = (Element) spanNode;
-				String spanStart = spanElement.getAttribute(XmlTags.SPAN_START);
-				String spanEnd = spanElement.getAttribute(XmlTags.SPAN_END);
+	public void readFromXml(Element parent, String content) {
+        Element spanElement;
+        int spanStart;
+        int spanEnd;
+        String spannedText;
+        for (Node spanNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.SPAN))) {
+            if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
+                spanElement = (Element) spanNode;
+                spanStart = Integer.parseInt(spanElement.getAttribute(XmlTags.SPAN_START));
+                spanEnd = Integer.parseInt(spanElement.getAttribute(XmlTags.SPAN_END));
 
-				Span newSpan = new Span(textSource, Integer.parseInt(spanStart), Integer.parseInt(spanEnd));
-				log.warn("\t\t\tXML: " + newSpan);
-				addSpan(newSpan);
+
+                spannedText = content.substring(spanStart, spanEnd);
+                Span newSpan = new Span(spanStart, spanEnd, spannedText);
+//				log.warn("\t\t\tXML: " + newSpan);
+                addSpan(newSpan);
+
 			}
 		}
 	}

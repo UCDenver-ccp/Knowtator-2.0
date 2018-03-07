@@ -90,14 +90,14 @@ public class ProfileManager implements Savable {
     }
 
     @Override
-    public void readFromXml(Element parent) {
+    public void readFromXml(Element parent, String content) {
         for (Node profileNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.PROFILE))) {
             Element profileElement = (Element) profileNode;
             String profileID = profileElement.getAttribute(XmlTags.ID);
 
             Profile newProfile = addNewProfile(profileID);
             log.warn("\tXML: " + newProfile);
-            newProfile.readFromXml(profileElement);
+            newProfile.readFromXml(profileElement, content);
         }
     }
 }

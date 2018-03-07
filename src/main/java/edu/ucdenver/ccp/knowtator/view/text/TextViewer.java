@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.view.text;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.listeners.TextSourceListener;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewer;
@@ -33,10 +34,11 @@ import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TextViewer extends JPanel implements TextSourceListener {
+public class TextViewer extends JPanel implements TextSourceListener, ProjectListener {
     public static final Logger log = Logger.getLogger(KnowtatorManager.class);
     private boolean first;
     private KnowtatorManager manager;
@@ -60,7 +62,11 @@ public class TextViewer extends JPanel implements TextSourceListener {
         TextPane newTextPane = new TextPane(manager, view, textSource);
         if (textSource != null) {
             newTextPane.setName(textSource.getDocID());
-            newTextPane.setText(textSource.getContent());
+            try {
+                newTextPane.read(new FileReader(textSource.getFile()), textSource.getFile());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             log.warn("TextViewer: adding: " + textSource.getDocID());
         }
@@ -78,7 +84,7 @@ public class TextViewer extends JPanel implements TextSourceListener {
 
             JPanel subPanel = new JPanel();
             subPanel.setLayout(new BorderLayout());
-            subPanel.add(new KnowtatorToolBar(this), BorderLayout.NORTH);
+            subPanel.add(new AnnotationToolBar(this), BorderLayout.NORTH);
             subPanel.add(documentLabel, BorderLayout.SOUTH);
 
             add(subPanel, BorderLayout.NORTH);
@@ -114,7 +120,7 @@ public class TextViewer extends JPanel implements TextSourceListener {
 
     @Override
     public void textSourceAdded(TextSource textSource) {
-        addNewDocument(textSource);
+//        addNewDocument(textSource);
 
     }
 
@@ -132,5 +138,10 @@ public class TextViewer extends JPanel implements TextSourceListener {
 
     public List<TextPane> getTextPaneList() {
         return textPaneList;
+    }
+
+    @Override
+    public void projectLoaded() {
+        manager.getTextSourceManager().getTextSources().values().forEach(this::addNewDocument);
     }
 }

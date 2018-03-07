@@ -202,9 +202,12 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 
 	public void previousSpan() {
 		TreeMap<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null, filterByProfile ? manager.getProfileManager().getCurrentProfile() : null);
-		Map.Entry<Span, Annotation> previous =
-				annotationMap.containsKey(selectedSpan) ? annotationMap.lowerEntry(selectedSpan) : annotationMap.floorEntry(selectedSpan);
-
+		Map.Entry<Span, Annotation> previous;
+		try {
+            previous = annotationMap.containsKey(selectedSpan) ? annotationMap.lowerEntry(selectedSpan) : annotationMap.floorEntry(selectedSpan);
+        } catch (NullPointerException npe) {
+		    previous = null;
+        }
 		if (previous == null) previous = annotationMap.lastEntry();
 
 		setSelection(previous.getKey(), previous.getValue());
@@ -213,9 +216,12 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	public void nextSpan() {
 		TreeMap<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null, filterByProfile ? manager.getProfileManager().getCurrentProfile() : null);
 
-		Map.Entry<Span, Annotation> next =
-				annotationMap.containsKey(selectedSpan) ? annotationMap.higherEntry(selectedSpan) : annotationMap.ceilingEntry(selectedSpan);
-
+		Map.Entry<Span, Annotation> next;
+		try {
+            next = annotationMap.containsKey(selectedSpan) ? annotationMap.higherEntry(selectedSpan) : annotationMap.ceilingEntry(selectedSpan);
+        } catch (NullPointerException npe) {
+		    next = null;
+        }
 		if (next == null) next = annotationMap.firstEntry();
 
 		setSelection(next.getKey(), next.getValue());
@@ -283,7 +289,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 			highlightSelectedAnnotation();
 
 			// Highlight overlaps first, then spans
-			Span lastSpan = Span.makeDefaultSpan(textSource);
+			Span lastSpan = Span.makeDefaultSpan();
 			Color lastColor = null;
 
 			Map<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null, filterByProfile ? manager.getProfileManager().getCurrentProfile() : null);
@@ -415,13 +421,13 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	}
 
 	public void addAnnotation() {
-		String className = null;
-		String classID = null;
-		String[] descendants = null;
+		String className = manager.getOWLAPIDataExtractor().getSelectedOwlClassName();
+		String classID = manager.getOWLAPIDataExtractor().getSelectedOwlClassID();
+		String[] descendants = manager.getOWLAPIDataExtractor().getSelectedOwlClassDescendants();
 
-		Map<String, String[]> clsInfo = manager.getOWLAPIDataExtractor().getSelectedOwlClassInfo();
 
-		if (clsInfo == null) {
+
+		if (classID == null) {
 			log.warn("No OWLClass selected");
 
 			JTextField nameField = new JTextField(10);
@@ -440,20 +446,21 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 				className = nameField.getText();
 				classID = idField.getText();
 			}
-		} else {
-			className = clsInfo.get("identifiers")[0];
-			classID = clsInfo.get("identifiers")[1];
-			descendants = clsInfo.get("descendants");
 		}
 
-		if (className != null) {
-			Profile profile = manager.getProfileManager().getCurrentProfile();
+//		log.warn(String.format("Class name: %s Class ID: %s", className, classID));
 
-			ProfileMenu.pickAColor(classID, descendants, profile, manager.getProfileManager());
+        Profile profile = manager.getProfileManager().getCurrentProfile();
 
-			Span newSpan = new Span(textSource, getSelectionStart(), getSelectionEnd());
-			textSource.getAnnotationManager().addAnnotation(className, classID, newSpan);
-		}
+        ProfileMenu.pickAColor(classID, descendants, profile, manager.getProfileManager());
+
+        Span newSpan = new Span(
+                getSelectionStart(),
+                getSelectionEnd(),
+                getText().substring(getSelectionStart(), getSelectionEnd())
+        );
+        textSource.getAnnotationManager().addAnnotation(className, classID, newSpan);
+
 	}
 
 	public void removeAnnotation() {
@@ -464,4 +471,15 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
     public void setIsVisible(boolean isVisible) {
         this.isVisible = isVisible;
     }
+
+	public void addSpanToAnnotation() {
+		textSource.getAnnotationManager()
+				.addSpanToAnnotation(
+						selectedAnnotation,
+						new Span(
+								getSelectionStart(),
+								getSelectionEnd(),
+								getText().substring(getSelectionStart(), getSelectionEnd()))
+				);
+	}
 }

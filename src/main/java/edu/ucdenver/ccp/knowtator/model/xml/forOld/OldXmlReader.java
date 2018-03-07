@@ -73,7 +73,7 @@ public class OldXmlReader {
             }
 
             Profile profile = textSourceManager.getManager().getProfileManager().addNewProfile(profileID);
-            List<Span> spans = getSpanInfo(textSource, annotationElement);
+            List<Span> spans = getSpanInfo(annotationElement);
 
 
             String annotationID = ((Element) annotationElement.getElementsByTagName(OldXmlTags.MENTION).item(0)).getAttribute(OldXmlTags.ID);
@@ -103,16 +103,21 @@ public class OldXmlReader {
         }
     }
 
-    private static List<Span> getSpanInfo(TextSource textSource, Element annotationElement) {
+    private static List<Span> getSpanInfo(Element annotationElement) {
         List<Span> spans = new ArrayList<>();
 
+        Element spanElement;
+        int spanStart;
+        int spanEnd;
+        String spannedText;
         for (Node spanNode : XmlUtil.asList(annotationElement.getElementsByTagName(OldXmlTags.SPAN))) {
             if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element spanElement = (Element) spanNode;
-                String spanStart = spanElement.getAttribute(OldXmlTags.SPAN_START);
-                String spanEnd = spanElement.getAttribute(OldXmlTags.SPAN_END);
+                spanElement = (Element) spanNode;
+                spanStart = Integer.parseInt(spanElement.getAttribute(OldXmlTags.SPAN_START));
+                spanEnd = Integer.parseInt(spanElement.getAttribute(OldXmlTags.SPAN_END));
+                spannedText = spanElement.getTextContent();
 
-                spans.add(new Span(textSource, Integer.parseInt(spanStart), Integer.parseInt(spanEnd)));
+                spans.add(new Span(spanStart, spanEnd, spannedText));
             }
         }
         return spans;

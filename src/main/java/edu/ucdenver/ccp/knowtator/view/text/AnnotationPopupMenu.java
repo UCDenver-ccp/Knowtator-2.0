@@ -58,12 +58,7 @@ public class AnnotationPopupMenu extends JPopupMenu {
 
     private JMenuItem addSpanToAnnotationCommand() {
         JMenuItem addSpanToAnnotation = new JMenuItem("Add span");
-        addSpanToAnnotation.addActionListener(e4 -> textPane.getTextSource().getAnnotationManager()
-                .addSpanToAnnotation(
-                        textPane.getSelectedAnnotation(),
-                        new Span(textPane.getTextSource(), textPane.getSelectionStart(), textPane.getSelectionEnd())
-                )
-        );
+        addSpanToAnnotation.addActionListener(e4 -> textPane.addSpanToAnnotation());
 
         return addSpanToAnnotation;
     }

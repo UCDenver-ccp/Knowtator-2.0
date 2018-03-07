@@ -82,8 +82,8 @@ public class InfoPanel extends JPanel implements SpanListener, AnnotationListene
             JLabel idLabel = new JLabel(String.format("Annotation ID: %s", annotation.getID()));
             JLabel classLabel = new JLabel(String.format("Class ID: %s", annotation.getClassID()));
             JLabel classNameLabel = new JLabel(String.format("Class Name: %s", annotation.getClassName()));
-            JLabel profileLabel = new JLabel(String.format("Profile ID: %s", annotation.getAnnotator().getId()));
-            JLabel textSourceLabel = new JLabel(String.format("Document ID: %s", annotation.getTextSource().getDocID()));
+            JLabel profileLabel = new JLabel(String.format("Annotator: %s", annotation.getAnnotator().getId()));
+            JLabel textSourceLabel = new JLabel(String.format("Document: %s", annotation.getTextSource().getDocID()));
             JLabel dateLabel = new JLabel(String.format("Date: %s", dateFormat.format(annotation.getDate())));
 
             // **********************************SPANS*********************************

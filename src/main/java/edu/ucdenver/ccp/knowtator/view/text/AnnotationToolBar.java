@@ -33,11 +33,11 @@ import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-class KnowtatorToolBar extends JToolBar {
+class AnnotationToolBar extends JToolBar {
 
     private TextViewer textViewer;
 
-    KnowtatorToolBar(TextViewer textViewer) {
+    AnnotationToolBar(TextViewer textViewer) {
         this.textViewer = textViewer;
 
         setFloatable(false);

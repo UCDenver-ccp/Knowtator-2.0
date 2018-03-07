@@ -13,7 +13,6 @@ edu\ucdenver\ccp\knowtator\model\graph\GraphSpace.class
 edu\ucdenver\ccp\knowtator\model\xml\XmlTags.class
 edu\ucdenver\ccp\knowtator\view\info\InfoPanel.class
 edu\ucdenver\ccp\knowtator\model\xml\forOld\OldXmlReader.class
-edu\ucdenver\ccp\knowtator\view\text\KnowtatorToolBar.class
 edu\ucdenver\ccp\knowtator\listeners\TextSourceListener.class
 edu\ucdenver\ccp\knowtator\listeners\Listener.class
 edu\ucdenver\ccp\knowtator\model\owl\OntologyTranslator$1.class

@@ -87,7 +87,7 @@ public class Profile implements Savable {
     }
 
     @Override
-    public void readFromXml(Element parent) {
+    public void readFromXml(Element parent, String content) {
         for (Node highlighterNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.HIGHLIGHTER))) {
             Element highlighterElement = (Element) highlighterNode;
 
