@@ -99,7 +99,7 @@ public class AnnotationManagerTest {
         Annotation annotation1 = new Annotation("class_2", "class_2", "mention_3", textSource, profile, "identity");
         annotationManager.addAnnotation(annotation1);
 
-        Span span1 = new Span(1, 6);
+        Span span1 = new Span(1, 6, "");
         annotationManager.addSpanToAnnotation(annotation1, span1);
 
         int numAnnotations = annotationManager.getAnnotations().size();
@@ -132,7 +132,7 @@ public class AnnotationManagerTest {
         Annotation annotation1 = new Annotation("class_2", "class_2", "mention_3", textSource, profile, "identity");
         annotationManager.addAnnotation(annotation1);
 
-        Span span1 = new Span(1, 6);
+        Span span1 = new Span(1, 6, "");
         annotationManager.addSpanToAnnotation(annotation1, span1);
 
         annotationManager.removeSpanFromAnnotation(annotation1, span1);

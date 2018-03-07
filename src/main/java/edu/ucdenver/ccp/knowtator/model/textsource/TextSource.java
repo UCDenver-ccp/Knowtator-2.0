@@ -45,14 +45,15 @@ public class TextSource implements Savable {
 
     private AnnotationManager annotationManager;
     private String docID;
-    private String content;
+    private File file;
+//    private String content;
 
     public TextSource(KnowtatorManager manager, String docID) {
         this.annotationManager = new AnnotationManager(manager, this);
 
         if (docID != null) {
             this.docID = docID;
-            File file = new File(manager.getProjectManager().getArticlesLocation(), docID + ".txt");
+            file = new File(manager.getProjectManager().getArticlesLocation(), docID + ".txt");
             while (!file.exists()) {
                 JFileChooser fileChooser = new JFileChooser();
                 if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -61,19 +62,20 @@ public class TextSource implements Savable {
                 }
             }
 
-            try {
-                content = FileUtils.readFileToString(file, "UTF-8");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            this.docID = "Instructions";
-            content = "***Instructions:***" +
-                    "\n" +
-                    "Create a new project: Project -> New Project" +
-                    "\n" +
-                    "Load an existing project: Project -> Load Project";
+//            try {
+//                content = FileUtils.readFileToString(file, "UTF-8");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
         }
+//        else {
+//            this.docID = "Instructions";
+//            content = "***Instructions:***" +
+//                    "\n" +
+//                    "Create a new project: Project -> New Project" +
+//                    "\n" +
+//                    "Load an existing project: Project -> Load Project";
+//        }
 
     }
 
@@ -81,8 +83,8 @@ public class TextSource implements Savable {
         return docID;
     }
 
-    public String getContent() {
-        return content;
+    public File getFile() {
+        return file;
     }
 
     public AnnotationManager getAnnotationManager() {
@@ -101,7 +103,13 @@ public class TextSource implements Savable {
     }
 
     @Override
-    public void readFromXml(Element parent) {
-        annotationManager.readFromXml(parent);
+    public void readFromXml(Element parent, String content) {
+        try {
+            content = FileUtils.readFileToString(file, "UTF-8");
+            annotationManager.readFromXml(parent, content);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

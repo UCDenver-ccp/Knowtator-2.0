@@ -130,6 +130,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         manager.addSpanListener(infoPanel);
         manager.addAnnotationListener(infoPanel);
         manager.addTextSourceListener(textViewer);
+        manager.addProjectListener(textViewer);
         manager.addProfileListener(profileMenu);
 
         DropTarget dt = new DropTarget(this, this);

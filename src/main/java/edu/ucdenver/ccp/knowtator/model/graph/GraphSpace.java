@@ -155,7 +155,7 @@ public class GraphSpace extends mxGraph implements Savable {
     }
 
     @Override
-    public void readFromXml(Element parent) {
+    public void readFromXml(Element parent, String content) {
         for (Node graphVertexNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.VERTEX))) {
             Element graphVertexElem = (Element) graphVertexNode;
 

@@ -31,7 +31,6 @@ package edu.ucdenver.ccp.knowtator.model.annotation;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -49,12 +48,12 @@ public class Span implements Savable {
 
 	private int end;
 	private Annotation annotation;
-	private TextSource textSource;
+	private String spannedText;
 
-	public Span(TextSource textSource, int start, int end) {
-		this.textSource = textSource;
+	public Span(int start, int end, String spannedText) {
 		this.start = start;
 		this.end = end;
+		this.spannedText = spannedText;
 		if (start > end) {
 			throw new IndexOutOfBoundsException(
 					"Span is invalid because the start of the Span is greater than the end of it: start=" + start
@@ -66,14 +65,8 @@ public class Span implements Savable {
 		}
 	}
 
-	public Span(int start, int end) {
-
-		this.start = start;
-		this.end = end;
-	}
-
-	public static Span makeDefaultSpan(TextSource textSource) {
-		return new Span(textSource, 0, 0);
+	public static Span makeDefaultSpan() {
+		return new Span(0, 0, "");
 	}
 
 	public boolean equals(Object object) {
@@ -191,7 +184,7 @@ public class Span implements Savable {
 	}
 
 	public String getSpannedText() {
-		return textSource.getContent().substring(start, end);
+		return spannedText;
 	}
 
 	public Integer getStart() {
@@ -215,7 +208,7 @@ public class Span implements Savable {
 	}
 
 	@Override
-	public void readFromXml(Element parent) {
+	public void readFromXml(Element parent, String content) {
 
 	}
 

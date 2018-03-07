@@ -90,10 +90,18 @@ public class ProjectManager {
                         path -> path.toString().endsWith(".xml"))
                         .forEach(file -> XmlUtil.readXML(manager.getProfileManager(), file.toFile()));
 
+//                Load annotations in parallel
+//                log.warn("Loading annotations");
+//                Stream<Path> annotationFilesToRead = Files.walk(Paths.get(annotationsLocation.toURI()))
+//                        .filter(path -> path.toString().endsWith(".xml"));
+//                annotationFilesToRead.parallel().forEach(path -> XmlUtil.readXML(manager.getTextSourceManager(), path.toFile()));
+
                 log.warn("Loading annotations");
                 Files.newDirectoryStream(Paths.get(annotationsLocation.toURI()),
                         path -> path.toString().endsWith(".xml"))
                         .forEach(file -> XmlUtil.readXML(manager.getTextSourceManager(), file.toFile()));
+
+                manager.projectLoadedEvent();
             } catch (IOException e) {
                 e.printStackTrace();
             }

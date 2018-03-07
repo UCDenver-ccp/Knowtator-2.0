@@ -32,7 +32,8 @@ import org.protege.editor.owl.model.OWLWorkspace;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -41,82 +42,71 @@ public class OWLAPIDataExtractor {
     private OWLWorkspace owlWorkSpace;
     private OWLModelManager owlModelManager;
 
-    private Collection<OWLAnnotation> getOWLObjectAnnotations(OWLEntity ent) {
-        if (ent != null) {
-            return EntitySearcher.getAnnotations(ent.getIRI(), owlModelManager.getActiveOntology());
-        }
-        else {
-            return null;
-        }
+
+    private OWLAnnotationProperty getOWLAnnotationPropertyByName(String annotationPropertyName) {
+        return owlModelManager.getOWLEntityFinder().getOWLAnnotationProperty(annotationPropertyName);
     }
 
-    private String extractOWLObjectData(OWLEntity ent) {
-
-        Collection<OWLAnnotation> owlAnnotations = getOWLObjectAnnotations(ent);
-
-        if (owlAnnotations != null) {
-            for (OWLAnnotation owlAnnotation : owlAnnotations) {
-                if (owlAnnotation.getProperty().isLabel()) {
-                    if (owlAnnotation.getValue() instanceof OWLLiteral) {
-                        return ((OWLLiteral) owlAnnotation.getValue()).getLiteral();
-                    }
-                }
-            }
+    private String extractAnnotation(OWLEntity ent, OWLAnnotationProperty annotationProperty) {
+        String annotationValue;
+        try{
+            annotationValue = EntitySearcher.getAnnotations(ent, owlModelManager.getActiveOntology(), annotationProperty)
+                    .stream().map(owlAnnotation -> ((OWLLiteral) owlAnnotation.getValue()).getLiteral())
+                    .collect(Collectors.toList()).get(0);
+        } catch (IndexOutOfBoundsException e) {
+            annotationValue = null;
         }
-        return null;
+        return annotationValue;
     }
 
     private String getOwlEntID(OWLEntity ent) {
-        log.warn("Knowtator: OWLAPIDataExtractor: " + ent.getIRI().getShortForm());
+//        log.warn("Knowtator: OWLAPIDataExtractor: " + ent.getIRI().getShortForm());
 
         return ent.getIRI().getShortForm();
     }
 
     public OWLClass getOWLClassByID(String classID) {
-        return owlModelManager == null ? null : owlModelManager.getOWLEntityFinder().getOWLClass(classID);
+        return owlModelManager.getOWLEntityFinder().getOWLClass(classID);
     }
 
     public OWLObjectProperty getOWLObjectPropertyByID(String classID) {
-        return owlModelManager == null ? null : owlModelManager.getOWLEntityFinder().getOWLObjectProperty(classID);
+        return owlModelManager.getOWLEntityFinder().getOWLObjectProperty(classID);
     }
 
     private String[] getDescendants(OWLClass cls) {
-        Set<OWLClass> descendants = owlModelManager == null ? null :
-                owlModelManager.getOWLHierarchyManager().getOWLClassHierarchyProvider().getDescendants(cls);
-        return descendants == null ? null :
-                descendants.stream().map(this::getOwlEntID).toArray(String[]::new);
+        Set<OWLClass> descendants = owlModelManager.getOWLHierarchyManager().getOWLClassHierarchyProvider().getDescendants(cls);
+        return descendants.stream().map(this::getOwlEntID).toArray(String[]::new);
     }
 
     private OWLClass getSelectedClass() {
-        return owlWorkSpace == null ? null : owlWorkSpace.getOWLSelectionModel().getLastSelectedClass();
+        return owlWorkSpace.getOWLSelectionModel().getLastSelectedClass();
     }
 
     private OWLObjectProperty getSelectedProperty() {
-        return owlWorkSpace == null ? null : owlWorkSpace.getOWLSelectionModel().getLastSelectedObjectProperty();
+        return owlWorkSpace.getOWLSelectionModel().getLastSelectedObjectProperty();
     }
 
     public String getSelectedPropertyID() {
         OWLObjectProperty property = getSelectedProperty();
-        if (property == null) {
-            return null;
-        } else {
-            return getOwlEntID(property);
-        }
+        return property == null ? null : getOwlEntID(property);
     }
 
-    public Map<String, String[]> getSelectedOwlClassInfo() {
+    public String getSelectedOwlClassID() {
         OWLClass cls = getSelectedClass();
+        String annotationValue = extractAnnotation(cls, owlModelManager.getOWLDataFactory().getRDFSLabel());
+        return annotationValue == null ? getOwlEntID(cls) : annotationValue;
+    }
 
-        Map<String, String[]> clsInfo = null;
-        if (cls != null) {
-            clsInfo = new HashMap<>();
-            clsInfo.put("identifiers", new String[]{
-                    extractOWLObjectData(cls),
-                    getOwlEntID(cls)
-            });
-            clsInfo.put("descendants", getDescendants(cls));
-        }
-        return clsInfo;
+    public String getSelectedOwlClassName() {
+        OWLClass cls = getSelectedClass();
+        String annotationValue = extractAnnotation(cls, getOWLAnnotationPropertyByName( "name"));
+        annotationValue = annotationValue == null ? extractAnnotation(cls, owlModelManager.getOWLDataFactory().getRDFSLabel()) : annotationValue;
+        return annotationValue == null ? getOwlEntID(cls) : annotationValue;
+    }
+
+    public String[] getSelectedOwlClassDescendants() {
+        OWLClass cls = getSelectedClass();
+        return getDescendants(cls);
     }
 
     public void loadOntologyFromLocation(String ontologyLocation) {

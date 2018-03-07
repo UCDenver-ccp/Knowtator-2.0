@@ -180,6 +180,7 @@ public final class AnnotationManager implements Savable {
         }
     }
 
+    @SuppressWarnings("unused")
     public void findOverlaps() {
         List<Span> overlappingSpans = new ArrayList<>();
         spanMap.forEach((span, annotation) -> {
@@ -216,32 +217,43 @@ public final class AnnotationManager implements Savable {
     }
 
     @Override
-    public void readFromXml(Element parent) {
+    public void readFromXml(Element parent, String content) {
+        Element annotationElement;
+        String annotationID;
+        String profileID;
+        String type;
+        Profile profile;
+        String className;
+        String classID;
+        Annotation newAnnotation;
+        Element graphSpaceElem;
+        String id;
+        GraphSpace graphSpace;
         for (Node annotationNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.ANNOTATION))) {
-            Element annotationElement = (Element) annotationNode;
+            annotationElement = (Element) annotationNode;
 
-            String annotationID = annotationElement.getAttribute(XmlTags.ID);
-            String profileID = annotationElement.getAttribute(XmlTags.ANNOTATOR);
-            String type = annotationElement.getAttribute(XmlTags.TYPE);
+            annotationID = annotationElement.getAttribute(XmlTags.ID);
+            profileID = annotationElement.getAttribute(XmlTags.ANNOTATOR);
+            type = annotationElement.getAttribute(XmlTags.TYPE);
 
-            Profile profile = manager.getProfileManager().addNewProfile(profileID);
-            String className = annotationElement.getElementsByTagName(XmlTags.CLASS).item(0).getTextContent();
-            String classID = ((Element) annotationElement.getElementsByTagName(XmlTags.CLASS).item(0)).getAttribute(XmlTags.ID);
+            profile = manager.getProfileManager().addNewProfile(profileID);
+            className = annotationElement.getElementsByTagName(XmlTags.CLASS).item(0).getTextContent();
+            classID = ((Element) annotationElement.getElementsByTagName(XmlTags.CLASS).item(0)).getAttribute(XmlTags.ID);
 
-            Annotation newAnnotation = new Annotation(classID, className, annotationID, textSource, profile, type);
-            log.warn("\t\tXML: " + newAnnotation);
-            newAnnotation.readFromXml(annotationElement);
+            newAnnotation = new Annotation(classID, className, annotationID, textSource, profile, type);
+//            log.warn("\t\tXML: " + newAnnotation);
+            newAnnotation.readFromXml(annotationElement, content);
 
             addAnnotation(newAnnotation);
         }
 
         for (Node graphSpaceNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.GRAPH))) {
-            Element graphSpaceElem = (Element) graphSpaceNode;
+            graphSpaceElem = (Element) graphSpaceNode;
 
-            String id = graphSpaceElem.getAttribute(XmlTags.ID);
-            GraphSpace graphSpace = addGraphSpace(id);
+            id = graphSpaceElem.getAttribute(XmlTags.ID);
+            graphSpace = addGraphSpace(id);
 
-            graphSpace.readFromXml(graphSpaceElem);
+            graphSpace.readFromXml(graphSpaceElem, content);
         }
     }
 

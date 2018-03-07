@@ -73,13 +73,13 @@ public class TextSourceManager implements Savable {
     }
 
     @Override
-    public void readFromXml(Element parent) {
+    public void readFromXml(Element parent, String content) {
         for (Node documentNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.DOCUMENT))) {
             Element documentElement = (Element) documentNode;
             String documentID = documentElement.getAttribute(XmlTags.ID);
             TextSource newTextSource = addTextSource(documentID);
             log.warn("\tXML: " + newTextSource);
-            newTextSource.readFromXml(documentElement);
+            newTextSource.readFromXml(documentElement, content);
         }
     }
 

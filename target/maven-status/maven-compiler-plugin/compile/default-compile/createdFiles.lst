@@ -8,7 +8,6 @@ edu\ucdenver\ccp\knowtator\view\text\TextPane.class
 edu\ucdenver\ccp\knowtator\view\info\FindPanel.class
 edu\ucdenver\ccp\knowtator\view\menus\ProjectMenu.class
 edu\ucdenver\ccp\knowtator\view\info\InfoPanel.class
-edu\ucdenver\ccp\knowtator\view\text\KnowtatorToolBar.class
 edu\ucdenver\ccp\knowtator\listeners\TextSourceListener.class
 edu\ucdenver\ccp\knowtator\listeners\Listener.class
 edu\ucdenver\ccp\knowtator\model\owl\OntologyTranslator$1.class
@@ -18,6 +17,8 @@ edu\ucdenver\ccp\knowtator\view\text\TextViewer.class
 edu\ucdenver\ccp\knowtator\model\owl\OntologyTranslator.class
 edu\ucdenver\ccp\knowtator\view\menus\ViewMenu.class
 edu\ucdenver\ccp\knowtator\view\text\TextPane$1.class
+edu\ucdenver\ccp\knowtator\listeners\ProjectListener.class
+edu\ucdenver\ccp\knowtator\view\text\AnnotationToolBar.class
 edu\ucdenver\ccp\knowtator\model\annotation\Annotation.class
 edu\ucdenver\ccp\knowtator\view\menus\ProfileMenu.class
 edu\ucdenver\ccp\knowtator\model\owl\OntologyTranslator$2.class

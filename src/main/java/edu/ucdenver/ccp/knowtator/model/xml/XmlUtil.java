@@ -76,7 +76,7 @@ public final class XmlUtil {
                 List<Node> knowtatorNodes = XmlUtil.asList(doc.getElementsByTagName(XmlTags.KNOWTATOR_PROJECT));
                 if (knowtatorNodes.size() > 0) {
                     Element knowtatorElement = (Element) knowtatorNodes.get(0);
-                    savable.readFromXml(knowtatorElement);
+                    savable.readFromXml(knowtatorElement, "");
                 }
 
                 List<Node> annotationNodes = XmlUtil.asList(doc.getElementsByTagName(OldXmlTags.ANNOTATIONS));

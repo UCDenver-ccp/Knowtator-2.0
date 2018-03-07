@@ -34,7 +34,6 @@ import org.apache.log4j.Logger;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
-import java.util.Map;
 
 public class ProfileMenu extends JMenu implements ProfileListener {
 
@@ -55,10 +54,9 @@ public class ProfileMenu extends JMenu implements ProfileListener {
 
         JMenuItem assignColorToClass = new JMenuItem("Assign color to current class");
         assignColorToClass.addActionListener(e -> {
-            Map<String, String[]> clsInfo = manager.getOWLAPIDataExtractor().getSelectedOwlClassInfo();
-            if (clsInfo != null) {
-                String classID = clsInfo.get("identifiers")[1];
-                String[] descendants = clsInfo.get("descendants");
+            String classID = manager.getOWLAPIDataExtractor().getSelectedOwlClassID();
+            String[] descendants = manager.getOWLAPIDataExtractor().getSelectedOwlClassDescendants();
+            if (classID != null) {
 
                 Profile profile = manager.getProfileManager().getCurrentProfile();
 
