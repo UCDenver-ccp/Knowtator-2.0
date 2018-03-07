@@ -287,8 +287,8 @@ public class GraphViewer implements ProfileListener, GraphListener {
         }
     }
 
-    private void addGraph(GraphSpace graph) {
-
+    public void addGraph(GraphSpace graph) {
+        log.warn("Knowtator: GraphViewer: Adding graph " + graph.getId());
 
         mxGraphComponent graphComponent = new mxGraphComponent(graph);
         graphComponent.getViewport().setOpaque(true);
@@ -389,7 +389,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
 
     @Override
     public void newGraph(GraphSpace graphSpace) {
-        addGraph(graphSpace);
+        if(graphSpace.getTextSource() == textPane.getTextSource()) addGraph(graphSpace);
     }
 
     @Override

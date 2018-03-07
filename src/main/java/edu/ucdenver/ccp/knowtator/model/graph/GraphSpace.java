@@ -32,8 +32,8 @@ import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
-import edu.ucdenver.ccp.knowtator.model.annotation.AnnotationManager;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
 import org.apache.log4j.Logger;
@@ -47,19 +47,19 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GraphSpace extends mxGraph implements Savable {
-
-
-    private Map<mxCell, Triple> edgeToTripleMap;
-    private Map<mxCell, Annotation> vertexToAnnotationMap;
-    private AnnotationManager annotationManager;
-    private String id;
-    private KnowtatorManager manager;
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(GraphSpace.class);
 
-    public GraphSpace(KnowtatorManager manager, AnnotationManager annotationManager, String id) {
+    private Map<mxCell, Triple> edgeToTripleMap;
+    private Map<mxCell, Annotation> vertexToAnnotationMap;
+    private String id;
+    private KnowtatorManager manager;
+    private TextSource textSource;
+
+
+    public GraphSpace(KnowtatorManager manager, TextSource textSource, String id) {
         this.manager = manager;
-        this.annotationManager = annotationManager;
+        this.textSource = textSource;
         this.id = id;
         edgeToTripleMap = new HashMap<>();
         vertexToAnnotationMap = new HashMap<>();
@@ -165,7 +165,7 @@ public class GraphSpace extends mxGraph implements Savable {
             String id = graphVertexElem.getAttribute(XmlTags.ID);
             String annotationID = graphVertexElem.getAttribute(XmlTags.ANNOTATION);
 
-            Annotation annotation = annotationManager.getAnnotation(annotationID);
+            Annotation annotation = textSource.getAnnotationManager().getAnnotation(annotationID);
             addVertex(id, annotation);
         }
 
@@ -247,5 +247,14 @@ public class GraphSpace extends mxGraph implements Savable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "GraphSpace: " + id;
+    }
+
+    public TextSource getTextSource() {
+        return textSource;
     }
 }

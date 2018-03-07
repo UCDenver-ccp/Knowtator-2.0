@@ -78,6 +78,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 
 		if (textSource != null) {
             graphViewer = new GraphViewer((JFrame) SwingUtilities.getWindowAncestor(view), manager, view, this);
+            textSource.getAnnotationManager().getGraphSpaces().forEach(graphSpace -> graphViewer.addGraph(graphSpace));
             manager.addProfileListener(graphViewer);
             manager.addGraphListener(graphViewer);
         }
