@@ -120,7 +120,7 @@ public class TextViewer extends JPanel implements TextSourceListener, ProjectLis
 
     @Override
     public void textSourceAdded(TextSource textSource) {
-//        addNewDocument(textSource);
+        addNewDocument(textSource);
 
     }
 

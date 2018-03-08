@@ -58,7 +58,7 @@ public class TextSourceManager implements Savable {
         } else {
             log.warn(docID + " is not null");
         }
-        manager.textSourceAddedEvent(newTextSource);
+
         return newTextSource;
     }
 

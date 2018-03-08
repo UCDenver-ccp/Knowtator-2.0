@@ -44,6 +44,7 @@ class GraphToolBar extends JToolBar {
 
         add(addGraphNodeCommand());
         add(removeGraphNodeCommand());
+        //TODO: Add arrows to switch between graph spaces
     }
 
     private JButton removeGraphNodeCommand() {
