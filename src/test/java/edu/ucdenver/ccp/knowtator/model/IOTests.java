@@ -1,3 +1,4 @@
+
 /*
  * MIT License
  *
@@ -42,7 +43,7 @@ public class IOTests {
 
     private KnowtatorManager manager;
 
-    private String[] projectFileNames = new String[]{"test_project", "old_project"};
+    private String[] projectFileNames = new String[]{"test_project", "old_project", "CRAFT_assertions"};
     private String[] articleFileNames = new String[]{"document1", "document2", "document3", "document1_old"};
     private String[] articleContent = new String[]{
             "This is a test document.",
@@ -66,6 +67,15 @@ public class IOTests {
                 projectName,
                 articleName)
         ).getFile());
+    }
+
+    @Test
+    public void loadLargeOld() {
+        int projectID = 2;
+        String projectFileName = projectFileNames[projectID];
+        File projectFile = getProjectFile(projectFileName);
+
+        manager.getProjectManager().loadProject(projectFile);
     }
 
     @Test
