@@ -49,11 +49,12 @@ class AnnotationToolBar extends JToolBar {
         add(decreaseTextSizeCommand());
         add(increaseTextSizeCommand());
 
+        add(addAnnotationCommand());
+        add(removeAnnotationCommand());
+
         add(previousSpanCommand());
         add(growSelectionStartCommand());
         add(shrinkSelectionStartCommand());
-        add(addAnnotationCommand());
-        add(removeAnnotationCommand());
         add(shrinkSelectionEndCommand());
         add(growSelectionEndCommand());
         add(nextSpanCommand());

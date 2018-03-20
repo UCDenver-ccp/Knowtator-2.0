@@ -204,7 +204,7 @@ public final class AnnotationManager implements Savable {
     }
 
     public GraphSpace addGraphSpace(String title) {
-        GraphSpace newGraphSpace = new GraphSpace(manager, this, title);
+        GraphSpace newGraphSpace = new GraphSpace(manager, textSource, title);
         graphSpaces.add(newGraphSpace);
         manager.newGraphEvent(newGraphSpace);
 
@@ -250,9 +250,11 @@ public final class AnnotationManager implements Savable {
         for (Node graphSpaceNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.GRAPH))) {
             graphSpaceElem = (Element) graphSpaceNode;
 
+
             id = graphSpaceElem.getAttribute(XmlTags.ID);
             graphSpace = addGraphSpace(id);
 
+            log.warn("\t\tXML: " + graphSpace);
             graphSpace.readFromXml(graphSpaceElem, content);
         }
     }

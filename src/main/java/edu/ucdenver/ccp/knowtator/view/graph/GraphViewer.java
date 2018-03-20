@@ -178,16 +178,16 @@ public class GraphViewer implements ProfileListener, GraphListener {
             }
         });
 
-        graph.addListener(mxEvent.REMOVE_CELLS, (sender, evt) -> {
-            Object[] cells = (Object[]) evt.getProperty("cells");
-            for (Object cell : cells) {
-                if (graph.getModel().isEdge(cell)) {
-                    graph.removeVertex((mxCell) cell);
-                    graph.reDrawVertices();
-//                    executeLayout(null);
-                }
-            }
-        });
+//        graph.addListener(mxEvent.REMOVE_CELLS, (sender, evt) -> {
+//            Object[] cells = (Object[]) evt.getProperty("cells");
+//            for (Object cell : cells) {
+//                if (graph.getModel().isEdge(cell)) {
+//                    graph.removeCell((mxCell) cell);
+//                    graph.reDrawVertices();
+////                    executeLayout(null);
+//                }
+//            }
+//        });
 
         graph.getSelectionModel().addListener(mxEvent.CHANGE, (sender, evt) -> {
             Collection selectedCells = (Collection) evt.getProperty("removed");
@@ -236,7 +236,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
 
     public void goToAnnotationVertex(String graphID, Annotation annotation) {
         if (annotation != null) {
-            currentGraphComponent = getGraphComponent(graphID);
+            showGraph(getGraphComponent(graphID));
             if (currentGraphComponent != null) {
                 GraphSpace graphSpace = (GraphSpace) currentGraphComponent.getGraph();
                 List<Object> vertices = graphSpace.getVerticesForAnnotation(annotation);
@@ -276,17 +276,19 @@ public class GraphViewer implements ProfileListener, GraphListener {
     }
 
     public void showGraph(mxGraphComponent graphComponent) {
-        if (currentGraphComponent != null) {
-            dialog.remove(currentGraphComponent);
+        if (graphComponent != null) {
+            if (currentGraphComponent != null) {
+                dialog.remove(currentGraphComponent);
+            }
+            currentGraphComponent = graphComponent;
+            dialog.add(currentGraphComponent, BorderLayout.CENTER);
+            graphLabel.setText(currentGraphComponent.getName());
+            ((GraphSpace) graphComponent.getGraph()).reDrawVertices();
         }
-        currentGraphComponent = graphComponent;
-        dialog.add(currentGraphComponent, BorderLayout.CENTER);
-        graphLabel.setText(currentGraphComponent.getName());
-        ((GraphSpace) graphComponent.getGraph()).reDrawVertices();
     }
 
-    private void addGraph(GraphSpace graph) {
-
+    public void addGraph(GraphSpace graph) {
+        log.warn("Knowtator: GraphViewer: Adding graph " + graph.getId());
 
         mxGraphComponent graphComponent = new mxGraphComponent(graph);
         graphComponent.getViewport().setOpaque(true);
@@ -355,7 +357,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
         if (currentGraphComponent != null) {
             GraphSpace graphSpace = (GraphSpace) currentGraphComponent.getGraph();
             Object cell = graphSpace.getSelectionModel().getCell();
-            graphSpace.removeVertex((mxCell) cell);
+            graphSpace.removeCell((mxCell) cell);
             graphSpace.reDrawVertices();
         }
     }
@@ -387,7 +389,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
 
     @Override
     public void newGraph(GraphSpace graphSpace) {
-        addGraph(graphSpace);
+        if(graphSpace.getTextSource() == textPane.getTextSource()) addGraph(graphSpace);
     }
 
     @Override

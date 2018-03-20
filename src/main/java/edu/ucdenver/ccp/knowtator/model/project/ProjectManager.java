@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.model.project;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -160,7 +161,8 @@ public class ProjectManager {
                 e.printStackTrace();
             }
         }
-        manager.getTextSourceManager().addTextSource(file.getName());
+        TextSource newTextSource = manager.getTextSourceManager().addTextSource(file.getName());
+        manager.textSourceAddedEvent(newTextSource);
     }
 
     public File getAnnotationsLocation() {
