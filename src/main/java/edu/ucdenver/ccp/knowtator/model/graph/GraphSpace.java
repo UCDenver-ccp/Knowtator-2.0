@@ -186,6 +186,11 @@ public class GraphSpace extends mxGraph implements Savable {
         }
     }
 
+    @Override
+    public void readFromOldXml(Element parent) {
+
+    }
+
     public void addTriple(String id, String subject, String object, String property, String quantifier, String value, String annotator) {
         Profile annotator1 = manager.getProfileManager().addNewProfile(annotator);
         mxCell subject1 = (mxCell) ((mxGraphModel) getModel()).getCells().get(subject);

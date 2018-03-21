@@ -112,4 +112,9 @@ public class TextSource implements Savable {
         }
 
     }
+
+    @Override
+    public void readFromOldXml(Element parent) {
+        annotationManager.readFromOldXml(parent);
+    }
 }

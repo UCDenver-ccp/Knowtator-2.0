@@ -33,13 +33,13 @@ public class OldXmlTags {
     public static final String SPAN_START = "start";
     public static final String SPAN_END = "end";
     public static final String ANNOTATION = "annotation";
-    static final String TEXT_SOURCE = "textSource";
+    public static final String TEXT_SOURCE = "textSource";
     // Annotations
-    static final String MENTION = "mention";
+    public static final String MENTION = "mention";
     static final String SPANNED_TEXT = "spannedText";
     // Class assigned to named entity
     static final String CLASS_MENTION = "classMention";
-    static final String MENTION_CLASS = "mentionClass";  // The named entity label
+    public static final String MENTION_CLASS = "mentionClass";  // The named entity label
     static final String HAS_SLOT_MENTION = "hasSlotMention";
     // Complex Slot Mentions
     static final String COMPLEX_SLOT_MENTION = "complexSlotMention";

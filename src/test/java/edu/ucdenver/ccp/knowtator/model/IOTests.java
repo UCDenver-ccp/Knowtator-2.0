@@ -71,6 +71,8 @@ public class IOTests {
 
     @Test
     public void loadLargeOld() {
+        manager = new KnowtatorManager();
+
         int projectID = 2;
         String projectFileName = projectFileNames[projectID];
         File projectFile = getProjectFile(projectFileName);

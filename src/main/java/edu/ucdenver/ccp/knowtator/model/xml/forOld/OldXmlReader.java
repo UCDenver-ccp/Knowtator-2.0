@@ -103,7 +103,7 @@ public class OldXmlReader {
         }
     }
 
-    private static List<Span> getSpanInfo(Element annotationElement) {
+    public static List<Span> getSpanInfo(Element annotationElement) {
         List<Span> spans = new ArrayList<>();
 
         Element spanElement;
@@ -123,7 +123,7 @@ public class OldXmlReader {
         return spans;
     }
 
-    private static HashMap<String, Element> getClassIDsFromXml(Element textSourceElement) {
+    public static HashMap<String, Element> getClassIDsFromXml(Element textSourceElement) {
         /*
         Next parse classes and add the annotations
          */

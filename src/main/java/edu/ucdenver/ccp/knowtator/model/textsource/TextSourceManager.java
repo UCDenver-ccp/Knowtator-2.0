@@ -28,6 +28,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
+import edu.ucdenver.ccp.knowtator.model.xml.forOld.OldXmlTags;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -81,6 +82,15 @@ public class TextSourceManager implements Savable {
             log.warn("\tXML: " + newTextSource);
             newTextSource.readFromXml(documentElement, content);
         }
+    }
+
+    @Override
+    public void readFromOldXml(Element parent) {
+
+        String docID = parent.getAttribute(OldXmlTags.TEXT_SOURCE).replace(".txt", "");
+        TextSource newTextSource = addTextSource(docID);
+        log.warn("\tOLD XML: " + newTextSource);
+        newTextSource.readFromOldXml(parent);
     }
 
     public KnowtatorManager getManager() {

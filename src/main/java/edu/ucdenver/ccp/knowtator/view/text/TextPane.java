@@ -35,7 +35,6 @@ import edu.ucdenver.ccp.knowtator.model.annotation.Span;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewer;
-import edu.ucdenver.ccp.knowtator.view.menus.ProfileMenu;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -314,9 +313,6 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 
 					String classID = annotation.getClassID();
 					lastColor = profile.getColor(classID);
-					if (lastColor == null) {
-						lastColor = ProfileMenu.pickAColor(classID, null, profile, manager.getProfileManager());
-					}
 				}
 			}
 
@@ -424,9 +420,6 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	public void addAnnotation() {
 		String className = manager.getOWLAPIDataExtractor().getSelectedOwlClassName();
 		String classID = manager.getOWLAPIDataExtractor().getSelectedOwlClassID();
-		String[] descendants = manager.getOWLAPIDataExtractor().getSelectedOwlClassDescendants();
-
-
 
 		if (classID == null) {
 			log.warn("No OWLClass selected");
@@ -450,10 +443,6 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		}
 
 //		log.warn(String.format("Class name: %s Class ID: %s", className, classID));
-
-        Profile profile = manager.getProfileManager().getCurrentProfile();
-
-        ProfileMenu.pickAColor(classID, descendants, profile, manager.getProfileManager());
 
         Span newSpan = new Span(
                 getSelectionStart(),

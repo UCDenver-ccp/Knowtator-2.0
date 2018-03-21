@@ -29,6 +29,7 @@ import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
+import edu.ucdenver.ccp.knowtator.model.xml.forOld.OldXmlReader;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -230,6 +231,12 @@ public class Annotation implements Savable {
 
 			}
 		}
+	}
+
+	@Override
+	public void readFromOldXml(Element parent) {
+		List<Span> spans = OldXmlReader.getSpanInfo(parent);
+		spans.forEach(this::addSpan);
 	}
 
 	public String getType() {

@@ -212,6 +212,11 @@ public class Span implements Savable {
 
 	}
 
+	@Override
+	public void readFromOldXml(Element parent) {
+
+	}
+
 
 	//	public static Span shortest(List<Span> spans) {
 //		if (spans.size() == 0)

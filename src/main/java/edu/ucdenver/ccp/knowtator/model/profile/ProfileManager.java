@@ -100,4 +100,9 @@ public class ProfileManager implements Savable {
             newProfile.readFromXml(profileElement, content);
         }
     }
+
+    @Override
+    public void readFromOldXml(Element parent) {
+
+    }
 }

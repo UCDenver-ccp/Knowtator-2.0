@@ -31,6 +31,8 @@ import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
+import edu.ucdenver.ccp.knowtator.model.xml.forOld.OldXmlReader;
+import edu.ucdenver.ccp.knowtator.model.xml.forOld.OldXmlTags;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -256,6 +258,54 @@ public final class AnnotationManager implements Savable {
 
             log.warn("\t\tXML: " + graphSpace);
             graphSpace.readFromXml(graphSpaceElem, content);
+        }
+    }
+
+    @Override
+    public void readFromOldXml(Element parent) {
+        Map<String, Element> classMentionToClassIDMap = OldXmlReader.getClassIDsFromXml(parent);
+//        Map<String, Element> complexSlotMentionToClassIDMap = getComplexSlotsFromXml(textSourceElement);
+
+        for (Node annotationNode : XmlUtil.asList(parent.getElementsByTagName(OldXmlTags.ANNOTATION))) {
+            Element annotationElement = (Element) annotationNode;
+
+            String profileID;
+            try {
+                profileID = annotationElement.getElementsByTagName(OldXmlTags.ANNOTATOR).item(0).getTextContent();
+            } catch (NullPointerException npe) {
+                profileID = "Default";
+            }
+
+            Profile profile = manager.getProfileManager().addNewProfile(profileID);
+
+
+
+            String annotationID = ((Element) annotationElement.getElementsByTagName(OldXmlTags.MENTION).item(0)).getAttribute(OldXmlTags.ID);
+            Element classElement = classMentionToClassIDMap.get(annotationID);
+
+            String className = classElement.getElementsByTagName(OldXmlTags.MENTION_CLASS).item(0).getTextContent();
+            String classID = ((Element) classElement.getElementsByTagName(OldXmlTags.MENTION_CLASS).item(0)).getAttribute(OldXmlTags.ID);
+
+            Annotation newAnnotation;
+//                    if (classID.equals(OldXmlTags.MENTION_CLASS_ID_IDENTITY)) {
+//                        newAnnotation = new Annotation(annotationID, textSource, profile);
+//                        Element complexSlotElement = complexSlotMentionToClassIDMap.get(((Element) classElement.getElementsByTagName(OldXmlTags.HAS_SLOT_MENTION).item(0)).getAttribute(OldXmlTags.HAS_SLOT_MENTION_ID));
+//                        if (((Element) complexSlotElement.getElementsByTagName(OldXmlTags.MENTION_SLOT).item(0)).getAttribute(OldXmlTags.MENTION_SLOT_ID).equals(OldXmlTags.MENTION_SLOT_ID_COREFERENCE)) {
+//                            for (Node complexSlotMentionValueNode : XmlUtil.asList(complexSlotElement.getElementsByTagName(OldXmlTags.COMPLEX_SLOT_MENTION_VALUE))) {
+//                                ((IdentityChainAnnotation) newAnnotation).addCoreferringAnnotation(((Element) complexSlotMentionValueNode).getAttribute(OldXmlTags.COMPLEX_SLOT_MENTION_VALUE_VALUE));
+//                            }
+//                        }
+//
+//                    } else {
+//
+            newAnnotation = new Annotation(classID, className, annotationID, textSource, profile, "identity");
+
+            newAnnotation.readFromOldXml(annotationElement);
+//            spans.forEach(newAnnotation::addSpan);
+            addAnnotation(newAnnotation);
+
+//            log.warn("OLD XML: " + newAnnotation);
+
         }
     }
 

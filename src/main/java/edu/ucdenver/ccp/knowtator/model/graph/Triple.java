@@ -64,4 +64,9 @@ public class Triple implements Savable {
     public void readFromXml(Element parent, String content) {
 
     }
+
+    @Override
+    public void readFromOldXml(Element parent) {
+
+    }
 }

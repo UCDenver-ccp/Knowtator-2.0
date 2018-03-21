@@ -54,6 +54,8 @@ public class Profile implements Savable {
     }
 
     public Color getColor(String classID) {
+        colors.putIfAbsent(classID, Color.CYAN);
+
         return colors.get(classID);
     }
 
@@ -95,5 +97,10 @@ public class Profile implements Savable {
             String color = highlighterElement.getAttribute(XmlTags.COLOR);
             addColor(classID, color);
         }
+    }
+
+    @Override
+    public void readFromOldXml(Element parent) {
+
     }
 }

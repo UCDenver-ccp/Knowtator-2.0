@@ -31,4 +31,6 @@ public interface Savable {
     void writeToXml(Document dom, Element parent);
 
     void readFromXml(Element parent, String content);
+
+    void readFromOldXml(Element parent);
 }

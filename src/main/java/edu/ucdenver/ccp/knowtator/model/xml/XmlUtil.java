@@ -25,8 +25,6 @@
 package edu.ucdenver.ccp.knowtator.model.xml;
 
 import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.textsource.TextSourceManager;
-import edu.ucdenver.ccp.knowtator.model.xml.forOld.OldXmlReader;
 import edu.ucdenver.ccp.knowtator.model.xml.forOld.OldXmlTags;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -81,7 +79,7 @@ public final class XmlUtil {
 
                 List<Node> annotationNodes = XmlUtil.asList(doc.getElementsByTagName(OldXmlTags.ANNOTATIONS));
                 if (annotationNodes.size() > 0) {
-                    OldXmlReader.readAnnotations((TextSourceManager) savable, annotationNodes);
+                    savable.readFromOldXml(doc.getDocumentElement());
                 }
             } catch (IllegalArgumentException | IOException | SAXException e) {
                 e.printStackTrace();
