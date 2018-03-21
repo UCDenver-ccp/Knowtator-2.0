@@ -31,30 +31,31 @@ import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class Triple implements Savable {
-    private final String id;
+public class Triple extends mxCell implements Savable {
     private final String quantifier;
     private final String quantifierValue;
-    private mxCell edge;
     private Profile annotator;
 
-    Triple(mxCell edge, String id, Profile annotator, String quantifier, String quantifierValue) {
-        this.edge = edge;
-        this.id = id;
-        this.annotator = annotator;
+    Triple(String id, mxCell source, mxCell target, String property, Profile annotator, String quantifier, String quantifierValue) {
+        super();
 
+        this.annotator = annotator;
         this.quantifier = quantifier;
         this.quantifierValue = quantifierValue;
-
+        setEdge(true);
+        setId(id);
+        setSource(source);
+        setTarget(target);
+        setValue(property);
     }
 
     public void writeToXml(Document dom, Element graphElem) {
         Element tripleElem = dom.createElement(XmlTags.TRIPLE);
         tripleElem.setAttribute(XmlTags.ID, id);
         tripleElem.setAttribute(XmlTags.ANNOTATOR, annotator.getId());
-        tripleElem.setAttribute(XmlTags.TRIPLE_SUBJECT, edge.getSource().getId());
-        tripleElem.setAttribute(XmlTags.TRIPLE_OBJECT, edge.getTarget().getId());
-        tripleElem.setAttribute(XmlTags.TRIPLE_PROPERTY, edge.getValue().toString());
+        tripleElem.setAttribute(XmlTags.TRIPLE_SUBJECT, getSource().getId());
+        tripleElem.setAttribute(XmlTags.TRIPLE_OBJECT, getTarget().getId());
+        tripleElem.setAttribute(XmlTags.TRIPLE_PROPERTY, getValue().toString());
         tripleElem.setAttribute(XmlTags.TRIPLE_QUANTIFIER, quantifier);
         tripleElem.setAttribute(XmlTags.TRIPLE_VALUE, quantifierValue);
         graphElem.appendChild(tripleElem);

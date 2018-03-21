@@ -41,16 +41,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GraphSpace extends mxGraph implements Savable {
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(GraphSpace.class);
 
-    private Map<mxCell, Triple> edgeToTripleMap;
     private Map<mxCell, Annotation> vertexToAnnotationMap;
     private String id;
     private KnowtatorManager manager;
@@ -61,7 +58,6 @@ public class GraphSpace extends mxGraph implements Savable {
         this.manager = manager;
         this.textSource = textSource;
         this.id = id;
-        edgeToTripleMap = new HashMap<>();
         vertexToAnnotationMap = new HashMap<>();
         setCellsResizable(false);
         setEdgeLabelsMovable(false);
@@ -71,38 +67,36 @@ public class GraphSpace extends mxGraph implements Savable {
         setCellsBendable(false);
     }
 
-    public void addTriple(mxCell edge, String id, Profile annotator, String property, String quantifier, String value) {
+    public void addTriple(mxCell source, mxCell target, String id, Profile annotator, String property, String quantifier, String quantifierValue) {
         if (id == null) {
-            id = String.format("edge_%d", edgeToTripleMap.size());
+            id = String.format("edge_%d", getChildEdges(getDefaultParent()).length);
         }
         while (tripleIdExists(id)) {
             int vertexIDIndex = Integer.parseInt(id.split("edge_")[1]);
             id = String.format("edge_%d", ++vertexIDIndex);
         }
 
-        edge.setValue(property);
-        edge.setId(id);
-        setCellStyles(mxConstants.STYLE_STARTARROW, "dash", new Object[]{edge});
-        setCellStyles(mxConstants.STYLE_STARTSIZE, "12", new Object[]{edge});
-        setCellStyles(mxConstants.STYLE_ENDARROW, "block", new Object[]{edge});
-        setCellStyles(mxConstants.STYLE_VERTICAL_ALIGN, "top", new Object[]{edge});
-        setCellStyles(mxConstants.STYLE_VERTICAL_LABEL_POSITION, "top", new Object[]{edge});
-        setCellStyles(mxConstants.STYLE_FONTSIZE, "16", new Object[]{edge});
-
-        Triple newTriple = new Triple(edge, id, annotator,
+        Triple newTriple = new Triple(
+                id,
+                source,
+                target,
+                property,
+                annotator,
                 quantifier,
-                value);
+                quantifierValue);
 
-        edgeToTripleMap.put(edge, newTriple);
+        setCellStyles(mxConstants.STYLE_STARTARROW, "dash", new Object[]{newTriple});
+        setCellStyles(mxConstants.STYLE_STARTSIZE, "12", new Object[]{newTriple});
+        setCellStyles(mxConstants.STYLE_ENDARROW, "block", new Object[]{newTriple});
+        setCellStyles(mxConstants.STYLE_VERTICAL_ALIGN, "top", new Object[]{newTriple});
+        setCellStyles(mxConstants.STYLE_VERTICAL_LABEL_POSITION, "top", new Object[]{newTriple});
+        setCellStyles(mxConstants.STYLE_FONTSIZE, "16", new Object[]{newTriple});
+
+        getModel().add(getDefaultParent(), newTriple, 1);
     }
 
     private boolean tripleIdExists(String id) {
-        for (mxCell edge : edgeToTripleMap.keySet()) {
-            if (edge.getId().equals(id)) {
-                return true;
-            }
-        }
-        return false;
+        return ((mxGraphModel) getModel()).getCells().get(id) != null;
     }
 
     public mxCell addVertex(String id, Annotation annotation) {
@@ -128,7 +122,6 @@ public class GraphSpace extends mxGraph implements Savable {
     public void removeCell(mxCell cell) {
         getModel().remove(cell);
         if (cell.isVertex()) vertexToAnnotationMap.remove(cell);
-        if (cell.isEdge()) edgeToTripleMap.remove(cell);
 
         reDrawVertices();
     }
@@ -142,7 +135,11 @@ public class GraphSpace extends mxGraph implements Savable {
             vertexElem.setAttribute(XmlTags.ANNOTATION, annotation.getID());
             graphElem.appendChild(vertexElem);
         });
-        edgeToTripleMap.values().forEach(triple -> triple.writeToXml(dom, graphElem));
+        Arrays.stream(getChildEdges(getDefaultParent())).forEach(cell -> {
+            if (cell instanceof Triple) {
+                ((Triple) cell).writeToXml(dom, graphElem);
+            }
+        });
         textSourceElement.appendChild(graphElem);
     }
 
@@ -173,15 +170,17 @@ public class GraphSpace extends mxGraph implements Savable {
             Element tripleElem = (Element) tripleNode;
 
             String id = tripleElem.getAttribute(XmlTags.ID);
-            String annotator = tripleElem.getAttribute(XmlTags.ANNOTATOR);
-            String subject = tripleElem.getAttribute(XmlTags.TRIPLE_SUBJECT);
-            String object = tripleElem.getAttribute(XmlTags.TRIPLE_OBJECT);
-            String property = tripleElem.getAttribute(XmlTags.TRIPLE_PROPERTY);
+            String annotatorID = tripleElem.getAttribute(XmlTags.ANNOTATOR);
+            String subjectID = tripleElem.getAttribute(XmlTags.TRIPLE_SUBJECT);
+            String objectID = tripleElem.getAttribute(XmlTags.TRIPLE_OBJECT);
+            String propertyID = tripleElem.getAttribute(XmlTags.TRIPLE_PROPERTY);
             String quantifier = tripleElem.getAttribute(XmlTags.TRIPLE_QUANTIFIER);
-            String value = tripleElem.getAttribute(XmlTags.TRIPLE_VALUE);
+            String quantifierValue = tripleElem.getAttribute(XmlTags.TRIPLE_VALUE);
 
-            addTriple(id, subject, object, property, quantifier, value, annotator);
-
+            Profile annotator = manager.getProfileManager().addNewProfile(annotatorID);
+            mxCell source = (mxCell) ((mxGraphModel) getModel()).getCells().get(subjectID);
+            mxCell target = (mxCell) ((mxGraphModel) getModel()).getCells().get(objectID);
+            addTriple(source, target, id, annotator, propertyID, quantifier, quantifierValue);
 
         }
     }
@@ -189,23 +188,6 @@ public class GraphSpace extends mxGraph implements Savable {
     @Override
     public void readFromOldXml(Element parent) {
 
-    }
-
-    public void addTriple(String id, String subject, String object, String property, String quantifier, String value, String annotator) {
-        Profile annotator1 = manager.getProfileManager().addNewProfile(annotator);
-        mxCell subject1 = (mxCell) ((mxGraphModel) getModel()).getCells().get(subject);
-        mxCell object1 = (mxCell) ((mxGraphModel) getModel()).getCells().get(object);
-        mxCell edge = (mxCell) insertEdge(getDefaultParent(), id, property, subject1, object1);
-        addTriple(edge,
-                id,
-                annotator1,
-                property,
-                quantifier, value);
-    }
-
-
-    public Map<mxCell, Triple> getTriples() {
-        return edgeToTripleMap;
     }
 
     public String getId() {

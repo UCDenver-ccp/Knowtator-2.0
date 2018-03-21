@@ -132,6 +132,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
             Object[] cells = (Object[]) evt.getProperty("cells");
             for (Object cell : cells) {
                 if (graph.getModel().isEdge(cell) && ((mxCell) cell).getValue() != null && ((mxCell) cell).getValue().equals("")) {
+                    mxCell edge = (mxCell) cell;
                     String propertyName = manager.getOWLAPIDataExtractor().getSelectedPropertyID();
 
                     if (propertyName == null) {
@@ -144,9 +145,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
                             propertyName = field1.getText();
                         }
                     }
-                    if (propertyName == null) {
-                        graph.getModel().remove(cell);
-                    } else {
+                    if (propertyName != null) {
                         JTextField quantifierField = new JTextField(10);
                         JTextField valueField = new JTextField(10);
                         JPanel restrictionPanel = new JPanel();
@@ -164,14 +163,21 @@ public class GraphViewer implements ProfileListener, GraphListener {
                             quantifier = quantifierField.getText();
                             value = valueField.getText();
                         }
+
+                        log.warn(String.format("Target: %s, Source: %s", edge.getSource(), edge.getTarget()));
+
                         graph.addTriple(
-                                (mxCell) cell,
+                                (mxCell) edge.getSource(),
+                                (mxCell) edge.getTarget(),
                                 null,
                                 manager.getProfileManager().getCurrentProfile(),
                                 propertyName,
                                 quantifier,
                                 value);
                     }
+
+                    graph.getModel().remove(edge);
+
                     graph.reDrawVertices();
 //                    executeLayout(null);
                 }

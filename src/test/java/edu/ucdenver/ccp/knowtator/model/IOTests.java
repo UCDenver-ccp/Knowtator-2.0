@@ -26,10 +26,11 @@
 package edu.ucdenver.ccp.knowtator.model;
 
 import com.google.common.io.Files;
+import com.mxgraph.model.mxCell;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.annotation.AnnotationManager;
-import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -106,7 +107,7 @@ public class IOTests {
         int numSpans = annotationManager.getSpanMap(null, null).size();
         int numGraphSpaces = annotationManager.getGraphSpaces().size();
         int numVertices = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getVertices().size()).sum();
-        int numTriples = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getTriples().size()).sum();
+        int numTriples = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildEdges(graphSpace.getDefaultParent()).length).sum();
 
         assert numGraphSpaces == 1 : "There were " + numGraphSpaces + " graph spaces";
         assert numVertices == 2 : "There were " + numVertices + " vertices";
@@ -129,7 +130,7 @@ public class IOTests {
         numSpans = annotationManager.getSpanMap(null, null).size();
         numGraphSpaces = annotationManager.getGraphSpaces().size();
         numVertices = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getVertices().size()).sum();
-        numTriples = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getTriples().size()).sum();
+        numTriples = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildEdges(graphSpace.getDefaultParent()).length).sum();
 
         assert numGraphSpaces == 1 : "There were " + numGraphSpaces + " graph spaces";
         assert numVertices == 2 : "There were " + numVertices + " vertices";
@@ -255,13 +256,13 @@ public class IOTests {
         GraphSpace graphSpace = annotationManager.addGraphSpace("graph_1");
 
 
-        graphSpace.addVertex("node_0", annotationManager.getAnnotation("mention_0"));
-        graphSpace.addVertex("node_1", annotationManager.getAnnotation("mention_1"));
-        graphSpace.addTriple("edge_0", "node_0", "node_1", "property_0", "", "", "Default");
+        mxCell v1 = graphSpace.addVertex("node_0", annotationManager.getAnnotation("mention_0"));
+        mxCell v2 = graphSpace.addVertex("node_1", annotationManager.getAnnotation("mention_1"));
+        graphSpace.addTriple(v1, v2, "edge_1", manager.getProfileManager().getCurrentProfile(), "property_0", "", "");
 
         int numGraphSpaces = annotationManager.getGraphSpaces().size();
         int numVertices = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace1 -> graphSpace1.getVertices().size()).sum();
-        int numTriples = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace1 -> graphSpace1.getTriples().size()).sum();
+        int numTriples = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace1 -> graphSpace1.getChildEdges(graphSpace.getDefaultParent()).length).sum();
 
         assert numGraphSpaces == 2 : "There were " + numGraphSpaces + " graph spaces";
         assert numVertices == 4 : "There were " + numVertices + " vertices";
