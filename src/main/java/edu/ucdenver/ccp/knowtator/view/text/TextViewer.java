@@ -34,8 +34,9 @@ import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
-import java.util.ArrayList;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 import java.util.List;
 
 public class TextViewer extends JPanel implements TextSourceListener, ProjectListener {
@@ -142,6 +143,8 @@ public class TextViewer extends JPanel implements TextSourceListener, ProjectLis
 
     @Override
     public void projectLoaded() {
-        manager.getTextSourceManager().getTextSources().values().forEach(this::addNewDocument);
+        List<Map.Entry<String,TextSource>> textsourceEntries = new ArrayList<>(manager.getTextSourceManager().getTextSources().entrySet());
+        textsourceEntries.sort(Comparator.comparing(Map.Entry::getKey));
+        textsourceEntries.forEach(entry -> addNewDocument(entry.getValue()));
     }
 }
