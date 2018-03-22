@@ -43,15 +43,15 @@ class GraphToolBar extends JToolBar {
         setFloatable(false);
 
         add(addGraphNodeCommand());
-        add(removeGraphNodeCommand());
+        add(removeCellCommand());
         //TODO: Add arrows to switch between graph spaces
     }
 
-    private JButton removeGraphNodeCommand() {
+    private JButton removeCellCommand() {
         JButton button = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.REMOVE));
-        button.setToolTipText("Remove node");
+        button.setToolTipText("Remove vertex or edge");
 
-        button.addActionListener(e -> graphViewer.removeSelectedVertex());
+        button.addActionListener(e -> graphViewer.removeSelectedCell());
 
         return button;
     }

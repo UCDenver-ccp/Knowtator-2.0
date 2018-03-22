@@ -25,7 +25,6 @@
 package edu.ucdenver.ccp.knowtator.view.menus;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.KnowtatorView;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -40,12 +39,10 @@ public class ProjectMenu extends JMenu {
     private static Logger log = LogManager.getLogger(ProjectMenu.class);
 
     private KnowtatorManager manager;
-    private KnowtatorView view;
 
-    public ProjectMenu(KnowtatorManager manager, KnowtatorView view) {
+    public ProjectMenu(KnowtatorManager manager) {
         super("Project");
         this.manager = manager;
-        this.view = view;
 
 
         add(newProjectCommand());
@@ -137,7 +134,14 @@ public class ProjectMenu extends JMenu {
 
     private JMenuItem saveProjectCommand() {
         JMenuItem save = new JMenuItem("Save Project");
-        save.addActionListener(e -> manager.getProjectManager().saveProject());
+        save.addActionListener(e -> {
+            try {
+                manager.getProjectManager().saveProject();
+            } catch (Exception e1) {
+                JOptionPane.showMessageDialog(null, String.format( "Something went wrong trying to save your project:/n %s",
+                        e1.getMessage()));
+            }
+        });
 
         return save;
     }

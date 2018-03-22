@@ -145,6 +145,7 @@ public class ProjectManager {
                 File textSourceFile = new File(annotationsLocation, textSource.getDocID() + ".xml");
 
                 XmlUtil.createXML(textSource, textSourceFile);
+
             });
         }
     }

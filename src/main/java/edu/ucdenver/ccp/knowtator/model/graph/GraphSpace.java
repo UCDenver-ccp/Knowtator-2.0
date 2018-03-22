@@ -41,49 +41,61 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class GraphSpace extends mxGraph implements Savable {
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(GraphSpace.class);
 
-    private Map<mxCell, Annotation> vertexToAnnotationMap;
     private String id;
     private KnowtatorManager manager;
     private TextSource textSource;
-
 
     public GraphSpace(KnowtatorManager manager, TextSource textSource, String id) {
         this.manager = manager;
         this.textSource = textSource;
         this.id = id;
-        vertexToAnnotationMap = new HashMap<>();
         setCellsResizable(false);
         setEdgeLabelsMovable(false);
         setAllowDanglingEdges(false);
         setCellsEditable(false);
         setConnectableEdges(false);
         setCellsBendable(false);
+        setResetEdgesOnMove(true);
     }
 
-    public void addTriple(mxCell source, mxCell target, String id, Profile annotator, String property, String quantifier, String quantifierValue) {
-        if (id == null) {
-            id = String.format("edge_%d", getChildEdges(getDefaultParent()).length);
-        }
-        while (tripleIdExists(id)) {
-            int vertexIDIndex = Integer.parseInt(id.split("edge_")[1]);
-            id = String.format("edge_%d", ++vertexIDIndex);
+    /*
+    ADDERS
+     */
+
+    private void addCellToGraph(mxCell cell) {
+        getModel().beginUpdate();
+        try {
+            addCell(cell);
+            log.warn(String.format("Cell: %s", cell));
+        } finally {
+            reDrawGraph();
+            getModel().endUpdate();
         }
 
-        Triple newTriple = new Triple(
-                id,
-                source,
-                target,
-                property,
-                annotator,
-                quantifier,
-                quantifierValue);
+        reDrawGraph();
+    }
+
+    public AnnotationNode addNode(String id, Annotation annotation) {
+        id = verifyID(id, "node");
+
+        AnnotationNode newVertex = new AnnotationNode(id, annotation);
+        addCellToGraph(newVertex);
+
+        return newVertex;
+    }
+
+    public void addTriple(AnnotationNode source, AnnotationNode target, String id, Profile annotator, String property, String quantifier, String quantifierValue) {
+        id = verifyID(id, "edge");
+
+        Triple newTriple = new Triple(id, source, target, property, annotator, quantifier, quantifierValue);
 
         setCellStyles(mxConstants.STYLE_STARTARROW, "dash", new Object[]{newTriple});
         setCellStyles(mxConstants.STYLE_STARTSIZE, "12", new Object[]{newTriple});
@@ -92,67 +104,35 @@ public class GraphSpace extends mxGraph implements Savable {
         setCellStyles(mxConstants.STYLE_VERTICAL_LABEL_POSITION, "top", new Object[]{newTriple});
         setCellStyles(mxConstants.STYLE_FONTSIZE, "16", new Object[]{newTriple});
 
-        getModel().add(getDefaultParent(), newTriple, 1);
+        addCellToGraph(newTriple);
     }
 
-    private boolean tripleIdExists(String id) {
-        return ((mxGraphModel) getModel()).getCells().get(id) != null;
-    }
-
-    public mxCell addVertex(String id, Annotation annotation) {
-
-        mxCell newVertex = new mxCell(annotation.getSpannedText(), new mxGeometry(20, 20, 80, 80), "fontSize=16;fontColor=black;strokeColor=black");
-        newVertex.setVertex(true);
-        newVertex.setConnectable(true);
-
+    private String verifyID(String id, String idPrefix) {
         if (id == null) {
-            id = String.format("node_%d", vertexToAnnotationMap.size());
+            id = String.format("%s_%d", idPrefix, getChildCells(getDefaultParent()).length);
         }
         while (((mxGraphModel) getModel()).getCells().containsKey(id)) {
-            int vertexIDIndex = Integer.parseInt(id.split("node_")[1]);
-            id = String.format("node_%d", ++vertexIDIndex);
+            int vertexIDIndex = Integer.parseInt(id.split(String.format("%s_", idPrefix))[1]);
+            id = String.format("%s_%d", idPrefix, ++vertexIDIndex);
         }
-        newVertex.setId(id);
 
-        vertexToAnnotationMap.put(newVertex, annotation);
-        addCell(newVertex, getDefaultParent());
-        return newVertex;
+        return id;
     }
 
-    public void removeCell(mxCell cell) {
+    /*
+    REMOVERS
+     */
+
+    public void removeSelectedCell() {
+        Object cell = getSelectionModel().getCell();
+        Arrays.stream(getEdges(cell)).forEach(edge -> getModel().remove(edge));
         getModel().remove(cell);
-        if (cell.isVertex()) vertexToAnnotationMap.remove(cell);
-
-        reDrawVertices();
+        reDrawGraph();
     }
 
-    public void writeToXml(Document dom, Element textSourceElement) {
-        Element graphElem = dom.createElement(XmlTags.GRAPH);
-        graphElem.setAttribute(XmlTags.ID, id);
-        vertexToAnnotationMap.forEach((vertex, annotation) -> {
-            Element vertexElem = dom.createElement(XmlTags.VERTEX);
-            vertexElem.setAttribute(XmlTags.ID, vertex.getId());
-            vertexElem.setAttribute(XmlTags.ANNOTATION, annotation.getID());
-            graphElem.appendChild(vertexElem);
-        });
-        Arrays.stream(getChildEdges(getDefaultParent())).forEach(cell -> {
-            if (cell instanceof Triple) {
-                ((Triple) cell).writeToXml(dom, graphElem);
-            }
-        });
-        textSourceElement.appendChild(graphElem);
-    }
-
-    private void setVertexStyle(mxCell vertex) {
-        String classID = vertexToAnnotationMap.get(vertex).getClassID();
-        Profile profile = manager.getProfileManager().getCurrentProfile();
-        String color = Integer.toHexString(profile.getColor(classID).getRGB()).substring(2);
-        String shape = mxConstants.SHAPE_RECTANGLE;
-
-        setCellStyles(mxConstants.STYLE_SHAPE, shape, new Object[]{vertex});
-        setCellStyles(mxConstants.STYLE_FILLCOLOR, color, new Object[]{vertex});
-
-    }
+    /*
+    I/O
+     */
 
     @Override
     public void readFromXml(Element parent, String content) {
@@ -163,7 +143,7 @@ public class GraphSpace extends mxGraph implements Savable {
             String annotationID = graphVertexElem.getAttribute(XmlTags.ANNOTATION);
 
             Annotation annotation = textSource.getAnnotationManager().getAnnotation(annotationID);
-            addVertex(id, annotation);
+            addNode(id, annotation);
         }
 
         for (Node tripleNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.TRIPLE))) {
@@ -178,9 +158,12 @@ public class GraphSpace extends mxGraph implements Savable {
             String quantifierValue = tripleElem.getAttribute(XmlTags.TRIPLE_VALUE);
 
             Profile annotator = manager.getProfileManager().addNewProfile(annotatorID);
-            mxCell source = (mxCell) ((mxGraphModel) getModel()).getCells().get(subjectID);
-            mxCell target = (mxCell) ((mxGraphModel) getModel()).getCells().get(objectID);
-            addTriple(source, target, id, annotator, propertyID, quantifier, quantifierValue);
+            AnnotationNode source = (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(subjectID);
+            AnnotationNode target = (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(objectID);
+
+            if (target != null && source != null) {
+                addTriple(source, target, id, annotator, propertyID, quantifier, quantifierValue);
+            }
 
         }
     }
@@ -190,21 +173,44 @@ public class GraphSpace extends mxGraph implements Savable {
 
     }
 
-    public String getId() {
-        return id;
+    @Override
+    public void writeToXml(Document dom, Element textSourceElement) {
+        Element graphElem = dom.createElement(XmlTags.GRAPH);
+        graphElem.setAttribute(XmlTags.ID, id);
+        Arrays.stream(getChildVertices(getDefaultParent())).forEach(vertex -> {
+            if (vertex instanceof  AnnotationNode) {
+                ((AnnotationNode) vertex).writeToXml(dom, graphElem);
+            }
+        });
+        Arrays.stream(getChildEdges(getDefaultParent())).forEach(edge -> {
+            if (edge instanceof Triple) {
+                ((Triple) edge).writeToXml(dom, graphElem);
+            }
+        });
+        textSourceElement.appendChild(graphElem);
     }
 
-    public void reDrawVertices() {
+    @Override
+    public String toString() {
+        return "GraphSpace: " + id;
+    }
+
+    /*
+    UPDATE
+     */
+    public void reDrawGraph() {
+//        log.warn("Redrawing Graph");
         getModel().beginUpdate();
         try {
-            getVertices().keySet().forEach(v -> {
-                setVertexStyle(v);
+            Arrays.stream(getChildVertices(getDefaultParent())).forEach(v -> {
+                setVertexStyle((AnnotationNode) v);
                 updateCellSize(v);
-                mxGeometry g = v.getGeometry();
-                g.setHeight(g.getHeight() + 50);
-                g.setWidth(g.getWidth() + 50);
 
                 getView().validateCell(v);
+            });
+            Arrays.stream(getChildEdges(getDefaultParent())).forEach(edge -> {
+                updateCellSize(edge);
+                getView().validateCell(edge);
             });
         } finally {
             getModel().endUpdate();
@@ -212,34 +218,45 @@ public class GraphSpace extends mxGraph implements Savable {
         }
     }
 
-    public Map<mxCell, Annotation> getVertices() {
-        return vertexToAnnotationMap;
+    private void setVertexStyle(AnnotationNode vertex) {
+        mxGeometry g = vertex.getGeometry();
+        g.setHeight(g.getHeight() + 200);
+        g.setWidth(g.getWidth() + 200);
+
+        String classID = vertex.getAnnotation().getClassID();
+        Profile profile = manager.getProfileManager().getCurrentProfile();
+        String color = Integer.toHexString(profile.getColor(classID).getRGB()).substring(2);
+        String shape = mxConstants.SHAPE_RECTANGLE;
+
+        setCellStyles(mxConstants.STYLE_SHAPE, shape, new Object[]{vertex});
+        setCellStyles(mxConstants.STYLE_FILLCOLOR, color, new Object[]{vertex});
+
     }
 
-    public mxCell containsVertexCorrespondingToAnnotation(Annotation selectedAnnotation) {
-        for (Map.Entry<mxCell, Annotation> entry : vertexToAnnotationMap.entrySet()) {
-            if (entry.getValue().equals(selectedAnnotation)) {
-                return entry.getKey();
+    /*
+    GETTERS, CHECKERS, SETTERS
+     */
+
+    public String getId() {
+        return id;
+    }
+
+    public AnnotationNode containsVertexCorrespondingToAnnotation(Annotation selectedAnnotation) {
+        for (Object o : getChildVertices(getDefaultParent())) {
+            if (o instanceof AnnotationNode && ((AnnotationNode) o).getAnnotation().equals(selectedAnnotation)) {
+                return (AnnotationNode) o;
             }
         }
         return null;
     }
 
     public List<Object> getVerticesForAnnotation(Annotation annotation) {
-        return vertexToAnnotationMap.entrySet().stream()
-                .filter(map -> annotation.equals(map.getValue()))
-                .map(Map.Entry::getKey)
+        return Arrays.stream(getChildVertices(getDefaultParent()))
+                .filter(o -> o instanceof AnnotationNode && annotation.equals(((AnnotationNode) o).getAnnotation()))
                 .collect(Collectors.toList());
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Override
-    public String toString() {
-        return "GraphSpace: " + id;
-    }
+    public void setId(String id) { this.id = id; }
 
     public TextSource getTextSource() {
         return textSource;

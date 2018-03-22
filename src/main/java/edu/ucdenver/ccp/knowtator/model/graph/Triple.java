@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator.model.graph;
 
 import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxGeometry;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
@@ -37,7 +38,9 @@ public class Triple extends mxCell implements Savable {
     private Profile annotator;
 
     Triple(String id, mxCell source, mxCell target, String property, Profile annotator, String quantifier, String quantifierValue) {
-        super();
+        super(property, new mxGeometry(), null);
+
+        getGeometry().setRelative(true);
 
         this.annotator = annotator;
         this.quantifier = quantifier;

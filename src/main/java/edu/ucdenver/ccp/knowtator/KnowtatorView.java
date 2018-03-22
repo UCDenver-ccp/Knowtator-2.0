@@ -122,7 +122,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         infoPanel = new InfoPanel(this);
         findPanel = new FindPanel(this);
 
-        projectMenu = new ProjectMenu(manager, this);
+        projectMenu = new ProjectMenu(manager);
         viewMenu = new ViewMenu(manager);
         profileMenu = new ProfileMenu(manager);
         iaaMenu = new IAAMenu(manager);
