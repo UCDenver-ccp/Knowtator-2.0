@@ -133,6 +133,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         manager.addProjectListener(textViewer);
         manager.addProfileListener(profileMenu);
 
+        getOWLModelManager().addOntologyChangeListener(manager.getTextSourceManager());
+
         DropTarget dt = new DropTarget(this, this);
         dt.setActive(true);
 
@@ -164,8 +166,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         infoSplitPane.add(findPanel, JSplitPane.TOP);
         infoSplitPane.add(infoPanelSP, JSplitPane.BOTTOM);
         add(annotationSplitPane);
-
-
     }
 
 

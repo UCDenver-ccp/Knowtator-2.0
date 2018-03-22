@@ -37,10 +37,13 @@ import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
 import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
 import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,7 +77,7 @@ public class GraphSpace extends mxGraph implements Savable {
         getModel().beginUpdate();
         try {
             addCell(cell);
-            log.warn(String.format("Cell: %s", cell));
+//            log.warn(String.format("Cell: %s", cell));
         } finally {
             reDrawGraph();
             getModel().endUpdate();
@@ -92,7 +95,7 @@ public class GraphSpace extends mxGraph implements Savable {
         return newVertex;
     }
 
-    public void addTriple(AnnotationNode source, AnnotationNode target, String id, Profile annotator, String property, String quantifier, String quantifierValue) {
+    public void addTriple(AnnotationNode source, AnnotationNode target, String id, Profile annotator, Object property, String quantifier, String quantifierValue) {
         id = verifyID(id, "edge");
 
         Triple newTriple = new Triple(id, source, target, property, annotator, quantifier, quantifierValue);
@@ -195,6 +198,18 @@ public class GraphSpace extends mxGraph implements Savable {
         return "GraphSpace: " + id;
     }
 
+    public void connectEdgesToProperties() {
+        Arrays.stream(getChildEdges(getDefaultParent())).forEach(edge -> {
+            if (edge instanceof Triple) {
+                Object value = ((Triple) edge).getValue();
+                if (value instanceof String) {
+                    OWLObjectProperty property = manager.getOWLAPIDataExtractor().getOWLObjectPropertyByID((String) value);
+                    ((Triple) edge).setValue(property);
+                }
+            }
+        });
+    }
+
     /*
     UPDATE
      */
@@ -202,14 +217,20 @@ public class GraphSpace extends mxGraph implements Savable {
 //        log.warn("Redrawing Graph");
         getModel().beginUpdate();
         try {
-            Arrays.stream(getChildVertices(getDefaultParent())).forEach(v -> {
-                setVertexStyle((AnnotationNode) v);
-                updateCellSize(v);
+            Arrays.stream(getChildVertices(getDefaultParent())).forEach(vertex -> {
 
-                getView().validateCell(v);
+                if (vertex instanceof AnnotationNode) {
+                    setVertexStyle((AnnotationNode) vertex);
+                }
+                updateCellSize(vertex);
+
+                getView().validateCell(vertex);
             });
             Arrays.stream(getChildEdges(getDefaultParent())).forEach(edge -> {
                 updateCellSize(edge);
+//                if (edge instanceof Triple) {
+//                    ((Triple) edge).setValue(((Triple) edge).getValue());
+//                }
                 getView().validateCell(edge);
             });
         } finally {
@@ -260,5 +281,23 @@ public class GraphSpace extends mxGraph implements Savable {
 
     public TextSource getTextSource() {
         return textSource;
+    }
+
+    public void reassignProperty(OWLEntity oldProperty, OWLEntity newProperty) {
+        log.warn(String.format("Old Property: %s, New Property: %s", oldProperty, newProperty));
+
+        List<Triple> edges = getTriplesCorrespondingToProperty(oldProperty);
+        edges.forEach(edge -> edge.setValue(newProperty));
+    }
+
+    private List<Triple> getTriplesCorrespondingToProperty(OWLEntity property) {
+        List<Triple> edges = new ArrayList<>();
+        Arrays.stream(getChildEdges(getDefaultParent())).forEach(edge -> {
+            if (((Triple) edge).getValue() == property) {
+                edges.add((Triple) edge);
+            }
+        });
+
+        return edges;
     }
 }

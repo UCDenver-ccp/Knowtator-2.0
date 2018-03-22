@@ -43,8 +43,8 @@ public class OWLAPIDataExtractor {
     private OWLModelManager owlModelManager;
 
 
-    private OWLAnnotationProperty getOWLAnnotationPropertyByName(String annotationPropertyName) {
-        return owlModelManager.getOWLEntityFinder().getOWLAnnotationProperty(annotationPropertyName);
+    private OWLAnnotationProperty getOWLAnnotationPropertyByName() {
+        return owlModelManager.getOWLEntityFinder().getOWLAnnotationProperty("name");
     }
 
     private String extractAnnotation(OWLEntity ent, OWLAnnotationProperty annotationProperty) {
@@ -82,13 +82,8 @@ public class OWLAPIDataExtractor {
         return owlWorkSpace.getOWLSelectionModel().getLastSelectedClass();
     }
 
-    private OWLObjectProperty getSelectedProperty() {
+    public OWLObjectProperty getSelectedProperty() {
         return owlWorkSpace.getOWLSelectionModel().getLastSelectedObjectProperty();
-    }
-
-    public String getSelectedPropertyID() {
-        OWLObjectProperty property = getSelectedProperty();
-        return property == null ? null : getOwlEntID(property);
     }
 
     public String getSelectedOwlClassID() {
@@ -99,7 +94,7 @@ public class OWLAPIDataExtractor {
 
     public String getSelectedOwlClassName() {
         OWLClass cls = getSelectedClass();
-        String annotationValue = extractAnnotation(cls, getOWLAnnotationPropertyByName( "name"));
+        String annotationValue = extractAnnotation(cls, getOWLAnnotationPropertyByName());
         annotationValue = annotationValue == null ? extractAnnotation(cls, owlModelManager.getOWLDataFactory().getRDFSLabel()) : annotationValue;
         return annotationValue == null ? getOwlEntID(cls) : annotationValue;
     }

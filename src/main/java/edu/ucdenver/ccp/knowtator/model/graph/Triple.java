@@ -27,8 +27,8 @@ package edu.ucdenver.ccp.knowtator.model.graph;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -37,7 +37,7 @@ public class Triple extends mxCell implements Savable {
     private final String quantifierValue;
     private Profile annotator;
 
-    Triple(String id, mxCell source, mxCell target, String property, Profile annotator, String quantifier, String quantifierValue) {
+    Triple(String id, mxCell source, mxCell target, Object property, Profile annotator, String quantifier, String quantifierValue) {
         super(property, new mxGeometry(), null);
 
         getGeometry().setRelative(true);
@@ -49,7 +49,7 @@ public class Triple extends mxCell implements Savable {
         setId(id);
         setSource(source);
         setTarget(target);
-        setValue(property);
+//        setValue(property);
     }
 
     public void writeToXml(Document dom, Element graphElem) {

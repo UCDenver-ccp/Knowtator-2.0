@@ -140,6 +140,7 @@ public class ProjectMenu extends JMenu {
             } catch (Exception e1) {
                 JOptionPane.showMessageDialog(null, String.format( "Something went wrong trying to save your project:/n %s",
                         e1.getMessage()));
+                e1.printStackTrace();
             }
         });
 

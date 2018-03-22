@@ -41,7 +41,6 @@ public class Annotation implements Savable {
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(Annotation.class);
 
-
     private String className;
     private String classID;
     private String type;

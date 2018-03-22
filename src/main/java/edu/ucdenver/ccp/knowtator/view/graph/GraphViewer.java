@@ -42,6 +42,8 @@ import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.view.text.TextPane;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.swing.*;
 import java.awt.*;
@@ -139,19 +141,19 @@ public class GraphViewer implements ProfileListener, GraphListener {
                     mxICell source = edge.getSource();
                     mxICell target = edge.getTarget();
                     if (source instanceof AnnotationNode && target instanceof AnnotationNode) {
-                        String propertyName = manager.getOWLAPIDataExtractor().getSelectedPropertyID();
+                        Object property = manager.getOWLAPIDataExtractor().getSelectedProperty();
 
-                        if (propertyName == null) {
+                        if (property == null) {
                             log.warn("No Object property selected");
                             JTextField field1 = new JTextField();
                             Object[] message = {
                                     "Relationship ID", field1,
                             };
                             if (JOptionPane.showConfirmDialog(null, message, "Enter an ID for this property", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
-                                propertyName = field1.getText();
+                                property = field1.getText();
                             }
                         }
-                        if (propertyName != null) {
+                        if (property != null) {
                             JTextField quantifierField = new JTextField(10);
                             JTextField valueField = new JTextField(10);
                             JPanel restrictionPanel = new JPanel();
@@ -175,7 +177,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
                                     (AnnotationNode) target,
                                     null,
                                     manager.getProfileManager().getCurrentProfile(),
-                                    propertyName,
+                                    property,
                                     quantifier,
                                     value);
 
@@ -216,7 +218,12 @@ public class GraphViewer implements ProfileListener, GraphListener {
                         view.owlEntitySelectionChanged(manager.getOWLAPIDataExtractor().getOWLClassByID(annotation.getClassID()));
                         graph.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
                     } else {
-                        view.owlEntitySelectionChanged(manager.getOWLAPIDataExtractor().getOWLObjectPropertyByID((String) ((mxCell) cell).getValue()));
+                        Object value = ((mxCell) cell).getValue();
+                        if (value instanceof OWLProperty) {
+                            view.owlEntitySelectionChanged((OWLObjectProperty) value);
+                        } else if (value instanceof String) {
+                            view.owlEntitySelectionChanged(manager.getOWLAPIDataExtractor().getOWLObjectPropertyByID((String) ((mxCell) cell).getValue()));
+                        }
                     }
                 }
             }

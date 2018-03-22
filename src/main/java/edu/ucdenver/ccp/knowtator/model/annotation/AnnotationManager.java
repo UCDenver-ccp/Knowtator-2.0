@@ -317,4 +317,5 @@ public final class AnnotationManager implements Savable {
         graphSpaces.remove(graphSpace);
         manager.removeGraphEvent(graphSpace);
     }
+
 }

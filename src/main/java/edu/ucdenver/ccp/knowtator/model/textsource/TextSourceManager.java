@@ -31,14 +31,16 @@ import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
 import edu.ucdenver.ccp.knowtator.model.xml.forOld.OldXmlTags;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.util.OWLEntityCollector;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.annotation.Nonnull;
+import java.util.*;
 
-public class TextSourceManager implements Savable {
+public class TextSourceManager implements Savable, OWLOntologyChangeListener {
     private Logger log = Logger.getLogger(TextSourceManager.class);
 
 
@@ -95,5 +97,44 @@ public class TextSourceManager implements Savable {
 
     public KnowtatorManager getManager() {
         return manager;
+    }
+
+    /*
+    React to changes in the ontology. For now, only handling entity renaming
+     */
+    @Override
+    public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) {
+
+        log.warn("Ontology Change Event");
+        textSources.values().forEach(textSource -> textSource.getAnnotationManager().getGraphSpaces().forEach(graphSpace -> {
+            Set<OWLEntity> possiblyAddedEntities = new HashSet<>();
+            Set<OWLEntity> possiblyRemovedEntities = new HashSet<>();
+            OWLEntityCollector addedCollector = new OWLEntityCollector(possiblyAddedEntities);
+            OWLEntityCollector removedCollector = new OWLEntityCollector(possiblyRemovedEntities);
+
+            for(OWLOntologyChange chg : changes) {
+                if(chg.isAxiomChange()) {
+                    OWLAxiomChange axChg = (OWLAxiomChange) chg;
+//                    log.warn(String.format("Axiom Change: %s", axChg));
+                    if (axChg.getAxiom().getAxiomType() == AxiomType.DECLARATION) {
+                        if (axChg instanceof AddAxiom) {
+                            axChg.getAxiom().accept(addedCollector);
+                        } else {
+                            axChg.getAxiom().accept(removedCollector);
+                        }
+                    }
+                }
+            }
+            possiblyAddedEntities.forEach(owlEntity -> log.warn(String.format("Added: %s", owlEntity)));
+
+            possiblyRemovedEntities.forEach(owlEntity -> log.warn(String.format("Removed: %s", owlEntity)));
+
+            /*
+            For now, I will assume that entity removed is the one that existed and the one
+            that is added is the new name for it.
+             */
+            graphSpace.reassignProperty(possiblyRemovedEntities.iterator().next(), possiblyAddedEntities.iterator().next());
+            graphSpace.reDrawGraph();
+        }));
     }
 }
