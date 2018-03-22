@@ -312,6 +312,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
         graphComponentList.add(graphComponent);
 
         showGraph(graphComponent);
+        executeLayout();
 
         graphViewMenu.updateMenus();
     }
