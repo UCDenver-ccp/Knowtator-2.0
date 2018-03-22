@@ -204,7 +204,11 @@ public class GraphSpace extends mxGraph implements Savable {
                 Object value = ((Triple) edge).getValue();
                 if (value instanceof String) {
                     OWLObjectProperty property = manager.getOWLAPIDataExtractor().getOWLObjectPropertyByID((String) value);
-                    ((Triple) edge).setValue(property);
+                    if (property != null) {
+                        ((Triple) edge).setValue(property);
+                    } else {
+                        log.warn(String.format("Edge not found in ontology: %s", ((Triple) edge).getValue()));
+                    }
                 }
             }
         });
