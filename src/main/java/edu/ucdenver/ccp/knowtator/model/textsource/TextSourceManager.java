@@ -26,9 +26,9 @@ package edu.ucdenver.ccp.knowtator.model.textsource;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
-import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
-import edu.ucdenver.ccp.knowtator.model.xml.forOld.OldXmlTags;
+import edu.ucdenver.ccp.knowtator.model.io.xml.XmlTags;
+import edu.ucdenver.ccp.knowtator.model.io.xml.XmlUtil;
+import edu.ucdenver.ccp.knowtator.model.io.xml.forOld.OldXmlTags;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.*;

@@ -28,7 +28,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileManager;
-import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
+import edu.ucdenver.ccp.knowtator.model.io.xml.XmlUtil;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;

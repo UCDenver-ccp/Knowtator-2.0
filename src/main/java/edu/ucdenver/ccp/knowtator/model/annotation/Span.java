@@ -31,7 +31,7 @@ package edu.ucdenver.ccp.knowtator.model.annotation;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.xml.XmlTags;
+import edu.ucdenver.ccp.knowtator.model.io.xml.XmlTags;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -70,7 +70,7 @@ public class Span implements Savable {
 	}
 
 	public boolean equals(Object object) {
-		if (object == null || !(object instanceof Span)) {
+		if (!(object instanceof Span)) {
 			return false;
 		}
 		Span span = (Span) object;
@@ -183,7 +183,7 @@ public class Span implements Savable {
 		this.annotation = annotation;
 	}
 
-	public String getSpannedText() {
+	String getSpannedText() {
 		return spannedText;
 	}
 

@@ -27,7 +27,7 @@ package edu.ucdenver.ccp.knowtator.model.project;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
-import edu.ucdenver.ccp.knowtator.model.xml.XmlUtil;
+import edu.ucdenver.ccp.knowtator.model.io.xml.XmlUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
