@@ -22,24 +22,41 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model;
+package edu.ucdenver.ccp.knowtator.model.io.brat;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.List;
-import java.util.Map;
+/**
+ Based on http://brat.nlplab.org/standoff.html
+ **/
+public class StandoffTags {
 
-public interface Savable {
-    void writeToKnowtatorXml(Document dom, Element parent);
+    final static String columnDelimiter = "\t";
 
-    void readFromKnowtatorXml(Element parent, String content);
+    public final static char TEXTBOUNDANNOTATION = 'T';
+    public final static char RELATION = 'R';
+    public final static char EVENT = 'E';
+    private final static char ATTRIBUTE = 'A';
+    private final static char MODIFICATION = 'M';
+    private final static char NORMALIZATION = 'N';
+    private final static char NOTE = '#';
 
-    void readFromOldKnowtatorXml(Element parent);
+    // Note that this is not a standard tag. It is included to pass the document ID.
+    public final static char DOCID = 'D';
 
-    void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content);
+    final static char[] tagList = {
+            TEXTBOUNDANNOTATION,
+            RELATION,
+            EVENT,
+            ATTRIBUTE,
+            MODIFICATION,
+            NORMALIZATION,
+            NOTE,
+            DOCID
+    };
 
-    void writeToBratStandoff(Writer writer) throws IOException;
+
+    public final static String spanDelimiter = ";";
+    public final static String textBoundAnnotationTripleDelimiter = " ";
+    public final static String relationTripleDelimiter = " ";
+    public final static String relationTripleRoleIDDelimiter = ":";
 }

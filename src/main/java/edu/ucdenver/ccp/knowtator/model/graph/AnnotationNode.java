@@ -32,6 +32,11 @@ import edu.ucdenver.ccp.knowtator.model.io.xml.XmlTags;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.util.List;
+import java.util.Map;
+
 public class AnnotationNode extends mxCell implements Savable{
 
     private Annotation annotation;
@@ -46,7 +51,7 @@ public class AnnotationNode extends mxCell implements Savable{
     }
 
     @Override
-    public void writeToXml(Document dom, Element parent) {
+    public void writeToKnowtatorXml(Document dom, Element parent) {
         Element vertexElem = dom.createElement(XmlTags.VERTEX);
         vertexElem.setAttribute(XmlTags.ID, getId());
         vertexElem.setAttribute(XmlTags.ANNOTATION, annotation.getID());
@@ -54,12 +59,23 @@ public class AnnotationNode extends mxCell implements Savable{
     }
 
     @Override
-    public void readFromXml(Element parent, String content) {
+    public void readFromKnowtatorXml(Element parent, String content) {
 
     }
 
     @Override
-    public void readFromOldXml(Element parent) {
+    public void readFromOldKnowtatorXml(Element parent) {
+
+    }
+
+    @Override
+    public void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content) {
+
+    }
+
+    @SuppressWarnings("RedundantThrows")
+    @Override
+    public void writeToBratStandoff(Writer writer) throws  IOException {
 
     }
 

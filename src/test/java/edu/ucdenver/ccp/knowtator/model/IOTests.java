@@ -45,7 +45,7 @@ public class IOTests {
     private KnowtatorManager manager;
 
     private String[] projectFileNames = new String[]{"test_project", "old_project"};
-    private String[] articleFileNames = new String[]{"document1", "document2", "document3", "document1_old"};
+    private String[] articleFileNames = new String[]{"document1", "document2", "document3", "document1_old", "brat_test"};
     private String[] articleContent = new String[]{
             "This is a test document.",
             "A second test document has appeared!",
@@ -67,6 +67,14 @@ public class IOTests {
                 "/%s/Articles/%s.txt",
                 projectName,
                 articleName)
+        ).getFile());
+    }
+
+    private File getBratFile(String projectName, String bratFileName) {
+        return new File(getClass().getResource(String.format(
+                "/%s/Annotations/%s.ann",
+                projectName,
+                bratFileName)
         ).getFile());
     }
 
@@ -294,5 +302,24 @@ public class IOTests {
         successfulLoad();
 
         projectDirectory.deleteOnExit();
+    }
+
+    @Test
+    public void successfulExportToBrat() {
+        manager = new KnowtatorManager();
+
+        int projectID = 0;
+        int articleID = 4;
+        String projectFileName = projectFileNames[projectID];
+        File projectFile = getProjectFile(projectFileName);
+        String article = articleFileNames[articleID];
+
+        File bratAnnotationFile = getBratFile(projectFileName, article);
+
+        File outputFile = new File("E:/Documents/Test/brat_test.ann");
+
+        manager.getProjectManager().loadProject(projectFile);
+        manager.getProjectManager().importBrat(bratAnnotationFile);
+        manager.getProjectManager().exportToBrat(manager.getTextSourceManager().getTextSources().get(article), outputFile);
     }
 }

@@ -36,9 +36,9 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.TreeSet;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.*;
 
 public class Span implements Savable {
 	@SuppressWarnings("unused")
@@ -199,7 +199,7 @@ public class Span implements Savable {
 		return getEnd() - getStart();
 	}
 
-	public void writeToXml(Document dom, Element annotationElem) {
+	public void writeToKnowtatorXml(Document dom, Element annotationElem) {
 		Element spanElement = dom.createElement(XmlTags.SPAN);
 		spanElement.setAttribute(XmlTags.SPAN_START, String.valueOf(start));
 		spanElement.setAttribute(XmlTags.SPAN_END, String.valueOf(end));
@@ -208,13 +208,23 @@ public class Span implements Savable {
 	}
 
 	@Override
-	public void readFromXml(Element parent, String content) {
+	public void readFromKnowtatorXml(Element parent, String content) {
 
 	}
 
 	@Override
-	public void readFromOldXml(Element parent) {
+	public void readFromOldKnowtatorXml(Element parent) {
 
+	}
+
+	@Override
+	public void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content) {
+
+	}
+
+	@Override
+	public void writeToBratStandoff(Writer writer) throws IOException {
+		writer.append(String.format("%d %d", start, end));
 	}
 
 

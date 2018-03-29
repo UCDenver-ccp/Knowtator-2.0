@@ -32,6 +32,7 @@ import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.model.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.model.io.xml.XmlTags;
@@ -43,9 +44,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GraphSpace extends mxGraph implements Savable {
@@ -138,7 +142,7 @@ public class GraphSpace extends mxGraph implements Savable {
      */
 
     @Override
-    public void readFromXml(Element parent, String content) {
+    public void readFromKnowtatorXml(Element parent, String content) {
         for (Node graphVertexNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.VERTEX))) {
             Element graphVertexElem = (Element) graphVertexNode;
 
@@ -172,22 +176,64 @@ public class GraphSpace extends mxGraph implements Savable {
     }
 
     @Override
-    public void readFromOldXml(Element parent) {
+    public void readFromOldKnowtatorXml(Element parent) {
 
     }
 
     @Override
-    public void writeToXml(Document dom, Element textSourceElement) {
+    public void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content) {
+        annotationMap.get(StandoffTags.RELATION).forEach(annotation -> {
+            String id = annotation[0];
+
+            String[] relationTriple = annotation[1].split(StandoffTags.relationTripleDelimiter);
+            String propertyID = relationTriple[0];
+            String subjectAnnotationID = relationTriple[1].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
+            String objectAnnotationID = relationTriple[2].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
+
+            Profile annotator = manager.getProfileManager().getDefaultProfile();
+
+            Annotation subjectAnnotation = textSource.getAnnotationManager().getAnnotation(subjectAnnotationID);
+            List<Object> subjectAnnotationVertices = getVerticesForAnnotation(subjectAnnotation);
+            AnnotationNode source;
+            if (subjectAnnotationVertices.size() == 0) {
+                source = addNode(null, subjectAnnotation);
+            } else {
+                source = (AnnotationNode) subjectAnnotationVertices.get(0);
+            }
+
+            Annotation objectAnnotation = textSource.getAnnotationManager().getAnnotation(objectAnnotationID);
+            List<Object> objectAnnotationVertices = getVerticesForAnnotation(objectAnnotation);
+            AnnotationNode target;
+            if (objectAnnotationVertices.size() == 0) {
+                target = addNode(null, objectAnnotation);
+            } else {
+                target = (AnnotationNode) objectAnnotationVertices.get(0);
+            }
+
+            addTriple(source, target, id, annotator, propertyID, "", "");
+
+
+        });
+    }
+
+    @SuppressWarnings("RedundantThrows")
+    @Override
+    public void writeToBratStandoff(Writer writer) throws IOException {
+
+    }
+
+    @Override
+    public void writeToKnowtatorXml(Document dom, Element textSourceElement) {
         Element graphElem = dom.createElement(XmlTags.GRAPH);
         graphElem.setAttribute(XmlTags.ID, id);
         Arrays.stream(getChildVertices(getDefaultParent())).forEach(vertex -> {
             if (vertex instanceof  AnnotationNode) {
-                ((AnnotationNode) vertex).writeToXml(dom, graphElem);
+                ((AnnotationNode) vertex).writeToKnowtatorXml(dom, graphElem);
             }
         });
         Arrays.stream(getChildEdges(getDefaultParent())).forEach(edge -> {
             if (edge instanceof Triple) {
-                ((Triple) edge).writeToXml(dom, graphElem);
+                ((Triple) edge).writeToKnowtatorXml(dom, graphElem);
             }
         });
         textSourceElement.appendChild(graphElem);

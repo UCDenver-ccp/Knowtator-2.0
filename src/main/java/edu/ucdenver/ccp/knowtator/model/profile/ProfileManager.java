@@ -33,12 +33,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ProfileManager implements Savable {
 
     private static final Logger log = Logger.getLogger(KnowtatorManager.class);
+    private final Profile defaultProfile;
     private Profile currentProfile;
 
     private Map<String, Profile> profiles;
@@ -48,7 +52,7 @@ public class ProfileManager implements Savable {
     public ProfileManager(KnowtatorManager manager) {
         this.manager = manager;
         profiles = new HashMap<>();
-        addNewProfile("Default");
+        defaultProfile = addNewProfile("Default");
     }
 
     public Profile addNewProfile(String profileID) {
@@ -85,24 +89,39 @@ public class ProfileManager implements Savable {
         return profiles;
     }
 
-    public void writeToXml(Document dom, Element root) {
-        profiles.values().forEach(profile -> profile.writeToXml(dom, root));
+    public void writeToKnowtatorXml(Document dom, Element root) {
+        profiles.values().forEach(profile -> profile.writeToKnowtatorXml(dom, root));
     }
 
     @Override
-    public void readFromXml(Element parent, String content) {
+    public void readFromKnowtatorXml(Element parent, String content) {
         for (Node profileNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.PROFILE))) {
             Element profileElement = (Element) profileNode;
             String profileID = profileElement.getAttribute(XmlTags.ID);
 
             Profile newProfile = addNewProfile(profileID);
             log.warn("\tXML: " + newProfile);
-            newProfile.readFromXml(profileElement, content);
+            newProfile.readFromKnowtatorXml(profileElement, content);
         }
     }
 
     @Override
-    public void readFromOldXml(Element parent) {
+    public void readFromOldKnowtatorXml(Element parent) {
 
+    }
+
+    @Override
+    public void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content) {
+
+    }
+
+    @SuppressWarnings("RedundantThrows")
+    @Override
+    public void writeToBratStandoff(Writer writer) throws IOException {
+
+    }
+
+    public Profile getDefaultProfile() {
+        return defaultProfile;
     }
 }

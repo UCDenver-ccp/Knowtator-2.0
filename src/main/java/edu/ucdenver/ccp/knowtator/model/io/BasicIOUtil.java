@@ -22,24 +22,13 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model;
+package edu.ucdenver.ccp.knowtator.model.io;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import edu.ucdenver.ccp.knowtator.model.Savable;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
 
-public interface Savable {
-    void writeToKnowtatorXml(Document dom, Element parent);
-
-    void readFromKnowtatorXml(Element parent, String content);
-
-    void readFromOldKnowtatorXml(Element parent);
-
-    void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content);
-
-    void writeToBratStandoff(Writer writer) throws IOException;
+public interface BasicIOUtil {
+    void read(Savable savable, File file);
+    void write(Savable savable, File file);
 }

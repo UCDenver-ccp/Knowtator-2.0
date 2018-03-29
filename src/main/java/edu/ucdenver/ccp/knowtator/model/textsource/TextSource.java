@@ -37,6 +37,9 @@ import org.w3c.dom.Element;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.Writer;
+import java.util.List;
+import java.util.Map;
 
 public class TextSource implements Savable {
     @SuppressWarnings("unused")
@@ -95,18 +98,18 @@ public class TextSource implements Savable {
         return String.format("TextSource: docID: %s", docID);
     }
     @Override
-    public void writeToXml(Document dom, Element parent) {
+    public void writeToKnowtatorXml(Document dom, Element parent) {
         Element textSourceElement = dom.createElement(XmlTags.DOCUMENT);
         parent.appendChild(textSourceElement);
         textSourceElement.setAttribute(XmlTags.ID, docID);
-        annotationManager.writeToXml(dom, textSourceElement);
+        annotationManager.writeToKnowtatorXml(dom, textSourceElement);
     }
 
     @Override
-    public void readFromXml(Element parent, String content) {
+    public void readFromKnowtatorXml(Element parent, String content) {
         try {
             content = FileUtils.readFileToString(file, "UTF-8");
-            annotationManager.readFromXml(parent, content);
+            annotationManager.readFromKnowtatorXml(parent, content);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -114,7 +117,22 @@ public class TextSource implements Savable {
     }
 
     @Override
-    public void readFromOldXml(Element parent) {
-        annotationManager.readFromOldXml(parent);
+    public void readFromOldKnowtatorXml(Element parent) {
+        annotationManager.readFromOldKnowtatorXml(parent);
+    }
+
+    @Override
+    public void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content) {
+        try {
+            content = FileUtils.readFileToString(file, "UTF-8");
+            annotationManager.readFromBratStandoff(annotationMap, content);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void writeToBratStandoff(Writer writer) throws IOException {
+        annotationManager.writeToBratStandoff(writer);
     }
 }

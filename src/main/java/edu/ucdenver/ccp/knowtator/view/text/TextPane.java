@@ -100,11 +100,11 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 
 					@Override
 					public void mousePressed(MouseEvent e) {
-						press_offset = viewToModel(e.getPoint());
+						press_offset = viewToModel2D(e.getPoint());
 					}
 
 					@Override
-					public void mouseReleased(MouseEvent e) { handleMouseRelease(e, press_offset, viewToModel(e.getPoint())); }
+					public void mouseReleased(MouseEvent e) { handleMouseRelease(e, press_offset, viewToModel2D(e.getPoint())); }
 
 					@Override
 					public void mouseEntered(MouseEvent e) { }
@@ -277,7 +277,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
     	if (isVisible) {
     		if (selectedSpan != null) {
 				try {
-					scrollRectToVisible(modelToView(selectedSpan.getStart()));
+					scrollRectToVisible((Rectangle) modelToView2D(selectedSpan.getStart()));
 				} catch (BadLocationException | NullPointerException ignored) {
 
 				}

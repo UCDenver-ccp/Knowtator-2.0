@@ -33,10 +33,16 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.util.List;
+import java.util.Map;
+
 public class Triple extends mxCell implements Savable {
     private final String quantifier;
     private final String quantifierValue;
     private Profile annotator;
+    private String bratID;
 
     Triple(String id, mxCell source, mxCell target, Object property, Profile annotator, String quantifier, String quantifierValue) {
         super(property, new mxGeometry(), null);
@@ -53,7 +59,7 @@ public class Triple extends mxCell implements Savable {
 //        setValue(property);
     }
 
-    public void writeToXml(Document dom, Element graphElem) {
+    public void writeToKnowtatorXml(Document dom, Element graphElem) {
         Element tripleElem = dom.createElement(XmlTags.TRIPLE);
         tripleElem.setAttribute(XmlTags.ID, id);
         tripleElem.setAttribute(XmlTags.ANNOTATOR, annotator.getId());
@@ -66,12 +72,31 @@ public class Triple extends mxCell implements Savable {
     }
 
     @Override
-    public void readFromXml(Element parent, String content) {
+    public void readFromKnowtatorXml(Element parent, String content) {
 
     }
 
     @Override
-    public void readFromOldXml(Element parent) {
+    public void readFromOldKnowtatorXml(Element parent) {
 
+    }
+
+    @Override
+    public void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content) {
+
+    }
+
+    @SuppressWarnings("RedundantThrows")
+    @Override
+    public void writeToBratStandoff(Writer writer) throws IOException {
+
+    }
+
+    public String getBratID() {
+        return bratID;
+    }
+
+    public void setBratID(String bratID) {
+        this.bratID = bratID;
     }
 }

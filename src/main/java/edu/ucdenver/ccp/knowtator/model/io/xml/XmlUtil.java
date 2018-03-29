@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator.model.io.xml;
 
 import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.model.io.xml.forOld.OldXmlTags;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -48,7 +49,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.RandomAccess;
 
-public final class XmlUtil {
+public final class XmlUtil implements BasicIOUtil {
     private static final Logger log = Logger.getLogger(XmlUtil.class);
 
 
@@ -56,7 +57,8 @@ public final class XmlUtil {
         return n.getLength() == 0 ? Collections.emptyList() : new NodeListWrapper(n);
     }
 
-    public static void readXML(Savable savable, File file) {
+    @Override
+    public void read(Savable savable, File file) {
         try {
             /*
             doc parses the XML into a graph
@@ -74,12 +76,12 @@ public final class XmlUtil {
                 List<Node> knowtatorNodes = XmlUtil.asList(doc.getElementsByTagName(XmlTags.KNOWTATOR_PROJECT));
                 if (knowtatorNodes.size() > 0) {
                     Element knowtatorElement = (Element) knowtatorNodes.get(0);
-                    savable.readFromXml(knowtatorElement, "");
+                    savable.readFromKnowtatorXml(knowtatorElement, "");
                 }
 
                 List<Node> annotationNodes = XmlUtil.asList(doc.getElementsByTagName(OldXmlTags.ANNOTATIONS));
                 if (annotationNodes.size() > 0) {
-                    savable.readFromOldXml(doc.getDocumentElement());
+                    savable.readFromOldKnowtatorXml(doc.getDocumentElement());
                 }
             } catch (IllegalArgumentException | IOException | SAXException e) {
                 e.printStackTrace();
@@ -89,8 +91,8 @@ public final class XmlUtil {
         }
     }
 
-
-    public static void createXML(Savable savable, File file) {
+    @Override
+    public void write(Savable savable, File file) {
         Document dom;
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -102,7 +104,7 @@ public final class XmlUtil {
 
             Element root = dom.createElement(XmlTags.KNOWTATOR_PROJECT);
             dom.appendChild(root);
-            savable.writeToXml(dom, root);
+            savable.writeToKnowtatorXml(dom, root);
 
             try {
                 Transformer tr = TransformerFactory.newInstance().newTransformer();

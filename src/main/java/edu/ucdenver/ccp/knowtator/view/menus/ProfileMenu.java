@@ -91,7 +91,7 @@ public class ProfileMenu extends JMenu implements ProfileListener {
                 fileChooser.setCurrentDirectory(manager.getProjectManager().getProjectLocation());
 
                 if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    XmlUtil.readXML(manager.getProfileManager(), fileChooser.getSelectedFile());
+                    manager.getProjectManager().loadProfiles(fileChooser.getSelectedFile());
                 }
 
 

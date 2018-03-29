@@ -25,20 +25,24 @@
 package edu.ucdenver.ccp.knowtator.model.annotation;
 
 import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
+import edu.ucdenver.ccp.knowtator.model.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.model.io.xml.XmlTags;
 import edu.ucdenver.ccp.knowtator.model.io.xml.XmlUtil;
 import edu.ucdenver.ccp.knowtator.model.io.xml.forOld.OldXmlReader;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.*;
 
 public class Annotation implements Savable {
-    @SuppressWarnings("unused")
+
+	@SuppressWarnings("unused")
     private Logger log = Logger.getLogger(Annotation.class);
 
     private String className;
@@ -51,6 +55,8 @@ public class Annotation implements Savable {
 	private String id;
 	private TextSource textSource;
 	private Profile annotator;
+
+	private String bratID;
 
 	public Annotation(String classID, String className, String annotationID, TextSource textSource, Profile annotator, String type) {
 		this.textSource = textSource;
@@ -194,7 +200,7 @@ public class Annotation implements Savable {
 		return overlappingAnnotations;
 	}
 
-	public void writeToXml(Document dom, Element textSourceElement) {
+	public void writeToKnowtatorXml(Document dom, Element textSourceElement) {
 		Element annotationElem = dom.createElement(XmlTags.ANNOTATION);
 		annotationElem.setAttribute(XmlTags.ID, id);
 		annotationElem.setAttribute(XmlTags.ANNOTATOR, annotator.getId());
@@ -205,13 +211,13 @@ public class Annotation implements Savable {
 		classElement.setTextContent(className);
 		annotationElem.appendChild(classElement);
 
-		spans.forEach(span -> span.writeToXml(dom, annotationElem));
+		spans.forEach(span -> span.writeToKnowtatorXml(dom, annotationElem));
 
 		textSourceElement.appendChild(annotationElem);
 	}
 
 	@Override
-	public void readFromXml(Element parent, String content) {
+	public void readFromKnowtatorXml(Element parent, String content) {
         Element spanElement;
         int spanStart;
         int spanEnd;
@@ -233,13 +239,49 @@ public class Annotation implements Savable {
 	}
 
 	@Override
-	public void readFromOldXml(Element parent) {
+	public void readFromOldKnowtatorXml(Element parent) {
 		List<Span> spans = OldXmlReader.getSpanInfo(parent);
 		spans.forEach(this::addSpan);
 	}
 
+	@Override
+	public void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content) {
+		String[] triple = annotationMap.get(StandoffTags.TEXTBOUNDANNOTATION).get(0)[1].split(StandoffTags.textBoundAnnotationTripleDelimiter);
+		int start =  Integer.parseInt(triple[1]);
+		for (int i=2; i<triple.length; i++) {
+			int end = Integer.parseInt(triple[i].split(StandoffTags.spanDelimiter)[0]);
+			String spannedText = content.substring(start, end);
+
+			Span newSpan = new Span(start, end, spannedText);
+			addSpan(newSpan);
+
+			if (i != triple.length-1) {
+				start = Integer.parseInt(triple[i].split(StandoffTags.spanDelimiter)[1]);
+			}
+		}
+	}
+
+	@Override
+	public void writeToBratStandoff(Writer writer) throws IOException {
+		Iterator<Span> spanIterator = spans.iterator();
+		for (int i=0; i<spans.size(); i++) {
+			spanIterator.next().writeToBratStandoff(writer);
+			if (i != spans.size()-1) {
+				writer.append(";");
+			}
+		}
+	}
+
 	public String getType() {
 		return type;
+	}
+
+	void setBratID(String bratID) {
+		this.bratID = bratID;
+	}
+
+	String getBratID() {
+		return bratID;
 	}
 
 

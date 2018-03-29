@@ -26,23 +26,28 @@ package edu.ucdenver.ccp.knowtator.model.annotation;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
+import edu.ucdenver.ccp.knowtator.model.graph.Triple;
+import edu.ucdenver.ccp.knowtator.model.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.model.io.xml.XmlTags;
 import edu.ucdenver.ccp.knowtator.model.io.xml.XmlUtil;
 import edu.ucdenver.ccp.knowtator.model.io.xml.forOld.OldXmlReader;
 import edu.ucdenver.ccp.knowtator.model.io.xml.forOld.OldXmlTags;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
-public final class AnnotationManager implements Savable {
+public class AnnotationManager implements Savable {
 
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(AnnotationManager.class);
@@ -213,13 +218,13 @@ public final class AnnotationManager implements Savable {
         return newGraphSpace;
     }
 
-    public void writeToXml(Document dom, Element textSourceElement) {
-        getAnnotations().forEach(annotation -> annotation.writeToXml(dom, textSourceElement));
-        graphSpaces.forEach(graphSpace -> graphSpace.writeToXml(dom, textSourceElement));
+    public void writeToKnowtatorXml(Document dom, Element textSourceElement) {
+        getAnnotations().forEach(annotation -> annotation.writeToKnowtatorXml(dom, textSourceElement));
+        graphSpaces.forEach(graphSpace -> graphSpace.writeToKnowtatorXml(dom, textSourceElement));
     }
 
     @Override
-    public void readFromXml(Element parent, String content) {
+    public void readFromKnowtatorXml(Element parent, String content) {
         Element annotationElement;
         String annotationID;
         String profileID;
@@ -244,7 +249,7 @@ public final class AnnotationManager implements Savable {
 
             newAnnotation = new Annotation(classID, className, annotationID, textSource, profile, type);
 //            log.warn("\t\tXML: " + newAnnotation);
-            newAnnotation.readFromXml(annotationElement, content);
+            newAnnotation.readFromKnowtatorXml(annotationElement, content);
 
             addAnnotation(newAnnotation);
         }
@@ -257,36 +262,39 @@ public final class AnnotationManager implements Savable {
             graphSpace = addGraphSpace(id);
 
             log.warn("\t\tXML: " + graphSpace);
-            graphSpace.readFromXml(graphSpaceElem, content);
+            graphSpace.readFromKnowtatorXml(graphSpaceElem, content);
         }
     }
 
     @Override
-    public void readFromOldXml(Element parent) {
+    public void readFromOldKnowtatorXml(Element parent) {
         Map<String, Element> classMentionToClassIDMap = OldXmlReader.getClassIDsFromXml(parent);
 //        Map<String, Element> complexSlotMentionToClassIDMap = getComplexSlotsFromXml(textSourceElement);
 
-        for (Node annotationNode : XmlUtil.asList(parent.getElementsByTagName(OldXmlTags.ANNOTATION))) {
-            Element annotationElement = (Element) annotationNode;
+        Element annotationElement;
+        String annotationID;
+        Element classElement;
+        String className;
+        String classID;
+        Annotation newAnnotation;
 
-            String profileID;
+        for (Node annotationNode : XmlUtil.asList(parent.getElementsByTagName(OldXmlTags.ANNOTATION))) {
+            annotationElement = (Element) annotationNode;
+
+            Profile profile;
             try {
-                profileID = annotationElement.getElementsByTagName(OldXmlTags.ANNOTATOR).item(0).getTextContent();
+                String profileID = annotationElement.getElementsByTagName(OldXmlTags.ANNOTATOR).item(0).getTextContent();
+                profile = manager.getProfileManager().addNewProfile(profileID);
             } catch (NullPointerException npe) {
-                profileID = "Default";
+                profile = manager.getProfileManager().getDefaultProfile();
             }
 
-            Profile profile = manager.getProfileManager().addNewProfile(profileID);
+            annotationID = ((Element) annotationElement.getElementsByTagName(OldXmlTags.MENTION).item(0)).getAttribute(OldXmlTags.ID);
+            classElement = classMentionToClassIDMap.get(annotationID);
 
+            className = classElement.getElementsByTagName(OldXmlTags.MENTION_CLASS).item(0).getTextContent();
+            classID = ((Element) classElement.getElementsByTagName(OldXmlTags.MENTION_CLASS).item(0)).getAttribute(OldXmlTags.ID);
 
-
-            String annotationID = ((Element) annotationElement.getElementsByTagName(OldXmlTags.MENTION).item(0)).getAttribute(OldXmlTags.ID);
-            Element classElement = classMentionToClassIDMap.get(annotationID);
-
-            String className = classElement.getElementsByTagName(OldXmlTags.MENTION_CLASS).item(0).getTextContent();
-            String classID = ((Element) classElement.getElementsByTagName(OldXmlTags.MENTION_CLASS).item(0)).getAttribute(OldXmlTags.ID);
-
-            Annotation newAnnotation;
 //                    if (classID.equals(OldXmlTags.MENTION_CLASS_ID_IDENTITY)) {
 //                        newAnnotation = new Annotation(annotationID, textSource, profile);
 //                        Element complexSlotElement = complexSlotMentionToClassIDMap.get(((Element) classElement.getElementsByTagName(OldXmlTags.HAS_SLOT_MENTION).item(0)).getAttribute(OldXmlTags.HAS_SLOT_MENTION_ID));
@@ -300,12 +308,64 @@ public final class AnnotationManager implements Savable {
 //
             newAnnotation = new Annotation(classID, className, annotationID, textSource, profile, "identity");
 
-            newAnnotation.readFromOldXml(annotationElement);
+            newAnnotation.readFromOldKnowtatorXml(annotationElement);
 //            spans.forEach(newAnnotation::addSpan);
             addAnnotation(newAnnotation);
 
 //            log.warn("OLD XML: " + newAnnotation);
 
+        }
+    }
+
+    //TODO: Should probably also read in Events, Modifiers, etc.
+    @Override
+    public void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content) {
+
+        Profile profile = manager.getProfileManager().getDefaultProfile();
+
+        annotationMap.get(StandoffTags.TEXTBOUNDANNOTATION).forEach(annotation -> {
+            Annotation newAnnotation = new Annotation(annotation[1].split(StandoffTags.textBoundAnnotationTripleDelimiter)[0], annotation[2], annotation[0], textSource, profile, "identity");
+            newAnnotation.readFromBratStandoff(Map.of(
+                    StandoffTags.TEXTBOUNDANNOTATION, new ArrayList<>() {{
+                        add(annotation);
+                    }}
+            ), content);
+
+            addAnnotation(newAnnotation);
+        });
+
+        GraphSpace newGraphSpace = addGraphSpace("Brat Relation Graph");
+        newGraphSpace.readFromBratStandoff(annotationMap, null);
+    }
+
+
+    @Override
+    public void writeToBratStandoff(Writer writer) throws IOException {
+        Iterator<Annotation> annotationIterator = annotationMap.values().iterator();
+        for (int i=0; i<annotationMap.values().size(); i++) {
+            Annotation annotation = annotationIterator.next();
+            annotation.setBratID(String.format("T%d", i));
+            writer.append(String.format("%s\t%s ", annotation.getBratID(), annotation.getClassID()));
+            annotation.writeToBratStandoff(writer);
+
+            writer.append(String.format("\t%s\n", annotation.getClassName()));
+        }
+
+        int lastNumTriples = 0;
+        for (GraphSpace graphSpace : graphSpaces) {
+            Object[] edges = graphSpace.getChildEdges(graphSpace.getDefaultParent());
+            int bound = edges.length;
+            for (int i = 0; i < bound; i++) {
+                Object edge = edges[i];
+                Triple triple = (Triple) edge;
+                triple.setBratID(String.format("R%d", lastNumTriples + i));
+                writer.append(String.format("%s\t%s Arg1:%s Arg2:%s\n",
+                        triple.getBratID(),
+                        triple.getValue(),
+                        ((AnnotationNode) triple.getSource()).getAnnotation().getBratID(),
+                        ((AnnotationNode) triple.getTarget()).getAnnotation().getBratID())
+                );
+            }
         }
     }
 

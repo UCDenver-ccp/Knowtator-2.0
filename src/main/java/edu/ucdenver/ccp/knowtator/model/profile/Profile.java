@@ -34,7 +34,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import java.awt.*;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Profile implements Savable {
     @SuppressWarnings("unused")
@@ -76,7 +80,7 @@ public class Profile implements Savable {
 
 
     @Override
-    public void writeToXml(Document dom, Element root) {
+    public void writeToKnowtatorXml(Document dom, Element root) {
         Element profileElem = dom.createElement(XmlTags.PROFILE);
         profileElem.setAttribute(XmlTags.ID, profileID);
         colors.forEach((classID, c) -> {
@@ -89,7 +93,7 @@ public class Profile implements Savable {
     }
 
     @Override
-    public void readFromXml(Element parent, String content) {
+    public void readFromKnowtatorXml(Element parent, String content) {
         for (Node highlighterNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.HIGHLIGHTER))) {
             Element highlighterElement = (Element) highlighterNode;
 
@@ -100,7 +104,18 @@ public class Profile implements Savable {
     }
 
     @Override
-    public void readFromOldXml(Element parent) {
+    public void readFromOldKnowtatorXml(Element parent) {
+
+    }
+
+    @Override
+    public void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content) {
+
+    }
+
+    @SuppressWarnings("RedundantThrows")
+    @Override
+    public void writeToBratStandoff(Writer writer) throws IOException {
 
     }
 }

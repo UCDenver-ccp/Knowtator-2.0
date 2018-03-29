@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.model.project;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.model.io.brat.StandoffUtil;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.model.io.xml.XmlUtil;
 import org.apache.commons.io.FileUtils;
@@ -39,15 +40,20 @@ import java.util.Objects;
 
 public class ProjectManager {
     private static final Logger log = Logger.getLogger(ProjectManager.class);
+    private XmlUtil xmlUtil;
     private KnowtatorManager manager;
     private File projectLocation;
     private File articlesLocation;
     private File ontologiesLocation;
     private File annotationsLocation;
     private File profilesLocation;
+    private StandoffUtil standoffUtil;
 
     public ProjectManager(KnowtatorManager manager) {
         this.manager = manager;
+        xmlUtil = new XmlUtil();
+        standoffUtil = new StandoffUtil();
+
     }
 
     public File getProjectLocation() {
@@ -89,18 +95,18 @@ public class ProjectManager {
                 log.warn("Loading profiles");
                 Files.newDirectoryStream(Paths.get(profilesLocation.toURI()),
                         path -> path.toString().endsWith(".xml"))
-                        .forEach(file -> XmlUtil.readXML(manager.getProfileManager(), file.toFile()));
+                        .forEach(file -> xmlUtil.read(manager.getProfileManager(), file.toFile()));
 
 //                Load annotations in parallel
 //                log.warn("Loading annotations");
 //                Stream<Path> annotationFilesToRead = Files.walk(Paths.get(annotationsLocation.toURI()))
 //                        .filter(path -> path.toString().endsWith(".xml"));
-//                annotationFilesToRead.parallel().forEach(path -> XmlUtil.readXML(manager.getTextSourceManager(), path.toFile()));
+//                annotationFilesToRead.parallel().forEach(path -> XmlUtil.read(manager.getTextSourceManager(), path.toFile()));
 
                 log.warn("Loading annotations");
                 Files.newDirectoryStream(Paths.get(annotationsLocation.toURI()),
                         path -> path.toString().endsWith(".xml"))
-                        .forEach(file -> XmlUtil.readXML(manager.getTextSourceManager(), file.toFile()));
+                        .forEach(file -> xmlUtil.read(manager.getTextSourceManager(), file.toFile()));
 
                 manager.projectLoadedEvent();
             } catch (IOException e) {
@@ -133,7 +139,7 @@ public class ProjectManager {
         if (getProjectLocation() != null) {
             manager.getProfileManager().getProfiles().values().forEach(profile -> {
                 File profileFile = new File(profilesLocation, profile.getId() + ".xml");
-                XmlUtil.createXML(profile, profileFile);
+                xmlUtil.write(profile, profileFile);
             });
 
             for (File file : Objects.requireNonNull(annotationsLocation.listFiles())) {
@@ -144,14 +150,14 @@ public class ProjectManager {
             manager.getTextSourceManager().getTextSources().values().forEach(textSource -> {
                 File textSourceFile = new File(annotationsLocation, textSource.getDocID() + ".xml");
 
-                XmlUtil.createXML(textSource, textSourceFile);
+                xmlUtil.write(textSource, textSourceFile);
 
             });
         }
     }
 
     public void importAnnotations(File file) {
-        XmlUtil.readXML(manager.getTextSourceManager(), file);
+        xmlUtil.read(manager.getTextSourceManager(), file);
     }
 
     public void addDocument(File file) {
@@ -168,5 +174,17 @@ public class ProjectManager {
 
     public File getAnnotationsLocation() {
         return annotationsLocation;
+    }
+
+    public void loadProfiles(File file) {
+        xmlUtil.read(manager.getProfileManager(), file);
+    }
+
+    public void exportToBrat(TextSource textSource, File file) {
+        standoffUtil.write(textSource, file);
+    }
+
+    public void importBrat(File file) {
+        standoffUtil.read(manager.getTextSourceManager(), file);
     }
 }

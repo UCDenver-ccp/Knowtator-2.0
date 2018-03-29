@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.model.textsource;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.model.io.xml.XmlTags;
 import edu.ucdenver.ccp.knowtator.model.io.xml.XmlUtil;
 import edu.ucdenver.ccp.knowtator.model.io.xml.forOld.OldXmlTags;
@@ -38,6 +39,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.*;
 
 public class TextSourceManager implements Savable, OWLOntologyChangeListener {
@@ -70,29 +73,50 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
     }
 
     @Override
-    public void writeToXml(Document dom, Element parent) {
-        textSources.values().forEach(textSource -> textSource.writeToXml(dom, parent));
+    public void writeToKnowtatorXml(Document dom, Element parent) {
+        textSources.values().forEach(textSource -> textSource.writeToKnowtatorXml(dom, parent));
 
     }
 
     @Override
-    public void readFromXml(Element parent, String content) {
+    public void readFromKnowtatorXml(Element parent, String content) {
         for (Node documentNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.DOCUMENT))) {
             Element documentElement = (Element) documentNode;
             String documentID = documentElement.getAttribute(XmlTags.ID);
             TextSource newTextSource = addTextSource(documentID);
             log.warn("\tXML: " + newTextSource);
-            newTextSource.readFromXml(documentElement, content);
+            newTextSource.readFromKnowtatorXml(documentElement, content);
         }
     }
 
     @Override
-    public void readFromOldXml(Element parent) {
+    public void readFromOldKnowtatorXml(Element parent) {
 
         String docID = parent.getAttribute(OldXmlTags.TEXT_SOURCE).replace(".txt", "");
         TextSource newTextSource = addTextSource(docID);
         log.warn("\tOLD XML: " + newTextSource);
-        newTextSource.readFromOldXml(parent);
+        newTextSource.readFromOldKnowtatorXml(parent);
+    }
+
+    @Override
+    public void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content) {
+        String docID = annotationMap.get(StandoffTags.DOCID).get(0)[0];
+
+        TextSource newTextSource = addTextSource(docID);
+        log.warn("\tBRAT: " + newTextSource);
+        newTextSource.readFromBratStandoff(annotationMap, null);
+    }
+
+    @SuppressWarnings("RedundantThrows")
+    @Override
+    public void writeToBratStandoff(Writer writer) throws IOException {
+        textSources.values().forEach(textSource -> {
+            try {
+                textSource.writeToBratStandoff(writer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public KnowtatorManager getManager() {
