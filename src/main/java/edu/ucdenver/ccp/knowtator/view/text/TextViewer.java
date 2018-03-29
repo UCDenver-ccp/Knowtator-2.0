@@ -40,7 +40,7 @@ import java.util.*;
 import java.util.List;
 
 public class TextViewer extends JPanel implements TextSourceListener, ProjectListener {
-    public static final Logger log = Logger.getLogger(KnowtatorManager.class);
+    private static final Logger log = Logger.getLogger(KnowtatorManager.class);
     private boolean first;
     private KnowtatorManager manager;
     private KnowtatorView view;
@@ -129,15 +129,15 @@ public class TextViewer extends JPanel implements TextSourceListener, ProjectLis
         return textPaneList.get(currentTextPaneIndex);
     }
 
-    public void showPreviousTextPane() {
+    void showPreviousTextPane() {
         showTextPane(Math.max(0, currentTextPaneIndex - 1));
     }
 
-    public void showNextTextPane() {
+    void showNextTextPane() {
         showTextPane(Math.min(textPaneList.size()-1, currentTextPaneIndex + 1));
     }
 
-    public List<TextPane> getTextPaneList() {
+    List<TextPane> getTextPaneList() {
         return textPaneList;
     }
 

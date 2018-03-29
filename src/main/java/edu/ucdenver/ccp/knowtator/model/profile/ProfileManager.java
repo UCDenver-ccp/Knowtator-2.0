@@ -38,7 +38,7 @@ import java.util.Map;
 
 public class ProfileManager implements Savable {
 
-    public static final Logger log = Logger.getLogger(KnowtatorManager.class);
+    private static final Logger log = Logger.getLogger(KnowtatorManager.class);
     private Profile currentProfile;
 
     private Map<String, Profile> profiles;

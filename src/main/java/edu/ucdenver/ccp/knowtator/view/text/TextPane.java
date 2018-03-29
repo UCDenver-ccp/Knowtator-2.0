@@ -52,7 +52,7 @@ import static java.lang.Math.min;
 
 public class TextPane extends JTextPane implements AnnotationListener, SpanListener, ProfileListener {
 
-	public static final Logger log = Logger.getLogger(KnowtatorManager.class);
+	private static final Logger log = Logger.getLogger(KnowtatorManager.class);
 	private GraphViewer graphViewer;
 
 	private KnowtatorManager manager;
@@ -153,7 +153,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		manager.spanSelectionChangedEvent(selectedSpan);
 	}
 
-	public void setSelection(Span span, Annotation annotation) {
+	void setSelection(Span span, Annotation annotation) {
 		if (isVisible) {
 			setSelectedSpan(span);
 
@@ -203,7 +203,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		}
 	}
 
-	public void previousSpan() {
+	void previousSpan() {
 		TreeMap<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null, filterByProfile ? manager.getProfileManager().getCurrentProfile() : null);
 		Map.Entry<Span, Annotation> previous;
 		try {
@@ -216,7 +216,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		setSelection(previous.getKey(), previous.getValue());
 	}
 
-	public void nextSpan() {
+	void nextSpan() {
 		TreeMap<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null, filterByProfile ? manager.getProfileManager().getCurrentProfile() : null);
 
 		Map.Entry<Span, Annotation> next;
@@ -230,7 +230,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		setSelection(next.getKey(), next.getValue());
 	}
 
-	public void shrinkSelectionEnd() {
+	void shrinkSelectionEnd() {
 		if (focusOnSelectedSpan) {
 			textSource.getAnnotationManager().shrinkSpanEnd(selectedSpan);
 			setSelectedSpan(selectedSpan);
@@ -240,7 +240,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		}
 
 	}
-	public void shrinkSelectionStart() {
+	void shrinkSelectionStart() {
 		if (focusOnSelectedSpan) {
 			textSource.getAnnotationManager().shrinkSpanStart(selectedSpan);
 			setSelectedSpan(selectedSpan);
@@ -249,7 +249,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 			select(getSelectionStart() + 1, getSelectionEnd());
 		}
 	}
-	public void growSelectionEnd() {
+	void growSelectionEnd() {
 		if (focusOnSelectedSpan) {
 			textSource.getAnnotationManager().growSpanEnd(selectedSpan, getText().length());
 			setSelectedSpan(selectedSpan);
@@ -258,7 +258,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 			select(getSelectionStart(), getSelectionEnd() + 1);
 		}
 	}
-	public void growSelectionStart() {
+	void growSelectionStart() {
 		if (focusOnSelectedSpan) {
 			textSource.getAnnotationManager().growSpanStart(selectedSpan);
 			setSelectedSpan(selectedSpan);
@@ -348,11 +348,11 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		}
 	}
 
-	public Span getSelectedSpan() {
+	Span getSelectedSpan() {
 		return selectedSpan;
 	}
 
-	public GraphViewer getGraphViewer() {
+	GraphViewer getGraphViewer() {
 		return graphViewer;
 	}
 
@@ -420,7 +420,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		refreshHighlights();
 	}
 
-	public void addAnnotation() {
+	void addAnnotation() {
 		String className = manager.getOWLAPIDataExtractor().getSelectedOwlClassName();
 		String classID = manager.getOWLAPIDataExtractor().getSelectedOwlClassID();
 
@@ -456,16 +456,16 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 
 	}
 
-	public void removeAnnotation() {
+	void removeAnnotation() {
 		textSource.getAnnotationManager().removeAnnotation(selectedAnnotation.getID());
 		setSelection(null, null);
 	}
 
-    public void setIsVisible(boolean isVisible) {
+    void setIsVisible(boolean isVisible) {
         this.isVisible = isVisible;
     }
 
-	public void addSpanToAnnotation() {
+	void addSpanToAnnotation() {
 		textSource.getAnnotationManager()
 				.addSpanToAnnotation(
 						selectedAnnotation,

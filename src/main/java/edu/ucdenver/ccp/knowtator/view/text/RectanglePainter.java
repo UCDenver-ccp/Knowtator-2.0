@@ -34,7 +34,7 @@ import java.awt.*;
  *  area to be highlighted.
  *
  */
-public class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {
+class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {
 
     public static Logger log = Logger.getLogger(RectanglePainter.class);
 

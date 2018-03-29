@@ -38,7 +38,7 @@ import java.nio.file.Paths;
 import java.util.Objects;
 
 public class ProjectManager {
-    public static final Logger log = Logger.getLogger(ProjectManager.class);
+    private static final Logger log = Logger.getLogger(ProjectManager.class);
     private KnowtatorManager manager;
     private File projectLocation;
     private File articlesLocation;

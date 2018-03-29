@@ -190,11 +190,11 @@ public class KnowtatorManager {
         graphListeners.forEach(listener -> listener.removeGraph(graphSpace));
     }
 
-    public void addAnnotationListener(AnnotationListener listener) {
+    void addAnnotationListener(AnnotationListener listener) {
         annotationListeners.add(listener);
     }
 
-    public void addTextSourceListener(TextSourceListener listener) {
+    void addTextSourceListener(TextSourceListener listener) {
         textSourceListeners.add(listener);
     }
 
@@ -203,7 +203,7 @@ public class KnowtatorManager {
     }
 
 
-    public void setUpOWL(OWLWorkspace owlWorkspace, OWLModelManager owlModelManager) {
+    void setUpOWL(OWLWorkspace owlWorkspace, OWLModelManager owlModelManager) {
         owlDataExtractor.setUpOWL(owlWorkspace, owlModelManager);
     }
 
@@ -211,7 +211,7 @@ public class KnowtatorManager {
         projectListeners.forEach(ProjectListener::projectLoaded);
     }
 
-    public void addProjectListener(ProjectListener listener) {
+    void addProjectListener(ProjectListener listener) {
         projectListeners.add(listener);
     }
 }

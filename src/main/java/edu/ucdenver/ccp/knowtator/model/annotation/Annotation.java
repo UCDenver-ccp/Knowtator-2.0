@@ -48,7 +48,7 @@ public class Annotation implements Savable {
     private Set<String> overlappingAnnotations;
 
 	private final Date date;
-	public String id;
+	private String id;
 	private TextSource textSource;
 	private Profile annotator;
 
@@ -185,7 +185,7 @@ public class Annotation implements Savable {
 		return false;
 	}
 
-	public void addOverlappingAnnotation(String annotationID) {
+	void addOverlappingAnnotation(String annotationID) {
 		overlappingAnnotations.add(annotationID);
 	}
 

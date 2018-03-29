@@ -49,7 +49,7 @@ import java.util.List;
 import java.util.RandomAccess;
 
 public final class XmlUtil {
-    public static final Logger log = Logger.getLogger(XmlUtil.class);
+    private static final Logger log = Logger.getLogger(XmlUtil.class);
 
 
     public static List<Node> asList(NodeList n) {
