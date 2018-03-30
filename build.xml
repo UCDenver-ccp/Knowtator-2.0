@@ -30,7 +30,7 @@
 <project name="knowtator" default="package" basedir=".">
 
   <!-- ====================================================================== -->
-  <!-- Import maven-build.xml into the current project                        -->
+  <!-- Import maven-build.knowtator into the current project                        -->
   <!-- ====================================================================== -->
 
   <import file="maven-build.xml"/>

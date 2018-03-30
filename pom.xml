@@ -110,7 +110,7 @@
 
 		<resources>
 			<resource>
-				<!-- Use resource filtering to replace references to the artifactId in the plugin.xml test_project -->
+				<!-- Use resource filtering to replace references to the artifactId in the plugin.knowtator test_project -->
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>

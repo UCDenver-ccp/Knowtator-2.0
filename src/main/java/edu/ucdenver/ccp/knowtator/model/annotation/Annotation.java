@@ -26,9 +26,8 @@ package edu.ucdenver.ccp.knowtator.model.annotation;
 
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.io.brat.StandoffTags;
-import edu.ucdenver.ccp.knowtator.model.io.xml.XmlTags;
-import edu.ucdenver.ccp.knowtator.model.io.xml.XmlUtil;
-import edu.ucdenver.ccp.knowtator.model.io.xml.forOld.OldXmlReader;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.log4j.Logger;
@@ -173,7 +172,7 @@ public class Annotation implements Savable {
 		return sb.toString();
 	}
 
-	public void addSpan(Span newSpan) {
+	void addSpan(Span newSpan) {
 		spans.add(newSpan);
 		newSpan.setAnnotation(this);
 	}
@@ -201,13 +200,13 @@ public class Annotation implements Savable {
 	}
 
 	public void writeToKnowtatorXml(Document dom, Element textSourceElement) {
-		Element annotationElem = dom.createElement(XmlTags.ANNOTATION);
-		annotationElem.setAttribute(XmlTags.ID, id);
-		annotationElem.setAttribute(XmlTags.ANNOTATOR, annotator.getId());
-		annotationElem.setAttribute(XmlTags.TYPE, type);
+		Element annotationElem = dom.createElement(KnowtatorXMLTags.ANNOTATION);
+		annotationElem.setAttribute(KnowtatorXMLTags.ID, id);
+		annotationElem.setAttribute(KnowtatorXMLTags.ANNOTATOR, annotator.getId());
+		annotationElem.setAttribute(KnowtatorXMLTags.TYPE, type);
 
-		Element classElement = dom.createElement(XmlTags.CLASS);
-		classElement.setAttribute(XmlTags.ID, classID);
+		Element classElement = dom.createElement(KnowtatorXMLTags.CLASS);
+		classElement.setAttribute(KnowtatorXMLTags.ID, classID);
 		classElement.setTextContent(className);
 		annotationElem.appendChild(classElement);
 
@@ -222,11 +221,11 @@ public class Annotation implements Savable {
         int spanStart;
         int spanEnd;
         String spannedText;
-        for (Node spanNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.SPAN))) {
+        for (Node spanNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.SPAN))) {
             if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
                 spanElement = (Element) spanNode;
-                spanStart = Integer.parseInt(spanElement.getAttribute(XmlTags.SPAN_START));
-                spanEnd = Integer.parseInt(spanElement.getAttribute(XmlTags.SPAN_END));
+                spanStart = Integer.parseInt(spanElement.getAttribute(KnowtatorXMLTags.SPAN_START));
+                spanEnd = Integer.parseInt(spanElement.getAttribute(KnowtatorXMLTags.SPAN_END));
 
 
                 spannedText = content.substring(spanStart, spanEnd);
@@ -240,7 +239,7 @@ public class Annotation implements Savable {
 
 	@Override
 	public void readFromOldKnowtatorXml(Element parent) {
-		List<Span> spans = OldXmlReader.getSpanInfo(parent);
+		List<Span> spans = KnowtatorXMLUtil.getSpanInfo(parent);
 		spans.forEach(this::addSpan);
 	}
 

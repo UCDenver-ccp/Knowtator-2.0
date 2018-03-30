@@ -143,7 +143,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     }
 
     private void setupInitial() {
-//        File project = new File("E:/Documents/repos/Knowtator-2.0/src/test/resources/test_project/test_project.xml");
+//        File project = new File("E:/Documents/repos/Knowtator-2.0/src/test/resources/test_project/test_project.knowtator");
 //        manager.loadProject(project);
     }
 

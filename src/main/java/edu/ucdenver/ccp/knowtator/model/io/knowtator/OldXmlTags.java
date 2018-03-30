@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.io.xml.forOld;
+package edu.ucdenver.ccp.knowtator.model.io.knowtator;
 
 public class OldXmlTags {
     // ******************OLD Tags*****************
-    public static final String ANNOTATIONS = "annotations";
+    static final String ANNOTATIONS = "annotations";
     public static final String ID = "id";
     public static final String ANNOTATOR = "annotator";
     static final String SPAN = "span";

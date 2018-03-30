@@ -30,10 +30,9 @@ import edu.ucdenver.ccp.knowtator.model.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.graph.Triple;
 import edu.ucdenver.ccp.knowtator.model.io.brat.StandoffTags;
-import edu.ucdenver.ccp.knowtator.model.io.xml.XmlTags;
-import edu.ucdenver.ccp.knowtator.model.io.xml.XmlUtil;
-import edu.ucdenver.ccp.knowtator.model.io.xml.forOld.OldXmlReader;
-import edu.ucdenver.ccp.knowtator.model.io.xml.forOld.OldXmlTags;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.OldXmlTags;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.log4j.Logger;
@@ -67,7 +66,7 @@ public class AnnotationManager implements Savable {
         graphSpaces = new ArrayList<>();
     }
 
-    public void addAnnotation(Annotation newAnnotation) {
+    void addAnnotation(Annotation newAnnotation) {
         String id = newAnnotation.getID();
         if (id == null) {
             id = String.format("mention_%d", annotationMap.size());
@@ -236,16 +235,16 @@ public class AnnotationManager implements Savable {
         Element graphSpaceElem;
         String id;
         GraphSpace graphSpace;
-        for (Node annotationNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.ANNOTATION))) {
+        for (Node annotationNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.ANNOTATION))) {
             annotationElement = (Element) annotationNode;
 
-            annotationID = annotationElement.getAttribute(XmlTags.ID);
-            profileID = annotationElement.getAttribute(XmlTags.ANNOTATOR);
-            type = annotationElement.getAttribute(XmlTags.TYPE);
+            annotationID = annotationElement.getAttribute(KnowtatorXMLTags.ID);
+            profileID = annotationElement.getAttribute(KnowtatorXMLTags.ANNOTATOR);
+            type = annotationElement.getAttribute(KnowtatorXMLTags.TYPE);
 
             profile = manager.getProfileManager().addNewProfile(profileID);
-            className = annotationElement.getElementsByTagName(XmlTags.CLASS).item(0).getTextContent();
-            classID = ((Element) annotationElement.getElementsByTagName(XmlTags.CLASS).item(0)).getAttribute(XmlTags.ID);
+            className = annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0).getTextContent();
+            classID = ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0)).getAttribute(KnowtatorXMLTags.ID);
 
             newAnnotation = new Annotation(classID, className, annotationID, textSource, profile, type);
 //            log.warn("\t\tXML: " + newAnnotation);
@@ -254,11 +253,11 @@ public class AnnotationManager implements Savable {
             addAnnotation(newAnnotation);
         }
 
-        for (Node graphSpaceNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.GRAPH))) {
+        for (Node graphSpaceNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.GRAPH))) {
             graphSpaceElem = (Element) graphSpaceNode;
 
 
-            id = graphSpaceElem.getAttribute(XmlTags.ID);
+            id = graphSpaceElem.getAttribute(KnowtatorXMLTags.ID);
             graphSpace = addGraphSpace(id);
 
             log.warn("\t\tXML: " + graphSpace);
@@ -268,7 +267,7 @@ public class AnnotationManager implements Savable {
 
     @Override
     public void readFromOldKnowtatorXml(Element parent) {
-        Map<String, Element> classMentionToClassIDMap = OldXmlReader.getClassIDsFromXml(parent);
+        Map<String, Element> classMentionToClassIDMap = KnowtatorXMLUtil.getClassIDsFromXml(parent);
 //        Map<String, Element> complexSlotMentionToClassIDMap = getComplexSlotsFromXml(textSourceElement);
 
         Element annotationElement;
@@ -278,7 +277,7 @@ public class AnnotationManager implements Savable {
         String classID;
         Annotation newAnnotation;
 
-        for (Node annotationNode : XmlUtil.asList(parent.getElementsByTagName(OldXmlTags.ANNOTATION))) {
+        for (Node annotationNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(OldXmlTags.ANNOTATION))) {
             annotationElement = (Element) annotationNode;
 
             Profile profile;
@@ -299,7 +298,7 @@ public class AnnotationManager implements Savable {
 //                        newAnnotation = new Annotation(annotationID, textSource, profile);
 //                        Element complexSlotElement = complexSlotMentionToClassIDMap.get(((Element) classElement.getElementsByTagName(OldXmlTags.HAS_SLOT_MENTION).item(0)).getAttribute(OldXmlTags.HAS_SLOT_MENTION_ID));
 //                        if (((Element) complexSlotElement.getElementsByTagName(OldXmlTags.MENTION_SLOT).item(0)).getAttribute(OldXmlTags.MENTION_SLOT_ID).equals(OldXmlTags.MENTION_SLOT_ID_COREFERENCE)) {
-//                            for (Node complexSlotMentionValueNode : XmlUtil.asList(complexSlotElement.getElementsByTagName(OldXmlTags.COMPLEX_SLOT_MENTION_VALUE))) {
+//                            for (Node complexSlotMentionValueNode : KnowtatorXMLUtil.asList(complexSlotElement.getElementsByTagName(OldXmlTags.COMPLEX_SLOT_MENTION_VALUE))) {
 //                                ((IdentityChainAnnotation) newAnnotation).addCoreferringAnnotation(((Element) complexSlotMentionValueNode).getAttribute(OldXmlTags.COMPLEX_SLOT_MENTION_VALUE_VALUE));
 //                            }
 //                        }

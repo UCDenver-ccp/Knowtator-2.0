@@ -63,7 +63,7 @@ public class ProjectMenu extends JMenu {
             } else {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setCurrentDirectory(manager.getProjectManager().getAnnotationsLocation());
-                FileFilter fileFilter = new FileNameExtensionFilter("XML", "xml");
+                FileFilter fileFilter = new FileNameExtensionFilter("XML", "knowtator");
                 fileChooser.setFileFilter(fileFilter);
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 

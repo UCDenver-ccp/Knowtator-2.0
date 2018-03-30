@@ -28,7 +28,6 @@ import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileManager;
-import edu.ucdenver.ccp.knowtator.model.io.xml.XmlUtil;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -85,7 +84,7 @@ public class ProfileMenu extends JMenu implements ProfileListener {
     private JMenuItem newProfile() {
         JMenuItem newAnnotator = new JMenuItem("New profile");
         newAnnotator.addActionListener(e -> {
-            int dialogResult = JOptionPane.showConfirmDialog(null, "Load profile from test_project(xml)?", "New profile", JOptionPane.YES_NO_CANCEL_OPTION);
+            int dialogResult = JOptionPane.showConfirmDialog(null, "Load profile from test_project(knowtator)?", "New profile", JOptionPane.YES_NO_CANCEL_OPTION);
             if(dialogResult == JOptionPane.YES_OPTION) {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setCurrentDirectory(manager.getProjectManager().getProjectLocation());

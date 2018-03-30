@@ -25,8 +25,8 @@
 package edu.ucdenver.ccp.knowtator.model.profile;
 
 import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.io.xml.XmlTags;
-import edu.ucdenver.ccp.knowtator.model.io.xml.XmlUtil;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -81,12 +81,12 @@ public class Profile implements Savable {
 
     @Override
     public void writeToKnowtatorXml(Document dom, Element root) {
-        Element profileElem = dom.createElement(XmlTags.PROFILE);
-        profileElem.setAttribute(XmlTags.ID, profileID);
+        Element profileElem = dom.createElement(KnowtatorXMLTags.PROFILE);
+        profileElem.setAttribute(KnowtatorXMLTags.ID, profileID);
         colors.forEach((classID, c) -> {
-            Element e = dom.createElement(XmlTags.HIGHLIGHTER);
-            e.setAttribute(XmlTags.CLASS, classID);
-            e.setAttribute(XmlTags.COLOR, String.format("#%06x", c.getRGB() & 0x00FFFFFF));
+            Element e = dom.createElement(KnowtatorXMLTags.HIGHLIGHTER);
+            e.setAttribute(KnowtatorXMLTags.CLASS, classID);
+            e.setAttribute(KnowtatorXMLTags.COLOR, String.format("#%06x", c.getRGB() & 0x00FFFFFF));
             profileElem.appendChild(e);
         });
         root.appendChild(profileElem);
@@ -94,11 +94,11 @@ public class Profile implements Savable {
 
     @Override
     public void readFromKnowtatorXml(Element parent, String content) {
-        for (Node highlighterNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.HIGHLIGHTER))) {
+        for (Node highlighterNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.HIGHLIGHTER))) {
             Element highlighterElement = (Element) highlighterNode;
 
-            String classID = highlighterElement.getAttribute(XmlTags.CLASS);
-            String color = highlighterElement.getAttribute(XmlTags.COLOR);
+            String classID = highlighterElement.getAttribute(KnowtatorXMLTags.CLASS);
+            String color = highlighterElement.getAttribute(KnowtatorXMLTags.COLOR);
             addColor(classID, color);
         }
     }

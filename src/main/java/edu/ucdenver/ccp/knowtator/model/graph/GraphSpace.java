@@ -33,10 +33,10 @@ import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.io.brat.StandoffTags;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
-import edu.ucdenver.ccp.knowtator.model.io.xml.XmlTags;
-import edu.ucdenver.ccp.knowtator.model.io.xml.XmlUtil;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
@@ -143,26 +143,26 @@ public class GraphSpace extends mxGraph implements Savable {
 
     @Override
     public void readFromKnowtatorXml(Element parent, String content) {
-        for (Node graphVertexNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.VERTEX))) {
+        for (Node graphVertexNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.VERTEX))) {
             Element graphVertexElem = (Element) graphVertexNode;
 
-            String id = graphVertexElem.getAttribute(XmlTags.ID);
-            String annotationID = graphVertexElem.getAttribute(XmlTags.ANNOTATION);
+            String id = graphVertexElem.getAttribute(KnowtatorXMLTags.ID);
+            String annotationID = graphVertexElem.getAttribute(KnowtatorXMLTags.ANNOTATION);
 
             Annotation annotation = textSource.getAnnotationManager().getAnnotation(annotationID);
             addNode(id, annotation);
         }
 
-        for (Node tripleNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.TRIPLE))) {
+        for (Node tripleNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.TRIPLE))) {
             Element tripleElem = (Element) tripleNode;
 
-            String id = tripleElem.getAttribute(XmlTags.ID);
-            String annotatorID = tripleElem.getAttribute(XmlTags.ANNOTATOR);
-            String subjectID = tripleElem.getAttribute(XmlTags.TRIPLE_SUBJECT);
-            String objectID = tripleElem.getAttribute(XmlTags.TRIPLE_OBJECT);
-            String propertyID = tripleElem.getAttribute(XmlTags.TRIPLE_PROPERTY);
-            String quantifier = tripleElem.getAttribute(XmlTags.TRIPLE_QUANTIFIER);
-            String quantifierValue = tripleElem.getAttribute(XmlTags.TRIPLE_VALUE);
+            String id = tripleElem.getAttribute(KnowtatorXMLTags.ID);
+            String annotatorID = tripleElem.getAttribute(KnowtatorXMLTags.ANNOTATOR);
+            String subjectID = tripleElem.getAttribute(KnowtatorXMLTags.TRIPLE_SUBJECT);
+            String objectID = tripleElem.getAttribute(KnowtatorXMLTags.TRIPLE_OBJECT);
+            String propertyID = tripleElem.getAttribute(KnowtatorXMLTags.TRIPLE_PROPERTY);
+            String quantifier = tripleElem.getAttribute(KnowtatorXMLTags.TRIPLE_QUANTIFIER);
+            String quantifierValue = tripleElem.getAttribute(KnowtatorXMLTags.TRIPLE_VALUE);
 
             Profile annotator = manager.getProfileManager().addNewProfile(annotatorID);
             AnnotationNode source = (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(subjectID);
@@ -224,8 +224,8 @@ public class GraphSpace extends mxGraph implements Savable {
 
     @Override
     public void writeToKnowtatorXml(Document dom, Element textSourceElement) {
-        Element graphElem = dom.createElement(XmlTags.GRAPH);
-        graphElem.setAttribute(XmlTags.ID, id);
+        Element graphElem = dom.createElement(KnowtatorXMLTags.GRAPH);
+        graphElem.setAttribute(KnowtatorXMLTags.ID, id);
         Arrays.stream(getChildVertices(getDefaultParent())).forEach(vertex -> {
             if (vertex instanceof  AnnotationNode) {
                 ((AnnotationNode) vertex).writeToKnowtatorXml(dom, graphElem);

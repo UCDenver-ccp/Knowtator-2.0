@@ -28,7 +28,7 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.model.io.xml.XmlTags;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -60,14 +60,14 @@ public class Triple extends mxCell implements Savable {
     }
 
     public void writeToKnowtatorXml(Document dom, Element graphElem) {
-        Element tripleElem = dom.createElement(XmlTags.TRIPLE);
-        tripleElem.setAttribute(XmlTags.ID, id);
-        tripleElem.setAttribute(XmlTags.ANNOTATOR, annotator.getId());
-        tripleElem.setAttribute(XmlTags.TRIPLE_SUBJECT, getSource().getId());
-        tripleElem.setAttribute(XmlTags.TRIPLE_OBJECT, getTarget().getId());
-        tripleElem.setAttribute(XmlTags.TRIPLE_PROPERTY, getValue() instanceof OWLObjectProperty ? ((OWLObjectProperty) getValue()).getIRI().getShortForm() : getValue().toString());
-        tripleElem.setAttribute(XmlTags.TRIPLE_QUANTIFIER, quantifier);
-        tripleElem.setAttribute(XmlTags.TRIPLE_VALUE, quantifierValue);
+        Element tripleElem = dom.createElement(KnowtatorXMLTags.TRIPLE);
+        tripleElem.setAttribute(KnowtatorXMLTags.ID, id);
+        tripleElem.setAttribute(KnowtatorXMLTags.ANNOTATOR, annotator.getId());
+        tripleElem.setAttribute(KnowtatorXMLTags.TRIPLE_SUBJECT, getSource().getId());
+        tripleElem.setAttribute(KnowtatorXMLTags.TRIPLE_OBJECT, getTarget().getId());
+        tripleElem.setAttribute(KnowtatorXMLTags.TRIPLE_PROPERTY, getValue() instanceof OWLObjectProperty ? ((OWLObjectProperty) getValue()).getIRI().getShortForm() : getValue().toString());
+        tripleElem.setAttribute(KnowtatorXMLTags.TRIPLE_QUANTIFIER, quantifier);
+        tripleElem.setAttribute(KnowtatorXMLTags.TRIPLE_VALUE, quantifierValue);
         graphElem.appendChild(tripleElem);
     }
 

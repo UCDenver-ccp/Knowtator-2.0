@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.io.xml;
+package edu.ucdenver.ccp.knowtator.model.io.knowtator;
 
-public class XmlTags {
+public class KnowtatorXMLTags {
 
     public static final String ID = "id";
     // For each document in the project

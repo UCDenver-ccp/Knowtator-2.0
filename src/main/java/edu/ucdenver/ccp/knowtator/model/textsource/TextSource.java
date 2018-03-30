@@ -27,7 +27,7 @@ package edu.ucdenver.ccp.knowtator.model.textsource;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.annotation.AnnotationManager;
-import edu.ucdenver.ccp.knowtator.model.io.xml.XmlTags;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -99,9 +99,9 @@ public class TextSource implements Savable {
     }
     @Override
     public void writeToKnowtatorXml(Document dom, Element parent) {
-        Element textSourceElement = dom.createElement(XmlTags.DOCUMENT);
+        Element textSourceElement = dom.createElement(KnowtatorXMLTags.DOCUMENT);
         parent.appendChild(textSourceElement);
-        textSourceElement.setAttribute(XmlTags.ID, docID);
+        textSourceElement.setAttribute(KnowtatorXMLTags.ID, docID);
         annotationManager.writeToKnowtatorXml(dom, textSourceElement);
     }
 

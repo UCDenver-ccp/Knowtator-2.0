@@ -27,8 +27,8 @@ package edu.ucdenver.ccp.knowtator.model.project;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.model.io.brat.StandoffUtil;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
-import edu.ucdenver.ccp.knowtator.model.io.xml.XmlUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -40,7 +40,7 @@ import java.util.Objects;
 
 public class ProjectManager {
     private static final Logger log = Logger.getLogger(ProjectManager.class);
-    private XmlUtil xmlUtil;
+    private KnowtatorXMLUtil knowtatorXMLUtil;
     private KnowtatorManager manager;
     private File projectLocation;
     private File articlesLocation;
@@ -51,7 +51,7 @@ public class ProjectManager {
 
     public ProjectManager(KnowtatorManager manager) {
         this.manager = manager;
-        xmlUtil = new XmlUtil();
+        knowtatorXMLUtil = new KnowtatorXMLUtil();
         standoffUtil = new StandoffUtil();
 
     }
@@ -94,19 +94,19 @@ public class ProjectManager {
 
                 log.warn("Loading profiles");
                 Files.newDirectoryStream(Paths.get(profilesLocation.toURI()),
-                        path -> path.toString().endsWith(".xml"))
-                        .forEach(file -> xmlUtil.read(manager.getProfileManager(), file.toFile()));
+                        path -> path.toString().endsWith(".knowtator"))
+                        .forEach(file -> knowtatorXMLUtil.read(manager.getProfileManager(), file.toFile()));
 
 //                Load annotations in parallel
 //                log.warn("Loading annotations");
 //                Stream<Path> annotationFilesToRead = Files.walk(Paths.get(annotationsLocation.toURI()))
-//                        .filter(path -> path.toString().endsWith(".xml"));
-//                annotationFilesToRead.parallel().forEach(path -> XmlUtil.read(manager.getTextSourceManager(), path.toFile()));
+//                        .filter(path -> path.toString().endsWith(".knowtator"));
+//                annotationFilesToRead.parallel().forEach(path -> KnowtatorXMLUtil.read(manager.getTextSourceManager(), path.toFile()));
 
                 log.warn("Loading annotations");
                 Files.newDirectoryStream(Paths.get(annotationsLocation.toURI()),
-                        path -> path.toString().endsWith(".xml"))
-                        .forEach(file -> xmlUtil.read(manager.getTextSourceManager(), file.toFile()));
+                        path -> path.toString().endsWith(".knowtator"))
+                        .forEach(file -> knowtatorXMLUtil.read(manager.getTextSourceManager(), file.toFile()));
 
                 manager.projectLoadedEvent();
             } catch (IOException e) {
@@ -138,8 +138,8 @@ public class ProjectManager {
     public void saveProject() {
         if (getProjectLocation() != null) {
             manager.getProfileManager().getProfiles().values().forEach(profile -> {
-                File profileFile = new File(profilesLocation, profile.getId() + ".xml");
-                xmlUtil.write(profile, profileFile);
+                File profileFile = new File(profilesLocation, profile.getId() + ".knowtator");
+                knowtatorXMLUtil.write(profile, profileFile);
             });
 
             for (File file : Objects.requireNonNull(annotationsLocation.listFiles())) {
@@ -148,16 +148,16 @@ public class ProjectManager {
             }
 
             manager.getTextSourceManager().getTextSources().values().forEach(textSource -> {
-                File textSourceFile = new File(annotationsLocation, textSource.getDocID() + ".xml");
+                File textSourceFile = new File(annotationsLocation, textSource.getDocID() + ".knowtator");
 
-                xmlUtil.write(textSource, textSourceFile);
+                knowtatorXMLUtil.write(textSource, textSourceFile);
 
             });
         }
     }
 
     public void importAnnotations(File file) {
-        xmlUtil.read(manager.getTextSourceManager(), file);
+        knowtatorXMLUtil.read(manager.getTextSourceManager(), file);
     }
 
     public void addDocument(File file) {
@@ -177,7 +177,7 @@ public class ProjectManager {
     }
 
     public void loadProfiles(File file) {
-        xmlUtil.read(manager.getProfileManager(), file);
+        knowtatorXMLUtil.read(manager.getProfileManager(), file);
     }
 
     public void exportToBrat(TextSource textSource, File file) {

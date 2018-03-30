@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.io.xml;
+package edu.ucdenver.ccp.knowtator.model.io.knowtator;
 
 import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.annotation.Span;
 import edu.ucdenver.ccp.knowtator.model.io.BasicIOUtil;
-import edu.ucdenver.ccp.knowtator.model.io.xml.forOld.OldXmlTags;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -44,13 +44,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
-import java.util.AbstractList;
-import java.util.Collections;
-import java.util.List;
-import java.util.RandomAccess;
+import java.util.*;
 
-public final class XmlUtil implements BasicIOUtil {
-    private static final Logger log = Logger.getLogger(XmlUtil.class);
+public final class KnowtatorXMLUtil implements BasicIOUtil {
+    private static final Logger log = Logger.getLogger(KnowtatorXMLUtil.class);
 
 
     public static List<Node> asList(NodeList n) {
@@ -73,13 +70,13 @@ public final class XmlUtil implements BasicIOUtil {
                 doc = db.parse(is);
                 doc.getDocumentElement().normalize();
 
-                List<Node> knowtatorNodes = XmlUtil.asList(doc.getElementsByTagName(XmlTags.KNOWTATOR_PROJECT));
+                List<Node> knowtatorNodes = KnowtatorXMLUtil.asList(doc.getElementsByTagName(KnowtatorXMLTags.KNOWTATOR_PROJECT));
                 if (knowtatorNodes.size() > 0) {
                     Element knowtatorElement = (Element) knowtatorNodes.get(0);
                     savable.readFromKnowtatorXml(knowtatorElement, "");
                 }
 
-                List<Node> annotationNodes = XmlUtil.asList(doc.getElementsByTagName(OldXmlTags.ANNOTATIONS));
+                List<Node> annotationNodes = KnowtatorXMLUtil.asList(doc.getElementsByTagName(OldXmlTags.ANNOTATIONS));
                 if (annotationNodes.size() > 0) {
                     savable.readFromOldKnowtatorXml(doc.getDocumentElement());
                 }
@@ -102,16 +99,16 @@ public final class XmlUtil implements BasicIOUtil {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.newDocument();
 
-            Element root = dom.createElement(XmlTags.KNOWTATOR_PROJECT);
+            Element root = dom.createElement(KnowtatorXMLTags.KNOWTATOR_PROJECT);
             dom.appendChild(root);
             savable.writeToKnowtatorXml(dom, root);
 
             try {
                 Transformer tr = TransformerFactory.newInstance().newTransformer();
                 tr.setOutputProperty(OutputKeys.INDENT, "yes");
-                tr.setOutputProperty(OutputKeys.METHOD, "xml");
+                tr.setOutputProperty(OutputKeys.METHOD, "knowtator");
                 tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-                tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+                tr.setOutputProperty("{http://knowtator.apache.org/xslt}indent-amount", "4");
 
                 // send DOM to test_project
                 PrintWriter pw = new PrintWriter(file);
@@ -144,6 +141,44 @@ public final class XmlUtil implements BasicIOUtil {
         public int size() {
             return list.getLength();
         }
+    }
+
+    public static List<Span> getSpanInfo(Element annotationElement) {
+        List<Span> spans = new ArrayList<>();
+
+        Element spanElement;
+        int spanStart;
+        int spanEnd;
+        String spannedText;
+        for (Node spanNode : KnowtatorXMLUtil.asList(annotationElement.getElementsByTagName(OldXmlTags.SPAN))) {
+            if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
+                spanElement = (Element) spanNode;
+                spanStart = Integer.parseInt(spanElement.getAttribute(OldXmlTags.SPAN_START));
+                spanEnd = Integer.parseInt(spanElement.getAttribute(OldXmlTags.SPAN_END));
+                spannedText = spanElement.getTextContent();
+
+                spans.add(new Span(spanStart, spanEnd, spannedText));
+            }
+        }
+        return spans;
+    }
+
+    public static HashMap<String, Element> getClassIDsFromXml(Element textSourceElement) {
+        /*
+        Next parse classes and add the annotations
+         */
+        HashMap<String, Element> mentionTracker = new HashMap<>();
+
+        for (Node classNode : KnowtatorXMLUtil.asList(textSourceElement.getElementsByTagName(OldXmlTags.CLASS_MENTION))) {
+            if (classNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element classElement = (Element) classNode;
+
+                String annotationID = classElement.getAttribute(OldXmlTags.ID);
+                mentionTracker.put(annotationID, classElement);
+            }
+        }
+
+        return mentionTracker;
     }
 
 

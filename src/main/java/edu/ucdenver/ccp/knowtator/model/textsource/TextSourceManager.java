@@ -27,9 +27,9 @@ package edu.ucdenver.ccp.knowtator.model.textsource;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.io.brat.StandoffTags;
-import edu.ucdenver.ccp.knowtator.model.io.xml.XmlTags;
-import edu.ucdenver.ccp.knowtator.model.io.xml.XmlUtil;
-import edu.ucdenver.ccp.knowtator.model.io.xml.forOld.OldXmlTags;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.OldXmlTags;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
@@ -80,9 +80,9 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
 
     @Override
     public void readFromKnowtatorXml(Element parent, String content) {
-        for (Node documentNode : XmlUtil.asList(parent.getElementsByTagName(XmlTags.DOCUMENT))) {
+        for (Node documentNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.DOCUMENT))) {
             Element documentElement = (Element) documentNode;
-            String documentID = documentElement.getAttribute(XmlTags.ID);
+            String documentID = documentElement.getAttribute(KnowtatorXMLTags.ID);
             TextSource newTextSource = addTextSource(documentID);
             log.warn("\tXML: " + newTextSource);
             newTextSource.readFromKnowtatorXml(documentElement, content);
