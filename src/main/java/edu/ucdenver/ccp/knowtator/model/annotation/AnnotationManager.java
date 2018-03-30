@@ -368,6 +368,11 @@ public class AnnotationManager implements Savable {
         }
     }
 
+    @Override
+    public void readFromGeniaXml(Element parent, String content) {
+
+    }
+
     public List<GraphSpace> getGraphSpaces() {
         return graphSpaces;
     }

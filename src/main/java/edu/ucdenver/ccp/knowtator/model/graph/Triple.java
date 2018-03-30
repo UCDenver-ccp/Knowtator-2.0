@@ -92,6 +92,11 @@ public class Triple extends mxCell implements Savable {
 
     }
 
+    @Override
+    public void readFromGeniaXml(Element parent, String content) {
+
+    }
+
     public String getBratID() {
         return bratID;
     }

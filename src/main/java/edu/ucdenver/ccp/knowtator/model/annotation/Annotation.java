@@ -271,6 +271,11 @@ public class Annotation implements Savable {
 		}
 	}
 
+	@Override
+	public void readFromGeniaXml(Element parent, String content) {
+
+	}
+
 	public String getType() {
 		return type;
 	}

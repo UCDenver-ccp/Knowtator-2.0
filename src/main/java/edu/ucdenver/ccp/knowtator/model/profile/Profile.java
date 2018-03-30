@@ -118,4 +118,9 @@ public class Profile implements Savable {
     public void writeToBratStandoff(Writer writer) throws IOException {
 
     }
+
+    @Override
+    public void readFromGeniaXml(Element parent, String content) {
+
+    }
 }

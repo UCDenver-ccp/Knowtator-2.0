@@ -27,6 +27,7 @@ package edu.ucdenver.ccp.knowtator.model.project;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.model.io.brat.StandoffUtil;
+import edu.ucdenver.ccp.knowtator.model.io.genia.GeniaUtil;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.commons.io.FileUtils;
@@ -48,11 +49,13 @@ public class ProjectManager {
     private File annotationsLocation;
     private File profilesLocation;
     private StandoffUtil standoffUtil;
+    private GeniaUtil geniaUtil;
 
     public ProjectManager(KnowtatorManager manager) {
         this.manager = manager;
         knowtatorXMLUtil = new KnowtatorXMLUtil();
         standoffUtil = new StandoffUtil();
+        geniaUtil = new GeniaUtil();
 
     }
 
@@ -186,5 +189,13 @@ public class ProjectManager {
 
     public void importBrat(File file) {
         standoffUtil.read(manager.getTextSourceManager(), file);
+    }
+
+    public void exportToGenia(TextSource textSource, File file) {
+        geniaUtil.write(textSource, file);
+    }
+
+    public void importGenia(File file) {
+        geniaUtil.read(manager.getTextSourceManager(), file);
     }
 }

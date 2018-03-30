@@ -119,6 +119,11 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
         });
     }
 
+    @Override
+    public void readFromGeniaXml(Element parent, String content) {
+
+    }
+
     public KnowtatorManager getManager() {
         return manager;
     }

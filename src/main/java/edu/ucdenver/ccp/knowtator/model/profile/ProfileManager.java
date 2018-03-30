@@ -121,6 +121,11 @@ public class ProfileManager implements Savable {
 
     }
 
+    @Override
+    public void readFromGeniaXml(Element parent, String content) {
+
+    }
+
     public Profile getDefaultProfile() {
         return defaultProfile;
     }

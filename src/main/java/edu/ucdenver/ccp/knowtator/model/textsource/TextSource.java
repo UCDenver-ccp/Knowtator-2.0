@@ -135,4 +135,9 @@ public class TextSource implements Savable {
     public void writeToBratStandoff(Writer writer) throws IOException {
         annotationManager.writeToBratStandoff(writer);
     }
+
+    @Override
+    public void readFromGeniaXml(Element parent, String content) {
+
+    }
 }

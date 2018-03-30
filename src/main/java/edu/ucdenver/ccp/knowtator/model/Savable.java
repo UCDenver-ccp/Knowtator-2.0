@@ -42,4 +42,6 @@ public interface Savable {
     void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content);
 
     void writeToBratStandoff(Writer writer) throws IOException;
+
+    void readFromGeniaXml(Element parent, String content);
 }

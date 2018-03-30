@@ -223,6 +223,11 @@ public class GraphSpace extends mxGraph implements Savable {
     }
 
     @Override
+    public void readFromGeniaXml(Element parent, String content) {
+
+    }
+
+    @Override
     public void writeToKnowtatorXml(Document dom, Element textSourceElement) {
         Element graphElem = dom.createElement(KnowtatorXMLTags.GRAPH);
         graphElem.setAttribute(KnowtatorXMLTags.ID, id);

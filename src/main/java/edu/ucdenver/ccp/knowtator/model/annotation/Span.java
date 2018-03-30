@@ -227,6 +227,11 @@ public class Span implements Savable {
 		writer.append(String.format("%d %d", start, end));
 	}
 
+	@Override
+	public void readFromGeniaXml(Element parent, String content) {
+
+	}
+
 
 	//	public static Span shortest(List<Span> spans) {
 //		if (spans.size() == 0)

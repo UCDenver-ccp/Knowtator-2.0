@@ -24,5 +24,19 @@
 
 package edu.ucdenver.ccp.knowtator.model.io.genia;
 
-public class GeniaUtil {
+import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.io.BasicIOUtil;
+
+import java.io.File;
+
+public class GeniaUtil implements BasicIOUtil {
+    @Override
+    public void read(Savable savable, File file) {
+
+    }
+
+    @Override
+    public void write(Savable savable, File file) {
+
+    }
 }
