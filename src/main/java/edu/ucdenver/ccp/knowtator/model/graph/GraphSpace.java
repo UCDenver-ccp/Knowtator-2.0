@@ -142,7 +142,7 @@ public class GraphSpace extends mxGraph implements Savable {
      */
 
     @Override
-    public void readFromKnowtatorXml(Element parent, String content) {
+    public void readFromKnowtatorXML(Element parent, String content) {
         for (Node graphVertexNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.VERTEX))) {
             Element graphVertexElem = (Element) graphVertexNode;
 
@@ -176,7 +176,7 @@ public class GraphSpace extends mxGraph implements Savable {
     }
 
     @Override
-    public void readFromOldKnowtatorXml(Element parent) {
+    public void readFromOldKnowtatorXML(Element parent) {
 
     }
 
@@ -223,22 +223,32 @@ public class GraphSpace extends mxGraph implements Savable {
     }
 
     @Override
-    public void readFromGeniaXml(Element parent, String content) {
+    public void readFromGeniaXML(Element parent, String content) {
 
     }
 
     @Override
-    public void writeToKnowtatorXml(Document dom, Element textSourceElement) {
+    public void readFromUIMAXMI(Element parent, String content) {
+
+    }
+
+    @Override
+    public void writeToUIMAXMI(Document dom, Element parent) {
+
+    }
+
+    @Override
+    public void writeToKnowtatorXML(Document dom, Element textSourceElement) {
         Element graphElem = dom.createElement(KnowtatorXMLTags.GRAPH);
         graphElem.setAttribute(KnowtatorXMLTags.ID, id);
         Arrays.stream(getChildVertices(getDefaultParent())).forEach(vertex -> {
             if (vertex instanceof  AnnotationNode) {
-                ((AnnotationNode) vertex).writeToKnowtatorXml(dom, graphElem);
+                ((AnnotationNode) vertex).writeToKnowtatorXML(dom, graphElem);
             }
         });
         Arrays.stream(getChildEdges(getDefaultParent())).forEach(edge -> {
             if (edge instanceof Triple) {
-                ((Triple) edge).writeToKnowtatorXml(dom, graphElem);
+                ((Triple) edge).writeToKnowtatorXML(dom, graphElem);
             }
         });
         textSourceElement.appendChild(graphElem);

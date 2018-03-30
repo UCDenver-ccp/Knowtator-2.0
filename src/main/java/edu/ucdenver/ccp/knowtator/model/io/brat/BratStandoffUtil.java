@@ -41,7 +41,7 @@ import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class StandoffUtil implements BasicIOUtil {
+public class BratStandoffUtil implements BasicIOUtil {
 
     @Override
     public void read(Savable textSourceManager, File file) {

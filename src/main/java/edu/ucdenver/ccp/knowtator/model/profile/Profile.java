@@ -80,7 +80,7 @@ public class Profile implements Savable {
 
 
     @Override
-    public void writeToKnowtatorXml(Document dom, Element root) {
+    public void writeToKnowtatorXML(Document dom, Element root) {
         Element profileElem = dom.createElement(KnowtatorXMLTags.PROFILE);
         profileElem.setAttribute(KnowtatorXMLTags.ID, profileID);
         colors.forEach((classID, c) -> {
@@ -93,7 +93,7 @@ public class Profile implements Savable {
     }
 
     @Override
-    public void readFromKnowtatorXml(Element parent, String content) {
+    public void readFromKnowtatorXML(Element parent, String content) {
         for (Node highlighterNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.HIGHLIGHTER))) {
             Element highlighterElement = (Element) highlighterNode;
 
@@ -104,7 +104,7 @@ public class Profile implements Savable {
     }
 
     @Override
-    public void readFromOldKnowtatorXml(Element parent) {
+    public void readFromOldKnowtatorXML(Element parent) {
 
     }
 
@@ -120,7 +120,17 @@ public class Profile implements Savable {
     }
 
     @Override
-    public void readFromGeniaXml(Element parent, String content) {
+    public void readFromGeniaXML(Element parent, String content) {
+
+    }
+
+    @Override
+    public void readFromUIMAXMI(Element parent, String content) {
+
+    }
+
+    @Override
+    public void writeToUIMAXMI(Document dom, Element parent) {
 
     }
 }

@@ -199,7 +199,7 @@ public class Span implements Savable {
 		return getEnd() - getStart();
 	}
 
-	public void writeToKnowtatorXml(Document dom, Element annotationElem) {
+	public void writeToKnowtatorXML(Document dom, Element annotationElem) {
 		Element spanElement = dom.createElement(KnowtatorXMLTags.SPAN);
 		spanElement.setAttribute(KnowtatorXMLTags.SPAN_START, String.valueOf(start));
 		spanElement.setAttribute(KnowtatorXMLTags.SPAN_END, String.valueOf(end));
@@ -208,12 +208,12 @@ public class Span implements Savable {
 	}
 
 	@Override
-	public void readFromKnowtatorXml(Element parent, String content) {
+	public void readFromKnowtatorXML(Element parent, String content) {
 
 	}
 
 	@Override
-	public void readFromOldKnowtatorXml(Element parent) {
+	public void readFromOldKnowtatorXML(Element parent) {
 
 	}
 
@@ -228,7 +228,17 @@ public class Span implements Savable {
 	}
 
 	@Override
-	public void readFromGeniaXml(Element parent, String content) {
+	public void readFromGeniaXML(Element parent, String content) {
+
+	}
+
+	@Override
+	public void readFromUIMAXMI(Element parent, String content) {
+
+	}
+
+	@Override
+	public void writeToUIMAXMI(Document dom, Element parent) {
 
 	}
 

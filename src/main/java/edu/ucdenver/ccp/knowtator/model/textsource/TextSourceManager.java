@@ -73,29 +73,29 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
     }
 
     @Override
-    public void writeToKnowtatorXml(Document dom, Element parent) {
-        textSources.values().forEach(textSource -> textSource.writeToKnowtatorXml(dom, parent));
+    public void writeToKnowtatorXML(Document dom, Element parent) {
+        textSources.values().forEach(textSource -> textSource.writeToKnowtatorXML(dom, parent));
 
     }
 
     @Override
-    public void readFromKnowtatorXml(Element parent, String content) {
+    public void readFromKnowtatorXML(Element parent, String content) {
         for (Node documentNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.DOCUMENT))) {
             Element documentElement = (Element) documentNode;
             String documentID = documentElement.getAttribute(KnowtatorXMLTags.ID);
             TextSource newTextSource = addTextSource(documentID);
             log.warn("\tXML: " + newTextSource);
-            newTextSource.readFromKnowtatorXml(documentElement, content);
+            newTextSource.readFromKnowtatorXML(documentElement, null);
         }
     }
 
     @Override
-    public void readFromOldKnowtatorXml(Element parent) {
+    public void readFromOldKnowtatorXML(Element parent) {
 
         String docID = parent.getAttribute(OldXmlTags.TEXT_SOURCE).replace(".txt", "");
         TextSource newTextSource = addTextSource(docID);
         log.warn("\tOLD XML: " + newTextSource);
-        newTextSource.readFromOldKnowtatorXml(parent);
+        newTextSource.readFromOldKnowtatorXML(parent);
     }
 
     @Override
@@ -120,8 +120,18 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
     }
 
     @Override
-    public void readFromGeniaXml(Element parent, String content) {
+    public void readFromGeniaXML(Element parent, String content) {
 
+    }
+
+    @Override
+    public void readFromUIMAXMI(Element parent, String content) {
+
+    }
+
+    @Override
+    public void writeToUIMAXMI(Document dom, Element parent) {
+        textSources.values().forEach(textSource -> textSource.writeToUIMAXMI(dom, parent));
     }
 
     public KnowtatorManager getManager() {

@@ -26,9 +26,10 @@ package edu.ucdenver.ccp.knowtator.model.project;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.model.io.brat.StandoffUtil;
-import edu.ucdenver.ccp.knowtator.model.io.genia.GeniaUtil;
+import edu.ucdenver.ccp.knowtator.model.io.brat.BratStandoffUtil;
+import edu.ucdenver.ccp.knowtator.model.io.genia.GeniaXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
+import edu.ucdenver.ccp.knowtator.model.io.uima.UIMAXMIUtil;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -48,15 +49,16 @@ public class ProjectManager {
     private File ontologiesLocation;
     private File annotationsLocation;
     private File profilesLocation;
-    private StandoffUtil standoffUtil;
-    private GeniaUtil geniaUtil;
+    private BratStandoffUtil bratStandoffUtil;
+    private GeniaXMLUtil geniaXMLUtil;
+    private UIMAXMIUtil uimaXMIUtil;
 
     public ProjectManager(KnowtatorManager manager) {
         this.manager = manager;
         knowtatorXMLUtil = new KnowtatorXMLUtil();
-        standoffUtil = new StandoffUtil();
-        geniaUtil = new GeniaUtil();
-
+        bratStandoffUtil = new BratStandoffUtil();
+        geniaXMLUtil = new GeniaXMLUtil();
+        uimaXMIUtil = new UIMAXMIUtil();
     }
 
     public File getProjectLocation() {
@@ -184,18 +186,22 @@ public class ProjectManager {
     }
 
     public void exportToBrat(TextSource textSource, File file) {
-        standoffUtil.write(textSource, file);
+        bratStandoffUtil.write(textSource, file);
     }
 
     public void importBrat(File file) {
-        standoffUtil.read(manager.getTextSourceManager(), file);
+        bratStandoffUtil.read(manager.getTextSourceManager(), file);
     }
 
     public void exportToGenia(TextSource textSource, File file) {
-        geniaUtil.write(textSource, file);
+        geniaXMLUtil.write(textSource, file);
     }
 
     public void importGenia(File file) {
-        geniaUtil.read(manager.getTextSourceManager(), file);
+        geniaXMLUtil.read(manager.getTextSourceManager(), file);
     }
+
+    public void exportToUIMA(File file) { uimaXMIUtil.write(manager.getTextSourceManager(), file);}
+
+    public void importUIMA(File file) { uimaXMIUtil.read(manager.getTextSourceManager(), file);}
 }

@@ -22,10 +22,9 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.io.knowtator;
+package edu.ucdenver.ccp.knowtator.model.io.uima;
 
 import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.annotation.Span;
 import edu.ucdenver.ccp.knowtator.model.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.model.io.XMLUtil;
 import org.apache.log4j.Logger;
@@ -38,14 +37,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-public final class KnowtatorXMLUtil extends XMLUtil implements BasicIOUtil {
-    private static final Logger log = Logger.getLogger(KnowtatorXMLUtil.class);
-
-
+public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
+    private static final Logger log = Logger.getLogger(UIMAXMIUtil.class);
 
 
     @Override
@@ -64,16 +59,12 @@ public final class KnowtatorXMLUtil extends XMLUtil implements BasicIOUtil {
                 doc = db.parse(is);
                 doc.getDocumentElement().normalize();
 
-                List<Node> knowtatorNodes = asList(doc.getElementsByTagName(KnowtatorXMLTags.KNOWTATOR_PROJECT));
-                if (knowtatorNodes.size() > 0) {
-                    Element knowtatorElement = (Element) knowtatorNodes.get(0);
-                    savable.readFromKnowtatorXML(knowtatorElement, null);
+                List<Node> uimaNodes = asList(doc.getElementsByTagName(UIMAXMITags.XMI_XMI));
+                if (uimaNodes.size() > 0) {
+                    Element uimaElement = (Element) uimaNodes.get(0);
+                    savable.readFromKnowtatorXML(uimaElement, null);
                 }
 
-                List<Node> annotationNodes = asList(doc.getElementsByTagName(OldXmlTags.ANNOTATIONS));
-                if (annotationNodes.size() > 0) {
-                    savable.readFromOldKnowtatorXML(doc.getDocumentElement());
-                }
             } catch (IllegalArgumentException | IOException | SAXException e) {
                 e.printStackTrace();
             }
@@ -93,56 +84,13 @@ public final class KnowtatorXMLUtil extends XMLUtil implements BasicIOUtil {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.newDocument();
 
-            Element root = dom.createElement(KnowtatorXMLTags.KNOWTATOR_PROJECT);
+            Element root = dom.createElement(UIMAXMITags.XMI_XMI);
             dom.appendChild(root);
-            savable.writeToKnowtatorXML(dom, root);
+            savable.writeToUIMAXMI(dom, root);
 
             finishWritingXML(dom, file);
         } catch (ParserConfigurationException e1) {
             e1.printStackTrace();
         }
-
     }
-
-
-
-    public static List<Span> getSpanInfo(Element annotationElement) {
-        List<Span> spans = new ArrayList<>();
-
-        Element spanElement;
-        int spanStart;
-        int spanEnd;
-        String spannedText;
-        for (Node spanNode : KnowtatorXMLUtil.asList(annotationElement.getElementsByTagName(OldXmlTags.SPAN))) {
-            if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
-                spanElement = (Element) spanNode;
-                spanStart = Integer.parseInt(spanElement.getAttribute(OldXmlTags.SPAN_START));
-                spanEnd = Integer.parseInt(spanElement.getAttribute(OldXmlTags.SPAN_END));
-                spannedText = spanElement.getTextContent();
-
-                spans.add(new Span(spanStart, spanEnd, spannedText));
-            }
-        }
-        return spans;
-    }
-
-    public static HashMap<String, Element> getClassIDsFromXml(Element textSourceElement) {
-        /*
-        Next parse classes and add the annotations
-         */
-        HashMap<String, Element> mentionTracker = new HashMap<>();
-
-        for (Node classNode : KnowtatorXMLUtil.asList(textSourceElement.getElementsByTagName(OldXmlTags.CLASS_MENTION))) {
-            if (classNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element classElement = (Element) classNode;
-
-                String annotationID = classElement.getAttribute(OldXmlTags.ID);
-                mentionTracker.put(annotationID, classElement);
-            }
-        }
-
-        return mentionTracker;
-    }
-
-
 }

@@ -33,15 +33,19 @@ import java.util.List;
 import java.util.Map;
 
 public interface Savable {
-    void writeToKnowtatorXml(Document dom, Element parent);
+    void writeToKnowtatorXML(Document dom, Element parent);
 
-    void readFromKnowtatorXml(Element parent, String content);
+    void readFromKnowtatorXML(Element parent, String content);
 
-    void readFromOldKnowtatorXml(Element parent);
+    void readFromOldKnowtatorXML(Element parent);
 
     void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content);
 
     void writeToBratStandoff(Writer writer) throws IOException;
 
-    void readFromGeniaXml(Element parent, String content);
+    void readFromGeniaXML(Element parent, String content);
+
+    void readFromUIMAXMI (Element parent, String content);
+
+    void writeToUIMAXMI (Document dom, Element parent);
 }

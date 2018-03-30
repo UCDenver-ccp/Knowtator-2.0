@@ -98,18 +98,18 @@ public class TextSource implements Savable {
         return String.format("TextSource: docID: %s", docID);
     }
     @Override
-    public void writeToKnowtatorXml(Document dom, Element parent) {
+    public void writeToKnowtatorXML(Document dom, Element parent) {
         Element textSourceElement = dom.createElement(KnowtatorXMLTags.DOCUMENT);
         parent.appendChild(textSourceElement);
         textSourceElement.setAttribute(KnowtatorXMLTags.ID, docID);
-        annotationManager.writeToKnowtatorXml(dom, textSourceElement);
+        annotationManager.writeToKnowtatorXML(dom, textSourceElement);
     }
 
     @Override
-    public void readFromKnowtatorXml(Element parent, String content) {
+    public void readFromKnowtatorXML(Element parent, String content) {
         try {
             content = FileUtils.readFileToString(file, "UTF-8");
-            annotationManager.readFromKnowtatorXml(parent, content);
+            annotationManager.readFromKnowtatorXML(parent, content);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,8 +117,8 @@ public class TextSource implements Savable {
     }
 
     @Override
-    public void readFromOldKnowtatorXml(Element parent) {
-        annotationManager.readFromOldKnowtatorXml(parent);
+    public void readFromOldKnowtatorXML(Element parent) {
+        annotationManager.readFromOldKnowtatorXML(parent);
     }
 
     @Override
@@ -137,7 +137,17 @@ public class TextSource implements Savable {
     }
 
     @Override
-    public void readFromGeniaXml(Element parent, String content) {
+    public void readFromGeniaXML(Element parent, String content) {
 
+    }
+
+    @Override
+    public void readFromUIMAXMI(Element parent, String content) {
+
+    }
+
+    @Override
+    public void writeToUIMAXMI(Document dom, Element parent) {
+        annotationManager.writeToUIMAXMI(dom, parent);
     }
 }

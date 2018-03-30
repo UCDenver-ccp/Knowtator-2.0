@@ -89,24 +89,24 @@ public class ProfileManager implements Savable {
         return profiles;
     }
 
-    public void writeToKnowtatorXml(Document dom, Element root) {
-        profiles.values().forEach(profile -> profile.writeToKnowtatorXml(dom, root));
+    public void writeToKnowtatorXML(Document dom, Element root) {
+        profiles.values().forEach(profile -> profile.writeToKnowtatorXML(dom, root));
     }
 
     @Override
-    public void readFromKnowtatorXml(Element parent, String content) {
+    public void readFromKnowtatorXML(Element parent, String content) {
         for (Node profileNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.PROFILE))) {
             Element profileElement = (Element) profileNode;
             String profileID = profileElement.getAttribute(KnowtatorXMLTags.ID);
 
             Profile newProfile = addNewProfile(profileID);
             log.warn("\tXML: " + newProfile);
-            newProfile.readFromKnowtatorXml(profileElement, content);
+            newProfile.readFromKnowtatorXML(profileElement, content);
         }
     }
 
     @Override
-    public void readFromOldKnowtatorXml(Element parent) {
+    public void readFromOldKnowtatorXML(Element parent) {
 
     }
 
@@ -122,7 +122,17 @@ public class ProfileManager implements Savable {
     }
 
     @Override
-    public void readFromGeniaXml(Element parent, String content) {
+    public void readFromGeniaXML(Element parent, String content) {
+
+    }
+
+    @Override
+    public void readFromUIMAXMI(Element parent, String content) {
+
+    }
+
+    @Override
+    public void writeToUIMAXMI(Document dom, Element parent) {
 
     }
 

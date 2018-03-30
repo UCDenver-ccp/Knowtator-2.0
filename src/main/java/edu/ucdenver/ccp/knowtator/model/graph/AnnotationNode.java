@@ -51,7 +51,7 @@ public class AnnotationNode extends mxCell implements Savable{
     }
 
     @Override
-    public void writeToKnowtatorXml(Document dom, Element parent) {
+    public void writeToKnowtatorXML(Document dom, Element parent) {
         Element vertexElem = dom.createElement(KnowtatorXMLTags.VERTEX);
         vertexElem.setAttribute(KnowtatorXMLTags.ID, getId());
         vertexElem.setAttribute(KnowtatorXMLTags.ANNOTATION, annotation.getID());
@@ -59,12 +59,12 @@ public class AnnotationNode extends mxCell implements Savable{
     }
 
     @Override
-    public void readFromKnowtatorXml(Element parent, String content) {
+    public void readFromKnowtatorXML(Element parent, String content) {
 
     }
 
     @Override
-    public void readFromOldKnowtatorXml(Element parent) {
+    public void readFromOldKnowtatorXML(Element parent) {
 
     }
 
@@ -80,7 +80,17 @@ public class AnnotationNode extends mxCell implements Savable{
     }
 
     @Override
-    public void readFromGeniaXml(Element parent, String content) {
+    public void readFromGeniaXML(Element parent, String content) {
+
+    }
+
+    @Override
+    public void readFromUIMAXMI(Element parent, String content) {
+
+    }
+
+    @Override
+    public void writeToUIMAXMI(Document dom, Element parent) {
 
     }
 

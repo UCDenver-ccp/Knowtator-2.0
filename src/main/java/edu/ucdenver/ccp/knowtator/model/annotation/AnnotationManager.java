@@ -217,13 +217,13 @@ public class AnnotationManager implements Savable {
         return newGraphSpace;
     }
 
-    public void writeToKnowtatorXml(Document dom, Element textSourceElement) {
-        getAnnotations().forEach(annotation -> annotation.writeToKnowtatorXml(dom, textSourceElement));
-        graphSpaces.forEach(graphSpace -> graphSpace.writeToKnowtatorXml(dom, textSourceElement));
+    public void writeToKnowtatorXML(Document dom, Element textSourceElement) {
+        getAnnotations().forEach(annotation -> annotation.writeToKnowtatorXML(dom, textSourceElement));
+        graphSpaces.forEach(graphSpace -> graphSpace.writeToKnowtatorXML(dom, textSourceElement));
     }
 
     @Override
-    public void readFromKnowtatorXml(Element parent, String content) {
+    public void readFromKnowtatorXML(Element parent, String content) {
         Element annotationElement;
         String annotationID;
         String profileID;
@@ -248,7 +248,7 @@ public class AnnotationManager implements Savable {
 
             newAnnotation = new Annotation(classID, className, annotationID, textSource, profile, type);
 //            log.warn("\t\tXML: " + newAnnotation);
-            newAnnotation.readFromKnowtatorXml(annotationElement, content);
+            newAnnotation.readFromKnowtatorXML(annotationElement, content);
 
             addAnnotation(newAnnotation);
         }
@@ -261,12 +261,12 @@ public class AnnotationManager implements Savable {
             graphSpace = addGraphSpace(id);
 
             log.warn("\t\tXML: " + graphSpace);
-            graphSpace.readFromKnowtatorXml(graphSpaceElem, content);
+            graphSpace.readFromKnowtatorXML(graphSpaceElem, content);
         }
     }
 
     @Override
-    public void readFromOldKnowtatorXml(Element parent) {
+    public void readFromOldKnowtatorXML(Element parent) {
         Map<String, Element> classMentionToClassIDMap = KnowtatorXMLUtil.getClassIDsFromXml(parent);
 //        Map<String, Element> complexSlotMentionToClassIDMap = getComplexSlotsFromXml(textSourceElement);
 
@@ -307,7 +307,7 @@ public class AnnotationManager implements Savable {
 //
             newAnnotation = new Annotation(classID, className, annotationID, textSource, profile, "identity");
 
-            newAnnotation.readFromOldKnowtatorXml(annotationElement);
+            newAnnotation.readFromOldKnowtatorXML(annotationElement);
 //            spans.forEach(newAnnotation::addSpan);
             addAnnotation(newAnnotation);
 
@@ -369,8 +369,19 @@ public class AnnotationManager implements Savable {
     }
 
     @Override
-    public void readFromGeniaXml(Element parent, String content) {
+    public void readFromGeniaXML(Element parent, String content) {
 
+    }
+
+    @Override
+    public void readFromUIMAXMI(Element parent, String content) {
+
+    }
+
+    @Override
+    public void writeToUIMAXMI(Document dom, Element parent) {
+        annotationMap.values().forEach(annotation -> annotation.writeToUIMAXMI(dom, parent));
+        graphSpaces.forEach(graphSpace -> graphSpace.writeToUIMAXMI(dom, parent));
     }
 
     public List<GraphSpace> getGraphSpaces() {

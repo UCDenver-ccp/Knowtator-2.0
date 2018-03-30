@@ -199,7 +199,7 @@ public class Annotation implements Savable {
 		return overlappingAnnotations;
 	}
 
-	public void writeToKnowtatorXml(Document dom, Element textSourceElement) {
+	public void writeToKnowtatorXML(Document dom, Element textSourceElement) {
 		Element annotationElem = dom.createElement(KnowtatorXMLTags.ANNOTATION);
 		annotationElem.setAttribute(KnowtatorXMLTags.ID, id);
 		annotationElem.setAttribute(KnowtatorXMLTags.ANNOTATOR, annotator.getId());
@@ -210,13 +210,13 @@ public class Annotation implements Savable {
 		classElement.setTextContent(className);
 		annotationElem.appendChild(classElement);
 
-		spans.forEach(span -> span.writeToKnowtatorXml(dom, annotationElem));
+		spans.forEach(span -> span.writeToKnowtatorXML(dom, annotationElem));
 
 		textSourceElement.appendChild(annotationElem);
 	}
 
 	@Override
-	public void readFromKnowtatorXml(Element parent, String content) {
+	public void readFromKnowtatorXML(Element parent, String content) {
         Element spanElement;
         int spanStart;
         int spanEnd;
@@ -238,7 +238,7 @@ public class Annotation implements Savable {
 	}
 
 	@Override
-	public void readFromOldKnowtatorXml(Element parent) {
+	public void readFromOldKnowtatorXML(Element parent) {
 		List<Span> spans = KnowtatorXMLUtil.getSpanInfo(parent);
 		spans.forEach(this::addSpan);
 	}
@@ -272,7 +272,17 @@ public class Annotation implements Savable {
 	}
 
 	@Override
-	public void readFromGeniaXml(Element parent, String content) {
+	public void readFromGeniaXML(Element parent, String content) {
+
+	}
+
+	@Override
+	public void readFromUIMAXMI(Element parent, String content) {
+
+	}
+
+	@Override
+	public void writeToUIMAXMI(Document dom, Element parent) {
 
 	}
 

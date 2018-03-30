@@ -59,7 +59,7 @@ public class Triple extends mxCell implements Savable {
 //        setValue(property);
     }
 
-    public void writeToKnowtatorXml(Document dom, Element graphElem) {
+    public void writeToKnowtatorXML(Document dom, Element graphElem) {
         Element tripleElem = dom.createElement(KnowtatorXMLTags.TRIPLE);
         tripleElem.setAttribute(KnowtatorXMLTags.ID, id);
         tripleElem.setAttribute(KnowtatorXMLTags.ANNOTATOR, annotator.getId());
@@ -72,12 +72,12 @@ public class Triple extends mxCell implements Savable {
     }
 
     @Override
-    public void readFromKnowtatorXml(Element parent, String content) {
+    public void readFromKnowtatorXML(Element parent, String content) {
 
     }
 
     @Override
-    public void readFromOldKnowtatorXml(Element parent) {
+    public void readFromOldKnowtatorXML(Element parent) {
 
     }
 
@@ -93,7 +93,17 @@ public class Triple extends mxCell implements Savable {
     }
 
     @Override
-    public void readFromGeniaXml(Element parent, String content) {
+    public void readFromGeniaXML(Element parent, String content) {
+
+    }
+
+    @Override
+    public void readFromUIMAXMI(Element parent, String content) {
+
+    }
+
+    @Override
+    public void writeToUIMAXMI(Document dom, Element parent) {
 
     }
 
