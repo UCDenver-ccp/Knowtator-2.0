@@ -70,7 +70,7 @@ public final class KnowtatorXMLUtil extends XMLUtil implements BasicIOUtil {
                     savable.readFromKnowtatorXML(knowtatorElement, null);
                 }
 
-                List<Node> annotationNodes = asList(doc.getElementsByTagName(OldXmlTags.ANNOTATIONS));
+                List<Node> annotationNodes = asList(doc.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATIONS));
                 if (annotationNodes.size() > 0) {
                     savable.readFromOldKnowtatorXML(doc.getDocumentElement());
                 }
@@ -113,11 +113,11 @@ public final class KnowtatorXMLUtil extends XMLUtil implements BasicIOUtil {
         int spanStart;
         int spanEnd;
         String spannedText;
-        for (Node spanNode : KnowtatorXMLUtil.asList(annotationElement.getElementsByTagName(OldXmlTags.SPAN))) {
+        for (Node spanNode : KnowtatorXMLUtil.asList(annotationElement.getElementsByTagName(OldKnowtatorXMLTags.SPAN))) {
             if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
                 spanElement = (Element) spanNode;
-                spanStart = Integer.parseInt(spanElement.getAttribute(OldXmlTags.SPAN_START));
-                spanEnd = Integer.parseInt(spanElement.getAttribute(OldXmlTags.SPAN_END));
+                spanStart = Integer.parseInt(spanElement.getAttribute(OldKnowtatorXMLAttributes.SPAN_START));
+                spanEnd = Integer.parseInt(spanElement.getAttribute(OldKnowtatorXMLAttributes.SPAN_END));
                 spannedText = spanElement.getTextContent();
 
                 spans.add(new Span(spanStart, spanEnd, spannedText));
@@ -132,11 +132,11 @@ public final class KnowtatorXMLUtil extends XMLUtil implements BasicIOUtil {
          */
         HashMap<String, Element> mentionTracker = new HashMap<>();
 
-        for (Node classNode : KnowtatorXMLUtil.asList(textSourceElement.getElementsByTagName(OldXmlTags.CLASS_MENTION))) {
+        for (Node classNode : KnowtatorXMLUtil.asList(textSourceElement.getElementsByTagName(OldKnowtatorXMLTags.CLASS_MENTION))) {
             if (classNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element classElement = (Element) classNode;
 
-                String annotationID = classElement.getAttribute(OldXmlTags.ID);
+                String annotationID = classElement.getAttribute(OldKnowtatorXMLAttributes.ID);
                 mentionTracker.put(annotationID, classElement);
             }
         }

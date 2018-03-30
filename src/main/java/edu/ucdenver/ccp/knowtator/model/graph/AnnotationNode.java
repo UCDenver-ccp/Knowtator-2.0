@@ -28,6 +28,7 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -53,7 +54,7 @@ public class AnnotationNode extends mxCell implements Savable{
     @Override
     public void writeToKnowtatorXML(Document dom, Element parent) {
         Element vertexElem = dom.createElement(KnowtatorXMLTags.VERTEX);
-        vertexElem.setAttribute(KnowtatorXMLTags.ID, getId());
+        vertexElem.setAttribute(KnowtatorXMLAttributes.ID, getId());
         vertexElem.setAttribute(KnowtatorXMLTags.ANNOTATION, annotation.getID());
         parent.appendChild(vertexElem);
     }

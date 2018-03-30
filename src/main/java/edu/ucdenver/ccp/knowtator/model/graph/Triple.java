@@ -27,8 +27,9 @@ package edu.ucdenver.ccp.knowtator.model.graph;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -61,13 +62,13 @@ public class Triple extends mxCell implements Savable {
 
     public void writeToKnowtatorXML(Document dom, Element graphElem) {
         Element tripleElem = dom.createElement(KnowtatorXMLTags.TRIPLE);
-        tripleElem.setAttribute(KnowtatorXMLTags.ID, id);
-        tripleElem.setAttribute(KnowtatorXMLTags.ANNOTATOR, annotator.getId());
-        tripleElem.setAttribute(KnowtatorXMLTags.TRIPLE_SUBJECT, getSource().getId());
-        tripleElem.setAttribute(KnowtatorXMLTags.TRIPLE_OBJECT, getTarget().getId());
-        tripleElem.setAttribute(KnowtatorXMLTags.TRIPLE_PROPERTY, getValue() instanceof OWLObjectProperty ? ((OWLObjectProperty) getValue()).getIRI().getShortForm() : getValue().toString());
-        tripleElem.setAttribute(KnowtatorXMLTags.TRIPLE_QUANTIFIER, quantifier);
-        tripleElem.setAttribute(KnowtatorXMLTags.TRIPLE_VALUE, quantifierValue);
+        tripleElem.setAttribute(KnowtatorXMLAttributes.ID, id);
+        tripleElem.setAttribute(KnowtatorXMLAttributes.ANNOTATOR, annotator.getId());
+        tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_SUBJECT, getSource().getId());
+        tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_OBJECT, getTarget().getId());
+        tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_PROPERTY, getValue() instanceof OWLObjectProperty ? ((OWLObjectProperty) getValue()).getIRI().getShortForm() : getValue().toString());
+        tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_QUANTIFIER, quantifier);
+        tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_VALUE, quantifierValue);
         graphElem.appendChild(tripleElem);
     }
 

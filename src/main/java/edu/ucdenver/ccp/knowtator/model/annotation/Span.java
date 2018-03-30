@@ -31,6 +31,7 @@ package edu.ucdenver.ccp.knowtator.model.annotation;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -201,8 +202,8 @@ public class Span implements Savable {
 
 	public void writeToKnowtatorXML(Document dom, Element annotationElem) {
 		Element spanElement = dom.createElement(KnowtatorXMLTags.SPAN);
-		spanElement.setAttribute(KnowtatorXMLTags.SPAN_START, String.valueOf(start));
-		spanElement.setAttribute(KnowtatorXMLTags.SPAN_END, String.valueOf(end));
+		spanElement.setAttribute(KnowtatorXMLAttributes.SPAN_START, String.valueOf(start));
+		spanElement.setAttribute(KnowtatorXMLAttributes.SPAN_END, String.valueOf(end));
 		spanElement.setTextContent(getSpannedText());
 		annotationElem.appendChild(spanElement);
 	}

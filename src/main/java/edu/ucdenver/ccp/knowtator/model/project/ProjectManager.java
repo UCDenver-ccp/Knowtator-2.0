@@ -201,7 +201,7 @@ public class ProjectManager {
         geniaXMLUtil.read(manager.getTextSourceManager(), file);
     }
 
-    public void exportToUIMA(File file) { uimaXMIUtil.write(manager.getTextSourceManager(), file);}
+    public void exportToUIMA(TextSource textSource, File file) { uimaXMIUtil.write(textSource, file);}
 
     public void importUIMA(File file) { uimaXMIUtil.read(manager.getTextSourceManager(), file);}
 }

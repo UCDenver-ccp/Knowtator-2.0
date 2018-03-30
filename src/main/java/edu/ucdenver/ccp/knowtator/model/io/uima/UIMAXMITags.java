@@ -38,6 +38,7 @@ class UIMAXMITags {
 
     // Under tcas namespace
     static final String TCAS_DOCUMENT_ANNOTATION = "tcas:DocumentAnnotation";
+    static final String LANGUAGE = "language";
 
     // Under xmlns namespace
     static final String XMLNS_ANNOTATION = "xmlns:annotation";
@@ -49,22 +50,13 @@ class UIMAXMITags {
 
     // Under annotation namespace
     static final String ANNOTATION_DOCUMENT_INFORMATION = "annotation:CCPDocumentInformation";
-
     static final String ANNOTATION_TEXT_ANNOTATION = "annotation:CCPTextAnnotation";
-    static final String ANNOTATION_ID = "annotationID";
-    static final String ANNOTATION_SETS = "annotationSets";
-    static final String ANNOTATOR = "annotator";
-    static final String BEGIN = "begin";
-    static final String CLASS_MENTION = "classMention";
-    static final String DOCUMENT_SECTION_ID = "documentSectionID";
-    static final String END = "end";
-    static final String NUMBER_OF_SPANS = "numberOfSpans";
-    static final String SOFA = "sofa";
-    static final String SPANS = "spans";
-
     static final String ANNOTATION_SPAN = "annotation:CCPSpan";
     static final String ANNOTATION_ANNOTATOR = "annotation:CCPAnnotator";
 
+
     // Under mention namespace
-    static final String CLASSMENTION = "mention:CCPClassMention";
+    static final String MENTION_CLASS_MENTION = "mention:CCPClassMention";
+    static final String CCP_TEXT_ANNOTATION = "ccpTextAnnotation";
+
 }

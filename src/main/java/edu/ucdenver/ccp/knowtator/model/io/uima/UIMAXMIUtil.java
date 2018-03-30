@@ -84,7 +84,18 @@ public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.newDocument();
 
+
             Element root = dom.createElement(UIMAXMITags.XMI_XMI);
+
+            // TODO: Verify that this information is correct
+            root.setAttribute(UIMAXMITags.XMI_VERSION, "2.0");
+            root.setAttribute(UIMAXMITags.XMLNS_ANNOTATION, "http:///edu/ucdenver/ccp/nlp/core/uima/annotation.ecore");
+            root.setAttribute(UIMAXMITags.XMLNS_CAS, "http:///uima/cas.ecore");
+            root.setAttribute(UIMAXMITags.XMLNS_MENTION, "http:///edu/ucdenver/ccp/nlp/core/uima/mention.ecore");
+            root.setAttribute(UIMAXMITags.XMLNS_METADATA, "http:///edu/ucdenver/ccp/nlp/core/uima/annotation/metadata.ecore");
+            root.setAttribute(UIMAXMITags.XMLNS_TCAS, "http:///uima/tcas.ecore");
+            root.setAttribute(UIMAXMITags.XMLNS_XMI, "http://www.omg.org/XMI");
+
             dom.appendChild(root);
             savable.writeToUIMAXMI(dom, root);
 

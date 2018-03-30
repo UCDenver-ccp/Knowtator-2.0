@@ -27,9 +27,10 @@ package edu.ucdenver.ccp.knowtator.model.textsource;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.io.brat.StandoffTags;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.io.knowtator.OldXmlTags;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.OldKnowtatorXMLAttributes;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
@@ -82,7 +83,7 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
     public void readFromKnowtatorXML(Element parent, String content) {
         for (Node documentNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.DOCUMENT))) {
             Element documentElement = (Element) documentNode;
-            String documentID = documentElement.getAttribute(KnowtatorXMLTags.ID);
+            String documentID = documentElement.getAttribute(KnowtatorXMLAttributes.ID);
             TextSource newTextSource = addTextSource(documentID);
             log.warn("\tXML: " + newTextSource);
             newTextSource.readFromKnowtatorXML(documentElement, null);
@@ -92,7 +93,7 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
     @Override
     public void readFromOldKnowtatorXML(Element parent) {
 
-        String docID = parent.getAttribute(OldXmlTags.TEXT_SOURCE).replace(".txt", "");
+        String docID = parent.getAttribute(OldKnowtatorXMLAttributes.TEXT_SOURCE).replace(".txt", "");
         TextSource newTextSource = addTextSource(docID);
         log.warn("\tOLD XML: " + newTextSource);
         newTextSource.readFromOldKnowtatorXML(parent);

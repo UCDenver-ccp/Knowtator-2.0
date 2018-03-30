@@ -24,19 +24,22 @@
 
 package edu.ucdenver.ccp.knowtator.model.io.knowtator;
 
-public class KnowtatorXMLTags {
+public class KnowtatorXMLAttributes {
+    public static final String ID = "id";
 
-    static final String KNOWTATOR_PROJECT = "knowtator-project";
+    public static final String ANNOTATOR = "annotator";  // also in OLD
+    public static final String TYPE = "type";
+    public static final String SPAN_START = "start";
+    public static final String SPAN_END = "end";
 
-    public static final String DOCUMENT = "document";
-    public static final String ANNOTATION = "annotation";
-    public static final String CLASS = "class";
-    public static final String SPAN = "span";
+    // Graph data
+    public static final String TRIPLE_SUBJECT = "subject";
+    public static final String TRIPLE_OBJECT = "object";
+    public static final String TRIPLE_PROPERTY = "property";
+    public static final String TRIPLE_QUANTIFIER = "quantifier";
+    public static final String TRIPLE_VALUE = "value";
 
-    public static final String GRAPH_SPACE = "graph-space";
-    public static final String VERTEX = "vertex";
-    public static final String TRIPLE = "triple";
-
-    public static final String PROFILE = "profile";
-    public static final String HIGHLIGHTER = "highlighter";
+    // Used for saving profile settings
+    public static final String COLOR = "color";
+    public static final String CLASS_ID = "class";
 }

@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator.model.profile;
 
 import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
 import org.apache.log4j.LogManager;
@@ -82,11 +83,11 @@ public class Profile implements Savable {
     @Override
     public void writeToKnowtatorXML(Document dom, Element root) {
         Element profileElem = dom.createElement(KnowtatorXMLTags.PROFILE);
-        profileElem.setAttribute(KnowtatorXMLTags.ID, profileID);
+        profileElem.setAttribute(KnowtatorXMLAttributes.ID, profileID);
         colors.forEach((classID, c) -> {
             Element e = dom.createElement(KnowtatorXMLTags.HIGHLIGHTER);
-            e.setAttribute(KnowtatorXMLTags.CLASS, classID);
-            e.setAttribute(KnowtatorXMLTags.COLOR, String.format("#%06x", c.getRGB() & 0x00FFFFFF));
+            e.setAttribute(KnowtatorXMLAttributes.CLASS_ID, classID);
+            e.setAttribute(KnowtatorXMLAttributes.COLOR, String.format("#%06x", c.getRGB() & 0x00FFFFFF));
             profileElem.appendChild(e);
         });
         root.appendChild(profileElem);
@@ -97,8 +98,8 @@ public class Profile implements Savable {
         for (Node highlighterNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.HIGHLIGHTER))) {
             Element highlighterElement = (Element) highlighterNode;
 
-            String classID = highlighterElement.getAttribute(KnowtatorXMLTags.CLASS);
-            String color = highlighterElement.getAttribute(KnowtatorXMLTags.COLOR);
+            String classID = highlighterElement.getAttribute(KnowtatorXMLAttributes.CLASS_ID);
+            String color = highlighterElement.getAttribute(KnowtatorXMLAttributes.COLOR);
             addColor(classID, color);
         }
     }

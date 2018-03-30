@@ -30,9 +30,7 @@ import edu.ucdenver.ccp.knowtator.model.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.graph.Triple;
 import edu.ucdenver.ccp.knowtator.model.io.brat.StandoffTags;
-import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
-import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.io.knowtator.OldXmlTags;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.log4j.Logger;
@@ -238,13 +236,13 @@ public class AnnotationManager implements Savable {
         for (Node annotationNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.ANNOTATION))) {
             annotationElement = (Element) annotationNode;
 
-            annotationID = annotationElement.getAttribute(KnowtatorXMLTags.ID);
-            profileID = annotationElement.getAttribute(KnowtatorXMLTags.ANNOTATOR);
-            type = annotationElement.getAttribute(KnowtatorXMLTags.TYPE);
+            annotationID = annotationElement.getAttribute(KnowtatorXMLAttributes.ID);
+            profileID = annotationElement.getAttribute(KnowtatorXMLAttributes.ANNOTATOR);
+            type = annotationElement.getAttribute(KnowtatorXMLAttributes.TYPE);
 
             profile = manager.getProfileManager().addNewProfile(profileID);
             className = annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0).getTextContent();
-            classID = ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0)).getAttribute(KnowtatorXMLTags.ID);
+            classID = ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0)).getAttribute(KnowtatorXMLAttributes.ID);
 
             newAnnotation = new Annotation(classID, className, annotationID, textSource, profile, type);
 //            log.warn("\t\tXML: " + newAnnotation);
@@ -253,11 +251,11 @@ public class AnnotationManager implements Savable {
             addAnnotation(newAnnotation);
         }
 
-        for (Node graphSpaceNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.GRAPH))) {
+        for (Node graphSpaceNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.GRAPH_SPACE))) {
             graphSpaceElem = (Element) graphSpaceNode;
 
 
-            id = graphSpaceElem.getAttribute(KnowtatorXMLTags.ID);
+            id = graphSpaceElem.getAttribute(KnowtatorXMLAttributes.ID);
             graphSpace = addGraphSpace(id);
 
             log.warn("\t\tXML: " + graphSpace);
@@ -277,29 +275,29 @@ public class AnnotationManager implements Savable {
         String classID;
         Annotation newAnnotation;
 
-        for (Node annotationNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(OldXmlTags.ANNOTATION))) {
+        for (Node annotationNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATION))) {
             annotationElement = (Element) annotationNode;
 
             Profile profile;
             try {
-                String profileID = annotationElement.getElementsByTagName(OldXmlTags.ANNOTATOR).item(0).getTextContent();
+                String profileID = annotationElement.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATOR).item(0).getTextContent();
                 profile = manager.getProfileManager().addNewProfile(profileID);
             } catch (NullPointerException npe) {
                 profile = manager.getProfileManager().getDefaultProfile();
             }
 
-            annotationID = ((Element) annotationElement.getElementsByTagName(OldXmlTags.MENTION).item(0)).getAttribute(OldXmlTags.ID);
+            annotationID = ((Element) annotationElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID);
             classElement = classMentionToClassIDMap.get(annotationID);
 
-            className = classElement.getElementsByTagName(OldXmlTags.MENTION_CLASS).item(0).getTextContent();
-            classID = ((Element) classElement.getElementsByTagName(OldXmlTags.MENTION_CLASS).item(0)).getAttribute(OldXmlTags.ID);
+            className = classElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION_CLASS).item(0).getTextContent();
+            classID = ((Element) classElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION_CLASS).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID);
 
-//                    if (classID.equals(OldXmlTags.MENTION_CLASS_ID_IDENTITY)) {
+//                    if (classID.equals(OldKnowtatorXMLTags.MENTION_CLASS_ID_IDENTITY)) {
 //                        newAnnotation = new Annotation(annotationID, textSource, profile);
-//                        Element complexSlotElement = complexSlotMentionToClassIDMap.get(((Element) classElement.getElementsByTagName(OldXmlTags.HAS_SLOT_MENTION).item(0)).getAttribute(OldXmlTags.HAS_SLOT_MENTION_ID));
-//                        if (((Element) complexSlotElement.getElementsByTagName(OldXmlTags.MENTION_SLOT).item(0)).getAttribute(OldXmlTags.MENTION_SLOT_ID).equals(OldXmlTags.MENTION_SLOT_ID_COREFERENCE)) {
-//                            for (Node complexSlotMentionValueNode : KnowtatorXMLUtil.asList(complexSlotElement.getElementsByTagName(OldXmlTags.COMPLEX_SLOT_MENTION_VALUE))) {
-//                                ((IdentityChainAnnotation) newAnnotation).addCoreferringAnnotation(((Element) complexSlotMentionValueNode).getAttribute(OldXmlTags.COMPLEX_SLOT_MENTION_VALUE_VALUE));
+//                        Element complexSlotElement = complexSlotMentionToClassIDMap.get(((Element) classElement.getElementsByTagName(OldKnowtatorXMLTags.HAS_SLOT_MENTION).item(0)).getAttribute(OldKnowtatorXMLTags.HAS_SLOT_MENTION_ID));
+//                        if (((Element) complexSlotElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION_SLOT).item(0)).getAttribute(OldKnowtatorXMLTags.MENTION_SLOT_ID).equals(OldKnowtatorXMLTags.MENTION_SLOT_ID_COREFERENCE)) {
+//                            for (Node complexSlotMentionValueNode : KnowtatorXMLUtil.asList(complexSlotElement.getElementsByTagName(OldKnowtatorXMLTags.COMPLEX_SLOT_MENTION_VALUE))) {
+//                                ((IdentityChainAnnotation) newAnnotation).addCoreferringAnnotation(((Element) complexSlotMentionValueNode).getAttribute(OldKnowtatorXMLTags.COMPLEX_SLOT_MENTION_VALUE_VALUE));
 //                            }
 //                        }
 //

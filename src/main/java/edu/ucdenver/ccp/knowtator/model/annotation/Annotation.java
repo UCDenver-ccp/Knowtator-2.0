@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.model.annotation;
 
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.io.brat.StandoffTags;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
@@ -201,12 +202,12 @@ public class Annotation implements Savable {
 
 	public void writeToKnowtatorXML(Document dom, Element textSourceElement) {
 		Element annotationElem = dom.createElement(KnowtatorXMLTags.ANNOTATION);
-		annotationElem.setAttribute(KnowtatorXMLTags.ID, id);
-		annotationElem.setAttribute(KnowtatorXMLTags.ANNOTATOR, annotator.getId());
-		annotationElem.setAttribute(KnowtatorXMLTags.TYPE, type);
+		annotationElem.setAttribute(KnowtatorXMLAttributes.ID, id);
+		annotationElem.setAttribute(KnowtatorXMLAttributes.ANNOTATOR, annotator.getId());
+		annotationElem.setAttribute(KnowtatorXMLAttributes.TYPE, type);
 
 		Element classElement = dom.createElement(KnowtatorXMLTags.CLASS);
-		classElement.setAttribute(KnowtatorXMLTags.ID, classID);
+		classElement.setAttribute(KnowtatorXMLAttributes.ID, classID);
 		classElement.setTextContent(className);
 		annotationElem.appendChild(classElement);
 
@@ -224,8 +225,8 @@ public class Annotation implements Savable {
         for (Node spanNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.SPAN))) {
             if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
                 spanElement = (Element) spanNode;
-                spanStart = Integer.parseInt(spanElement.getAttribute(KnowtatorXMLTags.SPAN_START));
-                spanEnd = Integer.parseInt(spanElement.getAttribute(KnowtatorXMLTags.SPAN_END));
+                spanStart = Integer.parseInt(spanElement.getAttribute(KnowtatorXMLAttributes.SPAN_START));
+                spanEnd = Integer.parseInt(spanElement.getAttribute(KnowtatorXMLAttributes.SPAN_END));
 
 
                 spannedText = content.substring(spanStart, spanEnd);

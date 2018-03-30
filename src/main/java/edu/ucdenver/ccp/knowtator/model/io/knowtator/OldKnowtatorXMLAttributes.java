@@ -24,19 +24,25 @@
 
 package edu.ucdenver.ccp.knowtator.model.io.knowtator;
 
-public class KnowtatorXMLTags {
+public class OldKnowtatorXMLAttributes {
 
-    static final String KNOWTATOR_PROJECT = "knowtator-project";
+    public static final String ID = "id";
+    static final String SPAN_START = "start";
+    static final String SPAN_END = "end";
+    public static final String TEXT_SOURCE = "textSource";
 
-    public static final String DOCUMENT = "document";
-    public static final String ANNOTATION = "annotation";
-    public static final String CLASS = "class";
-    public static final String SPAN = "span";
+    // Class assigned to named entity
+    static final String HAS_SLOT_MENTION = "hasSlotMention";
+    // Complex Slot Mentions
+    static final String COMPLEX_SLOT_MENTION = "complexSlotMention";
+    static final String MENTION_SLOT = "mentionSlot";
+    static final String COMPLEX_SLOT_MENTION_VALUE = "complexSlotMentionValue";
+    static final String COMPLEX_SLOT_MENTION_VALUE_VALUE = "value";
+    // Coreference specific IDs
+    static final String MENTION_CLASS_ID_IDENTITY = "IDENTITY chain";
+    static final String MENTION_CLASS_IDENTITY = "IDENTITY chain";
+    static final String MENTION_SLOT_ID_COREFERENCE = "Coreferring strings";
+    static final String COMPLEX_SLOT_MENTION_ID_APPOS_HEAD = "APPOS Head";
+    static final String COMPLEX_SLOT_MENTION_ID_APPOS_ATTRIBUTES = "APPOS Attributes";
 
-    public static final String GRAPH_SPACE = "graph-space";
-    public static final String VERTEX = "vertex";
-    public static final String TRIPLE = "triple";
-
-    public static final String PROFILE = "profile";
-    public static final String HIGHLIGHTER = "highlighter";
 }
