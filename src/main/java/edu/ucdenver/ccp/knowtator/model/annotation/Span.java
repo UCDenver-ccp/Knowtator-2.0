@@ -34,6 +34,7 @@ import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
 import org.apache.log4j.Logger;
+import org.apache.uima.cas.CAS;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -240,6 +241,11 @@ public class Span implements Savable {
 
 	@Override
 	public void writeToUIMAXMI(Document dom, Element parent) {
+
+	}
+
+	@Override
+	public void convertToUIMA(CAS cas) {
 
 	}
 

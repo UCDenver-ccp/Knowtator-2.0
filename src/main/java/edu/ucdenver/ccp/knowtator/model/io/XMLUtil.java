@@ -65,7 +65,7 @@ public class XMLUtil {
         try {
             Transformer tr = TransformerFactory.newInstance().newTransformer();
             tr.setOutputProperty(OutputKeys.INDENT, "yes");
-            tr.setOutputProperty(OutputKeys.METHOD, "knowtator");
+            tr.setOutputProperty(OutputKeys.METHOD, "xml");
             tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             tr.setOutputProperty("{http://knowtator.apache.org/xslt}indent-amount", "4");
 

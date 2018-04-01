@@ -25,31 +25,36 @@
 package edu.ucdenver.ccp.knowtator.model.io.uima;
 
 public class UIMAXMIAttributes {
-    static final String ANNOTATION_ID = "annotationID";
-    static final String ANNOTATION_SETS = "annotationSets";
-    static final String ANNOTATOR = "annotator";
-    static final String BEGIN = "begin";
-    static final String CLASS_MENTION = "classMention";
-    static final String DOCUMENT_SECTION_ID = "documentSectionID";
-    static final String END = "end";
-    static final String NUMBER_OF_SPANS = "numberOfSpans";
-    static final String SOFA = "sofa";
-    static final String SPANS = "spans";
+    public static final String XMI_ID = "xmi:id";
+    public static final String MIME_TYPE = "mimeType";
+    public static final String SOFA_ID = "sofaID";
+    public static final String SOFA_STRING = "sofaString";
+    public static final String SOFA_NUM = "sofaNum";
+    public static final String LANGUAGE = "language";
+    public static final String SOFA = "sofa";
+    public static final String ANNOTATION_ID = "annotationID";
+    public static final String ANNOTATION_SETS = "annotationSets";
+    public static final String ANNOTATOR = "annotator";
+    public static final String BEGIN = "begin";
+    public static final String CLASS_MENTION = "classMention";
+    public static final String DOCUMENT_SECTION_ID = "documentSectionID";
+    public static final String END = "end";
+    public static final String NUMBER_OF_SPANS = "numberOfSpans";
+    public static final String SPANS = "spans";
 
-    static final String AFFILIATION = "affiliation";
-    static final String ANNOTATOR_ID = "annotatorID";
-    static final String FIRST_NAME = "firstName";
-    static final String LAST_NAME = "lastName";
+    public static final String AFFILIATION = "affiliation";
+    public static final String ANNOTATOR_ID = "annotatorID";
+    public static final String FIRST_NAME = "firstName";
+    public static final String LAST_NAME = "lastName";
 
-    static final String MENTION_ID = "mentionID";
-    static final String MENTION_Name = "mentionName";
-    static final String SLOT_MENTIONS = "slotMentions";
+    public static final String MENTION_ID = "mentionID";
+    public static final String MENTION_Name = "mentionName";
+    public static final String SLOT_MENTIONS = "slotMentions";
+    public static final String SPAN_END = "spanEnd";
+    public static final String SPAN_START = "spanStart";
 
-    static final String SPAN_END = "spanEnd";
-    static final String SPAND_START = "spanStart";
-
-    static final String DOCUMENT_COLLECTION_ID = "documentCollectionID";
-    static final String DOCUMENT_ID = "documentID";
-    static final String DOCUMENT_SIZE = "documentSize";
-    static final String ENCODING = "encoding";
+    public static final String DOCUMENT_COLLECTION_ID = "documentCollectionID";
+    public static final String DOCUMENT_ID = "documentID";
+    public static final String DOCUMENT_SIZE = "documentSize";
+    public static final String ENCODING = "encoding";
 }

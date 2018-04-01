@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
+        
+  
+  
+  <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
+        
+  
+  
+  <primitive>true</primitive>
+        
+  
+  
+  <annotatorImplementationName>edu.ucdenver.ccp.knowtator.model.io.uima.KnowtatorToUIMAAnnotator</annotatorImplementationName>
+        
+  
+  
+  <analysisEngineMetaData>
+                
+    
+    
+    <name>KnowtatorAnnotatorDescriptor</name>
+                
+    
+    
+    <description/>
+                
+    
+    
+    <version>1.0</version>
+                
+    
+    
+    <vendor/>
+                
+    
+    
+    <configurationParameters/>
+                
+    
+    
+    <configurationParameterSettings/>
+                
+    
+    
+    <typeSystemDescription>
+                        
+      
+      
+      <imports>
+                
+        <import location="file:/E:/Documents/RoomNumberAnnotator/CcpTypeSystem.xml"/>
+              
+      </imports>
+    </typeSystemDescription>
+                
+    
+    
+    <typePriorities/>
+                
+    
+    
+    <fsIndexCollection/>
+                
+    
+    
+    <capabilities>
+                        
+      
+      
+      <capability>
+                                
+        
+        
+        <inputs/>
+                                
+        
+        
+        <outputs/>
+                                
+        
+        
+        <languagesSupported>
+                              
+          
+          <language>en</language>
+                  
+        </languagesSupported>
+                              
+      
+      
+      </capability>
+                      
+    
+    
+    </capabilities>
+              
+    
+    
+    <operationalProperties>
+                        
+      
+      
+      <modifiesCas>true</modifiesCas>
+                        
+      
+      
+      <multipleDeploymentAllowed>true</multipleDeploymentAllowed>
+                        
+      
+      
+      <outputsNewCASes>true</outputsNewCASes>
+                      
+    
+    
+    </operationalProperties>
+          
+  
+  </analysisEngineMetaData>
+        
+  
+  
+  <resourceManagerConfiguration/>
+      
+
+
+</analysisEngineDescription>

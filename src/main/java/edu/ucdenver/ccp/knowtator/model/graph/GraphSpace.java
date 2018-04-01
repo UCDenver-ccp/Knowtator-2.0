@@ -39,6 +39,7 @@ import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.log4j.Logger;
+import org.apache.uima.cas.CAS;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.w3c.dom.Document;
@@ -235,6 +236,11 @@ public class GraphSpace extends mxGraph implements Savable {
 
     @Override
     public void writeToUIMAXMI(Document dom, Element parent) {
+
+    }
+
+    @Override
+    public void convertToUIMA(CAS cas) {
 
     }
 

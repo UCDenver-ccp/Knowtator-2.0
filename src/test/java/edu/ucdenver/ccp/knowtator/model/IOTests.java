@@ -322,4 +322,20 @@ public class IOTests {
         manager.getProjectManager().importBrat(bratAnnotationFile);
         manager.getProjectManager().exportToBrat(manager.getTextSourceManager().getTextSources().get(article), outputFile);
     }
+
+    @Test
+    public void exportToUIMAXMI() {
+        manager = new KnowtatorManager();
+
+        int projectID = 0;
+        int articleID = 0;
+        String projectFileName = projectFileNames[projectID];
+        File projectFile = getProjectFile(projectFileName);
+        String article = articleFileNames[articleID];
+
+        File outputDir = new File("E:/Documents/Test/");
+
+        manager.getProjectManager().loadProject(projectFile);
+        manager.getProjectManager().exportToUIMA(outputDir);
+    }
 }

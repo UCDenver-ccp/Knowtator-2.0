@@ -32,6 +32,12 @@ import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.log4j.Logger;
+import org.apache.uima.cas.ArrayFS;
+import org.apache.uima.cas.CAS;
+import org.apache.uima.cas.Feature;
+import org.apache.uima.cas.Type;
+import org.apache.uima.cas.text.AnnotationFS;
+import org.apache.uima.jcas.cas.TOP;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -39,6 +45,7 @@ import org.w3c.dom.Node;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class Annotation implements Savable {
 
@@ -47,7 +54,7 @@ public class Annotation implements Savable {
 
     private String className;
     private String classID;
-    private String type;
+    private String annotation_type;
     private TreeSet<Span> spans;
     private Set<String> overlappingAnnotations;
 
@@ -58,7 +65,8 @@ public class Annotation implements Savable {
 
 	private String bratID;
 
-	public Annotation(String classID, String className, String annotationID, TextSource textSource, Profile annotator, String type) {
+
+	public Annotation(String classID, String className, String annotationID, TextSource textSource, Profile annotator, String annotation_type) {
 		this.textSource = textSource;
 		this.annotator = annotator;
 		this.date = new Date();
@@ -66,7 +74,7 @@ public class Annotation implements Savable {
 
 		this.className = className;
 		this.classID = classID;
-		this.type = type;
+		this.annotation_type = annotation_type;
 
 		spans = new TreeSet<>((span1, span2) -> {
 			if (span1 == null) {
@@ -161,7 +169,7 @@ public class Annotation implements Savable {
 
 	@Override
 	public String toString() {
-		return String.format("Annotation: %s class name: %s class id: %s type: %s", id, className, classID, type);
+		return String.format("Annotation: %s class name: %s class id: %s annotation_type: %s", id, className, classID, annotation_type);
 	}
 
 	public String getSpannedText() {
@@ -204,7 +212,7 @@ public class Annotation implements Savable {
 		Element annotationElem = dom.createElement(KnowtatorXMLTags.ANNOTATION);
 		annotationElem.setAttribute(KnowtatorXMLAttributes.ID, id);
 		annotationElem.setAttribute(KnowtatorXMLAttributes.ANNOTATOR, annotator.getId());
-		annotationElem.setAttribute(KnowtatorXMLAttributes.TYPE, type);
+		annotationElem.setAttribute(KnowtatorXMLAttributes.TYPE, annotation_type);
 
 		Element classElement = dom.createElement(KnowtatorXMLTags.CLASS);
 		classElement.setAttribute(KnowtatorXMLAttributes.ID, classID);
@@ -287,8 +295,35 @@ public class Annotation implements Savable {
 
 	}
 
+	@Override
+	public void convertToUIMA(CAS cas) {
+		Type annotationType = cas.getTypeSystem().getType("edu.ucdenver.ccp.nlp.core.uima.annotation.CCPTextAnnotation");
+		AnnotationFS annotationFS = cas.createAnnotation(annotationType, spans.first().getStart(), spans.first().getEnd());
+		ArrayFS spansFS = cas.createArrayFS(spans.size());
+
+		Iterator<Span> spanIterator = spans.iterator();
+		IntStream.range(0, spans.size()).forEach(i -> {
+			Span span = spanIterator.next();
+			Type spanType = cas.getTypeSystem().getType("edu.ucdenver.ccp.nlp.core.uima.annotation.CCPSpan");
+			TOP spanFS = cas.createFS(spanType);
+
+			Feature spanStartFeature = spanType.getFeatureByBaseName("spanStart");
+			Feature spanEndFeature = spanType.getFeatureByBaseName("spanEnd");
+			spanFS.setIntValue(spanStartFeature, span.getStart());
+			spanFS.setIntValue(spanEndFeature, span.getEnd());
+
+			//noinspection unchecked
+			spansFS.set(i, spanFS);
+		});
+
+		Feature spansFeature = annotationType.getFeatureByBaseName("spans");
+		annotationFS.setFeatureValue(spansFeature, spansFS);
+
+		cas.getIndexRepository().addFS(annotationFS);
+	}
+
 	public String getType() {
-		return type;
+		return annotation_type;
 	}
 
 	void setBratID(String bratID) {

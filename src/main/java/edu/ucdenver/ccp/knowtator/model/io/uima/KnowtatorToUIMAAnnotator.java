@@ -22,33 +22,16 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model;
+package edu.ucdenver.ccp.knowtator.model.io.uima;
 
-import org.apache.uima.cas.CAS;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
+import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
+import org.apache.uima.jcas.JCas;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.List;
-import java.util.Map;
+public class KnowtatorToUIMAAnnotator extends JCasAnnotator_ImplBase {
+    @SuppressWarnings("RedundantThrows")
+    @Override
+    public void process(JCas aJCas) throws AnalysisEngineProcessException {
 
-public interface Savable {
-    void writeToKnowtatorXML(Document dom, Element parent);
-
-    void readFromKnowtatorXML(Element parent, String content);
-
-    void readFromOldKnowtatorXML(Element parent);
-
-    void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content);
-
-    void writeToBratStandoff(Writer writer) throws IOException;
-
-    void readFromGeniaXML(Element parent, String content);
-
-    void readFromUIMAXMI(Element parent, String content);
-
-    void writeToUIMAXMI(Document dom, Element parent);
-
-    void convertToUIMA(CAS cas);
+    }
 }

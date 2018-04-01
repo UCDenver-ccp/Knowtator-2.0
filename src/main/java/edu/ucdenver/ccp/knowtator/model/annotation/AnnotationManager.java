@@ -34,6 +34,7 @@ import edu.ucdenver.ccp.knowtator.model.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.log4j.Logger;
+import org.apache.uima.cas.CAS;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -380,6 +381,11 @@ public class AnnotationManager implements Savable {
     public void writeToUIMAXMI(Document dom, Element parent) {
         annotationMap.values().forEach(annotation -> annotation.writeToUIMAXMI(dom, parent));
         graphSpaces.forEach(graphSpace -> graphSpace.writeToUIMAXMI(dom, parent));
+    }
+
+    @Override
+    public void convertToUIMA(CAS cas) {
+        annotationMap.values().forEach(annotation -> annotation.convertToUIMA(cas));
     }
 
     public List<GraphSpace> getGraphSpaces() {

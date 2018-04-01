@@ -99,7 +99,7 @@ public class ProjectManager {
 
                 log.warn("Loading profiles");
                 Files.newDirectoryStream(Paths.get(profilesLocation.toURI()),
-                        path -> path.toString().endsWith(".knowtator"))
+                        path -> path.toString().endsWith(".xml"))
                         .forEach(file -> knowtatorXMLUtil.read(manager.getProfileManager(), file.toFile()));
 
 //                Load annotations in parallel
@@ -110,7 +110,7 @@ public class ProjectManager {
 
                 log.warn("Loading annotations");
                 Files.newDirectoryStream(Paths.get(annotationsLocation.toURI()),
-                        path -> path.toString().endsWith(".knowtator"))
+                        path -> path.toString().endsWith(".xml"))
                         .forEach(file -> knowtatorXMLUtil.read(manager.getTextSourceManager(), file.toFile()));
 
                 manager.projectLoadedEvent();
@@ -201,7 +201,7 @@ public class ProjectManager {
         geniaXMLUtil.read(manager.getTextSourceManager(), file);
     }
 
-    public void exportToUIMA(TextSource textSource, File file) { uimaXMIUtil.write(textSource, file);}
+    public void exportToUIMA(File file) { uimaXMIUtil.write(manager.getTextSourceManager(), file);}
 
     public void importUIMA(File file) { uimaXMIUtil.read(manager.getTextSourceManager(), file);}
 }

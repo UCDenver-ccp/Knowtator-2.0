@@ -27,7 +27,17 @@ package edu.ucdenver.ccp.knowtator.model.io.uima;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.model.io.XMLUtil;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSourceManager;
 import org.apache.log4j.Logger;
+import org.apache.uima.UIMAFramework;
+import org.apache.uima.analysis_engine.AnalysisEngine;
+import org.apache.uima.analysis_engine.AnalysisEngineDescription;
+import org.apache.uima.cas.CAS;
+import org.apache.uima.cas.SerialFormat;
+import org.apache.uima.resource.ResourceInitializationException;
+import org.apache.uima.util.CasIOUtils;
+import org.apache.uima.util.InvalidXMLException;
+import org.apache.uima.util.XMLInputSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -40,6 +50,7 @@ import java.io.*;
 import java.util.List;
 
 public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
+    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(UIMAXMIUtil.class);
 
 
@@ -75,33 +86,25 @@ public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
 
     @Override
     public void write(Savable savable, File file) {
-        Document dom;
+        if (savable instanceof TextSourceManager) {
+            try {
+                XMLInputSource input = new XMLInputSource("E:/Documents/RoomNumberAnnotator/desc/KnowtatorAnnotatorDescriptor.xml");
+                AnalysisEngineDescription description = UIMAFramework.getXMLParser().parseAnalysisEngineDescription(input);
+                AnalysisEngine analysisEngine = UIMAFramework.produceAnalysisEngine(description);
 
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-
-        try {
-            log.warn("Writing to " + file.getAbsolutePath());
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            dom = db.newDocument();
-
-
-            Element root = dom.createElement(UIMAXMITags.XMI_XMI);
-
-            // TODO: Verify that this information is correct
-            root.setAttribute(UIMAXMITags.XMI_VERSION, "2.0");
-            root.setAttribute(UIMAXMITags.XMLNS_ANNOTATION, "http:///edu/ucdenver/ccp/nlp/core/uima/annotation.ecore");
-            root.setAttribute(UIMAXMITags.XMLNS_CAS, "http:///uima/cas.ecore");
-            root.setAttribute(UIMAXMITags.XMLNS_MENTION, "http:///edu/ucdenver/ccp/nlp/core/uima/mention.ecore");
-            root.setAttribute(UIMAXMITags.XMLNS_METADATA, "http:///edu/ucdenver/ccp/nlp/core/uima/annotation/metadata.ecore");
-            root.setAttribute(UIMAXMITags.XMLNS_TCAS, "http:///uima/tcas.ecore");
-            root.setAttribute(UIMAXMITags.XMLNS_XMI, "http://www.omg.org/XMI");
-
-            dom.appendChild(root);
-            savable.writeToUIMAXMI(dom, root);
-
-            finishWritingXML(dom, file);
-        } catch (ParserConfigurationException e1) {
-            e1.printStackTrace();
+                ((TextSourceManager) savable).getTextSources().values().forEach(textSource -> {
+                    CAS cas;
+                    try {
+                        cas = analysisEngine.newCAS();
+                        textSource.convertToUIMA(cas);
+                        CasIOUtils.save(cas, new FileOutputStream(new File(file.getAbsolutePath() + File.separator + textSource.getDocID() + ".xmi")), SerialFormat.XMI);
+                    } catch (ResourceInitializationException | IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            } catch (IOException | InvalidXMLException | ResourceInitializationException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

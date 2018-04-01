@@ -33,6 +33,7 @@ import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.OldKnowtatorXMLAttributes;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+import org.apache.uima.cas.CAS;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLEntityCollector;
 import org.w3c.dom.Document;
@@ -108,16 +109,10 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
         newTextSource.readFromBratStandoff(annotationMap, null);
     }
 
+
     @SuppressWarnings("RedundantThrows")
     @Override
     public void writeToBratStandoff(Writer writer) throws IOException {
-        textSources.values().forEach(textSource -> {
-            try {
-                textSource.writeToBratStandoff(writer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
     }
 
     @Override
@@ -132,7 +127,12 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
 
     @Override
     public void writeToUIMAXMI(Document dom, Element parent) {
-        textSources.values().forEach(textSource -> textSource.writeToUIMAXMI(dom, parent));
+
+    }
+
+    @Override
+    public void convertToUIMA(CAS cas) {
+
     }
 
     public KnowtatorManager getManager() {

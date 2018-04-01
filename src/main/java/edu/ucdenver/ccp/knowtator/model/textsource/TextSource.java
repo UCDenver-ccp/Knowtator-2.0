@@ -32,6 +32,8 @@ import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.apache.uima.cas.CAS;
+import org.apache.uima.cas.impl.CASImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -42,17 +44,20 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
-public class TextSource implements Savable {
+public class TextSource extends CASImpl implements Savable {
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(TextSource.class);
+    private final KnowtatorManager manager;
 
 
     private AnnotationManager annotationManager;
     private String docID;
     private File file;
+    private CAS textSourceAsCAS;
 //    private String content;
 
     public TextSource(KnowtatorManager manager, String docID) {
+        this.manager = manager;
         this.annotationManager = new AnnotationManager(manager, this);
 
         if (docID != null) {
@@ -108,13 +113,23 @@ public class TextSource implements Savable {
 
     @Override
     public void readFromKnowtatorXML(Element parent, String content) {
-        try {
-            content = FileUtils.readFileToString(file, "UTF-8");
-            annotationManager.readFromKnowtatorXML(parent, content);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        annotationManager.readFromKnowtatorXML(parent, getContent());
+    }
 
+    private String getContent() {
+        while (true) {
+            try {
+                return FileUtils.readFileToString(file, "UTF-8");
+            } catch (IOException e) {
+                file = new File(manager.getProjectManager().getArticlesLocation(), docID + ".txt");
+                while (!file.exists()) {
+                    JFileChooser fileChooser = new JFileChooser();
+                    if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                        file = fileChooser.getSelectedFile();
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -124,12 +139,8 @@ public class TextSource implements Savable {
 
     @Override
     public void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content) {
-        try {
-            content = FileUtils.readFileToString(file, "UTF-8");
-            annotationManager.readFromBratStandoff(annotationMap, content);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        annotationManager.readFromBratStandoff(annotationMap, getContent());
+
     }
 
     @Override
@@ -149,6 +160,39 @@ public class TextSource implements Savable {
 
     @Override
     public void writeToUIMAXMI(Document dom, Element parent) {
-        annotationManager.writeToUIMAXMI(dom, parent);
+//        String content = getContent();
+////        String sofaNum = Integer.toString(1);
+////
+////        Element nullElement = dom.createElement(UIMAXMITags.CAS_NULL);
+////        parent.appendChild(nullElement);
+////        nullElement.setAttribute(UIMAXMIAttributes.XMI_ID, "0");
+////
+////        Element textSourceElement = dom.createElement(UIMAXMITags.CAS_SOFA);
+////        parent.appendChild(textSourceElement);
+////        textSourceElement.setAttribute(UIMAXMIAttributes.MIME_TYPE, "text/plain");
+////        textSourceElement.setAttribute(UIMAXMIAttributes.SOFA_ID, "_InitialView");
+////        textSourceElement.setAttribute(UIMAXMIAttributes.SOFA_NUM, sofaNum);
+////        textSourceElement.setAttribute(UIMAXMIAttributes.SOFA_STRING, content);
+////
+////        Element documentAnnotation = dom.createElement(UIMAXMITags.TCAS_DOCUMENT_ANNOTATION);
+////        textSourceElement.appendChild(documentAnnotation);
+////        documentAnnotation.setAttribute(UIMAXMIAttributes.BEGIN, "0");
+////        documentAnnotation.setAttribute(UIMAXMIAttributes.END, Integer.toString(content.length()));
+////        documentAnnotation.setAttribute(UIMAXMIAttributes.LANGUAGE, "en");
+////        documentAnnotation.setAttribute(UIMAXMIAttributes.SOFA, sofaNum);
+//////        documentAnnotation.setAttribute(UIMAXMIAttributes.XMI_ID, );
+////
+////        annotationManager.writeToUIMAXMI(dom, textSourceElement);
+
+
+
+    }
+
+    @Override
+    public void convertToUIMA(CAS cas) {
+        textSourceAsCAS = cas.createView(docID);
+        textSourceAsCAS.setDocumentText(getContent());
+        textSourceAsCAS.setDocumentLanguage("en");
+        annotationManager.convertToUIMA(textSourceAsCAS);
     }
 }
