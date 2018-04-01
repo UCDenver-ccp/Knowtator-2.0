@@ -25,38 +25,6 @@
 package edu.ucdenver.ccp.knowtator.model.io.uima;
 
 public class UIMAXMITags {
-
-    // Under xmi namespace
-    static final String XMI_XMI = "xmi:XMI";
-
-    public static final String XMI_VERSION = "xmi:version";
-
-    // Under cas namespace
-    public static final String CAS_NULL = "cas:NULL";
-    public static final String CAS_SOFA = "cas:Sofa";
-    public static final String CAS_VIEW = "cas:View";
-
-    // Under tcas namespace
-    public static final String TCAS_DOCUMENT_ANNOTATION = "tcas:DocumentAnnotation";
-
-
-    // Under xmlns namespace
-    public static final String XMLNS_ANNOTATION = "xmlns:annotation";
-    public static final String XMLNS_MENTION = "xmlns:mention";
-    public static final String XMLNS_METADATA = "xmlns:metadata";
-    public static final String XMLNS_TCAS = "xmlns:tcas";
-    public static final String XMLNS_CAS = "xmlns:cas";
-    public static final String XMLNS_XMI = "xmlns:xmi";
-
-    // Under annotation namespace
-    public static final String ANNOTATION_DOCUMENT_INFORMATION = "annotation:CCPDocumentInformation";
-    public static final String ANNOTATION_TEXT_ANNOTATION = "annotation:CCPTextAnnotation";
-    public static final String ANNOTATION_SPAN = "annotation:CCPSpan";
-    public static final String ANNOTATION_ANNOTATOR = "annotation:CCPAnnotator";
-
-
-    // Under mention namespace
-    public static final String MENTION_CLASS_MENTION = "mention:CCPClassMention";
-    public static final String CCP_TEXT_ANNOTATION = "ccpTextAnnotation";
-
+    public static final String TEXTANNOTATION = "edu.ucdenver.ccp.nlp.core.uima.annotation.CCPTextAnnotation";
+    public static final String SPAN = "edu.ucdenver.ccp.nlp.core.uima.annotation.CCPSpan";
 }

@@ -33,7 +33,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.uima.cas.CAS;
-import org.apache.uima.cas.impl.CASImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -44,7 +43,7 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
-public class TextSource extends CASImpl implements Savable {
+public class TextSource implements Savable {
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(TextSource.class);
     private final KnowtatorManager manager;
@@ -154,45 +153,15 @@ public class TextSource extends CASImpl implements Savable {
     }
 
     @Override
-    public void readFromUIMAXMI(Element parent, String content) {
-
-    }
-
-    @Override
-    public void writeToUIMAXMI(Document dom, Element parent) {
-//        String content = getContent();
-////        String sofaNum = Integer.toString(1);
-////
-////        Element nullElement = dom.createElement(UIMAXMITags.CAS_NULL);
-////        parent.appendChild(nullElement);
-////        nullElement.setAttribute(UIMAXMIAttributes.XMI_ID, "0");
-////
-////        Element textSourceElement = dom.createElement(UIMAXMITags.CAS_SOFA);
-////        parent.appendChild(textSourceElement);
-////        textSourceElement.setAttribute(UIMAXMIAttributes.MIME_TYPE, "text/plain");
-////        textSourceElement.setAttribute(UIMAXMIAttributes.SOFA_ID, "_InitialView");
-////        textSourceElement.setAttribute(UIMAXMIAttributes.SOFA_NUM, sofaNum);
-////        textSourceElement.setAttribute(UIMAXMIAttributes.SOFA_STRING, content);
-////
-////        Element documentAnnotation = dom.createElement(UIMAXMITags.TCAS_DOCUMENT_ANNOTATION);
-////        textSourceElement.appendChild(documentAnnotation);
-////        documentAnnotation.setAttribute(UIMAXMIAttributes.BEGIN, "0");
-////        documentAnnotation.setAttribute(UIMAXMIAttributes.END, Integer.toString(content.length()));
-////        documentAnnotation.setAttribute(UIMAXMIAttributes.LANGUAGE, "en");
-////        documentAnnotation.setAttribute(UIMAXMIAttributes.SOFA, sofaNum);
-//////        documentAnnotation.setAttribute(UIMAXMIAttributes.XMI_ID, );
-////
-////        annotationManager.writeToUIMAXMI(dom, textSourceElement);
-
-
-
-    }
-
-    @Override
     public void convertToUIMA(CAS cas) {
         textSourceAsCAS = cas.createView(docID);
         textSourceAsCAS.setDocumentText(getContent());
         textSourceAsCAS.setDocumentLanguage("en");
         annotationManager.convertToUIMA(textSourceAsCAS);
+    }
+
+    @Override
+    public void writeToGeniaXML(Document dom, Element parent) {
+
     }
 }

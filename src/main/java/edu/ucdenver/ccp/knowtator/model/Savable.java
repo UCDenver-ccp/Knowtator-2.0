@@ -46,9 +46,7 @@ public interface Savable {
 
     void readFromGeniaXML(Element parent, String content);
 
-    void readFromUIMAXMI(Element parent, String content);
-
-    void writeToUIMAXMI(Document dom, Element parent);
-
     void convertToUIMA(CAS cas);
+
+    void writeToGeniaXML(Document dom, Element parent);
 }

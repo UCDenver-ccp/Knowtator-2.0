@@ -29,6 +29,8 @@ import edu.ucdenver.ccp.knowtator.model.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
+import edu.ucdenver.ccp.knowtator.model.io.uima.UIMAXMIAttributes;
+import edu.ucdenver.ccp.knowtator.model.io.uima.UIMAXMITags;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.log4j.Logger;
@@ -286,29 +288,19 @@ public class Annotation implements Savable {
 	}
 
 	@Override
-	public void readFromUIMAXMI(Element parent, String content) {
-
-	}
-
-	@Override
-	public void writeToUIMAXMI(Document dom, Element parent) {
-
-	}
-
-	@Override
 	public void convertToUIMA(CAS cas) {
-		Type annotationType = cas.getTypeSystem().getType("edu.ucdenver.ccp.nlp.core.uima.annotation.CCPTextAnnotation");
+		Type annotationType = cas.getTypeSystem().getType(UIMAXMITags.TEXTANNOTATION);
 		AnnotationFS annotationFS = cas.createAnnotation(annotationType, spans.first().getStart(), spans.first().getEnd());
 		ArrayFS spansFS = cas.createArrayFS(spans.size());
 
 		Iterator<Span> spanIterator = spans.iterator();
 		IntStream.range(0, spans.size()).forEach(i -> {
 			Span span = spanIterator.next();
-			Type spanType = cas.getTypeSystem().getType("edu.ucdenver.ccp.nlp.core.uima.annotation.CCPSpan");
+			Type spanType = cas.getTypeSystem().getType(UIMAXMITags.SPAN);
 			TOP spanFS = cas.createFS(spanType);
 
-			Feature spanStartFeature = spanType.getFeatureByBaseName("spanStart");
-			Feature spanEndFeature = spanType.getFeatureByBaseName("spanEnd");
+			Feature spanStartFeature = spanType.getFeatureByBaseName(UIMAXMIAttributes.SPAN_START);
+			Feature spanEndFeature = spanType.getFeatureByBaseName(UIMAXMIAttributes.SPAN_END);
 			spanFS.setIntValue(spanStartFeature, span.getStart());
 			spanFS.setIntValue(spanEndFeature, span.getEnd());
 
@@ -316,10 +308,15 @@ public class Annotation implements Savable {
 			spansFS.set(i, spanFS);
 		});
 
-		Feature spansFeature = annotationType.getFeatureByBaseName("spans");
+		Feature spansFeature = annotationType.getFeatureByBaseName(UIMAXMIAttributes.SPANS);
 		annotationFS.setFeatureValue(spansFeature, spansFS);
 
 		cas.getIndexRepository().addFS(annotationFS);
+	}
+
+	@Override
+	public void writeToGeniaXML(Document dom, Element parent) {
+
 	}
 
 	public String getType() {

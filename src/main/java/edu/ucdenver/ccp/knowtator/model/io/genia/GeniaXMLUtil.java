@@ -37,6 +37,6 @@ public class GeniaXMLUtil implements BasicIOUtil {
 
     @Override
     public void write(Savable savable, File file) {
-        savable.writeToUIMAXMI(null, null);
+        savable.writeToGeniaXML(null, null);
     }
 }

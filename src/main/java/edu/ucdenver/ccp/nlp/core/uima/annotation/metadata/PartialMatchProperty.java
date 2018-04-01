@@ -1,7 +1,7 @@
 
 
    
-/* Apache UIMA v3 - First created by JCasGen Sat Mar 31 18:02:20 MDT 2018 */
+/* Apache UIMA v3 - First created by JCasGen Sat Mar 31 19:49:28 MDT 2018 */
 
 package edu.ucdenver.ccp.nlp.core.uima.annotation.metadata;
 
@@ -18,8 +18,8 @@ import org.apache.uima.jcas.JCasRegistry;
 
 
 /** A subclass of False Positive Property. This property is used to indicate an annotation that was scored as a False Positive during an evaluation, but is a partial match to the Gold Standard. That is, what is present is correct and the reason it was scored as a False Positive is because it is missing something.
- * Updated by JCasGen Sat Mar 31 18:49:37 MDT 2018
- * XML source: E:/Documents/RoomNumberAnnotator/desc/KnowtatorAnnotatorDescriptor.xml
+ * Updated by JCasGen Sat Mar 31 19:49:28 MDT 2018
+ * XML source: E:/Documents/Knowtator-2.0/src/main/resources/KnowtatorToUIMAAnnotatorDescriptor.xml
  * @generated */
 public class PartialMatchProperty extends TruePositiveProperty {
  

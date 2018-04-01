@@ -1,7 +1,7 @@
 
 
    
-/* Apache UIMA v3 - First created by JCasGen Sat Mar 31 18:02:20 MDT 2018 */
+/* Apache UIMA v3 - First created by JCasGen Sat Mar 31 19:49:28 MDT 2018 */
 
 package edu.ucdenver.ccp.nlp.core.uima.annotation;
 
@@ -20,8 +20,8 @@ import org.apache.uima.jcas.cas.StringArray;
 
 
 /** The CCPDocumentInformation annotation includes document metadata such as the document ID, document collection ID, secondary document IDs, document size, etc.
- * Updated by JCasGen Sat Mar 31 18:49:36 MDT 2018
- * XML source: E:/Documents/RoomNumberAnnotator/desc/KnowtatorAnnotatorDescriptor.xml
+ * Updated by JCasGen Sat Mar 31 19:49:28 MDT 2018
+ * XML source: E:/Documents/Knowtator-2.0/src/main/resources/KnowtatorToUIMAAnnotatorDescriptor.xml
  * @generated */
 public class CCPDocumentInformation extends TOP {
  

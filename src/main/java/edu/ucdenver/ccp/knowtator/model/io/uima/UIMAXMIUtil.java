@@ -27,6 +27,7 @@ package edu.ucdenver.ccp.knowtator.model.io.uima;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.model.io.XMLUtil;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSourceManager;
 import org.apache.log4j.Logger;
 import org.apache.uima.UIMAFramework;
@@ -38,60 +39,32 @@ import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.util.CasIOUtils;
 import org.apache.uima.util.InvalidXMLException;
 import org.apache.uima.util.XMLInputSource;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
-import java.util.List;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
 
 public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(UIMAXMIUtil.class);
-
+    private static final URL ANNOTATOR_DESCRIPTOR = UIMAXMIUtil.class.getResource("/KnowtatorToUIMAAnnotatorDescriptor.xml");
+//private static final File ANNOTATOR_DESCRIPTOR = new File("E:/Documents/Knowtator-2.0/src/main/resources/KnowtatorToUIMAAnnotatorDescriptor.xml");
 
     @Override
     public void read(Savable savable, File file) {
-        try {
-            /*
-            doc parses the XML into a graph
-             */
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
 
-            InputStream is = new FileInputStream(file);
-
-            Document doc;
-            try {
-                doc = db.parse(is);
-                doc.getDocumentElement().normalize();
-
-                List<Node> uimaNodes = asList(doc.getElementsByTagName(UIMAXMITags.XMI_XMI));
-                if (uimaNodes.size() > 0) {
-                    Element uimaElement = (Element) uimaNodes.get(0);
-                    savable.readFromKnowtatorXML(uimaElement, null);
-                }
-
-            } catch (IllegalArgumentException | IOException | SAXException e) {
-                e.printStackTrace();
-            }
-        } catch (ParserConfigurationException | FileNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public void write(Savable savable, File file) {
-        if (savable instanceof TextSourceManager) {
-            try {
-                XMLInputSource input = new XMLInputSource("E:/Documents/RoomNumberAnnotator/desc/KnowtatorAnnotatorDescriptor.xml");
-                AnalysisEngineDescription description = UIMAFramework.getXMLParser().parseAnalysisEngineDescription(input);
-                AnalysisEngine analysisEngine = UIMAFramework.produceAnalysisEngine(description);
 
+        try {
+            XMLInputSource input = new XMLInputSource(ANNOTATOR_DESCRIPTOR);
+            AnalysisEngineDescription description = UIMAFramework.getXMLParser().parseAnalysisEngineDescription(input);
+            AnalysisEngine analysisEngine = UIMAFramework.produceAnalysisEngine(description);
+
+            if (savable instanceof TextSourceManager) {
                 ((TextSourceManager) savable).getTextSources().values().forEach(textSource -> {
                     CAS cas;
                     try {
@@ -102,9 +75,18 @@ public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
                         e.printStackTrace();
                     }
                 });
-            } catch (IOException | InvalidXMLException | ResourceInitializationException e) {
-                e.printStackTrace();
+            } else if (savable instanceof TextSource){
+                CAS cas;
+                try {
+                    cas = analysisEngine.newCAS();
+                    savable.convertToUIMA(cas);
+                    CasIOUtils.save(cas, new FileOutputStream(file), SerialFormat.XMI);
+                } catch (ResourceInitializationException | IOException e) {
+                    e.printStackTrace();
+                }
             }
+        } catch (IOException | InvalidXMLException | ResourceInitializationException e) {
+            e.printStackTrace();
         }
     }
 }

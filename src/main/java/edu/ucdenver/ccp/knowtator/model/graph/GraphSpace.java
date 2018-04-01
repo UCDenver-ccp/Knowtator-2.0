@@ -230,17 +230,12 @@ public class GraphSpace extends mxGraph implements Savable {
     }
 
     @Override
-    public void readFromUIMAXMI(Element parent, String content) {
-
-    }
-
-    @Override
-    public void writeToUIMAXMI(Document dom, Element parent) {
-
-    }
-
-    @Override
     public void convertToUIMA(CAS cas) {
+
+    }
+
+    @Override
+    public void writeToGeniaXML(Document dom, Element parent) {
 
     }
 

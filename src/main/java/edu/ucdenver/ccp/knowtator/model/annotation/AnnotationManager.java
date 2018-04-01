@@ -373,19 +373,13 @@ public class AnnotationManager implements Savable {
     }
 
     @Override
-    public void readFromUIMAXMI(Element parent, String content) {
-
-    }
-
-    @Override
-    public void writeToUIMAXMI(Document dom, Element parent) {
-        annotationMap.values().forEach(annotation -> annotation.writeToUIMAXMI(dom, parent));
-        graphSpaces.forEach(graphSpace -> graphSpace.writeToUIMAXMI(dom, parent));
-    }
-
-    @Override
     public void convertToUIMA(CAS cas) {
         annotationMap.values().forEach(annotation -> annotation.convertToUIMA(cas));
+    }
+
+    @Override
+    public void writeToGeniaXML(Document dom, Element parent) {
+
     }
 
     public List<GraphSpace> getGraphSpaces() {

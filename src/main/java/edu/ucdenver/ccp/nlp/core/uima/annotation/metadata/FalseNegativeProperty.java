@@ -1,7 +1,7 @@
 
 
    
-/* Apache UIMA v3 - First created by JCasGen Sat Mar 31 18:02:20 MDT 2018 */
+/* Apache UIMA v3 - First created by JCasGen Sat Mar 31 19:49:28 MDT 2018 */
 
 package edu.ucdenver.ccp.nlp.core.uima.annotation.metadata;
 
@@ -18,8 +18,8 @@ import org.apache.uima.jcas.JCasRegistry;
 
 
 /** A subclass of the Gold Standard Property, the False Negative Property indicates a Gold Standard Annotation that was scored as a False Negative during an evaluation.
- * Updated by JCasGen Sat Mar 31 18:49:37 MDT 2018
- * XML source: E:/Documents/RoomNumberAnnotator/desc/KnowtatorAnnotatorDescriptor.xml
+ * Updated by JCasGen Sat Mar 31 19:49:28 MDT 2018
+ * XML source: E:/Documents/Knowtator-2.0/src/main/resources/KnowtatorToUIMAAnnotatorDescriptor.xml
  * @generated */
 public class FalseNegativeProperty extends GoldStandardSetProperty {
  

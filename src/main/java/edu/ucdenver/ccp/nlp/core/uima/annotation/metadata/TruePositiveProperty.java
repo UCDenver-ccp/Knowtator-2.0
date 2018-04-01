@@ -1,7 +1,7 @@
 
 
    
-/* Apache UIMA v3 - First created by JCasGen Sat Mar 31 18:02:20 MDT 2018 */
+/* Apache UIMA v3 - First created by JCasGen Sat Mar 31 19:49:28 MDT 2018 */
 
 package edu.ucdenver.ccp.nlp.core.uima.annotation.metadata;
 
@@ -14,9 +14,10 @@ import org.apache.uima.jcas.JCasRegistry;
 
 
 /** Indicates this annotation was scored as a True Positive during an evaluation.
- * Updated by JCasGen Sat Mar 31 18:49:37 MDT 2018
- * XML source: E:/Documents/RoomNumberAnnotator/desc/KnowtatorAnnotatorDescriptor.xml
+ * Updated by JCasGen Sat Mar 31 19:49:28 MDT 2018
+ * XML source: E:/Documents/Knowtator-2.0/src/main/resources/KnowtatorToUIMAAnnotatorDescriptor.xml
  * @generated */
+@SuppressWarnings("ALL")
 public class TruePositiveProperty extends TestSetProperty {
  
   /** @generated
@@ -53,14 +54,14 @@ public class TruePositiveProperty extends TestSetProperty {
    
   /** Never called.  Disable default constructor
    * @generated */
-  TruePositiveProperty() {/* intentionally empty block */}
+  protected TruePositiveProperty() {/* intentionally empty block */}
     
   /** Internal - constructor used by generator 
    * @generated
    * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure 
    */
-  TruePositiveProperty(TypeImpl type, CASImpl casImpl) {
+  public TruePositiveProperty(TypeImpl type, CASImpl casImpl) {
     super(type, casImpl);
     readObject();
   }
@@ -68,7 +69,7 @@ public class TruePositiveProperty extends TestSetProperty {
   /** @generated
    * @param jcas JCas to which this Feature Structure belongs 
    */
-  TruePositiveProperty(JCas jcas) {
+  public TruePositiveProperty(JCas jcas) {
     super(jcas);
     readObject();   
   } 

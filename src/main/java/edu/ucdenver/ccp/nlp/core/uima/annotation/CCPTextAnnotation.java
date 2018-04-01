@@ -1,10 +1,11 @@
 
 
    
-/* Apache UIMA v3 - First created by JCasGen Sat Mar 31 18:02:20 MDT 2018 */
+/* Apache UIMA v3 - First created by JCasGen Sat Mar 31 19:49:28 MDT 2018 */
 
 package edu.ucdenver.ccp.nlp.core.uima.annotation;
 
+import edu.ucdenver.ccp.nlp.core.uima.mention.CCPClassMention;
 import org.apache.uima.cas.impl.CASImpl;
 import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.cas.impl.TypeSystemImpl;
@@ -17,9 +18,10 @@ import java.lang.invoke.MethodHandle;
 
 
 /** The CCP TextAnnotation extends the base annotation class to include an annotation ID, the capability for multiple annotation spans, a link to the annotator responsible for generating the annotation, membership to annotation sets, and a link to a class mention which defines the class of this annotation.
- * Updated by JCasGen Sat Mar 31 18:49:36 MDT 2018
- * XML source: E:/Documents/RoomNumberAnnotator/desc/KnowtatorAnnotatorDescriptor.xml
+ * Updated by JCasGen Sat Mar 31 19:49:28 MDT 2018
+ * XML source: E:/Documents/Knowtator-2.0/src/main/resources/KnowtatorToUIMAAnnotatorDescriptor.xml
  * @generated */
+@SuppressWarnings("ALL")
 public class CCPTextAnnotation extends CCPAnnotation {
  
   /** @generated
@@ -210,7 +212,6 @@ public class CCPTextAnnotation extends CCPAnnotation {
    * @param v value to set into the array 
    */
   public void setAnnotationSets(int i, CCPAnnotationSet v) {
-    //noinspection unchecked
     ((FSArray)(_getFeatureValueNc(wrapGetIntCatchException(_FH_annotationSets)))).set(i, v);
   }  
    
@@ -266,9 +267,27 @@ public class CCPTextAnnotation extends CCPAnnotation {
    * @param v value to set into the array 
    */
   public void setSpans(int i, CCPSpan v) {
-    //noinspection unchecked
     ((FSArray)(_getFeatureValueNc(wrapGetIntCatchException(_FH_spans)))).set(i, v);
   }  
+   
+    
+  //*--------------*
+  //* Feature: classMention
+
+  /** getter for classMention - gets The CCP ClassMention indicates the type (or class) for this annotation.
+   * @generated
+   * @return value of the feature 
+   */
+  public CCPClassMention getClassMention() { return (CCPClassMention)(_getFeatureValueNc(wrapGetIntCatchException(_FH_classMention)));}
+    
+  /** setter for classMention - sets The CCP ClassMention indicates the type (or class) for this annotation. 
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setClassMention(CCPClassMention v) {
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_classMention), v);
+  }    
+    
   }
 
     

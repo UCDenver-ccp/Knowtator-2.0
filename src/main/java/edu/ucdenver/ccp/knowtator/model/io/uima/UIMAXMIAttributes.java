@@ -25,20 +25,9 @@
 package edu.ucdenver.ccp.knowtator.model.io.uima;
 
 public class UIMAXMIAttributes {
-    public static final String XMI_ID = "xmi:id";
-    public static final String MIME_TYPE = "mimeType";
-    public static final String SOFA_ID = "sofaID";
-    public static final String SOFA_STRING = "sofaString";
-    public static final String SOFA_NUM = "sofaNum";
-    public static final String LANGUAGE = "language";
-    public static final String SOFA = "sofa";
-    public static final String ANNOTATION_ID = "annotationID";
     public static final String ANNOTATION_SETS = "annotationSets";
     public static final String ANNOTATOR = "annotator";
-    public static final String BEGIN = "begin";
-    public static final String CLASS_MENTION = "classMention";
     public static final String DOCUMENT_SECTION_ID = "documentSectionID";
-    public static final String END = "end";
     public static final String NUMBER_OF_SPANS = "numberOfSpans";
     public static final String SPANS = "spans";
 
@@ -47,9 +36,6 @@ public class UIMAXMIAttributes {
     public static final String FIRST_NAME = "firstName";
     public static final String LAST_NAME = "lastName";
 
-    public static final String MENTION_ID = "mentionID";
-    public static final String MENTION_Name = "mentionName";
-    public static final String SLOT_MENTIONS = "slotMentions";
     public static final String SPAN_END = "spanEnd";
     public static final String SPAN_START = "spanStart";
 

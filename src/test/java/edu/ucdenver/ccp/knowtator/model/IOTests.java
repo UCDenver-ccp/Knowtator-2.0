@@ -331,11 +331,13 @@ public class IOTests {
         int articleID = 0;
         String projectFileName = projectFileNames[projectID];
         File projectFile = getProjectFile(projectFileName);
-        String article = articleFileNames[articleID];
+//        String article = articleFileNames[articleID];
 
         File outputDir = new File("E:/Documents/Test/");
 
         manager.getProjectManager().loadProject(projectFile);
+
+//        TextSource textSource = manager.getTextSourceManager().getTextSources().get(article);
         manager.getProjectManager().exportToUIMA(outputDir);
     }
 }

@@ -1,7 +1,7 @@
 
 
    
-/* Apache UIMA v3 - First created by JCasGen Sat Mar 31 18:02:20 MDT 2018 */
+/* Apache UIMA v3 - First created by JCasGen Sat Mar 31 19:49:28 MDT 2018 */
 
 package edu.ucdenver.ccp.nlp.core.uima.annotation;
 
@@ -19,8 +19,8 @@ import org.apache.uima.jcas.cas.TOP;
 
 
 /** The span object holds span information.This is a supplement to the default UIMA annotation which cannot handle multi-span annotations.
- * Updated by JCasGen Sat Mar 31 18:49:36 MDT 2018
- * XML source: E:/Documents/RoomNumberAnnotator/desc/KnowtatorAnnotatorDescriptor.xml
+ * Updated by JCasGen Sat Mar 31 19:49:28 MDT 2018
+ * XML source: E:/Documents/Knowtator-2.0/src/main/resources/KnowtatorToUIMAAnnotatorDescriptor.xml
  * @generated */
 public class CCPSpan extends TOP {
  
