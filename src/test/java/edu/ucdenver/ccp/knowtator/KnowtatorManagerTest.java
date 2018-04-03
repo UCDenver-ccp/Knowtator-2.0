@@ -26,8 +26,6 @@ package edu.ucdenver.ccp.knowtator;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class KnowtatorManagerTest {
 
     @Test
@@ -36,7 +34,8 @@ public class KnowtatorManagerTest {
                 "t",
                 "--articles", "E:/Documents/Test/test_project/Articles",
                 "--annotations", "E:/Documents/Test/test_project/Annotations",
-                "--brat", "E:/Documents/Test/brat_output_test"
+                "--brat", "E:/Documents/Test/brat_output_test",
+                "--uima", "E:/Documents/Test/uima_output_test"
         };
 
         KnowtatorManager.main(args);

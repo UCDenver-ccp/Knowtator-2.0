@@ -173,7 +173,7 @@ public class ProjectManager {
         try {
             BasicIOUtil util = ioClass.getDeclaredConstructor().newInstance();
             util.write(savable != null ? savable : manager.getTextSourceManager(), file);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | IOException e) {
             e.printStackTrace();
         }
     }

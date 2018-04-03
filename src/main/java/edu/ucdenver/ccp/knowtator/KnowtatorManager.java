@@ -138,8 +138,8 @@ public class KnowtatorManager {
                     projectManager.loadProject(
                             profilesDirName == null ? null : new File(profilesDirName),
                             ontologiesDirName == null ? null : new File(ontologiesDirName),
-                            annotationsDirName == null ? null : new File(annotationsDirName),
-                            articlesDirName == null? null : new File(articlesDirName)
+                            articlesDirName == null? null : new File(articlesDirName),
+                            annotationsDirName == null ? null : new File(annotationsDirName)
                     );
                 } else {
                     projectManager.loadProject(new File(projectFileName));
@@ -181,6 +181,7 @@ public class KnowtatorManager {
                             new File(bratOutputDirName)
                     );
                 }
+                break;
         }
     }
 
@@ -188,8 +189,6 @@ public class KnowtatorManager {
         initManagers();
         projectManager.loadProject(file);
     }
-
-
 
     public void textSourceAddedEvent(TextSource textSource) {
         textSourceListeners.forEach(textSourceListener -> textSourceListener.textSourceAdded(textSource));
