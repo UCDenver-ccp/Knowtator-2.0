@@ -30,6 +30,8 @@ import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.annotation.AnnotationManager;
 import edu.ucdenver.ccp.knowtator.model.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.io.brat.BratStandoffUtil;
+import edu.ucdenver.ccp.knowtator.model.io.uima.UIMAXMIUtil;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -235,8 +237,6 @@ public class IOTests {
         assert numGraphSpaces == 0 : "There were " + numGraphSpaces + " graph spaces";
         assert numAnnotations == 2 : "There were " + numAnnotations + " annotations";
         assert numSpans == 3 : "There were " + numSpans + " spans";
-
-        manager.getProjectManager().saveProject();
     }
 
     @Test
@@ -319,8 +319,8 @@ public class IOTests {
         File outputFile = new File("E:/Documents/Test/brat_test.ann");
 
         manager.getProjectManager().loadProject(projectFile);
-        manager.getProjectManager().importBrat(bratAnnotationFile);
-        manager.getProjectManager().exportToBrat(manager.getTextSourceManager().getTextSources().get(article), outputFile);
+        manager.getProjectManager().importFromAlternativeFormat(BratStandoffUtil.class, bratAnnotationFile);
+        manager.getProjectManager().exportToAlternativeFormat(BratStandoffUtil.class, manager.getTextSourceManager().getTextSources().get(article), outputFile);
     }
 
     @Test
@@ -328,7 +328,7 @@ public class IOTests {
         manager = new KnowtatorManager();
 
         int projectID = 0;
-        int articleID = 0;
+//        int articleID = 0;
         String projectFileName = projectFileNames[projectID];
         File projectFile = getProjectFile(projectFileName);
 //        String article = articleFileNames[articleID];
@@ -338,6 +338,6 @@ public class IOTests {
         manager.getProjectManager().loadProject(projectFile);
 
 //        TextSource textSource = manager.getTextSourceManager().getTextSources().get(article);
-        manager.getProjectManager().exportToUIMA(outputDir);
+        manager.getProjectManager().exportToAlternativeFormat(UIMAXMIUtil.class, null, outputDir);
     }
 }

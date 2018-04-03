@@ -22,22 +22,23 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.io.genia;
+package edu.ucdenver.ccp.knowtator;
 
-import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.io.BasicIOUtil;
+import org.junit.Test;
 
-import java.io.File;
+import static org.junit.Assert.*;
 
-public class GeniaXMLUtil implements BasicIOUtil {
-    @Override
-    public void read(Savable savable, File file) {
-//        savable.readFromGeniaXML(null, null);
-    }
+public class KnowtatorManagerTest {
 
-    @Override
-    public void write(Savable savable, File file) {
+    @Test
+    public void main() {
+        String[] args = new String[]{
+                "t",
+                "--articles", "E:/Documents/Test/test_project/Articles",
+                "--annotations", "E:/Documents/Test/test_project/Annotations",
+                "--brat", "E:/Documents/Test/brat_output_test"
+        };
 
-//        savable.writeToGeniaXML(null, null);
+        KnowtatorManager.main(args);
     }
 }

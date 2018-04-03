@@ -25,7 +25,7 @@
             
       <imports>
                 
-        <import location="file:/E:/Documents/Knowtator-2.0/src/main/resources/CcpTypeSystem.xml"/>
+        <import location="file:/E:/Documents/Projects/Knowtator-2.0/src/main/resources/CcpTypeSystem.xml"/>
               
       </imports>
     </typeSystemDescription>

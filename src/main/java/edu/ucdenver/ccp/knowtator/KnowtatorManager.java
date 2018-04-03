@@ -28,6 +28,9 @@ import edu.ucdenver.ccp.knowtator.listeners.*;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.io.brat.BratStandoffUtil;
+import edu.ucdenver.ccp.knowtator.model.io.genia.GeniaXMLUtil;
+import edu.ucdenver.ccp.knowtator.model.io.uima.UIMAXMIUtil;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLAPIDataExtractor;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileManager;
@@ -39,7 +42,9 @@ import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.OWLWorkspace;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -106,7 +111,68 @@ public class KnowtatorManager {
 
     //TODO: Autoload the AO or at least provide the functionality to convert to it if desired.
 
-    public static void main(String[] args) { }
+    public static void main(String[] args) {
+        String command = args[0];
+        Map<String, String> options = new HashMap<>();
+        for (int i=1; i < args.length; i++) {
+            switch (args[i].charAt(0)) {
+                case '-':
+                    options.put(args[i], args[++i]);
+            }
+        }
+
+        KnowtatorManager manager = new KnowtatorManager();
+
+        switch (command) {
+            case "t":
+                ProjectManager projectManager = manager.getProjectManager();
+
+                String projectFileName = options.get("-i");
+
+                if (projectFileName == null) {
+                    String profilesDirName = options.get("--profiles");
+                    String ontologiesDirName = options.get("--ontologies");
+                    String annotationsDirName = options.get("--annotations");
+                    String articlesDirName = options.get("--articles");
+                    projectManager.loadProject(
+                            profilesDirName == null ? null : new File(profilesDirName),
+                            ontologiesDirName == null ? null : new File(ontologiesDirName),
+                            annotationsDirName == null ? null : new File(annotationsDirName),
+                            articlesDirName == null? null : new File(articlesDirName)
+                    );
+                } else {
+                    projectManager.loadProject(new File(projectFileName));
+                }
+
+                String geniaOutputDirName = options.get("--genia");
+                String uimaOutputDirName = options.get("--uima");
+                String bratOutputDirName = options.get("--brat");
+
+                if (geniaOutputDirName != null) {
+                    projectManager.exportToAlternativeFormat(
+                            GeniaXMLUtil.class,
+                            null,
+                            new File(geniaOutputDirName)
+                    );
+                }
+
+                if (uimaOutputDirName != null) {
+                    projectManager.exportToAlternativeFormat(
+                            UIMAXMIUtil.class,
+                            null,
+                            new File(uimaOutputDirName)
+                    );
+                }
+
+                if (bratOutputDirName != null) {
+                    projectManager.exportToAlternativeFormat(
+                            BratStandoffUtil.class,
+                            null,
+                            new File(bratOutputDirName)
+                    );
+                }
+        }
+    }
 
     public void close(File file) {
         initManagers();

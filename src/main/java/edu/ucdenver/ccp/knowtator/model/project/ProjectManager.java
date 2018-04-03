@@ -26,16 +26,16 @@ package edu.ucdenver.ccp.knowtator.model.project;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.model.io.brat.BratStandoffUtil;
-import edu.ucdenver.ccp.knowtator.model.io.genia.GeniaXMLUtil;
+import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.io.uima.UIMAXMIUtil;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
@@ -49,16 +49,10 @@ public class ProjectManager {
     private File ontologiesLocation;
     private File annotationsLocation;
     private File profilesLocation;
-    private BratStandoffUtil bratStandoffUtil;
-    private GeniaXMLUtil geniaXMLUtil;
-    private UIMAXMIUtil uimaXMIUtil;
 
     public ProjectManager(KnowtatorManager manager) {
         this.manager = manager;
         knowtatorXMLUtil = new KnowtatorXMLUtil();
-        bratStandoffUtil = new BratStandoffUtil();
-        geniaXMLUtil = new GeniaXMLUtil();
-        uimaXMIUtil = new UIMAXMIUtil();
     }
 
     public File getProjectLocation() {
@@ -83,6 +77,39 @@ public class ProjectManager {
             manager.close(file);
         }
     }
+
+    public void loadProject(File profilesLocation, File ontologiesLocation, File articlesLocation, File annotationsLocation) {
+        makeFileStructure(profilesLocation, ontologiesLocation, articlesLocation, annotationsLocation);
+
+        try {
+            if (ontologiesLocation != null) {
+                log.warn("Loading ontologies");
+                Files.newDirectoryStream(Paths.get(ontologiesLocation.toURI()),
+                        path -> path.toString().endsWith(".owl"))
+                        .forEach(file -> manager.getOWLAPIDataExtractor().loadOntologyFromLocation(file.toFile().toURI().toString()));
+            }
+
+            if (profilesLocation != null) {
+                log.warn("Loading profiles");
+                Files.newDirectoryStream(Paths.get(profilesLocation.toURI()),
+                        path -> path.toString().endsWith(".xml"))
+                        .forEach(file -> knowtatorXMLUtil.read(manager.getProfileManager(), file.toFile()));
+            }
+
+            if (annotationsLocation != null) {
+                log.warn("Loading annotations");
+                Files.newDirectoryStream(Paths.get(annotationsLocation.toURI()),
+                        path -> path.toString().endsWith(".xml"))
+                        .forEach(file -> knowtatorXMLUtil.read(manager.getTextSourceManager(), file.toFile()));
+            }
+
+            manager.projectLoadedEvent();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     public void loadProject(File projectFile) {
         if (projectFile != null) {
@@ -120,6 +147,17 @@ public class ProjectManager {
         }
     }
 
+    /**
+     Allows for manual setting of the project structure
+     **/
+    private void makeFileStructure(File profilesLocation, File ontologiesLocation, File articlesLocation, File annotationsLocation) {
+        this.projectLocation = null;
+        this.profilesLocation = profilesLocation;
+        this.ontologiesLocation = ontologiesLocation;
+        this.articlesLocation = articlesLocation;
+        this.annotationsLocation = annotationsLocation;
+    }
+
     private void makeFileStructure(File projectDirectory) {
         try {
             projectLocation = projectDirectory;
@@ -153,7 +191,7 @@ public class ProjectManager {
             }
 
             manager.getTextSourceManager().getTextSources().values().forEach(textSource -> {
-                File textSourceFile = new File(annotationsLocation, textSource.getDocID() + ".knowtator");
+                File textSourceFile = new File(annotationsLocation, textSource.getDocID() + ".xml");
 
                 knowtatorXMLUtil.write(textSource, textSourceFile);
 
@@ -185,25 +223,22 @@ public class ProjectManager {
         knowtatorXMLUtil.read(manager.getProfileManager(), file);
     }
 
-    public void exportToBrat(TextSource textSource, File file) {
-        bratStandoffUtil.write(textSource, file);
+    public void exportToAlternativeFormat(Class<? extends BasicIOUtil> ioClass, Savable savable, File file) {
+        try {
+            BasicIOUtil util = ioClass.getDeclaredConstructor().newInstance();
+            util.write(savable != null ? savable : manager.getTextSourceManager(), file);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void importBrat(File file) {
-        bratStandoffUtil.read(manager.getTextSourceManager(), file);
+    public void importFromAlternativeFormat(Class<? extends BasicIOUtil> ioClass, File file) {
+        try {
+            BasicIOUtil util = ioClass.getDeclaredConstructor().newInstance();
+            util.write(manager.getTextSourceManager(), file);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void exportToGenia(TextSource textSource, File file) {
-        geniaXMLUtil.write(textSource, file);
-    }
-
-    public void importGenia(File file) {
-        geniaXMLUtil.read(manager.getTextSourceManager(), file);
-    }
-
-    public void exportToUIMA(File file) { uimaXMIUtil.write(manager.getTextSourceManager(), file);}
-
-    public void exportToUIMA(TextSource textSource, File file) {uimaXMIUtil.write(textSource, file);}
-
-    public void importUIMA(File file) { uimaXMIUtil.read(manager.getTextSourceManager(), file);}
 }

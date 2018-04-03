@@ -48,7 +48,7 @@ import java.net.URL;
 public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(UIMAXMIUtil.class);
-    private static final URL ANNOTATOR_DESCRIPTOR = UIMAXMIUtil.class.getResource("/KnowtatorToUIMAAnnotatorDescriptor.xml");
+
 //private static final File ANNOTATOR_DESCRIPTOR = new File("E:/Documents/Knowtator-2.0/src/main/resources/KnowtatorToUIMAAnnotatorDescriptor.xml");
 
     @Override
@@ -58,7 +58,7 @@ public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
 
     @Override
     public void write(Savable savable, File file) {
-
+        final URL ANNOTATOR_DESCRIPTOR = UIMAXMIUtil.class.getResource("/KnowtatorToUIMAAnnotatorDescriptor.xml");
         try {
             XMLInputSource input = new XMLInputSource(ANNOTATOR_DESCRIPTOR);
             AnalysisEngineDescription description = UIMAFramework.getXMLParser().parseAnalysisEngineDescription(input);
