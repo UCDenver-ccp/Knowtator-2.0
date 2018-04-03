@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator.view.menus;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -68,7 +69,7 @@ public class ProjectMenu extends JMenu {
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
                 if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    manager.getProjectManager().importAnnotations(fileChooser.getSelectedFile());
+                    manager.getProjectManager().loadFromFormat(KnowtatorXMLUtil.class, fileChooser.getSelectedFile());
                 }
             }
         });

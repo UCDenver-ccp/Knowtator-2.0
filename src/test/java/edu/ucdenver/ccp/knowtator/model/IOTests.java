@@ -319,8 +319,8 @@ public class IOTests {
         File outputFile = new File("E:/Documents/Test/brat_test.ann");
 
         manager.getProjectManager().loadProject(projectFile);
-        manager.getProjectManager().importFromAlternativeFormat(BratStandoffUtil.class, bratAnnotationFile);
-        manager.getProjectManager().exportToAlternativeFormat(BratStandoffUtil.class, manager.getTextSourceManager().getTextSources().get(article), outputFile);
+        manager.getProjectManager().loadFromFormat(BratStandoffUtil.class, bratAnnotationFile);
+        manager.getProjectManager().saveToFormat(BratStandoffUtil.class, manager.getTextSourceManager().getTextSources().get(article), outputFile);
     }
 
     @Test
@@ -338,6 +338,6 @@ public class IOTests {
         manager.getProjectManager().loadProject(projectFile);
 
 //        TextSource textSource = manager.getTextSourceManager().getTextSources().get(article);
-        manager.getProjectManager().exportToAlternativeFormat(UIMAXMIUtil.class, null, outputDir);
+        manager.getProjectManager().saveToFormat(UIMAXMIUtil.class, null, outputDir);
     }
 }

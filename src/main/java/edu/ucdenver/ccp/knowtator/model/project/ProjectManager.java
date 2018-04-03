@@ -29,6 +29,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
+import edu.ucdenver.ccp.knowtator.model.io.owl.OWLUtil;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -37,12 +38,11 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class ProjectManager {
     private static final Logger log = Logger.getLogger(ProjectManager.class);
-    private KnowtatorXMLUtil knowtatorXMLUtil;
     private KnowtatorManager manager;
     private File projectLocation;
     private File articlesLocation;
@@ -52,7 +52,6 @@ public class ProjectManager {
 
     public ProjectManager(KnowtatorManager manager) {
         this.manager = manager;
-        knowtatorXMLUtil = new KnowtatorXMLUtil();
     }
 
     public File getProjectLocation() {
@@ -78,73 +77,35 @@ public class ProjectManager {
         }
     }
 
-    public void loadProject(File profilesLocation, File ontologiesLocation, File articlesLocation, File annotationsLocation) {
-        makeFileStructure(profilesLocation, ontologiesLocation, articlesLocation, annotationsLocation);
-
-        try {
-            if (ontologiesLocation != null) {
-                log.warn("Loading ontologies");
-                Files.newDirectoryStream(Paths.get(ontologiesLocation.toURI()),
-                        path -> path.toString().endsWith(".owl"))
-                        .forEach(file -> manager.getOWLAPIDataExtractor().loadOntologyFromLocation(file.toFile().toURI().toString()));
-            }
-
-            if (profilesLocation != null) {
-                log.warn("Loading profiles");
-                Files.newDirectoryStream(Paths.get(profilesLocation.toURI()),
-                        path -> path.toString().endsWith(".xml"))
-                        .forEach(file -> knowtatorXMLUtil.read(manager.getProfileManager(), file.toFile()));
-            }
-
-            if (annotationsLocation != null) {
-                log.warn("Loading annotations");
-                Files.newDirectoryStream(Paths.get(annotationsLocation.toURI()),
-                        path -> path.toString().endsWith(".xml"))
-                        .forEach(file -> knowtatorXMLUtil.read(manager.getTextSourceManager(), file.toFile()));
-            }
-
-            manager.projectLoadedEvent();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void loadProject(File projectFile) {
+        if (projectFile != null) {
+            makeFileStructure(projectFile.getParentFile());
+            loadProject();
         }
     }
 
+    public void loadProject(File profilesLocation, File ontologiesLocation, File articlesLocation, File annotationsLocation) {
+        makeFileStructure(profilesLocation, ontologiesLocation, articlesLocation, annotationsLocation);
+        loadProject();
+    }
 
-
-    public void loadProject(File projectFile) {
-        if (projectFile != null) {
-            log.warn("4: " + projectFile);
-            File projectDirectory = projectFile.getParentFile();
-
-            makeFileStructure(projectDirectory);
-
-            try {
-                log.warn("Loading ontologies");
-                Files.newDirectoryStream(Paths.get(ontologiesLocation.toURI()),
-                        path -> path.toString().endsWith(".owl"))
-                        .forEach(file -> manager.getOWLAPIDataExtractor().loadOntologyFromLocation(file.toFile().toURI().toString()));
-
-                log.warn("Loading profiles");
-                Files.newDirectoryStream(Paths.get(profilesLocation.toURI()),
-                        path -> path.toString().endsWith(".xml"))
-                        .forEach(file -> knowtatorXMLUtil.read(manager.getProfileManager(), file.toFile()));
-
-//                Load annotations in parallel
-//                log.warn("Loading annotations");
-//                Stream<Path> annotationFilesToRead = Files.walk(Paths.get(annotationsLocation.toURI()))
-//                        .filter(path -> path.toString().endsWith(".knowtator"));
-//                annotationFilesToRead.parallel().forEach(path -> KnowtatorXMLUtil.read(manager.getTextSourceManager(), path.toFile()));
-
-                log.warn("Loading annotations");
-                Files.newDirectoryStream(Paths.get(annotationsLocation.toURI()),
-                        path -> path.toString().endsWith(".xml"))
-                        .forEach(file -> knowtatorXMLUtil.read(manager.getTextSourceManager(), file.toFile()));
-
-                manager.projectLoadedEvent();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    private void loadProject() {
+        if (ontologiesLocation != null) {
+            log.warn("Loading ontologies");
+            loadFromFormat(OWLUtil.class, manager.getOWLAPIDataExtractor(), ontologiesLocation);
         }
+
+        if (profilesLocation != null) {
+            log.warn("Loading profiles");
+            loadFromFormat(KnowtatorXMLUtil.class, manager.getProfileManager(), profilesLocation);
+        }
+
+        if (annotationsLocation != null) {
+            log.warn("Loading annotations");
+            loadFromFormat(KnowtatorXMLUtil.class, manager.getTextSourceManager(), annotationsLocation);
+        }
+
+        manager.projectLoadedEvent();
     }
 
     /**
@@ -179,28 +140,17 @@ public class ProjectManager {
     }
 
     public void saveProject() {
+
+
         if (getProjectLocation() != null) {
-            manager.getProfileManager().getProfiles().values().forEach(profile -> {
-                File profileFile = new File(profilesLocation, profile.getId() + ".knowtator");
-                knowtatorXMLUtil.write(profile, profileFile);
-            });
+            //noinspection ResultOfMethodCallIgnored
+            Arrays.stream(Objects.requireNonNull(profilesLocation.listFiles())).forEach(File::delete);
+            //noinspection ResultOfMethodCallIgnored
+            Arrays.stream(Objects.requireNonNull(annotationsLocation.listFiles())).forEach(File::delete);
 
-            for (File file : Objects.requireNonNull(annotationsLocation.listFiles())) {
-                //noinspection ResultOfMethodCallIgnored
-                file.delete();
-            }
-
-            manager.getTextSourceManager().getTextSources().values().forEach(textSource -> {
-                File textSourceFile = new File(annotationsLocation, textSource.getDocID() + ".xml");
-
-                knowtatorXMLUtil.write(textSource, textSourceFile);
-
-            });
+            this.saveToFormat(KnowtatorXMLUtil.class, manager.getProfileManager(), profilesLocation);
+            this.saveToFormat(KnowtatorXMLUtil.class, manager.getTextSourceManager(), annotationsLocation);
         }
-    }
-
-    public void importAnnotations(File file) {
-        knowtatorXMLUtil.read(manager.getTextSourceManager(), file);
     }
 
     public void addDocument(File file) {
@@ -219,11 +169,7 @@ public class ProjectManager {
         return annotationsLocation;
     }
 
-    public void loadProfiles(File file) {
-        knowtatorXMLUtil.read(manager.getProfileManager(), file);
-    }
-
-    public void exportToAlternativeFormat(Class<? extends BasicIOUtil> ioClass, Savable savable, File file) {
+    public void saveToFormat(Class<? extends BasicIOUtil> ioClass, Savable savable, File file) {
         try {
             BasicIOUtil util = ioClass.getDeclaredConstructor().newInstance();
             util.write(savable != null ? savable : manager.getTextSourceManager(), file);
@@ -232,11 +178,15 @@ public class ProjectManager {
         }
     }
 
-    public void importFromAlternativeFormat(Class<? extends BasicIOUtil> ioClass, File file) {
+    public void loadFromFormat(Class<? extends BasicIOUtil> ioClass, File file) {
+        loadFromFormat(ioClass, manager.getTextSourceManager(), file);
+    }
+
+    public void loadFromFormat(Class<? extends BasicIOUtil> ioClass, Savable savable, File file) {
         try {
             BasicIOUtil util = ioClass.getDeclaredConstructor().newInstance();
-            util.write(manager.getTextSourceManager(), file);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            util.read(savable, file);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | IOException e) {
             e.printStackTrace();
         }
     }

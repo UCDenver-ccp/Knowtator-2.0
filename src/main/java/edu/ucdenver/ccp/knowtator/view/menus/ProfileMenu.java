@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.view.menus;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileManager;
 import org.apache.log4j.Logger;
@@ -90,7 +91,7 @@ public class ProfileMenu extends JMenu implements ProfileListener {
                 fileChooser.setCurrentDirectory(manager.getProjectManager().getProjectLocation());
 
                 if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    manager.getProjectManager().loadProfiles(fileChooser.getSelectedFile());
+                    manager.getProjectManager().loadFromFormat(KnowtatorXMLUtil.class, manager.getProfileManager(), fileChooser.getSelectedFile());
                 }
 
 

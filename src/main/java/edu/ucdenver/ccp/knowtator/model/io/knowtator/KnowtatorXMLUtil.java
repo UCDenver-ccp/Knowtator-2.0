@@ -28,6 +28,8 @@ import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
 import edu.ucdenver.ccp.knowtator.model.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.model.io.XMLUtil;
+import edu.ucdenver.ccp.knowtator.model.profile.ProfileManager;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSourceManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -38,6 +40,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +53,17 @@ public final class KnowtatorXMLUtil extends XMLUtil implements BasicIOUtil {
 
 
     @Override
-    public void read(Savable savable, File file) {
+    public void read(Savable savable, File file) throws IOException {
+        if (file.isDirectory()) {
+            Files.newDirectoryStream(Paths.get(file.toURI()),
+                    path -> path.toString().endsWith(".xml"))
+                    .forEach(inputFile -> readFromInputFile(savable, inputFile.toFile()));
+        } else {
+            readFromInputFile(savable, file);
+        }
+    }
+
+    private void readFromInputFile(Savable savable, File file) {
         try {
             /*
             doc parses the XML into a graph
@@ -84,12 +98,29 @@ public final class KnowtatorXMLUtil extends XMLUtil implements BasicIOUtil {
 
     @Override
     public void write(Savable savable, File file) {
+        if (savable instanceof TextSourceManager) {
+            ((TextSourceManager) savable).getTextSources().values().forEach(textSource -> {
+                File outputFile = new File(file.getAbsolutePath() + File.separator + textSource.getDocID() + ".xml");
+                writeToOutputFile(savable, outputFile);
+            });
+        } else if(savable instanceof ProfileManager){
+            ((ProfileManager) savable).getProfiles().values().forEach(profile -> {
+                File outputFile = new File(file.getAbsolutePath() + File.separator + profile.getId() + ".xml");
+                writeToOutputFile(savable, outputFile);
+            });
+        } else {
+            writeToOutputFile(savable, file);
+        }
+
+    }
+
+    private void writeToOutputFile(Savable savable, File outputFile) {
         Document dom;
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
         try {
-            log.warn("Writing to " + file.getAbsolutePath());
+            log.warn("Writing to " + outputFile.getAbsolutePath());
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.newDocument();
 
@@ -97,13 +128,11 @@ public final class KnowtatorXMLUtil extends XMLUtil implements BasicIOUtil {
             dom.appendChild(root);
             savable.writeToKnowtatorXML(dom, root);
 
-            finishWritingXML(dom, file);
+            finishWritingXML(dom, outputFile);
         } catch (ParserConfigurationException e1) {
             e1.printStackTrace();
         }
-
     }
-
 
 
     public static List<Span> getSpanInfo(Element annotationElement) {

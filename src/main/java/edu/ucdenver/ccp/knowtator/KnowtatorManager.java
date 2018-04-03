@@ -30,6 +30,7 @@ import edu.ucdenver.ccp.knowtator.model.annotation.Span;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.model.io.genia.GeniaXMLUtil;
+import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.io.uima.UIMAXMIUtil;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLAPIDataExtractor;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
@@ -144,12 +145,21 @@ public class KnowtatorManager {
                     projectManager.loadProject(new File(projectFileName));
                 }
 
+                String knowtatorOutputDirName = options.get("--knowtator");
                 String geniaOutputDirName = options.get("--genia");
                 String uimaOutputDirName = options.get("--uima");
                 String bratOutputDirName = options.get("--brat");
 
+                if (knowtatorOutputDirName != null) {
+                    projectManager.saveToFormat(
+                            KnowtatorXMLUtil.class,
+                            null,
+                            new File(knowtatorOutputDirName)
+                    );
+                }
+
                 if (geniaOutputDirName != null) {
-                    projectManager.exportToAlternativeFormat(
+                    projectManager.saveToFormat(
                             GeniaXMLUtil.class,
                             null,
                             new File(geniaOutputDirName)
@@ -157,7 +167,7 @@ public class KnowtatorManager {
                 }
 
                 if (uimaOutputDirName != null) {
-                    projectManager.exportToAlternativeFormat(
+                    projectManager.saveToFormat(
                             UIMAXMIUtil.class,
                             null,
                             new File(uimaOutputDirName)
@@ -165,7 +175,7 @@ public class KnowtatorManager {
                 }
 
                 if (bratOutputDirName != null) {
-                    projectManager.exportToAlternativeFormat(
+                    projectManager.saveToFormat(
                             BratStandoffUtil.class,
                             null,
                             new File(bratOutputDirName)

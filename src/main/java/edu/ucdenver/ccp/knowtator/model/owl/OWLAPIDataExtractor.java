@@ -24,20 +24,26 @@
 
 package edu.ucdenver.ccp.knowtator.model.owl;
 
-import com.google.common.base.Optional;
+import edu.ucdenver.ccp.knowtator.model.Savable;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.apache.uima.cas.CAS;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.OWLWorkspace;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
+import java.io.Writer;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 
-public class OWLAPIDataExtractor {
+public class OWLAPIDataExtractor implements Savable {
+    @SuppressWarnings("unused")
     private static final Logger log = LogManager.getLogger(OWLAPIDataExtractor.class);
     private OWLWorkspace owlWorkSpace;
     private OWLModelManager owlModelManager;
@@ -104,35 +110,52 @@ public class OWLAPIDataExtractor {
         return getDescendants(cls);
     }
 
-    public void loadOntologyFromLocation(String ontologyLocation) {
-        if (owlModelManager != null) {
-            List<String> ontologies = owlModelManager.getActiveOntologies().stream().map(ontology -> {
-                OWLOntologyID ontID = ontology.getOntologyID();
-                //noinspection Guava
-                Optional<IRI> ontIRI = ontID.getOntologyIRI();
-                if (ontIRI.isPresent()) {
-                    return ontIRI.get().toURI().toString();
-                } else {
-                    return null;
-                }
-            }).collect(Collectors.toList());
-
-//        String ontologyLocation = OntologyTranslator.translate(classID);
-            if (!ontologies.contains(ontologyLocation)) {
-                log.warn("Loading ontology: " + ontologyLocation);
-                try {
-                    OWLOntology newOntology = owlModelManager.getOWLOntologyManager().loadOntology((IRI.create(ontologyLocation)));
-                    owlModelManager.setActiveOntology(newOntology);
-                } catch (OWLOntologyCreationException e) {
-                    log.warn("Knowtator: OWLAPIDataExtractor: Ontology already loaded");
-                }
-            }
-        }
-
-    }
-
     public void setUpOWL(OWLWorkspace owlWorkSpace, OWLModelManager owlModelManager) {
         this.owlWorkSpace = owlWorkSpace;
         this.owlModelManager = owlModelManager;
+    }
+
+    public OWLModelManager getOwlModelManager() {
+        return owlModelManager;
+    }
+
+    @Override
+    public void writeToKnowtatorXML(Document dom, Element parent) {
+
+    }
+
+    @Override
+    public void readFromKnowtatorXML(Element parent, String content) {
+
+    }
+
+    @Override
+    public void readFromOldKnowtatorXML(Element parent) {
+
+    }
+
+    @Override
+    public void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content) {
+
+    }
+
+    @Override
+    public void writeToBratStandoff(Writer writer) {
+
+    }
+
+    @Override
+    public void readFromGeniaXML(Element parent, String content) {
+
+    }
+
+    @Override
+    public void convertToUIMA(CAS cas) {
+
+    }
+
+    @Override
+    public void writeToGeniaXML(Document dom, Element parent) {
+
     }
 }
