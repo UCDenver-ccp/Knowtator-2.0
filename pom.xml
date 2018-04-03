@@ -132,6 +132,14 @@
               </configuration>
             </plugin>
 
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>edu.ucdenver.ccp.knowtator.KnowtatorManager</mainClass>
+				</configuration>
+			</plugin>
+
             <plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
