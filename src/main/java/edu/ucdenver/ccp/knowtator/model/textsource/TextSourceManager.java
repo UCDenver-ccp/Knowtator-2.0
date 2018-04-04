@@ -33,7 +33,6 @@ import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.OldKnowtatorXMLAttributes;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
-import org.apache.uima.cas.CAS;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLEntityCollector;
 import org.w3c.dom.Document;
@@ -92,12 +91,12 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
     }
 
     @Override
-    public void readFromOldKnowtatorXML(Element parent) {
+    public void readFromOldKnowtatorXML(Element parent, String content) {
 
         String docID = parent.getAttribute(OldKnowtatorXMLAttributes.TEXT_SOURCE).replace(".txt", "");
         TextSource newTextSource = addTextSource(docID);
         log.warn("\tOLD XML: " + newTextSource);
-        newTextSource.readFromOldKnowtatorXML(parent);
+        newTextSource.readFromOldKnowtatorXML(parent, null);
     }
 
     @Override
@@ -120,10 +119,10 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
 
     }
 
-    @Override
-    public void convertToUIMA(CAS cas) {
-
-    }
+//    @Override
+//    public void convertToUIMA(CAS cas) {
+//
+//    }
 
     @Override
     public void writeToGeniaXML(Document dom, Element parent) {

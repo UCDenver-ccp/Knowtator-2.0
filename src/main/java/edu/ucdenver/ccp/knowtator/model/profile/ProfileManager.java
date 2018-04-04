@@ -30,7 +30,6 @@ import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
 import org.apache.log4j.Logger;
-import org.apache.uima.cas.CAS;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -108,7 +107,7 @@ public class ProfileManager implements Savable {
     }
 
     @Override
-    public void readFromOldKnowtatorXML(Element parent) {
+    public void readFromOldKnowtatorXML(Element parent, String content) {
 
     }
 
@@ -127,11 +126,11 @@ public class ProfileManager implements Savable {
     public void readFromGeniaXML(Element parent, String content) {
 
     }
-
-    @Override
-    public void convertToUIMA(CAS cas) {
-
-    }
+//
+//    @Override
+//    public void convertToUIMA(CAS cas) {
+//
+//    }
 
     @Override
     public void writeToGeniaXML(Document dom, Element parent) {

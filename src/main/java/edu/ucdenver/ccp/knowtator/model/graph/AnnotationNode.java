@@ -30,7 +30,6 @@ import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
-import org.apache.uima.cas.CAS;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -66,7 +65,7 @@ public class AnnotationNode extends mxCell implements Savable{
     }
 
     @Override
-    public void readFromOldKnowtatorXML(Element parent) {
+    public void readFromOldKnowtatorXML(Element parent, String content) {
 
     }
 
@@ -86,10 +85,10 @@ public class AnnotationNode extends mxCell implements Savable{
 
     }
 
-    @Override
-    public void convertToUIMA(CAS cas) {
-
-    }
+//    @Override
+//    public void convertToUIMA(CAS cas) {
+//
+//    }
 
     @Override
     public void writeToGeniaXML(Document dom, Element parent) {

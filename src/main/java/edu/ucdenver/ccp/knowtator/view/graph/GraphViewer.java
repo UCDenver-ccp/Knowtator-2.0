@@ -32,7 +32,7 @@ import com.mxgraph.swing.util.mxMorphing;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.listeners.GraphListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
@@ -111,11 +111,11 @@ public class GraphViewer implements ProfileListener, GraphListener {
     }
 
 
-    public void addNewGraphSpace(String graphID) {
+    void addNewGraphSpace(String graphID) {
         textPane.getTextSource().getAnnotationManager().addGraphSpace(graphID);
     }
 
-    public mxGraphComponent getCurrentGraphComponent() {
+    mxGraphComponent getCurrentGraphComponent() {
         return currentGraphComponent;
     }
 
@@ -267,7 +267,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
         }
     }
 
-    public void deleteSelectedGraph() {
+    void deleteSelectedGraph() {
         if (currentGraphComponent != null) {
             GraphSpace graph = (GraphSpace) currentGraphComponent.getGraph();
 
@@ -283,7 +283,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
 
     }
 
-    public void showGraph(mxGraphComponent graphComponent) {
+    void showGraph(mxGraphComponent graphComponent) {
         if (graphComponent != null) {
             if (currentGraphComponent != null) {
                 dialog.remove(currentGraphComponent);
@@ -349,20 +349,20 @@ public class GraphViewer implements ProfileListener, GraphListener {
         return dialog;
     }
 
-    public void renameCurrentGraph(String newGraphID) {
+    void renameCurrentGraph(String newGraphID) {
         ((GraphSpace) currentGraphComponent.getGraph()).setId(newGraphID);
         currentGraphComponent.setName(newGraphID);
     }
 
-    public List<mxGraphComponent> getGraphComponentList() {
+    List<mxGraphComponent> getGraphComponentList() {
         return graphComponentList;
     }
 
-    public void addSelectedAnnotationAsVertex() {
+    void addSelectedAnnotationAsVertex() {
         addAnnotationVertex(textPane.getSelectedAnnotation());
     }
 
-    public void removeSelectedCell() {
+    void removeSelectedCell() {
         if (currentGraphComponent != null) {
             GraphSpace graphSpace = (GraphSpace) currentGraphComponent.getGraph();
             graphSpace.removeSelectedCell();

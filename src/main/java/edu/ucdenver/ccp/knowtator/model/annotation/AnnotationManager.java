@@ -34,7 +34,6 @@ import edu.ucdenver.ccp.knowtator.model.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.log4j.Logger;
-import org.apache.uima.cas.CAS;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -265,9 +264,9 @@ public class AnnotationManager implements Savable {
     }
 
     @Override
-    public void readFromOldKnowtatorXML(Element parent) {
+    public void readFromOldKnowtatorXML(Element parent, String content) {
+        Map<String, Element> complexSlotMentionToClassIDMap = KnowtatorXMLUtil.getComplexSlotsFromXml(parent);
         Map<String, Element> classMentionToClassIDMap = KnowtatorXMLUtil.getClassIDsFromXml(parent);
-//        Map<String, Element> complexSlotMentionToClassIDMap = getComplexSlotsFromXml(textSourceElement);
 
         Element annotationElement;
         String annotationID;
@@ -275,6 +274,7 @@ public class AnnotationManager implements Savable {
         String className;
         String classID;
         Annotation newAnnotation;
+        Map<Annotation, Element> annotationToComplexSlotMap = new HashMap<>();
 
         for (Node annotationNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATION))) {
             annotationElement = (Element) annotationNode;
@@ -293,26 +293,67 @@ public class AnnotationManager implements Savable {
             className = classElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION_CLASS).item(0).getTextContent();
             classID = ((Element) classElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION_CLASS).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID);
 
-//                    if (classID.equals(OldKnowtatorXMLTags.MENTION_CLASS_ID_IDENTITY)) {
-//                        newAnnotation = new Annotation(annotationID, textSource, profile);
-//                        Element complexSlotElement = complexSlotMentionToClassIDMap.get(((Element) classElement.getElementsByTagName(OldKnowtatorXMLTags.HAS_SLOT_MENTION).item(0)).getAttribute(OldKnowtatorXMLTags.HAS_SLOT_MENTION_ID));
-//                        if (((Element) complexSlotElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION_SLOT).item(0)).getAttribute(OldKnowtatorXMLTags.MENTION_SLOT_ID).equals(OldKnowtatorXMLTags.MENTION_SLOT_ID_COREFERENCE)) {
-//                            for (Node complexSlotMentionValueNode : KnowtatorXMLUtil.asList(complexSlotElement.getElementsByTagName(OldKnowtatorXMLTags.COMPLEX_SLOT_MENTION_VALUE))) {
-//                                ((IdentityChainAnnotation) newAnnotation).addCoreferringAnnotation(((Element) complexSlotMentionValueNode).getAttribute(OldKnowtatorXMLTags.COMPLEX_SLOT_MENTION_VALUE_VALUE));
-//                            }
-//                        }
-//
-//                    } else {
-//
             newAnnotation = new Annotation(classID, className, annotationID, textSource, profile, "identity");
 
-            newAnnotation.readFromOldKnowtatorXML(annotationElement);
-//            spans.forEach(newAnnotation::addSpan);
+            newAnnotation.readFromOldKnowtatorXML(annotationElement, content);
             addAnnotation(newAnnotation);
+
+            log.warn("\t\tOLD KNOWATOTOR: added ANNOTATION " + newAnnotation);
+
+            for (Node slotMentionNode : KnowtatorXMLUtil.asList(classElement.getElementsByTagName(OldKnowtatorXMLTags.HAS_SLOT_MENTION))) {
+                Element slotMentionElement = (Element) slotMentionNode;
+                String slotMentionID = slotMentionElement.getAttribute(OldKnowtatorXMLAttributes.ID);
+                Element complexSlotMentionElement = complexSlotMentionToClassIDMap.get(slotMentionID);
+                annotationToComplexSlotMap.put(newAnnotation, complexSlotMentionElement);
+            }
+
+//            if (classID.equals(OldKnowtatorXMLAttributes.IDENTITY_CHAIN)) {
+//                Element complexSlotElement = complexSlotMentionToClassIDMap.get(((Element) classElement.getElementsByTagName(OldKnowtatorXMLTags.HAS_SLOT_MENTION).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID));
+//                if (((Element) complexSlotElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION_SLOT).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID).equals(OldKnowtatorXMLAttributes.COREFERENCE)) {
+//                    for (Node complexSlotMentionValueNode : KnowtatorXMLUtil.asList(complexSlotElement.getElementsByTagName(OldKnowtatorXMLTags.COMPLEX_SLOT_MENTION_VALUE))) {
+//                        newAnnotation.addCoreferringAnnotation(((Element) complexSlotMentionValueNode).getAttribute(OldKnowtatorXMLAttributes.VALUE));
+//                    }
+//                }
+//
+//            }
+
+
 
 //            log.warn("OLD XML: " + newAnnotation);
 
         }
+
+        GraphSpace oldKnowtatorGraphSpace = addGraphSpace("Old Knowtator Relations");
+        annotationToComplexSlotMap.forEach((annotation, slotMention) -> {
+            List<Object> vertices = oldKnowtatorGraphSpace.getVerticesForAnnotation(annotation);
+            AnnotationNode source;
+            if (vertices.isEmpty()) {
+                source = oldKnowtatorGraphSpace.addNode(null, annotation);
+                log.warn("\t\tOLD KNOWTATOR: added NODE: " + source);
+            } else {
+                source = (AnnotationNode) vertices.get(0);
+            }
+
+
+            String property = ((Element) slotMention.getElementsByTagName(OldKnowtatorXMLTags.MENTION_SLOT).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID);
+            for (Node slotMentionValueNode : OldKnowatorUtil.asList(slotMention.getElementsByTagName(OldKnowtatorXMLTags.COMPLEX_SLOT_MENTION_VALUE))) {
+                Element slotMentionValueElement = (Element) slotMentionValueNode;
+                String value = slotMentionValueElement.getAttribute(OldKnowtatorXMLAttributes.VALUE);
+                Annotation annotation1 = getAnnotation(value);
+
+                List<Object> vertices1 = oldKnowtatorGraphSpace.getVerticesForAnnotation(annotation1);
+                AnnotationNode target;
+                if (vertices1.isEmpty()) {
+                    target = oldKnowtatorGraphSpace.addNode(null, annotation1);
+                    log.warn("\t\t\tOLD KNOWTATOR: added NODE: " + target);
+                } else {
+                    target = (AnnotationNode) vertices1.get(0);
+                }
+                Triple triple = oldKnowtatorGraphSpace.addTriple(source, target, null, manager.getProfileManager().getCurrentProfile(), property, "", "");
+                log.warn("\t\t\tOLD KNOWTATOR: added TRIPLE: " + triple);
+            }
+        });
+
     }
 
     //TODO: Should probably also read in Events, Modifiers, etc.
@@ -323,11 +364,11 @@ public class AnnotationManager implements Savable {
 
         annotationMap.get(StandoffTags.TEXTBOUNDANNOTATION).forEach(annotation -> {
             Annotation newAnnotation = new Annotation(annotation[1].split(StandoffTags.textBoundAnnotationTripleDelimiter)[0], annotation[2], annotation[0], textSource, profile, "identity");
-            newAnnotation.readFromBratStandoff(Map.of(
-                    StandoffTags.TEXTBOUNDANNOTATION, new ArrayList<>() {{
-                        add(annotation);
-                    }}
-            ), content);
+            Map<Character, List<String[]>> map = new HashMap<>();
+            List<String[]> list = new ArrayList<>();
+            list.add(annotation);
+            map.put(StandoffTags.TEXTBOUNDANNOTATION, list);
+            newAnnotation.readFromBratStandoff(map, content);
 
             addAnnotation(newAnnotation);
         });
@@ -372,10 +413,10 @@ public class AnnotationManager implements Savable {
 
     }
 
-    @Override
-    public void convertToUIMA(CAS cas) {
-        annotationMap.values().forEach(annotation -> annotation.convertToUIMA(cas));
-    }
+//    @Override
+//    public void convertToUIMA(CAS cas) {
+//        annotationMap.values().forEach(annotation -> annotation.convertToUIMA(cas));
+//    }
 
     @Override
     public void writeToGeniaXML(Document dom, Element parent) {

@@ -32,7 +32,6 @@ import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.apache.uima.cas.CAS;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -52,8 +51,7 @@ public class TextSource implements Savable {
     private AnnotationManager annotationManager;
     private String docID;
     private File file;
-    private CAS textSourceAsCAS;
-//    private String content;
+    //    private String content;
 
     public TextSource(KnowtatorManager manager, String docID) {
         this.manager = manager;
@@ -62,11 +60,17 @@ public class TextSource implements Savable {
         if (docID != null) {
             this.docID = docID;
             file = new File(manager.getProjectManager().getArticlesLocation(), docID + ".txt");
-            while (!file.exists()) {
-                JFileChooser fileChooser = new JFileChooser();
-                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    file = fileChooser.getSelectedFile();
 
+            if (!file.exists()) {
+                if (JOptionPane.showConfirmDialog(null, String.format("Could not find file for %s. Choose file location?", docID), "File not found", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    JFileChooser fileChooser = new JFileChooser(file);
+                    while (!file.exists()) {
+
+                        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                            file = fileChooser.getSelectedFile();
+
+                        }
+                    }
                 }
             }
 
@@ -115,7 +119,7 @@ public class TextSource implements Savable {
         annotationManager.readFromKnowtatorXML(parent, getContent());
     }
 
-    private String getContent() {
+    public String getContent() {
         while (true) {
             try {
                 return FileUtils.readFileToString(file, "UTF-8");
@@ -132,8 +136,8 @@ public class TextSource implements Savable {
     }
 
     @Override
-    public void readFromOldKnowtatorXML(Element parent) {
-        annotationManager.readFromOldKnowtatorXML(parent);
+    public void readFromOldKnowtatorXML(Element parent, String content) {
+        annotationManager.readFromOldKnowtatorXML(parent, getContent());
     }
 
     @Override
@@ -152,13 +156,13 @@ public class TextSource implements Savable {
 
     }
 
-    @Override
-    public void convertToUIMA(CAS cas) {
-        textSourceAsCAS = cas.createView(docID);
-        textSourceAsCAS.setDocumentText(getContent());
-        textSourceAsCAS.setDocumentLanguage("en");
-        annotationManager.convertToUIMA(textSourceAsCAS);
-    }
+//    @Override
+//    public void convertToUIMA(CAS cas) {
+//        CAS textSourceAsCAS = cas.createView(docID);
+//        textSourceAsCAS.setDocumentText(getContent());
+//        textSourceAsCAS.setDocumentLanguage("en");
+//        annotationManager.convertToUIMA(textSourceAsCAS);
+//    }
 
     @Override
     public void writeToGeniaXML(Document dom, Element parent) {

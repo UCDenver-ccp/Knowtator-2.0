@@ -25,7 +25,7 @@
 package edu.ucdenver.ccp.knowtator.view.text;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.listeners.TextSourceListener;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;

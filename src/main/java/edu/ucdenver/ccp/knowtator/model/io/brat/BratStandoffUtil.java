@@ -28,6 +28,7 @@ import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSourceManager;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -43,6 +44,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class BratStandoffUtil implements BasicIOUtil {
+    private static final Logger log = Logger.getLogger(BratStandoffUtil.class);
 
     @Override
     public void read(Savable textSourceManager, File file) {
@@ -97,6 +99,7 @@ public class BratStandoffUtil implements BasicIOUtil {
 
     private void writeToOutputFile(Savable savable, File file) {
         try {
+            log.warn("Writing to " + file.getAbsolutePath());
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
             savable.writeToBratStandoff(bw);
             bw.close();

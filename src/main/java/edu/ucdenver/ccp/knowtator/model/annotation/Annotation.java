@@ -29,17 +29,9 @@ import edu.ucdenver.ccp.knowtator.model.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.io.uima.UIMAXMIAttributes;
-import edu.ucdenver.ccp.knowtator.model.io.uima.UIMAXMITags;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.log4j.Logger;
-import org.apache.uima.cas.ArrayFS;
-import org.apache.uima.cas.CAS;
-import org.apache.uima.cas.Feature;
-import org.apache.uima.cas.Type;
-import org.apache.uima.cas.text.AnnotationFS;
-import org.apache.uima.jcas.cas.TOP;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -47,7 +39,6 @@ import org.w3c.dom.Node;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
-import java.util.stream.IntStream;
 
 public class Annotation implements Savable {
 
@@ -249,8 +240,8 @@ public class Annotation implements Savable {
 	}
 
 	@Override
-	public void readFromOldKnowtatorXML(Element parent) {
-		List<Span> spans = KnowtatorXMLUtil.getSpanInfo(parent);
+	public void readFromOldKnowtatorXML(Element parent, String content) {
+		List<Span> spans = KnowtatorXMLUtil.getSpanInfo(parent, content);
 		spans.forEach(this::addSpan);
 	}
 
@@ -287,32 +278,32 @@ public class Annotation implements Savable {
 
 	}
 
-	@Override
-	public void convertToUIMA(CAS cas) {
-		Type annotationType = cas.getTypeSystem().getType(UIMAXMITags.TEXTANNOTATION);
-		AnnotationFS annotationFS = cas.createAnnotation(annotationType, spans.first().getStart(), spans.first().getEnd());
-		ArrayFS spansFS = cas.createArrayFS(spans.size());
-
-		Iterator<Span> spanIterator = spans.iterator();
-		IntStream.range(0, spans.size()).forEach(i -> {
-			Span span = spanIterator.next();
-			Type spanType = cas.getTypeSystem().getType(UIMAXMITags.SPAN);
-			TOP spanFS = cas.createFS(spanType);
-
-			Feature spanStartFeature = spanType.getFeatureByBaseName(UIMAXMIAttributes.SPAN_START);
-			Feature spanEndFeature = spanType.getFeatureByBaseName(UIMAXMIAttributes.SPAN_END);
-			spanFS.setIntValue(spanStartFeature, span.getStart());
-			spanFS.setIntValue(spanEndFeature, span.getEnd());
-
-			//noinspection unchecked
-			spansFS.set(i, spanFS);
-		});
-
-		Feature spansFeature = annotationType.getFeatureByBaseName(UIMAXMIAttributes.SPANS);
-		annotationFS.setFeatureValue(spansFeature, spansFS);
-
-		cas.getIndexRepository().addFS(annotationFS);
-	}
+//	@Override
+//	public void convertToUIMA(CAS cas) {
+//		Type annotationType = cas.getTypeSystem().getType(UIMAXMITags.TEXTANNOTATION);
+//		AnnotationFS annotationFS = cas.createAnnotation(annotationType, spans.first().getStart(), spans.first().getEnd());
+//		ArrayFS spansFS = cas.createArrayFS(spans.size());
+//
+//		Iterator<Span> spanIterator = spans.iterator();
+//		IntStream.range(0, spans.size()).forEach(i -> {
+//			Span span = spanIterator.next();
+//			Type spanType = cas.getTypeSystem().getType(UIMAXMITags.SPAN);
+//			TOP spanFS = cas.createFS(spanType);
+//
+//			Feature spanStartFeature = spanType.getFeatureByBaseName(UIMAXMIAttributes.SPAN_START);
+//			Feature spanEndFeature = spanType.getFeatureByBaseName(UIMAXMIAttributes.SPAN_END);
+//			spanFS.setIntValue(spanStartFeature, span.getStart());
+//			spanFS.setIntValue(spanEndFeature, span.getEnd());
+//
+//			//noinspection unchecked
+//			spansFS.set(i, spanFS);
+//		});
+//
+//		Feature spansFeature = annotationType.getFeatureByBaseName(UIMAXMIAttributes.SPANS);
+//		annotationFS.setFeatureValue(spansFeature, spansFS);
+//
+//		cas.getIndexRepository().addFS(annotationFS);
+//	}
 
 	@Override
 	public void writeToGeniaXML(Document dom, Element parent) {

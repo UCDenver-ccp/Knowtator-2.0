@@ -30,7 +30,6 @@ import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import org.apache.uima.cas.CAS;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -79,7 +78,7 @@ public class Triple extends mxCell implements Savable {
     }
 
     @Override
-    public void readFromOldKnowtatorXML(Element parent) {
+    public void readFromOldKnowtatorXML(Element parent, String content) {
 
     }
 
@@ -99,10 +98,10 @@ public class Triple extends mxCell implements Savable {
 
     }
 
-    @Override
-    public void convertToUIMA(CAS cas) {
-
-    }
+//    @Override
+//    public void convertToUIMA(CAS cas) {
+//
+//    }
 
     @Override
     public void writeToGeniaXML(Document dom, Element parent) {

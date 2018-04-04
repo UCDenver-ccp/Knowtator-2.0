@@ -39,7 +39,6 @@ import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.log4j.Logger;
-import org.apache.uima.cas.CAS;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.w3c.dom.Document;
@@ -101,7 +100,7 @@ public class GraphSpace extends mxGraph implements Savable {
         return newVertex;
     }
 
-    public void addTriple(AnnotationNode source, AnnotationNode target, String id, Profile annotator, Object property, String quantifier, String quantifierValue) {
+    public Triple addTriple(AnnotationNode source, AnnotationNode target, String id, Profile annotator, Object property, String quantifier, String quantifierValue) {
         id = verifyID(id, "edge");
 
         Triple newTriple = new Triple(id, source, target, property, annotator, quantifier, quantifierValue);
@@ -114,6 +113,8 @@ public class GraphSpace extends mxGraph implements Savable {
         setCellStyles(mxConstants.STYLE_FONTSIZE, "16", new Object[]{newTriple});
 
         addCellToGraph(newTriple);
+
+        return newTriple;
     }
 
     private String verifyID(String id, String idPrefix) {
@@ -178,7 +179,7 @@ public class GraphSpace extends mxGraph implements Savable {
     }
 
     @Override
-    public void readFromOldKnowtatorXML(Element parent) {
+    public void readFromOldKnowtatorXML(Element parent, String content) {
 
     }
 
@@ -229,10 +230,10 @@ public class GraphSpace extends mxGraph implements Savable {
 
     }
 
-    @Override
-    public void convertToUIMA(CAS cas) {
-
-    }
+//    @Override
+//    public void convertToUIMA(CAS cas) {
+//
+//    }
 
     @Override
     public void writeToGeniaXML(Document dom, Element parent) {

@@ -27,7 +27,6 @@ package edu.ucdenver.ccp.knowtator.model.owl;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.apache.uima.cas.CAS;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.OWLWorkspace;
 import org.semanticweb.owlapi.model.*;
@@ -94,8 +93,13 @@ public class OWLAPIDataExtractor implements Savable {
 
     public String getSelectedOwlClassID() {
         OWLClass cls = getSelectedClass();
-        String annotationValue = extractAnnotation(cls, owlModelManager.getOWLDataFactory().getRDFSLabel());
-        return annotationValue == null ? getOwlEntID(cls) : annotationValue;
+        if (cls != null) {
+            String annotationValue = extractAnnotation(cls, owlModelManager.getOWLDataFactory().getRDFSLabel());
+            return annotationValue == null ? getOwlEntID(cls) : annotationValue;
+        } else {
+            return null;
+        }
+
     }
 
     public String getSelectedOwlClassName() {
@@ -130,7 +134,7 @@ public class OWLAPIDataExtractor implements Savable {
     }
 
     @Override
-    public void readFromOldKnowtatorXML(Element parent) {
+    public void readFromOldKnowtatorXML(Element parent, String content) {
 
     }
 
@@ -149,10 +153,10 @@ public class OWLAPIDataExtractor implements Savable {
 
     }
 
-    @Override
-    public void convertToUIMA(CAS cas) {
-
-    }
+//    @Override
+//    public void convertToUIMA(CAS cas) {
+//
+//    }
 
     @Override
     public void writeToGeniaXML(Document dom, Element parent) {

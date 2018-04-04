@@ -34,7 +34,6 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 
-@SuppressWarnings("Duplicates")
 public class ProjectMenu extends JMenu {
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(ProjectMenu.class);
@@ -116,7 +115,7 @@ public class ProjectMenu extends JMenu {
         open.addActionListener(e -> {
 
             JFileChooser fileChooser = new JFileChooser();
-            javax.swing.filechooser.FileFilter fileFilter = new FileNameExtensionFilter("Knowtator", "knowtator");
+            FileFilter fileFilter = new FileNameExtensionFilter("Knowtator", "knowtator");
             fileChooser.setFileFilter(fileFilter);
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 

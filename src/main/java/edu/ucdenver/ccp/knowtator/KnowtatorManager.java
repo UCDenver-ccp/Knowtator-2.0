@@ -28,10 +28,6 @@ import edu.ucdenver.ccp.knowtator.listeners.*;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.io.brat.BratStandoffUtil;
-import edu.ucdenver.ccp.knowtator.model.io.genia.GeniaXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.io.uima.UIMAXMIUtil;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLAPIDataExtractor;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileManager;
@@ -43,9 +39,7 @@ import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.OWLWorkspace;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 
@@ -113,76 +107,9 @@ public class KnowtatorManager {
     //TODO: Autoload the AO or at least provide the functionality to convert to it if desired.
 
     public static void main(String[] args) {
-        String command = args[0];
-        Map<String, String> options = new HashMap<>();
-        for (int i=1; i < args.length; i++) {
-            switch (args[i].charAt(0)) {
-                case '-':
-                    options.put(args[i], args[++i]);
-            }
-        }
 
-        KnowtatorManager manager = new KnowtatorManager();
 
-        switch (command) {
-            case "t":
-                ProjectManager projectManager = manager.getProjectManager();
 
-                String projectFileName = options.get("-i");
-
-                if (projectFileName == null) {
-                    String profilesDirName = options.get("--profiles");
-                    String ontologiesDirName = options.get("--ontologies");
-                    String annotationsDirName = options.get("--annotations");
-                    String articlesDirName = options.get("--articles");
-                    projectManager.loadProject(
-                            profilesDirName == null ? null : new File(profilesDirName),
-                            ontologiesDirName == null ? null : new File(ontologiesDirName),
-                            articlesDirName == null? null : new File(articlesDirName),
-                            annotationsDirName == null ? null : new File(annotationsDirName)
-                    );
-                } else {
-                    projectManager.loadProject(new File(projectFileName));
-                }
-
-                String knowtatorOutputDirName = options.get("--knowtator");
-                String geniaOutputDirName = options.get("--genia");
-                String uimaOutputDirName = options.get("--uima");
-                String bratOutputDirName = options.get("--brat");
-
-                if (knowtatorOutputDirName != null) {
-                    projectManager.saveToFormat(
-                            KnowtatorXMLUtil.class,
-                            null,
-                            new File(knowtatorOutputDirName)
-                    );
-                }
-
-                if (geniaOutputDirName != null) {
-                    projectManager.saveToFormat(
-                            GeniaXMLUtil.class,
-                            null,
-                            new File(geniaOutputDirName)
-                    );
-                }
-
-                if (uimaOutputDirName != null) {
-                    projectManager.saveToFormat(
-                            UIMAXMIUtil.class,
-                            null,
-                            new File(uimaOutputDirName)
-                    );
-                }
-
-                if (bratOutputDirName != null) {
-                    projectManager.saveToFormat(
-                            BratStandoffUtil.class,
-                            null,
-                            new File(bratOutputDirName)
-                    );
-                }
-                break;
-        }
     }
 
     public void close(File file) {
@@ -265,11 +192,11 @@ public class KnowtatorManager {
         graphListeners.forEach(listener -> listener.removeGraph(graphSpace));
     }
 
-    void addAnnotationListener(AnnotationListener listener) {
+    public void addAnnotationListener(AnnotationListener listener) {
         annotationListeners.add(listener);
     }
 
-    void addTextSourceListener(TextSourceListener listener) {
+    public void addTextSourceListener(TextSourceListener listener) {
         textSourceListeners.add(listener);
     }
 
@@ -278,7 +205,7 @@ public class KnowtatorManager {
     }
 
 
-    void setUpOWL(OWLWorkspace owlWorkspace, OWLModelManager owlModelManager) {
+    public void setUpOWL(OWLWorkspace owlWorkspace, OWLModelManager owlModelManager) {
         owlDataExtractor.setUpOWL(owlWorkspace, owlModelManager);
     }
 
@@ -286,7 +213,7 @@ public class KnowtatorManager {
         projectListeners.forEach(ProjectListener::projectLoaded);
     }
 
-    void addProjectListener(ProjectListener listener) {
+    public void addProjectListener(ProjectListener listener) {
         projectListeners.add(listener);
     }
 }

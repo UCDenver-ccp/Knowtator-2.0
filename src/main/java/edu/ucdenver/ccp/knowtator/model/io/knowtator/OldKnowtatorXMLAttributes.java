@@ -24,25 +24,25 @@
 
 package edu.ucdenver.ccp.knowtator.model.io.knowtator;
 
+@SuppressWarnings("WeakerAccess")
 public class OldKnowtatorXMLAttributes {
 
     public static final String ID = "id";
-    static final String SPAN_START = "start";
-    static final String SPAN_END = "end";
+    public static final String SPAN_START = "start";
+    public static final String SPAN_END = "end";
     public static final String TEXT_SOURCE = "textSource";
 
     // Class assigned to named entity
-    static final String HAS_SLOT_MENTION = "hasSlotMention";
+
     // Complex Slot Mentions
-    static final String COMPLEX_SLOT_MENTION = "complexSlotMention";
-    static final String MENTION_SLOT = "mentionSlot";
-    static final String COMPLEX_SLOT_MENTION_VALUE = "complexSlotMentionValue";
-    static final String COMPLEX_SLOT_MENTION_VALUE_VALUE = "value";
+
+
+
+    public static final String VALUE = "value";
     // Coreference specific IDs
-    static final String MENTION_CLASS_ID_IDENTITY = "IDENTITY chain";
-    static final String MENTION_CLASS_IDENTITY = "IDENTITY chain";
-    static final String MENTION_SLOT_ID_COREFERENCE = "Coreferring strings";
-    static final String COMPLEX_SLOT_MENTION_ID_APPOS_HEAD = "APPOS Head";
-    static final String COMPLEX_SLOT_MENTION_ID_APPOS_ATTRIBUTES = "APPOS Attributes";
+    public static final String IDENTITY_CHAIN = "IDENTITY chain";
+    public static final String COREFERENCE = "Coreferring strings";
+    public static final String COMPLEX_SLOT_MENTION_ID_APPOS_HEAD = "APPOS Head";
+    public static final String COMPLEX_SLOT_MENTION_ID_APPOS_ATTRIBUTES = "APPOS Attributes";
 
 }

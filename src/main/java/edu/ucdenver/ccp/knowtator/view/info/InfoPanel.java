@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.info;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
 import edu.ucdenver.ccp.knowtator.listeners.SpanListener;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;

@@ -26,7 +26,7 @@ package edu.ucdenver.ccp.knowtator.view.text;
 
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
 import edu.ucdenver.ccp.knowtator.listeners.SpanListener;
@@ -100,11 +100,11 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 
 					@Override
 					public void mousePressed(MouseEvent e) {
-						press_offset = viewToModel2D(e.getPoint());
+						press_offset = viewToModel(e.getPoint());
 					}
 
 					@Override
-					public void mouseReleased(MouseEvent e) { handleMouseRelease(e, press_offset, viewToModel2D(e.getPoint())); }
+					public void mouseReleased(MouseEvent e) { handleMouseRelease(e, press_offset, viewToModel(e.getPoint())); }
 
 					@Override
 					public void mouseEntered(MouseEvent e) { }
@@ -277,7 +277,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
     	if (isVisible) {
     		if (selectedSpan != null) {
 				try {
-					scrollRectToVisible((Rectangle) modelToView2D(selectedSpan.getStart()));
+					scrollRectToVisible(modelToView(selectedSpan.getStart()));
 				} catch (BadLocationException | NullPointerException ignored) {
 
 				}

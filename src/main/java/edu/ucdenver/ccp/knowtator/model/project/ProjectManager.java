@@ -25,7 +25,7 @@
 package edu.ucdenver.ccp.knowtator.model.project;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
@@ -167,6 +167,10 @@ public class ProjectManager {
 
     public File getAnnotationsLocation() {
         return annotationsLocation;
+    }
+
+    public void saveToFormat(Class<? extends BasicIOUtil> ioClass, File file) {
+        saveToFormat(ioClass, manager.getTextSourceManager(), file);
     }
 
     public void saveToFormat(Class<? extends BasicIOUtil> ioClass, Savable savable, File file) {

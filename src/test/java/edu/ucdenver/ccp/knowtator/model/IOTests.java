@@ -31,7 +31,6 @@ import edu.ucdenver.ccp.knowtator.model.annotation.AnnotationManager;
 import edu.ucdenver.ccp.knowtator.model.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.io.brat.BratStandoffUtil;
-import edu.ucdenver.ccp.knowtator.model.io.uima.UIMAXMIUtil;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -234,7 +233,7 @@ public class IOTests {
         int numSpans = annotationManager1.getSpanMap(null, null).size();
         int numGraphSpaces = annotationManager1.getGraphSpaces().size();
 
-        assert numGraphSpaces == 0 : "There were " + numGraphSpaces + " graph spaces";
+        assert numGraphSpaces == 1 : "There were " + numGraphSpaces + " graph spaces";
         assert numAnnotations == 2 : "There were " + numAnnotations + " annotations";
         assert numSpans == 3 : "There were " + numSpans + " spans";
     }
@@ -338,6 +337,6 @@ public class IOTests {
         manager.getProjectManager().loadProject(projectFile);
 
 //        TextSource textSource = manager.getTextSourceManager().getTextSources().get(article);
-        manager.getProjectManager().saveToFormat(UIMAXMIUtil.class, null, outputDir);
+//        manager.getProjectManager().saveToFormat(UIMAXMIUtil.class, null, outputDir);
     }
 }

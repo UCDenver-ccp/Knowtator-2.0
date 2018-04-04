@@ -29,7 +29,7 @@
     <extension id="Knowtator"
                point="org.protege.editor.core.application.ViewComponent">
         <label value="Knowtator"/>
-        <class value="edu.ucdenver.ccp.knowtator.KnowtatorView"/>
+        <class value="edu.ucdenver.ccp.knowtator.view.KnowtatorView"/>
         <headerColor value="@org.protege.miscellaneouscolor"/>
         <category value="@org.protege.miscellaneouscategory" />
     </extension>

@@ -24,7 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.model;
 
-import org.apache.uima.cas.CAS;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -38,7 +37,7 @@ public interface Savable {
 
     void readFromKnowtatorXML(Element parent, String content);
 
-    void readFromOldKnowtatorXML(Element parent);
+    void readFromOldKnowtatorXML(Element parent, String content);
 
     void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content);
 
@@ -46,7 +45,7 @@ public interface Savable {
 
     void readFromGeniaXML(Element parent, String content);
 
-    void convertToUIMA(CAS cas);
+//    void convertToUIMA(CAS cas);
 
     void writeToGeniaXML(Document dom, Element parent);
 }
