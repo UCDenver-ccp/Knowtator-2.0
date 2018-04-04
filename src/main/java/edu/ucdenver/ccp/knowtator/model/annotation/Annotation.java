@@ -36,6 +36,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
@@ -218,7 +219,7 @@ public class Annotation implements Savable {
 	}
 
 	@Override
-	public void readFromKnowtatorXML(Element parent, String content) {
+	public void readFromKnowtatorXML(File file, Element parent, String content) {
         Element spanElement;
         int spanStart;
         int spanEnd;
@@ -240,13 +241,13 @@ public class Annotation implements Savable {
 	}
 
 	@Override
-	public void readFromOldKnowtatorXML(Element parent, String content) {
+	public void readFromOldKnowtatorXML(File file, Element parent, String content) {
 		List<Span> spans = KnowtatorXMLUtil.getSpanInfo(parent, content);
 		spans.forEach(this::addSpan);
 	}
 
 	@Override
-	public void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content) {
+	public void readFromBratStandoff(File file, Map<Character, List<String[]>> annotationMap, String content) {
 		String[] triple = annotationMap.get(StandoffTags.TEXTBOUNDANNOTATION).get(0)[1].split(StandoffTags.textBoundAnnotationTripleDelimiter);
 		int start =  Integer.parseInt(triple[1]);
 		for (int i=2; i<triple.length; i++) {

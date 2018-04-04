@@ -161,7 +161,7 @@ public class ProjectManager {
                 e.printStackTrace();
             }
         }
-        TextSource newTextSource = manager.getTextSourceManager().addTextSource(file.getName());
+        TextSource newTextSource = manager.getTextSourceManager().addTextSource(null, file.getName());
         manager.textSourceAddedEvent(newTextSource);
     }
 

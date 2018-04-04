@@ -34,6 +34,7 @@ import org.semanticweb.owlapi.search.EntitySearcher;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.io.File;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;
@@ -111,7 +112,11 @@ public class OWLAPIDataExtractor implements Savable {
 
     public String[] getSelectedOwlClassDescendants() {
         OWLClass cls = getSelectedClass();
-        return getDescendants(cls);
+        if (cls != null) {
+            return getDescendants(cls);
+        } else {
+            return null;
+        }
     }
 
     public void setUpOWL(OWLWorkspace owlWorkSpace, OWLModelManager owlModelManager) {
@@ -129,17 +134,17 @@ public class OWLAPIDataExtractor implements Savable {
     }
 
     @Override
-    public void readFromKnowtatorXML(Element parent, String content) {
+    public void readFromKnowtatorXML(File file, Element parent, String content) {
 
     }
 
     @Override
-    public void readFromOldKnowtatorXML(Element parent, String content) {
+    public void readFromOldKnowtatorXML(File file, Element parent, String content) {
 
     }
 
     @Override
-    public void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content) {
+    public void readFromBratStandoff(File file, Map<Character, List<String[]>> annotationMap, String content) {
 
     }
 

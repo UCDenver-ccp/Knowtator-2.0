@@ -40,6 +40,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import javax.annotation.Nonnull;
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
@@ -48,64 +49,64 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
     private Logger log = Logger.getLogger(TextSourceManager.class);
 
 
-    private Map<String, TextSource> textSources;
+    private List<TextSource> textSources;
     private KnowtatorManager manager;
 
     public TextSourceManager(KnowtatorManager manager) {
         this.manager = manager;
-        textSources = new HashMap<>();
+        textSources = new ArrayList<>();
     }
 
-    public TextSource addTextSource(String fileLocation) {
+    public TextSource addTextSource(File file, String fileLocation) {
         String docID = FilenameUtils.getBaseName(fileLocation);
-        TextSource newTextSource = textSources.get(docID);
-        if (newTextSource == null) {
-            newTextSource = new TextSource(manager, docID);
-            textSources.put(docID, newTextSource);
+        Optional<TextSource> newTextSourceMatch = textSources.stream().filter(textSource -> textSource.getDocID().equals(docID)).findAny();
+        if (!newTextSourceMatch.isPresent()) {
+            TextSource newTextSource = new TextSource(manager, file, docID);
+            textSources.add(newTextSource);
+            return newTextSource;
         } else {
             log.warn(docID + " is not null");
+            return newTextSourceMatch.get();
         }
-
-        return newTextSource;
     }
 
-    public Map<String, TextSource> getTextSources() {
+    public List<TextSource> getTextSources() {
         return textSources;
     }
 
     @Override
     public void writeToKnowtatorXML(Document dom, Element parent) {
-        textSources.values().forEach(textSource -> textSource.writeToKnowtatorXML(dom, parent));
+        textSources.forEach(textSource -> textSource.writeToKnowtatorXML(dom, parent));
 
     }
 
     @Override
-    public void readFromKnowtatorXML(Element parent, String content) {
+    public void readFromKnowtatorXML(File file, Element parent, String content) {
         for (Node documentNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.DOCUMENT))) {
             Element documentElement = (Element) documentNode;
             String documentID = documentElement.getAttribute(KnowtatorXMLAttributes.ID);
-            TextSource newTextSource = addTextSource(documentID);
+            TextSource newTextSource = addTextSource(file, documentID);
             log.warn("\tXML: " + newTextSource);
-            newTextSource.readFromKnowtatorXML(documentElement, null);
+            newTextSource.readFromKnowtatorXML(null, documentElement, null);
         }
     }
 
     @Override
-    public void readFromOldKnowtatorXML(Element parent, String content) {
+    public void readFromOldKnowtatorXML(File file, Element parent, String content) {
 
         String docID = parent.getAttribute(OldKnowtatorXMLAttributes.TEXT_SOURCE).replace(".txt", "");
-        TextSource newTextSource = addTextSource(docID);
+        TextSource newTextSource = addTextSource(file, docID);
         log.warn("\tOLD XML: " + newTextSource);
-        newTextSource.readFromOldKnowtatorXML(parent, null);
+        newTextSource.readFromOldKnowtatorXML(null, parent, null);
     }
 
     @Override
-    public void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content) {
+    public void readFromBratStandoff(File file, Map<Character, List<String[]>> annotationMap, String content) {
         String docID = annotationMap.get(StandoffTags.DOCID).get(0)[0];
 
-        TextSource newTextSource = addTextSource(docID);
+        TextSource newTextSource = addTextSource(file, docID);
         log.warn("\tBRAT: " + newTextSource);
-        newTextSource.readFromBratStandoff(annotationMap, null);
+        newTextSource.readFromBratStandoff(null, annotationMap, null);
     }
 
 
@@ -140,7 +141,7 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
     public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) {
 
         log.warn("Ontology Change Event");
-        textSources.values().forEach(textSource -> textSource.getAnnotationManager().getGraphSpaces().forEach(graphSpace -> {
+        textSources.forEach(textSource -> textSource.getAnnotationManager().getGraphSpaces().forEach(graphSpace -> {
             Set<OWLEntity> possiblyAddedEntities = new HashSet<>();
             Set<OWLEntity> possiblyRemovedEntities = new HashSet<>();
             OWLEntityCollector addedCollector = new OWLEntityCollector(possiblyAddedEntities);

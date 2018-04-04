@@ -33,6 +33,7 @@ import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
@@ -60,17 +61,17 @@ public class AnnotationNode extends mxCell implements Savable{
     }
 
     @Override
-    public void readFromKnowtatorXML(Element parent, String content) {
+    public void readFromKnowtatorXML(File file, Element parent, String content) {
 
     }
 
     @Override
-    public void readFromOldKnowtatorXML(Element parent, String content) {
+    public void readFromOldKnowtatorXML(File file, Element parent, String content) {
 
     }
 
     @Override
-    public void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content) {
+    public void readFromBratStandoff(File file, Map<Character, List<String[]>> annotationMap, String content) {
 
     }
 

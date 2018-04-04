@@ -38,6 +38,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
@@ -221,7 +222,7 @@ public class AnnotationManager implements Savable {
     }
 
     @Override
-    public void readFromKnowtatorXML(Element parent, String content) {
+    public void readFromKnowtatorXML(File file, Element parent, String content) {
         Element annotationElement;
         String annotationID;
         String profileID;
@@ -246,7 +247,7 @@ public class AnnotationManager implements Savable {
 
             newAnnotation = new Annotation(classID, className, annotationID, textSource, profile, type);
 //            log.warn("\t\tXML: " + newAnnotation);
-            newAnnotation.readFromKnowtatorXML(annotationElement, content);
+            newAnnotation.readFromKnowtatorXML(null, annotationElement, content);
 
             addAnnotation(newAnnotation);
         }
@@ -259,12 +260,12 @@ public class AnnotationManager implements Savable {
             graphSpace = addGraphSpace(id);
 
             log.warn("\t\tXML: " + graphSpace);
-            graphSpace.readFromKnowtatorXML(graphSpaceElem, content);
+            graphSpace.readFromKnowtatorXML(null, graphSpaceElem, content);
         }
     }
 
     @Override
-    public void readFromOldKnowtatorXML(Element parent, String content) {
+    public void readFromOldKnowtatorXML(File file, Element parent, String content) {
         Map<String, Element> complexSlotMentionToClassIDMap = KnowtatorXMLUtil.getComplexSlotsFromXml(parent);
         Map<String, Element> classMentionToClassIDMap = KnowtatorXMLUtil.getClassIDsFromXml(parent);
 
@@ -295,7 +296,7 @@ public class AnnotationManager implements Savable {
 
             newAnnotation = new Annotation(classID, className, annotationID, textSource, profile, "identity");
 
-            newAnnotation.readFromOldKnowtatorXML(annotationElement, content);
+            newAnnotation.readFromOldKnowtatorXML(null, annotationElement, content);
             addAnnotation(newAnnotation);
 
             log.warn("\t\tOLD KNOWATOTOR: added ANNOTATION " + newAnnotation);
@@ -358,7 +359,7 @@ public class AnnotationManager implements Savable {
 
     //TODO: Should probably also read in Events, Modifiers, etc.
     @Override
-    public void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content) {
+    public void readFromBratStandoff(File file, Map<Character, List<String[]>> annotationMap, String content) {
 
         Profile profile = manager.getProfileManager().getDefaultProfile();
 
@@ -368,13 +369,13 @@ public class AnnotationManager implements Savable {
             List<String[]> list = new ArrayList<>();
             list.add(annotation);
             map.put(StandoffTags.TEXTBOUNDANNOTATION, list);
-            newAnnotation.readFromBratStandoff(map, content);
+            newAnnotation.readFromBratStandoff(null, map, content);
 
             addAnnotation(newAnnotation);
         });
 
         GraphSpace newGraphSpace = addGraphSpace("Brat Relation Graph");
-        newGraphSpace.readFromBratStandoff(annotationMap, null);
+        newGraphSpace.readFromBratStandoff(null, annotationMap, null);
     }
 
 

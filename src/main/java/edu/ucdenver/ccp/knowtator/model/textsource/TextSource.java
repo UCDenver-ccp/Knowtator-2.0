@@ -47,27 +47,34 @@ public class TextSource implements Savable {
     private static Logger log = LogManager.getLogger(TextSource.class);
     private final KnowtatorManager manager;
 
+    public File getSaveFile() {
+        return saveFile;
+    }
+
+    private final File saveFile;
+
 
     private AnnotationManager annotationManager;
     private String docID;
-    private File file;
+    private File textFile;
     //    private String content;
 
-    public TextSource(KnowtatorManager manager, String docID) {
+    public TextSource(KnowtatorManager manager, File saveFile, String docID) {
         this.manager = manager;
+        this.saveFile = saveFile;
         this.annotationManager = new AnnotationManager(manager, this);
 
         if (docID != null) {
             this.docID = docID;
-            file = new File(manager.getProjectManager().getArticlesLocation(), docID + ".txt");
+            textFile = new File(manager.getProjectManager().getArticlesLocation(), docID + ".txt");
 
-            if (!file.exists()) {
-                if (JOptionPane.showConfirmDialog(null, String.format("Could not find file for %s. Choose file location?", docID), "File not found", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    JFileChooser fileChooser = new JFileChooser(file);
-                    while (!file.exists()) {
+            if (!textFile.exists()) {
+                if (JOptionPane.showConfirmDialog(null, String.format("Could not find textFile for %s. Choose textFile location?", docID), "File not found", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    JFileChooser fileChooser = new JFileChooser(textFile);
+                    while (!textFile.exists()) {
 
                         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                            file = fileChooser.getSelectedFile();
+                            textFile = fileChooser.getSelectedFile();
 
                         }
                     }
@@ -75,7 +82,7 @@ public class TextSource implements Savable {
             }
 
 //            try {
-//                content = FileUtils.readFileToString(file, "UTF-8");
+//                content = FileUtils.readFileToString(textFile, "UTF-8");
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //            }
@@ -95,8 +102,8 @@ public class TextSource implements Savable {
         return docID;
     }
 
-    public File getFile() {
-        return file;
+    public File getTextFile() {
+        return textFile;
     }
 
     public AnnotationManager getAnnotationManager() {
@@ -115,20 +122,20 @@ public class TextSource implements Savable {
     }
 
     @Override
-    public void readFromKnowtatorXML(Element parent, String content) {
-        annotationManager.readFromKnowtatorXML(parent, getContent());
+    public void readFromKnowtatorXML(File file, Element parent, String content) {
+        annotationManager.readFromKnowtatorXML(null, parent, getContent());
     }
 
     public String getContent() {
         while (true) {
             try {
-                return FileUtils.readFileToString(file, "UTF-8");
+                return FileUtils.readFileToString(textFile, "UTF-8");
             } catch (IOException e) {
-                file = new File(manager.getProjectManager().getArticlesLocation(), docID + ".txt");
-                while (!file.exists()) {
+                textFile = new File(manager.getProjectManager().getArticlesLocation(), docID + ".txt");
+                while (!textFile.exists()) {
                     JFileChooser fileChooser = new JFileChooser();
                     if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                        file = fileChooser.getSelectedFile();
+                        textFile = fileChooser.getSelectedFile();
                     }
                 }
             }
@@ -136,13 +143,13 @@ public class TextSource implements Savable {
     }
 
     @Override
-    public void readFromOldKnowtatorXML(Element parent, String content) {
-        annotationManager.readFromOldKnowtatorXML(parent, getContent());
+    public void readFromOldKnowtatorXML(File file, Element parent, String content) {
+        annotationManager.readFromOldKnowtatorXML(null, parent, getContent());
     }
 
     @Override
-    public void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content) {
-        annotationManager.readFromBratStandoff(annotationMap, getContent());
+    public void readFromBratStandoff(File file, Map<Character, List<String[]>> annotationMap, String content) {
+        annotationManager.readFromBratStandoff(null, annotationMap, getContent());
 
     }
 

@@ -32,6 +32,7 @@ import org.junit.Test;
 
 import java.io.File;
 
+@SuppressWarnings("unused")
 public class AnnotationManagerTest {
     private static final Logger log = Logger.getLogger(AnnotationManagerTest.class);
 
@@ -74,7 +75,7 @@ public class AnnotationManagerTest {
 
         manager.getProjectManager().loadProject(project);
 
-        textSource = manager.getTextSourceManager().getTextSources().get(articleName);
+        textSource = manager.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleName)).findAny().get();
         annotationManager = textSource.getAnnotationManager();
         profile = manager.getProfileManager().addNewProfile("Default");
 

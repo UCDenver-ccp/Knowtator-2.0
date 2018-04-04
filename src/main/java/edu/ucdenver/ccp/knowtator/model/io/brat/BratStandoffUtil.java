@@ -55,7 +55,7 @@ public class BratStandoffUtil implements BasicIOUtil {
 
             annotationMap.get(StandoffTags.DOCID).add(new String[]{FilenameUtils.getBaseName(file.getName())});
 
-            textSourceManager.readFromBratStandoff(annotationMap, null);
+            textSourceManager.readFromBratStandoff(file, annotationMap, null);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -86,7 +86,7 @@ public class BratStandoffUtil implements BasicIOUtil {
     @Override
     public void write(Savable savable, File file) {
         if (savable instanceof TextSourceManager) {
-            ((TextSourceManager) savable).getTextSources().values().forEach(textSource -> {
+            ((TextSourceManager) savable).getTextSources().forEach(textSource -> {
                 File outputFile = new File(file.getAbsolutePath() + File.separator + textSource.getDocID() + ".ann");
                 writeToOutputFile(textSource, outputFile);
 

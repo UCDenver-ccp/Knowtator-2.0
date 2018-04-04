@@ -35,6 +35,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
@@ -94,7 +95,7 @@ public class Profile implements Savable {
     }
 
     @Override
-    public void readFromKnowtatorXML(Element parent, String content) {
+    public void readFromKnowtatorXML(File file, Element parent, String content) {
         for (Node highlighterNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.HIGHLIGHTER))) {
             Element highlighterElement = (Element) highlighterNode;
 
@@ -105,12 +106,12 @@ public class Profile implements Savable {
     }
 
     @Override
-    public void readFromOldKnowtatorXML(Element parent, String content) {
+    public void readFromOldKnowtatorXML(File file, Element parent, String content) {
 
     }
 
     @Override
-    public void readFromBratStandoff(Map<Character, List<String[]>> annotationMap, String content) {
+    public void readFromBratStandoff(File file, Map<Character, List<String[]>> annotationMap, String content) {
 
     }
 

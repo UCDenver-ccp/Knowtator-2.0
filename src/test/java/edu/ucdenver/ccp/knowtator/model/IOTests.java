@@ -102,10 +102,10 @@ public class IOTests {
 
         manager.getProjectManager().loadProject(projectFile);
 
-        TextSource textSource = manager.getTextSourceManager().getTextSources().get(articleFileNames[articleID]);
+        TextSource textSource = manager.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID])).findAny().get();
         String content;
         try {
-            content = FileUtils.readFileToString(textSource.getFile(), "UTF-8");
+            content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
             assert content.equals(articleContent[articleID]);
         } catch (IOException e) {
             e.printStackTrace();
@@ -125,10 +125,10 @@ public class IOTests {
         assert numSpans == 3 : "There were " + numSpans + " spans";
 
 
-        textSource = manager.getTextSourceManager().getTextSources().get(articleFileNames[articleID2]);
+        textSource = manager.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID2])).findAny().get();
 
         try {
-            content = FileUtils.readFileToString(textSource.getFile(), "UTF-8");
+            content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
             assert content.equals(articleContent[articleID2]);
         } catch (IOException e) {
             e.printStackTrace();
@@ -165,17 +165,17 @@ public class IOTests {
 
         manager.getProjectManager().addDocument(articleFile);
 
-        TextSource textSource = manager.getTextSourceManager().getTextSources().get(articleFileNames[articleID]);
+        TextSource textSource = manager.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID])).findAny().get();
         String content;
         try {
-            content = FileUtils.readFileToString(textSource.getFile(), "UTF-8");
+            content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
             assert content.equals(articleContent[articleID]);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void successfulClose() {
         manager = new KnowtatorManager();
 
@@ -188,9 +188,7 @@ public class IOTests {
         manager.getProjectManager().loadProject(projectFile);
         manager.getProjectManager().closeProject(null, null);
 
-        TextSource textSource1 = manager.getTextSourceManager().getTextSources().get(articleFileNames[articleID]);
-
-        assert textSource1 == null;
+        manager.getTextSourceManager().getTextSources().stream().filter(textSource -> textSource.getDocID().equals(articleFileNames[articleID])).findAny().orElseThrow(RuntimeException::new);
     }
 
     @Test
@@ -219,10 +217,10 @@ public class IOTests {
         File projectFile = getProjectFile(projectFileName);
 
         manager.getProjectManager().loadProject(projectFile);
-        TextSource textSource = manager.getTextSourceManager().getTextSources().get(articleFileNames[articleID]);
+        TextSource textSource = manager.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID])).findAny().get();
         String content;
         try {
-            content = FileUtils.readFileToString(textSource.getFile(), "UTF-8");
+            content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
             assert content.equals(articleContent[articleID]);
         } catch (IOException e) {
             e.printStackTrace();
@@ -250,10 +248,10 @@ public class IOTests {
 
         manager.getProjectManager().loadProject(projectFile);
 
-        TextSource textSource = manager.getTextSourceManager().getTextSources().get(articleFileNames[articleID]);
+        TextSource textSource = manager.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID])).findAny().get();
         String content;
         try {
-            content = FileUtils.readFileToString(textSource.getFile(), "UTF-8");
+            content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
             assert content.equals(articleContent[articleID]);
         } catch (IOException e) {
             e.printStackTrace();
@@ -319,24 +317,8 @@ public class IOTests {
 
         manager.getProjectManager().loadProject(projectFile);
         manager.getProjectManager().loadFromFormat(BratStandoffUtil.class, bratAnnotationFile);
-        manager.getProjectManager().saveToFormat(BratStandoffUtil.class, manager.getTextSourceManager().getTextSources().get(article), outputFile);
+        manager.getProjectManager().saveToFormat(BratStandoffUtil.class, manager.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(article)).findAny().get(), outputFile);
     }
 
-    @Test
-    public void exportToUIMAXMI() {
-        manager = new KnowtatorManager();
 
-        int projectID = 0;
-//        int articleID = 0;
-        String projectFileName = projectFileNames[projectID];
-        File projectFile = getProjectFile(projectFileName);
-//        String article = articleFileNames[articleID];
-
-        File outputDir = new File("E:/Documents/Test/");
-
-        manager.getProjectManager().loadProject(projectFile);
-
-//        TextSource textSource = manager.getTextSourceManager().getTextSources().get(article);
-//        manager.getProjectManager().saveToFormat(UIMAXMIUtil.class, null, outputDir);
-    }
 }

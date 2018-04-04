@@ -74,12 +74,12 @@ public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUt
                 List<Node> knowtatorNodes = asList(doc.getElementsByTagName(KnowtatorXMLTags.KNOWTATOR_PROJECT));
                 if (knowtatorNodes.size() > 0) {
                     Element knowtatorElement = (Element) knowtatorNodes.get(0);
-                    savable.readFromKnowtatorXML(knowtatorElement, null);
+                    savable.readFromKnowtatorXML(file, knowtatorElement, null);
                 }
 
                 List<Node> annotationNodes = asList(doc.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATIONS));
                 if (annotationNodes.size() > 0) {
-                    savable.readFromOldKnowtatorXML(doc.getDocumentElement(), null);
+                    savable.readFromOldKnowtatorXML(file, doc.getDocumentElement(), null);
                 }
             } catch (IllegalArgumentException | IOException | SAXException e) {
                 e.printStackTrace();
@@ -92,13 +92,25 @@ public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUt
     @Override
     public void write(Savable savable, File file) {
         if (savable instanceof TextSourceManager) {
-            ((TextSourceManager) savable).getTextSources().values().forEach(textSource -> {
-                File outputFile = new File(file.getAbsolutePath() + File.separator + textSource.getDocID() + ".xml");
+            ((TextSourceManager) savable).getTextSources().forEach(textSource -> {
+                String fileName = textSource.getSaveFile() == null ? textSource.getDocID() : textSource.getSaveFile().getName();
+                String extension = fileName.endsWith(".xml") ? "" : ".xml";
+                File outputFile = new File(
+                        file.getAbsolutePath() +
+                                File.separator +
+                                fileName +
+                                extension
+                );
                 writeToOutputFile(savable, outputFile);
             });
         } else if(savable instanceof ProfileManager){
             ((ProfileManager) savable).getProfiles().values().forEach(profile -> {
-                File outputFile = new File(file.getAbsolutePath() + File.separator + profile.getId() + ".xml");
+                File outputFile = new File(
+                        file.getAbsolutePath() +
+                                File.separator +
+                                profile.getId() +
+                                ".xml"
+                );
                 writeToOutputFile(savable, outputFile);
             });
         } else {

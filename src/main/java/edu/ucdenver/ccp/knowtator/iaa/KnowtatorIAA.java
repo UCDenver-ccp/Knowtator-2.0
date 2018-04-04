@@ -78,7 +78,7 @@ public class KnowtatorIAA {
 
 		this.outputDirectory = outputDirectory;
 		//this.filter = filter;
-		this.textSources = new HashSet<>(manager.getTextSourceManager().getTextSources().values());
+		this.textSources = new HashSet<>(manager.getTextSourceManager().getTextSources());
 
 		this.manager = manager;
 		annotationTexts = new HashMap<>();

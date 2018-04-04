@@ -64,7 +64,7 @@ public class TextViewer extends JPanel implements TextSourceListener, ProjectLis
         if (textSource != null) {
             newTextPane.setName(textSource.getDocID());
             try {
-                newTextPane.read(new FileReader(textSource.getFile()), textSource.getFile());
+                newTextPane.read(new FileReader(textSource.getTextFile()), textSource.getTextFile());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -143,8 +143,9 @@ public class TextViewer extends JPanel implements TextSourceListener, ProjectLis
 
     @Override
     public void projectLoaded() {
-        List<Map.Entry<String,TextSource>> textsourceEntries = new ArrayList<>(manager.getTextSourceManager().getTextSources().entrySet());
-        textsourceEntries.sort(Comparator.comparing(Map.Entry::getKey));
-        textsourceEntries.forEach(entry -> addNewDocument(entry.getValue()));
+        List<TextSource> textsourceEntries = new ArrayList<>(manager.getTextSourceManager().getTextSources());
+        textsourceEntries.sort(Comparator.comparing(TextSource::getDocID));
+        textsourceEntries.forEach(this::addNewDocument);
+        showTextPane(0);
     }
 }
