@@ -56,7 +56,6 @@ public class Profile implements Savable {
         return String.format("Profile: ID: %s", profileID);
     }
 
-    //TODO: Make sure owlClass part is never set to null (i.e. when the annotation owl class has yet to be set)
     @Override
     public void writeToKnowtatorXML(Document dom, Element root) {
         Element profileElem = dom.createElement(KnowtatorXMLTags.PROFILE);

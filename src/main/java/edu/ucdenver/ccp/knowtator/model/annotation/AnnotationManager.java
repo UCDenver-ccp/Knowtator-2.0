@@ -158,7 +158,6 @@ public class AnnotationManager implements Savable {
         }
     }
 
-    //TODO: Add annotations as subclasses of their assigned classes as well as of the AO
     public void addAnnotation(String classID, Span span) {
         if (classID != null) {
             Annotation newAnnotation = new Annotation(classID, null, textSource, manager.getProfileManager().getCurrentProfile(), "identity");

@@ -99,7 +99,7 @@ public class ProjectMenu extends JMenu {
             if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 manager.getProjectManager().saveProject();
                 log.warn("1: " + fileChooser.getSelectedFile());
-                //TODO: Figure out how to close project before loading
+
 //            closeProject(view, fileChooser.getSelectedFile());
                 manager.getProjectManager().loadProject(fileChooser.getSelectedFile());
             }

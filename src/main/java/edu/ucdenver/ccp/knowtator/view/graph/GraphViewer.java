@@ -29,8 +29,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-//TODO: Display coreferences
-//TODO: Expand to show ontology terms as nodes
+
 public class GraphViewer implements ProfileListener, GraphListener {
 
     @SuppressWarnings("unused")

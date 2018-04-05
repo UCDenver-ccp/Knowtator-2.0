@@ -2,8 +2,6 @@ package edu.ucdenver.ccp.knowtator.view.graph;
 
 import javax.swing.*;
 
-//TODO: Toggle expand to show ontology terms as separate nodes
-//TODO; Toggle expand to show coreference
 class GraphViewMenu extends JMenu {
 
 

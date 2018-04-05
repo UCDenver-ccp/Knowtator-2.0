@@ -79,9 +79,6 @@ public class KnowtatorManager {
         return textSourceManager;
     }
 
-
-    //TODO: Autoload the AO or at least provide the functionality to convert to it if desired.
-
     public static void main(String[] args) {
 
 

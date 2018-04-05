@@ -9,7 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-//TODO: Regex search
 public class FindPanel extends JPanel {
     private static Logger log = LogManager.getLogger(FindPanel.class);
     private final JCheckBox isCaseSensitive;
