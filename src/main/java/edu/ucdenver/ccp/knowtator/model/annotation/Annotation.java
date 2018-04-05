@@ -47,9 +47,12 @@ public class Annotation implements Savable {
 	@SuppressWarnings("unused")
     private Logger log = Logger.getLogger(Annotation.class);
 
+	public OWLClass getOwlClass() {
+		return owlClass;
+	}
+
 	private OWLClass owlClass;
-    private String className;
-    private String classID;
+    private String owlClassID;
     private String annotation_type;
     private TreeSet<Span> spans;
     private Set<String> overlappingAnnotations;
@@ -62,14 +65,13 @@ public class Annotation implements Savable {
 	private String bratID;
 
 
-	public Annotation(String classID, String className, String annotationID, TextSource textSource, Profile annotator, String annotation_type) {
+	public Annotation(String owlClassID, String annotationID, TextSource textSource, Profile annotator, String annotation_type) {
 		this.textSource = textSource;
 		this.annotator = annotator;
 		this.date = new Date();
 		this.id = annotationID;
 
-		this.className = className;
-		this.classID = classID;
+		this.owlClassID = owlClassID;
 		this.annotation_type = annotation_type;
 
 		spans = new TreeSet<>((span1, span2) -> {
@@ -104,11 +106,8 @@ public class Annotation implements Savable {
 	void setID(String id) {
 		this.id = id;
 	}
-	public String getClassID() {
-		return classID;
-	}
-	public String getClassName() {
-		return className;
+	public String getOwlClassID() {
+		return owlClass == null ? owlClassID : owlClass.toStringID();
 	}
 	public TreeSet<Span> getSpans() {
 		return spans;
@@ -153,7 +152,8 @@ public class Annotation implements Savable {
 	public String toHTML() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ul><li>").append(annotator.getId()).append("</li>");
-		sb.append("<li>class = ").append(className).append("</li>");
+
+		sb.append("<li>class = ").append(getOwlClassID()).append("</li>");
 		sb.append("<li>spans = ");
 		for (Span span : spans)
 			sb.append(span.toString()).append(" ");
@@ -165,7 +165,7 @@ public class Annotation implements Savable {
 
 	@Override
 	public String toString() {
-		return String.format("Annotation: %s class name: %s class id: %s annotation_type: %s", id, className, classID, annotation_type);
+		return String.format("Annotation: %s owl class: %s annotation_type: %s", id, getOwlClassID(), annotation_type);
 	}
 
 	public String getSpannedText() {
@@ -211,8 +211,7 @@ public class Annotation implements Savable {
 		annotationElem.setAttribute(KnowtatorXMLAttributes.TYPE, annotation_type);
 
 		Element classElement = dom.createElement(KnowtatorXMLTags.CLASS);
-		classElement.setAttribute(KnowtatorXMLAttributes.ID, classID);
-		classElement.setTextContent(className);
+		classElement.setAttribute(KnowtatorXMLAttributes.ID, owlClassID);
 		annotationElem.appendChild(classElement);
 
 		spans.forEach(span -> span.writeToKnowtatorXML(dom, annotationElem));
@@ -323,6 +322,10 @@ public class Annotation implements Savable {
 
 	String getBratID() {
 		return bratID;
+	}
+
+	void setOwlClass(OWLClass owlClass) {
+		this.owlClass = owlClass;
 	}
 
 
@@ -712,8 +715,8 @@ public class Annotation implements Savable {
 //	 * annotationClass.
 //	 */
 //	public static boolean classesMatch(annotation annotation1, annotation annotation2) {
-//		String cls1 = annotation1.getClassID();
-//		String cls2 = annotation2.getClassID();
+//		String cls1 = annotation1.getOwlClassID();
+//		String cls2 = annotation2.getOwlClassID();
 //
 //		return cls1 != null && cls2 != null && cls1.equals(cls2);
 //

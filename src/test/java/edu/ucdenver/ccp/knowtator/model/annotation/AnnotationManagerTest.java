@@ -75,6 +75,7 @@ public class AnnotationManagerTest {
 
         manager.getProjectManager().loadProject(project);
 
+        //noinspection ConstantConditions
         textSource = manager.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleName)).findAny().get();
         annotationManager = textSource.getAnnotationManager();
         profile = manager.getProfileManager().addNewProfile("Default");
@@ -84,7 +85,7 @@ public class AnnotationManagerTest {
     @Test
     public void addAnnotation() {
         setUp();
-        Annotation annotation1 = new Annotation("class_2", "class_2", "mention_3", textSource, profile, "identity");
+        Annotation annotation1 = new Annotation("class_2", "mention_3", textSource, profile, "identity");
         annotationManager.addAnnotation(annotation1);
 
         int numAnnotations = annotationManager.getAnnotations().size();
@@ -97,7 +98,7 @@ public class AnnotationManagerTest {
     @Test
     public void addSpanToAnnotation() {
         setUp();
-        Annotation annotation1 = new Annotation("class_2", "class_2", "mention_3", textSource, profile, "identity");
+        Annotation annotation1 = new Annotation( "class_2", "mention_3", textSource, profile, "identity");
         annotationManager.addAnnotation(annotation1);
 
         Span span1 = new Span(1, 6, "");
@@ -130,7 +131,7 @@ public class AnnotationManagerTest {
     @Test
     public void removeSpanFromAnnotation() {
         setUp();
-        Annotation annotation1 = new Annotation("class_2", "class_2", "mention_3", textSource, profile, "identity");
+        Annotation annotation1 = new Annotation( "class_2", "mention_3", textSource, profile, "identity");
         annotationManager.addAnnotation(annotation1);
 
         Span span1 = new Span(1, 6, "");

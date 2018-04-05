@@ -215,7 +215,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
 
                         manager.annotationSelectionChangedEvent(annotation);
 
-                        view.owlEntitySelectionChanged(manager.getOWLAPIDataExtractor().getOWLClassByID(annotation.getClassID()));
+                        view.owlEntitySelectionChanged(manager.getOWLAPIDataExtractor().getOWLClassByID(annotation.getOwlClassID()));
                         graph.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
                     } else {
                         Object value = ((mxCell) cell).getValue();

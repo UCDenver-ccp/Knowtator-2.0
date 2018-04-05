@@ -80,9 +80,8 @@ public class InfoPanel extends JPanel implements SpanListener, AnnotationListene
             titleLabel.setFont(new Font(titleLabel.getFont().getName(), Font.BOLD, titleLabel.getFont().getSize() + 5));
 
             JLabel idLabel = new JLabel(String.format("Annotation ID: %s", annotation.getID()));
-            JLabel classLabel = new JLabel(String.format("Class ID: %s", annotation.getClassID()));
-            JLabel classNameLabel = new JLabel(String.format("Class Name: %s", annotation.getClassName()));
-            JLabel profileLabel = new JLabel(String.format("Annotator: %s", annotation.getAnnotator().getId()));
+            JLabel classLabel = new JLabel(String.format("Class ID: %s", annotation.getOwlClassID()));
+           JLabel profileLabel = new JLabel(String.format("Annotator: %s", annotation.getAnnotator().getId()));
             JLabel textSourceLabel = new JLabel(String.format("Document: %s", annotation.getTextSource().getDocID()));
             JLabel dateLabel = new JLabel(String.format("Date: %s", dateFormat.format(annotation.getDate())));
 
@@ -102,7 +101,6 @@ public class InfoPanel extends JPanel implements SpanListener, AnnotationListene
             add(titleLabel, gbc);
             add(idLabel, gbc);
             add(classLabel, gbc);
-            add(classNameLabel, gbc);
             add(profileLabel, gbc);
             add(textSourceLabel, gbc);
             add(dateLabel, gbc);

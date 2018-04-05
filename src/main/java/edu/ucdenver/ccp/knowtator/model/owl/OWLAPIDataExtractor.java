@@ -72,7 +72,8 @@ public class OWLAPIDataExtractor implements Savable {
     }
 
     public OWLClass getOWLClassByID(String classID) {
-        return owlModelManager.getOWLEntityFinder().getOWLClass(classID);
+
+        return owlModelManager == null ? null : owlModelManager.getOWLEntityFinder().getOWLClass(classID);
     }
 
     public OWLObjectProperty getOWLObjectPropertyByID(String classID) {
@@ -103,11 +104,15 @@ public class OWLAPIDataExtractor implements Savable {
 
     }
 
-    public String getSelectedOwlClassName() {
-        OWLClass cls = getSelectedClass();
+    private String getOwlClassName(OWLClass cls) {
         String annotationValue = extractAnnotation(cls, getOWLAnnotationPropertyByName());
         annotationValue = annotationValue == null ? extractAnnotation(cls, owlModelManager.getOWLDataFactory().getRDFSLabel()) : annotationValue;
         return annotationValue == null ? getOwlEntID(cls) : annotationValue;
+    }
+
+    public String getSelectedOwlClassName() {
+        OWLClass cls = getSelectedClass();
+        return getOwlClassName(cls);
     }
 
     public String[] getSelectedOwlClassDescendants() {

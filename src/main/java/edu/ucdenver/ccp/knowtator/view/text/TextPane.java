@@ -190,7 +190,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 			selectedAnnotation = annotation;
 
 			if (selectedAnnotation != null) {
-				view.owlEntitySelectionChanged(manager.getOWLAPIDataExtractor().getOWLClassByID(selectedAnnotation.getClassID()));
+				view.owlEntitySelectionChanged(manager.getOWLAPIDataExtractor().getOWLClassByID(selectedAnnotation.getOwlClassID()));
 				if (annotation.getSpans().size() == 1) {
 					setSelectedSpan(annotation.getSpans().first());
 				}
@@ -199,7 +199,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 			manager.annotationSelectionChangedEvent(selectedAnnotation);
 		}
 		if (selectedAnnotation != null) {
-			view.owlEntitySelectionChanged(manager.getOWLAPIDataExtractor().getOWLClassByID(selectedAnnotation.getClassID()));
+			view.owlEntitySelectionChanged(manager.getOWLAPIDataExtractor().getOWLClassByID(selectedAnnotation.getOwlClassID()));
 		}
 	}
 
@@ -314,7 +314,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 					}
 					lastSpan = span;
 
-					String classID = annotation.getClassID();
+					String classID = annotation.getOwlClassID();
 					lastColor = profile.getColor(classID);
 				}
 			}
@@ -427,12 +427,12 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		if (classID == null) {
 			log.warn("No OWLClass selected");
 
-			JTextField nameField = new JTextField(10);
+//			JTextField nameField = new JTextField(10);
 			JTextField idField = new JTextField(10);
 			JPanel inputPanel = new JPanel();
-			inputPanel.add(new JLabel("Name:"));
-			inputPanel.add(nameField);
-			inputPanel.add(Box.createHorizontalStrut(15));
+//			inputPanel.add(new JLabel("Name:"));
+//			inputPanel.add(nameField);
+//			inputPanel.add(Box.createHorizontalStrut(15));
 			inputPanel.add(new JLabel("ID:"));
 			inputPanel.add(idField);
 
@@ -440,7 +440,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 			int result = JOptionPane.showConfirmDialog(null, inputPanel,
 					"No OWL Class selected", JOptionPane.DEFAULT_OPTION);
 			if (result == JOptionPane.OK_OPTION) {
-				className = nameField.getText();
+//				className = nameField.getText();
 				classID = idField.getText();
 			}
 		}
@@ -452,7 +452,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
                 getSelectionEnd(),
                 getText().substring(getSelectionStart(), getSelectionEnd())
         );
-        textSource.getAnnotationManager().addAnnotation(className, classID, newSpan);
+        textSource.getAnnotationManager().addAnnotation(classID, newSpan);
 
 	}
 

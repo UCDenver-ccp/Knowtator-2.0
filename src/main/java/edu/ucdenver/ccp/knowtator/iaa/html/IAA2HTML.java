@@ -388,7 +388,7 @@ public class IAA2HTML {
 			sortedAnnotations.put(type, new HashSet<>());
 		}
 		for (Annotation annotation : annotations) {
-			String type = annotation.getClassID();
+			String type = annotation.getOwlClassID();
 			if (type != null)
 				sortedAnnotations.get(type).add(annotation);
 		}
@@ -411,7 +411,8 @@ public class IAA2HTML {
 
 			for (Span span : modifiedSpans) {
 				try {
-					html.append(annotationText.substring(mark, span.getStart())).append("<b>");
+                    //noinspection RedundantStringOperation
+                    html.append(annotationText.substring(mark, span.getStart())).append("<b>");
 					html.append(Span.substring(annotationText, span)).append("</b>");
 					mark = span.getEnd();
 				} catch (StringIndexOutOfBoundsException sioobe) {

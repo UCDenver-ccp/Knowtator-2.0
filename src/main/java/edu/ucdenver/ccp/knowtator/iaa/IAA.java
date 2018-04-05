@@ -96,7 +96,7 @@ public class IAA {
 
 		annotationSets = new HashMap<>();
 
-		emptyAnnotationSet = Collections.unmodifiableSet(new HashSet<Annotation>());
+		emptyAnnotationSet = Collections.unmodifiableSet(new HashSet<>());
 
 		Set<Annotation> emptySet = Collections.emptySet();
 		setAnnotations(emptySet);
@@ -267,7 +267,7 @@ public class IAA {
 
 		for (Annotation annotation : annotations) {
 			String setName = annotation.getAnnotator().getId();
-			String annotationClass = annotation.getClassID();
+			String annotationClass = annotation.getOwlClassID();
 			if (annotationClass != null)
 				annotationClasses.add(annotationClass);
 			// throw exception here if there is a setName in the annotations
@@ -284,7 +284,7 @@ public class IAA {
 			class2AnnotationsMap.put(setName, classAnnotations);
 
 			for (Annotation setAnnotation : setAnnotations) {
-				String annotationClass = setAnnotation.getClassID();
+				String annotationClass = setAnnotation.getOwlClassID();
 				if (!classAnnotations.containsKey(annotationClass)) {
 					classAnnotations.put(annotationClass, new HashSet<>());
 				}
@@ -457,7 +457,7 @@ public class IAA {
 	}
 
 	public Set<Annotation> getAnnotationsOfSameType(Annotation annotation, String compareSetName) {
-		String annotationClass = annotation.getClassID();
+		String annotationClass = annotation.getOwlClassID();
 		return safeReturn(class2AnnotationsMap.get(compareSetName).get(annotationClass));
 	}
 

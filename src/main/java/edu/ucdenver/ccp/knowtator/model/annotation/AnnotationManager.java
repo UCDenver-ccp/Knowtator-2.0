@@ -34,6 +34,7 @@ import edu.ucdenver.ccp.knowtator.model.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -80,6 +81,9 @@ public class AnnotationManager implements Savable {
 
         newAnnotation.getSpans().forEach(span -> spanMap.put(span, newAnnotation));
         manager.annotationAddedEvent(newAnnotation);
+
+        OWLClass owlClass = manager.getOWLAPIDataExtractor().getOWLClassByID(newAnnotation.getOwlClassID());
+        newAnnotation.setOwlClass(owlClass);
     }
 
     public void addSpanToAnnotation(Annotation annotation, Span newSpan) {
@@ -177,9 +181,9 @@ public class AnnotationManager implements Savable {
     }
 
     //TODO: Add annotations as subclasses of their assigned classes as well as of the AO
-    public void addAnnotation(String className, String classID, Span span) {
+    public void addAnnotation(String classID, Span span) {
         if (classID != null) {
-            Annotation newAnnotation = new Annotation(classID, className, null, textSource, manager.getProfileManager().getCurrentProfile(), "identity");
+            Annotation newAnnotation = new Annotation(classID, null, textSource, manager.getProfileManager().getCurrentProfile(), "identity");
             newAnnotation.addSpan(span);
             addAnnotation(newAnnotation);
         }
@@ -228,7 +232,7 @@ public class AnnotationManager implements Savable {
         String profileID;
         String type;
         Profile profile;
-        String className;
+//        String className;
         String classID;
         Annotation newAnnotation;
         Element graphSpaceElem;
@@ -242,10 +246,10 @@ public class AnnotationManager implements Savable {
             type = annotationElement.getAttribute(KnowtatorXMLAttributes.TYPE);
 
             profile = manager.getProfileManager().addNewProfile(profileID);
-            className = annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0).getTextContent();
+//            className = annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0).getTextContent();
             classID = ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0)).getAttribute(KnowtatorXMLAttributes.ID);
 
-            newAnnotation = new Annotation(classID, className, annotationID, textSource, profile, type);
+            newAnnotation = new Annotation(classID, annotationID, textSource, profile, type);
 //            log.warn("\t\tXML: " + newAnnotation);
             newAnnotation.readFromKnowtatorXML(null, annotationElement, content);
 
@@ -272,7 +276,7 @@ public class AnnotationManager implements Savable {
         Element annotationElement;
         String annotationID;
         Element classElement;
-        String className;
+//        String className;
         String classID;
         Annotation newAnnotation;
         Map<Annotation, Element> annotationToComplexSlotMap = new HashMap<>();
@@ -291,10 +295,10 @@ public class AnnotationManager implements Savable {
             annotationID = ((Element) annotationElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID);
             classElement = classMentionToClassIDMap.get(annotationID);
 
-            className = classElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION_CLASS).item(0).getTextContent();
+//            className = classElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION_CLASS).item(0).getTextContent();
             classID = ((Element) classElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION_CLASS).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID);
 
-            newAnnotation = new Annotation(classID, className, annotationID, textSource, profile, "identity");
+            newAnnotation = new Annotation(classID, annotationID, textSource, profile, "identity");
 
             newAnnotation.readFromOldKnowtatorXML(null, annotationElement, content);
             addAnnotation(newAnnotation);
@@ -364,7 +368,7 @@ public class AnnotationManager implements Savable {
         Profile profile = manager.getProfileManager().getDefaultProfile();
 
         annotationMap.get(StandoffTags.TEXTBOUNDANNOTATION).forEach(annotation -> {
-            Annotation newAnnotation = new Annotation(annotation[1].split(StandoffTags.textBoundAnnotationTripleDelimiter)[0], annotation[2], annotation[0], textSource, profile, "identity");
+            Annotation newAnnotation = new Annotation(annotation[1].split(StandoffTags.textBoundAnnotationTripleDelimiter)[0], annotation[0], textSource, profile, "identity");
             Map<Character, List<String[]>> map = new HashMap<>();
             List<String[]> list = new ArrayList<>();
             list.add(annotation);
@@ -385,10 +389,10 @@ public class AnnotationManager implements Savable {
         for (int i=0; i<annotationMap.values().size(); i++) {
             Annotation annotation = annotationIterator.next();
             annotation.setBratID(String.format("T%d", i));
-            writer.append(String.format("%s\t%s ", annotation.getBratID(), annotation.getClassID()));
+            writer.append(String.format("%s\t%s ", annotation.getBratID(), annotation.getOwlClassID()));
             annotation.writeToBratStandoff(writer);
 
-            writer.append(String.format("\t%s\n", annotation.getClassName()));
+            writer.append(String.format("\t%s\n", annotation.getSpans().first().getSpannedText()));
         }
 
         int lastNumTriples = 0;

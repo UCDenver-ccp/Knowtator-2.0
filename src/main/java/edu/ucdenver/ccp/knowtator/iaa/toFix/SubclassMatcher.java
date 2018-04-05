@@ -73,7 +73,7 @@
 //	public annotation match(annotation annotation, String compareSetName, Set<annotation> excludeAnnotations, IAA iaa,
 //							MatchResult matchResult) {
 //
-//		String annotationClassName = annotation.getClassID();
+//		String annotationClassName = annotation.getOwlClassID();
 //		if (!subclassNames.contains(annotationClassName)) {
 //			matchResult.setResult(MatchResult.TRIVIAL_NONMATCH);
 //			return null;

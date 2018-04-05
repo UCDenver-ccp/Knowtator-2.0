@@ -313,7 +313,7 @@ public class GraphSpace extends mxGraph implements Savable {
         g.setHeight(g.getHeight() + 200);
         g.setWidth(g.getWidth() + 200);
 
-        String classID = vertex.getAnnotation().getClassID();
+        String classID = vertex.getAnnotation().getOwlClassID();
         Profile profile = manager.getProfileManager().getCurrentProfile();
         String color = Integer.toHexString(profile.getColor(classID).getRGB()).substring(2);
         String shape = mxConstants.SHAPE_RECTANGLE;
