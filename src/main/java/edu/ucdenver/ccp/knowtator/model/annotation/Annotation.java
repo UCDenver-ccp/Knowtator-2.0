@@ -32,6 +32,7 @@ import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -46,6 +47,7 @@ public class Annotation implements Savable {
 	@SuppressWarnings("unused")
     private Logger log = Logger.getLogger(Annotation.class);
 
+	private OWLClass owlClass;
     private String className;
     private String classID;
     private String annotation_type;
