@@ -47,7 +47,7 @@ public class Profile implements Savable {
     private static Logger log = LogManager.getLogger(Profile.class);
 
     private String profileID;
-    private HashMap<String, Color> colors;  //<ClassName, Highlighter>
+    private HashMap<Object, Color> colors;  //<ClassName, Highlighter>
 
     public Profile(String profileID) {
         this.profileID = profileID;
@@ -59,10 +59,10 @@ public class Profile implements Savable {
         return profileID;
     }
 
-    public Color getColor(String classID) {
-        colors.putIfAbsent(classID, Color.CYAN);
+    public Color getColor(Object owlClass) {
+        colors.putIfAbsent(owlClass, Color.CYAN);
 
-        return colors.get(classID);
+        return colors.get(owlClass);
     }
 
     private void addColor(String classID, String color) {
@@ -80,14 +80,14 @@ public class Profile implements Savable {
         return String.format("Profile: ID: %s", profileID);
     }
 
-
+    //TODO: Make sure owlClass part is never set to null (i.e. when the annotation owl class has yet to be set)
     @Override
     public void writeToKnowtatorXML(Document dom, Element root) {
         Element profileElem = dom.createElement(KnowtatorXMLTags.PROFILE);
         profileElem.setAttribute(KnowtatorXMLAttributes.ID, profileID);
-        colors.forEach((classID, c) -> {
+        colors.forEach((owlClass, c) -> {
             Element e = dom.createElement(KnowtatorXMLTags.HIGHLIGHTER);
-            e.setAttribute(KnowtatorXMLAttributes.CLASS_ID, classID);
+            e.setAttribute(KnowtatorXMLAttributes.CLASS_ID, owlClass.toString());
             e.setAttribute(KnowtatorXMLAttributes.COLOR, String.format("#%06x", c.getRGB() & 0x00FFFFFF));
             profileElem.appendChild(e);
         });

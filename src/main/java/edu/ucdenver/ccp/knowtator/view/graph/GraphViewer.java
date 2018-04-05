@@ -42,6 +42,7 @@ import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.view.text.TextPane;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLProperty;
 
@@ -215,7 +216,9 @@ public class GraphViewer implements ProfileListener, GraphListener {
 
                         manager.annotationSelectionChangedEvent(annotation);
 
-                        view.owlEntitySelectionChanged(manager.getOWLAPIDataExtractor().getOWLClassByID(annotation.getOwlClassID()));
+                        if (annotation.isOwlClassSet()) {
+                            view.owlEntitySelectionChanged((OWLClass) annotation.getOwlClass());
+                        }
                         graph.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
                     } else {
                         Object value = ((mxCell) cell).getValue();

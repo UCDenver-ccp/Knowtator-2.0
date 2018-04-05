@@ -64,7 +64,7 @@ class AnnotationPopupMenu extends JPopupMenu {
     }
 
     private JMenuItem removeSpanFromAnnotationCommand() {
-        JMenuItem removeSpanFromSelectedAnnotation = new JMenuItem(String.format("Delete span from %s", textPane.getSelectedAnnotation().getOwlClassID()));
+        JMenuItem removeSpanFromSelectedAnnotation = new JMenuItem(String.format("Delete span from %s", textPane.getSelectedAnnotation().getOwlClass()));
         removeSpanFromSelectedAnnotation.addActionListener(e5 -> textPane.getTextSource().getAnnotationManager()
                 .removeSpanFromAnnotation(
                         textPane.getSelectedAnnotation(),
@@ -77,7 +77,7 @@ class AnnotationPopupMenu extends JPopupMenu {
     }
 
     private JMenuItem selectAnnotationCommand(Annotation annotation, Span span) {
-        JMenuItem selectAnnotationMenuItem = new JMenuItem("Select " + annotation.getOwlClassID());
+        JMenuItem selectAnnotationMenuItem = new JMenuItem("Select " + annotation.getOwlClass());
         selectAnnotationMenuItem.addActionListener(e3 -> textPane.setSelection(span, annotation));
 
         return  selectAnnotationMenuItem;
@@ -85,7 +85,7 @@ class AnnotationPopupMenu extends JPopupMenu {
     }
 
     private JMenuItem removeAnnotationCommand() {
-        JMenuItem removeAnnotationMenuItem = new JMenuItem("Delete " + textPane.getSelectedAnnotation().getOwlClassID());
+        JMenuItem removeAnnotationMenuItem = new JMenuItem("Delete " + textPane.getSelectedAnnotation().getOwlClass());
         removeAnnotationMenuItem.addActionListener(e4 -> textPane.removeAnnotation());
 
         return removeAnnotationMenuItem;

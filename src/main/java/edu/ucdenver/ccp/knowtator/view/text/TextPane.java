@@ -26,7 +26,6 @@ package edu.ucdenver.ccp.knowtator.view.text;
 
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
 import edu.ucdenver.ccp.knowtator.listeners.SpanListener;
@@ -34,8 +33,10 @@ import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewer;
 import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -190,7 +191,9 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 			selectedAnnotation = annotation;
 
 			if (selectedAnnotation != null) {
-				view.owlEntitySelectionChanged(manager.getOWLAPIDataExtractor().getOWLClassByID(selectedAnnotation.getOwlClassID()));
+				if (selectedAnnotation.isOwlClassSet()) {
+					view.owlEntitySelectionChanged((OWLClass) selectedAnnotation.getOwlClass());
+				}
 				if (annotation.getSpans().size() == 1) {
 					setSelectedSpan(annotation.getSpans().first());
 				}
@@ -199,7 +202,9 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 			manager.annotationSelectionChangedEvent(selectedAnnotation);
 		}
 		if (selectedAnnotation != null) {
-			view.owlEntitySelectionChanged(manager.getOWLAPIDataExtractor().getOWLClassByID(selectedAnnotation.getOwlClassID()));
+			if (selectedAnnotation.isOwlClassSet()) {
+				view.owlEntitySelectionChanged((OWLClass) selectedAnnotation.getOwlClass());
+			}
 		}
 	}
 
@@ -314,8 +319,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 					}
 					lastSpan = span;
 
-					String classID = annotation.getOwlClassID();
-					lastColor = profile.getColor(classID);
+					lastColor = profile.getColor(annotation.getOwlClass());
 				}
 			}
 
@@ -421,7 +425,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	}
 
 	void addAnnotation() {
-		String className = manager.getOWLAPIDataExtractor().getSelectedOwlClassName();
+//		String className = manager.getOWLAPIDataExtractor().getSelectedOwlClassName();
 		String classID = manager.getOWLAPIDataExtractor().getSelectedOwlClassID();
 
 		if (classID == null) {

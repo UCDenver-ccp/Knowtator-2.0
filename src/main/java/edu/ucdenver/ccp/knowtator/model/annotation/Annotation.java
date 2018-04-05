@@ -47,12 +47,7 @@ public class Annotation implements Savable {
 	@SuppressWarnings("unused")
     private Logger log = Logger.getLogger(Annotation.class);
 
-	public OWLClass getOwlClass() {
-		return owlClass;
-	}
-
-	private OWLClass owlClass;
-    private String owlClassID;
+	private Object owlClass;
     private String annotation_type;
     private TreeSet<Span> spans;
     private Set<String> overlappingAnnotations;
@@ -71,7 +66,7 @@ public class Annotation implements Savable {
 		this.date = new Date();
 		this.id = annotationID;
 
-		this.owlClassID = owlClassID;
+		this.owlClass = owlClassID;
 		this.annotation_type = annotation_type;
 
 		spans = new TreeSet<>((span1, span2) -> {
@@ -106,8 +101,8 @@ public class Annotation implements Savable {
 	void setID(String id) {
 		this.id = id;
 	}
-	public String getOwlClassID() {
-		return owlClass == null ? owlClassID : owlClass.toStringID();
+	public Object getOwlClass() {
+		return owlClass;
 	}
 	public TreeSet<Span> getSpans() {
 		return spans;
@@ -153,7 +148,7 @@ public class Annotation implements Savable {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ul><li>").append(annotator.getId()).append("</li>");
 
-		sb.append("<li>class = ").append(getOwlClassID()).append("</li>");
+		sb.append("<li>class = ").append(getOwlClass()).append("</li>");
 		sb.append("<li>spans = ");
 		for (Span span : spans)
 			sb.append(span.toString()).append(" ");
@@ -165,7 +160,7 @@ public class Annotation implements Savable {
 
 	@Override
 	public String toString() {
-		return String.format("Annotation: %s owl class: %s annotation_type: %s", id, getOwlClassID(), annotation_type);
+		return String.format("Annotation: %s owl class: %s annotation_type: %s", id, getOwlClass(), annotation_type);
 	}
 
 	public String getSpannedText() {
@@ -211,7 +206,7 @@ public class Annotation implements Savable {
 		annotationElem.setAttribute(KnowtatorXMLAttributes.TYPE, annotation_type);
 
 		Element classElement = dom.createElement(KnowtatorXMLTags.CLASS);
-		classElement.setAttribute(KnowtatorXMLAttributes.ID, owlClassID);
+		classElement.setAttribute(KnowtatorXMLAttributes.ID, owlClass.toString());
 		annotationElem.appendChild(classElement);
 
 		spans.forEach(span -> span.writeToKnowtatorXML(dom, annotationElem));
@@ -326,6 +321,10 @@ public class Annotation implements Savable {
 
 	void setOwlClass(OWLClass owlClass) {
 		this.owlClass = owlClass;
+	}
+
+	public boolean isOwlClassSet() {
+		return owlClass instanceof OWLClass;
 	}
 
 

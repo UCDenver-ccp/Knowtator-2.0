@@ -82,7 +82,7 @@ public class AnnotationManager implements Savable {
         newAnnotation.getSpans().forEach(span -> spanMap.put(span, newAnnotation));
         manager.annotationAddedEvent(newAnnotation);
 
-        OWLClass owlClass = manager.getOWLAPIDataExtractor().getOWLClassByID(newAnnotation.getOwlClassID());
+        OWLClass owlClass = manager.getOWLAPIDataExtractor().getOWLClassByID((String) newAnnotation.getOwlClass());
         newAnnotation.setOwlClass(owlClass);
     }
 
@@ -389,7 +389,7 @@ public class AnnotationManager implements Savable {
         for (int i=0; i<annotationMap.values().size(); i++) {
             Annotation annotation = annotationIterator.next();
             annotation.setBratID(String.format("T%d", i));
-            writer.append(String.format("%s\t%s ", annotation.getBratID(), annotation.getOwlClassID()));
+            writer.append(String.format("%s\t%s ", annotation.getBratID(), annotation.getOwlClass()));
             annotation.writeToBratStandoff(writer);
 
             writer.append(String.format("\t%s\n", annotation.getSpans().first().getSpannedText()));

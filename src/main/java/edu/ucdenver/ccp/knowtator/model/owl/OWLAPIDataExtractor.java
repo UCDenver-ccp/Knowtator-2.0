@@ -93,27 +93,28 @@ public class OWLAPIDataExtractor implements Savable {
         return owlWorkSpace.getOWLSelectionModel().getLastSelectedObjectProperty();
     }
 
+    private String getOwlClassID(OWLClass cls) {
+        String annotationValue = extractAnnotation(cls, owlModelManager.getOWLDataFactory().getRDFSLabel());
+        return annotationValue == null ? getOwlEntID(cls) : annotationValue;
+    }
+
     public String getSelectedOwlClassID() {
         OWLClass cls = getSelectedClass();
         if (cls != null) {
-            String annotationValue = extractAnnotation(cls, owlModelManager.getOWLDataFactory().getRDFSLabel());
-            return annotationValue == null ? getOwlEntID(cls) : annotationValue;
+            return getOwlClassID(cls);
         } else {
             return null;
         }
 
     }
 
+    @SuppressWarnings("unused")
     private String getOwlClassName(OWLClass cls) {
         String annotationValue = extractAnnotation(cls, getOWLAnnotationPropertyByName());
         annotationValue = annotationValue == null ? extractAnnotation(cls, owlModelManager.getOWLDataFactory().getRDFSLabel()) : annotationValue;
         return annotationValue == null ? getOwlEntID(cls) : annotationValue;
     }
 
-    public String getSelectedOwlClassName() {
-        OWLClass cls = getSelectedClass();
-        return getOwlClassName(cls);
-    }
 
     public String[] getSelectedOwlClassDescendants() {
         OWLClass cls = getSelectedClass();
