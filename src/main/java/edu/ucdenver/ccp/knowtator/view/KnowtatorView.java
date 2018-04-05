@@ -27,7 +27,10 @@ package edu.ucdenver.ccp.knowtator.view;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.view.info.FindPanel;
 import edu.ucdenver.ccp.knowtator.view.info.InfoPanel;
-import edu.ucdenver.ccp.knowtator.view.menus.*;
+import edu.ucdenver.ccp.knowtator.view.menus.IAAMenu;
+import edu.ucdenver.ccp.knowtator.view.menus.ProfileMenu;
+import edu.ucdenver.ccp.knowtator.view.menus.ProjectMenu;
+import edu.ucdenver.ccp.knowtator.view.menus.ViewMenu;
 import edu.ucdenver.ccp.knowtator.view.text.TextViewer;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
@@ -42,6 +45,7 @@ import java.io.File;
 public class KnowtatorView extends AbstractOWLClassViewComponent implements DropTargetListener {
 
     private static final Logger log = Logger.getLogger(KnowtatorManager.class);
+
     @SuppressWarnings("WeakerAccess")
     KnowtatorManager manager;
     private TextViewer textViewer;
@@ -116,6 +120,12 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     @Override
     public void initialiseClassView() {
+//        try {
+//            UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
+//        } catch (UnsupportedLookAndFeelException e) {
+//            e.printStackTrace();
+//        }
+//        UIManager.getLookAndFeelDefaults().put("ClassLoader", Plastic3DLookAndFeel.class.getClassLoader());
         manager = new KnowtatorManager();
         manager.setUpOWL(getOWLWorkspace(), getOWLModelManager());
 

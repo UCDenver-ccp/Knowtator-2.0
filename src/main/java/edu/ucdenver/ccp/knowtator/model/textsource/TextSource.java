@@ -39,6 +39,8 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -69,15 +71,23 @@ public class TextSource implements Savable {
             textFile = new File(manager.getProjectManager().getArticlesLocation(), docID + ".txt");
 
             if (!textFile.exists()) {
-                if (JOptionPane.showConfirmDialog(null, String.format("Could not find textFile for %s. Choose textFile location?", docID), "File not found", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    JFileChooser fileChooser = new JFileChooser(textFile);
-                    while (!textFile.exists()) {
+                if (JOptionPane.showConfirmDialog(null, String.format("Could not find file for %s. Choose file location?", docID), "File not found", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    JFileChooser fileChooser = new JFileChooser();
+                    fileChooser.setDialogTitle("Select text file for " + docID);
 
-                        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                            textFile = fileChooser.getSelectedFile();
-
+                    if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                        File file = fileChooser.getSelectedFile();
+                        if (JOptionPane.showConfirmDialog(null, String.format("Copy %s to project?", textFile.getName()), "Copy selected file?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                            try {
+                                textFile = Files.copy(Paths.get(file.toURI()), Paths.get(manager.getProjectManager().getArticlesLocation().toURI().resolve(file.getName()))).toFile();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            textFile = file;
                         }
                     }
+
                 }
             }
 

@@ -97,6 +97,7 @@ public class ProjectMenu extends JMenu {
             if (projectName != null && !projectName.equals("")) {
 
                 JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Select project root");
                 fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
                 if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
