@@ -19,6 +19,11 @@ import java.util.Map;
 public class Triple extends mxCell implements Savable {
     private final String quantifier;
     private final String quantifierValue;
+
+    public Profile getAnnotator() {
+        return annotator;
+    }
+
     private Profile annotator;
     private String bratID;
 
@@ -91,5 +96,17 @@ public class Triple extends mxCell implements Savable {
 
     public void setBratID(String bratID) {
         this.bratID = bratID;
+    }
+
+    public Object getProperty() {
+        return getValue();
+    }
+
+    public String getQuantifier() {
+        return quantifier;
+    }
+
+    public String getQuantifierValue() {
+        return quantifierValue;
     }
 }

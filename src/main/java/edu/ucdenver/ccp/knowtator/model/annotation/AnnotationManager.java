@@ -278,15 +278,19 @@ public class AnnotationManager implements Savable {
             newAnnotation = new Annotation(classID, annotationID, textSource, profile, "identity");
 
             newAnnotation.readFromOldKnowtatorXML(null, annotationElement, content);
-            addAnnotation(newAnnotation);
 
-            log.warn("\t\tOLD KNOWATOTOR: added ANNOTATION " + newAnnotation);
+            // No need to keep annotations with no spans
+            if (!newAnnotation.getSpans().isEmpty()) {
+                addAnnotation(newAnnotation);
 
-            for (Node slotMentionNode : KnowtatorXMLUtil.asList(classElement.getElementsByTagName(OldKnowtatorXMLTags.HAS_SLOT_MENTION))) {
-                Element slotMentionElement = (Element) slotMentionNode;
-                String slotMentionID = slotMentionElement.getAttribute(OldKnowtatorXMLAttributes.ID);
-                Element complexSlotMentionElement = complexSlotMentionToClassIDMap.get(slotMentionID);
-                annotationToComplexSlotMap.put(newAnnotation, complexSlotMentionElement);
+                log.warn("\t\tOLD KNOWATOTOR: added ANNOTATION " + newAnnotation);
+
+                for (Node slotMentionNode : KnowtatorXMLUtil.asList(classElement.getElementsByTagName(OldKnowtatorXMLTags.HAS_SLOT_MENTION))) {
+                    Element slotMentionElement = (Element) slotMentionNode;
+                    String slotMentionID = slotMentionElement.getAttribute(OldKnowtatorXMLAttributes.ID);
+                    Element complexSlotMentionElement = complexSlotMentionToClassIDMap.get(slotMentionID);
+                    annotationToComplexSlotMap.put(newAnnotation, complexSlotMentionElement);
+                }
             }
 
 //            if (classID.equals(OldKnowtatorXMLAttributes.IDENTITY_CHAIN)) {
