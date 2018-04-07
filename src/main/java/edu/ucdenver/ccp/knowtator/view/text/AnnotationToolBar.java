@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator.view.text;
 
 import edu.ucdenver.ccp.knowtator.view.KnowtatorIcons;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
 import javax.swing.text.MutableAttributeSet;
@@ -12,9 +13,11 @@ import java.awt.event.ActionEvent;
 class AnnotationToolBar extends JToolBar {
 
     private TextViewer textViewer;
+    private KnowtatorView view;
 
-    AnnotationToolBar(TextViewer textViewer) {
+    AnnotationToolBar(TextViewer textViewer, KnowtatorView view) {
         this.textViewer = textViewer;
+        this.view = view;
 
         setFloatable(false);
 
@@ -83,28 +86,32 @@ class AnnotationToolBar extends JToolBar {
     private JButton decreaseTextSizeCommand() {
         JButton command = new JButton (KnowtatorIcons.getIcon(KnowtatorIcons.DECREASE_TEXT_SIZE_ICON));
         command.setToolTipText("Decrease text size");
-        command.addActionListener((ActionEvent e) -> textViewer.getTextPaneList().forEach(textPane -> {
-            StyledDocument doc = textPane.getStyledDocument();
-            MutableAttributeSet attrs = textPane.getInputAttributes();
-            Font font = doc.getFont(attrs);
-            StyleConstants.setFontSize(attrs, font.getSize() - 2);
-            doc.setCharacterAttributes(0, doc.getLength() + 1, attrs, false);
-            textPane.repaint();
-        }));
+        command.addActionListener((ActionEvent e) -> {
+            for (TextPane textPane : textViewer.getTextPaneMap().values()) {
+                StyledDocument doc = textPane.getStyledDocument();
+                MutableAttributeSet attrs = textPane.getInputAttributes();
+                Font font = doc.getFont(attrs);
+                StyleConstants.setFontSize(attrs, font.getSize() - 2);
+                doc.setCharacterAttributes(0, doc.getLength() + 1, attrs, false);
+                textPane.repaint();
+            }
+        });
         return command;
     }
 
     private JButton increaseTextSizeCommand() {
         JButton command = new JButton (KnowtatorIcons.getIcon(KnowtatorIcons.INCREASE_TEXT_SIZE_ICON));
         command.setToolTipText("Increase text size");
-        command.addActionListener((ActionEvent e) -> textViewer.getTextPaneList().forEach(textPane -> {
-            StyledDocument doc = textPane.getStyledDocument();
-            MutableAttributeSet attrs = textPane.getInputAttributes();
-            Font font = doc.getFont(attrs);
-            StyleConstants.setFontSize(attrs, font.getSize() + 2);
-            doc.setCharacterAttributes(0, doc.getLength() + 1, attrs, false);
-            textPane.repaint();
-        }));
+        command.addActionListener((ActionEvent e) -> {
+            for (TextPane textPane : textViewer.getTextPaneMap().values()) {
+                StyledDocument doc = textPane.getStyledDocument();
+                MutableAttributeSet attrs = textPane.getInputAttributes();
+                Font font = doc.getFont(attrs);
+                StyleConstants.setFontSize(attrs, font.getSize() + 2);
+                doc.setCharacterAttributes(0, doc.getLength() + 1, attrs, false);
+                textPane.repaint();
+            }
+        });
 
         return command;
     }
@@ -126,7 +133,7 @@ class AnnotationToolBar extends JToolBar {
     private JButton showGraphViewerCommand() {
         JButton command = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.GRAPH_VIEWER));
         command.setToolTipText("Show graph viewer");
-        command.addActionListener(e -> textViewer.getCurrentTextPane().getGraphViewer().getDialog().setVisible(true));
+        command.addActionListener(e -> view.getGraphViewer().getDialog().setVisible(true));
 
         return command;
     }

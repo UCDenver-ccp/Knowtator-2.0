@@ -115,8 +115,11 @@ public class KnowtatorController {
 
     public void annotationSelectionChangedEvent(Annotation annotation) {
         if (annotation != null) {
-            if (annotation.isOwlClass()) {
-                view.owlEntitySelectionChanged((OWLClass) annotation.getOwlClass());
+            if (view != null) {
+                if (annotation.isOwlClass()) {
+                    view.owlEntitySelectionChanged((OWLClass) annotation.getOwlClass());
+                }
+                view.getGraphViewer().goToAnnotationVertex(null, annotation);
             }
 
             annotationListeners.forEach(listener -> listener.annotationSelectionChanged(annotation));

@@ -24,7 +24,6 @@ import java.util.*;
 public class TextSourceManager implements Savable, OWLOntologyChangeListener {
     private Logger log = Logger.getLogger(TextSourceManager.class);
 
-
     private List<TextSource> textSources;
     private KnowtatorController controller;
 
@@ -65,6 +64,7 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
             log.warn("\tXML: " + newTextSource);
             newTextSource.readFromKnowtatorXML(null, documentElement, null);
         }
+        textSources.sort(Comparator.comparing(TextSource::getDocID));
     }
 
     @Override
@@ -142,5 +142,25 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
             graphSpace.reassignProperty(possiblyRemovedEntities.iterator().next(), possiblyAddedEntities.iterator().next());
             graphSpace.reDrawGraph();
         }));
+    }
+
+    public TextSource getPreviousTextSource() {
+        TextSource activeTextSource = controller.getSelectionManager().getActiveTextSource();
+        if (activeTextSource != null) {
+            int index = textSources.indexOf(activeTextSource);
+            return textSources.get(index == 0 ? 0 : index - 1);
+        } else {
+            return null;
+        }
+    }
+
+    public TextSource getNextTextSource() {
+        TextSource activeTextSource = controller.getSelectionManager().getActiveTextSource();
+        if (activeTextSource != null) {
+            int index = textSources.indexOf(activeTextSource);
+            return textSources.get(index == textSources.size() - 1 ? index : index + 1);
+        } else {
+            return null;
+        }
     }
 }

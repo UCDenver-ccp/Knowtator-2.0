@@ -15,7 +15,6 @@ import edu.ucdenver.ccp.knowtator.model.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.text.TextPane;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -24,9 +23,7 @@ import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 import java.util.List;
 
 
@@ -36,20 +33,18 @@ public class GraphViewer implements ProfileListener, GraphListener {
     private static Logger log = LogManager.getLogger(GraphViewer.class);
     private final KnowtatorController controller;
     private final KnowtatorView view;
-    private TextPane textPane;
     private JDialog dialog;
 
     private mxGraphComponent currentGraphComponent;
-    private List<mxGraphComponent> graphComponentList;
+    private Map<GraphSpace, mxGraphComponent> graphComponentMap;
     private JScrollPane scrollPane;
     private JLabel graphLabel;
     private GraphViewMenu graphViewMenu;
 
-    public GraphViewer(JFrame frame, KnowtatorController controller, KnowtatorView view, TextPane textPane) {
+    public GraphViewer(JFrame frame, KnowtatorController controller, KnowtatorView view) {
         this.controller = controller;
         this.view = view;
-        this.textPane = textPane;
-        graphComponentList = new ArrayList<>();
+        graphComponentMap = new HashMap<>();
         scrollPane = new JScrollPane();
         scrollPane.getVerticalScrollBar().setUnitIncrement(20);
         graphLabel = new JLabel();
@@ -59,7 +54,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
     }
 
     private void makeDialog(JFrame frame) {
-        dialog = new JDialog(frame, "Graph Viewer - " + textPane.getTextSource().getDocID());
+        dialog = new JDialog(frame, "Graph Viewer");
 
         dialog.setLayout(new BorderLayout());
 
@@ -88,21 +83,15 @@ public class GraphViewer implements ProfileListener, GraphListener {
 
 
     void addNewGraphSpace(String graphID) {
-        textPane.getTextSource().getAnnotationManager().addGraphSpace(graphID);
+        controller.getSelectionManager().getActiveTextSource().getAnnotationManager().addGraphSpace(graphID);
     }
 
     mxGraphComponent getCurrentGraphComponent() {
         return currentGraphComponent;
     }
 
-    private mxGraphComponent getGraphComponent(String graphID) {
-        if (graphID == null) return currentGraphComponent;
-        for (mxGraphComponent graphComponent : graphComponentList) {
-            if (graphComponent.getName().equals(graphID)) {
-                return graphComponent;
-            }
-        }
-        return null;
+    private mxGraphComponent getGraphComponent(GraphSpace graphSpace) {
+        return graphComponentMap.get(graphSpace);
     }
 
     private void setupListeners(mxGraphComponent graphComponent) {
@@ -220,11 +209,10 @@ public class GraphViewer implements ProfileListener, GraphListener {
 
     }
 
-    public void goToAnnotationVertex(String graphID, Annotation annotation) {
+    public void goToAnnotationVertex(GraphSpace graphSpace, Annotation annotation) {
         if (annotation != null) {
-            showGraph(getGraphComponent(graphID));
+            showGraph(getGraphComponent(graphSpace));
             if (currentGraphComponent != null) {
-                GraphSpace graphSpace = (GraphSpace) currentGraphComponent.getGraph();
                 List<Object> vertices = graphSpace.getVerticesForAnnotation(annotation);
                 if (vertices.size() > 0) {
                     graphSpace.setSelectionCells(vertices);
@@ -249,12 +237,11 @@ public class GraphViewer implements ProfileListener, GraphListener {
         if (currentGraphComponent != null) {
             GraphSpace graph = (GraphSpace) currentGraphComponent.getGraph();
 
-            textPane.getTextSource().getAnnotationManager().removeGraphSpace(graph);
+            controller.getSelectionManager().getActiveTextSource().getAnnotationManager().removeGraphSpace(graph);
 
-            int index = graphComponentList.indexOf(currentGraphComponent);
-            graphComponentList.remove(currentGraphComponent);
-            if (graphComponentList.size() > 0) {
-                showGraph(graphComponentList.get(index == 0 ? 0 : index - 1));
+            graphComponentMap.remove(graph);
+            if (graphComponentMap.size() > 0) {
+                showGraph(graphComponentMap.values().iterator().next());
             }
             graphViewMenu.updateMenus();
         }
@@ -273,21 +260,20 @@ public class GraphViewer implements ProfileListener, GraphListener {
         }
     }
 
-    public void addGraph(GraphSpace graph) {
-        log.warn("Knowtator: GraphViewer: Adding graph " + graph.getId());
+    public void addGraph(GraphSpace graphSpace) {
+        log.warn("Knowtator: GraphViewer: Adding graph space " + graphSpace.getId());
 
-        mxGraphComponent graphComponent = new mxGraphComponent(graph);
+        mxGraphComponent graphComponent = new mxGraphComponent(graphSpace);
         graphComponent.getViewport().setOpaque(true);
         graphComponent.getViewport().setBackground(Color.white);
         graphComponent.setDragEnabled(false);
         graphComponent.setSize(new Dimension(800, 800));
         graphComponent.getGraphControl().add(scrollPane, 0);
-        graphComponent.setName(graph.getId());
+        graphComponent.setName(graphSpace.getId());
 
         setupListeners(graphComponent);
 
-
-        graphComponentList.add(graphComponent);
+        graphComponentMap.put(graphSpace, graphComponent);
 
         showGraph(graphComponent);
         executeLayout();
@@ -332,8 +318,8 @@ public class GraphViewer implements ProfileListener, GraphListener {
         currentGraphComponent.setName(newGraphID);
     }
 
-    List<mxGraphComponent> getGraphComponentList() {
-        return graphComponentList;
+    Map<GraphSpace, mxGraphComponent> getGraphComponentMap() {
+        return graphComponentMap;
     }
 
     void addSelectedAnnotationAsVertex() {
@@ -359,7 +345,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
 
     @Override
     public void profileSelectionChanged(Profile profile) {
-        graphComponentList.forEach(graphComponent -> ((GraphSpace) graphComponent.getGraph()).reDrawGraph());
+        graphComponentMap.keySet().forEach(GraphSpace::reDrawGraph);
     }
 
     @Override
@@ -369,16 +355,21 @@ public class GraphViewer implements ProfileListener, GraphListener {
 
     @Override
     public void colorChanged() {
-        graphComponentList.forEach(graphComponent -> ((GraphSpace) graphComponent.getGraph()).reDrawGraph());
+        graphComponentMap.keySet().forEach(GraphSpace::reDrawGraph);
     }
 
     @Override
     public void newGraph(GraphSpace graphSpace) {
-        if(graphSpace.getTextSource() == textPane.getTextSource()) addGraph(graphSpace);
+        if (graphSpace.getTextSource() == controller.getSelectionManager().getActiveTextSource()) addGraph(graphSpace);
     }
 
     @Override
     public void removeGraph(GraphSpace graphSpace) {
 
+    }
+
+    public void removeAllGraphs() {
+        graphComponentMap = new HashMap<>();
+        dialog.remove(currentGraphComponent);
     }
 }

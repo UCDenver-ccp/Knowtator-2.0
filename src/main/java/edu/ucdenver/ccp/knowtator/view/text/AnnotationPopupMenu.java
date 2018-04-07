@@ -4,6 +4,7 @@ import com.mxgraph.model.mxCell;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -18,12 +19,14 @@ class AnnotationPopupMenu extends JPopupMenu {
     private MouseEvent e;
     private TextPane textPane;
     private KnowtatorController controller;
+    private KnowtatorView view;
 
 
-    AnnotationPopupMenu(MouseEvent e, TextPane textPane, KnowtatorController controller) {
+    AnnotationPopupMenu(MouseEvent e, TextPane textPane, KnowtatorController controller, KnowtatorView view) {
         this.e = e;
         this.textPane = textPane;
         this.controller = controller;
+        this.view = view;
     }
 
     private JMenuItem addAnnotationCommand() {
@@ -84,8 +87,8 @@ class AnnotationPopupMenu extends JPopupMenu {
                     if (vertex != null) {
                         JMenuItem menuItem = new JMenuItem(graphSpace.getId());
                         menuItem.addActionListener(e1 -> {
-                            textPane.getGraphViewer().getDialog().setVisible(true);
-                            textPane.getGraphViewer().goToAnnotationVertex(graphSpace.getId(), controller.getSelectionManager().getSelectedAnnotation());
+                            view.getGraphViewer().getDialog().setVisible(true);
+                            view.getGraphViewer().goToAnnotationVertex(graphSpace, controller.getSelectionManager().getSelectedAnnotation());
                         });
                         jMenu.add(menuItem);
                     }

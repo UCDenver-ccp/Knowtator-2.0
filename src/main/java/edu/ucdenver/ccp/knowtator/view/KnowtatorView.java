@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator.view;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.view.graph.GraphViewer;
 import edu.ucdenver.ccp.knowtator.view.info.FindPanel;
 import edu.ucdenver.ccp.knowtator.view.info.InfoPanel;
 import edu.ucdenver.ccp.knowtator.view.menus.IAAMenu;
@@ -24,6 +25,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     private KnowtatorController controller;
     private TextViewer textViewer;
+    private GraphViewer graphViewer;
     private InfoPanel infoPanel;
     private FindPanel findPanel;
     private ProjectMenu projectMenu;
@@ -95,16 +97,11 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     @Override
     public void initialiseClassView() {
-//        try {
-//            UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
-//        } catch (UnsupportedLookAndFeelException e) {
-//            e.printStackTrace();
-//        }
-//        UIManager.getLookAndFeelDefaults().put("ClassLoader", Plastic3DLookAndFeel.class.getClassLoader());
         controller = new KnowtatorController(this);
         controller.setUpOWL(getOWLWorkspace(), getOWLModelManager());
 
         textViewer = new TextViewer(controller, this);
+        graphViewer = new GraphViewer((JFrame) SwingUtilities.getWindowAncestor(this), controller, this);
         infoPanel = new InfoPanel(controller);
         findPanel = new FindPanel(this);
 
@@ -118,6 +115,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         controller.addTextSourceListener(textViewer);
         controller.addProjectListener(textViewer);
         controller.addProfileListener(profileMenu);
+        controller.addProfileListener(graphViewer);
+        controller.addGraphListener(graphViewer);
 
         getOWLModelManager().addOntologyChangeListener(controller.getTextSourceManager());
 
@@ -165,5 +164,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
         add(menuBar, BorderLayout.NORTH);
 
+    }
+
+    public GraphViewer getGraphViewer() {
+        return graphViewer;
     }
 }

@@ -10,7 +10,6 @@ import edu.ucdenver.ccp.knowtator.model.annotation.Span;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.graph.GraphViewer;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -28,7 +27,7 @@ import static java.lang.Math.min;
 public class TextPane extends JTextPane implements AnnotationListener, SpanListener, ProfileListener {
 
 	private static final Logger log = Logger.getLogger(KnowtatorController.class);
-	private GraphViewer graphViewer;
+	private final KnowtatorView view;
 
 	private KnowtatorController controller;
 	private TextSource textSource;
@@ -36,22 +35,14 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 
 	private boolean isVisible;
 
-	TextPane(KnowtatorController controller, KnowtatorView view, TextSource textSource) {
+	TextPane(KnowtatorView view, KnowtatorController controller, TextSource textSource) {
 		super();
+		this.view = view;
 		this.controller = controller;
 		this.textSource = textSource;
 
 		this.setEditable(false);
 
-		if (textSource != null) {
-			graphViewer = new GraphViewer((JFrame) SwingUtilities.getWindowAncestor(view), controller, view, this);
-            textSource.getAnnotationManager().getGraphSpaces().forEach(graphSpace -> {
-            	graphViewer.addGraph(graphSpace);
-            	graphSpace.connectEdgesToProperties();
-			});
-			controller.addProfileListener(graphViewer);
-			controller.addGraphListener(graphViewer);
-        }
 		controller.addSpanListener(this);
 		controller.addConceptAnnotationListener(this);
 		controller.addProfileListener(this);
@@ -88,7 +79,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 
 	private void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
 		if (isVisible) {
-			AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e, this, controller);
+			AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e, this, controller, view);
 
 			Map<Span, Annotation> spansContainingLocation = textSource.getAnnotationManager().getSpanMap(press_offset);
 
@@ -259,10 +250,6 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		}
 	}
 
-	GraphViewer getGraphViewer() {
-		return graphViewer;
-	}
-
 	@Override
 	public void annotationAdded(Annotation newAnnotation) {
 		setSelection(newAnnotation.getSpans().first(), newAnnotation);
@@ -278,7 +265,6 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	public void annotationSelectionChanged(Annotation annotation) {
 		if (isVisible) {
 			refreshHighlights();
-			graphViewer.goToAnnotationVertex(null, annotation);
 		}
 	}
 
