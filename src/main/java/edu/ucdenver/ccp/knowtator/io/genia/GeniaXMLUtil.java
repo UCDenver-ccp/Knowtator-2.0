@@ -1,7 +1,7 @@
-package edu.ucdenver.ccp.knowtator.model.io.genia;
+package edu.ucdenver.ccp.knowtator.io.genia;
 
+import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.io.BasicIOUtil;
 
 import java.io.File;
 

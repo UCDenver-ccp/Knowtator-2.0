@@ -3,10 +3,10 @@ package edu.ucdenver.ccp.knowtator.model;
 
 import com.google.common.io.Files;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.model.annotation.AnnotationManager;
 import edu.ucdenver.ccp.knowtator.model.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;

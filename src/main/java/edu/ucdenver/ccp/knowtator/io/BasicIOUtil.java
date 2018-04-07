@@ -1,4 +1,4 @@
-package edu.ucdenver.ccp.knowtator.model.io;
+package edu.ucdenver.ccp.knowtator.io;
 
 import edu.ucdenver.ccp.knowtator.model.Savable;
 

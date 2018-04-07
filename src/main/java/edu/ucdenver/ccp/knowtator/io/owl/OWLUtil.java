@@ -1,8 +1,8 @@
-package edu.ucdenver.ccp.knowtator.model.io.owl;
+package edu.ucdenver.ccp.knowtator.io.owl;
 
 import com.google.common.base.Optional;
+import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLAPIDataExtractor;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLModelManager;

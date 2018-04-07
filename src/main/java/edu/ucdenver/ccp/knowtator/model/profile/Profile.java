@@ -1,9 +1,9 @@
 package edu.ucdenver.ccp.knowtator.model.profile;
 
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLAttributes;
-import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
-import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;

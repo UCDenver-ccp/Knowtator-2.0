@@ -1,4 +1,4 @@
-package edu.ucdenver.ccp.knowtator.model.io.brat;
+package edu.ucdenver.ccp.knowtator.io.brat;
 
 
 /**

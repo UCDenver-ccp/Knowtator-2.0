@@ -1,12 +1,12 @@
 package edu.ucdenver.ccp.knowtator.model.textsource;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
+import edu.ucdenver.ccp.knowtator.io.knowtator.OldKnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.io.brat.StandoffTags;
-import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLAttributes;
-import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
-import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.io.knowtator.OldKnowtatorXMLAttributes;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.*;

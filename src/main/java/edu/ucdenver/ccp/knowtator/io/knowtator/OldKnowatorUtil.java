@@ -1,7 +1,7 @@
-package edu.ucdenver.ccp.knowtator.model.io.knowtator;
+package edu.ucdenver.ccp.knowtator.io.knowtator;
 
+import edu.ucdenver.ccp.knowtator.io.XMLUtil;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
-import edu.ucdenver.ccp.knowtator.model.io.XMLUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 

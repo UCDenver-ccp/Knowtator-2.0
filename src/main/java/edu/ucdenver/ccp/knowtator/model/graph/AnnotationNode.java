@@ -2,10 +2,10 @@ package edu.ucdenver.ccp.knowtator.model.graph;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
-import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLAttributes;
-import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

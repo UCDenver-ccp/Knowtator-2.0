@@ -1,4 +1,4 @@
-package edu.ucdenver.ccp.knowtator.model.io.knowtator;
+package edu.ucdenver.ccp.knowtator.io.knowtator;
 
 public class KnowtatorXMLTags {
 

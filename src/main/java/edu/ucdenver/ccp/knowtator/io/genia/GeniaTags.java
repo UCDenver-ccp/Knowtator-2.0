@@ -1,4 +1,4 @@
-package edu.ucdenver.ccp.knowtator.model.io.genia;
+package edu.ucdenver.ccp.knowtator.io.genia;
 
 public class GeniaTags {
 

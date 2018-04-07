@@ -2,9 +2,9 @@ package edu.ucdenver.ccp.knowtator.model.graph;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLAttributes;
-import edu.ucdenver.ccp.knowtator.model.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.w3c.dom.Document;
