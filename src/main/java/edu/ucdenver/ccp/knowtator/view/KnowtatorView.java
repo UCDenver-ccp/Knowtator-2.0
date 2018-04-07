@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.view.info.FindPanel;
 import edu.ucdenver.ccp.knowtator.view.info.InfoPanel;
 import edu.ucdenver.ccp.knowtator.view.menus.IAAMenu;
@@ -20,10 +20,9 @@ import java.io.File;
 
 public class KnowtatorView extends AbstractOWLClassViewComponent implements DropTargetListener {
 
-    private static final Logger log = Logger.getLogger(KnowtatorManager.class);
+    private static final Logger log = Logger.getLogger(KnowtatorController.class);
 
-    @SuppressWarnings("WeakerAccess")
-    KnowtatorManager manager;
+    private KnowtatorController controller;
     private TextViewer textViewer;
     private InfoPanel infoPanel;
     private FindPanel findPanel;
@@ -54,7 +53,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
         // For some reason, clicking yes here discards changes, even saved ones...
         if (JOptionPane.showConfirmDialog(null, "Save changes to Knowtator project?") == JOptionPane.OK_OPTION) {
-            manager.getProjectManager().saveProject();
+            controller.getProjectManager().saveProject();
         }
     }
 
@@ -91,7 +90,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     public void close(File file) {
         initialiseClassView();
         log.warn("3.a: " + file);
-        this.manager.getProjectManager().loadProject(file);
+        this.controller.getProjectManager().loadProject(file);
     }
 
     @Override
@@ -102,25 +101,25 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 //            e.printStackTrace();
 //        }
 //        UIManager.getLookAndFeelDefaults().put("ClassLoader", Plastic3DLookAndFeel.class.getClassLoader());
-        manager = new KnowtatorManager();
-        manager.setUpOWL(getOWLWorkspace(), getOWLModelManager());
+        controller = new KnowtatorController();
+        controller.setUpOWL(getOWLWorkspace(), getOWLModelManager());
 
-        textViewer = new TextViewer(manager, this);
+        textViewer = new TextViewer(controller, this);
         infoPanel = new InfoPanel(this);
         findPanel = new FindPanel(this);
 
-        projectMenu = new ProjectMenu(manager);
-        viewMenu = new ViewMenu(manager);
-        profileMenu = new ProfileMenu(manager);
-        iaaMenu = new IAAMenu(manager);
+        projectMenu = new ProjectMenu(controller);
+        viewMenu = new ViewMenu(controller);
+        profileMenu = new ProfileMenu(controller);
+        iaaMenu = new IAAMenu(controller);
 
-        manager.addSpanListener(infoPanel);
-        manager.addAnnotationListener(infoPanel);
-        manager.addTextSourceListener(textViewer);
-        manager.addProjectListener(textViewer);
-        manager.addProfileListener(profileMenu);
+        controller.addSpanListener(infoPanel);
+        controller.addAnnotationListener(infoPanel);
+        controller.addTextSourceListener(textViewer);
+        controller.addProjectListener(textViewer);
+        controller.addProfileListener(profileMenu);
 
-        getOWLModelManager().addOntologyChangeListener(manager.getTextSourceManager());
+        getOWLModelManager().addOntologyChangeListener(controller.getTextSourceManager());
 
         DropTarget dt = new DropTarget(this, this);
         dt.setActive(true);
@@ -131,7 +130,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     private void setupInitial() {
 //        File project = new File("E:/Documents/repos/Knowtator-2.0/src/test/resources/test_project/test_project.knowtator");
-//        manager.loadProject(project);
+//        controller.loadProject(project);
     }
 
     private void createUI() {

@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.model.textsource;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
@@ -26,10 +26,10 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
 
 
     private List<TextSource> textSources;
-    private KnowtatorManager manager;
+    private KnowtatorController controller;
 
-    public TextSourceManager(KnowtatorManager manager) {
-        this.manager = manager;
+    public TextSourceManager(KnowtatorController controller) {
+        this.controller = controller;
         textSources = new ArrayList<>();
     }
 
@@ -37,7 +37,7 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
         String docID = FilenameUtils.getBaseName(fileLocation);
         Optional<TextSource> newTextSourceMatch = textSources.stream().filter(textSource -> textSource.getDocID().equals(docID)).findAny();
         if (!newTextSourceMatch.isPresent()) {
-            TextSource newTextSource = new TextSource(manager, file, docID);
+            TextSource newTextSource = new TextSource(controller, file, docID);
             textSources.add(newTextSource);
             return newTextSource;
         } else {
@@ -101,8 +101,8 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
 
     }
 
-    public KnowtatorManager getManager() {
-        return manager;
+    public KnowtatorController getController() {
+        return controller;
     }
 
     /*

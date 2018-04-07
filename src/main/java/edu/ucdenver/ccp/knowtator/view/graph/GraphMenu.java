@@ -1,7 +1,7 @@
 package edu.ucdenver.ccp.knowtator.view.graph;
 
 import com.mxgraph.util.mxCellRenderer;
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -14,12 +14,12 @@ import java.io.IOException;
 
 class GraphMenu extends JMenu {
 
-    private KnowtatorManager manager;
+    private KnowtatorController controller;
     private GraphViewer graphViewer;
 
-    GraphMenu(KnowtatorManager manager, GraphViewer graphViewer) {
+    GraphMenu(KnowtatorController controller, GraphViewer graphViewer) {
         super("Graph");
-        this.manager = manager;
+        this.controller = controller;
         this.graphViewer = graphViewer;
 
         add(addNewGraphCommand());
@@ -55,7 +55,7 @@ class GraphMenu extends JMenu {
         menuItem.addActionListener(e -> {
             if (graphViewer.getCurrentGraphComponent() != null) {
                 JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setCurrentDirectory(manager.getProjectManager().getProjectLocation());
+                fileChooser.setCurrentDirectory(controller.getProjectManager().getProjectLocation());
                 FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
                 fileChooser.setFileFilter(fileFilter);
                 if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {

@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.model.annotation;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.Savable;
@@ -27,15 +27,15 @@ public class AnnotationManager implements Savable {
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(AnnotationManager.class);
 
-    private final KnowtatorManager manager;
+    private final KnowtatorController controller;
 
     private TreeMap<Span, Annotation> spanMap;
     private TextSource textSource;
     private Map<String, Annotation> annotationMap;
     private List<GraphSpace> graphSpaces;
 
-    public AnnotationManager(KnowtatorManager manager, TextSource textSource) {
-        this.manager = manager;
+    public AnnotationManager(KnowtatorController controller, TextSource textSource) {
+        this.controller = controller;
         this.textSource = textSource;
         annotationMap = new HashMap<>();
         spanMap = new TreeMap<>(Span::compare);
@@ -56,9 +56,9 @@ public class AnnotationManager implements Savable {
         annotationMap.put(newAnnotation.getID(), newAnnotation);
 
         newAnnotation.getSpans().forEach(span -> spanMap.put(span, newAnnotation));
-        manager.annotationAddedEvent(newAnnotation);
+        controller.annotationAddedEvent(newAnnotation);
 
-        OWLClass owlClass = manager.getOWLAPIDataExtractor().getOWLClassByID((String) newAnnotation.getOwlClass());
+        OWLClass owlClass = controller.getOWLAPIDataExtractor().getOWLClassByID((String) newAnnotation.getOwlClass());
         if (owlClass != null) {
             newAnnotation.setOwlClass(owlClass);
         }
@@ -67,12 +67,12 @@ public class AnnotationManager implements Savable {
     public void addSpanToAnnotation(Annotation annotation, Span newSpan) {
         annotation.addSpan(newSpan);
         spanMap.put(newSpan, annotation);
-        manager.spanAddedEvent(newSpan);
+        controller.spanAddedEvent(newSpan);
     }
 
     private void removeAnnotationFromSpanMap(Annotation annotationToRemove) {
         annotationToRemove.getSpans().forEach(span -> spanMap.remove(span));
-        manager.annotationRemovedEvent(annotationToRemove);
+        controller.annotationRemovedEvent(annotationToRemove);
 
     }
 
@@ -80,13 +80,13 @@ public class AnnotationManager implements Savable {
         Annotation annotationToRemove = annotationMap.get(annotationToRemoveID);
         annotationMap.remove(annotationToRemoveID);
         if (annotationToRemove != null) removeAnnotationFromSpanMap(annotationToRemove);
-        manager.annotationRemovedEvent(annotationToRemove);
+        controller.annotationRemovedEvent(annotationToRemove);
     }
 
     public void removeSpanFromAnnotation(Annotation annotation, Span span) {
         annotation.removeSpan(span);
         spanMap.remove(span);
-        manager.spanRemovedEvent();
+        controller.spanRemovedEvent();
     }
 
     public Collection<Annotation> getAnnotations() {
@@ -160,7 +160,7 @@ public class AnnotationManager implements Savable {
 
     public void addAnnotation(String classID, Span span) {
         if (classID != null) {
-            Annotation newAnnotation = new Annotation(classID, null, textSource, manager.getProfileManager().getCurrentProfile(), "identity");
+            Annotation newAnnotation = new Annotation(classID, null, textSource, controller.getProfileManager().getCurrentProfile(), "identity");
             newAnnotation.addSpan(span);
             addAnnotation(newAnnotation);
         }
@@ -190,9 +190,9 @@ public class AnnotationManager implements Savable {
     }
 
     public GraphSpace addGraphSpace(String title) {
-        GraphSpace newGraphSpace = new GraphSpace(manager, textSource, title);
+        GraphSpace newGraphSpace = new GraphSpace(controller, textSource, title);
         graphSpaces.add(newGraphSpace);
-        manager.newGraphEvent(newGraphSpace);
+        controller.newGraphEvent(newGraphSpace);
 
         return newGraphSpace;
     }
@@ -221,7 +221,7 @@ public class AnnotationManager implements Savable {
             profileID = annotationElement.getAttribute(KnowtatorXMLAttributes.ANNOTATOR);
             type = annotationElement.getAttribute(KnowtatorXMLAttributes.TYPE);
 
-            profile = manager.getProfileManager().addNewProfile(profileID);
+            profile = controller.getProfileManager().addNewProfile(profileID);
             classID = ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0)).getAttribute(KnowtatorXMLAttributes.ID);
 
             newAnnotation = new Annotation(classID, annotationID, textSource, profile, type);
@@ -263,9 +263,9 @@ public class AnnotationManager implements Savable {
             Profile profile;
             try {
                 String profileID = annotationElement.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATOR).item(0).getTextContent();
-                profile = manager.getProfileManager().addNewProfile(profileID);
+                profile = controller.getProfileManager().addNewProfile(profileID);
             } catch (NullPointerException npe) {
-                profile = manager.getProfileManager().getDefaultProfile();
+                profile = controller.getProfileManager().getDefaultProfile();
             }
 
             annotationID = ((Element) annotationElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID);
@@ -323,7 +323,7 @@ public class AnnotationManager implements Savable {
                         target = (AnnotationNode) vertices1.get(0);
                     }
 
-                    Triple triple = oldKnowtatorGraphSpace.addTriple(source, target, null, manager.getProfileManager().getCurrentProfile(), property, "", "");
+                    Triple triple = oldKnowtatorGraphSpace.addTriple(source, target, null, controller.getProfileManager().getCurrentProfile(), property, "", "");
                     log.warn("OLD KNOWTATOR: added TRIPLE: " + triple);
                 }
             }
@@ -334,7 +334,7 @@ public class AnnotationManager implements Savable {
     @Override
     public void readFromBratStandoff(File file, Map<Character, List<String[]>> annotationMap, String content) {
 
-        Profile profile = manager.getProfileManager().getDefaultProfile();
+        Profile profile = controller.getProfileManager().getDefaultProfile();
 
         annotationMap.get(StandoffTags.TEXTBOUNDANNOTATION).forEach(annotation -> {
             Annotation newAnnotation = new Annotation(annotation[1].split(StandoffTags.textBoundAnnotationTripleDelimiter)[0], annotation[0], textSource, profile, "identity");
@@ -398,7 +398,7 @@ public class AnnotationManager implements Savable {
 
     public void removeGraphSpace(GraphSpace graphSpace) {
         graphSpaces.remove(graphSpace);
-        manager.removeGraphEvent(graphSpace);
+        controller.removeGraphEvent(graphSpace);
     }
 
 }

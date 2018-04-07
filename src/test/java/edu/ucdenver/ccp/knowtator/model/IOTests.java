@@ -2,7 +2,7 @@
 package edu.ucdenver.ccp.knowtator.model;
 
 import com.google.common.io.Files;
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.model.annotation.AnnotationManager;
 import edu.ucdenver.ccp.knowtator.model.graph.AnnotationNode;
@@ -20,7 +20,7 @@ public class IOTests {
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(IOTests.class);
 
-    private KnowtatorManager manager;
+    private KnowtatorController controller;
 
     private String[] projectFileNames = new String[]{"test_project", "old_project"};
     private String[] articleFileNames = new String[]{"document1", "document2", "document3", "document1_old", "brat_test"};
@@ -58,18 +58,18 @@ public class IOTests {
 
 //    @Test
 //    public void loadLargeOld() {
-//        manager = new KnowtatorManager();
+//        controller = new KnowtatorController();
 //
 //        int projectID = 2;
 //        String projectFileName = projectFileNames[projectID];
 //        File projectFile = getProjectFile(projectFileName);
 //
-//        manager.getProjectManager().loadProject(projectFile);
+//        controller.getProjectManager().loadProject(projectFile);
 //    }
 
     @Test
     public void successfulLoad() {
-        manager = new KnowtatorManager();
+        controller = new KnowtatorController();
 
         int projectID = 0;
         int articleID = 0;
@@ -77,9 +77,9 @@ public class IOTests {
         String projectFileName = projectFileNames[projectID];
         File projectFile = getProjectFile(projectFileName);
 
-        manager.getProjectManager().loadProject(projectFile);
+        controller.getProjectManager().loadProject(projectFile);
 
-        TextSource textSource = manager.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID])).findAny().get();
+        TextSource textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID])).findAny().get();
         String content;
         try {
             content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
@@ -102,7 +102,7 @@ public class IOTests {
         assert numSpans == 3 : "There were " + numSpans + " spans";
 
 
-        textSource = manager.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID2])).findAny().get();
+        textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID2])).findAny().get();
 
         try {
             content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
@@ -127,7 +127,7 @@ public class IOTests {
 
     @Test
     public void successfulAddDocument() {
-        manager = new KnowtatorManager();
+        controller = new KnowtatorController();
 
         int projectID = 0;
         int articleID = 1;
@@ -138,11 +138,11 @@ public class IOTests {
         String articleFileName = articleFileNames[articleID];
         File articleFile = getArticleFile(projectFileName, articleFileName);
 
-        manager.getProjectManager().loadProject(projectFile);
+        controller.getProjectManager().loadProject(projectFile);
 
-        manager.getProjectManager().addDocument(articleFile);
+        controller.getProjectManager().addDocument(articleFile);
 
-        TextSource textSource = manager.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID])).findAny().get();
+        TextSource textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID])).findAny().get();
         String content;
         try {
             content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
@@ -154,7 +154,7 @@ public class IOTests {
 
     @Test(expected = RuntimeException.class)
     public void successfulClose() {
-        manager = new KnowtatorManager();
+        controller = new KnowtatorController();
 
         int projectID = 0;
         int articleID = 0;
@@ -162,18 +162,18 @@ public class IOTests {
         String projectFileName = projectFileNames[projectID];
         File projectFile = getProjectFile(projectFileName);
 
-        manager.getProjectManager().loadProject(projectFile);
-        manager.getProjectManager().closeProject(null, null);
+        controller.getProjectManager().loadProject(projectFile);
+        controller.getProjectManager().closeProject(null, null);
 
-        manager.getTextSourceManager().getTextSources().stream().filter(textSource -> textSource.getDocID().equals(articleFileNames[articleID])).findAny().orElseThrow(RuntimeException::new);
+        controller.getTextSourceManager().getTextSources().stream().filter(textSource -> textSource.getDocID().equals(articleFileNames[articleID])).findAny().orElseThrow(RuntimeException::new);
     }
 
     @Test
     public void successfulMakeNew() {
-        manager = new KnowtatorManager();
+        controller = new KnowtatorController();
 
         File newProject = Files.createTempDir();
-        manager.getProjectManager().newProject(newProject);
+        controller.getProjectManager().newProject(newProject);
 
         assert new File(newProject, "Articles").exists();
         assert new File(newProject, "Annotations").exists();
@@ -185,7 +185,7 @@ public class IOTests {
 
     @Test
     public void successfulLoadOld() {
-        manager = new KnowtatorManager();
+        controller = new KnowtatorController();
 
         int projectID = 1;
         int articleID = 3;
@@ -193,8 +193,8 @@ public class IOTests {
         String projectFileName = projectFileNames[projectID];
         File projectFile = getProjectFile(projectFileName);
 
-        manager.getProjectManager().loadProject(projectFile);
-        TextSource textSource = manager.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID])).findAny().get();
+        controller.getProjectManager().loadProject(projectFile);
+        TextSource textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID])).findAny().get();
         String content;
         try {
             content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
@@ -215,7 +215,7 @@ public class IOTests {
 
     @Test
     public void successfulAddGraphSpace() {
-        manager = new KnowtatorManager();
+        controller = new KnowtatorController();
 
         int projectID = 0;
         int articleID = 0;
@@ -223,9 +223,9 @@ public class IOTests {
         String projectFileName = projectFileNames[projectID];
         File projectFile = getProjectFile(projectFileName);
 
-        manager.getProjectManager().loadProject(projectFile);
+        controller.getProjectManager().loadProject(projectFile);
 
-        TextSource textSource = manager.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID])).findAny().get();
+        TextSource textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID])).findAny().get();
         String content;
         try {
             content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
@@ -240,7 +240,7 @@ public class IOTests {
 
         AnnotationNode v1 = graphSpace.addNode("node_0", annotationManager.getAnnotation("mention_0"));
         AnnotationNode v2 = graphSpace.addNode("node_1", annotationManager.getAnnotation("mention_1"));
-        graphSpace.addTriple(v1, v2, "edge_1", manager.getProfileManager().getCurrentProfile(), "property_0", "", "");
+        graphSpace.addTriple(v1, v2, "edge_1", controller.getProfileManager().getCurrentProfile(), "property_0", "", "");
 
         int numGraphSpaces = annotationManager.getGraphSpaces().size();
         int numVertices = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace1 -> graphSpace1.getChildVertices(graphSpace.getDefaultParent()).length).sum();
@@ -253,7 +253,7 @@ public class IOTests {
 
     @Test
     public void successfulSave() {
-        manager = new KnowtatorManager();
+        controller = new KnowtatorController();
 
 
         int projectID = 0;
@@ -271,8 +271,8 @@ public class IOTests {
             e.printStackTrace();
         }
         File projectFile = new File(projectDirectory, resourceProjectFile.getName());
-        manager.getProjectManager().loadProject(projectFile);
-        manager.getProjectManager().saveProject();
+        controller.getProjectManager().loadProject(projectFile);
+        controller.getProjectManager().saveProject();
         successfulLoad();
 
         projectDirectory.deleteOnExit();
@@ -280,7 +280,7 @@ public class IOTests {
 
     @Test
     public void successfulExportToBrat() {
-        manager = new KnowtatorManager();
+        controller = new KnowtatorController();
 
         int projectID = 0;
         int articleID = 4;
@@ -292,9 +292,9 @@ public class IOTests {
 
         File outputFile = new File("E:/Documents/Test/brat_test.ann");
 
-        manager.getProjectManager().loadProject(projectFile);
-        manager.getProjectManager().loadFromFormat(BratStandoffUtil.class, bratAnnotationFile);
-        manager.getProjectManager().saveToFormat(BratStandoffUtil.class, manager.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(article)).findAny().get(), outputFile);
+        controller.getProjectManager().loadProject(projectFile);
+        controller.getProjectManager().loadFromFormat(BratStandoffUtil.class, bratAnnotationFile);
+        controller.getProjectManager().saveToFormat(BratStandoffUtil.class, controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(article)).findAny().get(), outputFile);
     }
 
 

@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.model.annotation;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.log4j.Logger;
@@ -41,7 +41,7 @@ public class AnnotationManagerTest {
     }
 
     public void setUp() {
-        KnowtatorManager manager = new KnowtatorManager();
+        KnowtatorController controller = new KnowtatorController();
 
         int projectID = 0;
         int articleID = 0;
@@ -49,12 +49,12 @@ public class AnnotationManagerTest {
         File project = getProjectFile(projectFileName);
         String articleName = articleFileNames[articleID];
 
-        manager.getProjectManager().loadProject(project);
+        controller.getProjectManager().loadProject(project);
 
         //noinspection ConstantConditions
-        textSource = manager.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleName)).findAny().get();
+        textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleName)).findAny().get();
         annotationManager = textSource.getAnnotationManager();
-        profile = manager.getProfileManager().addNewProfile("Default");
+        profile = controller.getProfileManager().addNewProfile("Default");
 
     }
 

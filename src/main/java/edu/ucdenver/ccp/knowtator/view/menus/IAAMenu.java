@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view.menus;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.iaa.IAAException;
 import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
 
@@ -9,16 +9,15 @@ import java.io.File;
 
 public class IAAMenu extends JMenu {
 
-    private KnowtatorManager manager;
+    private KnowtatorController controller;
     private JCheckBoxMenuItem classIAAChoice;
     private JCheckBoxMenuItem spanIAAChoice;
     private JCheckBoxMenuItem classAndSpanIAAChoice;
 
 
-
-    public IAAMenu(KnowtatorManager manager) {
+    public IAAMenu(KnowtatorController controller) {
         super("IAA");
-        this.manager = manager;
+        this.controller = controller;
 
         classIAAChoice = new JCheckBoxMenuItem("Class");
         spanIAAChoice = new JCheckBoxMenuItem("Span");
@@ -38,7 +37,7 @@ public class IAAMenu extends JMenu {
 
         runIAA.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(manager.getProjectManager().getProjectLocation());
+            fileChooser.setCurrentDirectory(controller.getProjectManager().getProjectLocation());
             fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             //
             // disable the "All files" option.
@@ -48,7 +47,7 @@ public class IAAMenu extends JMenu {
                 File outputDirectory = fileChooser.getSelectedFile();
 
                 try {
-                    KnowtatorIAA knowtatorIAA = new KnowtatorIAA(outputDirectory, manager);
+                    KnowtatorIAA knowtatorIAA = new KnowtatorIAA(outputDirectory, controller);
 
                     if (classIAAChoice.getState()) {
                         knowtatorIAA.runClassIAA();

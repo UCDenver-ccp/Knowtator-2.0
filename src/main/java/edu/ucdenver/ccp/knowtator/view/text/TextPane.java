@@ -1,7 +1,7 @@
 package edu.ucdenver.ccp.knowtator.view.text;
 
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
 import edu.ucdenver.ccp.knowtator.listeners.SpanListener;
@@ -29,10 +29,10 @@ import static java.lang.Math.min;
 
 public class TextPane extends JTextPane implements AnnotationListener, SpanListener, ProfileListener {
 
-	private static final Logger log = Logger.getLogger(KnowtatorManager.class);
+	private static final Logger log = Logger.getLogger(KnowtatorController.class);
 	private GraphViewer graphViewer;
 
-	private KnowtatorManager manager;
+	private KnowtatorController controller;
 	private KnowtatorView view;
 	private TextSource textSource;
 	private Span selectedSpan;
@@ -41,9 +41,9 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	private boolean focusOnSelectedSpan;
     private boolean isVisible;
 
-    TextPane(KnowtatorManager manager, KnowtatorView view, TextSource textSource) {
+	TextPane(KnowtatorController controller, KnowtatorView view, TextSource textSource) {
 		super();
-		this.manager = manager;
+		this.controller = controller;
 		this.view = view;
 		this.textSource = textSource;
 
@@ -53,17 +53,17 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		focusOnSelectedSpan = false;
 
 		if (textSource != null) {
-            graphViewer = new GraphViewer((JFrame) SwingUtilities.getWindowAncestor(view), manager, view, this);
+			graphViewer = new GraphViewer((JFrame) SwingUtilities.getWindowAncestor(view), controller, view, this);
             textSource.getAnnotationManager().getGraphSpaces().forEach(graphSpace -> {
             	graphViewer.addGraph(graphSpace);
             	graphSpace.connectEdgesToProperties();
 			});
-            manager.addProfileListener(graphViewer);
-            manager.addGraphListener(graphViewer);
+			controller.addProfileListener(graphViewer);
+			controller.addGraphListener(graphViewer);
         }
-		manager.addSpanListener(this);
-		manager.addConceptAnnotationListener(this);
-		manager.addProfileListener(this);
+		controller.addSpanListener(this);
+		controller.addConceptAnnotationListener(this);
+		controller.addProfileListener(this);
 
 		setupListeners();
 		requestFocusInWindow();
@@ -101,7 +101,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 
             Map<Span, Annotation> spansContainingLocation = textSource.getAnnotationManager().getSpanMap(
                     press_offset,
-                    filterByProfile ? manager.getProfileManager().getCurrentProfile() : null
+					filterByProfile ? controller.getProfileManager().getCurrentProfile() : null
             );
 
             if (SwingUtilities.isRightMouseButton(e)) {
@@ -127,7 +127,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	private void setSelectedSpan(Span span) {
 		selectedSpan = span;
 		focusOnSelectedSpan = true;
-		manager.spanSelectionChangedEvent(selectedSpan);
+		controller.spanSelectionChangedEvent(selectedSpan);
 	}
 
 	void setSelection(Span span, Annotation annotation) {
@@ -175,7 +175,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 				}
 			}
 			graphViewer.goToAnnotationVertex(null, selectedAnnotation);
-			manager.annotationSelectionChangedEvent(selectedAnnotation);
+			controller.annotationSelectionChangedEvent(selectedAnnotation);
 		}
 		if (selectedAnnotation != null) {
 			if (selectedAnnotation.isOwlClassSet()) {
@@ -185,7 +185,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	}
 
 	void previousSpan() {
-		TreeMap<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null, filterByProfile ? manager.getProfileManager().getCurrentProfile() : null);
+		TreeMap<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null, filterByProfile ? controller.getProfileManager().getCurrentProfile() : null);
 		Map.Entry<Span, Annotation> previous;
 		try {
             previous = annotationMap.containsKey(selectedSpan) ? annotationMap.lowerEntry(selectedSpan) : annotationMap.floorEntry(selectedSpan);
@@ -198,7 +198,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	}
 
 	void nextSpan() {
-		TreeMap<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null, filterByProfile ? manager.getProfileManager().getCurrentProfile() : null);
+		TreeMap<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null, filterByProfile ? controller.getProfileManager().getCurrentProfile() : null);
 
 		Map.Entry<Span, Annotation> next;
 		try {
@@ -264,7 +264,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 				}
 			}
 
-			Profile profile = manager.getProfileManager().getCurrentProfile();
+			Profile profile = controller.getProfileManager().getCurrentProfile();
 
 			//Remove all previous highlights in case a span has been deleted
 			getHighlighter().removeAllHighlights();
@@ -276,7 +276,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 			Span lastSpan = Span.makeDefaultSpan();
 			Color lastColor = null;
 
-			Map<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null, filterByProfile ? manager.getProfileManager().getCurrentProfile() : null);
+			Map<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null, filterByProfile ? controller.getProfileManager().getCurrentProfile() : null);
 			for (Map.Entry<Span, Annotation> entry : annotationMap.entrySet()) {
 				Span span = entry.getKey();
 				Annotation annotation = entry.getValue();
@@ -401,8 +401,8 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	}
 
 	void addAnnotation() {
-//		String className = manager.getOWLAPIDataExtractor().getSelectedOwlClassName();
-		String classID = manager.getOWLAPIDataExtractor().getSelectedOwlClassID();
+//		String className = controller.getOWLAPIDataExtractor().getSelectedOwlClassName();
+		String classID = controller.getOWLAPIDataExtractor().getSelectedOwlClassID();
 
 		if (classID == null) {
 			log.warn("No OWLClass selected");

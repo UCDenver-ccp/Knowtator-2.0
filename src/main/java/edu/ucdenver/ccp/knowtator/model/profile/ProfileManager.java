@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.model.profile;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
@@ -19,16 +19,16 @@ import java.util.Map;
 
 public class ProfileManager implements Savable {
 
-    private static final Logger log = Logger.getLogger(KnowtatorManager.class);
+    private static final Logger log = Logger.getLogger(KnowtatorController.class);
     private final Profile defaultProfile;
     private Profile currentProfile;
 
     private Map<String, Profile> profiles;
-    private KnowtatorManager manager;
+    private KnowtatorController controller;
 
 
-    public ProfileManager(KnowtatorManager manager) {
-        this.manager = manager;
+    public ProfileManager(KnowtatorController controller) {
+        this.controller = controller;
         profiles = new HashMap<>();
         defaultProfile = addNewProfile("Default");
     }
@@ -43,7 +43,7 @@ public class ProfileManager implements Savable {
 
         currentProfile = newProfile;
 
-        manager.profileAddedEvent(currentProfile);
+        controller.profileAddedEvent(currentProfile);
 
         return newProfile;
     }
@@ -54,12 +54,12 @@ public class ProfileManager implements Savable {
 
     public void switchAnnotator(Profile profile) {
         currentProfile = profile;
-        manager.profileSelectionChangedEvent(currentProfile);
+        controller.profileSelectionChangedEvent(currentProfile);
     }
 
     public void removeProfile(Profile profile) {
         profiles.remove(profile.getId());
-        manager.profileRemovedEvent();
+        controller.profileRemovedEvent();
 
     }
 

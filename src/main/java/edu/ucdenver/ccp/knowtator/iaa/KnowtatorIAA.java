@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.iaa;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.iaa.html.IAA2HTML;
 import edu.ucdenver.ccp.knowtator.iaa.html.SpanMatcherHTML;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.ClassAndSpanMatcher;
@@ -26,7 +26,7 @@ public class KnowtatorIAA {
 
 	//Project project;
 
-	private KnowtatorManager manager;
+    private KnowtatorController controller;
 
 	//KnowtatorProjectUtil kpu;
 
@@ -46,18 +46,18 @@ public class KnowtatorIAA {
 
 	@SuppressWarnings("unused")
 	public KnowtatorIAA(File outputDirectory,
-						//KnowtatorFilter filter,
-						//Project project,
-						KnowtatorManager manager
-						//MentionUtil mentionUtil,
-						//FilterUtil filterUtil
+                        //KnowtatorFilter filter,
+                        //Project project,
+                        KnowtatorController controller
+                        //MentionUtil mentionUtil,
+                        //FilterUtil filterUtil
 						) throws IAAException {
 
 		this.outputDirectory = outputDirectory;
 		//this.filter = filter;
-		this.textSources = new HashSet<>(manager.getTextSourceManager().getTextSources());
+        this.textSources = new HashSet<>(controller.getTextSourceManager().getTextSources());
 
-		this.manager = manager;
+        this.controller = controller;
 		annotationTexts = new HashMap<>();
 		annotationTextNames = new HashMap<>();
 
@@ -67,7 +67,7 @@ public class KnowtatorIAA {
 	}
 
 	private void initSetNames() {
-		setNames = manager.getProfileManager().getProfiles().keySet();
+        setNames = controller.getProfileManager().getProfiles().keySet();
 	}
 
 	private void initHTML() throws IAAException {

@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.model.project;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.io.owl.OWLUtil;
@@ -19,15 +19,15 @@ import java.util.Objects;
 
 public class ProjectManager {
     private static final Logger log = Logger.getLogger(ProjectManager.class);
-    private KnowtatorManager manager;
+    private KnowtatorController controller;
     private File projectLocation;
     private File articlesLocation;
     private File ontologiesLocation;
     private File annotationsLocation;
     private File profilesLocation;
 
-    public ProjectManager(KnowtatorManager manager) {
-        this.manager = manager;
+    public ProjectManager(KnowtatorController controller) {
+        this.controller = controller;
     }
 
     public File getProjectLocation() {
@@ -49,7 +49,7 @@ public class ProjectManager {
         }
         else {
             log.warn("2.b: " + file);
-            manager.close(file);
+            controller.close(file);
         }
     }
 
@@ -68,20 +68,20 @@ public class ProjectManager {
     private void loadProject() {
         if (ontologiesLocation != null) {
             log.warn("Loading ontologies");
-            loadFromFormat(OWLUtil.class, manager.getOWLAPIDataExtractor(), ontologiesLocation);
+            loadFromFormat(OWLUtil.class, controller.getOWLAPIDataExtractor(), ontologiesLocation);
         }
 
         if (profilesLocation != null) {
             log.warn("Loading profiles");
-            loadFromFormat(KnowtatorXMLUtil.class, manager.getProfileManager(), profilesLocation);
+            loadFromFormat(KnowtatorXMLUtil.class, controller.getProfileManager(), profilesLocation);
         }
 
         if (annotationsLocation != null) {
             log.warn("Loading annotations");
-            loadFromFormat(KnowtatorXMLUtil.class, manager.getTextSourceManager(), annotationsLocation);
+            loadFromFormat(KnowtatorXMLUtil.class, controller.getTextSourceManager(), annotationsLocation);
         }
 
-        manager.projectLoadedEvent();
+        controller.projectLoadedEvent();
     }
 
     /**
@@ -124,8 +124,8 @@ public class ProjectManager {
             //noinspection ResultOfMethodCallIgnored
             Arrays.stream(Objects.requireNonNull(annotationsLocation.listFiles())).forEach(File::delete);
 
-            this.saveToFormat(KnowtatorXMLUtil.class, manager.getProfileManager(), profilesLocation);
-            this.saveToFormat(KnowtatorXMLUtil.class, manager.getTextSourceManager(), annotationsLocation);
+            this.saveToFormat(KnowtatorXMLUtil.class, controller.getProfileManager(), profilesLocation);
+            this.saveToFormat(KnowtatorXMLUtil.class, controller.getTextSourceManager(), annotationsLocation);
         }
     }
 
@@ -137,8 +137,8 @@ public class ProjectManager {
                 e.printStackTrace();
             }
         }
-        TextSource newTextSource = manager.getTextSourceManager().addTextSource(null, file.getName());
-        manager.textSourceAddedEvent(newTextSource);
+        TextSource newTextSource = controller.getTextSourceManager().addTextSource(null, file.getName());
+        controller.textSourceAddedEvent(newTextSource);
     }
 
     public File getAnnotationsLocation() {
@@ -146,20 +146,20 @@ public class ProjectManager {
     }
 
     public void saveToFormat(Class<? extends BasicIOUtil> ioClass, File file) {
-        saveToFormat(ioClass, manager.getTextSourceManager(), file);
+        saveToFormat(ioClass, controller.getTextSourceManager(), file);
     }
 
     public void saveToFormat(Class<? extends BasicIOUtil> ioClass, Savable savable, File file) {
         try {
             BasicIOUtil util = ioClass.getDeclaredConstructor().newInstance();
-            util.write(savable != null ? savable : manager.getTextSourceManager(), file);
+            util.write(savable != null ? savable : controller.getTextSourceManager(), file);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | IOException e) {
             e.printStackTrace();
         }
     }
 
     public void loadFromFormat(Class<? extends BasicIOUtil> ioClass, File file) {
-        loadFromFormat(ioClass, manager.getTextSourceManager(), file);
+        loadFromFormat(ioClass, controller.getTextSourceManager(), file);
     }
 
     public void loadFromFormat(Class<? extends BasicIOUtil> ioClass, Savable savable, File file) {

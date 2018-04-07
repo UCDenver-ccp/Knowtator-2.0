@@ -5,7 +5,7 @@ import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
@@ -35,11 +35,11 @@ public class GraphSpace extends mxGraph implements Savable {
     private Logger log = Logger.getLogger(GraphSpace.class);
 
     private String id;
-    private KnowtatorManager manager;
+    private KnowtatorController controller;
     private TextSource textSource;
 
-    public GraphSpace(KnowtatorManager manager, TextSource textSource, String id) {
-        this.manager = manager;
+    public GraphSpace(KnowtatorController controller, TextSource textSource, String id) {
+        this.controller = controller;
         this.textSource = textSource;
         this.id = id;
         setCellsResizable(false);
@@ -144,7 +144,7 @@ public class GraphSpace extends mxGraph implements Savable {
             String quantifier = tripleElem.getAttribute(KnowtatorXMLAttributes.TRIPLE_QUANTIFIER);
             String quantifierValue = tripleElem.getAttribute(KnowtatorXMLAttributes.TRIPLE_VALUE);
 
-            Profile annotator = manager.getProfileManager().addNewProfile(annotatorID);
+            Profile annotator = controller.getProfileManager().addNewProfile(annotatorID);
             AnnotationNode source = (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(subjectID);
             AnnotationNode target = (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(objectID);
 
@@ -170,7 +170,7 @@ public class GraphSpace extends mxGraph implements Savable {
             String subjectAnnotationID = relationTriple[1].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
             String objectAnnotationID = relationTriple[2].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
 
-            Profile annotator = manager.getProfileManager().getDefaultProfile();
+            Profile annotator = controller.getProfileManager().getDefaultProfile();
 
             Annotation subjectAnnotation = textSource.getAnnotationManager().getAnnotation(subjectAnnotationID);
             List<Object> subjectAnnotationVertices = getVerticesForAnnotation(subjectAnnotation);
@@ -239,7 +239,7 @@ public class GraphSpace extends mxGraph implements Savable {
             if (edge instanceof Triple) {
                 Object value = ((Triple) edge).getValue();
                 if (value instanceof String) {
-                    OWLObjectProperty property = manager.getOWLAPIDataExtractor().getOWLObjectPropertyByID((String) value);
+                    OWLObjectProperty property = controller.getOWLAPIDataExtractor().getOWLObjectPropertyByID((String) value);
                     if (property != null) {
                         ((Triple) edge).setValue(property);
                     } else {
@@ -285,7 +285,7 @@ public class GraphSpace extends mxGraph implements Savable {
         g.setWidth(g.getWidth() + 200);
 
         Object owlClass = vertex.getAnnotation().getOwlClass();
-        Profile profile = manager.getProfileManager().getCurrentProfile();
+        Profile profile = controller.getProfileManager().getCurrentProfile();
         String color = Integer.toHexString(profile.getColor(owlClass).getRGB()).substring(2);
         String shape = mxConstants.SHAPE_RECTANGLE;
 

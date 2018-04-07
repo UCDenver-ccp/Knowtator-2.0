@@ -7,14 +7,14 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.util.mxMorphing;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.GraphListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.text.TextPane;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -34,7 +34,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
 
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(GraphViewer.class);
-    private final KnowtatorManager manager;
+    private final KnowtatorController controller;
     private final KnowtatorView view;
     private TextPane textPane;
     private JDialog dialog;
@@ -45,8 +45,8 @@ public class GraphViewer implements ProfileListener, GraphListener {
     private JLabel graphLabel;
     private GraphViewMenu graphViewMenu;
 
-    public GraphViewer(JFrame frame, KnowtatorManager manager, KnowtatorView view, TextPane textPane) {
-        this.manager = manager;
+    public GraphViewer(JFrame frame, KnowtatorController controller, KnowtatorView view, TextPane textPane) {
+        this.controller = controller;
         this.view = view;
         this.textPane = textPane;
         graphComponentList = new ArrayList<>();
@@ -69,7 +69,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
         dialog.setLocationRelativeTo(view);
 
         JMenuBar menuBar = new JMenuBar();
-        menuBar.add(new GraphMenu(manager, this));
+        menuBar.add(new GraphMenu(controller, this));
 
         graphViewMenu = new GraphViewMenu(this);
         menuBar.add(graphViewMenu);
@@ -117,7 +117,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
                     mxICell source = edge.getSource();
                     mxICell target = edge.getTarget();
                     if (source instanceof AnnotationNode && target instanceof AnnotationNode) {
-                        Object property = manager.getOWLAPIDataExtractor().getSelectedProperty();
+                        Object property = controller.getOWLAPIDataExtractor().getSelectedProperty();
 
                         if (property == null) {
                             log.warn("No Object property selected");
@@ -152,7 +152,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
                                     (AnnotationNode) source,
                                     (AnnotationNode) target,
                                     null,
-                                    manager.getProfileManager().getCurrentProfile(),
+                                    controller.getProfileManager().getCurrentProfile(),
                                     property,
                                     quantifier,
                                     value);
@@ -189,7 +189,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
                         //noinspection SuspiciousMethodCalls
                         Annotation annotation = ((AnnotationNode) cell).getAnnotation();
 
-                        manager.annotationSelectionChangedEvent(annotation);
+                        controller.annotationSelectionChangedEvent(annotation);
 
                         if (annotation.isOwlClassSet()) {
                             view.owlEntitySelectionChanged((OWLClass) annotation.getOwlClass());
@@ -200,7 +200,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
                         if (value instanceof OWLProperty) {
                             view.owlEntitySelectionChanged((OWLObjectProperty) value);
                         } else if (value instanceof String) {
-                            view.owlEntitySelectionChanged(manager.getOWLAPIDataExtractor().getOWLObjectPropertyByID((String) ((mxCell) cell).getValue()));
+                            view.owlEntitySelectionChanged(controller.getOWLAPIDataExtractor().getOWLObjectPropertyByID((String) ((mxCell) cell).getValue()));
                         }
                     }
                 }

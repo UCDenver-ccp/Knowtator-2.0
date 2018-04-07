@@ -1,10 +1,10 @@
 package edu.ucdenver.ccp.knowtator.view.text;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.listeners.TextSourceListener;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewer;
 import org.apache.log4j.Logger;
 
@@ -12,21 +12,22 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class TextViewer extends JPanel implements TextSourceListener, ProjectListener {
-    private static final Logger log = Logger.getLogger(KnowtatorManager.class);
+    private static final Logger log = Logger.getLogger(KnowtatorController.class);
     private boolean first;
-    private KnowtatorManager manager;
+    private KnowtatorController controller;
     private KnowtatorView view;
     private int currentTextPaneIndex;
     private List<TextPane> textPaneList;
     private JScrollPane scrollPane;
     private JLabel documentLabel;
 
-    public TextViewer(KnowtatorManager manager, KnowtatorView view) {
-        this.manager = manager;
+    public TextViewer(KnowtatorController controller, KnowtatorView view) {
+        this.controller = controller;
         this.view = view;
         textPaneList = new ArrayList<>();
         scrollPane = new JScrollPane();
@@ -36,7 +37,7 @@ public class TextViewer extends JPanel implements TextSourceListener, ProjectLis
     }
 
     private void addNewDocument(TextSource textSource) {
-        TextPane newTextPane = new TextPane(manager, view, textSource);
+        TextPane newTextPane = new TextPane(controller, view, textSource);
         if (textSource != null) {
             newTextPane.setName(textSource.getDocID());
             try {
@@ -119,7 +120,7 @@ public class TextViewer extends JPanel implements TextSourceListener, ProjectLis
 
     @Override
     public void projectLoaded() {
-        List<TextSource> textsourceEntries = new ArrayList<>(manager.getTextSourceManager().getTextSources());
+        List<TextSource> textsourceEntries = new ArrayList<>(controller.getTextSourceManager().getTextSources());
         textsourceEntries.sort(Comparator.comparing(TextSource::getDocID));
         textsourceEntries.forEach(this::addNewDocument);
         showTextPane(0);

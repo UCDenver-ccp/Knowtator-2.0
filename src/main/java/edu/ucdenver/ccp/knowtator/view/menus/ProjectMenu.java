@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view.menus;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -14,11 +14,11 @@ public class ProjectMenu extends JMenu {
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(ProjectMenu.class);
 
-    private KnowtatorManager manager;
+    private KnowtatorController controller;
 
-    public ProjectMenu(KnowtatorManager manager) {
+    public ProjectMenu(KnowtatorController controller) {
         super("Project");
-        this.manager = manager;
+        this.controller = controller;
 
 
         add(newProjectCommand());
@@ -33,18 +33,18 @@ public class ProjectMenu extends JMenu {
     private JMenuItem importAnnotationsCommand() {
         JMenuItem menuItem = new JMenuItem("Import Annotations");
         menuItem.addActionListener(e -> {
-            if (manager.getProjectManager().getProjectLocation() == null) {
+            if (controller.getProjectManager().getProjectLocation() == null) {
                 JOptionPane.showMessageDialog(null, "Not in a project. Please create or load " +
                         "a project first. (Project -> New Project or Project -> Load Project)");
             } else {
                 JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setCurrentDirectory(manager.getProjectManager().getAnnotationsLocation());
+                fileChooser.setCurrentDirectory(controller.getProjectManager().getAnnotationsLocation());
                 FileFilter fileFilter = new FileNameExtensionFilter("XML", "knowtator");
                 fileChooser.setFileFilter(fileFilter);
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
                 if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    manager.getProjectManager().loadFromFormat(KnowtatorXMLUtil.class, fileChooser.getSelectedFile());
+                    controller.getProjectManager().loadFromFormat(KnowtatorXMLUtil.class, fileChooser.getSelectedFile());
                 }
             }
         });
@@ -55,10 +55,10 @@ public class ProjectMenu extends JMenu {
         JMenuItem menuItem = new JMenuItem("Add Document");
         menuItem.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(manager.getProjectManager().getArticlesLocation());
+            fileChooser.setCurrentDirectory(controller.getProjectManager().getArticlesLocation());
 
             if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                manager.getProjectManager().addDocument(fileChooser.getSelectedFile());
+                controller.getProjectManager().addDocument(fileChooser.getSelectedFile());
             }
         });
         return menuItem;
@@ -78,7 +78,7 @@ public class ProjectMenu extends JMenu {
 
                 if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                     File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
-                    manager.getProjectManager().newProject(projectDirectory);
+                    controller.getProjectManager().newProject(projectDirectory);
                 }
             }
         });
@@ -97,11 +97,11 @@ public class ProjectMenu extends JMenu {
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
             if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                manager.getProjectManager().saveProject();
+                controller.getProjectManager().saveProject();
                 log.warn("1: " + fileChooser.getSelectedFile());
 
 //            closeProject(view, fileChooser.getSelectedFile());
-                manager.getProjectManager().loadProject(fileChooser.getSelectedFile());
+                controller.getProjectManager().loadProject(fileChooser.getSelectedFile());
             }
         });
 
@@ -113,7 +113,7 @@ public class ProjectMenu extends JMenu {
         JMenuItem save = new JMenuItem("Save Project");
         save.addActionListener(e -> {
             try {
-                manager.getProjectManager().saveProject();
+                controller.getProjectManager().saveProject();
             } catch (Exception e1) {
                 JOptionPane.showMessageDialog(null, String.format( "Something went wrong trying to save your project:/n %s",
                         e1.getMessage()));

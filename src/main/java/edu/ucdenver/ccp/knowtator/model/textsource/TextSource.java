@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.model.textsource;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.Savable;
@@ -23,7 +23,7 @@ import java.util.Map;
 public class TextSource implements Savable {
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(TextSource.class);
-    private final KnowtatorManager manager;
+    private final KnowtatorController controller;
 
     public File getSaveFile() {
         return saveFile;
@@ -37,14 +37,14 @@ public class TextSource implements Savable {
     private File textFile;
     //    private String content;
 
-    public TextSource(KnowtatorManager manager, File saveFile, String docID) {
-        this.manager = manager;
+    public TextSource(KnowtatorController controller, File saveFile, String docID) {
+        this.controller = controller;
         this.saveFile = saveFile;
-        this.annotationManager = new AnnotationManager(manager, this);
+        this.annotationManager = new AnnotationManager(controller, this);
 
         if (docID != null) {
             this.docID = docID;
-            textFile = new File(manager.getProjectManager().getArticlesLocation(), docID + ".txt");
+            textFile = new File(controller.getProjectManager().getArticlesLocation(), docID + ".txt");
 
             if (!textFile.exists()) {
                 if (JOptionPane.showConfirmDialog(null, String.format("Could not find file for %s. Choose file location?", docID), "File not found", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
@@ -55,7 +55,7 @@ public class TextSource implements Savable {
                         File file = fileChooser.getSelectedFile();
                         if (JOptionPane.showConfirmDialog(null, String.format("Copy %s to project?", textFile.getName()), "Copy selected file?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                             try {
-                                textFile = Files.copy(Paths.get(file.toURI()), Paths.get(manager.getProjectManager().getArticlesLocation().toURI().resolve(file.getName()))).toFile();
+                                textFile = Files.copy(Paths.get(file.toURI()), Paths.get(controller.getProjectManager().getArticlesLocation().toURI().resolve(file.getName()))).toFile();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -117,7 +117,7 @@ public class TextSource implements Savable {
             try {
                 return FileUtils.readFileToString(textFile, "UTF-8");
             } catch (IOException e) {
-                textFile = new File(manager.getProjectManager().getArticlesLocation(), docID + ".txt");
+                textFile = new File(controller.getProjectManager().getArticlesLocation(), docID + ".txt");
                 while (!textFile.exists()) {
                     JFileChooser fileChooser = new JFileChooser();
                     if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {

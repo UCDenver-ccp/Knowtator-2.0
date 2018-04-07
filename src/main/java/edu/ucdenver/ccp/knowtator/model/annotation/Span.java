@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.model.annotation;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.Savable;
@@ -15,7 +15,7 @@ import java.util.*;
 
 public class Span implements Savable {
 	@SuppressWarnings("unused")
-	private static Logger log = Logger.getLogger(KnowtatorManager.class);
+	private static Logger log = Logger.getLogger(KnowtatorController.class);
 
 	private int start;
 
