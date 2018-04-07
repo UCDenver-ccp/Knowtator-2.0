@@ -12,7 +12,6 @@ import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewer;
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -22,7 +21,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Map;
-import java.util.TreeMap;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -33,24 +31,17 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	private GraphViewer graphViewer;
 
 	private KnowtatorController controller;
-	private KnowtatorView view;
 	private TextSource textSource;
-	private Span selectedSpan;
-	private Annotation selectedAnnotation;
-	private boolean filterByProfile;
-	private boolean focusOnSelectedSpan;
-    private boolean isVisible;
+
+
+	private boolean isVisible;
 
 	TextPane(KnowtatorController controller, KnowtatorView view, TextSource textSource) {
 		super();
 		this.controller = controller;
-		this.view = view;
 		this.textSource = textSource;
 
 		this.setEditable(false);
-
-		filterByProfile = false;
-		focusOnSelectedSpan = false;
 
 		if (textSource != null) {
 			graphViewer = new GraphViewer((JFrame) SwingUtilities.getWindowAncestor(view), controller, view, this);
@@ -97,12 +88,9 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 
 	private void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
 		if (isVisible) {
-            AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e, this);
+			AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e, this, controller);
 
-            Map<Span, Annotation> spansContainingLocation = textSource.getAnnotationManager().getSpanMap(
-                    press_offset,
-					filterByProfile ? controller.getProfileManager().getCurrentProfile() : null
-            );
+			Map<Span, Annotation> spansContainingLocation = textSource.getAnnotationManager().getSpanMap(press_offset);
 
             if (SwingUtilities.isRightMouseButton(e)) {
                 if (spansContainingLocation.size() == 1) {
@@ -119,27 +107,17 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
                 }
 
             } else {
+				controller.getSelectionManager().setFocusOnSelectedSpan(false);
                 setSelectionAtWordLimits(press_offset, release_offset);
             }
         }
 	}
 
-	private void setSelectedSpan(Span span) {
-		selectedSpan = span;
-		focusOnSelectedSpan = true;
-		controller.spanSelectionChangedEvent(selectedSpan);
-	}
-
 	void setSelection(Span span, Annotation annotation) {
 		if (isVisible) {
-			setSelectedSpan(span);
-
-			setSelectedAnnotation(annotation);
+			controller.getSelectionManager().setSelectedSpan(span);
+			controller.getSelectionManager().setSelectedAnnotation(annotation);
 		}
-	}
-
-	public Annotation getSelectedAnnotation() {
-		return selectedAnnotation;
 	}
 
 	private void setSelectionAtWordLimits(int press_offset, int release_offset) {
@@ -148,73 +126,33 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 			int start = Utilities.getWordStart(this, min(press_offset, release_offset));
 			int end = Utilities.getWordEnd(this, max(press_offset, release_offset));
 
-			focusOnSelectedSpan = false;
 			select(start, end);
 
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
-
-
 	}
 
 	public TextSource getTextSource() {
 		return textSource;
 	}
 
-	private void setSelectedAnnotation(Annotation annotation) {
-		if (selectedAnnotation != annotation) {
-			selectedAnnotation = annotation;
-
-			if (selectedAnnotation != null) {
-				if (selectedAnnotation.isOwlClassSet()) {
-					view.owlEntitySelectionChanged((OWLClass) selectedAnnotation.getOwlClass());
-				}
-				if (annotation.getSpans().size() == 1) {
-					setSelectedSpan(annotation.getSpans().first());
-				}
-			}
-			graphViewer.goToAnnotationVertex(null, selectedAnnotation);
-			controller.annotationSelectionChangedEvent(selectedAnnotation);
-		}
-		if (selectedAnnotation != null) {
-			if (selectedAnnotation.isOwlClassSet()) {
-				view.owlEntitySelectionChanged((OWLClass) selectedAnnotation.getOwlClass());
-			}
-		}
-	}
 
 	void previousSpan() {
-		TreeMap<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null, filterByProfile ? controller.getProfileManager().getCurrentProfile() : null);
-		Map.Entry<Span, Annotation> previous;
-		try {
-            previous = annotationMap.containsKey(selectedSpan) ? annotationMap.lowerEntry(selectedSpan) : annotationMap.floorEntry(selectedSpan);
-        } catch (NullPointerException npe) {
-		    previous = null;
-        }
-		if (previous == null) previous = annotationMap.lastEntry();
+		Span previousSpan = textSource.getAnnotationManager().getPreviousSpan();
 
-		setSelection(previous.getKey(), previous.getValue());
+		setSelection(previousSpan, previousSpan.getAnnotation());
 	}
 
 	void nextSpan() {
-		TreeMap<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null, filterByProfile ? controller.getProfileManager().getCurrentProfile() : null);
+		Span nextSpan = textSource.getAnnotationManager().getNextSpan();
 
-		Map.Entry<Span, Annotation> next;
-		try {
-            next = annotationMap.containsKey(selectedSpan) ? annotationMap.higherEntry(selectedSpan) : annotationMap.ceilingEntry(selectedSpan);
-        } catch (NullPointerException npe) {
-		    next = null;
-        }
-		if (next == null) next = annotationMap.firstEntry();
-
-		setSelection(next.getKey(), next.getValue());
+		setSelection(nextSpan, nextSpan.getAnnotation());
 	}
 
 	void shrinkSelectionEnd() {
-		if (focusOnSelectedSpan) {
-			textSource.getAnnotationManager().shrinkSpanEnd(selectedSpan);
-			setSelectedSpan(selectedSpan);
+		if (controller.getSelectionManager().isFocusOnSelectedSpan()) {
+			textSource.getAnnotationManager().shrinkSpanEnd(controller.getSelectionManager().getSelectedSpan());
 		} else {
 			requestFocusInWindow();
 			select(getSelectionStart(), getSelectionEnd() - 1);
@@ -222,43 +160,36 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 
 	}
 	void shrinkSelectionStart() {
-		if (focusOnSelectedSpan) {
-			textSource.getAnnotationManager().shrinkSpanStart(selectedSpan);
-			setSelectedSpan(selectedSpan);
+		if (controller.getSelectionManager().isFocusOnSelectedSpan()) {
+			textSource.getAnnotationManager().shrinkSpanStart(controller.getSelectionManager().getSelectedSpan());
 		} else {
 			requestFocusInWindow();
 			select(getSelectionStart() + 1, getSelectionEnd());
 		}
 	}
 	void growSelectionEnd() {
-		if (focusOnSelectedSpan) {
-			textSource.getAnnotationManager().growSpanEnd(selectedSpan, getText().length());
-			setSelectedSpan(selectedSpan);
+		if (controller.getSelectionManager().isFocusOnSelectedSpan()) {
+			textSource.getAnnotationManager().growSpanEnd(controller.getSelectionManager().getSelectedSpan(), getText().length());
 		} else {
 			requestFocusInWindow();
 			select(getSelectionStart(), getSelectionEnd() + 1);
 		}
 	}
 	void growSelectionStart() {
-		if (focusOnSelectedSpan) {
-			textSource.getAnnotationManager().growSpanStart(selectedSpan);
-			setSelectedSpan(selectedSpan);
+		if (controller.getSelectionManager().isFocusOnSelectedSpan()) {
+			textSource.getAnnotationManager().growSpanStart(controller.getSelectionManager().getSelectedSpan());
 		} else {
 			requestFocusInWindow();
 			select(getSelectionStart() - 1, getSelectionEnd());
 		}
 	}
 
-	private void setFilterByProfile(boolean filterByProfile) {
-		this.filterByProfile = filterByProfile;
-		setSelection(null, null);
-	}
 
 	void refreshHighlights() {
     	if (isVisible) {
-    		if (selectedSpan != null) {
+			if (controller.getSelectionManager().getSelectedSpan() != null) {
 				try {
-					scrollRectToVisible(modelToView(selectedSpan.getStart()));
+					scrollRectToVisible(modelToView(controller.getSelectionManager().getSelectedSpan().getStart()));
 				} catch (BadLocationException | NullPointerException ignored) {
 
 				}
@@ -276,7 +207,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 			Span lastSpan = Span.makeDefaultSpan();
 			Color lastColor = null;
 
-			Map<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null, filterByProfile ? controller.getProfileManager().getCurrentProfile() : null);
+			Map<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null);
 			for (Map.Entry<Span, Annotation> entry : annotationMap.entrySet()) {
 				Span span = entry.getKey();
 				Annotation annotation = entry.getValue();
@@ -312,10 +243,10 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	}
 
 	private void highlightSelectedAnnotation() {
-		if (selectedAnnotation != null) {
-			for (Span span : selectedAnnotation.getSpans()) {
+		if (controller.getSelectionManager().getSelectedAnnotation() != null) {
+			for (Span span : controller.getSelectionManager().getSelectedAnnotation().getSpans()) {
 				try {
-					if (span.equals(selectedSpan)) {
+					if (span.equals(controller.getSelectionManager().getSelectedSpan())) {
 						getHighlighter().addHighlight(span.getStart(), span.getEnd(), new RectanglePainter(Color.BLACK));
 					} else {
 						getHighlighter().addHighlight(span.getStart(), span.getEnd(), new RectanglePainter(Color.GRAY));
@@ -326,10 +257,6 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 			}
 
 		}
-	}
-
-	Span getSelectedSpan() {
-		return selectedSpan;
 	}
 
 	GraphViewer getGraphViewer() {
@@ -344,15 +271,14 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 
 	@Override
 	public void annotationRemoved(Annotation removedAnnotation) {
-		if (selectedAnnotation != null && selectedAnnotation.equals(removedAnnotation)) setSelectedAnnotation(null);
 		refreshHighlights();
 	}
 
 	@Override
 	public void annotationSelectionChanged(Annotation annotation) {
 		if (isVisible) {
-			setSelectedAnnotation(annotation);
 			refreshHighlights();
+			graphViewer.goToAnnotationVertex(null, annotation);
 		}
 	}
 
@@ -365,7 +291,6 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 
 	@Override
 	public void spanRemoved() {
-		setSelection(null, null);
 		refreshHighlights();
 	}
 
@@ -392,7 +317,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 
 	@Override
 	public void profileFilterSelectionChanged(boolean filterByProfile) {
-		setFilterByProfile(filterByProfile);
+		setSelection(null, null);
 	}
 
 	@Override
@@ -401,18 +326,13 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	}
 
 	void addAnnotation() {
-//		String className = controller.getOWLAPIDataExtractor().getSelectedOwlClassName();
 		String classID = controller.getOWLAPIDataExtractor().getSelectedOwlClassID();
 
 		if (classID == null) {
 			log.warn("No OWLClass selected");
 
-//			JTextField nameField = new JTextField(10);
 			JTextField idField = new JTextField(10);
 			JPanel inputPanel = new JPanel();
-//			inputPanel.add(new JLabel("Name:"));
-//			inputPanel.add(nameField);
-//			inputPanel.add(Box.createHorizontalStrut(15));
 			inputPanel.add(new JLabel("ID:"));
 			inputPanel.add(idField);
 
@@ -420,12 +340,9 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 			int result = JOptionPane.showConfirmDialog(null, inputPanel,
 					"No OWL Class selected", JOptionPane.DEFAULT_OPTION);
 			if (result == JOptionPane.OK_OPTION) {
-//				className = nameField.getText();
 				classID = idField.getText();
 			}
 		}
-
-//		log.warn(String.format("Class name: %s Class ID: %s", className, classID));
 
         Span newSpan = new Span(
                 getSelectionStart(),
@@ -437,7 +354,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	}
 
 	void removeAnnotation() {
-		textSource.getAnnotationManager().removeAnnotation(selectedAnnotation.getID());
+		textSource.getAnnotationManager().removeAnnotation(controller.getSelectionManager().getSelectedAnnotation().getID());
 		setSelection(null, null);
 	}
 
@@ -448,7 +365,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	void addSpanToAnnotation() {
 		textSource.getAnnotationManager()
 				.addSpanToAnnotation(
-						selectedAnnotation,
+						controller.getSelectionManager().getSelectedAnnotation(),
 						new Span(
 								getSelectionStart(),
 								getSelectionEnd(),

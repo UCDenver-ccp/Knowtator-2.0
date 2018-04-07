@@ -270,7 +270,7 @@ public class Annotation implements Savable {
 		this.owlClass = owlClass;
 	}
 
-	public boolean isOwlClassSet() {
+    public boolean isOwlClass() {
 		return owlClass instanceof OWLClass;
 	}
 

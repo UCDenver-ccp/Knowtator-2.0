@@ -101,11 +101,11 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 //            e.printStackTrace();
 //        }
 //        UIManager.getLookAndFeelDefaults().put("ClassLoader", Plastic3DLookAndFeel.class.getClassLoader());
-        controller = new KnowtatorController();
+        controller = new KnowtatorController(this);
         controller.setUpOWL(getOWLWorkspace(), getOWLModelManager());
 
         textViewer = new TextViewer(controller, this);
-        infoPanel = new InfoPanel(this);
+        infoPanel = new InfoPanel(controller);
         findPanel = new FindPanel(this);
 
         projectMenu = new ProjectMenu(controller);

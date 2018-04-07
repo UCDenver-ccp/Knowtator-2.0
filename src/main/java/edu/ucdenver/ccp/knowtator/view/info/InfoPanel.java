@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view.info;
 
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
 import edu.ucdenver.ccp.knowtator.listeners.SpanListener;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
@@ -18,11 +18,11 @@ public class InfoPanel extends JPanel implements SpanListener, AnnotationListene
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(InfoPanel.class);
     private DateFormat dateFormat = new SimpleDateFormat("yyy/MM/dd");
-    private KnowtatorView view;
+    private KnowtatorController controller;
 
 
-    public InfoPanel(KnowtatorView view) {
-        this.view = view;
+    public InfoPanel(KnowtatorController controller) {
+        this.controller = controller;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setMinimumSize(new Dimension(20, 50));
@@ -88,16 +88,16 @@ public class InfoPanel extends JPanel implements SpanListener, AnnotationListene
 
     @Override
     public void spanAdded(Span newSpan) {
-        displayInfo(view.getTextViewer().getCurrentTextPane().getSelectedAnnotation());
+        displayInfo(controller.getSelectionManager().getSelectedAnnotation());
     }
 
     @Override
     public void spanRemoved() {
-        displayInfo(view.getTextViewer().getCurrentTextPane().getSelectedAnnotation());
+        displayInfo(controller.getSelectionManager().getSelectedAnnotation());
     }
 
     @Override
     public void spanSelectionChanged(Span span) {
-        displayInfo(view.getTextViewer().getCurrentTextPane().getSelectedAnnotation());
+        displayInfo(controller.getSelectionManager().getSelectedAnnotation());
     }
 }

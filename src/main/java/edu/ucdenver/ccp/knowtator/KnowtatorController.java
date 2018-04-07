@@ -8,11 +8,14 @@ import edu.ucdenver.ccp.knowtator.model.owl.OWLAPIDataExtractor;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileManager;
 import edu.ucdenver.ccp.knowtator.model.project.ProjectManager;
+import edu.ucdenver.ccp.knowtator.model.selection.SelectionManager;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSourceManager;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.OWLWorkspace;
+import org.semanticweb.owlapi.model.OWLClass;
 
 import java.io.File;
 import java.util.HashSet;
@@ -31,6 +34,7 @@ public class KnowtatorController {
     private ProjectManager projectManager;
     private TextSourceManager textSourceManager;
     private ProfileManager profileManager;
+    private SelectionManager selectionManager;
     private OWLAPIDataExtractor owlDataExtractor;
 
     private Set<TextSourceListener> textSourceListeners;
@@ -39,20 +43,26 @@ public class KnowtatorController {
     private Set<SpanListener> spanListeners;
     private Set<GraphListener> graphListeners;
     private Set<ProjectListener> projectListeners;
+    private KnowtatorView view;
 
-    /**
-     *
-     */
     public KnowtatorController() {
-        super();
         initListeners();
         initManagers();
+    }
+
+    /**
+     * @param view The view that spawned this controller
+     */
+    public KnowtatorController(KnowtatorView view) {
+        this();
+        this.view = view;
     }
 
     private void initManagers() {
         textSourceManager = new TextSourceManager(this);
         profileManager = new ProfileManager(this);  //manipulates profiles and colors
         projectManager = new ProjectManager(this);  //reads and writes to XML
+        selectionManager = new SelectionManager(this);
         owlDataExtractor = new OWLAPIDataExtractor();
     }
 
@@ -103,12 +113,20 @@ public class KnowtatorController {
         annotationListeners.forEach(listener -> listener.annotationAdded(newAnnotation));
     }
 
-    public void annotationSelectionChangedEvent(Annotation selectedAnnotation) {
-        if (selectedAnnotation != null)
-            annotationListeners.forEach(listener -> listener.annotationSelectionChanged(selectedAnnotation));
+    public void annotationSelectionChangedEvent(Annotation annotation) {
+        if (annotation != null) {
+            if (annotation.isOwlClass()) {
+                view.owlEntitySelectionChanged((OWLClass) annotation.getOwlClass());
+            }
+
+            annotationListeners.forEach(listener -> listener.annotationSelectionChanged(annotation));
+
+
+        }
     }
 
     public void annotationRemovedEvent(Annotation removedAnnotation) {
+        selectionManager.setSelectedAnnotation(null);
         annotationListeners.forEach(listener -> listener.annotationRemoved(removedAnnotation));
     }
 
@@ -118,6 +136,7 @@ public class KnowtatorController {
 
 
     public void profileFilterEvent(boolean filterByProfile) {
+        selectionManager.setFilterByProfile(filterByProfile);
         profileListeners.forEach(profileListener -> profileListener.profileFilterSelectionChanged(filterByProfile));
     }
 
@@ -181,5 +200,9 @@ public class KnowtatorController {
 
     public void addProjectListener(ProjectListener listener) {
         projectListeners.add(listener);
+    }
+
+    public SelectionManager getSelectionManager() {
+        return selectionManager;
     }
 }

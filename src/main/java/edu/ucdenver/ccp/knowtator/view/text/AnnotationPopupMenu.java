@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator.view.text;
 
 import com.mxgraph.model.mxCell;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
 import org.apache.log4j.Logger;
@@ -16,14 +17,14 @@ class AnnotationPopupMenu extends JPopupMenu {
 
     private MouseEvent e;
     private TextPane textPane;
+    private KnowtatorController controller;
 
 
-    AnnotationPopupMenu(MouseEvent e, TextPane textPane) {
+    AnnotationPopupMenu(MouseEvent e, TextPane textPane, KnowtatorController controller) {
         this.e = e;
         this.textPane = textPane;
+        this.controller = controller;
     }
-
-
 
     private JMenuItem addAnnotationCommand() {
         JMenuItem menuItem = new JMenuItem("Add annotation");
@@ -40,11 +41,11 @@ class AnnotationPopupMenu extends JPopupMenu {
     }
 
     private JMenuItem removeSpanFromAnnotationCommand() {
-        JMenuItem removeSpanFromSelectedAnnotation = new JMenuItem(String.format("Delete span from %s", textPane.getSelectedAnnotation().getOwlClass()));
+        JMenuItem removeSpanFromSelectedAnnotation = new JMenuItem(String.format("Delete span from %s", controller.getSelectionManager().getSelectedAnnotation().getOwlClass()));
         removeSpanFromSelectedAnnotation.addActionListener(e5 -> textPane.getTextSource().getAnnotationManager()
                 .removeSpanFromAnnotation(
-                        textPane.getSelectedAnnotation(),
-                        textPane.getSelectedSpan()
+                        controller.getSelectionManager().getSelectedAnnotation(),
+                        controller.getSelectionManager().getSelectedSpan()
                 )
         );
 
@@ -61,7 +62,7 @@ class AnnotationPopupMenu extends JPopupMenu {
     }
 
     private JMenuItem removeAnnotationCommand() {
-        JMenuItem removeAnnotationMenuItem = new JMenuItem("Delete " + textPane.getSelectedAnnotation().getOwlClass());
+        JMenuItem removeAnnotationMenuItem = new JMenuItem("Delete " + controller.getSelectionManager().getSelectedAnnotation().getOwlClass());
         removeAnnotationMenuItem.addActionListener(e4 -> textPane.removeAnnotation());
 
         return removeAnnotationMenuItem;
@@ -79,12 +80,12 @@ class AnnotationPopupMenu extends JPopupMenu {
 
         textPane.getTextSource().getAnnotationManager().getGraphSpaces()
                 .forEach(graphSpace -> {
-                    mxCell vertex = graphSpace.containsVertexCorrespondingToAnnotation(textPane.getSelectedAnnotation());
+                    mxCell vertex = graphSpace.containsVertexCorrespondingToAnnotation(controller.getSelectionManager().getSelectedAnnotation());
                     if (vertex != null) {
                         JMenuItem menuItem = new JMenuItem(graphSpace.getId());
                         menuItem.addActionListener(e1 -> {
                             textPane.getGraphViewer().getDialog().setVisible(true);
-                            textPane.getGraphViewer().goToAnnotationVertex(graphSpace.getId(), textPane.getSelectedAnnotation());
+                            textPane.getGraphViewer().goToAnnotationVertex(graphSpace.getId(), controller.getSelectionManager().getSelectedAnnotation());
                         });
                         jMenu.add(menuItem);
                     }
@@ -95,22 +96,22 @@ class AnnotationPopupMenu extends JPopupMenu {
 
     void showPopUpMenu(int release_offset) {
 
-        Annotation selectedAnnotation = textPane.getSelectedAnnotation();
-        Span selectedSpan = textPane.getSelectedSpan();
+        Annotation selectedAnnotation = controller.getSelectionManager().getSelectedAnnotation();
+        Span selectedSpan = controller.getSelectionManager().getSelectedSpan();
 
         if (textPane.getSelectionStart() <= release_offset && release_offset <= textPane.getSelectionEnd() && textPane.getSelectionStart() != textPane.getSelectionEnd()) {
             textPane.select(textPane.getSelectionStart(), textPane.getSelectionEnd());
             add(addAnnotationCommand());
-            if (textPane.getSelectedAnnotation() != null) {
+            if (controller.getSelectionManager().getSelectedAnnotation() != null) {
                 add(addSpanToAnnotationCommand());
             }
         } else if (selectedAnnotation != null  && selectedSpan.getStart() <= release_offset && release_offset <= selectedSpan.getEnd()) {
             add(removeAnnotationCommand());
-            if (textPane.getSelectedSpan() != null && textPane.getSelectedAnnotation() != null && textPane.getSelectedAnnotation().getSpans().size() > 1 ) {
+            if (controller.getSelectionManager().getSelectedSpan() != null && controller.getSelectionManager().getSelectedAnnotation() != null && controller.getSelectionManager().getSelectedAnnotation().getSpans().size() > 1) {
                 add(removeSpanFromAnnotationCommand());
             }
 
-            if (textPane.getSelectedAnnotation() != null) {
+            if (controller.getSelectionManager().getSelectedAnnotation() != null) {
                 addSeparator();
                 add(goToAnnotationInGraphCommand());
             }

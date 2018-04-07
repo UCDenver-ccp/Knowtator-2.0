@@ -27,3 +27,4 @@ TODO; Toggle expand to show coreference
 TODO: Regex search
 TODO: Figure out how to close project before loading
 TODO: Should probably also read in Events, Modifiers, etc.
+TODO: Change spanAnnotationMap to span list in annotation manager

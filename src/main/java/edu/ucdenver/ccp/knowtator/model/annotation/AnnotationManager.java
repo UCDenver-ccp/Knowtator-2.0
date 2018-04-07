@@ -99,15 +99,14 @@ public class AnnotationManager implements Savable {
 
     /**
      * @param loc     Location filter
-     * @param profile Profile filter
      */
-    public TreeMap<Span, Annotation> getSpanMap(Integer loc, Profile profile) {
+    public TreeMap<Span, Annotation> getSpanMap(Integer loc) {
         TreeMap<Span, Annotation> filteredAnnotations = new TreeMap<>(Span::compare);
 
         for (Map.Entry<Span, Annotation> entry : spanMap.entrySet()) {
             Span span = entry.getKey();
             Annotation annotation = entry.getValue();
-            if ((loc == null || span.contains(loc)) && (profile == null || annotation.getAnnotator().equals(profile))) {
+            if ((loc == null || span.contains(loc)) && (controller.getSelectionManager().isFilterByProfile() || annotation.getAnnotator().equals(controller.getProfileManager().getCurrentProfile()))) {
                 filteredAnnotations.put(span, annotation);
             }
         }
@@ -401,4 +400,31 @@ public class AnnotationManager implements Savable {
         controller.removeGraphEvent(graphSpace);
     }
 
+    public Span getPreviousSpan() {
+        Span selectedSpan = controller.getSelectionManager().getSelectedSpan();
+        TreeMap<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null);
+        Map.Entry<Span, Annotation> previous;
+        try {
+            previous = annotationMap.containsKey(selectedSpan) ? annotationMap.lowerEntry(selectedSpan) : annotationMap.floorEntry(selectedSpan);
+        } catch (NullPointerException npe) {
+            previous = null;
+        }
+        if (previous == null) previous = annotationMap.lastEntry();
+        return previous.getKey();
+    }
+
+    public Span getNextSpan() {
+        Span selectedSpan = controller.getSelectionManager().getSelectedSpan();
+        TreeMap<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null);
+
+        Map.Entry<Span, Annotation> next;
+        try {
+            next = annotationMap.containsKey(selectedSpan) ? annotationMap.higherEntry(selectedSpan) : annotationMap.ceilingEntry(selectedSpan);
+        } catch (NullPointerException npe) {
+            next = null;
+        }
+        if (next == null) next = annotationMap.firstEntry();
+
+        return next.getKey();
+    }
 }

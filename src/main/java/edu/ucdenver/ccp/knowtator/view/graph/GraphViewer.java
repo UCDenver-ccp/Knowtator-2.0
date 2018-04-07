@@ -191,7 +191,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
 
                         controller.annotationSelectionChangedEvent(annotation);
 
-                        if (annotation.isOwlClassSet()) {
+                        if (annotation.isOwlClass()) {
                             view.owlEntitySelectionChanged((OWLClass) annotation.getOwlClass());
                         }
                         graph.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
@@ -337,7 +337,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
     }
 
     void addSelectedAnnotationAsVertex() {
-        addAnnotationVertex(textPane.getSelectedAnnotation());
+        addAnnotationVertex(controller.getSelectionManager().getSelectedAnnotation());
     }
 
     void removeSelectedCell() {
