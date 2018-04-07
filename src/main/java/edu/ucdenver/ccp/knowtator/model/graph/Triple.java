@@ -17,15 +17,15 @@ import java.util.List;
 import java.util.Map;
 
 public class Triple extends mxCell implements Savable {
-    private final String quantifier;
-    private final String quantifierValue;
+    private String quantifier;
+    private String quantifierValue;
+    private Profile annotator;
+    private String bratID;
+
 
     public Profile getAnnotator() {
         return annotator;
     }
-
-    private Profile annotator;
-    private String bratID;
 
     Triple(String id, mxCell source, mxCell target, Object property, Profile annotator, String quantifier, String quantifierValue) {
         super(property, new mxGeometry(), null);
@@ -39,7 +39,6 @@ public class Triple extends mxCell implements Savable {
         setId(id);
         setSource(source);
         setTarget(target);
-//        setValue(property);
     }
 
     public void writeToKnowtatorXML(Document dom, Element graphElem) {
@@ -79,11 +78,6 @@ public class Triple extends mxCell implements Savable {
     public void readFromGeniaXML(Element parent, String content) {
 
     }
-
-//    @Override
-//    public void convertToUIMA(CAS cas) {
-//
-//    }
 
     @Override
     public void writeToGeniaXML(Document dom, Element parent) {

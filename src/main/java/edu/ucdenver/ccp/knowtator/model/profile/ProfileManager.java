@@ -103,11 +103,6 @@ public class ProfileManager implements Savable {
     public void readFromGeniaXML(Element parent, String content) {
 
     }
-//
-//    @Override
-//    public void convertToUIMA(CAS cas) {
-//
-//    }
 
     @Override
     public void writeToGeniaXML(Document dom, Element parent) {

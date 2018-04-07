@@ -207,11 +207,6 @@ public class GraphSpace extends mxGraph implements Savable {
 
     }
 
-//    @Override
-//    public void convertToUIMA(CAS cas) {
-//
-//    }
-
     @Override
     public void writeToGeniaXML(Document dom, Element parent) {
 

@@ -209,7 +209,6 @@ public class AnnotationManager implements Savable {
         String profileID;
         String type;
         Profile profile;
-//        String className;
         String classID;
         Annotation newAnnotation;
         Element graphSpaceElem;
@@ -223,11 +222,9 @@ public class AnnotationManager implements Savable {
             type = annotationElement.getAttribute(KnowtatorXMLAttributes.TYPE);
 
             profile = manager.getProfileManager().addNewProfile(profileID);
-//            className = annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0).getTextContent();
             classID = ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0)).getAttribute(KnowtatorXMLAttributes.ID);
 
             newAnnotation = new Annotation(classID, annotationID, textSource, profile, type);
-//            log.warn("\t\tXML: " + newAnnotation);
             newAnnotation.readFromKnowtatorXML(null, annotationElement, content);
 
             addAnnotation(newAnnotation);
@@ -274,7 +271,6 @@ public class AnnotationManager implements Savable {
             annotationID = ((Element) annotationElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID);
             classElement = classMentionToClassIDMap.get(annotationID);
 
-//            className = classElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION_CLASS).item(0).getTextContent();
             classID = ((Element) classElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION_CLASS).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID);
 
             newAnnotation = new Annotation(classID, annotationID, textSource, profile, "identity");
@@ -390,11 +386,6 @@ public class AnnotationManager implements Savable {
     public void readFromGeniaXML(Element parent, String content) {
 
     }
-
-//    @Override
-//    public void convertToUIMA(CAS cas) {
-//        annotationMap.values().forEach(annotation -> annotation.convertToUIMA(cas));
-//    }
 
     @Override
     public void writeToGeniaXML(Document dom, Element parent) {

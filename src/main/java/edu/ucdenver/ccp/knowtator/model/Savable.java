@@ -22,7 +22,5 @@ public interface Savable {
 
     void readFromGeniaXML(Element parent, String content);
 
-//    void convertToUIMA(CAS cas);
-
     void writeToGeniaXML(Document dom, Element parent);
 }

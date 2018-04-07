@@ -149,14 +149,6 @@ public class TextSource implements Savable {
 
     }
 
-//    @Override
-//    public void convertToUIMA(CAS cas) {
-//        CAS textSourceAsCAS = cas.createView(docID);
-//        textSourceAsCAS.setDocumentText(getContent());
-//        textSourceAsCAS.setDocumentLanguage("en");
-//        annotationManager.convertToUIMA(textSourceAsCAS);
-//    }
-
     @Override
     public void writeToGeniaXML(Document dom, Element parent) {
 

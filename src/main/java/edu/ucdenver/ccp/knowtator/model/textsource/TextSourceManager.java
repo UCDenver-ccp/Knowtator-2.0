@@ -96,11 +96,6 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
 
     }
 
-//    @Override
-//    public void convertToUIMA(CAS cas) {
-//
-//    }
-
     @Override
     public void writeToGeniaXML(Document dom, Element parent) {
 

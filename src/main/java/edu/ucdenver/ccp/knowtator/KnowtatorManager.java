@@ -40,9 +40,8 @@ public class KnowtatorManager {
     private Set<GraphListener> graphListeners;
     private Set<ProjectListener> projectListeners;
 
-
     /**
-     * Mediates between models and views
+     *
      */
     public KnowtatorManager() {
         super();
