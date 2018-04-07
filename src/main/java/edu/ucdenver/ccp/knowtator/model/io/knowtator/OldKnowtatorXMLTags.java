@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator.model.io.knowtator;
 
 public class OldKnowtatorXMLTags {
+    public static final String STRING_SLOT_MENTION = "stringSlotMention";
     // ******************OLD Tags*****************
     static final String ANNOTATIONS = "annotations";
     public static final String ANNOTATION = "annotation";

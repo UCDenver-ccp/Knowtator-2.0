@@ -49,18 +49,22 @@ public class OldKnowatorUtil extends XMLUtil {
         return mentionTracker;
     }
 
-    public static HashMap<String, Element> getComplexSlotsFromXml(Element textSourceElement) {
-        HashMap<String, Element> mentionTracker = new HashMap<>();
+    public static HashMap<String, Element> getslotsFromXml(Element textSourceElement) {
+        HashMap<String, Element> slotMap = new HashMap<>();
+        String slotID;
+        Element slotElement;
         for (Node complexSlotNode : asList(textSourceElement.getElementsByTagName(OldKnowtatorXMLTags.COMPLEX_SLOT_MENTION))) {
-            if (complexSlotNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element complexSlotElement = (Element) complexSlotNode;
-                String annotationID = complexSlotElement.getAttribute(OldKnowtatorXMLAttributes.ID);
-                mentionTracker.put(annotationID, complexSlotElement);
-
-            }
-
+            slotElement = (Element) complexSlotNode;
+            slotID = slotElement.getAttribute(OldKnowtatorXMLAttributes.ID);
+            slotMap.put(slotID, slotElement);
         }
-        return mentionTracker;
+//        for (Node stringSlotNode : asList(textSourceElement.getElementsByTagName(OldKnowtatorXMLTags.STRING_SLOT_MENTION))) {
+//            slotElement = (Element) stringSlotNode;
+//            slotID = slotElement.getAttribute(OldKnowtatorXMLAttributes.ID);
+//            slotMap.put(slotID, slotElement);
+//        }
+
+        return slotMap;
 
     }
 }

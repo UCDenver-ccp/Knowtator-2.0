@@ -247,16 +247,18 @@ public class AnnotationManager implements Savable {
 
     @Override
     public void readFromOldKnowtatorXML(File file, Element parent, String content) {
-        Map<String, Element> complexSlotMentionToClassIDMap = KnowtatorXMLUtil.getComplexSlotsFromXml(parent);
-        Map<String, Element> classMentionToClassIDMap = KnowtatorXMLUtil.getClassIDsFromXml(parent);
-
         Element annotationElement;
         String annotationID;
         Element classElement;
-//        String className;
         String classID;
         Annotation newAnnotation;
-        Map<Annotation, Element> annotationToComplexSlotMap = new HashMap<>();
+        Element slotMentionElement;
+        String slotMentionID;
+        Element slotElement;
+
+        Map<String, Element> slotToClassIDMap = KnowtatorXMLUtil.getslotsFromXml(parent);
+        Map<String, Element> classMentionToClassIDMap = KnowtatorXMLUtil.getClassIDsFromXml(parent);
+        Map<Annotation, List<Element>> annotationToSlotMap = new HashMap<>();
 
         for (Node annotationNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATION))) {
             annotationElement = (Element) annotationNode;
@@ -283,66 +285,56 @@ public class AnnotationManager implements Savable {
             if (!newAnnotation.getSpans().isEmpty()) {
                 addAnnotation(newAnnotation);
 
-                log.warn("\t\tOLD KNOWATOTOR: added ANNOTATION " + newAnnotation);
+                log.warn("OLD KNOWTATOR: added ANNOTATION " + newAnnotation);
 
+                annotationToSlotMap.put(newAnnotation, new ArrayList<>());
                 for (Node slotMentionNode : KnowtatorXMLUtil.asList(classElement.getElementsByTagName(OldKnowtatorXMLTags.HAS_SLOT_MENTION))) {
-                    Element slotMentionElement = (Element) slotMentionNode;
-                    String slotMentionID = slotMentionElement.getAttribute(OldKnowtatorXMLAttributes.ID);
-                    Element complexSlotMentionElement = complexSlotMentionToClassIDMap.get(slotMentionID);
-                    annotationToComplexSlotMap.put(newAnnotation, complexSlotMentionElement);
+                    slotMentionElement = (Element) slotMentionNode;
+                    slotMentionID = slotMentionElement.getAttribute(OldKnowtatorXMLAttributes.ID);
+                    slotElement = slotToClassIDMap.get(slotMentionID);
+                    annotationToSlotMap.get(newAnnotation).add(slotElement);
                 }
             }
-
-//            if (classID.equals(OldKnowtatorXMLAttributes.IDENTITY_CHAIN)) {
-//                Element complexSlotElement = complexSlotMentionToClassIDMap.get(((Element) classElement.getElementsByTagName(OldKnowtatorXMLTags.HAS_SLOT_MENTION).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID));
-//                if (((Element) complexSlotElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION_SLOT).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID).equals(OldKnowtatorXMLAttributes.COREFERENCE)) {
-//                    for (Node complexSlotMentionValueNode : KnowtatorXMLUtil.asList(complexSlotElement.getElementsByTagName(OldKnowtatorXMLTags.COMPLEX_SLOT_MENTION_VALUE))) {
-//                        newAnnotation.addCoreferringAnnotation(((Element) complexSlotMentionValueNode).getAttribute(OldKnowtatorXMLAttributes.VALUE));
-//                    }
-//                }
-//
-//            }
-
-
-
-//            log.warn("OLD XML: " + newAnnotation);
-
         }
 
         GraphSpace oldKnowtatorGraphSpace = addGraphSpace("Old Knowtator Relations");
-        annotationToComplexSlotMap.forEach((annotation, slotMention) -> {
+
+        annotationToSlotMap.forEach((annotation, slotList) -> {
             List<Object> vertices = oldKnowtatorGraphSpace.getVerticesForAnnotation(annotation);
+
             AnnotationNode source;
             if (vertices.isEmpty()) {
                 source = oldKnowtatorGraphSpace.addNode(null, annotation);
-                log.warn("\t\tOLD KNOWTATOR: added NODE: " + source);
+                log.warn("OLD KNOWTATOR: added NODE: " + source);
             } else {
                 source = (AnnotationNode) vertices.get(0);
             }
 
+            for (Element slot : slotList) {
+                String property = ((Element) slot.getElementsByTagName(OldKnowtatorXMLTags.MENTION_SLOT).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID);
+                for (Node slotMentionValueNode : OldKnowatorUtil.asList(slot.getElementsByTagName(OldKnowtatorXMLTags.COMPLEX_SLOT_MENTION_VALUE))) {
+                    Element slotMentionValueElement = (Element) slotMentionValueNode;
+                    String value = slotMentionValueElement.getAttribute(OldKnowtatorXMLAttributes.VALUE);
+                    Annotation annotation1 = getAnnotation(value);
 
-            String property = ((Element) slotMention.getElementsByTagName(OldKnowtatorXMLTags.MENTION_SLOT).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID);
-            for (Node slotMentionValueNode : OldKnowatorUtil.asList(slotMention.getElementsByTagName(OldKnowtatorXMLTags.COMPLEX_SLOT_MENTION_VALUE))) {
-                Element slotMentionValueElement = (Element) slotMentionValueNode;
-                String value = slotMentionValueElement.getAttribute(OldKnowtatorXMLAttributes.VALUE);
-                Annotation annotation1 = getAnnotation(value);
+                    List<Object> vertices1 = oldKnowtatorGraphSpace.getVerticesForAnnotation(annotation1);
 
-                List<Object> vertices1 = oldKnowtatorGraphSpace.getVerticesForAnnotation(annotation1);
-                AnnotationNode target;
-                if (vertices1.isEmpty()) {
-                    target = oldKnowtatorGraphSpace.addNode(null, annotation1);
-                    log.warn("\t\t\tOLD KNOWTATOR: added NODE: " + target);
-                } else {
-                    target = (AnnotationNode) vertices1.get(0);
+                    AnnotationNode target;
+                    if (vertices1.isEmpty()) {
+                        target = oldKnowtatorGraphSpace.addNode(null, annotation1);
+                        log.warn("OLD KNOWTATOR: added NODE: " + target);
+                    } else {
+                        target = (AnnotationNode) vertices1.get(0);
+                    }
+
+                    Triple triple = oldKnowtatorGraphSpace.addTriple(source, target, null, manager.getProfileManager().getCurrentProfile(), property, "", "");
+                    log.warn("OLD KNOWTATOR: added TRIPLE: " + triple);
                 }
-                Triple triple = oldKnowtatorGraphSpace.addTriple(source, target, null, manager.getProfileManager().getCurrentProfile(), property, "", "");
-                log.warn("\t\t\tOLD KNOWTATOR: added TRIPLE: " + triple);
             }
         });
 
     }
 
-    //TODO: Should probably also read in Events, Modifiers, etc.
     @Override
     public void readFromBratStandoff(File file, Map<Character, List<String[]>> annotationMap, String content) {
 
