@@ -87,7 +87,7 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
         graph.addListener(mxEvent.ADD_CELLS, (sender, evt) -> {
             Object[] cells = (Object[]) evt.getProperty("cells");
             for (Object cell : cells) {
-                if (graph.getModel().isEdge(cell) && ((mxCell) cell).getValue() != null && ((mxCell) cell).getValue().equals("")) {
+                if (graph.getModel().isEdge(cell) && "".equals(((mxCell) cell).getValue())) {
                     mxCell edge = (mxCell) cell;
                     mxICell source = edge.getSource();
                     mxICell target = edge.getTarget();
@@ -106,7 +106,7 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
                         String quantifier = "";
                         String value = "";
                         int result = JOptionPane.showConfirmDialog(controller.getView(), restrictionPanel,
-                                "Restriction options", JOptionPane.OK_CANCEL_OPTION);
+                                "Restriction options", JOptionPane.DEFAULT_OPTION);
                         if (result == JOptionPane.OK_OPTION) {
                             quantifier = quantifierField.getText();
                             value = valueField.getText();
@@ -126,6 +126,7 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
                     graph.getModel().remove(edge);
 
                     graph.reDrawGraph();
+                    break;
                 }
             }
         });

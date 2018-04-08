@@ -82,7 +82,7 @@ public class GraphSpace extends mxGraph implements Savable {
         }
     }
 
-    public Triple addTriple(AnnotationNode source, AnnotationNode target, String id, Profile annotator, Object property, String quantifier, String quantifierValue) {
+    public void addTriple(AnnotationNode source, AnnotationNode target, String id, Profile annotator, Object property, String quantifier, String quantifierValue) {
         id = verifyID(id, "edge");
 
         Triple newTriple = new Triple(id, source, target, property, annotator, quantifier, quantifierValue);
@@ -96,7 +96,6 @@ public class GraphSpace extends mxGraph implements Savable {
 
         addCellToGraph(newTriple);
 
-        return newTriple;
     }
 
     private String verifyID(String id, String idPrefix) {
