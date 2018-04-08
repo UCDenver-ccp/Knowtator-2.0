@@ -203,40 +203,30 @@ public class AnnotationManager implements Savable, ProjectListener {
 
     @Override
     public void readFromKnowtatorXML(File file, Element parent, String content) {
-        Element annotationElement;
-        String annotationID;
-        String profileID;
-        String type;
-        Profile profile;
-        String owlClassID;
-        Annotation newAnnotation;
-        Element graphSpaceElem;
-        String id;
-        GraphSpace graphSpace;
         for (Node annotationNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.ANNOTATION))) {
-            annotationElement = (Element) annotationNode;
+            Element annotationElement = (Element) annotationNode;
 
-            annotationID = annotationElement.getAttribute(KnowtatorXMLAttributes.ID);
-            profileID = annotationElement.getAttribute(KnowtatorXMLAttributes.ANNOTATOR);
-            type = annotationElement.getAttribute(KnowtatorXMLAttributes.TYPE);
+            String annotationID = annotationElement.getAttribute(KnowtatorXMLAttributes.ID);
+            String profileID = annotationElement.getAttribute(KnowtatorXMLAttributes.ANNOTATOR);
+            String type = annotationElement.getAttribute(KnowtatorXMLAttributes.TYPE);
 
-            profile = controller.getProfileManager().addNewProfile(profileID);
-            owlClassID = ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0)).getAttribute(KnowtatorXMLAttributes.ID);
+            Profile profile = controller.getProfileManager().addNewProfile(profileID);
+            String owlClassID = ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0)).getAttribute(KnowtatorXMLAttributes.ID);
 
-            newAnnotation = new Annotation(null, owlClassID, annotationID, textSource, profile, type, controller);
+            Annotation newAnnotation = new Annotation(null, owlClassID, annotationID, textSource, profile, type, controller);
             newAnnotation.readFromKnowtatorXML(null, annotationElement, content);
 
             addAnnotation(newAnnotation);
         }
 
         for (Node graphSpaceNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.GRAPH_SPACE))) {
-            graphSpaceElem = (Element) graphSpaceNode;
+            Element graphSpaceElem = (Element) graphSpaceNode;
 
 
-            id = graphSpaceElem.getAttribute(KnowtatorXMLAttributes.ID);
-            graphSpace = addGraphSpace(id);
+            String id = graphSpaceElem.getAttribute(KnowtatorXMLAttributes.ID);
+            GraphSpace graphSpace = addGraphSpace(id);
 
-            log.warn("\t\tXML: " + graphSpace);
+//            log.warn("\t\tXML: " + graphSpace);
             graphSpace.readFromKnowtatorXML(null, graphSpaceElem, content);
         }
     }
@@ -313,7 +303,7 @@ public class AnnotationManager implements Savable, ProjectListener {
                     target = (AnnotationNode) vertices1.get(0);
                 }
 
-                Triple triple = oldKnowtatorGraphSpace.addTriple(
+                oldKnowtatorGraphSpace.addTriple(
                         source,
                         target,
                         null,
@@ -321,7 +311,7 @@ public class AnnotationManager implements Savable, ProjectListener {
                         property,
                         "",
                         "");
-                log.warn("OLD KNOWTATOR: added TRIPLE: " + triple);
+//                log.warn("OLD KNOWTATOR: added TRIPLE: " + triple);
             }
         });
 
@@ -425,10 +415,17 @@ public class AnnotationManager implements Savable, ProjectListener {
         return nextSpan;
     }
 
+    public void connectToOWLModelManager() {
+        for (Annotation annotation : annotationMap.values()) {
+            annotation.getOwlClass();
+        }
+        for (GraphSpace graphSpace : graphSpaces) {
+            graphSpace.connectEdgesToProperties();
+        }
+    }
+
     @Override
     public void projectLoaded() {
-        for (Annotation annotation : annotationMap.values()) {
-            annotation.setOwlClass(controller.getOWLAPIDataExtractor().getOWLClassByID(annotation.getOwlClassID()));
-        }
+        connectToOWLModelManager();
     }
 }

@@ -74,7 +74,9 @@ public class Annotation implements Savable {
 
 	public String getOwlClassID() {
 		String owlClassID = controller.getOWLAPIDataExtractor().getOWLClassID(owlClass);
-		if (owlClassID != null) {
+		if (owlClassID == null) {
+			setOwlClass(controller.getOWLAPIDataExtractor().getOWLClassByID(this.owlClassID));
+		} else {
 			this.owlClassID = owlClassID;
 		}
 		return this.owlClassID;
@@ -277,7 +279,7 @@ public class Annotation implements Savable {
 		return bratID;
 	}
 
-	void setOwlClass(OWLClass owlClass) {
+	private void setOwlClass(OWLClass owlClass) {
 		this.owlClass = owlClass;
 	}
 

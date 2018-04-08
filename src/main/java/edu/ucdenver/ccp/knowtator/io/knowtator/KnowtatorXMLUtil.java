@@ -69,15 +69,18 @@ public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUt
     public void write(Savable savable, File file) {
         if (savable instanceof TextSourceManager) {
             ((TextSourceManager) savable).getTextSources().forEach(textSource -> {
-                String fileName = textSource.getSaveFile() == null ? textSource.getId() : textSource.getSaveFile().getName();
-                String extension = fileName.endsWith(".xml") ? "" : ".xml";
-                File outputFile = new File(
-                        file.getAbsolutePath() +
-                                File.separator +
-                                fileName +
-                                extension
-                );
-                writeToOutputFile(savable, outputFile);
+                File outputFile = textSource.getSaveFile();
+                if (outputFile == null) {
+                    String fileName = textSource.getId();
+                    String extension = fileName.endsWith(".xml") ? "" : ".xml";
+                    outputFile = new File(
+                            file.getAbsolutePath() +
+                                    File.separator +
+                                    fileName +
+                                    extension
+                    );
+                }
+                writeToOutputFile(textSource, outputFile);
             });
         } else if(savable instanceof ProfileManager){
             ((ProfileManager) savable).getProfiles().values().forEach(profile -> {
@@ -87,7 +90,7 @@ public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUt
                                 profile.getId() +
                                 ".xml"
                 );
-                writeToOutputFile(savable, outputFile);
+                writeToOutputFile(profile, outputFile);
             });
         } else {
             writeToOutputFile(savable, file);

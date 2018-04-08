@@ -32,10 +32,18 @@ public class ProjectMenu extends JMenu implements ProjectListener {
         addSeparator();
         add(exportToBratCommand());
         addSeparator();
+        add(attemptToConnectToOWLModelManagerCommand());
+        addSeparator();
         add(new IAAMenu(controller));
         addSeparator();
         add(new ProfileMenu(controller));
 
+    }
+
+    private JMenuItem attemptToConnectToOWLModelManagerCommand() {
+        JMenuItem menuItem = new JMenuItem("Attempt to connect to OWL API");
+        menuItem.addActionListener(e -> controller.getTextSourceManager().connectToOWLModelManager());
+        return menuItem;
     }
 
     private JMenuItem exportToBratCommand() {

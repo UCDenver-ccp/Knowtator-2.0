@@ -36,10 +36,16 @@ public class Profile implements Savable {
         return profileID;
     }
 
-    public Color getColor(Object owlClass) {
-        colors.putIfAbsent(owlClass, Color.CYAN);
+    public Color getColor(OWLClass owlClass, String owlClassID) {
+        Color oldColor = colors.get(owlClassID);
+        if (owlClass != null) {
+            colors.putIfAbsent(owlClass, oldColor == null ? Color.CYAN : oldColor);
+            return colors.get(owlClass);
+        } else {
+            colors.putIfAbsent(owlClassID, Color.CYAN);
+            return colors.get(owlClassID);
+        }
 
-        return colors.get(owlClass);
     }
 
     private void addColor(String classID, String color) {

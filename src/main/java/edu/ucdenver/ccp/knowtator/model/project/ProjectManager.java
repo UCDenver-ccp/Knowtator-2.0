@@ -132,7 +132,7 @@ public class ProjectManager {
             Arrays.stream(Objects.requireNonNull(annotationsLocation.listFiles())).forEach(File::delete);
 
             this.saveToFormat(KnowtatorXMLUtil.class, controller.getProfileManager(), profilesLocation);
-            this.saveToFormat(KnowtatorXMLUtil.class, controller.getTextSourceManager(), annotationsLocation);
+            this.saveToFormat(KnowtatorXMLUtil.class, annotationsLocation);
         }
     }
 

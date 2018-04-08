@@ -299,7 +299,7 @@ public class GraphSpace extends mxGraph implements Savable {
 
         OWLClass owlClass = vertex.getAnnotation().getOwlClass();
         Profile profile = controller.getSelectionManager().getActiveProfile();
-        String color = Integer.toHexString(profile.getColor(owlClass == null ? vertex.getAnnotation().getOwlClassID() : owlClass).getRGB()).substring(2);
+        String color = Integer.toHexString(profile.getColor(owlClass, vertex.getAnnotation().getOwlClassID()).getRGB()).substring(2);
         String shape = mxConstants.SHAPE_RECTANGLE;
 
         setCellStyles(mxConstants.STYLE_SHAPE, shape, new Object[]{vertex});

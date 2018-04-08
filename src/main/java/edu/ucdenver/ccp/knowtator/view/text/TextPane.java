@@ -196,7 +196,7 @@ public class TextPane extends JTextPane {
 					lastSpan = span;
 
 					OWLClass owlClass = span.getAnnotation().getOwlClass();
-					lastColor = profile.getColor(owlClass == null ? span.getAnnotation().getOwlClassID() : owlClass);
+					lastColor = profile.getColor(owlClass, span.getAnnotation().getOwlClassID());
 				}
 			}
 

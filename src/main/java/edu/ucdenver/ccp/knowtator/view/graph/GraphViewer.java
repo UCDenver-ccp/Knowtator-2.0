@@ -325,7 +325,6 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
         removeAllGraphs();
         for (GraphSpace graphSpace : textSource.getAnnotationManager().getGraphSpaces()) {
             addGraph(graphSpace);
-            graphSpace.connectEdgesToProperties();
         }
     }
 

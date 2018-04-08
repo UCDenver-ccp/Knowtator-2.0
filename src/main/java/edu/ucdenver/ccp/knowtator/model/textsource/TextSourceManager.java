@@ -167,4 +167,10 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
         if (nextTextSource == null) nextTextSource = textSources.first();
         return nextTextSource;
     }
+
+    public void connectToOWLModelManager() {
+        for (TextSource textSource : textSources) {
+            textSource.getAnnotationManager().connectToOWLModelManager();
+        }
+    }
 }
