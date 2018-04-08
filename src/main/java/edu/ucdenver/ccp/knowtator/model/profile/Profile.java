@@ -6,6 +6,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -48,8 +49,8 @@ public class Profile implements Savable {
         colors.put(classID, c);
     }
 
-    public void addColor(String classID, Color c) {
-        colors.put(classID, c);
+    public void addColor(OWLClass owlClass, Color c) {
+        colors.put(owlClass, c);
     }
 
     public String toString() {

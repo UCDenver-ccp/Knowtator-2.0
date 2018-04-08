@@ -15,6 +15,7 @@ import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.w3c.dom.Document;
@@ -296,9 +297,9 @@ public class GraphSpace extends mxGraph implements Savable {
         g.setHeight(g.getHeight() + 200);
         g.setWidth(g.getWidth() + 200);
 
-        Object owlClass = vertex.getAnnotation().getOwlClass();
+        OWLClass owlClass = vertex.getAnnotation().getOwlClass();
         Profile profile = controller.getSelectionManager().getActiveProfile();
-        String color = Integer.toHexString(profile.getColor(owlClass).getRGB()).substring(2);
+        String color = Integer.toHexString(profile.getColor(owlClass == null ? vertex.getAnnotation().getOwlClassID() : owlClass).getRGB()).substring(2);
         String shape = mxConstants.SHAPE_RECTANGLE;
 
         setCellStyles(mxConstants.STYLE_SHAPE, shape, new Object[]{vertex});

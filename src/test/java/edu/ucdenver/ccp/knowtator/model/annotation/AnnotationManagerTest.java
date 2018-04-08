@@ -23,6 +23,7 @@ public class AnnotationManagerTest {
     private AnnotationManager annotationManager;
     private TextSource textSource;
     private Profile profile;
+    private KnowtatorController controller;
 
     private File getProjectFile(String projectName) {
         return new File(getClass().getResource(String.format(
@@ -41,7 +42,7 @@ public class AnnotationManagerTest {
     }
 
     public void setUp() {
-        KnowtatorController controller = new KnowtatorController();
+        controller = new KnowtatorController();
 
         int projectID = 0;
         int articleID = 0;
@@ -61,7 +62,7 @@ public class AnnotationManagerTest {
     @Test
     public void addAnnotation() {
         setUp();
-        Annotation annotation1 = new Annotation("class_2", "mention_3", textSource, profile, "identity");
+        Annotation annotation1 = new Annotation(null, "class_2", "mention_3", textSource, profile, "identity", controller);
         annotationManager.addAnnotation(annotation1);
 
         int numAnnotations = annotationManager.getAnnotations().size();
@@ -74,7 +75,7 @@ public class AnnotationManagerTest {
     @Test
     public void addSpanToAnnotation() {
         setUp();
-        Annotation annotation1 = new Annotation( "class_2", "mention_3", textSource, profile, "identity");
+        Annotation annotation1 = new Annotation(null, "class_2", "mention_3", textSource, profile, "identity", controller);
         annotationManager.addAnnotation(annotation1);
 
         Span span1 = new Span(1, 6, "");
@@ -107,7 +108,7 @@ public class AnnotationManagerTest {
     @Test
     public void removeSpanFromAnnotation() {
         setUp();
-        Annotation annotation1 = new Annotation( "class_2", "mention_3", textSource, profile, "identity");
+        Annotation annotation1 = new Annotation(null, "class_2", "mention_3", textSource, profile, "identity", controller);
         annotationManager.addAnnotation(annotation1);
 
         Span span1 = new Span(1, 6, "");

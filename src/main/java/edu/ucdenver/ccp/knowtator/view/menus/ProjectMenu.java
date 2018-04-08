@@ -130,7 +130,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
                 }
 
                 controller.getProjectManager().closeProject(controller.getView(), fileChooser.getSelectedFile());
-                controller.getProjectManager().loadProject(fileChooser.getSelectedFile());
+//                controller.getProjectManager().loadProject(fileChooser.getSelectedFile());
             }
         });
 

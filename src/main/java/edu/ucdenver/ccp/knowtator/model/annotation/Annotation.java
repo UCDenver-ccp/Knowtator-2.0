@@ -1,5 +1,6 @@
 package edu.ucdenver.ccp.knowtator.model.annotation;
 
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
@@ -23,7 +24,7 @@ public class Annotation implements Savable {
 	@SuppressWarnings("unused")
     private Logger log = Logger.getLogger(Annotation.class);
 
-	private Object owlClass;
+	private OWLClass owlClass;
     private String annotation_type;
     private TreeSet<Span> spans;
     private Set<Annotation> overlappingAnnotations;
@@ -35,14 +36,19 @@ public class Annotation implements Savable {
 
 	private String bratID;
 
+	private String owlClassID;
+	private KnowtatorController controller;
 
-	public Annotation(String owlClassID, String annotationID, TextSource textSource, Profile annotator, String annotation_type) {
+
+	public Annotation(OWLClass owlClass, String owlClassID, String annotationID, TextSource textSource, Profile annotator, String annotation_type, KnowtatorController controller) {
 		this.textSource = textSource;
 		this.annotator = annotator;
+		this.controller = controller;
 		this.date = new Date();
 		this.id = annotationID;
 
-		this.owlClass = owlClassID;
+		this.owlClass = owlClass;
+		this.owlClassID = owlClassID;
 		this.annotation_type = annotation_type;
 
 		spans = new TreeSet<>((span1, span2) -> {
@@ -65,6 +71,14 @@ public class Annotation implements Savable {
 	public TextSource getTextSource() {
 		return textSource;
 	}
+
+	public String getOwlClassID() {
+		String owlClassID = controller.getOWLAPIDataExtractor().getOWLClassID(owlClass);
+		if (owlClassID != null) {
+			this.owlClassID = owlClassID;
+		}
+		return this.owlClassID;
+	}
 	public Profile getAnnotator() {
 		return annotator;
 	}
@@ -77,7 +91,8 @@ public class Annotation implements Savable {
 	void setID(String id) {
 		this.id = id;
 	}
-	public Object getOwlClass() {
+
+	public OWLClass getOwlClass() {
 		return owlClass;
 	}
 	public TreeSet<Span> getSpans() {
@@ -99,9 +114,6 @@ public class Annotation implements Savable {
 		return size;
 	}
 
-
-
-
 	void setSpans(List<Span> spans) {
 		this.spans.clear();
 		this.spans.addAll(spans);
@@ -111,9 +123,6 @@ public class Annotation implements Savable {
 		this.spans.clear();
 		this.spans.add(span);
 	}
-
-
-
 
 	/**
 	 * this needs to be moved out of this class
@@ -182,7 +191,7 @@ public class Annotation implements Savable {
 		annotationElem.setAttribute(KnowtatorXMLAttributes.TYPE, annotation_type);
 
 		Element classElement = dom.createElement(KnowtatorXMLTags.CLASS);
-		classElement.setAttribute(KnowtatorXMLAttributes.ID, owlClass.toString());
+		classElement.setAttribute(KnowtatorXMLAttributes.ID, getOwlClassID());
 		annotationElem.appendChild(classElement);
 
 		spans.forEach(span -> span.writeToKnowtatorXML(dom, annotationElem));
@@ -215,7 +224,9 @@ public class Annotation implements Savable {
 	@Override
 	public void readFromOldKnowtatorXML(File file, Element parent, String content) {
 		List<Span> spans = KnowtatorXMLUtil.getSpanInfo(parent, content);
-		spans.forEach(this::addSpan);
+		for (Span span : spans) {
+			addSpan(span);
+		}
 	}
 
 	@Override
@@ -268,10 +279,6 @@ public class Annotation implements Savable {
 
 	void setOwlClass(OWLClass owlClass) {
 		this.owlClass = owlClass;
-	}
-
-    public boolean isOwlClass() {
-		return owlClass instanceof OWLClass;
 	}
 
 
@@ -661,8 +668,8 @@ public class Annotation implements Savable {
 //	 * annotationClass.
 //	 */
 //	public static boolean classesMatch(annotation annotation1, annotation annotation2) {
-//		String cls1 = annotation1.getOwlClassID();
-//		String cls2 = annotation2.getOwlClassID();
+//		String cls1 = annotation1.getOWLClassID();
+//		String cls2 = annotation2.getOWLClassID();
 //
 //		return cls1 != null && cls2 != null && cls1.equals(cls2);
 //

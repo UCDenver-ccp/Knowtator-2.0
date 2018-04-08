@@ -22,7 +22,7 @@ public class IOTests {
 
     private KnowtatorController controller;
 
-    private String[] projectFileNames = new String[]{"test_project", "old_project", "test_load_old_coreference"};
+    private String[] projectFileNames = new String[]{"test_project", "old_project", "test_load_old_coreference", "CRAFT_assertions"};
     private String[] articleFileNames = new String[]{"document1", "document2", "document3", "document1_old", "brat_test", "small_11319941"};
     private String[] articleContent = new String[]{
             "This is a test document.",
@@ -60,7 +60,7 @@ public class IOTests {
 //    public void loadLargeOld() {
 //        controller = new KnowtatorController();
 //
-//        int projectID = 2;
+//        int projectID = 3;
 //        String projectFileName = projectFileNames[projectID];
 //        File projectFile = getProjectFile(projectFileName);
 //

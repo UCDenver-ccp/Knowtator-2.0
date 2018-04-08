@@ -14,16 +14,12 @@ public class OldKnowatorUtil extends XMLUtil {
     public static List<Span> getSpanInfo(Element annotationElement, String content) {
         List<Span> spans = new ArrayList<>();
 
-        Element spanElement;
-        int spanStart;
-        int spanEnd;
-        String spannedText;
         for (Node spanNode : KnowtatorXMLUtil.asList(annotationElement.getElementsByTagName(OldKnowtatorXMLTags.SPAN))) {
             if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
-                spanElement = (Element) spanNode;
-                spanStart = Integer.parseInt(spanElement.getAttribute(OldKnowtatorXMLAttributes.SPAN_START));
-                spanEnd = Integer.parseInt(spanElement.getAttribute(OldKnowtatorXMLAttributes.SPAN_END));
-                spannedText = content.substring(spanStart, spanEnd);
+                Element spanElement = (Element) spanNode;
+                int spanStart = Integer.parseInt(spanElement.getAttribute(OldKnowtatorXMLAttributes.SPAN_START));
+                int spanEnd = Integer.parseInt(spanElement.getAttribute(OldKnowtatorXMLAttributes.SPAN_END));
+                String spannedText = content.substring(spanStart, spanEnd);
 
                 spans.add(new Span(spanStart, spanEnd, spannedText));
             }

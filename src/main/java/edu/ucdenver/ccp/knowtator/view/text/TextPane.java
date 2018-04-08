@@ -6,6 +6,7 @@ import edu.ucdenver.ccp.knowtator.model.annotation.Span;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -21,6 +22,7 @@ import static java.lang.Math.min;
 
 public class TextPane extends JTextPane {
 
+	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(KnowtatorController.class);
 
 	private KnowtatorController controller;
@@ -193,7 +195,8 @@ public class TextPane extends JTextPane {
 					}
 					lastSpan = span;
 
-					lastColor = profile.getColor(span.getAnnotation().getOwlClass());
+					OWLClass owlClass = span.getAnnotation().getOwlClass();
+					lastColor = profile.getColor(owlClass == null ? span.getAnnotation().getOwlClassID() : owlClass);
 				}
 			}
 
@@ -227,9 +230,10 @@ public class TextPane extends JTextPane {
 	}
 
 	void addAnnotation() {
-		String classID = controller.getOWLAPIDataExtractor().getSelectedOwlClassID();
+		OWLClass owlClass = controller.getOWLAPIDataExtractor().getSelectedClass();
+		String owlClassID = controller.getOWLAPIDataExtractor().getOWLClassID(owlClass);
 
-		if (classID != null) {
+		if (owlClass != null) {
 
 
 			Span newSpan = new Span(
@@ -237,7 +241,7 @@ public class TextPane extends JTextPane {
 					getSelectionEnd(),
 					getText().substring(getSelectionStart(), getSelectionEnd())
 			);
-			textSource.getAnnotationManager().addAnnotation(classID, newSpan);
+			textSource.getAnnotationManager().addAnnotation(owlClass, owlClassID, newSpan);
 		}
 
 	}

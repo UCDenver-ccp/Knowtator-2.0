@@ -56,12 +56,11 @@ public class OWLAPIDataExtractor implements Savable {
         return owlModelManager.getOWLEntityFinder().getOWLObjectProperty(classID);
     }
 
-    private String[] getDescendants(OWLClass cls) {
-        Set<OWLClass> descendants = owlModelManager.getOWLHierarchyManager().getOWLClassHierarchyProvider().getDescendants(cls);
-        return descendants.stream().map(this::getOwlEntID).toArray(String[]::new);
+    private Set<OWLClass> getDescendants(OWLClass cls) {
+        return owlModelManager.getOWLHierarchyManager().getOWLClassHierarchyProvider().getDescendants(cls);
     }
 
-    private OWLClass getSelectedClass() {
+    public OWLClass getSelectedClass() {
         return owlWorkSpace.getOWLSelectionModel().getLastSelectedClass();
     }
 
@@ -69,19 +68,13 @@ public class OWLAPIDataExtractor implements Savable {
         return owlWorkSpace.getOWLSelectionModel().getLastSelectedObjectProperty();
     }
 
-    private String getOwlClassID(OWLClass cls) {
-        String annotationValue = extractAnnotation(cls, owlModelManager.getOWLDataFactory().getRDFSLabel());
-        return annotationValue == null ? getOwlEntID(cls) : annotationValue;
-    }
-
-    public String getSelectedOwlClassID() {
-        OWLClass cls = getSelectedClass();
-        if (cls != null) {
-            return getOwlClassID(cls);
+    public String getOWLClassID(OWLClass cls) {
+        if (owlModelManager != null && cls != null) {
+            String annotationValue = extractAnnotation(cls, owlModelManager.getOWLDataFactory().getRDFSLabel());
+            return annotationValue == null ? getOwlEntID(cls) : annotationValue;
         } else {
             return null;
         }
-
     }
 
     @SuppressWarnings("unused")
@@ -92,7 +85,7 @@ public class OWLAPIDataExtractor implements Savable {
     }
 
 
-    public String[] getSelectedOwlClassDescendants() {
+    public Set<OWLClass> getSelectedOwlClassDescendants() {
         OWLClass cls = getSelectedClass();
         if (cls != null) {
             return getDescendants(cls);

@@ -15,7 +15,6 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.OWLWorkspace;
-import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLProperty;
 
@@ -201,9 +200,7 @@ public class KnowtatorController {
     public void annotationSelectionChangedEvent(Annotation annotation) {
         if (annotation != null) {
             if (view != null) {
-                if (annotation.isOwlClass()) {
-                    view.owlEntitySelectionChanged((OWLClass) annotation.getOwlClass());
-                }
+                view.owlEntitySelectionChanged(annotation.getOwlClass());
                 view.getGraphViewer().goToAnnotationVertex(selectionManager.getActiveGraphSpace(), annotation);
             }
             annotationListeners.forEach(listener -> listener.annotationSelectionChanged(annotation));

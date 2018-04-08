@@ -3,11 +3,12 @@ package edu.ucdenver.ccp.knowtator.view.text;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorIcons;
+import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
+import java.util.Set;
 
 class AnnotationToolBar extends JToolBar {
 
@@ -38,13 +39,13 @@ class AnnotationToolBar extends JToolBar {
         JButton button = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.COLOR_PICKER_ICON));
         button.setToolTipText("Assign color to class");
         button.addActionListener(e -> {
-            String classID = controller.getOWLAPIDataExtractor().getSelectedOwlClassID();
-            String[] descendants = controller.getOWLAPIDataExtractor().getSelectedOwlClassDescendants();
-            if (classID != null) {
+            OWLClass owlClass = controller.getOWLAPIDataExtractor().getSelectedClass();
+            Set<OWLClass> descendants = controller.getOWLAPIDataExtractor().getSelectedOwlClassDescendants();
+            if (owlClass != null) {
 
                 Profile profile = controller.getSelectionManager().getActiveProfile();
 
-                pickAColor(classID, descendants, profile);
+                pickAColor(owlClass, descendants, profile);
 
                 controller.colorChangedEvent();
             }
@@ -53,14 +54,16 @@ class AnnotationToolBar extends JToolBar {
         return button;
     }
 
-    private void pickAColor(String classID, String[] descendants, Profile profile) {
-        Color c = JColorChooser.showDialog(controller.getView(), "Pick a color for " + classID, Color.CYAN);
+    private void pickAColor(OWLClass owlClass, Set<OWLClass> descendants, Profile profile) {
+        Color c = JColorChooser.showDialog(controller.getView(), "Pick a color for " + owlClass, Color.CYAN);
         if (c != null) {
-            profile.addColor(classID, c);
+            profile.addColor(owlClass, c);
 
-            if (JOptionPane.showConfirmDialog(controller.getView(), "Assign color to descendants of " + classID + "?") == JOptionPane.OK_OPTION) {
+            if (JOptionPane.showConfirmDialog(controller.getView(), "Assign color to descendants of " + owlClass + "?") == JOptionPane.OK_OPTION) {
                 if (descendants != null) {
-                    Arrays.stream(descendants).forEach(descendant -> profile.addColor(descendant, c));
+                    for (OWLClass descendant : descendants) {
+                        profile.addColor(descendant, c);
+                    }
                 }
             }
         }
