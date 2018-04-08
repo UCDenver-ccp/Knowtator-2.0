@@ -4,10 +4,6 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorIcons;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
-import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 
 class AnnotationToolBar extends JToolBar {
@@ -22,11 +18,6 @@ class AnnotationToolBar extends JToolBar {
         setFloatable(false);
 
         add(showGraphViewerCommand());
-        add(previousTextPaneCommand());
-        add(nextTextPaneCommand());
-
-        add(decreaseTextSizeCommand());
-        add(increaseTextSizeCommand());
 
         add(addAnnotationCommand());
         add(removeAnnotationCommand());
@@ -83,52 +74,6 @@ class AnnotationToolBar extends JToolBar {
         return command;
     }
 
-    private JButton decreaseTextSizeCommand() {
-        JButton command = new JButton (KnowtatorIcons.getIcon(KnowtatorIcons.DECREASE_TEXT_SIZE_ICON));
-        command.setToolTipText("Decrease text size");
-        command.addActionListener((ActionEvent e) -> {
-            for (TextPane textPane : textViewer.getTextPaneMap().values()) {
-                StyledDocument doc = textPane.getStyledDocument();
-                MutableAttributeSet attrs = textPane.getInputAttributes();
-                Font font = doc.getFont(attrs);
-                StyleConstants.setFontSize(attrs, font.getSize() - 2);
-                doc.setCharacterAttributes(0, doc.getLength() + 1, attrs, false);
-                textPane.repaint();
-            }
-        });
-        return command;
-    }
-
-    private JButton increaseTextSizeCommand() {
-        JButton command = new JButton (KnowtatorIcons.getIcon(KnowtatorIcons.INCREASE_TEXT_SIZE_ICON));
-        command.setToolTipText("Increase text size");
-        command.addActionListener((ActionEvent e) -> {
-            for (TextPane textPane : textViewer.getTextPaneMap().values()) {
-                StyledDocument doc = textPane.getStyledDocument();
-                MutableAttributeSet attrs = textPane.getInputAttributes();
-                Font font = doc.getFont(attrs);
-                StyleConstants.setFontSize(attrs, font.getSize() + 2);
-                doc.setCharacterAttributes(0, doc.getLength() + 1, attrs, false);
-                textPane.repaint();
-            }
-        });
-
-        return command;
-    }
-    private JButton previousTextPaneCommand() {
-        JButton command = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.PREVIOUS_ICON));
-        command.setToolTipText("Previous document");
-        command.addActionListener(e -> textViewer.showPreviousTextPane());
-        return command;
-    }
-
-
-    private JButton nextTextPaneCommand() {
-        JButton command = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.NEXT_ICON));
-        command.setToolTipText("Next document");
-        command.addActionListener(e -> textViewer.showNextTextPane());
-        return command;
-    }
 
     private JButton showGraphViewerCommand() {
         JButton command = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.GRAPH_VIEWER));

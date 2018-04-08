@@ -6,4 +6,5 @@ public interface TextSourceListener extends Listener {
 
     void textSourceAdded(TextSource textSource);
 
+    void activeTextSourceChanged(TextSource textSource);
 }

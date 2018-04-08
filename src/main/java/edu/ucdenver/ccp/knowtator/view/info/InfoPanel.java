@@ -25,7 +25,7 @@ public class InfoPanel extends JPanel implements SpanListener, AnnotationListene
         this.controller = controller;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setMinimumSize(new Dimension(20, 50));
+        setMinimumSize(new Dimension(10, 50));
         setBackground(Color.white);
     }
 

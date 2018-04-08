@@ -21,6 +21,7 @@ import java.io.File;
 
 public class KnowtatorView extends AbstractOWLClassViewComponent implements DropTargetListener {
 
+    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(KnowtatorController.class);
 
     private KnowtatorController controller;
@@ -41,9 +42,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         }
     }
 
-    // I want to keep this method in case I want to autoLoad ontologies eventually
-
-
     @Override
     protected OWLClass updateView(OWLClass selectedClass) {
 
@@ -52,7 +50,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     @Override
     public void disposeView() {
-
         // For some reason, clicking yes here discards changes, even saved ones...
         if (JOptionPane.showConfirmDialog(null, "Save changes to Knowtator project?") == JOptionPane.OK_OPTION) {
             controller.getProjectManager().saveProject();
@@ -91,7 +88,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     public void close(File file) {
         initialiseClassView();
-        log.warn("3.a: " + file);
         this.controller.getProjectManager().loadProject(file);
     }
 
@@ -101,7 +97,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         controller.setUpOWL(getOWLWorkspace(), getOWLModelManager());
 
         textViewer = new TextViewer(controller, this);
-        graphViewer = new GraphViewer((JFrame) SwingUtilities.getWindowAncestor(this), controller, this);
+        graphViewer = new GraphViewer((JFrame) SwingUtilities.getWindowAncestor(this), controller);
         infoPanel = new InfoPanel(controller);
         findPanel = new FindPanel(this);
 
@@ -112,11 +108,18 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
         controller.addSpanListener(infoPanel);
         controller.addAnnotationListener(infoPanel);
+
         controller.addTextSourceListener(textViewer);
         controller.addProjectListener(textViewer);
+        controller.addSpanListener(textViewer);
+        controller.addConceptAnnotationListener(textViewer);
+        controller.addProfileListener(textViewer);
+
         controller.addProfileListener(profileMenu);
+
         controller.addProfileListener(graphViewer);
         controller.addGraphListener(graphViewer);
+        controller.addTextSourceListener(graphViewer);
 
         getOWLModelManager().addOntologyChangeListener(controller.getTextSourceManager());
 

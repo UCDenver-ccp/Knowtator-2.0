@@ -16,6 +16,8 @@ import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.OWLWorkspace;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLProperty;
 
 import java.io.File;
 import java.util.HashSet;
@@ -161,7 +163,7 @@ public class KnowtatorController {
         textSourceListeners.forEach(textSourceListener -> textSourceListener.textSourceAdded(textSource));
     }
     public void annotationRemovedEvent(Annotation removedAnnotation) {
-        selectionManager.setSelectedAnnotation(null);
+        selectionManager.setSelectedAnnotation(null, null);
         annotationListeners.forEach(listener -> listener.annotationRemoved(removedAnnotation));
     }
 
@@ -175,7 +177,9 @@ public class KnowtatorController {
     public void profileRemovedEvent() {
         profileListeners.forEach(ProfileListener::profileRemoved);
     }
-    public void profileFilterEvent(boolean filterByProfile) {
+
+    public void profileFilterChangedEvent(boolean filterByProfile) {
+        selectionManager.setSelectedAnnotation(null, null);
         profileListeners.forEach(profileListener -> profileListener.profileFilterSelectionChanged(filterByProfile));
     }
     public void colorChangedEvent() {
@@ -202,5 +206,18 @@ public class KnowtatorController {
             }
             annotationListeners.forEach(listener -> listener.annotationSelectionChanged(annotation));
         }
+    }
+
+    public void propertyChangedEvent(Object value) {
+        if (value instanceof OWLProperty) {
+            view.owlEntitySelectionChanged((OWLObjectProperty) value);
+        } else if (value instanceof String) {
+            view.owlEntitySelectionChanged(owlDataExtractor.getOWLObjectPropertyByID((String) value));
+        }
+    }
+
+    public void activeTextSourceChangedEvent(TextSource textSource) {
+        selectionManager.setSelectedAnnotation(null, null);
+        textSourceListeners.forEach(listenter -> listenter.activeTextSourceChanged(textSource));
     }
 }

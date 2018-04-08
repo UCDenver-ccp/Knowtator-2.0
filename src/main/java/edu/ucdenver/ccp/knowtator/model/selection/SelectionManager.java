@@ -41,7 +41,7 @@ public class SelectionManager {
 
     public void setFilterByProfile(boolean filterByProfile) {
         this.filterByProfile = filterByProfile;
-        controller.profileFilterEvent(filterByProfile);
+        controller.profileFilterChangedEvent(filterByProfile);
     }
 
     public KnowtatorController getController() {
@@ -64,16 +64,17 @@ public class SelectionManager {
         return selectedAnnotation;
     }
 
-    public void setSelectedAnnotation(Annotation annotation) {
+    public void setSelectedAnnotation(Annotation annotation, Span span) {
         if (selectedAnnotation != annotation) {
             selectedAnnotation = annotation;
-            controller.annotationSelectionChangedEvent(annotation);
 
             if (selectedAnnotation != null) {
-                if (annotation.getSpans().size() == 1) {
-                    setSelectedSpan(annotation.getSpans().first());
-                }
+                setSelectedSpan(span);
+            } else if (activeGraphSpace != null) {
+                activeGraphSpace.setSelectionCell(null);
             }
+
+            controller.annotationSelectionChangedEvent(annotation);
         }
 
     }
@@ -85,7 +86,10 @@ public class SelectionManager {
     public void setSelectedSpan(Span span) {
         if (span != selectedSpan) {
             this.selectedSpan = span;
-            this.focusOnSelectedSpan = true;
+            if (span != null) {
+                this.focusOnSelectedSpan = true;
+                setSelectedAnnotation(span.getAnnotation(), span);
+            }
             controller.spanSelectionChangedEvent(span);
         }
     }
@@ -102,8 +106,9 @@ public class SelectionManager {
         return activeTextSource;
     }
 
-    public void setActiveTextSource(TextSource activeTextSource) {
-        this.activeTextSource = activeTextSource;
+    public void setActiveTextSource(TextSource textSource) {
+        this.activeTextSource = textSource;
+        controller.activeTextSourceChangedEvent(textSource);
     }
 
 

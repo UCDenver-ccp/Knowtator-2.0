@@ -1,5 +1,8 @@
 package edu.ucdenver.ccp.knowtator.view.graph;
 
+import com.mxgraph.model.mxCell;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorIcons;
 import org.apache.log4j.Logger;
 
@@ -11,10 +14,12 @@ class GraphToolBar extends JToolBar {
     private static final Logger log = Logger.getLogger(GraphToolBar.class);
 
     private GraphViewer graphViewer;
+    private KnowtatorController controller;
 
-    GraphToolBar(GraphViewer graphViewer) {
+    GraphToolBar(GraphViewer graphViewer, KnowtatorController controller) {
 
         this.graphViewer = graphViewer;
+        this.controller = controller;
 
         setFloatable(false);
 
@@ -36,7 +41,12 @@ class GraphToolBar extends JToolBar {
         JButton button = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.ADD));
         button.setToolTipText("Add annotation as node");
 
-        button.addActionListener(e -> graphViewer.addSelectedAnnotationAsVertex());
+        button.addActionListener(e -> {
+            Annotation annotation = controller.getSelectionManager().getSelectedAnnotation();
+            mxCell vertex = controller.getSelectionManager().getActiveGraphSpace().addNode(null, annotation);
+
+            graphViewer.goToVertex(vertex);
+        });
 
         return button;
     }

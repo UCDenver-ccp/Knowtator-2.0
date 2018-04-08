@@ -97,7 +97,7 @@ public class TextSource implements Savable {
     }
     @Override
     public String toString() {
-        return String.format("TextSource: docID: %s", docID);
+        return docID;
     }
     @Override
     public void writeToKnowtatorXML(Document dom, Element parent) {

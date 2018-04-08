@@ -1,9 +1,10 @@
 package edu.ucdenver.ccp.knowtator.view.text;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
-import edu.ucdenver.ccp.knowtator.listeners.TextSourceListener;
-import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.listeners.*;
+import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.model.annotation.Span;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.Logger;
@@ -15,21 +16,21 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TextViewer extends JPanel implements TextSourceListener, ProjectListener {
+public class TextViewer extends JPanel implements TextSourceListener, ProjectListener, AnnotationListener, SpanListener, ProfileListener {
     private static final Logger log = Logger.getLogger(KnowtatorController.class);
     private boolean first;
     private KnowtatorController controller;
     private KnowtatorView view;
     private Map<TextSource, TextPane> textPaneMap;
     private JScrollPane scrollPane;
-    private JLabel documentLabel;
+    private DocumentToolBar documentToolBar;
 
     public TextViewer(KnowtatorController controller, KnowtatorView view) {
         this.controller = controller;
         this.view = view;
         textPaneMap = new HashMap<>();
         scrollPane = new JScrollPane();
-        documentLabel = new JLabel();
+        documentToolBar = new DocumentToolBar(this, controller);
         setLayout(new BorderLayout());
         first = true;
     }
@@ -52,14 +53,14 @@ public class TextViewer extends JPanel implements TextSourceListener, ProjectLis
         showTextPane(textSource);
     }
 
-    private void showTextPane(TextSource textSource) {
+    void showTextPane(TextSource textSource) {
         if (first) {
             log.warn("Adding first document");
 
             JPanel subPanel = new JPanel();
             subPanel.setLayout(new BorderLayout());
-            subPanel.add(new AnnotationToolBar(this, view), BorderLayout.NORTH);
-            subPanel.add(documentLabel, BorderLayout.SOUTH);
+            subPanel.add(documentToolBar, BorderLayout.NORTH);
+            subPanel.add(new AnnotationToolBar(this, view), BorderLayout.SOUTH);
 
             add(subPanel, BorderLayout.NORTH);
             add(scrollPane, BorderLayout.CENTER);
@@ -74,28 +75,22 @@ public class TextViewer extends JPanel implements TextSourceListener, ProjectLis
         }
 
         TextPane currentTextPane = textPaneMap.get(textSource);
-        controller.getSelectionManager().setActiveTextSource(textSource);
 
-        documentLabel.setText(currentTextPane.getTextSource().getDocID());
         scrollPane.setViewportView(currentTextPane);
         currentTextPane.setIsVisible(true);
 
-        currentTextPane.refreshHighlights();
-
-        view.getGraphViewer().removeAllGraphs();
-        for (GraphSpace graphSpace : textSource.getAnnotationManager().getGraphSpaces()) {
-            view.getGraphViewer().addGraph(graphSpace);
-            graphSpace.connectEdgesToProperties();
-        }
+        controller.getSelectionManager().setActiveTextSource(textSource);
     }
-
-
-
 
     @Override
     public void textSourceAdded(TextSource textSource) {
         addNewDocument(textSource);
+    }
 
+    @Override
+    public void activeTextSourceChanged(TextSource textSource) {
+        getCurrentTextPane().refreshHighlights();
+        documentToolBar.updateComboBox(textSource);
     }
 
     public TextPane getCurrentTextPane() {
@@ -117,6 +112,61 @@ public class TextViewer extends JPanel implements TextSourceListener, ProjectLis
     @Override
     public void projectLoaded() {
         controller.getTextSourceManager().getTextSources().forEach(this::addNewDocument);
-        showTextPane(controller.getTextSourceManager().getTextSources().get(0));
+        showTextPane(controller.getSelectionManager().getActiveTextSource());
+    }
+
+    @Override
+    public void annotationAdded(Annotation newAnnotation) {
+        if (getCurrentTextPane() != null) getCurrentTextPane().refreshHighlights();
+    }
+
+    @Override
+    public void annotationRemoved(Annotation removedAnnotation) {
+        if (getCurrentTextPane() != null) getCurrentTextPane().refreshHighlights();
+    }
+
+    @Override
+    public void annotationSelectionChanged(Annotation annotation) {
+        if (getCurrentTextPane() != null) getCurrentTextPane().refreshHighlights();
+    }
+
+    @Override
+    public void spanAdded(Span newSpan) {
+        if (getCurrentTextPane() != null) getCurrentTextPane().refreshHighlights();
+    }
+
+    @Override
+    public void spanRemoved() {
+        if (getCurrentTextPane() != null) getCurrentTextPane().refreshHighlights();
+    }
+
+    @Override
+    public void spanSelectionChanged(Span span) {
+        if (getCurrentTextPane() != null) getCurrentTextPane().refreshHighlights();
+    }
+
+    @Override
+    public void profileAdded(Profile profile) {
+        if (getCurrentTextPane() != null) getCurrentTextPane().refreshHighlights();
+    }
+
+    @Override
+    public void profileRemoved() {
+        if (getCurrentTextPane() != null) getCurrentTextPane().refreshHighlights();
+    }
+
+    @Override
+    public void profileSelectionChanged(Profile profile) {
+        if (getCurrentTextPane() != null) getCurrentTextPane().refreshHighlights();
+    }
+
+    @Override
+    public void profileFilterSelectionChanged(boolean filterByProfile) {
+        if (getCurrentTextPane() != null) getCurrentTextPane().refreshHighlights();
+    }
+
+    @Override
+    public void colorChanged() {
+        if (getCurrentTextPane() != null) getCurrentTextPane().refreshHighlights();
     }
 }

@@ -2,10 +2,6 @@ package edu.ucdenver.ccp.knowtator.view.text;
 
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.listeners.AnnotationListener;
-import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
-import edu.ucdenver.ccp.knowtator.listeners.SpanListener;
-import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
@@ -24,15 +20,13 @@ import java.util.Set;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public class TextPane extends JTextPane implements AnnotationListener, SpanListener, ProfileListener {
+public class TextPane extends JTextPane {
 
 	private static final Logger log = Logger.getLogger(KnowtatorController.class);
-	private final KnowtatorView view;
 
+	private final KnowtatorView view;
 	private KnowtatorController controller;
 	private TextSource textSource;
-
-
 	private boolean isVisible;
 
 	TextPane(KnowtatorView view, KnowtatorController controller, TextSource textSource) {
@@ -42,10 +36,6 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		this.textSource = textSource;
 
 		this.setEditable(false);
-
-		controller.addSpanListener(this);
-		controller.addConceptAnnotationListener(this);
-		controller.addProfileListener(this);
 
 		setupListeners();
 		requestFocusInWindow();
@@ -86,13 +76,13 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
             if (SwingUtilities.isRightMouseButton(e)) {
                 if (spansContainingLocation.size() == 1) {
 					Span span = spansContainingLocation.iterator().next();
-					setSelection(span, span.getAnnotation());
+					controller.getSelectionManager().setSelectedSpan(span);
                 }
                 popupMenu.showPopUpMenu(release_offset);
             } else if (press_offset == release_offset) {
                 if (spansContainingLocation.size() == 1) {
 					Span span = spansContainingLocation.iterator().next();
-					setSelection(span, span.getAnnotation());
+					controller.getSelectionManager().setSelectedSpan(span);
                 } else if (spansContainingLocation.size() > 1) {
                     popupMenu.chooseAnnotation(spansContainingLocation);
                 }
@@ -102,13 +92,6 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
                 setSelectionAtWordLimits(press_offset, release_offset);
             }
         }
-	}
-
-	void setSelection(Span span, Annotation annotation) {
-		if (isVisible) {
-			controller.getSelectionManager().setSelectedSpan(span);
-			controller.getSelectionManager().setSelectedAnnotation(annotation);
-		}
 	}
 
 	private void setSelectionAtWordLimits(int press_offset, int release_offset) {
@@ -124,21 +107,16 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		}
 	}
 
-	public TextSource getTextSource() {
-		return textSource;
-	}
-
-
 	void previousSpan() {
 		Span previousSpan = textSource.getAnnotationManager().getPreviousSpan();
 
-		setSelection(previousSpan, previousSpan.getAnnotation());
+		controller.getSelectionManager().setSelectedSpan(previousSpan);
 	}
 
 	void nextSpan() {
 		Span nextSpan = textSource.getAnnotationManager().getNextSpan();
 
-		setSelection(nextSpan, nextSpan.getAnnotation());
+		controller.getSelectionManager().setSelectedSpan(nextSpan);
 	}
 
 	void shrinkSelectionEnd() {
@@ -178,7 +156,6 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 			select(getSelectionStart() - 1, getSelectionEnd());
 		}
 	}
-
 
 	void refreshHighlights() {
     	if (isVisible) {
@@ -252,67 +229,6 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		}
 	}
 
-	@Override
-	public void annotationAdded(Annotation newAnnotation) {
-		setSelection(newAnnotation.getSpans().first(), newAnnotation);
-		refreshHighlights();
-	}
-
-	@Override
-	public void annotationRemoved(Annotation removedAnnotation) {
-		refreshHighlights();
-	}
-
-	@Override
-	public void annotationSelectionChanged(Annotation annotation) {
-		if (isVisible) {
-			refreshHighlights();
-		}
-	}
-
-
-
-	@Override
-	public void spanAdded(Span newSpan) {
-		refreshHighlights();
-	}
-
-	@Override
-	public void spanRemoved() {
-		refreshHighlights();
-	}
-
-	@Override
-	public void spanSelectionChanged(Span span) {
-
-		refreshHighlights();
-	}
-
-	@Override
-	public void profileAdded(Profile profile) {
-		refreshHighlights();
-	}
-
-	@Override
-	public void profileRemoved() {
-		refreshHighlights();
-	}
-
-	@Override
-	public void profileSelectionChanged(Profile profile) {
-		refreshHighlights();
-	}
-
-	@Override
-	public void profileFilterSelectionChanged(boolean filterByProfile) {
-		setSelection(null, null);
-	}
-
-	@Override
-	public void colorChanged() {
-		refreshHighlights();
-	}
-
 	void addAnnotation() {
 		String classID = controller.getOWLAPIDataExtractor().getSelectedOwlClassID();
 
@@ -343,7 +259,6 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 
 	void removeAnnotation() {
 		textSource.getAnnotationManager().removeAnnotation(controller.getSelectionManager().getSelectedAnnotation());
-		setSelection(null, null);
 	}
 
     void setIsVisible(boolean isVisible) {

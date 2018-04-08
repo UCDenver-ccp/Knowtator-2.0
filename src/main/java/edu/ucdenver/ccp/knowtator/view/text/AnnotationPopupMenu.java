@@ -4,6 +4,8 @@ import com.mxgraph.model.mxCell;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
+import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.Logger;
 
@@ -45,7 +47,7 @@ class AnnotationPopupMenu extends JPopupMenu {
 
     private JMenuItem removeSpanFromAnnotationCommand() {
         JMenuItem removeSpanFromSelectedAnnotation = new JMenuItem(String.format("Delete span from %s", controller.getSelectionManager().getSelectedAnnotation().getOwlClass()));
-        removeSpanFromSelectedAnnotation.addActionListener(e5 -> textPane.getTextSource().getAnnotationManager()
+        removeSpanFromSelectedAnnotation.addActionListener(e5 -> controller.getSelectionManager().getActiveTextSource().getAnnotationManager()
                 .removeSpanFromAnnotation(
                         controller.getSelectionManager().getSelectedAnnotation(),
                         controller.getSelectionManager().getSelectedSpan()
@@ -58,7 +60,7 @@ class AnnotationPopupMenu extends JPopupMenu {
 
     private JMenuItem selectAnnotationCommand(Annotation annotation, Span span) {
         JMenuItem selectAnnotationMenuItem = new JMenuItem("Select " + annotation.getOwlClass());
-        selectAnnotationMenuItem.addActionListener(e3 -> textPane.setSelection(span, annotation));
+        selectAnnotationMenuItem.addActionListener(e3 -> controller.getSelectionManager().setSelectedSpan(span));
 
         return  selectAnnotationMenuItem;
 
@@ -81,18 +83,21 @@ class AnnotationPopupMenu extends JPopupMenu {
     private JMenu goToAnnotationInGraphCommand() {
         JMenu jMenu = new JMenu("Graphs");
 
-        textPane.getTextSource().getAnnotationManager().getGraphSpaces()
-                .forEach(graphSpace -> {
-                    mxCell vertex = graphSpace.containsVertexCorrespondingToAnnotation(controller.getSelectionManager().getSelectedAnnotation());
-                    if (vertex != null) {
-                        JMenuItem menuItem = new JMenuItem(graphSpace.getId());
-                        menuItem.addActionListener(e1 -> {
-                            view.getGraphViewer().getDialog().setVisible(true);
-                            view.getGraphViewer().goToAnnotationVertex(graphSpace, controller.getSelectionManager().getSelectedAnnotation());
-                        });
-                        jMenu.add(menuItem);
-                    }
+        Annotation annotation = controller.getSelectionManager().getSelectedAnnotation();
+        TextSource textSource = controller.getSelectionManager().getActiveTextSource();
+        for (GraphSpace graphSpace : textSource.getAnnotationManager().getGraphSpaces()) {
+            mxCell vertex = graphSpace.containsVertexCorrespondingToAnnotation(annotation);
+            if (vertex != null) {
+                JMenuItem menuItem = new JMenuItem(graphSpace.getId());
+                menuItem.addActionListener(e1 -> {
+                    view.getGraphViewer().getDialog().setVisible(true);
+                    controller.getSelectionManager().setActiveGraphSpace(graphSpace);
+                    controller.getSelectionManager().setSelectedAnnotation(null, null);
+                    controller.getSelectionManager().setSelectedAnnotation(annotation, null);
                 });
+                jMenu.add(menuItem);
+            }
+        }
 
         return jMenu;
     }

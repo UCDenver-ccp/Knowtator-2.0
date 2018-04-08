@@ -57,12 +57,14 @@ public class AnnotationManager implements Savable {
         annotationMap.put(newAnnotation.getID(), newAnnotation);
 
         spanTreeSet.addAll(newAnnotation.getSpans());
-        controller.annotationAddedEvent(newAnnotation);
 
         OWLClass owlClass = controller.getOWLAPIDataExtractor().getOWLClassByID((String) newAnnotation.getOwlClass());
         if (owlClass != null) {
             newAnnotation.setOwlClass(owlClass);
         }
+
+        controller.getSelectionManager().setSelectedAnnotation(newAnnotation, null);
+        controller.annotationAddedEvent(newAnnotation);
     }
 
     public void addSpanToAnnotation(Annotation annotation, Span newSpan) {
@@ -82,6 +84,7 @@ public class AnnotationManager implements Savable {
                 graphSpace.removeSelectedCell();
             }
         }
+        controller.getSelectionManager().setSelectedAnnotation(null, null);
         controller.annotationRemovedEvent(annotationToRemove);
     }
 

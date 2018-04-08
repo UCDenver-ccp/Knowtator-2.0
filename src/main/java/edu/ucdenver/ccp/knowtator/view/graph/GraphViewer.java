@@ -10,16 +10,14 @@ import com.mxgraph.util.mxEvent;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.GraphListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProfileListener;
+import edu.ucdenver.ccp.knowtator.listeners.TextSourceListener;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLProperty;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,12 +25,10 @@ import java.util.*;
 import java.util.List;
 
 
-public class GraphViewer implements ProfileListener, GraphListener {
+public class GraphViewer implements ProfileListener, GraphListener, TextSourceListener {
 
-    @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(GraphViewer.class);
     private final KnowtatorController controller;
-    private final KnowtatorView view;
     private JDialog dialog;
 
     private Map<GraphSpace, mxGraphComponent> graphComponentMap;
@@ -40,9 +36,8 @@ public class GraphViewer implements ProfileListener, GraphListener {
     private JLabel graphLabel;
     private GraphViewMenu graphViewMenu;
 
-    public GraphViewer(JFrame frame, KnowtatorController controller, KnowtatorView view) {
+    public GraphViewer(JFrame frame, KnowtatorController controller) {
         this.controller = controller;
-        this.view = view;
         graphComponentMap = new HashMap<>();
         scrollPane = new JScrollPane();
         scrollPane.getVerticalScrollBar().setUnitIncrement(20);
@@ -60,7 +55,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
         dialog.setVisible(false);
         dialog.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         dialog.setSize(new Dimension(800, 800));
-        dialog.setLocationRelativeTo(view);
+        dialog.setLocationRelativeTo(frame);
 
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(new GraphMenu(controller, this));
@@ -72,7 +67,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
 
         JPanel subPanel = new JPanel();
         subPanel.setLayout(new BorderLayout());
-        subPanel.add(new GraphToolBar(this), BorderLayout.NORTH);
+        subPanel.add(new GraphToolBar(this, controller), BorderLayout.NORTH);
         subPanel.add(graphLabel, BorderLayout.SOUTH);
 
         dialog.add(subPanel, BorderLayout.NORTH);
@@ -96,48 +91,36 @@ public class GraphViewer implements ProfileListener, GraphListener {
                     mxCell edge = (mxCell) cell;
                     mxICell source = edge.getSource();
                     mxICell target = edge.getTarget();
-                    if (source instanceof AnnotationNode && target instanceof AnnotationNode) {
-                        Object property = controller.getOWLAPIDataExtractor().getSelectedProperty();
+                    Object property = controller.getOWLAPIDataExtractor().getSelectedProperty();
 
-                        if (property == null) {
-                            log.warn("No Object property selected");
-                            JTextField field1 = new JTextField();
-                            Object[] message = {
-                                    "Relationship ID", field1,
-                            };
-                            if (JOptionPane.showConfirmDialog(null, message, "Enter an ID for this property", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
-                                property = field1.getText();
-                            }
+                    if (property != null) {
+                        JTextField quantifierField = new JTextField(10);
+                        JTextField valueField = new JTextField(10);
+                        JPanel restrictionPanel = new JPanel();
+                        restrictionPanel.add(new JLabel("Quantifier:"));
+                        restrictionPanel.add(quantifierField);
+                        restrictionPanel.add(Box.createHorizontalStrut(15));
+                        restrictionPanel.add(new JLabel("Value:"));
+                        restrictionPanel.add(valueField);
+
+                        String quantifier = "";
+                        String value = "";
+                        int result = JOptionPane.showConfirmDialog(null, restrictionPanel,
+                                "Restriction options", JOptionPane.OK_CANCEL_OPTION);
+                        if (result == JOptionPane.OK_OPTION) {
+                            quantifier = quantifierField.getText();
+                            value = valueField.getText();
                         }
-                        if (property != null) {
-                            JTextField quantifierField = new JTextField(10);
-                            JTextField valueField = new JTextField(10);
-                            JPanel restrictionPanel = new JPanel();
-                            restrictionPanel.add(new JLabel("Quantifier:"));
-                            restrictionPanel.add(quantifierField);
-                            restrictionPanel.add(Box.createHorizontalStrut(15));
-                            restrictionPanel.add(new JLabel("Value:"));
-                            restrictionPanel.add(valueField);
 
-                            String quantifier = "";
-                            String value = "";
-                            int result = JOptionPane.showConfirmDialog(null, restrictionPanel,
-                                    "Restriction options", JOptionPane.OK_CANCEL_OPTION);
-                            if (result == JOptionPane.OK_OPTION) {
-                                quantifier = quantifierField.getText();
-                                value = valueField.getText();
-                            }
+                        graph.addTriple(
+                                (AnnotationNode) source,
+                                (AnnotationNode) target,
+                                null,
+                                controller.getSelectionManager().getActiveProfile(),
+                                property,
+                                quantifier,
+                                value);
 
-                            graph.addTriple(
-                                    (AnnotationNode) source,
-                                    (AnnotationNode) target,
-                                    null,
-                                    controller.getSelectionManager().getActiveProfile(),
-                                    property,
-                                    quantifier,
-                                    value);
-
-                        }
                     }
 
                     graph.getModel().remove(edge);
@@ -166,34 +149,20 @@ public class GraphViewer implements ProfileListener, GraphListener {
             if (selectedCells != null) {
                 for (Object cell : selectedCells) {
                     if (cell instanceof AnnotationNode) {
-                        //noinspection SuspiciousMethodCalls
                         Annotation annotation = ((AnnotationNode) cell).getAnnotation();
 
-                        controller.getSelectionManager().setSelectedAnnotation(annotation);
+                        controller.getSelectionManager().setSelectedAnnotation(annotation, null);
 
-                        if (annotation.isOwlClass()) {
-                            view.owlEntitySelectionChanged((OWLClass) annotation.getOwlClass());
-                        }
                         graph.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
 
                     } else {
                         Object value = ((mxCell) cell).getValue();
-                        if (value instanceof OWLProperty) {
-                            view.owlEntitySelectionChanged((OWLObjectProperty) value);
-                        } else if (value instanceof String) {
-                            view.owlEntitySelectionChanged(controller.getOWLAPIDataExtractor().getOWLObjectPropertyByID((String) ((mxCell) cell).getValue()));
-                        }
+                        controller.propertyChangedEvent(value);
                     }
                 }
             }
             graph.reDrawGraph();
         });
-    }
-
-    private void addAnnotationVertex(Annotation annotation) {
-        mxCell vertex = controller.getSelectionManager().getActiveGraphSpace().addNode(null, annotation);
-
-        goToVertex(vertex);
     }
 
     public void goToAnnotationVertex(GraphSpace graphSpace, Annotation annotation) {
@@ -207,7 +176,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
         }
     }
 
-    private void goToVertex(Object vertex) {
+    void goToVertex(Object vertex) {
         dialog.requestFocusInWindow();
         graphComponentMap.get(controller.getSelectionManager().getActiveGraphSpace()).scrollCellToVisible(vertex, true);
 
@@ -237,7 +206,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
         graphSpace.reDrawGraph();
     }
 
-    public void addGraph(GraphSpace graphSpace) {
+    private void addGraph(GraphSpace graphSpace) {
         log.warn("Knowtator: GraphViewer: Adding graph space " + graphSpace.getId());
 
         mxGraphComponent graphComponent = new mxGraphComponent(graphSpace);
@@ -296,10 +265,6 @@ public class GraphViewer implements ProfileListener, GraphListener {
         return graphComponentMap;
     }
 
-    void addSelectedAnnotationAsVertex() {
-        addAnnotationVertex(controller.getSelectionManager().getSelectedAnnotation());
-    }
-
     void removeSelectedCell() {
         controller.getSelectionManager().getActiveGraphSpace().removeSelectedCell();
     }
@@ -339,7 +304,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
 
     }
 
-    public void removeAllGraphs() {
+    private void removeAllGraphs() {
         mxGraphComponent graphComponent = graphComponentMap.get(controller.getSelectionManager().getActiveGraphSpace());
         if (graphComponent != null) {
             dialog.remove(graphComponent);
@@ -353,5 +318,19 @@ public class GraphViewer implements ProfileListener, GraphListener {
 
     void zoomOut() {
         graphComponentMap.get(controller.getSelectionManager().getActiveGraphSpace()).zoomOut();
+    }
+
+    @Override
+    public void textSourceAdded(TextSource textSource) {
+
+    }
+
+    @Override
+    public void activeTextSourceChanged(TextSource textSource) {
+        removeAllGraphs();
+        for (GraphSpace graphSpace : textSource.getAnnotationManager().getGraphSpaces()) {
+            addGraph(graphSpace);
+            graphSpace.connectEdgesToProperties();
+        }
     }
 }
