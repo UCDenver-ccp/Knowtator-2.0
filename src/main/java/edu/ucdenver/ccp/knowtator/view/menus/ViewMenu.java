@@ -19,10 +19,7 @@ public class ViewMenu extends JMenu {
 
     private JCheckBoxMenuItem showForCurrentProfileCommand() {
         JCheckBoxMenuItem showForCurrentProfile = new JCheckBoxMenuItem("Show only annotations for current profile");
-        showForCurrentProfile.addActionListener(e -> {
-            if (showForCurrentProfile.getState()) controller.profileFilterEvent(true);
-            else controller.profileFilterEvent(false);
-        });
+        showForCurrentProfile.addActionListener(e -> controller.getSelectionManager().setFilterByProfile(showForCurrentProfile.getState()));
 
         return  showForCurrentProfile;
     }

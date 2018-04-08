@@ -31,19 +31,17 @@ class GraphMenu extends JMenu {
     private JMenuItem renameGraphCommand() {
         JMenuItem menuItem = new JMenuItem("Rename Graph");
         menuItem.addActionListener(e -> {
-            if (graphViewer.getCurrentGraphComponent() != null) {
-                JTextField nameField = new JTextField(10);
-                nameField.setText(graphViewer.getCurrentGraphComponent().getName());
-                JPanel inputPanel = new JPanel();
-                inputPanel.add(new JLabel("New Name:"));
-                inputPanel.add(nameField);
+            JTextField nameField = new JTextField(10);
+            nameField.setText(controller.getSelectionManager().getActiveGraphSpace().getId());
+            JPanel inputPanel = new JPanel();
+            inputPanel.add(new JLabel("New Name:"));
+            inputPanel.add(nameField);
 
 
-                int result = JOptionPane.showConfirmDialog(null, inputPanel,
-                        "Enter a new name for this graph space", JOptionPane.DEFAULT_OPTION);
-                if (result == JOptionPane.OK_OPTION) {
-                    graphViewer.renameCurrentGraph(nameField.getText());
-                }
+            int result = JOptionPane.showConfirmDialog(null, inputPanel,
+                    "Enter a new name for this graph space", JOptionPane.DEFAULT_OPTION);
+            if (result == JOptionPane.OK_OPTION) {
+                graphViewer.renameCurrentGraph(nameField.getText());
             }
         });
 
@@ -53,18 +51,16 @@ class GraphMenu extends JMenu {
     private JMenuItem saveToImageCommand() {
         JMenuItem menuItem = new JMenuItem("Save as PNG");
         menuItem.addActionListener(e -> {
-            if (graphViewer.getCurrentGraphComponent() != null) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setCurrentDirectory(controller.getProjectManager().getProjectLocation());
-                FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
-                fileChooser.setFileFilter(fileFilter);
-                if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    BufferedImage image = mxCellRenderer.createBufferedImage(graphViewer.getCurrentGraphComponent().getGraph(), null, 1, Color.WHITE, true, null);
-                    try {
-                        ImageIO.write(image, "PNG", new File(fileChooser.getSelectedFile().getAbsolutePath()));
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(controller.getProjectManager().getProjectLocation());
+            FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
+            fileChooser.setFileFilter(fileFilter);
+            if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                BufferedImage image = mxCellRenderer.createBufferedImage(controller.getSelectionManager().getActiveGraphSpace(), null, 1, Color.WHITE, true, null);
+                try {
+                    ImageIO.write(image, "PNG", new File(fileChooser.getSelectedFile().getAbsolutePath()));
+                } catch (IOException e1) {
+                    e1.printStackTrace();
                 }
             }
         });
@@ -75,10 +71,8 @@ class GraphMenu extends JMenu {
     private JMenuItem deleteGraphCommand() {
         JMenuItem deleteGraphMenuItem = new JMenuItem("Delete graph");
         deleteGraphMenuItem.addActionListener(e -> {
-            if (graphViewer.getCurrentGraphComponent() != null) {
-                if (JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this graph?") == JOptionPane.YES_OPTION) {
-                    graphViewer.deleteSelectedGraph();
-                }
+            if (JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this graph?") == JOptionPane.YES_OPTION) {
+                graphViewer.deleteSelectedGraph();
             }
         });
 

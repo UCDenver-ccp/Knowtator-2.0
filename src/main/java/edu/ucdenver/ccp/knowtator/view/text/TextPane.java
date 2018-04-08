@@ -19,7 +19,7 @@ import javax.swing.text.Utilities;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Map;
+import java.util.Set;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -81,18 +81,18 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 		if (isVisible) {
 			AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e, this, controller, view);
 
-			Map<Span, Annotation> spansContainingLocation = textSource.getAnnotationManager().getSpanMap(press_offset);
+			Set<Span> spansContainingLocation = textSource.getAnnotationManager().getSpanSet(press_offset);
 
             if (SwingUtilities.isRightMouseButton(e)) {
                 if (spansContainingLocation.size() == 1) {
-                    Map.Entry<Span, Annotation> entry = spansContainingLocation.entrySet().iterator().next();
-                    setSelection(entry.getKey(), entry.getValue());
+					Span span = spansContainingLocation.iterator().next();
+					setSelection(span, span.getAnnotation());
                 }
                 popupMenu.showPopUpMenu(release_offset);
             } else if (press_offset == release_offset) {
                 if (spansContainingLocation.size() == 1) {
-                    Map.Entry<Span, Annotation> entry = spansContainingLocation.entrySet().iterator().next();
-                    setSelection(entry.getKey(), entry.getValue());
+					Span span = spansContainingLocation.iterator().next();
+					setSelection(span, span.getAnnotation());
                 } else if (spansContainingLocation.size() > 1) {
                     popupMenu.chooseAnnotation(spansContainingLocation);
                 }
@@ -144,6 +144,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	void shrinkSelectionEnd() {
 		if (controller.getSelectionManager().isFocusOnSelectedSpan()) {
 			textSource.getAnnotationManager().shrinkSpanEnd(controller.getSelectionManager().getSelectedSpan());
+			refreshHighlights();
 		} else {
 			requestFocusInWindow();
 			select(getSelectionStart(), getSelectionEnd() - 1);
@@ -153,6 +154,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	void shrinkSelectionStart() {
 		if (controller.getSelectionManager().isFocusOnSelectedSpan()) {
 			textSource.getAnnotationManager().shrinkSpanStart(controller.getSelectionManager().getSelectedSpan());
+			refreshHighlights();
 		} else {
 			requestFocusInWindow();
 			select(getSelectionStart() + 1, getSelectionEnd());
@@ -161,6 +163,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	void growSelectionEnd() {
 		if (controller.getSelectionManager().isFocusOnSelectedSpan()) {
 			textSource.getAnnotationManager().growSpanEnd(controller.getSelectionManager().getSelectedSpan(), getText().length());
+			refreshHighlights();
 		} else {
 			requestFocusInWindow();
 			select(getSelectionStart(), getSelectionEnd() + 1);
@@ -169,6 +172,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	void growSelectionStart() {
 		if (controller.getSelectionManager().isFocusOnSelectedSpan()) {
 			textSource.getAnnotationManager().growSpanStart(controller.getSelectionManager().getSelectedSpan());
+			refreshHighlights();
 		} else {
 			requestFocusInWindow();
 			select(getSelectionStart() - 1, getSelectionEnd());
@@ -198,10 +202,8 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 			Span lastSpan = Span.makeDefaultSpan();
 			Color lastColor = null;
 
-			Map<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null);
-			for (Map.Entry<Span, Annotation> entry : annotationMap.entrySet()) {
-				Span span = entry.getKey();
-				Annotation annotation = entry.getValue();
+			Set<Span> spans = textSource.getAnnotationManager().getSpanSet(null);
+			for (Span span : spans) {
 				if (span.intersects(lastSpan)) {
 					try {
 						getHighlighter().addHighlight(span.getStart(), min(span.getEnd(), lastSpan.getEnd()), new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY));
@@ -217,7 +219,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 					}
 					lastSpan = span;
 
-					lastColor = profile.getColor(annotation.getOwlClass());
+					lastColor = profile.getColor(span.getAnnotation().getOwlClass());
 				}
 			}
 
@@ -340,7 +342,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 	}
 
 	void removeAnnotation() {
-		textSource.getAnnotationManager().removeAnnotation(controller.getSelectionManager().getSelectedAnnotation().getID());
+		textSource.getAnnotationManager().removeAnnotation(controller.getSelectionManager().getSelectedAnnotation());
 		setSelection(null, null);
 	}
 

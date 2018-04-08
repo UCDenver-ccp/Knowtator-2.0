@@ -16,10 +16,10 @@ class GraphViewMenu extends JMenu {
 
     private JMenu goToGraphMenu() {
         JMenu menu = new JMenu("Go to graph");
-        graphViewer.getGraphComponentMap().values()
-                .forEach(graphComponent -> {
-                    JMenuItem menuItem = new JMenuItem(graphComponent.getName());
-                    menuItem.addActionListener(e -> graphViewer.showGraph(graphComponent));
+        graphViewer.getGraphComponentMap().keySet()
+                .forEach(graphSpace -> {
+                    JMenuItem menuItem = new JMenuItem(graphSpace.getId());
+                    menuItem.addActionListener(e -> graphViewer.showGraph(graphSpace));
                     menu.add(menuItem);
                 });
         return menu;
@@ -27,17 +27,13 @@ class GraphViewMenu extends JMenu {
 
     private JMenuItem zoomInCommand() {
         JMenuItem menuItem = new JMenuItem("Zoom In");
-        menuItem.addActionListener(e -> {
-            if(graphViewer.getCurrentGraphComponent() != null) graphViewer.getCurrentGraphComponent().zoomIn();
-        });
+        menuItem.addActionListener(e -> graphViewer.zoomIn());
         return menuItem;
     }
 
     private JMenuItem zoomOutCommand() {
         JMenuItem menuItem = new JMenuItem("Zoom Out");
-        menuItem.addActionListener(e -> {
-            if(graphViewer.getCurrentGraphComponent() != null) graphViewer.getCurrentGraphComponent().zoomOut();
-        });
+        menuItem.addActionListener(e -> graphViewer.zoomOut());
         return menuItem;
     }
 

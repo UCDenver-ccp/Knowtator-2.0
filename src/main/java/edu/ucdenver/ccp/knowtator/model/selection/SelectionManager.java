@@ -29,6 +29,7 @@ public class SelectionManager {
 
     public void setFilterByProfile(boolean filterByProfile) {
         this.filterByProfile = filterByProfile;
+        controller.profileFilterEvent(filterByProfile);
     }
 
     public KnowtatorController getController() {

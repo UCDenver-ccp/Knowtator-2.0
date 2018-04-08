@@ -90,7 +90,7 @@ public class IOTests {
 
         AnnotationManager annotationManager = textSource.getAnnotationManager();
         int numAnnotations = annotationManager.getAnnotations().size();
-        int numSpans = annotationManager.getSpanMap(null).size();
+        int numSpans = annotationManager.getSpanSet(null).size();
         int numGraphSpaces = annotationManager.getGraphSpaces().size();
         int numVertices = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildVertices(graphSpace.getDefaultParent()).length).sum();
         int numTriples = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildEdges(graphSpace.getDefaultParent()).length).sum();
@@ -113,7 +113,7 @@ public class IOTests {
 
         annotationManager = textSource.getAnnotationManager();
         numAnnotations = annotationManager.getAnnotations().size();
-        numSpans = annotationManager.getSpanMap(null).size();
+        numSpans = annotationManager.getSpanSet(null).size();
         numGraphSpaces = annotationManager.getGraphSpaces().size();
         numVertices = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildVertices(graphSpace.getDefaultParent()).length).sum();
         numTriples = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildEdges(graphSpace.getDefaultParent()).length).sum();
@@ -205,7 +205,7 @@ public class IOTests {
 
         AnnotationManager annotationManager1 = textSource.getAnnotationManager();
         int numAnnotations = annotationManager1.getAnnotations().size();
-        int numSpans = annotationManager1.getSpanMap(null).size();
+        int numSpans = annotationManager1.getSpanSet(null).size();
         int numGraphSpaces = annotationManager1.getGraphSpaces().size();
 
         assert numGraphSpaces == 1 : "There were " + numGraphSpaces + " graph spaces";

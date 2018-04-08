@@ -26,7 +26,7 @@ public class Annotation implements Savable {
 	private Object owlClass;
     private String annotation_type;
     private TreeSet<Span> spans;
-    private Set<String> overlappingAnnotations;
+    private Set<Annotation> overlappingAnnotations;
 
 	private final Date date;
 	private String id;
@@ -166,12 +166,12 @@ public class Annotation implements Savable {
 		return false;
 	}
 
-	void addOverlappingAnnotation(String annotationID) {
-		overlappingAnnotations.add(annotationID);
+    void addOverlappingAnnotation(Annotation annotation) {
+        overlappingAnnotations.add(annotation);
 	}
 
 	@SuppressWarnings("unused")
-	public Set<String> getOverlappingAnnotations() {
+    public Set<Annotation> getOverlappingAnnotations() {
 		return overlappingAnnotations;
 	}
 

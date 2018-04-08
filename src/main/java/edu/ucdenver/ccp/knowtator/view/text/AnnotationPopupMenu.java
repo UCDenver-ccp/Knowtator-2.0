@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
-import java.util.Map;
+import java.util.Set;
 
 class AnnotationPopupMenu extends JPopupMenu {
     @SuppressWarnings("unused")
@@ -71,9 +71,9 @@ class AnnotationPopupMenu extends JPopupMenu {
         return removeAnnotationMenuItem;
     }
 
-    void chooseAnnotation(Map<Span, Annotation> spansContainingLocation) {
+    void chooseAnnotation(Set<Span> spansContainingLocation) {
         // Menu items to select and remove annotations
-        spansContainingLocation.forEach((span, annotation) -> add(selectAnnotationCommand(annotation, span)));
+        spansContainingLocation.forEach(span -> add(selectAnnotationCommand(span.getAnnotation(), span)));
 
         show(e.getComponent(), e.getX(), e.getY());
     }

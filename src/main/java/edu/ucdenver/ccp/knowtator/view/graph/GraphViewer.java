@@ -35,7 +35,6 @@ public class GraphViewer implements ProfileListener, GraphListener {
     private final KnowtatorView view;
     private JDialog dialog;
 
-    private mxGraphComponent currentGraphComponent;
     private Map<GraphSpace, mxGraphComponent> graphComponentMap;
     private JScrollPane scrollPane;
     private JLabel graphLabel;
@@ -84,14 +83,6 @@ public class GraphViewer implements ProfileListener, GraphListener {
 
     void addNewGraphSpace(String graphID) {
         controller.getSelectionManager().getActiveTextSource().getAnnotationManager().addGraphSpace(graphID);
-    }
-
-    mxGraphComponent getCurrentGraphComponent() {
-        return currentGraphComponent;
-    }
-
-    private mxGraphComponent getGraphComponent(GraphSpace graphSpace) {
-        return graphComponentMap.get(graphSpace);
     }
 
     private void setupListeners(mxGraphComponent graphComponent) {
@@ -178,12 +169,13 @@ public class GraphViewer implements ProfileListener, GraphListener {
                         //noinspection SuspiciousMethodCalls
                         Annotation annotation = ((AnnotationNode) cell).getAnnotation();
 
-                        controller.annotationSelectionChangedEvent(annotation);
+                        controller.getSelectionManager().setSelectedAnnotation(annotation);
 
                         if (annotation.isOwlClass()) {
                             view.owlEntitySelectionChanged((OWLClass) annotation.getOwlClass());
                         }
                         graph.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
+
                     } else {
                         Object value = ((mxCell) cell).getValue();
                         if (value instanceof OWLProperty) {
@@ -195,69 +187,54 @@ public class GraphViewer implements ProfileListener, GraphListener {
                 }
             }
             graph.reDrawGraph();
-//            executeLayout(null);
         });
     }
 
     private void addAnnotationVertex(Annotation annotation) {
-        if (currentGraphComponent != null && annotation != null) {
-            GraphSpace graph = (GraphSpace) currentGraphComponent.getGraph();
+        mxCell vertex = controller.getSelectionManager().getActiveGraphSpace().addNode(null, annotation);
 
-            mxCell vertex = graph.addNode(null, annotation);
-            goToVertex(vertex);
-        }
-
+        goToVertex(vertex);
     }
 
     public void goToAnnotationVertex(GraphSpace graphSpace, Annotation annotation) {
-        if (annotation != null) {
-            showGraph(getGraphComponent(graphSpace));
-            if (currentGraphComponent != null) {
-                List<Object> vertices = graphSpace.getVerticesForAnnotation(annotation);
-                if (vertices.size() > 0) {
-                    graphSpace.setSelectionCells(vertices);
-                    goToVertex(vertices.get(0));
-                }
+        if (annotation != null && graphSpace != null) {
+            showGraph(graphSpace);
+            List<Object> vertices = graphSpace.getVerticesForAnnotation(annotation);
+            if (vertices.size() > 0) {
+                graphSpace.setSelectionCells(vertices);
+                goToVertex(vertices.get(0));
             }
         }
     }
 
     private void goToVertex(Object vertex) {
-        if (currentGraphComponent != null) {
-//            GraphSpace graph = (GraphSpace) currentGraphComponent.getGraph();
+        dialog.requestFocusInWindow();
+        graphComponentMap.get(controller.getSelectionManager().getActiveGraphSpace()).scrollCellToVisible(vertex, true);
 
-//            if (!graph.getSelectionModel().isSelected(vertex)) graph.setSelectionCell(vertex);
-            dialog.requestFocusInWindow();
-            currentGraphComponent.scrollCellToVisible(vertex, true);
-
-        }
     }
 
     void deleteSelectedGraph() {
-        if (currentGraphComponent != null) {
-            GraphSpace graph = (GraphSpace) currentGraphComponent.getGraph();
-
-            controller.getSelectionManager().getActiveTextSource().getAnnotationManager().removeGraphSpace(graph);
-
-            graphComponentMap.remove(graph);
-            if (graphComponentMap.size() > 0) {
-                showGraph(graphComponentMap.values().iterator().next());
-            }
-            graphViewMenu.updateMenus();
+        if (graphComponentMap.size() > 0) {
+            showGraph(graphComponentMap.keySet().iterator().next());
+        } else {
+            dialog.remove(graphComponentMap.get(controller.getSelectionManager().getActiveGraphSpace()));
         }
 
+        controller.getSelectionManager().getActiveTextSource().getAnnotationManager().removeGraphSpace(controller.getSelectionManager().getActiveGraphSpace());
+        graphComponentMap.remove(controller.getSelectionManager().getActiveGraphSpace());
+        graphViewMenu.updateMenus();
     }
 
-    void showGraph(mxGraphComponent graphComponent) {
+    void showGraph(GraphSpace graphSpace) {
+        mxGraphComponent graphComponent = graphComponentMap.get(controller.getSelectionManager().getActiveGraphSpace());
         if (graphComponent != null) {
-            if (currentGraphComponent != null) {
-                dialog.remove(currentGraphComponent);
-            }
-            currentGraphComponent = graphComponent;
-            dialog.add(currentGraphComponent, BorderLayout.CENTER);
-            graphLabel.setText(currentGraphComponent.getName());
-            ((GraphSpace) graphComponent.getGraph()).reDrawGraph();
+            dialog.remove(graphComponent);
         }
+
+        controller.getSelectionManager().setActiveGraphSpace(graphSpace);
+        dialog.add(graphComponentMap.get(graphSpace), BorderLayout.CENTER);
+        graphLabel.setText(graphSpace.getId());
+        graphSpace.reDrawGraph();
     }
 
     public void addGraph(GraphSpace graphSpace) {
@@ -275,37 +252,35 @@ public class GraphViewer implements ProfileListener, GraphListener {
 
         graphComponentMap.put(graphSpace, graphComponent);
 
-        showGraph(graphComponent);
+        showGraph(graphSpace);
         executeLayout();
 
         graphViewMenu.updateMenus();
     }
 
     void executeLayout() {
-        if (currentGraphComponent != null) {
-            GraphSpace graph = (GraphSpace) currentGraphComponent.getGraph();
-            graph.reDrawGraph();
-            mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
-            layout.setOrientation(SwingConstants.WEST);
-            layout.setIntraCellSpacing(50);
-            layout.setInterRankCellSpacing(125);
-            layout.setOrientation(SwingConstants.NORTH);
+        GraphSpace graph = controller.getSelectionManager().getActiveGraphSpace();
+        graph.reDrawGraph();
+        mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
+        layout.setOrientation(SwingConstants.WEST);
+        layout.setIntraCellSpacing(50);
+        layout.setInterRankCellSpacing(125);
+        layout.setOrientation(SwingConstants.NORTH);
 
+        try {
+            graph.getModel().beginUpdate();
             try {
-                graph.getModel().beginUpdate();
-                try {
-                    layout.execute(graph.getDefaultParent());
-                } finally {
-                    mxMorphing morph = new mxMorphing(currentGraphComponent, 20, 1.2, 20);
-
-                    morph.addListener(mxEvent.DONE, (arg0, arg1) -> graph.getModel().endUpdate());
-
-                    morph.startAnimation();
-                }
+                layout.execute(graph.getDefaultParent());
             } finally {
-                graph.getModel().endUpdate();
-                currentGraphComponent.zoomAndCenter();
+                mxMorphing morph = new mxMorphing(graphComponentMap.get(controller.getSelectionManager().getActiveGraphSpace()), 20, 1.2, 20);
+
+                morph.addListener(mxEvent.DONE, (arg0, arg1) -> graph.getModel().endUpdate());
+
+                morph.startAnimation();
             }
+        } finally {
+            graph.getModel().endUpdate();
+            graphComponentMap.get(controller.getSelectionManager().getActiveGraphSpace()).zoomAndCenter();
         }
     }
 
@@ -314,8 +289,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
     }
 
     void renameCurrentGraph(String newGraphID) {
-        ((GraphSpace) currentGraphComponent.getGraph()).setId(newGraphID);
-        currentGraphComponent.setName(newGraphID);
+        (controller.getSelectionManager().getActiveGraphSpace()).setId(newGraphID);
     }
 
     Map<GraphSpace, mxGraphComponent> getGraphComponentMap() {
@@ -327,10 +301,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
     }
 
     void removeSelectedCell() {
-        if (currentGraphComponent != null) {
-            GraphSpace graphSpace = (GraphSpace) currentGraphComponent.getGraph();
-            graphSpace.removeSelectedCell();
-        }
+        controller.getSelectionManager().getActiveGraphSpace().removeSelectedCell();
     }
 
     @Override
@@ -369,7 +340,18 @@ public class GraphViewer implements ProfileListener, GraphListener {
     }
 
     public void removeAllGraphs() {
+        mxGraphComponent graphComponent = graphComponentMap.get(controller.getSelectionManager().getActiveGraphSpace());
+        if (graphComponent != null) {
+            dialog.remove(graphComponent);
+        }
         graphComponentMap = new HashMap<>();
-        dialog.remove(currentGraphComponent);
+    }
+
+    void zoomIn() {
+        graphComponentMap.get(controller.getSelectionManager().getActiveGraphSpace()).zoomIn();
+    }
+
+    void zoomOut() {
+        graphComponentMap.get(controller.getSelectionManager().getActiveGraphSpace()).zoomOut();
     }
 }

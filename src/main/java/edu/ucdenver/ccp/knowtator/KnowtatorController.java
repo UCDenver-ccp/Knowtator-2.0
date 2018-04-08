@@ -75,17 +75,8 @@ public class KnowtatorController {
         graphListeners = new HashSet<>();
     }
 
-    public ProfileManager getProfileManager() {
-        return profileManager;
-    }
+    public static void main(String[] args) {
 
-    public ProjectManager getProjectManager() {
-        return projectManager;
-    }
-
-
-    public TextSourceManager getTextSourceManager() {
-        return textSourceManager;
     }
 
     public void close(File file) {
@@ -93,71 +84,37 @@ public class KnowtatorController {
         projectManager.loadProject(file);
     }
 
-    public void textSourceAddedEvent(TextSource textSource) {
-        textSourceListeners.forEach(textSourceListener -> textSourceListener.textSourceAdded(textSource));
+    public void setUpOWL(OWLWorkspace owlWorkspace, OWLModelManager owlModelManager) {
+        owlDataExtractor.setUpOWL(owlWorkspace, owlModelManager);
+    }
+    public ProfileManager getProfileManager() {
+        return profileManager;
+    }
+    public ProjectManager getProjectManager() {
+        return projectManager;
     }
 
-    public void profileAddedEvent(Profile profile) {
-        profileListeners.forEach(profileListener -> profileListener.profileAdded(profile));
+    /**
+     * GETTERS
+     */
+
+    public OWLAPIDataExtractor getOWLAPIDataExtractor() {
+        return owlDataExtractor;
+    }
+    public TextSourceManager getTextSourceManager() {
+        return textSourceManager;
     }
 
-    public void spanSelectionChangedEvent(Span span) {
-        spanListeners.forEach(spanListener -> spanListener.spanSelectionChanged(span));
+    public SelectionManager getSelectionManager() {
+        return selectionManager;
     }
 
-    public void profileSelectionChangedEvent(Profile profile) {
-        profileListeners.forEach(profileListener -> profileListener.profileSelectionChanged(profile));
-    }
-
-    public void annotationAddedEvent(Annotation newAnnotation) {
-        annotationListeners.forEach(listener -> listener.annotationAdded(newAnnotation));
-    }
-
-    public void annotationSelectionChangedEvent(Annotation annotation) {
-        if (annotation != null) {
-            if (view != null) {
-                if (annotation.isOwlClass()) {
-                    view.owlEntitySelectionChanged((OWLClass) annotation.getOwlClass());
-                }
-                view.getGraphViewer().goToAnnotationVertex(null, annotation);
-            }
-
-            annotationListeners.forEach(listener -> listener.annotationSelectionChanged(annotation));
-
-
-        }
-    }
-
-    public void annotationRemovedEvent(Annotation removedAnnotation) {
-        selectionManager.setSelectedAnnotation(null);
-        annotationListeners.forEach(listener -> listener.annotationRemoved(removedAnnotation));
-    }
-
-    public void profileRemovedEvent() {
-        profileListeners.forEach(ProfileListener::profileRemoved);
-    }
-
-
-    public void profileFilterEvent(boolean filterByProfile) {
-        selectionManager.setFilterByProfile(filterByProfile);
-        profileListeners.forEach(profileListener -> profileListener.profileFilterSelectionChanged(filterByProfile));
-    }
-
-    public void spanAddedEvent(Span newSpan) {
-        spanListeners.forEach(spanListener -> spanListener.spanAdded(newSpan));
-    }
-
-
-    public void spanRemovedEvent() {
-        spanListeners.forEach(SpanListener::spanRemoved);
-    }
+    /**
+     * ADDERS
+     */
 
     public void addConceptAnnotationListener(AnnotationListener listener) {
         annotationListeners.add(listener);
-    }
-
-    public void colorChangedEvent() {
-        profileListeners.forEach(ProfileListener::colorChanged);
     }
 
     public void addSpanListener(SpanListener listener) {
@@ -168,16 +125,12 @@ public class KnowtatorController {
         profileListeners.add(listener);
     }
 
+    public void addProjectListener(ProjectListener listener) {
+        projectListeners.add(listener);
+    }
+
     public void addGraphListener(GraphListener listener) {
         graphListeners.add(listener);
-    }
-
-    public void newGraphEvent(GraphSpace graphSpace) {
-        graphListeners.forEach(listener -> listener.newGraph(graphSpace));
-    }
-
-    public void removeGraphEvent(GraphSpace graphSpace) {
-        graphListeners.forEach(listener -> listener.removeGraph(graphSpace));
     }
 
     public void addAnnotationListener(AnnotationListener listener) {
@@ -187,25 +140,64 @@ public class KnowtatorController {
     public void addTextSourceListener(TextSourceListener listener) {
         textSourceListeners.add(listener);
     }
-
-    public OWLAPIDataExtractor getOWLAPIDataExtractor() {
-        return owlDataExtractor;
+    public void profileAddedEvent(Profile profile) {
+        profileListeners.forEach(profileListener -> profileListener.profileAdded(profile));
+    }
+    public void spanSelectionChangedEvent(Span span) {
+        spanListeners.forEach(spanListener -> spanListener.spanSelectionChanged(span));
+    }
+    public void profileSelectionChangedEvent(Profile profile) {
+        profileListeners.forEach(profileListener -> profileListener.profileSelectionChanged(profile));
+    }
+    public void annotationAddedEvent(Annotation newAnnotation) {
+        annotationListeners.forEach(listener -> listener.annotationAdded(newAnnotation));
     }
 
+    /**
+     * EVENTS
+     */
 
-    public void setUpOWL(OWLWorkspace owlWorkspace, OWLModelManager owlModelManager) {
-        owlDataExtractor.setUpOWL(owlWorkspace, owlModelManager);
+    public void textSourceAddedEvent(TextSource textSource) {
+        textSourceListeners.forEach(textSourceListener -> textSourceListener.textSourceAdded(textSource));
     }
-
+    public void annotationRemovedEvent(Annotation removedAnnotation) {
+        selectionManager.setSelectedAnnotation(null);
+        annotationListeners.forEach(listener -> listener.annotationRemoved(removedAnnotation));
+    }
+    public void profileRemovedEvent() {
+        profileListeners.forEach(ProfileListener::profileRemoved);
+    }
+    public void profileFilterEvent(boolean filterByProfile) {
+        profileListeners.forEach(profileListener -> profileListener.profileFilterSelectionChanged(filterByProfile));
+    }
+    public void spanAddedEvent(Span newSpan) {
+        spanListeners.forEach(spanListener -> spanListener.spanAdded(newSpan));
+    }
+    public void spanRemovedEvent() {
+        spanListeners.forEach(SpanListener::spanRemoved);
+    }
+    public void colorChangedEvent() {
+        profileListeners.forEach(ProfileListener::colorChanged);
+    }
+    public void newGraphEvent(GraphSpace graphSpace) {
+        graphListeners.forEach(listener -> listener.newGraph(graphSpace));
+    }
+    public void removeGraphEvent(GraphSpace graphSpace) {
+        graphListeners.forEach(listener -> listener.removeGraph(graphSpace));
+    }
     public void projectLoadedEvent() {
         projectListeners.forEach(ProjectListener::projectLoaded);
     }
 
-    public void addProjectListener(ProjectListener listener) {
-        projectListeners.add(listener);
-    }
-
-    public SelectionManager getSelectionManager() {
-        return selectionManager;
+    public void annotationSelectionChangedEvent(Annotation annotation) {
+        if (annotation != null) {
+            if (view != null) {
+                if (annotation.isOwlClass()) {
+                    view.owlEntitySelectionChanged((OWLClass) annotation.getOwlClass());
+                }
+                view.getGraphViewer().goToAnnotationVertex(selectionManager.getActiveGraphSpace(), annotation);
+            }
+            annotationListeners.forEach(listener -> listener.annotationSelectionChanged(annotation));
+        }
     }
 }

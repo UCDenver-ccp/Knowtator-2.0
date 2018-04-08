@@ -69,12 +69,16 @@ public class GraphSpace extends mxGraph implements Savable {
     }
 
     public AnnotationNode addNode(String id, Annotation annotation) {
-        id = verifyID(id, "node");
+        if (annotation != null) {
+            id = verifyID(id, "node");
 
-        AnnotationNode newVertex = new AnnotationNode(id, annotation);
-        addCellToGraph(newVertex);
+            AnnotationNode newVertex = new AnnotationNode(id, annotation);
+            addCellToGraph(newVertex);
 
-        return newVertex;
+            return newVertex;
+        } else {
+            return null;
+        }
     }
 
     public Triple addTriple(AnnotationNode source, AnnotationNode target, String id, Profile annotator, Object property, String quantifier, String quantifierValue) {

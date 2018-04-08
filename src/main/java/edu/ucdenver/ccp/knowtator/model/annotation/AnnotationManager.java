@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 
@@ -29,7 +30,7 @@ public class AnnotationManager implements Savable {
 
     private final KnowtatorController controller;
 
-    private TreeMap<Span, Annotation> spanMap;
+    private TreeSet<Span> spanTreeSet;
     private TextSource textSource;
     private Map<String, Annotation> annotationMap;
     private List<GraphSpace> graphSpaces;
@@ -38,7 +39,7 @@ public class AnnotationManager implements Savable {
         this.controller = controller;
         this.textSource = textSource;
         annotationMap = new HashMap<>();
-        spanMap = new TreeMap<>(Span::compare);
+        spanTreeSet = new TreeSet<>(Span::compare);
         graphSpaces = new ArrayList<>();
     }
 
@@ -55,7 +56,7 @@ public class AnnotationManager implements Savable {
         newAnnotation.setID(id);
         annotationMap.put(newAnnotation.getID(), newAnnotation);
 
-        newAnnotation.getSpans().forEach(span -> spanMap.put(span, newAnnotation));
+        spanTreeSet.addAll(newAnnotation.getSpans());
         controller.annotationAddedEvent(newAnnotation);
 
         OWLClass owlClass = controller.getOWLAPIDataExtractor().getOWLClassByID((String) newAnnotation.getOwlClass());
@@ -66,26 +67,27 @@ public class AnnotationManager implements Savable {
 
     public void addSpanToAnnotation(Annotation annotation, Span newSpan) {
         annotation.addSpan(newSpan);
-        spanMap.put(newSpan, annotation);
+        spanTreeSet.add(newSpan);
         controller.spanAddedEvent(newSpan);
     }
 
-    private void removeAnnotationFromSpanMap(Annotation annotationToRemove) {
-        annotationToRemove.getSpans().forEach(span -> spanMap.remove(span));
-        controller.annotationRemovedEvent(annotationToRemove);
-
-    }
-
-    public void removeAnnotation(String annotationToRemoveID) {
-        Annotation annotationToRemove = annotationMap.get(annotationToRemoveID);
-        annotationMap.remove(annotationToRemoveID);
-        if (annotationToRemove != null) removeAnnotationFromSpanMap(annotationToRemove);
+    public void removeAnnotation(Annotation annotationToRemove) {
+        annotationMap.remove(annotationToRemove.getID());
+        for (Span span : annotationToRemove.getSpans()) {
+            spanTreeSet.remove(span);
+        }
+        for (GraphSpace graphSpace : graphSpaces) {
+            for (Object vertex : graphSpace.getVerticesForAnnotation(annotationToRemove)) {
+                graphSpace.setSelectionCell(vertex);
+                graphSpace.removeSelectedCell();
+            }
+        }
         controller.annotationRemovedEvent(annotationToRemove);
     }
 
     public void removeSpanFromAnnotation(Annotation annotation, Span span) {
         annotation.removeSpan(span);
-        spanMap.remove(span);
+        spanTreeSet.remove(span);
         controller.spanRemovedEvent();
     }
 
@@ -100,58 +102,47 @@ public class AnnotationManager implements Savable {
     /**
      * @param loc     Location filter
      */
-    public TreeMap<Span, Annotation> getSpanMap(Integer loc) {
-        TreeMap<Span, Annotation> filteredAnnotations = new TreeMap<>(Span::compare);
+    public TreeSet<Span> getSpanSet(Integer loc) {
+        Supplier<TreeSet<Span>> supplier = () -> new TreeSet<>(Span::compare);
 
-        for (Map.Entry<Span, Annotation> entry : spanMap.entrySet()) {
-            Span span = entry.getKey();
-            Annotation annotation = entry.getValue();
-            if ((loc == null || span.contains(loc)) && (controller.getSelectionManager().isFilterByProfile() || annotation.getAnnotator().equals(controller.getProfileManager().getCurrentProfile()))) {
-                filteredAnnotations.put(span, annotation);
-            }
-        }
-        return filteredAnnotations;
+        return spanTreeSet.stream().filter(span -> (loc == null || span.contains(loc)) && (controller.getSelectionManager().isFilterByProfile() || span.getAnnotation().getAnnotator().equals(controller.getProfileManager().getCurrentProfile()))).collect(Collectors.toCollection(supplier));
     }
 
     public void growSpanStart(Span span) {
-        if (spanMap.containsKey(span)) {
-            Annotation annotation = spanMap.get(span);
-            spanMap.remove(span);
+        if (spanTreeSet.contains(span)) {
+            spanTreeSet.remove(span);
             span.growStart();
-            spanMap.put(span, annotation);
+            spanTreeSet.add(span);
         } else {
             span.growStart();
         }
     }
 
     public void growSpanEnd(Span span, int limit) {
-        if (spanMap.containsKey(span)) {
-            Annotation annotation = spanMap.get(span);
-            spanMap.remove(span);
+        if (spanTreeSet.contains(span)) {
+            spanTreeSet.remove(span);
             span.growEnd(limit);
-            spanMap.put(span, annotation);
+            spanTreeSet.add(span);
         } else {
             span.growEnd(limit);
         }
     }
 
     public void shrinkSpanEnd(Span span) {
-        if (spanMap.containsKey(span)) {
-            Annotation annotation = spanMap.get(span);
-            spanMap.remove(span);
+        if (spanTreeSet.contains(span)) {
+            spanTreeSet.remove(span);
             span.shrinkEnd();
-            spanMap.put(span, annotation);
+            spanTreeSet.add(span);
         } else {
             span.shrinkEnd();
         }
     }
 
     public void shrinkSpanStart(Span span) {
-        if (spanMap.containsKey(span)) {
-            Annotation annotation = spanMap.get(span);
-            spanMap.remove(span);
+        if (spanTreeSet.contains(span)) {
+            spanTreeSet.remove(span);
             span.shrinkStart();
-            spanMap.put(span, annotation);
+            spanTreeSet.add(span);
         } else {
             span.shrinkStart();
         }
@@ -168,12 +159,12 @@ public class AnnotationManager implements Savable {
     @SuppressWarnings("unused")
     public void findOverlaps() {
         List<Span> overlappingSpans = new ArrayList<>();
-        spanMap.forEach((span, annotation) -> {
+        spanTreeSet.forEach(span -> {
             List<Span> toRemove = new ArrayList<>();
             overlappingSpans.forEach(span1 -> {
                 if (span.intersects(span1)) {
-                    annotation.addOverlappingAnnotation(span1.getAnnotation().getID());
-                    span1.getAnnotation().addOverlappingAnnotation(annotation.getID());
+                    span.getAnnotation().addOverlappingAnnotation(span1.getAnnotation());
+                    span1.getAnnotation().addOverlappingAnnotation(span.getAnnotation());
                 } else {
                     toRemove.add(span1);
                 }
@@ -276,7 +267,7 @@ public class AnnotationManager implements Savable {
 
             newAnnotation.readFromOldKnowtatorXML(null, annotationElement, content);
 
-            // No need to keep annotations with no spans
+            // No need to keep annotations with no spanTreeSet
             if (!newAnnotation.getSpans().isEmpty()) {
                 addAnnotation(newAnnotation);
 
@@ -402,29 +393,29 @@ public class AnnotationManager implements Savable {
 
     public Span getPreviousSpan() {
         Span selectedSpan = controller.getSelectionManager().getSelectedSpan();
-        TreeMap<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null);
-        Map.Entry<Span, Annotation> previous;
+        TreeSet<Span> annotationMap = textSource.getAnnotationManager().getSpanSet(null);
+        Span previousSpan;
         try {
-            previous = annotationMap.containsKey(selectedSpan) ? annotationMap.lowerEntry(selectedSpan) : annotationMap.floorEntry(selectedSpan);
+            previousSpan = annotationMap.contains(selectedSpan) ? annotationMap.lower(selectedSpan) : annotationMap.floor(selectedSpan);
         } catch (NullPointerException npe) {
-            previous = null;
+            previousSpan = null;
         }
-        if (previous == null) previous = annotationMap.lastEntry();
-        return previous.getKey();
+        if (previousSpan == null) previousSpan = annotationMap.last();
+        return previousSpan;
     }
 
     public Span getNextSpan() {
         Span selectedSpan = controller.getSelectionManager().getSelectedSpan();
-        TreeMap<Span, Annotation> annotationMap = textSource.getAnnotationManager().getSpanMap(null);
+        TreeSet<Span> annotationMap = textSource.getAnnotationManager().getSpanSet(null);
 
-        Map.Entry<Span, Annotation> next;
+        Span nextSpan;
         try {
-            next = annotationMap.containsKey(selectedSpan) ? annotationMap.higherEntry(selectedSpan) : annotationMap.ceilingEntry(selectedSpan);
+            nextSpan = annotationMap.contains(selectedSpan) ? annotationMap.higher(selectedSpan) : annotationMap.ceiling(selectedSpan);
         } catch (NullPointerException npe) {
-            next = null;
+            nextSpan = null;
         }
-        if (next == null) next = annotationMap.firstEntry();
+        if (nextSpan == null) nextSpan = annotationMap.first();
 
-        return next.getKey();
+        return nextSpan;
     }
 }
