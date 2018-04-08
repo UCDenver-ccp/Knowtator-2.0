@@ -23,12 +23,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.prefs.Preferences;
 
-
-/**
- * @author Harrison Pielke-Lombardo
- * @version 2.0.7
- */
-
 public class KnowtatorController {
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(KnowtatorController.class);
