@@ -79,7 +79,7 @@ public class IOTests {
 
         controller.getProjectManager().loadProject(projectFile);
 
-        TextSource textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID])).findAny().get();
+        TextSource textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID])).findAny().get();
         String content;
         try {
             content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
@@ -102,7 +102,7 @@ public class IOTests {
         assert numSpans == 3 : "There were " + numSpans + " spans";
 
 
-        textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID2])).findAny().get();
+        textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID2])).findAny().get();
 
         try {
             content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
@@ -142,7 +142,7 @@ public class IOTests {
 
         controller.getProjectManager().addDocument(articleFile);
 
-        TextSource textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID])).findAny().get();
+        TextSource textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID])).findAny().get();
         String content;
         try {
             content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
@@ -165,7 +165,7 @@ public class IOTests {
         controller.getProjectManager().loadProject(projectFile);
         controller.getProjectManager().closeProject(null, null);
 
-        controller.getTextSourceManager().getTextSources().stream().filter(textSource -> textSource.getDocID().equals(articleFileNames[articleID])).findAny().orElseThrow(RuntimeException::new);
+        controller.getTextSourceManager().getTextSources().stream().filter(textSource -> textSource.getId().equals(articleFileNames[articleID])).findAny().orElseThrow(RuntimeException::new);
     }
 
     @Test
@@ -194,7 +194,7 @@ public class IOTests {
         File projectFile = getProjectFile(projectFileName);
 
         controller.getProjectManager().loadProject(projectFile);
-        TextSource textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID])).findAny().get();
+        TextSource textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID])).findAny().get();
         String content;
         try {
             content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
@@ -225,7 +225,7 @@ public class IOTests {
 
         controller.getProjectManager().loadProject(projectFile);
 
-        TextSource textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleFileNames[articleID])).findAny().get();
+        TextSource textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID])).findAny().get();
         String content;
         try {
             content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
@@ -294,7 +294,7 @@ public class IOTests {
 
         controller.getProjectManager().loadProject(projectFile);
         controller.getProjectManager().loadFromFormat(BratStandoffUtil.class, bratAnnotationFile);
-        controller.getProjectManager().saveToFormat(BratStandoffUtil.class, controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(article)).findAny().get(), outputFile);
+        controller.getProjectManager().saveToFormat(BratStandoffUtil.class, controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(article)).findAny().get(), outputFile);
     }
 
 

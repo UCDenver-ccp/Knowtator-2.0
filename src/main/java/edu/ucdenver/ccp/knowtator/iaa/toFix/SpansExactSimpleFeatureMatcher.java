@@ -37,7 +37,7 @@
 //
 //public class SpansExactSimpleFeatureMatcher implements Matcher {
 //	// public static final String FEATURE_NAMES =
-//	// SpansExactSimpleFeatureMatcher.class.getDocID()+".FEATURE_NAMES";
+//	// SpansExactSimpleFeatureMatcher.class.getId()+".FEATURE_NAMES";
 //
 //	/**
 //	 * This method will return an annotation that has the exact same spans and
@@ -129,7 +129,7 @@
 //		return null;
 //	}
 //
-//	public String getDocID() {
+//	public String getId() {
 //		return "Simple slots matcher (with same spans)";
 //	}
 //

@@ -24,17 +24,17 @@ import java.util.*;
 public class TextSourceManager implements Savable, OWLOntologyChangeListener {
     private Logger log = Logger.getLogger(TextSourceManager.class);
 
-    private List<TextSource> textSources;
+    private TreeSet<TextSource> textSources;
     private KnowtatorController controller;
 
     public TextSourceManager(KnowtatorController controller) {
         this.controller = controller;
-        textSources = new ArrayList<>();
+        textSources = new TreeSet<>(TextSource::compare);
     }
 
     public TextSource addTextSource(File file, String fileLocation) {
         String docID = FilenameUtils.getBaseName(fileLocation);
-        Optional<TextSource> newTextSourceMatch = textSources.stream().filter(textSource -> textSource.getDocID().equals(docID)).findAny();
+        Optional<TextSource> newTextSourceMatch = textSources.stream().filter(textSource -> textSource.getId().equals(docID)).findAny();
         if (!newTextSourceMatch.isPresent()) {
             TextSource newTextSource = new TextSource(controller, file, docID);
             textSources.add(newTextSource);
@@ -45,7 +45,7 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
         }
     }
 
-    public List<TextSource> getTextSources() {
+    public Set<TextSource> getTextSources() {
         return textSources;
     }
 
@@ -64,7 +64,6 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
             log.warn("\tXML: " + newTextSource);
             newTextSource.readFromKnowtatorXML(null, documentElement, null);
         }
-        textSources.sort(Comparator.comparing(TextSource::getDocID));
     }
 
     @Override
@@ -145,22 +144,27 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
     }
 
     public TextSource getPreviousTextSource() {
-        TextSource activeTextSource = controller.getSelectionManager().getActiveTextSource();
-        if (activeTextSource != null) {
-            int index = textSources.indexOf(activeTextSource);
-            return textSources.get(index == 0 ? 0 : index - 1);
-        } else {
-            return null;
+        TextSource textSource = controller.getSelectionManager().getActiveTextSource();
+
+        TextSource previousTextSource;
+        try {
+            previousTextSource = textSources.contains(textSource) ? textSources.lower(textSource) : textSources.floor(textSource);
+        } catch (NullPointerException npe) {
+            previousTextSource = null;
         }
+        if (previousTextSource == null) previousTextSource = textSources.last();
+        return previousTextSource;
     }
 
     public TextSource getNextTextSource() {
-        TextSource activeTextSource = controller.getSelectionManager().getActiveTextSource();
-        if (activeTextSource != null) {
-            int index = textSources.indexOf(activeTextSource);
-            return textSources.get(index == textSources.size() - 1 ? index : index + 1);
-        } else {
-            return null;
+        TextSource textSource = controller.getSelectionManager().getActiveTextSource();
+        TextSource nextTextSource;
+        try {
+            nextTextSource = textSources.contains(textSource) ? textSources.higher(textSource) : textSources.ceiling(textSource);
+        } catch (NullPointerException npe) {
+            nextTextSource = null;
         }
+        if (nextTextSource == null) nextTextSource = textSources.first();
+        return nextTextSource;
     }
 }

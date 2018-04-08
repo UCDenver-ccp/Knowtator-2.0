@@ -218,7 +218,7 @@
 //		return null;
 //	}
 //
-//	public String getDocID() {
+//	public String getId() {
 //		return docID;
 //	}
 //

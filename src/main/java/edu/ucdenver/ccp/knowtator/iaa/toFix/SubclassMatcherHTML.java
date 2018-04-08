@@ -32,13 +32,13 @@
 
 //	public static void printIAA(IAA iaa, SubclassMatcher matcher, File directory, int numberOfDocs,
 //								Map<annotation, String> annotationTexts, Map<annotation, String> annotationTextNames) throws IOException {
-//		String fileName = matcher.getDocID();
+//		String fileName = matcher.getId();
 //		PrintStream html = new PrintStream(new File(directory, fileName + ".html"));
 //
 //		NumberFormat percentageFormat = NumberFormat.getPercentInstance();
 //		percentageFormat.setMinimumFractionDigits(2);
 //
-//		html.println(IAA2HTML.initHTML(matcher.getDocID(), matcher.getDescription()));
+//		html.println(IAA2HTML.initHTML(matcher.getId(), matcher.getDescription()));
 //		html.println("<h2>" + iaa.getSetNames().size() + "-way IAA Results</h2>");
 //
 //		html.println("<p>");

@@ -52,7 +52,7 @@ public class AnnotationManagerTest {
         controller.getProjectManager().loadProject(project);
 
         //noinspection ConstantConditions
-        textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getDocID().equals(articleName)).findAny().get();
+        textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleName)).findAny().get();
         annotationManager = textSource.getAnnotationManager();
         profile = controller.getProfileManager().addNewProfile("Default");
 

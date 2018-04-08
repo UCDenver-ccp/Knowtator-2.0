@@ -21,6 +21,8 @@ public class KnowtatorIcons {
     public static final String GRAPH_VIEWER = "icons8-edit-node-50.png";
     public static final String ADD = "icons8-plus-50.png";
     public static final String REMOVE = "icons8-minus-50.png";
+    public static final String UP_ICON = "icons8-up-filled-50.png";
+    public static final String DOWN_ICON = "icons8-down-filled-50.png";
 
 
     private static HashMap<String, ImageIcon> iconMap = new HashMap<>();

@@ -138,7 +138,7 @@
 //		return null;
 //	}
 //
-//	public String getDocID() {
+//	public String getId() {
 //		return "Simple slots matcher (with overlapping spans)";
 //	}
 //

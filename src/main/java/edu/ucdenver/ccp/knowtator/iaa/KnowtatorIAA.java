@@ -175,7 +175,7 @@ public class KnowtatorIAA {
 //
 //			IAA2HTML.printIAA(featureIAA, featureMatcher, outputDirectory, textSources.size(), annotationTexts,
 //					annotationTextNames);
-//			html.println("<li><a href=\"" + featureMatcher.getDocID() + ".html\">" + featureMatcher.getDocID()
+//			html.println("<li><a href=\"" + featureMatcher.getId() + ".html\">" + featureMatcher.getId()
 //					+ "</a></li>");
 //		} catch (Exception exception) {
 //			throw new IAAException(exception);
@@ -285,8 +285,8 @@ public class KnowtatorIAA {
 //
 //				double subclsIAA = (double) matches.size() / ((double) matches.size() + (double) nonmatches.size());
 //
-//				subclassHTML.println("<tr><td><a href=\"" + subclassMatcher.getDocID() + ".html\">"
-//						+ parentCls.getDocID() + "</a></td>" + "<td>" + percentageFormat.format(subclsIAA) + "</td><td>"
+//				subclassHTML.println("<tr><td><a href=\"" + subclassMatcher.getId() + ".html\">"
+//						+ parentCls.getId() + "</a></td>" + "<td>" + percentageFormat.format(subclsIAA) + "</td><td>"
 //						+ matches.size() + "</td><td>" + nonmatches.size() + "</td></tr>");
 //			}
 //			subclassHTML.println("</table>");
@@ -302,7 +302,7 @@ public class KnowtatorIAA {
 //			IAA subclassIAA, Map<String, Set<annotation>> textSourceAnnotationsMap)
 //			throwsedu.ucdenver.ccp.knowtator.iaa.IAAException {
 //		subclassIAA.reset();
-//		subclassMatcher.setIAAClass(cls.getDocID());
+//		subclassMatcher.setIAAClass(cls.getId());
 //		for (Set<annotation> annotations : textSourceAnnotationsMap.values()) {
 //			subclassIAA.setAnnotations(annotations);
 //			subclassIAA.allwayIAA(subclassMatcher);

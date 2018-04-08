@@ -33,23 +33,23 @@ public class TextSource implements Savable {
 
 
     private AnnotationManager annotationManager;
-    private String docID;
+    private String id;
     private File textFile;
     //    private String content;
 
-    public TextSource(KnowtatorController controller, File saveFile, String docID) {
+    public TextSource(KnowtatorController controller, File saveFile, String id) {
         this.controller = controller;
         this.saveFile = saveFile;
         this.annotationManager = new AnnotationManager(controller, this);
 
-        if (docID != null) {
-            this.docID = docID;
-            textFile = new File(controller.getProjectManager().getArticlesLocation(), docID + ".txt");
+        if (id != null) {
+            this.id = id;
+            textFile = new File(controller.getProjectManager().getArticlesLocation(), id + ".txt");
 
             if (!textFile.exists()) {
-                if (JOptionPane.showConfirmDialog(null, String.format("Could not find file for %s. Choose file location?", docID), "File not found", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                if (JOptionPane.showConfirmDialog(null, String.format("Could not find file for %s. Choose file location?", id), "File not found", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     JFileChooser fileChooser = new JFileChooser();
-                    fileChooser.setDialogTitle("Select text file for " + docID);
+                    fileChooser.setDialogTitle("Select text file for " + id);
 
                     if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                         File file = fileChooser.getSelectedFile();
@@ -74,7 +74,7 @@ public class TextSource implements Savable {
 //            }
         }
 //        else {
-//            this.docID = "Instructions";
+//            this.id = "Instructions";
 //            content = "***Instructions:***" +
 //                    "\n" +
 //                    "Create a new project: Project -> New Project" +
@@ -84,8 +84,17 @@ public class TextSource implements Savable {
 
     }
 
-    public String getDocID() {
-        return docID;
+    static int compare(TextSource textSource1, TextSource textSource2) {
+        if (textSource1 == textSource2) {
+            return 0;
+        }
+        if (textSource2 == null) {
+            return 1;
+        }
+        if (textSource1 == null) {
+            return -1;
+        }
+        return textSource2.getId().toLowerCase().compareTo(textSource1.getId().toLowerCase());
     }
 
     public File getTextFile() {
@@ -95,16 +104,14 @@ public class TextSource implements Savable {
     public AnnotationManager getAnnotationManager() {
         return annotationManager;
     }
+
+    public String getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
-        return docID;
-    }
-    @Override
-    public void writeToKnowtatorXML(Document dom, Element parent) {
-        Element textSourceElement = dom.createElement(KnowtatorXMLTags.DOCUMENT);
-        parent.appendChild(textSourceElement);
-        textSourceElement.setAttribute(KnowtatorXMLAttributes.ID, docID);
-        annotationManager.writeToKnowtatorXML(dom, textSourceElement);
+        return id;
     }
 
     @Override
@@ -112,20 +119,12 @@ public class TextSource implements Savable {
         annotationManager.readFromKnowtatorXML(null, parent, getContent());
     }
 
-    public String getContent() {
-        while (true) {
-            try {
-                return FileUtils.readFileToString(textFile, "UTF-8");
-            } catch (IOException e) {
-                textFile = new File(controller.getProjectManager().getArticlesLocation(), docID + ".txt");
-                while (!textFile.exists()) {
-                    JFileChooser fileChooser = new JFileChooser();
-                    if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                        textFile = fileChooser.getSelectedFile();
-                    }
-                }
-            }
-        }
+    @Override
+    public void writeToKnowtatorXML(Document dom, Element parent) {
+        Element textSourceElement = dom.createElement(KnowtatorXMLTags.DOCUMENT);
+        parent.appendChild(textSourceElement);
+        textSourceElement.setAttribute(KnowtatorXMLAttributes.ID, id);
+        annotationManager.writeToKnowtatorXML(dom, textSourceElement);
     }
 
     @Override
@@ -147,6 +146,22 @@ public class TextSource implements Savable {
     @Override
     public void readFromGeniaXML(Element parent, String content) {
 
+    }
+
+    public String getContent() {
+        while (true) {
+            try {
+                return FileUtils.readFileToString(textFile, "UTF-8");
+            } catch (IOException e) {
+                textFile = new File(controller.getProjectManager().getArticlesLocation(), id + ".txt");
+                while (!textFile.exists()) {
+                    JFileChooser fileChooser = new JFileChooser();
+                    if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                        textFile = fileChooser.getSelectedFile();
+                    }
+                }
+            }
+        }
     }
 
     @Override

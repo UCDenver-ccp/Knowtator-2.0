@@ -37,7 +37,7 @@
 //
 //public class SpansExactComplexFeatureMatcher implements Matcher {
 //	// public static final String FEATURE_NAMES =
-//	// SpansExactComplexFeatureMatcher.class.getDocID()+".FEATURE_NAMES";
+//	// SpansExactComplexFeatureMatcher.class.getId()+".FEATURE_NAMES";
 //
 //	String featureName;
 //
@@ -142,7 +142,7 @@
 //		return null;
 //	}
 //
-//	public String getDocID() {
+//	public String getId() {
 //		return "Simple slots matcher (with same spans)";
 //	}
 //

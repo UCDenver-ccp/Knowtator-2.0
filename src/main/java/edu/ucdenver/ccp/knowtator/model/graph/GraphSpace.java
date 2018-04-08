@@ -233,9 +233,17 @@ public class GraphSpace extends mxGraph implements Savable {
         textSourceElement.appendChild(graphElem);
     }
 
-    @Override
-    public String toString() {
-        return "GraphSpace: " + id;
+    public static int compare(GraphSpace graphSpace1, GraphSpace graphSpace2) {
+        if (graphSpace1 == graphSpace2) {
+            return 0;
+        }
+        if (graphSpace1 == null) {
+            return -1;
+        }
+        if (graphSpace2 == null) {
+            return 1;
+        }
+        return graphSpace1.getId().toLowerCase().compareTo(graphSpace2.getId().toLowerCase());
     }
 
     public void connectEdgesToProperties() {
@@ -343,5 +351,10 @@ public class GraphSpace extends mxGraph implements Savable {
         });
 
         return edges;
+    }
+
+    @Override
+    public String toString() {
+        return id;
     }
 }

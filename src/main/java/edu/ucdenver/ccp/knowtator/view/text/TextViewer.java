@@ -23,14 +23,14 @@ public class TextViewer extends JPanel implements TextSourceListener, ProjectLis
     private KnowtatorView view;
     private Map<TextSource, TextPane> textPaneMap;
     private JScrollPane scrollPane;
-    private DocumentToolBar documentToolBar;
+    private TextSourceToolBar textSourceToolBar;
 
     public TextViewer(KnowtatorController controller, KnowtatorView view) {
         this.controller = controller;
         this.view = view;
         textPaneMap = new HashMap<>();
         scrollPane = new JScrollPane();
-        documentToolBar = new DocumentToolBar(this, controller);
+        textSourceToolBar = new TextSourceToolBar(this, controller);
         setLayout(new BorderLayout());
         first = true;
     }
@@ -38,14 +38,14 @@ public class TextViewer extends JPanel implements TextSourceListener, ProjectLis
     private void addNewDocument(TextSource textSource) {
         TextPane newTextPane = new TextPane(view, controller, textSource);
         if (textSource != null) {
-            newTextPane.setName(textSource.getDocID());
+            newTextPane.setName(textSource.getId());
             try {
                 newTextPane.read(new FileReader(textSource.getTextFile()), textSource.getTextFile());
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            log.warn("TextViewer: adding: " + textSource.getDocID());
+            log.warn("TextViewer: adding: " + textSource.getId());
         }
 
         textPaneMap.put(textSource, newTextPane);
@@ -59,7 +59,7 @@ public class TextViewer extends JPanel implements TextSourceListener, ProjectLis
 
             JPanel subPanel = new JPanel();
             subPanel.setLayout(new BorderLayout());
-            subPanel.add(documentToolBar, BorderLayout.NORTH);
+            subPanel.add(textSourceToolBar, BorderLayout.NORTH);
             subPanel.add(new AnnotationToolBar(this, view), BorderLayout.SOUTH);
 
             add(subPanel, BorderLayout.NORTH);
@@ -90,7 +90,7 @@ public class TextViewer extends JPanel implements TextSourceListener, ProjectLis
     @Override
     public void activeTextSourceChanged(TextSource textSource) {
         getCurrentTextPane().refreshHighlights();
-        documentToolBar.updateComboBox(textSource);
+        textSourceToolBar.update(textSource);
     }
 
     public TextPane getCurrentTextPane() {

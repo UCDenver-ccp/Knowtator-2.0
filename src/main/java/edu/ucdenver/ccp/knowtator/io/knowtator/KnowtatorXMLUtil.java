@@ -69,7 +69,7 @@ public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUt
     public void write(Savable savable, File file) {
         if (savable instanceof TextSourceManager) {
             ((TextSourceManager) savable).getTextSources().forEach(textSource -> {
-                String fileName = textSource.getSaveFile() == null ? textSource.getDocID() : textSource.getSaveFile().getName();
+                String fileName = textSource.getSaveFile() == null ? textSource.getId() : textSource.getSaveFile().getName();
                 String extension = fileName.endsWith(".xml") ? "" : ".xml";
                 File outputFile = new File(
                         file.getAbsolutePath() +

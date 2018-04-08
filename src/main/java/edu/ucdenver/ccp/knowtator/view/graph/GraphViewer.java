@@ -31,17 +31,17 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
     private final KnowtatorController controller;
     private JDialog dialog;
 
-    private Map<GraphSpace, mxGraphComponent> graphComponentMap;
+    private TreeMap<GraphSpace, mxGraphComponent> graphComponentMap;
     private JScrollPane scrollPane;
-    private JLabel graphLabel;
+    private GraphSpaceToolBar graphSpaceToolBar;
     private GraphViewMenu graphViewMenu;
 
     public GraphViewer(JFrame frame, KnowtatorController controller) {
         this.controller = controller;
-        graphComponentMap = new HashMap<>();
+        graphComponentMap = new TreeMap<>(GraphSpace::compare);
         scrollPane = new JScrollPane();
         scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-        graphLabel = new JLabel();
+        graphSpaceToolBar = new GraphSpaceToolBar(this, controller);
 
         makeDialog(frame);
 
@@ -67,8 +67,8 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
 
         JPanel subPanel = new JPanel();
         subPanel.setLayout(new BorderLayout());
-        subPanel.add(new GraphToolBar(this, controller), BorderLayout.NORTH);
-        subPanel.add(graphLabel, BorderLayout.SOUTH);
+        subPanel.add(graphSpaceToolBar, BorderLayout.NORTH);
+        subPanel.add(new GraphEditorToolBar(this, controller), BorderLayout.SOUTH);
 
         dialog.add(subPanel, BorderLayout.NORTH);
 
@@ -126,21 +126,11 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
                     graph.getModel().remove(edge);
 
                     graph.reDrawGraph();
-//                    executeLayout(null);
                 }
             }
         });
 
-//        graph.addListener(mxEvent.REMOVE_CELLS, (sender, evt) -> {
-//            Object[] cells = (Object[]) evt.getProperty("cells");
-//            for (Object cell : cells) {
-//                if (graph.getModel().isEdge(cell)) {
-//                    graph.removeCell((mxCell) cell);
-//                    graph.reDrawGraph();
-////                    executeLayout(null);
-//                }
-//            }
-//        });
+        graph.addListener(mxEvent.MOVE_CELLS, (sender, evt) -> graph.reDrawGraph());
 
         graph.getSelectionModel().addListener(mxEvent.CHANGE, (sender, evt) -> {
             Collection selectedCells = (Collection) evt.getProperty("removed");
@@ -202,8 +192,9 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
 
         controller.getSelectionManager().setActiveGraphSpace(graphSpace);
         dialog.add(graphComponentMap.get(graphSpace), BorderLayout.CENTER);
-        graphLabel.setText(graphSpace.getId());
         graphSpace.reDrawGraph();
+
+        graphSpaceToolBar.update(graphSpace);
     }
 
     private void addGraph(GraphSpace graphSpace) {
@@ -309,7 +300,7 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
         if (graphComponent != null) {
             dialog.remove(graphComponent);
         }
-        graphComponentMap = new HashMap<>();
+        graphComponentMap = new TreeMap<>(GraphSpace::compare);
     }
 
     void zoomIn() {
@@ -332,5 +323,31 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
             addGraph(graphSpace);
             graphSpace.connectEdgesToProperties();
         }
+    }
+
+    void showPreviousGraphSpace() {
+        GraphSpace graphSpace = controller.getSelectionManager().getActiveGraphSpace();
+
+        GraphSpace previousGraphSpace;
+        try {
+            previousGraphSpace = graphComponentMap.containsKey(graphSpace) ? graphComponentMap.lowerKey(graphSpace) : graphComponentMap.floorKey(graphSpace);
+        } catch (NullPointerException npe) {
+            previousGraphSpace = null;
+        }
+        if (previousGraphSpace == null) previousGraphSpace = graphComponentMap.lastKey();
+        showGraph(previousGraphSpace);
+    }
+
+    void showNextGraphSpace() {
+        GraphSpace graphSpace = controller.getSelectionManager().getActiveGraphSpace();
+
+        GraphSpace nextGraphSpace;
+        try {
+            nextGraphSpace = graphComponentMap.containsKey(graphSpace) ? graphComponentMap.higherKey(graphSpace) : graphComponentMap.ceilingKey(graphSpace);
+        } catch (NullPointerException npe) {
+            nextGraphSpace = null;
+        }
+        if (nextGraphSpace == null) nextGraphSpace = graphComponentMap.firstKey();
+        showGraph(nextGraphSpace);
     }
 }

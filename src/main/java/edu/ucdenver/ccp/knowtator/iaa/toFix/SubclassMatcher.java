@@ -128,7 +128,7 @@
 //		return className;
 //	}
 //
-//	public String getDocID() {
+//	public String getId() {
 //		return "Subclass matcher for class '" + className + "'";
 //	}
 //

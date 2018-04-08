@@ -258,7 +258,9 @@ public class TextPane extends JTextPane {
 	}
 
 	void removeAnnotation() {
-		textSource.getAnnotationManager().removeAnnotation(controller.getSelectionManager().getSelectedAnnotation());
+		if (JOptionPane.showConfirmDialog(null, "Are you sure you want to remove the selected annotation?", "Remove Annotation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+			textSource.getAnnotationManager().removeAnnotation(controller.getSelectionManager().getSelectedAnnotation());
+		}
 	}
 
     void setIsVisible(boolean isVisible) {

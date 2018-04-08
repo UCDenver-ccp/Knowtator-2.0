@@ -13,15 +13,11 @@ TODO: Expand and collapse by sentence
 TODO: Remember last project
 TODO: Only allow unique names for graph spaces
 TODO: No empty string values for property specifications (value, etc.)
-TODO: Warning popup when deleting an annotation
 TODO: Fix save and opening of projects. When new project opened, old one doesn't close properly
 TODO: Save project saves ontology too
 TODO: Autoload the AO or at least provide the functionality to convert to it if desired.
 TODO: Add annotations as subclasses of their assigned classes as well as of the AO
 TODO: Make sure owlClass part is never set to null (i.e. when the annotation owl class has yet to be set)
-TODO: Add arrows to switch between graph spaces
-TODO: Display coreferences
-TODO: Expand to show ontology terms as nodes
 TODO: Toggle expand to show ontology terms as separate nodes
 TODO; Toggle expand to show coreference
 TODO: Regex search

@@ -297,13 +297,13 @@ public class IAA2HTML {
 	private static Set<Annotation> getCandidateAnnotations(Annotation annotation, AnnotationSpanIndex spanIndex) {
 		Set<Annotation> candidateAnnotations = new HashSet<>();
 		String set = annotation.getAnnotator().getId();
-		String docID = annotation.getTextSource().getDocID();
+        String docID = annotation.getTextSource().getId();
 
 		Set<Annotation> overlappingAnnotations = spanIndex.getOverlappingAnnotations(annotation);
 		for (Annotation overlappingAnnotation : overlappingAnnotations) {
 			String candidateAnnotationSet = overlappingAnnotation.getAnnotator().getId();
 			if (!candidateAnnotationSet.equals(set)) {
-				String candidateDocID = overlappingAnnotation.getTextSource().getDocID();
+                String candidateDocID = overlappingAnnotation.getTextSource().getId();
 				if (candidateDocID.equals(docID)) {
 					candidateAnnotations.add(overlappingAnnotation);
 				}
@@ -584,7 +584,7 @@ public class IAA2HTML {
 // Set<annotation> typeNonmatches = sortedNonmatches.get(type);
 // for(annotation annotation : typeNonmatches)
 // {
-// String docID = annotation.getDocID();
+// String docID = annotation.getId();
 // writeAnnotationTextSourceHTML(errors, annotation,
 // annotationTexts.get(annotation), annotationTextNames.get(annotation));
 // errors.println("<ul><li>");
@@ -594,10 +594,10 @@ public class IAA2HTML {
 // spanIndex.getOverlappingAnnotations(annotation);
 // for(annotation candidateAnnotation : candidateAnnotations)
 // {
-// String candidateAnnotationSet = candidateAnnotation.getDocID();
+// String candidateAnnotationSet = candidateAnnotation.getId();
 // if(!candidateAnnotationSet.equals(set))
 // {
-// String candidateDocID = candidateAnnotation.getDocID();
+// String candidateDocID = candidateAnnotation.getId();
 // if(candidateDocID.equals(docID))
 // {
 // errors.println("<li>");

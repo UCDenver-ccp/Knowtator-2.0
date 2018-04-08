@@ -11,13 +11,13 @@ import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-class DocumentToolBar extends JToolBar {
+class TextSourceToolBar extends JToolBar {
 
     private TextViewer textViewer;
     private KnowtatorController controller;
-    private JComboBox<TextSource> comboBox;
+    private JComboBox<TextSource> textSourceChooser;
 
-    DocumentToolBar(TextViewer textViewer, KnowtatorController controller) {
+    TextSourceToolBar(TextViewer textViewer, KnowtatorController controller) {
         this.textViewer = textViewer;
         this.controller = controller;
 
@@ -27,34 +27,34 @@ class DocumentToolBar extends JToolBar {
         add(increaseTextSizeCommand());
 
         add(previousTextPaneCommand());
-        add(documentMenuCommand());
         add(nextTextPaneCommand());
+        add(textSourceChooserCommand());
 
     }
 
-    private JComboBox<TextSource> documentMenuCommand() {
-        comboBox = new JComboBox<>();
+    private JComboBox<TextSource> textSourceChooserCommand() {
+        textSourceChooser = new JComboBox<>();
 
-        comboBox.addActionListener(e -> {
+        textSourceChooser.addActionListener(e -> {
             JComboBox comboBox = (JComboBox) e.getSource();
             if (comboBox.getSelectedItem() != null && comboBox.getSelectedItem() != controller.getSelectionManager().getActiveTextSource()) {
                 textViewer.showTextPane((TextSource) comboBox.getSelectedItem());
             }
         });
 
-//        updateComboBox(controller.);
+//        update(controller.);
 
-        return comboBox;
+        return textSourceChooser;
     }
 
-    void updateComboBox(TextSource textSource) {
-        comboBox.removeAllItems();
-        textViewer.getTextPaneMap().keySet().forEach(textSource1 -> comboBox.addItem(textSource1));
-        comboBox.setSelectedItem(textSource);
+    void update(TextSource textSource) {
+        textSourceChooser.removeAllItems();
+        textViewer.getTextPaneMap().keySet().forEach(textSource1 -> textSourceChooser.addItem(textSource1));
+        textSourceChooser.setSelectedItem(textSource);
     }
 
     private JButton previousTextPaneCommand() {
-        JButton command = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.PREVIOUS_ICON));
+        JButton command = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.UP_ICON));
         command.setToolTipText("Previous document");
         command.addActionListener(e -> textViewer.showPreviousTextPane());
         return command;
@@ -62,7 +62,7 @@ class DocumentToolBar extends JToolBar {
 
 
     private JButton nextTextPaneCommand() {
-        JButton command = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.NEXT_ICON));
+        JButton command = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.DOWN_ICON));
         command.setToolTipText("Next document");
         command.addActionListener(e -> textViewer.showNextTextPane());
         return command;
