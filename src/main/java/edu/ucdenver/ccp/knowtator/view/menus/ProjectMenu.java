@@ -2,6 +2,7 @@ package edu.ucdenver.ccp.knowtator.view.menus;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
+import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -10,7 +11,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 
-public class ProjectMenu extends JMenu {
+public class ProjectMenu extends JMenu implements ProjectListener {
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(ProjectMenu.class);
 
@@ -20,8 +21,8 @@ public class ProjectMenu extends JMenu {
         super("Project");
         this.controller = controller;
 
-
         add(newProjectCommand());
+        add(openRecentCommand());
         add(openProjectCommand());
         add(saveProjectCommand());
         addSeparator();
@@ -32,6 +33,29 @@ public class ProjectMenu extends JMenu {
         addSeparator();
         add(new ProfileMenu(controller));
 
+    }
+
+    private JMenu openRecentCommand() {
+        JMenu menu = new JMenu("Open recent ...");
+
+        String recentProjectName = controller.getPrefs().get("Last Project", null);
+
+        if (recentProjectName != null) {
+            File recentProject = new File(recentProjectName);
+            JMenuItem recentProjectMenuItem = new JMenuItem(recentProject.getName());
+            recentProjectMenuItem.addActionListener(e -> {
+                if (controller.getProjectManager().isProjectLoaded() && JOptionPane.showConfirmDialog(controller.getView(), "Save changes to Knowtator project?", "Save Project", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    controller.getProjectManager().saveProject();
+                }
+
+                controller.getProjectManager().closeProject(controller.getView(), recentProject);
+                controller.getProjectManager().loadProject(recentProject);
+            });
+
+            menu.add(recentProjectMenuItem);
+        }
+
+        return menu;
     }
 
     private JMenuItem importAnnotationsCommand() {
@@ -127,5 +151,21 @@ public class ProjectMenu extends JMenu {
         });
 
         return save;
+    }
+
+    @Override
+    public void projectLoaded() {
+        removeAll();
+        add(newProjectCommand());
+        add(openRecentCommand());
+        add(openProjectCommand());
+        add(saveProjectCommand());
+        addSeparator();
+        add(addDocumentCommand());
+        add(importAnnotationsCommand());
+        addSeparator();
+        add(new IAAMenu(controller));
+        addSeparator();
+        add(new ProfileMenu(controller));
     }
 }

@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.prefs.BackingStoreException;
 
 public class ProjectManager {
     private static final Logger log = Logger.getLogger(ProjectManager.class);
@@ -56,6 +57,12 @@ public class ProjectManager {
         if (projectFile != null) {
             makeFileStructure(projectFile.getParentFile());
             loadProject();
+            controller.getPrefs().put("Last Project", projectFile.getAbsolutePath());
+            try {
+                controller.getPrefs().flush();
+            } catch (BackingStoreException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -22,6 +22,7 @@ import org.semanticweb.owlapi.model.OWLProperty;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.prefs.Preferences;
 
 
 /**
@@ -33,6 +34,7 @@ public class KnowtatorController {
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(KnowtatorController.class);
 
+    private final Preferences prefs = Preferences.userRoot().node("knowtator");
     private ProjectManager projectManager;
     private TextSourceManager textSourceManager;
     private ProfileManager profileManager;
@@ -223,5 +225,9 @@ public class KnowtatorController {
 
     public KnowtatorView getView() {
         return view;
+    }
+
+    public Preferences getPrefs() {
+        return prefs;
     }
 }
