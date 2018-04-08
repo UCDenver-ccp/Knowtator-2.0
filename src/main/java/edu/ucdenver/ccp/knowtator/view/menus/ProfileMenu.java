@@ -8,8 +8,6 @@ import edu.ucdenver.ccp.knowtator.model.profile.ProfileManager;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.Arrays;
 
 public class ProfileMenu extends JMenu implements ProfileListener {
 
@@ -17,56 +15,26 @@ public class ProfileMenu extends JMenu implements ProfileListener {
 
     private KnowtatorController controller;
 
-    public ProfileMenu(KnowtatorController controller) {
+    ProfileMenu(KnowtatorController controller) {
         super("Profile");
         this.controller = controller;
 
         add(newProfile());
-        addSeparator();
-        add(assignColorToClassMenu());
     }
 
-    private JMenuItem assignColorToClassMenu() {
 
-        JMenuItem assignColorToClass = new JMenuItem("Assign color to current class");
-        assignColorToClass.addActionListener(e -> {
-            String classID = controller.getOWLAPIDataExtractor().getSelectedOwlClassID();
-            String[] descendants = controller.getOWLAPIDataExtractor().getSelectedOwlClassDescendants();
-            if (classID != null) {
 
-                Profile profile = controller.getSelectionManager().getActiveProfile();
 
-                pickAColor(classID, descendants, profile);
-
-                controller.colorChangedEvent();
-            }
-
-        });
-        return assignColorToClass;
-    }
-
-    private static void pickAColor(String classID, String[] descendants, Profile profile) {
-        Color c = JColorChooser.showDialog(null, "Pick a color for " + classID, Color.CYAN);
-        if (c != null) {
-            profile.addColor(classID, c);
-
-            if (JOptionPane.showConfirmDialog(null, "Assign color to descendants of " + classID + "?") == JOptionPane.OK_OPTION) {
-                if (descendants != null) {
-                    Arrays.stream(descendants).forEach(descendant -> profile.addColor(descendant, c));
-                }
-            }
-        }
-    }
 
     private JMenuItem newProfile() {
         JMenuItem newAnnotator = new JMenuItem("New profile");
         newAnnotator.addActionListener(e -> {
-            int dialogResult = JOptionPane.showConfirmDialog(null, "Load profile from test_project(knowtator)?", "New profile", JOptionPane.YES_NO_CANCEL_OPTION);
+            int dialogResult = JOptionPane.showConfirmDialog(controller.getView(), "Load profile from test_project(knowtator)?", "New profile", JOptionPane.YES_NO_CANCEL_OPTION);
             if(dialogResult == JOptionPane.YES_OPTION) {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setCurrentDirectory(controller.getProjectManager().getProjectLocation());
 
-                if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                if (fileChooser.showSaveDialog(controller.getView()) == JFileChooser.APPROVE_OPTION) {
                     controller.getProjectManager().loadFromFormat(KnowtatorXMLUtil.class, controller.getProfileManager(), fileChooser.getSelectedFile());
                 }
 
@@ -79,7 +47,7 @@ public class ProfileMenu extends JMenu implements ProfileListener {
                 Object[] message = {
                         "Profile name", field1,
                 };
-                int option = JOptionPane.showConfirmDialog(null, message, "Enter profile name", JOptionPane.OK_CANCEL_OPTION);
+                int option = JOptionPane.showConfirmDialog(controller.getView(), message, "Enter profile name", JOptionPane.OK_CANCEL_OPTION);
                 if (option == JOptionPane.OK_OPTION) {
                     String annotator = field1.getText();
                     controller.getProfileManager().addNewProfile(annotator);
@@ -118,7 +86,6 @@ public class ProfileMenu extends JMenu implements ProfileListener {
         }
 
         addSeparator();
-        add(assignColorToClassMenu());
     }
 
     @Override

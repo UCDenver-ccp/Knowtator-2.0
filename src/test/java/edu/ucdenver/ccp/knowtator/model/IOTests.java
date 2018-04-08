@@ -22,8 +22,8 @@ public class IOTests {
 
     private KnowtatorController controller;
 
-    private String[] projectFileNames = new String[]{"test_project", "old_project"};
-    private String[] articleFileNames = new String[]{"document1", "document2", "document3", "document1_old", "brat_test"};
+    private String[] projectFileNames = new String[]{"test_project", "old_project", "test_load_old_coreference"};
+    private String[] articleFileNames = new String[]{"document1", "document2", "document3", "document1_old", "brat_test", "small_11319941"};
     private String[] articleContent = new String[]{
             "This is a test document.",
             "A second test document has appeared!",
@@ -297,5 +297,30 @@ public class IOTests {
         controller.getProjectManager().saveToFormat(BratStandoffUtil.class, controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(article)).findAny().get(), outputFile);
     }
 
+    @Test
+    public void successfulLoadOldCoreference() {
+        controller = new KnowtatorController();
 
+        int projectID = 2;
+        int articleID = 5;
+        String projectFileName = projectFileNames[projectID];
+        File projectFile = getProjectFile(projectFileName);
+
+        controller.getProjectManager().loadProject(projectFile);
+
+        TextSource textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID])).findAny().get();
+
+        AnnotationManager annotationManager = textSource.getAnnotationManager();
+        int numAnnotations = annotationManager.getAnnotations().size();
+        int numSpans = annotationManager.getSpanSet(null).size();
+        int numGraphSpaces = annotationManager.getGraphSpaces().size();
+        int numVertices = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildVertices(graphSpace.getDefaultParent()).length).sum();
+        int numTriples = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildEdges(graphSpace.getDefaultParent()).length).sum();
+
+        assert numGraphSpaces == 1 : "There were " + numGraphSpaces + " graph spaces";
+        assert numVertices == 12 : "There were " + numVertices + " vertices";
+        assert numTriples == 11 : "There were " + numTriples + " triples";
+        assert numAnnotations == 12 : "There were " + numAnnotations + " annotations";
+        assert numSpans == 12 : "There were " + numSpans + " spans";
+    }
 }

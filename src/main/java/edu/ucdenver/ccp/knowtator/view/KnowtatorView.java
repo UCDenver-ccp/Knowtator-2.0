@@ -4,10 +4,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewer;
 import edu.ucdenver.ccp.knowtator.view.info.FindPanel;
 import edu.ucdenver.ccp.knowtator.view.info.InfoPanel;
-import edu.ucdenver.ccp.knowtator.view.menus.IAAMenu;
-import edu.ucdenver.ccp.knowtator.view.menus.ProfileMenu;
 import edu.ucdenver.ccp.knowtator.view.menus.ProjectMenu;
-import edu.ucdenver.ccp.knowtator.view.menus.ViewMenu;
 import edu.ucdenver.ccp.knowtator.view.text.TextViewer;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
@@ -30,9 +27,50 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     private InfoPanel infoPanel;
     private FindPanel findPanel;
     private ProjectMenu projectMenu;
-    private ViewMenu viewMenu;
-    private ProfileMenu profileMenu;
-    private IAAMenu iaaMenu;
+    private JFrame frame;
+    private File fileToLoad;
+
+    @Override
+    public void initialiseClassView() {
+        setMinimumSize(new Dimension(50, 20));
+
+        setFrame((JFrame) SwingUtilities.getWindowAncestor(this));
+
+        controller = new KnowtatorController(this);
+        controller.setUpOWL(getOWLWorkspace(), getOWLModelManager());
+
+        textViewer = new TextViewer(controller);
+        graphViewer = new GraphViewer(getFrame(), controller);
+        infoPanel = new InfoPanel(controller);
+        findPanel = new FindPanel(controller);
+
+        projectMenu = new ProjectMenu(controller);
+
+        controller.addSpanListener(infoPanel);
+        controller.addAnnotationListener(infoPanel);
+
+        controller.addTextSourceListener(textViewer);
+        controller.addProjectListener(textViewer);
+        controller.addSpanListener(textViewer);
+        controller.addConceptAnnotationListener(textViewer);
+        controller.addProfileListener(textViewer);
+
+        controller.addProfileListener(graphViewer);
+        controller.addGraphListener(graphViewer);
+        controller.addTextSourceListener(graphViewer);
+
+        getOWLModelManager().addOntologyChangeListener(controller.getTextSourceManager());
+
+        DropTarget dt = new DropTarget(this, this);
+        dt.setActive(true);
+
+        createUI();
+        setupInitial();
+
+        if (fileToLoad != null) {
+            controller.getProjectManager().loadProject(fileToLoad);
+        }
+    }
 
     public void owlEntitySelectionChanged(OWLEntity owlEntity) {
         if (getView() != null) {
@@ -51,7 +89,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     @Override
     public void disposeView() {
         // For some reason, clicking yes here discards changes, even saved ones...
-        if (JOptionPane.showConfirmDialog(null, "Save changes to Knowtator project?") == JOptionPane.OK_OPTION) {
+        if (JOptionPane.showConfirmDialog(controller.getView(), "Save changes to Knowtator project?", "Save Project", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             controller.getProjectManager().saveProject();
         }
     }
@@ -87,47 +125,22 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 
     public void close(File file) {
+        this.fileToLoad = (file);
+        textViewer.getTextPaneMap().clear();
+        textViewer.removeAll();
+        graphViewer.getGraphSpaceMap().clear();
+        graphViewer.getDialog().removeAll();
+        removeAll();
+        repaint();
         initialiseClassView();
-        this.controller.getProjectManager().loadProject(file);
     }
 
-    @Override
-    public void initialiseClassView() {
-        controller = new KnowtatorController(this);
-        controller.setUpOWL(getOWLWorkspace(), getOWLModelManager());
+    private JFrame getFrame() {
+        return frame;
+    }
 
-        textViewer = new TextViewer(controller, this);
-        graphViewer = new GraphViewer((JFrame) SwingUtilities.getWindowAncestor(this), controller);
-        infoPanel = new InfoPanel(controller);
-        findPanel = new FindPanel(this);
-
-        projectMenu = new ProjectMenu(controller);
-        viewMenu = new ViewMenu(controller);
-        profileMenu = new ProfileMenu(controller);
-        iaaMenu = new IAAMenu(controller);
-
-        controller.addSpanListener(infoPanel);
-        controller.addAnnotationListener(infoPanel);
-
-        controller.addTextSourceListener(textViewer);
-        controller.addProjectListener(textViewer);
-        controller.addSpanListener(textViewer);
-        controller.addConceptAnnotationListener(textViewer);
-        controller.addProfileListener(textViewer);
-
-        controller.addProfileListener(profileMenu);
-
-        controller.addProfileListener(graphViewer);
-        controller.addGraphListener(graphViewer);
-        controller.addTextSourceListener(graphViewer);
-
-        getOWLModelManager().addOntologyChangeListener(controller.getTextSourceManager());
-
-        DropTarget dt = new DropTarget(this, this);
-        dt.setActive(true);
-
-        createUI();
-        setupInitial();
+    private void setFrame(JFrame frame) {
+        this.frame = frame;
     }
 
     private void setupInitial() {
@@ -161,9 +174,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         JMenuBar menuBar = new JMenuBar();
 
         menuBar.add(projectMenu);
-        menuBar.add(viewMenu);
-        menuBar.add(profileMenu);
-        menuBar.add(iaaMenu);
 
         add(menuBar, BorderLayout.NORTH);
 

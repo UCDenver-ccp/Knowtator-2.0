@@ -50,8 +50,12 @@ public class AnnotationManager implements Savable {
         }
 
         while (annotationMap.containsKey(id)) {
-            int annotationIDIndex = Integer.parseInt(id.split("mention_")[1]);
-            id = String.format("mention_%d", ++annotationIDIndex);
+            try {
+                int annotationIDIndex = Integer.parseInt(id.split("mention_")[1]);
+                id = String.format("mention_%d", ++annotationIDIndex);
+            } catch (ArrayIndexOutOfBoundsException aioobe) {
+                id = "mention_0";
+            }
         }
         newAnnotation.setID(id);
         annotationMap.put(newAnnotation.getID(), newAnnotation);
@@ -107,10 +111,9 @@ public class AnnotationManager implements Savable {
      */
     public TreeSet<Span> getSpanSet(Integer loc) {
         Supplier<TreeSet<Span>> supplier = () -> new TreeSet<>(Span::compare);
-
         return spanTreeSet.stream().filter(span ->
                 (loc == null || span.contains(loc)) &&
-                        (controller.getSelectionManager().isFilterByProfile() ||
+                        (!controller.getSelectionManager().isFilterByProfile() ||
                                 span.getAnnotation().getAnnotator().equals(controller.getSelectionManager().getActiveProfile())))
                 .collect(Collectors.toCollection(supplier));
     }

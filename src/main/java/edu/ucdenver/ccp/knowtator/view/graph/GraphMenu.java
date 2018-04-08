@@ -38,7 +38,7 @@ class GraphMenu extends JMenu {
             inputPanel.add(nameField);
 
 
-            int result = JOptionPane.showConfirmDialog(null, inputPanel,
+            int result = JOptionPane.showConfirmDialog(controller.getView(), inputPanel,
                     "Enter a new name for this graph space", JOptionPane.DEFAULT_OPTION);
             if (result == JOptionPane.OK_OPTION) {
                 graphViewer.renameCurrentGraph(nameField.getText());
@@ -55,7 +55,7 @@ class GraphMenu extends JMenu {
             fileChooser.setCurrentDirectory(controller.getProjectManager().getProjectLocation());
             FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
             fileChooser.setFileFilter(fileFilter);
-            if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.showSaveDialog(controller.getView()) == JFileChooser.APPROVE_OPTION) {
                 BufferedImage image = mxCellRenderer.createBufferedImage(controller.getSelectionManager().getActiveGraphSpace(), null, 1, Color.WHITE, true, null);
                 try {
                     ImageIO.write(image, "PNG", new File(fileChooser.getSelectedFile().getAbsolutePath()));
@@ -71,7 +71,7 @@ class GraphMenu extends JMenu {
     private JMenuItem deleteGraphCommand() {
         JMenuItem deleteGraphMenuItem = new JMenuItem("Delete graph");
         deleteGraphMenuItem.addActionListener(e -> {
-            if (JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this graph?") == JOptionPane.YES_OPTION) {
+            if (JOptionPane.showConfirmDialog(controller.getView(), "Are you sure you want to delete this graph?") == JOptionPane.YES_OPTION) {
                 graphViewer.deleteSelectedGraph();
             }
         });
@@ -86,7 +86,7 @@ class GraphMenu extends JMenu {
             Object[] message = {
                     "Graph Title", field1,
             };
-            int option = JOptionPane.showConfirmDialog(null, message, "Enter a name for this graph", JOptionPane.OK_CANCEL_OPTION);
+            int option = JOptionPane.showConfirmDialog(controller.getView(), message, "Enter a name for this graph", JOptionPane.OK_CANCEL_OPTION);
             if (option == JOptionPane.OK_OPTION) {
                 graphViewer.addNewGraphSpace(field1.getText());
 

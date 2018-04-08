@@ -6,7 +6,6 @@ import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -20,23 +19,23 @@ public class TextViewer extends JPanel implements TextSourceListener, ProjectLis
     private static final Logger log = Logger.getLogger(KnowtatorController.class);
     private boolean first;
     private KnowtatorController controller;
-    private KnowtatorView view;
     private Map<TextSource, TextPane> textPaneMap;
     private JScrollPane scrollPane;
     private TextSourceToolBar textSourceToolBar;
 
-    public TextViewer(KnowtatorController controller, KnowtatorView view) {
+    public TextViewer(KnowtatorController controller) {
         this.controller = controller;
-        this.view = view;
+
+        setMinimumSize(new Dimension(30, 20));
         textPaneMap = new HashMap<>();
         scrollPane = new JScrollPane();
-        textSourceToolBar = new TextSourceToolBar(this, controller);
+        textSourceToolBar = new TextSourceToolBar(controller);
         setLayout(new BorderLayout());
         first = true;
     }
 
     private void addNewDocument(TextSource textSource) {
-        TextPane newTextPane = new TextPane(view, controller, textSource);
+        TextPane newTextPane = new TextPane(controller, textSource);
         if (textSource != null) {
             newTextPane.setName(textSource.getId());
             try {
@@ -60,7 +59,7 @@ public class TextViewer extends JPanel implements TextSourceListener, ProjectLis
             JPanel subPanel = new JPanel();
             subPanel.setLayout(new BorderLayout());
             subPanel.add(textSourceToolBar, BorderLayout.NORTH);
-            subPanel.add(new AnnotationToolBar(this, view), BorderLayout.SOUTH);
+            subPanel.add(new AnnotationToolBar(controller), BorderLayout.SOUTH);
 
             add(subPanel, BorderLayout.NORTH);
             add(scrollPane, BorderLayout.CENTER);
@@ -105,7 +104,7 @@ public class TextViewer extends JPanel implements TextSourceListener, ProjectLis
         showTextPane(controller.getTextSourceManager().getNextTextSource());
     }
 
-    Map<TextSource, TextPane> getTextPaneMap() {
+    public Map<TextSource, TextPane> getTextPaneMap() {
         return textPaneMap;
     }
 

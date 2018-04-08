@@ -13,12 +13,10 @@ import java.awt.event.ActionEvent;
 
 class TextSourceToolBar extends JToolBar {
 
-    private TextViewer textViewer;
     private KnowtatorController controller;
     private JComboBox<TextSource> textSourceChooser;
 
-    TextSourceToolBar(TextViewer textViewer, KnowtatorController controller) {
-        this.textViewer = textViewer;
+    TextSourceToolBar(KnowtatorController controller) {
         this.controller = controller;
 
         setFloatable(false);
@@ -38,7 +36,7 @@ class TextSourceToolBar extends JToolBar {
         textSourceChooser.addActionListener(e -> {
             JComboBox comboBox = (JComboBox) e.getSource();
             if (comboBox.getSelectedItem() != null && comboBox.getSelectedItem() != controller.getSelectionManager().getActiveTextSource()) {
-                textViewer.showTextPane((TextSource) comboBox.getSelectedItem());
+                controller.getView().getTextViewer().showTextPane((TextSource) comboBox.getSelectedItem());
             }
         });
 
@@ -49,14 +47,14 @@ class TextSourceToolBar extends JToolBar {
 
     void update(TextSource textSource) {
         textSourceChooser.removeAllItems();
-        textViewer.getTextPaneMap().keySet().forEach(textSource1 -> textSourceChooser.addItem(textSource1));
+        controller.getView().getTextViewer().getTextPaneMap().keySet().forEach(textSource1 -> textSourceChooser.addItem(textSource1));
         textSourceChooser.setSelectedItem(textSource);
     }
 
     private JButton previousTextPaneCommand() {
         JButton command = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.UP_ICON));
         command.setToolTipText("Previous document");
-        command.addActionListener(e -> textViewer.showPreviousTextPane());
+        command.addActionListener(e -> controller.getView().getTextViewer().showPreviousTextPane());
         return command;
     }
 
@@ -64,7 +62,7 @@ class TextSourceToolBar extends JToolBar {
     private JButton nextTextPaneCommand() {
         JButton command = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.DOWN_ICON));
         command.setToolTipText("Next document");
-        command.addActionListener(e -> textViewer.showNextTextPane());
+        command.addActionListener(e -> controller.getView().getTextViewer().showNextTextPane());
         return command;
     }
 
@@ -72,7 +70,7 @@ class TextSourceToolBar extends JToolBar {
         JButton command = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.DECREASE_TEXT_SIZE_ICON));
         command.setToolTipText("Decrease text size");
         command.addActionListener((ActionEvent e) -> {
-            for (TextPane textPane : textViewer.getTextPaneMap().values()) {
+            for (TextPane textPane : controller.getView().getTextViewer().getTextPaneMap().values()) {
                 StyledDocument doc = textPane.getStyledDocument();
                 MutableAttributeSet attrs = textPane.getInputAttributes();
                 Font font = doc.getFont(attrs);
@@ -88,7 +86,7 @@ class TextSourceToolBar extends JToolBar {
         JButton command = new JButton(KnowtatorIcons.getIcon(KnowtatorIcons.INCREASE_TEXT_SIZE_ICON));
         command.setToolTipText("Increase text size");
         command.addActionListener((ActionEvent e) -> {
-            for (TextPane textPane : textViewer.getTextPaneMap().values()) {
+            for (TextPane textPane : controller.getView().getTextViewer().getTextPaneMap().values()) {
                 StyledDocument doc = textPane.getStyledDocument();
                 MutableAttributeSet attrs = textPane.getInputAttributes();
                 Font font = doc.getFont(attrs);
@@ -100,4 +98,6 @@ class TextSourceToolBar extends JToolBar {
 
         return command;
     }
+
+
 }

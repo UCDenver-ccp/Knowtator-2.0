@@ -23,6 +23,7 @@ public class KnowtatorIcons {
     public static final String REMOVE = "icons8-minus-50.png";
     public static final String UP_ICON = "icons8-up-filled-50.png";
     public static final String DOWN_ICON = "icons8-down-filled-50.png";
+    public static final String COLOR_PICKER_ICON = "icons8-color-dropper-filled-50.png";
 
 
     private static HashMap<String, ImageIcon> iconMap = new HashMap<>();

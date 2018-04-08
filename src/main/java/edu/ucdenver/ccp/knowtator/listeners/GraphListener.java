@@ -5,7 +5,7 @@ import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
 public interface GraphListener {
     void newGraph(GraphSpace graphSpace);
 
-    void removeGraph(GraphSpace graphSpace);
+    void graphSpaceRemoved(GraphSpace graphSpace);
 }
 
 

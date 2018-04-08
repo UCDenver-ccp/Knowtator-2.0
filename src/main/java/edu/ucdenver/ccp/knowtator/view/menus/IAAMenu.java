@@ -7,7 +7,7 @@ import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
 import javax.swing.*;
 import java.io.File;
 
-public class IAAMenu extends JMenu {
+class IAAMenu extends JMenu {
 
     private KnowtatorController controller;
     private JCheckBoxMenuItem classIAAChoice;
@@ -15,7 +15,7 @@ public class IAAMenu extends JMenu {
     private JCheckBoxMenuItem classAndSpanIAAChoice;
 
 
-    public IAAMenu(KnowtatorController controller) {
+    IAAMenu(KnowtatorController controller) {
         super("IAA");
         this.controller = controller;
 
@@ -43,7 +43,7 @@ public class IAAMenu extends JMenu {
             // disable the "All files" option.
             //
             fileChooser.setAcceptAllFileFilterUsed(false);
-            if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.showSaveDialog(controller.getView()) == JFileChooser.APPROVE_OPTION) {
                 File outputDirectory = fileChooser.getSelectedFile();
 
                 try {

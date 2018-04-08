@@ -31,14 +31,14 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
     private final KnowtatorController controller;
     private JDialog dialog;
 
-    private TreeMap<GraphSpace, mxGraphComponent> graphComponentMap;
+    private TreeMap<GraphSpace, mxGraphComponent> graphSpaceMap;
     private JScrollPane scrollPane;
     private GraphSpaceToolBar graphSpaceToolBar;
     private GraphViewMenu graphViewMenu;
 
     public GraphViewer(JFrame frame, KnowtatorController controller) {
         this.controller = controller;
-        graphComponentMap = new TreeMap<>(GraphSpace::compare);
+        graphSpaceMap = new TreeMap<>(GraphSpace::compare);
         scrollPane = new JScrollPane();
         scrollPane.getVerticalScrollBar().setUnitIncrement(20);
         graphSpaceToolBar = new GraphSpaceToolBar(this, controller);
@@ -105,7 +105,7 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
 
                         String quantifier = "";
                         String value = "";
-                        int result = JOptionPane.showConfirmDialog(null, restrictionPanel,
+                        int result = JOptionPane.showConfirmDialog(controller.getView(), restrictionPanel,
                                 "Restriction options", JOptionPane.OK_CANCEL_OPTION);
                         if (result == JOptionPane.OK_OPTION) {
                             quantifier = quantifierField.getText();
@@ -168,33 +168,37 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
 
     void goToVertex(Object vertex) {
         dialog.requestFocusInWindow();
-        graphComponentMap.get(controller.getSelectionManager().getActiveGraphSpace()).scrollCellToVisible(vertex, true);
+        graphSpaceMap.get(controller.getSelectionManager().getActiveGraphSpace()).scrollCellToVisible(vertex, true);
 
     }
 
     void deleteSelectedGraph() {
-        if (graphComponentMap.size() > 0) {
-            showGraph(graphComponentMap.keySet().iterator().next());
+        if (graphSpaceMap.size() > 0) {
+            showGraph(graphSpaceMap.keySet().iterator().next());
         } else {
-            dialog.remove(graphComponentMap.get(controller.getSelectionManager().getActiveGraphSpace()));
+            dialog.remove(graphSpaceMap.get(controller.getSelectionManager().getActiveGraphSpace()));
         }
 
         controller.getSelectionManager().getActiveTextSource().getAnnotationManager().removeGraphSpace(controller.getSelectionManager().getActiveGraphSpace());
-        graphComponentMap.remove(controller.getSelectionManager().getActiveGraphSpace());
+        graphSpaceMap.remove(controller.getSelectionManager().getActiveGraphSpace());
         graphViewMenu.updateMenus();
     }
 
     void showGraph(GraphSpace graphSpace) {
-        mxGraphComponent graphComponent = graphComponentMap.get(controller.getSelectionManager().getActiveGraphSpace());
-        if (graphComponent != null) {
+        mxGraphComponent graphComponent = graphSpaceMap.get(controller.getSelectionManager().getActiveGraphSpace());
+        if (graphComponent != null && graphSpace != controller.getSelectionManager().getActiveGraphSpace()) {
             dialog.remove(graphComponent);
         }
 
         controller.getSelectionManager().setActiveGraphSpace(graphSpace);
-        dialog.add(graphComponentMap.get(graphSpace), BorderLayout.CENTER);
-        graphSpace.reDrawGraph();
+        graphComponent = graphSpaceMap.get(graphSpace);
+        if (graphComponent != null) {
+            dialog.add(graphSpaceMap.get(graphSpace), BorderLayout.CENTER);
 
-        graphSpaceToolBar.update(graphSpace);
+            graphSpace.reDrawGraph();
+
+            graphSpaceToolBar.update(graphSpace);
+        }
     }
 
     private void addGraph(GraphSpace graphSpace) {
@@ -210,7 +214,7 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
 
         setupListeners(graphComponent);
 
-        graphComponentMap.put(graphSpace, graphComponent);
+        graphSpaceMap.put(graphSpace, graphComponent);
 
         showGraph(graphSpace);
         executeLayout();
@@ -232,7 +236,7 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
             try {
                 layout.execute(graph.getDefaultParent());
             } finally {
-                mxMorphing morph = new mxMorphing(graphComponentMap.get(controller.getSelectionManager().getActiveGraphSpace()), 20, 1.2, 20);
+                mxMorphing morph = new mxMorphing(graphSpaceMap.get(controller.getSelectionManager().getActiveGraphSpace()), 20, 1.2, 20);
 
                 morph.addListener(mxEvent.DONE, (arg0, arg1) -> graph.getModel().endUpdate());
 
@@ -240,7 +244,7 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
             }
         } finally {
             graph.getModel().endUpdate();
-            graphComponentMap.get(controller.getSelectionManager().getActiveGraphSpace()).zoomAndCenter();
+            graphSpaceMap.get(controller.getSelectionManager().getActiveGraphSpace()).zoomAndCenter();
         }
     }
 
@@ -252,8 +256,8 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
         (controller.getSelectionManager().getActiveGraphSpace()).setId(newGraphID);
     }
 
-    Map<GraphSpace, mxGraphComponent> getGraphComponentMap() {
-        return graphComponentMap;
+    public Map<GraphSpace, mxGraphComponent> getGraphSpaceMap() {
+        return graphSpaceMap;
     }
 
     void removeSelectedCell() {
@@ -272,7 +276,7 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
 
     @Override
     public void profileSelectionChanged(Profile profile) {
-        graphComponentMap.keySet().forEach(GraphSpace::reDrawGraph);
+        graphSpaceMap.keySet().forEach(GraphSpace::reDrawGraph);
     }
 
     @Override
@@ -282,7 +286,7 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
 
     @Override
     public void colorChanged() {
-        graphComponentMap.keySet().forEach(GraphSpace::reDrawGraph);
+        graphSpaceMap.keySet().forEach(GraphSpace::reDrawGraph);
     }
 
     @Override
@@ -291,24 +295,24 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
     }
 
     @Override
-    public void removeGraph(GraphSpace graphSpace) {
+    public void graphSpaceRemoved(GraphSpace graphSpace) {
 
     }
 
     private void removeAllGraphs() {
-        mxGraphComponent graphComponent = graphComponentMap.get(controller.getSelectionManager().getActiveGraphSpace());
+        mxGraphComponent graphComponent = graphSpaceMap.get(controller.getSelectionManager().getActiveGraphSpace());
         if (graphComponent != null) {
             dialog.remove(graphComponent);
         }
-        graphComponentMap = new TreeMap<>(GraphSpace::compare);
+        graphSpaceMap = new TreeMap<>(GraphSpace::compare);
     }
 
     void zoomIn() {
-        graphComponentMap.get(controller.getSelectionManager().getActiveGraphSpace()).zoomIn();
+        graphSpaceMap.get(controller.getSelectionManager().getActiveGraphSpace()).zoomIn();
     }
 
     void zoomOut() {
-        graphComponentMap.get(controller.getSelectionManager().getActiveGraphSpace()).zoomOut();
+        graphSpaceMap.get(controller.getSelectionManager().getActiveGraphSpace()).zoomOut();
     }
 
     @Override
@@ -330,11 +334,11 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
 
         GraphSpace previousGraphSpace;
         try {
-            previousGraphSpace = graphComponentMap.containsKey(graphSpace) ? graphComponentMap.lowerKey(graphSpace) : graphComponentMap.floorKey(graphSpace);
+            previousGraphSpace = graphSpaceMap.containsKey(graphSpace) ? graphSpaceMap.lowerKey(graphSpace) : graphSpaceMap.floorKey(graphSpace);
         } catch (NullPointerException npe) {
             previousGraphSpace = null;
         }
-        if (previousGraphSpace == null) previousGraphSpace = graphComponentMap.lastKey();
+        if (previousGraphSpace == null) previousGraphSpace = graphSpaceMap.lastKey();
         showGraph(previousGraphSpace);
     }
 
@@ -343,11 +347,11 @@ public class GraphViewer implements ProfileListener, GraphListener, TextSourceLi
 
         GraphSpace nextGraphSpace;
         try {
-            nextGraphSpace = graphComponentMap.containsKey(graphSpace) ? graphComponentMap.higherKey(graphSpace) : graphComponentMap.ceilingKey(graphSpace);
+            nextGraphSpace = graphSpaceMap.containsKey(graphSpace) ? graphSpaceMap.higherKey(graphSpace) : graphSpaceMap.ceilingKey(graphSpace);
         } catch (NullPointerException npe) {
             nextGraphSpace = null;
         }
-        if (nextGraphSpace == null) nextGraphSpace = graphComponentMap.firstKey();
+        if (nextGraphSpace == null) nextGraphSpace = graphSpaceMap.firstKey();
         showGraph(nextGraphSpace);
     }
 }

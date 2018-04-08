@@ -187,7 +187,7 @@ public class KnowtatorController {
     }
 
     public void removeGraphEvent(GraphSpace graphSpace) {
-        graphListeners.forEach(listener -> listener.removeGraph(graphSpace));
+        graphListeners.forEach(listener -> listener.graphSpaceRemoved(graphSpace));
     }
     public void newGraphEvent(GraphSpace graphSpace) {
         graphListeners.forEach(listener -> listener.newGraph(graphSpace));
@@ -219,5 +219,9 @@ public class KnowtatorController {
     public void activeTextSourceChangedEvent(TextSource textSource) {
         selectionManager.setSelectedAnnotation(null, null);
         textSourceListeners.forEach(listenter -> listenter.activeTextSourceChanged(textSource));
+    }
+
+    public KnowtatorView getView() {
+        return view;
     }
 }

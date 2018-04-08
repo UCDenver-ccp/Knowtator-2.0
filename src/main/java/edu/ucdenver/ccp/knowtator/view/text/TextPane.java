@@ -5,7 +5,6 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -24,14 +23,12 @@ public class TextPane extends JTextPane {
 
 	private static final Logger log = Logger.getLogger(KnowtatorController.class);
 
-	private final KnowtatorView view;
 	private KnowtatorController controller;
 	private TextSource textSource;
 	private boolean isVisible;
 
-	TextPane(KnowtatorView view, KnowtatorController controller, TextSource textSource) {
+	TextPane(KnowtatorController controller, TextSource textSource) {
 		super();
-		this.view = view;
 		this.controller = controller;
 		this.textSource = textSource;
 
@@ -69,7 +66,7 @@ public class TextPane extends JTextPane {
 
 	private void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
 		if (isVisible) {
-			AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e, this, controller, view);
+			AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e, this, controller);
 
 			Set<Span> spansContainingLocation = textSource.getAnnotationManager().getSpanSet(press_offset);
 
@@ -232,33 +229,21 @@ public class TextPane extends JTextPane {
 	void addAnnotation() {
 		String classID = controller.getOWLAPIDataExtractor().getSelectedOwlClassID();
 
-		if (classID == null) {
-			log.warn("No OWLClass selected");
-
-			JTextField idField = new JTextField(10);
-			JPanel inputPanel = new JPanel();
-			inputPanel.add(new JLabel("ID:"));
-			inputPanel.add(idField);
+		if (classID != null) {
 
 
-			int result = JOptionPane.showConfirmDialog(null, inputPanel,
-					"No OWL Class selected", JOptionPane.DEFAULT_OPTION);
-			if (result == JOptionPane.OK_OPTION) {
-				classID = idField.getText();
-			}
+			Span newSpan = new Span(
+					getSelectionStart(),
+					getSelectionEnd(),
+					getText().substring(getSelectionStart(), getSelectionEnd())
+			);
+			textSource.getAnnotationManager().addAnnotation(classID, newSpan);
 		}
-
-        Span newSpan = new Span(
-                getSelectionStart(),
-                getSelectionEnd(),
-                getText().substring(getSelectionStart(), getSelectionEnd())
-        );
-        textSource.getAnnotationManager().addAnnotation(classID, newSpan);
 
 	}
 
 	void removeAnnotation() {
-		if (JOptionPane.showConfirmDialog(null, "Are you sure you want to remove the selected annotation?", "Remove Annotation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+		if (JOptionPane.showConfirmDialog(controller.getView(), "Are you sure you want to remove the selected annotation?", "Remove Annotation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 			textSource.getAnnotationManager().removeAnnotation(controller.getSelectionManager().getSelectedAnnotation());
 		}
 	}

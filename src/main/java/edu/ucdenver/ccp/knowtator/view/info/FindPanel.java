@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view.info;
 
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.view.text.TextPane;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -10,14 +10,15 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class FindPanel extends JPanel {
+    @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(FindPanel.class);
     private final JCheckBox isCaseSensitive;
     private final JCheckBox isRegex;
     private JTextField textField;
-    private KnowtatorView view;
+    private KnowtatorController controller;
 
-    public FindPanel(KnowtatorView view) {
-        this.view = view;
+    public FindPanel(KnowtatorController controller) {
+        this.controller = controller;
         setLayout(new GridLayout(2, 3));
 
 
@@ -44,7 +45,7 @@ public class FindPanel extends JPanel {
     private ActionListener getNextMatch() {
         return e -> {
             String textToFind = textField.getText();
-            TextPane currentTextPane = view.getTextViewer().getCurrentTextPane();
+            TextPane currentTextPane = controller.getView().getTextViewer().getCurrentTextPane();
 
             String textToSearch = currentTextPane.getText();
             if (!isCaseSensitive.isSelected()) {
@@ -66,7 +67,7 @@ public class FindPanel extends JPanel {
     private ActionListener getPreviousMatch() {
         return e -> {
             String textToFind = textField.getText();
-            TextPane currentTextPane = view.getTextViewer().getCurrentTextPane();
+            TextPane currentTextPane = controller.getView().getTextViewer().getCurrentTextPane();
             String textToSearch = currentTextPane.getText();
             if (!isCaseSensitive.isSelected()) {
                 textToSearch = textToSearch.toLowerCase();

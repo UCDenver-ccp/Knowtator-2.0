@@ -16,7 +16,7 @@ class GraphViewMenu extends JMenu {
 
     private JMenu goToGraphMenu() {
         JMenu menu = new JMenu("Go to graph");
-        graphViewer.getGraphComponentMap().keySet()
+        graphViewer.getGraphSpaceMap().keySet()
                 .forEach(graphSpace -> {
                     JMenuItem menuItem = new JMenuItem(graphSpace.getId());
                     menuItem.addActionListener(e -> graphViewer.showGraph(graphSpace));

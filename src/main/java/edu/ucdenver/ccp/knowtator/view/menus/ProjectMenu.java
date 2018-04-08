@@ -27,6 +27,10 @@ public class ProjectMenu extends JMenu {
         addSeparator();
         add(addDocumentCommand());
         add(importAnnotationsCommand());
+        addSeparator();
+        add(new IAAMenu(controller));
+        addSeparator();
+        add(new ProfileMenu(controller));
 
     }
 
@@ -34,7 +38,7 @@ public class ProjectMenu extends JMenu {
         JMenuItem menuItem = new JMenuItem("Import Annotations");
         menuItem.addActionListener(e -> {
             if (controller.getProjectManager().getProjectLocation() == null) {
-                JOptionPane.showMessageDialog(null, "Not in a project. Please create or load " +
+                JOptionPane.showMessageDialog(controller.getView(), "Not in a project. Please create or load " +
                         "a project first. (Project -> New Project or Project -> Load Project)");
             } else {
                 JFileChooser fileChooser = new JFileChooser();
@@ -43,7 +47,7 @@ public class ProjectMenu extends JMenu {
                 fileChooser.setFileFilter(fileFilter);
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
-                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                if (fileChooser.showOpenDialog(controller.getView()) == JFileChooser.APPROVE_OPTION) {
                     controller.getProjectManager().loadFromFormat(KnowtatorXMLUtil.class, fileChooser.getSelectedFile());
                 }
             }
@@ -57,7 +61,7 @@ public class ProjectMenu extends JMenu {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(controller.getProjectManager().getArticlesLocation());
 
-            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.showOpenDialog(controller.getView()) == JFileChooser.APPROVE_OPTION) {
                 controller.getProjectManager().addDocument(fileChooser.getSelectedFile());
             }
         });
@@ -76,7 +80,7 @@ public class ProjectMenu extends JMenu {
                 fileChooser.setDialogTitle("Select project root");
                 fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                if (fileChooser.showOpenDialog(controller.getView()) == JFileChooser.APPROVE_OPTION) {
                     File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
                     controller.getProjectManager().newProject(projectDirectory);
                 }
@@ -96,11 +100,12 @@ public class ProjectMenu extends JMenu {
             fileChooser.setFileFilter(fileFilter);
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
-            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                controller.getProjectManager().saveProject();
-                log.warn("1: " + fileChooser.getSelectedFile());
+            if (fileChooser.showOpenDialog(controller.getView()) == JFileChooser.APPROVE_OPTION) {
+                if (controller.getProjectManager().isProjectLoaded() && JOptionPane.showConfirmDialog(controller.getView(), "Save changes to Knowtator project?", "Save Project", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    controller.getProjectManager().saveProject();
+                }
 
-//            closeProject(view, fileChooser.getSelectedFile());
+                controller.getProjectManager().closeProject(controller.getView(), fileChooser.getSelectedFile());
                 controller.getProjectManager().loadProject(fileChooser.getSelectedFile());
             }
         });
@@ -115,7 +120,7 @@ public class ProjectMenu extends JMenu {
             try {
                 controller.getProjectManager().saveProject();
             } catch (Exception e1) {
-                JOptionPane.showMessageDialog(null, String.format( "Something went wrong trying to save your project:/n %s",
+                JOptionPane.showMessageDialog(controller.getView(), String.format("Something went wrong trying to save your project:/n %s",
                         e1.getMessage()));
                 e1.printStackTrace();
             }

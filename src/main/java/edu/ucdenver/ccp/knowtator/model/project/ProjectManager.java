@@ -25,9 +25,11 @@ public class ProjectManager {
     private File ontologiesLocation;
     private File annotationsLocation;
     private File profilesLocation;
+    private boolean projectLoaded;
 
     public ProjectManager(KnowtatorController controller) {
         this.controller = controller;
+        projectLoaded = false;
     }
 
     public File getProjectLocation() {
@@ -43,13 +45,10 @@ public class ProjectManager {
     }
 
     public void closeProject(KnowtatorView view, File file) {
-        if (view != null){
-            log.warn("2.a: " + file);
-            view.close(file);
-        }
-        else {
-            log.warn("2.b: " + file);
+        if (view == null) {
             controller.close(file);
+        } else {
+            view.close(file);
         }
     }
 
@@ -81,6 +80,7 @@ public class ProjectManager {
             loadFromFormat(KnowtatorXMLUtil.class, controller.getTextSourceManager(), annotationsLocation);
         }
 
+        projectLoaded = true;
         controller.projectLoadedEvent();
     }
 
@@ -171,4 +171,7 @@ public class ProjectManager {
         }
     }
 
+    public boolean isProjectLoaded() {
+        return projectLoaded;
+    }
 }

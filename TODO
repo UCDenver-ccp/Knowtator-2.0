@@ -21,5 +21,4 @@ TODO: Make sure owlClass part is never set to null (i.e. when the annotation owl
 TODO: Toggle expand to show ontology terms as separate nodes
 TODO; Toggle expand to show coreference
 TODO: Regex search
-TODO: Figure out how to close project before loading
 TODO: Should probably also read in Events, Modifiers, etc.

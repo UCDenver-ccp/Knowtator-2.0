@@ -39,7 +39,7 @@ class GraphSpaceToolBar extends JToolBar {
 
     void update(GraphSpace graphSpace) {
         graphSpaceChooser.removeAllItems();
-        graphViewer.getGraphComponentMap().keySet().forEach(textSource1 -> graphSpaceChooser.addItem(textSource1));
+        graphViewer.getGraphSpaceMap().keySet().forEach(textSource1 -> graphSpaceChooser.addItem(textSource1));
         graphSpaceChooser.setSelectedItem(graphSpace);
     }
 
