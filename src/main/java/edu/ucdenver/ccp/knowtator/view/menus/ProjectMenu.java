@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator.view.menus;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import org.apache.log4j.LogManager;
@@ -29,10 +30,26 @@ public class ProjectMenu extends JMenu implements ProjectListener {
         add(addDocumentCommand());
         add(importAnnotationsCommand());
         addSeparator();
+        add(exportToBratCommand());
+        addSeparator();
         add(new IAAMenu(controller));
         addSeparator();
         add(new ProfileMenu(controller));
 
+    }
+
+    private JMenuItem exportToBratCommand() {
+        JMenuItem menuItem = new JMenuItem("Export to Brat");
+        menuItem.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser(controller.getProjectManager().getAnnotationsLocation());
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+            if (fileChooser.showOpenDialog(controller.getView()) == JFileChooser.APPROVE_OPTION) {
+                controller.getProjectManager().saveToFormat(BratStandoffUtil.class, fileChooser.getSelectedFile());
+            }
+        });
+
+        return menuItem;
     }
 
     private JMenu openRecentCommand() {
