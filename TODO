@@ -22,3 +22,5 @@ TODO: Toggle expand to show ontology terms as separate nodes
 TODO; Toggle expand to show coreference
 TODO: Regex search
 TODO: Should probably also read in Events, Modifiers, etc.
+TODO: Figure out why edges add four times
+TODO: Change project menu to Knowtator or project name
