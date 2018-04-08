@@ -59,10 +59,10 @@ public class KnowtatorController {
     }
 
     private void initManagers() {
+        selectionManager = new SelectionManager(this);
         textSourceManager = new TextSourceManager(this);
         profileManager = new ProfileManager(this);  //manipulates profiles and colors
         projectManager = new ProjectManager(this);  //reads and writes to XML
-        selectionManager = new SelectionManager(this);
         owlDataExtractor = new OWLAPIDataExtractor();
     }
 
@@ -164,26 +164,29 @@ public class KnowtatorController {
         selectionManager.setSelectedAnnotation(null);
         annotationListeners.forEach(listener -> listener.annotationRemoved(removedAnnotation));
     }
+
+    public void spanAddedEvent(Span newSpan) {
+        spanListeners.forEach(spanListener -> spanListener.spanAdded(newSpan));
+    }
+
+    public void spanRemovedEvent() {
+        spanListeners.forEach(SpanListener::spanRemoved);
+    }
     public void profileRemovedEvent() {
         profileListeners.forEach(ProfileListener::profileRemoved);
     }
     public void profileFilterEvent(boolean filterByProfile) {
         profileListeners.forEach(profileListener -> profileListener.profileFilterSelectionChanged(filterByProfile));
     }
-    public void spanAddedEvent(Span newSpan) {
-        spanListeners.forEach(spanListener -> spanListener.spanAdded(newSpan));
-    }
-    public void spanRemovedEvent() {
-        spanListeners.forEach(SpanListener::spanRemoved);
-    }
     public void colorChangedEvent() {
         profileListeners.forEach(ProfileListener::colorChanged);
     }
-    public void newGraphEvent(GraphSpace graphSpace) {
-        graphListeners.forEach(listener -> listener.newGraph(graphSpace));
-    }
+
     public void removeGraphEvent(GraphSpace graphSpace) {
         graphListeners.forEach(listener -> listener.removeGraph(graphSpace));
+    }
+    public void newGraphEvent(GraphSpace graphSpace) {
+        graphListeners.forEach(listener -> listener.newGraph(graphSpace));
     }
     public void projectLoadedEvent() {
         projectListeners.forEach(ProjectListener::projectLoaded);

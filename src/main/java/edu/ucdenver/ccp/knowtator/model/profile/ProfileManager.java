@@ -21,7 +21,6 @@ public class ProfileManager implements Savable {
 
     private static final Logger log = Logger.getLogger(KnowtatorController.class);
     private final Profile defaultProfile;
-    private Profile currentProfile;
 
     private Map<String, Profile> profiles;
     private KnowtatorController controller;
@@ -41,26 +40,22 @@ public class ProfileManager implements Savable {
         Profile newProfile = new Profile(profileID);
         profiles.put(profileID, newProfile);
 
-        currentProfile = newProfile;
+        controller.getSelectionManager().setActiveProfile(newProfile);
 
-        controller.profileAddedEvent(currentProfile);
+        controller.profileAddedEvent(newProfile);
 
         return newProfile;
     }
 
-    public Profile getCurrentProfile() {
-        return currentProfile;
-    }
-
     public void switchAnnotator(Profile profile) {
-        currentProfile = profile;
-        controller.profileSelectionChangedEvent(currentProfile);
+        controller.getSelectionManager().setActiveProfile(profile);
+
     }
 
     public void removeProfile(Profile profile) {
         profiles.remove(profile.getId());
+        controller.getSelectionManager().setActiveProfile(profiles.values().iterator().next());
         controller.profileRemovedEvent();
-
     }
 
     public Map<String, Profile> getProfiles() {

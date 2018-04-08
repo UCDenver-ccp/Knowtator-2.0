@@ -34,7 +34,7 @@ public class ProfileMenu extends JMenu implements ProfileListener {
             String[] descendants = controller.getOWLAPIDataExtractor().getSelectedOwlClassDescendants();
             if (classID != null) {
 
-                Profile profile = controller.getProfileManager().getCurrentProfile();
+                Profile profile = controller.getSelectionManager().getActiveProfile();
 
                 pickAColor(classID, descendants, profile);
 
@@ -104,7 +104,7 @@ public class ProfileMenu extends JMenu implements ProfileListener {
 
                 JCheckBoxMenuItem switchAnnotator = new JCheckBoxMenuItem(profile.getId());
                 switchAnnotator.addActionListener(e -> profileManager.switchAnnotator(profile));
-                if (controller.getProfileManager().getCurrentProfile().equals(profile)) {
+                if (controller.getSelectionManager().getActiveProfile().equals(profile)) {
                     switchAnnotator.setState(true);
                 } else switchAnnotator.setState(false);
                 switchProfileMenu.add(switchAnnotator);

@@ -190,7 +190,7 @@ public class TextPane extends JTextPane implements AnnotationListener, SpanListe
 				}
 			}
 
-			Profile profile = controller.getProfileManager().getCurrentProfile();
+			Profile profile = controller.getSelectionManager().getActiveProfile();
 
 			//Remove all previous highlights in case a span has been deleted
 			getHighlighter().removeAllHighlights();

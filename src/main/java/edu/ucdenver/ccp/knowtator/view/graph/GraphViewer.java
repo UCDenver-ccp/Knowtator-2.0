@@ -132,7 +132,7 @@ public class GraphViewer implements ProfileListener, GraphListener {
                                     (AnnotationNode) source,
                                     (AnnotationNode) target,
                                     null,
-                                    controller.getProfileManager().getCurrentProfile(),
+                                    controller.getSelectionManager().getActiveProfile(),
                                     property,
                                     quantifier,
                                     value);

@@ -105,7 +105,11 @@ public class AnnotationManager implements Savable {
     public TreeSet<Span> getSpanSet(Integer loc) {
         Supplier<TreeSet<Span>> supplier = () -> new TreeSet<>(Span::compare);
 
-        return spanTreeSet.stream().filter(span -> (loc == null || span.contains(loc)) && (controller.getSelectionManager().isFilterByProfile() || span.getAnnotation().getAnnotator().equals(controller.getProfileManager().getCurrentProfile()))).collect(Collectors.toCollection(supplier));
+        return spanTreeSet.stream().filter(span ->
+                (loc == null || span.contains(loc)) &&
+                        (controller.getSelectionManager().isFilterByProfile() ||
+                                span.getAnnotation().getAnnotator().equals(controller.getSelectionManager().getActiveProfile())))
+                .collect(Collectors.toCollection(supplier));
     }
 
     public void growSpanStart(Span span) {
@@ -150,7 +154,13 @@ public class AnnotationManager implements Savable {
 
     public void addAnnotation(String classID, Span span) {
         if (classID != null) {
-            Annotation newAnnotation = new Annotation(classID, null, textSource, controller.getProfileManager().getCurrentProfile(), "identity");
+            Annotation newAnnotation = new Annotation(
+                    classID,
+                    null,
+                    textSource,
+                    controller.getSelectionManager().getActiveProfile(),
+                    "identity"
+            );
             newAnnotation.addSpan(span);
             addAnnotation(newAnnotation);
         }
@@ -313,7 +323,14 @@ public class AnnotationManager implements Savable {
                         target = (AnnotationNode) vertices1.get(0);
                     }
 
-                    Triple triple = oldKnowtatorGraphSpace.addTriple(source, target, null, controller.getProfileManager().getCurrentProfile(), property, "", "");
+                    Triple triple = oldKnowtatorGraphSpace.addTriple(
+                            source,
+                            target,
+                            null,
+                            controller.getSelectionManager().getActiveProfile(),
+                            property,
+                            "",
+                            "");
                     log.warn("OLD KNOWTATOR: added TRIPLE: " + triple);
                 }
             }

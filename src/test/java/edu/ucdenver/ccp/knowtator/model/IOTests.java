@@ -240,7 +240,7 @@ public class IOTests {
 
         AnnotationNode v1 = graphSpace.addNode("node_0", annotationManager.getAnnotation("mention_0"));
         AnnotationNode v2 = graphSpace.addNode("node_1", annotationManager.getAnnotation("mention_1"));
-        graphSpace.addTriple(v1, v2, "edge_1", controller.getProfileManager().getCurrentProfile(), "property_0", "", "");
+        graphSpace.addTriple(v1, v2, "edge_1", controller.getSelectionManager().getActiveProfile(), "property_0", "", "");
 
         int numGraphSpaces = annotationManager.getGraphSpaces().size();
         int numVertices = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace1 -> graphSpace1.getChildVertices(graphSpace.getDefaultParent()).length).sum();

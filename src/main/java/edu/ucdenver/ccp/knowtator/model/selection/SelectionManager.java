@@ -4,6 +4,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 
 public class SelectionManager {
@@ -13,14 +14,25 @@ public class SelectionManager {
     private Span selectedSpan;
     private GraphSpace activeGraphSpace;
     private TextSource activeTextSource;
-    private boolean focusOnSelectedSpan;
 
+    private Profile activeProfile;
+
+    private boolean focusOnSelectedSpan;
     private boolean filterByProfile;
 
     public SelectionManager(KnowtatorController knowtatorController) {
         controller = knowtatorController;
         focusOnSelectedSpan = false;
         filterByProfile = false;
+    }
+
+    public Profile getActiveProfile() {
+        return activeProfile;
+    }
+
+    public void setActiveProfile(Profile profile) {
+        this.activeProfile = profile;
+        controller.profileSelectionChangedEvent(profile);
     }
 
     public boolean isFilterByProfile() {
