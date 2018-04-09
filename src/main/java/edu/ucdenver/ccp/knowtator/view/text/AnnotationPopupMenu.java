@@ -65,7 +65,11 @@ class AnnotationPopupMenu extends JPopupMenu {
 
     private JMenuItem removeAnnotationCommand() {
         JMenuItem removeAnnotationMenuItem = new JMenuItem("Delete " + controller.getSelectionManager().getSelectedAnnotation().getOwlClass());
-        removeAnnotationMenuItem.addActionListener(e4 -> textPane.removeAnnotation());
+        removeAnnotationMenuItem.addActionListener(e4 -> {
+            if (JOptionPane.showConfirmDialog(controller.getView(), "Are you sure you want to remove the selected annotation?", "Remove Annotation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                controller.getSelectionManager().getActiveTextSource().getAnnotationManager().addSelectedAnnotation();
+            }
+        });
 
         return removeAnnotationMenuItem;
     }
@@ -82,12 +86,12 @@ class AnnotationPopupMenu extends JPopupMenu {
 
         Annotation annotation = controller.getSelectionManager().getSelectedAnnotation();
         TextSource textSource = controller.getSelectionManager().getActiveTextSource();
-        for (GraphSpace graphSpace : textSource.getAnnotationManager().getGraphSpaces()) {
+        for (GraphSpace graphSpace : textSource.getAnnotationManager().getGraphSpaces().getGraphSpaces()) {
             mxCell vertex = graphSpace.containsVertexCorrespondingToAnnotation(annotation);
             if (vertex != null) {
                 JMenuItem menuItem = new JMenuItem(graphSpace.getId());
                 menuItem.addActionListener(e1 -> {
-                    controller.getView().getGraphViewer().getDialog().setVisible(true);
+                    controller.getView().getGraphViewDialog().setVisible(true);
                     controller.getSelectionManager().setActiveGraphSpace(graphSpace);
                     controller.getSelectionManager().setSelectedAnnotation(null, null);
                     controller.getSelectionManager().setSelectedAnnotation(annotation, null);

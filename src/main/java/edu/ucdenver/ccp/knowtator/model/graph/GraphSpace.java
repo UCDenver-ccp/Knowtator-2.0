@@ -148,7 +148,7 @@ public class GraphSpace extends mxGraph implements Savable {
             String quantifier = tripleElem.getAttribute(KnowtatorXMLAttributes.TRIPLE_QUANTIFIER);
             String quantifierValue = tripleElem.getAttribute(KnowtatorXMLAttributes.TRIPLE_VALUE);
 
-            Profile annotator = controller.getProfileManager().addNewProfile(annotatorID);
+            Profile annotator = controller.getProfileManager().addProfile(annotatorID);
             AnnotationNode source = (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(subjectID);
             AnnotationNode target = (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(objectID);
 

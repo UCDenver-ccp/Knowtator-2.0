@@ -40,7 +40,7 @@ public class Annotation implements Savable {
 	private KnowtatorController controller;
 
 
-	public Annotation(OWLClass owlClass, String owlClassID, String annotationID, TextSource textSource, Profile annotator, String annotation_type, KnowtatorController controller) {
+	public Annotation(KnowtatorController controller, String annotationID, OWLClass owlClass, String owlClassID, Profile annotator, String annotation_type, TextSource textSource) {
 		this.textSource = textSource;
 		this.annotator = annotator;
 		this.controller = controller;

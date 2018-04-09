@@ -7,6 +7,7 @@ import edu.ucdenver.ccp.knowtator.iaa.matcher.ClassAndSpanMatcher;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.ClassMatcher;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.SpanMatcher;
 import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
 
 import java.io.File;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class KnowtatorIAA {
 	private File outputDirectory;
@@ -55,7 +57,7 @@ public class KnowtatorIAA {
 
 		this.outputDirectory = outputDirectory;
 		//this.filter = filter;
-        this.textSources = new HashSet<>(controller.getTextSourceManager().getTextSources());
+        this.textSources = new HashSet<>(controller.getTextSourceManager().getTextSources().getTextSources());
 
         this.controller = controller;
 		annotationTexts = new HashMap<>();
@@ -67,7 +69,7 @@ public class KnowtatorIAA {
 	}
 
 	private void initSetNames() {
-        setNames = controller.getProfileManager().getProfiles().keySet();
+        setNames = controller.getProfileManager().getProfiles().getProfiles().stream().map(Profile::getId).collect(Collectors.toSet());
 	}
 
 	private void initHTML() throws IAAException {

@@ -62,7 +62,7 @@ public class BratStandoffUtil implements BasicIOUtil {
     @Override
     public void write(Savable savable, File file) {
         if (savable instanceof TextSourceManager) {
-            ((TextSourceManager) savable).getTextSources().forEach(textSource -> {
+            ((TextSourceManager) savable).getTextSources().getTextSources().forEach(textSource -> {
                 File outputFile = new File(file.getAbsolutePath() + File.separator + textSource.getId() + ".ann");
                 writeToOutputFile(textSource, outputFile);
 

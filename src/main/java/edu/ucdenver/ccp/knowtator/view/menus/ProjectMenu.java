@@ -1,6 +1,8 @@
 package edu.ucdenver.ccp.knowtator.view.menus;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.iaa.IAAException;
+import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
@@ -17,6 +19,9 @@ public class ProjectMenu extends JMenu implements ProjectListener {
     private static Logger log = LogManager.getLogger(ProjectMenu.class);
 
     private KnowtatorController controller;
+    private JCheckBoxMenuItem classIAAChoice;
+    private JCheckBoxMenuItem spanIAAChoice;
+    private JCheckBoxMenuItem classAndSpanIAAChoice;
 
     public ProjectMenu(KnowtatorController controller) {
         super("Project");
@@ -34,9 +39,32 @@ public class ProjectMenu extends JMenu implements ProjectListener {
         addSeparator();
         add(attemptToConnectToOWLModelManagerCommand());
         addSeparator();
-        add(new IAAMenu(controller));
+        add(profileMenu());
+        add(removeProfileMenu());
         addSeparator();
-        add(new ProfileMenu(controller));
+        add(IAAMenu());
+
+    }
+
+    private JMenu profileMenu() {
+        JMenu profileMenu = new JMenu("Profile");
+        profileMenu.add(newProfile());
+        return profileMenu;
+    }
+
+    private JMenu IAAMenu() {
+        JMenu iaaMenu = new JMenu("IAA");
+
+        classIAAChoice = new JCheckBoxMenuItem("Class");
+        spanIAAChoice = new JCheckBoxMenuItem("Span");
+        classAndSpanIAAChoice = new JCheckBoxMenuItem("Class and Span");
+
+        iaaMenu.add(classIAAChoice);
+        iaaMenu.add(spanIAAChoice);
+        iaaMenu.add(classAndSpanIAAChoice);
+        iaaMenu.add(getRunIAACommand());
+
+        return iaaMenu;
 
     }
 
@@ -74,7 +102,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
                 }
 
                 controller.getProjectManager().closeProject(controller.getView(), recentProject);
-                controller.getProjectManager().loadProject(recentProject);
+//                controller.getProjectManager().loadProject(recentProject);
             });
 
             menu.add(recentProjectMenuItem);
@@ -189,8 +217,78 @@ public class ProjectMenu extends JMenu implements ProjectListener {
         add(addDocumentCommand());
         add(importAnnotationsCommand());
         addSeparator();
-        add(new IAAMenu(controller));
+        add(IAAMenu());
         addSeparator();
-        add(new ProfileMenu(controller));
+        add(profileMenu());
+    }
+
+    private JMenuItem newProfile() {
+        JMenuItem newAnnotator = new JMenuItem("New profile");
+        newAnnotator.addActionListener(e -> {
+            int dialogResult = JOptionPane.showConfirmDialog(controller.getView(), "Load profile from test_project(knowtator)?", "New profile", JOptionPane.YES_NO_CANCEL_OPTION);
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setCurrentDirectory(controller.getProjectManager().getProjectLocation());
+
+                if (fileChooser.showSaveDialog(controller.getView()) == JFileChooser.APPROVE_OPTION) {
+                    controller.getProjectManager().loadFromFormat(KnowtatorXMLUtil.class, controller.getProfileManager(), fileChooser.getSelectedFile());
+                }
+            } else if (dialogResult == JOptionPane.NO_OPTION) {
+                JTextField field1 = new JTextField();
+                Object[] message = {
+                        "Profile name", field1,
+                };
+                int option = JOptionPane.showConfirmDialog(controller.getView(), message, "Enter profile name", JOptionPane.OK_CANCEL_OPTION);
+                if (option == JOptionPane.OK_OPTION) {
+                    String annotator = field1.getText();
+                    controller.getProfileManager().addProfile(annotator);
+                }
+            }
+        });
+
+        return newAnnotator;
+    }
+
+    private JMenuItem removeProfileMenu() {
+        JMenuItem removeProfileMenu = new JMenuItem("Remove profile");
+        removeProfileMenu.addActionListener(e -> controller.getProfileManager().removeActiveProfile());
+
+        return removeProfileMenu;
+    }
+
+    private JMenuItem getRunIAACommand() {
+        JMenuItem runIAA = new JMenuItem("Run IAA");
+
+        runIAA.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(controller.getProjectManager().getProjectLocation());
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            //
+            // disable the "All files" option.
+            //
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            if (fileChooser.showSaveDialog(controller.getView()) == JFileChooser.APPROVE_OPTION) {
+                File outputDirectory = fileChooser.getSelectedFile();
+
+                try {
+                    KnowtatorIAA knowtatorIAA = new KnowtatorIAA(outputDirectory, controller);
+
+                    if (classIAAChoice.getState()) {
+                        knowtatorIAA.runClassIAA();
+                    }
+                    if (spanIAAChoice.getState()) {
+                        knowtatorIAA.runSpanIAA();
+                    }
+                    if (classAndSpanIAAChoice.getState()) {
+                        knowtatorIAA.runClassAndSpanIAA();
+                    }
+
+                    knowtatorIAA.closeHTML();
+                } catch (IAAException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        return runIAA;
     }
 }

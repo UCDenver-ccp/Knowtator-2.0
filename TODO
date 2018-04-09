@@ -24,3 +24,5 @@ TODO: Regex search
 TODO: Should probably also read in Events, Modifiers, etc.
 TODO: Figure out why edges add four times
 TODO: Change project menu to Knowtator or project name
+TODO: Quantifier and value as persistent text boxes
+TODO: Implement owl model manager and renderer change listeners

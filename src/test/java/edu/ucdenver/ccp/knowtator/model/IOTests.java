@@ -79,7 +79,7 @@ public class IOTests {
 
         controller.getProjectManager().loadProject(projectFile);
 
-        TextSource textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID])).findAny().get();
+        TextSource textSource = controller.getTextSourceManager().getTextSources().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID])).findAny().get();
         String content;
         try {
             content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
@@ -91,9 +91,9 @@ public class IOTests {
         AnnotationManager annotationManager = textSource.getAnnotationManager();
         int numAnnotations = annotationManager.getAnnotations().size();
         int numSpans = annotationManager.getSpanSet(null).size();
-        int numGraphSpaces = annotationManager.getGraphSpaces().size();
-        int numVertices = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildVertices(graphSpace.getDefaultParent()).length).sum();
-        int numTriples = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildEdges(graphSpace.getDefaultParent()).length).sum();
+        int numGraphSpaces = annotationManager.getGraphSpaces().getGraphSpaces().size();
+        int numVertices = annotationManager.getGraphSpaces().getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildVertices(graphSpace.getDefaultParent()).length).sum();
+        int numTriples = annotationManager.getGraphSpaces().getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildEdges(graphSpace.getDefaultParent()).length).sum();
 
         assert numGraphSpaces == 1 : "There were " + numGraphSpaces + " graph spaces";
         assert numVertices == 2 : "There were " + numVertices + " vertices";
@@ -102,7 +102,7 @@ public class IOTests {
         assert numSpans == 3 : "There were " + numSpans + " spans";
 
 
-        textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID2])).findAny().get();
+        textSource = controller.getTextSourceManager().getTextSources().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID2])).findAny().get();
 
         try {
             content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
@@ -114,9 +114,9 @@ public class IOTests {
         annotationManager = textSource.getAnnotationManager();
         numAnnotations = annotationManager.getAnnotations().size();
         numSpans = annotationManager.getSpanSet(null).size();
-        numGraphSpaces = annotationManager.getGraphSpaces().size();
-        numVertices = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildVertices(graphSpace.getDefaultParent()).length).sum();
-        numTriples = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildEdges(graphSpace.getDefaultParent()).length).sum();
+        numGraphSpaces = annotationManager.getGraphSpaces().getGraphSpaces().size();
+        numVertices = annotationManager.getGraphSpaces().getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildVertices(graphSpace.getDefaultParent()).length).sum();
+        numTriples = annotationManager.getGraphSpaces().getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildEdges(graphSpace.getDefaultParent()).length).sum();
 
         assert numGraphSpaces == 1 : "There were " + numGraphSpaces + " graph spaces";
         assert numVertices == 2 : "There were " + numVertices + " vertices";
@@ -142,7 +142,7 @@ public class IOTests {
 
         controller.getProjectManager().addDocument(articleFile);
 
-        TextSource textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID])).findAny().get();
+        TextSource textSource = controller.getTextSourceManager().getTextSources().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID])).findAny().get();
         String content;
         try {
             content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
@@ -165,7 +165,7 @@ public class IOTests {
         controller.getProjectManager().loadProject(projectFile);
         controller.getProjectManager().closeProject(null, null);
 
-        controller.getTextSourceManager().getTextSources().stream().filter(textSource -> textSource.getId().equals(articleFileNames[articleID])).findAny().orElseThrow(RuntimeException::new);
+        controller.getTextSourceManager().getTextSources().getTextSources().stream().filter(textSource -> textSource.getId().equals(articleFileNames[articleID])).findAny().orElseThrow(RuntimeException::new);
     }
 
     @Test
@@ -194,7 +194,7 @@ public class IOTests {
         File projectFile = getProjectFile(projectFileName);
 
         controller.getProjectManager().loadProject(projectFile);
-        TextSource textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID])).findAny().get();
+        TextSource textSource = controller.getTextSourceManager().getTextSources().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID])).findAny().get();
         String content;
         try {
             content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
@@ -206,7 +206,7 @@ public class IOTests {
         AnnotationManager annotationManager1 = textSource.getAnnotationManager();
         int numAnnotations = annotationManager1.getAnnotations().size();
         int numSpans = annotationManager1.getSpanSet(null).size();
-        int numGraphSpaces = annotationManager1.getGraphSpaces().size();
+        int numGraphSpaces = annotationManager1.getGraphSpaces().getGraphSpaces().size();
 
         assert numGraphSpaces == 1 : "There were " + numGraphSpaces + " graph spaces";
         assert numAnnotations == 2 : "There were " + numAnnotations + " annotations";
@@ -225,7 +225,7 @@ public class IOTests {
 
         controller.getProjectManager().loadProject(projectFile);
 
-        TextSource textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID])).findAny().get();
+        TextSource textSource = controller.getTextSourceManager().getTextSources().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID])).findAny().get();
         String content;
         try {
             content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
@@ -242,9 +242,9 @@ public class IOTests {
         AnnotationNode v2 = graphSpace.addNode("node_1", annotationManager.getAnnotation("mention_1"));
         graphSpace.addTriple(v1, v2, "edge_1", controller.getSelectionManager().getActiveProfile(), "property_0", "", "");
 
-        int numGraphSpaces = annotationManager.getGraphSpaces().size();
-        int numVertices = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace1 -> graphSpace1.getChildVertices(graphSpace.getDefaultParent()).length).sum();
-        int numTriples = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace1 -> graphSpace1.getChildEdges(graphSpace.getDefaultParent()).length).sum();
+        int numGraphSpaces = annotationManager.getGraphSpaces().getGraphSpaces().size();
+        int numVertices = annotationManager.getGraphSpaces().getGraphSpaces().stream().mapToInt(graphSpace1 -> graphSpace1.getChildVertices(graphSpace.getDefaultParent()).length).sum();
+        int numTriples = annotationManager.getGraphSpaces().getGraphSpaces().stream().mapToInt(graphSpace1 -> graphSpace1.getChildEdges(graphSpace.getDefaultParent()).length).sum();
 
         assert numGraphSpaces == 2 : "There were " + numGraphSpaces + " graph spaces";
         assert numVertices == 4 : "There were " + numVertices + " vertices";
@@ -294,7 +294,7 @@ public class IOTests {
 
         controller.getProjectManager().loadProject(projectFile);
         controller.getProjectManager().loadFromFormat(BratStandoffUtil.class, bratAnnotationFile);
-        controller.getProjectManager().saveToFormat(BratStandoffUtil.class, controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(article)).findAny().get(), outputFile);
+        controller.getProjectManager().saveToFormat(BratStandoffUtil.class, controller.getTextSourceManager().getTextSources().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(article)).findAny().get(), outputFile);
     }
 
     @Test
@@ -308,14 +308,14 @@ public class IOTests {
 
         controller.getProjectManager().loadProject(projectFile);
 
-        TextSource textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID])).findAny().get();
+        TextSource textSource = controller.getTextSourceManager().getTextSources().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID])).findAny().get();
 
         AnnotationManager annotationManager = textSource.getAnnotationManager();
         int numAnnotations = annotationManager.getAnnotations().size();
         int numSpans = annotationManager.getSpanSet(null).size();
-        int numGraphSpaces = annotationManager.getGraphSpaces().size();
-        int numVertices = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildVertices(graphSpace.getDefaultParent()).length).sum();
-        int numTriples = annotationManager.getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildEdges(graphSpace.getDefaultParent()).length).sum();
+        int numGraphSpaces = annotationManager.getGraphSpaces().getGraphSpaces().size();
+        int numVertices = annotationManager.getGraphSpaces().getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildVertices(graphSpace.getDefaultParent()).length).sum();
+        int numTriples = annotationManager.getGraphSpaces().getGraphSpaces().stream().mapToInt(graphSpace -> graphSpace.getChildEdges(graphSpace.getDefaultParent()).length).sum();
 
         assert numGraphSpaces == 1 : "There were " + numGraphSpaces + " graph spaces";
         assert numVertices == 12 : "There were " + numVertices + " vertices";

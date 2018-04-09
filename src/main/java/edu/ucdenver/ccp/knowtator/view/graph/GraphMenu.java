@@ -15,12 +15,10 @@ import java.io.IOException;
 class GraphMenu extends JMenu {
 
     private KnowtatorController controller;
-    private GraphViewer graphViewer;
 
-    GraphMenu(KnowtatorController controller, GraphViewer graphViewer) {
+    GraphMenu(KnowtatorController controller) {
         super("Graph");
         this.controller = controller;
-        this.graphViewer = graphViewer;
 
         add(addNewGraphCommand());
         add(renameGraphCommand());
@@ -41,7 +39,7 @@ class GraphMenu extends JMenu {
             int result = JOptionPane.showConfirmDialog(controller.getView(), inputPanel,
                     "Enter a new name for this graph space", JOptionPane.DEFAULT_OPTION);
             if (result == JOptionPane.OK_OPTION) {
-                graphViewer.renameCurrentGraph(nameField.getText());
+                controller.getSelectionManager().getActiveGraphSpace().setId(nameField.getText());
             }
         });
 
@@ -72,7 +70,7 @@ class GraphMenu extends JMenu {
         JMenuItem deleteGraphMenuItem = new JMenuItem("Delete graph");
         deleteGraphMenuItem.addActionListener(e -> {
             if (JOptionPane.showConfirmDialog(controller.getView(), "Are you sure you want to delete this graph?") == JOptionPane.YES_OPTION) {
-                graphViewer.deleteSelectedGraph();
+                controller.getSelectionManager().getActiveTextSource().getAnnotationManager().removeGraphSpace(controller.getSelectionManager().getActiveGraphSpace());
             }
         });
 
@@ -82,14 +80,15 @@ class GraphMenu extends JMenu {
     private JMenuItem addNewGraphCommand() {
         JMenuItem addNewGraphMenuItem = new JMenuItem("Create new graph");
         addNewGraphMenuItem.addActionListener(e -> {
-            JTextField field1 = new JTextField();
-            Object[] message = {
-                    "Graph Title", field1,
-            };
-            int option = JOptionPane.showConfirmDialog(controller.getView(), message, "Enter a name for this graph", JOptionPane.OK_CANCEL_OPTION);
-            if (option == JOptionPane.OK_OPTION) {
-                graphViewer.addNewGraphSpace(field1.getText());
-
+            if (controller.getSelectionManager().getActiveTextSource() != null) {
+                JTextField field1 = new JTextField();
+                Object[] message = {
+                        "Graph Title", field1,
+                };
+                int option = JOptionPane.showConfirmDialog(controller.getView(), message, "Enter a name for this graph", JOptionPane.OK_CANCEL_OPTION);
+                if (option == JOptionPane.OK_OPTION) {
+                    controller.getSelectionManager().getActiveTextSource().getAnnotationManager().addGraphSpace(field1.getText());
+                }
             }
 
         });

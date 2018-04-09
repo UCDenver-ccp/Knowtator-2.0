@@ -60,7 +60,7 @@ public class Profile implements Savable {
     }
 
     public String toString() {
-        return String.format("Profile: ID: %s", profileID);
+        return profileID;
     }
 
     @Override

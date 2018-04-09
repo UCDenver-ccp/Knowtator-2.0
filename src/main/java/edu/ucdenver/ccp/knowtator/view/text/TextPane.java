@@ -2,43 +2,47 @@ package edu.ucdenver.ccp.knowtator.view.text;
 
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
+import edu.ucdenver.ccp.knowtator.listeners.SelectionListener;
 import edu.ucdenver.ccp.knowtator.model.annotation.Span;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
-import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter;
-import javax.swing.text.Utilities;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Set;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public class TextPane extends JTextPane {
-
-	@SuppressWarnings("unused")
-	private static final Logger log = Logger.getLogger(KnowtatorController.class);
+public class TextPane extends JTextPane implements SelectionListener, ProjectListener {
 
 	private KnowtatorController controller;
-	private TextSource textSource;
-	private boolean isVisible;
 
-	TextPane(KnowtatorController controller, TextSource textSource) {
+	public TextPane(KnowtatorController controller) {
 		super();
 		this.controller = controller;
-		this.textSource = textSource;
+		controller.getSelectionManager().addSelectionListener(this);
 
-		this.setEditable(false);
+		addCaretListener(controller.getSelectionManager());
 
 		setupListeners();
 		requestFocusInWindow();
 		select(0, 0);
+	}
+
+	private void showTextPane(TextSource textSource) {
+		try {
+			read(new FileReader(textSource.getTextFile()), textSource.getTextFile());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void setupListeners() {
@@ -67,30 +71,30 @@ public class TextPane extends JTextPane {
 	}
 
 	private void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
-		if (isVisible) {
+		if (controller.getSelectionManager().getActiveTextSource() != null) {
 			AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e, this, controller);
 
-			Set<Span> spansContainingLocation = textSource.getAnnotationManager().getSpanSet(press_offset);
+			Set<Span> spansContainingLocation = controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getSpanSet(press_offset);
 
-            if (SwingUtilities.isRightMouseButton(e)) {
-                if (spansContainingLocation.size() == 1) {
+			if (SwingUtilities.isRightMouseButton(e)) {
+				if (spansContainingLocation.size() == 1) {
 					Span span = spansContainingLocation.iterator().next();
 					controller.getSelectionManager().setSelectedSpan(span);
-                }
-                popupMenu.showPopUpMenu(release_offset);
-            } else if (press_offset == release_offset) {
-                if (spansContainingLocation.size() == 1) {
+				}
+				popupMenu.showPopUpMenu(release_offset);
+			} else if (press_offset == release_offset) {
+				if (spansContainingLocation.size() == 1) {
 					Span span = spansContainingLocation.iterator().next();
 					controller.getSelectionManager().setSelectedSpan(span);
-                } else if (spansContainingLocation.size() > 1) {
-                    popupMenu.chooseAnnotation(spansContainingLocation);
-                }
+				} else if (spansContainingLocation.size() > 1) {
+					popupMenu.chooseAnnotation(spansContainingLocation);
+				}
 
-            } else {
+			} else {
 				controller.getSelectionManager().setFocusOnSelectedSpan(false);
-                setSelectionAtWordLimits(press_offset, release_offset);
-            }
-        }
+				setSelectionAtWordLimits(press_offset, release_offset);
+			}
+		}
 	}
 
 	private void setSelectionAtWordLimits(int press_offset, int release_offset) {
@@ -106,58 +110,9 @@ public class TextPane extends JTextPane {
 		}
 	}
 
-	void previousSpan() {
-		Span previousSpan = textSource.getAnnotationManager().getPreviousSpan();
+	private void refreshHighlights() {
+		if (controller.getSelectionManager().getActiveTextSource() != null) {
 
-		controller.getSelectionManager().setSelectedSpan(previousSpan);
-	}
-
-	void nextSpan() {
-		Span nextSpan = textSource.getAnnotationManager().getNextSpan();
-
-		controller.getSelectionManager().setSelectedSpan(nextSpan);
-	}
-
-	void shrinkSelectionEnd() {
-		if (controller.getSelectionManager().isFocusOnSelectedSpan()) {
-			textSource.getAnnotationManager().shrinkSpanEnd(controller.getSelectionManager().getSelectedSpan());
-			refreshHighlights();
-		} else {
-			requestFocusInWindow();
-			select(getSelectionStart(), getSelectionEnd() - 1);
-		}
-
-	}
-	void shrinkSelectionStart() {
-		if (controller.getSelectionManager().isFocusOnSelectedSpan()) {
-			textSource.getAnnotationManager().shrinkSpanStart(controller.getSelectionManager().getSelectedSpan());
-			refreshHighlights();
-		} else {
-			requestFocusInWindow();
-			select(getSelectionStart() + 1, getSelectionEnd());
-		}
-	}
-	void growSelectionEnd() {
-		if (controller.getSelectionManager().isFocusOnSelectedSpan()) {
-			textSource.getAnnotationManager().growSpanEnd(controller.getSelectionManager().getSelectedSpan(), getText().length());
-			refreshHighlights();
-		} else {
-			requestFocusInWindow();
-			select(getSelectionStart(), getSelectionEnd() + 1);
-		}
-	}
-	void growSelectionStart() {
-		if (controller.getSelectionManager().isFocusOnSelectedSpan()) {
-			textSource.getAnnotationManager().growSpanStart(controller.getSelectionManager().getSelectedSpan());
-			refreshHighlights();
-		} else {
-			requestFocusInWindow();
-			select(getSelectionStart() - 1, getSelectionEnd());
-		}
-	}
-
-	void refreshHighlights() {
-    	if (isVisible) {
 			if (controller.getSelectionManager().getSelectedSpan() != null) {
 				try {
 					scrollRectToVisible(modelToView(controller.getSelectionManager().getSelectedSpan().getStart()));
@@ -178,7 +133,7 @@ public class TextPane extends JTextPane {
 			Span lastSpan = Span.makeDefaultSpan();
 			Color lastColor = null;
 
-			Set<Span> spans = textSource.getAnnotationManager().getSpanSet(null);
+			Set<Span> spans = controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getSpanSet(null);
 			for (Span span : spans) {
 				if (span.intersects(lastSpan)) {
 					try {
@@ -241,23 +196,12 @@ public class TextPane extends JTextPane {
 					getSelectionEnd(),
 					getText().substring(getSelectionStart(), getSelectionEnd())
 			);
-			textSource.getAnnotationManager().addAnnotation(owlClass, owlClassID, newSpan);
-		}
-
-	}
-
-	void removeAnnotation() {
-		if (JOptionPane.showConfirmDialog(controller.getView(), "Are you sure you want to remove the selected annotation?", "Remove Annotation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-			textSource.getAnnotationManager().removeAnnotation(controller.getSelectionManager().getSelectedAnnotation());
+			controller.getSelectionManager().getActiveTextSource().getAnnotationManager().addAnnotation(owlClass, owlClassID, newSpan);
 		}
 	}
-
-    void setIsVisible(boolean isVisible) {
-        this.isVisible = isVisible;
-    }
 
 	void addSpanToAnnotation() {
-		textSource.getAnnotationManager()
+		controller.getSelectionManager().getActiveTextSource().getAnnotationManager()
 				.addSpanToAnnotation(
 						controller.getSelectionManager().getSelectedAnnotation(),
 						new Span(
@@ -265,5 +209,69 @@ public class TextPane extends JTextPane {
 								getSelectionEnd(),
 								getText().substring(getSelectionStart(), getSelectionEnd()))
 				);
+	}
+
+	@Override
+	public void selectedAnnotationChanged() {
+		refreshHighlights();
+	}
+
+	@Override
+	public void selectedSpanChanged() {
+		refreshHighlights();
+	}
+
+	@Override
+	public void activeGraphSpaceChanged() {
+	}
+
+	@Override
+	public void activeTextSourceChanged() {
+		showTextPane(controller.getSelectionManager().getActiveTextSource());
+		refreshHighlights();
+	}
+
+	@Override
+	public void currentProfileChange() {
+		refreshHighlights();
+	}
+
+	@Override
+	public void projectLoaded() {
+		showTextPane(controller.getSelectionManager().getActiveTextSource());
+	}
+
+	public void decreaseFontSize() {
+		StyledDocument doc = getStyledDocument();
+		MutableAttributeSet attrs = getInputAttributes();
+		Font font = doc.getFont(attrs);
+		StyleConstants.setFontSize(attrs, font.getSize() - 2);
+		doc.setCharacterAttributes(0, doc.getLength() + 1, attrs, false);
+		repaint();
+	}
+
+	public void increaseFindSize() {
+		StyledDocument doc = getStyledDocument();
+		MutableAttributeSet attrs = getInputAttributes();
+		Font font = doc.getFont(attrs);
+		StyleConstants.setFontSize(attrs, font.getSize() + 2);
+		doc.setCharacterAttributes(0, doc.getLength() + 1, attrs, false);
+		repaint();
+	}
+
+	public void growStart() {
+		select(getSelectionStart() - 1, getSelectionEnd());
+	}
+
+	public void shrinkStart() {
+		select(getSelectionStart() + 1, getSelectionEnd());
+	}
+
+	public void shrinkEnd() {
+		select(getSelectionStart(), getSelectionEnd() - 1);
+	}
+
+	public void growEnd() {
+		select(getSelectionStart(), getSelectionEnd() + 1);
 	}
 }

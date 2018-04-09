@@ -3,7 +3,6 @@ package edu.ucdenver.ccp.knowtator.model.owl;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.protege.editor.owl.model.OWLModelManager;
 import org.protege.editor.owl.model.OWLWorkspace;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
@@ -22,17 +21,16 @@ public class OWLAPIDataExtractor implements Savable {
     @SuppressWarnings("unused")
     private static final Logger log = LogManager.getLogger(OWLAPIDataExtractor.class);
     private OWLWorkspace owlWorkSpace;
-    private OWLModelManager owlModelManager;
 
 
     private OWLAnnotationProperty getOWLAnnotationPropertyByName() {
-        return owlModelManager.getOWLEntityFinder().getOWLAnnotationProperty("name");
+        return owlWorkSpace.getOWLModelManager().getOWLEntityFinder().getOWLAnnotationProperty("name");
     }
 
     private String extractAnnotation(OWLEntity ent, OWLAnnotationProperty annotationProperty) {
         String annotationValue;
         try{
-            annotationValue = EntitySearcher.getAnnotations(ent, owlModelManager.getActiveOntology(), annotationProperty)
+            annotationValue = EntitySearcher.getAnnotations(ent, owlWorkSpace.getOWLModelManager().getActiveOntology(), annotationProperty)
                     .stream().map(owlAnnotation -> ((OWLLiteral) owlAnnotation.getValue()).getLiteral())
                     .collect(Collectors.toList()).get(0);
         } catch (IndexOutOfBoundsException e) {
@@ -49,15 +47,15 @@ public class OWLAPIDataExtractor implements Savable {
 
     public OWLClass getOWLClassByID(String classID) {
 
-        return owlModelManager == null ? null : owlModelManager.getOWLEntityFinder().getOWLClass(classID);
+        return owlWorkSpace == null ? null : owlWorkSpace.getOWLModelManager().getOWLEntityFinder().getOWLClass(classID);
     }
 
     public OWLObjectProperty getOWLObjectPropertyByID(String classID) {
-        return owlModelManager.getOWLEntityFinder().getOWLObjectProperty(classID);
+        return owlWorkSpace.getOWLModelManager().getOWLEntityFinder().getOWLObjectProperty(classID);
     }
 
-    private Set<OWLClass> getDescendants(OWLClass cls) {
-        return owlModelManager.getOWLHierarchyManager().getOWLClassHierarchyProvider().getDescendants(cls);
+    public Set<OWLClass> getDescendants(OWLClass cls) {
+        return owlWorkSpace.getOWLModelManager().getOWLHierarchyManager().getOWLClassHierarchyProvider().getDescendants(cls);
     }
 
     public OWLClass getSelectedClass() {
@@ -65,12 +63,16 @@ public class OWLAPIDataExtractor implements Savable {
     }
 
     public OWLObjectProperty getSelectedProperty() {
-        return owlWorkSpace.getOWLSelectionModel().getLastSelectedObjectProperty();
+        if (owlWorkSpace != null) {
+            return owlWorkSpace.getOWLSelectionModel().getLastSelectedObjectProperty();
+        } else {
+            return null;
+        }
     }
 
     public String getOWLClassID(OWLClass cls) {
-        if (owlModelManager != null && cls != null) {
-            String annotationValue = extractAnnotation(cls, owlModelManager.getOWLDataFactory().getRDFSLabel());
+        if (owlWorkSpace != null && cls != null) {
+            String annotationValue = extractAnnotation(cls, owlWorkSpace.getOWLModelManager().getOWLDataFactory().getRDFSLabel());
             return annotationValue == null ? getOwlEntID(cls) : annotationValue;
         } else {
             return null;
@@ -80,7 +82,7 @@ public class OWLAPIDataExtractor implements Savable {
     @SuppressWarnings("unused")
     private String getOwlClassName(OWLClass cls) {
         String annotationValue = extractAnnotation(cls, getOWLAnnotationPropertyByName());
-        annotationValue = annotationValue == null ? extractAnnotation(cls, owlModelManager.getOWLDataFactory().getRDFSLabel()) : annotationValue;
+        annotationValue = annotationValue == null ? extractAnnotation(cls, owlWorkSpace.getOWLModelManager().getOWLDataFactory().getRDFSLabel()) : annotationValue;
         return annotationValue == null ? getOwlEntID(cls) : annotationValue;
     }
 
@@ -94,13 +96,8 @@ public class OWLAPIDataExtractor implements Savable {
         }
     }
 
-    public void setUpOWL(OWLWorkspace owlWorkSpace, OWLModelManager owlModelManager) {
+    public void setUpOWL(OWLWorkspace owlWorkSpace) {
         this.owlWorkSpace = owlWorkSpace;
-        this.owlModelManager = owlModelManager;
-    }
-
-    public OWLModelManager getOwlModelManager() {
-        return owlModelManager;
     }
 
     @Override
@@ -136,5 +133,9 @@ public class OWLAPIDataExtractor implements Savable {
     @Override
     public void writeToGeniaXML(Document dom, Element parent) {
 
+    }
+
+    public OWLWorkspace getWorkSpace() {
+        return owlWorkSpace;
     }
 }

@@ -7,6 +7,7 @@ import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.graph.GraphSpaces;
 import edu.ucdenver.ccp.knowtator.model.graph.Triple;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.textsource.TextSource;
@@ -34,14 +35,14 @@ public class AnnotationManager implements Savable, ProjectListener {
     private TreeSet<Span> spanTreeSet;
     private TextSource textSource;
     private Map<String, Annotation> annotationMap;
-    private List<GraphSpace> graphSpaces;
+    private GraphSpaces graphSpaces;
 
     public AnnotationManager(KnowtatorController controller, TextSource textSource) {
         this.controller = controller;
         this.textSource = textSource;
         annotationMap = new HashMap<>();
         spanTreeSet = new TreeSet<>(Span::compare);
-        graphSpaces = new ArrayList<>();
+        graphSpaces = new GraphSpaces();
     }
 
     void addAnnotation(Annotation newAnnotation) {
@@ -60,34 +61,30 @@ public class AnnotationManager implements Savable, ProjectListener {
         spanTreeSet.addAll(newAnnotation.getSpans());
 
         controller.getSelectionManager().setSelectedAnnotation(newAnnotation, null);
-        controller.annotationAddedEvent(newAnnotation);
     }
 
     public void addSpanToAnnotation(Annotation annotation, Span newSpan) {
         annotation.addSpan(newSpan);
         spanTreeSet.add(newSpan);
-        controller.spanAddedEvent(newSpan);
     }
 
-    public void removeAnnotation(Annotation annotationToRemove) {
+    void removeAnnotation(Annotation annotationToRemove) {
         annotationMap.remove(annotationToRemove.getID());
         for (Span span : annotationToRemove.getSpans()) {
             spanTreeSet.remove(span);
         }
-        for (GraphSpace graphSpace : graphSpaces) {
+        for (GraphSpace graphSpace : graphSpaces.getGraphSpaces()) {
             for (Object vertex : graphSpace.getVerticesForAnnotation(annotationToRemove)) {
                 graphSpace.setSelectionCell(vertex);
                 graphSpace.removeSelectedCell();
             }
         }
         controller.getSelectionManager().setSelectedAnnotation(null, null);
-        controller.annotationRemovedEvent(annotationToRemove);
     }
 
     public void removeSpanFromAnnotation(Annotation annotation, Span span) {
         annotation.removeSpan(span);
         spanTreeSet.remove(span);
-        controller.spanRemovedEvent();
     }
 
     public Collection<Annotation> getAnnotations() {
@@ -110,56 +107,45 @@ public class AnnotationManager implements Savable, ProjectListener {
                 .collect(Collectors.toCollection(supplier));
     }
 
-    public void growSpanStart(Span span) {
-        if (spanTreeSet.contains(span)) {
-            spanTreeSet.remove(span);
-            span.growStart();
-            spanTreeSet.add(span);
-        } else {
-            span.growStart();
-        }
+    public void growSelectedSpanStart() {
+        Span span = controller.getSelectionManager().getSelectedSpan();
+        spanTreeSet.remove(span);
+        span.growStart();
+        spanTreeSet.add(span);
+        controller.getSelectionManager().setSelectedSpan(span);
     }
 
-    public void growSpanEnd(Span span, int limit) {
-        if (spanTreeSet.contains(span)) {
-            spanTreeSet.remove(span);
-            span.growEnd(limit);
-            spanTreeSet.add(span);
-        } else {
-            span.growEnd(limit);
-        }
+    public void growSelectedSpanEnd() {
+        Span span = controller.getSelectionManager().getSelectedSpan();
+        spanTreeSet.remove(span);
+        span.growEnd(textSource.getContent().length());
+        spanTreeSet.add(controller.getSelectionManager().getSelectedSpan());
+        controller.getSelectionManager().setSelectedSpan(span);
     }
 
-    public void shrinkSpanEnd(Span span) {
-        if (spanTreeSet.contains(span)) {
-            spanTreeSet.remove(span);
-            span.shrinkEnd();
-            spanTreeSet.add(span);
-        } else {
-            span.shrinkEnd();
-        }
+    public void shrinkSelectedSpanEnd() {
+        Span span = controller.getSelectionManager().getSelectedSpan();
+        spanTreeSet.remove(span);
+        span.shrinkEnd();
+        spanTreeSet.add(span);
+        controller.getSelectionManager().setSelectedSpan(span);
     }
 
-    public void shrinkSpanStart(Span span) {
-        if (spanTreeSet.contains(span)) {
-            spanTreeSet.remove(span);
-            span.shrinkStart();
-            spanTreeSet.add(span);
-        } else {
-            span.shrinkStart();
-        }
+    public void shrinkSelectedSpanStart() {
+        Span span = controller.getSelectionManager().getSelectedSpan();
+        spanTreeSet.remove(span);
+        span.shrinkStart();
+        spanTreeSet.add(span);
+        controller.getSelectionManager().setSelectedSpan(span);
     }
 
     public void addAnnotation(OWLClass owlClass, String owlClassID, Span span) {
         if (owlClass != null) {
             Annotation newAnnotation = new Annotation(
-                    owlClass,
+                    controller, null, owlClass,
                     owlClassID,
-                    null,
-                    textSource,
-                    controller.getSelectionManager().getActiveProfile(),
-                    "identity",
-                    controller);
+                    controller.getSelectionManager().getActiveProfile(), "identity", textSource
+            );
             newAnnotation.addSpan(span);
             addAnnotation(newAnnotation);
         }
@@ -191,14 +177,13 @@ public class AnnotationManager implements Savable, ProjectListener {
     public GraphSpace addGraphSpace(String title) {
         GraphSpace newGraphSpace = new GraphSpace(controller, textSource, title);
         graphSpaces.add(newGraphSpace);
-        controller.newGraphEvent(newGraphSpace);
-
+        controller.getSelectionManager().setActiveGraphSpace(newGraphSpace);
         return newGraphSpace;
     }
 
     public void writeToKnowtatorXML(Document dom, Element textSourceElement) {
         getAnnotations().forEach(annotation -> annotation.writeToKnowtatorXML(dom, textSourceElement));
-        graphSpaces.forEach(graphSpace -> graphSpace.writeToKnowtatorXML(dom, textSourceElement));
+        graphSpaces.getGraphSpaces().forEach(graphSpace -> graphSpace.writeToKnowtatorXML(dom, textSourceElement));
     }
 
     @Override
@@ -210,10 +195,10 @@ public class AnnotationManager implements Savable, ProjectListener {
             String profileID = annotationElement.getAttribute(KnowtatorXMLAttributes.ANNOTATOR);
             String type = annotationElement.getAttribute(KnowtatorXMLAttributes.TYPE);
 
-            Profile profile = controller.getProfileManager().addNewProfile(profileID);
+            Profile profile = controller.getProfileManager().addProfile(profileID);
             String owlClassID = ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0)).getAttribute(KnowtatorXMLAttributes.ID);
 
-            Annotation newAnnotation = new Annotation(null, owlClassID, annotationID, textSource, profile, type, controller);
+            Annotation newAnnotation = new Annotation(controller, annotationID, null, owlClassID, profile, type, textSource);
             newAnnotation.readFromKnowtatorXML(null, annotationElement, content);
 
             addAnnotation(newAnnotation);
@@ -244,7 +229,7 @@ public class AnnotationManager implements Savable, ProjectListener {
             Profile profile;
             try {
                 String profileID = annotationElement.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATOR).item(0).getTextContent();
-                profile = controller.getProfileManager().addNewProfile(profileID);
+                profile = controller.getProfileManager().addProfile(profileID);
             } catch (NullPointerException npe) {
                 profile = controller.getProfileManager().getDefaultProfile();
             }
@@ -254,7 +239,7 @@ public class AnnotationManager implements Savable, ProjectListener {
 
             String owlClassID = ((Element) classElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION_CLASS).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID);
 
-            Annotation newAnnotation = new Annotation(null, owlClassID, annotationID, textSource, profile, "identity", controller);
+            Annotation newAnnotation = new Annotation(controller, annotationID, null, owlClassID, profile, "identity", textSource);
 
             newAnnotation.readFromOldKnowtatorXML(null, annotationElement, content);
 
@@ -274,7 +259,6 @@ public class AnnotationManager implements Savable, ProjectListener {
         }
 
         GraphSpace oldKnowtatorGraphSpace = addGraphSpace("Old Knowtator Relations");
-//        log.warn("OLD KNOWTATOR: added GRAPHSPACE " + oldKnowtatorGraphSpace);
 
         annotationToSlotMap.forEach((annotation, slot) -> {
             List<Object> vertices = oldKnowtatorGraphSpace.getVerticesForAnnotation(annotation);
@@ -282,7 +266,6 @@ public class AnnotationManager implements Savable, ProjectListener {
             AnnotationNode source;
             if (vertices.isEmpty()) {
                 source = oldKnowtatorGraphSpace.addNode(null, annotation);
-//                log.warn("OLD KNOWTATOR: added NODE: " + source);
             } else {
                 source = (AnnotationNode) vertices.get(0);
             }
@@ -323,7 +306,7 @@ public class AnnotationManager implements Savable, ProjectListener {
         Profile profile = controller.getProfileManager().getDefaultProfile();
 
         annotationMap.get(StandoffTags.TEXTBOUNDANNOTATION).forEach(annotation -> {
-            Annotation newAnnotation = new Annotation(null, annotation[1].split(StandoffTags.textBoundAnnotationTripleDelimiter)[0], annotation[0], textSource, profile, "identity", controller);
+            Annotation newAnnotation = new Annotation(controller, annotation[0], null, annotation[1].split(StandoffTags.textBoundAnnotationTripleDelimiter)[0], profile, "identity", textSource);
             Map<Character, List<String[]>> map = new HashMap<>();
             List<String[]> list = new ArrayList<>();
             list.add(annotation);
@@ -351,7 +334,7 @@ public class AnnotationManager implements Savable, ProjectListener {
         }
 
         int lastNumTriples = 0;
-        for (GraphSpace graphSpace : graphSpaces) {
+        for (GraphSpace graphSpace : graphSpaces.getGraphSpaces()) {
             Object[] edges = graphSpace.getChildEdges(graphSpace.getDefaultParent());
             int bound = edges.length;
             for (int i = 0; i < bound; i++) {
@@ -378,16 +361,15 @@ public class AnnotationManager implements Savable, ProjectListener {
 
     }
 
-    public List<GraphSpace> getGraphSpaces() {
+    public GraphSpaces getGraphSpaces() {
         return graphSpaces;
     }
 
     public void removeGraphSpace(GraphSpace graphSpace) {
         graphSpaces.remove(graphSpace);
-        controller.removeGraphEvent(graphSpace);
     }
 
-    public Span getPreviousSpan() {
+    public void getPreviousSpan() {
         Span selectedSpan = controller.getSelectionManager().getSelectedSpan();
         TreeSet<Span> annotationMap = textSource.getAnnotationManager().getSpanSet(null);
         Span previousSpan;
@@ -397,10 +379,11 @@ public class AnnotationManager implements Savable, ProjectListener {
             previousSpan = null;
         }
         if (previousSpan == null) previousSpan = annotationMap.last();
-        return previousSpan;
+
+        controller.getSelectionManager().setSelectedSpan(previousSpan);
     }
 
-    public Span getNextSpan() {
+    public void getNextSpan() {
         Span selectedSpan = controller.getSelectionManager().getSelectedSpan();
         TreeSet<Span> annotationMap = textSource.getAnnotationManager().getSpanSet(null);
 
@@ -412,14 +395,15 @@ public class AnnotationManager implements Savable, ProjectListener {
         }
         if (nextSpan == null) nextSpan = annotationMap.first();
 
-        return nextSpan;
+        controller.getSelectionManager().setSelectedSpan(nextSpan);
     }
 
     public void connectToOWLModelManager() {
         for (Annotation annotation : annotationMap.values()) {
+            //noinspection ResultOfMethodCallIgnored
             annotation.getOwlClass();
         }
-        for (GraphSpace graphSpace : graphSpaces) {
+        for (GraphSpace graphSpace : graphSpaces.getGraphSpaces()) {
             graphSpace.connectEdgesToProperties();
         }
     }
@@ -427,5 +411,50 @@ public class AnnotationManager implements Savable, ProjectListener {
     @Override
     public void projectLoaded() {
         connectToOWLModelManager();
+    }
+
+    public GraphSpace getPreviousGraphSpace() {
+        GraphSpace graphSpace = controller.getSelectionManager().getActiveGraphSpace();
+
+        GraphSpace previousGraphSpace;
+        try {
+            previousGraphSpace = graphSpaces.getGraphSpaces().contains(graphSpace) ? graphSpaces.getGraphSpaces().lower(graphSpace) : graphSpaces.getGraphSpaces().floor(graphSpace);
+        } catch (NullPointerException npe) {
+            previousGraphSpace = null;
+        }
+        if (previousGraphSpace == null) previousGraphSpace = graphSpaces.getGraphSpaces().last();
+
+        return previousGraphSpace;
+    }
+
+    public GraphSpace getNextGraphSpace() {
+        GraphSpace graphSpace = controller.getSelectionManager().getActiveGraphSpace();
+
+        GraphSpace nextGraphSpace;
+        try {
+            nextGraphSpace = graphSpaces.getGraphSpaces().contains(graphSpace) ? graphSpaces.getGraphSpaces().higher(graphSpace) : graphSpaces.getGraphSpaces().ceiling(graphSpace);
+        } catch (NullPointerException npe) {
+            nextGraphSpace = null;
+        }
+        if (nextGraphSpace == null) nextGraphSpace = graphSpaces.getGraphSpaces().first();
+
+        return nextGraphSpace;
+    }
+
+    public void removeSelectedAnnotation() {
+        removeAnnotation(controller.getSelectionManager().getSelectedAnnotation());
+    }
+
+    public void addSelectedAnnotation() {
+        int start = controller.getSelectionManager().getStart();
+        int end = controller.getSelectionManager().getEnd();
+        String spannedText = textSource.getContent().substring(start, end);
+        Span newSpan = new Span(start, end, spannedText);
+
+        OWLClass owlClass = controller.getSelectionManager().getSelectedOWLClass();
+        Profile annotator = controller.getSelectionManager().getActiveProfile();
+        Annotation newAnnotation = new Annotation(controller, null, owlClass, null, annotator, "identity", textSource);
+
+        addSpanToAnnotation(newAnnotation, newSpan);
     }
 }

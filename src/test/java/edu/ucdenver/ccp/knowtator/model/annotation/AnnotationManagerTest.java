@@ -53,16 +53,16 @@ public class AnnotationManagerTest {
         controller.getProjectManager().loadProject(project);
 
         //noinspection ConstantConditions
-        textSource = controller.getTextSourceManager().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleName)).findAny().get();
+        textSource = controller.getTextSourceManager().getTextSources().getTextSources().stream().filter(textSource1 -> textSource1.getId().equals(articleName)).findAny().get();
         annotationManager = textSource.getAnnotationManager();
-        profile = controller.getProfileManager().addNewProfile("Default");
+        profile = controller.getProfileManager().addProfile("Default");
 
     }
 
     @Test
     public void addAnnotation() {
         setUp();
-        Annotation annotation1 = new Annotation(null, "class_2", "mention_3", textSource, profile, "identity", controller);
+        Annotation annotation1 = new Annotation(controller, "mention_3", null, "class_2", profile, "identity", textSource);
         annotationManager.addAnnotation(annotation1);
 
         int numAnnotations = annotationManager.getAnnotations().size();
@@ -75,7 +75,7 @@ public class AnnotationManagerTest {
     @Test
     public void addSpanToAnnotation() {
         setUp();
-        Annotation annotation1 = new Annotation(null, "class_2", "mention_3", textSource, profile, "identity", controller);
+        Annotation annotation1 = new Annotation(controller, "mention_3", null, "class_2", profile, "identity", textSource);
         annotationManager.addAnnotation(annotation1);
 
         Span span1 = new Span(1, 6, "");
@@ -108,7 +108,7 @@ public class AnnotationManagerTest {
     @Test
     public void removeSpanFromAnnotation() {
         setUp();
-        Annotation annotation1 = new Annotation(null, "class_2", "mention_3", textSource, profile, "identity", controller);
+        Annotation annotation1 = new Annotation(controller, "mention_3", null, "class_2", profile, "identity", textSource);
         annotationManager.addAnnotation(annotation1);
 
         Span span1 = new Span(1, 6, "");

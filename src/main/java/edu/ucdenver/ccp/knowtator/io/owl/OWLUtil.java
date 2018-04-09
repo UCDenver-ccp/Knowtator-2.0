@@ -5,7 +5,7 @@ import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLAPIDataExtractor;
 import org.apache.log4j.Logger;
-import org.protege.editor.owl.model.OWLModelManager;
+import org.protege.editor.owl.model.OWLWorkspace;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -34,9 +34,9 @@ public class OWLUtil implements BasicIOUtil {
     }
 
     private void loadOntologyFromLocation(OWLAPIDataExtractor dataExtractor, String ontologyLocation) {
-        OWLModelManager owlModelManager = dataExtractor.getOwlModelManager();
-        if (owlModelManager != null) {
-            List<String> ontologies = owlModelManager.getActiveOntologies().stream().map(ontology -> {
+        OWLWorkspace workSpace = dataExtractor.getWorkSpace();
+        if (workSpace != null) {
+            List<String> ontologies = workSpace.getOWLModelManager().getActiveOntologies().stream().map(ontology -> {
                 OWLOntologyID ontID = ontology.getOntologyID();
                 //noinspection Guava
                 Optional<IRI> ontIRI = ontID.getOntologyIRI();
@@ -51,8 +51,8 @@ public class OWLUtil implements BasicIOUtil {
             if (!ontologies.contains(ontologyLocation)) {
                 log.warn("Loading ontology: " + ontologyLocation);
                 try {
-                    OWLOntology newOntology = owlModelManager.getOWLOntologyManager().loadOntology((IRI.create(ontologyLocation)));
-                    owlModelManager.setActiveOntology(newOntology);
+                    OWLOntology newOntology = workSpace.getOWLModelManager().getOWLOntologyManager().loadOntology((IRI.create(ontologyLocation)));
+                    workSpace.getOWLModelManager().setActiveOntology(newOntology);
                 } catch (OWLOntologyCreationException e) {
                     log.warn("Knowtator: OWLAPIDataExtractor: Ontology already loaded");
                 }

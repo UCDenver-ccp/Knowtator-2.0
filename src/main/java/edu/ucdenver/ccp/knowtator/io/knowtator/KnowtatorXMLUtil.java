@@ -68,7 +68,7 @@ public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUt
     @Override
     public void write(Savable savable, File file) {
         if (savable instanceof TextSourceManager) {
-            ((TextSourceManager) savable).getTextSources().forEach(textSource -> {
+            ((TextSourceManager) savable).getTextSources().getTextSources().forEach(textSource -> {
                 File outputFile = textSource.getSaveFile();
                 if (outputFile == null) {
                     String fileName = textSource.getId();
@@ -83,7 +83,7 @@ public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUt
                 writeToOutputFile(textSource, outputFile);
             });
         } else if(savable instanceof ProfileManager){
-            ((ProfileManager) savable).getProfiles().values().forEach(profile -> {
+            ((ProfileManager) savable).getProfiles().getProfiles().forEach(profile -> {
                 File outputFile = new File(
                         file.getAbsolutePath() +
                                 File.separator +

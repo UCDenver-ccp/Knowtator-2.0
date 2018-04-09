@@ -145,7 +145,7 @@ public class Span implements Savable {
 	}
 
 	public String toString() {
-		return String.format("Span: Start: %d, End: %d", start, end);
+		return String.format("Start: %d, End: %d", start, end);
 	}
 
 	public Annotation getAnnotation() {

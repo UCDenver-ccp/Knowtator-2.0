@@ -24,34 +24,36 @@ import java.util.*;
 public class TextSourceManager implements Savable, OWLOntologyChangeListener {
     private Logger log = Logger.getLogger(TextSourceManager.class);
 
-    private TreeSet<TextSource> textSources;
+    private TextSources textSources;
     private KnowtatorController controller;
 
     public TextSourceManager(KnowtatorController controller) {
         this.controller = controller;
-        textSources = new TreeSet<>(TextSource::compare);
+        textSources = new TextSources();
     }
 
     public TextSource addTextSource(File file, String fileLocation) {
         String docID = FilenameUtils.getBaseName(fileLocation);
-        Optional<TextSource> newTextSourceMatch = textSources.stream().filter(textSource -> textSource.getId().equals(docID)).findAny();
+        Optional<TextSource> newTextSourceMatch = textSources.getTextSources().stream().filter(textSource -> textSource.getId().equals(docID)).findAny();
+        TextSource newTextSource;
         if (!newTextSourceMatch.isPresent()) {
-            TextSource newTextSource = new TextSource(controller, file, docID);
+            newTextSource = new TextSource(controller, file, docID);
             textSources.add(newTextSource);
-            return newTextSource;
         } else {
             log.warn(docID + " is not null");
-            return newTextSourceMatch.get();
+            newTextSource = newTextSourceMatch.get();
         }
+        controller.getSelectionManager().setActiveTextSource(newTextSource);
+        return newTextSource;
     }
 
-    public Set<TextSource> getTextSources() {
+    public TextSources getTextSources() {
         return textSources;
     }
 
     @Override
     public void writeToKnowtatorXML(Document dom, Element parent) {
-        textSources.forEach(textSource -> textSource.writeToKnowtatorXML(dom, parent));
+        textSources.getTextSources().forEach(textSource -> textSource.writeToKnowtatorXML(dom, parent));
 
     }
 
@@ -111,7 +113,7 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
     public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) {
 
         log.warn("Ontology Change Event");
-        textSources.forEach(textSource -> textSource.getAnnotationManager().getGraphSpaces().forEach(graphSpace -> {
+        textSources.getTextSources().forEach(textSource -> textSource.getAnnotationManager().getGraphSpaces().getGraphSpaces().forEach(graphSpace -> {
             Set<OWLEntity> possiblyAddedEntities = new HashSet<>();
             Set<OWLEntity> possiblyRemovedEntities = new HashSet<>();
             OWLEntityCollector addedCollector = new OWLEntityCollector(possiblyAddedEntities);
@@ -143,33 +145,35 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
         }));
     }
 
-    public TextSource getPreviousTextSource() {
+    public void getPreviousTextSource() {
         TextSource textSource = controller.getSelectionManager().getActiveTextSource();
 
         TextSource previousTextSource;
         try {
-            previousTextSource = textSources.contains(textSource) ? textSources.lower(textSource) : textSources.floor(textSource);
+            previousTextSource = textSources.getTextSources().contains(textSource) ? textSources.getTextSources().lower(textSource) : textSources.getTextSources().floor(textSource);
         } catch (NullPointerException npe) {
             previousTextSource = null;
         }
-        if (previousTextSource == null) previousTextSource = textSources.last();
-        return previousTextSource;
+        if (previousTextSource == null) previousTextSource = textSources.getTextSources().last();
+
+        controller.getSelectionManager().setActiveTextSource(previousTextSource);
     }
 
-    public TextSource getNextTextSource() {
+    public void getNextTextSource() {
         TextSource textSource = controller.getSelectionManager().getActiveTextSource();
         TextSource nextTextSource;
         try {
-            nextTextSource = textSources.contains(textSource) ? textSources.higher(textSource) : textSources.ceiling(textSource);
+            nextTextSource = textSources.getTextSources().contains(textSource) ? textSources.getTextSources().higher(textSource) : textSources.getTextSources().ceiling(textSource);
         } catch (NullPointerException npe) {
             nextTextSource = null;
         }
-        if (nextTextSource == null) nextTextSource = textSources.first();
-        return nextTextSource;
+        if (nextTextSource == null) nextTextSource = textSources.getTextSources().first();
+
+        controller.getSelectionManager().setActiveTextSource(nextTextSource);
     }
 
     public void connectToOWLModelManager() {
-        for (TextSource textSource : textSources) {
+        for (TextSource textSource : textSources.getTextSources()) {
             textSource.getAnnotationManager().connectToOWLModelManager();
         }
     }

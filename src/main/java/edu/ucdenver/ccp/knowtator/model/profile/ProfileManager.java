@@ -13,7 +13,6 @@ import org.w3c.dom.Node;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,48 +21,35 @@ public class ProfileManager implements Savable {
     private static final Logger log = Logger.getLogger(KnowtatorController.class);
     private final Profile defaultProfile;
 
-    private Map<String, Profile> profiles;
+    private Profiles profiles;
     private KnowtatorController controller;
 
 
     public ProfileManager(KnowtatorController controller) {
         this.controller = controller;
-        profiles = new HashMap<>();
-        defaultProfile = addNewProfile("Default");
+        profiles = new Profiles();
+        defaultProfile = addProfile("Default");
     }
 
-    public Profile addNewProfile(String profileID) {
-        if (profiles.containsKey(profileID)) {
-            return profiles.get(profileID);
-        }
-
+    public Profile addProfile(String profileID) {
         Profile newProfile = new Profile(profileID);
-        profiles.put(profileID, newProfile);
+        profiles.add(newProfile);
 
         controller.getSelectionManager().setActiveProfile(newProfile);
-
-        controller.profileAddedEvent(newProfile);
-
         return newProfile;
     }
 
-    public void switchAnnotator(Profile profile) {
-        controller.getSelectionManager().setActiveProfile(profile);
-
+    private void removeProfile(Profile profile) {
+        profiles.remove(profile);
+        controller.getSelectionManager().setActiveProfile(profiles.getProfiles().iterator().next());
     }
 
-    public void removeProfile(Profile profile) {
-        profiles.remove(profile.getId());
-        controller.getSelectionManager().setActiveProfile(profiles.values().iterator().next());
-        controller.profileRemovedEvent();
-    }
-
-    public Map<String, Profile> getProfiles() {
+    public Profiles getProfiles() {
         return profiles;
     }
 
     public void writeToKnowtatorXML(Document dom, Element root) {
-        profiles.values().forEach(profile -> profile.writeToKnowtatorXML(dom, root));
+        profiles.getProfiles().forEach(profile -> profile.writeToKnowtatorXML(dom, root));
     }
 
     @Override
@@ -72,7 +58,7 @@ public class ProfileManager implements Savable {
             Element profileElement = (Element) profileNode;
             String profileID = profileElement.getAttribute(KnowtatorXMLAttributes.ID);
 
-            Profile newProfile = addNewProfile(profileID);
+            Profile newProfile = addProfile(profileID);
             log.warn("\tXML: " + newProfile);
             newProfile.readFromKnowtatorXML(null, profileElement, content);
         }
@@ -106,5 +92,11 @@ public class ProfileManager implements Savable {
 
     public Profile getDefaultProfile() {
         return defaultProfile;
+    }
+
+    public void removeActiveProfile() {
+        if (controller.getSelectionManager().getActiveProfile() != defaultProfile) {
+            removeProfile(controller.getSelectionManager().getActiveProfile());
+        }
     }
 }
