@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="edu.ucdenver.ccp.knowtator.view.graph.GraphView">
-  <grid id="27dc6" binding="panel1" layout-manager="GridBagLayout">
+  <grid id="27dc6" binding="panel1" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
       <xy x="8" y="7" width="967" height="400"/>
     </constraints>
@@ -11,11 +11,8 @@
     </properties>
     <border type="none"/>
     <children>
-      <toolbar id="d5dee">
-        <constraints>
-          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
+      <toolbar id="6fbb5">
+        <constraints border-constraint="North"/>
         <properties>
           <alignmentX value="0.0"/>
           <alignmentY value="0.0"/>
@@ -24,7 +21,7 @@
         </properties>
         <border type="none"/>
         <children>
-          <component id="858cb" class="javax.swing.JButton" binding="zoomOutButton">
+          <component id="337cd" class="javax.swing.JButton" binding="zoomOutButton">
             <constraints/>
             <properties>
               <icon value="icon/icons8-zoom-out-filled-50 (Custom).png"/>
@@ -32,7 +29,7 @@
               <toolTipText resource-bundle="ui" key="zoom.out"/>
             </properties>
           </component>
-          <component id="22c91" class="javax.swing.JButton" binding="zoomInButton">
+          <component id="f0702" class="javax.swing.JButton" binding="zoomInButton">
             <constraints/>
             <properties>
               <icon value="icon/icons8-zoom-in-filled-50 (Custom).png"/>
@@ -40,7 +37,7 @@
               <toolTipText resource-bundle="ui" key="zoom.in"/>
             </properties>
           </component>
-          <component id="cf888" class="javax.swing.JButton" binding="removeCellButton">
+          <component id="8eaa7" class="javax.swing.JButton" binding="removeCellButton">
             <constraints/>
             <properties>
               <icon value="icon/icons8-minus-50 (Custom).png"/>
@@ -48,7 +45,7 @@
               <toolTipText resource-bundle="ui" key="remove.item"/>
             </properties>
           </component>
-          <component id="f8d98" class="javax.swing.JButton" binding="addAnnotationNodeButton">
+          <component id="d086" class="javax.swing.JButton" binding="addAnnotationNodeButton">
             <constraints/>
             <properties>
               <icon value="icon/icons8-plus-50 (Custom).png"/>
@@ -56,14 +53,14 @@
               <toolTipText resource-bundle="ui" key="add.annotation.node"/>
             </properties>
           </component>
-          <component id="d0ebd" class="javax.swing.JButton" binding="applyLayoutButton">
+          <component id="7cc75" class="javax.swing.JButton" binding="applyLayoutButton">
             <constraints/>
             <properties>
               <text resource-bundle="ui" key="apply.layout"/>
               <toolTipText resource-bundle="ui" key="apply.layout1"/>
             </properties>
           </component>
-          <component id="17ce6" class="javax.swing.JButton" binding="previousGraphSpaceButton">
+          <component id="7f634" class="javax.swing.JButton" binding="previousGraphSpaceButton">
             <constraints/>
             <properties>
               <icon value="icon/icons8-up-filled-50 (Custom).png"/>
@@ -71,7 +68,7 @@
               <toolTipText resource-bundle="ui" key="previous.graph.space"/>
             </properties>
           </component>
-          <component id="72810" class="javax.swing.JButton" binding="nextGraphSpaceButton">
+          <component id="7837f" class="javax.swing.JButton" binding="nextGraphSpaceButton">
             <constraints/>
             <properties>
               <icon value="icon/icons8-down-filled-50 (Custom).png"/>
@@ -79,7 +76,7 @@
               <toolTipText resource-bundle="ui" key="next.graph.space"/>
             </properties>
           </component>
-          <component id="b5c6f" class="edu.ucdenver.ccp.knowtator.view.graph.GraphSpaceChooser" binding="graphSpaceChooser" custom-create="true">
+          <component id="e1838" class="edu.ucdenver.ccp.knowtator.view.graph.GraphSpaceChooser" binding="graphSpaceChooser" custom-create="true">
             <constraints/>
             <properties>
               <minimumSize width="80" height="30"/>
@@ -87,38 +84,11 @@
           </component>
         </children>
       </toolbar>
-      <vspacer id="199ff">
-        <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0" ipady="300"/>
-        </constraints>
-      </vspacer>
-      <vspacer id="2f9a0">
-        <constraints>
-          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-      </vspacer>
-      <grid id="d91ce" binding="graphPane" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
-        <constraints>
-          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
+      <grid id="ff821" binding="graphPane" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints border-constraint="Center"/>
         <properties/>
         <border type="none"/>
-        <children>
-          <hspacer id="1ad66">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </hspacer>
-          <vspacer id="85653">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </vspacer>
-        </children>
+        <children/>
       </grid>
     </children>
   </grid>

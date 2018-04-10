@@ -1,8 +1,5 @@
 package edu.ucdenver.ccp.knowtator.view.graph;
 
-import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxICell;
@@ -269,7 +266,7 @@ public class GraphView extends JPanel implements SelectionListener {
     private void $$$setupUI$$$() {
         createUIComponents();
         panel1 = new JPanel();
-        panel1.setLayout(new GridBagLayout());
+        panel1.setLayout(new BorderLayout(0, 0));
         panel1.setAlignmentX(0.0f);
         panel1.setAlignmentY(0.0f);
         panel1.setMinimumSize(new Dimension(400, 400));
@@ -277,12 +274,8 @@ public class GraphView extends JPanel implements SelectionListener {
         toolBar1.setAlignmentX(0.0f);
         toolBar1.setAlignmentY(0.0f);
         toolBar1.setFloatable(false);
-        GridBagConstraints gbc;
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.NORTHWEST;
-        panel1.add(toolBar1, gbc);
+        toolBar1.setMinimumSize(new Dimension(630, 100));
+        panel1.add(toolBar1, BorderLayout.NORTH);
         zoomOutButton = new JButton();
         zoomOutButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-zoom-out-filled-50 (Custom).png")));
         zoomOutButton.setText("");
@@ -319,36 +312,9 @@ public class GraphView extends JPanel implements SelectionListener {
         toolBar1.add(nextGraphSpaceButton);
         graphSpaceChooser.setMinimumSize(new Dimension(80, 30));
         toolBar1.add(graphSpaceChooser);
-        final JPanel spacer1 = new JPanel();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel1.add(spacer1, gbc);
-        final JPanel spacer2 = new JPanel();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.fill = GridBagConstraints.VERTICAL;
-        gbc.ipady = 300;
-        panel1.add(spacer2, gbc);
-        final JPanel spacer3 = new JPanel();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        gbc.fill = GridBagConstraints.VERTICAL;
-        panel1.add(spacer3, gbc);
         graphPane = new JPanel();
-        graphPane.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.fill = GridBagConstraints.BOTH;
-        panel1.add(graphPane, gbc);
-        final Spacer spacer4 = new Spacer();
-        graphPane.add(spacer4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        final Spacer spacer5 = new Spacer();
-        graphPane.add(spacer5, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        graphPane.setLayout(new BorderLayout(0, 0));
+        panel1.add(graphPane, BorderLayout.CENTER);
     }
 
     /**

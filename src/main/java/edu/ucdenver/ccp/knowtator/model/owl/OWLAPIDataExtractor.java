@@ -51,7 +51,11 @@ public class OWLAPIDataExtractor implements Savable {
     }
 
     public OWLObjectProperty getOWLObjectPropertyByID(String classID) {
-        return owlWorkSpace.getOWLModelManager().getOWLEntityFinder().getOWLObjectProperty(classID);
+        if (owlWorkSpace != null) {
+            return owlWorkSpace.getOWLModelManager().getOWLEntityFinder().getOWLObjectProperty(classID);
+        } else {
+            return null;
+        }
     }
 
     public Set<OWLClass> getDescendants(OWLClass cls) {
@@ -86,15 +90,6 @@ public class OWLAPIDataExtractor implements Savable {
         return annotationValue == null ? getOwlEntID(cls) : annotationValue;
     }
 
-
-    public Set<OWLClass> getSelectedOwlClassDescendants() {
-        OWLClass cls = getSelectedClass();
-        if (cls != null) {
-            return getDescendants(cls);
-        } else {
-            return null;
-        }
-    }
 
     public void setUpOWL(OWLWorkspace owlWorkSpace) {
         this.owlWorkSpace = owlWorkSpace;
