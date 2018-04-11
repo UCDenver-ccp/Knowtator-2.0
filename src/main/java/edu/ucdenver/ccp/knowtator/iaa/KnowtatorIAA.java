@@ -134,11 +134,11 @@ public class KnowtatorIAA {
 	//				.getOwnSlotValues(kpu.getSlotMatchCriteriaSlot());
 	//
 	//		for (SimpleInstance slotMatchCriterium : slotMatchCriteria) {
-	//			if (slotMatchCriterium.getDirectType().equals(kpu.getSimpleSlotMatchCriteriaCls())) {
+	//			if (slotMatchCriterium.getDirectType().equalStartAndEnd(kpu.getSimpleSlotMatchCriteriaCls())) {
 	//				Slot slotMatcherSlot = (Slot)
 	// slotMatchCriterium.getOwnSlotValue(kpu.getSlotMatcherSlotSlot());
 	//				featureMatcher.addComparedSimpleFeatures(slotMatcherSlot.getBrowserText());
-	//			} else if (slotMatchCriterium.getDirectType().equals(kpu.getComplexSlotMatchCriteriaCls())) {
+	//			} else if (slotMatchCriterium.getDirectType().equalStartAndEnd(kpu.getComplexSlotMatchCriteriaCls())) {
 	//				Slot slotMatcherSlot = (Slot)
 	// slotMatchCriterium.getOwnSlotValue(kpu.getSlotMatcherSlotSlot());
 	//				Boolean b = (Boolean) slotMatchCriterium.getOwnSlotValue(kpu.getClassMatchCriteriaSlot());
@@ -369,11 +369,11 @@ public class KnowtatorIAA {
 	//				.getOwnSlotValues(kpu.getSlotMatchCriteriaSlot());
 	//
 	//		for (SimpleInstance slotMatchCriterium : slotMatchCriteria) {
-	//			if (slotMatchCriterium.getDirectType().equals(kpu.getSimpleSlotMatchCriteriaCls())) {
+	//			if (slotMatchCriterium.getDirectType().equalStartAndEnd(kpu.getSimpleSlotMatchCriteriaCls())) {
 	//				Slot slotMatcherSlot = (Slot)
 	// slotMatchCriterium.getOwnSlotValue(kpu.getSlotMatcherSlotSlot());
 	//				returnValues.add(slotMatcherSlot);
-	//			} else if (slotMatchCriterium.getDirectType().equals(kpu.getComplexSlotMatchCriteriaCls())) {
+	//			} else if (slotMatchCriterium.getDirectType().equalStartAndEnd(kpu.getComplexSlotMatchCriteriaCls())) {
 	//				Collection<Slot> comparedSimpleSlots = (Collection<Slot>)
 	// slotMatchCriterium.getOwnSlotValues(kpu
 	//						.getSlotMatcherSimpleSlotsSlot());
@@ -392,7 +392,7 @@ public class KnowtatorIAA {
 	//				.getOwnSlotValues(kpu.getSlotMatchCriteriaSlot());
 	//
 	//		for (SimpleInstance slotMatchCriterium : slotMatchCriteria) {
-	//			if (slotMatchCriterium.getDirectType().equals(kpu.getComplexSlotMatchCriteriaCls())) {
+	//			if (slotMatchCriterium.getDirectType().equalStartAndEnd(kpu.getComplexSlotMatchCriteriaCls())) {
 	//				Slot slotMatcherSlot = (Slot)
 	// slotMatchCriterium.getOwnSlotValue(kpu.getSlotMatcherSlotSlot());
 	//				returnValues.add(slotMatcherSlot);

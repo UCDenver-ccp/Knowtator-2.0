@@ -47,7 +47,7 @@ public class KnowtatorController {
 		selectionManager = new SelectionManager(this);
 		textSourceManager = new TextSourceManager(this);
 		profileManager = new ProfileManager(this); // manipulates profiles and colors
-		owlDataExtractor = new OWLAPIDataExtractor(this);
+		owlDataExtractor = new OWLAPIDataExtractor();
 	}
 
 	private void setUpOWL(OWLWorkspace owlWorkspace) {

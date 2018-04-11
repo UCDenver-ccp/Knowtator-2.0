@@ -27,3 +27,9 @@ TODO: Change project menu to Knowtator or project name
 TODO: Quantifier and value as persistent text boxes
 TODO: Implement owl model manager and renderer change listeners
 TODO: Fix selecting of text in text pane
+TODO: Can't drag vertices
+TODO: Profiles (at least in profile chooser) not clearing on reload
+TODO: Ontologies not autoloading
+TODO: Project menu not positioning properly on second load
+TODO: Info pane not starting in correct place
+TODO: Click on span in info pane to go to it

@@ -67,10 +67,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   private TextSourceChooser textSourceChooser;
   private ProfileChooser profileChooser;
   private JButton textToGraphButton;
+  private JPanel menuPane;
 
   public KnowtatorView() {
     $$$setupUI$$$();
     makeButtons();
+
+    JMenuBar menuBar = new JMenuBar();
+    menuBar.add(projectMenu);
+    menuPane.add(menuBar, BorderLayout.NORTH);
+    mainPane.setDividerLocation(1537);
+    mainPane.validate();
   }
 
   @Override
@@ -305,8 +312,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
   @Override
   public void disposeView() {
-    // For some reason, clicking yes here discards changes, even saved ones...
-    if (JOptionPane.showConfirmDialog(
+    if (controller.getProjectManager().isProjectLoaded() && JOptionPane.showConfirmDialog(
             controller.getView(),
             "Save changes to Knowtator project?",
             "Save Project",
@@ -439,12 +445,12 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     annotatorLabel.setVerticalTextPosition(1);
     infoPanel.add(annotatorLabel, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
     textPanel = new JPanel();
-    textPanel.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
+    textPanel.setLayout(new GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));
     mainPane.setLeftComponent(textPanel);
     textPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-16777216)), null));
     textSourceToolBar = new JToolBar();
     textSourceToolBar.setFloatable(false);
-    textPanel.add(textSourceToolBar, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
+    textPanel.add(textSourceToolBar, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
     decreaseFontSizeButton = new JButton();
     decreaseFontSizeButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-Decrease Font (Custom).png")));
     decreaseFontSizeButton.setText("");
@@ -466,16 +472,16 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     nextTextSourceButton.setToolTipText(ResourceBundle.getBundle("ui").getString("next.text.source"));
     textSourceToolBar.add(nextTextSourceButton);
     final JLabel label1 = new JLabel();
-    label1.setText("Document");
+    this.$$$loadLabelText$$$(label1, ResourceBundle.getBundle("ui").getString("document"));
     textSourceToolBar.add(label1);
     textSourceToolBar.add(textSourceChooser);
     final JLabel label2 = new JLabel();
-    label2.setText("Profile");
+    this.$$$loadLabelText$$$(label2, ResourceBundle.getBundle("ui").getString("profile"));
     textSourceToolBar.add(label2);
     textSourceToolBar.add(profileChooser);
     annotationToolBar = new JToolBar();
     annotationToolBar.setFloatable(false);
-    textPanel.add(annotationToolBar, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
+    textPanel.add(annotationToolBar, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
     showGraphViewerButton = new JButton();
     showGraphViewerButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-edit-node-50 (Custom).png")));
     showGraphViewerButton.setText("");
@@ -535,7 +541,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     profileFilterCheckBox.setToolTipText(ResourceBundle.getBundle("ui").getString("filter.annotations.by.profile"));
     annotationToolBar.add(profileFilterCheckBox);
     final JScrollPane scrollPane2 = new JScrollPane();
-    textPanel.add(scrollPane2, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+    textPanel.add(scrollPane2, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     knowtatorTextPane.setBackground(new Color(-1));
     knowtatorTextPane.setEditable(false);
     knowtatorTextPane.setFocusTraversalPolicyProvider(true);
@@ -543,6 +549,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     knowtatorTextPane.setForeground(new Color(-16777216));
     knowtatorTextPane.setText("");
     scrollPane2.setViewportView(knowtatorTextPane);
+    menuPane = new JPanel();
+    menuPane.setLayout(new BorderLayout(0, 0));
+    textPanel.add(menuPane, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(-1, 30), new Dimension(-1, 30), 0, false));
   }
 
   /**

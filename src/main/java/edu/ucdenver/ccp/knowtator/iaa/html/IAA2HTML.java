@@ -866,10 +866,10 @@ public class IAA2HTML {
 // for(annotation candidateAnnotation : candidateAnnotations)
 // {
 // String candidateAnnotationSet = candidateAnnotation.getId();
-// if(!candidateAnnotationSet.equals(set))
+// if(!candidateAnnotationSet.equalStartAndEnd(set))
 // {
 // String candidateDocID = candidateAnnotation.getId();
-// if(candidateDocID.equals(docID))
+// if(candidateDocID.equalStartAndEnd(docID))
 // {
 // errors.println("<li>");
 // printAnnotationHTML(errors, candidateAnnotation,
@@ -994,7 +994,7 @@ public class IAA2HTML {
 // printedAnnotations.add(annotation);
 // for(annotation matchedAnnotation : matchSet)
 // {
-// if(!matchedAnnotation.equals(annotation))
+// if(!matchedAnnotation.equalStartAndEnd(annotation))
 // {
 // printAnnotationHTML(matchesStream, matchedAnnotation,
 // annotationTexts.get(matchedAnnotation));

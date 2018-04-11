@@ -101,7 +101,7 @@ public class IOTests {
 
             annotationManager = textSource.getAnnotationManager();
             numAnnotations = annotationManager.getAnnotations().size();
-            numSpans = annotationManager.getSpans(null, 0, content.length() - 1).size();
+            numSpans = annotationManager.getSpans(null, 0, content.length()).size();
             numGraphSpaces = annotationManager.getGraphSpaceCollection().getData().size();
             numVertices =
                     annotationManager

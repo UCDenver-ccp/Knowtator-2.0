@@ -1,7 +1,6 @@
 package edu.ucdenver.ccp.knowtator.model.owl;
 
 import com.google.common.base.Optional;
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLWorkspace;
@@ -22,10 +21,8 @@ public class OWLAPIDataExtractor {
 	private static final Logger log = LogManager.getLogger(OWLAPIDataExtractor.class);
 
 	private OWLWorkspace owlWorkSpace;
-	private KnowtatorController controller;
 
-	public OWLAPIDataExtractor(KnowtatorController controller) {
-		this.controller = controller;
+	public OWLAPIDataExtractor() {
 	}
 //
 //	private OWLAnnotationProperty getOWLAnnotationPropertyByName()
@@ -118,39 +115,37 @@ public class OWLAPIDataExtractor {
 
 	private void loadOntologyFromLocation(
 			String ontologyLocation) throws OWLWorkSpaceNotSetException {
-		OWLWorkspace workSpace = controller.getOWLAPIDataExtractor().getWorkSpace();
-		if (workSpace != null) {
-			List<String> ontologies =
-					workSpace
-							.getOWLModelManager()
-							.getActiveOntologies()
-							.stream()
-							.map(
-									ontology -> {
-										OWLOntologyID ontID = ontology.getOntologyID();
-										//noinspection Guava
-										Optional<IRI> ontIRI = ontID.getOntologyIRI();
-										if (ontIRI.isPresent()) {
-											return ontIRI.get().toURI().toString();
-										} else {
-											return null;
-										}
-									})
-							.collect(Collectors.toList());
+		OWLWorkspace workSpace = getWorkSpace();
+		List<String> ontologies =
+				workSpace
+						.getOWLModelManager()
+						.getActiveOntologies()
+						.stream()
+						.map(
+								ontology -> {
+									OWLOntologyID ontID = ontology.getOntologyID();
+									//noinspection Guava
+									Optional<IRI> ontIRI = ontID.getOntologyIRI();
+									if (ontIRI.isPresent()) {
+										return ontIRI.get().toURI().toString();
+									} else {
+										return null;
+									}
+								})
+						.collect(Collectors.toList());
 
-			//        String ontologyLocation = OntologyTranslator.translate(classID);
-			if (!ontologies.contains(ontologyLocation)) {
-				log.warn("Loading ontology: " + ontologyLocation);
-				try {
-					OWLOntology newOntology =
-							workSpace
-									.getOWLModelManager()
-									.getOWLOntologyManager()
-									.loadOntology((IRI.create(ontologyLocation)));
-					workSpace.getOWLModelManager().setActiveOntology(newOntology);
-				} catch (OWLOntologyCreationException e) {
-					log.warn("Knowtator: OWLAPIDataExtractor: Ontology already loaded");
-				}
+		//        String ontologyLocation = OntologyTranslator.translate(classID);
+		if (!ontologies.contains(ontologyLocation)) {
+			log.warn("Loading ontology: " + ontologyLocation);
+			try {
+				OWLOntology newOntology =
+						workSpace
+								.getOWLModelManager()
+								.getOWLOntologyManager()
+								.loadOntology((IRI.create(ontologyLocation)));
+				workSpace.getOWLModelManager().setActiveOntology(newOntology);
+			} catch (OWLOntologyCreationException e) {
+				log.warn("Knowtator: OWLAPIDataExtractor: Ontology already loaded");
 			}
 		}
 	}

@@ -76,7 +76,7 @@ public class Span implements Savable {
 		if (spans1.size() == spans2.size()) {
 			Iterator<Span> spans1Iterator = spans1.iterator(), spans2Iterator = spans2.iterator();
 			while (spans1Iterator.hasNext()) {
-				if (!spans1Iterator.next().equals(spans2Iterator.next())) {
+				if (!spans1Iterator.next().equalStartAndEnd(spans2Iterator.next())) {
 					return false;
 				}
 			}
@@ -116,10 +116,15 @@ public class Span implements Savable {
 		if (compare == 0) {
 			compare = getEnd().compareTo(span2.getEnd());
 		}
+		if (compare == 0) {
+			if (!equals(span2)) {
+				compare = 1;
+			}
+		}
 		return compare;
 	}
 
-	public boolean equals(Object object) {
+	public boolean equalStartAndEnd(Object object) {
 		if (!(object instanceof Span)) {
 			return false;
 		}

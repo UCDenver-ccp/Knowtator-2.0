@@ -98,7 +98,10 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
       TextSourceChangeEvent e = new TextSourceChangeEvent(this.activeTextSource, newTextSource);
       this.activeTextSource = newTextSource;
       setSelected(null, null);
-      setSelected(newTextSource.getAnnotationManager().getGraphSpaceCollection().getData().first());
+      if (!newTextSource.getAnnotationManager().getGraphSpaceCollection().getData().isEmpty()) {
+        setSelected(
+                newTextSource.getAnnotationManager().getGraphSpaceCollection().getData().first());
+      }
       listeners.forEach(selectionListener -> selectionListener.activeTextSourceChanged(e));
     }
   }

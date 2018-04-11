@@ -192,7 +192,7 @@ public abstract class KnowtatorTextPane extends JTextPane
 			for (Span span :
 					controller.getSelectionManager().getSelectedAnnotation().getSpanCollection().getData()) {
 				try {
-					if (span.equals(controller.getSelectionManager().getSelectedSpan())) {
+					if (span.equalStartAndEnd(controller.getSelectionManager().getSelectedSpan())) {
 						highlightSpan(span.getStart(), span.getEnd(), new RectanglePainter(Color.BLACK));
 					} else {
 						highlightSpan(span.getStart(), span.getEnd(), new RectanglePainter(Color.GRAY));

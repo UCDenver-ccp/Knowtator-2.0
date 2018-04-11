@@ -34,6 +34,6 @@ public class MainKnowtatorTextPane extends KnowtatorTextPane {
 				.getSelectionManager()
 				.getActiveTextSource()
 				.getAnnotationManager()
-				.getSpans(loc, 0, getText().length() - 1);
+				.getSpans(loc, 0, getText().length());
 	}
 }

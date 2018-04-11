@@ -455,9 +455,9 @@ public class Annotation implements Savable, Serializable {
   //	 *         the result of trivialCompare for the feature values unless that
   //	 *         method returns MatchResult.MATCH_RESULT_UNASSIGNED. Otherwise, <br>
   //	 *         MatchResult.NONTRIVIAL_MATCH if the values of the features are
-  //	 *         equal as defined by the equals method. <br>
+  //	 *         equal as defined by the equalStartAndEnd method. <br>
   //	 *         MatchResult.NONTRIVIAL_NONMATCH if the values are not equal as
-  //	 *         defined by the equals method.
+  //	 *         defined by the equalStartAndEnd method.
   //	 * @see #trivialCompare(Set, Set)
   //	 */
   //
@@ -676,7 +676,7 @@ public class Annotation implements Savable, Serializable {
   //		String cls1 = annotation1.getOWLClassID();
   //		String cls2 = annotation2.getOWLClassID();
   //
-  //		return cls1 != null && cls2 != null && cls1.equals(cls2);
+  //		return cls1 != null && cls2 != null && cls1.equalStartAndEnd(cls2);
   //
   //	}
   // public static boolean compareNames(Set<String> names1, Set<String> names2) {
