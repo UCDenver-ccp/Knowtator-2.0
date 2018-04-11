@@ -94,7 +94,7 @@
 //
 //		Set<annotation> candidateAnnotations = new HashSet<>(iaa.getOverlappingAnnotations(annotation,
 //				compareSetName));
-//		candidateAnnotations.removeAll(excludeAnnotations);
+//		candidateAnnotations.clear(excludeAnnotations);
 //
 //		// we are going to collect all matches because we want to return the
 //		// shortest of the matches if there is more than one.

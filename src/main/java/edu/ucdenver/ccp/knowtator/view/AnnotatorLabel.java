@@ -4,6 +4,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.events.*;
 import edu.ucdenver.ccp.knowtator.listeners.SelectionListener;
 import edu.ucdenver.ccp.knowtator.model.Annotation;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.swing.*;
 
@@ -36,5 +37,10 @@ public class AnnotatorLabel extends JLabel implements SelectionListener {
 
 	@Override
 	public void activeProfileChange(ProfileChangeEvent e) {
+	}
+
+	@Override
+	public void owlPropertyChangedEvent(OWLObjectProperty value) {
+
 	}
 }

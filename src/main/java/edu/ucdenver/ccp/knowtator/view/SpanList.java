@@ -3,6 +3,7 @@ package edu.ucdenver.ccp.knowtator.view;
 import edu.ucdenver.ccp.knowtator.events.*;
 import edu.ucdenver.ccp.knowtator.listeners.SelectionListener;
 import edu.ucdenver.ccp.knowtator.model.Span;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.swing.*;
 import java.util.Set;
@@ -31,5 +32,10 @@ public class SpanList extends JList<Span> implements SelectionListener {
 
 	@Override
 	public void activeProfileChange(ProfileChangeEvent e) {
+	}
+
+	@Override
+	public void owlPropertyChangedEvent(OWLObjectProperty value) {
+
 	}
 }

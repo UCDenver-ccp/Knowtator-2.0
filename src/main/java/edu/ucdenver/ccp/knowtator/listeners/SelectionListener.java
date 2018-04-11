@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator.listeners;
 
 import edu.ucdenver.ccp.knowtator.events.*;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 public interface SelectionListener {
 
@@ -13,4 +14,6 @@ public interface SelectionListener {
 	void activeTextSourceChanged(TextSourceChangeEvent e);
 
 	void activeProfileChange(ProfileChangeEvent e);
+
+	void owlPropertyChangedEvent(OWLObjectProperty value);
 }

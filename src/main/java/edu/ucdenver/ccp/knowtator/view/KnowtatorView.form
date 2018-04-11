@@ -202,11 +202,23 @@
                       <toolTipText resource-bundle="ui" key="next.text.source"/>
                     </properties>
                   </component>
-                  <component id="c56f1" class="edu.ucdenver.ccp.knowtator.view.TextSourceChooser" binding="textSourceChooser" custom-create="true">
+                  <component id="8cca1" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text resource-bundle="ui" key="document"/>
+                    </properties>
+                  </component>
+                  <component id="c56f1" class="edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser" binding="textSourceChooser" custom-create="true">
                     <constraints/>
                     <properties/>
                   </component>
-                  <component id="1d43f" class="edu.ucdenver.ccp.knowtator.view.ProfileChooser" binding="profileChooser" custom-create="true">
+                  <component id="fd528" class="javax.swing.JLabel">
+                    <constraints/>
+                    <properties>
+                      <text resource-bundle="ui" key="profile"/>
+                    </properties>
+                  </component>
+                  <component id="1d43f" class="edu.ucdenver.ccp.knowtator.view.chooser.ProfileChooser" binding="profileChooser" custom-create="true">
                     <constraints/>
                     <properties/>
                   </component>
@@ -326,7 +338,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="c1f28" class="edu.ucdenver.ccp.knowtator.view.KnowtatorTextPane" binding="knowtatorTextPane" custom-create="true">
+                  <component id="c1f28" class="edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane" binding="knowtatorTextPane" custom-create="true">
                     <constraints/>
                     <properties>
                       <background color="-1"/>

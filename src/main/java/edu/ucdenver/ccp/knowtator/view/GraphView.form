@@ -81,7 +81,13 @@
                   <toolTipText resource-bundle="ui" key="next.graph.space"/>
                 </properties>
               </component>
-              <component id="e76ed" class="edu.ucdenver.ccp.knowtator.view.GraphSpaceChooser" binding="graphSpaceChooser" custom-create="true">
+              <component id="6f6e6" class="javax.swing.JLabel">
+                <constraints/>
+                <properties>
+                  <text resource-bundle="ui" key="graph.space"/>
+                </properties>
+              </component>
+              <component id="e76ed" class="edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser" binding="graphSpaceChooser" custom-create="true">
                 <constraints/>
                 <properties>
                   <minimumSize width="80" height="30"/>
@@ -91,12 +97,15 @@
           </toolbar>
           <scrollpane id="ab8dd">
             <constraints border-constraint="South"/>
-            <properties/>
+            <properties>
+              <maximumSize width="32767" height="15"/>
+            </properties>
             <border type="none"/>
             <children>
-              <component id="58010" class="edu.ucdenver.ccp.knowtator.view.KnowtatorTextPane" binding="knowtatorTextPane" custom-create="true">
+              <component id="58010" class="edu.ucdenver.ccp.knowtator.view.textpane.GraphViewKnowtatorTextPane" binding="knowtatorTextPane" custom-create="true">
                 <constraints/>
                 <properties>
+                  <editable value="false"/>
                   <text value=""/>
                 </properties>
               </component>
@@ -106,7 +115,9 @@
       </grid>
       <scrollpane id="76d5a" class="com.mxgraph.swing.mxGraphComponent" binding="graphComponent" custom-create="true">
         <constraints border-constraint="Center"/>
-        <properties/>
+        <properties>
+          <gridVisible value="true"/>
+        </properties>
         <border type="none"/>
         <children/>
       </scrollpane>

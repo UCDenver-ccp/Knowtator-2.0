@@ -13,12 +13,13 @@ import org.w3c.dom.Node;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Profile implements Savable {
+public class Profile implements Savable, Serializable {
 	@SuppressWarnings("unused")
 	private static Logger log = LogManager.getLogger(Profile.class);
 
@@ -91,7 +92,7 @@ public class Profile implements Savable {
 	}
 
 	@Override
-	public void readFromOldKnowtatorXML(File file, Element parent, String content) {
+	public void readFromOldKnowtatorXML(File file, Element parent, TextSource textSource) {
 	}
 
 	@Override

@@ -26,7 +26,7 @@ public class ProfileManager implements Savable {
 
 	public ProfileManager(KnowtatorController controller) {
 		this.controller = controller;
-		profileCollection = new ProfileCollection();
+		profileCollection = new ProfileCollection(controller);
 		defaultProfile = addProfile("Default");
 	}
 
@@ -65,7 +65,7 @@ public class ProfileManager implements Savable {
 	}
 
 	@Override
-	public void readFromOldKnowtatorXML(File file, Element parent, String content) {
+	public void readFromOldKnowtatorXML(File file, Element parent, TextSource textSource) {
 	}
 
 	@Override

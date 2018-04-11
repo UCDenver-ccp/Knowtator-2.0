@@ -6,13 +6,14 @@ import edu.ucdenver.ccp.knowtator.model.Annotation;
 import edu.ucdenver.ccp.knowtator.model.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.Span;
 import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.Set;
 
-class AnnotationPopupMenu extends JPopupMenu {
+public class AnnotationPopupMenu extends JPopupMenu {
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(AnnotationPopupMenu.class);
 
@@ -20,7 +21,7 @@ class AnnotationPopupMenu extends JPopupMenu {
 	private KnowtatorTextPane knowtatorTextPane;
 	private KnowtatorController controller;
 
-	AnnotationPopupMenu(
+	public AnnotationPopupMenu(
 			MouseEvent e, KnowtatorTextPane knowtatorTextPane, KnowtatorController controller) {
 		this.e = e;
 		this.knowtatorTextPane = knowtatorTextPane;
@@ -29,14 +30,20 @@ class AnnotationPopupMenu extends JPopupMenu {
 
 	private JMenuItem addAnnotationCommand() {
 		JMenuItem menuItem = new JMenuItem("Add annotation");
-		menuItem.addActionListener(e12 -> knowtatorTextPane.addAnnotation());
+		menuItem.addActionListener(
+				e12 ->
+						controller
+								.getSelectionManager()
+								.getActiveTextSource()
+								.getAnnotationManager()
+								.addSelectedAnnotation());
 
 		return menuItem;
 	}
 
 	private JMenuItem addSpanToAnnotationCommand() {
 		JMenuItem addSpanToAnnotation = new JMenuItem("Add span");
-		addSpanToAnnotation.addActionListener(e4 -> knowtatorTextPane.addSpanToAnnotation());
+		addSpanToAnnotation.addActionListener(e4 -> controller.getSelectionManager().getActiveTextSource().getAnnotationManager().addSpanToSelectedAnnotation());
 
 		return addSpanToAnnotation;
 	}
@@ -91,7 +98,7 @@ class AnnotationPopupMenu extends JPopupMenu {
 		return removeAnnotationMenuItem;
 	}
 
-	void chooseAnnotation(Set<Span> spansContainingLocation) {
+	public void chooseAnnotation(Set<Span> spansContainingLocation) {
 		// Menu items to select and remove annotations
 		spansContainingLocation.forEach(
 				span -> add(selectAnnotationCommand(span.getAnnotation(), span)));
@@ -123,7 +130,7 @@ class AnnotationPopupMenu extends JPopupMenu {
 		return jMenu;
 	}
 
-	void showPopUpMenu(int release_offset) {
+	public void showPopUpMenu(int release_offset) {
 
 		Annotation selectedAnnotation = controller.getSelectionManager().getSelectedAnnotation();
 		Span selectedSpan = controller.getSelectionManager().getSelectedSpan();

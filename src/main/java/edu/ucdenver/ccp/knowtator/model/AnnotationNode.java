@@ -42,7 +42,7 @@ public class AnnotationNode extends mxCell implements Savable {
 	}
 
 	@Override
-	public void readFromOldKnowtatorXML(File file, Element parent, String content) {
+	public void readFromOldKnowtatorXML(File file, Element parent, TextSource textSource) {
 	}
 
 	@Override

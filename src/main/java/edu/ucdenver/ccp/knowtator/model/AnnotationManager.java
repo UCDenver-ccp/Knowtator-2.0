@@ -3,7 +3,6 @@ package edu.ucdenver.ccp.knowtator.model;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
-import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
 import org.apache.log4j.Logger;
@@ -19,7 +18,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class AnnotationManager implements Savable, ProjectListener {
+public class AnnotationManager implements Savable {
 
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(AnnotationManager.class);
@@ -35,8 +34,8 @@ public class AnnotationManager implements Savable, ProjectListener {
 		this.controller = controller;
 		this.textSource = textSource;
 		annotationMap = new HashMap<>();
-		allSpanCollection = new SpanCollection();
-		graphSpaceCollection = new GraphSpaceCollection();
+		allSpanCollection = new SpanCollection(controller);
+		graphSpaceCollection = new GraphSpaceCollection(controller);
 	}
 
 	public void addAnnotation(Annotation newAnnotation) {
@@ -92,7 +91,7 @@ public class AnnotationManager implements Savable, ProjectListener {
 	/**
 	 * @param loc Location filter
 	 */
-	public TreeSet<Span> getSpanSet(Integer loc) {
+	public TreeSet<Span> getSpans(Integer loc, int start, int end) {
 		Supplier<TreeSet<Span>> supplier = () -> new TreeSet<>(Span::compare);
 		return allSpanCollection
 				.getData()
@@ -100,6 +99,7 @@ public class AnnotationManager implements Savable, ProjectListener {
 				.filter(
 						span ->
 								(loc == null || span.contains(loc))
+										&& (start <= span.getStart() && span.getEnd() <= end)
 										&& (!controller.getSelectionManager().isFilterByProfile()
 										|| span.getAnnotation()
 										.getAnnotator()
@@ -137,22 +137,6 @@ public class AnnotationManager implements Savable, ProjectListener {
 		span.shrinkStart();
 		allSpanCollection.add(span);
 		controller.getSelectionManager().setSelected(span);
-	}
-
-	public void addAnnotation(OWLClass owlClass, String owlClassID, Span span) {
-		if (owlClass != null) {
-			Annotation newAnnotation =
-					new Annotation(
-							controller,
-							null,
-							owlClass,
-							owlClassID,
-							controller.getSelectionManager().getActiveProfile(),
-							"identity",
-							textSource);
-			newAnnotation.addSpan(span);
-			addAnnotation(newAnnotation);
-		}
 	}
 
 	@SuppressWarnings("unused")
@@ -231,7 +215,7 @@ public class AnnotationManager implements Savable, ProjectListener {
 	}
 
 	@Override
-	public void readFromOldKnowtatorXML(File file, Element parent, String content) {
+	public void readFromOldKnowtatorXML(File file, Element parent, TextSource textSource) {
 
 		Map<String, Element> slotToClassIDMap = KnowtatorXMLUtil.getslotsFromXml(parent);
 		Map<String, Element> classMentionToClassIDMap = KnowtatorXMLUtil.getClassIDsFromXml(parent);
@@ -264,9 +248,9 @@ public class AnnotationManager implements Savable, ProjectListener {
 
 			Annotation newAnnotation =
 					new Annotation(
-							controller, annotationID, null, owlClassID, profile, "identity", textSource);
+							controller, annotationID, null, owlClassID, profile, "identity", this.textSource);
 
-			newAnnotation.readFromOldKnowtatorXML(null, annotationElement, content);
+			newAnnotation.readFromOldKnowtatorXML(null, annotationElement, textSource);
 
 			// No need to keep annotations with no allSpanCollection
 			if (!newAnnotation.getSpanCollection().getData().isEmpty()) {
@@ -412,48 +396,6 @@ public class AnnotationManager implements Savable, ProjectListener {
 		graphSpaceCollection.remove(graphSpace);
 	}
 
-	public void getPreviousSpan() {
-		controller
-				.getSelectionManager()
-				.setSelected(
-						allSpanCollection.getPrevious(controller.getSelectionManager().getSelectedSpan()));
-	}
-
-	public void getNextSpan() {
-		controller
-				.getSelectionManager()
-				.setSelected(allSpanCollection.getNext(controller.getSelectionManager().getSelectedSpan()));
-	}
-
-	void connectToOWLModelManager() {
-		for (Annotation annotation : annotationMap.values()) {
-			//noinspection ResultOfMethodCallIgnored
-			annotation.getOwlClass();
-		}
-		for (GraphSpace graphSpace : graphSpaceCollection.getData()) {
-			graphSpace.connectEdgesToProperties();
-		}
-	}
-
-	@Override
-	public void projectLoaded() {
-		connectToOWLModelManager();
-	}
-
-	public void getPreviousGraphSpace() {
-		controller
-				.getSelectionManager()
-				.setSelected(
-						graphSpaceCollection.getNext(controller.getSelectionManager().getActiveGraphSpace()));
-	}
-
-	public void getNextGraphSpace() {
-		controller
-				.getSelectionManager()
-				.setSelected(
-						graphSpaceCollection.getNext(controller.getSelectionManager().getActiveGraphSpace()));
-	}
-
 	public void removeSelectedAnnotation() {
 		removeAnnotation(controller.getSelectionManager().getSelectedAnnotation());
 	}
@@ -461,8 +403,7 @@ public class AnnotationManager implements Savable, ProjectListener {
 	public void addSelectedAnnotation() {
 		int start = controller.getSelectionManager().getStart();
 		int end = controller.getSelectionManager().getEnd();
-		String spannedText = textSource.getContent().substring(start, end);
-		Span newSpan = new Span(start, end, spannedText);
+		Span newSpan = new Span(start, end, textSource);
 
 		OWLClass owlClass = controller.getSelectionManager().getSelectedOWLClass();
 		Profile annotator = controller.getSelectionManager().getActiveProfile();
@@ -474,5 +415,14 @@ public class AnnotationManager implements Savable, ProjectListener {
 
 	SpanCollection getAllSpanCollection() {
 		return allSpanCollection;
+	}
+
+	public void addSpanToSelectedAnnotation() {
+		addSpanToAnnotation(
+				controller.getSelectionManager().getSelectedAnnotation(),
+				new Span(
+						controller.getSelectionManager().getStart(),
+						controller.getSelectionManager().getEnd(),
+						textSource));
 	}
 }

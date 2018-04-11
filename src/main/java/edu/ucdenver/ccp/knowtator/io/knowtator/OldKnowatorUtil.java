@@ -2,6 +2,7 @@ package edu.ucdenver.ccp.knowtator.io.knowtator;
 
 import edu.ucdenver.ccp.knowtator.io.XMLUtil;
 import edu.ucdenver.ccp.knowtator.model.Span;
+import edu.ucdenver.ccp.knowtator.model.TextSource;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class OldKnowatorUtil extends XMLUtil {
 
-	public static List<Span> getSpanInfo(Element annotationElement, String content) {
+	public static List<Span> getSpanInfo(Element annotationElement, TextSource textSource) {
 		List<Span> spans = new ArrayList<>();
 
 		for (Node spanNode :
@@ -22,9 +23,8 @@ public class OldKnowatorUtil extends XMLUtil {
 						Integer.parseInt(spanElement.getAttribute(OldKnowtatorXMLAttributes.SPAN_START));
 				int spanEnd =
 						Integer.parseInt(spanElement.getAttribute(OldKnowtatorXMLAttributes.SPAN_END));
-				String spannedText = content.substring(spanStart, spanEnd);
 
-				spans.add(new Span(spanStart, spanEnd, spannedText));
+				spans.add(new Span(spanStart, spanEnd, textSource));
 			}
 		}
 		return spans;

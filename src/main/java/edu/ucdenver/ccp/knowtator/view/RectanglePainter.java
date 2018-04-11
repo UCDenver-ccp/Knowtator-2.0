@@ -10,11 +10,11 @@ import java.awt.*;
  *  area to be highlighted.
  *
  */
-class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {
+public class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {
 
 	public static Logger log = Logger.getLogger(RectanglePainter.class);
 
-	RectanglePainter(Color color) {
+	public RectanglePainter(Color color) {
 		super(color);
 	}
 

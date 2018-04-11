@@ -14,7 +14,7 @@ public interface Savable {
 
 	void readFromKnowtatorXML(File file, Element parent, String content);
 
-	void readFromOldKnowtatorXML(File file, Element parent, String content);
+	void readFromOldKnowtatorXML(File file, Element parent, TextSource textSource);
 
 	void readFromBratStandoff(
 			File file, Map<Character, List<String[]>> annotationMap, String content);

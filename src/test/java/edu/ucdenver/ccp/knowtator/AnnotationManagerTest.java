@@ -64,7 +64,7 @@ public class AnnotationManagerTest {
         annotationManager.addAnnotation(annotation1);
 
         int numAnnotations = annotationManager.getAnnotations().size();
-        int numSpans = annotationManager.getSpanSet(null).size();
+        int numSpans = annotationManager.getSpans(null, 0, textSource.getContent().length()).size();
 
         assert numAnnotations == 3;
         assert numSpans == 3;
@@ -76,11 +76,11 @@ public class AnnotationManagerTest {
         Annotation annotation1 = new Annotation(controller, "mention_3", null, "class_2", profile, "identity", textSource);
         annotationManager.addAnnotation(annotation1);
 
-        Span span1 = new Span(1, 6, "");
+        Span span1 = new Span(1, 6, textSource);
         annotationManager.addSpanToAnnotation(annotation1, span1);
 
         int numAnnotations = annotationManager.getAnnotations().size();
-        int numSpans = annotationManager.getSpanSet(null).size();
+        int numSpans = annotationManager.getSpans(null, 0, textSource.getContent().length()).size();
 
         assert numAnnotations == 3;
         assert numSpans == 4;
@@ -92,13 +92,13 @@ public class AnnotationManagerTest {
         annotationManager.removeAnnotation(annotationManager.getAnnotation("mention_1"));
 
         int numAnnotations = annotationManager.getAnnotations().size();
-        int numSpans = annotationManager.getSpanSet(null).size();
+        int numSpans = annotationManager.getSpans(null, 0, textSource.getContent().length()).size();
 
         assert numAnnotations == 1;
         try {
             assert numSpans == 1;
         } catch (AssertionError ae) {
-            annotationManager.getSpanSet(null).forEach((span -> log.warn(String.format("%s, %s", span, span.getAnnotation()))));
+            annotationManager.getSpans(null, 0, textSource.getContent().length()).forEach((span -> log.warn(String.format("%s, %s", span, span.getAnnotation()))));
             throw new AssertionError();
         }
     }
@@ -109,18 +109,18 @@ public class AnnotationManagerTest {
         Annotation annotation1 = new Annotation(controller, "mention_3", null, "class_2", profile, "identity", textSource);
         annotationManager.addAnnotation(annotation1);
 
-        Span span1 = new Span(1, 6, "");
+        Span span1 = new Span(1, 6, textSource);
         annotationManager.addSpanToAnnotation(annotation1, span1);
 
         annotationManager.removeSpanFromAnnotation(annotation1, span1);
         int numAnnotations = annotationManager.getAnnotations().size();
-        int numSpans = annotationManager.getSpanSet(null).size();
+        int numSpans = annotationManager.getSpans(null, 0, textSource.getContent().length()).size();
 
         assert numAnnotations == 3;
         try {
             assert numSpans == 3;
         } catch (AssertionError ae) {
-            annotationManager.getSpanSet(null).forEach((span -> log.warn(String.format("%s, %s", span, span.getAnnotation()))));
+            annotationManager.getSpans(null, 0, textSource.getContent().length()).forEach((span -> log.warn(String.format("%s, %s", span, span.getAnnotation()))));
             throw new AssertionError();
         }
     }

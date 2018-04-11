@@ -110,8 +110,8 @@
 //		Set<annotation> exactlyOverlappingAnnotations = new
 // HashSet<>(iaa.getExactlyOverlappingAnnotations(
 //				annotation, compareSetName));
-//		exactlyOverlappingAnnotations.removeAll(classAndSpanMatches);
-//		exactlyOverlappingAnnotations.removeAll(excludeAnnotations);
+//		exactlyOverlappingAnnotations.clear(classAndSpanMatches);
+//		exactlyOverlappingAnnotations.clear(excludeAnnotations);
 //
 //		List<annotation> candidateAnnotations = new ArrayList<>(classAndSpanMatches.size()
 //				+ exactlyOverlappingAnnotations.size());

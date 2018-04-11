@@ -1,12 +1,13 @@
 package edu.ucdenver.ccp.knowtator.model.collection;
 
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.SpanCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.Span;
 
 import java.util.TreeSet;
 
 public class SpanCollection extends CyclableCollection<Span, SpanCollectionListener> {
-	public SpanCollection() {
-		super(new TreeSet<>(Span::compare));
+	public SpanCollection(KnowtatorController controller) {
+		super(controller, new TreeSet<>(Span::compare));
 	}
 }

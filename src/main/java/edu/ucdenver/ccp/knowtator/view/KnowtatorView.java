@@ -3,25 +3,32 @@ package edu.ucdenver.ccp.knowtator.view;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.events.*;
+import edu.ucdenver.ccp.knowtator.listeners.SelectionListener;
 import edu.ucdenver.ccp.knowtator.model.Profile;
 import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
+import edu.ucdenver.ccp.knowtator.view.chooser.ProfileChooser;
+import edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser;
+import edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane;
+import edu.ucdenver.ccp.knowtator.view.textpane.MainKnowtatorTextPane;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-public class KnowtatorView extends AbstractOWLClassViewComponent implements DropTargetListener {
+public class KnowtatorView extends AbstractOWLClassViewComponent
+        implements DropTargetListener, SelectionListener {
   private KnowtatorController controller;
   private GraphViewDialog graphViewDialog;
   private ProjectMenu projectMenu;
-  private File fileToLoad;
 
   private JComponent panel1;
   private JButton previousMatchButton;
@@ -64,18 +71,11 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
   public KnowtatorView() {
     $$$setupUI$$$();
     makeButtons();
-    setListeners();
-  }
-
-  private void setListeners() {
-    controller.addProjectListener(knowtatorTextPane);
   }
 
   @Override
   public void initialiseClassView() {
     //        log.warn("Initializing class view");
-
-    panel1 = this;
     graphViewDialog = new GraphViewDialog(controller);
     annotationIDLabel = new AnnotationIDLabel(controller);
     annotationClassLabel = new AnnotationClassLabel(controller);
@@ -83,31 +83,18 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     spanList = new SpanList();
     textSourceChooser = new TextSourceChooser(controller);
     profileChooser = new ProfileChooser(controller);
-
-    DropTarget dt = new DropTarget(this, this);
-    dt.setActive(true);
-
-    //        if (getFrame().getJMenuBar() == null) {
-    //            JMenuBar menuBar = new JMenuBar();
-    //            getFrame().setJMenuBar(menuBar);
-    //        }
-
-    //        getFrame().getJMenuBar().add(projectMenu);
-
-    if (fileToLoad != null) {
-      controller.getProjectManager().loadProject(fileToLoad);
-      fileToLoad = null;
-    }
   }
 
   private void createUIComponents() {
-    // Place custom component creation code here
+    DropTarget dt = new DropTarget(this, this);
+    dt.setActive(true);
 
-    //        log.warn("Creating UI components");
+    panel1 = this;
+
     controller = new KnowtatorController(this);
 
     projectMenu = new ProjectMenu(controller);
-    knowtatorTextPane = new KnowtatorTextPane(controller);
+    knowtatorTextPane = new MainKnowtatorTextPane(controller);
 
     initialiseClassView();
   }
@@ -127,17 +114,19 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
                   if (JOptionPane.showConfirmDialog(
                           controller.getView(), "Assign color to descendants of " + owlClass + "?")
                           == JOptionPane.OK_OPTION) {
-                    Set<OWLClass> descendants =
-                            controller.getOWLAPIDataExtractor().getDescendants(owlClass);
-                    if (descendants != null) {
+                    try {
+                      Set<OWLClass> descendants =
+                              controller.getOWLAPIDataExtractor().getDescendants(owlClass);
+
                       for (OWLClass descendant : descendants) {
                         controller.getSelectionManager().getActiveProfile().addColor(descendant, c);
                       }
+                    } catch (OWLWorkSpaceNotSetException ignored) {
                     }
                   }
                 }
               }
-        });
+            });
 
     profileFilterCheckBox.addChangeListener(controller.getSelectionManager());
 
@@ -152,7 +141,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
                         .getAnnotationManager()
                         .growSelectedSpanStart();
               }
-        });
+            });
     shrinkSelectionStartButton.addActionListener(
             (ActionEvent e) -> {
               if (controller.getSelectionManager().getSelectedSpan() == null) {
@@ -164,7 +153,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
                         .getAnnotationManager()
                         .shrinkSelectedSpanStart();
               }
-        });
+            });
     shrinkSelectionEndButton.addActionListener(
             (ActionEvent e) -> {
               if (controller.getSelectionManager().getSelectedSpan() == null) {
@@ -176,7 +165,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
                         .getAnnotationManager()
                         .shrinkSelectedSpanEnd();
               }
-        });
+            });
     growSelectionEndButton.addActionListener(
             (ActionEvent e) -> {
               if (controller.getSelectionManager().getSelectedSpan() == null) {
@@ -188,7 +177,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
                         .getAnnotationManager()
                         .growSelectedSpanEnd();
               }
-        });
+            });
 
     previousSpanButton.addActionListener(
             (ActionEvent e) -> controller.getSelectionManager().getPreviousSpan());
@@ -199,7 +188,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     removeAnnotationButton.addActionListener(
             e -> {
-              if (JOptionPane.showConfirmDialog(
+              if (controller.getProjectManager().isProjectLoaded()
+                      && JOptionPane.showConfirmDialog(
                       controller.getView(),
                       "Are you sure you want to remove the selected annotation?",
                       "Remove Annotation",
@@ -211,14 +201,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
                         .getAnnotationManager()
                         .removeSelectedAnnotation();
               }
-        });
+            });
     addAnnotationButton.addActionListener(
-            e ->
-                    controller
-                            .getSelectionManager()
-                            .getActiveTextSource()
-                            .getAnnotationManager()
-                            .addSelectedAnnotation());
+            e -> {
+              if (controller.getProjectManager().isProjectLoaded()) {
+                controller
+                        .getSelectionManager()
+                        .getActiveTextSource()
+                        .getAnnotationManager()
+                        .addSelectedAnnotation();
+              }
+            });
 
     previousTextSourceButton.addActionListener(
             e -> controller.getSelectionManager().getPreviousTextSource());
@@ -235,14 +228,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
               if (comboBox.getSelectedItem() != null) {
                 controller.getSelectionManager().setSelected((TextSource) comboBox.getSelectedItem());
               }
-        });
+            });
     profileChooser.addActionListener(
             e -> {
               JComboBox comboBox = (JComboBox) e.getSource();
               if (comboBox.getSelectedItem() != null) {
                 controller.getSelectionManager().setSelected((Profile) comboBox.getSelectedItem());
               }
-        });
+            });
     nextMatchButton.addActionListener(
             e -> {
               String textToFind = matchTextField.getText();
@@ -259,7 +252,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
               } else {
                 currentKnowtatorTextPane.setSelectionStart(textToSearch.length());
               }
-        });
+            });
     previousMatchButton.addActionListener(
             e -> {
               String textToFind = matchTextField.getText();
@@ -277,32 +270,26 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
               } else {
                 currentKnowtatorTextPane.setSelectionStart(-1);
               }
-        });
+            });
 
     textToGraphButton.addActionListener(
-            e ->
-                    controller
-                            .getSelectionManager()
-                            .getActiveGraphSpace()
-                            .setGraphText(
-                                    knowtatorTextPane.getSelectionStart(), knowtatorTextPane.getSelectionEnd()));
+            e -> {
+              if (controller.getProjectManager().isProjectLoaded()) {
+                controller
+                        .getSelectionManager()
+                        .getActiveGraphSpace()
+                        .setGraphText(
+                                knowtatorTextPane.getSelectionStart(), knowtatorTextPane.getSelectionEnd());
+              }
+            });
 
-    controller.getSelectionManager().addSelectionListener(annotationIDLabel);
-    controller.getSelectionManager().addSelectionListener(annotationClassLabel);
-    controller.getSelectionManager().addSelectionListener(annotatorLabel);
-    controller.getSelectionManager().addSelectionListener(spanList);
+    controller.getSelectionManager().addListener(annotationIDLabel);
+    controller.getSelectionManager().addListener(annotationClassLabel);
+    controller.getSelectionManager().addListener(annotatorLabel);
+    controller.getSelectionManager().addListener(spanList);
   }
 
-  public void close(File file) {
-    this.fileToLoad = (file);
-    knowtatorTextPane.setText(null);
-    repaint();
-    initialiseClassView();
-    repaint();
-    revalidate();
-  }
-
-  public void owlEntitySelectionChanged(OWLEntity owlEntity) {
+  private void owlEntitySelectionChanged(OWLEntity owlEntity) {
     if (getView() != null) {
       if (getView().isSyncronizing()) {
         getOWLWorkspace().getOWLSelectionModel().setSelectedEntity(owlEntity);
@@ -361,9 +348,36 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     return graphViewDialog;
   }
 
+  @Override
+  public void selectedAnnotationChanged(AnnotationChangeEvent e) {
+    owlEntitySelectionChanged(e.getNew().getOwlClass());
+  }
+
+  @Override
+  public void selectedSpanChanged(SpanChangeEvent e) {
+  }
+
+  @Override
+  public void activeGraphSpaceChanged(GraphSpaceChangeEvent e) {
+  }
+
+  @Override
+  public void activeTextSourceChanged(TextSourceChangeEvent e) {
+  }
+
+  @Override
+  public void activeProfileChange(ProfileChangeEvent e) {
+  }
+
+  @Override
+  public void owlPropertyChangedEvent(OWLObjectProperty value) {
+    owlEntitySelectionChanged(value);
+  }
+
   /**
-   * Method generated by IntelliJ IDEA GUI Designer >>> IMPORTANT!! <<< DO NOT edit this method OR
-   * call it in your code!
+   * Method generated by IntelliJ IDEA GUI Designer
+   * >>> IMPORTANT!! <<<
+   * DO NOT edit this method OR call it in your code!
    *
    * @noinspection ALL
    */
@@ -372,390 +386,156 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
     mainPane = new JSplitPane();
     mainPane.setDividerLocation(1536);
-    panel1.add(
-            mainPane,
-            new GridConstraints(
-                    0,
-                    0,
-                    1,
-                    1,
-                    GridConstraints.ANCHOR_CENTER,
-                    GridConstraints.FILL_BOTH,
-                    GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                    GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                    null,
-                    new Dimension(200, 200),
-                    null,
-                    0,
-                    false));
+    panel1.add(mainPane, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
     infoPane = new JSplitPane();
     infoPane.setOrientation(0);
     mainPane.setRightComponent(infoPane);
     findPanel = new JPanel();
     findPanel.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
     infoPane.setLeftComponent(findPanel);
-    findPanel.setBorder(
-            BorderFactory.createTitledBorder(ResourceBundle.getBundle("ui").getString("find")));
+    findPanel.setBorder(BorderFactory.createTitledBorder(ResourceBundle.getBundle("ui").getString("find")));
     nextMatchButton = new JButton();
     this.$$$loadButtonText$$$(nextMatchButton, ResourceBundle.getBundle("ui").getString("next"));
-    findPanel.add(
-            nextMatchButton,
-            new GridConstraints(
-                    0,
-                    2,
-                    1,
-                    1,
-                    GridConstraints.ANCHOR_CENTER,
-                    GridConstraints.FILL_HORIZONTAL,
-                    GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                    GridConstraints.SIZEPOLICY_FIXED,
-                    null,
-                    null,
-                    null,
-                    0,
-                    false));
+    findPanel.add(nextMatchButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     previousMatchButton = new JButton();
-    this.$$$loadButtonText$$$(
-            previousMatchButton, ResourceBundle.getBundle("ui").getString("previous"));
-    findPanel.add(
-            previousMatchButton,
-            new GridConstraints(
-                    0,
-                    0,
-                    1,
-                    1,
-                    GridConstraints.ANCHOR_CENTER,
-                    GridConstraints.FILL_HORIZONTAL,
-                    GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                    GridConstraints.SIZEPOLICY_FIXED,
-                    null,
-                    null,
-                    null,
-                    0,
-                    false));
+    this.$$$loadButtonText$$$(previousMatchButton, ResourceBundle.getBundle("ui").getString("previous"));
+    findPanel.add(previousMatchButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     matchTextField = new JTextField();
-    findPanel.add(
-            matchTextField,
-            new GridConstraints(
-                    0,
-                    1,
-                    1,
-                    1,
-                    GridConstraints.ANCHOR_WEST,
-                    GridConstraints.FILL_HORIZONTAL,
-                    GridConstraints.SIZEPOLICY_WANT_GROW,
-                    GridConstraints.SIZEPOLICY_FIXED,
-                    null,
-                    new Dimension(150, -1),
-                    null,
-                    0,
-                    false));
+    findPanel.add(matchTextField, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
     caseSensitiveCheckBox = new JCheckBox();
-    this.$$$loadButtonText$$$(
-            caseSensitiveCheckBox, ResourceBundle.getBundle("ui").getString("case.sensitive"));
-    findPanel.add(
-            caseSensitiveCheckBox,
-            new GridConstraints(
-                    1,
-                    0,
-                    1,
-                    1,
-                    GridConstraints.ANCHOR_WEST,
-                    GridConstraints.FILL_NONE,
-                    GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                    GridConstraints.SIZEPOLICY_FIXED,
-                    null,
-                    null,
-                    null,
-                    0,
-                    false));
+    this.$$$loadButtonText$$$(caseSensitiveCheckBox, ResourceBundle.getBundle("ui").getString("case.sensitive"));
+    findPanel.add(caseSensitiveCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     regexCheckBox = new JCheckBox();
     this.$$$loadButtonText$$$(regexCheckBox, ResourceBundle.getBundle("ui").getString("regex"));
-    findPanel.add(
-            regexCheckBox,
-            new GridConstraints(
-                    1,
-                    1,
-                    1,
-                    1,
-                    GridConstraints.ANCHOR_WEST,
-                    GridConstraints.FILL_NONE,
-                    GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                    GridConstraints.SIZEPOLICY_FIXED,
-                    null,
-                    null,
-                    null,
-                    0,
-                    false));
+    findPanel.add(regexCheckBox, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     infoPanel = new JPanel();
     infoPanel.setLayout(new GridLayoutManager(5, 1, new Insets(0, 0, 0, 0), -1, -1));
     infoPane.setRightComponent(infoPanel);
     infoPanelTitleLabel = new JLabel();
-    Font infoPanelTitleLabelFont =
-            this.$$$getFont$$$(null, Font.BOLD, 18, infoPanelTitleLabel.getFont());
+    Font infoPanelTitleLabelFont = this.$$$getFont$$$(null, Font.BOLD, 18, infoPanelTitleLabel.getFont());
     if (infoPanelTitleLabelFont != null) infoPanelTitleLabel.setFont(infoPanelTitleLabelFont);
     infoPanelTitleLabel.setHorizontalAlignment(0);
     infoPanelTitleLabel.setHorizontalTextPosition(0);
-    this.$$$loadLabelText$$$(
-            infoPanelTitleLabel, ResourceBundle.getBundle("ui").getString("annotation.information"));
+    this.$$$loadLabelText$$$(infoPanelTitleLabel, ResourceBundle.getBundle("ui").getString("annotation.information"));
     infoPanelTitleLabel.setVerticalAlignment(0);
     infoPanelTitleLabel.setVerticalTextPosition(0);
-    infoPanel.add(
-            infoPanelTitleLabel,
-            new GridConstraints(
-                    0,
-                    0,
-                    1,
-                    1,
-                    GridConstraints.ANCHOR_WEST,
-                    GridConstraints.FILL_NONE,
-                    GridConstraints.SIZEPOLICY_FIXED,
-                    GridConstraints.SIZEPOLICY_FIXED,
-                    null,
-                    null,
-                    null,
-                    0,
-                    false));
+    infoPanel.add(infoPanelTitleLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     final JScrollPane scrollPane1 = new JScrollPane();
-    infoPanel.add(
-            scrollPane1,
-            new GridConstraints(
-                    4,
-                    0,
-                    1,
-                    1,
-                    GridConstraints.ANCHOR_CENTER,
-                    GridConstraints.FILL_BOTH,
-                    GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,
-                    GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,
-                    null,
-                    null,
-                    null,
-                    0,
-                    false));
+    infoPanel.add(scrollPane1, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     scrollPane1.setViewportView(spanList);
     annotationIDLabel.setHorizontalAlignment(2);
     annotationIDLabel.setHorizontalTextPosition(2);
     annotationIDLabel.setVerticalAlignment(1);
     annotationIDLabel.setVerticalTextPosition(1);
-    infoPanel.add(
-            annotationIDLabel,
-            new GridConstraints(
-                    1,
-                    0,
-                    1,
-                    1,
-                    GridConstraints.ANCHOR_NORTHWEST,
-                    GridConstraints.FILL_NONE,
-                    GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                    GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                    null,
-                    null,
-                    null,
-                    0,
-                    false));
+    infoPanel.add(annotationIDLabel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
     annotationClassLabel.setHorizontalAlignment(2);
     annotationClassLabel.setHorizontalTextPosition(2);
     annotationClassLabel.setVerticalAlignment(1);
     annotationClassLabel.setVerticalTextPosition(1);
-    infoPanel.add(
-            annotationClassLabel,
-            new GridConstraints(
-                    2,
-                    0,
-                    1,
-                    1,
-                    GridConstraints.ANCHOR_NORTHWEST,
-                    GridConstraints.FILL_NONE,
-                    GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                    GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                    null,
-                    null,
-                    null,
-                    0,
-                    false));
+    infoPanel.add(annotationClassLabel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
     annotatorLabel.setHorizontalAlignment(2);
     annotatorLabel.setHorizontalTextPosition(2);
     annotatorLabel.setVerticalAlignment(1);
     annotatorLabel.setVerticalTextPosition(1);
-    infoPanel.add(
-            annotatorLabel,
-            new GridConstraints(
-                    3,
-                    0,
-                    1,
-                    1,
-                    GridConstraints.ANCHOR_NORTHWEST,
-                    GridConstraints.FILL_NONE,
-                    GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                    GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                    null,
-                    null,
-                    null,
-                    0,
-                    false));
+    infoPanel.add(annotatorLabel, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
     textPanel = new JPanel();
     textPanel.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
     mainPane.setLeftComponent(textPanel);
-    textPanel.setBorder(
-            BorderFactory.createTitledBorder(
-                    BorderFactory.createLineBorder(new Color(-16777216)), null));
+    textPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-16777216)), null));
     textSourceToolBar = new JToolBar();
     textSourceToolBar.setFloatable(false);
-    textPanel.add(
-            textSourceToolBar,
-            new GridConstraints(
-                    0,
-                    0,
-                    1,
-                    1,
-                    GridConstraints.ANCHOR_CENTER,
-                    GridConstraints.FILL_HORIZONTAL,
-                    GridConstraints.SIZEPOLICY_WANT_GROW,
-                    GridConstraints.SIZEPOLICY_FIXED,
-                    null,
-                    new Dimension(-1, 20),
-                    null,
-                    0,
-                    false));
+    textPanel.add(textSourceToolBar, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
     decreaseFontSizeButton = new JButton();
-    decreaseFontSizeButton.setIcon(
-            new ImageIcon(getClass().getResource("/icon/icons8-Decrease Font (Custom).png")));
+    decreaseFontSizeButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-Decrease Font (Custom).png")));
     decreaseFontSizeButton.setText("");
-    decreaseFontSizeButton.setToolTipText(
-            ResourceBundle.getBundle("ui").getString("decrease.font.size"));
+    decreaseFontSizeButton.setToolTipText(ResourceBundle.getBundle("ui").getString("decrease.font.size"));
     textSourceToolBar.add(decreaseFontSizeButton);
     increaseFontSizeButton = new JButton();
-    increaseFontSizeButton.setIcon(
-            new ImageIcon(getClass().getResource("/icon/icons8-Increase Font (Custom).png")));
+    increaseFontSizeButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-Increase Font (Custom).png")));
     increaseFontSizeButton.setText("");
-    increaseFontSizeButton.setToolTipText(
-            ResourceBundle.getBundle("ui").getString("increase.font.size"));
+    increaseFontSizeButton.setToolTipText(ResourceBundle.getBundle("ui").getString("increase.font.size"));
     textSourceToolBar.add(increaseFontSizeButton);
     previousTextSourceButton = new JButton();
-    previousTextSourceButton.setIcon(
-            new ImageIcon(getClass().getResource("/icon/icons8-up-filled-50 (Custom).png")));
+    previousTextSourceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-up-filled-50 (Custom).png")));
     previousTextSourceButton.setText("");
-    previousTextSourceButton.setToolTipText(
-            ResourceBundle.getBundle("ui").getString("previous.text.source"));
+    previousTextSourceButton.setToolTipText(ResourceBundle.getBundle("ui").getString("previous.text.source"));
     textSourceToolBar.add(previousTextSourceButton);
     nextTextSourceButton = new JButton();
-    nextTextSourceButton.setIcon(
-            new ImageIcon(getClass().getResource("/icon/icons8-down-filled-50 (Custom).png")));
+    nextTextSourceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-down-filled-50 (Custom).png")));
     nextTextSourceButton.setText("");
-    nextTextSourceButton.setToolTipText(
-            ResourceBundle.getBundle("ui").getString("next.text.source"));
+    nextTextSourceButton.setToolTipText(ResourceBundle.getBundle("ui").getString("next.text.source"));
     textSourceToolBar.add(nextTextSourceButton);
+    final JLabel label1 = new JLabel();
+    label1.setText("Document");
+    textSourceToolBar.add(label1);
     textSourceToolBar.add(textSourceChooser);
+    final JLabel label2 = new JLabel();
+    label2.setText("Profile");
+    textSourceToolBar.add(label2);
     textSourceToolBar.add(profileChooser);
     annotationToolBar = new JToolBar();
     annotationToolBar.setFloatable(false);
-    textPanel.add(
-            annotationToolBar,
-            new GridConstraints(
-                    1,
-                    0,
-                    1,
-                    1,
-                    GridConstraints.ANCHOR_CENTER,
-                    GridConstraints.FILL_HORIZONTAL,
-                    GridConstraints.SIZEPOLICY_WANT_GROW,
-                    GridConstraints.SIZEPOLICY_FIXED,
-                    null,
-                    new Dimension(-1, 20),
-                    null,
-                    0,
-                    false));
+    textPanel.add(annotationToolBar, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
     showGraphViewerButton = new JButton();
-    showGraphViewerButton.setIcon(
-            new ImageIcon(getClass().getResource("/icon/icons8-edit-node-50 (Custom).png")));
+    showGraphViewerButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-edit-node-50 (Custom).png")));
     showGraphViewerButton.setText("");
-    showGraphViewerButton.setToolTipText(
-            ResourceBundle.getBundle("ui").getString("show.graph.viewer"));
+    showGraphViewerButton.setToolTipText(ResourceBundle.getBundle("ui").getString("show.graph.viewer"));
     annotationToolBar.add(showGraphViewerButton);
+    textToGraphButton = new JButton();
+    this.$$$loadButtonText$$$(textToGraphButton, ResourceBundle.getBundle("ui").getString("text.to.graph"));
+    textToGraphButton.setToolTipText(ResourceBundle.getBundle("ui").getString("send.selected.text.to.graph"));
+    annotationToolBar.add(textToGraphButton);
     addAnnotationButton = new JButton();
-    addAnnotationButton.setIcon(
-            new ImageIcon(getClass().getResource("/icon/icons8-plus-50 (Custom).png")));
+    addAnnotationButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-plus-50 (Custom).png")));
     addAnnotationButton.setText("");
     addAnnotationButton.setToolTipText(ResourceBundle.getBundle("ui").getString("add.annotation"));
     annotationToolBar.add(addAnnotationButton);
     removeAnnotationButton = new JButton();
-    removeAnnotationButton.setIcon(
-            new ImageIcon(getClass().getResource("/icon/icons8-minus-50 (Custom).png")));
+    removeAnnotationButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-minus-50 (Custom).png")));
     removeAnnotationButton.setText("");
-    removeAnnotationButton.setToolTipText(
-            ResourceBundle.getBundle("ui").getString("remove.annotation"));
+    removeAnnotationButton.setToolTipText(ResourceBundle.getBundle("ui").getString("remove.annotation"));
     annotationToolBar.add(removeAnnotationButton);
     previousSpanButton = new JButton();
-    previousSpanButton.setIcon(
-            new ImageIcon(getClass().getResource("/icon/icons8-left-filled-50 (Custom).png")));
+    previousSpanButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-left-filled-50 (Custom).png")));
     previousSpanButton.setText("");
     previousSpanButton.setToolTipText(ResourceBundle.getBundle("ui").getString("previous.span"));
     annotationToolBar.add(previousSpanButton);
     growSelectionStartButton = new JButton();
-    growSelectionStartButton.setIcon(
-            new ImageIcon(getClass().getResource("/icon/icons8-back-50 (Custom).png")));
+    growSelectionStartButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-back-50 (Custom).png")));
     growSelectionStartButton.setText("");
-    growSelectionStartButton.setToolTipText(
-            ResourceBundle.getBundle("ui").getString("grow.selection.start"));
+    growSelectionStartButton.setToolTipText(ResourceBundle.getBundle("ui").getString("grow.selection.start"));
     annotationToolBar.add(growSelectionStartButton);
     shrinkSelectionStartButton = new JButton();
-    shrinkSelectionStartButton.setIcon(
-            new ImageIcon(getClass().getResource("/icon/icons8-forward-50 (Custom).png")));
+    shrinkSelectionStartButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-forward-50 (Custom).png")));
     shrinkSelectionStartButton.setText("");
-    shrinkSelectionStartButton.setToolTipText(
-            ResourceBundle.getBundle("ui").getString("shrink.selection.start"));
+    shrinkSelectionStartButton.setToolTipText(ResourceBundle.getBundle("ui").getString("shrink.selection.start"));
     annotationToolBar.add(shrinkSelectionStartButton);
     shrinkSelectionEndButton = new JButton();
-    shrinkSelectionEndButton.setIcon(
-            new ImageIcon(getClass().getResource("/icon/icons8-back-50 (Custom).png")));
+    shrinkSelectionEndButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-back-50 (Custom).png")));
     shrinkSelectionEndButton.setText("");
-    shrinkSelectionEndButton.setToolTipText(
-            ResourceBundle.getBundle("ui").getString("shrink.selection.end"));
+    shrinkSelectionEndButton.setToolTipText(ResourceBundle.getBundle("ui").getString("shrink.selection.end"));
     annotationToolBar.add(shrinkSelectionEndButton);
     growSelectionEndButton = new JButton();
-    growSelectionEndButton.setIcon(
-            new ImageIcon(getClass().getResource("/icon/icons8-forward-50 (Custom).png")));
+    growSelectionEndButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-forward-50 (Custom).png")));
     growSelectionEndButton.setText("");
-    growSelectionEndButton.setToolTipText(
-            ResourceBundle.getBundle("ui").getString("grow.selection.end"));
+    growSelectionEndButton.setToolTipText(ResourceBundle.getBundle("ui").getString("grow.selection.end"));
     annotationToolBar.add(growSelectionEndButton);
     nextSpanButton = new JButton();
-    nextSpanButton.setIcon(
-            new ImageIcon(getClass().getResource("/icon/icons8-right-filled-50 (Custom).png")));
+    nextSpanButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-right-filled-50 (Custom).png")));
     nextSpanButton.setText("");
     nextSpanButton.setToolTipText(ResourceBundle.getBundle("ui").getString("next.span"));
     annotationToolBar.add(nextSpanButton);
     assignColorToClassButton = new JButton();
-    assignColorToClassButton.setIcon(
-            new ImageIcon(getClass().getResource("/icon/icons8-color-dropper-filled-50 (Custom).png")));
+    assignColorToClassButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-color-dropper-filled-50 (Custom).png")));
     assignColorToClassButton.setText("");
-    assignColorToClassButton.setToolTipText(
-            ResourceBundle.getBundle("ui").getString("assign.color.to.class"));
+    assignColorToClassButton.setToolTipText(ResourceBundle.getBundle("ui").getString("assign.color.to.class"));
     annotationToolBar.add(assignColorToClassButton);
     profileFilterCheckBox = new JCheckBox();
-    this.$$$loadButtonText$$$(
-            profileFilterCheckBox, ResourceBundle.getBundle("ui").getString("profile.filter"));
-    profileFilterCheckBox.setToolTipText(
-            ResourceBundle.getBundle("ui").getString("filter.annotations.by.profile"));
+    this.$$$loadButtonText$$$(profileFilterCheckBox, ResourceBundle.getBundle("ui").getString("profile.filter"));
+    profileFilterCheckBox.setToolTipText(ResourceBundle.getBundle("ui").getString("filter.annotations.by.profile"));
     annotationToolBar.add(profileFilterCheckBox);
     final JScrollPane scrollPane2 = new JScrollPane();
-    textPanel.add(
-            scrollPane2,
-            new GridConstraints(
-                    2,
-                    0,
-                    1,
-                    1,
-                    GridConstraints.ANCHOR_CENTER,
-                    GridConstraints.FILL_BOTH,
-                    GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,
-                    GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW,
-                    null,
-                    null,
-                    null,
-                    0,
-                    false));
+    textPanel.add(scrollPane2, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     knowtatorTextPane.setBackground(new Color(-1));
     knowtatorTextPane.setEditable(false);
     knowtatorTextPane.setFocusTraversalPolicyProvider(true);
@@ -781,10 +561,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         resultName = currentFont.getName();
       }
     }
-    return new Font(
-            resultName,
-            style >= 0 ? style : currentFont.getStyle(),
-            size >= 0 ? size : currentFont.getSize());
+    return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
   }
 
   /**

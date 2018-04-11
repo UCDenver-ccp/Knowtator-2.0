@@ -1,4 +1,4 @@
-package edu.ucdenver.ccp.knowtator.view;
+package edu.ucdenver.ccp.knowtator.view.textpane;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.events.*;
@@ -7,7 +7,10 @@ import edu.ucdenver.ccp.knowtator.listeners.SelectionListener;
 import edu.ucdenver.ccp.knowtator.model.Profile;
 import edu.ucdenver.ccp.knowtator.model.Span;
 import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.view.AnnotationPopupMenu;
+import edu.ucdenver.ccp.knowtator.view.RectanglePainter;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -19,15 +22,17 @@ import java.util.Set;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public class KnowtatorTextPane extends JTextPane implements SelectionListener, ProjectListener {
+public abstract class KnowtatorTextPane extends JTextPane
+		implements SelectionListener, ProjectListener {
 
-	private KnowtatorController controller;
+	KnowtatorController controller;
 
 	KnowtatorTextPane(KnowtatorController controller) {
 		super();
 		this.controller = controller;
-		controller.getSelectionManager().addSelectionListener(this);
+		controller.getSelectionManager().addListener(this);
 
+		getCaret().setVisible(true);
 		addCaretListener(controller.getSelectionManager());
 
 		setupListeners();
@@ -35,9 +40,7 @@ public class KnowtatorTextPane extends JTextPane implements SelectionListener, P
 		select(0, 0);
 	}
 
-	private void showTextPane(TextSource textSource) {
-		setText(textSource.getContent());
-	}
+	abstract void showTextPane(TextSource textSource);
 
 	private void setupListeners() {
 		addMouseListener(
@@ -72,12 +75,7 @@ public class KnowtatorTextPane extends JTextPane implements SelectionListener, P
 		if (controller.getSelectionManager().getActiveTextSource() != null) {
 			AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e, this, controller);
 
-			Set<Span> spansContainingLocation =
-					controller
-							.getSelectionManager()
-							.getActiveTextSource()
-							.getAnnotationManager()
-							.getSpanSet(press_offset);
+			Set<Span> spansContainingLocation = getSpans(press_offset);
 
 			if (SwingUtilities.isRightMouseButton(e)) {
 				if (spansContainingLocation.size() == 1) {
@@ -104,7 +102,7 @@ public class KnowtatorTextPane extends JTextPane implements SelectionListener, P
 		try {
 			int start = Utilities.getWordStart(this, min(press_offset, release_offset));
 			int end = Utilities.getWordEnd(this, max(press_offset, release_offset));
-
+			requestFocusInWindow();
 			select(start, end);
 
 		} catch (BadLocationException e) {
@@ -112,7 +110,7 @@ public class KnowtatorTextPane extends JTextPane implements SelectionListener, P
 		}
 	}
 
-	private void refreshHighlights() {
+	void refreshHighlights() {
 		if (controller.getSelectionManager().getActiveTextSource() != null) {
 
 			if (controller.getSelectionManager().getSelectedSpan() != null) {
@@ -133,53 +131,49 @@ public class KnowtatorTextPane extends JTextPane implements SelectionListener, P
 			highlightSelectedAnnotation();
 
 			// Highlight overlaps first, then spans
-			Span lastSpan = Span.makeDefaultSpan();
+			Span lastSpan = null;
 			Color lastColor = null;
 
-			Set<Span> spans =
-					controller
-							.getSelectionManager()
-							.getActiveTextSource()
-							.getAnnotationManager()
-							.getSpanSet(null);
+			Set<Span> spans = getSpans(null);
 			for (Span span : spans) {
-				if (span.intersects(lastSpan)) {
-					try {
-						getHighlighter()
-								.addHighlight(
-										span.getStart(),
-										min(span.getEnd(), lastSpan.getEnd()),
-										new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY));
-					} catch (BadLocationException e) {
-						e.printStackTrace();
+				if (lastSpan != null) {
+					if (span.intersects(lastSpan)) {
+						try {
+							highlightSpan(
+									span.getStart(),
+									min(span.getEnd(), lastSpan.getEnd()),
+									new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY));
+						} catch (BadLocationException e) {
+							e.printStackTrace();
+						}
+					}
+					if (span.getEnd() > lastSpan.getEnd()) {
+						try {
+							highlightSpan(
+									lastSpan.getStart(),
+									lastSpan.getEnd(),
+									new DefaultHighlighter.DefaultHighlightPainter(lastColor));
+						} catch (BadLocationException e) {
+							e.printStackTrace();
+						}
 					}
 				}
-				if (span.getEnd() > lastSpan.getEnd()) {
-					try {
-						getHighlighter()
-								.addHighlight(
-										lastSpan.getStart(),
-										lastSpan.getEnd(),
-										new DefaultHighlighter.DefaultHighlightPainter(lastColor));
-					} catch (BadLocationException e) {
-						e.printStackTrace();
-					}
-					lastSpan = span;
+				lastSpan = span;
 
-					OWLClass owlClass = span.getAnnotation().getOwlClass();
-					lastColor = profile.getColor(owlClass, span.getAnnotation().getOwlClassID());
-				}
+				OWLClass owlClass = span.getAnnotation().getOwlClass();
+				lastColor = profile.getColor(owlClass, span.getAnnotation().getOwlClassID());
 			}
+			if (lastSpan != null) {
 
-			// Highlight remaining span
-			try {
-				getHighlighter()
-						.addHighlight(
-								lastSpan.getStart(),
-								lastSpan.getEnd(),
-								new DefaultHighlighter.DefaultHighlightPainter(lastColor));
-			} catch (BadLocationException e) {
-				e.printStackTrace();
+				// Highlight remaining span
+				try {
+					highlightSpan(
+							lastSpan.getStart(),
+							lastSpan.getEnd(),
+							new DefaultHighlighter.DefaultHighlightPainter(lastColor));
+				} catch (BadLocationException e) {
+					e.printStackTrace();
+				}
 			}
 
 			revalidate();
@@ -187,55 +181,27 @@ public class KnowtatorTextPane extends JTextPane implements SelectionListener, P
 		}
 	}
 
+	public abstract void highlightSpan(
+			int start, int end, DefaultHighlighter.DefaultHighlightPainter highlighter)
+			throws BadLocationException;
+
+	protected abstract Set<Span> getSpans(Integer loc);
+
 	private void highlightSelectedAnnotation() {
 		if (controller.getSelectionManager().getSelectedAnnotation() != null) {
 			for (Span span :
 					controller.getSelectionManager().getSelectedAnnotation().getSpanCollection().getData()) {
 				try {
 					if (span.equals(controller.getSelectionManager().getSelectedSpan())) {
-						getHighlighter()
-								.addHighlight(span.getStart(), span.getEnd(), new RectanglePainter(Color.BLACK));
+						highlightSpan(span.getStart(), span.getEnd(), new RectanglePainter(Color.BLACK));
 					} else {
-						getHighlighter()
-								.addHighlight(span.getStart(), span.getEnd(), new RectanglePainter(Color.GRAY));
+						highlightSpan(span.getStart(), span.getEnd(), new RectanglePainter(Color.GRAY));
 					}
 				} catch (BadLocationException e) {
 					e.printStackTrace();
 				}
 			}
 		}
-	}
-
-	void addAnnotation() {
-		OWLClass owlClass = controller.getOWLAPIDataExtractor().getSelectedClass();
-		String owlClassID = controller.getOWLAPIDataExtractor().getOWLClassID(owlClass);
-
-		if (owlClass != null) {
-
-			Span newSpan =
-					new Span(
-							getSelectionStart(),
-							getSelectionEnd(),
-							getText().substring(getSelectionStart(), getSelectionEnd()));
-			controller
-					.getSelectionManager()
-					.getActiveTextSource()
-					.getAnnotationManager()
-					.addAnnotation(owlClass, owlClassID, newSpan);
-		}
-	}
-
-	void addSpanToAnnotation() {
-		controller
-				.getSelectionManager()
-				.getActiveTextSource()
-				.getAnnotationManager()
-				.addSpanToAnnotation(
-						controller.getSelectionManager().getSelectedAnnotation(),
-						new Span(
-								getSelectionStart(),
-								getSelectionEnd(),
-								getText().substring(getSelectionStart(), getSelectionEnd())));
 	}
 
 	@Override
@@ -264,11 +230,19 @@ public class KnowtatorTextPane extends JTextPane implements SelectionListener, P
 	}
 
 	@Override
+	public void owlPropertyChangedEvent(OWLObjectProperty value) {
+	}
+
+	@Override
+	public void projectClosed() {
+	}
+
+	@Override
 	public void projectLoaded() {
 		showTextPane(controller.getSelectionManager().getActiveTextSource());
 	}
 
-	void decreaseFontSize() {
+	public void decreaseFontSize() {
 		StyledDocument doc = getStyledDocument();
 		MutableAttributeSet attrs = getInputAttributes();
 		Font font = doc.getFont(attrs);
@@ -277,7 +251,7 @@ public class KnowtatorTextPane extends JTextPane implements SelectionListener, P
 		repaint();
 	}
 
-	void increaseFindSize() {
+	public void increaseFindSize() {
 		StyledDocument doc = getStyledDocument();
 		MutableAttributeSet attrs = getInputAttributes();
 		Font font = doc.getFont(attrs);
@@ -286,19 +260,19 @@ public class KnowtatorTextPane extends JTextPane implements SelectionListener, P
 		repaint();
 	}
 
-	void growStart() {
+	public void growStart() {
 		select(getSelectionStart() - 1, getSelectionEnd());
 	}
 
-	void shrinkStart() {
+	public void shrinkStart() {
 		select(getSelectionStart() + 1, getSelectionEnd());
 	}
 
-	void shrinkEnd() {
+	public void shrinkEnd() {
 		select(getSelectionStart(), getSelectionEnd() - 1);
 	}
 
-	void growEnd() {
+	public void growEnd() {
 		select(getSelectionStart(), getSelectionEnd() + 1);
 	}
 }

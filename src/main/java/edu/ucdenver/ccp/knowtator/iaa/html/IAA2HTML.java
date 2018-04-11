@@ -621,7 +621,7 @@ public class IAA2HTML {
 
 			for (int i = 0; i < spans.size(); i++) {
 				span = spans.get(i);
-				Span offsetSpan = new Span(span.getStart() - start, span.getEnd() - start, "");
+				Span offsetSpan = new Span(span.getStart() - start, span.getEnd() - start);
 				spans.set(i, offsetSpan);
 			}
 			return substring;

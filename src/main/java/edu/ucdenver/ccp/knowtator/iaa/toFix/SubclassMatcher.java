@@ -95,7 +95,7 @@
 // HashSet<>(iaa.getExactlyOverlappingAnnotations(
 //				annotation, compareSetName));
 //		exactlyOverlappingAnnotations.retainAll(candidateAnnotations);
-//		exactlyOverlappingAnnotations.removeAll(excludeAnnotations);
+//		exactlyOverlappingAnnotations.clear(excludeAnnotations);
 //		if (exactlyOverlappingAnnotations.size() > 0) {
 //			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 //			return exactlyOverlappingAnnotations.iterator().next();
@@ -104,7 +104,7 @@
 //		Set<annotation> overlappingAnnotations = new HashSet<>(iaa.getOverlappingAnnotations(annotation,
 //				compareSetName));
 //		overlappingAnnotations.retainAll(candidateAnnotations);
-//		overlappingAnnotations.removeAll(excludeAnnotations);
+//		overlappingAnnotations.clear(excludeAnnotations);
 //		if (overlappingAnnotations.size() > 0) {
 //			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 //			if (overlappingAnnotations.size() == 1)

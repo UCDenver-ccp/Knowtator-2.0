@@ -10,12 +10,16 @@ import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.events.*;
-import edu.ucdenver.ccp.knowtator.listeners.GraphSpaceListener;
 import edu.ucdenver.ccp.knowtator.listeners.SelectionListener;
 import edu.ucdenver.ccp.knowtator.model.Annotation;
 import edu.ucdenver.ccp.knowtator.model.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.model.Triple;
+import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
+import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
+import edu.ucdenver.ccp.knowtator.view.textpane.GraphViewKnowtatorTextPane;
+import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +28,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class GraphView extends JPanel implements SelectionListener, GraphSpaceListener {
+public class GraphView extends JPanel implements SelectionListener {
+	private JScrollPane scrollPane;
 	private JButton removeCellButton;
 	private JButton addAnnotationNodeButton;
 	private JButton applyLayoutButton;
@@ -35,31 +40,27 @@ public class GraphView extends JPanel implements SelectionListener, GraphSpaceLi
 	private JButton zoomInButton;
 	private JPanel panel1;
 	private GraphSpaceChooser graphSpaceChooser;
-	private JPanel graphPane;
-	private KnowtatorTextPane knowtatorTextPane;
+	private GraphViewKnowtatorTextPane knowtatorTextPane;
 	private JDialog dialog;
 	private KnowtatorController controller;
+	private Logger log = Logger.getLogger(GraphView.class);
 
 	GraphView(JDialog dialog, KnowtatorController controller) {
 		this.dialog = dialog;
 		this.controller = controller;
-		controller.getSelectionManager().addSelectionListener(this);
+		controller.getSelectionManager().addListener(this);
 		$$$setupUI$$$();
 		makeButtons();
 	}
 
 	private void createUIComponents() {
-		JScrollPane scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane();
 		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 		graphSpaceChooser = new GraphSpaceChooser(controller);
+		mxGraph testGraph = new mxGraph();
+		graphComponent = new mxGraphComponent(testGraph);
 
-		knowtatorTextPane = new KnowtatorTextPane(controller);
-
-		graphComponent = new mxGraphComponent(new mxGraph());
-		graphComponent.getViewport().setOpaque(true);
-		graphComponent.getViewport().setBackground(Color.white);
-		graphComponent.setDragEnabled(false);
-		graphComponent.getGraphControl().add(scrollPane, 0);
+		knowtatorTextPane = new GraphViewKnowtatorTextPane(controller);
 	}
 
 	private void makeButtons() {
@@ -102,16 +103,11 @@ public class GraphView extends JPanel implements SelectionListener, GraphSpaceLi
 					for (Object cell : cells) {
 						if (graph.getModel().isEdge(cell) && "".equals(((mxCell) cell).getValue())) {
 							mxCell edge = (mxCell) cell;
-							mxICell source = edge.getSource();
-							mxICell target = edge.getTarget();
-							Object property = controller.getOWLAPIDataExtractor().getSelectedProperty();
+							try {
+								Object property = controller.getOWLAPIDataExtractor().getSelectedProperty();
+								mxICell source = edge.getSource();
+								mxICell target = edge.getTarget();
 
-							if (property != null) {
-								try {
-									throw new Exception();
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
 								JTextField quantifierField = new JTextField(10);
 								JTextField valueField = new JTextField(10);
 								JPanel restrictionPanel = new JPanel();
@@ -142,14 +138,16 @@ public class GraphView extends JPanel implements SelectionListener, GraphSpaceLi
 										property,
 										quantifier,
 										value);
+
+								graph.getModel().remove(edge);
+							} catch (OWLWorkSpaceNotSetException e) {
+								graph.getModel().remove(edge);
 							}
-
-							graph.getModel().remove(edge);
-
-							graph.reDrawGraph();
-							break;
 						}
 					}
+
+					graph.reDrawGraph();
+
 				});
 
 		graph.addListener(mxEvent.MOVE_CELLS, (sender, evt) -> graph.reDrawGraph());
@@ -175,9 +173,13 @@ public class GraphView extends JPanel implements SelectionListener, GraphSpaceLi
 
 										graph.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
 
-									} else {
+									} else if (cell instanceof Triple) {
 										Object value = ((mxCell) cell).getValue();
-										controller.propertyChangedEvent(value);
+										if (value instanceof OWLObjectProperty) {
+											controller
+													.getSelectionManager()
+													.setSelectedOWLProperty((OWLObjectProperty) value);
+										}
 									}
 								}
 							}
@@ -214,12 +216,23 @@ public class GraphView extends JPanel implements SelectionListener, GraphSpaceLi
 
 		setupListeners(graphComponent);
 
-		graphPane.add(graphComponent, BorderLayout.CENTER);
+//		graphSpace.insertVertex(graphSpace.getDefaultParent(), "Hi", "val1", 20, 20, 50, 50);
+//		panel1.remove(graphComponent);
+//		graphComponent = new mxGraphComponent(graphSpace);
+//		graphComponent.setGridVisible(true);
+//		graphComponent.getViewport().setOpaque(true);
+//		graphComponent.getViewport().setBackground(Color.white);
+//		graphComponent.setDragEnabled(false);
+//		graphComponent.getGraphControl().add(scrollPane, 0);
+//		panel1.add(graphComponent, BorderLayout.CENTER);
+//
+//		for (Object cell : graphSpace.getChildCells(graphSpace.getDefaultParent())) {
+//			log.warn(cell);
+//		}
 
-		graphSpace.addListener(this);
-
-		applyLayout();
 		graphSpace.reDrawGraph();
+		applyLayout();
+		graphComponent.refresh();
 	}
 
 	private void applyLayout() {
@@ -263,6 +276,7 @@ public class GraphView extends JPanel implements SelectionListener, GraphSpaceLi
 	@Override
 	public void activeGraphSpaceChanged(GraphSpaceChangeEvent e) {
 		showGraph(controller.getSelectionManager().getActiveGraphSpace());
+		applyLayout();
 	}
 
 	@Override
@@ -273,9 +287,14 @@ public class GraphView extends JPanel implements SelectionListener, GraphSpaceLi
 	public void activeProfileChange(ProfileChangeEvent e) {
 	}
 
+	@Override
+	public void owlPropertyChangedEvent(OWLObjectProperty value) {
+	}
+
 	/**
-	 * Method generated by IntelliJ IDEA GUI Designer >>> IMPORTANT!! <<< DO NOT edit this method OR
-	 * call it in your code!
+	 * Method generated by IntelliJ IDEA GUI Designer
+	 * >>> IMPORTANT!! <<<
+	 * DO NOT edit this method OR call it in your code!
 	 *
 	 * @noinspection ALL
 	 */
@@ -286,61 +305,89 @@ public class GraphView extends JPanel implements SelectionListener, GraphSpaceLi
 		panel1.setAlignmentX(0.0f);
 		panel1.setAlignmentY(0.0f);
 		panel1.setMinimumSize(new Dimension(400, 400));
+		final JPanel panel2 = new JPanel();
+		panel2.setLayout(new BorderLayout(0, 0));
+		panel1.add(panel2, BorderLayout.NORTH);
 		final JToolBar toolBar1 = new JToolBar();
 		toolBar1.setAlignmentX(0.0f);
 		toolBar1.setAlignmentY(0.0f);
 		toolBar1.setFloatable(false);
 		toolBar1.setMinimumSize(new Dimension(630, 100));
-		panel1.add(toolBar1, BorderLayout.NORTH);
+		panel2.add(toolBar1, BorderLayout.NORTH);
 		zoomOutButton = new JButton();
-		zoomOutButton.setIcon(
-				new ImageIcon(getClass().getResource("/icon/icons8-zoom-out-filled-50 (Custom).png")));
+		zoomOutButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-zoom-out-filled-50 (Custom).png")));
 		zoomOutButton.setText("");
 		zoomOutButton.setToolTipText(ResourceBundle.getBundle("ui").getString("zoom.out"));
 		toolBar1.add(zoomOutButton);
 		zoomInButton = new JButton();
-		zoomInButton.setIcon(
-				new ImageIcon(getClass().getResource("/icon/icons8-zoom-in-filled-50 (Custom).png")));
+		zoomInButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-zoom-in-filled-50 (Custom).png")));
 		zoomInButton.setText("");
 		zoomInButton.setToolTipText(ResourceBundle.getBundle("ui").getString("zoom.in"));
 		toolBar1.add(zoomInButton);
 		removeCellButton = new JButton();
-		removeCellButton.setIcon(
-				new ImageIcon(getClass().getResource("/icon/icons8-minus-50 (Custom).png")));
+		removeCellButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-minus-50 (Custom).png")));
 		removeCellButton.setText("");
 		removeCellButton.setToolTipText(ResourceBundle.getBundle("ui").getString("remove.item"));
 		toolBar1.add(removeCellButton);
 		addAnnotationNodeButton = new JButton();
-		addAnnotationNodeButton.setIcon(
-				new ImageIcon(getClass().getResource("/icon/icons8-plus-50 (Custom).png")));
+		addAnnotationNodeButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-plus-50 (Custom).png")));
 		addAnnotationNodeButton.setText("");
-		addAnnotationNodeButton.setToolTipText(
-				ResourceBundle.getBundle("ui").getString("add.annotation.node"));
+		addAnnotationNodeButton.setToolTipText(ResourceBundle.getBundle("ui").getString("add.annotation.node"));
 		toolBar1.add(addAnnotationNodeButton);
 		applyLayoutButton = new JButton();
-		this.$$$loadButtonText$$$(
-				applyLayoutButton, ResourceBundle.getBundle("ui").getString("apply.layout"));
+		this.$$$loadButtonText$$$(applyLayoutButton, ResourceBundle.getBundle("ui").getString("apply.layout"));
 		applyLayoutButton.setToolTipText(ResourceBundle.getBundle("ui").getString("apply.layout1"));
 		toolBar1.add(applyLayoutButton);
 		previousGraphSpaceButton = new JButton();
-		previousGraphSpaceButton.setIcon(
-				new ImageIcon(getClass().getResource("/icon/icons8-up-filled-50 (Custom).png")));
+		previousGraphSpaceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-up-filled-50 (Custom).png")));
 		previousGraphSpaceButton.setText("");
-		previousGraphSpaceButton.setToolTipText(
-				ResourceBundle.getBundle("ui").getString("previous.graph.space"));
+		previousGraphSpaceButton.setToolTipText(ResourceBundle.getBundle("ui").getString("previous.graph.space"));
 		toolBar1.add(previousGraphSpaceButton);
 		nextGraphSpaceButton = new JButton();
-		nextGraphSpaceButton.setIcon(
-				new ImageIcon(getClass().getResource("/icon/icons8-down-filled-50 (Custom).png")));
+		nextGraphSpaceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-down-filled-50 (Custom).png")));
 		nextGraphSpaceButton.setText("");
-		nextGraphSpaceButton.setToolTipText(
-				ResourceBundle.getBundle("ui").getString("next.graph.space"));
+		nextGraphSpaceButton.setToolTipText(ResourceBundle.getBundle("ui").getString("next.graph.space"));
 		toolBar1.add(nextGraphSpaceButton);
+		final JLabel label1 = new JLabel();
+		this.$$$loadLabelText$$$(label1, ResourceBundle.getBundle("ui").getString("graph.space"));
+		toolBar1.add(label1);
 		graphSpaceChooser.setMinimumSize(new Dimension(80, 30));
 		toolBar1.add(graphSpaceChooser);
-		graphPane = new JPanel();
-		graphPane.setLayout(new BorderLayout(0, 0));
-		panel1.add(graphPane, BorderLayout.CENTER);
+		final JScrollPane scrollPane1 = new JScrollPane();
+		scrollPane1.setMaximumSize(new Dimension(32767, 15));
+		panel2.add(scrollPane1, BorderLayout.SOUTH);
+		knowtatorTextPane.setEditable(false);
+		knowtatorTextPane.setText("");
+		scrollPane1.setViewportView(knowtatorTextPane);
+		graphComponent.setGridVisible(true);
+		panel1.add(graphComponent, BorderLayout.CENTER);
+	}
+
+	/**
+	 * @noinspection ALL
+	 */
+	private void $$$loadLabelText$$$(JLabel component, String text) {
+		StringBuffer result = new StringBuffer();
+		boolean haveMnemonic = false;
+		char mnemonic = '\0';
+		int mnemonicIndex = -1;
+		for (int i = 0; i < text.length(); i++) {
+			if (text.charAt(i) == '&') {
+				i++;
+				if (i == text.length()) break;
+				if (!haveMnemonic && text.charAt(i) != '&') {
+					haveMnemonic = true;
+					mnemonic = text.charAt(i);
+					mnemonicIndex = result.length();
+				}
+			}
+			result.append(text.charAt(i));
+		}
+		component.setText(result.toString());
+		if (haveMnemonic) {
+			component.setDisplayedMnemonic(mnemonic);
+			component.setDisplayedMnemonicIndex(mnemonicIndex);
+		}
 	}
 
 	/**
@@ -375,10 +422,5 @@ public class GraphView extends JPanel implements SelectionListener, GraphSpaceLi
 	 */
 	public JComponent $$$getRootComponent$$$() {
 		return panel1;
-	}
-
-	@Override
-	public void graphTextChanged(TextSource textSource, int start, int end) {
-		knowtatorTextPane.setText(textSource.getContent().substring(start, end));
 	}
 }

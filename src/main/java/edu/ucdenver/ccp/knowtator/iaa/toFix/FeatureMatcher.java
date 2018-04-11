@@ -153,7 +153,7 @@
 //			}
 //		}
 //
-//		candidateAnnotations.removeAll(excludeAnnotations);
+//		candidateAnnotations.clear(excludeAnnotations);
 //
 //		if (candidateAnnotations.size() == 0) {
 //			matchResult.setResult(MatchResult.TRIVIAL_NONMATCH);

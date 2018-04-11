@@ -22,10 +22,9 @@ public class Span implements Savable {
 	private Annotation annotation;
 	private String spannedText;
 
-	public Span(int start, int end, String spannedText) {
+	public Span(int start, int end, TextSource textSource) {
 		this.start = start;
 		this.end = end;
-		this.spannedText = spannedText;
 		if (start > end) {
 			throw new IndexOutOfBoundsException(
 					"Span is invalid because the start of the Span is greater than the end of it: start="
@@ -37,10 +36,23 @@ public class Span implements Savable {
 			throw new IndexOutOfBoundsException(
 					"Span is invalid because the start of the Span is less than zero: start=" + start);
 		}
+		this.spannedText = textSource.getContent().substring(start, end);
 	}
 
-	public static Span makeDefaultSpan() {
-		return new Span(0, 0, "");
+	public Span(int start, int end) {
+		this.start = start;
+		this.end = end;
+		if (start > end) {
+			throw new IndexOutOfBoundsException(
+					"Span is invalid because the start of the Span is greater than the end of it: start="
+							+ start
+							+ " end="
+							+ end);
+		}
+		if (start < 0) {
+			throw new IndexOutOfBoundsException(
+					"Span is invalid because the start of the Span is less than zero: start=" + start);
+		}
 	}
 
 	public static boolean intersects(TreeSet<Span> spans1, TreeSet<Span> spans2) {
@@ -196,7 +208,7 @@ public class Span implements Savable {
 	}
 
 	@Override
-	public void readFromOldKnowtatorXML(File file, Element parent, String content) {
+	public void readFromOldKnowtatorXML(File file, Element parent, TextSource textSource) {
 	}
 
 	@Override

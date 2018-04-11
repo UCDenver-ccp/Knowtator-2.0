@@ -26,5 +26,4 @@ TODO: Figure out why edges add four times
 TODO: Change project menu to Knowtator or project name
 TODO: Quantifier and value as persistent text boxes
 TODO: Implement owl model manager and renderer change listeners
-TODO: Text Pane for subsample of text source within the graph viewer
 TODO: Fix selecting of text in text pane

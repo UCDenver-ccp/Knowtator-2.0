@@ -2,8 +2,11 @@ package edu.ucdenver.ccp.knowtator.model;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
+import edu.ucdenver.ccp.knowtator.model.owl.OWLObjectPropertyNotFoundException;
+import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,6 +22,7 @@ public class Triple extends mxCell implements Savable {
 	private String quantifierValue;
 	private Profile annotator;
 	private String bratID;
+	private KnowtatorController controller;
 
 	Triple(
 			String id,
@@ -27,8 +31,10 @@ public class Triple extends mxCell implements Savable {
 			Object property,
 			Profile annotator,
 			String quantifier,
-			String quantifierValue) {
+			String quantifierValue,
+			KnowtatorController controller) {
 		super(property, new mxGeometry(), null);
+		this.controller = controller;
 
 		getGeometry().setRelative(true);
 
@@ -66,7 +72,7 @@ public class Triple extends mxCell implements Savable {
 	}
 
 	@Override
-	public void readFromOldKnowtatorXML(File file, Element parent, String content) {
+	public void readFromOldKnowtatorXML(File file, Element parent, TextSource textSource) {
 	}
 
 	@Override
@@ -85,6 +91,15 @@ public class Triple extends mxCell implements Savable {
 
 	@Override
 	public void writeToGeniaXML(Document dom, Element parent) {
+	}
+
+	@Override
+	public Object getValue() {
+		try {
+			setValue(controller.getOWLAPIDataExtractor().getOWLObjectPropertyByID((String) value));
+		} catch (OWLObjectPropertyNotFoundException | OWLWorkSpaceNotSetException ignored) {
+		}
+		return value;
 	}
 
 	String getBratID() {

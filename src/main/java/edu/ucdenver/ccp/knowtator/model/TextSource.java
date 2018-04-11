@@ -76,24 +76,9 @@ public class TextSource implements Savable {
 					}
 				}
 			}
-
-			//            try {
-			//                content = FileUtils.readFileToString(textFile, "UTF-8");
-			//            } catch (IOException e) {
-			//                e.printStackTrace();
-			//            }
 		}
-		//        else {
-		//            this.id = "Instructions";
-		//            content = "***Instructions:***" +
-		//                    "\n" +
-		//                    "Create a new project: Project -> New Project" +
-		//                    "\n" +
-		//                    "Load an existing project: Project -> Load Project";
-		//        }
 
 	}
-	//    private String content;
 
 	public static int compare(TextSource textSource1, TextSource textSource2) {
 		if (textSource1 == textSource2) {
@@ -105,7 +90,7 @@ public class TextSource implements Savable {
 		if (textSource1 == null) {
 			return -1;
 		}
-		return textSource2.getId().toLowerCase().compareTo(textSource1.getId().toLowerCase());
+		return textSource1.getId().toLowerCase().compareTo(textSource2.getId().toLowerCase());
 	}
 
 	public File getSaveFile() {
@@ -143,8 +128,8 @@ public class TextSource implements Savable {
 	}
 
 	@Override
-	public void readFromOldKnowtatorXML(File file, Element parent, String content) {
-		annotationManager.readFromOldKnowtatorXML(null, parent, getContent());
+	public void readFromOldKnowtatorXML(File file, Element parent, TextSource textSource) {
+		annotationManager.readFromOldKnowtatorXML(null, parent, this);
 	}
 
 	@Override
