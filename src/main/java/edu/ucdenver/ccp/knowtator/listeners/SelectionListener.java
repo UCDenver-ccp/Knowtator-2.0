@@ -1,14 +1,16 @@
 package edu.ucdenver.ccp.knowtator.listeners;
 
+import edu.ucdenver.ccp.knowtator.events.*;
+
 public interface SelectionListener {
 
-    void selectedAnnotationChanged();
+	void selectedAnnotationChanged(AnnotationChangeEvent e);
 
-    void selectedSpanChanged();
+	void selectedSpanChanged(SpanChangeEvent e);
 
-    void activeGraphSpaceChanged();
+	void activeGraphSpaceChanged(GraphSpaceChangeEvent e);
 
-    void activeTextSourceChanged();
+	void activeTextSourceChanged(TextSourceChangeEvent e);
 
-    void currentProfileChange();
+	void activeProfileChange(ProfileChangeEvent e);
 }

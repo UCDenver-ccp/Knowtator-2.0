@@ -1,7 +1,7 @@
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
 public class MatchResult {
-//	public static final int MATCH_RESULT_UNASSIGNED = -1;
+	//	public static final int MATCH_RESULT_UNASSIGNED = -1;
 
 	public static final int NONTRIVIAL_MATCH = 0;
 

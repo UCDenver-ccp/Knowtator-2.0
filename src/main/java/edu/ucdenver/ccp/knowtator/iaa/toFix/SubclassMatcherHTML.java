@@ -1,4 +1,4 @@
-///*
+/// *
 // * The contents of this test_project are subject to the Mozilla Public
 // * License Version 1.1 (the "License"); you may not use this test_project
 // * except in compliance with the License. You may obtain a copy of
@@ -26,12 +26,13 @@
 // *   Philip V. Ogren <philip@ogren.info> (Original Author)
 // */
 
-//package edu.ucdenver.ccp.knowtator.iaa.html;
+// package edu.ucdenver.ccp.knowtator.iaa.html;
 //
-//public class SubclassMatcherHTML {
+// public class SubclassMatcherHTML {
 
 //	public static void printIAA(IAA iaa, SubclassMatcher matcher, File directory, int numberOfDocs,
-//								Map<annotation, String> annotationTexts, Map<annotation, String> annotationTextNames) throws IOException {
+//								Map<annotation, String> annotationTexts, Map<annotation, String> annotationTextNames)
+// throws IOException {
 //		String fileName = matcher.getId();
 //		PrintStream html = new PrintStream(new File(directory, fileName + ".html"));
 //
@@ -56,9 +57,11 @@
 //		int totalAllwayMatches = allwayMatchesSingleSet.size();
 //		int totalAllwayNonmatches = allwayNonmatchesSingleSet.size();
 //
-//		double iaaScore = (double) totalAllwayMatches / ((double) totalAllwayMatches + (double) totalAllwayNonmatches);
+//		double iaaScore = (double) totalAllwayMatches / ((double) totalAllwayMatches + (double)
+// totalAllwayNonmatches);
 //
-//		html.println("<tr><td>" + percentageFormat.format(iaaScore) + "</td>" + "<td>" + totalAllwayMatches + "</td>"
+//		html.println("<tr><td>" + percentageFormat.format(iaaScore) + "</td>" + "<td>" +
+// totalAllwayMatches + "</td>"
 //				+ "<td>" + totalAllwayNonmatches + "</td></tr>");
 //		html.println("</table>");
 //
@@ -71,20 +74,24 @@
 //		Set<annotation> nonmatchesSingleSet = IAA2HTML.getSingleSet(nonmatches);
 //		AnnotationSpanIndex spanIndex = new AnnotationSpanIndex(nonmatchesSingleSet);
 //
-//		IAA2HTML.printMatchData(html, sets, fileName, directory, allwayMatches, annotationTexts, annotationTextNames,
+//		IAA2HTML.printMatchData(html, sets, fileName, directory, allwayMatches, annotationTexts,
+// annotationTextNames,
 //				matcher.getSubclasses(), iaa);
 //
-//		IAA2HTML.printNonmatchData(html, sets, fileName, directory, allwayNonmatches, spanIndex, annotationTexts,
+//		IAA2HTML.printNonmatchData(html, sets, fileName, directory, allwayNonmatches, spanIndex,
+// annotationTexts,
 //				annotationTextNames, matcher.getSubclasses());
 //
 //		Map<String, Map<String, Set<annotation>>> pairwiseMatches = iaa.getNontrivialPairwiseMatches();
-//		Map<String, Map<String, Set<annotation>>> pairwiseNonmatches = iaa.getNontrivialPairwiseNonmatches();
+//		Map<String, Map<String, Set<annotation>>> pairwiseNonmatches =
+// iaa.getNontrivialPairwiseNonmatches();
 //
-//		IAA2HTML.printPairwiseAgreement(html, sets, pairwiseMatches, pairwiseNonmatches, percentageFormat);
+//		IAA2HTML.printPairwiseAgreement(html, sets, pairwiseMatches, pairwiseNonmatches,
+// percentageFormat);
 //
 //		html.flush();
 //		html.close();
 //
 //	}
 //
-//}
+// }

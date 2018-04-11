@@ -17,44 +17,43 @@ import java.util.List;
 import java.util.RandomAccess;
 
 public class XMLUtil {
-    static final class NodeListWrapper extends AbstractList<Node> implements RandomAccess {
-        final NodeList list;
+	public static List<Node> asList(NodeList n) {
+		return n.getLength() == 0 ? Collections.emptyList() : new NodeListWrapper(n);
+	}
 
-        NodeListWrapper(NodeList l) {
-            list = l;
-        }
+	protected static void finishWritingXML(Document dom, File file) {
+		try {
+			Transformer tr = TransformerFactory.newInstance().newTransformer();
+			tr.setOutputProperty(OutputKeys.INDENT, "yes");
+			tr.setOutputProperty(OutputKeys.METHOD, "xml");
+			tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+			tr.setOutputProperty("{http://knowtator.apache.org/xslt}indent-amount", "4");
 
-        public Node get(int index) {
-            return list.item(index);
-        }
+			// send DOM to test_project
+			PrintWriter pw = new PrintWriter(file);
+			pw.close();
+			OutputStream os = new FileOutputStream(file, false);
+			tr.transform(new DOMSource(dom), new StreamResult(os));
+			os.close();
 
-        public int size() {
-            return list.getLength();
-        }
-    }
+		} catch (TransformerException | IOException te) {
+			System.out.println(te.getMessage());
+		}
+	}
 
-    public static List<Node> asList(NodeList n) {
-        return n.getLength() == 0 ? Collections.emptyList() : new NodeListWrapper(n);
-    }
+	static final class NodeListWrapper extends AbstractList<Node> implements RandomAccess {
+		final NodeList list;
 
-    protected static void finishWritingXML(Document dom, File file) {
-        try {
-            Transformer tr = TransformerFactory.newInstance().newTransformer();
-            tr.setOutputProperty(OutputKeys.INDENT, "yes");
-            tr.setOutputProperty(OutputKeys.METHOD, "xml");
-            tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-            tr.setOutputProperty("{http://knowtator.apache.org/xslt}indent-amount", "4");
+		NodeListWrapper(NodeList l) {
+			list = l;
+		}
 
-            // send DOM to test_project
-            PrintWriter pw = new PrintWriter(file);
-            pw.close();
-            OutputStream os = new FileOutputStream(file, false);
-            tr.transform(new DOMSource(dom),
-                    new StreamResult(os));
-            os.close();
+		public Node get(int index) {
+			return list.item(index);
+		}
 
-        } catch (TransformerException | IOException te) {
-            System.out.println(te.getMessage());
-        }
-    }
+		public int size() {
+			return list.getLength();
+		}
+	}
 }

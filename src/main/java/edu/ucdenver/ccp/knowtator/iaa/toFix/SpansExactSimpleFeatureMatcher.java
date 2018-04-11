@@ -1,4 +1,4 @@
-///*
+/// *
 // * The contents of this test_project are subject to the Mozilla Public
 // * License Version 1.1 (the "License"); you may not use this test_project
 // * except in compliance with the License. You may obtain a copy of
@@ -25,17 +25,17 @@
 // * Contributor(s):
 // *   Philip V. Ogren <philip@ogren.info> (Original Author)
 // */
-//package edu.ucdenver.ccp.knowtator.iaa.matcher;
+// package edu.ucdenver.ccp.knowtator.iaa.matcher;
 //
-//import edu.ucdenver.ccp.knowtator.annotation.text.annotation;
-//import edu.ucdenver.ccp.knowtator.iaa.IAA;
+// import edu.ucdenver.ccp.knowtator.annotation.text.annotation;
+// import edu.ucdenver.ccp.knowtator.iaa.IAA;
 //
-//import java.util.ArrayList;
-//import java.util.HashSet;
-//import java.util.List;
-//import java.util.Set;
+// import java.util.ArrayList;
+// import java.util.HashSet;
+// import java.util.List;
+// import java.util.Set;
 //
-//public class SpansExactSimpleFeatureMatcher implements Matcher {
+// public class SpansExactSimpleFeatureMatcher implements Matcher {
 //	// public static final String FEATURE_NAMES =
 //	// SpansExactSimpleFeatureMatcher.class.getId()+".FEATURE_NAMES";
 //
@@ -46,7 +46,8 @@
 //	 * as spans and simple features. If one does not exist, then null is
 //	 * returned.
 //	 */
-//	public annotation match(annotation annotation, String compareSetName, Set<annotation> excludeAnnotations, IAA iaa,
+//	public annotation match(annotation annotation, String compareSetName, Set<annotation>
+// excludeAnnotations, IAA iaa,
 //							MatchResult matchResult) {
 //		return match(annotation, compareSetName, iaa, excludeAnnotations, matchResult);
 //	}
@@ -90,9 +91,11 @@
 //	public static annotation match(annotation annotation, String compareSetName, IAA iaa,
 //								   Set<annotation> excludeAnnotations, MatchResult matchResult) {
 //		// prefer class and Span matches over just Span matches
-//		Set<annotation> classAndSpanMatches = ClassAndSpanMatcher.matches(annotation, compareSetName, iaa,
+//		Set<annotation> classAndSpanMatches = ClassAndSpanMatcher.matches(annotation, compareSetName,
+// iaa,
 //				excludeAnnotations, false);
-//		Set<annotation> exactlyOverlappingAnnotations = new HashSet<>(iaa.getExactlyOverlappingAnnotations(
+//		Set<annotation> exactlyOverlappingAnnotations = new
+// HashSet<>(iaa.getExactlyOverlappingAnnotations(
 //				annotation, compareSetName));
 //		exactlyOverlappingAnnotations.removeAll(classAndSpanMatches);
 //		exactlyOverlappingAnnotations.removeAll(excludeAnnotations);
@@ -134,11 +137,13 @@
 //	}
 //
 //	public String getDescription() {
-//		return "Annotations match if they have the same spans and the same value for simple slots (e.g. slots that are primitive values such as integer and String).  Only slots that are specified must match.";
+//		return "Annotations match if they have the same spans and the same value for simple slots (e.g.
+// slots that are primitive values such as integer and String).  Only slots that are specified must
+// match.";
 //	}
 //
 //	public boolean returnsTrivials() {
 //		return true;
 //	}
 //
-//}
+// }

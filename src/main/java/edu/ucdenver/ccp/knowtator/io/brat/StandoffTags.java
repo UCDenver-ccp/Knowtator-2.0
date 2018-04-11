@@ -1,39 +1,26 @@
 package edu.ucdenver.ccp.knowtator.io.brat;
 
-
 /**
- Based on http://brat.nlplab.org/standoff.html
- **/
+ * Based on http://brat.nlplab.org/standoff.html
+ */
 @SuppressWarnings("WeakerAccess")
 public class StandoffTags {
 
-    final static String columnDelimiter = "\t";
-
-    public final static char TEXTBOUNDANNOTATION = 'T';
-    public final static char RELATION = 'R';
-    public final static char EVENT = 'E';
-    private final static char ATTRIBUTE = 'A';
-    private final static char MODIFICATION = 'M';
-    private final static char NORMALIZATION = 'N';
-    private final static char NOTE = '#';
-
-    // Note that this is not a standard tag. It is included to pass the document ID.
-    public final static char DOCID = 'D';
-
-    final static char[] tagList = {
-            TEXTBOUNDANNOTATION,
-            RELATION,
-            EVENT,
-            ATTRIBUTE,
-            MODIFICATION,
-            NORMALIZATION,
-            NOTE,
-            DOCID
-    };
-
-
-    public final static String spanDelimiter = ";";
-    public final static String textBoundAnnotationTripleDelimiter = " ";
-    public final static String relationTripleDelimiter = " ";
-    public final static String relationTripleRoleIDDelimiter = ":";
+	public static final char TEXTBOUNDANNOTATION = 'T';
+	public static final char RELATION = 'R';
+	public static final char EVENT = 'E';
+	// Note that this is not a standard tag. It is included to pass the document ID.
+	public static final char DOCID = 'D';
+	public static final String spanDelimiter = ";";
+	public static final String textBoundAnnotationTripleDelimiter = " ";
+	public static final String relationTripleDelimiter = " ";
+	public static final String relationTripleRoleIDDelimiter = ":";
+	static final String columnDelimiter = "\t";
+	private static final char ATTRIBUTE = 'A';
+	private static final char MODIFICATION = 'M';
+	private static final char NORMALIZATION = 'N';
+	private static final char NOTE = '#';
+	static final char[] tagList = {
+			TEXTBOUNDANNOTATION, RELATION, EVENT, ATTRIBUTE, MODIFICATION, NORMALIZATION, NOTE, DOCID
+	};
 }

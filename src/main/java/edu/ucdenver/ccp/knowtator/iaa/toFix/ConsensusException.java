@@ -1,4 +1,4 @@
-///*
+/// *
 // * The contents of this test_project are subject to the Mozilla Public
 // * License Version 1.1 (the "License"); you may not use this test_project
 // * except in compliance with the License. You may obtain a copy of
@@ -25,12 +25,12 @@
 // * Contributor(s):
 // *   Philip V. Ogren <philip@ogren.info> (Original Author)
 // */
-//package edu.ucdenver.ccp.knowtator.iaa;
+// package edu.ucdenver.ccp.knowtator.iaa;
 //
-//public class ConsensusException extends Exception {
+// public class ConsensusException extends Exception {
 //
 //	public ConsensusException(Throwable cause) {
 //		super(cause);
 //	}
 //
-//}
+// }

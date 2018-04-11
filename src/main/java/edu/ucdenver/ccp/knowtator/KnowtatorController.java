@@ -1,11 +1,7 @@
 package edu.ucdenver.ccp.knowtator;
 
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLAPIDataExtractor;
-import edu.ucdenver.ccp.knowtator.model.profile.ProfileManager;
-import edu.ucdenver.ccp.knowtator.model.project.ProjectManager;
-import edu.ucdenver.ccp.knowtator.model.selection.SelectionManager;
-import edu.ucdenver.ccp.knowtator.model.textsource.TextSourceManager;
+import edu.ucdenver.ccp.knowtator.model.*;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLWorkspace;
@@ -18,113 +14,110 @@ import java.util.Set;
 import java.util.prefs.Preferences;
 
 public class KnowtatorController {
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(KnowtatorController.class);
+	@SuppressWarnings("unused")
+	private static final Logger log = Logger.getLogger(KnowtatorController.class);
 
-    private final Preferences prefs = Preferences.userRoot().node("knowtator");
-    private ProjectManager projectManager;
-    private TextSourceManager textSourceManager;
-    private ProfileManager profileManager;
-    private SelectionManager selectionManager;
-    private OWLAPIDataExtractor owlDataExtractor;
+	private final Preferences prefs = Preferences.userRoot().node("knowtator");
+	private ProjectManager projectManager;
+	private TextSourceManager textSourceManager;
+	private ProfileManager profileManager;
+	private SelectionManager selectionManager;
+	private OWLAPIDataExtractor owlDataExtractor;
 
-    private Set<ProjectListener> projectListeners;
-    private KnowtatorView view;
+	private Set<ProjectListener> projectListeners;
+	private KnowtatorView view;
 
-    public KnowtatorController() {
-        initListeners();
-        initManagers();
-    }
+	public KnowtatorController() {
+		initListeners();
+		initManagers();
+	}
 
-    /**
-     * @param view The view that spawned this controller
-     */
-    public KnowtatorController(KnowtatorView view) {
-        this();
-        this.view = view;
-        if (view.getOWLWorkspace() != null) {
-            setUpOWL(view.getOWLWorkspace());
-        }
-    }
+	/**
+	 * @param view The view that spawned this controller
+	 */
+	public KnowtatorController(KnowtatorView view) {
+		this();
+		this.view = view;
+		if (view.getOWLWorkspace() != null) {
+			setUpOWL(view.getOWLWorkspace());
+		}
+	}
 
-    private void initManagers() {
-        selectionManager = new SelectionManager(this);
-        textSourceManager = new TextSourceManager(this);
-        profileManager = new ProfileManager(this);  //manipulates profiles and colors
-        projectManager = new ProjectManager(this);  //reads and writes to XML
-        owlDataExtractor = new OWLAPIDataExtractor();
-    }
+	public static void main(String[] args) {
+	}
 
-    private void initListeners() {
-        projectListeners = new HashSet<>();
-    }
+	private void initManagers() {
+		selectionManager = new SelectionManager(this);
+		textSourceManager = new TextSourceManager(this);
+		profileManager = new ProfileManager(this); // manipulates profiles and colors
+		projectManager = new ProjectManager(this); // reads and writes to XML
+		owlDataExtractor = new OWLAPIDataExtractor();
+	}
 
-    public static void main(String[] args) {
+	private void initListeners() {
+		projectListeners = new HashSet<>();
+	}
 
-    }
+	public void close(File file) {
+		initManagers();
+		projectManager.loadProject(file);
+	}
 
-    public void close(File file) {
-        initManagers();
-        projectManager.loadProject(file);
-    }
+	private void setUpOWL(OWLWorkspace owlWorkspace) {
+		owlDataExtractor.setUpOWL(owlWorkspace);
+		owlWorkspace.getOWLModelManager().addOntologyChangeListener(textSourceManager);
+	}
 
-    private void setUpOWL(OWLWorkspace owlWorkspace) {
-        owlDataExtractor.setUpOWL(owlWorkspace);
-        owlWorkspace.getOWLModelManager().addOntologyChangeListener(textSourceManager);
-    }
-    public ProfileManager getProfileManager() {
-        return profileManager;
-    }
-    public ProjectManager getProjectManager() {
-        return projectManager;
-    }
+	public ProfileManager getProfileManager() {
+		return profileManager;
+	}
 
-    /**
-     * GETTERS
-     */
+	public ProjectManager getProjectManager() {
+		return projectManager;
+	}
 
-    public OWLAPIDataExtractor getOWLAPIDataExtractor() {
-        return owlDataExtractor;
-    }
-    public TextSourceManager getTextSourceManager() {
-        return textSourceManager;
-    }
+	/**
+	 * GETTERS
+	 */
+	public OWLAPIDataExtractor getOWLAPIDataExtractor() {
+		return owlDataExtractor;
+	}
 
-    public SelectionManager getSelectionManager() {
-        return selectionManager;
-    }
+	public TextSourceManager getTextSourceManager() {
+		return textSourceManager;
+	}
 
-    /**
-     * ADDERS
-     */
+	public SelectionManager getSelectionManager() {
+		return selectionManager;
+	}
 
+	/**
+	 * ADDERS
+	 */
+	public void addProjectListener(ProjectListener listener) {
+		projectListeners.add(listener);
+	}
 
-    public void addProjectListener(ProjectListener listener) {
-        projectListeners.add(listener);
-    }
+	/**
+	 * EVENTS
+	 */
+	public void projectLoadedEvent() {
+		projectListeners.forEach(ProjectListener::projectLoaded);
+	}
 
-    /**
-     * EVENTS
-     */
+	public void propertyChangedEvent(Object value) {
+		if (value instanceof OWLProperty) {
+			view.owlEntitySelectionChanged((OWLObjectProperty) value);
+		} else if (value instanceof String) {
+			view.owlEntitySelectionChanged(owlDataExtractor.getOWLObjectPropertyByID((String) value));
+		}
+	}
 
+	public KnowtatorView getView() {
+		return view;
+	}
 
-    public void projectLoadedEvent() {
-        projectListeners.forEach(ProjectListener::projectLoaded);
-    }
-
-    public void propertyChangedEvent(Object value) {
-        if (value instanceof OWLProperty) {
-            view.owlEntitySelectionChanged((OWLObjectProperty) value);
-        } else if (value instanceof String) {
-            view.owlEntitySelectionChanged(owlDataExtractor.getOWLObjectPropertyByID((String) value));
-        }
-    }
-
-    public KnowtatorView getView() {
-        return view;
-    }
-
-    public Preferences getPrefs() {
-        return prefs;
-    }
+	public Preferences getPrefs() {
+		return prefs;
+	}
 }

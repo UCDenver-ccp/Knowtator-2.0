@@ -12,6 +12,6 @@
     <extension id="menu.PluginsMenuItem"
                point="org.protege.editor.core.application.EditorKitMenuAction">
         <name value="Knowator Menu"/>
-        <class value="edu.ucdenver.ccp.knowtator.view.menus.ProjectMenu"/>
+        <class value="edu.ucdenver.ccp.knowtator.view.ProjectMenu"/>
     </extension>
 </plugin>

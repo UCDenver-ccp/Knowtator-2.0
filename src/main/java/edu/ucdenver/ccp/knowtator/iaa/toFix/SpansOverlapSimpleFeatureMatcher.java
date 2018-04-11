@@ -1,4 +1,4 @@
-///*
+/// *
 // * The contents of this test_project are subject to the Mozilla Public
 // * License Version 1.1 (the "License"); you may not use this test_project
 // * except in compliance with the License. You may obtain a copy of
@@ -25,17 +25,17 @@
 // * Contributor(s):
 // *   Philip V. Ogren <philip@ogren.info> (Original Author)
 // */
-//package edu.ucdenver.ccp.knowtator.iaa.matcher;
+// package edu.ucdenver.ccp.knowtator.iaa.matcher;
 //
-//import edu.ucdenver.ccp.knowtator.annotation.text.annotation;
-//import edu.ucdenver.ccp.knowtator.iaa.IAA;
+// import edu.ucdenver.ccp.knowtator.annotation.text.annotation;
+// import edu.ucdenver.ccp.knowtator.iaa.IAA;
 //
-//import java.util.ArrayList;
-//import java.util.HashSet;
-//import java.util.List;
-//import java.util.Set;
+// import java.util.ArrayList;
+// import java.util.HashSet;
+// import java.util.List;
+// import java.util.Set;
 //
-//public class SpansOverlapSimpleFeatureMatcher implements Matcher {
+// public class SpansOverlapSimpleFeatureMatcher implements Matcher {
 //
 //	/**
 //	 * This method will return an annotation that has overlapping spans and the
@@ -75,17 +75,20 @@
 //	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#TRIVIAL_NONMATCH
 //	 */
 //
-//	public annotation match(annotation annotation, String compareSetName, Set<annotation> excludeAnnotations, IAA iaa,
+//	public annotation match(annotation annotation, String compareSetName, Set<annotation>
+// excludeAnnotations, IAA iaa,
 //							MatchResult matchResult) {
 //
-//		annotation spansExactSimpleFeatureMatch = SpansExactSimpleFeatureMatcher.match(annotation, compareSetName, iaa,
+//		annotation spansExactSimpleFeatureMatch = SpansExactSimpleFeatureMatcher.match(annotation,
+// compareSetName, iaa,
 //				excludeAnnotations, matchResult);
 //
 //		// if TRIVIAL_MATCH then we do not have to worry about there being an
 //		// overlapping NONTRIVIAL_MATCH further down
 //		// because we know that a trivial match is the best we can do.
 //		if (spansExactSimpleFeatureMatch != null
-//				&& (matchResult.getResult() == MatchResult.NONTRIVIAL_MATCH || matchResult.getResult() == MatchResult.TRIVIAL_MATCH)) {
+//				&& (matchResult.getResult() == MatchResult.NONTRIVIAL_MATCH || matchResult.getResult() ==
+// MatchResult.TRIVIAL_MATCH)) {
 //			return spansExactSimpleFeatureMatch;
 //		}
 //
@@ -143,11 +146,13 @@
 //	}
 //
 //	public String getDescription() {
-//		return "Annotations match if they have overlapping spans and the same value for simple slots (e.g. slots that are primitive values such as integer and String).  Only slots that are specified must match.";
+//		return "Annotations match if they have overlapping spans and the same value for simple slots
+// (e.g. slots that are primitive values such as integer and String).  Only slots that are specified
+// must match.";
 //	}
 //
 //	public boolean returnsTrivials() {
 //		return true;
 //	}
 //
-//}
+// }

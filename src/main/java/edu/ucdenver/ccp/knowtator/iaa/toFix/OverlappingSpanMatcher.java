@@ -1,4 +1,4 @@
-///*
+/// *
 // * The contents of this test_project are subject to the Mozilla Public
 // * License Version 1.1 (the "License"); you may not use this test_project
 // * except in compliance with the License. You may obtain a copy of
@@ -25,32 +25,36 @@
 // * Contributor(s):
 // *   Philip V. Ogren <philip@ogren.info> (Original Author)
 // */
-//package edu.ucdenver.ccp.knowtator.iaa.matcher;
+// package edu.ucdenver.ccp.knowtator.iaa.matcher;
 //
-//import edu.ucdenver.ccp.knowtator.annotation.text.annotation;
-//import edu.ucdenver.ccp.knowtator.iaa.IAA;
+// import edu.ucdenver.ccp.knowtator.annotation.text.annotation;
+// import edu.ucdenver.ccp.knowtator.iaa.IAA;
 //
-//import java.util.Set;
+// import java.util.Set;
 //
-//public class OverlappingSpanMatcher implements Matcher {
+// public class OverlappingSpanMatcher implements Matcher {
 //
-//	public annotation match(annotation annotation, String compareSetName, Set<annotation> excludeAnnotations, IAA iaa,
+//	public annotation match(annotation annotation, String compareSetName, Set<annotation>
+// excludeAnnotations, IAA iaa,
 //							MatchResult matchResult) {
 //
-//		annotation spanAndClassMatch = ClassAndSpanMatcher.match(annotation, compareSetName, iaa, excludeAnnotations);
+//		annotation spanAndClassMatch = ClassAndSpanMatcher.match(annotation, compareSetName, iaa,
+// excludeAnnotations);
 //		if (spanAndClassMatch != null) {
 //			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 //			return spanAndClassMatch;
 //		}
 //
-//		Set<annotation> classMatches = ClassMatcher.matches(annotation, compareSetName, iaa, excludeAnnotations);
+//		Set<annotation> classMatches = ClassMatcher.matches(annotation, compareSetName, iaa,
+// excludeAnnotations);
 //		if (classMatches.size() > 0) {
 //			annotation match = annotation.getShortestAnnotation(classMatches);
 //			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 //			return match;
 //		}
 //
-//		Set<annotation> overlappingAnnotations = iaa.getOverlappingAnnotations(annotation, compareSetName);
+//		Set<annotation> overlappingAnnotations = iaa.getOverlappingAnnotations(annotation,
+// compareSetName);
 //		if (overlappingAnnotations.size() > 0) {
 //			annotation match = annotation.getShortestAnnotation(overlappingAnnotations);
 //			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
@@ -73,4 +77,4 @@
 //		return false;
 //	}
 //
-//}
+// }

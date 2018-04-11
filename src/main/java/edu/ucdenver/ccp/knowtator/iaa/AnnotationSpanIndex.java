@@ -1,16 +1,14 @@
 package edu.ucdenver.ccp.knowtator.iaa;
 
-import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
-import edu.ucdenver.ccp.knowtator.model.annotation.Span;
+import edu.ucdenver.ccp.knowtator.model.Annotation;
+import edu.ucdenver.ccp.knowtator.model.Span;
 
 import java.util.*;
 
 /**
- * This class creates an index on a collection of annotations based on the
- * proximity of the spans of the annotations.
- * 
+ * This class creates an index on a collection of annotations based on the proximity of the spans of
+ * the annotations.
  */
-
 public class AnnotationSpanIndex {
 
 	private Map<Integer, Set<Annotation>> window2AnnotationsMap;
@@ -25,7 +23,7 @@ public class AnnotationSpanIndex {
 		this.windowSize = windowSize;
 		window2AnnotationsMap = new HashMap<>();
 		for (Annotation annotation : annotations) {
-			TreeSet<Span> spans = annotation.getSpans();
+			TreeSet<Span> spans = annotation.getSpanCollection().getData();
 			for (Span span : spans) {
 				int startKey = span.getStart() / windowSize;
 				int endKey = span.getEnd() / windowSize;
@@ -41,7 +39,7 @@ public class AnnotationSpanIndex {
 		// window2AnnotationsMap.get(window);
 		// for(annotation windowAnnotation : windowAnnotations)
 		// {
-		// Collection<Span> spans = windowAnnotation.getSpans();
+		// Collection<Span> spans = windowAnnotation.getSpanCollection();
 		// }
 		// }
 	}
@@ -54,7 +52,7 @@ public class AnnotationSpanIndex {
 	}
 
 	private Set<Annotation> getNearbyAnnotations(Annotation annotation) {
-		Collection<Span> spans = annotation.getSpans();
+		Collection<Span> spans = annotation.getSpanCollection().getData();
 		HashSet<Integer> windows = new HashSet<>();
 		for (Span span : spans) {
 			windows.add(span.getStart() / windowSize);
@@ -64,8 +62,7 @@ public class AnnotationSpanIndex {
 		HashSet<Annotation> returnValues = new HashSet<>();
 		for (Integer window : windows) {
 			Set<Annotation> windowAnnotations = window2AnnotationsMap.get(window);
-			if (windowAnnotations != null)
-				returnValues.addAll(windowAnnotations);
+			if (windowAnnotations != null) returnValues.addAll(windowAnnotations);
 		}
 
 		returnValues.remove(annotation);
@@ -93,5 +90,4 @@ public class AnnotationSpanIndex {
 		}
 		return returnValues;
 	}
-
 }

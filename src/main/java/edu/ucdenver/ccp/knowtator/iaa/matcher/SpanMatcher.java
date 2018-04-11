@@ -1,38 +1,40 @@
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
-import edu.ucdenver.ccp.knowtator.model.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.model.Annotation;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class SpanMatcher implements Matcher {
 	/**
-	 * This method will return an annotation with the same class and spans. If
-	 * one does not exist, then it will return an annotation with the same spans
-	 * (but different class). Otherwise, null is returned.
+	 * This method will return an annotation with the same class and spans. If one does not exist,
+	 * then it will return an annotation with the same spans (but different class). Otherwise, null is
+	 * returned.
 	 *
-	 * @param matchResult
-	 *            will be set to NONTRIVIAL_MATCH or NONTRIVIAL_NONMATCH.
-	 *            Trivial matches and non-matches are not defined for this
-	 *            matcher.
-	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher#match(Annotation, String, Set,
-	 *      IAA, MatchResult)
+	 * @param matchResult will be set to NONTRIVIAL_MATCH or NONTRIVIAL_NONMATCH. Trivial matches and
+	 *                    non-matches are not defined for this matcher.
+	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher#match(Annotation, String, Set, IAA,
+	 * MatchResult)
 	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
 	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
 	 */
-
 	@SuppressWarnings("SuspiciousMethodCalls")
-	public Annotation match(Annotation annotation, String compareSetName, Set<Annotation> excludeAnnotations, IAA iaa,
-							MatchResult matchResult) {
-		Annotation spanAndClassMatch = ClassAndSpanMatcher.match(annotation, compareSetName, iaa, excludeAnnotations);
+	public Annotation match(
+			Annotation annotation,
+			String compareSetName,
+			Set<Annotation> excludeAnnotations,
+			IAA iaa,
+			MatchResult matchResult) {
+		Annotation spanAndClassMatch =
+				ClassAndSpanMatcher.match(annotation, compareSetName, iaa, excludeAnnotations);
 		if (spanAndClassMatch != null) {
 			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 			return spanAndClassMatch;
 		}
 
-		Set<Annotation> candidateAnnotations = new HashSet<>(iaa.getExactlyOverlappingAnnotations(annotation,
-				compareSetName));
+		Set<Annotation> candidateAnnotations =
+				new HashSet<>(iaa.getExactlyOverlappingAnnotations(annotation, compareSetName));
 		candidateAnnotations.remove(excludeAnnotations);
 
 		for (Annotation candidateAnnotation : candidateAnnotations) {
@@ -56,5 +58,4 @@ public class SpanMatcher implements Matcher {
 	public boolean returnsTrivials() {
 		return false;
 	}
-
 }

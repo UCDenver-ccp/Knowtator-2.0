@@ -6,14 +6,14 @@ import edu.ucdenver.ccp.knowtator.model.Savable;
 import java.io.File;
 
 public class GeniaXMLUtil implements BasicIOUtil {
-    @Override
-    public void read(Savable savable, File file) {
-//        savable.readFromGeniaXML(null, null);
-    }
+	@Override
+	public void read(Savable savable, File file) {
+		//        savable.readFromGeniaXML(null, null);
+	}
 
-    @Override
-    public void write(Savable savable, File file) {
+	@Override
+	public void write(Savable savable, File file) {
 
-//        savable.writeToGeniaXML(null, null);
-    }
+		//        savable.writeToGeniaXML(null, null);
+	}
 }

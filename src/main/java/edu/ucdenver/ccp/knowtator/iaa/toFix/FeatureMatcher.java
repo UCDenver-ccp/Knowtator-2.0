@@ -1,4 +1,4 @@
-///*
+/// *
 // * The contents of this test_project are subject to the Mozilla Public
 // * License Version 1.1 (the "License"); you may not use this test_project
 // * except in compliance with the License. You may obtain a copy of
@@ -25,14 +25,14 @@
 // * Contributor(s):
 // *   Philip V. Ogren <philip@ogren.info> (Original Author)
 // */
-//package edu.ucdenver.ccp.knowtator.iaa.matcher;
+// package edu.ucdenver.ccp.knowtator.iaa.matcher;
 //
-//import edu.ucdenver.ccp.knowtator.annotation.text.annotation;
-//import edu.ucdenver.ccp.knowtator.iaa.IAA;
+// import edu.ucdenver.ccp.knowtator.annotation.text.annotation;
+// import edu.ucdenver.ccp.knowtator.iaa.IAA;
 //
-//import java.util.*;
+// import java.util.*;
 //
-//public class FeatureMatcher implements Matcher {
+// public class FeatureMatcher implements Matcher {
 //	boolean matchClasses = true;
 //
 //	int matchSpans = annotation.SPANS_OVERLAP_COMPARISON;
@@ -59,17 +59,20 @@
 //		comparedSimpleFeatures.add(simpleFeatureName);
 //	}
 //
-//	public void addComparedComplexFeature(String complexFeatureName, ComplexFeatureMatchCriteria matchCriteria) {
+//	public void addComparedComplexFeature(String complexFeatureName, ComplexFeatureMatchCriteria
+// matchCriteria) {
 //		comparedComplexFeatures.put(complexFeatureName, matchCriteria);
 //	}
 //
-//	public annotation match(annotation annotation, String compareSetName, Set<annotation> excludeAnnotations, IAA iaa,
+//	public annotation match(annotation annotation, String compareSetName, Set<annotation>
+// excludeAnnotations, IAA iaa,
 //							MatchResult matchResult) {
 //		Set<annotation> candidateAnnotations = new HashSet<>();
 //		if (matchClasses) {
 //			if (matchSpans == annotation.SPANS_EXACT_COMPARISON) {
 //				candidateAnnotations.addAll(iaa.getAnnotationsOfSameType(annotation, compareSetName));
-//				candidateAnnotations.retainAll(iaa.getExactlyOverlappingAnnotations(annotation, compareSetName));
+//				candidateAnnotations.retainAll(iaa.getExactlyOverlappingAnnotations(annotation,
+// compareSetName));
 //			} else if (matchSpans == annotation.SPANS_OVERLAP_COMPARISON) {
 //				// Set<annotation> someAnnotations =
 //				// iaa.getExactlyOverlappingAnnotations(annotation,
@@ -90,7 +93,8 @@
 //				// 1) annotations with the same class and same spans
 //				// 2) annotations with the same spans
 //				candidateAnnotations.addAll(iaa.getAnnotationsOfSameType(annotation, compareSetName));
-//				Set<annotation> exactlyOverlappingAnnotations = iaa.getExactlyOverlappingAnnotations(annotation,
+//				Set<annotation> exactlyOverlappingAnnotations =
+// iaa.getExactlyOverlappingAnnotations(annotation,
 //						compareSetName);
 //				candidateAnnotations.retainAll(exactlyOverlappingAnnotations);
 //				candidateAnnotations.addAll(exactlyOverlappingAnnotations);
@@ -102,9 +106,11 @@
 //				// 3) annotations with the same spans
 //				// 4) annotations with overlapping spans
 //				Set<annotation> classAnnotations = iaa.getAnnotationsOfSameType(annotation, compareSetName);
-//				Set<annotation> exactlyOverlappingAnnotations = iaa.getExactlyOverlappingAnnotations(annotation,
+//				Set<annotation> exactlyOverlappingAnnotations =
+// iaa.getExactlyOverlappingAnnotations(annotation,
 //						compareSetName);
-//				Set<annotation> overlappingAnnotations = iaa.getOverlappingAnnotations(annotation, compareSetName);
+//				Set<annotation> overlappingAnnotations = iaa.getOverlappingAnnotations(annotation,
+// compareSetName);
 //
 //				Set<annotation> classAndExactSpanAnnotations = new HashSet<>(classAnnotations);
 //				classAndExactSpanAnnotations.retainAll(exactlyOverlappingAnnotations);
@@ -126,9 +132,11 @@
 //				// 5) annotations with the same class
 //				// 6) all other annotations
 //				Set<annotation> classAnnotations = iaa.getAnnotationsOfSameType(annotation, compareSetName);
-//				Set<annotation> exactlyOverlappingAnnotations = iaa.getExactlyOverlappingAnnotations(annotation,
+//				Set<annotation> exactlyOverlappingAnnotations =
+// iaa.getExactlyOverlappingAnnotations(annotation,
 //						compareSetName);
-//				Set<annotation> overlappingAnnotations = iaa.getOverlappingAnnotations(annotation, compareSetName);
+//				Set<annotation> overlappingAnnotations = iaa.getOverlappingAnnotations(annotation,
+// compareSetName);
 //
 //				Set<annotation> classAndExactSpanAnnotations = new HashSet<>(classAnnotations);
 //				classAndExactSpanAnnotations.retainAll(exactlyOverlappingAnnotations);
@@ -161,7 +169,8 @@
 //		for (annotation candidateAnnotation : candidateAnnotations) {
 //			int result;
 //			if (comparedSimpleFeatures.size() > 0)
-//				result = annotation.compareSimpleFeatures(annotation, candidateAnnotation, comparedSimpleFeatures);
+//				result = annotation.compareSimpleFeatures(annotation, candidateAnnotation,
+// comparedSimpleFeatures);
 //			else
 //				result = MatchResult.NONTRIVIAL_MATCH;
 //
@@ -182,7 +191,8 @@
 //				} else if (complexResult == MatchResult.NONTRIVIAL_NONMATCH
 //						&& (result == MatchResult.NONTRIVIAL_MATCH || result == MatchResult.TRIVIAL_MATCH)) {
 //					result = MatchResult.NONTRIVIAL_NONMATCH;
-//				} else if (complexResult == MatchResult.TRIVIAL_MATCH && result == MatchResult.NONTRIVIAL_MATCH) {
+//				} else if (complexResult == MatchResult.TRIVIAL_MATCH && result ==
+// MatchResult.NONTRIVIAL_MATCH) {
 //					result = MatchResult.TRIVIAL_MATCH;
 //				}
 //			}
@@ -230,4 +240,4 @@
 //		return true;
 //	}
 //
-//}
+// }

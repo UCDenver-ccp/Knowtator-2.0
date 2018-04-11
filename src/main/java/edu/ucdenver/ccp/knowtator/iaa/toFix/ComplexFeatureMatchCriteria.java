@@ -1,4 +1,4 @@
-///*
+/// *
 // * The contents of this test_project are subject to the Mozilla Public
 // * License Version 1.1 (the "License"); you may not use this test_project
 // * except in compliance with the License. You may obtain a copy of
@@ -25,11 +25,11 @@
 // * Contributor(s):
 // *   Philip V. Ogren <philip@ogren.info> (Original Author)
 // */
-//package edu.ucdenver.ccp.knowtator.iaa.matcher;
+// package edu.ucdenver.ccp.knowtator.iaa.matcher;
 //
-//import java.util.Set;
+// import java.util.Set;
 //
-//public class ComplexFeatureMatchCriteria {
+// public class ComplexFeatureMatchCriteria {
 //	boolean matchClasses;
 //
 //	int matchSpans;
@@ -38,11 +38,13 @@
 //
 //	boolean trivialSimpleFeatureMatchesCauseTrivialMatch;
 //
-//	public ComplexFeatureMatchCriteria(boolean matchClasses, int matchSpans, Set<String> comparedSimpleFeatures,
+//	public ComplexFeatureMatchCriteria(boolean matchClasses, int matchSpans, Set<String>
+// comparedSimpleFeatures,
 //			boolean trivialSimpleFeatureMatchesCauseTrivialMatch) {
 //		this.matchClasses = matchClasses;
 //		this.matchSpans = matchSpans;
 //		this.comparedSimpleFeatures = comparedSimpleFeatures;
-//		this.trivialSimpleFeatureMatchesCauseTrivialMatch = trivialSimpleFeatureMatchesCauseTrivialMatch;
+//		this.trivialSimpleFeatureMatchesCauseTrivialMatch =
+// trivialSimpleFeatureMatchesCauseTrivialMatch;
 //	}
-//}
+// }

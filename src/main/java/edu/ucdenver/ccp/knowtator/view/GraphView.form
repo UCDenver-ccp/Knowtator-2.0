@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="edu.ucdenver.ccp.knowtator.view.GraphView">
+  <grid id="27dc6" binding="panel1" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="8" y="7" width="967" height="400"/>
+    </constraints>
+    <properties>
+      <alignmentX value="0.0"/>
+      <alignmentY value="0.0"/>
+      <minimumSize width="400" height="400"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <grid id="a1899" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints border-constraint="North"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <toolbar id="65f25">
+            <constraints border-constraint="North"/>
+            <properties>
+              <alignmentX value="0.0"/>
+              <alignmentY value="0.0"/>
+              <floatable value="false"/>
+              <minimumSize width="630" height="100"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="74251" class="javax.swing.JButton" binding="zoomOutButton">
+                <constraints/>
+                <properties>
+                  <icon value="icon/icons8-zoom-out-filled-50 (Custom).png"/>
+                  <text value=""/>
+                  <toolTipText resource-bundle="ui" key="zoom.out"/>
+                </properties>
+              </component>
+              <component id="fc032" class="javax.swing.JButton" binding="zoomInButton">
+                <constraints/>
+                <properties>
+                  <icon value="icon/icons8-zoom-in-filled-50 (Custom).png"/>
+                  <text value=""/>
+                  <toolTipText resource-bundle="ui" key="zoom.in"/>
+                </properties>
+              </component>
+              <component id="505b9" class="javax.swing.JButton" binding="removeCellButton">
+                <constraints/>
+                <properties>
+                  <icon value="icon/icons8-minus-50 (Custom).png"/>
+                  <text value=""/>
+                  <toolTipText resource-bundle="ui" key="remove.item"/>
+                </properties>
+              </component>
+              <component id="8ed2b" class="javax.swing.JButton" binding="addAnnotationNodeButton">
+                <constraints/>
+                <properties>
+                  <icon value="icon/icons8-plus-50 (Custom).png"/>
+                  <text value=""/>
+                  <toolTipText resource-bundle="ui" key="add.annotation.node"/>
+                </properties>
+              </component>
+              <component id="17564" class="javax.swing.JButton" binding="applyLayoutButton">
+                <constraints/>
+                <properties>
+                  <text resource-bundle="ui" key="apply.layout"/>
+                  <toolTipText resource-bundle="ui" key="apply.layout1"/>
+                </properties>
+              </component>
+              <component id="f0550" class="javax.swing.JButton" binding="previousGraphSpaceButton">
+                <constraints/>
+                <properties>
+                  <icon value="icon/icons8-up-filled-50 (Custom).png"/>
+                  <text value=""/>
+                  <toolTipText resource-bundle="ui" key="previous.graph.space"/>
+                </properties>
+              </component>
+              <component id="4437a" class="javax.swing.JButton" binding="nextGraphSpaceButton">
+                <constraints/>
+                <properties>
+                  <icon value="icon/icons8-down-filled-50 (Custom).png"/>
+                  <text value=""/>
+                  <toolTipText resource-bundle="ui" key="next.graph.space"/>
+                </properties>
+              </component>
+              <component id="e76ed" class="edu.ucdenver.ccp.knowtator.view.GraphSpaceChooser" binding="graphSpaceChooser" custom-create="true">
+                <constraints/>
+                <properties>
+                  <minimumSize width="80" height="30"/>
+                </properties>
+              </component>
+            </children>
+          </toolbar>
+          <scrollpane id="ab8dd">
+            <constraints border-constraint="South"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="58010" class="edu.ucdenver.ccp.knowtator.view.KnowtatorTextPane" binding="knowtatorTextPane" custom-create="true">
+                <constraints/>
+                <properties>
+                  <text value=""/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
+        </children>
+      </grid>
+      <scrollpane id="76d5a" class="com.mxgraph.swing.mxGraphComponent" binding="graphComponent" custom-create="true">
+        <constraints border-constraint="Center"/>
+        <properties/>
+        <border type="none"/>
+        <children/>
+      </scrollpane>
+    </children>
+  </grid>
+</form>

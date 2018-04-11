@@ -231,6 +231,13 @@
                       <toolTipText resource-bundle="ui" key="show.graph.viewer"/>
                     </properties>
                   </component>
+                  <component id="51e2b" class="javax.swing.JButton" binding="textToGraphButton">
+                    <constraints/>
+                    <properties>
+                      <text resource-bundle="ui" key="text.to.graph"/>
+                      <toolTipText resource-bundle="ui" key="send.selected.text.to.graph"/>
+                    </properties>
+                  </component>
                   <component id="55553" class="javax.swing.JButton" binding="addAnnotationButton">
                     <constraints/>
                     <properties>
@@ -319,7 +326,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="c1f28" class="edu.ucdenver.ccp.knowtator.view.text.TextPane" binding="textPane" custom-create="true">
+                  <component id="c1f28" class="edu.ucdenver.ccp.knowtator.view.KnowtatorTextPane" binding="knowtatorTextPane" custom-create="true">
                     <constraints/>
                     <properties>
                       <background color="-1"/>
