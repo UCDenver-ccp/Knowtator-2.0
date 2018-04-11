@@ -1,4 +1,4 @@
-package edu.ucdenver.ccp.knowtator.view;
+package edu.ucdenver.ccp.knowtator.view.menu;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.iaa.IAAException;
@@ -23,7 +23,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
   private JCheckBoxMenuItem spanIAAChoice;
   private JCheckBoxMenuItem classAndSpanIAAChoice;
 
-  ProjectMenu(KnowtatorController controller) {
+  public ProjectMenu(KnowtatorController controller) {
     super("Project");
     this.controller = controller;
 

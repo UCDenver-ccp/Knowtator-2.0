@@ -1,4 +1,4 @@
-package edu.ucdenver.ccp.knowtator.view;
+package edu.ucdenver.ccp.knowtator.view.menu;
 
 import com.mxgraph.model.mxCell;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;

@@ -10,6 +10,7 @@ import edu.ucdenver.ccp.knowtator.model.TextSource;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.view.chooser.ProfileChooser;
 import edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser;
+import edu.ucdenver.ccp.knowtator.view.menu.ProjectMenu;
 import edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane;
 import edu.ucdenver.ccp.knowtator.view.textpane.MainKnowtatorTextPane;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
@@ -350,7 +351,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     return projectMenu;
   }
 
-  GraphViewDialog getGraphViewDialog() {
+  public GraphViewDialog getGraphViewDialog() {
     return graphViewDialog;
   }
 
@@ -392,6 +393,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
     mainPane = new JSplitPane();
     mainPane.setDividerLocation(1536);
+    mainPane.setOneTouchExpandable(true);
     panel1.add(mainPane, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
     infoPane = new JSplitPane();
     infoPane.setOrientation(0);

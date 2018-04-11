@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator.view;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.view.menu.GraphMenu;
 
 import javax.swing.*;
 import java.awt.*;

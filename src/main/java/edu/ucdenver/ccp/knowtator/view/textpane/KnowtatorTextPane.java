@@ -7,8 +7,7 @@ import edu.ucdenver.ccp.knowtator.listeners.SelectionListener;
 import edu.ucdenver.ccp.knowtator.model.Profile;
 import edu.ucdenver.ccp.knowtator.model.Span;
 import edu.ucdenver.ccp.knowtator.model.TextSource;
-import edu.ucdenver.ccp.knowtator.view.AnnotationPopupMenu;
-import edu.ucdenver.ccp.knowtator.view.RectanglePainter;
+import edu.ucdenver.ccp.knowtator.view.menu.AnnotationPopupMenu;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 

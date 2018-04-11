@@ -1,35 +1,29 @@
-TODO: Annotation suggestions
-TODO: JavaScript graph viz
-TODO: Edit coreference annotation
-TODO: Server based collaboration
-TODO: Edge coloring
-TODO: Labels not overlapping
-TODO: Undo: either save state or do reverse actions
+TODO: Can't drag vertices
+TODO: Figure out why edges add four times
+TODO: Ontologies not autoloading
+TODO: Profiles (at least in profile chooser) not clearing on reload
+TODO: Project menu not positioning properly on second load
+TODO: Info pane not starting in correct place
+TODO: Make sure owlClass part is never set to null (i.e. when the annotation owl class has yet to be set)
 TODO: Icons: add distinguishing marks for spans vs annoations
-TODO: Separators
-TODO: Colorbrewer: qualitative.
-TODO: Prescribe colors, but allow the adding of new colors
+TODO: Implement owl model manager and renderer change listeners
+TODO: Quantifier and value as persistent text boxes
+TODO: Click on span in info pane to go to it
+TODO: Change project menu to Knowtator or project name
+TODO: Should probably also read in Events, Modifiers, etc.
+TODO: Prescribe colors (Colorbrewer qualitative), but allow the adding of new colors
+TODO: Edge coloring
+TODO: Regex search
 TODO: Expand and collapse by sentence
-TODO: Remember last project
-TODO: Only allow unique names for graph spaces
+TODO: Toggle expand to show ontology terms as separate nodes
+TODO: Edit coreference annotation
+TODO: Labels not overlapping
+TODO: Separators
+TODO: Undo: either save state or do reverse actions
 TODO: No empty string values for property specifications (value, etc.)
-TODO: Fix save and opening of projects. When new project opened, old one doesn't close properly
 TODO: Save project saves ontology too
 TODO: Autoload the AO or at least provide the functionality to convert to it if desired.
 TODO: Add annotations as subclasses of their assigned classes as well as of the AO
-TODO: Make sure owlClass part is never set to null (i.e. when the annotation owl class has yet to be set)
-TODO: Toggle expand to show ontology terms as separate nodes
-TODO; Toggle expand to show coreference
-TODO: Regex search
-TODO: Should probably also read in Events, Modifiers, etc.
-TODO: Figure out why edges add four times
-TODO: Change project menu to Knowtator or project name
-TODO: Quantifier and value as persistent text boxes
-TODO: Implement owl model manager and renderer change listeners
-TODO: Fix selecting of text in text pane
-TODO: Can't drag vertices
-TODO: Profiles (at least in profile chooser) not clearing on reload
-TODO: Ontologies not autoloading
-TODO: Project menu not positioning properly on second load
-TODO: Info pane not starting in correct place
-TODO: Click on span in info pane to go to it
+TODO: Server based collaboration
+TODO: Annotation suggestions
+TODO: JavaScript graph viz
