@@ -1,13 +1,12 @@
 TODO: Figure out why edges add four times
 TODO: Ontologies not autoloading
 TODO: Add load errors
+TODO: Document properly
 TODO: Remove default graph
 TODO: Make sure owlClass part is never set to null (i.e. when the annotation owl class has yet to be set)
 TODO: Icons: add distinguishing marks for spans vs annoations
-TODO: Implement owl model manager and renderer change listeners
+TODO: Implement owl model manager listeners and renderer change listeners
 TODO: Quantifier and value as persistent text boxes
-TODO: Click on span in info pane to go to it
-TODO: Change project menu to Knowtator or project name
 TODO: Should probably also read in Events, Modifiers, etc.
 TODO: Prescribe colors (Colorbrewer qualitative), but allow the adding of new colors
 TODO: Edge coloring
