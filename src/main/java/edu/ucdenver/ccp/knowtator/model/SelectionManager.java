@@ -88,7 +88,6 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
   }
 
   public void setSelectedOWLClass(OWLClass owlClass) {
-    log.warn("SelectionManager: OWLClass " + owlClass);
     selectedOWLClass = owlClass;
     owlClassListeners.forEach(listener -> listener.owlClassChanged(owlClass));
   }
@@ -218,7 +217,6 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
   }
 
   public void setSelectedOWLObjectProperty(OWLObjectProperty owlObjectProperty) {
-    log.warn("SelectionManager: OWLObjectProperty " + owlObjectProperty);
     this.selectedOWLObjectProperty = owlObjectProperty;
     owlObjectPropertyListeners.forEach(selectionListener -> selectionListener.owlObjectPropertyChanged(owlObjectProperty));
   }

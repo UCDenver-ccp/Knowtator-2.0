@@ -182,7 +182,6 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
     OWLEntity ent = null;
     try {
       ent = getWorkSpace().getOWLSelectionModel().getSelectedEntity();
-      log.warn("OWLAPIDataExtractor: " + ent);
     } catch (OWLWorkSpaceNotSetException e) {
       e.printStackTrace();
     }

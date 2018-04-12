@@ -1,4 +1,3 @@
-TODO: Ontologies not autoloading
 TODO: Add load errors
 TODO: Remove default graph
 TODO: Make sure owlClass part is never set to null (i.e. when the annotation owl class has yet to be set)

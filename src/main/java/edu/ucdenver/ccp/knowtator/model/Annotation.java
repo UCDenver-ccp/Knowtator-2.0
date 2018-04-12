@@ -209,7 +209,6 @@ public class Annotation implements Savable, KnowtatorObject {
         spanId = spanElement.getAttribute(KnowtatorXMLAttributes.ID);
 
         Span newSpan = new Span(spanId, spanStart, spanEnd, textSource, controller);
-        //				log.warn("\t\t\tXML: " + newSpan);
         addSpan(newSpan);
       }
     }

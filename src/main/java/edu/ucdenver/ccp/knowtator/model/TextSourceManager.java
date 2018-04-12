@@ -125,8 +125,6 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
                           for (OWLOntologyChange chg : changes) {
                             if (chg.isAxiomChange()) {
                               OWLAxiomChange axChg = (OWLAxiomChange) chg;
-                              //                    log.warn(String.format("Axiom Change: %s",
-                              // axChg));
                               if (axChg.getAxiom().getAxiomType() == AxiomType.DECLARATION) {
                                 if (axChg instanceof AddAxiom) {
                                   axChg.getAxiom().accept(addedCollector);
@@ -136,11 +134,6 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
                               }
                             }
                           }
-                          possiblyAddedEntities.forEach(
-                              owlEntity -> log.warn(String.format("Added: %s", owlEntity)));
-
-                          possiblyRemovedEntities.forEach(
-                              owlEntity -> log.warn(String.format("Removed: %s", owlEntity)));
 
                           /*
                           For now, I will assume that entity removed is the one that existed and the one

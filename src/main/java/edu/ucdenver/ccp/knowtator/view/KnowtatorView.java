@@ -16,6 +16,7 @@ import edu.ucdenver.ccp.knowtator.view.menu.ProjectMenu;
 import edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane;
 import edu.ucdenver.ccp.knowtator.view.textpane.MainKnowtatorTextPane;
 import org.apache.log4j.Logger;
+import org.protege.editor.owl.model.OWLWorkspace;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -84,6 +85,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
     // This is necessary to force OSGI to load the mxGraphTransferable class to allow node dragging.
     // It is kind of a hacky fix, but it works for now.
+
+    log.warn("Don't worry about the following exception. Just forcing loading of a class needed by mxGraph");
     try {
       mxGraphTransferable.dataFlavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + "; class=com.mxgraph.swing.util.mxGraphTransferable", null, new mxGraphTransferable(null, null).getClass().getClassLoader());
     } catch (ClassNotFoundException e) {
@@ -92,25 +95,28 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   }
 
   private void makeController() {
-    log.warn("KnowtatorView: Making controller" );
+    log.warn("KnowtatorView: Making controller");
     controller = new KnowtatorController();
 
     setUpOWL();
   }
 
   private void setUpOWL() {
+    OWLWorkspace workspace = null;
     try {
-      if (controller.getOWLAPIDataExtractor().getWorkSpace() == null) {
-        if (getOWLWorkspace() != null) {
-          controller.getOWLAPIDataExtractor().setUpOWL(getOWLWorkspace());
-          getOWLWorkspace()
-              .getOWLModelManager()
-              .addOntologyChangeListener(controller.getTextSourceManager());
-        }
-      }
-    } catch (OWLWorkSpaceNotSetException e) {
-      e.printStackTrace();
+      workspace = controller.getOWLAPIDataExtractor().getWorkSpace();
+    } catch (OWLWorkSpaceNotSetException ignored) {
+
     }
+    if (workspace == null) {
+      if (getOWLWorkspace() != null) {
+        controller.getOWLAPIDataExtractor().setUpOWL(getOWLWorkspace());
+        getOWLWorkspace()
+                .getOWLModelManager()
+                .addOntologyChangeListener(controller.getTextSourceManager());
+      }
+    }
+
   }
 
   public KnowtatorController getController() {
@@ -342,7 +348,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
   @Override
   protected OWLClass updateView(OWLClass selectedClass) {
-    log.warn("KnowtatorView: update view " + selectedClass);
     setUpOWL();
     controller.getSelectionManager().setSelectedOWLClass(selectedClass);
     return selectedClass;

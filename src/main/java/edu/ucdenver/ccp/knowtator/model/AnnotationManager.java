@@ -192,7 +192,6 @@ public class AnnotationManager implements Savable {
       String id = graphSpaceElem.getAttribute(KnowtatorXMLAttributes.ID);
       GraphSpace graphSpace = addGraphSpace(id);
 
-      //            log.warn("\t\tXML: " + graphSpace);
       graphSpace.readFromKnowtatorXML(null, graphSpaceElem);
     }
   }
@@ -239,7 +238,6 @@ public class AnnotationManager implements Savable {
       if (!newAnnotation.getSpanCollection().getCollection().isEmpty()) {
         addAnnotation(newAnnotation);
 
-        //                log.warn("OLD KNOWTATOR: added ANNOTATION " + newAnnotation);
 
         for (Node slotMentionNode :
             KnowtatorXMLUtil.asList(
@@ -280,7 +278,6 @@ public class AnnotationManager implements Savable {
             AnnotationNode target;
             if (vertices1.isEmpty()) {
               target = oldKnowtatorGraphSpace.addNode(null, annotation1);
-              //                        log.warn("OLD KNOWTATOR: added NODE: " + target);
             } else {
               target = (AnnotationNode) vertices1.get(0);
             }
@@ -293,7 +290,6 @@ public class AnnotationManager implements Savable {
                 property,
                 "",
                 "");
-            //                log.warn("OLD KNOWTATOR: added TRIPLE: " + triple);
           }
         });
   }

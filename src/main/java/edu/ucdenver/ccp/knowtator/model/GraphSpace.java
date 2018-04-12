@@ -86,7 +86,6 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject {
     getModel().beginUpdate();
     try {
       addCell(cell);
-      //            log.warn(String.format("Cell: %s", cell));
     } finally {
       reDrawGraph();
       getModel().endUpdate();
@@ -287,7 +286,6 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject {
   UPDATE
    */
   public void reDrawGraph() {
-    //        log.warn("Redrawing Graph");
     getModel().beginUpdate();
     try {
       Arrays.stream(getChildVertices(getDefaultParent()))
