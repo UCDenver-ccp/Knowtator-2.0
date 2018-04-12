@@ -69,10 +69,6 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
     this.end = end;
   }
 
-  public KnowtatorController getController() {
-    return controller;
-  }
-
   public Annotation getSelectedAnnotation() {
     return selectedAnnotation;
   }
@@ -98,9 +94,9 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
       TextSourceChangeEvent e = new TextSourceChangeEvent(this.activeTextSource, newTextSource);
       this.activeTextSource = newTextSource;
       setSelected(null, null);
-      if (!newTextSource.getAnnotationManager().getGraphSpaceCollection().getData().isEmpty()) {
+      if (!newTextSource.getAnnotationManager().getGraphSpaceCollection().getCollection().isEmpty()) {
         setSelected(
-                newTextSource.getAnnotationManager().getGraphSpaceCollection().getData().first());
+                newTextSource.getAnnotationManager().getGraphSpaceCollection().getCollection().first());
       }
       listeners.forEach(selectionListener -> selectionListener.activeTextSourceChanged(e));
     }
@@ -218,6 +214,6 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
 
   @Override
   public void projectLoaded() {
-    setSelected(controller.getTextSourceManager().getTextSourceCollection().getData().first());
+    setSelected(controller.getTextSourceManager().getTextSourceCollection().getCollection().first());
   }
 }

@@ -17,108 +17,110 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
-public class Triple extends mxCell implements Savable {
-	private String quantifier;
-	private String quantifierValue;
-	private Profile annotator;
-	private String bratID;
-	private KnowtatorController controller;
+public class Triple extends mxCell implements Savable, KnowtatorObject {
+  private String quantifier;
+  private String quantifierValue;
+  private Profile annotator;
+  private String bratID;
+  private KnowtatorController controller;
+  private TextSource textSource;
 
-	Triple(
-			String id,
-			mxCell source,
-			mxCell target,
-			Object property,
-			Profile annotator,
-			String quantifier,
-			String quantifierValue,
-			KnowtatorController controller) {
-		super(property, new mxGeometry(), null);
-		this.controller = controller;
+  Triple(
+          String id,
+          mxCell source,
+          mxCell target,
+          Object property,
+          Profile annotator,
+          String quantifier,
+          String quantifierValue,
+          KnowtatorController controller, TextSource textSource) {
+    super(property, new mxGeometry(), null);
 
-		getGeometry().setRelative(true);
+    this.textSource = textSource;
+    this.controller = controller;
+    this.annotator = annotator;
+    this.quantifier = quantifier;
+    this.quantifierValue = quantifierValue;
 
-		this.annotator = annotator;
-		this.quantifier = quantifier;
-		this.quantifierValue = quantifierValue;
-		setEdge(true);
-		setId(id);
-		setSource(source);
-		setTarget(target);
-	}
+    controller.verifyId(id, this, false);
 
-	public Profile getAnnotator() {
-		return annotator;
-	}
+    getGeometry().setRelative(true);
+    setEdge(true);
+    setSource(source);
+    setTarget(target);
+  }
 
-	public void writeToKnowtatorXML(Document dom, Element graphElem) {
-		Element tripleElem = dom.createElement(KnowtatorXMLTags.TRIPLE);
-		tripleElem.setAttribute(KnowtatorXMLAttributes.ID, id);
-		tripleElem.setAttribute(KnowtatorXMLAttributes.ANNOTATOR, annotator.getId());
-		tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_SUBJECT, getSource().getId());
-		tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_OBJECT, getTarget().getId());
-		tripleElem.setAttribute(
-				KnowtatorXMLAttributes.TRIPLE_PROPERTY,
-				getValue() instanceof OWLObjectProperty
-						? ((OWLObjectProperty) getValue()).getIRI().getShortForm()
-						: getValue().toString());
-		tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_QUANTIFIER, quantifier);
-		tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_VALUE, quantifierValue);
-		graphElem.appendChild(tripleElem);
-	}
+  public Profile getAnnotator() {
+    return annotator;
+  }
 
-	@Override
-	public void readFromKnowtatorXML(File file, Element parent, String content) {
-	}
+  public void writeToKnowtatorXML(Document dom, Element graphElem) {
+    Element tripleElem = dom.createElement(KnowtatorXMLTags.TRIPLE);
+    tripleElem.setAttribute(KnowtatorXMLAttributes.ID, id);
+    tripleElem.setAttribute(KnowtatorXMLAttributes.ANNOTATOR, annotator.getId());
+    tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_SUBJECT, getSource().getId());
+    tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_OBJECT, getTarget().getId());
+    tripleElem.setAttribute(
+        KnowtatorXMLAttributes.TRIPLE_PROPERTY,
+        getValue() instanceof OWLObjectProperty
+            ? ((OWLObjectProperty) getValue()).getIRI().getShortForm()
+            : getValue().toString());
+    tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_QUANTIFIER, quantifier);
+    tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_VALUE, quantifierValue);
+    graphElem.appendChild(tripleElem);
+  }
 
-	@Override
-	public void readFromOldKnowtatorXML(File file, Element parent, TextSource textSource) {
-	}
+  @Override
+  public void readFromKnowtatorXML(File file, Element parent) {}
 
-	@Override
-	public void readFromBratStandoff(
-			File file, Map<Character, List<String[]>> annotationMap, String content) {
-	}
+  @Override
+  public void readFromOldKnowtatorXML(File file, Element parent) {}
 
-	@SuppressWarnings("RedundantThrows")
-	@Override
-	public void writeToBratStandoff(Writer writer) throws IOException {
-	}
+  @Override
+  public void readFromBratStandoff(
+      File file, Map<Character, List<String[]>> annotationMap, String content) {}
 
-	@Override
-	public void readFromGeniaXML(Element parent, String content) {
-	}
+  @SuppressWarnings("RedundantThrows")
+  @Override
+  public void writeToBratStandoff(Writer writer) throws IOException {}
 
-	@Override
-	public void writeToGeniaXML(Document dom, Element parent) {
-	}
+  @Override
+  public void readFromGeniaXML(Element parent, String content) {}
 
-	@Override
-	public Object getValue() {
-		try {
-			setValue(controller.getOWLAPIDataExtractor().getOWLObjectPropertyByID((String) value));
-		} catch (OWLObjectPropertyNotFoundException | OWLWorkSpaceNotSetException ignored) {
-		}
-		return value;
-	}
+  @Override
+  public void writeToGeniaXML(Document dom, Element parent) {}
 
-	String getBratID() {
-		return bratID;
-	}
+  @Override
+  public Object getValue() {
+    try {
+      setValue(controller.getOWLAPIDataExtractor().getOWLObjectPropertyByID((String) value));
+    } catch (OWLObjectPropertyNotFoundException | OWLWorkSpaceNotSetException ignored) {
+    }
+    return value;
+  }
 
-	void setBratID(String bratID) {
-		this.bratID = bratID;
-	}
+  String getBratID() {
+    return bratID;
+  }
 
-	public Object getProperty() {
-		return getValue();
-	}
+  void setBratID(String bratID) {
+    this.bratID = bratID;
+  }
 
-	public String getQuantifier() {
-		return quantifier;
-	}
+  public Object getProperty() {
+    return getValue();
+  }
 
-	public String getQuantifierValue() {
-		return quantifierValue;
-	}
+  public String getQuantifier() {
+    return quantifier;
+  }
+
+  public String getQuantifierValue() {
+    return quantifierValue;
+  }
+
+  @Override
+  public TextSource getTextSource() {
+    return textSource;
+  }
 }

@@ -125,7 +125,7 @@ public class ProjectManager {
       articlesLocation = new File(projectDirectory, "Articles");
       ontologiesLocation = new File(projectDirectory, "Ontologies");
       annotationsLocation = new File(projectDirectory, "Annotations");
-      profilesLocation = new File(projectDirectory, "ProfileCollection");
+      profilesLocation = new File(projectDirectory, "Profiles");
 
       Files.createDirectories(projectDirectory.toPath());
       Files.createDirectories(articlesLocation.toPath());
@@ -161,7 +161,7 @@ public class ProjectManager {
         e.printStackTrace();
       }
     }
-    controller.getTextSourceManager().addTextSource(null, file.getName());
+    controller.getTextSourceManager().addTextSource(null, file.getName(), file.getName());
   }
 
   public File getAnnotationsLocation() {

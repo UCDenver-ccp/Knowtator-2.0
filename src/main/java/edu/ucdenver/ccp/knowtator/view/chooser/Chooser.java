@@ -1,25 +1,26 @@
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.events.*;
 import edu.ucdenver.ccp.knowtator.listeners.CollectionListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.listeners.SelectionListener;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.swing.*;
 
-public class Chooser<objectType> extends JComboBox<objectType> implements SelectionListener, ProjectListener, CollectionListener<objectType> {
+public class Chooser<K extends KnowtatorObject> extends JComboBox<K> implements SelectionListener, ProjectListener, CollectionListener<K> {
 
-	Chooser(KnowtatorController controller) {
-		controller.getSelectionManager().addListener(this);
-		controller.getProjectManager().addListener(this);
+	Chooser(KnowtatorView view) {
+		view.getController().getSelectionManager().addListener(this);
+		view.getController().getProjectManager().addListener(this);
 	}
 
-	Chooser(KnowtatorController controller, objectType[] initialData) {
+	Chooser(KnowtatorView view, K[] initialData) {
 		super(initialData);
-		controller.getSelectionManager().addListener(this);
-		controller.getProjectManager().addListener(this);
+		view.getController().getSelectionManager().addListener(this);
+		view.getController().getProjectManager().addListener(this);
 	}
 
 	@Override
@@ -53,12 +54,12 @@ public class Chooser<objectType> extends JComboBox<objectType> implements Select
 	}
 
 	@Override
-	public void added(objectType addedObject) {
+	public void added(K addedObject) {
 		addItem(addedObject);
 	}
 
 	@Override
-	public void removed(objectType removedObject) {
+	public void removed(K removedObject) {
 		removeItem(removedObject);
 	}
 

@@ -23,8 +23,7 @@ public class AnnotationSpanIndex {
 		this.windowSize = windowSize;
 		window2AnnotationsMap = new HashMap<>();
 		for (Annotation annotation : annotations) {
-			TreeSet<Span> spans = annotation.getSpanCollection().getData();
-			for (Span span : spans) {
+			for (Span span : annotation.getSpanCollection()) {
 				int startKey = span.getStart() / windowSize;
 				int endKey = span.getEnd() / windowSize;
 				for (int key = startKey; key <= endKey; key++) {
@@ -52,9 +51,8 @@ public class AnnotationSpanIndex {
 	}
 
 	private Set<Annotation> getNearbyAnnotations(Annotation annotation) {
-		Collection<Span> spans = annotation.getSpanCollection().getData();
 		HashSet<Integer> windows = new HashSet<>();
-		for (Span span : spans) {
+		for (Span span : annotation.getSpanCollection()) {
 			windows.add(span.getStart() / windowSize);
 			windows.add(span.getEnd() / windowSize);
 		}

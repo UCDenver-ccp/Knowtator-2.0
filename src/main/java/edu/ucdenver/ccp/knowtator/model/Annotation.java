@@ -2,9 +2,7 @@ package edu.ucdenver.ccp.knowtator.model;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
+import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import org.apache.log4j.Logger;
@@ -15,11 +13,10 @@ import org.w3c.dom.Node;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.Writer;
 import java.util.*;
 
-public class Annotation implements Savable, Serializable {
+public class Annotation implements Savable, KnowtatorObject {
 
   private final Date date;
 
@@ -40,25 +37,24 @@ public class Annotation implements Savable, Serializable {
   private KnowtatorController controller;
 
   public Annotation(
-          KnowtatorController controller,
-          String annotationID,
-          OWLClass owlClass,
-          String owlClassID,
-          Profile annotator,
-          String annotation_type,
-          TextSource textSource) {
+      KnowtatorController controller,
+      String annotationID,
+      OWLClass owlClass,
+      String owlClassID,
+      Profile annotator,
+      String annotation_type,
+      TextSource textSource) {
     this.textSource = textSource;
     this.annotator = annotator;
     this.controller = controller;
     this.date = new Date();
-    this.id = annotationID;
-
     this.owlClass = owlClass;
     this.owlClassID = owlClassID;
     this.annotation_type = annotation_type;
 
-    spanCollection = new SpanCollection(controller);
+    controller.verifyId(annotationID, this, false);
 
+    spanCollection = new SpanCollection(controller);
     overlappingAnnotations = new HashSet<>();
   }
 
@@ -87,11 +83,13 @@ public class Annotation implements Savable, Serializable {
     return date;
   }
 
-  public String getID() {
+  @Override
+  public String getId() {
     return id;
   }
 
-  public void setID(String id) {
+  @Override
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -109,12 +107,11 @@ public class Annotation implements Savable, Serializable {
 
   /**
    * @return the size of the Span associated with the annotation. If the annotation has more than
-   * one Span, then the sum of the size of the spanCollection is returned.
+   *     one Span, then the sum of the size of the spanCollection is returned.
    */
   public int getSize() {
     int size = 0;
-    TreeSet<Span> spans = this.spanCollection.getData();
-    for (Span span : spans) {
+    for (Span span : this.spanCollection) {
       size += span.getSize();
     }
     return size;
@@ -131,7 +128,7 @@ public class Annotation implements Savable, Serializable {
 
     sb.append("<li>class = ").append(getOwlClass()).append("</li>");
     sb.append("<li>spanCollection = ");
-    for (Span span : spanCollection.getData()) sb.append(span.toString()).append(" ");
+    for (Span span : spanCollection) sb.append(span.toString()).append(" ");
     sb.append("</li>");
 
     sb.append("</ul>");
@@ -141,18 +138,17 @@ public class Annotation implements Savable, Serializable {
   @Override
   public String toString() {
     return String.format(
-            "Annotation: %s owl class: %s annotation_type: %s", id, getOwlClass(), annotation_type);
+        "Annotation: %s owl class: %s annotation_type: %s", id, getOwlClass(), annotation_type);
   }
 
   public String getSpannedText() {
     StringBuilder sb = new StringBuilder();
     spanCollection
-            .getData()
-            .forEach(
-                    span -> {
-                      sb.append(String.format("%s", span.getSpannedText()));
-                      sb.append("\n");
-                    });
+        .forEach(
+            span -> {
+              sb.append(String.format("%s", span.getSpannedText()));
+              sb.append("\n");
+            });
     return sb.toString();
   }
 
@@ -166,7 +162,7 @@ public class Annotation implements Savable, Serializable {
   }
 
   public boolean contains(Integer loc) {
-    for (Span span : spanCollection.getData()) {
+    for (Span span : spanCollection) {
       if (span.contains(loc)) {
         return true;
       }
@@ -193,24 +189,26 @@ public class Annotation implements Savable, Serializable {
     classElement.setAttribute(KnowtatorXMLAttributes.ID, getOwlClassID());
     annotationElem.appendChild(classElement);
 
-    spanCollection.getData().forEach(span -> span.writeToKnowtatorXML(dom, annotationElem));
+    spanCollection.forEach(span -> span.writeToKnowtatorXML(dom, annotationElem));
 
     textSourceElement.appendChild(annotationElem);
   }
 
   @Override
-  public void readFromKnowtatorXML(File file, Element parent, String content) {
+  public void readFromKnowtatorXML(File file, Element parent) {
     Element spanElement;
+    String spanId;
     int spanStart;
     int spanEnd;
     for (Node spanNode :
-            KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.SPAN))) {
+        KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.SPAN))) {
       if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
         spanElement = (Element) spanNode;
         spanStart = Integer.parseInt(spanElement.getAttribute(KnowtatorXMLAttributes.SPAN_START));
         spanEnd = Integer.parseInt(spanElement.getAttribute(KnowtatorXMLAttributes.SPAN_END));
+        spanId = spanElement.getAttribute(KnowtatorXMLAttributes.ID);
 
-        Span newSpan = new Span(spanStart, spanEnd, textSource);
+        Span newSpan = new Span(spanId, spanStart, spanEnd, textSource, controller);
         //				log.warn("\t\t\tXML: " + newSpan);
         addSpan(newSpan);
       }
@@ -218,26 +216,35 @@ public class Annotation implements Savable, Serializable {
   }
 
   @Override
-  public void readFromOldKnowtatorXML(File file, Element parent, TextSource textSource) {
-    List<Span> spans = KnowtatorXMLUtil.getSpanInfo(parent, this.textSource);
-    for (Span span : spans) {
-      addSpan(span);
+  public void readFromOldKnowtatorXML(File file, Element parent) {
+    for (Node spanNode :
+            KnowtatorXMLUtil.asList(parent.getElementsByTagName(OldKnowtatorXMLTags.SPAN))) {
+      if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
+        Element spanElement = (Element) spanNode;
+        int spanStart =
+                Integer.parseInt(spanElement.getAttribute(OldKnowtatorXMLAttributes.SPAN_START));
+        int spanEnd =
+                Integer.parseInt(spanElement.getAttribute(OldKnowtatorXMLAttributes.SPAN_END));
+
+        addSpan(new Span(null, spanStart, spanEnd, textSource, controller));
+      }
     }
+
   }
 
   @Override
   public void readFromBratStandoff(
-          File file, Map<Character, List<String[]>> annotationMap, String content) {
+      File file, Map<Character, List<String[]>> annotationMap, String content) {
     String[] triple =
-            annotationMap
-                    .get(StandoffTags.TEXTBOUNDANNOTATION)
-                    .get(0)[1]
-                    .split(StandoffTags.textBoundAnnotationTripleDelimiter);
+        annotationMap
+            .get(StandoffTags.TEXTBOUNDANNOTATION)
+            .get(0)[1]
+            .split(StandoffTags.textBoundAnnotationTripleDelimiter);
     int start = Integer.parseInt(triple[1]);
     for (int i = 2; i < triple.length; i++) {
       int end = Integer.parseInt(triple[i].split(StandoffTags.spanDelimiter)[0]);
 
-      Span newSpan = new Span(start, end, textSource);
+      Span newSpan = new Span(null, start, end, textSource, controller);
       addSpan(newSpan);
 
       if (i != triple.length - 1) {
@@ -248,22 +255,20 @@ public class Annotation implements Savable, Serializable {
 
   @Override
   public void writeToBratStandoff(Writer writer) throws IOException {
-    Iterator<Span> spanIterator = spanCollection.getData().iterator();
-    for (int i = 0; i < spanCollection.getData().size(); i++) {
+    Iterator<Span> spanIterator = spanCollection.iterator();
+    for (int i = 0; i < spanCollection.size(); i++) {
       spanIterator.next().writeToBratStandoff(writer);
-      if (i != spanCollection.getData().size() - 1) {
+      if (i != spanCollection.size() - 1) {
         writer.append(";");
       }
     }
   }
 
   @Override
-  public void readFromGeniaXML(Element parent, String content) {
-  }
+  public void readFromGeniaXML(Element parent, String content) {}
 
   @Override
-  public void writeToGeniaXML(Document dom, Element parent) {
-  }
+  public void writeToGeniaXML(Document dom, Element parent) {}
 
   public String getType() {
     return annotation_type;
@@ -275,6 +280,19 @@ public class Annotation implements Savable, Serializable {
 
   void setBratID(String bratID) {
     this.bratID = bratID;
+  }
+
+  public static int compare(Annotation annotation1, Annotation annotation2) {
+    Iterator<Span> spanIterator1 = annotation1.getSpanCollection().iterator();
+    Iterator<Span> spanIterator2 = annotation2.getSpanCollection().iterator();
+    int result = 0;
+    while(result == 0 && spanIterator1.hasNext() && spanIterator2.hasNext()) {
+      result = spanIterator1.next().compare(spanIterator2.next());
+    }
+    if (result == 0) {
+      result = annotation1.getId().compareTo(annotation2.getId());
+    }
+    return result;
   }
 
   //		public Set<String> getSimpleFeatureNames() {

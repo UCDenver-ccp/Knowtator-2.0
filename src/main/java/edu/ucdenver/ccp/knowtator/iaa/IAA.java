@@ -94,7 +94,7 @@ public class IAA {
 	@SuppressWarnings("JavaDoc")
 	static boolean spansMatch(Annotation annotation1, Annotation annotation2) {
 		return Span.spansMatch(
-				annotation1.getSpanCollection().getData(), annotation2.getSpanCollection().getData());
+				annotation1.getSpanCollection().getCollection(), annotation2.getSpanCollection().getCollection());
 	}
 
 	@SuppressWarnings("unused")
@@ -107,7 +107,7 @@ public class IAA {
 
 	static boolean spansOverlap(Annotation annotation1, Annotation annotation2) {
 		return Span.intersects(
-				annotation1.getSpanCollection().getData(), annotation2.getSpanCollection().getData());
+				annotation1.getSpanCollection().getCollection(), annotation2.getSpanCollection().getCollection());
 	}
 
 	//	/**
@@ -132,7 +132,7 @@ public class IAA {
 	 */
 	public static String getCoveredText(
 			Annotation annotation, String annotationText, String spanSeparator) {
-		TreeSet<Span> spans = annotation.getSpanCollection().getData();
+		TreeSet<Span> spans = annotation.getSpanCollection().getCollection();
 		if (spans == null || spans.size() == 0) return "";
 		else if (spans.size() == 1) {
 			return Span.substring(annotationText, spans.first());

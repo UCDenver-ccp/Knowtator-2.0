@@ -83,7 +83,7 @@ public class IOTests {
                 controller
                         .getTextSourceManager()
                         .getTextSourceCollection()
-                        .getData()
+                        .getCollection()
                         .stream()
                         .filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID]))
                         .findAny()
@@ -100,13 +100,13 @@ public class IOTests {
             assert content.equals(articleContent[articleID]);
 
             annotationManager = textSource.getAnnotationManager();
-            numAnnotations = annotationManager.getAnnotations().size();
+            numAnnotations = annotationManager.getAnnotations().getCollection().size();
             numSpans = annotationManager.getSpans(null, 0, content.length()).size();
-            numGraphSpaces = annotationManager.getGraphSpaceCollection().getData().size();
+            numGraphSpaces = annotationManager.getGraphSpaceCollection().getCollection().size();
             numVertices =
                     annotationManager
                             .getGraphSpaceCollection()
-                            .getData()
+                            .getCollection()
                             .stream()
                             .mapToInt(
                                     graphSpace -> graphSpace.getChildVertices(graphSpace.getDefaultParent()).length)
@@ -114,7 +114,7 @@ public class IOTests {
             numTriples =
                     annotationManager
                             .getGraphSpaceCollection()
-                            .getData()
+                            .getCollection()
                             .stream()
                             .mapToInt(
                                     graphSpace -> graphSpace.getChildEdges(graphSpace.getDefaultParent()).length)
@@ -133,7 +133,7 @@ public class IOTests {
                 controller
                         .getTextSourceManager()
                         .getTextSourceCollection()
-                        .getData()
+                        .getCollection()
                         .stream()
                         .filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID2]))
                         .findAny()
@@ -144,13 +144,13 @@ public class IOTests {
             assert content.equals(articleContent[articleID2]);
 
             annotationManager = textSource.getAnnotationManager();
-            numAnnotations = annotationManager.getAnnotations().size();
+            numAnnotations = annotationManager.getAnnotations().getCollection().size();
             numSpans = annotationManager.getSpans(null, 0, content.length()).size();
-            numGraphSpaces = annotationManager.getGraphSpaceCollection().getData().size();
+            numGraphSpaces = annotationManager.getGraphSpaceCollection().getCollection().size();
             numVertices =
                     annotationManager
                             .getGraphSpaceCollection()
-                            .getData()
+                            .getCollection()
                             .stream()
                             .mapToInt(
                                     graphSpace -> graphSpace.getChildVertices(graphSpace.getDefaultParent()).length)
@@ -158,7 +158,7 @@ public class IOTests {
             numTriples =
                     annotationManager
                             .getGraphSpaceCollection()
-                            .getData()
+                            .getCollection()
                             .stream()
                             .mapToInt(
                                     graphSpace -> graphSpace.getChildEdges(graphSpace.getDefaultParent()).length)
@@ -195,7 +195,7 @@ public class IOTests {
                 controller
                         .getTextSourceManager()
                         .getTextSourceCollection()
-                        .getData()
+                        .getCollection()
                         .stream()
                         .filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID]))
                         .findAny()
@@ -219,7 +219,7 @@ public class IOTests {
         assert new File(newProject, "Articles").exists();
         assert new File(newProject, "Annotations").exists();
         assert new File(newProject, "Ontologies").exists();
-        assert new File(newProject, "ProfileCollection").exists();
+        assert new File(newProject, "Profiles").exists();
 
         newProject.deleteOnExit();
     }
@@ -239,7 +239,7 @@ public class IOTests {
                 controller
                         .getTextSourceManager()
                         .getTextSourceCollection()
-                        .getData()
+                        .getCollection()
                         .stream()
                         .filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID]))
                         .findAny()
@@ -250,9 +250,9 @@ public class IOTests {
             assert content.equals(articleContent[articleID]);
 
             AnnotationManager annotationManager1 = textSource.getAnnotationManager();
-            int numAnnotations = annotationManager1.getAnnotations().size();
+            int numAnnotations = annotationManager1.getAnnotations().getCollection().size();
             int numSpans = annotationManager1.getSpans(null, 0, content.length()).size();
-            int numGraphSpaces = annotationManager1.getGraphSpaceCollection().getData().size();
+            int numGraphSpaces = annotationManager1.getGraphSpaceCollection().getCollection().size();
 
             assert numGraphSpaces == 1 : "There were " + numGraphSpaces + " graph spaces";
             assert numAnnotations == 2 : "There were " + numAnnotations + " annotations";
@@ -278,7 +278,7 @@ public class IOTests {
                 controller
                         .getTextSourceManager()
                         .getTextSourceCollection()
-                        .getData()
+                        .getCollection()
                         .stream()
                         .filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID]))
                         .findAny()
@@ -305,11 +305,11 @@ public class IOTests {
                 "",
                 "");
 
-        int numGraphSpaces = annotationManager.getGraphSpaceCollection().getData().size();
+        int numGraphSpaces = annotationManager.getGraphSpaceCollection().getCollection().size();
         int numVertices =
                 annotationManager
                         .getGraphSpaceCollection()
-                        .getData()
+                        .getCollection()
                         .stream()
                         .mapToInt(
                                 graphSpace1 -> graphSpace1.getChildVertices(graphSpace.getDefaultParent()).length)
@@ -317,7 +317,7 @@ public class IOTests {
         int numTriples =
                 annotationManager
                         .getGraphSpaceCollection()
-                        .getData()
+                        .getCollection()
                         .stream()
                         .mapToInt(
                                 graphSpace1 -> graphSpace1.getChildEdges(graphSpace.getDefaultParent()).length)
@@ -375,7 +375,7 @@ public class IOTests {
                         controller
                                 .getTextSourceManager()
                                 .getTextSourceCollection()
-                                .getData()
+                                .getCollection()
                                 .stream()
                                 .filter(textSource1 -> textSource1.getId().equals(article))
                                 .findAny()
@@ -398,20 +398,20 @@ public class IOTests {
                 controller
                         .getTextSourceManager()
                         .getTextSourceCollection()
-                        .getData()
+                        .getCollection()
                         .stream()
                         .filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID]))
                         .findAny()
                         .get();
 
         AnnotationManager annotationManager = textSource.getAnnotationManager();
-        int numAnnotations = annotationManager.getAnnotations().size();
+        int numAnnotations = annotationManager.getAnnotations().getCollection().size();
         int numSpans = annotationManager.getSpans(null, 0, textSource.getContent().length()).size();
-        int numGraphSpaces = annotationManager.getGraphSpaceCollection().getData().size();
+        int numGraphSpaces = annotationManager.getGraphSpaceCollection().getCollection().size();
         int numVertices =
                 annotationManager
                         .getGraphSpaceCollection()
-                        .getData()
+                        .getCollection()
                         .stream()
                         .mapToInt(
                                 graphSpace -> graphSpace.getChildVertices(graphSpace.getDefaultParent()).length)
@@ -419,7 +419,7 @@ public class IOTests {
         int numTriples =
                 annotationManager
                         .getGraphSpaceCollection()
-                        .getData()
+                        .getCollection()
                         .stream()
                         .mapToInt(graphSpace -> graphSpace.getChildEdges(graphSpace.getDefaultParent()).length)
                         .sum();

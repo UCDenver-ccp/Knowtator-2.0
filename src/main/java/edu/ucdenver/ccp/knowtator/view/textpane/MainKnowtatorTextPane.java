@@ -1,17 +1,17 @@
 package edu.ucdenver.ccp.knowtator.view.textpane;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.Span;
 import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import java.util.Set;
 
 public class MainKnowtatorTextPane extends KnowtatorTextPane {
-	public MainKnowtatorTextPane(KnowtatorController controller) {
-		super(controller);
-		controller.getProjectManager().addListener(this);
+	public MainKnowtatorTextPane( KnowtatorView view) {
+		super(view);
+		view.getController().getProjectManager().addListener(this);
 		getCaret().setSelectionVisible(true);
 	}
 
@@ -30,7 +30,7 @@ public class MainKnowtatorTextPane extends KnowtatorTextPane {
 
 	@Override
 	protected Set<Span> getSpans(Integer loc) {
-		return controller
+		return view.getController()
 				.getSelectionManager()
 				.getActiveTextSource()
 				.getAnnotationManager()

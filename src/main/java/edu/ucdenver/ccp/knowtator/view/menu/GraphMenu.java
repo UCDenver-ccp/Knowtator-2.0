@@ -1,7 +1,7 @@
 package edu.ucdenver.ccp.knowtator.view.menu;
 
 import com.mxgraph.util.mxCellRenderer;
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -20,11 +20,12 @@ import java.io.IOException;
 
 public class GraphMenu extends JMenu {
 
-	private KnowtatorController controller;
 
-	public GraphMenu(KnowtatorController controller) {
+	private KnowtatorView view;
+
+	public GraphMenu( KnowtatorView view) {
 		super("Graph");
-		this.controller = controller;
+		this.view = view;
 
 		add(addNewGraphCommand());
 		add(renameGraphCommand());
@@ -38,7 +39,7 @@ public class GraphMenu extends JMenu {
 				e -> {
 					String graphName = getGraphNameInput(null);
 					if (graphName != null) {
-						controller.getSelectionManager().getActiveGraphSpace().setId(graphName);
+						view.getController().getSelectionManager().getActiveGraphSpace().setId(graphName);
 					}
 				});
 
@@ -50,13 +51,13 @@ public class GraphMenu extends JMenu {
 		menuItem.addActionListener(
 				e -> {
 					JFileChooser fileChooser = new JFileChooser();
-					fileChooser.setCurrentDirectory(controller.getProjectManager().getProjectLocation());
+					fileChooser.setCurrentDirectory(view.getController().getProjectManager().getProjectLocation());
 					FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
 					fileChooser.setFileFilter(fileFilter);
-					if (fileChooser.showSaveDialog(controller.getView()) == JFileChooser.APPROVE_OPTION) {
+					if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
 						BufferedImage image =
 								mxCellRenderer.createBufferedImage(
-										controller.getSelectionManager().getActiveGraphSpace(),
+										view.getController().getSelectionManager().getActiveGraphSpace(),
 										null,
 										1,
 										Color.WHITE,
@@ -79,13 +80,13 @@ public class GraphMenu extends JMenu {
 		deleteGraphMenuItem.addActionListener(
 				e -> {
 					if (JOptionPane.showConfirmDialog(
-							controller.getView(), "Are you sure you want to delete this graph?")
+							view, "Are you sure you want to delete this graph?")
 							== JOptionPane.YES_OPTION) {
-						controller
+						view.getController()
 								.getSelectionManager()
 								.getActiveTextSource()
 								.getAnnotationManager()
-								.removeGraphSpace(controller.getSelectionManager().getActiveGraphSpace());
+								.removeGraphSpace(view.getController().getSelectionManager().getActiveGraphSpace());
 					}
 				});
 
@@ -96,12 +97,12 @@ public class GraphMenu extends JMenu {
 		JMenuItem addNewGraphMenuItem = new JMenuItem("Create new graph");
 		addNewGraphMenuItem.addActionListener(
 				e -> {
-					if (controller.getSelectionManager().getActiveTextSource() != null) {
+					if (view.getController().getSelectionManager().getActiveTextSource() != null) {
 
 						String graphName = getGraphNameInput(null);
 
 						if (graphName != null) {
-							controller
+							view.getController()
 									.getSelectionManager()
 									.getActiveTextSource()
 									.getAnnotationManager()
@@ -138,7 +139,7 @@ public class GraphMenu extends JMenu {
 								}
 
 								private void warn() {
-									if (controller
+									if (view.getController()
 											.getSelectionManager()
 											.getActiveTextSource()
 											.getAnnotationManager()
@@ -166,12 +167,12 @@ public class GraphMenu extends JMenu {
 		field1.addAncestorListener(new RequestFocusListener());
 		int option =
 				JOptionPane.showConfirmDialog(
-						controller.getView(),
+						view,
 						message,
 						"Enter a name for this graph",
 						JOptionPane.OK_CANCEL_OPTION);
 		if (option == JOptionPane.OK_OPTION) {
-			if (controller
+			if (view.getController()
 					.getSelectionManager()
 					.getActiveTextSource()
 					.getAnnotationManager()

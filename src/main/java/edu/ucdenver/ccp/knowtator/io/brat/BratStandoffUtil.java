@@ -68,7 +68,7 @@ public class BratStandoffUtil implements BasicIOUtil {
 		if (savable instanceof TextSourceManager) {
 			((TextSourceManager) savable)
 					.getTextSourceCollection()
-					.getData()
+					.getCollection()
 					.forEach(
 							textSource -> {
 								File outputFile =

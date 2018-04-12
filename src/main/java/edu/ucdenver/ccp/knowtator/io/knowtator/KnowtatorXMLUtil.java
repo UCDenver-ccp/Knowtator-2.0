@@ -50,13 +50,13 @@ public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUt
 						asList(doc.getElementsByTagName(KnowtatorXMLTags.KNOWTATOR_PROJECT));
 				if (knowtatorNodes.size() > 0) {
 					Element knowtatorElement = (Element) knowtatorNodes.get(0);
-					savable.readFromKnowtatorXML(file, knowtatorElement, null);
+					savable.readFromKnowtatorXML(file, knowtatorElement);
 				}
 
 				List<Node> annotationNodes =
 						asList(doc.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATIONS));
 				if (annotationNodes.size() > 0) {
-					savable.readFromOldKnowtatorXML(file, doc.getDocumentElement(), null);
+					savable.readFromOldKnowtatorXML(file, doc.getDocumentElement());
 				}
 			} catch (IllegalArgumentException | IOException | SAXException e) {
 				e.printStackTrace();
@@ -71,7 +71,7 @@ public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUt
 		if (savable instanceof TextSourceManager) {
 			((TextSourceManager) savable)
 					.getTextSourceCollection()
-					.getData()
+					.getCollection()
 					.forEach(
 							textSource -> {
                 File outputFile = textSource.getSaveFile();
@@ -86,7 +86,7 @@ public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUt
 		} else if (savable instanceof ProfileManager) {
 			((ProfileManager) savable)
 					.getProfileCollection()
-					.getData()
+					.getCollection()
 					.forEach(
 							profile -> {
 								File outputFile =

@@ -1,6 +1,5 @@
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.view.menu.GraphMenu;
 
 import javax.swing.*;
@@ -12,19 +11,20 @@ import java.awt.event.WindowEvent;
 public class GraphViewDialog extends JDialog {
 	private JPanel contentPane;
 	private GraphView graphView;
-	private KnowtatorController controller;
+	private KnowtatorView view;
 
-	GraphViewDialog(KnowtatorController controller) {
-		this.controller = controller;
+	GraphViewDialog(KnowtatorView view) {
+
+		this.view = view;
 		$$$setupUI$$$();
 		setSize(new Dimension(800, 800));
-		setLocationRelativeTo(controller.getView());
+		setLocationRelativeTo(view);
 
 		setContentPane(contentPane);
 		setModal(false);
 
 		setJMenuBar(new JMenuBar());
-		GraphMenu graphMenu = new GraphMenu(controller);
+		GraphMenu graphMenu = new GraphMenu(view);
 		getJMenuBar().add(graphMenu);
 
 		// call onCancel() when cross is clicked
@@ -49,7 +49,7 @@ public class GraphViewDialog extends JDialog {
 	}
 
 	private void createUIComponents() {
-		graphView = new GraphView(this, controller);
+		graphView = new GraphView(this, view);
 	}
 
 	/**

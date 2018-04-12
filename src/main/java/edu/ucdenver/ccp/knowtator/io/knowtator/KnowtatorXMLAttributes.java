@@ -18,4 +18,5 @@ public class KnowtatorXMLAttributes {
 	// Used for saving profile settings
 	public static final String COLOR = "color";
 	public static final String CLASS_ID = "class";
+	public static final String FILE = "text-file";
 }

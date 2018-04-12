@@ -2,38 +2,40 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.CollectionListener;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 
 import java.util.TreeSet;
 
-public class CyclableCollection<
-		collectionType, listenerType extends CollectionListener<collectionType>>
-		extends ListenableCollection<collectionType, TreeSet<collectionType>, listenerType> {
+public class CyclableCollection<K extends KnowtatorObject, L extends CollectionListener<K>>
+    extends ListenableCollection<K, TreeSet<K>, L> {
 
-	CyclableCollection(KnowtatorController controller, TreeSet<collectionType> collection) {
-		super(controller, collection);
-	}
+  CyclableCollection(KnowtatorController controller, TreeSet<K> collection) {
+    super(controller, collection);
+  }
 
-	public collectionType getPrevious(collectionType current) {
+  public K getPrevious(K current) {
 
-		collectionType previous;
-		try {
-			previous = getData().contains(current) ? getData().lower(current) : getData().floor(current);
-		} catch (NullPointerException npe) {
-			previous = null;
-		}
-		if (previous == null) previous = getData().last();
+    K previous;
+    try {
+      previous =
+          collection.contains(current) ? collection.lower(current) : collection.floor(current);
+    } catch (NullPointerException npe) {
+      previous = null;
+    }
+    if (previous == null) previous = collection.last();
 
-		return previous;
-	}
+    return previous;
+  }
 
-	public collectionType getNext(collectionType current) {
-		collectionType next;
-		try {
-			next = getData().contains(current) ? getData().higher(current) : getData().ceiling(current);
-		} catch (NullPointerException npe) {
-			next = null;
-		}
-		if (next == null) next = getData().first();
-		return next;
-	}
+  public K getNext(K current) {
+    K next;
+    try {
+      next =
+          collection.contains(current) ? collection.higher(current) : collection.ceiling(current);
+    } catch (NullPointerException npe) {
+      next = null;
+    }
+    if (next == null) next = collection.first();
+    return next;
+  }
 }

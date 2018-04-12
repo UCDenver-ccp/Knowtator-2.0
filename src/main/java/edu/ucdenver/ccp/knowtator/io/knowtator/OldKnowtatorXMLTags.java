@@ -11,7 +11,7 @@ public class OldKnowtatorXMLTags {
 	public static final String HAS_SLOT_MENTION = "hasSlotMention";
 	// ******************OLD Tags*****************
 	static final String ANNOTATIONS = "annotations";
-	static final String SPAN = "span";
+	public static final String SPAN = "span";
 	static final String SPANNED_TEXT = "spannedText";
 	static final String CLASS_MENTION = "classMention";
 	static final String COMPLEX_SLOT_MENTION = "complexSlotMention";

@@ -1,7 +1,9 @@
 package edu.ucdenver.ccp.knowtator.listeners;
 
-public interface CollectionListener<T1> {
-	void added(T1 addedObject);
+import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 
-	void removed(T1 removedObject);
+public interface CollectionListener<K extends KnowtatorObject> {
+	void added(K addedObject);
+
+	void removed(K removedObject);
 }

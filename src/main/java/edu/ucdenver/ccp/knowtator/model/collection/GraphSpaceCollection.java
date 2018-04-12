@@ -12,13 +12,4 @@ public class GraphSpaceCollection
 	public GraphSpaceCollection(KnowtatorController controller) {
 		super(controller, new TreeSet<>(GraphSpace::compare));
 	}
-
-	public boolean containsID(String text) {
-		for (GraphSpace graphSpace : getData()) {
-			if (graphSpace.getId().equals(text)) {
-				return true;
-			}
-		}
-		return false;
-	}
 }

@@ -51,7 +51,7 @@ public class AnnotationManagerTest {
         controller.getProjectManager().loadProject(project);
 
         //noinspection ConstantConditions
-        textSource = controller.getTextSourceManager().getTextSourceCollection().getData().stream().filter(textSource1 -> textSource1.getId().equals(articleName)).findAny().get();
+        textSource = controller.getTextSourceManager().getTextSourceCollection().getCollection().stream().filter(textSource1 -> textSource1.getId().equals(articleName)).findAny().get();
         annotationManager = textSource.getAnnotationManager();
         profile = controller.getProfileManager().addProfile("Default");
 
@@ -63,7 +63,7 @@ public class AnnotationManagerTest {
         Annotation annotation1 = new Annotation(controller, "mention_3", null, "class_2", profile, "identity", textSource);
         annotationManager.addAnnotation(annotation1);
 
-        int numAnnotations = annotationManager.getAnnotations().size();
+        int numAnnotations = annotationManager.getAnnotations().getCollection().size();
         int numSpans = annotationManager.getSpans(null, 0, textSource.getContent().length()).size();
 
         assert numAnnotations == 3;
@@ -76,10 +76,10 @@ public class AnnotationManagerTest {
         Annotation annotation1 = new Annotation(controller, "mention_3", null, "class_2", profile, "identity", textSource);
         annotationManager.addAnnotation(annotation1);
 
-        Span span1 = new Span(1, 6, textSource);
+        Span span1 = new Span(null, 1, 6, textSource, controller);
         annotationManager.addSpanToAnnotation(annotation1, span1);
 
-        int numAnnotations = annotationManager.getAnnotations().size();
+        int numAnnotations = annotationManager.getAnnotations().getCollection().size();
         int numSpans = annotationManager.getSpans(null, 0, textSource.getContent().length()).size();
 
         assert numAnnotations == 3;
@@ -91,7 +91,7 @@ public class AnnotationManagerTest {
         setUp();
         annotationManager.removeAnnotation(annotationManager.getAnnotation("mention_1"));
 
-        int numAnnotations = annotationManager.getAnnotations().size();
+        int numAnnotations = annotationManager.getAnnotations().getCollection().size();
         int numSpans = annotationManager.getSpans(null, 0, textSource.getContent().length()).size();
 
         assert numAnnotations == 1;
@@ -109,11 +109,11 @@ public class AnnotationManagerTest {
         Annotation annotation1 = new Annotation(controller, "mention_3", null, "class_2", profile, "identity", textSource);
         annotationManager.addAnnotation(annotation1);
 
-        Span span1 = new Span(1, 6, textSource);
+        Span span1 = new Span(null, 1, 6, textSource, controller);
         annotationManager.addSpanToAnnotation(annotation1, span1);
 
         annotationManager.removeSpanFromAnnotation(annotation1, span1);
-        int numAnnotations = annotationManager.getAnnotations().size();
+        int numAnnotations = annotationManager.getAnnotations().getCollection().size();
         int numSpans = annotationManager.getSpans(null, 0, textSource.getContent().length()).size();
 
         assert numAnnotations == 3;

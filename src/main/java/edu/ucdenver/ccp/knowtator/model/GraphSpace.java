@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class GraphSpace extends mxGraph implements Savable {
+public class GraphSpace extends mxGraph implements Savable, KnowtatorObject {
   @SuppressWarnings("unused")
   private Logger log = Logger.getLogger(GraphSpace.class);
 
@@ -41,9 +41,12 @@ public class GraphSpace extends mxGraph implements Savable {
   private List<GraphSpaceListener> listeners;
 
   public GraphSpace(KnowtatorController controller, TextSource textSource, String id) {
+
     this.controller = controller;
     this.textSource = textSource;
-    this.id = id;
+
+    controller.verifyId(id, this, false);
+
     setCellsResizable(false);
     setEdgeLabelsMovable(false);
     setAllowDanglingEdges(false);
@@ -96,7 +99,7 @@ public class GraphSpace extends mxGraph implements Savable {
     if (annotation != null) {
       id = verifyID(id, "node");
 
-      AnnotationNode newVertex = new AnnotationNode(id, annotation);
+      AnnotationNode newVertex = new AnnotationNode(controller, id, annotation, textSource);
       addCellToGraph(newVertex);
 
       return newVertex;
@@ -125,7 +128,7 @@ public class GraphSpace extends mxGraph implements Savable {
 
     Triple newTriple =
             new Triple(
-                    id, source, target, property, annotator, quantifier, quantifierValue, controller);
+                    id, source, target, property, annotator, quantifier, quantifierValue, controller, textSource);
 
     setCellStyles(mxConstants.STYLE_STARTARROW, "dash", new Object[]{newTriple});
     setCellStyles(mxConstants.STYLE_STARTSIZE, "12", new Object[]{newTriple});
@@ -165,7 +168,7 @@ public class GraphSpace extends mxGraph implements Savable {
   }
 
   @Override
-  public void readFromKnowtatorXML(File file, Element parent, String content) {
+  public void readFromKnowtatorXML(File file, Element parent) {
     for (Node graphVertexNode :
             KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.VERTEX))) {
       Element graphVertexElem = (Element) graphVertexNode;
@@ -173,7 +176,7 @@ public class GraphSpace extends mxGraph implements Savable {
       String id = graphVertexElem.getAttribute(KnowtatorXMLAttributes.ID);
       String annotationID = graphVertexElem.getAttribute(KnowtatorXMLTags.ANNOTATION);
 
-      Annotation annotation = textSource.getAnnotationManager().getAnnotation(annotationID);
+      Annotation annotation = this.textSource.getAnnotationManager().getAnnotation(annotationID);
       addNode(id, annotation);
     }
 
@@ -201,7 +204,7 @@ public class GraphSpace extends mxGraph implements Savable {
   }
 
   @Override
-  public void readFromOldKnowtatorXML(File file, Element parent, TextSource textSource) {
+  public void readFromOldKnowtatorXML(File file, Element parent) {
   }
 
   @Override
@@ -333,14 +336,6 @@ public class GraphSpace extends mxGraph implements Savable {
   GETTERS, CHECKERS, SETTERS
    */
 
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
   public AnnotationNode containsVertexCorrespondingToAnnotation(Annotation selectedAnnotation) {
     for (Object o : getChildVertices(getDefaultParent())) {
       if (o instanceof AnnotationNode
@@ -360,6 +355,7 @@ public class GraphSpace extends mxGraph implements Savable {
             .collect(Collectors.toList());
   }
 
+  @Override
   public TextSource getTextSource() {
     return textSource;
   }
@@ -402,5 +398,15 @@ public class GraphSpace extends mxGraph implements Savable {
     graphTextEnd = end;
 
     listeners.forEach(listener -> listener.graphTextChanged(textSource, start, end));
+  }
+
+  @Override
+  public String getId() {
+    return id;
+  }
+
+  @Override
+  public void setId(String id) {
+    this.id = id;
   }
 }

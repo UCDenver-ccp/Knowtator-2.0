@@ -588,7 +588,7 @@ public class IAA2HTML {
 			html.append("Text source docID = ").append(annotationTextName).append("<p>");
 
 		if (annotationText != null) {
-			TreeSet<Span> spans = annotation.getSpanCollection().getData();
+			TreeSet<Span> spans = annotation.getSpanCollection().getCollection();
 			List<Span> modifiedSpans = new ArrayList<>(spans);
 
 			annotationText = shortenText(annotationText, modifiedSpans);

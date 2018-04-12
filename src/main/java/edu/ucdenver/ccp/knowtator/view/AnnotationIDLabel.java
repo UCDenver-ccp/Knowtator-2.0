@@ -1,6 +1,5 @@
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.events.*;
 import edu.ucdenver.ccp.knowtator.listeners.SelectionListener;
 import edu.ucdenver.ccp.knowtator.model.Annotation;
@@ -10,18 +9,19 @@ import javax.swing.*;
 
 class AnnotationIDLabel extends JLabel implements SelectionListener {
 
-	private KnowtatorController controller;
 
-	AnnotationIDLabel(KnowtatorController controller) {
+	private KnowtatorView view;
 
-		this.controller = controller;
+	AnnotationIDLabel(KnowtatorView view) {
+
+		this.view = view;
 	}
 
 	@Override
 	public void selectedAnnotationChanged(AnnotationChangeEvent e) {
-		Annotation annotation = controller.getSelectionManager().getSelectedAnnotation();
+		Annotation annotation = view.getController().getSelectionManager().getSelectedAnnotation();
 		if (annotation != null) {
-			setText(annotation.getID());
+			setText(annotation.getId());
 		}
 	}
 

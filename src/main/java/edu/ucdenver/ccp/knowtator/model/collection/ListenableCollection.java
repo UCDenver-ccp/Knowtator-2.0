@@ -3,43 +3,63 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.CollectionListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.stream.Stream;
 
 public class ListenableCollection<
-        collectionType,
-        underlyingCollection extends Collection<collectionType>,
-        listenerType extends CollectionListener<collectionType>>
-        implements ProjectListener {
-  public final underlyingCollection collection;
-  private final ArrayList<listenerType> listeners;
+        K extends KnowtatorObject, C extends Collection<K>, L extends CollectionListener<K>>
+        implements ProjectListener, Iterable<K> {
+  public final C collection;
+  private final ArrayList<L> listeners;
 
-  ListenableCollection(KnowtatorController controller, underlyingCollection collection) {
+  ListenableCollection(KnowtatorController controller, C collection) {
     this.collection = collection;
     listeners = new ArrayList<>();
     controller.getProjectManager().addListener(this);
   }
 
-  public void add(collectionType objectToAdd) {
+  public void add(K objectToAdd) {
     collection.add(objectToAdd);
     listeners.forEach(profilesListener -> profilesListener.added(objectToAdd));
   }
 
-  public void remove(collectionType objectToRemove) {
+  public void remove(K objectToRemove) {
     collection.remove(objectToRemove);
     listeners.forEach(listener -> listener.removed(objectToRemove));
   }
 
-  public underlyingCollection getData() {
-    return collection;
+  public K get(String id) {
+    for (K obj : collection) {
+      if (obj.getId().equals(id)) {
+        return obj;
+      }
+    }
+    return null;
   }
 
-  public void addListener(listenerType listener) {
+  public boolean contains(K objToFind) {
+    return containsID(objToFind.getId());
+  }
+
+  public boolean containsID(String idToFind) {
+    for (K id : collection) {
+      if (id.getId().equals(idToFind)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public void addListener(L listener) {
     listeners.add(listener);
   }
 
-  public void removeListener(listenerType listener) {
+  public void removeListener(L listener) {
     listeners.remove(listener);
   }
 
@@ -50,6 +70,23 @@ public class ListenableCollection<
   }
 
   @Override
-  public void projectLoaded() {
+  public void projectLoaded() {}
+
+  @Override
+  @Nonnull
+  public Iterator<K> iterator() {
+    return collection.iterator();
+  }
+
+  public Stream<K> stream() {
+    return collection.stream();
+  }
+
+  public int size() {
+    return collection.size();
+  }
+
+  public C getCollection() {
+    return collection;
   }
 }

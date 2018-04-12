@@ -10,16 +10,22 @@ import java.util.Set;
 
 public class SpanList extends JList<Span> implements SelectionListener {
 
+	SpanList(KnowtatorView view) {
+		view.getController().getSelectionManager().addListener(this);
+
+	}
+
 	@Override
 	public void selectedAnnotationChanged(AnnotationChangeEvent e) {
 		if (e.getNew() != null) {
-			Set<Span> spans = e.getNew().getSpanCollection().getData();
+			Set<Span> spans = e.getNew().getSpanCollection().getCollection();
 			setListData(spans.toArray(new Span[0]));
 		}
 	}
 
 	@Override
 	public void selectedSpanChanged(SpanChangeEvent e) {
+		setSelectedValue(e.getNew(), true);
 	}
 
 	@Override

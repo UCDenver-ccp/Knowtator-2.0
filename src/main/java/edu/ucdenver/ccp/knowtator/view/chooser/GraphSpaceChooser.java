@@ -1,17 +1,17 @@
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.events.GraphSpaceChangeEvent;
 import edu.ucdenver.ccp.knowtator.events.TextSourceChangeEvent;
 import edu.ucdenver.ccp.knowtator.listeners.GraphSpaceCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.GraphSpace;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
 
 public class GraphSpaceChooser extends Chooser<GraphSpace> implements GraphSpaceCollectionListener {
 
-	public GraphSpaceChooser(KnowtatorController controller) {
-		super(controller);
+	public GraphSpaceChooser(KnowtatorView view) {
+		super(view);
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class GraphSpaceChooser extends Chooser<GraphSpace> implements GraphSpace
 						e.getNew()
 								.getAnnotationManager()
 								.getGraphSpaceCollection()
-								.getData()
+								.getCollection()
 								.toArray(new GraphSpace[0])));
 		if (e.getOld() != null) {
 			e.getOld().getAnnotationManager().getGraphSpaceCollection().removeListener(this);

@@ -8,7 +8,6 @@ import com.mxgraph.swing.util.mxMorphing;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.events.*;
 import edu.ucdenver.ccp.knowtator.listeners.SelectionListener;
 import edu.ucdenver.ccp.knowtator.model.Annotation;
@@ -29,7 +28,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class GraphView extends JPanel implements SelectionListener {
-	private JScrollPane scrollPane;
 	private JButton removeCellButton;
 	private JButton addAnnotationNodeButton;
 	private JButton applyLayoutButton;
@@ -42,25 +40,26 @@ public class GraphView extends JPanel implements SelectionListener {
 	private GraphSpaceChooser graphSpaceChooser;
 	private GraphViewKnowtatorTextPane knowtatorTextPane;
 	private JDialog dialog;
-	private KnowtatorController controller;
+	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(GraphView.class);
+	private KnowtatorView view;
 
-	GraphView(JDialog dialog, KnowtatorController controller) {
+	GraphView(JDialog dialog, KnowtatorView view) {
 		this.dialog = dialog;
-		this.controller = controller;
-		controller.getSelectionManager().addListener(this);
+		this.view = view;
+		view.getController().getSelectionManager().addListener(this);
 		$$$setupUI$$$();
 		makeButtons();
 	}
 
 	private void createUIComponents() {
-		scrollPane = new JScrollPane();
+		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-		graphSpaceChooser = new GraphSpaceChooser(controller);
+		graphSpaceChooser = new GraphSpaceChooser(view);
 		mxGraph testGraph = new mxGraph();
 		graphComponent = new mxGraphComponent(testGraph);
 
-		knowtatorTextPane = new GraphViewKnowtatorTextPane(controller);
+		knowtatorTextPane = new GraphViewKnowtatorTextPane(view);
 	}
 
 	private void makeButtons() {
@@ -69,23 +68,23 @@ public class GraphView extends JPanel implements SelectionListener {
 					JComboBox comboBox = (JComboBox) e.getSource();
 					if (comboBox.getSelectedItem() != null
 							&& comboBox.getSelectedItem()
-							!= controller.getSelectionManager().getActiveTextSource()) {
-						controller.getSelectionManager().setSelected((GraphSpace) comboBox.getSelectedItem());
+							!= view.getController().getSelectionManager().getActiveTextSource()) {
+						view.getController().getSelectionManager().setSelected((GraphSpace) comboBox.getSelectedItem());
 					}
 				});
 
 		zoomOutButton.addActionListener(e -> graphComponent.zoomOut());
 		zoomInButton.addActionListener(e -> graphComponent.zoomIn());
 		previousGraphSpaceButton.addActionListener(
-				e -> controller.getSelectionManager().getPreviousGraphSpace());
+				e -> view.getController().getSelectionManager().getPreviousGraphSpace());
 		nextGraphSpaceButton.addActionListener(
-				e -> controller.getSelectionManager().getNextGraphSpace());
+				e -> view.getController().getSelectionManager().getNextGraphSpace());
 		removeCellButton.addActionListener(e -> removeSelectedCell());
 		addAnnotationNodeButton.addActionListener(
 				e -> {
-					Annotation annotation = controller.getSelectionManager().getSelectedAnnotation();
+					Annotation annotation = view.getController().getSelectionManager().getSelectedAnnotation();
 					mxCell vertex =
-							controller.getSelectionManager().getActiveGraphSpace().addNode(null, annotation);
+							view.getController().getSelectionManager().getActiveGraphSpace().addNode(null, annotation);
 
 					goToVertex(vertex);
 				});
@@ -104,7 +103,7 @@ public class GraphView extends JPanel implements SelectionListener {
 						if (graph.getModel().isEdge(cell) && "".equals(((mxCell) cell).getValue())) {
 							mxCell edge = (mxCell) cell;
 							try {
-								Object property = controller.getOWLAPIDataExtractor().getSelectedProperty();
+								Object property = view.getController().getOWLAPIDataExtractor().getSelectedProperty();
 								mxICell source = edge.getSource();
 								mxICell target = edge.getTarget();
 
@@ -121,7 +120,7 @@ public class GraphView extends JPanel implements SelectionListener {
 								String value = "";
 								int result =
 										JOptionPane.showConfirmDialog(
-												controller.getView(),
+												view,
 												restrictionPanel,
 												"Restriction options",
 												JOptionPane.DEFAULT_OPTION);
@@ -134,7 +133,7 @@ public class GraphView extends JPanel implements SelectionListener {
 										(AnnotationNode) source,
 										(AnnotationNode) target,
 										null,
-										controller.getSelectionManager().getActiveProfile(),
+										view.getController().getSelectionManager().getActiveProfile(),
 										property,
 										quantifier,
 										value);
@@ -169,14 +168,14 @@ public class GraphView extends JPanel implements SelectionListener {
 									if (cell instanceof AnnotationNode) {
 										Annotation annotation = ((AnnotationNode) cell).getAnnotation();
 
-										controller.getSelectionManager().setSelected(annotation, null);
+										view.getController().getSelectionManager().setSelected(annotation, null);
 
 										graph.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
 
 									} else if (cell instanceof Triple) {
 										Object value = ((mxCell) cell).getValue();
 										if (value instanceof OWLObjectProperty) {
-											controller
+											view.getController()
 													.getSelectionManager()
 													.setSelectedOWLProperty((OWLObjectProperty) value);
 										}
@@ -190,7 +189,7 @@ public class GraphView extends JPanel implements SelectionListener {
 	@SuppressWarnings("unused")
 	public void goToAnnotationVertex(GraphSpace graphSpace, Annotation annotation) {
 		if (annotation != null && graphSpace != null) {
-			controller.getSelectionManager().setSelected(graphSpace);
+			view.getController().getSelectionManager().setSelected(graphSpace);
 			List<Object> vertices = graphSpace.getVerticesForAnnotation(annotation);
 			if (vertices.size() > 0) {
 				graphSpace.setSelectionCells(vertices);
@@ -236,7 +235,7 @@ public class GraphView extends JPanel implements SelectionListener {
 	}
 
 	private void applyLayout() {
-		GraphSpace graph = controller.getSelectionManager().getActiveGraphSpace();
+		GraphSpace graph = view.getController().getSelectionManager().getActiveGraphSpace();
 		graph.reDrawGraph();
 		mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
 		layout.setOrientation(SwingConstants.WEST);
@@ -262,7 +261,7 @@ public class GraphView extends JPanel implements SelectionListener {
 	}
 
 	private void removeSelectedCell() {
-		controller.getSelectionManager().getActiveGraphSpace().removeSelectedCell();
+		view.getController().getSelectionManager().getActiveGraphSpace().removeSelectedCell();
 	}
 
 	@Override
@@ -275,7 +274,7 @@ public class GraphView extends JPanel implements SelectionListener {
 
 	@Override
 	public void activeGraphSpaceChanged(GraphSpaceChangeEvent e) {
-		showGraph(controller.getSelectionManager().getActiveGraphSpace());
+		showGraph(view.getController().getSelectionManager().getActiveGraphSpace());
 		applyLayout();
 	}
 

@@ -1,10 +1,10 @@
 package edu.ucdenver.ccp.knowtator.view.textpane;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.events.GraphSpaceChangeEvent;
 import edu.ucdenver.ccp.knowtator.listeners.GraphSpaceListener;
 import edu.ucdenver.ccp.knowtator.model.Span;
 import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
@@ -15,8 +15,8 @@ public class GraphViewKnowtatorTextPane extends KnowtatorTextPane implements Gra
 	private int start;
 	private int end;
 
-	public GraphViewKnowtatorTextPane(KnowtatorController controller) {
-		super(controller);
+	public GraphViewKnowtatorTextPane(KnowtatorView view) {
+		super(view);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class GraphViewKnowtatorTextPane extends KnowtatorTextPane implements Gra
 
 	@Override
 	protected Set<Span> getSpans(Integer loc) {
-		return controller
+		return view.getController()
 				.getSelectionManager()
 				.getActiveTextSource()
 				.getAnnotationManager()
@@ -68,6 +68,6 @@ public class GraphViewKnowtatorTextPane extends KnowtatorTextPane implements Gra
 		e.getNew().addGraphSpaceListener(this);
 		this.start = e.getNew().getGraphTextStart();
 		this.end = e.getNew().getGraphTextEnd();
-		showTextPane(controller.getSelectionManager().getActiveTextSource());
+		showTextPane(view.getController().getSelectionManager().getActiveTextSource());
 	}
 }

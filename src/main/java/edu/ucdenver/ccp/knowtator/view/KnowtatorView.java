@@ -6,6 +6,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.events.*;
 import edu.ucdenver.ccp.knowtator.listeners.SelectionListener;
 import edu.ucdenver.ccp.knowtator.model.Profile;
+import edu.ucdenver.ccp.knowtator.model.Span;
 import edu.ucdenver.ccp.knowtator.model.TextSource;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.view.chooser.ProfileChooser;
@@ -27,10 +28,10 @@ import java.util.Set;
 
 public class KnowtatorView extends AbstractOWLClassViewComponent
         implements DropTargetListener, SelectionListener {
+
   private KnowtatorController controller;
   private GraphViewDialog graphViewDialog;
-  private ProjectMenu projectMenu;
-
+  private JMenu projectMenu;
   private JComponent panel1;
   private JButton previousMatchButton;
   private JButton nextMatchButton;
@@ -68,29 +69,30 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   private TextSourceChooser textSourceChooser;
   private ProfileChooser profileChooser;
   private JButton textToGraphButton;
-  private JPanel menuPane;
 
   public KnowtatorView() {
+    makeController();
     $$$setupUI$$$();
     makeButtons();
+  }
 
-    JMenuBar menuBar = new JMenuBar();
-    menuBar.add(projectMenu);
-    menuPane.add(menuBar, BorderLayout.NORTH);
-    mainPane.setDividerLocation(1537);
-    mainPane.validate();
+  private void makeController() {
+    controller = new KnowtatorController();
+
+    if (getOWLWorkspace() != null) {
+      controller.getOWLAPIDataExtractor().setUpOWL(getOWLWorkspace());
+      getOWLWorkspace()
+              .getOWLModelManager()
+              .addOntologyChangeListener(controller.getTextSourceManager());
+    }
+  }
+
+  public KnowtatorController getController() {
+    return controller;
   }
 
   @Override
   public void initialiseClassView() {
-    //        log.warn("Initializing class view");
-    graphViewDialog = new GraphViewDialog(controller);
-    annotationIDLabel = new AnnotationIDLabel(controller);
-    annotationClassLabel = new AnnotationClassLabel(controller);
-    annotatorLabel = new AnnotatorLabel(controller);
-    spanList = new SpanList();
-    textSourceChooser = new TextSourceChooser(controller);
-    profileChooser = new ProfileChooser(controller);
   }
 
   private void createUIComponents() {
@@ -98,38 +100,45 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     dt.setActive(true);
 
     panel1 = this;
-
-    controller = new KnowtatorController(this);
-
-    projectMenu = new ProjectMenu(controller);
-    knowtatorTextPane = new MainKnowtatorTextPane(controller);
-
-    initialiseClassView();
+    projectMenu = new ProjectMenu(this);
+    knowtatorTextPane = new MainKnowtatorTextPane(this);
+    graphViewDialog = new GraphViewDialog(this);
+    annotationIDLabel = new AnnotationIDLabel(this);
+    annotationClassLabel = new AnnotationClassLabel(this);
+    annotatorLabel = new AnnotatorLabel(this);
+    spanList = new SpanList(this);
+    textSourceChooser = new TextSourceChooser(this);
+    profileChooser = new ProfileChooser(this);
   }
 
   private void makeButtons() {
 
     assignColorToClassButton.addActionListener(
             e -> {
-              OWLClass owlClass = controller.getSelectionManager().getSelectedOWLClass();
+              Object owlClass = controller.getSelectionManager().getSelectedOWLClass();
+              if (owlClass == null) {
+                if (controller.getProjectManager().isProjectLoaded()) {
+                  owlClass = controller.getSelectionManager().getSelectedAnnotation().getOwlClassID();
+                }
+              }
               if (owlClass != null) {
-                Color c =
-                        JColorChooser.showDialog(
-                                controller.getView(), "Pick a color for " + owlClass, Color.CYAN);
+                Color c = JColorChooser.showDialog(this, "Pick a color for " + owlClass, Color.CYAN);
                 if (c != null) {
                   controller.getSelectionManager().getActiveProfile().addColor(owlClass, c);
 
-                  if (JOptionPane.showConfirmDialog(
-                          controller.getView(), "Assign color to descendants of " + owlClass + "?")
-                          == JOptionPane.OK_OPTION) {
-                    try {
-                      Set<OWLClass> descendants =
-                              controller.getOWLAPIDataExtractor().getDescendants(owlClass);
+                  if (owlClass instanceof OWLClass) {
+                    if (JOptionPane.showConfirmDialog(
+                            this, "Assign color to descendants of " + owlClass + "?")
+                            == JOptionPane.OK_OPTION) {
+                      try {
+                        Set<OWLClass> descendants =
+                                controller.getOWLAPIDataExtractor().getDescendants((OWLClass) owlClass);
 
-                      for (OWLClass descendant : descendants) {
-                        controller.getSelectionManager().getActiveProfile().addColor(descendant, c);
+                        for (OWLClass descendant : descendants) {
+                          controller.getSelectionManager().getActiveProfile().addColor(descendant, c);
+                        }
+                      } catch (OWLWorkSpaceNotSetException ignored) {
                       }
-                    } catch (OWLWorkSpaceNotSetException ignored) {
                     }
                   }
                 }
@@ -198,7 +207,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
             e -> {
               if (controller.getProjectManager().isProjectLoaded()
                       && JOptionPane.showConfirmDialog(
-                      controller.getView(),
+                      this,
                       "Are you sure you want to remove the selected annotation?",
                       "Remove Annotation",
                       JOptionPane.YES_NO_OPTION)
@@ -244,10 +253,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                 controller.getSelectionManager().setSelected((Profile) comboBox.getSelectedItem());
               }
             });
+    spanList.addListSelectionListener(
+            e -> {
+              JList jList = (JList) e.getSource();
+              if (jList.getSelectedValue() != null) {
+                controller.getSelectionManager().setSelected((Span) jList.getSelectedValue());
+              }
+            });
     nextMatchButton.addActionListener(
             e -> {
               String textToFind = matchTextField.getText();
-              KnowtatorTextPane currentKnowtatorTextPane = controller.getView().getKnowtatorTextPane();
+              KnowtatorTextPane currentKnowtatorTextPane = getKnowtatorTextPane();
               String textToSearch = currentKnowtatorTextPane.getText();
               if (!caseSensitiveCheckBox.isSelected()) {
                 textToSearch = textToSearch.toLowerCase();
@@ -264,19 +280,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     previousMatchButton.addActionListener(
             e -> {
               String textToFind = matchTextField.getText();
-              KnowtatorTextPane currentKnowtatorTextPane = controller.getView().getKnowtatorTextPane();
-              String textToSearch = currentKnowtatorTextPane.getText();
+              String textToSearch = knowtatorTextPane.getText();
               if (!caseSensitiveCheckBox.isSelected()) {
                 textToSearch = textToSearch.toLowerCase();
               }
               int matchLoc =
-                      textToSearch.lastIndexOf(
-                              textToFind, currentKnowtatorTextPane.getSelectionStart() - 1);
+                      textToSearch.lastIndexOf(textToFind, knowtatorTextPane.getSelectionStart() - 1);
               if (matchLoc != -1) {
-                currentKnowtatorTextPane.requestFocusInWindow();
-                currentKnowtatorTextPane.select(matchLoc, matchLoc + textToFind.length());
+                knowtatorTextPane.requestFocusInWindow();
+                knowtatorTextPane.select(matchLoc, matchLoc + textToFind.length());
               } else {
-                currentKnowtatorTextPane.setSelectionStart(-1);
+                knowtatorTextPane.setSelectionStart(-1);
               }
             });
 
@@ -294,7 +308,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     controller.getSelectionManager().addListener(annotationIDLabel);
     controller.getSelectionManager().addListener(annotationClassLabel);
     controller.getSelectionManager().addListener(annotatorLabel);
-    controller.getSelectionManager().addListener(spanList);
   }
 
   private void owlEntitySelectionChanged(OWLEntity owlEntity) {
@@ -313,8 +326,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
   @Override
   public void disposeView() {
-    if (controller.getProjectManager().isProjectLoaded() && JOptionPane.showConfirmDialog(
-            controller.getView(),
+    if (controller.getProjectManager().isProjectLoaded()
+            && JOptionPane.showConfirmDialog(
+            this,
             "Save changes to Knowtator project?",
             "Save Project",
             JOptionPane.YES_NO_OPTION)
@@ -335,7 +349,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   public void drop(DropTargetDropEvent e) {
   }
 
-  private KnowtatorTextPane getKnowtatorTextPane() {
+  public KnowtatorTextPane getKnowtatorTextPane() {
     return knowtatorTextPane;
   }
 
@@ -390,11 +404,11 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
    */
   private void $$$setupUI$$$() {
     createUIComponents();
-    panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+    panel1.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
     mainPane = new JSplitPane();
     mainPane.setDividerLocation(1536);
     mainPane.setOneTouchExpandable(true);
-    panel1.add(mainPane, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
+    panel1.add(mainPane, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
     infoPane = new JSplitPane();
     infoPane.setOrientation(0);
     mainPane.setRightComponent(infoPane);
@@ -447,12 +461,12 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     annotatorLabel.setVerticalTextPosition(1);
     infoPanel.add(annotatorLabel, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
     textPanel = new JPanel();
-    textPanel.setLayout(new GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));
+    textPanel.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
     mainPane.setLeftComponent(textPanel);
     textPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-16777216)), null));
     textSourceToolBar = new JToolBar();
     textSourceToolBar.setFloatable(false);
-    textPanel.add(textSourceToolBar, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
+    textPanel.add(textSourceToolBar, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
     decreaseFontSizeButton = new JButton();
     decreaseFontSizeButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-Decrease Font (Custom).png")));
     decreaseFontSizeButton.setText("");
@@ -483,7 +497,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     textSourceToolBar.add(profileChooser);
     annotationToolBar = new JToolBar();
     annotationToolBar.setFloatable(false);
-    textPanel.add(annotationToolBar, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
+    textPanel.add(annotationToolBar, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
     showGraphViewerButton = new JButton();
     showGraphViewerButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-edit-node-50 (Custom).png")));
     showGraphViewerButton.setText("");
@@ -543,7 +557,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     profileFilterCheckBox.setToolTipText(ResourceBundle.getBundle("ui").getString("filter.annotations.by.profile"));
     annotationToolBar.add(profileFilterCheckBox);
     final JScrollPane scrollPane2 = new JScrollPane();
-    textPanel.add(scrollPane2, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+    textPanel.add(scrollPane2, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     knowtatorTextPane.setBackground(new Color(-1));
     knowtatorTextPane.setEditable(false);
     knowtatorTextPane.setFocusTraversalPolicyProvider(true);
@@ -551,9 +565,18 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     knowtatorTextPane.setForeground(new Color(-16777216));
     knowtatorTextPane.setText("");
     scrollPane2.setViewportView(knowtatorTextPane);
-    menuPane = new JPanel();
-    menuPane.setLayout(new BorderLayout(0, 0));
-    textPanel.add(menuPane, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(-1, 30), new Dimension(-1, 30), 0, false));
+    final JMenuBar menuBar1 = new JMenuBar();
+    menuBar1.setLayout(new GridBagLayout());
+    panel1.add(menuBar1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+    projectMenu.setSelected(false);
+    projectMenu.setText("Knowator Project");
+    GridBagConstraints gbc;
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.weightx = 1.0;
+    gbc.weighty = 1.0;
+    menuBar1.add(projectMenu, gbc);
   }
 
   /**
