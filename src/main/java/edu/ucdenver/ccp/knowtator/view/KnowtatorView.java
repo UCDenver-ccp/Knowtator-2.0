@@ -4,8 +4,8 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.events.*;
-import edu.ucdenver.ccp.knowtator.listeners.SelectionListener;
+import edu.ucdenver.ccp.knowtator.listeners.OWLClassSelectionListener;
+import edu.ucdenver.ccp.knowtator.listeners.OWLObjectPropertySelectionListener;
 import edu.ucdenver.ccp.knowtator.model.Profile;
 import edu.ucdenver.ccp.knowtator.model.Span;
 import edu.ucdenver.ccp.knowtator.model.TextSource;
@@ -29,7 +29,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 public class KnowtatorView extends AbstractOWLClassViewComponent
-        implements DropTargetListener, SelectionListener {
+        implements DropTargetListener, OWLClassSelectionListener, OWLObjectPropertySelectionListener {
 
   private KnowtatorController controller;
   private GraphViewDialog graphViewDialog;
@@ -76,6 +76,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     makeController();
     $$$setupUI$$$();
     makeButtons();
+
+    controller.getSelectionManager().addOWLClassListener(this);
+    controller.getSelectionManager().addOWLObjectPropertyListener(this);
 
     // This is necessary to force OSGI to load the mxGraphTransferable class to allow node dragging.
     // It is kind of a hacky fix, but it works for now.
@@ -253,21 +256,21 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
             e -> {
               JComboBox comboBox = (JComboBox) e.getSource();
               if (comboBox.getSelectedItem() != null) {
-                controller.getSelectionManager().setSelected((TextSource) comboBox.getSelectedItem());
+                controller.getSelectionManager().setSelectedTextSource((TextSource) comboBox.getSelectedItem());
               }
             });
     profileChooser.addActionListener(
             e -> {
               JComboBox comboBox = (JComboBox) e.getSource();
               if (comboBox.getSelectedItem() != null) {
-                controller.getSelectionManager().setSelected((Profile) comboBox.getSelectedItem());
+                controller.getSelectionManager().setSelectedProfile((Profile) comboBox.getSelectedItem());
               }
             });
     spanList.addListSelectionListener(
             e -> {
               JList jList = (JList) e.getSource();
               if (jList.getSelectedValue() != null) {
-                controller.getSelectionManager().setSelected((Span) jList.getSelectedValue());
+                controller.getSelectionManager().setSelectedSpan((Span) jList.getSelectedValue());
               }
             });
     nextMatchButton.addActionListener(
@@ -314,10 +317,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                                 knowtatorTextPane.getSelectionStart(), knowtatorTextPane.getSelectionEnd());
               }
             });
-
-    controller.getSelectionManager().addListener(annotationIDLabel);
-    controller.getSelectionManager().addListener(annotationClassLabel);
-    controller.getSelectionManager().addListener(annotatorLabel);
   }
 
   private void owlEntitySelectionChanged(OWLEntity owlEntity) {
@@ -379,30 +378,15 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     return graphViewDialog;
   }
 
+
   @Override
-  public void selectedAnnotationChanged(AnnotationChangeEvent e) {
-    owlEntitySelectionChanged(e.getNew().getOwlClass());
+  public void owlClassChanged(OWLClass owlClass) {
+    owlEntitySelectionChanged(owlClass);
   }
 
   @Override
-  public void selectedSpanChanged(SpanChangeEvent e) {
-  }
-
-  @Override
-  public void activeGraphSpaceChanged(GraphSpaceChangeEvent e) {
-  }
-
-  @Override
-  public void activeTextSourceChanged(TextSourceChangeEvent e) {
-  }
-
-  @Override
-  public void activeProfileChange(ProfileChangeEvent e) {
-  }
-
-  @Override
-  public void owlPropertyChangedEvent(OWLObjectProperty value) {
-    owlEntitySelectionChanged(value);
+  public void owlObjectPropertyChanged(OWLObjectProperty owlObjectProperty) {
+    owlEntitySelectionChanged(owlObjectProperty);
   }
 
   /**

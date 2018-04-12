@@ -41,7 +41,7 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
     TextSource newTextSource = new TextSource(controller, file, textFileName);
     textSourceCollection.add(newTextSource);
 
-    controller.getSelectionManager().setSelected(newTextSource);
+    controller.getSelectionManager().setSelectedTextSource(newTextSource);
     return newTextSource;
   }
 

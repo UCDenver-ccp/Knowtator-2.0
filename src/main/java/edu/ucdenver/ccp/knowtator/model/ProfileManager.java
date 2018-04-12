@@ -42,13 +42,13 @@ public class ProfileManager implements Savable {
       newProfile = new Profile(controller, profileID);
       profileCollection.add(newProfile);
     }
-    controller.getSelectionManager().setSelected(newProfile);
+    controller.getSelectionManager().setSelectedProfile(newProfile);
     return newProfile;
   }
 
   private void removeProfile(Profile profile) {
     profileCollection.remove(profile);
-    controller.getSelectionManager().setSelected(profileCollection.iterator().next());
+    controller.getSelectionManager().setSelectedProfile(profileCollection.iterator().next());
   }
 
   public ProfileCollection getProfileCollection() {

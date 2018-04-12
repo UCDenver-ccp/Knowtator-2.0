@@ -1,13 +1,12 @@
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.events.*;
-import edu.ucdenver.ccp.knowtator.listeners.SelectionListener;
+import edu.ucdenver.ccp.knowtator.events.AnnotationChangeEvent;
+import edu.ucdenver.ccp.knowtator.listeners.AnnotationSelectionListener;
 import edu.ucdenver.ccp.knowtator.model.Annotation;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.swing.*;
 
-class AnnotationIDLabel extends JLabel implements SelectionListener {
+class AnnotationIDLabel extends JLabel implements AnnotationSelectionListener {
 
 
 	private KnowtatorView view;
@@ -15,6 +14,7 @@ class AnnotationIDLabel extends JLabel implements SelectionListener {
 	AnnotationIDLabel(KnowtatorView view) {
 
 		this.view = view;
+		view.getController().getSelectionManager().addAnnotationListener(this);
 	}
 
 	@Override
@@ -23,26 +23,5 @@ class AnnotationIDLabel extends JLabel implements SelectionListener {
 		if (annotation != null) {
 			setText(annotation.getId());
 		}
-	}
-
-	@Override
-	public void selectedSpanChanged(SpanChangeEvent e) {
-	}
-
-	@Override
-	public void activeGraphSpaceChanged(GraphSpaceChangeEvent e) {
-	}
-
-	@Override
-	public void activeTextSourceChanged(TextSourceChangeEvent e) {
-	}
-
-	@Override
-	public void activeProfileChange(ProfileChangeEvent e) {
-	}
-
-	@Override
-	public void owlPropertyChangedEvent(OWLObjectProperty value) {
-
 	}
 }

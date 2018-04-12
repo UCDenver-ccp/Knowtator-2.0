@@ -2,8 +2,7 @@ package edu.ucdenver.ccp.knowtator.model;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.events.*;
-import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
-import edu.ucdenver.ccp.knowtator.listeners.SelectionListener;
+import edu.ucdenver.ccp.knowtator.listeners.*;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
@@ -17,8 +16,6 @@ import java.util.List;
 
 public class SelectionManager implements CaretListener, ChangeListener, ProjectListener {
   private KnowtatorController controller;
-  private List<SelectionListener> listeners;
-
   private Annotation selectedAnnotation;
   private Span selectedSpan;
   private GraphSpace activeGraphSpace;
@@ -28,19 +25,29 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
   private OWLClass selectedOWLClass;
   private int start;
   private int end;
+  private List<TextSourceSelectionListener> textSourceListeners;
+  private List<AnnotationSelectionListener> annotationListeners;
+  private List<SpanSelectionListener> spanListeners;
+  private List<ProfileSelectionListener> profileListeners;
+  private List<OWLClassSelectionListener> owlClassListeners;
+  private List<OWLObjectPropertySelectionListener> owlObjectPropertyListeners;
+  private List<GraphSpaceSelectionListener> graphSpaceListeners;
+  private OWLObjectProperty selectedOWLObjectProperty;
 
   public SelectionManager(KnowtatorController knowtatorController) {
     controller = knowtatorController;
     controller.getProjectManager().addListener(this);
     filterByProfile = false;
-    listeners = new ArrayList<>();
+    textSourceListeners = new ArrayList<>();
+    annotationListeners = new ArrayList<>();
+    spanListeners = new ArrayList<>();
+    profileListeners = new ArrayList<>();
+    owlClassListeners = new ArrayList<>();
+    owlObjectPropertyListeners = new ArrayList<>();
+    graphSpaceListeners = new ArrayList<>();
 
     start = 0;
     end = 0;
-  }
-
-  public void addListener(SelectionListener listener) {
-    listeners.add(listener);
   }
 
   public int getStart() {
@@ -55,10 +62,10 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
     return activeProfile;
   }
 
-  public void setSelected(Profile newProfile) {
+  public void setSelectedProfile(Profile newProfile) {
     ProfileChangeEvent e = new ProfileChangeEvent(this.activeProfile, newProfile);
     this.activeProfile = newProfile;
-    listeners.forEach(selectionListener -> selectionListener.activeProfileChange(e));
+    profileListeners.forEach(selectionListener -> selectionListener.activeProfileChange(e));
   }
 
   public int getEnd() {
@@ -79,6 +86,7 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
 
   public void setSelectedOWLClass(OWLClass owlClass) {
     selectedOWLClass = owlClass;
+    owlClassListeners.forEach(listener -> listener.owlClassChanged(owlClass));
   }
 
   boolean isFilterByProfile() {
@@ -89,16 +97,16 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
     return activeTextSource;
   }
 
-  public void setSelected(TextSource newTextSource) {
+  public void setSelectedTextSource(TextSource newTextSource) {
     if (controller.getProjectManager().isProjectLoaded()) {
       TextSourceChangeEvent e = new TextSourceChangeEvent(this.activeTextSource, newTextSource);
       this.activeTextSource = newTextSource;
-      setSelected(null, null);
+      setSelectedAnnotation(null, null);
       if (!newTextSource.getAnnotationManager().getGraphSpaceCollection().getCollection().isEmpty()) {
-        setSelected(
+        setSelectedGraphSpace(
                 newTextSource.getAnnotationManager().getGraphSpaceCollection().getCollection().first());
       }
-      listeners.forEach(selectionListener -> selectionListener.activeTextSourceChanged(e));
+      textSourceListeners.forEach(selectionListener -> selectionListener.activeTextSourceChanged(e));
     }
   }
 
@@ -106,39 +114,39 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
     return selectedSpan;
   }
 
-  public void setSelected(Span newSpan) {
+  public void setSelectedSpan(Span newSpan) {
     SpanChangeEvent e = new SpanChangeEvent(selectedSpan, newSpan);
 
     this.selectedSpan = newSpan;
     if (newSpan != null) {
-      setSelected(newSpan.getAnnotation(), newSpan);
+      setSelectedAnnotation(newSpan.getAnnotation(), newSpan);
     }
 
-    listeners.forEach(listener -> listener.selectedSpanChanged(e));
+    spanListeners.forEach(listener -> listener.selectedSpanChanged(e));
   }
 
   public GraphSpace getActiveGraphSpace() {
     return activeGraphSpace;
   }
 
-  public void setSelected(GraphSpace newGraphSpace) {
+  public void setSelectedGraphSpace(GraphSpace newGraphSpace) {
     if (controller.getProjectManager().isProjectLoaded()) {
       GraphSpaceChangeEvent e = new GraphSpaceChangeEvent(this.activeGraphSpace, newGraphSpace);
       this.activeGraphSpace = newGraphSpace;
-      listeners.forEach(selectionListener -> selectionListener.activeGraphSpaceChanged(e));
+      graphSpaceListeners.forEach(selectionListener -> selectionListener.activeGraphSpaceChanged(e));
     }
   }
 
-  public void setSelected(Annotation newAnnotation, Span newSpan) {
+  public void setSelectedAnnotation(Annotation newAnnotation, Span newSpan) {
     if (selectedAnnotation != newAnnotation) {
       AnnotationChangeEvent e = new AnnotationChangeEvent(this.selectedAnnotation, newAnnotation);
       selectedAnnotation = newAnnotation;
       if (selectedAnnotation != null) {
-        setSelected(newSpan);
+        setSelectedSpan(newSpan);
       } else if (activeGraphSpace != null) {
         activeGraphSpace.setSelectionCell(null);
       }
-      listeners.forEach(selectionListener -> selectionListener.selectedAnnotationChanged(e));
+      annotationListeners.forEach(selectionListener -> selectionListener.selectedAnnotationChanged(e));
     }
   }
 
@@ -155,7 +163,7 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
 
   public void getNextGraphSpace() {
     if (controller.getProjectManager().isProjectLoaded()) {
-      setSelected(
+      setSelectedGraphSpace(
               activeTextSource
                       .getAnnotationManager()
                       .getGraphSpaceCollection()
@@ -165,7 +173,7 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
 
   public void getPreviousGraphSpace() {
     if (controller.getProjectManager().isProjectLoaded()) {
-      setSelected(
+      setSelectedGraphSpace(
               activeTextSource
                       .getAnnotationManager()
                       .getGraphSpaceCollection()
@@ -175,28 +183,28 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
 
   public void getNextSpan() {
     if (controller.getProjectManager().isProjectLoaded()) {
-      setSelected(
+      setSelectedSpan(
               activeTextSource.getAnnotationManager().getAllSpanCollection().getNext(selectedSpan));
     }
   }
 
   public void getPreviousSpan() {
     if (controller.getProjectManager().isProjectLoaded()) {
-      setSelected(
+      setSelectedSpan(
               activeTextSource.getAnnotationManager().getAllSpanCollection().getPrevious(selectedSpan));
     }
   }
 
   public void getNextTextSource() {
     if (controller.getProjectManager().isProjectLoaded()) {
-      setSelected(
+      setSelectedTextSource(
               controller.getTextSourceManager().getTextSourceCollection().getNext(activeTextSource));
     }
   }
 
   public void getPreviousTextSource() {
     if (controller.getProjectManager().isProjectLoaded()) {
-      setSelected(
+      setSelectedTextSource(
               controller
                       .getTextSourceManager()
                       .getTextSourceCollection()
@@ -204,8 +212,9 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
     }
   }
 
-  public void setSelectedOWLProperty(OWLObjectProperty value) {
-    listeners.forEach(selectionListener -> selectionListener.owlPropertyChangedEvent(value));
+  public void setSelectedOWLObjectProperty(OWLObjectProperty owlObjectProperty) {
+    this.selectedOWLObjectProperty = owlObjectProperty;
+    owlObjectPropertyListeners.forEach(selectionListener -> selectionListener.owlObjectPropertyChanged(owlObjectProperty));
   }
 
   @Override
@@ -214,6 +223,38 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
 
   @Override
   public void projectLoaded() {
-    setSelected(controller.getTextSourceManager().getTextSourceCollection().getCollection().first());
+    setSelectedTextSource(controller.getTextSourceManager().getTextSourceCollection().getCollection().first());
+  }
+
+  public void addTextSourceListener(TextSourceSelectionListener listener) {
+    textSourceListeners.add(listener);
+  }
+
+  public void addProfileListener(ProfileSelectionListener listener) {
+    profileListeners.add(listener);
+  }
+
+  public void addAnnotationListener(AnnotationSelectionListener listener) {
+    annotationListeners.add(listener);
+  }
+
+  public void addSpanListener(SpanSelectionListener listener) {
+    spanListeners.add(listener);
+  }
+
+  public void addGraphSpaceListener(GraphSpaceSelectionListener listener) {
+    graphSpaceListeners.add(listener);
+  }
+
+  public void addOWLClassListener(OWLClassSelectionListener listener) {
+    owlClassListeners.add(listener);
+  }
+
+  public void addOWLObjectPropertyListener(OWLObjectPropertySelectionListener listener) {
+    owlObjectPropertyListeners.add(listener);
+  }
+
+  public OWLObjectProperty getSelectedOWLObjectProperty() {
+    return selectedOWLObjectProperty;
   }
 }

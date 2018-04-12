@@ -6,6 +6,7 @@ import edu.ucdenver.ccp.knowtator.listeners.DebugListener;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLWorkspace;
+import org.protege.editor.owl.model.selection.OWLSelectionModelListener;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class OWLAPIDataExtractor implements Serializable, DebugListener {
+public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSelectionModelListener {
   @SuppressWarnings("unused")
   private static final Logger log = LogManager.getLogger(OWLAPIDataExtractor.class);
 
@@ -86,10 +87,10 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener {
         .getOWLClassHierarchyProvider()
         .getDescendants(cls);
   }
-
-  public OWLObjectProperty getSelectedProperty() throws OWLWorkSpaceNotSetException {
-    return getWorkSpace().getOWLSelectionModel().getLastSelectedObjectProperty();
-  }
+//
+//  public OWLObjectProperty getSelectedProperty() throws OWLWorkSpaceNotSetException {
+//    return getWorkSpace().getOWLSelectionModel().getLastSelectedObjectProperty();
+//  }
 
   public String getOWLClassID(OWLClass cls) throws OWLWorkSpaceNotSetException {
     try {
@@ -102,6 +103,7 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener {
 
   public void setUpOWL(OWLWorkspace owlWorkSpace) {
     this.owlWorkSpace = owlWorkSpace;
+    owlWorkSpace.getOWLSelectionModel().addListener(this);
   }
 
   private OWLWorkspace getWorkSpace() throws OWLWorkSpaceNotSetException {
@@ -164,8 +166,28 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener {
     OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 //	  OWLModelManager manager2 = new OWLModelManagerImpl();
     OWLDataFactory factory = manager.getOWLDataFactory();
+
     IRI iri = IRI.create("test");
     OWLClass testClass = factory.getOWLClass(iri);
     controller.getSelectionManager().setSelectedOWLClass(testClass);
+
+    iri = IRI.create("property_test");
+    OWLObjectProperty  objectProperty = factory.getOWLObjectProperty(iri);
+    controller.getSelectionManager().setSelectedOWLObjectProperty(objectProperty);
+  }
+
+  @Override
+  public void selectionChanged() {
+    OWLEntity ent = null;
+    try {
+      ent = getWorkSpace().getOWLSelectionModel().getSelectedEntity();
+    } catch (OWLWorkSpaceNotSetException e) {
+      e.printStackTrace();
+    }
+    if (ent instanceof OWLObjectProperty) {
+      controller.getSelectionManager().setSelectedOWLObjectProperty((OWLObjectProperty) ent);
+    } else if (ent instanceof OWLClass) {
+      controller.getSelectionManager().setSelectedOWLClass((OWLClass) ent);
+    }
   }
 }

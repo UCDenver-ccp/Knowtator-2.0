@@ -93,7 +93,11 @@ public class Triple extends mxCell implements Savable, KnowtatorObject {
   @Override
   public Object getValue() {
     try {
-      setValue(controller.getOWLAPIDataExtractor().getOWLObjectPropertyByID((String) value));
+      if (value instanceof String) {
+        setValue(controller.getOWLAPIDataExtractor().getOWLObjectPropertyByID((String) value));
+      } else {
+        return value;
+      }
     } catch (OWLObjectPropertyNotFoundException | OWLWorkSpaceNotSetException ignored) {
     }
     return value;

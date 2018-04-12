@@ -1,17 +1,16 @@
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.events.*;
-import edu.ucdenver.ccp.knowtator.listeners.SelectionListener;
+import edu.ucdenver.ccp.knowtator.events.AnnotationChangeEvent;
+import edu.ucdenver.ccp.knowtator.listeners.AnnotationSelectionListener;
 import edu.ucdenver.ccp.knowtator.model.Span;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.swing.*;
 import java.util.Set;
 
-public class SpanList extends JList<Span> implements SelectionListener {
+public class SpanList extends JList<Span> implements AnnotationSelectionListener {
 
 	SpanList(KnowtatorView view) {
-		view.getController().getSelectionManager().addListener(this);
+		view.getController().getSelectionManager().addAnnotationListener(this);
 
 	}
 
@@ -23,25 +22,4 @@ public class SpanList extends JList<Span> implements SelectionListener {
 		}
 	}
 
-	@Override
-	public void selectedSpanChanged(SpanChangeEvent e) {
-		setSelectedValue(e.getNew(), true);
-	}
-
-	@Override
-	public void activeGraphSpaceChanged(GraphSpaceChangeEvent e) {
-	}
-
-	@Override
-	public void activeTextSourceChanged(TextSourceChangeEvent e) {
-	}
-
-	@Override
-	public void activeProfileChange(ProfileChangeEvent e) {
-	}
-
-	@Override
-	public void owlPropertyChangedEvent(OWLObjectProperty value) {
-
-	}
 }

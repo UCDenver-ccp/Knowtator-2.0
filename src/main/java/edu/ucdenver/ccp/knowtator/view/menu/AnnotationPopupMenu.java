@@ -67,7 +67,7 @@ public class AnnotationPopupMenu extends JPopupMenu {
 	private JMenuItem selectAnnotationCommand(Annotation annotation, Span span) {
 		JMenuItem selectAnnotationMenuItem = new JMenuItem("Select " + annotation.getOwlClass());
 		selectAnnotationMenuItem.addActionListener(
-				e3 -> view.getController().getSelectionManager().setSelected(span));
+				e3 -> view.getController().getSelectionManager().setSelectedSpan(span));
 
 		return selectAnnotationMenuItem;
 	}
@@ -116,9 +116,9 @@ public class AnnotationPopupMenu extends JPopupMenu {
 				menuItem.addActionListener(
 						e1 -> {
 							view.getGraphViewDialog().setVisible(true);
-							view.getController().getSelectionManager().setSelected(graphSpace);
-							view.getController().getSelectionManager().setSelected(null, null);
-							view.getController().getSelectionManager().setSelected(annotation, null);
+							view.getController().getSelectionManager().setSelectedGraphSpace(graphSpace);
+							view.getController().getSelectionManager().setSelectedAnnotation(null, null);
+							view.getController().getSelectionManager().setSelectedAnnotation(annotation, null);
 						});
 				jMenu.add(menuItem);
 			}

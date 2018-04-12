@@ -44,13 +44,13 @@ public class AnnotationManager implements Savable {
 
     allSpanCollection.getCollection().addAll(newAnnotation.getSpanCollection().getCollection());
 
-    controller.getSelectionManager().setSelected(newAnnotation, null);
+    controller.getSelectionManager().setSelectedAnnotation(newAnnotation, null);
   }
 
   public void addSpanToAnnotation(Annotation annotation, Span newSpan) {
     annotation.addSpan(newSpan);
     allSpanCollection.add(newSpan);
-    controller.getSelectionManager().setSelected(newSpan);
+    controller.getSelectionManager().setSelectedSpan(newSpan);
   }
 
   public void removeAnnotation(Annotation annotationToRemove) {
@@ -64,7 +64,7 @@ public class AnnotationManager implements Savable {
         graphSpace.removeSelectedCell();
       }
     }
-    controller.getSelectionManager().setSelected(null, null);
+    controller.getSelectionManager().setSelectedAnnotation(null, null);
   }
 
   public void removeSpanFromAnnotation(Annotation annotation, Span span) {
@@ -97,7 +97,7 @@ public class AnnotationManager implements Savable {
     allSpanCollection.remove(span);
     span.growStart();
     allSpanCollection.add(span);
-    controller.getSelectionManager().setSelected(span);
+    controller.getSelectionManager().setSelectedSpan(span);
   }
 
   public void growSelectedSpanEnd() {
@@ -105,7 +105,7 @@ public class AnnotationManager implements Savable {
     allSpanCollection.remove(span);
     span.growEnd(textSource.getContent().length());
     allSpanCollection.add(controller.getSelectionManager().getSelectedSpan());
-    controller.getSelectionManager().setSelected(span);
+    controller.getSelectionManager().setSelectedSpan(span);
   }
 
   public void shrinkSelectedSpanEnd() {
@@ -113,7 +113,7 @@ public class AnnotationManager implements Savable {
     allSpanCollection.remove(span);
     span.shrinkEnd();
     allSpanCollection.add(span);
-    controller.getSelectionManager().setSelected(span);
+    controller.getSelectionManager().setSelectedSpan(span);
   }
 
   public void shrinkSelectedSpanStart() {
@@ -121,7 +121,7 @@ public class AnnotationManager implements Savable {
     allSpanCollection.remove(span);
     span.shrinkStart();
     allSpanCollection.add(span);
-    controller.getSelectionManager().setSelected(span);
+    controller.getSelectionManager().setSelectedSpan(span);
   }
 
   @SuppressWarnings("unused")
@@ -152,7 +152,7 @@ public class AnnotationManager implements Savable {
   public GraphSpace addGraphSpace(String title) {
     GraphSpace newGraphSpace = new GraphSpace(controller, textSource, title);
     graphSpaceCollection.add(newGraphSpace);
-    controller.getSelectionManager().setSelected(newGraphSpace);
+    controller.getSelectionManager().setSelectedGraphSpace(newGraphSpace);
     return newGraphSpace;
   }
 

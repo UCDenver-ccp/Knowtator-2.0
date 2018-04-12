@@ -8,13 +8,12 @@ import com.mxgraph.swing.util.mxMorphing;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
-import edu.ucdenver.ccp.knowtator.events.*;
-import edu.ucdenver.ccp.knowtator.listeners.SelectionListener;
+import edu.ucdenver.ccp.knowtator.events.GraphSpaceChangeEvent;
+import edu.ucdenver.ccp.knowtator.listeners.GraphSpaceSelectionListener;
 import edu.ucdenver.ccp.knowtator.model.Annotation;
 import edu.ucdenver.ccp.knowtator.model.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.Triple;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
 import edu.ucdenver.ccp.knowtator.view.textpane.GraphViewKnowtatorTextPane;
 import org.apache.log4j.Logger;
@@ -27,7 +26,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class GraphView extends JPanel implements SelectionListener {
+public class GraphView extends JPanel implements GraphSpaceSelectionListener {
 	private JButton removeCellButton;
 	private JButton addAnnotationNodeButton;
 	private JButton applyLayoutButton;
@@ -47,7 +46,7 @@ public class GraphView extends JPanel implements SelectionListener {
 	GraphView(JDialog dialog, KnowtatorView view) {
 		this.dialog = dialog;
 		this.view = view;
-		view.getController().getSelectionManager().addListener(this);
+		view.getController().getSelectionManager().addGraphSpaceListener(this);
 		$$$setupUI$$$();
 		makeButtons();
 	}
@@ -69,7 +68,7 @@ public class GraphView extends JPanel implements SelectionListener {
 					if (comboBox.getSelectedItem() != null
 							&& comboBox.getSelectedItem()
 							!= view.getController().getSelectionManager().getActiveTextSource()) {
-						view.getController().getSelectionManager().setSelected((GraphSpace) comboBox.getSelectedItem());
+						view.getController().getSelectionManager().setSelectedGraphSpace((GraphSpace) comboBox.getSelectedItem());
 					}
 				});
 
@@ -93,61 +92,56 @@ public class GraphView extends JPanel implements SelectionListener {
 
 	private void setupListeners(mxGraphComponent graphComponent) {
 		GraphSpace graph = (GraphSpace) graphComponent.getGraph();
-		// Handle drag and drop
-		// Adds the current selected object property as the edge value
-		graph.addListener(
-				mxEvent.ADD_CELLS,
-				(sender, evt) -> {
-					Object[] cells = (Object[]) evt.getProperty("cells");
-					for (Object cell : cells) {
-						if (graph.getModel().isEdge(cell) && "".equals(((mxCell) cell).getValue())) {
-							mxCell edge = (mxCell) cell;
-							try {
-								Object property = view.getController().getOWLAPIDataExtractor().getSelectedProperty();
-								mxICell source = edge.getSource();
-								mxICell target = edge.getTarget();
+    // Handle drag and drop
+    // Adds the current selected object property as the edge value
+    graph.addListener(
+        mxEvent.ADD_CELLS,
+        (sender, evt) -> {
+          Object[] cells = (Object[]) evt.getProperty("cells");
+          for (Object cell : cells) {
+            if (graph.getModel().isEdge(cell) && "".equals(((mxCell) cell).getValue())) {
+              mxCell edge = (mxCell) cell;
+              Object property =
+                  view.getController().getSelectionManager().getSelectedOWLObjectProperty();
+              if (property != null) {
+                mxICell source = edge.getSource();
+                mxICell target = edge.getTarget();
 
-								JTextField quantifierField = new JTextField(10);
-								JTextField valueField = new JTextField(10);
-								JPanel restrictionPanel = new JPanel();
-								restrictionPanel.add(new JLabel("Quantifier:"));
-								restrictionPanel.add(quantifierField);
-								restrictionPanel.add(Box.createHorizontalStrut(15));
-								restrictionPanel.add(new JLabel("Value:"));
-								restrictionPanel.add(valueField);
+                JTextField quantifierField = new JTextField(10);
+                JTextField valueField = new JTextField(10);
+                JPanel restrictionPanel = new JPanel();
+                restrictionPanel.add(new JLabel("Quantifier:"));
+                restrictionPanel.add(quantifierField);
+                restrictionPanel.add(Box.createHorizontalStrut(15));
+                restrictionPanel.add(new JLabel("Value:"));
+                restrictionPanel.add(valueField);
 
-								String quantifier = "";
-								String value = "";
-								int result =
-										JOptionPane.showConfirmDialog(
-												view,
-												restrictionPanel,
-												"Restriction options",
-												JOptionPane.DEFAULT_OPTION);
-								if (result == JOptionPane.OK_OPTION) {
-									quantifier = quantifierField.getText();
-									value = valueField.getText();
-								}
+                String quantifier = "";
+                String value = "";
+                int result =
+                    JOptionPane.showConfirmDialog(
+                        view, restrictionPanel, "Restriction options", JOptionPane.DEFAULT_OPTION);
+                if (result == JOptionPane.OK_OPTION) {
+                  quantifier = quantifierField.getText();
+                  value = valueField.getText();
+                }
 
-								graph.addTriple(
-										(AnnotationNode) source,
-										(AnnotationNode) target,
-										null,
-										view.getController().getSelectionManager().getActiveProfile(),
-										property,
-										quantifier,
-										value);
+                graph.addTriple(
+                    (AnnotationNode) source,
+                    (AnnotationNode) target,
+                    null,
+                    view.getController().getSelectionManager().getActiveProfile(),
+                    property,
+                    quantifier,
+                    value);
+              }
 
-								graph.getModel().remove(edge);
-							} catch (OWLWorkSpaceNotSetException e) {
-								graph.getModel().remove(edge);
-							}
-						}
-					}
+              graph.getModel().remove(edge);
+            }
+          }
 
-					graph.reDrawGraph();
-
-				});
+          graph.reDrawGraph();
+        });
 
 		graph.addListener(mxEvent.MOVE_CELLS, (sender, evt) -> graph.reDrawGraph());
 
@@ -168,7 +162,7 @@ public class GraphView extends JPanel implements SelectionListener {
 									if (cell instanceof AnnotationNode) {
 										Annotation annotation = ((AnnotationNode) cell).getAnnotation();
 
-										view.getController().getSelectionManager().setSelected(annotation, null);
+										view.getController().getSelectionManager().setSelectedAnnotation(annotation, null);
 
 										graph.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
 
@@ -177,7 +171,7 @@ public class GraphView extends JPanel implements SelectionListener {
 										if (value instanceof OWLObjectProperty) {
 											view.getController()
 													.getSelectionManager()
-													.setSelectedOWLProperty((OWLObjectProperty) value);
+													.setSelectedOWLObjectProperty((OWLObjectProperty) value);
 										}
 									}
 								}
@@ -189,7 +183,7 @@ public class GraphView extends JPanel implements SelectionListener {
 	@SuppressWarnings("unused")
 	public void goToAnnotationVertex(GraphSpace graphSpace, Annotation annotation) {
 		if (annotation != null && graphSpace != null) {
-			view.getController().getSelectionManager().setSelected(graphSpace);
+			view.getController().getSelectionManager().setSelectedGraphSpace(graphSpace);
 			List<Object> vertices = graphSpace.getVerticesForAnnotation(annotation);
 			if (vertices.size() > 0) {
 				graphSpace.setSelectionCells(vertices);
@@ -265,30 +259,12 @@ public class GraphView extends JPanel implements SelectionListener {
 	}
 
 	@Override
-	public void selectedAnnotationChanged(AnnotationChangeEvent e) {
-	}
-
-	@Override
-	public void selectedSpanChanged(SpanChangeEvent e) {
-	}
-
-	@Override
 	public void activeGraphSpaceChanged(GraphSpaceChangeEvent e) {
 		showGraph(view.getController().getSelectionManager().getActiveGraphSpace());
 		applyLayout();
 	}
 
-	@Override
-	public void activeTextSourceChanged(TextSourceChangeEvent e) {
-	}
 
-	@Override
-	public void activeProfileChange(ProfileChangeEvent e) {
-	}
-
-	@Override
-	public void owlPropertyChangedEvent(OWLObjectProperty value) {
-	}
 
 	/**
 	 * Method generated by IntelliJ IDEA GUI Designer

@@ -2,6 +2,7 @@ package edu.ucdenver.ccp.knowtator.view.textpane;
 
 import edu.ucdenver.ccp.knowtator.events.GraphSpaceChangeEvent;
 import edu.ucdenver.ccp.knowtator.listeners.GraphSpaceListener;
+import edu.ucdenver.ccp.knowtator.listeners.GraphSpaceSelectionListener;
 import edu.ucdenver.ccp.knowtator.model.Span;
 import edu.ucdenver.ccp.knowtator.model.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
@@ -10,13 +11,14 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import java.util.Set;
 
-public class GraphViewKnowtatorTextPane extends KnowtatorTextPane implements GraphSpaceListener {
+public class GraphViewKnowtatorTextPane extends KnowtatorTextPane implements GraphSpaceListener, GraphSpaceSelectionListener {
 
 	private int start;
 	private int end;
 
 	public GraphViewKnowtatorTextPane(KnowtatorView view) {
 		super(view);
+		view.getController().getSelectionManager().addGraphSpaceListener(this);
 	}
 
 	@Override
