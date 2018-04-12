@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="edu.ucdenver.ccp.knowtator.view.KnowtatorView">
-  <grid id="27dc6" binding="panel1" custom-create="true" default-binding="true" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-    <margin top="0" left="0" bottom="0" right="0"/>
+  <grid id="27dc6" binding="panel1" custom-create="true" default-binding="true" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
       <xy x="20" y="20" width="1677" height="400"/>
     </constraints>
@@ -9,11 +8,7 @@
     <border type="none"/>
     <children>
       <splitpane id="b3540" binding="mainPane">
-        <constraints>
-          <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="200" height="200"/>
-          </grid>
-        </constraints>
+        <constraints border-constraint="Center"/>
         <properties>
           <dividerLocation value="1536"/>
           <oneTouchExpandable value="true"/>
@@ -356,18 +351,13 @@
           </grid>
         </children>
       </splitpane>
-      <grid id="8fd5c" class="javax.swing.JMenuBar" layout-manager="GridBagLayout">
-        <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
+      <grid id="e2c13" class="javax.swing.JMenuBar" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints border-constraint="North"/>
         <properties/>
         <border type="none"/>
         <children>
-          <component id="739a4" class="javax.swing.JMenu" binding="projectMenu" custom-create="true">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="1.0" weighty="1.0"/>
-            </constraints>
+          <component id="9fd96" class="javax.swing.JMenu" binding="projectMenu" custom-create="true">
+            <constraints border-constraint="West"/>
             <properties>
               <selected value="false"/>
               <text resource-bundle="ui" key="knowator.project"/>

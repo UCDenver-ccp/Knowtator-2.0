@@ -1,8 +1,6 @@
 TODO: Figure out why edges add four times
 TODO: Ontologies not autoloading
 TODO: Add load errors
-TODO: Project menu not positioning properly on second load
-TODO: Info pane not starting in correct place
 TODO: Remove default graph
 TODO: Make sure owlClass part is never set to null (i.e. when the annotation owl class has yet to be set)
 TODO: Icons: add distinguishing marks for spans vs annoations
