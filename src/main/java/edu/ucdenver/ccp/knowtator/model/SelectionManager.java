@@ -3,6 +3,7 @@ package edu.ucdenver.ccp.knowtator.model;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.events.*;
 import edu.ucdenver.ccp.knowtator.listeners.*;
+import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SelectionManager implements CaretListener, ChangeListener, ProjectListener {
+
+  private static final Logger log = Logger.getLogger(SelectionManager.class);
   private KnowtatorController controller;
   private Annotation selectedAnnotation;
   private Span selectedSpan;
@@ -85,6 +88,7 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
   }
 
   public void setSelectedOWLClass(OWLClass owlClass) {
+    log.warn("SelectionManager: OWLClass " + owlClass);
     selectedOWLClass = owlClass;
     owlClassListeners.forEach(listener -> listener.owlClassChanged(owlClass));
   }
@@ -143,6 +147,7 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
       selectedAnnotation = newAnnotation;
       if (selectedAnnotation != null) {
         setSelectedSpan(newSpan);
+        setSelectedOWLClass(selectedAnnotation.getOwlClass());
       } else if (activeGraphSpace != null) {
         activeGraphSpace.setSelectionCell(null);
       }
@@ -213,6 +218,7 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
   }
 
   public void setSelectedOWLObjectProperty(OWLObjectProperty owlObjectProperty) {
+    log.warn("SelectionManager: OWLObjectProperty " + owlObjectProperty);
     this.selectedOWLObjectProperty = owlObjectProperty;
     owlObjectPropertyListeners.forEach(selectionListener -> selectionListener.owlObjectPropertyChanged(owlObjectProperty));
   }

@@ -15,6 +15,7 @@ import edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser;
 import edu.ucdenver.ccp.knowtator.view.menu.ProjectMenu;
 import edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane;
 import edu.ucdenver.ccp.knowtator.view.textpane.MainKnowtatorTextPane;
+import org.apache.log4j.Logger;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -31,6 +32,7 @@ import java.util.Set;
 public class KnowtatorView extends AbstractOWLClassViewComponent
         implements DropTargetListener, OWLClassSelectionListener, OWLObjectPropertySelectionListener {
 
+  private static final Logger log = Logger.getLogger(KnowtatorView.class);
   private KnowtatorController controller;
   private GraphViewDialog graphViewDialog;
   private JMenu projectMenu;
@@ -90,13 +92,24 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   }
 
   private void makeController() {
+    log.warn("KnowtatorView: Making controller" );
     controller = new KnowtatorController();
 
-    if (getOWLWorkspace() != null) {
-      controller.getOWLAPIDataExtractor().setUpOWL(getOWLWorkspace());
-      getOWLWorkspace()
+    setUpOWL();
+  }
+
+  private void setUpOWL() {
+    try {
+      if (controller.getOWLAPIDataExtractor().getWorkSpace() == null) {
+        if (getOWLWorkspace() != null) {
+          controller.getOWLAPIDataExtractor().setUpOWL(getOWLWorkspace());
+          getOWLWorkspace()
               .getOWLModelManager()
               .addOntologyChangeListener(controller.getTextSourceManager());
+        }
+      }
+    } catch (OWLWorkSpaceNotSetException e) {
+      e.printStackTrace();
     }
   }
 
@@ -329,6 +342,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
   @Override
   protected OWLClass updateView(OWLClass selectedClass) {
+    log.warn("KnowtatorView: update view " + selectedClass);
+    setUpOWL();
     controller.getSelectionManager().setSelectedOWLClass(selectedClass);
     return selectedClass;
   }

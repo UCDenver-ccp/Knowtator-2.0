@@ -102,11 +102,12 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
   }
 
   public void setUpOWL(OWLWorkspace owlWorkSpace) {
+	  log.warn("OWLAPIDataExtractor: setup OWL API connection");
     this.owlWorkSpace = owlWorkSpace;
     owlWorkSpace.getOWLSelectionModel().addListener(this);
   }
 
-  private OWLWorkspace getWorkSpace() throws OWLWorkSpaceNotSetException {
+  public OWLWorkspace getWorkSpace() throws OWLWorkSpaceNotSetException {
     if (owlWorkSpace == null) {
       throw new OWLWorkSpaceNotSetException();
     } else {
@@ -181,6 +182,7 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
     OWLEntity ent = null;
     try {
       ent = getWorkSpace().getOWLSelectionModel().getSelectedEntity();
+      log.warn("OWLAPIDataExtractor: " + ent);
     } catch (OWLWorkSpaceNotSetException e) {
       e.printStackTrace();
     }
