@@ -301,9 +301,8 @@ public class IOTests {
                 v2,
                 "edge_1",
                 controller.getSelectionManager().getActiveProfile(),
-                "property_0",
-                "",
-                "");
+                null, "property_0",
+				"", "");
 
         int numGraphSpaces = annotationManager.getGraphSpaceCollection().getCollection().size();
         int numVertices =

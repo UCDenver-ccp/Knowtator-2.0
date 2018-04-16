@@ -65,7 +65,7 @@ public class Annotation implements Savable, KnowtatorObject {
   public String getOwlClassID() {
     try {
       if (owlClass != null) {
-        return controller.getOWLAPIDataExtractor().getOWLClassID(owlClass);
+        return controller.getOWLAPIDataExtractor().getOWLEntityRendering(owlClass);
       } else {
         setOwlClass(controller.getOWLAPIDataExtractor().getOWLClassByID(this.owlClassID));
         return owlClassID;
@@ -690,8 +690,8 @@ public class Annotation implements Savable, KnowtatorObject {
   //	 * annotationClass.
   //	 */
   //	public static boolean classesMatch(annotation annotation1, annotation annotation2) {
-  //		String cls1 = annotation1.getOWLClassID();
-  //		String cls2 = annotation2.getOWLClassID();
+  //		String cls1 = annotation1.getOWLEntityRendering();
+  //		String cls2 = annotation2.getOWLEntityRendering();
   //
   //		return cls1 != null && cls2 != null && cls1.equalStartAndEnd(cls2);
   //

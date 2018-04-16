@@ -3,24 +3,41 @@ package edu.ucdenver.ccp.knowtator.view;
 import edu.ucdenver.ccp.knowtator.events.AnnotationChangeEvent;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationSelectionListener;
 import edu.ucdenver.ccp.knowtator.model.Annotation;
+import org.apache.log4j.Logger;
+import org.protege.editor.owl.model.event.EventType;
+import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
+import org.protege.editor.owl.model.event.OWLModelManagerListener;
 
 import javax.swing.*;
 
-public class AnnotationClassLabel extends JLabel implements AnnotationSelectionListener {
+public class AnnotationClassLabel extends JLabel
+    implements AnnotationSelectionListener, OWLModelManagerListener {
 
+  private KnowtatorView view;
+  private Logger log = Logger.getLogger(AnnotationClassLabel.class);
 
-	private KnowtatorView view;
+  AnnotationClassLabel(KnowtatorView view) {
+    this.view = view;
+    view.getController().getSelectionManager().addAnnotationListener(this);
+  }
 
-	AnnotationClassLabel(KnowtatorView view) {
-		this.view = view;
-		view.getController().getSelectionManager().addAnnotationListener(this);
-	}
+  @Override
+  public void selectedAnnotationChanged(AnnotationChangeEvent e) {
+    displayAnnotation(e.getNew());
+  }
 
-	@Override
-	public void selectedAnnotationChanged(AnnotationChangeEvent e) {
-		Annotation annotation = view.getController().getSelectionManager().getSelectedAnnotation();
-		if (annotation != null) {
-			setText(annotation.getOwlClassID());
-		}
-	}
+  private void displayAnnotation(Annotation annotation) {
+    if (annotation != null) {
+      setText(annotation.getOwlClassID());
+    }
+  }
+
+  @Override
+  public void handleChange(OWLModelManagerChangeEvent event) {
+    if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
+      log.warn("Changed renderer");
+      Annotation annotation = view.getController().getSelectionManager().getSelectedAnnotation();
+      displayAnnotation(annotation);
+    }
+  }
 }

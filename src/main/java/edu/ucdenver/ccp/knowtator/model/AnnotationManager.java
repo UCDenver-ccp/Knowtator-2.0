@@ -216,7 +216,12 @@ public class AnnotationManager implements Savable {
                 .getTextContent();
         profile = controller.getProfileManager().addProfile(profileID);
       } catch (NullPointerException npe) {
-        profile = controller.getProfileManager().getDefaultProfile();
+        try {
+          String profileID = annotationElement.getAttribute(OldKnowtatorXMLAttributes.ANNOTATOR);
+          profile = controller.getProfileManager().addProfile(profileID);
+        } catch (NullPointerException npe2) {
+          profile = controller.getProfileManager().getDefaultProfile();
+        }
       }
 
       String annotationID =
@@ -245,7 +250,9 @@ public class AnnotationManager implements Savable {
           Element slotMentionElement = (Element) slotMentionNode;
           String slotMentionID = slotMentionElement.getAttribute(OldKnowtatorXMLAttributes.ID);
           Element slotElement = slotToClassIDMap.get(slotMentionID);
-          annotationToSlotMap.put(newAnnotation, slotElement);
+          if (slotElement != null) {
+            annotationToSlotMap.put(newAnnotation, slotElement);
+          }
         }
       }
     }
@@ -263,7 +270,7 @@ public class AnnotationManager implements Savable {
             source = (AnnotationNode) vertices.get(0);
           }
 
-          String property =
+          String propertyID =
               ((Element) slot.getElementsByTagName(OldKnowtatorXMLTags.MENTION_SLOT).item(0))
                   .getAttribute(OldKnowtatorXMLAttributes.ID);
           for (Node slotMentionValueNode :
@@ -281,15 +288,13 @@ public class AnnotationManager implements Savable {
             } else {
               target = (AnnotationNode) vertices1.get(0);
             }
-
             oldKnowtatorGraphSpace.addTriple(
                 source,
                 target,
                 null,
                 controller.getSelectionManager().getActiveProfile(),
-                property,
-                "",
-                "");
+                null, propertyID,
+					"", "");
           }
         });
   }
@@ -332,7 +337,7 @@ public class AnnotationManager implements Savable {
     for (int i = 0; i < annotationCollection.size(); i++) {
       Annotation annotation = annotationIterator.next();
       annotation.setBratID(String.format("T%d", i));
-      writer.append(String.format("%s\t%s ", annotation.getBratID(), annotation.getOwlClass()));
+      writer.append(String.format("%s\t%s ", annotation.getBratID(), annotation.getOwlClassID()));
       annotation.writeToBratStandoff(writer);
 
       writer.append(

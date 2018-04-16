@@ -92,13 +92,8 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
 //    return getWorkSpace().getOWLSelectionModel().getLastSelectedObjectProperty();
 //  }
 
-  public String getOWLClassID(OWLClass cls) throws OWLWorkSpaceNotSetException {
-    try {
-      return extractAnnotation(
-          cls, getWorkSpace().getOWLModelManager().getOWLDataFactory().getRDFSLabel());
-    } catch (OWLAnnotationNotFoundException e) {
-      return getOwlEntID(cls);
-    }
+  public String getOWLEntityRendering(OWLEntity owlEntity) throws OWLWorkSpaceNotSetException {
+    return getWorkSpace().getOWLModelManager().getOWLEntityRenderer().render(owlEntity);
   }
 
   public void setUpOWL(OWLWorkspace owlWorkSpace) {
@@ -165,7 +160,9 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
   @Override
   public void setDebug() {
     OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-//	  OWLModelManager manager2 = new OWLModelManagerImpl();
+    //	  OWLModelManager manager2 = new OWLModelManagerImpl();
+    OWLWorkspace workspace = new OWLWorkspace();
+    workspace.initialise();
     OWLDataFactory factory = manager.getOWLDataFactory();
 
     IRI iri = IRI.create("test");

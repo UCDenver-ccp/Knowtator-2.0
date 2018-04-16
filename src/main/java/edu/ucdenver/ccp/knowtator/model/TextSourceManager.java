@@ -64,7 +64,6 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
       String documentID = documentElement.getAttribute(KnowtatorXMLAttributes.ID);
       String documentFile = documentElement.getAttribute(KnowtatorXMLAttributes.FILE);
       TextSource newTextSource = addTextSource(file, documentID, documentFile);
-      log.warn("\tXML: " + newTextSource);
       newTextSource.readFromKnowtatorXML(null, documentElement);
     }
   }
@@ -74,7 +73,6 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
 
     String docID = parent.getAttribute(OldKnowtatorXMLAttributes.TEXT_SOURCE).replace(".txt", "");
     TextSource newTextSource = addTextSource(file, docID, null);
-    log.warn("\tOLD XML: " + newTextSource);
     newTextSource.readFromOldKnowtatorXML(null, parent);
   }
 
@@ -84,7 +82,6 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
     String docID = annotationMap.get(StandoffTags.DOCID).get(0)[0];
 
     TextSource newTextSource = addTextSource(file, docID, null);
-    log.warn("\tBRAT: " + newTextSource);
     newTextSource.readFromBratStandoff(null, annotationMap, null);
   }
 
@@ -142,7 +139,7 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
                           graphSpace.reassignProperty(
                               possiblyRemovedEntities.iterator().next(),
                               possiblyAddedEntities.iterator().next());
-                          graphSpace.reDrawGraph();
+
                         }));
   }
 }

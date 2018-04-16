@@ -18,4 +18,5 @@ public class OldKnowtatorXMLAttributes {
 	public static final String COREFERENCE = "Coreferring strings";
 	public static final String COMPLEX_SLOT_MENTION_ID_APPOS_HEAD = "APPOS Head";
 	public static final String COMPLEX_SLOT_MENTION_ID_APPOS_ATTRIBUTES = "APPOS Attributes";
+	public static final String ANNOTATOR = "annotator";
 }

@@ -74,7 +74,7 @@
 // excludeAnnotations, IAA iaa,
 //							MatchResult matchResult) {
 //
-//		String annotationClassName = annotation.getOWLClassID();
+//		String annotationClassName = annotation.getOWLEntityRendering();
 //		if (!subclassNames.contains(annotationClassName)) {
 //			matchResult.setResult(MatchResult.TRIVIAL_NONMATCH);
 //			return null;

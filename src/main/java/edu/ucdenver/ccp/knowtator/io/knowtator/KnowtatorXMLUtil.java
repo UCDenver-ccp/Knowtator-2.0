@@ -19,102 +19,102 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUtil {
-	private static final Logger log = Logger.getLogger(KnowtatorXMLUtil.class);
+  private static final Logger log = Logger.getLogger(KnowtatorXMLUtil.class);
 
-	@Override
-	public void read(Savable savable, File file) throws IOException {
-		if (file.isDirectory()) {
-			Files.newDirectoryStream(Paths.get(file.toURI()), path -> path.toString().endsWith(".xml"))
-					.forEach(inputFile -> readFromInputFile(savable, inputFile.toFile()));
-		} else {
-			readFromInputFile(savable, file);
-		}
-	}
+  @Override
+  public void read(Savable savable, File file) throws IOException {
+    if (file.isDirectory()) {
+      Files.newDirectoryStream(Paths.get(file.toURI()), path -> path.toString().endsWith(".xml"))
+          .forEach(inputFile -> readFromInputFile(savable, inputFile.toFile()));
+    } else {
+      readFromInputFile(savable, file);
+    }
+  }
 
-	private void readFromInputFile(Savable savable, File file) {
-		try {
+  private void readFromInputFile(Savable savable, File file) {
+    try {
+      log.warn("Reading from " + file);
+
       /*
       doc parses the XML into a graph
        */
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder db = dbf.newDocumentBuilder();
+      DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+      DocumentBuilder db = dbf.newDocumentBuilder();
 
-			InputStream is = new FileInputStream(file);
+      InputStream is = new FileInputStream(file);
 
-			Document doc;
-			try {
-				doc = db.parse(is);
-				doc.getDocumentElement().normalize();
+      Document doc;
+      try {
+        doc = db.parse(is);
+        doc.getDocumentElement().normalize();
 
-				List<Node> knowtatorNodes =
-						asList(doc.getElementsByTagName(KnowtatorXMLTags.KNOWTATOR_PROJECT));
-				if (knowtatorNodes.size() > 0) {
-					Element knowtatorElement = (Element) knowtatorNodes.get(0);
-					savable.readFromKnowtatorXML(file, knowtatorElement);
-				}
+        List<Node> knowtatorNodes =
+            asList(doc.getElementsByTagName(KnowtatorXMLTags.KNOWTATOR_PROJECT));
+        if (knowtatorNodes.size() > 0) {
+          Element knowtatorElement = (Element) knowtatorNodes.get(0);
+          savable.readFromKnowtatorXML(file, knowtatorElement);
+        }
 
-				List<Node> annotationNodes =
-						asList(doc.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATIONS));
-				if (annotationNodes.size() > 0) {
-					savable.readFromOldKnowtatorXML(file, doc.getDocumentElement());
-				}
-			} catch (IllegalArgumentException | IOException | SAXException e) {
-				e.printStackTrace();
-			}
-		} catch (ParserConfigurationException | FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
+        List<Node> annotationNodes =
+            asList(doc.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATIONS));
+        if (annotationNodes.size() > 0) {
+          savable.readFromOldKnowtatorXML(file, doc.getDocumentElement());
+        }
+      } catch (IllegalArgumentException | IOException | SAXException e) {
+        e.printStackTrace();
+      }
+    } catch (ParserConfigurationException | FileNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
 
-	@Override
-	public void write(Savable savable, File file) {
-		if (savable instanceof TextSourceManager) {
-			((TextSourceManager) savable)
-					.getTextSourceCollection()
-					.getCollection()
-					.forEach(
-							textSource -> {
-                File outputFile = textSource.getSaveFile();
-                if (outputFile == null) {
-					String fileName = textSource.getId();
-					String extension = fileName.endsWith(".xml") ? "" : ".xml";
-					outputFile =
-							new File(file.getAbsolutePath() + File.separator + fileName + extension);
-                }
+  @Override
+  public void write(Savable savable, File file) {
+    if (savable instanceof TextSourceManager) {
+      ((TextSourceManager) savable)
+          .getTextSourceCollection()
+          .getCollection()
+          .forEach(
+              textSource -> {
+                File outputFile =
+                    new File(
+                        file.getAbsolutePath()
+                            + File.separator
+                            + textSource.getSaveFile().getName());
                 writeToOutputFile(textSource, outputFile);
-							});
-		} else if (savable instanceof ProfileManager) {
-			((ProfileManager) savable)
-					.getProfileCollection()
-					.getCollection()
-					.forEach(
-							profile -> {
-								File outputFile =
-										new File(file.getAbsolutePath() + File.separator + profile.getId() + ".xml");
+              });
+    } else if (savable instanceof ProfileManager) {
+      ((ProfileManager) savable)
+          .getProfileCollection()
+          .getCollection()
+          .forEach(
+              profile -> {
+                File outputFile =
+                    new File(file.getAbsolutePath() + File.separator + profile.getId() + ".xml");
                 writeToOutputFile(profile, outputFile);
-							});
-		} else {
-			writeToOutputFile(savable, file);
-		}
-	}
+              });
+    } else {
+      writeToOutputFile(savable, file);
+    }
+  }
 
-	private void writeToOutputFile(Savable savable, File outputFile) {
-		Document dom;
+  private void writeToOutputFile(Savable savable, File outputFile) {
+    Document dom;
 
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
-		try {
-			log.warn("Writing to " + outputFile.getAbsolutePath());
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			dom = db.newDocument();
+    try {
+      log.warn("Writing to " + outputFile.getAbsolutePath());
+      DocumentBuilder db = dbf.newDocumentBuilder();
+      dom = db.newDocument();
 
-			Element root = dom.createElement(KnowtatorXMLTags.KNOWTATOR_PROJECT);
-			dom.appendChild(root);
-			savable.writeToKnowtatorXML(dom, root);
+      Element root = dom.createElement(KnowtatorXMLTags.KNOWTATOR_PROJECT);
+      dom.appendChild(root);
+      savable.writeToKnowtatorXML(dom, root);
 
-			finishWritingXML(dom, outputFile);
-		} catch (ParserConfigurationException e1) {
-			e1.printStackTrace();
-		}
-	}
+      finishWritingXML(dom, outputFile);
+    } catch (ParserConfigurationException e1) {
+      e1.printStackTrace();
+    }
+  }
 }

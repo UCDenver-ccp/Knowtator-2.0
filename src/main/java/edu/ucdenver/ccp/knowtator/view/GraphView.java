@@ -15,6 +15,7 @@ import edu.ucdenver.ccp.knowtator.model.Annotation;
 import edu.ucdenver.ccp.knowtator.model.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.Triple;
+import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
 import edu.ucdenver.ccp.knowtator.view.textpane.GraphViewKnowtatorTextPane;
 import org.apache.log4j.Logger;
@@ -102,8 +103,14 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 					for (Object cell : cells) {
 						if (graph.getModel().isEdge(cell) && "".equals(((mxCell) cell).getValue())) {
 							mxCell edge = (mxCell) cell;
-							Object property =
+							OWLObjectProperty property =
 									view.getController().getSelectionManager().getSelectedOWLObjectProperty();
+							String propertyID = null;
+							try {
+								propertyID = view.getController().getOWLAPIDataExtractor().getOWLEntityRendering(property);
+							} catch (OWLWorkSpaceNotSetException ignored) {
+
+							}
 							if (property != null) {
 								mxICell source = edge.getSource();
 								mxICell target = edge.getTarget();
@@ -132,9 +139,8 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 										(AnnotationNode) target,
 										null,
 										view.getController().getSelectionManager().getActiveProfile(),
-										property,
-										quantifier,
-										value);
+										property, propertyID,
+										quantifier, value);
 							}
 
 							graph.getModel().remove(edge);
@@ -209,20 +215,6 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 		graphComponent.setName(graphSpace.getId());
 
 		setupListeners(graphComponent);
-
-//		graphSpace.insertVertex(graphSpace.getDefaultParent(), "Hi", "val1", 20, 20, 50, 50);
-//		panel1.remove(graphComponent);
-//		graphComponent = new mxGraphComponent(graphSpace);
-//		graphComponent.setGridVisible(true);
-//		graphComponent.getViewport().setOpaque(true);
-//		graphComponent.getViewport().setBackground(Color.white);
-//		graphComponent.setDragEnabled(false);
-//		graphComponent.getGraphControl().add(scrollPane, 0);
-//		panel1.add(graphComponent, BorderLayout.CENTER);
-//
-//		for (Object cell : graphSpace.getChildCells(graphSpace.getDefaultParent())) {
-//			log.warn(cell);
-//		}
 
 		graphSpace.reDrawGraph();
 		applyLayout();
@@ -408,4 +400,5 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 	public JComponent $$$getRootComponent$$$() {
 		return panel1;
 	}
+
 }

@@ -1,7 +1,5 @@
 package edu.ucdenver.ccp.knowtator.view;
 
-import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.OWLClassSelectionListener;
@@ -88,7 +86,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
     log.warn("Don't worry about the following exception. Just forcing loading of a class needed by mxGraph");
     try {
-      mxGraphTransferable.dataFlavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + "; class=com.mxgraph.swing.util.mxGraphTransferable", null, new mxGraphTransferable(null, null).getClass().getClassLoader());
+      mxGraphTransferable.dataFlavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + "; class=com.mxgraph.swing.util.mxGraphTransferable", null, mxGraphTransferable.class.getClassLoader());
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     }
@@ -114,6 +112,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         getOWLWorkspace()
                 .getOWLModelManager()
                 .addOntologyChangeListener(controller.getTextSourceManager());
+        log.warn("Adding class label as renderer listener");
+        getOWLWorkspace().getOWLModelManager().addListener(annotationClassLabel);
+        controller.getTextSourceManager().getTextSourceCollection().forEach(textSource -> textSource.getAnnotationManager().getGraphSpaceCollection().forEach(graphSpace -> getOWLWorkspace().getOWLModelManager().addListener(graphSpace)));
+
       }
     }
 

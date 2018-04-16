@@ -11,11 +11,13 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.listeners.GraphSpaceListener;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLObjectPropertyNotFoundException;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import org.apache.log4j.Logger;
+import org.protege.editor.owl.model.event.EventType;
+import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
+import org.protege.editor.owl.model.event.OWLModelManagerListener;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -29,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class GraphSpace extends mxGraph implements Savable, KnowtatorObject {
+public class GraphSpace extends mxGraph implements Savable, KnowtatorObject, OWLModelManagerListener {
   @SuppressWarnings("unused")
   private Logger log = Logger.getLogger(GraphSpace.class);
 
@@ -87,11 +89,11 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject {
     try {
       addCell(cell);
     } finally {
-      reDrawGraph();
+//      reDrawGraph();
       getModel().endUpdate();
     }
 
-    reDrawGraph();
+//    reDrawGraph();
   }
 
   public AnnotationNode addNode(String id, Annotation annotation) {
@@ -112,22 +114,16 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject {
           AnnotationNode target,
           String id,
           Profile annotator,
-          Object property,
-          String quantifier,
+          OWLObjectProperty property,
+          String propertyID, String quantifier,
           String quantifierValue) {
     id = verifyID(id, "edge");
 
-    if (property instanceof String) {
-      try {
-        property = controller.getOWLAPIDataExtractor().getOWLObjectPropertyByID((String) property);
-      } catch (OWLWorkSpaceNotSetException | OWLObjectPropertyNotFoundException ignored) {
 
-      }
-    }
 
     Triple newTriple =
             new Triple(
-                    id, source, target, property, annotator, quantifier, quantifierValue, controller, textSource);
+                    id, source, target, property, propertyID, annotator, quantifier, quantifierValue, controller, textSource);
 
     setCellStyles(mxConstants.STYLE_STARTARROW, "dash", new Object[]{newTriple});
     setCellStyles(mxConstants.STYLE_STARTSIZE, "12", new Object[]{newTriple});
@@ -163,7 +159,7 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject {
     Object cell = getSelectionModel().getCell();
     Arrays.stream(getEdges(cell)).forEach(edge -> getModel().remove(edge));
     getModel().remove(cell);
-    reDrawGraph();
+//    reDrawGraph();
   }
 
   @Override
@@ -197,7 +193,7 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject {
       AnnotationNode target = (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(objectID);
 
       if (target != null && source != null) {
-        addTriple(source, target, id, annotator, propertyID, quantifier, quantifierValue);
+        addTriple(source, target, id, annotator, null, propertyID, quantifier, quantifierValue);
       }
     }
   }
@@ -244,7 +240,7 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject {
                         target = (AnnotationNode) objectAnnotationVertices.get(0);
                       }
 
-                      addTriple(source, target, id, annotator, propertyID, "", "");
+                      addTriple(source, target, id, annotator, null, propertyID, "", "");
                     });
   }
 
@@ -363,6 +359,7 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject {
 
     List<Triple> edges = getTriplesCorrespondingToProperty(oldProperty);
     edges.forEach(edge -> edge.setValue(newProperty));
+    reDrawGraph();
   }
 
   private List<Triple> getTriplesCorrespondingToProperty(OWLEntity property) {
@@ -407,4 +404,17 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject {
   public void setId(String id) {
     this.id = id;
   }
+
+	@Override
+	public void handleChange(OWLModelManagerChangeEvent event) {
+    if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
+      Arrays.stream(getChildEdges(getDefaultParent()))
+          .forEach(
+              edge -> {
+                if (edge instanceof Triple) {
+					((Triple) edge).resetValue();
+                }
+              });
+  	}
+	}
 }

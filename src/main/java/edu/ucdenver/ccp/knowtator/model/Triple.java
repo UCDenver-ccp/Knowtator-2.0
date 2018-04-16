@@ -24,18 +24,21 @@ public class Triple extends mxCell implements Savable, KnowtatorObject {
   private String bratID;
   private KnowtatorController controller;
   private TextSource textSource;
+  private OWLObjectProperty property;
 
   Triple(
           String id,
           mxCell source,
           mxCell target,
-          Object property,
+          OWLObjectProperty property,
+          String propertyID,
           Profile annotator,
           String quantifier,
           String quantifierValue,
           KnowtatorController controller, TextSource textSource) {
-    super(property, new mxGeometry(), null);
+    super(propertyID, new mxGeometry(), null);
 
+    this.property = property;
     this.textSource = textSource;
     this.controller = controller;
     this.annotator = annotator;
@@ -126,5 +129,13 @@ public class Triple extends mxCell implements Savable, KnowtatorObject {
   @Override
   public TextSource getTextSource() {
     return textSource;
+  }
+
+  void resetValue() {
+    try {
+      setValue(controller.getOWLAPIDataExtractor().getOWLEntityRendering(property));
+    } catch (OWLWorkSpaceNotSetException e) {
+      setValue(getValue());
+    }
   }
 }
