@@ -1,6 +1,3 @@
-TODO: Changing class changes annotation (change listener)
-TODO: OWL Class should always found if present in ontology
-TODO: Search ontology for highlighted text
 TODO: Add load errors
 TODO: Remove default graph
 TODO: Make sure owlClass part is never set to null (i.e. when the annotation owl class has yet to be set)

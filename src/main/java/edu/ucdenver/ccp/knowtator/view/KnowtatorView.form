@@ -246,6 +246,12 @@
                       <toolTipText resource-bundle="ui" key="send.selected.text.to.graph"/>
                     </properties>
                   </component>
+                  <component id="feeaf" class="javax.swing.JButton" binding="findTextButton">
+                    <constraints/>
+                    <properties>
+                      <text resource-bundle="log4j" key="find.in.ontology"/>
+                    </properties>
+                  </component>
                   <component id="55553" class="javax.swing.JButton" binding="addAnnotationButton">
                     <constraints/>
                     <properties>

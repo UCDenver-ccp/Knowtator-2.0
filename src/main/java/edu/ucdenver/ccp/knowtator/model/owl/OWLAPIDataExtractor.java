@@ -165,7 +165,7 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
       }
     });
 
-    getWorkSpace().showSearchDialog();
+    dialog.setVisible(true);
   }
 
   @Override

@@ -72,6 +72,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   private TextSourceChooser textSourceChooser;
   private ProfileChooser profileChooser;
   private JButton textToGraphButton;
+  private JButton findTextButton;
 
   public KnowtatorView() {
     makeController();
@@ -141,6 +142,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   }
 
   private void makeButtons() {
+
+    findTextButton.addActionListener(e -> {
+      try {
+        controller.getOWLAPIDataExtractor().searchForString(knowtatorTextPane.getSelectedText());
+      } catch (OWLWorkSpaceNotSetException ignored) {
+
+      }
+    });
 
     assignColorToClassButton.addActionListener(
             e -> {
@@ -516,6 +525,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     this.$$$loadButtonText$$$(textToGraphButton, ResourceBundle.getBundle("ui").getString("text.to.graph"));
     textToGraphButton.setToolTipText(ResourceBundle.getBundle("ui").getString("send.selected.text.to.graph"));
     annotationToolBar.add(textToGraphButton);
+    findTextButton = new JButton();
+    findTextButton.setText("Find in ontology");
+    annotationToolBar.add(findTextButton);
     addAnnotationButton = new JButton();
     addAnnotationButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-plus-50 (Custom).png")));
     addAnnotationButton.setText("");

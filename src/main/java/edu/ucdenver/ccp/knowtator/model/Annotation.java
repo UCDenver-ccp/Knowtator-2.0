@@ -9,17 +9,19 @@ import edu.ucdenver.ccp.knowtator.model.owl.OWLClassNotFoundException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.util.OWLEntityCollector;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
-public class Annotation implements Savable, KnowtatorObject, OWLSetupListener {
+public class Annotation implements Savable, KnowtatorObject, OWLSetupListener, OWLOntologyChangeListener {
 
   private final Date date;
 
@@ -56,6 +58,7 @@ public class Annotation implements Savable, KnowtatorObject, OWLSetupListener {
     this.annotation_type = annotation_type;
 
     controller.verifyId(annotationID, this, false);
+    controller.getOWLAPIDataExtractor().addOWLSetupListener(this);
 
     spanCollection = new SpanCollection(controller);
     overlappingAnnotations = new HashSet<>();
@@ -298,8 +301,42 @@ public class Annotation implements Savable, KnowtatorObject, OWLSetupListener {
   public void owlSetup() {
     try {
       setOwlClass(controller.getOWLAPIDataExtractor().getOWLClassByID(owlClassID));
+      controller.getOWLAPIDataExtractor().getWorkSpace().getOWLModelManager().addOntologyChangeListener(this);
     } catch (OWLWorkSpaceNotSetException | OWLClassNotFoundException ignored) {
 
+    }
+  }
+
+  @Override
+  public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) {
+    Set<OWLEntity> possiblyAddedEntities = new HashSet<>();
+    Set<OWLEntity> possiblyRemovedEntities = new HashSet<>();
+    OWLEntityCollector addedCollector = new OWLEntityCollector(possiblyAddedEntities);
+    OWLEntityCollector removedCollector = new OWLEntityCollector(possiblyRemovedEntities);
+
+    for (OWLOntologyChange chg : changes) {
+      if (chg.isAxiomChange()) {
+        OWLAxiomChange axChg = (OWLAxiomChange) chg;
+        if (axChg.getAxiom().getAxiomType() == AxiomType.DECLARATION) {
+          if (axChg instanceof AddAxiom) {
+            axChg.getAxiom().accept(addedCollector);
+          } else {
+            axChg.getAxiom().accept(removedCollector);
+          }
+        }
+      }
+    }
+
+    /*
+    For now, I will assume that entity removed is the one that existed and the one
+    that is added is the new name for it.
+     */
+    if (!possiblyAddedEntities.isEmpty() && !possiblyRemovedEntities.isEmpty()) {
+      OWLEntity oldOWLClass = possiblyRemovedEntities.iterator().next();
+      OWLEntity newOWLClass = possiblyAddedEntities.iterator().next();
+      if (oldOWLClass == owlClass) {
+        setOwlClass((OWLClass) newOWLClass);
+      }
     }
   }
 

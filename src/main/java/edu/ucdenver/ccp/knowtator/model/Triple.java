@@ -36,6 +36,7 @@ public class Triple extends mxCell implements Savable, KnowtatorObject, OWLSetup
   private TextSource textSource;
   private OWLObjectProperty property;
   private GraphSpace graphSpace;
+  @SuppressWarnings("unused")
   private Logger log = Logger.getLogger(Triple.class);
 
   Triple(
@@ -225,10 +226,8 @@ public class Triple extends mxCell implements Savable, KnowtatorObject, OWLSetup
   public void handleChange(OWLModelManagerChangeEvent event) {
     if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
       try {
-        log.warn("Resetting property value");
         setValue(controller.getOWLAPIDataExtractor().getOWLEntityRendering(property, false));
-      } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
-        log.warn("Resetting property value failed");
+      } catch (OWLWorkSpaceNotSetException | OWLEntityNullException ignored) {
       }
     }
   }
