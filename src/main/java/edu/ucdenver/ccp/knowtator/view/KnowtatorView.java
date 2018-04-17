@@ -109,13 +109,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     if (workspace == null) {
       if (getOWLWorkspace() != null) {
         controller.getOWLAPIDataExtractor().setUpOWL(getOWLWorkspace());
-        getOWLWorkspace()
-                .getOWLModelManager()
-                .addOntologyChangeListener(controller.getTextSourceManager());
         log.warn("Adding class label as renderer listener");
         getOWLWorkspace().getOWLModelManager().addListener(annotationClassLabel);
-        controller.getTextSourceManager().getTextSourceCollection().forEach(textSource -> textSource.getAnnotationManager().getGraphSpaceCollection().forEach(graphSpace -> getOWLWorkspace().getOWLModelManager().addListener(graphSpace)));
-
       }
     }
 
@@ -149,10 +144,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
     assignColorToClassButton.addActionListener(
             e -> {
-              Object owlClass = controller.getSelectionManager().getSelectedOWLClass();
+              OWLClass owlClass = controller.getSelectionManager().getSelectedOWLClass();
               if (owlClass == null) {
                 if (controller.getProjectManager().isProjectLoaded()) {
-                  owlClass = controller.getSelectionManager().getSelectedAnnotation().getOwlClassID();
+                  owlClass = controller.getSelectionManager().getSelectedAnnotation().getOwlClass();
                 }
               }
               if (owlClass != null) {
@@ -160,19 +155,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                 if (c != null) {
                   controller.getSelectionManager().getActiveProfile().addColor(owlClass, c);
 
-                  if (owlClass instanceof OWLClass) {
-                    if (JOptionPane.showConfirmDialog(
-                            this, "Assign color to descendants of " + owlClass + "?")
-                            == JOptionPane.OK_OPTION) {
-                      try {
-                        Set<OWLClass> descendants =
-                                controller.getOWLAPIDataExtractor().getDescendants((OWLClass) owlClass);
+                  if (JOptionPane.showConfirmDialog(
+                          this, "Assign color to descendants of " + owlClass + "?")
+                          == JOptionPane.OK_OPTION) {
+                    try {
+                      Set<OWLClass> descendants =
+                              controller.getOWLAPIDataExtractor().getDescendants(owlClass);
 
-                        for (OWLClass descendant : descendants) {
-                          controller.getSelectionManager().getActiveProfile().addColor(descendant, c);
-                        }
-                      } catch (OWLWorkSpaceNotSetException ignored) {
+                      for (OWLClass descendant : descendants) {
+                        controller.getSelectionManager().getActiveProfile().addColor(descendant, c);
                       }
+                    } catch (OWLWorkSpaceNotSetException ignored) {
                     }
                   }
                 }

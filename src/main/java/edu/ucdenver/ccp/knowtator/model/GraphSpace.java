@@ -15,13 +15,9 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationSelectionListener;
 import edu.ucdenver.ccp.knowtator.listeners.GraphSpaceListener;
+import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import org.apache.log4j.Logger;
-import org.protege.editor.owl.model.event.EventType;
-import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
-import org.protege.editor.owl.model.event.OWLModelManagerListener;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -35,7 +31,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class GraphSpace extends mxGraph
-    implements Savable, KnowtatorObject, OWLModelManagerListener, AnnotationSelectionListener {
+    implements Savable, KnowtatorObject, AnnotationSelectionListener {
   @SuppressWarnings("unused")
   private Logger log = Logger.getLogger(GraphSpace.class);
 
@@ -127,18 +123,32 @@ public class GraphSpace extends mxGraph
       String quantifierValue) {
     id = verifyID(id, "edge");
 
-    Triple newTriple =
-        new Triple(
-            id,
-            source,
-            target,
-            property,
-            propertyID,
-            annotator,
-            quantifier,
-            quantifierValue,
-            controller,
-            textSource);
+    Triple newTriple;
+    try {
+      newTriple = new Triple(
+          id,
+          source,
+          target,
+          property,
+          annotator,
+          quantifier,
+          quantifierValue,
+          controller,
+          textSource,
+          this);
+    } catch (OWLEntityNullException | OWLWorkSpaceNotSetException e) {
+      newTriple = new Triple(
+              id,
+              source,
+              target,
+              propertyID,
+              annotator,
+              quantifier,
+              quantifierValue,
+              controller,
+              textSource,
+              this);
+    }
 
     setCellStyles(mxConstants.STYLE_STARTARROW, "dash", new Object[] {newTriple});
     setCellStyles(mxConstants.STYLE_STARTSIZE, "12", new Object[] {newTriple});
@@ -338,8 +348,8 @@ public class GraphSpace extends mxGraph
                   String propertyID = null;
                   try {
                     propertyID =
-                        controller.getOWLAPIDataExtractor().getOWLEntityRendering(property);
-                  } catch (OWLWorkSpaceNotSetException ignored) {
+                        controller.getOWLAPIDataExtractor().getOWLEntityRendering(property, false);
+                  } catch (OWLWorkSpaceNotSetException | OWLEntityNullException ignored) {
 
                   }
                   if (property != null) {
@@ -420,12 +430,11 @@ public class GraphSpace extends mxGraph
                       setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[] {cell});
 
                     } else if (cell instanceof Triple) {
-                      Object value = ((mxCell) cell).getValue();
-                      if (value instanceof OWLObjectProperty) {
-                        controller
-                            .getSelectionManager()
-                            .setSelectedOWLObjectProperty((OWLObjectProperty) value);
-                      }
+                      OWLObjectProperty value = ((Triple) cell).getProperty();
+
+                      controller
+                          .getSelectionManager()
+                          .setSelectedOWLObjectProperty(value);
                     }
                   }
                   reDrawGraph();
@@ -440,11 +449,13 @@ public class GraphSpace extends mxGraph
     g.setHeight(g.getHeight() + 200);
     g.setWidth(g.getWidth() + 200);
 
-    OWLClass owlClass = vertex.getAnnotation().getOwlClass();
-    Profile profile = controller.getSelectionManager().getActiveProfile();
     String color =
         Integer.toHexString(
-                profile.getColor(owlClass, vertex.getAnnotation().getOwlClassID()).getRGB())
+                controller
+                    .getSelectionManager()
+                    .getActiveProfile()
+                    .getColor(vertex.getAnnotation())
+                    .getRGB())
             .substring(2);
     String shape = mxConstants.SHAPE_RECTANGLE;
 
@@ -480,27 +491,6 @@ public class GraphSpace extends mxGraph
     return textSource;
   }
 
-  void reassignProperty(OWLEntity oldProperty, OWLEntity newProperty) {
-    log.warn(String.format("Old Property: %s, New Property: %s", oldProperty, newProperty));
-
-    List<Triple> edges = getTriplesCorrespondingToProperty(oldProperty);
-    edges.forEach(edge -> edge.setValue(newProperty));
-    reDrawGraph();
-  }
-
-  private List<Triple> getTriplesCorrespondingToProperty(OWLEntity property) {
-    List<Triple> edges = new ArrayList<>();
-    Arrays.stream(getChildEdges(getDefaultParent()))
-        .forEach(
-            edge -> {
-              if (((Triple) edge).getValue() == property) {
-                edges.add((Triple) edge);
-              }
-            });
-
-    return edges;
-  }
-
   @Override
   public String toString() {
     return id;
@@ -529,19 +519,6 @@ public class GraphSpace extends mxGraph
   @Override
   public void setId(String id) {
     this.id = id;
-  }
-
-  @Override
-  public void handleChange(OWLModelManagerChangeEvent event) {
-    if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
-      Arrays.stream(getChildEdges(getDefaultParent()))
-          .forEach(
-              edge -> {
-                if (edge instanceof Triple) {
-                  ((Triple) edge).resetValue();
-                }
-              });
-    }
   }
 
   @Override

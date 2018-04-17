@@ -3,7 +3,10 @@ package edu.ucdenver.ccp.knowtator.model;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
+import edu.ucdenver.ccp.knowtator.listeners.OWLSetupListener;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
+import edu.ucdenver.ccp.knowtator.model.owl.OWLClassNotFoundException;
+import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -16,7 +19,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
-public class Annotation implements Savable, KnowtatorObject {
+public class Annotation implements Savable, KnowtatorObject, OWLSetupListener {
 
   private final Date date;
 
@@ -63,16 +66,7 @@ public class Annotation implements Savable, KnowtatorObject {
   }
 
   public String getOwlClassID() {
-    try {
-      if (owlClass != null) {
-        return controller.getOWLAPIDataExtractor().getOWLEntityRendering(owlClass);
-      } else {
-        setOwlClass(controller.getOWLAPIDataExtractor().getOWLClassByID(this.owlClassID));
-        return owlClassID;
-      }
-    } catch (OWLWorkSpaceNotSetException e) {
-      return owlClassID;
-    }
+    return owlClassID;
   }
 
   public Profile getAnnotator() {
@@ -186,7 +180,13 @@ public class Annotation implements Savable, KnowtatorObject {
     annotationElem.setAttribute(KnowtatorXMLAttributes.TYPE, annotation_type);
 
     Element classElement = dom.createElement(KnowtatorXMLTags.CLASS);
-    classElement.setAttribute(KnowtatorXMLAttributes.ID, getOwlClassID());
+
+    try {
+      classElement.setAttribute(KnowtatorXMLAttributes.ID, controller.getOWLAPIDataExtractor().getOWLEntityRendering(owlClass, true));
+    } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
+      classElement.setAttribute(KnowtatorXMLAttributes.ID, getOwlClassID());
+    }
+
     annotationElem.appendChild(classElement);
 
     spanCollection.forEach(span -> span.writeToKnowtatorXML(dom, annotationElem));
@@ -292,6 +292,15 @@ public class Annotation implements Savable, KnowtatorObject {
       result = annotation1.getId().compareTo(annotation2.getId());
     }
     return result;
+  }
+
+  @Override
+  public void owlSetup() {
+    try {
+      setOwlClass(controller.getOWLAPIDataExtractor().getOWLClassByID(owlClassID));
+    } catch (OWLWorkSpaceNotSetException | OWLClassNotFoundException ignored) {
+
+    }
   }
 
   //		public Set<String> getSimpleFeatureNames() {

@@ -165,10 +165,10 @@ public class IOTests {
                             .sum();
 
             assert numGraphSpaces == 1 : "There were " + numGraphSpaces + " graph spaces";
-            assert numVertices == 2 : "There were " + numVertices + " vertices";
-            assert numTriples == 1 : "There were " + numTriples + " triples";
-            assert numAnnotations == 1 : "There were " + numAnnotations + " annotations";
-            assert numSpans == 1 : "There were " + numSpans + " spans";
+            assert numVertices == 3 : "There were " + numVertices + " vertices";
+            assert numTriples == 2 : "There were " + numTriples + " triples";
+            assert numAnnotations == 2 : "There were " + numAnnotations + " annotations";
+            assert numSpans == 2 : "There were " + numSpans + " spans";
         } catch (IOException e) {
             e.printStackTrace();
         }

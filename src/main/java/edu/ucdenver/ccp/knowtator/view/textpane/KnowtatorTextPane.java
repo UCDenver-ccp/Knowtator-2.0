@@ -10,7 +10,6 @@ import edu.ucdenver.ccp.knowtator.model.Span;
 import edu.ucdenver.ccp.knowtator.model.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.menu.AnnotationPopupMenu;
-import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -167,8 +166,7 @@ public abstract class KnowtatorTextPane extends JTextPane
         }
         lastSpan = span;
 
-        OWLClass owlClass = span.getAnnotation().getOwlClass();
-        lastColor = profile.getColor(owlClass, span.getAnnotation().getOwlClassID());
+        lastColor = profile.getColor(span.getAnnotation());
       }
       if (lastSpan != null) {
 

@@ -4,9 +4,12 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
+import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
+import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -61,30 +64,6 @@ public class Profile implements Savable, KnowtatorObject {
     return null;
   }
 
-  public Color getColor(OWLClass owlClass, String owlClassID) {
-    Color color = colors.get(owlClass);
-    if (color != null) {
-      return color;
-    } else {
-
-      color = colors.get(owlClassID);
-      if (owlClass != null) {
-      	if (color == null) {
-      		color = Color.CYAN;
-		}
-        colors.put(owlClass, color);
-        controller.getProfileManager().fireColorChanged();
-        return color;
-      } else if (color == null) {
-        colors.put(owlClassID, Color.CYAN);
-        controller.getProfileManager().fireColorChanged();
-        return Color.CYAN;
-      } else {
-      	return color;
-	  }
-    }
-  }
-
   private void addColor(String classID, String color) {
     Color c = Color.decode(color);
     c =
@@ -109,12 +88,26 @@ public class Profile implements Savable, KnowtatorObject {
     Element profileElem = dom.createElement(KnowtatorXMLTags.PROFILE);
     profileElem.setAttribute(KnowtatorXMLAttributes.ID, id);
     colors.forEach(
-        (owlClass, c) -> {
+        (owlEntity, c) -> {
           Element e = dom.createElement(KnowtatorXMLTags.HIGHLIGHTER);
-          e.setAttribute(KnowtatorXMLAttributes.CLASS_ID, owlClass.toString());
-          e.setAttribute(
-              KnowtatorXMLAttributes.COLOR, String.format("#%06x", c.getRGB() & 0x00FFFFFF));
-          profileElem.appendChild(e);
+          try {
+            if (owlEntity instanceof OWLEntity) {
+              e.setAttribute(
+                  KnowtatorXMLAttributes.CLASS_ID,
+                  controller
+                      .getOWLAPIDataExtractor()
+                      .getOWLEntityRendering((OWLEntity) owlEntity, true));
+            } else if (owlEntity instanceof String) {
+              e.setAttribute(
+                      KnowtatorXMLAttributes.CLASS_ID, (String) owlEntity);
+            }
+            e.setAttribute(
+                KnowtatorXMLAttributes.COLOR, String.format("#%06x", c.getRGB() & 0x00FFFFFF));
+            profileElem.appendChild(e);
+
+          } catch (OWLWorkSpaceNotSetException | OWLEntityNullException ignored) {
+
+          }
         });
     root.appendChild(profileElem);
   }
@@ -147,4 +140,31 @@ public class Profile implements Savable, KnowtatorObject {
 
   @Override
   public void writeToGeniaXML(Document dom, Element parent) {}
+
+  public Color getColor(Annotation annotation) {
+    OWLClass owlClass = annotation.getOwlClass();
+    String owlClassID = annotation.getOwlClassID();
+
+    Color color = colors.get(owlClass);
+    if (color != null) {
+      return color;
+    } else {
+
+      color = colors.get(owlClassID);
+      if (owlClass != null) {
+        if (color == null) {
+          color = Color.CYAN;
+        }
+        colors.put(owlClass, color);
+        controller.getProfileManager().fireColorChanged();
+        return color;
+      } else if (color == null) {
+        colors.put(owlClassID, Color.CYAN);
+        controller.getProfileManager().fireColorChanged();
+        return Color.CYAN;
+      } else {
+        return color;
+      }
+    }
+  }
 }

@@ -3,22 +3,25 @@ package edu.ucdenver.ccp.knowtator.model.owl;
 import com.google.common.base.Optional;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.DebugListener;
+import edu.ucdenver.ccp.knowtator.listeners.OWLSetupListener;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.protege.editor.core.ui.util.AugmentedJTextField;
 import org.protege.editor.owl.model.OWLWorkspace;
 import org.protege.editor.owl.model.selection.OWLSelectionModelListener;
+import org.protege.editor.owl.ui.renderer.OWLRendererPreferences;
+import org.protege.editor.owl.ui.search.SearchDialogPanel;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.search.EntitySearcher;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSelectionModelListener {
@@ -26,80 +29,77 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
   private static final Logger log = LogManager.getLogger(OWLAPIDataExtractor.class);
 
   private OWLWorkspace owlWorkSpace;
-	private KnowtatorController controller;
+  private KnowtatorController controller;
+  private List<OWLSetupListener> owlSetupListeners;
 
-	public OWLAPIDataExtractor(KnowtatorController controller) {
-		this.controller = controller;
-		controller.addDebugListener(this);
-	}
-  //
-  //	private OWLAnnotationProperty getOWLAnnotationPropertyByName()
-  //			throws OWLWorkSpaceNotSetException, OWLAnnotationPropertyNotFoundException {
-  //		OWLAnnotationProperty result = getWorkSpace()
-  //				.getOWLModelManager()
-  //				.getOWLEntityFinder()
-  //				.getOWLAnnotationProperty("name");
-  //		if (result == null) {
-  //			throw new OWLAnnotationPropertyNotFoundException();
-  //		} else {
-  //			return result;
-  //		}
-  //	}
+  public OWLAPIDataExtractor(KnowtatorController controller) {
+    this.controller = controller;
+    owlSetupListeners = new ArrayList<>();
+    controller.addDebugListener(this);
+  }
 
-  private String extractAnnotation(OWLEntity ent, OWLAnnotationProperty annotationProperty)
-      throws OWLWorkSpaceNotSetException, OWLAnnotationNotFoundException {
-    try {
-      return EntitySearcher.getAnnotations(
-              ent, getWorkSpace().getOWLModelManager().getActiveOntology(), annotationProperty)
-          .stream()
-          .map(owlAnnotation -> ((OWLLiteral) owlAnnotation.getValue()).getLiteral())
-          .collect(Collectors.toList())
-          .get(0);
-    } catch (IndexOutOfBoundsException e) {
-      throw new OWLAnnotationNotFoundException();
+  public void addOWLSetupListener(OWLSetupListener listener) {
+    owlSetupListeners.add(listener);
+  }
+
+  public OWLClass getOWLClassByID(String classID) throws OWLWorkSpaceNotSetException, OWLClassNotFoundException {
+    setRenderRDFSLabel();
+
+    OWLClass owlClass = getWorkSpace().getOWLModelManager().getOWLEntityFinder().getOWLClass(classID);
+    if (owlClass == null) {
+      throw new OWLClassNotFoundException();
+    } else {
+      return owlClass;
     }
   }
 
-  private String getOwlEntID(OWLEntity ent) {
-    return ent.getIRI().getShortForm();
-  }
-
-  public OWLClass getOWLClassByID(String classID) throws OWLWorkSpaceNotSetException {
-    return getWorkSpace().getOWLModelManager().getOWLEntityFinder().getOWLClass(classID);
-  }
-
-  public OWLObjectProperty getOWLObjectPropertyByID(String classID)
+  public OWLObjectProperty getOWLObjectPropertyByID(String propertyID)
       throws OWLWorkSpaceNotSetException, OWLObjectPropertyNotFoundException {
-    OWLObjectProperty property =
-        getWorkSpace().getOWLModelManager().getOWLEntityFinder().getOWLObjectProperty(classID);
+    setRenderRDFSLabel();
+    OWLObjectProperty property = getWorkSpace()
+        .getOWLModelManager()
+        .getOWLEntityFinder()
+        .getOWLObjectProperty(propertyID);
     if (property == null) {
-      throw new OWLObjectPropertyNotFoundException();
+      throw  new OWLObjectPropertyNotFoundException();
     } else {
       return property;
     }
   }
 
-  public Set<OWLClass> getDescendants(OWLClass cls) throws OWLWorkSpaceNotSetException {
+  private void setRenderRDFSLabel() throws OWLWorkSpaceNotSetException {
+    IRI labelIRI = getWorkSpace().getOWLModelManager().getOWLDataFactory().getRDFSLabel().getIRI();
+    OWLRendererPreferences.getInstance()
+            .setAnnotations(
+                    Collections.singletonList(
+                            labelIRI));
+    getWorkSpace().getOWLModelManager().refreshRenderer();
+    log.warn("Renderer set to RDFSLabel");
+  }
 
+  public Set<OWLClass> getDescendants(OWLClass cls) throws OWLWorkSpaceNotSetException {
     return getWorkSpace()
         .getOWLModelManager()
         .getOWLHierarchyManager()
         .getOWLClassHierarchyProvider()
         .getDescendants(cls);
   }
-//
-//  public OWLObjectProperty getSelectedProperty() throws OWLWorkSpaceNotSetException {
-//    return getWorkSpace().getOWLSelectionModel().getLastSelectedObjectProperty();
-//  }
 
-  public String getOWLEntityRendering(OWLEntity owlEntity) throws OWLWorkSpaceNotSetException {
+  public String getOWLEntityRendering(OWLEntity owlEntity, Boolean renderWithRDFSLabel) throws OWLWorkSpaceNotSetException, OWLEntityNullException {
+    if (owlEntity == null) {
+      throw new OWLEntityNullException();
+    }
+    if (renderWithRDFSLabel) {
+      setRenderRDFSLabel();
+    }
     return getWorkSpace().getOWLModelManager().getOWLEntityRenderer().render(owlEntity);
   }
 
   public void setUpOWL(OWLWorkspace owlWorkSpace) {
-	  log.warn("OWLAPIDataExtractor: setup OWL API connection");
+    log.warn("OWLAPIDataExtractor: setup OWL API connection");
     this.owlWorkSpace = owlWorkSpace;
     owlWorkSpace.getOWLSelectionModel().addListener(this);
+    owlSetupListeners.forEach(OWLSetupListener::owlSetup);
   }
 
   public OWLWorkspace getWorkSpace() throws OWLWorkSpaceNotSetException {
@@ -157,22 +157,33 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
     }
   }
 
+  public void searchForString(String stringToSearch) throws OWLWorkSpaceNotSetException {
+    JDialog dialog = SearchDialogPanel.createDialog(null, getWorkSpace().getOWLEditorKit());
+    Arrays.stream(dialog.getContentPane().getComponents()).forEach(component -> {
+      if (component instanceof AugmentedJTextField) {
+        ((AugmentedJTextField) component).setText(stringToSearch);
+      }
+    });
+
+    getWorkSpace().showSearchDialog();
+  }
+
   @Override
   public void setDebug() {
     OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-//    OWLWorkspace workspace = new OWLWorkspace();
-//    OWLEditorKitFactory editorKitFactory = new OWLEditorKitFactory();
-//    OWLEditorKit editorKit = new OWLEditorKit(editorKitFactory);
-//    workspace.setup(editorKit);
-//    workspace.initialise();
+    //    OWLWorkspace workspace = new OWLWorkspace();
+    //    OWLEditorKitFactory editorKitFactory = new OWLEditorKitFactory();
+    //    OWLEditorKit editorKit = new OWLEditorKit(editorKitFactory);
+    //    workspace.setup(editorKit);
+    //    workspace.initialise();
     OWLDataFactory factory = manager.getOWLDataFactory();
 
-    IRI iri = IRI.create("test");
+    IRI iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#DomainConcept");
     OWLClass testClass = factory.getOWLClass(iri);
     controller.getSelectionManager().setSelectedOWLClass(testClass);
 
-    iri = IRI.create("property_test");
-    OWLObjectProperty  objectProperty = factory.getOWLObjectProperty(iri);
+    iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#HasCountryOfOrigin");
+    OWLObjectProperty objectProperty = factory.getOWLObjectProperty(iri);
     controller.getSelectionManager().setSelectedOWLObjectProperty(objectProperty);
   }
 

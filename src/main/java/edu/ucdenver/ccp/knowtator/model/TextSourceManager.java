@@ -8,22 +8,18 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.io.knowtator.OldKnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.OWLEntityCollector;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-public class TextSourceManager implements Savable, OWLOntologyChangeListener {
+public class TextSourceManager implements Savable {
+  @SuppressWarnings("unused")
   private Logger log = Logger.getLogger(TextSourceManager.class);
 
   private TextSourceCollection textSourceCollection;
@@ -94,52 +90,4 @@ public class TextSourceManager implements Savable, OWLOntologyChangeListener {
 
   @Override
   public void writeToGeniaXML(Document dom, Element parent) {}
-
-  /*
-  React to changes in the ontology. For now, only handling entity renaming
-   */
-  @Override
-  public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) {
-
-    log.warn("Ontology Change Event");
-    textSourceCollection
-        .getCollection()
-        .forEach(
-            textSource ->
-                textSource
-                    .getAnnotationManager()
-                    .getGraphSpaceCollection()
-                    .getCollection()
-                    .forEach(
-                        graphSpace -> {
-                          Set<OWLEntity> possiblyAddedEntities = new HashSet<>();
-                          Set<OWLEntity> possiblyRemovedEntities = new HashSet<>();
-                          OWLEntityCollector addedCollector =
-                              new OWLEntityCollector(possiblyAddedEntities);
-                          OWLEntityCollector removedCollector =
-                              new OWLEntityCollector(possiblyRemovedEntities);
-
-                          for (OWLOntologyChange chg : changes) {
-                            if (chg.isAxiomChange()) {
-                              OWLAxiomChange axChg = (OWLAxiomChange) chg;
-                              if (axChg.getAxiom().getAxiomType() == AxiomType.DECLARATION) {
-                                if (axChg instanceof AddAxiom) {
-                                  axChg.getAxiom().accept(addedCollector);
-                                } else {
-                                  axChg.getAxiom().accept(removedCollector);
-                                }
-                              }
-                            }
-                          }
-
-                          /*
-                          For now, I will assume that entity removed is the one that existed and the one
-                          that is added is the new name for it.
-                           */
-                          graphSpace.reassignProperty(
-                              possiblyRemovedEntities.iterator().next(),
-                              possiblyAddedEntities.iterator().next());
-
-                        }));
-  }
 }

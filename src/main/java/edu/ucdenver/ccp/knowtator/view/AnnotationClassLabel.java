@@ -3,6 +3,8 @@ package edu.ucdenver.ccp.knowtator.view;
 import edu.ucdenver.ccp.knowtator.events.AnnotationChangeEvent;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationSelectionListener;
 import edu.ucdenver.ccp.knowtator.model.Annotation;
+import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
+import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.event.EventType;
 import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
@@ -28,7 +30,11 @@ public class AnnotationClassLabel extends JLabel
 
   private void displayAnnotation(Annotation annotation) {
     if (annotation != null) {
-      setText(annotation.getOwlClassID());
+      try {
+        setText(view.getController().getOWLAPIDataExtractor().getOWLEntityRendering(annotation.getOwlClass(), false));
+      } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
+        setText(annotation.getOwlClassID());
+      }
     }
   }
 
