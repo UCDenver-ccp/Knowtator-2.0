@@ -17,6 +17,7 @@ import java.util.List;
 
 public class SelectionManager implements CaretListener, ChangeListener, ProjectListener {
 
+  @SuppressWarnings("unused")
   private static final Logger log = Logger.getLogger(SelectionManager.class);
   private KnowtatorController controller;
   private Annotation selectedAnnotation;
