@@ -160,9 +160,11 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
   @Override
   public void setDebug() {
     OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-    //	  OWLModelManager manager2 = new OWLModelManagerImpl();
-    OWLWorkspace workspace = new OWLWorkspace();
-    workspace.initialise();
+//    OWLWorkspace workspace = new OWLWorkspace();
+//    OWLEditorKitFactory editorKitFactory = new OWLEditorKitFactory();
+//    OWLEditorKit editorKit = new OWLEditorKit(editorKitFactory);
+//    workspace.setup(editorKit);
+//    workspace.initialise();
     OWLDataFactory factory = manager.getOWLDataFactory();
 
     IRI iri = IRI.create("test");

@@ -2,29 +2,21 @@ package edu.ucdenver.ccp.knowtator.view;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxCell;
-import com.mxgraph.model.mxICell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.util.mxMorphing;
-import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.events.GraphSpaceChangeEvent;
 import edu.ucdenver.ccp.knowtator.listeners.GraphSpaceSelectionListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.Annotation;
-import edu.ucdenver.ccp.knowtator.model.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.Triple;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
 import edu.ucdenver.ccp.knowtator.view.textpane.GraphViewKnowtatorTextPane;
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -41,8 +33,10 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 	private GraphSpaceChooser graphSpaceChooser;
 	private GraphViewKnowtatorTextPane knowtatorTextPane;
 	private JDialog dialog;
+
 	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(GraphView.class);
+
 	private KnowtatorView view;
 
 	GraphView(JDialog dialog, KnowtatorView view) {
@@ -70,7 +64,9 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 					if (comboBox.getSelectedItem() != null
 							&& comboBox.getSelectedItem()
 							!= view.getController().getSelectionManager().getActiveTextSource()) {
-						view.getController().getSelectionManager().setSelectedGraphSpace((GraphSpace) comboBox.getSelectedItem());
+						view.getController()
+								.getSelectionManager()
+								.setSelectedGraphSpace((GraphSpace) comboBox.getSelectedItem());
 					}
 				});
 
@@ -83,109 +79,20 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 		removeCellButton.addActionListener(e -> removeSelectedCell());
 		addAnnotationNodeButton.addActionListener(
 				e -> {
-					Annotation annotation = view.getController().getSelectionManager().getSelectedAnnotation();
+					Annotation annotation =
+							view.getController().getSelectionManager().getSelectedAnnotation();
 					mxCell vertex =
-							view.getController().getSelectionManager().getActiveGraphSpace().addNode(null, annotation);
+							view.getController()
+									.getSelectionManager()
+									.getActiveGraphSpace()
+									.addNode(null, annotation);
 
 					goToVertex(vertex);
 				});
 		applyLayoutButton.addActionListener(e -> applyLayout());
 	}
 
-	private void setupListeners(mxGraphComponent graphComponent) {
-		GraphSpace graph = (GraphSpace) graphComponent.getGraph();
-		// Handle drag and drop
-		// Adds the current selected object property as the edge value
-		graph.addListener(
-				mxEvent.ADD_CELLS,
-				(sender, evt) -> {
-					Object[] cells = (Object[]) evt.getProperty("cells");
-					for (Object cell : cells) {
-						if (graph.getModel().isEdge(cell) && "".equals(((mxCell) cell).getValue())) {
-							mxCell edge = (mxCell) cell;
-							OWLObjectProperty property =
-									view.getController().getSelectionManager().getSelectedOWLObjectProperty();
-							String propertyID = null;
-							try {
-								propertyID = view.getController().getOWLAPIDataExtractor().getOWLEntityRendering(property);
-							} catch (OWLWorkSpaceNotSetException ignored) {
 
-							}
-							if (property != null) {
-								mxICell source = edge.getSource();
-								mxICell target = edge.getTarget();
-
-								JTextField quantifierField = new JTextField(10);
-								JTextField valueField = new JTextField(10);
-								JPanel restrictionPanel = new JPanel();
-								restrictionPanel.add(new JLabel("Quantifier:"));
-								restrictionPanel.add(quantifierField);
-								restrictionPanel.add(Box.createHorizontalStrut(15));
-								restrictionPanel.add(new JLabel("Value:"));
-								restrictionPanel.add(valueField);
-
-								String quantifier = "";
-								String value = "";
-								int result =
-										JOptionPane.showConfirmDialog(
-												view, restrictionPanel, "Restriction options", JOptionPane.DEFAULT_OPTION);
-								if (result == JOptionPane.OK_OPTION) {
-									quantifier = quantifierField.getText();
-									value = valueField.getText();
-								}
-
-								graph.addTriple(
-										(AnnotationNode) source,
-										(AnnotationNode) target,
-										null,
-										view.getController().getSelectionManager().getActiveProfile(),
-										property, propertyID,
-										quantifier, value);
-							}
-
-							graph.getModel().remove(edge);
-						}
-					}
-
-					graph.reDrawGraph();
-				});
-
-		graph.addListener(mxEvent.MOVE_CELLS, (sender, evt) -> graph.reDrawGraph());
-
-		graph
-				.getSelectionModel()
-				.addListener(
-						mxEvent.CHANGE,
-						(sender, evt) -> {
-							Collection selectedCells = (Collection) evt.getProperty("removed");
-							Arrays.stream(graph.getChildVertices(graph.getDefaultParent()))
-									.forEach(
-											cell ->
-													graph.setCellStyles(
-															mxConstants.STYLE_STROKEWIDTH, "0", new Object[]{cell}));
-
-							if (selectedCells != null) {
-								for (Object cell : selectedCells) {
-									if (cell instanceof AnnotationNode) {
-										Annotation annotation = ((AnnotationNode) cell).getAnnotation();
-
-										view.getController().getSelectionManager().setSelectedAnnotation(annotation, null);
-
-										graph.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
-
-									} else if (cell instanceof Triple) {
-										Object value = ((mxCell) cell).getValue();
-										if (value instanceof OWLObjectProperty) {
-											view.getController()
-													.getSelectionManager()
-													.setSelectedOWLObjectProperty((OWLObjectProperty) value);
-										}
-									}
-								}
-							}
-							graph.reDrawGraph();
-						});
-	}
 
 	@SuppressWarnings("unused")
 	public void goToAnnotationVertex(GraphSpace graphSpace, Annotation annotation) {
@@ -214,7 +121,7 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 
 		graphComponent.setName(graphSpace.getId());
 
-		setupListeners(graphComponent);
+		graphSpace.setupListeners();
 
 		graphSpace.reDrawGraph();
 		applyLayout();
@@ -223,7 +130,7 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 
 	private void applyLayout() {
 		GraphSpace graph = view.getController().getSelectionManager().getActiveGraphSpace();
-		graph.reDrawGraph();
+		//		graph.reDrawGraph();
 		mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
 		layout.setOrientation(SwingConstants.WEST);
 		layout.setIntraCellSpacing(50);
@@ -257,7 +164,6 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 		applyLayout();
 	}
 
-
 	@Override
 	public void projectClosed() {
 		graphComponent.setGraph(new mxGraph());
@@ -265,7 +171,6 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 
 	@Override
 	public void projectLoaded() {
-
 	}
 
 	/**
@@ -400,5 +305,4 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 	public JComponent $$$getRootComponent$$$() {
 		return panel1;
 	}
-
 }

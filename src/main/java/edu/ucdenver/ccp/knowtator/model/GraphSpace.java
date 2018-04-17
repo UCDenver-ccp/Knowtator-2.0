@@ -3,14 +3,19 @@ package edu.ucdenver.ccp.knowtator.model;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxGraphModel;
+import com.mxgraph.model.mxICell;
 import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.events.AnnotationChangeEvent;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
+import edu.ucdenver.ccp.knowtator.listeners.AnnotationSelectionListener;
 import edu.ucdenver.ccp.knowtator.listeners.GraphSpaceListener;
+import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.event.EventType;
 import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
@@ -22,16 +27,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class GraphSpace extends mxGraph implements Savable, KnowtatorObject, OWLModelManagerListener {
+public class GraphSpace extends mxGraph
+    implements Savable, KnowtatorObject, OWLModelManagerListener, AnnotationSelectionListener {
   @SuppressWarnings("unused")
   private Logger log = Logger.getLogger(GraphSpace.class);
 
@@ -41,6 +45,7 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject, OWL
   private int graphTextStart;
   private int graphTextEnd;
   private List<GraphSpaceListener> listeners;
+  private boolean areListenersSet;
 
   public GraphSpace(KnowtatorController controller, TextSource textSource, String id) {
 
@@ -48,6 +53,7 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject, OWL
     this.textSource = textSource;
 
     controller.verifyId(id, this, false);
+    controller.getSelectionManager().addAnnotationListener(this);
 
     setCellsResizable(false);
     setEdgeLabelsMovable(false);
@@ -57,6 +63,7 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject, OWL
     setCellsBendable(false);
     setResetEdgesOnMove(true);
     listeners = new ArrayList<>();
+    areListenersSet = false;
   }
 
   public static int compare(GraphSpace graphSpace1, GraphSpace graphSpace2) {
@@ -89,11 +96,11 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject, OWL
     try {
       addCell(cell);
     } finally {
-//      reDrawGraph();
+      //      reDrawGraph();
       getModel().endUpdate();
     }
 
-//    reDrawGraph();
+    //    reDrawGraph();
   }
 
   public AnnotationNode addNode(String id, Annotation annotation) {
@@ -110,27 +117,35 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject, OWL
   }
 
   public void addTriple(
-          AnnotationNode source,
-          AnnotationNode target,
-          String id,
-          Profile annotator,
-          OWLObjectProperty property,
-          String propertyID, String quantifier,
-          String quantifierValue) {
+      AnnotationNode source,
+      AnnotationNode target,
+      String id,
+      Profile annotator,
+      OWLObjectProperty property,
+      String propertyID,
+      String quantifier,
+      String quantifierValue) {
     id = verifyID(id, "edge");
 
-
-
     Triple newTriple =
-            new Triple(
-                    id, source, target, property, propertyID, annotator, quantifier, quantifierValue, controller, textSource);
+        new Triple(
+            id,
+            source,
+            target,
+            property,
+            propertyID,
+            annotator,
+            quantifier,
+            quantifierValue,
+            controller,
+            textSource);
 
-    setCellStyles(mxConstants.STYLE_STARTARROW, "dash", new Object[]{newTriple});
-    setCellStyles(mxConstants.STYLE_STARTSIZE, "12", new Object[]{newTriple});
-    setCellStyles(mxConstants.STYLE_ENDARROW, "block", new Object[]{newTriple});
-    setCellStyles(mxConstants.STYLE_VERTICAL_ALIGN, "top", new Object[]{newTriple});
-    setCellStyles(mxConstants.STYLE_VERTICAL_LABEL_POSITION, "top", new Object[]{newTriple});
-    setCellStyles(mxConstants.STYLE_FONTSIZE, "16", new Object[]{newTriple});
+    setCellStyles(mxConstants.STYLE_STARTARROW, "dash", new Object[] {newTriple});
+    setCellStyles(mxConstants.STYLE_STARTSIZE, "12", new Object[] {newTriple});
+    setCellStyles(mxConstants.STYLE_ENDARROW, "block", new Object[] {newTriple});
+    setCellStyles(mxConstants.STYLE_VERTICAL_ALIGN, "top", new Object[] {newTriple});
+    setCellStyles(mxConstants.STYLE_VERTICAL_LABEL_POSITION, "top", new Object[] {newTriple});
+    setCellStyles(mxConstants.STYLE_FONTSIZE, "16", new Object[] {newTriple});
 
     addCellToGraph(newTriple);
   }
@@ -156,16 +171,16 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject, OWL
    */
 
   public void removeSelectedCell() {
-    Object cell = getSelectionModel().getCell();
-    Arrays.stream(getEdges(cell)).forEach(edge -> getModel().remove(edge));
-    getModel().remove(cell);
-//    reDrawGraph();
+    //    Object cell = getSelectionModel().getCell();
+    //    Arrays.stream(getEdges(cell)).forEach(edge -> getModel().remove(edge));
+    removeCells(getSelectionCells(), true);
+    //    reDrawGraph();
   }
 
   @Override
   public void readFromKnowtatorXML(File file, Element parent) {
     for (Node graphVertexNode :
-            KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.VERTEX))) {
+        KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.VERTEX))) {
       Element graphVertexElem = (Element) graphVertexNode;
 
       String id = graphVertexElem.getAttribute(KnowtatorXMLAttributes.ID);
@@ -176,7 +191,7 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject, OWL
     }
 
     for (Node tripleNode :
-            KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.TRIPLE))) {
+        KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.TRIPLE))) {
       Element tripleElem = (Element) tripleNode;
 
       String id = tripleElem.getAttribute(KnowtatorXMLAttributes.ID);
@@ -189,7 +204,7 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject, OWL
 
       Profile annotator = controller.getProfileManager().addProfile(annotatorID);
       AnnotationNode source =
-              (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(subjectID);
+          (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(subjectID);
       AnnotationNode target = (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(objectID);
 
       if (target != null && source != null) {
@@ -199,82 +214,78 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject, OWL
   }
 
   @Override
-  public void readFromOldKnowtatorXML(File file, Element parent) {
-  }
+  public void readFromOldKnowtatorXML(File file, Element parent) {}
 
   @Override
   public void readFromBratStandoff(
-          File file, Map<Character, List<String[]>> annotationMap, String content) {
+      File file, Map<Character, List<String[]>> annotationMap, String content) {
     annotationMap
-            .get(StandoffTags.RELATION)
-            .forEach(
-                    annotation -> {
-                      String id = annotation[0];
+        .get(StandoffTags.RELATION)
+        .forEach(
+            annotation -> {
+              String id = annotation[0];
 
-                      String[] relationTriple = annotation[1].split(StandoffTags.relationTripleDelimiter);
-                      String propertyID = relationTriple[0];
-                      String subjectAnnotationID =
-                              relationTriple[1].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
-                      String objectAnnotationID =
-                              relationTriple[2].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
+              String[] relationTriple = annotation[1].split(StandoffTags.relationTripleDelimiter);
+              String propertyID = relationTriple[0];
+              String subjectAnnotationID =
+                  relationTriple[1].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
+              String objectAnnotationID =
+                  relationTriple[2].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
 
-                      Profile annotator = controller.getProfileManager().getDefaultProfile();
+              Profile annotator = controller.getProfileManager().getDefaultProfile();
 
-                      Annotation subjectAnnotation =
-                              textSource.getAnnotationManager().getAnnotation(subjectAnnotationID);
-                      List<Object> subjectAnnotationVertices = getVerticesForAnnotation(subjectAnnotation);
-                      AnnotationNode source;
-                      if (subjectAnnotationVertices.size() == 0) {
-                        source = addNode(null, subjectAnnotation);
-                      } else {
-                        source = (AnnotationNode) subjectAnnotationVertices.get(0);
-                      }
+              Annotation subjectAnnotation =
+                  textSource.getAnnotationManager().getAnnotation(subjectAnnotationID);
+              List<Object> subjectAnnotationVertices = getVerticesForAnnotation(subjectAnnotation);
+              AnnotationNode source;
+              if (subjectAnnotationVertices.size() == 0) {
+                source = addNode(null, subjectAnnotation);
+              } else {
+                source = (AnnotationNode) subjectAnnotationVertices.get(0);
+              }
 
-                      Annotation objectAnnotation =
-                              textSource.getAnnotationManager().getAnnotation(objectAnnotationID);
-                      List<Object> objectAnnotationVertices = getVerticesForAnnotation(objectAnnotation);
-                      AnnotationNode target;
-                      if (objectAnnotationVertices.size() == 0) {
-                        target = addNode(null, objectAnnotation);
-                      } else {
-                        target = (AnnotationNode) objectAnnotationVertices.get(0);
-                      }
+              Annotation objectAnnotation =
+                  textSource.getAnnotationManager().getAnnotation(objectAnnotationID);
+              List<Object> objectAnnotationVertices = getVerticesForAnnotation(objectAnnotation);
+              AnnotationNode target;
+              if (objectAnnotationVertices.size() == 0) {
+                target = addNode(null, objectAnnotation);
+              } else {
+                target = (AnnotationNode) objectAnnotationVertices.get(0);
+              }
 
-                      addTriple(source, target, id, annotator, null, propertyID, "", "");
-                    });
+              addTriple(source, target, id, annotator, null, propertyID, "", "");
+            });
   }
 
   @SuppressWarnings("RedundantThrows")
   @Override
-  public void writeToBratStandoff(Writer writer) throws IOException {
-  }
+  public void writeToBratStandoff(Writer writer) throws IOException {}
 
   @Override
-  public void readFromGeniaXML(Element parent, String content) {
-  }
+  public void readFromGeniaXML(Element parent, String content) {}
 
   @Override
-  public void writeToGeniaXML(Document dom, Element parent) {
-  }
+  public void writeToGeniaXML(Document dom, Element parent) {}
 
   @Override
   public void writeToKnowtatorXML(Document dom, Element textSourceElement) {
     Element graphElem = dom.createElement(KnowtatorXMLTags.GRAPH_SPACE);
     graphElem.setAttribute(KnowtatorXMLAttributes.ID, id);
     Arrays.stream(getChildVertices(getDefaultParent()))
-            .forEach(
-                    vertex -> {
-                      if (vertex instanceof AnnotationNode) {
-                        ((AnnotationNode) vertex).writeToKnowtatorXML(dom, graphElem);
-                      }
-                    });
+        .forEach(
+            vertex -> {
+              if (vertex instanceof AnnotationNode) {
+                ((AnnotationNode) vertex).writeToKnowtatorXML(dom, graphElem);
+              }
+            });
     Arrays.stream(getChildEdges(getDefaultParent()))
-            .forEach(
-                    edge -> {
-                      if (edge instanceof Triple) {
-                        ((Triple) edge).writeToKnowtatorXML(dom, graphElem);
-                      }
-                    });
+        .forEach(
+            edge -> {
+              if (edge instanceof Triple) {
+                ((Triple) edge).writeToKnowtatorXML(dom, graphElem);
+              }
+            });
     textSourceElement.appendChild(graphElem);
   }
 
@@ -282,30 +293,145 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject, OWL
   UPDATE
    */
   public void reDrawGraph() {
+    log.warn("Redrawing Graph");
     getModel().beginUpdate();
     try {
       Arrays.stream(getChildVertices(getDefaultParent()))
-              .forEach(
-                      vertex -> {
-                        if (vertex instanceof AnnotationNode) {
-                          setVertexStyle((AnnotationNode) vertex);
-                        }
-                        updateCellSize(vertex);
+          .forEach(
+              vertex -> {
+                if (vertex instanceof AnnotationNode) {
+                  setVertexStyle((AnnotationNode) vertex);
+                }
+                updateCellSize(vertex);
 
-                        getView().validateCell(vertex);
-                      });
+                getView().validateCell(vertex);
+              });
       Arrays.stream(getChildEdges(getDefaultParent()))
-              .forEach(
-                      edge -> {
-                        updateCellSize(edge);
-                        //                if (edge instanceof Triple) {
-                        //                    ((Triple) edge).setValue(((Triple) edge).getValue());
-                        //                }
-                        getView().validateCell(edge);
-                      });
+          .forEach(
+              edge -> {
+                updateCellSize(edge);
+                //                if (edge instanceof Triple) {
+                //                    ((Triple) edge).setValue(((Triple) edge).getValue());
+                //                }
+                getView().validateCell(edge);
+              });
     } finally {
       getModel().endUpdate();
       refresh();
+    }
+  }
+
+  public void setupListeners() {
+    // Handle drag and drop
+    // Adds the current selected object property as the edge value
+    if (!areListenersSet) {
+      addListener(
+          mxEvent.ADD_CELLS,
+          (sender, evt) -> {
+            Object[] cells = (Object[]) evt.getProperty("cells");
+            if (cells != null && cells.length > 0) {
+              for (Object cell : cells) {
+                if (getModel().isEdge(cell) && "".equals(((mxCell) cell).getValue())) {
+                  mxCell edge = (mxCell) cell;
+                  OWLObjectProperty property =
+                      controller.getSelectionManager().getSelectedOWLObjectProperty();
+                  String propertyID = null;
+                  try {
+                    propertyID =
+                        controller.getOWLAPIDataExtractor().getOWLEntityRendering(property);
+                  } catch (OWLWorkSpaceNotSetException ignored) {
+
+                  }
+                  if (property != null) {
+                    mxICell source = edge.getSource();
+                    mxICell target = edge.getTarget();
+
+                    JTextField quantifierField = new JTextField(10);
+                    JTextField valueField = new JTextField(10);
+                    JPanel restrictionPanel = new JPanel();
+                    restrictionPanel.add(new JLabel("Quantifier:"));
+                    restrictionPanel.add(quantifierField);
+                    restrictionPanel.add(Box.createHorizontalStrut(15));
+                    restrictionPanel.add(new JLabel("Value:"));
+                    restrictionPanel.add(valueField);
+
+                    String quantifier = "";
+                    String value = "";
+                    int result =
+                        JOptionPane.showConfirmDialog(
+                            null,
+                            restrictionPanel,
+                            "Restriction options",
+                            JOptionPane.DEFAULT_OPTION);
+                    if (result == JOptionPane.OK_OPTION) {
+                      quantifier = quantifierField.getText();
+                      value = valueField.getText();
+                    }
+
+                    addTriple(
+                        (AnnotationNode) source,
+                        (AnnotationNode) target,
+                        null,
+                        controller.getSelectionManager().getActiveProfile(),
+                        property,
+                        propertyID,
+                        quantifier,
+                        value);
+                  }
+
+                  getModel().remove(edge);
+                }
+              }
+
+              reDrawGraph();
+            }
+          });
+
+      addListener(mxEvent.MOVE_CELLS, (sender, evt) -> reDrawGraph());
+
+      addListener(mxEvent.REMOVE_CELLS, (sender, evt) -> reDrawGraph());
+
+      getSelectionModel()
+          .addListener(
+              mxEvent.CHANGE,
+              (sender, evt) -> {
+                Collection selectedCells = (Collection) evt.getProperty("removed");
+                Collection deselectedCells = (Collection) evt.getProperty("added");
+                if (deselectedCells != null && deselectedCells.size() > 0) {
+                  for (Object cell : deselectedCells) {
+                    setCellStyles(mxConstants.STYLE_STROKEWIDTH, "0", new Object[] {cell});
+                  }
+                  //                Arrays.stream(graph.getChildVertices(graph.getDefaultParent()))
+                  //                    .forEach(
+                  //                        cell ->
+                  //                            graph.setCellStyles(
+                  //                                mxConstants.STYLE_STROKEWIDTH, "0", new Object[]
+                  // {cell}));
+                  reDrawGraph();
+                }
+
+                if (selectedCells != null && selectedCells.size() > 0) {
+                  for (Object cell : selectedCells) {
+                    if (cell instanceof AnnotationNode) {
+                      Annotation annotation = ((AnnotationNode) cell).getAnnotation();
+
+                      controller.getSelectionManager().setSelectedAnnotation(annotation, null);
+
+                      setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[] {cell});
+
+                    } else if (cell instanceof Triple) {
+                      Object value = ((mxCell) cell).getValue();
+                      if (value instanceof OWLObjectProperty) {
+                        controller
+                            .getSelectionManager()
+                            .setSelectedOWLObjectProperty((OWLObjectProperty) value);
+                      }
+                    }
+                  }
+                  reDrawGraph();
+                }
+              });
+      areListenersSet = true;
     }
   }
 
@@ -317,13 +443,13 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject, OWL
     OWLClass owlClass = vertex.getAnnotation().getOwlClass();
     Profile profile = controller.getSelectionManager().getActiveProfile();
     String color =
-            Integer.toHexString(
-                    profile.getColor(owlClass, vertex.getAnnotation().getOwlClassID()).getRGB())
-                    .substring(2);
+        Integer.toHexString(
+                profile.getColor(owlClass, vertex.getAnnotation().getOwlClassID()).getRGB())
+            .substring(2);
     String shape = mxConstants.SHAPE_RECTANGLE;
 
-    setCellStyles(mxConstants.STYLE_SHAPE, shape, new Object[]{vertex});
-    setCellStyles(mxConstants.STYLE_FILLCOLOR, color, new Object[]{vertex});
+    setCellStyles(mxConstants.STYLE_SHAPE, shape, new Object[] {vertex});
+    setCellStyles(mxConstants.STYLE_FILLCOLOR, color, new Object[] {vertex});
   }
 
   /*
@@ -333,7 +459,7 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject, OWL
   public AnnotationNode containsVertexCorrespondingToAnnotation(Annotation selectedAnnotation) {
     for (Object o : getChildVertices(getDefaultParent())) {
       if (o instanceof AnnotationNode
-              && ((AnnotationNode) o).getAnnotation().equals(selectedAnnotation)) {
+          && ((AnnotationNode) o).getAnnotation().equals(selectedAnnotation)) {
         return (AnnotationNode) o;
       }
     }
@@ -342,11 +468,11 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject, OWL
 
   public List<Object> getVerticesForAnnotation(Annotation annotation) {
     return Arrays.stream(getChildVertices(getDefaultParent()))
-            .filter(
-                    o ->
-                            o instanceof AnnotationNode
-                                    && annotation.equals(((AnnotationNode) o).getAnnotation()))
-            .collect(Collectors.toList());
+        .filter(
+            o ->
+                o instanceof AnnotationNode
+                    && annotation.equals(((AnnotationNode) o).getAnnotation()))
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -365,12 +491,12 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject, OWL
   private List<Triple> getTriplesCorrespondingToProperty(OWLEntity property) {
     List<Triple> edges = new ArrayList<>();
     Arrays.stream(getChildEdges(getDefaultParent()))
-            .forEach(
-                    edge -> {
-                      if (((Triple) edge).getValue() == property) {
-                        edges.add((Triple) edge);
-                      }
-                    });
+        .forEach(
+            edge -> {
+              if (((Triple) edge).getValue() == property) {
+                edges.add((Triple) edge);
+              }
+            });
 
     return edges;
   }
@@ -405,16 +531,25 @@ public class GraphSpace extends mxGraph implements Savable, KnowtatorObject, OWL
     this.id = id;
   }
 
-	@Override
-	public void handleChange(OWLModelManagerChangeEvent event) {
+  @Override
+  public void handleChange(OWLModelManagerChangeEvent event) {
     if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
       Arrays.stream(getChildEdges(getDefaultParent()))
           .forEach(
               edge -> {
                 if (edge instanceof Triple) {
-					((Triple) edge).resetValue();
+                  ((Triple) edge).resetValue();
                 }
               });
-  	}
-	}
+    }
+  }
+
+  @Override
+  public void selectedAnnotationChanged(AnnotationChangeEvent e) {
+    if (e.getNew() != null) {
+      setSelectionCells(getVerticesForAnnotation(e.getNew()));
+    } else {
+      setSelectionCell(null);
+    }
+  }
 }

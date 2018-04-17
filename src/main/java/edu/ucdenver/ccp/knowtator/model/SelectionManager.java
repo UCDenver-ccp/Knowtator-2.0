@@ -134,9 +134,12 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
 
   public void setSelectedGraphSpace(GraphSpace newGraphSpace) {
     if (controller.getProjectManager().isProjectLoaded()) {
-      GraphSpaceChangeEvent e = new GraphSpaceChangeEvent(this.activeGraphSpace, newGraphSpace);
-      this.activeGraphSpace = newGraphSpace;
-      graphSpaceListeners.forEach(selectionListener -> selectionListener.activeGraphSpaceChanged(e));
+      if (this.activeGraphSpace != newGraphSpace) {
+        this.activeGraphSpace = newGraphSpace;
+        GraphSpaceChangeEvent e = new GraphSpaceChangeEvent(this.activeGraphSpace, newGraphSpace);
+        graphSpaceListeners.forEach(
+            selectionListener -> selectionListener.activeGraphSpaceChanged(e));
+      }
     }
   }
 
@@ -258,7 +261,7 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
     owlObjectPropertyListeners.add(listener);
   }
 
-  public OWLObjectProperty getSelectedOWLObjectProperty() {
+  OWLObjectProperty getSelectedOWLObjectProperty() {
     return selectedOWLObjectProperty;
   }
 }
