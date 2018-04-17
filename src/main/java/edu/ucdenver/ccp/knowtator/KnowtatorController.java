@@ -33,12 +33,12 @@ public class KnowtatorController implements Savable, ProjectListener {
     idRegistry = new TreeMap<>();
     debugListeners = new ArrayList<>();
     projectManager = new ProjectManager(this); // reads and writes to XML
-    projectManager.addListener(this);
+    owlDataExtractor = new OWLAPIDataExtractor(this);
     selectionManager = new SelectionManager(this);
     textSourceManager = new TextSourceManager(this);
     profileManager = new ProfileManager(this); // manipulates profiles and colors
-    owlDataExtractor = new OWLAPIDataExtractor(this);
 
+    projectManager.addListener(this);
   }
 
   public static void main(String[] args) {}

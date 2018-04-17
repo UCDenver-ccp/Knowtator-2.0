@@ -96,7 +96,7 @@ public class Profile implements Savable, KnowtatorObject {
                   KnowtatorXMLAttributes.CLASS_ID,
                   controller
                       .getOWLAPIDataExtractor()
-                      .getOWLEntityRendering((OWLEntity) owlEntity, true));
+                      .getOWLEntityRendering((OWLEntity) owlEntity));
             } else if (owlEntity instanceof String) {
               e.setAttribute(
                       KnowtatorXMLAttributes.CLASS_ID, (String) owlEntity);
@@ -149,7 +149,6 @@ public class Profile implements Savable, KnowtatorObject {
     if (color != null) {
       return color;
     } else {
-
       color = colors.get(owlClassID);
       if (owlClass != null) {
         if (color == null) {

@@ -6,6 +6,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.listeners.OWLSetupListener;
+import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLObjectPropertyNotFoundException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
@@ -27,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Triple extends mxCell implements Savable, KnowtatorObject, OWLSetupListener, OWLOntologyChangeListener, OWLModelManagerListener {
+public class Triple extends mxCell implements Savable, KnowtatorObject, ProjectListener, OWLSetupListener, OWLOntologyChangeListener, OWLModelManagerListener {
   private String quantifier;
   private String quantifierValue;
   private Profile annotator;
@@ -38,6 +39,7 @@ public class Triple extends mxCell implements Savable, KnowtatorObject, OWLSetup
   private GraphSpace graphSpace;
   @SuppressWarnings("unused")
   private Logger log = Logger.getLogger(Triple.class);
+  private boolean dontRedraw;
 
   Triple(
           String id,
@@ -48,7 +50,7 @@ public class Triple extends mxCell implements Savable, KnowtatorObject, OWLSetup
           String quantifier,
           String quantifierValue,
           KnowtatorController controller, TextSource textSource, GraphSpace graphSpace) throws OWLEntityNullException, OWLWorkSpaceNotSetException {
-    super(controller.getOWLAPIDataExtractor().getOWLEntityRendering(property, false), new mxGeometry(), null);
+    super(controller.getOWLAPIDataExtractor().getOWLEntityRendering(property), new mxGeometry(), null);
 
     this.property = property;
     this.textSource = textSource;
@@ -58,7 +60,9 @@ public class Triple extends mxCell implements Savable, KnowtatorObject, OWLSetup
     this.quantifierValue = quantifierValue;
     this.graphSpace = graphSpace;
 
+    dontRedraw = false;
     controller.getOWLAPIDataExtractor().addOWLSetupListener(this);
+    controller.getProjectManager().addListener(this);
 
     controller.verifyId(id, this, false);
 
@@ -66,8 +70,6 @@ public class Triple extends mxCell implements Savable, KnowtatorObject, OWLSetup
     setEdge(true);
     setSource(source);
     setTarget(target);
-
-    owlSetup();
   }
 
   public Triple(String id,
@@ -112,7 +114,7 @@ public class Triple extends mxCell implements Savable, KnowtatorObject, OWLSetup
 
     String propertyID;
     try{
-      propertyID = controller.getOWLAPIDataExtractor().getOWLEntityRendering(property, true);
+      propertyID = controller.getOWLAPIDataExtractor().getOWLEntityRendering(property);
     } catch (OWLEntityNullException | OWLWorkSpaceNotSetException e) {
       propertyID = getValue().toString();
     }
@@ -171,7 +173,7 @@ public class Triple extends mxCell implements Savable, KnowtatorObject, OWLSetup
   @Override
   public void setValue(Object value) {
     super.setValue(value);
-    if (graphSpace != null) {
+    if (graphSpace != null && !dontRedraw) {
       graphSpace.reDrawGraph();
     }
   }
@@ -183,7 +185,9 @@ public class Triple extends mxCell implements Savable, KnowtatorObject, OWLSetup
       controller.getOWLAPIDataExtractor().getWorkSpace().getOWLModelManager().addOntologyChangeListener(this);
 
       property = controller.getOWLAPIDataExtractor().getOWLObjectPropertyByID(getValue().toString());
-      setValue(controller.getOWLAPIDataExtractor().getOWLEntityRendering(property, true));
+      dontRedraw = true;
+      setValue(controller.getOWLAPIDataExtractor().getOWLEntityRendering(property));
+      dontRedraw = false;
     } catch (OWLWorkSpaceNotSetException | OWLObjectPropertyNotFoundException | OWLEntityNullException ignored) {
 
     }
@@ -226,9 +230,18 @@ public class Triple extends mxCell implements Savable, KnowtatorObject, OWLSetup
   public void handleChange(OWLModelManagerChangeEvent event) {
     if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
       try {
-        setValue(controller.getOWLAPIDataExtractor().getOWLEntityRendering(property, false));
+        setValue(controller.getOWLAPIDataExtractor().getOWLEntityRendering(property));
       } catch (OWLWorkSpaceNotSetException | OWLEntityNullException ignored) {
       }
     }
+  }
+
+  @Override
+  public void projectClosed() {
+  }
+
+  @Override
+  public void projectLoaded() {
+    owlSetup();
   }
 }

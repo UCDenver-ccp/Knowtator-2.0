@@ -303,31 +303,32 @@ public class GraphSpace extends mxGraph
   UPDATE
    */
   public void reDrawGraph() {
-    log.warn("Redrawing Graph");
-    getModel().beginUpdate();
-    try {
-      Arrays.stream(getChildVertices(getDefaultParent()))
-          .forEach(
-              vertex -> {
-                if (vertex instanceof AnnotationNode) {
-                  setVertexStyle((AnnotationNode) vertex);
-                }
-                updateCellSize(vertex);
+    if (controller.getProjectManager().isProjectLoaded()) {
+      getModel().beginUpdate();
+      try {
+        Arrays.stream(getChildVertices(getDefaultParent()))
+            .forEach(
+                vertex -> {
+                  if (vertex instanceof AnnotationNode) {
+                    setVertexStyle((AnnotationNode) vertex);
+                  }
+                  updateCellSize(vertex);
 
-                getView().validateCell(vertex);
-              });
-      Arrays.stream(getChildEdges(getDefaultParent()))
-          .forEach(
-              edge -> {
-                updateCellSize(edge);
-                //                if (edge instanceof Triple) {
-                //                    ((Triple) edge).setValue(((Triple) edge).getValue());
-                //                }
-                getView().validateCell(edge);
-              });
-    } finally {
-      getModel().endUpdate();
-      refresh();
+                  getView().validateCell(vertex);
+                });
+        Arrays.stream(getChildEdges(getDefaultParent()))
+            .forEach(
+                edge -> {
+                  updateCellSize(edge);
+                  //                if (edge instanceof Triple) {
+                  //                    ((Triple) edge).setValue(((Triple) edge).getValue());
+                  //                }
+                  getView().validateCell(edge);
+                });
+      } finally {
+        getModel().endUpdate();
+        refresh();
+      }
     }
   }
 
@@ -348,7 +349,7 @@ public class GraphSpace extends mxGraph
                   String propertyID = null;
                   try {
                     propertyID =
-                        controller.getOWLAPIDataExtractor().getOWLEntityRendering(property, false);
+                        controller.getOWLAPIDataExtractor().getOWLEntityRendering(property);
                   } catch (OWLWorkSpaceNotSetException | OWLEntityNullException ignored) {
 
                   }

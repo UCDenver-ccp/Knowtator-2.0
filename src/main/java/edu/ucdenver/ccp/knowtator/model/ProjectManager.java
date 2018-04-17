@@ -174,6 +174,10 @@ public class ProjectManager {
 
   public void saveToFormat(Class<? extends BasicIOUtil> ioClass, Savable savable, File file) {
     try {
+      try {
+        controller.getOWLAPIDataExtractor().setRenderRDFSLabel();
+      } catch (OWLWorkSpaceNotSetException ignored) {
+      }
       BasicIOUtil util = ioClass.getDeclaredConstructor().newInstance();
       util.write(savable != null ? savable : controller.getTextSourceManager(), file);
     } catch (InstantiationException

@@ -526,7 +526,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     textToGraphButton.setToolTipText(ResourceBundle.getBundle("ui").getString("send.selected.text.to.graph"));
     annotationToolBar.add(textToGraphButton);
     findTextButton = new JButton();
-    findTextButton.setText("Find in ontology");
+    this.$$$loadButtonText$$$(findTextButton, ResourceBundle.getBundle("log4j").getString("find.in.ontology"));
     annotationToolBar.add(findTextButton);
     addAnnotationButton = new JButton();
     addAnnotationButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-plus-50 (Custom).png")));

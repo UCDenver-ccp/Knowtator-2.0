@@ -16,6 +16,7 @@ public class AnnotationClassLabel extends JLabel
     implements AnnotationSelectionListener, OWLModelManagerListener {
 
   private KnowtatorView view;
+  @SuppressWarnings("unused")
   private Logger log = Logger.getLogger(AnnotationClassLabel.class);
 
   AnnotationClassLabel(KnowtatorView view) {
@@ -31,7 +32,7 @@ public class AnnotationClassLabel extends JLabel
   private void displayAnnotation(Annotation annotation) {
     if (annotation != null) {
       try {
-        setText(view.getController().getOWLAPIDataExtractor().getOWLEntityRendering(annotation.getOwlClass(), false));
+        setText(view.getController().getOWLAPIDataExtractor().getOWLEntityRendering(annotation.getOwlClass()));
       } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
         setText(annotation.getOwlClassID());
       }
@@ -41,7 +42,6 @@ public class AnnotationClassLabel extends JLabel
   @Override
   public void handleChange(OWLModelManagerChangeEvent event) {
     if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
-      log.warn("Changed renderer");
       Annotation annotation = view.getController().getSelectionManager().getSelectedAnnotation();
       displayAnnotation(annotation);
     }

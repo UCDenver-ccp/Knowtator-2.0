@@ -6,7 +6,6 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.collection.AnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLClassNotFoundException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import org.apache.log4j.Logger;
@@ -181,15 +180,8 @@ public class AnnotationManager implements Savable {
           ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0))
               .getAttribute(KnowtatorXMLAttributes.ID);
 
-      OWLClass owlClass = null;
-      try {
-        owlClass = controller.getOWLAPIDataExtractor().getOWLClassByID(owlClassID);
-      } catch (OWLClassNotFoundException | OWLWorkSpaceNotSetException e) {
-        log.warn("OWL Class not found");
-      }
-
       Annotation newAnnotation =
-          new Annotation(controller, annotationID, owlClass, owlClassID, profile, type, textSource);
+          new Annotation(controller, annotationID, null, owlClassID, profile, type, textSource);
       newAnnotation.readFromKnowtatorXML(null, annotationElement);
 
       addAnnotation(newAnnotation);
@@ -243,16 +235,9 @@ public class AnnotationManager implements Savable {
           ((Element) classElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION_CLASS).item(0))
               .getAttribute(OldKnowtatorXMLAttributes.ID);
 
-
-      OWLClass owlClass = null;
-      try {
-        owlClass = controller.getOWLAPIDataExtractor().getOWLClassByID(owlClassID);
-      } catch (OWLClassNotFoundException | OWLWorkSpaceNotSetException ignored) {
-      }
-
       Annotation newAnnotation =
           new Annotation(
-              controller, annotationID, owlClass, owlClassID, profile, "identity", this.textSource);
+              controller, annotationID, null, owlClassID, profile, "identity", this.textSource);
 
       newAnnotation.readFromOldKnowtatorXML(null, annotationElement);
 
@@ -356,7 +341,7 @@ public class AnnotationManager implements Savable {
       annotation.setBratID(String.format("T%d", i));
 
       try {
-        writer.append(String.format("%s\t%s ", annotation.getBratID(), controller.getOWLAPIDataExtractor().getOWLEntityRendering(annotation.getOwlClass(), true)));
+        writer.append(String.format("%s\t%s ", annotation.getBratID(), controller.getOWLAPIDataExtractor().getOWLEntityRendering(annotation.getOwlClass())));
       } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
         writer.append(String.format("%s\t%s ", annotation.getBratID(), annotation.getOwlClassID()));
       }
@@ -377,7 +362,7 @@ public class AnnotationManager implements Savable {
         triple.setBratID(String.format("R%d", lastNumTriples + i));
         String propertyID;
         try {
-          propertyID = controller.getOWLAPIDataExtractor().getOWLEntityRendering(triple.getProperty(), true);
+          propertyID = controller.getOWLAPIDataExtractor().getOWLEntityRendering(triple.getProperty());
         } catch (OWLEntityNullException | OWLWorkSpaceNotSetException e) {
           propertyID = triple.getValue().toString();
         }

@@ -4,6 +4,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.listeners.OWLSetupListener;
+import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLClassNotFoundException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
@@ -21,7 +22,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
-public class Annotation implements Savable, KnowtatorObject, OWLSetupListener, OWLOntologyChangeListener {
+public class Annotation implements Savable, KnowtatorObject, OWLSetupListener, OWLOntologyChangeListener, ProjectListener {
 
   private final Date date;
 
@@ -59,6 +60,7 @@ public class Annotation implements Savable, KnowtatorObject, OWLSetupListener, O
 
     controller.verifyId(annotationID, this, false);
     controller.getOWLAPIDataExtractor().addOWLSetupListener(this);
+    controller.getProjectManager().addListener(this);
 
     spanCollection = new SpanCollection(controller);
     overlappingAnnotations = new HashSet<>();
@@ -185,7 +187,7 @@ public class Annotation implements Savable, KnowtatorObject, OWLSetupListener, O
     Element classElement = dom.createElement(KnowtatorXMLTags.CLASS);
 
     try {
-      classElement.setAttribute(KnowtatorXMLAttributes.ID, controller.getOWLAPIDataExtractor().getOWLEntityRendering(owlClass, true));
+      classElement.setAttribute(KnowtatorXMLAttributes.ID, controller.getOWLAPIDataExtractor().getOWLEntityRendering(owlClass));
     } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
       classElement.setAttribute(KnowtatorXMLAttributes.ID, getOwlClassID());
     }
@@ -338,6 +340,16 @@ public class Annotation implements Savable, KnowtatorObject, OWLSetupListener, O
         setOwlClass((OWLClass) newOWLClass);
       }
     }
+  }
+
+  @Override
+  public void projectClosed() {
+
+  }
+
+  @Override
+  public void projectLoaded() {
+    owlSetup();
   }
 
   //		public Set<String> getSimpleFeatureNames() {

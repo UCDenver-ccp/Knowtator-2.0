@@ -145,16 +145,19 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
   }
 
   public void setSelectedAnnotation(Annotation newAnnotation, Span newSpan) {
-    if (selectedAnnotation != newAnnotation) {
-      AnnotationChangeEvent e = new AnnotationChangeEvent(this.selectedAnnotation, newAnnotation);
-      selectedAnnotation = newAnnotation;
-      if (selectedAnnotation != null) {
-        setSelectedSpan(newSpan);
-        setSelectedOWLClass(selectedAnnotation.getOwlClass());
-      } else if (activeGraphSpace != null) {
-        activeGraphSpace.setSelectionCell(null);
+    if (controller.getProjectManager().isProjectLoaded()) {
+      if (selectedAnnotation != newAnnotation) {
+        AnnotationChangeEvent e = new AnnotationChangeEvent(this.selectedAnnotation, newAnnotation);
+        selectedAnnotation = newAnnotation;
+        if (selectedAnnotation != null) {
+          setSelectedSpan(newSpan);
+          setSelectedOWLClass(selectedAnnotation.getOwlClass());
+        } else if (activeGraphSpace != null) {
+          activeGraphSpace.setSelectionCell(null);
+        }
+        annotationListeners.forEach(
+            selectionListener -> selectionListener.selectedAnnotationChanged(e));
       }
-      annotationListeners.forEach(selectionListener -> selectionListener.selectedAnnotationChanged(e));
     }
   }
 

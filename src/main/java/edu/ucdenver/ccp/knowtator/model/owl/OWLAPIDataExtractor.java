@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.DebugListener;
 import edu.ucdenver.ccp.knowtator.listeners.OWLSetupListener;
+import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.protege.editor.core.ui.util.AugmentedJTextField;
@@ -24,7 +25,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSelectionModelListener {
+public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSelectionModelListener, ProjectListener {
   @SuppressWarnings("unused")
   private static final Logger log = LogManager.getLogger(OWLAPIDataExtractor.class);
 
@@ -34,6 +35,7 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
 
   public OWLAPIDataExtractor(KnowtatorController controller) {
     this.controller = controller;
+    controller.getProjectManager().addListener(this);
     owlSetupListeners = new ArrayList<>();
     controller.addDebugListener(this);
   }
@@ -43,8 +45,6 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
   }
 
   public OWLClass getOWLClassByID(String classID) throws OWLWorkSpaceNotSetException, OWLClassNotFoundException {
-    setRenderRDFSLabel();
-
     OWLClass owlClass = getWorkSpace().getOWLModelManager().getOWLEntityFinder().getOWLClass(classID);
     if (owlClass == null) {
       throw new OWLClassNotFoundException();
@@ -55,7 +55,6 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
 
   public OWLObjectProperty getOWLObjectPropertyByID(String propertyID)
       throws OWLWorkSpaceNotSetException, OWLObjectPropertyNotFoundException {
-    setRenderRDFSLabel();
     OWLObjectProperty property = getWorkSpace()
         .getOWLModelManager()
         .getOWLEntityFinder()
@@ -67,14 +66,14 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
     }
   }
 
-  private void setRenderRDFSLabel() throws OWLWorkSpaceNotSetException {
+  public void setRenderRDFSLabel() throws OWLWorkSpaceNotSetException {
     IRI labelIRI = getWorkSpace().getOWLModelManager().getOWLDataFactory().getRDFSLabel().getIRI();
     OWLRendererPreferences.getInstance()
             .setAnnotations(
                     Collections.singletonList(
                             labelIRI));
+
     getWorkSpace().getOWLModelManager().refreshRenderer();
-    log.warn("Renderer set to RDFSLabel");
   }
 
   public Set<OWLClass> getDescendants(OWLClass cls) throws OWLWorkSpaceNotSetException {
@@ -85,12 +84,9 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
         .getDescendants(cls);
   }
 
-  public String getOWLEntityRendering(OWLEntity owlEntity, Boolean renderWithRDFSLabel) throws OWLWorkSpaceNotSetException, OWLEntityNullException {
+  public String getOWLEntityRendering(OWLEntity owlEntity) throws OWLWorkSpaceNotSetException, OWLEntityNullException {
     if (owlEntity == null) {
       throw new OWLEntityNullException();
-    }
-    if (renderWithRDFSLabel) {
-      setRenderRDFSLabel();
     }
     return getWorkSpace().getOWLModelManager().getOWLEntityRenderer().render(owlEntity);
   }
@@ -199,6 +195,20 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
       controller.getSelectionManager().setSelectedOWLObjectProperty((OWLObjectProperty) ent);
     } else if (ent instanceof OWLClass) {
       controller.getSelectionManager().setSelectedOWLClass((OWLClass) ent);
+    }
+  }
+
+  @Override
+  public void projectClosed() {
+
+  }
+
+  @Override
+  public void projectLoaded() {
+    try {
+      setRenderRDFSLabel();
+    } catch (OWLWorkSpaceNotSetException e) {
+      e.printStackTrace();
     }
   }
 }
