@@ -206,10 +206,17 @@ public class Span implements Savable, KnowtatorObject {
     return getEnd() - getStart();
   }
 
+  /**
+  These methods are intended to correct for Java's handling of supplementary unicode characters.
+   */
+  public int getStartCodePoint() { return Character.codePointCount(textSource.getContent(), 0, start); }
+
+  public int getEndCodePoint() { return Character.codePointCount(textSource.getContent(), 0, end); }
+
   public void writeToKnowtatorXML(Document dom, Element annotationElem) {
     Element spanElement = dom.createElement(KnowtatorXMLTags.SPAN);
-    spanElement.setAttribute(KnowtatorXMLAttributes.SPAN_START, String.valueOf(start));
-    spanElement.setAttribute(KnowtatorXMLAttributes.SPAN_END, String.valueOf(end));
+    spanElement.setAttribute(KnowtatorXMLAttributes.SPAN_START, String.valueOf(getStart()));
+    spanElement.setAttribute(KnowtatorXMLAttributes.SPAN_END, String.valueOf(getEnd()));
     spanElement.setAttribute(KnowtatorXMLAttributes.ID, id);
     spanElement.setTextContent(getSpannedText());
     annotationElem.appendChild(spanElement);
@@ -227,7 +234,7 @@ public class Span implements Savable, KnowtatorObject {
 
   @Override
   public void writeToBratStandoff(Writer writer) throws IOException {
-    writer.append(String.format("%d %d", start, end));
+    writer.append(String.format("%d %d", getStart(), getEnd()));
   }
 
   @Override
