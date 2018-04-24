@@ -32,7 +32,7 @@ public class TextSource implements Savable, KnowtatorObject {
 
   public TextSource(KnowtatorController controller, File saveFile, String textFileName) {
     this.controller = controller;
-    this.saveFile = saveFile;
+    this.saveFile = saveFile == null ? new File(controller.getProjectManager().getAnnotationsLocation().getAbsolutePath(), textFileName.replace(".txt", "") + ".xml") : saveFile;
     this.annotationManager = new AnnotationManager(controller, this);
 
     controller.verifyId(FilenameUtils.getBaseName(textFileName), this, true);
