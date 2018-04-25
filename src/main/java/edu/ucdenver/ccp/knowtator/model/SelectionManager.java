@@ -106,8 +106,14 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
       TextSourceChangeEvent e = new TextSourceChangeEvent(this.activeTextSource, newTextSource);
       this.activeTextSource = newTextSource;
       setSelectedAnnotation(null, null);
-      if (!newTextSource.getAnnotationManager().getGraphSpaceCollection().getCollection().isEmpty()) {
-        setSelectedGraphSpace(
+      if (newTextSource
+          .getAnnotationManager()
+          .getGraphSpaceCollection()
+          .getCollection()
+          .isEmpty()) {
+        newTextSource.getAnnotationManager().addGraphSpace(newTextSource.getId() + " Graph Space");
+      }
+        else{setSelectedGraphSpace(
                 newTextSource.getAnnotationManager().getGraphSpaceCollection().getCollection().first());
       }
       textSourceListeners.forEach(selectionListener -> selectionListener.activeTextSourceChanged(e));

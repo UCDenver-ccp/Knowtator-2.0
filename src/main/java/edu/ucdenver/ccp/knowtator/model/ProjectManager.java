@@ -8,6 +8,7 @@ import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -49,6 +50,7 @@ public class ProjectManager {
 
   public void newProject(File projectDirectory) {
     makeFileStructure(projectDirectory);
+    loadProject();
   }
 
   public void loadProject(File projectFile) {
@@ -95,6 +97,15 @@ public class ProjectManager {
       log.warn("Loading annotations");
       loadFromFormat(
               KnowtatorXMLUtil.class, controller.getTextSourceManager(), annotationsLocation);
+    }
+
+    if (controller.getTextSourceManager().getTextSourceCollection().getCollection().isEmpty()) {
+      JFileChooser fileChooser = new JFileChooser();
+      fileChooser.setCurrentDirectory(controller.getProjectManager().getArticlesLocation());
+
+      if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        controller.getProjectManager().addDocument(fileChooser.getSelectedFile());
+      }
     }
 
     projectLoaded = true;

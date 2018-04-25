@@ -207,8 +207,8 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
   public void projectLoaded() {
     try {
       setRenderRDFSLabel();
-    } catch (OWLWorkSpaceNotSetException e) {
-      e.printStackTrace();
+    } catch (OWLWorkSpaceNotSetException ignored) {
+
     }
   }
 }
