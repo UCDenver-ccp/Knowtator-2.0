@@ -2,14 +2,16 @@ package edu.ucdenver.ccp.knowtator;
 
 import com.google.common.io.Files;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
-import edu.ucdenver.ccp.knowtator.model.*;
+import edu.ucdenver.ccp.knowtator.model.AnnotationManager;
+import edu.ucdenver.ccp.knowtator.model.AnnotationNode;
+import edu.ucdenver.ccp.knowtator.model.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.TextSource;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 
 @SuppressWarnings("ConstantConditions")
 public class IOTests {
@@ -207,20 +209,20 @@ public class IOTests {
     }
   }
 
-  @Test
-  public void successfulMakeNew() {
-    controller = new KnowtatorController();
-
-    File newProject = Files.createTempDir();
-    controller.getProjectManager().newProject(newProject);
-
-    assert new File(newProject, "Articles").exists();
-    assert new File(newProject, "Annotations").exists();
-    assert new File(newProject, "Ontologies").exists();
-    assert new File(newProject, "Profiles").exists();
-
-    newProject.deleteOnExit();
-  }
+//  @Test
+//  public void successfulMakeNew() {
+//    controller = new KnowtatorController();
+//
+//    File newProject = Files.createTempDir();
+//    controller.getProjectManager().newProject(newProject);
+//
+//    assert new File(newProject, "Articles").exists();
+//    assert new File(newProject, "Annotations").exists();
+//    assert new File(newProject, "Ontologies").exists();
+//    assert new File(newProject, "Profiles").exists();
+//
+//    newProject.deleteOnExit();
+//  }
 
   @Test
   public void successfulLoadOld() {
@@ -430,58 +432,58 @@ public class IOTests {
     assert numSpans == 12 : "There were " + numSpans + " spans";
   }
 
-  @Test
-  public void compareProjects() {
-    KnowtatorController controller1 = new KnowtatorController();
-    KnowtatorController controller2 = new KnowtatorController();
-
-    controller1
-        .getProjectManager()
-        .loadProject(new File("E:/Documents/Test/CRAFT_Test/CRAFT_Test.knowtator"));
-    controller2
-        .getProjectManager()
-        .loadProject(
-            new File(
-                "E:/Documents/Test/CRAFT_Test_CodePointCorrected/CRAFT_Test_CodePointCorrected.knowtator"));
-
-    Iterator<TextSource> textSourceIterator1 =
-        controller1.getTextSourceManager().getTextSourceCollection().iterator();
-    Iterator<TextSource> textSourceIterator2 =
-        controller1.getTextSourceManager().getTextSourceCollection().iterator();
-    while (textSourceIterator1.hasNext()) {
-      TextSource textSource1 = textSourceIterator1.next();
-      TextSource textSource2 = textSourceIterator2.next();
-
-      Iterator<Annotation> annotationIterator1 =
-          textSource1.getAnnotationManager().getAnnotations().iterator();
-      Iterator<Annotation> annotationIterator2 =
-          textSource2.getAnnotationManager().getAnnotations().iterator();
-
-      while (annotationIterator1.hasNext()) {
-        Annotation annotation1 = annotationIterator1.next();
-        Annotation annotation2 = annotationIterator2.next();
-
-        try {
-          assert Annotation.compare(annotation1, annotation2) == 0;
-
-        } catch (AssertionError e) {
-          log.warn("Annotation 1:");
-          log.warn("\tID: " + annotation1.getId());
-          log.warn("\tSpans: ");
-          for (Span span : annotation1.getSpanCollection()) {
-            log.warn("\t\t" + span.toString());
-          }
-
-          log.warn("Annotation 2:");
-          log.warn("\tID: " + annotation2.getId());
-          log.warn("\tSpans: ");
-          for (Span span : annotation2.getSpanCollection()) {
-            log.warn("\t\t" + span.toString());
-          }
-
-          e.printStackTrace();
-        }
-      }
-    }
-  }
+//  @Test
+//  public void compareProjects() {
+//    KnowtatorController controller1 = new KnowtatorController();
+//    KnowtatorController controller2 = new KnowtatorController();
+//
+//    controller1
+//        .getProjectManager()
+//        .loadProject(new File("E:/Documents/Test/CRAFT_Test/CRAFT_Test.knowtator"));
+//    controller2
+//        .getProjectManager()
+//        .loadProject(
+//            new File(
+//                "E:/Documents/Test/CRAFT_Test_CodePointCorrected/CRAFT_Test_CodePointCorrected.knowtator"));
+//
+//    Iterator<TextSource> textSourceIterator1 =
+//        controller1.getTextSourceManager().getTextSourceCollection().iterator();
+//    Iterator<TextSource> textSourceIterator2 =
+//        controller1.getTextSourceManager().getTextSourceCollection().iterator();
+//    while (textSourceIterator1.hasNext()) {
+//      TextSource textSource1 = textSourceIterator1.next();
+//      TextSource textSource2 = textSourceIterator2.next();
+//
+//      Iterator<Annotation> annotationIterator1 =
+//          textSource1.getAnnotationManager().getAnnotations().iterator();
+//      Iterator<Annotation> annotationIterator2 =
+//          textSource2.getAnnotationManager().getAnnotations().iterator();
+//
+//      while (annotationIterator1.hasNext()) {
+//        Annotation annotation1 = annotationIterator1.next();
+//        Annotation annotation2 = annotationIterator2.next();
+//
+//        try {
+//          assert Annotation.compare(annotation1, annotation2) == 0;
+//
+//        } catch (AssertionError e) {
+//          log.warn("Annotation 1:");
+//          log.warn("\tID: " + annotation1.getId());
+//          log.warn("\tSpans: ");
+//          for (Span span : annotation1.getSpanCollection()) {
+//            log.warn("\t\t" + span.toString());
+//          }
+//
+//          log.warn("Annotation 2:");
+//          log.warn("\tID: " + annotation2.getId());
+//          log.warn("\tSpans: ");
+//          for (Span span : annotation2.getSpanCollection()) {
+//            log.warn("\t\t" + span.toString());
+//          }
+//
+//          e.printStackTrace();
+//        }
+//      }
+//    }
+//  }
 }

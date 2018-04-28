@@ -1,8 +1,4 @@
 TODO: Add load errors
-TODO: Remove default graph
-TODO: Make sure owlClass part is never set to null (i.e. when the annotation owl class has yet to be set)
-TODO: Icons: add distinguishing marks for spans vs annoations
-TODO: Implement owl model manager listeners and renderer change listeners
 TODO: Quantifier and value as persistent text boxes
 TODO: Should probably also read in Events, Modifiers, etc.
 TODO: Prescribe colors (Colorbrewer qualitative), but allow the adding of new colors

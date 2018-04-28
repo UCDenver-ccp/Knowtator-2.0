@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="edu.ucdenver.ccp.knowtator.view.KnowtatorView">
   <grid id="27dc6" binding="panel1" custom-create="true" default-binding="true" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="20" y="20" width="1677" height="400"/>
+      <xy x="20" y="20" width="2062" height="657"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -185,7 +185,7 @@
                   <component id="e14ca" class="javax.swing.JButton" binding="previousTextSourceButton">
                     <constraints/>
                     <properties>
-                      <icon value="icon/icons8-up-filled-50 (Custom).png"/>
+                      <icon value="icon/Previous Document (Custom).png"/>
                       <text value=""/>
                       <toolTipText resource-bundle="ui" key="previous.text.source"/>
                     </properties>
@@ -193,7 +193,7 @@
                   <component id="7a738" class="javax.swing.JButton" binding="nextTextSourceButton">
                     <constraints/>
                     <properties>
-                      <icon value="icon/icons8-down-filled-50 (Custom).png"/>
+                      <icon value="icon/Next Document (Custom).png"/>
                       <text value=""/>
                       <toolTipText resource-bundle="ui" key="next.text.source"/>
                     </properties>
@@ -234,7 +234,7 @@
                   <component id="4757d" class="javax.swing.JButton" binding="showGraphViewerButton">
                     <constraints/>
                     <properties>
-                      <icon value="icon/icons8-edit-node-50 (Custom).png"/>
+                      <icon value="icon/Show Graph Viewer (Custom).png"/>
                       <text value=""/>
                       <toolTipText resource-bundle="ui" key="show.graph.viewer"/>
                     </properties>
@@ -255,7 +255,7 @@
                   <component id="55553" class="javax.swing.JButton" binding="addAnnotationButton">
                     <constraints/>
                     <properties>
-                      <icon value="icon/icons8-plus-50 (Custom).png"/>
+                      <icon value="icon/Add annotation Node (Custom).png"/>
                       <text value=""/>
                       <toolTipText resource-bundle="ui" key="add.annotation"/>
                     </properties>
@@ -263,7 +263,7 @@
                   <component id="d63d5" class="javax.swing.JButton" binding="removeAnnotationButton">
                     <constraints/>
                     <properties>
-                      <icon value="icon/icons8-minus-50 (Custom).png"/>
+                      <icon value="icon/Remove Annotation (Custom).png"/>
                       <text value=""/>
                       <toolTipText resource-bundle="ui" key="remove.annotation"/>
                     </properties>
@@ -271,7 +271,7 @@
                   <component id="78f63" class="javax.swing.JButton" binding="previousSpanButton">
                     <constraints/>
                     <properties>
-                      <icon value="icon/icons8-left-filled-50 (Custom).png"/>
+                      <icon value="icon/Previous Annotation (Custom).png"/>
                       <text value=""/>
                       <toolTipText resource-bundle="ui" key="previous.span"/>
                     </properties>
@@ -279,7 +279,7 @@
                   <component id="98b9d" class="javax.swing.JButton" binding="growSelectionStartButton">
                     <constraints/>
                     <properties>
-                      <icon value="icon/icons8-back-50 (Custom).png"/>
+                      <icon value="icon/Increase Span Left (Custom).png"/>
                       <text value=""/>
                       <toolTipText resource-bundle="ui" key="grow.selection.start"/>
                     </properties>
@@ -287,7 +287,7 @@
                   <component id="e3525" class="javax.swing.JButton" binding="shrinkSelectionStartButton">
                     <constraints/>
                     <properties>
-                      <icon value="icon/icons8-forward-50 (Custom).png"/>
+                      <icon value="icon/Decrease Span Left (Custom).png"/>
                       <text value=""/>
                       <toolTipText resource-bundle="ui" key="shrink.selection.start"/>
                     </properties>
@@ -295,7 +295,7 @@
                   <component id="92c9b" class="javax.swing.JButton" binding="shrinkSelectionEndButton">
                     <constraints/>
                     <properties>
-                      <icon value="icon/icons8-back-50 (Custom).png"/>
+                      <icon value="icon/Decrease Span Right (Custom).png"/>
                       <text value=""/>
                       <toolTipText resource-bundle="ui" key="shrink.selection.end"/>
                     </properties>
@@ -303,7 +303,7 @@
                   <component id="969ef" class="javax.swing.JButton" binding="growSelectionEndButton">
                     <constraints/>
                     <properties>
-                      <icon value="icon/icons8-forward-50 (Custom).png"/>
+                      <icon value="icon/Increase Span Right (Custom).png"/>
                       <text value=""/>
                       <toolTipText resource-bundle="ui" key="grow.selection.end"/>
                     </properties>
@@ -311,7 +311,7 @@
                   <component id="55f45" class="javax.swing.JButton" binding="nextSpanButton">
                     <constraints/>
                     <properties>
-                      <icon value="icon/icons8-right-filled-50 (Custom).png"/>
+                      <icon value="icon/Next Annotation (Custom).png"/>
                       <text value=""/>
                       <toolTipText resource-bundle="ui" key="next.span"/>
                     </properties>

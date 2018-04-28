@@ -93,7 +93,6 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 	}
 
 
-
 	@SuppressWarnings("unused")
 	public void goToAnnotationVertex(GraphSpace graphSpace, Annotation annotation) {
 		if (annotation != null && graphSpace != null) {
@@ -207,12 +206,12 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 		zoomInButton.setToolTipText(ResourceBundle.getBundle("ui").getString("zoom.in"));
 		toolBar1.add(zoomInButton);
 		removeCellButton = new JButton();
-		removeCellButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-minus-50 (Custom).png")));
+		removeCellButton.setIcon(new ImageIcon(getClass().getResource("/icon/Remove Annotation Node (Custom).png")));
 		removeCellButton.setText("");
 		removeCellButton.setToolTipText(ResourceBundle.getBundle("ui").getString("remove.item"));
 		toolBar1.add(removeCellButton);
 		addAnnotationNodeButton = new JButton();
-		addAnnotationNodeButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-plus-50 (Custom).png")));
+		addAnnotationNodeButton.setIcon(new ImageIcon(getClass().getResource("/icon/Add annotation Node (Custom).png")));
 		addAnnotationNodeButton.setText("");
 		addAnnotationNodeButton.setToolTipText(ResourceBundle.getBundle("ui").getString("add.annotation.node"));
 		toolBar1.add(addAnnotationNodeButton);
@@ -221,12 +220,12 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 		applyLayoutButton.setToolTipText(ResourceBundle.getBundle("ui").getString("apply.layout1"));
 		toolBar1.add(applyLayoutButton);
 		previousGraphSpaceButton = new JButton();
-		previousGraphSpaceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-up-filled-50 (Custom).png")));
+		previousGraphSpaceButton.setIcon(new ImageIcon(getClass().getResource("/icon/Previous Graph Space (Custom).png")));
 		previousGraphSpaceButton.setText("");
 		previousGraphSpaceButton.setToolTipText(ResourceBundle.getBundle("ui").getString("previous.graph.space"));
 		toolBar1.add(previousGraphSpaceButton);
 		nextGraphSpaceButton = new JButton();
-		nextGraphSpaceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-down-filled-50 (Custom).png")));
+		nextGraphSpaceButton.setIcon(new ImageIcon(getClass().getResource("/icon/Next Graph Space (Custom).png")));
 		nextGraphSpaceButton.setText("");
 		nextGraphSpaceButton.setToolTipText(ResourceBundle.getBundle("ui").getString("next.graph.space"));
 		toolBar1.add(nextGraphSpaceButton);
