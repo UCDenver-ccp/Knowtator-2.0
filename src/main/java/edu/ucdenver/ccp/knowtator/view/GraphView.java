@@ -39,6 +39,7 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 	private JTextField quantifierTextField;
 	private JTextField quantifierValueTextField;
 	private JDialog dialog;
+	private ButtonGroup propertyQuantifierButtons;
 
 	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(GraphView.class);
@@ -76,6 +77,7 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 			view.getController().getSelectionManager().setSelectedPropertyQuantifer(quantifierTextField.getText());
 			view.getController().getSelectionManager().setSelectedPropertyQuantifierValue(quantifierValueTextField.getText());
 		});
+
 
 		graphSpaceChooser.addActionListener(
 				e -> {
@@ -140,6 +142,7 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 		graphComponent.setName(graphSpace.getId());
 
 		graphSpace.setupListeners();
+		someRadioButton.setSelected(true);
 
 		graphSpace.reDrawGraph();
 		applyLayout();
@@ -224,16 +227,6 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 		zoomInButton.setText("");
 		zoomInButton.setToolTipText(ResourceBundle.getBundle("ui").getString("zoom.in"));
 		toolBar1.add(zoomInButton);
-		removeCellButton = new JButton();
-		removeCellButton.setIcon(new ImageIcon(getClass().getResource("/icon/Remove Annotation Node (Custom).png")));
-		removeCellButton.setText("");
-		removeCellButton.setToolTipText(ResourceBundle.getBundle("ui").getString("remove.item"));
-		toolBar1.add(removeCellButton);
-		addAnnotationNodeButton = new JButton();
-		addAnnotationNodeButton.setIcon(new ImageIcon(getClass().getResource("/icon/Add annotation Node (Custom).png")));
-		addAnnotationNodeButton.setText("");
-		addAnnotationNodeButton.setToolTipText(ResourceBundle.getBundle("ui").getString("add.annotation.node"));
-		toolBar1.add(addAnnotationNodeButton);
 		applyLayoutButton = new JButton();
 		this.$$$loadButtonText$$$(applyLayoutButton, ResourceBundle.getBundle("ui").getString("apply.layout"));
 		applyLayoutButton.setToolTipText(ResourceBundle.getBundle("ui").getString("apply.layout1"));
@@ -259,8 +252,53 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 		knowtatorTextPane.setEditable(false);
 		knowtatorTextPane.setText("");
 		scrollPane1.setViewportView(knowtatorTextPane);
+		final JToolBar toolBar2 = new JToolBar();
+		panel2.add(toolBar2, BorderLayout.CENTER);
+		addAnnotationNodeButton = new JButton();
+		addAnnotationNodeButton.setIcon(new ImageIcon(getClass().getResource("/icon/Add annotation Node (Custom).png")));
+		addAnnotationNodeButton.setText("");
+		addAnnotationNodeButton.setToolTipText(ResourceBundle.getBundle("ui").getString("add.annotation.node"));
+		toolBar2.add(addAnnotationNodeButton);
+		removeCellButton = new JButton();
+		removeCellButton.setIcon(new ImageIcon(getClass().getResource("/icon/Remove Annotation Node (Custom).png")));
+		removeCellButton.setText("");
+		removeCellButton.setToolTipText(ResourceBundle.getBundle("ui").getString("remove.item"));
+		toolBar2.add(removeCellButton);
+		propertyValuePanel = new JPanel();
+		propertyValuePanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(3, 5, new Insets(0, 0, 0, 0), -1, -1));
+		propertyValuePanel.setMaximumSize(new Dimension(2147483647, 2147483647));
+		propertyValuePanel.setMinimumSize(new Dimension(30, 55));
+		toolBar2.add(propertyValuePanel);
+		someRadioButton = new JRadioButton();
+		someRadioButton.setSelected(true);
+		this.$$$loadButtonText$$$(someRadioButton, ResourceBundle.getBundle("log4j").getString("some1"));
+		propertyValuePanel.add(someRadioButton, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(58, 23), null, 0, false));
+		allRadioButton = new JRadioButton();
+		this.$$$loadButtonText$$$(allRadioButton, ResourceBundle.getBundle("log4j").getString("all1"));
+		propertyValuePanel.add(allRadioButton, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(58, 23), null, 0, false));
+		otherRadioButton = new JRadioButton();
+		otherRadioButton.setSelected(false);
+		this.$$$loadButtonText$$$(otherRadioButton, ResourceBundle.getBundle("log4j").getString("other1"));
+		propertyValuePanel.add(otherRadioButton, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		quantifierTextField = new JTextField();
+		propertyValuePanel.add(quantifierTextField, new com.intellij.uiDesigner.core.GridConstraints(2, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+		quantifierValueTextField = new JTextField();
+		propertyValuePanel.add(quantifierValueTextField, new com.intellij.uiDesigner.core.GridConstraints(2, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+		final JLabel label2 = new JLabel();
+		this.$$$loadLabelText$$$(label2, ResourceBundle.getBundle("log4j").getString("quantifier1"));
+		propertyValuePanel.add(label2, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		final JLabel label3 = new JLabel();
+		this.$$$loadLabelText$$$(label3, ResourceBundle.getBundle("log4j").getString("value1"));
+		propertyValuePanel.add(label3, new com.intellij.uiDesigner.core.GridConstraints(2, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		graphComponent.setGridVisible(true);
 		panel1.add(graphComponent, BorderLayout.CENTER);
+		label2.setLabelFor(quantifierTextField);
+		label3.setLabelFor(quantifierValueTextField);
+		ButtonGroup buttonGroup;
+		buttonGroup = new ButtonGroup();
+		buttonGroup.add(someRadioButton);
+		buttonGroup.add(allRadioButton);
+		buttonGroup.add(otherRadioButton);
 	}
 
 	/**
