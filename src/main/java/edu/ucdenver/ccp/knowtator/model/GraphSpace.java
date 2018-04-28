@@ -357,27 +357,8 @@ public class GraphSpace extends mxGraph
                     mxICell source = edge.getSource();
                     mxICell target = edge.getTarget();
 
-                    JTextField quantifierField = new JTextField(10);
-                    JTextField valueField = new JTextField(10);
-                    JPanel restrictionPanel = new JPanel();
-                    restrictionPanel.add(new JLabel("Quantifier:"));
-                    restrictionPanel.add(quantifierField);
-                    restrictionPanel.add(Box.createHorizontalStrut(15));
-                    restrictionPanel.add(new JLabel("Value:"));
-                    restrictionPanel.add(valueField);
-
-                    String quantifier = "";
-                    String value = "";
-                    int result =
-                        JOptionPane.showConfirmDialog(
-                            null,
-                            restrictionPanel,
-                            "Restriction options",
-                            JOptionPane.DEFAULT_OPTION);
-                    if (result == JOptionPane.OK_OPTION) {
-                      quantifier = quantifierField.getText();
-                      value = valueField.getText();
-                    }
+                    String quantifier = controller.getSelectionManager().getSelectedPropertyQuantifier();
+                    String value = controller.getSelectionManager().getSelectedPropertyQuantifierValue();
 
                     addTriple(
                         (AnnotationNode) source,

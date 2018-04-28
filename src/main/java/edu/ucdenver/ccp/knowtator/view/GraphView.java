@@ -32,6 +32,12 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 	private JPanel panel1;
 	private GraphSpaceChooser graphSpaceChooser;
 	private GraphViewKnowtatorTextPane knowtatorTextPane;
+	private JRadioButton someRadioButton;
+	private JRadioButton allRadioButton;
+	private JPanel propertyValuePanel;
+	private JRadioButton otherRadioButton;
+	private JTextField quantifierTextField;
+	private JTextField quantifierValueTextField;
 	private JDialog dialog;
 
 	@SuppressWarnings("unused")
@@ -58,6 +64,19 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 	}
 
 	private void makeButtons() {
+		someRadioButton.addActionListener(e -> {
+			view.getController().getSelectionManager().setSelectedPropertyQuantifer("some");
+			view.getController().getSelectionManager().setSelectedPropertyQuantifierValue("");
+		});
+		allRadioButton.addActionListener(e -> {
+			view.getController().getSelectionManager().setSelectedPropertyQuantifer("all");
+			view.getController().getSelectionManager().setSelectedPropertyQuantifierValue("");
+		});
+		otherRadioButton.addActionListener(e -> {
+			view.getController().getSelectionManager().setSelectedPropertyQuantifer(quantifierTextField.getText());
+			view.getController().getSelectionManager().setSelectedPropertyQuantifierValue(quantifierValueTextField.getText());
+		});
+
 		graphSpaceChooser.addActionListener(
 				e -> {
 					JComboBox comboBox = (JComboBox) e.getSource();

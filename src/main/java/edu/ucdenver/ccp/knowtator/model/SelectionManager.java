@@ -37,6 +37,13 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
   private List<OWLObjectPropertySelectionListener> owlObjectPropertyListeners;
   private List<GraphSpaceSelectionListener> graphSpaceListeners;
   private OWLObjectProperty selectedOWLObjectProperty;
+  private String selectedPropertyQuantifier;
+
+  public void setSelectedPropertyQuantifierValue(String selectedPropertyQuantifierValue) {
+    this.selectedPropertyQuantifierValue = selectedPropertyQuantifierValue;
+  }
+
+  private String selectedPropertyQuantifierValue;
 
   public SelectionManager(KnowtatorController knowtatorController) {
     controller = knowtatorController;
@@ -273,5 +280,17 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
 
   OWLObjectProperty getSelectedOWLObjectProperty() {
     return selectedOWLObjectProperty;
+  }
+
+  String getSelectedPropertyQuantifier() {
+    return selectedPropertyQuantifier;
+  }
+
+  public void setSelectedPropertyQuantifer(String propertyQuantifier) {
+    selectedPropertyQuantifier = propertyQuantifier;
+  }
+
+  String getSelectedPropertyQuantifierValue() {
+    return selectedPropertyQuantifierValue;
   }
 }

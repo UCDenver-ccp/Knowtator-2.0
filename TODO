@@ -1,5 +1,4 @@
 TODO: Add load errors
-TODO: Quantifier and value as persistent text boxes
 TODO: Should probably also read in Events, Modifiers, etc.
 TODO: Prescribe colors (Colorbrewer qualitative), but allow the adding of new colors
 TODO: Edge coloring

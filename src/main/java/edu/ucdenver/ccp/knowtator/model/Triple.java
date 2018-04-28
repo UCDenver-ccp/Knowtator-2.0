@@ -50,7 +50,7 @@ public class Triple extends mxCell implements Savable, KnowtatorObject, ProjectL
           String quantifier,
           String quantifierValue,
           KnowtatorController controller, TextSource textSource, GraphSpace graphSpace) throws OWLEntityNullException, OWLWorkSpaceNotSetException {
-    super(controller.getOWLAPIDataExtractor().getOWLEntityRendering(property), new mxGeometry(), null);
+    super(String.format("%s\n%s, %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(property), quantifier, quantifierValue), new mxGeometry(), null);
 
     this.property = property;
     this.textSource = textSource;
@@ -186,7 +186,7 @@ public class Triple extends mxCell implements Savable, KnowtatorObject, ProjectL
 
       property = controller.getOWLAPIDataExtractor().getOWLObjectPropertyByID(getValue().toString());
       dontRedraw = true;
-      setValue(controller.getOWLAPIDataExtractor().getOWLEntityRendering(property));
+      setValue(String.format("%s\n%s, %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(property), quantifier, quantifierValue));
       dontRedraw = false;
     } catch (OWLWorkSpaceNotSetException | OWLObjectPropertyNotFoundException | OWLEntityNullException ignored) {
 
@@ -221,7 +221,11 @@ public class Triple extends mxCell implements Savable, KnowtatorObject, ProjectL
       OWLEntity oldProperty = possiblyRemovedEntities.iterator().next();
       OWLEntity newProperty = possiblyAddedEntities.iterator().next();
       if (property == oldProperty) {
-        setValue(newProperty);
+        try {
+          setValue(String.format("%s\n%s, %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(newProperty), quantifier, quantifierValue));
+        } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
+          e.printStackTrace();
+        }
       }
     }
   }
@@ -230,7 +234,7 @@ public class Triple extends mxCell implements Savable, KnowtatorObject, ProjectL
   public void handleChange(OWLModelManagerChangeEvent event) {
     if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
       try {
-        setValue(controller.getOWLAPIDataExtractor().getOWLEntityRendering(property));
+        setValue(String.format("%s\n%s, %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(property), quantifier, quantifierValue));
       } catch (OWLWorkSpaceNotSetException | OWLEntityNullException ignored) {
       }
     }
