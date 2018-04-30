@@ -78,9 +78,7 @@ public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUt
               textSource -> {
                 File outputFile =
                     new File(
-                        file.getAbsolutePath()
-                            + File.separator
-                            + textSource.getSaveFile().getName());
+                        file.getAbsolutePath(), textSource.getSaveFile().getName());
                 writeToOutputFile(textSource, outputFile);
               });
     } else if (savable instanceof ProfileManager) {
@@ -90,7 +88,7 @@ public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUt
           .forEach(
               profile -> {
                 File outputFile =
-                    new File(file.getAbsolutePath() + File.separator + profile.getId() + ".xml");
+                    new File(file.getAbsolutePath(),  profile.getId() + ".xml");
                 writeToOutputFile(profile, outputFile);
               });
     } else {

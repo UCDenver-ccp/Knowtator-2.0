@@ -176,6 +176,7 @@ public class AnnotationManager implements Savable {
       String type = annotationElement.getAttribute(KnowtatorXMLAttributes.TYPE);
 
       Profile profile = controller.getProfileManager().getProfile(profileID);
+      profile = profile == null ? controller.getProfileManager().getDefaultProfile() : profile;
       String owlClassID =
           ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0))
               .getAttribute(KnowtatorXMLAttributes.ID);

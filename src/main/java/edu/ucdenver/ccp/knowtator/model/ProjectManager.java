@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -66,12 +67,83 @@ public class ProjectManager {
     }
   }
 
-  public void loadProject(
+  public void importProject(
           File profilesLocation,
           File ontologiesLocation,
           File articlesLocation,
-          File annotationsLocation) {
-    makeFileStructure(profilesLocation, ontologiesLocation, articlesLocation, annotationsLocation);
+          File annotationsLocation,
+          File projectLocation) {
+    makeFileStructure(projectLocation);
+    try {
+      if (profilesLocation != null && profilesLocation.exists()) {
+        Files.newDirectoryStream(
+                Paths.get(profilesLocation.toURI()), path -> path.toString().endsWith(".xml"))
+            .forEach(
+                profileFile -> {
+                  try {
+                    Files.copy(
+                        profileFile,
+                        new File(
+                                this.profilesLocation, profileFile.getFileName().toFile().getName())
+                            .toPath());
+                  } catch (IOException e) {
+                    e.printStackTrace();
+                  }
+                });
+      }
+      if (ontologiesLocation != null && ontologiesLocation.exists()) {
+        Files.newDirectoryStream(
+                Paths.get(ontologiesLocation.toURI()), path -> path.toString().endsWith(".obo"))
+            .forEach(
+                ontologyFile -> {
+                  try {
+                    Files.copy(
+                        ontologyFile,
+                        new File(
+                                this.ontologiesLocation,
+                                ontologyFile.getFileName().toFile().getName())
+                            .toPath());
+                  } catch (IOException e) {
+                    e.printStackTrace();
+                  }
+                });
+      }
+      if (articlesLocation != null && articlesLocation.exists()) {
+        Files.newDirectoryStream(
+                Paths.get(articlesLocation.toURI()), path -> path.toString().endsWith(".txt"))
+            .forEach(
+                articleFile -> {
+                  try {
+                    Files.copy(
+                        articleFile,
+                        new File(
+                                this.articlesLocation, articleFile.getFileName().toFile().getName())
+                            .toPath());
+                  } catch (IOException e) {
+                    e.printStackTrace();
+                  }
+                });
+      }
+      if (annotationsLocation != null && annotationsLocation.exists()) {
+        Files.newDirectoryStream(
+                Paths.get(annotationsLocation.toURI()), path -> path.toString().endsWith(".xml"))
+            .forEach(
+                profileFile -> {
+                  try {
+                    Files.copy(
+                        profileFile,
+                        new File(
+                                this.annotationsLocation,
+                                profileFile.getFileName().toFile().getName())
+                            .toPath());
+                  } catch (IOException e) {
+                    e.printStackTrace();
+                  }
+                });
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     loadProject();
   }
 
@@ -113,21 +185,6 @@ public class ProjectManager {
     for (ProjectListener listener : listeners) {
       listener.projectLoaded();
     }
-  }
-
-  /**
-   * Allows for manual setting of the project structure
-   */
-  private void makeFileStructure(
-          File profilesLocation,
-          File ontologiesLocation,
-          File articlesLocation,
-          File annotationsLocation) {
-    this.projectLocation = null;
-    this.profilesLocation = profilesLocation;
-    this.ontologiesLocation = ontologiesLocation;
-    this.articlesLocation = articlesLocation;
-    this.annotationsLocation = annotationsLocation;
   }
 
   private void makeFileStructure(File projectDirectory) {
