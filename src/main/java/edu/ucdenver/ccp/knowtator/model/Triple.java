@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Triple extends mxCell implements Savable, KnowtatorObject, ProjectListener, OWLSetupListener, OWLOntologyChangeListener, OWLModelManagerListener {
+public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject, ProjectListener, OWLSetupListener, OWLOntologyChangeListener, OWLModelManagerListener {
   private String quantifier;
   private String quantifierValue;
   private Profile annotator;

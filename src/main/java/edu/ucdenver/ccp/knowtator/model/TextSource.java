@@ -118,11 +118,6 @@ public class TextSource implements Savable, KnowtatorObject {
   }
 
   @Override
-  public TextSource getTextSource() {
-    return null;
-  }
-
-  @Override
   public String toString() {
     return id;
   }

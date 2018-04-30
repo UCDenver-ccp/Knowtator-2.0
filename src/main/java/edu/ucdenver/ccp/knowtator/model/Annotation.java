@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
-public class Annotation implements Savable, KnowtatorObject, OWLSetupListener, OWLOntologyChangeListener, ProjectListener {
+public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupListener, OWLOntologyChangeListener, ProjectListener {
 
   private final Date date;
 
@@ -66,6 +66,7 @@ public class Annotation implements Savable, KnowtatorObject, OWLSetupListener, O
     overlappingAnnotations = new HashSet<>();
   }
 
+  @Override
   public TextSource getTextSource() {
     return textSource;
   }

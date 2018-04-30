@@ -5,6 +5,4 @@ public interface KnowtatorObject {
 	String getId();
 
 	void setId(String id);
-
-	TextSource getTextSource();
 }

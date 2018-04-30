@@ -31,7 +31,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class GraphSpace extends mxGraph
-    implements Savable, KnowtatorObject, AnnotationSelectionListener {
+    implements Savable, KnowtatorTextBoundObject, AnnotationSelectionListener {
   @SuppressWarnings("unused")
   private Logger log = Logger.getLogger(GraphSpace.class);
 

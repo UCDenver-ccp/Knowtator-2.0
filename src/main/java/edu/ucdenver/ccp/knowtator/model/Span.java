@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
-public class Span implements Savable, KnowtatorObject {
+public class Span implements Savable, KnowtatorTextBoundObject {
   @SuppressWarnings("unused")
   private static Logger log = Logger.getLogger(KnowtatorController.class);
 

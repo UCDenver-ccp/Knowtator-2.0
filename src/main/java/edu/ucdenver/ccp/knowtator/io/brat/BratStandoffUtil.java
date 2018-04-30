@@ -2,6 +2,7 @@ package edu.ucdenver.ccp.knowtator.io.brat;
 
 import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.TextSource;
 import edu.ucdenver.ccp.knowtator.model.TextSourceManager;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
@@ -75,17 +76,19 @@ public class BratStandoffUtil implements BasicIOUtil {
 										new File(file.getAbsolutePath() + File.separator + textSource.getId() + ".ann");
                 writeToOutputFile(textSource, outputFile);
 							});
-		} else {
-			writeToOutputFile(savable, file);
+		} else if (savable instanceof TextSource) {
+			writeToOutputFile((TextSource) savable, file);
 		}
 	}
 
-	private void writeToOutputFile(Savable savable, File file) {
+	private void writeToOutputFile(TextSource textSource, File file) {
 		try {
 			log.warn("Writing to " + file.getAbsolutePath());
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-			savable.writeToBratStandoff(bw);
+			textSource.writeToBratStandoff(bw);
 			bw.close();
+			File textFileCopy = new File (file.getParentFile(), textSource.getTextFile().getName());
+			Files.copy(textSource.getTextFile().toPath(), textFileCopy.toPath());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

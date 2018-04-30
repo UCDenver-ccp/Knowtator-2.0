@@ -14,7 +14,7 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
-public class AnnotationNode extends mxCell implements Savable, KnowtatorObject {
+public class AnnotationNode extends mxCell implements Savable, KnowtatorTextBoundObject {
 
 	private Annotation annotation;
 	private TextSource textSource;

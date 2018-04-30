@@ -106,8 +106,8 @@ public class KnowtatorController implements Savable, ProjectListener {
     } else {
       int i = idRegistry.size();
       while (verifiedId == null || idRegistry.keySet().contains(verifiedId)) {
-        if (obj.getTextSource() != null) {
-          verifiedId = obj.getTextSource().getId() + "-" + Integer.toString(i);
+        if (obj instanceof  KnowtatorTextBoundObject && ((KnowtatorTextBoundObject) obj).getTextSource() != null) {
+          verifiedId = ((KnowtatorTextBoundObject) obj).getTextSource().getId() + "-" + Integer.toString(i);
         } else {
           verifiedId = Integer.toString(i);
         }

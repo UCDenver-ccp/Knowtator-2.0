@@ -59,11 +59,6 @@ public class Profile implements Savable, KnowtatorObject {
     this.id = id;
   }
 
-  @Override
-  public TextSource getTextSource() {
-    return null;
-  }
-
   private void addColor(String classID, String color) {
     Color c = Color.decode(color);
     c =
