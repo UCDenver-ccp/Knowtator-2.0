@@ -50,7 +50,7 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
           String quantifier,
           String quantifierValue,
           KnowtatorController controller, TextSource textSource, GraphSpace graphSpace) throws OWLEntityNullException, OWLWorkSpaceNotSetException {
-    super(String.format("%s\n%s, %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(property), quantifier, quantifierValue), new mxGeometry(), null);
+    super(String.format("%s\n%s %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(property), quantifier, quantifierValue), new mxGeometry(), null);
 
     this.property = property;
     this.textSource = textSource;
@@ -186,7 +186,7 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
 
       property = controller.getOWLAPIDataExtractor().getOWLObjectPropertyByID(getValue().toString());
       dontRedraw = true;
-      setValue(String.format("%s\n%s, %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(property), quantifier, quantifierValue));
+      setValue(String.format("%s\n%s %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(property), quantifier, quantifierValue));
       dontRedraw = false;
     } catch (OWLWorkSpaceNotSetException | OWLObjectPropertyNotFoundException | OWLEntityNullException ignored) {
 
@@ -234,7 +234,7 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
   public void handleChange(OWLModelManagerChangeEvent event) {
     if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
       try {
-        setValue(String.format("%s\n%s, %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(property), quantifier, quantifierValue));
+        setValue(String.format("%s\n%s %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(property), quantifier, quantifierValue));
       } catch (OWLWorkSpaceNotSetException | OWLEntityNullException ignored) {
       }
     }
