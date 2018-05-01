@@ -2,6 +2,7 @@ package edu.ucdenver.ccp.knowtator.model;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
+import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
@@ -254,6 +255,23 @@ public class ProjectManager {
             | NoSuchMethodException
             | IOException e) {
       e.printStackTrace();
+    }
+  }
+
+  public void loadWithAppropriateFormat(File file) {
+    String[] splitOnDots = file.getName().split("\\.");
+    String extension = splitOnDots[splitOnDots.length - 1];
+
+    switch (extension) {
+      case "xml":
+        loadFromFormat(KnowtatorXMLUtil.class, file);
+        break;
+      case "ann":
+        loadFromFormat(BratStandoffUtil.class, file);
+        break;
+      case "a1":
+        loadFromFormat(BratStandoffUtil.class, file);
+        break;
     }
   }
 

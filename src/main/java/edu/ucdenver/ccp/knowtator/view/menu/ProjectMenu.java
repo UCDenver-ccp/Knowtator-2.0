@@ -133,14 +133,12 @@ public class ProjectMenu extends JMenu implements ProjectListener {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setCurrentDirectory(
                         view.getController().getProjectManager().getAnnotationsLocation());
-                FileFilter fileFilter = new FileNameExtensionFilter("XML", "knowtator");
+                FileFilter fileFilter = new FileNameExtensionFilter("Annotation File (XML, ann, a1)", "xml", "ann", "a1");
                 fileChooser.setFileFilter(fileFilter);
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
                 if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-                  view.getController()
-                          .getProjectManager()
-                          .loadFromFormat(KnowtatorXMLUtil.class, fileChooser.getSelectedFile());
+                  view.getController().getProjectManager().loadWithAppropriateFormat(fileChooser.getSelectedFile());
                 }
               }
             });
