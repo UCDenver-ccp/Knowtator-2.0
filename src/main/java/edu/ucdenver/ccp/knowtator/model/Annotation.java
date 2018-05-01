@@ -353,6 +353,10 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
     owlSetup();
   }
 
+  void setOWLClassID(String owlClassID) {
+    this.owlClassID = owlClassID;
+  }
+
   //		public Set<String> getSimpleFeatureNames() {
   //		return Collections.unmodifiableSet(simpleFeatures.keySet());
   //	}

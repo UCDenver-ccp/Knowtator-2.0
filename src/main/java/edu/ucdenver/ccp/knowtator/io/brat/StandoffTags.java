@@ -18,7 +18,7 @@ public class StandoffTags {
 	static final String columnDelimiter = "\t";
 	private static final char ATTRIBUTE = 'A';
 	private static final char MODIFICATION = 'M';
-	private static final char NORMALIZATION = 'N';
+	public static final char NORMALIZATION = 'N';
 	private static final char NOTE = '#';
 	static final char[] tagList = {
 			TEXTBOUNDANNOTATION, RELATION, EVENT, ATTRIBUTE, MODIFICATION, NORMALIZATION, NOTE, DOCID

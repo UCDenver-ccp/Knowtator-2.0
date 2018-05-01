@@ -330,6 +330,16 @@ public class AnnotationManager implements Savable {
               addAnnotation(newAnnotation);
             });
 
+    annotationCollection
+            .get(StandoffTags.NORMALIZATION)
+            .forEach(
+                 normalizaion -> {
+                   String[] splitNormalization = normalizaion[1].split(StandoffTags.relationTripleDelimiter);
+                   Annotation annotation = getAnnotation(splitNormalization[1]);
+                   annotation.setOWLClassID(splitNormalization[2]);
+                 }
+            );
+
     GraphSpace newGraphSpace = addGraphSpace("Brat Relation Graph");
     newGraphSpace.readFromBratStandoff(null, annotationCollection, null);
   }
