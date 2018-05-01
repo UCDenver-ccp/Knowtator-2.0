@@ -42,7 +42,15 @@ public class ProjectMenu extends JMenu implements ProjectListener {
     addSeparator();
     add(IAAMenu());
     addSeparator();
+    add(attemptOWLRenderConnectionCommand());
     add(debugMenuItem());
+  }
+
+  private JMenuItem attemptOWLRenderConnectionCommand() {
+    JMenuItem menuItem = new JMenuItem("Connect annotations using current rendering");
+    menuItem.addActionListener(e -> view.getController().getOWLAPIDataExtractor().setUpOWL());
+
+    return menuItem;
   }
 
   private JMenuItem debugMenuItem() {
