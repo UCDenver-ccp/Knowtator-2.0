@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,8 +35,11 @@ public class TextSourceManager implements Savable {
     if (textFileName == null || textFileName.equals("")) {
       textFileName = id;
     }
-    TextSource newTextSource = new TextSource(controller, file, textFileName);
-    textSourceCollection.add(newTextSource);
+    TextSource newTextSource = textSourceCollection.get(textFileName);
+    if (newTextSource == null){
+      newTextSource = new TextSource(controller, file, textFileName);
+      textSourceCollection.add(newTextSource);
+    }
 
     controller.getSelectionManager().setSelectedTextSource(newTextSource);
     return newTextSource;
