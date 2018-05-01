@@ -5,7 +5,6 @@ import edu.ucdenver.ccp.knowtator.events.ProfileChangeEvent;
 import edu.ucdenver.ccp.knowtator.events.SpanChangeEvent;
 import edu.ucdenver.ccp.knowtator.events.TextSourceChangeEvent;
 import edu.ucdenver.ccp.knowtator.listeners.*;
-import edu.ucdenver.ccp.knowtator.model.Profile;
 import edu.ucdenver.ccp.knowtator.model.Span;
 import edu.ucdenver.ccp.knowtator.model.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
@@ -128,8 +127,6 @@ public abstract class KnowtatorTextPane extends JTextPane
         }
       }
 
-      Profile profile = view.getController().getSelectionManager().getActiveProfile();
-
       // Remove all previous highlights in case a span has been deleted
       getHighlighter().removeAllHighlights();
 
@@ -166,7 +163,7 @@ public abstract class KnowtatorTextPane extends JTextPane
         }
         lastSpan = span;
 
-        lastColor = profile.getColor(span.getAnnotation());
+        lastColor = span.getAnnotation().getAnnotator().getColor(span.getAnnotation());
       }
       if (lastSpan != null) {
 
