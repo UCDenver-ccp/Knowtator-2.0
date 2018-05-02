@@ -96,7 +96,7 @@ public abstract class KnowtatorTextPane extends JTextPane
         }
 
       } else {
-        view.getController().getSelectionManager().setSelectedAnnotation(null, null);
+//        view.getController().getSelectionManager().setSelectedAnnotation(null, null);
         setSelectionAtWordLimits(press_offset, release_offset);
       }
     }

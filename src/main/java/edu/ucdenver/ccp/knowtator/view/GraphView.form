@@ -52,7 +52,7 @@
               <component id="f0550" class="javax.swing.JButton" binding="previousGraphSpaceButton">
                 <constraints/>
                 <properties>
-                  <icon value="icon/Previous Graph Space (Custom).png"/>
+                  <icon value="icon/icons8-sort-up-filled-50.png"/>
                   <text value=""/>
                   <toolTipText resource-bundle="ui" key="previous.graph.space"/>
                 </properties>
@@ -60,7 +60,7 @@
               <component id="4437a" class="javax.swing.JButton" binding="nextGraphSpaceButton">
                 <constraints/>
                 <properties>
-                  <icon value="icon/Next Graph Space (Custom).png"/>
+                  <icon value="icon/icons8-sort-down-filled-50.png"/>
                   <text value=""/>
                   <toolTipText resource-bundle="ui" key="next.graph.space"/>
                 </properties>
@@ -103,7 +103,7 @@
               <component id="8ed2b" class="javax.swing.JButton" binding="addAnnotationNodeButton">
                 <constraints/>
                 <properties>
-                  <icon value="icon/Add annotation Node (Custom).png"/>
+                  <icon value="icon/icons8-plus-24.png"/>
                   <text value=""/>
                   <toolTipText resource-bundle="ui" key="add.annotation.node"/>
                 </properties>
@@ -111,7 +111,7 @@
               <component id="505b9" class="javax.swing.JButton" binding="removeCellButton">
                 <constraints/>
                 <properties>
-                  <icon value="icon/Remove Annotation Node (Custom).png"/>
+                  <icon value="icon/icons8-delete-24.png"/>
                   <text value=""/>
                   <toolTipText resource-bundle="ui" key="remove.item"/>
                 </properties>

@@ -159,10 +159,10 @@ public class AnnotationManager implements Savable {
   }
 
   public void writeToKnowtatorXML(Document dom, Element textSourceElement) {
-    annotationCollection
-        .forEach(annotation -> annotation.writeToKnowtatorXML(dom, textSourceElement));
-    graphSpaceCollection
-        .forEach(graphSpace -> graphSpace.writeToKnowtatorXML(dom, textSourceElement));
+    annotationCollection.forEach(
+        annotation -> annotation.writeToKnowtatorXML(dom, textSourceElement));
+    graphSpaceCollection.forEach(
+        graphSpace -> graphSpace.writeToKnowtatorXML(dom, textSourceElement));
   }
 
   @Override
@@ -246,7 +246,6 @@ public class AnnotationManager implements Savable {
       if (!newAnnotation.getSpanCollection().getCollection().isEmpty()) {
         addAnnotation(newAnnotation);
 
-
         for (Node slotMentionNode :
             KnowtatorXMLUtil.asList(
                 classElement.getElementsByTagName(OldKnowtatorXMLTags.HAS_SLOT_MENTION))) {
@@ -296,8 +295,10 @@ public class AnnotationManager implements Savable {
                 target,
                 null,
                 controller.getSelectionManager().getActiveProfile(),
-                null, propertyID,
-					"", "");
+                null,
+                propertyID,
+                "",
+                "");
           }
         });
   }
@@ -331,14 +332,14 @@ public class AnnotationManager implements Savable {
             });
 
     annotationCollection
-            .get(StandoffTags.NORMALIZATION)
-            .forEach(
-                 normalizaion -> {
-                   String[] splitNormalization = normalizaion[1].split(StandoffTags.relationTripleDelimiter);
-                   Annotation annotation = getAnnotation(splitNormalization[1]);
-                   annotation.setOWLClassID(splitNormalization[2]);
-                 }
-            );
+        .get(StandoffTags.NORMALIZATION)
+        .forEach(
+            normalizaion -> {
+              String[] splitNormalization =
+                  normalizaion[1].split(StandoffTags.relationTripleDelimiter);
+              Annotation annotation = getAnnotation(splitNormalization[1]);
+              annotation.setOWLClassID(splitNormalization[2]);
+            });
 
     GraphSpace newGraphSpace = addGraphSpace("Brat Relation Graph");
     newGraphSpace.readFromBratStandoff(null, annotationCollection, null);
@@ -352,7 +353,13 @@ public class AnnotationManager implements Savable {
       annotation.setBratID(String.format("T%d", i));
 
       try {
-        writer.append(String.format("%s\t%s ", annotation.getBratID(), controller.getOWLAPIDataExtractor().getOWLEntityRendering(annotation.getOwlClass())));
+        writer.append(
+            String.format(
+                "%s\t%s ",
+                annotation.getBratID(),
+                controller
+                    .getOWLAPIDataExtractor()
+                    .getOWLEntityRendering(annotation.getOwlClass())));
       } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
         writer.append(String.format("%s\t%s ", annotation.getBratID(), annotation.getOwlClassID()));
       }
@@ -373,7 +380,8 @@ public class AnnotationManager implements Savable {
         triple.setBratID(String.format("R%d", lastNumTriples + i));
         String propertyID;
         try {
-          propertyID = controller.getOWLAPIDataExtractor().getOWLEntityRendering(triple.getProperty());
+          propertyID =
+              controller.getOWLAPIDataExtractor().getOWLEntityRendering(triple.getProperty());
         } catch (OWLEntityNullException | OWLWorkSpaceNotSetException e) {
           propertyID = triple.getValue().toString();
         }
@@ -434,5 +442,11 @@ public class AnnotationManager implements Savable {
             controller.getSelectionManager().getEnd(),
             textSource,
             controller));
+  }
+
+  public void removeSpanFromSelectedAnnotation() {
+    removeSpanFromAnnotation(
+        controller.getSelectionManager().getSelectedAnnotation(),
+        controller.getSelectionManager().getSelectedSpan());
   }
 }
