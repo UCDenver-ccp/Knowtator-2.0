@@ -292,7 +292,19 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
     Iterator<Span> spanIterator2 = annotation2.getSpanCollection().iterator();
     int result = 0;
     while(result == 0 && spanIterator1.hasNext() && spanIterator2.hasNext()) {
-      result = spanIterator1.next().compare(spanIterator2.next());
+      Span span1 = spanIterator1.next();
+      Span span2 = spanIterator2.next();
+      if (span2 == null) {
+        result = 1;
+      }
+      else if (span1 == null) {
+        result = -1;
+      } else {
+        result = span1.getStart().compareTo(span2.getStart());
+        if (result == 0) {
+          result = span1.getEnd().compareTo(span2.getEnd());
+        }
+      }
     }
     if (result == 0) {
       result = annotation1.getId().compareTo(annotation2.getId());

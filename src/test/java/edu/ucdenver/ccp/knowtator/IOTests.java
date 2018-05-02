@@ -2,16 +2,14 @@ package edu.ucdenver.ccp.knowtator;
 
 import com.google.common.io.Files;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
-import edu.ucdenver.ccp.knowtator.model.AnnotationManager;
-import edu.ucdenver.ccp.knowtator.model.AnnotationNode;
-import edu.ucdenver.ccp.knowtator.model.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.model.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 
 @SuppressWarnings("ConstantConditions")
 public class IOTests {
@@ -449,7 +447,7 @@ public class IOTests {
 //    Iterator<TextSource> textSourceIterator1 =
 //        controller1.getTextSourceManager().getTextSourceCollection().iterator();
 //    Iterator<TextSource> textSourceIterator2 =
-//        controller1.getTextSourceManager().getTextSourceCollection().iterator();
+//        controller2.getTextSourceManager().getTextSourceCollection().iterator();
 //    while (textSourceIterator1.hasNext()) {
 //      TextSource textSource1 = textSourceIterator1.next();
 //      TextSource textSource2 = textSourceIterator2.next();
