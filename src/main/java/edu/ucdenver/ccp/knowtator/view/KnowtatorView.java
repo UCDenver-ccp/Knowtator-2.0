@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 public class KnowtatorView extends AbstractOWLClassViewComponent
-    implements DropTargetListener, OWLClassSelectionListener, OWLObjectPropertySelectionListener {
+        implements DropTargetListener, OWLClassSelectionListener, OWLObjectPropertySelectionListener {
 
   private static final Logger log = Logger.getLogger(KnowtatorView.class);
   private KnowtatorController controller;
@@ -72,14 +72,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     // It is kind of a hacky fix, but it works for now.
 
     log.warn(
-        "Don't worry about the following exception. Just forcing loading of a class needed by mxGraph");
+            "Don't worry about the following exception. Just forcing loading of a class needed by mxGraph");
     try {
       mxGraphTransferable.dataFlavor =
-          new DataFlavor(
-              DataFlavor.javaJVMLocalObjectMimeType
-                  + "; class=com.mxgraph.swing.util.mxGraphTransferable",
-              null,
-              mxGraphTransferable.class.getClassLoader());
+              new DataFlavor(
+                      DataFlavor.javaJVMLocalObjectMimeType
+                              + "; class=com.mxgraph.swing.util.mxGraphTransferable",
+                      null,
+                      mxGraphTransferable.class.getClassLoader());
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     }
@@ -113,7 +113,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   }
 
   @Override
-  public void initialiseClassView() {}
+  public void initialiseClassView() {
+  }
 
   private void createUIComponents() {
     infoPane = new InfoPane(this);
@@ -133,244 +134,244 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   private void makeButtons() {
 
     findTextButton.addActionListener(
-        e -> {
-          try {
-            controller
-                .getOWLAPIDataExtractor()
-                .searchForString(knowtatorTextPane.getSelectedText());
-          } catch (OWLWorkSpaceNotSetException ignored) {
+            e -> {
+              try {
+                controller
+                        .getOWLAPIDataExtractor()
+                        .searchForString(knowtatorTextPane.getSelectedText());
+              } catch (OWLWorkSpaceNotSetException ignored) {
 
-          }
-        });
+              }
+            });
 
     assignColorToClassButton.addActionListener(
-        e -> {
-          OWLClass owlClass = controller.getSelectionManager().getSelectedOWLClass();
-          if (owlClass == null) {
-            if (controller.getProjectManager().isProjectLoaded()) {
-              owlClass = controller.getSelectionManager().getSelectedAnnotation().getOwlClass();
-            }
-          }
-          if (owlClass != null) {
-            Color c = JColorChooser.showDialog(this, "Pick a color for " + owlClass, Color.CYAN);
-            if (c != null) {
-              controller.getSelectionManager().getActiveProfile().addColor(owlClass, c);
-
-              if (JOptionPane.showConfirmDialog(
-                      this, "Assign color to descendants of " + owlClass + "?")
-                  == JOptionPane.OK_OPTION) {
-                try {
-                  Set<OWLClass> descendants =
-                      controller.getOWLAPIDataExtractor().getDescendants(owlClass);
-
-                  for (OWLClass descendant : descendants) {
-                    controller.getSelectionManager().getActiveProfile().addColor(descendant, c);
-                  }
-                } catch (OWLWorkSpaceNotSetException ignored) {
+            e -> {
+              OWLClass owlClass = controller.getSelectionManager().getSelectedOWLClass();
+              if (owlClass == null) {
+                if (controller.getProjectManager().isProjectLoaded()) {
+                  owlClass = controller.getSelectionManager().getSelectedAnnotation().getOwlClass();
                 }
               }
-            }
-          }
-        });
+              if (owlClass != null) {
+                Color c = JColorChooser.showDialog(this, "Pick a color for " + owlClass, Color.CYAN);
+                if (c != null) {
+                  controller.getSelectionManager().getActiveProfile().addColor(owlClass, c);
+
+                  if (JOptionPane.showConfirmDialog(
+                          this, "Assign color to descendants of " + owlClass + "?")
+                          == JOptionPane.OK_OPTION) {
+                    try {
+                      Set<OWLClass> descendants =
+                              controller.getOWLAPIDataExtractor().getDescendants(owlClass);
+
+                      for (OWLClass descendant : descendants) {
+                        controller.getSelectionManager().getActiveProfile().addColor(descendant, c);
+                      }
+                    } catch (OWLWorkSpaceNotSetException ignored) {
+                    }
+                  }
+                }
+              }
+            });
 
     profileFilterCheckBox.addChangeListener(controller.getSelectionManager());
 
     growSelectionStartButton.addActionListener(
-        (ActionEvent e) -> {
-          if (controller.getSelectionManager().getSelectedSpan() == null) {
-            knowtatorTextPane.growStart();
-          } else {
-            controller
-                .getSelectionManager()
-                .getActiveTextSource()
-                .getAnnotationManager()
-                .growSelectedSpanStart();
-          }
-        });
+            (ActionEvent e) -> {
+              if (controller.getSelectionManager().getSelectedSpan() == null) {
+                knowtatorTextPane.growStart();
+              } else {
+                controller
+                        .getSelectionManager()
+                        .getActiveTextSource()
+                        .getAnnotationManager()
+                        .growSelectedSpanStart();
+              }
+            });
     shrinkSelectionStartButton.addActionListener(
-        (ActionEvent e) -> {
-          if (controller.getSelectionManager().getSelectedSpan() == null) {
-            knowtatorTextPane.shrinkStart();
-          } else {
-            controller
-                .getSelectionManager()
-                .getActiveTextSource()
-                .getAnnotationManager()
-                .shrinkSelectedSpanStart();
-          }
-        });
+            (ActionEvent e) -> {
+              if (controller.getSelectionManager().getSelectedSpan() == null) {
+                knowtatorTextPane.shrinkStart();
+              } else {
+                controller
+                        .getSelectionManager()
+                        .getActiveTextSource()
+                        .getAnnotationManager()
+                        .shrinkSelectedSpanStart();
+              }
+            });
     shrinkSelectionEndButton.addActionListener(
-        (ActionEvent e) -> {
-          if (controller.getSelectionManager().getSelectedSpan() == null) {
-            knowtatorTextPane.shrinkEnd();
-          } else {
-            controller
-                .getSelectionManager()
-                .getActiveTextSource()
-                .getAnnotationManager()
-                .shrinkSelectedSpanEnd();
-          }
-        });
+            (ActionEvent e) -> {
+              if (controller.getSelectionManager().getSelectedSpan() == null) {
+                knowtatorTextPane.shrinkEnd();
+              } else {
+                controller
+                        .getSelectionManager()
+                        .getActiveTextSource()
+                        .getAnnotationManager()
+                        .shrinkSelectedSpanEnd();
+              }
+            });
     growSelectionEndButton.addActionListener(
-        (ActionEvent e) -> {
-          if (controller.getSelectionManager().getSelectedSpan() == null) {
-            knowtatorTextPane.growEnd();
-          } else {
-            controller
-                .getSelectionManager()
-                .getActiveTextSource()
-                .getAnnotationManager()
-                .growSelectedSpanEnd();
-          }
-        });
+            (ActionEvent e) -> {
+              if (controller.getSelectionManager().getSelectedSpan() == null) {
+                knowtatorTextPane.growEnd();
+              } else {
+                controller
+                        .getSelectionManager()
+                        .getActiveTextSource()
+                        .getAnnotationManager()
+                        .growSelectedSpanEnd();
+              }
+            });
 
     previousSpanButton.addActionListener(
-        (ActionEvent e) -> controller.getSelectionManager().getPreviousSpan());
+            (ActionEvent e) -> controller.getSelectionManager().getPreviousSpan());
     nextSpanButton.addActionListener(
-        (ActionEvent e) -> controller.getSelectionManager().getNextSpan());
+            (ActionEvent e) -> controller.getSelectionManager().getNextSpan());
 
     showGraphViewerButton.addActionListener(
-        e -> {
-          if (controller.getProjectManager().isProjectLoaded()) {
-            graphViewDialog.setVisible(true);
-          }
-        });
+            e -> {
+              if (controller.getProjectManager().isProjectLoaded()) {
+                graphViewDialog.setVisible(true);
+              }
+            });
 
     removeAnnotationButton.addActionListener(
-        e -> {
-          if (controller.getProjectManager().isProjectLoaded()
-              && controller.getSelectionManager().getSelectedAnnotation() != null) {
-            if (controller.getSelectionManager().getSelectedAnnotation().getSpanCollection().size()
-                > 1) {
-              String[] buttons = {"Remove annotation", "Remove span from annotation", "Cancel"};
-              int response =
-                  JOptionPane.showOptionDialog(
-                      this,
-                      "Choose an option",
-                      "Remove Annotation",
-                      JOptionPane.DEFAULT_OPTION,
-                      JOptionPane.QUESTION_MESSAGE,
-                      null,
-                      buttons,
-                      2);
+            e -> {
+              if (controller.getProjectManager().isProjectLoaded()
+                      && controller.getSelectionManager().getSelectedAnnotation() != null) {
+                if (controller.getSelectionManager().getSelectedAnnotation().getSpanCollection().size()
+                        > 1) {
+                  String[] buttons = {"Remove annotation", "Remove span from annotation", "Cancel"};
+                  int response =
+                          JOptionPane.showOptionDialog(
+                                  this,
+                                  "Choose an option",
+                                  "Remove Annotation",
+                                  JOptionPane.DEFAULT_OPTION,
+                                  JOptionPane.QUESTION_MESSAGE,
+                                  null,
+                                  buttons,
+                                  2);
 
-              switch (response) {
-                case 0:
-                  controller
-                      .getSelectionManager()
-                      .getActiveTextSource()
-                      .getAnnotationManager()
-                      .removeSelectedAnnotation();
-                  break;
-                case 1:
-                  controller
-                      .getSelectionManager()
-                      .getActiveTextSource()
-                      .getAnnotationManager()
-                      .removeSpanFromSelectedAnnotation();
-                  break;
-                case 2:
-                  break;
+                  switch (response) {
+                    case 0:
+                      controller
+                              .getSelectionManager()
+                              .getActiveTextSource()
+                              .getAnnotationManager()
+                              .removeSelectedAnnotation();
+                      break;
+                    case 1:
+                      controller
+                              .getSelectionManager()
+                              .getActiveTextSource()
+                              .getAnnotationManager()
+                              .removeSpanFromSelectedAnnotation();
+                      break;
+                    case 2:
+                      break;
+                  }
+                } else {
+                  if (JOptionPane.showConfirmDialog(
+                          this,
+                          "Are you sure you want to remove the selected annotation?",
+                          "Remove Annotation",
+                          JOptionPane.YES_NO_OPTION)
+                          == JOptionPane.YES_OPTION) {
+                    controller
+                            .getSelectionManager()
+                            .getActiveTextSource()
+                            .getAnnotationManager()
+                            .removeSelectedAnnotation();
+                  }
+                }
               }
-            } else {
-              if (JOptionPane.showConfirmDialog(
-                      this,
-                      "Are you sure you want to remove the selected annotation?",
-                      "Remove Annotation",
-                      JOptionPane.YES_NO_OPTION)
-                  == JOptionPane.YES_OPTION) {
-                controller
-                    .getSelectionManager()
-                    .getActiveTextSource()
-                    .getAnnotationManager()
-                    .removeSelectedAnnotation();
-              }
-            }
-          }
-        });
+            });
     addAnnotationButton.addActionListener(
-        e -> {
-          if (controller.getProjectManager().isProjectLoaded()) {
-            if (controller.getSelectionManager().getSelectedAnnotation() != null) {
-              String[] buttons = {"Add new annotation", "Add span to annotation", "Cancel"};
-              int response =
-                  JOptionPane.showOptionDialog(
-                      this,
-                      "Choose an option",
-                      "Add Annotation",
-                      JOptionPane.DEFAULT_OPTION,
-                      JOptionPane.PLAIN_MESSAGE,
-                      null,
-                      buttons,
-                      2);
+            e -> {
+              if (controller.getProjectManager().isProjectLoaded()) {
+                if (controller.getSelectionManager().getSelectedAnnotation() != null) {
+                  String[] buttons = {"Add new annotation", "Add span to annotation", "Cancel"};
+                  int response =
+                          JOptionPane.showOptionDialog(
+                                  this,
+                                  "Choose an option",
+                                  "Add Annotation",
+                                  JOptionPane.DEFAULT_OPTION,
+                                  JOptionPane.PLAIN_MESSAGE,
+                                  null,
+                                  buttons,
+                                  2);
 
-              switch (response) {
-                case 0:
+                  switch (response) {
+                    case 0:
+                      controller
+                              .getSelectionManager()
+                              .getActiveTextSource()
+                              .getAnnotationManager()
+                              .addSelectedAnnotation();
+                      break;
+                    case 1:
+                      controller
+                              .getSelectionManager()
+                              .getActiveTextSource()
+                              .getAnnotationManager()
+                              .addSpanToSelectedAnnotation();
+                      break;
+                    case 2:
+                      break;
+                  }
+
+                } else {
                   controller
-                      .getSelectionManager()
-                      .getActiveTextSource()
-                      .getAnnotationManager()
-                      .addSelectedAnnotation();
-                  break;
-                case 1:
-                  controller
-                      .getSelectionManager()
-                      .getActiveTextSource()
-                      .getAnnotationManager()
-                      .addSpanToSelectedAnnotation();
-                  break;
-                case 2:
-                  break;
+                          .getSelectionManager()
+                          .getActiveTextSource()
+                          .getAnnotationManager()
+                          .addSelectedAnnotation();
+                }
               }
-
-            } else {
-              controller
-                  .getSelectionManager()
-                  .getActiveTextSource()
-                  .getAnnotationManager()
-                  .addSelectedAnnotation();
-            }
-          }
-        });
+            });
 
     previousTextSourceButton.addActionListener(
-        e -> controller.getSelectionManager().getPreviousTextSource());
+            e -> controller.getSelectionManager().getPreviousTextSource());
     nextTextSourceButton.addActionListener(
-        e -> controller.getSelectionManager().getNextTextSource());
+            e -> controller.getSelectionManager().getNextTextSource());
 
     decreaseFontSizeButton.addActionListener(
-        (ActionEvent e) -> knowtatorTextPane.decreaseFontSize());
+            (ActionEvent e) -> knowtatorTextPane.decreaseFontSize());
     increaseFontSizeButton.addActionListener(
-        (ActionEvent e) -> knowtatorTextPane.increaseFindSize());
+            (ActionEvent e) -> knowtatorTextPane.increaseFindSize());
     textSourceChooser.addActionListener(
-        e -> {
-          JComboBox comboBox = (JComboBox) e.getSource();
-          if (comboBox.getSelectedItem() != null) {
-            controller
-                .getSelectionManager()
-                .setSelectedTextSource((TextSource) comboBox.getSelectedItem());
-          }
-        });
+            e -> {
+              JComboBox comboBox = (JComboBox) e.getSource();
+              if (comboBox.getSelectedItem() != null) {
+                controller
+                        .getSelectionManager()
+                        .setSelectedTextSource((TextSource) comboBox.getSelectedItem());
+              }
+            });
     profileChooser.addActionListener(
-        e -> {
-          JComboBox comboBox = (JComboBox) e.getSource();
-          if (comboBox.getSelectedItem() != null) {
-            controller
-                .getSelectionManager()
-                .setSelectedProfile((Profile) comboBox.getSelectedItem());
-          }
-        });
+            e -> {
+              JComboBox comboBox = (JComboBox) e.getSource();
+              if (comboBox.getSelectedItem() != null) {
+                controller
+                        .getSelectionManager()
+                        .setSelectedProfile((Profile) comboBox.getSelectedItem());
+              }
+            });
 
     textToGraphButton.addActionListener(
-        e -> {
-          if (controller.getProjectManager().isProjectLoaded()) {
-            controller
-                .getSelectionManager()
-                .getActiveGraphSpace()
-                .setGraphText(
-                    knowtatorTextPane.getSelectionStart(), knowtatorTextPane.getSelectionEnd());
-          }
-        });
+            e -> {
+              if (controller.getProjectManager().isProjectLoaded()) {
+                controller
+                        .getSelectionManager()
+                        .getActiveGraphSpace()
+                        .setGraphText(
+                                knowtatorTextPane.getSelectionStart(), knowtatorTextPane.getSelectionEnd());
+              }
+            });
   }
 
   private void owlEntitySelectionChanged(OWLEntity owlEntity) {
@@ -391,34 +392,39 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   @Override
   public void disposeView() {
     if (controller.getProjectManager().isProjectLoaded()
-        && JOptionPane.showConfirmDialog(
-                this,
-                "Save changes to Knowtator project?",
-                "Save Project",
-                JOptionPane.YES_NO_OPTION)
+            && JOptionPane.showConfirmDialog(
+            this,
+            "Save changes to Knowtator project?",
+            "Save Project",
+            JOptionPane.YES_NO_OPTION)
             == JOptionPane.YES_OPTION) {
       controller.getProjectManager().saveProject();
     }
   }
 
   @Override
-  public void dropActionChanged(DropTargetDragEvent e) {}
+  public void dropActionChanged(DropTargetDragEvent e) {
+  }
 
   @Override
-  public void dragExit(DropTargetEvent e) {}
+  public void dragExit(DropTargetEvent e) {
+  }
 
   @Override
-  public void drop(DropTargetDropEvent e) {}
+  public void drop(DropTargetDropEvent e) {
+  }
 
   public KnowtatorTextPane getKnowtatorTextPane() {
     return knowtatorTextPane;
   }
 
   @Override
-  public void dragEnter(DropTargetDragEvent e) {}
+  public void dragEnter(DropTargetDragEvent e) {
+  }
 
   @Override
-  public void dragOver(DropTargetDragEvent e) {}
+  public void dragOver(DropTargetDragEvent e) {
+  }
 
   public JMenu getProjectMenu() {
     return projectMenu;
@@ -439,8 +445,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   }
 
   /**
-   * Method generated by IntelliJ IDEA GUI Designer >>> IMPORTANT!! <<< DO NOT edit this method OR
-   * call it in your code!
+   * Method generated by IntelliJ IDEA GUI Designer
+   * >>> IMPORTANT!! <<<
+   * DO NOT edit this method OR call it in your code!
    *
    * @noinspection ALL
    */
@@ -459,56 +466,33 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     projectMenu.setMinimumSize(new Dimension(120, 20));
     projectMenu.setPreferredSize(new Dimension(120, 20));
     projectMenu.setSelected(false);
-    this.$$$loadButtonText$$$(
-        projectMenu, ResourceBundle.getBundle("ui").getString("knowator.project"));
+    this.$$$loadButtonText$$$(projectMenu, ResourceBundle.getBundle("ui").getString("knowator.project"));
     menuBar1.add(projectMenu, BorderLayout.WEST);
     panel1.add(infoPane.$$$getRootComponent$$$(), BorderLayout.EAST);
     textPanel = new JPanel();
-    textPanel.setLayout(
-        new com.intellij.uiDesigner.core.GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));
+    textPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));
     textPanel.setMinimumSize(new Dimension(400, 350));
     textPanel.setPreferredSize(new Dimension(650, 725));
     panel1.add(textPanel, BorderLayout.CENTER);
-    textPanel.setBorder(
-        BorderFactory.createTitledBorder(
-            BorderFactory.createLineBorder(new Color(-16777216)), null));
+    textPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-16777216)), null));
     textSourceToolBar = new JToolBar();
     textSourceToolBar.setFloatable(false);
-    textPanel.add(
-        textSourceToolBar,
-        new com.intellij.uiDesigner.core.GridConstraints(
-            0,
-            0,
-            1,
-            1,
-            com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER,
-            com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL,
-            com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW,
-            com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED,
-            new Dimension(-1, 50),
-            new Dimension(-1, 50),
-            new Dimension(2147483647, 50),
-            0,
-            false));
+    textPanel.add(textSourceToolBar, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 50), new Dimension(-1, 50), new Dimension(2147483647, 50), 0, false));
     decreaseFontSizeButton = new JButton();
-    decreaseFontSizeButton.setIcon(
-        new ImageIcon(getClass().getResource("/icon/icons8-Decrease Font (Custom).png")));
+    decreaseFontSizeButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-Decrease Font (Custom).png")));
     decreaseFontSizeButton.setMaximumSize(new Dimension(50, 50));
     decreaseFontSizeButton.setMinimumSize(new Dimension(50, 50));
     decreaseFontSizeButton.setPreferredSize(new Dimension(50, 50));
     decreaseFontSizeButton.setText("");
-    decreaseFontSizeButton.setToolTipText(
-        ResourceBundle.getBundle("ui").getString("decrease.font.size"));
+    decreaseFontSizeButton.setToolTipText(ResourceBundle.getBundle("ui").getString("decrease.font.size"));
     textSourceToolBar.add(decreaseFontSizeButton);
     increaseFontSizeButton = new JButton();
-    increaseFontSizeButton.setIcon(
-        new ImageIcon(getClass().getResource("/icon/icons8-Increase Font (Custom).png")));
+    increaseFontSizeButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-Increase Font (Custom).png")));
     increaseFontSizeButton.setMaximumSize(new Dimension(50, 50));
     increaseFontSizeButton.setMinimumSize(new Dimension(50, 50));
     increaseFontSizeButton.setPreferredSize(new Dimension(72, 72));
     increaseFontSizeButton.setText("");
-    increaseFontSizeButton.setToolTipText(
-        ResourceBundle.getBundle("ui").getString("increase.font.size"));
+    increaseFontSizeButton.setToolTipText(ResourceBundle.getBundle("ui").getString("increase.font.size"));
     textSourceToolBar.add(increaseFontSizeButton);
     final JPanel panel2 = new JPanel();
     panel2.setLayout(new BorderLayout(0, 0));
@@ -525,24 +509,20 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     this.$$$loadLabelText$$$(label1, ResourceBundle.getBundle("ui").getString("document"));
     panel2.add(label1, BorderLayout.CENTER);
     nextTextSourceButton = new JButton();
-    nextTextSourceButton.setIcon(
-        new ImageIcon(getClass().getResource("/icon/icons8-sort-down-24.png")));
+    nextTextSourceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-sort-down-24.png")));
     nextTextSourceButton.setMaximumSize(new Dimension(100, 100));
     nextTextSourceButton.setMinimumSize(new Dimension(16, 16));
     nextTextSourceButton.setPreferredSize(new Dimension(24, 16));
     nextTextSourceButton.setText("");
-    nextTextSourceButton.setToolTipText(
-        ResourceBundle.getBundle("ui").getString("next.text.source"));
+    nextTextSourceButton.setToolTipText(ResourceBundle.getBundle("ui").getString("next.text.source"));
     panel2.add(nextTextSourceButton, BorderLayout.SOUTH);
     previousTextSourceButton = new JButton();
-    previousTextSourceButton.setIcon(
-        new ImageIcon(getClass().getResource("/icon/icons8-sort-up-24.png")));
+    previousTextSourceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-sort-up-24.png")));
     previousTextSourceButton.setMaximumSize(new Dimension(100, 100));
     previousTextSourceButton.setMinimumSize(new Dimension(16, 16));
     previousTextSourceButton.setPreferredSize(new Dimension(24, 16));
     previousTextSourceButton.setText("");
-    previousTextSourceButton.setToolTipText(
-        ResourceBundle.getBundle("ui").getString("previous.text.source"));
+    previousTextSourceButton.setToolTipText(ResourceBundle.getBundle("ui").getString("previous.text.source"));
     panel2.add(previousTextSourceButton, BorderLayout.NORTH);
     textSourceChooser.setMaximumSize(new Dimension(200, 50));
     textSourceChooser.setMinimumSize(new Dimension(200, 50));
@@ -562,22 +542,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     textSourceToolBar.add(profileChooser);
     annotationToolBar = new JToolBar();
     annotationToolBar.setFloatable(false);
-    textPanel.add(
-        annotationToolBar,
-        new com.intellij.uiDesigner.core.GridConstraints(
-            1,
-            0,
-            1,
-            1,
-            com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER,
-            com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL,
-            com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW,
-            com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED,
-            new Dimension(-1, 50),
-            new Dimension(-1, 50),
-            new Dimension(2147483647, 50),
-            0,
-            false));
+    textPanel.add(annotationToolBar, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 50), new Dimension(-1, 50), new Dimension(2147483647, 50), 0, false));
     addAnnotationButton = new JButton();
     addAnnotationButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-plus-24.png")));
     addAnnotationButton.setMaximumSize(new Dimension(50, 50));
@@ -587,18 +552,15 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     addAnnotationButton.setToolTipText(ResourceBundle.getBundle("ui").getString("add.annotation"));
     annotationToolBar.add(addAnnotationButton);
     removeAnnotationButton = new JButton();
-    removeAnnotationButton.setIcon(
-        new ImageIcon(getClass().getResource("/icon/icons8-delete-24.png")));
+    removeAnnotationButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-delete-24.png")));
     removeAnnotationButton.setMaximumSize(new Dimension(50, 50));
     removeAnnotationButton.setMinimumSize(new Dimension(50, 50));
     removeAnnotationButton.setPreferredSize(new Dimension(50, 50));
     removeAnnotationButton.setText("");
-    removeAnnotationButton.setToolTipText(
-        ResourceBundle.getBundle("ui").getString("remove.annotation"));
+    removeAnnotationButton.setToolTipText(ResourceBundle.getBundle("ui").getString("remove.annotation"));
     annotationToolBar.add(removeAnnotationButton);
     previousSpanButton = new JButton();
-    previousSpanButton.setIcon(
-        new ImageIcon(getClass().getResource("/icon/icons8-advance-24 (reversed).png")));
+    previousSpanButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-advance-24 (reversed).png")));
     previousSpanButton.setMaximumSize(new Dimension(50, 50));
     previousSpanButton.setMinimumSize(new Dimension(50, 50));
     previousSpanButton.setPreferredSize(new Dimension(50, 50));
@@ -606,44 +568,36 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     previousSpanButton.setToolTipText(ResourceBundle.getBundle("ui").getString("previous.span"));
     annotationToolBar.add(previousSpanButton);
     growSelectionStartButton = new JButton();
-    growSelectionStartButton.setIcon(
-        new ImageIcon(getClass().getResource("/icon/icons8-exit-32 (reversed).png")));
+    growSelectionStartButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-exit-32 (reversed).png")));
     growSelectionStartButton.setMaximumSize(new Dimension(50, 50));
     growSelectionStartButton.setMinimumSize(new Dimension(72, 72));
     growSelectionStartButton.setPreferredSize(new Dimension(50, 50));
     growSelectionStartButton.setText("");
-    growSelectionStartButton.setToolTipText(
-        ResourceBundle.getBundle("ui").getString("grow.selection.start"));
+    growSelectionStartButton.setToolTipText(ResourceBundle.getBundle("ui").getString("grow.selection.start"));
     annotationToolBar.add(growSelectionStartButton);
     shrinkSelectionStartButton = new JButton();
-    shrinkSelectionStartButton.setIcon(
-        new ImageIcon(getClass().getResource("/icon/icons8-enter-32.png")));
+    shrinkSelectionStartButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-enter-32.png")));
     shrinkSelectionStartButton.setMaximumSize(new Dimension(50, 50));
     shrinkSelectionStartButton.setMinimumSize(new Dimension(50, 50));
     shrinkSelectionStartButton.setPreferredSize(new Dimension(50, 50));
     shrinkSelectionStartButton.setText("");
-    shrinkSelectionStartButton.setToolTipText(
-        ResourceBundle.getBundle("ui").getString("shrink.selection.start"));
+    shrinkSelectionStartButton.setToolTipText(ResourceBundle.getBundle("ui").getString("shrink.selection.start"));
     annotationToolBar.add(shrinkSelectionStartButton);
     shrinkSelectionEndButton = new JButton();
-    shrinkSelectionEndButton.setIcon(
-        new ImageIcon(getClass().getResource("/icon/icons8-enter-32 (reversed).png")));
+    shrinkSelectionEndButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-enter-32 (reversed).png")));
     shrinkSelectionEndButton.setMaximumSize(new Dimension(50, 50));
     shrinkSelectionEndButton.setMinimumSize(new Dimension(50, 50));
     shrinkSelectionEndButton.setPreferredSize(new Dimension(50, 50));
     shrinkSelectionEndButton.setText("");
-    shrinkSelectionEndButton.setToolTipText(
-        ResourceBundle.getBundle("ui").getString("shrink.selection.end"));
+    shrinkSelectionEndButton.setToolTipText(ResourceBundle.getBundle("ui").getString("shrink.selection.end"));
     annotationToolBar.add(shrinkSelectionEndButton);
     growSelectionEndButton = new JButton();
-    growSelectionEndButton.setIcon(
-        new ImageIcon(getClass().getResource("/icon/icons8-exit-32.png")));
+    growSelectionEndButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-exit-32.png")));
     growSelectionEndButton.setMaximumSize(new Dimension(50, 50));
     growSelectionEndButton.setMinimumSize(new Dimension(50, 50));
     growSelectionEndButton.setPreferredSize(new Dimension(50, 50));
     growSelectionEndButton.setText("");
-    growSelectionEndButton.setToolTipText(
-        ResourceBundle.getBundle("ui").getString("grow.selection.end"));
+    growSelectionEndButton.setToolTipText(ResourceBundle.getBundle("ui").getString("grow.selection.end"));
     annotationToolBar.add(growSelectionEndButton);
     nextSpanButton = new JButton();
     nextSpanButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-advance-24.png")));
@@ -654,41 +608,22 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     nextSpanButton.setToolTipText(ResourceBundle.getBundle("ui").getString("next.span"));
     annotationToolBar.add(nextSpanButton);
     assignColorToClassButton = new JButton();
-    assignColorToClassButton.setIcon(
-        new ImageIcon(getClass().getResource("/icon/icons8-color-dropper-filled-50 (Custom).png")));
+    assignColorToClassButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-color-dropper-filled-50 (Custom).png")));
     assignColorToClassButton.setMaximumSize(new Dimension(50, 50));
     assignColorToClassButton.setMinimumSize(new Dimension(50, 50));
     assignColorToClassButton.setPreferredSize(new Dimension(50, 50));
     assignColorToClassButton.setText("");
-    assignColorToClassButton.setToolTipText(
-        ResourceBundle.getBundle("ui").getString("assign.color.to.class"));
+    assignColorToClassButton.setToolTipText(ResourceBundle.getBundle("ui").getString("assign.color.to.class"));
     annotationToolBar.add(assignColorToClassButton);
     profileFilterCheckBox = new JCheckBox();
     profileFilterCheckBox.setMaximumSize(new Dimension(100, 50));
     profileFilterCheckBox.setMinimumSize(new Dimension(100, 50));
     profileFilterCheckBox.setPreferredSize(new Dimension(100, 50));
-    this.$$$loadButtonText$$$(
-        profileFilterCheckBox, ResourceBundle.getBundle("ui").getString("profile.filter"));
-    profileFilterCheckBox.setToolTipText(
-        ResourceBundle.getBundle("ui").getString("filter.annotations.by.profile"));
+    this.$$$loadButtonText$$$(profileFilterCheckBox, ResourceBundle.getBundle("ui").getString("profile.filter"));
+    profileFilterCheckBox.setToolTipText(ResourceBundle.getBundle("ui").getString("filter.annotations.by.profile"));
     annotationToolBar.add(profileFilterCheckBox);
     final JScrollPane scrollPane1 = new JScrollPane();
-    textPanel.add(
-        scrollPane1,
-        new com.intellij.uiDesigner.core.GridConstraints(
-            3,
-            0,
-            1,
-            1,
-            com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER,
-            com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH,
-            com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW,
-            com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW,
-            null,
-            null,
-            null,
-            0,
-            false));
+    textPanel.add(scrollPane1, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     knowtatorTextPane.setBackground(new Color(-1));
     knowtatorTextPane.setEditable(false);
     knowtatorTextPane.setFocusTraversalPolicyProvider(true);
@@ -699,51 +634,33 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     knowtatorTextPane.setText("");
     scrollPane1.setViewportView(knowtatorTextPane);
     final JToolBar toolBar1 = new JToolBar();
-    textPanel.add(
-        toolBar1,
-        new com.intellij.uiDesigner.core.GridConstraints(
-            2,
-            0,
-            1,
-            1,
-            com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER,
-            com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL,
-            com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW,
-            com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED,
-            null,
-            new Dimension(-1, 20),
-            null,
-            0,
-            false));
+    textPanel.add(toolBar1, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
     showGraphViewerButton = new JButton();
-    showGraphViewerButton.setIcon(
-        new ImageIcon(getClass().getResource("/icon/icons8-tree-structure-32.png")));
+    showGraphViewerButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-tree-structure-32.png")));
     showGraphViewerButton.setMaximumSize(new Dimension(50, 50));
     showGraphViewerButton.setMinimumSize(new Dimension(50, 50));
     showGraphViewerButton.setPreferredSize(new Dimension(50, 50));
     showGraphViewerButton.setText("");
-    showGraphViewerButton.setToolTipText(
-        ResourceBundle.getBundle("ui").getString("show.graph.viewer"));
+    showGraphViewerButton.setToolTipText(ResourceBundle.getBundle("ui").getString("show.graph.viewer"));
     toolBar1.add(showGraphViewerButton);
     textToGraphButton = new JButton();
     textToGraphButton.setMaximumSize(new Dimension(100, 50));
     textToGraphButton.setMinimumSize(new Dimension(64, 50));
     textToGraphButton.setPreferredSize(new Dimension(64, 50));
-    this.$$$loadButtonText$$$(
-        textToGraphButton, ResourceBundle.getBundle("ui").getString("text.to.graph"));
-    textToGraphButton.setToolTipText(
-        ResourceBundle.getBundle("ui").getString("send.selected.text.to.graph"));
+    this.$$$loadButtonText$$$(textToGraphButton, ResourceBundle.getBundle("ui").getString("text.to.graph"));
+    textToGraphButton.setToolTipText(ResourceBundle.getBundle("ui").getString("send.selected.text.to.graph"));
     toolBar1.add(textToGraphButton);
     findTextButton = new JButton();
     findTextButton.setMaximumSize(new Dimension(100, 50));
     findTextButton.setMinimumSize(new Dimension(100, 50));
     findTextButton.setPreferredSize(new Dimension(100, 50));
-    this.$$$loadButtonText$$$(
-        findTextButton, ResourceBundle.getBundle("log4j").getString("find.in.ontology"));
+    this.$$$loadButtonText$$$(findTextButton, ResourceBundle.getBundle("log4j").getString("find.in.ontology"));
     toolBar1.add(findTextButton);
   }
 
-  /** @noinspection ALL */
+  /**
+   * @noinspection ALL
+   */
   private void $$$loadLabelText$$$(JLabel component, String text) {
     StringBuffer result = new StringBuffer();
     boolean haveMnemonic = false;
@@ -768,7 +685,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     }
   }
 
-  /** @noinspection ALL */
+  /**
+   * @noinspection ALL
+   */
   private void $$$loadButtonText$$$(AbstractButton component, String text) {
     StringBuffer result = new StringBuffer();
     boolean haveMnemonic = false;
@@ -793,7 +712,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     }
   }
 
-  /** @noinspection ALL */
+  /**
+   * @noinspection ALL
+   */
   public JComponent $$$getRootComponent$$$() {
     return panel1;
   }

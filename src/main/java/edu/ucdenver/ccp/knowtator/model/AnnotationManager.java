@@ -94,6 +94,16 @@ public class AnnotationManager implements Savable {
         .collect(Collectors.toCollection(supplier));
   }
 
+  public TreeSet<Annotation> getAnnotations(int start, int end) {
+    Supplier<TreeSet<Annotation>> supplier = () -> new TreeSet<>(Annotation::compare);
+    return annotationCollection
+        .stream()
+        .filter(
+            annotation ->
+                (annotation.contains(start) && annotation.contains(end)))
+        .collect(Collectors.toCollection(supplier));
+  }
+
   public void growSelectedSpanStart() {
     Span span = controller.getSelectionManager().getSelectedSpan();
     allSpanCollection.remove(span);
