@@ -1,3 +1,15 @@
+TODO: Overlapping spans not showing properly (see Annotation ID: 23195 in 11597317)
+TODO: Change All to Only 
+TODO: Graph tool bar should not be floatable
+TODO: Provide default graph name
+TODO: Graphs should be centered
+TODO: Selecting annotation in graph should jump to annotation in doc
+TODO: Graph space chooser not autoscrolling
+TODO: Graph space chooser in info pane for annotation
+TODO: min, max, exactly, and not instead of other
+TODO: Polarity in annotation file
+TODO: Graph space chooser not updating on add
+TODO: Find not highlighting in text pane
 TODO: Add load errors
 TODO: Should probably also read in Events, Modifiers, etc.
 TODO: Prescribe colors (Colorbrewer qualitative), but allow the adding of new colors
