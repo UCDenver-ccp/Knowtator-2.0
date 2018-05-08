@@ -305,7 +305,9 @@
                 <preferred-size width="-1" height="20"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <floatable value="false"/>
+            </properties>
             <border type="none"/>
             <children>
               <component id="59592" class="javax.swing.JButton" binding="showGraphViewerButton">

@@ -97,7 +97,9 @@
           </scrollpane>
           <toolbar id="48731">
             <constraints border-constraint="Center"/>
-            <properties/>
+            <properties>
+              <floatable value="false"/>
+            </properties>
             <border type="none"/>
             <children>
               <component id="8ed2b" class="javax.swing.JButton" binding="addAnnotationNodeButton">

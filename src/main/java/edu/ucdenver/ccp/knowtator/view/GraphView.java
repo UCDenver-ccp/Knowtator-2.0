@@ -253,6 +253,7 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 		knowtatorTextPane.setText("");
 		scrollPane1.setViewportView(knowtatorTextPane);
 		final JToolBar toolBar2 = new JToolBar();
+		toolBar2.setFloatable(false);
 		panel2.add(toolBar2, BorderLayout.CENTER);
 		addAnnotationNodeButton = new JButton();
 		addAnnotationNodeButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-plus-24.png")));
