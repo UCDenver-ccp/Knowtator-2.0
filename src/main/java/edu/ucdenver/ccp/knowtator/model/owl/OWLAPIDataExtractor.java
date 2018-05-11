@@ -211,6 +211,8 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
   public void projectLoaded() {
     try {
       setRenderRDFSLabel();
+      setUpOWL();
+      getWorkSpace().getOWLModelManager().getHistoryManager().undo();
     } catch (OWLWorkSpaceNotSetException ignored) {
 
     }
