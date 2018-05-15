@@ -97,7 +97,7 @@ public class Profile implements Savable, KnowtatorObject {
                       KnowtatorXMLAttributes.CLASS_ID, (String) owlEntity);
             }
             e.setAttribute(
-                KnowtatorXMLAttributes.COLOR, String.format("#%06x", c.getRGB() & 0x00FFFFFF));
+                KnowtatorXMLAttributes.COLOR, convertToHex(c));
             profileElem.appendChild(e);
 
           } catch (OWLWorkSpaceNotSetException | OWLEntityNullException ignored) {
@@ -128,7 +128,7 @@ public class Profile implements Savable, KnowtatorObject {
 
   @SuppressWarnings("RedundantThrows")
   @Override
-  public void writeToBratStandoff(Writer writer) throws IOException {}
+  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> config) throws IOException {}
 
   @Override
   public void readFromGeniaXML(Element parent, String content) {}
@@ -160,5 +160,9 @@ public class Profile implements Savable, KnowtatorObject {
         return color;
       }
     }
+  }
+
+  String convertToHex(Color c) {
+    return String.format("#%06x", c.getRGB() & 0x00FFFFFF);
   }
 }

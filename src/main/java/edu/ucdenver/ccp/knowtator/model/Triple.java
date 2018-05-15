@@ -137,7 +137,7 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
 
   @SuppressWarnings("RedundantThrows")
   @Override
-  public void writeToBratStandoff(Writer writer) throws IOException {}
+  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> config) throws IOException {}
 
   @Override
   public void readFromGeniaXML(Element parent, String content) {}

@@ -91,7 +91,7 @@ public class KnowtatorController implements Savable, ProjectListener {
       File file, Map<Character, List<String[]>> annotationMap, String content) {}
 
   @Override
-  public void writeToBratStandoff(Writer writer) {}
+  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> config) {}
 
   @Override
   public void readFromGeniaXML(Element parent, String content) {}

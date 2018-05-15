@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -87,7 +86,7 @@ public class TextSourceManager implements Savable {
 
   @SuppressWarnings("RedundantThrows")
   @Override
-  public void writeToBratStandoff(Writer writer) throws IOException {}
+  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> config) throws IOException {}
 
   @Override
   public void readFromGeniaXML(Element parent, String content) {}

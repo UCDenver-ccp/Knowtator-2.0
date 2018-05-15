@@ -20,7 +20,7 @@ public interface Savable extends Serializable {
 	void readFromBratStandoff(
 			File file, Map<Character, List<String[]>> annotationMap, String content);
 
-	void writeToBratStandoff(Writer writer) throws IOException;
+	void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> config) throws IOException;
 
 	void readFromGeniaXML(Element parent, String content);
 

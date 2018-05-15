@@ -23,7 +23,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
@@ -270,7 +269,7 @@ public class GraphSpace extends mxGraph
 
   @SuppressWarnings("RedundantThrows")
   @Override
-  public void writeToBratStandoff(Writer writer) throws IOException {}
+  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> config) throws IOException {}
 
   @Override
   public void readFromGeniaXML(Element parent, String content) {}

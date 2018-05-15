@@ -40,6 +40,7 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
   private String bratID;
 
   private String owlClassID;
+  private String owlClassLabel;
   private KnowtatorController controller;
 
   public Annotation(
@@ -47,6 +48,7 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
       String annotationID,
       OWLClass owlClass,
       String owlClassID,
+      String owlClassLabel,
       Profile annotator,
       String annotation_type,
       TextSource textSource) {
@@ -56,6 +58,7 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
     this.date = new Date();
     this.owlClass = owlClass;
     this.owlClassID = owlClassID;
+    this.owlClassLabel = owlClassLabel;
     this.annotation_type = annotation_type;
 
     controller.verifyId(annotationID, this, false);
@@ -74,6 +77,8 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
   public String getOwlClassID() {
     return owlClassID;
   }
+
+  String getOwlClassLabel() { return owlClassLabel;}
 
   public Profile getAnnotator() {
     return annotator;
@@ -193,6 +198,10 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
       classElement.setAttribute(KnowtatorXMLAttributes.ID, getOwlClassID());
     }
 
+    if (owlClassLabel != null) {
+      classElement.setAttribute(KnowtatorXMLAttributes.LABEL, getOwlClassLabel());
+    }
+
     annotationElem.appendChild(classElement);
 
     spanCollection.forEach(span -> span.writeToKnowtatorXML(dom, annotationElem));
@@ -259,13 +268,23 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
   }
 
   @Override
-  public void writeToBratStandoff(Writer writer) throws IOException {
+  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> config) throws IOException {
     Iterator<Span> spanIterator = spanCollection.iterator();
+    String spannedText = "";
     for (int i = 0; i < spanCollection.size(); i++) {
-      spanIterator.next().writeToBratStandoff(writer);
+      Span span = spanIterator.next();
+      span.writeToBratStandoff(writer, config);
       if (i != spanCollection.size() - 1) {
         writer.append(";");
       }
+      String[] spanLines = span.getSpannedText().split("\n");
+      for (int j = 0; j < spanLines.length; j++) {
+        spannedText += spanLines[j];
+        if (j != spanLines.length -1) {
+          spannedText += " ";
+        }
+      }
+      writer.append(String.format("\t%s\n", spannedText));
     }
   }
 

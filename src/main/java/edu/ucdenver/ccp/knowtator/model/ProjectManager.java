@@ -249,11 +249,6 @@ public class ProjectManager {
       }
       BasicIOUtil util = ioClass.getDeclaredConstructor().newInstance();
       util.write(savable != null ? savable : controller.getTextSourceManager(), file);
-      try {
-        controller.getOWLAPIDataExtractor().getWorkSpace().getOWLModelManager().getHistoryManager().undo();
-      } catch (OWLWorkSpaceNotSetException e) {
-        e.printStackTrace();
-      }
     } catch (InstantiationException
             | IllegalAccessException
             | InvocationTargetException

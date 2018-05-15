@@ -98,9 +98,7 @@ public class AnnotationManager implements Savable {
     Supplier<TreeSet<Annotation>> supplier = () -> new TreeSet<>(Annotation::compare);
     return annotationCollection
         .stream()
-        .filter(
-            annotation ->
-                (annotation.contains(start) && annotation.contains(end)))
+        .filter(annotation -> (annotation.contains(start) && annotation.contains(end)))
         .collect(Collectors.toCollection(supplier));
   }
 
@@ -190,9 +188,12 @@ public class AnnotationManager implements Savable {
       String owlClassID =
           ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0))
               .getAttribute(KnowtatorXMLAttributes.ID);
+      String owlClassLabel =
+              ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0))
+                      .getAttribute(KnowtatorXMLAttributes.LABEL);
 
       Annotation newAnnotation =
-          new Annotation(controller, annotationID, null, owlClassID, profile, type, textSource);
+          new Annotation(controller, annotationID, null, owlClassID, owlClassLabel, profile, type, textSource);
       newAnnotation.readFromKnowtatorXML(null, annotationElement);
 
       addAnnotation(newAnnotation);
@@ -245,10 +246,22 @@ public class AnnotationManager implements Savable {
       String owlClassID =
           ((Element) classElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION_CLASS).item(0))
               .getAttribute(OldKnowtatorXMLAttributes.ID);
+      String owlClassName =
+          classElement
+              .getElementsByTagName(OldKnowtatorXMLTags.MENTION_CLASS)
+              .item(0)
+              .getTextContent();
 
       Annotation newAnnotation =
           new Annotation(
-              controller, annotationID, null, owlClassID, profile, "identity", this.textSource);
+              controller,
+              annotationID,
+              null,
+              owlClassID,
+              owlClassName,
+              profile,
+              "identity",
+              this.textSource);
 
       newAnnotation.readFromOldKnowtatorXML(null, annotationElement);
 
@@ -329,6 +342,7 @@ public class AnnotationManager implements Savable {
                       annotation[0],
                       null,
                       annotation[1].split(StandoffTags.textBoundAnnotationTripleDelimiter)[0],
+                      null,
                       profile,
                       "identity",
                       textSource);
@@ -356,31 +370,34 @@ public class AnnotationManager implements Savable {
   }
 
   @Override
-  public void writeToBratStandoff(Writer writer) throws IOException {
+  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> config) throws IOException {
     Iterator<Annotation> annotationIterator = annotationCollection.iterator();
     for (int i = 0; i < annotationCollection.size(); i++) {
       Annotation annotation = annotationIterator.next();
       annotation.setBratID(String.format("T%d", i));
 
+      String owlClassID;
       try {
-        writer.append(
-            String.format(
-                "%s\t%s ",
-                annotation.getBratID(),
-                controller
-                    .getOWLAPIDataExtractor()
-                    .getOWLEntityRendering(annotation.getOwlClass())));
+        owlClassID = controller
+                .getOWLAPIDataExtractor()
+                .getOWLEntityRendering(annotation.getOwlClass());
       } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
-        writer.append(String.format("%s\t%s ", annotation.getBratID(), annotation.getOwlClassID()));
-      }
-      annotation.writeToBratStandoff(writer);
+        owlClassID = annotation.getOwlClassID();
 
-      writer.append(
-          String.format(
-              "\t%s\n", annotation.getSpanCollection().getCollection().first().getSpannedText()));
+      }
+      String owlClassID_inBratFormat = owlClassID.replace(":", "_").replace(" ", "_");
+      writer.append(String.format("%s\t%s ", annotation.getBratID(), owlClassID_inBratFormat));
+      annotation.writeToBratStandoff(writer, config);
+
+      if (annotation.getOwlClassLabel() != null) {
+         config.get("labels").put(owlClassID_inBratFormat, annotation.getOwlClassLabel());
+         config.get("drawing").put(owlClassID_inBratFormat, String.format("bgColor:%s", annotation.getAnnotator().convertToHex(annotation.getAnnotator().getColor(annotation))));
+
+      }
     }
 
-    int lastNumTriples = 0;
+    // Not adding relations due to complexity of relation types in Brat Standoff
+    /*int lastNumTriples = 0;
     for (GraphSpace graphSpace : graphSpaceCollection) {
       Object[] edges = graphSpace.getChildEdges(graphSpace.getDefaultParent());
       int bound = edges.length;
@@ -403,7 +420,7 @@ public class AnnotationManager implements Savable {
                 ((AnnotationNode) triple.getSource()).getAnnotation().getBratID(),
                 ((AnnotationNode) triple.getTarget()).getAnnotation().getBratID()));
       }
-    }
+    }*/
   }
 
   @Override
@@ -433,7 +450,7 @@ public class AnnotationManager implements Savable {
       Span newSpan = new Span(null, start, end, textSource, controller);
 
       Annotation newAnnotation =
-          new Annotation(controller, null, owlClass, null, annotator, "identity", textSource);
+          new Annotation(controller, null, owlClass, null, null, annotator, "identity", textSource);
       addAnnotation(newAnnotation);
       addSpanToAnnotation(newAnnotation, newSpan);
     }

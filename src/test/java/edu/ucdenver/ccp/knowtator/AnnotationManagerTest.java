@@ -60,7 +60,7 @@ public class AnnotationManagerTest {
     @Test
     public void addAnnotation() {
         setUp();
-        Annotation annotation1 = new Annotation(controller, "mention_3", null, "class_2", profile, "identity", textSource);
+        Annotation annotation1 = new Annotation(controller, "mention_3", null, "class_2", "class_2", profile, "identity", textSource);
         annotationManager.addAnnotation(annotation1);
 
         int numAnnotations = annotationManager.getAnnotations().getCollection().size();
@@ -73,7 +73,7 @@ public class AnnotationManagerTest {
     @Test
     public void addSpanToAnnotation() {
         setUp();
-        Annotation annotation1 = new Annotation(controller, "mention_3", null, "class_2", profile, "identity", textSource);
+        Annotation annotation1 = new Annotation(controller, "mention_3", null, "class_2", "class_2", profile, "identity", textSource);
         annotationManager.addAnnotation(annotation1);
 
         Span span1 = new Span(null, 1, 6, textSource, controller);
@@ -106,7 +106,7 @@ public class AnnotationManagerTest {
     @Test
     public void removeSpanFromAnnotation() {
         setUp();
-        Annotation annotation1 = new Annotation(controller, "mention_3", null, "class_2", profile, "identity", textSource);
+        Annotation annotation1 = new Annotation(controller, "mention_3", null, "class_2", "class_2", profile, "identity", textSource);
         annotationManager.addAnnotation(annotation1);
 
         Span span1 = new Span(null, 1, 6, textSource, controller);

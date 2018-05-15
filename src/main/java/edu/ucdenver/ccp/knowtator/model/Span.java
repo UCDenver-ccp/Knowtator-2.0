@@ -233,8 +233,17 @@ public class Span implements Savable, KnowtatorTextBoundObject {
       File file, Map<Character, List<String[]>> annotationMap, String content) {}
 
   @Override
-  public void writeToBratStandoff(Writer writer) throws IOException {
-    writer.append(String.format("%d %d", getStart(), getEnd()));
+  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> config) throws IOException {
+    String[] spanLines = getSpannedText().split("\n");
+    int spanStart = getStart();
+    for (int j = 0; j < spanLines.length; j++) {
+      writer.append(String.format("%d %d", spanStart, spanStart + spanLines[j].length()));
+      if (j != spanLines.length -1) {
+        writer.append(";");
+      }
+      spanStart += spanLines[j].length() + 1;
+    }
+
   }
 
   @Override
