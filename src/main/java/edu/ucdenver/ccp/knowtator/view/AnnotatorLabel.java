@@ -21,6 +21,8 @@ public class AnnotatorLabel extends JLabel implements AnnotationSelectionListene
 		Annotation annotation = view.getController().getSelectionManager().getSelectedAnnotation();
 		if (annotation != null) {
 			setText(annotation.getAnnotator().getId());
+		} else {
+			setText("");
 		}
 	}
 }

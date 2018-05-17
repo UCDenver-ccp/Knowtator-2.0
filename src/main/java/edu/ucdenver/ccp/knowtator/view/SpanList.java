@@ -19,6 +19,8 @@ public class SpanList extends JList<Span> implements AnnotationSelectionListener
 		if (e.getNew() != null) {
 			Set<Span> spans = e.getNew().getSpanCollection().getCollection();
 			setListData(spans.toArray(new Span[0]));
+		} else {
+			setListData(new Span[0]);
 		}
 	}
 

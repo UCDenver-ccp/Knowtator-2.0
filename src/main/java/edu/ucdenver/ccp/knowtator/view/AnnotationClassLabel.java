@@ -36,6 +36,8 @@ public class AnnotationClassLabel extends JLabel
       } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
         setText(annotation.getOwlClassID());
       }
+    } else {
+      setText("");
     }
   }
 
