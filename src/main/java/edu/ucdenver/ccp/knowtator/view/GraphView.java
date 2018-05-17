@@ -84,7 +84,7 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 					JComboBox comboBox = (JComboBox) e.getSource();
 					if (comboBox.getSelectedItem() != null
 							&& comboBox.getSelectedItem()
-							!= view.getController().getSelectionManager().getActiveTextSource()) {
+							!= view.getController().getSelectionManager().getActiveGraphSpace()) {
 						view.getController()
 								.getSelectionManager()
 								.setSelectedGraphSpace((GraphSpace) comboBox.getSelectedItem());

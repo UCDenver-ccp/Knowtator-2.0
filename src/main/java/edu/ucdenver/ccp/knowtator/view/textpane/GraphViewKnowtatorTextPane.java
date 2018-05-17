@@ -3,6 +3,8 @@ package edu.ucdenver.ccp.knowtator.view.textpane;
 import edu.ucdenver.ccp.knowtator.events.GraphSpaceChangeEvent;
 import edu.ucdenver.ccp.knowtator.listeners.GraphSpaceListener;
 import edu.ucdenver.ccp.knowtator.listeners.GraphSpaceSelectionListener;
+import edu.ucdenver.ccp.knowtator.model.AnnotationNode;
+import edu.ucdenver.ccp.knowtator.model.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.Span;
 import edu.ucdenver.ccp.knowtator.model.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
@@ -60,6 +62,16 @@ public class GraphViewKnowtatorTextPane extends KnowtatorTextPane implements Gra
 		this.start = start;
 		this.end = end;
 		showTextPane(textSource);
+	}
+
+	@Override
+	public void annotationNodeAdded(GraphSpace graphSpace, AnnotationNode node) {
+
+	}
+
+	@Override
+	public void annotationNodeRemoved(GraphSpace graphSpace, AnnotationNode node) {
+
 	}
 
 	@Override

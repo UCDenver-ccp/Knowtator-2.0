@@ -165,6 +165,7 @@ public class GraphMenu extends JMenu {
 				"Graph Title", field1,
 		};
 		field1.addAncestorListener(new RequestFocusListener());
+		field1.setText("Graph Space " + Integer.toString(view.getController().getSelectionManager().getActiveTextSource().getAnnotationManager().getGraphSpaceCollection().size()));
 		int option =
 				JOptionPane.showConfirmDialog(
 						view,

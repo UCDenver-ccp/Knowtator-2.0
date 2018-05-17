@@ -42,7 +42,7 @@ public class GraphSpace extends mxGraph
   private List<GraphSpaceListener> listeners;
   private boolean areListenersSet;
 
-  public GraphSpace(KnowtatorController controller, TextSource textSource, String id) {
+	public GraphSpace(KnowtatorController controller, TextSource textSource, String id) {
 
     this.controller = controller;
     this.textSource = textSource;
@@ -104,6 +104,7 @@ public class GraphSpace extends mxGraph
 
       AnnotationNode newVertex = new AnnotationNode(controller, id, annotation, textSource);
       addCellToGraph(newVertex);
+      listeners.forEach(graphSpaceListener -> graphSpaceListener.annotationNodeAdded(this, newVertex));
 
       return newVertex;
     } else {
@@ -182,9 +183,17 @@ public class GraphSpace extends mxGraph
   public void removeSelectedCell() {
     //    Object cell = getSelectionModel().getCell();
     //    Arrays.stream(getEdges(cell)).forEach(edge -> getModel().remove(edge));
-    removeCells(getSelectionCells(), true);
+    	Object[] selectionCells = getSelectionCells();
+	  removeCells(selectionCells, true);
+	  Arrays.stream(selectionCells).forEach(cell -> {
+	  	if (cell instanceof AnnotationNode) {
+	  		listeners.forEach(graphSpaceListener -> graphSpaceListener.annotationNodeRemoved(this, ((AnnotationNode) cell)));
+		}
+	  });
+
     //    reDrawGraph();
   }
+
 
   @Override
   public void readFromKnowtatorXML(File file, Element parent) {
@@ -521,4 +530,16 @@ public class GraphSpace extends mxGraph
       }
     });
   }
+
+  public boolean containsAnnotation(Annotation annotation) {
+    for (Object vertex : getChildVertices(getDefaultParent())) {
+      if (vertex instanceof AnnotationNode) {
+        if (((AnnotationNode) vertex).getAnnotation().equals(annotation) ) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
 }
