@@ -93,4 +93,9 @@ public class TextSourceManager implements Savable {
 
   @Override
   public void writeToGeniaXML(Document dom, Element parent) {}
+
+  public void dispose() {
+    textSourceCollection.forEach(TextSource::dispose);
+    textSourceCollection.getCollection().clear();
+  }
 }

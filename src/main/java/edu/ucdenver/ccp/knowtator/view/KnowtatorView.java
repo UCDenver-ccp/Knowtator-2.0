@@ -400,6 +400,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 				== JOptionPane.YES_OPTION) {
 			controller.getProjectManager().saveProject();
 		}
+		controller.dispose();
+		infoPane.dispose();
 	}
 
 	@Override

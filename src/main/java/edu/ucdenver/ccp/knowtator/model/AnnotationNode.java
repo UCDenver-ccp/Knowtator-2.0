@@ -75,4 +75,8 @@ public class AnnotationNode extends mxCell implements Savable, KnowtatorTextBoun
 	public TextSource getTextSource() {
 		return textSource;
 	}
+
+	public void dispose() {
+
+	}
 }

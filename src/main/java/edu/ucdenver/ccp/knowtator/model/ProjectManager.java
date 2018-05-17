@@ -295,4 +295,8 @@ public class ProjectManager {
   public boolean isProjectLoaded() {
     return projectLoaded;
   }
+
+  public void dispose() {
+    listeners.clear();
+  }
 }

@@ -477,4 +477,11 @@ public class AnnotationManager implements Savable {
         controller.getSelectionManager().getSelectedAnnotation(),
         controller.getSelectionManager().getSelectedSpan());
   }
+
+  void dispose() {
+    annotationCollection.forEach(Annotation::dispose);
+    annotationCollection.getCollection().clear();
+    graphSpaceCollection.forEach(GraphSpace::dispose);
+    graphSpaceCollection.getCollection().clear();
+  }
 }

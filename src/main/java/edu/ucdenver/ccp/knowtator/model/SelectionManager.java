@@ -294,4 +294,14 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
   String getSelectedPropertyQuantifierValue() {
     return selectedPropertyQuantifierValue;
   }
+
+  public void dispose() {
+    annotationListeners.clear();
+    graphSpaceListeners.clear();
+    owlClassListeners.clear();
+    profileListeners.clear();
+    spanListeners.clear();
+    textSourceListeners.clear();
+    owlObjectPropertyListeners.clear();
+  }
 }

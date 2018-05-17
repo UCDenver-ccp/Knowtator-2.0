@@ -213,6 +213,11 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
       }
     }
 
+    log.warn("Added entities:");
+    possiblyAddedEntities.forEach(owlEntity -> log.warn(owlEntity));
+    log.warn("Removed entities");
+    possiblyRemovedEntities.forEach(owlEntity -> log.warn(owlEntity));
+
     /*
     For now, I will assume that entity removed is the one that existed and the one
     that is added is the new name for it.
@@ -247,5 +252,14 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
   @Override
   public void projectLoaded() {
     owlSetup();
+  }
+
+  public void dispose() {
+    try {
+      controller.getOWLAPIDataExtractor().getWorkSpace().getOWLModelManager().removeListener(this);
+      controller.getOWLAPIDataExtractor().getWorkSpace().getOWLModelManager().removeOntologyChangeListener(this);
+    } catch (OWLWorkSpaceNotSetException e) {
+      e.printStackTrace();
+    }
   }
 }

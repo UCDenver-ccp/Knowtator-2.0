@@ -510,4 +510,15 @@ public class GraphSpace extends mxGraph
       setSelectionCell(null);
     }
   }
+
+  void dispose() {
+    Arrays.stream(getChildCells(getDefaultParent())).forEach(cell -> {
+      if (cell instanceof Triple) {
+        ((Triple) cell).dispose();
+      }
+      if (cell instanceof AnnotationNode) {
+        ((AnnotationNode) cell).dispose();
+      }
+    });
+  }
 }

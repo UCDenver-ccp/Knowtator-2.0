@@ -24,4 +24,7 @@ public class SpanList extends JList<Span> implements AnnotationSelectionListener
 		}
 	}
 
+	public void dispose() {
+
+	}
 }

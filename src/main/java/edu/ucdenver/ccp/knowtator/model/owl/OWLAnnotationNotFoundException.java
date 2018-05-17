@@ -1,4 +1,5 @@
 package edu.ucdenver.ccp.knowtator.model.owl;
 
-public class OWLAnnotationNotFoundException extends Exception {
+class OWLAnnotationNotFoundException extends Exception {
 }
+

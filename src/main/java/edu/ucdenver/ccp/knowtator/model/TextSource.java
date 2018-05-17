@@ -178,4 +178,8 @@ public class TextSource implements Savable, KnowtatorObject {
 
   @Override
   public void writeToGeniaXML(Document dom, Element parent) {}
+
+  void dispose() {
+    annotationManager.dispose();
+  }
 }

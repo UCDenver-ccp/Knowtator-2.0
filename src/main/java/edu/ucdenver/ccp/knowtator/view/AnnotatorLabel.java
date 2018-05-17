@@ -25,4 +25,8 @@ public class AnnotatorLabel extends JLabel implements AnnotationSelectionListene
 			setText("");
 		}
 	}
+
+	public void dispose() {
+
+	}
 }

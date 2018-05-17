@@ -267,6 +267,9 @@ public class Span implements Savable, KnowtatorTextBoundObject {
     return textSource;
   }
 
+  public void dispose() {
+  }
+
   //	public static Span shortest(List<Span> spans) {
   //		if (spans.size() == 0)
   //			return null;

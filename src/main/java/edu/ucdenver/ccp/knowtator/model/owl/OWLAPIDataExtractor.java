@@ -215,4 +215,16 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
 
     }
   }
+
+  public void dispose() {
+    owlSetupListeners.clear();
+    try {
+      getWorkSpace().getOWLSelectionModel().removeListener(this);
+    } catch (OWLWorkSpaceNotSetException e) {
+      e.printStackTrace();
+    }
+  }
 }
+
+
+

@@ -105,4 +105,9 @@ public class ProfileManager implements Savable {
   void fireColorChanged() {
     colorListeners.forEach(ColorListener::colorChanged);
   }
+
+  public void dispose() {
+    profileCollection.getCollection().clear();
+    colorListeners.clear();
+  }
 }

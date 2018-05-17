@@ -135,4 +135,12 @@ public class KnowtatorController implements Savable, ProjectListener {
   public void addDebugListener(DebugListener listener) {
     debugListeners.add(listener);
   }
+
+  public void dispose() {
+    textSourceManager.dispose();
+    owlDataExtractor.dispose();
+    selectionManager.dispose();
+    profileManager.dispose();
+    projectManager.dispose();
+  }
 }

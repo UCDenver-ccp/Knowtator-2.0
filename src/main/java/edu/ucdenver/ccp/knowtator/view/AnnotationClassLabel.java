@@ -34,7 +34,7 @@ public class AnnotationClassLabel extends JLabel
       try {
         setText(view.getController().getOWLAPIDataExtractor().getOWLEntityRendering(annotation.getOwlClass()));
       } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
-        setText(annotation.getOwlClassID());
+        setText(String.format("ID: %s Label: %s", annotation.getOwlClassID(), annotation.getOwlClassLabel()));
       }
     } else {
       setText("");
@@ -46,6 +46,14 @@ public class AnnotationClassLabel extends JLabel
     if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
       Annotation annotation = view.getController().getSelectionManager().getSelectedAnnotation();
       displayAnnotation(annotation);
+    }
+  }
+
+  public void dispose() {
+    try {
+      view.getController().getOWLAPIDataExtractor().getWorkSpace().getOWLModelManager().removeListener(this);
+    } catch (OWLWorkSpaceNotSetException e) {
+      e.printStackTrace();
     }
   }
 }

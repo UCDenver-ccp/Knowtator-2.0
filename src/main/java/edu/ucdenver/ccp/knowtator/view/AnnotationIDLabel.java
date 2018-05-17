@@ -26,4 +26,8 @@ class AnnotationIDLabel extends JLabel implements AnnotationSelectionListener {
 			setText("");
 		}
 	}
+
+	public void dispose() {
+
+	}
 }

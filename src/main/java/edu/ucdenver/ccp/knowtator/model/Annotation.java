@@ -78,7 +78,7 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
     return owlClassID;
   }
 
-  String getOwlClassLabel() { return owlClassLabel;}
+  public String getOwlClassLabel() { return owlClassLabel;}
 
   public Profile getAnnotator() {
     return annotator;
@@ -386,6 +386,17 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
 
   void setOWLClassID(String owlClassID) {
     this.owlClassID = owlClassID;
+  }
+
+  void dispose() {
+
+    spanCollection.forEach(Span::dispose);
+    spanCollection.getCollection().clear();
+    try {
+      controller.getOWLAPIDataExtractor().getWorkSpace().getOWLModelManager().removeOntologyChangeListener(this);
+    } catch (OWLWorkSpaceNotSetException e) {
+      e.printStackTrace();
+    }
   }
 
   //		public Set<String> getSimpleFeatureNames() {
