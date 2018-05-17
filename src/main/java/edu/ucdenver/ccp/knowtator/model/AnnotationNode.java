@@ -56,7 +56,7 @@ public class AnnotationNode extends mxCell implements Savable, KnowtatorTextBoun
 
 	@SuppressWarnings("RedundantThrows")
 	@Override
-	public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> config) throws IOException {
+	public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
 	}
 
 	@Override

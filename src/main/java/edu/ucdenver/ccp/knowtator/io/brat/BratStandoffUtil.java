@@ -70,8 +70,14 @@ public class BratStandoffUtil implements BasicIOUtil {
   public void write(Savable savable, File file) {
     Map<String, Map<String, String>> visualConfig = new HashMap<>();
 
-    visualConfig.put("labels", new HashMap<>());
-    visualConfig.put("drawing", new HashMap<>());
+    visualConfig.put(StandoffTags.visualLabels, new HashMap<>());
+    visualConfig.put(StandoffTags.visualDrawing, new HashMap<>());
+
+    Map<String, Map<String, String>> annotationConfig = new HashMap<>();
+    annotationConfig.put(StandoffTags.annotationsEvents, new HashMap<>());
+    annotationConfig.put(StandoffTags.annotationsRelations, new HashMap<>());
+    annotationConfig.put(StandoffTags.annotationsEntities, new HashMap<>());
+    annotationConfig.put(StandoffTags.annotationsAttributes, new HashMap<>());
 
     if (savable instanceof TextSourceManager) {
       ((TextSourceManager) savable)
@@ -81,54 +87,95 @@ public class BratStandoffUtil implements BasicIOUtil {
               textSource -> {
                 File outputFile =
                     new File(file.getAbsolutePath() + File.separator + textSource.getId() + ".ann");
-                writeToOutputFile(textSource, outputFile, visualConfig);
+                writeToOutputFile(textSource, outputFile, annotationConfig, visualConfig);
               });
-      try {
-        BufferedWriter visualConfigWriter =
-            new BufferedWriter(
-                new FileWriter(file.getAbsolutePath() + File.separator + "visual.conf"));
-        BufferedWriter annotationConfigWriter =
-            new BufferedWriter(
-                new FileWriter(file.getAbsolutePath() + File.separator + "annotation.conf"));
-        visualConfigWriter.append("[Labels]\n");
-        visualConfig
-            .get("labels")
-            .forEach(
-                (classID, label) -> {
-                  try {
-                    visualConfigWriter.append(String.format("%s | %s\n", classID, label));
-                    annotationConfigWriter.append(classID).append("\n");
-                  } catch (IOException e) {
-                    e.printStackTrace();
-                  }
-                });
-        visualConfig
-                .get("drawing")
-                .forEach(
-                        (classID, color) -> {
-                          try {
-                            visualConfigWriter.append(String.format("%s \t %s\n", classID, color));
-                          } catch (IOException e) {
-                            e.printStackTrace();
-                          }
-                        });
-        visualConfigWriter.close();
-        annotationConfigWriter.close();
 
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+      writeVisualConfiguration(file, visualConfig);
+      writeAnnotationsConfiguration(file, annotationConfig);
+
     } else if (savable instanceof TextSource) {
-      writeToOutputFile((TextSource) savable, file, visualConfig);
+      writeToOutputFile((TextSource) savable, file, annotationConfig, visualConfig);
+    }
+  }
+
+  private void writeAnnotationsConfiguration(
+      File file, Map<String, Map<String, String>> annotationConfig) {
+    try {
+
+      BufferedWriter annotationConfigWriter =
+          new BufferedWriter(
+              new FileWriter(file.getAbsolutePath() + File.separator + "annotation.conf"));
+
+      annotationConfig.forEach(
+          (key, map) -> {
+            try {
+              annotationConfigWriter.append(String.format("[%s]\n", key));
+              if (key.equals(StandoffTags.annotationsEntities)) {
+                map.forEach(
+                    (classID, value) -> {
+                      try {
+                        annotationConfigWriter.append(classID).append("\n");
+                      } catch (IOException e) {
+                        e.printStackTrace();
+                      }
+                    });
+              }
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+          });
+
+      annotationConfigWriter.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void writeVisualConfiguration(File file, Map<String, Map<String, String>> visualConfig) {
+    try {
+      BufferedWriter visualConfigWriter =
+          new BufferedWriter(
+              new FileWriter(file.getAbsolutePath() + File.separator + "visual.conf"));
+      visualConfig.forEach(
+          (key, map) -> {
+            try {
+              visualConfigWriter.append(String.format("[%s]\n", key));
+              if (key.equals(StandoffTags.visualLabels)) {
+                map.forEach(
+                    (classID, label) -> {
+                      try {
+                        visualConfigWriter.append(String.format("%s | %s\n", classID, label));
+                      } catch (IOException e) {
+                        e.printStackTrace();
+                      }
+                    });
+              } else if (key.equals(StandoffTags.visualDrawing)) {
+                map.forEach(
+                    (classID, color) -> {
+                      try {
+                        visualConfigWriter.append(String.format("%s \t %s\n", classID, color));
+                      } catch (IOException e) {
+                        e.printStackTrace();
+                      }
+                    });
+              }
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+          });
+
+      visualConfigWriter.close();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 
   private void writeToOutputFile(
-      TextSource textSource, File file, Map<String, Map<String, String>> config) {
+          TextSource textSource, File file, Map<String, Map<String, String>> annotationConfig, Map<String, Map<String, String>> visualConfig) {
     try {
       log.warn("Writing to " + file.getAbsolutePath());
       BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-      textSource.writeToBratStandoff(bw, config);
+      textSource.writeToBratStandoff(bw, annotationConfig, visualConfig);
       bw.close();
       File textFileCopy = new File(file.getParentFile(), textSource.getTextFile().getName());
       Files.copy(textSource.getTextFile().toPath(), textFileCopy.toPath());

@@ -268,12 +268,12 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
   }
 
   @Override
-  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> config) throws IOException {
+  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
     Iterator<Span> spanIterator = spanCollection.iterator();
     String spannedText = "";
     for (int i = 0; i < spanCollection.size(); i++) {
       Span span = spanIterator.next();
-      span.writeToBratStandoff(writer, config);
+      span.writeToBratStandoff(writer, annotationsConfig, visualConfig);
       if (i != spanCollection.size() - 1) {
         writer.append(";");
       }

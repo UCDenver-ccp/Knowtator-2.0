@@ -148,8 +148,8 @@ public class TextSource implements Savable, KnowtatorObject {
   }
 
   @Override
-  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> config) throws IOException {
-    annotationManager.writeToBratStandoff(writer, config);
+  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
+    annotationManager.writeToBratStandoff(writer, annotationsConfig, visualConfig);
   }
 
   @Override

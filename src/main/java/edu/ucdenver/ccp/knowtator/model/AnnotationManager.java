@@ -370,7 +370,7 @@ public class AnnotationManager implements Savable {
   }
 
   @Override
-  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> config) throws IOException {
+  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
     Iterator<Annotation> annotationIterator = annotationCollection.iterator();
     for (int i = 0; i < annotationCollection.size(); i++) {
       Annotation annotation = annotationIterator.next();
@@ -386,12 +386,13 @@ public class AnnotationManager implements Savable {
 
       }
       String owlClassID_inBratFormat = owlClassID.replace(":", "_").replace(" ", "_");
+      annotationsConfig.get(StandoffTags.annotationsEntities).put(owlClassID, "");
       writer.append(String.format("%s\t%s ", annotation.getBratID(), owlClassID_inBratFormat));
-      annotation.writeToBratStandoff(writer, config);
+      annotation.writeToBratStandoff(writer, annotationsConfig, visualConfig);
 
       if (annotation.getOwlClassLabel() != null) {
-         config.get("labels").put(owlClassID_inBratFormat, annotation.getOwlClassLabel());
-         config.get("drawing").put(owlClassID_inBratFormat, String.format("bgColor:%s", annotation.getAnnotator().convertToHex(annotation.getAnnotator().getColor(annotation))));
+         visualConfig.get("labels").put(owlClassID_inBratFormat, annotation.getOwlClassLabel());
+         visualConfig.get("drawing").put(owlClassID_inBratFormat, String.format("bgColor:%s", annotation.getAnnotator().convertToHex(annotation.getAnnotator().getColor(annotation))));
 
       }
     }

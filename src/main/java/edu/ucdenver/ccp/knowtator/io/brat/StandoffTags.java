@@ -23,4 +23,13 @@ public class StandoffTags {
 	static final char[] tagList = {
 			TEXTBOUNDANNOTATION, RELATION, EVENT, ATTRIBUTE, MODIFICATION, NORMALIZATION, NOTE, DOCID
 	};
+
+	public static final String visual = "visual";
+	public static final String visualLabels = "labels";
+	public static final String visualDrawing = "drawing";
+	public static final String annotations = "annotations";
+	public static final String annotationsEntities = "entities";
+	public static final String annotationsRelations = "relations";
+	public static final String annotationsAttributes = "attributes";
+	public static final String annotationsEvents = "events";
 }

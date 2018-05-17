@@ -128,7 +128,7 @@ public class Profile implements Savable, KnowtatorObject {
 
   @SuppressWarnings("RedundantThrows")
   @Override
-  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> config) throws IOException {}
+  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {}
 
   @Override
   public void readFromGeniaXML(Element parent, String content) {}

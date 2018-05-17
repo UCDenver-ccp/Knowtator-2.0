@@ -132,7 +132,7 @@ public class Span implements Savable, KnowtatorTextBoundObject {
     return compare;
   }
 
-  public boolean equalStartAndEnd(Object object) {
+  private boolean equalStartAndEnd(Object object) {
     if (!(object instanceof Span)) {
       return false;
     }
@@ -233,7 +233,7 @@ public class Span implements Savable, KnowtatorTextBoundObject {
       File file, Map<Character, List<String[]>> annotationMap, String content) {}
 
   @Override
-  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> config) throws IOException {
+  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
     String[] spanLines = getSpannedText().split("\n");
     int spanStart = getStart();
     for (int j = 0; j < spanLines.length; j++) {
