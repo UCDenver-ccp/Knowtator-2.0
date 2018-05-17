@@ -71,7 +71,15 @@ public class GraphSpace extends mxGraph
     if (graphSpace2 == null) {
       return 1;
     }
-    return graphSpace1.getId().toLowerCase().compareTo(graphSpace2.getId().toLowerCase());
+
+
+    return extractInt(graphSpace1.getId()) - extractInt(graphSpace2.getId());
+
+  }
+  private static int extractInt(String s) {
+    String num = s.replaceAll("\\D", "");
+    // return 0 if no digits found
+    return num.isEmpty() ? 0 : Integer.parseInt(num);
   }
 
   /*
