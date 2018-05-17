@@ -33,8 +33,8 @@ public abstract class KnowtatorTextPane extends JTextPane
   KnowtatorTextPane(KnowtatorView view) {
     super();
     this.view = view;
-	  view.getController().getSelectionManager().addTextSourceListener(this);
-	  view.getController().getSelectionManager().addAnnotationListener(this);
+    view.getController().getSelectionManager().addTextSourceListener(this);
+    view.getController().getSelectionManager().addAnnotationListener(this);
     view.getController().getSelectionManager().addProfileListener(this);
     view.getController().getSelectionManager().addSpanListener(this);
     view.getController().getProfileManager().addColorListener(this);
@@ -96,7 +96,7 @@ public abstract class KnowtatorTextPane extends JTextPane
         }
 
       } else {
-//        view.getController().getSelectionManager().setSelectedAnnotation(null, null);
+        //        view.getController().getSelectionManager().setSelectedAnnotation(null, null);
         setSelectionAtWordLimits(press_offset, release_offset);
       }
     }
@@ -118,15 +118,6 @@ public abstract class KnowtatorTextPane extends JTextPane
   void refreshHighlights() {
     if (view.getController().getSelectionManager().getActiveTextSource() != null) {
 
-      if (view.getController().getSelectionManager().getSelectedSpan() != null) {
-        try {
-          scrollRectToVisible(
-              modelToView(view.getController().getSelectionManager().getSelectedSpan().getStart()));
-        } catch (BadLocationException | NullPointerException ignored) {
-
-        }
-      }
-
       // Remove all previous highlights in case a span has been deleted
       getHighlighter().removeAllHighlights();
 
@@ -135,7 +126,6 @@ public abstract class KnowtatorTextPane extends JTextPane
 
       // Highlight overlaps first, then spans
       Span lastSpan = null;
-      Color lastColor = null;
 
       Set<Span> spans = getSpans(null);
       for (Span span : spans) {
@@ -143,36 +133,30 @@ public abstract class KnowtatorTextPane extends JTextPane
           if (span.intersects(lastSpan)) {
             try {
               highlightSpan(
-                  span.getStart(),
-                  min(span.getEnd(), lastSpan.getEnd()),
+                  lastSpan.getStart(),
+                  min(lastSpan.getEnd(), span.getEnd()),
                   new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY));
             } catch (BadLocationException e) {
               e.printStackTrace();
             }
           }
-          if (span.getEnd() > lastSpan.getEnd()) {
-            try {
-              highlightSpan(
-                  lastSpan.getStart(),
-                  lastSpan.getEnd(),
-                  new DefaultHighlighter.DefaultHighlightPainter(lastColor));
-            } catch (BadLocationException e) {
-              e.printStackTrace();
-            }
-          }
         }
-        lastSpan = span;
 
-        lastColor = span.getAnnotation().getAnnotator().getColor(span.getAnnotation());
+        if (lastSpan == null || span.getEnd() > lastSpan.getEnd()) {
+          lastSpan = span;
+        }
       }
-      if (lastSpan != null) {
 
-        // Highlight remaining span
+      for (Span span : spans) {
         try {
           highlightSpan(
-              lastSpan.getStart(),
-              lastSpan.getEnd(),
-              new DefaultHighlighter.DefaultHighlightPainter(lastColor));
+              span.getStart(),
+              span.getEnd(),
+              new DefaultHighlighter.DefaultHighlightPainter(
+                  view.getController()
+                      .getSelectionManager()
+                      .getActiveProfile()
+                      .getColor(span.getAnnotation())));
         } catch (BadLocationException e) {
           e.printStackTrace();
         }
@@ -180,6 +164,39 @@ public abstract class KnowtatorTextPane extends JTextPane
 
       revalidate();
       repaint();
+
+      SwingUtilities.invokeLater(
+          () -> {
+            if (view.getController().getSelectionManager().getSelectedSpan() != null) {
+              try {
+                scrollRectToVisible(
+                    modelToView(
+                        view.getController().getSelectionManager().getSelectedSpan().getStart()));
+              } catch (BadLocationException | NullPointerException ignored) {
+
+              }
+            } else if (view.getController().getSelectionManager().getSelectedAnnotation() != null) {
+              try {
+                scrollRectToVisible(
+                    modelToView(
+                        view.getController()
+                            .getSelectionManager()
+                            .getSelectedAnnotation()
+                            .getSpanCollection()
+                            .getCollection()
+                            .first()
+                            .getStart()));
+              } catch (BadLocationException | NullPointerException ignored) {
+
+              }
+            } else {
+              try {
+                scrollRectToVisible(modelToView(0));
+              } catch (BadLocationException | NullPointerException ignored) {
+
+              }
+            }
+          });
     }
   }
 
@@ -198,11 +215,7 @@ public abstract class KnowtatorTextPane extends JTextPane
               .getSpanCollection()
               .getCollection()) {
         try {
-          if (span.equalStartAndEnd(view.getController().getSelectionManager().getSelectedSpan())) {
-            highlightSpan(span.getStart(), span.getEnd(), new RectanglePainter(Color.BLACK));
-          } else {
-            highlightSpan(span.getStart(), span.getEnd(), new RectanglePainter(Color.GRAY));
-          }
+          highlightSpan(span.getStart(), span.getEnd(), new RectanglePainter(Color.BLACK));
         } catch (BadLocationException e) {
           e.printStackTrace();
         }
