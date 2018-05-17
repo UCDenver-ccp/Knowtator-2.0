@@ -1,10 +1,7 @@
 package edu.ucdenver.ccp.knowtator.view.menu;
 
-import com.mxgraph.model.mxCell;
 import edu.ucdenver.ccp.knowtator.model.Annotation;
-import edu.ucdenver.ccp.knowtator.model.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.Span;
-import edu.ucdenver.ccp.knowtator.model.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.Logger;
 
@@ -103,30 +100,6 @@ public class AnnotationPopupMenu extends JPopupMenu {
 		show(e.getComponent(), e.getX(), e.getY());
 	}
 
-	private JMenu goToAnnotationInGraphCommand() {
-		JMenu jMenu = new JMenu("Graphs");
-
-		Annotation annotation = view.getController().getSelectionManager().getSelectedAnnotation();
-		TextSource textSource = view.getController().getSelectionManager().getActiveTextSource();
-		for (GraphSpace graphSpace :
-				textSource.getAnnotationManager().getGraphSpaceCollection().getCollection()) {
-			mxCell vertex = graphSpace.containsVertexCorrespondingToAnnotation(annotation);
-			if (vertex != null) {
-				JMenuItem menuItem = new JMenuItem(graphSpace.getId());
-				menuItem.addActionListener(
-						e1 -> {
-							view.getGraphViewDialog().setVisible(true);
-							view.getController().getSelectionManager().setSelectedGraphSpace(graphSpace);
-							view.getController().getSelectionManager().setSelectedAnnotation(null, null);
-							view.getController().getSelectionManager().setSelectedAnnotation(annotation, null);
-						});
-				jMenu.add(menuItem);
-			}
-		}
-
-		return jMenu;
-	}
-
 	public void showPopUpMenu(int release_offset) {
 
 		Annotation selectedAnnotation = view.getController().getSelectionManager().getSelectedAnnotation();
@@ -157,10 +130,6 @@ public class AnnotationPopupMenu extends JPopupMenu {
 				add(removeSpanFromAnnotationCommand());
 			}
 
-			if (view.getController().getSelectionManager().getSelectedAnnotation() != null) {
-				addSeparator();
-				add(goToAnnotationInGraphCommand());
-			}
 		} else {
 			return;
 		}

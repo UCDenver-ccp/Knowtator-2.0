@@ -457,16 +457,6 @@ public class GraphSpace extends mxGraph
   GETTERS, CHECKERS, SETTERS
    */
 
-  public AnnotationNode containsVertexCorrespondingToAnnotation(Annotation selectedAnnotation) {
-    for (Object o : getChildVertices(getDefaultParent())) {
-      if (o instanceof AnnotationNode
-          && ((AnnotationNode) o).getAnnotation().equals(selectedAnnotation)) {
-        return (AnnotationNode) o;
-      }
-    }
-    return null;
-  }
-
   public List<Object> getVerticesForAnnotation(Annotation annotation) {
     return Arrays.stream(getChildVertices(getDefaultParent()))
         .filter(

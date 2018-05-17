@@ -131,7 +131,7 @@ public class InfoPane {
 		infoPane.setPreferredSize(new Dimension(250, 725));
 		infoPanePanel.add(infoPane, BorderLayout.CENTER);
 		infoPanel = new JPanel();
-		infoPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(6, 1, new Insets(0, 0, 0, 0), -1, -1));
+		infoPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(7, 1, new Insets(0, 0, 0, 0), -1, -1));
 		infoPanel.setMaximumSize(new Dimension(500, 2147483647));
 		infoPanel.setMinimumSize(new Dimension(250, 625));
 		infoPanel.setPreferredSize(new Dimension(250, 625));
@@ -146,7 +146,7 @@ public class InfoPane {
 		infoPanelTitleLabel.setVerticalTextPosition(0);
 		infoPanel.add(infoPanelTitleLabel, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, new Dimension(250, 25), new Dimension(250, 25), new Dimension(500, 25), 0, false));
 		final JScrollPane scrollPane1 = new JScrollPane();
-		infoPanel.add(scrollPane1, new com.intellij.uiDesigner.core.GridConstraints(5, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(250, 100), new Dimension(250, 425), new Dimension(500, 2147483647), 0, false));
+		infoPanel.add(scrollPane1, new com.intellij.uiDesigner.core.GridConstraints(6, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(250, 100), new Dimension(250, 425), new Dimension(500, 2147483647), 0, false));
 		spanList.setMaximumSize(new Dimension(-1, -1));
 		spanList.setMinimumSize(new Dimension(-1, -1));
 		spanList.setPreferredSize(new Dimension(-1, -1));
@@ -166,7 +166,10 @@ public class InfoPane {
 		annotatorLabel.setVerticalAlignment(1);
 		annotatorLabel.setVerticalTextPosition(1);
 		infoPanel.add(annotatorLabel, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_NORTHWEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(250, 25), new Dimension(250, 25), new Dimension(500, 25), 0, false));
-		infoPanel.add(graphSpaceChooser, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		infoPanel.add(graphSpaceChooser, new com.intellij.uiDesigner.core.GridConstraints(5, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		final JLabel label1 = new JLabel();
+		label1.setText("Graph Spaces for Annotation");
+		infoPanel.add(label1, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		findPanel = new JPanel();
 		findPanel.setLayout(new BorderLayout(0, 0));
 		findPanel.setMaximumSize(new Dimension(250, 100));
@@ -194,6 +197,7 @@ public class InfoPane {
 		regexCheckBox = new JCheckBox();
 		this.$$$loadButtonText$$$(regexCheckBox, ResourceBundle.getBundle("ui").getString("regex"));
 		panel2.add(regexCheckBox, BorderLayout.EAST);
+		label1.setLabelFor(graphSpaceChooser);
 	}
 
 	/**
