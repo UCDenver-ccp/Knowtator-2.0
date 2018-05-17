@@ -23,7 +23,9 @@ public class XMLUtil {
 
 	protected static void finishWritingXML(Document dom, File file) {
 		try {
-			Transformer tr = TransformerFactory.newInstance().newTransformer();
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			transformerFactory.setAttribute("indent-number", 2);
+			Transformer tr = transformerFactory.newTransformer();
 			tr.setOutputProperty(OutputKeys.INDENT, "yes");
 			tr.setOutputProperty(OutputKeys.METHOD, "xml");
 			tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
@@ -33,7 +35,7 @@ public class XMLUtil {
 			PrintWriter pw = new PrintWriter(file);
 			pw.close();
 			OutputStream os = new FileOutputStream(file, false);
-			tr.transform(new DOMSource(dom), new StreamResult(os));
+			tr.transform(new DOMSource(dom), new StreamResult(new OutputStreamWriter(os, "utf-8")));
 			os.close();
 
 		} catch (TransformerException | IOException te) {
