@@ -402,6 +402,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 		}
 		controller.dispose();
 		infoPane.dispose();
+		graphViewDialog.dispose();
 	}
 
 	@Override
