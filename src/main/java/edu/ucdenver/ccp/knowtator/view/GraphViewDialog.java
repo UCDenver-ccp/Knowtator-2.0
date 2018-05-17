@@ -17,6 +17,7 @@ public class GraphViewDialog extends JDialog {
 
 		this.view = view;
 		$$$setupUI$$$();
+		setAlwaysOnTop(true);
 		setSize(new Dimension(800, 800));
 		setLocationRelativeTo(view);
 
