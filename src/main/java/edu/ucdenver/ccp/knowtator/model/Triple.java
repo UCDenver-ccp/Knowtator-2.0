@@ -227,6 +227,7 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
       OWLEntity newProperty = possiblyAddedEntities.iterator().next();
       if (property == oldProperty) {
         try {
+          property = ((OWLObjectProperty) newProperty);
           setValue(String.format("%s\n%s, %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(newProperty), quantifier, quantifierValue));
         } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
           e.printStackTrace();
