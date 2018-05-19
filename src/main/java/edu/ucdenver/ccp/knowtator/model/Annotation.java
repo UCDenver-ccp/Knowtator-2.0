@@ -269,23 +269,46 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
 
   @Override
   public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
+    String renderedOwlClassID;
+    try {
+      renderedOwlClassID = controller
+              .getOWLAPIDataExtractor()
+              .getOWLEntityRendering(owlClass);
+    } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
+      renderedOwlClassID = this.owlClassID;
+
+    }
+    renderedOwlClassID = renderedOwlClassID.replace(":", "_").replace(" ", "_");
+    annotationsConfig.get(StandoffTags.annotationsEntities).put(renderedOwlClassID, "");
+
+    writer.append(String.format("%s\t%s ", getBratID(), renderedOwlClassID));
+
+
+    if (getOwlClassLabel() != null) {
+      visualConfig.get("labels").put(renderedOwlClassID, getOwlClassLabel());
+      visualConfig.get("drawing").put(renderedOwlClassID, String.format("bgColor:%s", annotator.convertToHex(annotator.getColor(this))));
+
+    }
+
+
     Iterator<Span> spanIterator = spanCollection.iterator();
-    String spannedText = "";
+    StringBuilder spannedText = new StringBuilder();
     for (int i = 0; i < spanCollection.size(); i++) {
       Span span = spanIterator.next();
       span.writeToBratStandoff(writer, annotationsConfig, visualConfig);
-      if (i != spanCollection.size() - 1) {
-        writer.append(";");
-      }
       String[] spanLines = span.getSpannedText().split("\n");
       for (int j = 0; j < spanLines.length; j++) {
-        spannedText += spanLines[j];
+        spannedText.append(spanLines[j]);
         if (j != spanLines.length -1) {
-          spannedText += " ";
+          spannedText.append(" ");
         }
       }
-      writer.append(String.format("\t%s\n", spannedText));
+      if (i != spanCollection.size() - 1) {
+        writer.append(";");
+        spannedText.append(" ");
+      }
     }
+    writer.append(String.format("\t%s\n", spannedText.toString()));
   }
 
   @Override
@@ -298,7 +321,7 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
     return annotation_type;
   }
 
-  String getBratID() {
+  private String getBratID() {
     return bratID;
   }
 

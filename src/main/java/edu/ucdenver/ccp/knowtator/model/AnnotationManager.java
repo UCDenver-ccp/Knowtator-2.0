@@ -6,8 +6,6 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.collection.AnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.w3c.dom.Document;
@@ -376,25 +374,9 @@ public class AnnotationManager implements Savable {
       Annotation annotation = annotationIterator.next();
       annotation.setBratID(String.format("T%d", i));
 
-      String owlClassID;
-      try {
-        owlClassID = controller
-                .getOWLAPIDataExtractor()
-                .getOWLEntityRendering(annotation.getOwlClass());
-      } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
-        owlClassID = annotation.getOwlClassID();
-
-      }
-      String owlClassID_inBratFormat = owlClassID.replace(":", "_").replace(" ", "_");
-      annotationsConfig.get(StandoffTags.annotationsEntities).put(owlClassID, "");
-      writer.append(String.format("%s\t%s ", annotation.getBratID(), owlClassID_inBratFormat));
       annotation.writeToBratStandoff(writer, annotationsConfig, visualConfig);
 
-      if (annotation.getOwlClassLabel() != null) {
-         visualConfig.get("labels").put(owlClassID_inBratFormat, annotation.getOwlClassLabel());
-         visualConfig.get("drawing").put(owlClassID_inBratFormat, String.format("bgColor:%s", annotation.getAnnotator().convertToHex(annotation.getAnnotator().getColor(annotation))));
 
-      }
     }
 
     // Not adding relations due to complexity of relation types in Brat Standoff
