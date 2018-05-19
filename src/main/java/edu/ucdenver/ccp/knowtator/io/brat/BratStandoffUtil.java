@@ -7,10 +7,8 @@ import edu.ucdenver.ccp.knowtator.model.TextSourceManager;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -171,10 +169,15 @@ public class BratStandoffUtil implements BasicIOUtil {
   }
 
   private void writeToOutputFile(
-          TextSource textSource, File file, Map<String, Map<String, String>> annotationConfig, Map<String, Map<String, String>> visualConfig) {
+      TextSource textSource,
+      File file,
+      Map<String, Map<String, String>> annotationConfig,
+      Map<String, Map<String, String>> visualConfig) {
     try {
       log.warn("Writing to " + file.getAbsolutePath());
-      BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+      BufferedWriter bw =
+          new BufferedWriter(
+              new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
       textSource.writeToBratStandoff(bw, annotationConfig, visualConfig);
       bw.close();
       File textFileCopy = new File(file.getParentFile(), textSource.getTextFile().getName());
