@@ -6,190 +6,174 @@
     </constraints>
     <properties>
       <maximumSize width="250" height="2147483647"/>
-      <minimumSize width="250" height="354"/>
+      <minimumSize width="250" height="-1"/>
+      <preferredSize width="250" height="-1"/>
     </properties>
     <border type="none"/>
     <children>
-      <splitpane id="1a2b4" binding="infoPane">
-        <constraints border-constraint="Center"/>
+      <grid id="7a67" binding="findPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints border-constraint="North"/>
         <properties>
-          <dividerLocation value="75"/>
-          <maximumSize width="500" height="2147483647"/>
-          <minimumSize width="250" height="350"/>
-          <orientation value="0"/>
-          <preferredSize width="250" height="725"/>
+          <maximumSize width="250" height="100"/>
+          <minimumSize width="250" height="100"/>
+          <preferredSize width="250" height="100"/>
         </properties>
-        <border type="none"/>
+        <border type="none" title-resource-bundle="ui" title-key="find"/>
         <children>
-          <grid id="8778d" binding="infoPanel" layout-manager="GridLayoutManager" row-count="7" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-            <margin top="0" left="0" bottom="0" right="0"/>
-            <constraints>
-              <splitpane position="right"/>
-            </constraints>
-            <properties>
-              <maximumSize width="500" height="2147483647"/>
-              <minimumSize width="250" height="625"/>
-              <preferredSize width="250" height="625"/>
-            </properties>
+          <grid id="d83b6" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints border-constraint="Center"/>
+            <properties/>
             <border type="none"/>
             <children>
-              <component id="a214b" class="javax.swing.JLabel" binding="infoPanelTitleLabel">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
-                    <minimum-size width="250" height="25"/>
-                    <preferred-size width="250" height="25"/>
-                    <maximum-size width="500" height="25"/>
-                  </grid>
-                </constraints>
+              <component id="5df32" class="javax.swing.JButton" binding="previousMatchButton">
+                <constraints border-constraint="West"/>
                 <properties>
-                  <font size="18" style="1"/>
-                  <horizontalAlignment value="0"/>
-                  <horizontalTextPosition value="0"/>
-                  <text resource-bundle="ui" key="annotation.information"/>
-                  <verticalAlignment value="0"/>
-                  <verticalTextPosition value="0"/>
+                  <text resource-bundle="ui" key="previous"/>
                 </properties>
               </component>
-              <scrollpane id="9e5f6">
-                <constraints>
-                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="250" height="100"/>
-                    <preferred-size width="250" height="425"/>
-                    <maximum-size width="500" height="2147483647"/>
-                  </grid>
-                </constraints>
+              <component id="e28ad" class="javax.swing.JButton" binding="nextMatchButton">
+                <constraints border-constraint="East"/>
+                <properties>
+                  <text resource-bundle="ui" key="next"/>
+                </properties>
+              </component>
+              <component id="4d722" class="javax.swing.JTextField" binding="matchTextField">
+                <constraints border-constraint="Center"/>
                 <properties/>
-                <border type="none"/>
-                <children>
-                  <component id="e73fa" class="edu.ucdenver.ccp.knowtator.view.SpanList" binding="spanList" custom-create="true">
-                    <constraints/>
-                    <properties>
-                      <maximumSize width="-1" height="-1"/>
-                      <minimumSize width="-1" height="-1"/>
-                      <preferredSize width="-1" height="-1"/>
-                    </properties>
-                  </component>
-                </children>
-              </scrollpane>
-              <component id="33ae" class="edu.ucdenver.ccp.knowtator.view.AnnotationIDLabel" binding="annotationIDLabel" custom-create="true">
-                <constraints>
-                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false">
-                    <minimum-size width="250" height="25"/>
-                    <preferred-size width="250" height="25"/>
-                    <maximum-size width="500" height="25"/>
-                  </grid>
-                </constraints>
-                <properties>
-                  <horizontalAlignment value="2"/>
-                  <horizontalTextPosition value="2"/>
-                  <verticalAlignment value="1"/>
-                  <verticalTextPosition value="1"/>
-                </properties>
-              </component>
-              <component id="4e6a0" class="edu.ucdenver.ccp.knowtator.view.AnnotationClassLabel" binding="annotationClassLabel" custom-create="true">
-                <constraints>
-                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false">
-                    <minimum-size width="250" height="25"/>
-                    <preferred-size width="250" height="25"/>
-                    <maximum-size width="500" height="25"/>
-                  </grid>
-                </constraints>
-                <properties>
-                  <horizontalAlignment value="2"/>
-                  <horizontalTextPosition value="2"/>
-                  <verticalAlignment value="1"/>
-                  <verticalTextPosition value="1"/>
-                </properties>
-              </component>
-              <component id="da879" class="edu.ucdenver.ccp.knowtator.view.AnnotatorLabel" binding="annotatorLabel" custom-create="true">
-                <constraints>
-                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false">
-                    <minimum-size width="250" height="25"/>
-                    <preferred-size width="250" height="25"/>
-                    <maximum-size width="500" height="25"/>
-                  </grid>
-                </constraints>
-                <properties>
-                  <horizontalAlignment value="2"/>
-                  <horizontalTextPosition value="2"/>
-                  <verticalAlignment value="1"/>
-                  <verticalTextPosition value="1"/>
-                </properties>
-              </component>
-              <component id="4591d" class="javax.swing.JComboBox" binding="graphSpaceChooser" custom-create="true">
-                <constraints>
-                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties/>
-              </component>
-              <component id="52a8" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <labelFor value="4591d"/>
-                  <text value="Graph Spaces for Annotation"/>
-                </properties>
               </component>
             </children>
           </grid>
-          <grid id="7a67" binding="findPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
-            <constraints>
-              <splitpane position="left"/>
-            </constraints>
-            <properties>
-              <maximumSize width="250" height="100"/>
-              <minimumSize width="250" height="100"/>
-              <preferredSize width="250" height="100"/>
-            </properties>
-            <border type="none" title-resource-bundle="ui" title-key="find"/>
+          <grid id="86583" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints border-constraint="South"/>
+            <properties/>
+            <border type="none"/>
             <children>
-              <grid id="d83b6" layout-manager="BorderLayout" hgap="0" vgap="0">
-                <constraints border-constraint="Center"/>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <component id="5df32" class="javax.swing.JButton" binding="previousMatchButton">
-                    <constraints border-constraint="West"/>
-                    <properties>
-                      <text resource-bundle="ui" key="previous"/>
-                    </properties>
-                  </component>
-                  <component id="e28ad" class="javax.swing.JButton" binding="nextMatchButton">
-                    <constraints border-constraint="East"/>
-                    <properties>
-                      <text resource-bundle="ui" key="next"/>
-                    </properties>
-                  </component>
-                  <component id="4d722" class="javax.swing.JTextField" binding="matchTextField">
-                    <constraints border-constraint="Center"/>
-                    <properties/>
-                  </component>
-                </children>
-              </grid>
-              <grid id="86583" layout-manager="BorderLayout" hgap="0" vgap="0">
-                <constraints border-constraint="South"/>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <component id="fe46e" class="javax.swing.JCheckBox" binding="caseSensitiveCheckBox" default-binding="true">
-                    <constraints border-constraint="West"/>
-                    <properties>
-                      <text resource-bundle="ui" key="case.sensitive"/>
-                    </properties>
-                  </component>
-                  <component id="ae96b" class="javax.swing.JCheckBox" binding="regexCheckBox" default-binding="true">
-                    <constraints border-constraint="East"/>
-                    <properties>
-                      <text resource-bundle="ui" key="regex"/>
-                    </properties>
-                  </component>
-                </children>
-              </grid>
+              <component id="fe46e" class="javax.swing.JCheckBox" binding="caseSensitiveCheckBox" default-binding="true">
+                <constraints border-constraint="West"/>
+                <properties>
+                  <text resource-bundle="ui" key="case.sensitive"/>
+                </properties>
+              </component>
+              <component id="ae96b" class="javax.swing.JCheckBox" binding="regexCheckBox" default-binding="true">
+                <constraints border-constraint="East"/>
+                <properties>
+                  <text resource-bundle="ui" key="regex"/>
+                </properties>
+              </component>
             </children>
           </grid>
         </children>
-      </splitpane>
+      </grid>
+      <grid id="bca6e" binding="infoPanel" layout-manager="GridLayoutManager" row-count="7" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints border-constraint="Center"/>
+        <properties>
+          <maximumSize width="500" height="2147483647"/>
+          <minimumSize width="250" height="625"/>
+          <preferredSize width="250" height="625"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="8efe9" class="javax.swing.JLabel" binding="infoPanelTitleLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="250" height="25"/>
+                <preferred-size width="250" height="25"/>
+                <maximum-size width="500" height="25"/>
+              </grid>
+            </constraints>
+            <properties>
+              <font size="18" style="1"/>
+              <horizontalAlignment value="0"/>
+              <horizontalTextPosition value="0"/>
+              <text resource-bundle="ui" key="annotation.information"/>
+              <verticalAlignment value="0"/>
+              <verticalTextPosition value="0"/>
+            </properties>
+          </component>
+          <scrollpane id="7fbe5">
+            <constraints>
+              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <minimum-size width="250" height="100"/>
+                <preferred-size width="250" height="425"/>
+                <maximum-size width="500" height="2147483647"/>
+              </grid>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="5ca3a" class="edu.ucdenver.ccp.knowtator.view.SpanList" binding="spanList" custom-create="true">
+                <constraints/>
+                <properties>
+                  <maximumSize width="-1" height="-1"/>
+                  <minimumSize width="-1" height="-1"/>
+                  <preferredSize width="-1" height="-1"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
+          <component id="2c276" class="edu.ucdenver.ccp.knowtator.view.AnnotationIDLabel" binding="annotationIDLabel" custom-create="true">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="250" height="25"/>
+                <preferred-size width="250" height="25"/>
+                <maximum-size width="500" height="25"/>
+              </grid>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="2"/>
+              <horizontalTextPosition value="2"/>
+              <verticalAlignment value="1"/>
+              <verticalTextPosition value="1"/>
+            </properties>
+          </component>
+          <component id="18c16" class="edu.ucdenver.ccp.knowtator.view.AnnotationClassLabel" binding="annotationClassLabel" custom-create="true">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="250" height="25"/>
+                <preferred-size width="250" height="25"/>
+                <maximum-size width="500" height="25"/>
+              </grid>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="2"/>
+              <horizontalTextPosition value="2"/>
+              <verticalAlignment value="1"/>
+              <verticalTextPosition value="1"/>
+            </properties>
+          </component>
+          <component id="cb39f" class="edu.ucdenver.ccp.knowtator.view.AnnotatorLabel" binding="annotatorLabel" custom-create="true">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="250" height="25"/>
+                <preferred-size width="250" height="25"/>
+                <maximum-size width="500" height="25"/>
+              </grid>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="2"/>
+              <horizontalTextPosition value="2"/>
+              <verticalAlignment value="1"/>
+              <verticalTextPosition value="1"/>
+            </properties>
+          </component>
+          <component id="c7706" class="javax.swing.JComboBox" binding="graphSpaceChooser" custom-create="true">
+            <constraints>
+              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="2f90" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <labelFor value="4591d"/>
+              <text value="Graph Spaces for Annotation"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
     </children>
   </grid>
 </form>

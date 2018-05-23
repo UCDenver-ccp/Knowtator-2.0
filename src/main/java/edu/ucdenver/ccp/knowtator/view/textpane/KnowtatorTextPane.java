@@ -33,6 +33,8 @@ public abstract class KnowtatorTextPane extends JTextArea
   KnowtatorTextPane(KnowtatorView view) {
     super();
     this.view = view;
+    setLineWrap(true);
+    setWrapStyleWord(true);
     view.getController().getSelectionManager().addTextSourceListener(this);
     view.getController().getSelectionManager().addAnnotationListener(this);
     view.getController().getSelectionManager().addProfileListener(this);

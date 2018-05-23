@@ -11,9 +11,6 @@ import java.util.ResourceBundle;
 
 public class InfoPane {
 	private final KnowtatorView view;
-	private JSplitPane infoPane;
-	private JPanel infoPanel;
-	private JLabel infoPanelTitleLabel;
 	private SpanList spanList;
 	private AnnotationIDLabel annotationIDLabel;
 	private AnnotationClassLabel annotationClassLabel;
@@ -26,6 +23,8 @@ public class InfoPane {
 	private JTextField matchTextField;
 	private JPanel infoPanePanel;
 	private JComboBox graphSpaceChooser;
+	private JPanel infoPanel;
+	private JLabel infoPanelTitleLabel;
 
 	InfoPane(KnowtatorView view) {
 		this.view = view;
@@ -122,20 +121,41 @@ public class InfoPane {
 		infoPanePanel = new JPanel();
 		infoPanePanel.setLayout(new BorderLayout(0, 0));
 		infoPanePanel.setMaximumSize(new Dimension(250, 2147483647));
-		infoPanePanel.setMinimumSize(new Dimension(250, 354));
-		infoPane = new JSplitPane();
-		infoPane.setDividerLocation(75);
-		infoPane.setMaximumSize(new Dimension(500, 2147483647));
-		infoPane.setMinimumSize(new Dimension(250, 350));
-		infoPane.setOrientation(0);
-		infoPane.setPreferredSize(new Dimension(250, 725));
-		infoPanePanel.add(infoPane, BorderLayout.CENTER);
+		infoPanePanel.setMinimumSize(new Dimension(250, -1));
+		infoPanePanel.setPreferredSize(new Dimension(250, -1));
+		findPanel = new JPanel();
+		findPanel.setLayout(new BorderLayout(0, 0));
+		findPanel.setMaximumSize(new Dimension(250, 100));
+		findPanel.setMinimumSize(new Dimension(250, 100));
+		findPanel.setPreferredSize(new Dimension(250, 100));
+		infoPanePanel.add(findPanel, BorderLayout.NORTH);
+		findPanel.setBorder(BorderFactory.createTitledBorder(ResourceBundle.getBundle("ui").getString("find")));
+		final JPanel panel1 = new JPanel();
+		panel1.setLayout(new BorderLayout(0, 0));
+		findPanel.add(panel1, BorderLayout.CENTER);
+		previousMatchButton = new JButton();
+		this.$$$loadButtonText$$$(previousMatchButton, ResourceBundle.getBundle("ui").getString("previous"));
+		panel1.add(previousMatchButton, BorderLayout.WEST);
+		nextMatchButton = new JButton();
+		this.$$$loadButtonText$$$(nextMatchButton, ResourceBundle.getBundle("ui").getString("next"));
+		panel1.add(nextMatchButton, BorderLayout.EAST);
+		matchTextField = new JTextField();
+		panel1.add(matchTextField, BorderLayout.CENTER);
+		final JPanel panel2 = new JPanel();
+		panel2.setLayout(new BorderLayout(0, 0));
+		findPanel.add(panel2, BorderLayout.SOUTH);
+		caseSensitiveCheckBox = new JCheckBox();
+		this.$$$loadButtonText$$$(caseSensitiveCheckBox, ResourceBundle.getBundle("ui").getString("case.sensitive"));
+		panel2.add(caseSensitiveCheckBox, BorderLayout.WEST);
+		regexCheckBox = new JCheckBox();
+		this.$$$loadButtonText$$$(regexCheckBox, ResourceBundle.getBundle("ui").getString("regex"));
+		panel2.add(regexCheckBox, BorderLayout.EAST);
 		infoPanel = new JPanel();
 		infoPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(7, 1, new Insets(0, 0, 0, 0), -1, -1));
 		infoPanel.setMaximumSize(new Dimension(500, 2147483647));
 		infoPanel.setMinimumSize(new Dimension(250, 625));
 		infoPanel.setPreferredSize(new Dimension(250, 625));
-		infoPane.setRightComponent(infoPanel);
+		infoPanePanel.add(infoPanel, BorderLayout.CENTER);
 		infoPanelTitleLabel = new JLabel();
 		Font infoPanelTitleLabelFont = this.$$$getFont$$$(null, Font.BOLD, 18, infoPanelTitleLabel.getFont());
 		if (infoPanelTitleLabelFont != null) infoPanelTitleLabel.setFont(infoPanelTitleLabelFont);
@@ -170,34 +190,6 @@ public class InfoPane {
 		final JLabel label1 = new JLabel();
 		label1.setText("Graph Spaces for Annotation");
 		infoPanel.add(label1, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		findPanel = new JPanel();
-		findPanel.setLayout(new BorderLayout(0, 0));
-		findPanel.setMaximumSize(new Dimension(250, 100));
-		findPanel.setMinimumSize(new Dimension(250, 100));
-		findPanel.setPreferredSize(new Dimension(250, 100));
-		infoPane.setLeftComponent(findPanel);
-		findPanel.setBorder(BorderFactory.createTitledBorder(ResourceBundle.getBundle("ui").getString("find")));
-		final JPanel panel1 = new JPanel();
-		panel1.setLayout(new BorderLayout(0, 0));
-		findPanel.add(panel1, BorderLayout.CENTER);
-		previousMatchButton = new JButton();
-		this.$$$loadButtonText$$$(previousMatchButton, ResourceBundle.getBundle("ui").getString("previous"));
-		panel1.add(previousMatchButton, BorderLayout.WEST);
-		nextMatchButton = new JButton();
-		this.$$$loadButtonText$$$(nextMatchButton, ResourceBundle.getBundle("ui").getString("next"));
-		panel1.add(nextMatchButton, BorderLayout.EAST);
-		matchTextField = new JTextField();
-		panel1.add(matchTextField, BorderLayout.CENTER);
-		final JPanel panel2 = new JPanel();
-		panel2.setLayout(new BorderLayout(0, 0));
-		findPanel.add(panel2, BorderLayout.SOUTH);
-		caseSensitiveCheckBox = new JCheckBox();
-		this.$$$loadButtonText$$$(caseSensitiveCheckBox, ResourceBundle.getBundle("ui").getString("case.sensitive"));
-		panel2.add(caseSensitiveCheckBox, BorderLayout.WEST);
-		regexCheckBox = new JCheckBox();
-		this.$$$loadButtonText$$$(regexCheckBox, ResourceBundle.getBundle("ui").getString("regex"));
-		panel2.add(regexCheckBox, BorderLayout.EAST);
-		label1.setLabelFor(graphSpaceChooser);
 	}
 
 	/**

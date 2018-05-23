@@ -176,6 +176,7 @@ public class ProjectManager {
       JFileChooser fileChooser = new JFileChooser();
       fileChooser.setCurrentDirectory(controller.getProjectManager().getArticlesLocation());
 
+      JOptionPane.showMessageDialog(null, "Please select a document to annotate");
       if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
         controller.getProjectManager().addDocument(fileChooser.getSelectedFile());
       }

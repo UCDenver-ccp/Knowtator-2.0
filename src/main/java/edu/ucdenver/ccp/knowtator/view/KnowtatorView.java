@@ -53,7 +53,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 	private KnowtatorTextPane knowtatorTextPane;
 	private TextSourceChooser textSourceChooser;
 	private ProfileChooser profileChooser;
-	private JButton textToGraphButton;
 	private JButton findTextButton;
 	private JPanel textPanel;
 	private JToolBar textSourceToolBar;
@@ -362,16 +361,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 					}
 				});
 
-		textToGraphButton.addActionListener(
-				e -> {
-					if (controller.getProjectManager().isProjectLoaded()) {
-						controller
-								.getSelectionManager()
-								.getActiveGraphSpace()
-								.setGraphText(
-										knowtatorTextPane.getSelectionStart(), knowtatorTextPane.getSelectionEnd());
-					}
-				});
 	}
 
 	private void owlEntitySelectionChanged(OWLEntity owlEntity) {
@@ -458,15 +447,15 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 		createUIComponents();
 		panel1.setLayout(new BorderLayout(0, 0));
 		panel1.setMinimumSize(new Dimension(450, 375));
-		panel1.setPreferredSize(new Dimension(900, 750));
+		panel1.setPreferredSize(new Dimension(900, 800));
 		final JMenuBar menuBar1 = new JMenuBar();
 		menuBar1.setLayout(new BorderLayout(0, 0));
 		menuBar1.setMaximumSize(new Dimension(2147483647, 25));
-		menuBar1.setMinimumSize(new Dimension(450, 25));
+		menuBar1.setMinimumSize(new Dimension(-1, -1));
 		menuBar1.setPreferredSize(new Dimension(900, 25));
 		panel1.add(menuBar1, BorderLayout.NORTH);
 		projectMenu.setMaximumSize(new Dimension(120, 20));
-		projectMenu.setMinimumSize(new Dimension(120, 20));
+		projectMenu.setMinimumSize(new Dimension(-1, -1));
 		projectMenu.setPreferredSize(new Dimension(120, 20));
 		projectMenu.setSelected(false);
 		this.$$$loadButtonText$$$(projectMenu, ResourceBundle.getBundle("ui").getString("knowator.project"));
@@ -475,7 +464,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 		textPanel = new JPanel();
 		textPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));
 		textPanel.setMinimumSize(new Dimension(400, 350));
-		textPanel.setPreferredSize(new Dimension(650, 725));
+		textPanel.setPreferredSize(new Dimension(800, 200));
 		panel1.add(textPanel, BorderLayout.CENTER);
 		textPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-16777216)), null));
 		textSourceToolBar = new JToolBar();
@@ -625,17 +614,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 		this.$$$loadButtonText$$$(profileFilterCheckBox, ResourceBundle.getBundle("ui").getString("profile.filter"));
 		profileFilterCheckBox.setToolTipText(ResourceBundle.getBundle("ui").getString("filter.annotations.by.profile"));
 		annotationToolBar.add(profileFilterCheckBox);
-		final JScrollPane scrollPane1 = new JScrollPane();
-		textPanel.add(scrollPane1, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-		knowtatorTextPane.setBackground(new Color(-1));
-		knowtatorTextPane.setEditable(false);
-		knowtatorTextPane.setFocusTraversalPolicyProvider(true);
-		knowtatorTextPane.setFocusable(false);
-		knowtatorTextPane.setForeground(new Color(-16777216));
-		knowtatorTextPane.setMinimumSize(new Dimension(800, 100));
-		knowtatorTextPane.setPreferredSize(new Dimension(800, 200));
-		knowtatorTextPane.setText("");
-		scrollPane1.setViewportView(knowtatorTextPane);
 		final JToolBar toolBar1 = new JToolBar();
 		toolBar1.setFloatable(false);
 		textPanel.add(toolBar1, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
@@ -647,19 +625,15 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 		showGraphViewerButton.setText("");
 		showGraphViewerButton.setToolTipText(ResourceBundle.getBundle("ui").getString("show.graph.viewer"));
 		toolBar1.add(showGraphViewerButton);
-		textToGraphButton = new JButton();
-		textToGraphButton.setMaximumSize(new Dimension(100, 50));
-		textToGraphButton.setMinimumSize(new Dimension(64, 50));
-		textToGraphButton.setPreferredSize(new Dimension(64, 50));
-		this.$$$loadButtonText$$$(textToGraphButton, ResourceBundle.getBundle("ui").getString("text.to.graph"));
-		textToGraphButton.setToolTipText(ResourceBundle.getBundle("ui").getString("send.selected.text.to.graph"));
-		toolBar1.add(textToGraphButton);
 		findTextButton = new JButton();
 		findTextButton.setMaximumSize(new Dimension(100, 50));
 		findTextButton.setMinimumSize(new Dimension(100, 50));
 		findTextButton.setPreferredSize(new Dimension(100, 50));
 		this.$$$loadButtonText$$$(findTextButton, ResourceBundle.getBundle("log4j").getString("find.in.ontology"));
 		toolBar1.add(findTextButton);
+		final JScrollPane scrollPane1 = new JScrollPane();
+		textPanel.add(scrollPane1, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		scrollPane1.setViewportView(knowtatorTextPane);
 	}
 
 	/**
