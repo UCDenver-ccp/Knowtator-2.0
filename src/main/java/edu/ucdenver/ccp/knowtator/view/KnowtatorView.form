@@ -321,16 +321,6 @@
                   <toolTipText resource-bundle="ui" key="show.graph.viewer"/>
                 </properties>
               </component>
-              <component id="b444d" class="javax.swing.JButton" binding="textToGraphButton">
-                <constraints/>
-                <properties>
-                  <maximumSize width="100" height="50"/>
-                  <minimumSize width="64" height="50"/>
-                  <preferredSize width="64" height="50"/>
-                  <text resource-bundle="ui" key="text.to.graph"/>
-                  <toolTipText resource-bundle="ui" key="send.selected.text.to.graph"/>
-                </properties>
-              </component>
               <component id="97f14" class="javax.swing.JButton" binding="findTextButton">
                 <constraints/>
                 <properties>
