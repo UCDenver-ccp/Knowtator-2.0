@@ -3,7 +3,6 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import edu.ucdenver.ccp.knowtator.iaa.IAAException;
 import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.LogManager;
@@ -249,25 +248,6 @@ public class ProjectMenu extends JMenu implements ProjectListener {
     JMenuItem newAnnotator = new JMenuItem("New profile");
     newAnnotator.addActionListener(
             e -> {
-              int dialogResult =
-                      JOptionPane.showConfirmDialog(
-                              view,
-                              "Load profile from test_project(knowtator)?",
-                              "New profile",
-                              JOptionPane.YES_NO_CANCEL_OPTION);
-              if (dialogResult == JOptionPane.YES_OPTION) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setCurrentDirectory(view.getController().getProjectManager().getProjectLocation());
-
-                if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
-                  view.getController()
-                          .getProjectManager()
-                          .loadFromFormat(
-                                  KnowtatorXMLUtil.class,
-                                  view.getController().getProfileManager(),
-                                  fileChooser.getSelectedFile());
-                }
-              } else if (dialogResult == JOptionPane.NO_OPTION) {
                 JTextField field1 = new JTextField();
                 Object[] message = {
                         "Profile name", field1,
@@ -282,7 +262,6 @@ public class ProjectMenu extends JMenu implements ProjectListener {
                   String annotator = field1.getText();
                   view.getController().getProfileManager().addProfile(annotator);
                 }
-              }
             });
 
     return newAnnotator;
