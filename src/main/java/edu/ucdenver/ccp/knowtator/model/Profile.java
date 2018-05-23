@@ -162,7 +162,7 @@ public class Profile implements Savable, KnowtatorObject {
     }
   }
 
-  String convertToHex(Color c) {
+  static String convertToHex(Color c) {
     return String.format("#%06x", c.getRGB() & 0x00FFFFFF);
   }
 }

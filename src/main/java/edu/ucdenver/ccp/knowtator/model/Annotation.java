@@ -286,7 +286,7 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
 
     if (getOwlClassLabel() != null) {
       visualConfig.get("labels").put(renderedOwlClassID, getOwlClassLabel());
-      visualConfig.get("drawing").put(renderedOwlClassID, String.format("bgColor:%s", annotator.convertToHex(annotator.getColor(this))));
+      visualConfig.get("drawing").put(renderedOwlClassID, String.format("bgColor:%s", Profile.convertToHex(controller.getProfileManager().getProfile("Default").getColor(this))));
 
     }
 
