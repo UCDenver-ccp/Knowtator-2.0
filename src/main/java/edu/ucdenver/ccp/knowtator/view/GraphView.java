@@ -304,7 +304,7 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 		final JPanel panel3 = new JPanel();
 		panel3.setLayout(new BorderLayout(0, 0));
 		panel1.add(panel3, BorderLayout.SOUTH);
-		graphComponent.setCenterPage(true);
+		graphComponent.setCenterPage(false);
 		graphComponent.setGridVisible(true);
 		panel3.add(graphComponent, BorderLayout.CENTER);
 		label2.setLabelFor(valueTextField);

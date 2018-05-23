@@ -49,52 +49,50 @@
                   <toolTipText resource-bundle="ui" key="apply.layout1"/>
                 </properties>
               </component>
-              <component id="f0550" class="javax.swing.JButton" binding="previousGraphSpaceButton">
+              <grid id="f9f3" layout-manager="BorderLayout" hgap="0" vgap="0">
                 <constraints/>
                 <properties>
-                  <icon value="icon/icons8-sort-up-filled-50.png"/>
-                  <text value=""/>
-                  <toolTipText resource-bundle="ui" key="previous.graph.space"/>
+                  <maximumSize width="100" height="100"/>
+                  <minimumSize width="24" height="48"/>
                 </properties>
-              </component>
-              <component id="4437a" class="javax.swing.JButton" binding="nextGraphSpaceButton">
+                <border type="none"/>
+                <children>
+                  <component id="85de8" class="javax.swing.JButton" binding="previousGraphSpaceButton">
+                    <constraints border-constraint="North"/>
+                    <properties>
+                      <icon value="icon/icons8-sort-up-24.png"/>
+                      <preferredSize width="24" height="16"/>
+                      <text value=""/>
+                      <toolTipText resource-bundle="ui" key="previous.graph.space"/>
+                    </properties>
+                  </component>
+                  <component id="91d31" class="javax.swing.JLabel">
+                    <constraints border-constraint="Center"/>
+                    <properties>
+                      <preferredSize width="24" height="16"/>
+                      <text resource-bundle="ui" key="graph.space"/>
+                    </properties>
+                  </component>
+                  <component id="19393" class="javax.swing.JButton" binding="nextGraphSpaceButton">
+                    <constraints border-constraint="South"/>
+                    <properties>
+                      <icon value="icon/icons8-sort-down-24.png"/>
+                      <preferredSize width="24" height="16"/>
+                      <text value=""/>
+                      <toolTipText resource-bundle="ui" key="next.graph.space"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <component id="ea143" class="edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser" binding="graphSpaceChooser" custom-create="true">
                 <constraints/>
                 <properties>
-                  <icon value="icon/icons8-sort-down-filled-50.png"/>
-                  <text value=""/>
-                  <toolTipText resource-bundle="ui" key="next.graph.space"/>
-                </properties>
-              </component>
-              <component id="6f6e6" class="javax.swing.JLabel">
-                <constraints/>
-                <properties>
-                  <text resource-bundle="ui" key="graph.space"/>
-                </properties>
-              </component>
-              <component id="e76ed" class="edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser" binding="graphSpaceChooser" custom-create="true">
-                <constraints/>
-                <properties>
+                  <maximumSize width="200" height="32767"/>
                   <minimumSize width="80" height="30"/>
                 </properties>
               </component>
             </children>
           </toolbar>
-          <scrollpane id="ab8dd">
-            <constraints border-constraint="South"/>
-            <properties>
-              <maximumSize width="32767" height="15"/>
-            </properties>
-            <border type="none"/>
-            <children>
-              <component id="58010" class="edu.ucdenver.ccp.knowtator.view.textpane.GraphViewKnowtatorTextPane" binding="knowtatorTextPane" custom-create="true">
-                <constraints/>
-                <properties>
-                  <editable value="false"/>
-                  <text value=""/>
-                </properties>
-              </component>
-            </children>
-          </scrollpane>
           <toolbar id="48731">
             <constraints border-constraint="Center"/>
             <properties>
