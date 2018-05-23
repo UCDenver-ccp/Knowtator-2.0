@@ -20,7 +20,7 @@ import java.util.Set;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public abstract class KnowtatorTextPane extends JTextPane
+public abstract class KnowtatorTextPane extends JTextArea
     implements ProfileSelectionListener,
         TextSourceSelectionListener,
         AnnotationSelectionListener,
@@ -253,20 +253,14 @@ public abstract class KnowtatorTextPane extends JTextPane
   }
 
   public void decreaseFontSize() {
-    StyledDocument doc = getStyledDocument();
-    MutableAttributeSet attrs = getInputAttributes();
-    Font font = doc.getFont(attrs);
-    StyleConstants.setFontSize(attrs, font.getSize() - 2);
-    doc.setCharacterAttributes(0, doc.getLength() + 1, attrs, false);
+    Font font = getFont();
+    setFont(new Font(font.getName(), font.getStyle(), font.getSize() -2));
     repaint();
   }
 
   public void increaseFindSize() {
-    StyledDocument doc = getStyledDocument();
-    MutableAttributeSet attrs = getInputAttributes();
-    Font font = doc.getFont(attrs);
-    StyleConstants.setFontSize(attrs, font.getSize() + 2);
-    doc.setCharacterAttributes(0, doc.getLength() + 1, attrs, false);
+    Font font = getFont();
+    setFont(new Font(font.getName(), font.getStyle(), font.getSize() + 2));
     repaint();
   }
 
