@@ -193,12 +193,12 @@
           </toolbar>
         </children>
       </grid>
-      <grid id="fe817" layout-manager="BorderLayout" hgap="0" vgap="0">
-        <constraints border-constraint="South"/>
+      <grid id="d3ffc" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints border-constraint="Center"/>
         <properties/>
         <border type="none"/>
         <children>
-          <scrollpane id="43b29" class="com.mxgraph.swing.mxGraphComponent" binding="graphComponent" custom-create="true">
+          <scrollpane id="fc00a" class="com.mxgraph.swing.mxGraphComponent" binding="graphComponent" custom-create="true">
             <constraints border-constraint="Center"/>
             <properties>
               <centerPage value="false"/>
