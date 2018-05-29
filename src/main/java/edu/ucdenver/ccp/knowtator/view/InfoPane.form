@@ -15,31 +15,38 @@
         <constraints border-constraint="North"/>
         <properties>
           <maximumSize width="250" height="100"/>
-          <minimumSize width="250" height="100"/>
-          <preferredSize width="250" height="100"/>
+          <minimumSize width="250" height="75"/>
+          <preferredSize width="250" height="75"/>
         </properties>
         <border type="none" title-resource-bundle="ui" title-key="find"/>
         <children>
           <grid id="d83b6" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints border-constraint="Center"/>
-            <properties/>
+            <properties>
+              <minimumSize width="192" height="24"/>
+              <preferredSize width="192" height="24"/>
+            </properties>
             <border type="none"/>
             <children>
               <component id="5df32" class="javax.swing.JButton" binding="previousMatchButton">
                 <constraints border-constraint="West"/>
                 <properties>
+                  <preferredSize width="78" height="24"/>
                   <text resource-bundle="ui" key="previous"/>
                 </properties>
               </component>
               <component id="e28ad" class="javax.swing.JButton" binding="nextMatchButton">
                 <constraints border-constraint="East"/>
                 <properties>
+                  <preferredSize width="78" height="24"/>
                   <text resource-bundle="ui" key="next"/>
                 </properties>
               </component>
               <component id="4d722" class="javax.swing.JTextField" binding="matchTextField">
                 <constraints border-constraint="Center"/>
-                <properties/>
+                <properties>
+                  <preferredSize width="36" height="24"/>
+                </properties>
               </component>
             </children>
           </grid>
