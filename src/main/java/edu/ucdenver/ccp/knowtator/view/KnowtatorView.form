@@ -31,9 +31,6 @@
           </component>
         </children>
       </grid>
-      <nested-form id="a9698" form-file="edu/ucdenver/ccp/knowtator/view/InfoPane.form" binding="infoPane" custom-create="true">
-        <constraints border-constraint="East"/>
-      </nested-form>
       <grid id="80292" binding="textPanel" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints border-constraint="Center"/>
@@ -310,19 +307,37 @@
               </component>
             </children>
           </toolbar>
-          <scrollpane id="1e611">
+          <splitpane id="19274">
             <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="200" height="200"/>
+              </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <dividerLocation value="800"/>
+            </properties>
             <border type="none"/>
             <children>
-              <component id="6441b" class="edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane" binding="knowtatorTextPane" custom-create="true">
-                <constraints/>
+              <scrollpane id="f3620">
+                <constraints>
+                  <splitpane position="left"/>
+                </constraints>
                 <properties/>
-              </component>
+                <border type="none"/>
+                <children>
+                  <component id="51f70" class="edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane" binding="knowtatorTextPane" custom-create="true">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                </children>
+              </scrollpane>
+              <nested-form id="aac75" form-file="edu/ucdenver/ccp/knowtator/view/InfoPane.form" binding="infoPane" custom-create="true">
+                <constraints>
+                  <splitpane position="right"/>
+                </constraints>
+              </nested-form>
             </children>
-          </scrollpane>
+          </splitpane>
         </children>
       </grid>
     </children>

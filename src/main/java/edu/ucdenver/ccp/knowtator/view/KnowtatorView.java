@@ -460,7 +460,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 		projectMenu.setSelected(false);
 		this.$$$loadButtonText$$$(projectMenu, ResourceBundle.getBundle("ui").getString("knowator.project"));
 		menuBar1.add(projectMenu, BorderLayout.WEST);
-		panel1.add(infoPane.$$$getRootComponent$$$(), BorderLayout.EAST);
 		textPanel = new JPanel();
 		textPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));
 		textPanel.setMinimumSize(new Dimension(400, 350));
@@ -631,9 +630,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 		findTextButton.setPreferredSize(new Dimension(100, 50));
 		this.$$$loadButtonText$$$(findTextButton, ResourceBundle.getBundle("log4j").getString("find.in.ontology"));
 		toolBar1.add(findTextButton);
+		final JSplitPane splitPane1 = new JSplitPane();
+		splitPane1.setDividerLocation(800);
+		textPanel.add(splitPane1, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
 		final JScrollPane scrollPane1 = new JScrollPane();
-		textPanel.add(scrollPane1, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		splitPane1.setLeftComponent(scrollPane1);
 		scrollPane1.setViewportView(knowtatorTextPane);
+		splitPane1.setRightComponent(infoPane.$$$getRootComponent$$$());
 	}
 
 	/**
