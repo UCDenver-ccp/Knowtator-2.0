@@ -67,7 +67,10 @@ public class ProjectMenu extends JMenu implements ProjectListener {
         e -> {
           JFileChooser fileChooser =
               new JFileChooser(view.getProjectManager().getProjectLocation());
+          fileChooser.setFileFilter(new FileNameExtensionFilter("PNG", "png"));
+          fileChooser.setSelectedFile(new File(view.getController().getSelectionManager().getActiveTextSource().getId() + "_annotations.png"));
           if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
+            view.getController().getSelectionManager().setSelectedAnnotation(null, null);
             BufferedImage image = getScreenShot(view.getKnowtatorTextPane());
             try {
               ImageIO.write(image, "png", fileChooser.getSelectedFile());
