@@ -100,7 +100,7 @@ public class KnowtatorController implements Savable, ProjectListener {
   @Override
   public void writeToGeniaXML(Document dom, Element parent) {}
 
-  public void verifyId(String id, KnowtatorObject obj, Boolean hasPriority) {
+  public String verifyId(String id, KnowtatorObject obj, Boolean hasPriority) {
   	String verifiedId = id;
     if (hasPriority && idRegistry.keySet().contains(id)) {
 		verifyId(id, idRegistry.get(id), false);
@@ -117,6 +117,8 @@ public class KnowtatorController implements Savable, ProjectListener {
     }
     idRegistry.put(verifiedId, obj);
   	obj.setId(id == null ? verifiedId : id);
+
+  	return verifiedId;
   }
 
   @Override

@@ -17,7 +17,6 @@ public class GraphSpaceChooser extends Chooser<GraphSpace>
 
   public GraphSpaceChooser(KnowtatorView view) {
     super(view);
-
   }
 
   @Override

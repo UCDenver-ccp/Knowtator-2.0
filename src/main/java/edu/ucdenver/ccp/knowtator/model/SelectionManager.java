@@ -158,7 +158,7 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
     }
   }
 
-  void setSelectedAnnotation(Annotation newAnnotation, Span newSpan) {
+  public void setSelectedAnnotation(Annotation newAnnotation, Span newSpan) {
     if (controller.getProjectManager().isProjectLoaded()) {
       if (selectedAnnotation != newAnnotation) {
         AnnotationChangeEvent e = new AnnotationChangeEvent(this.selectedAnnotation, newAnnotation);

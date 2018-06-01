@@ -100,6 +100,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 		infoPane.setController(controller);
 		knowtatorTextPane.setController(controller);
 		textSourceChooser.setController(controller);
+		graphViewDialog.setController(controller);
 
 		profileChooser.setController(controller);
 		profileFilterCheckBox.addChangeListener(controller.getSelectionManager());
@@ -108,18 +109,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
 	private void setUpOWL() {
 		OWLWorkspace workspace = null;
-		if (controller != null) {
-			try {
-				workspace = controller.getOWLAPIDataExtractor().getWorkSpace();
-			} catch (OWLWorkSpaceNotSetException ignored) {
 
-			}
-			if (workspace == null) {
-				if (getOWLWorkspace() != null) {
-					controller.getOWLAPIDataExtractor().setUpOWL(getOWLWorkspace());
-					log.warn("Adding class label as renderer listener");
-					getOWLWorkspace().getOWLModelManager().addListener(infoPane.getAnnotationClassLabel());
-				}
+		try {
+			workspace = controller.getOWLAPIDataExtractor().getWorkSpace();
+		} catch (OWLWorkSpaceNotSetException ignored) {
+
+		}
+		if (workspace == null) {
+			if (getOWLWorkspace() != null) {
+				controller.getOWLAPIDataExtractor().setUpOWL(getOWLWorkspace());
+				log.warn("Adding class label as renderer listener");
+				getOWLWorkspace().getOWLModelManager().addListener(infoPane.getAnnotationClassLabel());
 			}
 		}
 	}
@@ -387,8 +387,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
 	@Override
 	protected OWLClass updateView(OWLClass selectedClass) {
-		setUpOWL();
-		controller.getSelectionManager().setSelectedOWLClass(selectedClass);
+		if (controller != null) {
+			setUpOWL();
+			controller.getSelectionManager().setSelectedOWLClass(selectedClass);
+		}
 		return selectedClass;
 	}
 
