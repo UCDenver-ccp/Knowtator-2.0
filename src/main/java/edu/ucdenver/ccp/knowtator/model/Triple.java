@@ -108,9 +108,13 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
   public void writeToKnowtatorXML(Document dom, Element graphElem) {
     Element tripleElem = dom.createElement(KnowtatorXMLTags.TRIPLE);
     tripleElem.setAttribute(KnowtatorXMLAttributes.ID, id);
-    tripleElem.setAttribute(KnowtatorXMLAttributes.ANNOTATOR, annotator.getId());
-    tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_SUBJECT, getSource().getId());
-    tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_OBJECT, getTarget().getId());
+    try {
+      tripleElem.setAttribute(KnowtatorXMLAttributes.ANNOTATOR, annotator.getId());
+      tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_SUBJECT, getSource().getId());
+      tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_OBJECT, getTarget().getId());
+    } catch (NullPointerException ignore) {
+
+    }
 
     String propertyID;
     try{
