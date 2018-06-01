@@ -42,7 +42,7 @@ public class GraphSpace extends mxGraph
   private List<GraphSpaceListener> listeners;
   private boolean areListenersSet;
 
-	public GraphSpace(KnowtatorController controller, TextSource textSource, String id) {
+  public GraphSpace(KnowtatorController controller, TextSource textSource, String id) {
 
     this.controller = controller;
     this.textSource = textSource;
@@ -72,10 +72,14 @@ public class GraphSpace extends mxGraph
       return 1;
     }
 
-
-    return extractInt(graphSpace1.getId()) - extractInt(graphSpace2.getId());
-
+    int intcompare = extractInt(graphSpace1.getId()) - extractInt(graphSpace2.getId());
+    if (intcompare == 0) {
+      return graphSpace1.getId().compareTo(graphSpace2.getId());
+    } else {
+      return intcompare;
+    }
   }
+
   private static int extractInt(String s) {
     String num = s.replaceAll("\\D", "");
     // return 0 if no digits found
@@ -106,13 +110,15 @@ public class GraphSpace extends mxGraph
     //    reDrawGraph();
   }
 
-  public AnnotationNode addNode(String id, Annotation annotation) {
+  public AnnotationNode addNode(String nodeId, Annotation annotation) {
     if (annotation != null) {
-      id = textSource.getAnnotationManager().verifyID(id, "node");
-
-      AnnotationNode newVertex = new AnnotationNode(controller, id, annotation, textSource);
+      if (nodeId == null) {
+        nodeId = textSource.getAnnotationManager().verifyID(null, "node");
+      }
+      AnnotationNode newVertex = new AnnotationNode(controller, nodeId, annotation, textSource);
       addCellToGraph(newVertex);
-      listeners.forEach(graphSpaceListener -> graphSpaceListener.annotationNodeAdded(this, newVertex));
+      listeners.forEach(
+          graphSpaceListener -> graphSpaceListener.annotationNodeAdded(this, newVertex));
 
       return newVertex;
     } else {
@@ -133,19 +139,21 @@ public class GraphSpace extends mxGraph
 
     Triple newTriple;
     try {
-      newTriple = new Triple(
-          id,
-          source,
-          target,
-          property,
-          annotator,
-          quantifier,
-          quantifierValue,
-          controller,
-          textSource,
-          this);
+      newTriple =
+          new Triple(
+              id,
+              source,
+              target,
+              property,
+              annotator,
+              quantifier,
+              quantifierValue,
+              controller,
+              textSource,
+              this);
     } catch (OWLEntityNullException | OWLWorkSpaceNotSetException e) {
-      newTriple = new Triple(
+      newTriple =
+          new Triple(
               id,
               source,
               target,
@@ -172,8 +180,6 @@ public class GraphSpace extends mxGraph
   REMOVERS
    */
 
-
-
   /*
   I/O
    */
@@ -181,17 +187,20 @@ public class GraphSpace extends mxGraph
   public void removeSelectedCell() {
     //    Object cell = getSelectionModel().getCell();
     //    Arrays.stream(getEdges(cell)).forEach(edge -> getModel().remove(edge));
-    	Object[] selectionCells = getSelectionCells();
-	  removeCells(selectionCells, true);
-	  Arrays.stream(selectionCells).forEach(cell -> {
-	  	if (cell instanceof AnnotationNode) {
-	  		listeners.forEach(graphSpaceListener -> graphSpaceListener.annotationNodeRemoved(this, ((AnnotationNode) cell)));
-		}
-	  });
+    Object[] selectionCells = getSelectionCells();
+    removeCells(selectionCells, true);
+    Arrays.stream(selectionCells)
+        .forEach(
+            cell -> {
+              if (cell instanceof AnnotationNode) {
+                listeners.forEach(
+                    graphSpaceListener ->
+                        graphSpaceListener.annotationNodeRemoved(this, ((AnnotationNode) cell)));
+              }
+            });
 
     //    reDrawGraph();
   }
-
 
   @Override
   public void readFromKnowtatorXML(File file, Element parent) {
@@ -226,6 +235,13 @@ public class GraphSpace extends mxGraph
       if (target != null && source != null) {
         addTriple(source, target, id, annotator, null, propertyID, quantifier, quantifierValue);
       }
+    }
+
+    for (Object cell : getChildVertices(getDefaultParent())) {
+      ((mxGraphModel) getModel()).getCells().remove(((AnnotationNode) cell).getId(), cell);
+      String nodeId = textSource.getAnnotationManager().verifyID(((AnnotationNode) cell).getId(), "node");
+      ((AnnotationNode) cell).setId(nodeId);
+      ((mxGraphModel) getModel()).getCells().put(nodeId, cell);
     }
   }
 
@@ -276,7 +292,11 @@ public class GraphSpace extends mxGraph
 
   @SuppressWarnings("RedundantThrows")
   @Override
-  public void writeToBratStandoff(Writer writer,  Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {}
+  public void writeToBratStandoff(
+      Writer writer,
+      Map<String, Map<String, String>> annotationsConfig,
+      Map<String, Map<String, String>> visualConfig)
+      throws IOException {}
 
   @Override
   public void readFromGeniaXML(Element parent, String content) {}
@@ -363,8 +383,10 @@ public class GraphSpace extends mxGraph
                     mxICell source = edge.getSource();
                     mxICell target = edge.getTarget();
 
-                    String quantifier = controller.getSelectionManager().getSelectedPropertyQuantifier();
-                    String value = controller.getSelectionManager().getSelectedPropertyQuantifierValue();
+                    String quantifier =
+                        controller.getSelectionManager().getSelectedPropertyQuantifier();
+                    String value =
+                        controller.getSelectionManager().getSelectedPropertyQuantifierValue();
 
                     addTriple(
                         (AnnotationNode) source,
@@ -420,9 +442,7 @@ public class GraphSpace extends mxGraph
                     } else if (cell instanceof Triple) {
                       OWLObjectProperty value = ((Triple) cell).getProperty();
 
-                      controller
-                          .getSelectionManager()
-                          .setSelectedOWLObjectProperty(value);
+                      controller.getSelectionManager().setSelectedOWLObjectProperty(value);
                     }
                   }
                   reDrawGraph();
@@ -509,25 +529,26 @@ public class GraphSpace extends mxGraph
   }
 
   void dispose() {
-    Arrays.stream(getChildCells(getDefaultParent())).forEach(cell -> {
-      if (cell instanceof Triple) {
-        ((Triple) cell).dispose();
-      }
-      if (cell instanceof AnnotationNode) {
-        ((AnnotationNode) cell).dispose();
-      }
-    });
+    Arrays.stream(getChildCells(getDefaultParent()))
+        .forEach(
+            cell -> {
+              if (cell instanceof Triple) {
+                ((Triple) cell).dispose();
+              }
+              if (cell instanceof AnnotationNode) {
+                ((AnnotationNode) cell).dispose();
+              }
+            });
   }
 
   public boolean containsAnnotation(Annotation annotation) {
     for (Object vertex : getChildVertices(getDefaultParent())) {
       if (vertex instanceof AnnotationNode) {
-        if (((AnnotationNode) vertex).getAnnotation().equals(annotation) ) {
+        if (((AnnotationNode) vertex).getAnnotation().equals(annotation)) {
           return true;
         }
       }
     }
     return false;
   }
-
 }

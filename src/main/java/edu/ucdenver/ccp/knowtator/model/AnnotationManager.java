@@ -1,6 +1,5 @@
 package edu.ucdenver.ccp.knowtator.model;
 
-import com.mxgraph.model.mxGraphModel;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
@@ -188,11 +187,12 @@ public class AnnotationManager implements Savable {
           ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0))
               .getAttribute(KnowtatorXMLAttributes.ID);
       String owlClassLabel =
-              ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0))
-                      .getAttribute(KnowtatorXMLAttributes.LABEL);
+          ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0))
+              .getAttribute(KnowtatorXMLAttributes.LABEL);
 
       Annotation newAnnotation =
-          new Annotation(controller, annotationID, null, owlClassID, owlClassLabel, profile, type, textSource);
+          new Annotation(
+              controller, annotationID, null, owlClassID, owlClassLabel, profile, type, textSource);
       newAnnotation.readFromKnowtatorXML(null, annotationElement);
 
       addAnnotation(newAnnotation);
@@ -369,15 +369,17 @@ public class AnnotationManager implements Savable {
   }
 
   @Override
-  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
+  public void writeToBratStandoff(
+      Writer writer,
+      Map<String, Map<String, String>> annotationsConfig,
+      Map<String, Map<String, String>> visualConfig)
+      throws IOException {
     Iterator<Annotation> annotationIterator = annotationCollection.iterator();
     for (int i = 0; i < annotationCollection.size(); i++) {
       Annotation annotation = annotationIterator.next();
       annotation.setBratID(String.format("T%d", i));
 
       annotation.writeToBratStandoff(writer, annotationsConfig, visualConfig);
-
-
     }
 
     // Not adding relations due to complexity of relation types in Brat Standoff
@@ -472,11 +474,16 @@ public class AnnotationManager implements Savable {
     if (id == null) {
       id = String.format("%s_0", idPrefix);
     }
+    List<String> ids = new ArrayList<>();
     for (GraphSpace graphSpace : graphSpaceCollection) {
-      while (((mxGraphModel) graphSpace.getModel()).getCells().containsKey(id)) {
-        int vertexIDIndex = Integer.parseInt(id.split(String.format("%s_", idPrefix))[1]);
-        id = String.format("%s_%d", idPrefix, ++vertexIDIndex);
+      for (Object cell : graphSpace.getChildVertices(graphSpace.getDefaultParent())) {
+        ids.add(((KnowtatorObject) cell).getId());
       }
+    }
+
+    while (ids.contains(id)) {
+      int vertexIDIndex = Integer.parseInt(id.split(String.format("%s_", idPrefix))[1]);
+      id = String.format("%s_%d", idPrefix, ++vertexIDIndex);
     }
 
     return id;
