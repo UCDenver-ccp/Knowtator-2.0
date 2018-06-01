@@ -1,5 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.events.TextSourceChangeEvent;
 import edu.ucdenver.ccp.knowtator.listeners.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.listeners.TextSourceSelectionListener;
@@ -16,14 +17,8 @@ public class TextSourceChooser extends Chooser<TextSource> implements TextSource
 	public TextSourceChooser(KnowtatorView view) {
 		super(
 				view,
-				view.getController()
-						.getTextSourceManager()
-						.getTextSourceCollection()
-						.getCollection()
-						.toArray(new TextSource[0]));
-		view.getController().getSelectionManager().addTextSourceListener(this);
-		collection = view.getController().getTextSourceManager().getTextSourceCollection();
-		collection.addListener(this);
+				new TextSource[0]);
+
 	}
 
 
@@ -39,4 +34,9 @@ public class TextSourceChooser extends Chooser<TextSource> implements TextSource
 		collection.addListener(this);
 	}
 
+	public void setController(KnowtatorController controller) {
+		controller.getSelectionManager().addTextSourceListener(this);
+		collection = controller.getTextSourceManager().getTextSourceCollection();
+		collection.addListener(this);
+	}
 }

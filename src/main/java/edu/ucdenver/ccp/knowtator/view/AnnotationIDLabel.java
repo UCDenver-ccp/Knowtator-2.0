@@ -14,7 +14,6 @@ class AnnotationIDLabel extends JLabel implements AnnotationSelectionListener {
 	AnnotationIDLabel(KnowtatorView view) {
 
 		this.view = view;
-		view.getController().getSelectionManager().addAnnotationListener(this);
 	}
 
 	@Override

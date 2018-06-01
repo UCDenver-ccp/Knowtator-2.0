@@ -108,7 +108,7 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
     return activeTextSource;
   }
 
-  public void setSelectedTextSource(TextSource newTextSource) {
+  public void setActiveTextSource(TextSource newTextSource) {
     if (controller.getProjectManager().isProjectLoaded()) {
       TextSourceChangeEvent e = new TextSourceChangeEvent(this.activeTextSource, newTextSource);
       setSelectedAnnotation(null, null);
@@ -158,7 +158,7 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
     }
   }
 
-  public void setSelectedAnnotation(Annotation newAnnotation, Span newSpan) {
+  void setSelectedAnnotation(Annotation newAnnotation, Span newSpan) {
     if (controller.getProjectManager().isProjectLoaded()) {
       if (selectedAnnotation != newAnnotation) {
         AnnotationChangeEvent e = new AnnotationChangeEvent(this.selectedAnnotation, newAnnotation);
@@ -222,14 +222,14 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
 
   public void getNextTextSource() {
     if (controller.getProjectManager().isProjectLoaded()) {
-      setSelectedTextSource(
+      setActiveTextSource(
               controller.getTextSourceManager().getTextSourceCollection().getNext(activeTextSource));
     }
   }
 
   public void getPreviousTextSource() {
     if (controller.getProjectManager().isProjectLoaded()) {
-      setSelectedTextSource(
+      setActiveTextSource(
               controller
                       .getTextSourceManager()
                       .getTextSourceCollection()
@@ -248,7 +248,7 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
 
   @Override
   public void projectLoaded() {
-    setSelectedTextSource(controller.getTextSourceManager().getTextSourceCollection().getCollection().first());
+    setActiveTextSource(controller.getTextSourceManager().getTextSourceCollection().getCollection().first());
   }
 
   public void addTextSourceListener(TextSourceSelectionListener listener) {

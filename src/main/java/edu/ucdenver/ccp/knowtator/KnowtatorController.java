@@ -14,13 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.prefs.Preferences;
 
 public class KnowtatorController implements Savable, ProjectListener {
   @SuppressWarnings("unused")
   private static final Logger log = Logger.getLogger(KnowtatorController.class);
 
-  private final Preferences prefs = Preferences.userRoot().node("knowtator");
   private ProjectManager projectManager;
   private TextSourceManager textSourceManager;
   private ProfileManager profileManager;
@@ -39,6 +37,13 @@ public class KnowtatorController implements Savable, ProjectListener {
     profileManager = new ProfileManager(this); // manipulates profiles and colors
 
     projectManager.addListener(this);
+  }
+
+  public void setProjectManager(ProjectManager projectManager) {
+    this.projectManager = projectManager;
+    projectManager.addListener(this);
+    projectManager.addListener(selectionManager);
+    projectManager.addListener(owlDataExtractor);
   }
 
   public static void main(String[] args) {}
@@ -62,10 +67,6 @@ public class KnowtatorController implements Savable, ProjectListener {
 
   public SelectionManager getSelectionManager() {
     return selectionManager;
-  }
-
-  public Preferences getPrefs() {
-    return prefs;
   }
 
   @Override
@@ -125,7 +126,8 @@ public class KnowtatorController implements Savable, ProjectListener {
 
   @Override
   public void projectLoaded() {
-
+    selectionManager.projectLoaded();
+    owlDataExtractor.projectLoaded();
   }
 
   public void setDebug() {

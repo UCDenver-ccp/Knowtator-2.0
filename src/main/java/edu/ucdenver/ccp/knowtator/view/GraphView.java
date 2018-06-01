@@ -7,6 +7,7 @@ import com.mxgraph.swing.util.mxMorphing;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxGraphView;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.events.GraphSpaceChangeEvent;
 import edu.ucdenver.ccp.knowtator.listeners.GraphSpaceSelectionListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
@@ -50,7 +51,6 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 	GraphView(JDialog dialog, KnowtatorView view) {
 		this.dialog = dialog;
 		this.view = view;
-		view.getController().getSelectionManager().addGraphSpaceListener(this);
 		$$$setupUI$$$();
 		makeButtons();
 	}
@@ -202,6 +202,19 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 
 	@Override
 	public void projectLoaded() {
+	}
+
+	public void setController(KnowtatorController controller) {
+		controller.getSelectionManager().addTextSourceListener(knowtatorTextPane);
+		controller.getSelectionManager().addAnnotationListener(knowtatorTextPane);
+		controller.getSelectionManager().addProfileListener(knowtatorTextPane);
+		controller.getSelectionManager().addSpanListener(knowtatorTextPane);
+		controller.getProfileManager().addColorListener(knowtatorTextPane);
+		controller.getSelectionManager().addGraphSpaceListener(this);
+		knowtatorTextPane.setController(controller);
+		controller.getSelectionManager().addGraphSpaceListener(graphSpaceChooser);
+		controller.getSelectionManager().addTextSourceListener(graphSpaceChooser);
+		controller.getSelectionManager().addGraphSpaceListener(knowtatorTextPane);
 	}
 
 	/**

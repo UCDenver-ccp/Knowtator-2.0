@@ -1,5 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view.textpane;
 
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.events.AnnotationChangeEvent;
 import edu.ucdenver.ccp.knowtator.events.ProfileChangeEvent;
 import edu.ucdenver.ccp.knowtator.events.SpanChangeEvent;
@@ -35,18 +36,21 @@ public abstract class KnowtatorTextPane extends JTextArea
     this.view = view;
     setLineWrap(true);
     setWrapStyleWord(true);
-    view.getController().getSelectionManager().addTextSourceListener(this);
-    view.getController().getSelectionManager().addAnnotationListener(this);
-    view.getController().getSelectionManager().addProfileListener(this);
-    view.getController().getSelectionManager().addSpanListener(this);
-    view.getController().getProfileManager().addColorListener(this);
 
     getCaret().setVisible(true);
-    addCaretListener(view.getController().getSelectionManager());
+
 
     setupListeners();
     requestFocusInWindow();
     select(0, 0);
+  }
+
+  public void setController(KnowtatorController controller) {
+    addCaretListener(controller.getSelectionManager());
+    controller.getSelectionManager().addAnnotationListener(this);
+    controller.getSelectionManager().addSpanListener(this);
+    controller.getSelectionManager().addTextSourceListener(this);
+    controller.getProfileManager().addColorListener(this);
   }
 
   abstract void showTextPane(TextSource textSource);
@@ -135,7 +139,7 @@ public abstract class KnowtatorTextPane extends JTextArea
           if (span.intersects(lastSpan)) {
             try {
               highlightSpan(
-                  lastSpan.getStart(),
+                  span.getStart(),
                   min(lastSpan.getEnd(), span.getEnd()),
                   new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY));
             } catch (BadLocationException e) {

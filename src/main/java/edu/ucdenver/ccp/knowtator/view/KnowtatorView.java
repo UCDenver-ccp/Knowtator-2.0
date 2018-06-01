@@ -5,6 +5,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.OWLClassSelectionListener;
 import edu.ucdenver.ccp.knowtator.listeners.OWLObjectPropertySelectionListener;
 import edu.ucdenver.ccp.knowtator.model.Profile;
+import edu.ucdenver.ccp.knowtator.model.ProjectManager;
 import edu.ucdenver.ccp.knowtator.model.TextSource;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.view.chooser.ProfileChooser;
@@ -26,11 +27,13 @@ import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.prefs.Preferences;
 
 public class KnowtatorView extends AbstractOWLClassViewComponent
 		implements DropTargetListener, OWLClassSelectionListener, OWLObjectPropertySelectionListener {
 
 	private static final Logger log = Logger.getLogger(KnowtatorView.class);
+	private final Preferences prefs = Preferences.userRoot().node("knowtator");
 	private KnowtatorController controller;
 	private GraphViewDialog graphViewDialog;
 	private JMenu projectMenu;
@@ -58,14 +61,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 	private JToolBar textSourceToolBar;
 	private JToolBar annotationToolBar;
 	private InfoPane infoPane;
+	private ProjectManager projectManager;
 
 	public KnowtatorView() {
-		makeController();
+		projectManager = new ProjectManager(this);
+		//		makeController();
 		$$$setupUI$$$();
 		makeButtons();
-
-		controller.getSelectionManager().addOWLClassListener(this);
-		controller.getSelectionManager().addOWLObjectPropertyListener(this);
 
 		// This is necessary to force OSGI to load the mxGraphTransferable class to allow node dragging.
 		// It is kind of a hacky fix, but it works for now.
@@ -84,10 +86,23 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 		}
 	}
 
+	public Preferences getPrefs() {
+		return prefs;
+	}
+
 	private void makeController() {
 		log.warn("KnowtatorView: Making controller");
 		controller = new KnowtatorController();
+		controller.getSelectionManager().addOWLClassListener(this);
+		controller.getSelectionManager().addOWLObjectPropertyListener(this);
+		controller.setProjectManager(projectManager);
+		projectManager.setController(controller);
+		infoPane.setController(controller);
+		knowtatorTextPane.setController(controller);
+		textSourceChooser.setController(controller);
 
+		profileChooser.setController(controller);
+		profileFilterCheckBox.addChangeListener(controller.getSelectionManager());
 		setUpOWL();
 	}
 
@@ -147,7 +162,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 				e -> {
 					OWLClass owlClass = controller.getSelectionManager().getSelectedOWLClass();
 					if (owlClass == null) {
-						if (controller.getProjectManager().isProjectLoaded()) {
+						if (projectManager.isProjectLoaded()) {
 							owlClass = controller.getSelectionManager().getSelectedAnnotation().getOwlClass();
 						}
 					}
@@ -172,8 +187,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 						}
 					}
 				});
-
-		profileFilterCheckBox.addChangeListener(controller.getSelectionManager());
 
 		growSelectionStartButton.addActionListener(
 				(ActionEvent e) -> {
@@ -231,14 +244,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
 		showGraphViewerButton.addActionListener(
 				e -> {
-					if (controller.getProjectManager().isProjectLoaded()) {
+					if (projectManager.isProjectLoaded()) {
 						graphViewDialog.setVisible(true);
 					}
 				});
 
 		removeAnnotationButton.addActionListener(
 				e -> {
-					if (controller.getProjectManager().isProjectLoaded()
+					if (projectManager.isProjectLoaded()
 							&& controller.getSelectionManager().getSelectedAnnotation() != null) {
 						if (controller.getSelectionManager().getSelectedAnnotation().getSpanCollection().size()
 								> 1) {
@@ -290,7 +303,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 				});
 		addAnnotationButton.addActionListener(
 				e -> {
-					if (controller.getProjectManager().isProjectLoaded()) {
+					if (projectManager.isProjectLoaded()) {
 						if (controller.getSelectionManager().getSelectedAnnotation() != null) {
 							String[] buttons = {"Add new annotation", "Add span to annotation", "Cancel"};
 							int response =
@@ -348,7 +361,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 					if (comboBox.getSelectedItem() != null) {
 						controller
 								.getSelectionManager()
-								.setSelectedTextSource((TextSource) comboBox.getSelectedItem());
+								.setActiveTextSource((TextSource) comboBox.getSelectedItem());
 					}
 				});
 		profileChooser.addActionListener(
@@ -360,7 +373,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 								.setSelectedProfile((Profile) comboBox.getSelectedItem());
 					}
 				});
-
 	}
 
 	private void owlEntitySelectionChanged(OWLEntity owlEntity) {
@@ -378,20 +390,27 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 		return selectedClass;
 	}
 
+	public void reset() {
+		disposeView();
+		makeController();
+	}
+
 	@Override
 	public void disposeView() {
-		if (controller.getProjectManager().isProjectLoaded()
+		if (projectManager.isProjectLoaded()
 				&& JOptionPane.showConfirmDialog(
 				this,
 				"Save changes to Knowtator project?",
 				"Save Project",
 				JOptionPane.YES_NO_OPTION)
 				== JOptionPane.YES_OPTION) {
-			controller.getProjectManager().saveProject();
+			projectManager.saveProject();
 		}
-		controller.dispose();
-		infoPane.dispose();
-		graphViewDialog.dispose();
+		if (controller != null) {
+			controller.dispose();
+		}
+		//		infoPane.dispose();
+		graphViewDialog.setVisible(false);
 	}
 
 	@Override
@@ -422,7 +441,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 		return projectMenu;
 	}
 
-	public GraphViewDialog getGraphViewDialog() {
+	GraphViewDialog getGraphViewDialog() {
 		return graphViewDialog;
 	}
 
@@ -434,6 +453,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 	@Override
 	public void owlObjectPropertyChanged(OWLObjectProperty owlObjectProperty) {
 		owlEntitySelectionChanged(owlObjectProperty);
+	}
+
+	public ProjectManager getProjectManager() {
+		return projectManager;
 	}
 
 	/**

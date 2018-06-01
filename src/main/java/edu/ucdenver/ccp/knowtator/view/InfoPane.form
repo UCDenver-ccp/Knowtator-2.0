@@ -130,6 +130,7 @@
             <properties>
               <horizontalAlignment value="2"/>
               <horizontalTextPosition value="2"/>
+              <labelFor value="4d722"/>
               <verticalAlignment value="1"/>
               <verticalTextPosition value="1"/>
             </properties>
@@ -164,7 +165,7 @@
               <verticalTextPosition value="1"/>
             </properties>
           </component>
-          <component id="c7706" class="javax.swing.JComboBox" binding="graphSpaceChooser" custom-create="true">
+          <component id="c7706" class="edu.ucdenver.ccp.knowtator.view.chooser.AnnotationGraphSpaceChooser" binding="graphSpaceChooser" custom-create="true">
             <constraints>
               <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -176,7 +177,7 @@
             </constraints>
             <properties>
               <labelFor value="4591d"/>
-              <text value="Graph Spaces for Annotation"/>
+              <text resource-bundle="log4j" key="graph.spaces.for.annotation"/>
             </properties>
           </component>
         </children>

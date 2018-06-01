@@ -1,5 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view;
 
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.Span;
 import edu.ucdenver.ccp.knowtator.view.chooser.AnnotationGraphSpaceChooser;
@@ -22,7 +23,7 @@ public class InfoPane {
 	private JButton nextMatchButton;
 	private JTextField matchTextField;
 	private JPanel infoPanePanel;
-	private JComboBox graphSpaceChooser;
+	private AnnotationGraphSpaceChooser graphSpaceChooser;
 	private JPanel infoPanel;
 	private JLabel infoPanelTitleLabel;
 
@@ -93,8 +94,18 @@ public class InfoPane {
 		annotationIDLabel = new AnnotationIDLabel(view);
 		annotationClassLabel = new AnnotationClassLabel(view);
 		annotatorLabel = new AnnotatorLabel(view);
-		spanList = new SpanList(view);
+		spanList = new SpanList();
 		graphSpaceChooser = new AnnotationGraphSpaceChooser(view);
+	}
+
+	public void setController(KnowtatorController controller) {
+		controller.getSelectionManager().addAnnotationListener(annotationClassLabel);
+		controller.getSelectionManager().addAnnotationListener(annotationIDLabel);
+		controller.getSelectionManager().addAnnotationListener(annotatorLabel);
+		controller.getSelectionManager().addAnnotationListener(spanList);
+		controller.getSelectionManager().addGraphSpaceListener(graphSpaceChooser);
+		controller.getSelectionManager().addTextSourceListener(graphSpaceChooser);
+		controller.getSelectionManager().addAnnotationListener(graphSpaceChooser);
 	}
 
 	AnnotationClassLabel getAnnotationClassLabel() {

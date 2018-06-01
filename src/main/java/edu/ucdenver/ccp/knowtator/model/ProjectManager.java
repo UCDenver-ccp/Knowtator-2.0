@@ -6,6 +6,7 @@ import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.prefs.BackingStoreException;
 
 public class ProjectManager {
   private static final Logger log = Logger.getLogger(ProjectManager.class);
@@ -34,6 +34,12 @@ public class ProjectManager {
 
   public ProjectManager(KnowtatorController controller) {
     this.controller = controller;
+    projectLoaded = false;
+    listeners = new ArrayList<>();
+  }
+
+  public ProjectManager(KnowtatorView view) {
+    this.controller = view.getController();
     projectLoaded = false;
     listeners = new ArrayList<>();
   }
@@ -59,12 +65,6 @@ public class ProjectManager {
     if (projectFile != null) {
       makeFileStructure(projectFile.getParentFile());
       loadProject();
-      controller.getPrefs().put("Last Project", projectFile.getAbsolutePath());
-      try {
-        controller.getPrefs().flush();
-      } catch (BackingStoreException e) {
-        e.printStackTrace();
-      }
     }
   }
 
@@ -183,6 +183,7 @@ public class ProjectManager {
     }
 
     projectLoaded = true;
+    controller.projectLoaded();
 
     for (ProjectListener listener : listeners) {
       listener.projectLoaded();
@@ -280,7 +281,7 @@ public class ProjectManager {
     loadFromFormat(ioClass, controller.getTextSourceManager(), file);
   }
 
-  public void loadFromFormat(Class<? extends BasicIOUtil> ioClass, Savable savable, File file) {
+  private void loadFromFormat(Class<? extends BasicIOUtil> ioClass, Savable savable, File file) {
     try {
       BasicIOUtil util = ioClass.getDeclaredConstructor().newInstance();
       util.read(savable, file);
@@ -299,5 +300,9 @@ public class ProjectManager {
 
   public void dispose() {
     listeners.clear();
+  }
+
+  public void setController(KnowtatorController controller) {
+    this.controller = controller;
   }
 }

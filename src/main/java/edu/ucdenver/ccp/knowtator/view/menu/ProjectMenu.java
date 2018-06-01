@@ -16,6 +16,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.prefs.BackingStoreException;
 
 public class ProjectMenu extends JMenu implements ProjectListener {
   @SuppressWarnings("unused")
@@ -65,7 +66,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
     menuItem.addActionListener(
         e -> {
           JFileChooser fileChooser =
-              new JFileChooser(view.getController().getProjectManager().getProjectLocation());
+              new JFileChooser(view.getProjectManager().getProjectLocation());
           if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
             BufferedImage image = getScreenShot(view.getKnowtatorTextPane());
             try {
@@ -118,12 +119,11 @@ public class ProjectMenu extends JMenu implements ProjectListener {
     menuItem.addActionListener(
         e -> {
           JFileChooser fileChooser =
-              new JFileChooser(view.getController().getProjectManager().getAnnotationsLocation());
+              new JFileChooser(view.getProjectManager().getAnnotationsLocation());
           fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
           if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-            view.getController()
-                .getProjectManager()
+            view.getProjectManager()
                 .saveToFormat(BratStandoffUtil.class, fileChooser.getSelectedFile());
           }
         });
@@ -134,7 +134,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
   private JMenu openRecentCommand() {
     JMenu menu = new JMenu("Open recent ...");
 
-    String recentProjectName = view.getController().getPrefs().get("Last Project", null);
+    String recentProjectName = view.getPrefs().get("Last Project", null);
 
     if (recentProjectName != null) {
       File recentProject = new File(recentProjectName);
@@ -148,24 +148,30 @@ public class ProjectMenu extends JMenu implements ProjectListener {
   }
 
   private void loadProject(File file) {
-    if (view.getController().getProjectManager().isProjectLoaded()
-        && JOptionPane.showConfirmDialog(
-                view,
-                "Save changes to Knowtator project?",
-                "Save Project",
-                JOptionPane.YES_NO_OPTION)
-            == JOptionPane.YES_OPTION) {
-      view.getController().getProjectManager().saveProject();
+//    if (view.getProjectManager().isProjectLoaded()
+//        && JOptionPane.showConfirmDialog(
+//                view,
+//                "Save changes to Knowtator project?",
+//                "Save Project",
+//                JOptionPane.YES_NO_OPTION)
+//            == JOptionPane.YES_OPTION) {
+//      view.getProjectManager().saveProject();
+//    }
+    view.reset();
+    view.getProjectManager().loadProject(file);
+    view.getPrefs().put("Last Project", file.getAbsolutePath());
+    try {
+      view.getPrefs().flush();
+    } catch (BackingStoreException e) {
+      e.printStackTrace();
     }
-
-    view.getController().getProjectManager().loadProject(file);
   }
 
   private JMenuItem importAnnotationsCommand() {
     JMenuItem menuItem = new JMenuItem("Import Annotations");
     menuItem.addActionListener(
         e -> {
-          if (view.getController().getProjectManager().getProjectLocation() == null) {
+          if (view.getProjectManager().getProjectLocation() == null) {
             JOptionPane.showMessageDialog(
                 view,
                 "Not in a project. Please create or load "
@@ -173,15 +179,14 @@ public class ProjectMenu extends JMenu implements ProjectListener {
           } else {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(
-                view.getController().getProjectManager().getAnnotationsLocation());
+                view.getProjectManager().getAnnotationsLocation());
             FileFilter fileFilter =
                 new FileNameExtensionFilter("Annotation File (XML, ann, a1)", "xml", "ann", "a1");
             fileChooser.setFileFilter(fileFilter);
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
             if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-              view.getController()
-                  .getProjectManager()
+              view.getProjectManager()
                   .loadWithAppropriateFormat(fileChooser.getSelectedFile());
             }
           }
@@ -195,10 +200,10 @@ public class ProjectMenu extends JMenu implements ProjectListener {
         e -> {
           JFileChooser fileChooser = new JFileChooser();
           fileChooser.setCurrentDirectory(
-              view.getController().getProjectManager().getArticlesLocation());
+              view.getProjectManager().getArticlesLocation());
 
           if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-            view.getController().getProjectManager().addDocument(fileChooser.getSelectedFile());
+            view.getProjectManager().addDocument(fileChooser.getSelectedFile());
           }
         });
     return menuItem;
@@ -218,7 +223,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
 
             if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
               File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
-              view.getController().getProjectManager().newProject(projectDirectory);
+              view.getProjectManager().newProject(projectDirectory);
             }
           }
         });
@@ -249,7 +254,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
     save.addActionListener(
         e -> {
           try {
-            view.getController().getProjectManager().saveProject();
+            view.getProjectManager().saveProject();
           } catch (Exception e1) {
             JOptionPane.showMessageDialog(
                 view,
@@ -316,7 +321,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
         e -> {
           JFileChooser fileChooser = new JFileChooser();
           fileChooser.setCurrentDirectory(
-              view.getController().getProjectManager().getProjectLocation());
+              view.getProjectManager().getProjectLocation());
           fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
           //
           // disable the "All files" option.

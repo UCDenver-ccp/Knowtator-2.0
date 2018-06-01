@@ -20,7 +20,6 @@ public class GraphViewKnowtatorTextPane extends KnowtatorTextPane implements Gra
 
 	public GraphViewKnowtatorTextPane(KnowtatorView view) {
 		super(view);
-		view.getController().getSelectionManager().addGraphSpaceListener(this);
 	}
 
 	@Override

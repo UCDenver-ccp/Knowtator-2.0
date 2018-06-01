@@ -13,7 +13,6 @@ public class AnnotatorLabel extends JLabel implements AnnotationSelectionListene
 
 	AnnotatorLabel(KnowtatorView view) {
 		this.view = view;
-		view.getController().getSelectionManager().addAnnotationListener(this);
 	}
 
 	@Override

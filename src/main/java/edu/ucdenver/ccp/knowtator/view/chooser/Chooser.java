@@ -10,12 +10,12 @@ import javax.swing.*;
 public class Chooser<K extends KnowtatorObject> extends JComboBox<K> implements ProjectListener, CollectionListener<K> {
 
 	Chooser(KnowtatorView view) {
-		view.getController().getProjectManager().addListener(this);
+		view.getProjectManager().addListener(this);
 	}
 
 	Chooser(KnowtatorView view, K[] initialData) {
 		super(initialData);
-		view.getController().getProjectManager().addListener(this);
+		view.getProjectManager().addListener(this);
 	}
 
 

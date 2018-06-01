@@ -23,9 +23,6 @@ public class AnnotationGraphSpaceChooser extends Chooser<GraphSpace>
   public AnnotationGraphSpaceChooser(KnowtatorView view) {
     super(view);
     this.view = view;
-    view.getController().getSelectionManager().addGraphSpaceListener(this);
-    view.getController().getSelectionManager().addTextSourceListener(this);
-    view.getController().getSelectionManager().addAnnotationListener(this);
   }
 
   @Override

@@ -21,7 +21,6 @@ public class AnnotationClassLabel extends JLabel
 
   AnnotationClassLabel(KnowtatorView view) {
     this.view = view;
-    view.getController().getSelectionManager().addAnnotationListener(this);
   }
 
   @Override

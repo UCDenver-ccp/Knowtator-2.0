@@ -11,7 +11,7 @@ import java.util.Set;
 public class MainKnowtatorTextPane extends KnowtatorTextPane {
 	public MainKnowtatorTextPane( KnowtatorView view) {
 		super(view);
-		view.getController().getProjectManager().addListener(this);
+		view.getProjectManager().addListener(this);
 		getCaret().setSelectionVisible(true);
 	}
 

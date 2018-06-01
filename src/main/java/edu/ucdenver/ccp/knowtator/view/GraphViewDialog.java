@@ -1,5 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view;
 
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.view.menu.GraphMenu;
 
 import javax.swing.*;
@@ -51,6 +52,10 @@ public class GraphViewDialog extends JDialog {
 
 	private void createUIComponents() {
 		graphView = new GraphView(this, view);
+	}
+
+	public void setController(KnowtatorController controller) {
+		graphView.setController(controller);
 	}
 
 	/**

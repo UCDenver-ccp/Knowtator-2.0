@@ -9,8 +9,8 @@ import java.util.Set;
 
 public class SpanList extends JList<Span> implements AnnotationSelectionListener {
 
-	SpanList(KnowtatorView view) {
-		view.getController().getSelectionManager().addAnnotationListener(this);
+	SpanList() {
+
 
 	}
 

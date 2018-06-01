@@ -40,7 +40,7 @@ public class TextSourceManager implements Savable {
       textSourceCollection.add(newTextSource);
     }
 
-    controller.getSelectionManager().setSelectedTextSource(newTextSource);
+    controller.getSelectionManager().setActiveTextSource(newTextSource);
     return newTextSource;
   }
 
