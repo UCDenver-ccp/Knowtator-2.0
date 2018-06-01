@@ -1,5 +1,6 @@
 package edu.ucdenver.ccp.knowtator.model;
 
+import com.mxgraph.model.mxGraphModel;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
@@ -465,5 +466,19 @@ public class AnnotationManager implements Savable {
     annotationCollection.getCollection().clear();
     graphSpaceCollection.forEach(GraphSpace::dispose);
     graphSpaceCollection.getCollection().clear();
+  }
+
+  String verifyID(String id, String idPrefix) {
+    if (id == null) {
+      id = String.format("%s_0", idPrefix);
+    }
+    for (GraphSpace graphSpace : graphSpaceCollection) {
+      while (((mxGraphModel) graphSpace.getModel()).getCells().containsKey(id)) {
+        int vertexIDIndex = Integer.parseInt(id.split(String.format("%s_", idPrefix))[1]);
+        id = String.format("%s_%d", idPrefix, ++vertexIDIndex);
+      }
+    }
+
+    return id;
   }
 }

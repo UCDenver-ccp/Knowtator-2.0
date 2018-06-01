@@ -108,7 +108,7 @@ public class GraphSpace extends mxGraph
 
   public AnnotationNode addNode(String id, Annotation annotation) {
     if (annotation != null) {
-      id = verifyID(id, "node");
+      id = textSource.getAnnotationManager().verifyID(id, "node");
 
       AnnotationNode newVertex = new AnnotationNode(controller, id, annotation, textSource);
       addCellToGraph(newVertex);
@@ -129,7 +129,7 @@ public class GraphSpace extends mxGraph
       String propertyID,
       String quantifier,
       String quantifierValue) {
-    id = verifyID(id, "edge");
+    id = textSource.getAnnotationManager().verifyID(id, "edge");
 
     Triple newTriple;
     try {
@@ -172,17 +172,7 @@ public class GraphSpace extends mxGraph
   REMOVERS
    */
 
-  private String verifyID(String id, String idPrefix) {
-    if (id == null) {
-      id = String.format("%s_%d", idPrefix, getChildCells(getDefaultParent()).length);
-    }
-    while (((mxGraphModel) getModel()).getCells().containsKey(id)) {
-      int vertexIDIndex = Integer.parseInt(id.split(String.format("%s_", idPrefix))[1]);
-      id = String.format("%s_%d", idPrefix, ++vertexIDIndex);
-    }
 
-    return id;
-  }
 
   /*
   I/O
