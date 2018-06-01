@@ -254,7 +254,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
             JOptionPane.showMessageDialog(
                 view,
                 String.format(
-                    "Something went wrong trying to save your project:/n %s", e1.getMessage()));
+                    "Something went wrong trying to save your project:\n %s", e1.getMessage()));
             e1.printStackTrace();
           }
         });

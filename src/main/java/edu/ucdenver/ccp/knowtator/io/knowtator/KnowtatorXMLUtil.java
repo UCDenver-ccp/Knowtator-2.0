@@ -77,8 +77,7 @@ public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUt
           .forEach(
               textSource -> {
                 File outputFile =
-                    new File(
-                        file.getAbsolutePath(), textSource.getSaveFile().getName());
+                    new File(file.getAbsolutePath(), textSource.getSaveFile().getName());
                 writeToOutputFile(textSource, outputFile);
               });
     } else if (savable instanceof ProfileManager) {
@@ -87,8 +86,7 @@ public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUt
           .getCollection()
           .forEach(
               profile -> {
-                File outputFile =
-                    new File(file.getAbsolutePath(),  profile.getId() + ".xml");
+                File outputFile = new File(file.getAbsolutePath(), profile.getId() + ".xml");
                 writeToOutputFile(profile, outputFile);
               });
     } else {
@@ -100,17 +98,22 @@ public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUt
     Document dom;
 
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-
+    log.warn("Writing to " + outputFile.getAbsolutePath());
     try {
-      log.warn("Writing to " + outputFile.getAbsolutePath());
+
       DocumentBuilder db = dbf.newDocumentBuilder();
       dom = db.newDocument();
 
-      Element root = dom.createElement(KnowtatorXMLTags.KNOWTATOR_PROJECT);
-      dom.appendChild(root);
-      savable.writeToKnowtatorXML(dom, root);
+      try {
 
-      finishWritingXML(dom, outputFile);
+        Element root = dom.createElement(KnowtatorXMLTags.KNOWTATOR_PROJECT);
+        dom.appendChild(root);
+        savable.writeToKnowtatorXML(dom, root);
+
+        finishWritingXML(dom, outputFile);
+      } catch (NullPointerException npe) {
+        finishWritingXML(dom, outputFile);
+      }
     } catch (ParserConfigurationException e1) {
       e1.printStackTrace();
     }
