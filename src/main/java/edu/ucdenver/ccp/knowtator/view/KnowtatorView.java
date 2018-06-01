@@ -108,16 +108,18 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
 	private void setUpOWL() {
 		OWLWorkspace workspace = null;
-		try {
-			workspace = controller.getOWLAPIDataExtractor().getWorkSpace();
-		} catch (OWLWorkSpaceNotSetException ignored) {
+		if (controller != null) {
+			try {
+				workspace = controller.getOWLAPIDataExtractor().getWorkSpace();
+			} catch (OWLWorkSpaceNotSetException ignored) {
 
-		}
-		if (workspace == null) {
-			if (getOWLWorkspace() != null) {
-				controller.getOWLAPIDataExtractor().setUpOWL(getOWLWorkspace());
-				log.warn("Adding class label as renderer listener");
-				getOWLWorkspace().getOWLModelManager().addListener(infoPane.getAnnotationClassLabel());
+			}
+			if (workspace == null) {
+				if (getOWLWorkspace() != null) {
+					controller.getOWLAPIDataExtractor().setUpOWL(getOWLWorkspace());
+					log.warn("Adding class label as renderer listener");
+					getOWLWorkspace().getOWLModelManager().addListener(infoPane.getAnnotationClassLabel());
+				}
 			}
 		}
 	}
