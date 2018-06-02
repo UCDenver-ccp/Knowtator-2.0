@@ -54,6 +54,7 @@ public class GraphMenu extends JMenu {
 					fileChooser.setCurrentDirectory(view.getProjectManager().getProjectLocation());
 					FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
 					fileChooser.setFileFilter(fileFilter);
+					fileChooser.setSelectedFile(new File(view.getController().getSelectionManager().getActiveTextSource().getId() + "_" + view.getController().getSelectionManager().getActiveGraphSpace().getId() + ".png"));
 					if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
 						BufferedImage image =
 								mxCellRenderer.createBufferedImage(
