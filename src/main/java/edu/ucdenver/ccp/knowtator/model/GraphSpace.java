@@ -419,7 +419,9 @@ public class GraphSpace extends mxGraph
                 Collection deselectedCells = (Collection) evt.getProperty("added");
                 if (deselectedCells != null && deselectedCells.size() > 0) {
                   for (Object cell : deselectedCells) {
-                    setCellStyles(mxConstants.STYLE_STROKEWIDTH, "0", new Object[] {cell});
+                    if (cell instanceof AnnotationNode) {
+                      setCellStyles(mxConstants.STYLE_STROKEWIDTH, "0", new Object[] {cell});
+                    }
                   }
                   //                Arrays.stream(graph.getChildVertices(graph.getDefaultParent()))
                   //                    .forEach(
