@@ -8,6 +8,6 @@ import java.util.TreeSet;
 
 public class SpanCollection extends CyclableCollection<Span, SpanCollectionListener> {
 	public SpanCollection(KnowtatorController controller) {
-		super(controller, new TreeSet<>(Span::compare));
+		super(controller, new TreeSet<>());
 	}
 }

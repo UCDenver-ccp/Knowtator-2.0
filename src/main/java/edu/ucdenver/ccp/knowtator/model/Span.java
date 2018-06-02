@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
-public class Span implements Savable, KnowtatorTextBoundObject {
+public class Span implements Savable, KnowtatorTextBoundObject, Comparable<Span> {
   @SuppressWarnings("unused")
   private static Logger log = Logger.getLogger(KnowtatorController.class);
 
@@ -125,9 +125,7 @@ public class Span implements Savable, KnowtatorTextBoundObject {
       compare = getEnd().compareTo(span2.getEnd());
     }
     if (compare == 0) {
-      if (!equals(span2)) {
-        compare = 1;
-      }
+      compare = id.compareTo(span2.getId());
     }
     return compare;
   }
@@ -269,6 +267,12 @@ public class Span implements Savable, KnowtatorTextBoundObject {
 
   public void dispose() {
   }
+
+  @Override
+  public int compareTo(Span o) {
+    return compare(o);
+  }
+
 
   //	public static Span shortest(List<Span> spans) {
   //		if (spans.size() == 0)
