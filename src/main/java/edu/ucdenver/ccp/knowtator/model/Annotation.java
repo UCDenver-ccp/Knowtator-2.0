@@ -417,8 +417,7 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
     spanCollection.getCollection().clear();
     try {
       controller.getOWLAPIDataExtractor().getWorkSpace().getOWLModelManager().removeOntologyChangeListener(this);
-    } catch (OWLWorkSpaceNotSetException e) {
-      e.printStackTrace();
+    } catch (OWLWorkSpaceNotSetException ignored) {
     }
   }
 

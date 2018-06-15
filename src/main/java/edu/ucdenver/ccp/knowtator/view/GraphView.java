@@ -152,7 +152,7 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 
 
 		graphSpace.setupListeners();
-		someRadioButton.setSelected(true);
+		someRadioButton.doClick();
 
 		graphSpace.reDrawGraph();
 		applyLayout();
@@ -326,11 +326,11 @@ public class GraphView extends JPanel implements GraphSpaceSelectionListener, Pr
 		label2.setLabelFor(valueTextField);
 		ButtonGroup buttonGroup;
 		buttonGroup = new ButtonGroup();
-		buttonGroup.add(someRadioButton);
 		buttonGroup.add(onlyRadioButton);
 		buttonGroup.add(exactlyRadioButton);
 		buttonGroup.add(minRadioButton);
 		buttonGroup.add(maxRadioButton);
+		buttonGroup.add(someRadioButton);
 	}
 
 	/**

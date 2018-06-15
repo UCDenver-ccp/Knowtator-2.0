@@ -216,11 +216,11 @@
       <member id="4c508"/>
     </group>
     <group name="buttonGroup">
-      <member id="c3312"/>
       <member id="3d225"/>
       <member id="5b33f"/>
       <member id="bef5c"/>
       <member id="fc2a6"/>
+      <member id="c3312"/>
     </group>
   </buttonGroups>
 </form>
