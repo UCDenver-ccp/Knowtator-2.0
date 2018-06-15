@@ -134,7 +134,8 @@ public class GraphSpace extends mxGraph
       OWLObjectProperty property,
       String propertyID,
       String quantifier,
-      String quantifierValue) {
+      String quantifierValue,
+      Boolean isNegated) {
     id = textSource.getAnnotationManager().verifyID(id, "edge");
 
     Triple newTriple;
@@ -148,6 +149,7 @@ public class GraphSpace extends mxGraph
               annotator,
               quantifier,
               quantifierValue,
+              isNegated,
               controller,
               textSource,
               this);
@@ -161,6 +163,7 @@ public class GraphSpace extends mxGraph
               annotator,
               quantifier,
               quantifierValue,
+              isNegated,
               controller,
               textSource,
               this);
@@ -172,6 +175,7 @@ public class GraphSpace extends mxGraph
     setCellStyles(mxConstants.STYLE_VERTICAL_ALIGN, "top", new Object[] {newTriple});
     setCellStyles(mxConstants.STYLE_VERTICAL_LABEL_POSITION, "top", new Object[] {newTriple});
     setCellStyles(mxConstants.STYLE_FONTSIZE, "16", new Object[] {newTriple});
+    setCellStyles(mxConstants.STYLE_STROKECOLOR, isNegated ? "red" : "black", new Object[] {newTriple});
 
     addCellToGraph(newTriple);
   }
@@ -226,6 +230,7 @@ public class GraphSpace extends mxGraph
       String propertyID = tripleElem.getAttribute(KnowtatorXMLAttributes.TRIPLE_PROPERTY);
       String quantifier = tripleElem.getAttribute(KnowtatorXMLAttributes.TRIPLE_QUANTIFIER);
       String quantifierValue = tripleElem.getAttribute(KnowtatorXMLAttributes.TRIPLE_VALUE);
+      String propertyIsNegated = tripleElem.getAttribute(KnowtatorXMLAttributes.NEGATED);
 
       Profile annotator = controller.getProfileManager().addProfile(annotatorID);
       AnnotationNode source =
@@ -233,7 +238,7 @@ public class GraphSpace extends mxGraph
       AnnotationNode target = (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(objectID);
 
       if (target != null && source != null) {
-        addTriple(source, target, id, annotator, null, propertyID, quantifier, quantifierValue);
+        addTriple(source, target, id, annotator, null, propertyID, quantifier, quantifierValue, propertyIsNegated.equals("true"));
       }
     }
 
@@ -286,7 +291,7 @@ public class GraphSpace extends mxGraph
                 target = (AnnotationNode) objectAnnotationVertices.get(0);
               }
 
-              addTriple(source, target, id, annotator, null, propertyID, "", "");
+              addTriple(source, target, id, annotator, null, propertyID, "", "", false);
             });
   }
 
@@ -387,6 +392,7 @@ public class GraphSpace extends mxGraph
                         controller.getSelectionManager().getSelectedPropertyQuantifier();
                     String value =
                         controller.getSelectionManager().getSelectedPropertyQuantifierValue();
+                    Boolean isNegated = controller.getSelectionManager().isPropertyIsNegated();
 
                     addTriple(
                         (AnnotationNode) source,
@@ -396,7 +402,7 @@ public class GraphSpace extends mxGraph
                         property,
                         propertyID,
                         quantifier,
-                        value);
+                        value, isNegated);
                   }
 
                   getModel().remove(edge);

@@ -320,7 +320,8 @@ public class AnnotationManager implements Savable {
                 null,
                 propertyID,
                 "",
-                "");
+                "",
+                false);
           }
         });
   }

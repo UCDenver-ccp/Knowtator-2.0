@@ -19,6 +19,7 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
 
   @SuppressWarnings("unused")
   private static final Logger log = Logger.getLogger(SelectionManager.class);
+
   private KnowtatorController controller;
   private Annotation selectedAnnotation;
   private Span selectedSpan;
@@ -38,6 +39,12 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
   private List<GraphSpaceSelectionListener> graphSpaceListeners;
   private OWLObjectProperty selectedOWLObjectProperty;
   private String selectedPropertyQuantifier;
+
+  boolean isPropertyIsNegated() {
+    return propertyIsNegated;
+  }
+
+  private boolean propertyIsNegated;
 
   public void setSelectedPropertyQuantifierValue(String selectedPropertyQuantifierValue) {
     this.selectedPropertyQuantifierValue = selectedPropertyQuantifierValue;
@@ -120,11 +127,12 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
           .getCollection()
           .isEmpty()) {
         newTextSource.getAnnotationManager().addGraphSpace(newTextSource.getId() + " Graph Space");
+      } else {
+        setSelectedGraphSpace(
+            newTextSource.getAnnotationManager().getGraphSpaceCollection().getCollection().first());
       }
-        else{setSelectedGraphSpace(
-                newTextSource.getAnnotationManager().getGraphSpaceCollection().getCollection().first());
-      }
-      textSourceListeners.forEach(selectionListener -> selectionListener.activeTextSourceChanged(e));
+      textSourceListeners.forEach(
+          selectionListener -> selectionListener.activeTextSourceChanged(e));
     }
   }
 
@@ -189,66 +197,67 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
   public void getNextGraphSpace() {
     if (controller.getProjectManager().isProjectLoaded()) {
       setSelectedGraphSpace(
-              activeTextSource
-                      .getAnnotationManager()
-                      .getGraphSpaceCollection()
-                      .getNext(activeGraphSpace));
+          activeTextSource
+              .getAnnotationManager()
+              .getGraphSpaceCollection()
+              .getNext(activeGraphSpace));
     }
   }
 
   public void getPreviousGraphSpace() {
     if (controller.getProjectManager().isProjectLoaded()) {
       setSelectedGraphSpace(
-              activeTextSource
-                      .getAnnotationManager()
-                      .getGraphSpaceCollection()
-                      .getPrevious(activeGraphSpace));
+          activeTextSource
+              .getAnnotationManager()
+              .getGraphSpaceCollection()
+              .getPrevious(activeGraphSpace));
     }
   }
 
   public void getNextSpan() {
     if (controller.getProjectManager().isProjectLoaded()) {
       setSelectedSpan(
-              activeTextSource.getAnnotationManager().getAllSpanCollection().getNext(selectedSpan));
+          activeTextSource.getAnnotationManager().getAllSpanCollection().getNext(selectedSpan));
     }
   }
 
   public void getPreviousSpan() {
     if (controller.getProjectManager().isProjectLoaded()) {
       setSelectedSpan(
-              activeTextSource.getAnnotationManager().getAllSpanCollection().getPrevious(selectedSpan));
+          activeTextSource.getAnnotationManager().getAllSpanCollection().getPrevious(selectedSpan));
     }
   }
 
   public void getNextTextSource() {
     if (controller.getProjectManager().isProjectLoaded()) {
       setActiveTextSource(
-              controller.getTextSourceManager().getTextSourceCollection().getNext(activeTextSource));
+          controller.getTextSourceManager().getTextSourceCollection().getNext(activeTextSource));
     }
   }
 
   public void getPreviousTextSource() {
     if (controller.getProjectManager().isProjectLoaded()) {
       setActiveTextSource(
-              controller
-                      .getTextSourceManager()
-                      .getTextSourceCollection()
-                      .getPrevious(activeTextSource));
+          controller
+              .getTextSourceManager()
+              .getTextSourceCollection()
+              .getPrevious(activeTextSource));
     }
   }
 
   public void setSelectedOWLObjectProperty(OWLObjectProperty owlObjectProperty) {
     this.selectedOWLObjectProperty = owlObjectProperty;
-    owlObjectPropertyListeners.forEach(selectionListener -> selectionListener.owlObjectPropertyChanged(owlObjectProperty));
+    owlObjectPropertyListeners.forEach(
+        selectionListener -> selectionListener.owlObjectPropertyChanged(owlObjectProperty));
   }
 
   @Override
-  public void projectClosed() {
-  }
+  public void projectClosed() {}
 
   @Override
   public void projectLoaded() {
-    setActiveTextSource(controller.getTextSourceManager().getTextSourceCollection().getCollection().first());
+    setActiveTextSource(
+        controller.getTextSourceManager().getTextSourceCollection().getCollection().first());
   }
 
   public void addTextSourceListener(TextSourceSelectionListener listener) {
@@ -303,5 +312,9 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
     spanListeners.clear();
     textSourceListeners.clear();
     owlObjectPropertyListeners.clear();
+  }
+
+  public void setNegateProperty(boolean isNegated) {
+    this.propertyIsNegated = isNegated;
   }
 }
