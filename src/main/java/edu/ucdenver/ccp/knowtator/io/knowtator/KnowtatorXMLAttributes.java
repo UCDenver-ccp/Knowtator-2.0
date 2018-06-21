@@ -14,7 +14,9 @@ public class KnowtatorXMLAttributes {
 	public static final String TRIPLE_PROPERTY = "property";
 	public static final String TRIPLE_QUANTIFIER = "quantifier";
 	public static final String TRIPLE_VALUE = "value";
-	public static final String NEGATED = "complement-of";
+	public static final String IS_NEGATED = "polarity";
+	public static final String IS_NEGATED_FALSE = "positive";
+	public static final String IS_NEGATED_TRUE = "negative";
 
 	// Used for saving profile settings
 	public static final String COLOR = "color";
