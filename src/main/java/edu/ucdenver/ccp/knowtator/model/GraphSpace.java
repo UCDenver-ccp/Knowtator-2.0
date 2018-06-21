@@ -175,7 +175,6 @@ public class GraphSpace extends mxGraph
     setCellStyles(mxConstants.STYLE_VERTICAL_ALIGN, "top", new Object[] {newTriple});
     setCellStyles(mxConstants.STYLE_VERTICAL_LABEL_POSITION, "top", new Object[] {newTriple});
     setCellStyles(mxConstants.STYLE_FONTSIZE, "16", new Object[] {newTriple});
-    setCellStyles(mxConstants.STYLE_STROKECOLOR, isNegated ? "red" : "black", new Object[] {newTriple});
 
     addCellToGraph(newTriple);
   }
