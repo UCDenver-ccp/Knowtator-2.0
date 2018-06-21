@@ -52,7 +52,7 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
           String quantifierValue,
           Boolean isNegated,
           KnowtatorController controller, TextSource textSource, GraphSpace graphSpace) throws OWLEntityNullException, OWLWorkSpaceNotSetException {
-    super(String.format("%s\n%s %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(property), quantifier, quantifierValue), new mxGeometry(), null);
+    super(String.format("%s %s\n%s %s", isNegated ? "not" : "", controller.getOWLAPIDataExtractor().getOWLEntityRendering(property), quantifier, quantifierValue), new mxGeometry(), null);
 
     this.property = property;
     this.isNegated = isNegated;
@@ -84,7 +84,7 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
                 String quantifierValue,
                 Boolean isNegated,
                 KnowtatorController controller, TextSource textSource, GraphSpace graphSpace) {
-    super(propertyID, new mxGeometry(), null);
+    super(String.format("%s %s\n%s %s", isNegated ? "not" : "", propertyID, quantifier, quantifierValue), new mxGeometry(), null);
     this.isNegated = isNegated;
 
     this.textSource = textSource;
@@ -131,7 +131,7 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
 
     tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_QUANTIFIER, quantifier);
     tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_VALUE, quantifierValue);
-    tripleElem.setAttribute(KnowtatorXMLAttributes.NEGATED, String.valueOf(isNegated));
+    tripleElem.setAttribute(KnowtatorXMLAttributes.IS_NEGATED, isNegated ? KnowtatorXMLAttributes.IS_NEGATED_TRUE : KnowtatorXMLAttributes.IS_NEGATED_FALSE);
     graphElem.appendChild(tripleElem);
   }
 

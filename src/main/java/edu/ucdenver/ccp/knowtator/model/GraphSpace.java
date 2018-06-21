@@ -230,7 +230,7 @@ public class GraphSpace extends mxGraph
       String propertyID = tripleElem.getAttribute(KnowtatorXMLAttributes.TRIPLE_PROPERTY);
       String quantifier = tripleElem.getAttribute(KnowtatorXMLAttributes.TRIPLE_QUANTIFIER);
       String quantifierValue = tripleElem.getAttribute(KnowtatorXMLAttributes.TRIPLE_VALUE);
-      String propertyIsNegated = tripleElem.getAttribute(KnowtatorXMLAttributes.NEGATED);
+      String propertyIsNegated = tripleElem.getAttribute(KnowtatorXMLAttributes.IS_NEGATED);
 
       Profile annotator = controller.getProfileManager().addProfile(annotatorID);
       AnnotationNode source =
@@ -238,7 +238,7 @@ public class GraphSpace extends mxGraph
       AnnotationNode target = (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(objectID);
 
       if (target != null && source != null) {
-        addTriple(source, target, id, annotator, null, propertyID, quantifier, quantifierValue, propertyIsNegated.equals("true"));
+        addTriple(source, target, id, annotator, null, propertyID, quantifier, quantifierValue, propertyIsNegated.equals(KnowtatorXMLAttributes.IS_NEGATED_TRUE));
       }
     }
 
