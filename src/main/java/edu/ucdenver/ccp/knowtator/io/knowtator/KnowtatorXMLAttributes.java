@@ -17,6 +17,8 @@ public class KnowtatorXMLAttributes {
 	public static final String IS_NEGATED = "polarity";
 	public static final String IS_NEGATED_FALSE = "positive";
 	public static final String IS_NEGATED_TRUE = "negative";
+	public static final String X_LOCATION = "x";
+	public static final String Y_LOCATION = "y";
 
 	// Used for saving profile settings
 	public static final String COLOR = "color";

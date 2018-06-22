@@ -138,6 +138,7 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
     tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_QUANTIFIER, quantifier);
     tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_VALUE, quantifierValue);
     tripleElem.setAttribute(KnowtatorXMLAttributes.IS_NEGATED, isNegated ? KnowtatorXMLAttributes.IS_NEGATED_TRUE : KnowtatorXMLAttributes.IS_NEGATED_FALSE);
+
     graphElem.appendChild(tripleElem);
   }
 
@@ -216,7 +217,7 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
       controller.getOWLAPIDataExtractor().getWorkSpace().getOWLModelManager().addListener(this);
       controller.getOWLAPIDataExtractor().getWorkSpace().getOWLModelManager().addOntologyChangeListener(this);
 
-      property = controller.getOWLAPIDataExtractor().getOWLObjectPropertyByID(getValue().toString());
+      property = controller.getOWLAPIDataExtractor().getOWLObjectPropertyByID(propertyID);
       dontRedraw = true;
       setValue(String.format("%s\n%s %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(property), quantifier, quantifierValue));
       dontRedraw = false;
@@ -232,20 +233,9 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
     OWLEntityCollector addedCollector = new OWLEntityCollector(possiblyAddedEntities);
     OWLEntityCollector removedCollector = new OWLEntityCollector(possiblyRemovedEntities);
 
-    for (OWLOntologyChange chg : changes) {
-      if (chg.isAxiomChange()) {
-        OWLAxiomChange axChg = (OWLAxiomChange) chg;
-        if (axChg.getAxiom().getAxiomType() == AxiomType.DECLARATION) {
-          if (axChg instanceof AddAxiom) {
-            axChg.getAxiom().accept(addedCollector);
-          } else {
-            axChg.getAxiom().accept(removedCollector);
-          }
-        }
-      }
-    }
+	  processOntologyChanges(changes, addedCollector, removedCollector);
 
-    log.warn("Added entities:");
+	  log.warn("Added entities:");
     possiblyAddedEntities.forEach(owlEntity -> log.warn(owlEntity));
     log.warn("Removed entities");
     possiblyRemovedEntities.forEach(owlEntity -> log.warn(owlEntity));
@@ -268,7 +258,22 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
     }
   }
 
-  @Override
+	public static void processOntologyChanges(@Nonnull List<? extends OWLOntologyChange> changes, OWLEntityCollector addedCollector, OWLEntityCollector removedCollector) {
+		for (OWLOntologyChange chg : changes) {
+		  if (chg.isAxiomChange()) {
+			OWLAxiomChange axChg = (OWLAxiomChange) chg;
+			if (axChg.getAxiom().getAxiomType() == AxiomType.DECLARATION) {
+			  if (axChg instanceof AddAxiom) {
+				axChg.getAxiom().accept(addedCollector);
+			  } else {
+				axChg.getAxiom().accept(removedCollector);
+			  }
+			}
+		  }
+		}
+	}
+
+	@Override
   public void handleChange(OWLModelManagerChangeEvent event) {
     if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
       try {
@@ -316,7 +321,7 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
     setValue(null);
   }
 
-  public boolean getNegated() {
+  boolean getNegated() {
     return isNegated;
   }
 }

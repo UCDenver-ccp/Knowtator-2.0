@@ -204,7 +204,7 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 										.getActiveTextSource()
 										.getGraphSpaceManager()
 										.getActiveGraphSpace()
-										.addNode(null, annotation);
+										.addNode(null, annotation, 20, 20);
 
 						goToVertex(vertex);
 					} catch (ActiveTextSourceNotSetException
@@ -274,7 +274,6 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 		graphSpace.setupListeners();
 
 		graphSpace.reDrawGraph();
-		applyLayout();
 		graphComponent.refresh();
 	}
 
@@ -384,7 +383,6 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 			negateCheckBox.setSelected(graphSpace.getRelationSelectionManager().isSelectedNegation());
 			if (graphComponent.getGraph() != graphSpace) {
 				showGraph(graphSpace);
-				applyLayout();
 			}
 		} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 

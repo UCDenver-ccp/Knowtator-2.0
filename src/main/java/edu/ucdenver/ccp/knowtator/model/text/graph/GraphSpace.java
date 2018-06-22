@@ -14,7 +14,6 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationSelectionListener;
-import edu.ucdenver.ccp.knowtator.listeners.ViewListener;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
 import edu.ucdenver.ccp.knowtator.model.Profile;
 import edu.ucdenver.ccp.knowtator.model.Savable;
@@ -39,7 +38,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GraphSpace extends mxGraph
-    implements Savable, KnowtatorTextBoundObject, AnnotationSelectionListener, ViewListener {
+    implements Savable, KnowtatorTextBoundObject, AnnotationSelectionListener {
   @SuppressWarnings("unused")
   private Logger log = Logger.getLogger(GraphSpace.class);
 
@@ -66,7 +65,6 @@ public class GraphSpace extends mxGraph
     setCellsBendable(false);
     setResetEdgesOnMove(true);
     areListenersSet = false;
-    controller.addViewListener(this);
   }
 
   public static int compare(GraphSpace graphSpace1, GraphSpace graphSpace2) {
@@ -98,7 +96,6 @@ public class GraphSpace extends mxGraph
   ADDERS
    */
 
-
   private void addCellToGraph(mxCell cell) {
     getModel().beginUpdate();
     try {
@@ -111,14 +108,14 @@ public class GraphSpace extends mxGraph
     //    reDrawGraph();
   }
 
-  public AnnotationNode addNode(String nodeId, Annotation annotation) {
+  public AnnotationNode addNode(String nodeId, Annotation annotation, double x, double y) {
     if (annotation != null) {
       if (nodeId == null) {
         nodeId = textSource.getGraphSpaceManager().verifyID(null, "node");
       }
-      AnnotationNode newVertex = new AnnotationNode(controller, nodeId, annotation, textSource);
+      AnnotationNode newVertex =
+          new AnnotationNode(controller, nodeId, annotation, textSource, x, y);
       addCellToGraph(newVertex);
-
 
       return newVertex;
     } else {
@@ -138,7 +135,10 @@ public class GraphSpace extends mxGraph
       Boolean isNegated) {
     id = textSource.getGraphSpaceManager().verifyID(id, "edge");
 
-    if (!(quantifier.equals("only") || quantifier.equals("exactly") || quantifier.equals("min") || quantifier.equals("max"))) {
+    if (!(quantifier.equals("only")
+        || quantifier.equals("exactly")
+        || quantifier.equals("min")
+        || quantifier.equals("max"))) {
       quantifier = "some";
     }
 
@@ -208,9 +208,20 @@ public class GraphSpace extends mxGraph
 
       String id = graphVertexElem.getAttribute(KnowtatorXMLAttributes.ID);
       String annotationID = graphVertexElem.getAttribute(KnowtatorXMLTags.ANNOTATION);
+      String x_string = graphVertexElem.getAttribute(KnowtatorXMLAttributes.X_LOCATION);
+      String y_string = graphVertexElem.getAttribute(KnowtatorXMLAttributes.Y_LOCATION);
+
+      double x = 20;
+      double y = 20;
+      if (!x_string.equals("")) {
+        x = Double.parseDouble(x_string);
+      }
+      if (!y_string.equals("")) {
+        y = Double.parseDouble(y_string);
+      }
 
       Annotation annotation = this.textSource.getAnnotationManager().getAnnotation(annotationID);
-      addNode(id, annotation);
+      addNode(id, annotation, x, y);
     }
 
     for (Node tripleNode :
@@ -232,13 +243,23 @@ public class GraphSpace extends mxGraph
       AnnotationNode target = (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(objectID);
 
       if (target != null && source != null) {
-        addTriple(source, target, id, annotator, null, propertyID, quantifier, quantifierValue, propertyIsNegated.equals(KnowtatorXMLAttributes.IS_NEGATED_TRUE));
+        addTriple(
+            source,
+            target,
+            id,
+            annotator,
+            null,
+            propertyID,
+            quantifier,
+            quantifierValue,
+            propertyIsNegated.equals(KnowtatorXMLAttributes.IS_NEGATED_TRUE));
       }
     }
 
     for (Object cell : getChildVertices(getDefaultParent())) {
       ((mxGraphModel) getModel()).getCells().remove(((AnnotationNode) cell).getId(), cell);
-      String nodeId = textSource.getGraphSpaceManager().verifyID(((AnnotationNode) cell).getId(), "node");
+      String nodeId =
+          textSource.getGraphSpaceManager().verifyID(((AnnotationNode) cell).getId(), "node");
       ((AnnotationNode) cell).setId(nodeId);
       ((mxGraphModel) getModel()).getCells().put(nodeId, cell);
     }
@@ -270,7 +291,7 @@ public class GraphSpace extends mxGraph
               List<Object> subjectAnnotationVertices = getVerticesForAnnotation(subjectAnnotation);
               AnnotationNode source;
               if (subjectAnnotationVertices.size() == 0) {
-                source = addNode(null, subjectAnnotation);
+                source = addNode(null, subjectAnnotation, 20, 20);
               } else {
                 source = (AnnotationNode) subjectAnnotationVertices.get(0);
               }
@@ -280,7 +301,7 @@ public class GraphSpace extends mxGraph
               List<Object> objectAnnotationVertices = getVerticesForAnnotation(objectAnnotation);
               AnnotationNode target;
               if (objectAnnotationVertices.size() == 0) {
-                target = addNode(null, objectAnnotation);
+                target = addNode(null, objectAnnotation, 20, 20);
               } else {
                 target = (AnnotationNode) objectAnnotationVertices.get(0);
               }
@@ -382,10 +403,8 @@ public class GraphSpace extends mxGraph
                     mxICell source = edge.getSource();
                     mxICell target = edge.getTarget();
 
-                    String quantifier =
-                        relationSelectionManager.getSelectedRelationQuantifier();
-                    String value =
-                        relationSelectionManager.getSelectedRelationQuantifierValue();
+                    String quantifier = relationSelectionManager.getSelectedRelationQuantifier();
+                    String value = relationSelectionManager.getSelectedRelationQuantifierValue();
                     Boolean isNegated = relationSelectionManager.isSelectedNegation();
 
                     addTriple(
@@ -396,7 +415,8 @@ public class GraphSpace extends mxGraph
                         property,
                         propertyID,
                         quantifier,
-                        value, isNegated);
+                        value,
+                        isNegated);
                   }
 
                   getModel().remove(edge);
@@ -446,7 +466,8 @@ public class GraphSpace extends mxGraph
 
                       relationSelectionManager.setSelectedOWLObjectProperty(triple.getProperty());
                       relationSelectionManager.setSelectedPropertyQuantifer(triple.getQuantifier());
-                      relationSelectionManager.setSelectedRelationQuantifierValue(triple.getQuantifierValue());
+                      relationSelectionManager.setSelectedRelationQuantifierValue(
+                          triple.getQuantifierValue());
                       relationSelectionManager.setNegatation(triple.getNegated());
                     }
                   }
@@ -499,8 +520,6 @@ public class GraphSpace extends mxGraph
     return id;
   }
 
-
-
   @Override
   public String getId() {
     return id;
@@ -546,10 +565,5 @@ public class GraphSpace extends mxGraph
 
   public RelationSelectionManager getRelationSelectionManager() {
     return relationSelectionManager;
-  }
-
-  @Override
-  public void viewChanged() {
-    reDrawGraph();
   }
 }

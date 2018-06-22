@@ -11,6 +11,7 @@ import edu.ucdenver.ccp.knowtator.model.owl.OWLClassNotFoundException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.graph.Triple;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLEntityCollector;
@@ -373,18 +374,7 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
     OWLEntityCollector addedCollector = new OWLEntityCollector(possiblyAddedEntities);
     OWLEntityCollector removedCollector = new OWLEntityCollector(possiblyRemovedEntities);
 
-    for (OWLOntologyChange chg : changes) {
-      if (chg.isAxiomChange()) {
-        OWLAxiomChange axChg = (OWLAxiomChange) chg;
-        if (axChg.getAxiom().getAxiomType() == AxiomType.DECLARATION) {
-          if (axChg instanceof AddAxiom) {
-            axChg.getAxiom().accept(addedCollector);
-          } else {
-            axChg.getAxiom().accept(removedCollector);
-          }
-        }
-      }
-    }
+	  Triple.processOntologyChanges(changes, addedCollector, removedCollector);
 
     /*
     For now, I will assume that entity removed is the one that existed and the one

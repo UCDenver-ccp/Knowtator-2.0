@@ -23,10 +23,10 @@ public class AnnotationNode extends mxCell implements Savable, KnowtatorTextBoun
 	private Annotation annotation;
 	private TextSource textSource;
 
-	AnnotationNode(KnowtatorController controller, String id, Annotation annotation, TextSource textSource) {
+	AnnotationNode(KnowtatorController controller, String id, Annotation annotation, TextSource textSource, double x, double y) {
 		super(
 				annotation.getSpannedText(),
-				new mxGeometry(20, 20, 150, 150),
+				new mxGeometry(x, y, 150, 150),
 				"fontSize=16;fontColor=black;strokeColor=black");
 		this.textSource = textSource;
 		this.annotation = annotation;
@@ -42,6 +42,8 @@ public class AnnotationNode extends mxCell implements Savable, KnowtatorTextBoun
 		Element vertexElem = dom.createElement(KnowtatorXMLTags.VERTEX);
 		vertexElem.setAttribute(KnowtatorXMLAttributes.ID, getId());
 		vertexElem.setAttribute(KnowtatorXMLTags.ANNOTATION, annotation.getId());
+		vertexElem.setAttribute(KnowtatorXMLAttributes.X_LOCATION, String.valueOf(getGeometry().getX()));
+		vertexElem.setAttribute(KnowtatorXMLAttributes.Y_LOCATION, String.valueOf(getGeometry().getY()));
 		parent.appendChild(vertexElem);
 	}
 

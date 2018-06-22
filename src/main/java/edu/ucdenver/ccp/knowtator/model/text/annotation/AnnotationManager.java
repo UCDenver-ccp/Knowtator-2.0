@@ -282,7 +282,7 @@ public class AnnotationManager implements Savable {
 
               AnnotationNode source;
               if (vertices.isEmpty()) {
-                source = oldKnowtatorGraphSpace.addNode(null, annotation);
+                source = oldKnowtatorGraphSpace.addNode(null, annotation, 20, 20);
               } else {
                 source = (AnnotationNode) vertices.get(0);
               }
@@ -301,7 +301,7 @@ public class AnnotationManager implements Savable {
 
                 AnnotationNode target;
                 if (vertices1.isEmpty()) {
-                  target = oldKnowtatorGraphSpace.addNode(null, annotation1);
+                  target = oldKnowtatorGraphSpace.addNode(null, annotation1, 20, 20);
                 } else {
                   target = (AnnotationNode) vertices1.get(0);
                 }
@@ -426,7 +426,7 @@ public class AnnotationManager implements Savable {
     }
   }
 
-  public SpanCollection getAllSpanCollection() {
+  private SpanCollection getAllSpanCollection() {
     return allSpanCollection;
   }
 
