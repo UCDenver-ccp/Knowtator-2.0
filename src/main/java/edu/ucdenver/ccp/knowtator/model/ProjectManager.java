@@ -6,7 +6,6 @@ import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -38,8 +37,7 @@ public class ProjectManager {
     listeners = new ArrayList<>();
   }
 
-  public ProjectManager(KnowtatorView view) {
-    this.controller = view.getController();
+  public ProjectManager() {
     projectLoaded = false;
     listeners = new ArrayList<>();
   }
