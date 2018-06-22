@@ -2,14 +2,12 @@ package edu.ucdenver.ccp.knowtator.view.text;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Span;
+import edu.ucdenver.ccp.knowtator.model.text.graph.ActiveGraphSpaceNotSetException;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.view.ControllerNotSetException;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.chooser.AnnotationGraphSpaceChooser;
-import edu.ucdenver.ccp.knowtator.view.text.AnnotationClassLabel;
-import edu.ucdenver.ccp.knowtator.view.text.AnnotationIDLabel;
-import edu.ucdenver.ccp.knowtator.view.text.AnnotatorLabel;
-import edu.ucdenver.ccp.knowtator.view.text.SpanList;
 import edu.ucdenver.ccp.knowtator.view.text.textpane.KnowtatorTextPane;
 
 import javax.swing.*;
@@ -52,7 +50,7 @@ public class InfoPane {
 									.getSelectionManager()
 									.getActiveTextSource().getGraphSpaceManager().setSelectedGraphSpace((GraphSpace) comboBox.getSelectedItem());
 						}
-					} catch (ActiveTextSourceNotSetException ignored) {
+					} catch (ActiveTextSourceNotSetException | ControllerNotSetException | ActiveGraphSpaceNotSetException ignored) {
 
 					}
 				});
@@ -63,7 +61,7 @@ public class InfoPane {
 					if (jList.getSelectedValue() != null) {
 						try {
 							view.getController().getSelectionManager().getActiveTextSource().getAnnotationManager().setSelectedSpan((Span) jList.getSelectedValue());
-						} catch (ActiveTextSourceNotSetException ignored) {
+						} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
 						}
 					}

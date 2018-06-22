@@ -1,11 +1,7 @@
-TODO: Quantifier not setting initially
 TODO: Remove nulls and null checks where possible
 TODO: Remove checks for if project is loaded since getting active text source now throws an error if null
 TODO: Pop-up warning asking if current rendering or another rendering should be used
-TODO: Graphs should be centered
-TODO: Selecting annotation in graph should jump to annotation in doc
 TODO: Graph space chooser not autoscrolling
-TODO: Polarity in annotation file
 TODO: Add load errors
 TODO: Should probably also read in Events, Modifiers, etc.
 TODO: Prescribe colors (Colorbrewer qualitative), but allow the adding of new colors

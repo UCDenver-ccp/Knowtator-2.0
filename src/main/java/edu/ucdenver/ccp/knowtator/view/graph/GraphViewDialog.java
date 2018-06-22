@@ -2,7 +2,6 @@ package edu.ucdenver.ccp.knowtator.view.graph;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.graph.GraphView;
 import edu.ucdenver.ccp.knowtator.view.menu.GraphMenu;
 
 import javax.swing.*;
@@ -20,7 +19,7 @@ public class GraphViewDialog extends JDialog {
 
 		this.view = view;
 		$$$setupUI$$$();
-		setAlwaysOnTop(true);
+
 		setSize(new Dimension(800, 800));
 		setLocationRelativeTo(view);
 
