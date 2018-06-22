@@ -3,6 +3,7 @@ package edu.ucdenver.ccp.knowtator.view.chooser;
 import edu.ucdenver.ccp.knowtator.listeners.ViewListener;
 import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.view.ControllerNotSetException;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
@@ -27,7 +28,7 @@ public class AnnotationGraphSpaceChooser extends Chooser<GraphSpace> implements 
               .getSelectedAnnotation())) {
         addItem(graphSpace);
       }
-    } catch (ActiveTextSourceNotSetException ignored) {
+    } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
     }
   }
@@ -53,12 +54,12 @@ public class AnnotationGraphSpaceChooser extends Chooser<GraphSpace> implements 
                                   .getActiveTextSource()
                                   .getAnnotationManager()
                                   .getSelectedAnnotation());
-                        } catch (ActiveTextSourceNotSetException e) {
+                        } catch (ActiveTextSourceNotSetException | ControllerNotSetException e) {
                           return false;
                         }
                       })
                   .toArray(GraphSpace[]::new)));
-    } catch (ActiveTextSourceNotSetException ignored) {
+    } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
     }
   }

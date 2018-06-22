@@ -5,28 +5,30 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.OWLClassSelectionListener;
 import edu.ucdenver.ccp.knowtator.model.Profile;
 import edu.ucdenver.ccp.knowtator.model.ProjectManager;
+import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.view.chooser.ProfileChooser;
 import edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog;
 import edu.ucdenver.ccp.knowtator.view.menu.ProjectMenu;
 import edu.ucdenver.ccp.knowtator.view.text.InfoPane;
 import edu.ucdenver.ccp.knowtator.view.text.textpane.KnowtatorTextPane;
-import edu.ucdenver.ccp.knowtator.view.text.textpane.KnowtatorTextPane;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLWorkspace;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.swing.*;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.prefs.Preferences;
@@ -66,7 +68,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 	private ProjectManager projectManager;
 
 	public KnowtatorView() {
-		projectManager = new ProjectManager(this);
+		projectManager = new ProjectManager();
 		//		makeController();
 		$$$setupUI$$$();
 		makeButtons();
@@ -125,7 +127,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 		}
 	}
 
-	public KnowtatorController getController() {
+	public KnowtatorController getController() throws ControllerNotSetException {
+		if (controller == null) {
+			throw new ControllerNotSetException();
+		}
 		return controller;
 	}
 
@@ -146,6 +151,37 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
 		textSourceChooser = new TextSourceChooser(this);
 		profileChooser = new ProfileChooser(this);
+
+		KnowtatorView view = this;
+		addAncestorListener(
+				new AncestorListener() {
+					@Override
+					public void ancestorAdded(AncestorEvent event) {
+						Window ancestor = SwingUtilities.getWindowAncestor(view);
+						ancestor.addWindowFocusListener(
+								new WindowFocusListener() {
+									@Override
+									public void windowGainedFocus(WindowEvent e) {
+										graphViewDialog.setAlwaysOnTop(true);
+									}
+
+									@Override
+									public void windowLostFocus(WindowEvent e) {
+										if (e.getOppositeWindow() != graphViewDialog) {
+											graphViewDialog.setAlwaysOnTop(false);
+										}
+									}
+								});
+					}
+
+					@Override
+					public void ancestorRemoved(AncestorEvent event) {
+					}
+
+					@Override
+					public void ancestorMoved(AncestorEvent event) {
+					}
+				});
 	}
 
 	private void makeButtons() {
@@ -153,122 +189,167 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 		findTextButton.addActionListener(
 				e -> {
 					try {
-						controller
+						getController()
 								.getOWLAPIDataExtractor()
 								.searchForString(knowtatorTextPane.getSelectedText());
-					} catch (OWLWorkSpaceNotSetException ignored) {
+					} catch (OWLWorkSpaceNotSetException | ControllerNotSetException ignored) {
 
 					}
 				});
 
 		assignColorToClassButton.addActionListener(
 				e -> {
-					OWLEntity owlClass = controller.getSelectionManager().getSelectedOWLEntity();
-					if (owlClass == null) {
-						try {
-							owlClass = controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getSelectedAnnotation().getOwlClass();
-						} catch (ActiveTextSourceNotSetException ignored) {
+					try {
+						OWLEntity owlClass = getController().getSelectionManager().getSelectedOWLEntity();
+						if (owlClass == null) {
+							try {
+								owlClass =
+										getController()
+												.getSelectionManager()
+												.getActiveTextSource()
+												.getAnnotationManager()
+												.getSelectedAnnotation()
+												.getOwlClass();
+							} catch (ActiveTextSourceNotSetException ignored) {
+							}
 						}
-					}
-					if (owlClass instanceof OWLClass) {
-						Color c = JColorChooser.showDialog(this, "Pick a color for " + owlClass, Color.CYAN);
-						if (c != null) {
-							controller.getSelectionManager().getActiveProfile().addColor(owlClass, c);
+						if (owlClass instanceof OWLClass) {
+							Color c = JColorChooser.showDialog(this, "Pick a color for " + owlClass, Color.CYAN);
+							if (c != null) {
+								getController().getSelectionManager().getActiveProfile().addColor(owlClass, c);
 
-							if (JOptionPane.showConfirmDialog(
-									this, "Assign color to descendants of " + owlClass + "?")
-									== JOptionPane.OK_OPTION) {
-								try {
-									Set<OWLClass> descendants =
-											controller.getOWLAPIDataExtractor().getDescendants((OWLClass) owlClass);
+								if (JOptionPane.showConfirmDialog(
+										this, "Assign color to descendants of " + owlClass + "?")
+										== JOptionPane.OK_OPTION) {
+									try {
+										Set<OWLClass> descendants =
+												getController()
+														.getOWLAPIDataExtractor()
+														.getDescendants((OWLClass) owlClass);
 
-									for (OWLClass descendant : descendants) {
-										controller.getSelectionManager().getActiveProfile().addColor(descendant, c);
+										for (OWLClass descendant : descendants) {
+											getController()
+													.getSelectionManager()
+													.getActiveProfile()
+													.addColor(descendant, c);
+										}
+									} catch (OWLWorkSpaceNotSetException ignored) {
 									}
-								} catch (OWLWorkSpaceNotSetException ignored) {
 								}
 							}
 						}
+					} catch (ControllerNotSetException ignored) {
+
 					}
 				});
 
 		growSelectionStartButton.addActionListener(
 				(ActionEvent e) -> {
 					try {
-						if (controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getSelectedSpan() == null) {
+						if (getController()
+								.getSelectionManager()
+								.getActiveTextSource()
+								.getAnnotationManager()
+								.getSelectedSpan()
+								== null) {
 							knowtatorTextPane.growStart();
 						} else {
-							controller
+							getController()
 									.getSelectionManager()
 									.getActiveTextSource()
 									.getAnnotationManager()
 									.growSelectedSpanStart();
 						}
-					} catch (ActiveTextSourceNotSetException ignored) {
+					} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 					}
 				});
 		shrinkSelectionStartButton.addActionListener(
 				(ActionEvent e) -> {
 					try {
-						if (controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getSelectedSpan() == null) {
+						if (getController()
+								.getSelectionManager()
+								.getActiveTextSource()
+								.getAnnotationManager()
+								.getSelectedSpan()
+								== null) {
 							knowtatorTextPane.shrinkStart();
 						} else {
-							controller
+							getController()
 									.getSelectionManager()
 									.getActiveTextSource()
 									.getAnnotationManager()
 									.shrinkSelectedSpanStart();
 						}
-					} catch (ActiveTextSourceNotSetException ignored) {
+					} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
 					}
 				});
 		shrinkSelectionEndButton.addActionListener(
 				(ActionEvent e) -> {
 					try {
-						if (controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getSelectedSpan() == null) {
+						if (getController()
+								.getSelectionManager()
+								.getActiveTextSource()
+								.getAnnotationManager()
+								.getSelectedSpan()
+								== null) {
 							knowtatorTextPane.shrinkEnd();
 						} else {
-							controller
+							getController()
 									.getSelectionManager()
 									.getActiveTextSource()
 									.getAnnotationManager()
 									.shrinkSelectedSpanEnd();
 						}
-					} catch (ActiveTextSourceNotSetException ignored) {
+					} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
 					}
 				});
 		growSelectionEndButton.addActionListener(
 				(ActionEvent e) -> {
 					try {
-						if (controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getSelectedSpan() == null) {
+						if (getController()
+								.getSelectionManager()
+								.getActiveTextSource()
+								.getAnnotationManager()
+								.getSelectedSpan()
+								== null) {
 							knowtatorTextPane.growEnd();
 						} else {
-							controller
+							getController()
 									.getSelectionManager()
 									.getActiveTextSource()
 									.getAnnotationManager()
 									.growSelectedSpanEnd();
 						}
-					} catch (ActiveTextSourceNotSetException ignored) {
+					} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
 					}
 				});
 
 		previousSpanButton.addActionListener(
 				(ActionEvent e) -> {
-					try {
-						controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getPreviousSpan();
-					} catch (ActiveTextSourceNotSetException ignored) {
+					if (projectManager.isProjectLoaded()) {
+						try {
+							getController()
+									.getSelectionManager()
+									.getActiveTextSource()
+									.getAnnotationManager()
+									.getPreviousSpan();
+						} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
+						}
 					}
 				});
 		nextSpanButton.addActionListener(
 				(ActionEvent e) -> {
 					try {
-						controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getNextSpan();
-					} catch (ActiveTextSourceNotSetException ignored) {
+						getController()
+								.getSelectionManager()
+								.getActiveTextSource()
+								.getAnnotationManager()
+								.getNextSpan();
+					} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
 					}
 				});
@@ -284,8 +365,19 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 				e -> {
 					try {
 						if (projectManager.isProjectLoaded()
-								&& controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getSelectedAnnotation() != null) {
-							if (controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getSelectedAnnotation().getSpanCollection().size()
+								&& getController()
+								.getSelectionManager()
+								.getActiveTextSource()
+								.getAnnotationManager()
+								.getSelectedAnnotation()
+								!= null) {
+							if (getController()
+									.getSelectionManager()
+									.getActiveTextSource()
+									.getAnnotationManager()
+									.getSelectedAnnotation()
+									.getSpanCollection()
+									.size()
 									> 1) {
 								String[] buttons = {"Remove annotation", "Remove span from annotation", "Cancel"};
 								int response =
@@ -301,13 +393,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
 								switch (response) {
 									case 0:
-										controller
+										getController()
 												.getSelectionManager()
 												.getActiveTextSource()
 												.removeSelectedAnnotation();
 										break;
 									case 1:
-										controller
+										getController()
 												.getSelectionManager()
 												.getActiveTextSource()
 												.getAnnotationManager()
@@ -323,14 +415,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 										"Remove Annotation",
 										JOptionPane.YES_NO_OPTION)
 										== JOptionPane.YES_OPTION) {
-									controller
+									getController()
 											.getSelectionManager()
 											.getActiveTextSource()
 											.removeSelectedAnnotation();
 								}
 							}
 						}
-					} catch (ActiveTextSourceNotSetException ignored) {
+					} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
 					}
 				});
@@ -338,7 +430,12 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 				e -> {
 					if (projectManager.isProjectLoaded()) {
 						try {
-							if (controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getSelectedAnnotation() != null) {
+							if (getController()
+									.getSelectionManager()
+									.getActiveTextSource()
+									.getAnnotationManager()
+									.getSelectedAnnotation()
+									!= null) {
 								String[] buttons = {"Add new annotation", "Add span to annotation", "Cancel"};
 								int response =
 										JOptionPane.showOptionDialog(
@@ -353,14 +450,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
 								switch (response) {
 									case 0:
-										controller
+										getController()
 												.getSelectionManager()
 												.getActiveTextSource()
 												.getAnnotationManager()
 												.addSelectedAnnotation();
 										break;
 									case 1:
-										controller
+										getController()
 												.getSelectionManager()
 												.getActiveTextSource()
 												.getAnnotationManager()
@@ -371,22 +468,33 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 								}
 
 							} else {
-								controller
+								getController()
 										.getSelectionManager()
 										.getActiveTextSource()
 										.getAnnotationManager()
 										.addSelectedAnnotation();
 							}
-						} catch (ActiveTextSourceNotSetException ignored) {
+						} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
 						}
 					}
 				});
 
 		previousTextSourceButton.addActionListener(
-				e -> controller.getSelectionManager().getPreviousTextSource());
+				e -> {
+					try {
+						getController().getSelectionManager().getPreviousTextSource();
+					} catch (ControllerNotSetException ignored) {
+
+					}
+				});
 		nextTextSourceButton.addActionListener(
-				e -> controller.getSelectionManager().getNextTextSource());
+				e -> {
+					try {
+						getController().getSelectionManager().getNextTextSource();
+					} catch (ControllerNotSetException ignored) {
+					}
+				});
 
 		decreaseFontSizeButton.addActionListener(
 				(ActionEvent e) -> knowtatorTextPane.decreaseFontSize());
@@ -396,18 +504,26 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 				e -> {
 					JComboBox comboBox = (JComboBox) e.getSource();
 					if (comboBox.getSelectedItem() != null) {
-						controller
-								.getSelectionManager()
-								.setActiveTextSource((TextSource) comboBox.getSelectedItem());
+						try {
+							getController()
+									.getSelectionManager()
+									.setActiveTextSource((TextSource) comboBox.getSelectedItem());
+						} catch (ControllerNotSetException ignored) {
+
+						}
 					}
 				});
 		profileChooser.addActionListener(
 				e -> {
 					JComboBox comboBox = (JComboBox) e.getSource();
 					if (comboBox.getSelectedItem() != null) {
-						controller
-								.getSelectionManager()
-								.setSelectedProfile((Profile) comboBox.getSelectedItem());
+						try {
+							getController()
+									.getSelectionManager()
+									.setSelectedProfile((Profile) comboBox.getSelectedItem());
+						} catch (ControllerNotSetException ignored) {
+
+						}
 					}
 				});
 	}
@@ -488,7 +604,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 	public void owlEntityChanged(OWLEntity owlClass) {
 		owlEntitySelectionChanged(owlClass);
 	}
-
 
 	public ProjectManager getProjectManager() {
 		return projectManager;

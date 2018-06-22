@@ -5,6 +5,7 @@ import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
+import edu.ucdenver.ccp.knowtator.view.ControllerNotSetException;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -66,23 +67,30 @@ public class ProjectMenu extends JMenu implements ProjectListener {
     JMenuItem menuItem = new JMenuItem("Save text annotations as PNG");
     menuItem.addActionListener(
         e -> {
-            try {
-          JFileChooser fileChooser =
-              new JFileChooser(view.getProjectManager().getProjectLocation());
-          fileChooser.setFileFilter(new FileNameExtensionFilter("PNG", "png"));
-          fileChooser.setSelectedFile(new File(view.getController().getSelectionManager().getActiveTextSource().getId() + "_annotations.png"));
-          if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
-            view.getController().getSelectionManager().getActiveTextSource().getAnnotationManager().setSelectedAnnotation(null, null);
-            BufferedImage image = getScreenShot(view.getKnowtatorTextPane());
-            try {
-              ImageIO.write(image, "png", fileChooser.getSelectedFile());
-            } catch (IOException e1) {
-              e1.printStackTrace();
+          try {
+            JFileChooser fileChooser =
+                new JFileChooser(view.getProjectManager().getProjectLocation());
+            fileChooser.setFileFilter(new FileNameExtensionFilter("PNG", "png"));
+            fileChooser.setSelectedFile(
+                new File(
+                    view.getController().getSelectionManager().getActiveTextSource().getId()
+                        + "_annotations.png"));
+            if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
+              view.getController()
+                  .getSelectionManager()
+                  .getActiveTextSource()
+                  .getAnnotationManager()
+                  .setSelectedAnnotation(null, null);
+              BufferedImage image = getScreenShot(view.getKnowtatorTextPane());
+              try {
+                ImageIO.write(image, "png", fileChooser.getSelectedFile());
+              } catch (IOException e1) {
+                e1.printStackTrace();
+              }
             }
-          }
-                } catch (ActiveTextSourceNotSetException ignored) {
+          } catch (ControllerNotSetException | ActiveTextSourceNotSetException ignored) {
 
-            }
+          }
         });
 
     return menuItem;
@@ -90,14 +98,26 @@ public class ProjectMenu extends JMenu implements ProjectListener {
 
   private JMenuItem attemptOWLRenderConnectionCommand() {
     JMenuItem menuItem = new JMenuItem("Connect annotations using current rendering");
-    menuItem.addActionListener(e -> view.getController().getOWLAPIDataExtractor().setUpOWL());
+    menuItem.addActionListener(e -> {
+        try {
+            view.getController().getOWLAPIDataExtractor().setUpOWL();
+        } catch (ControllerNotSetException ignored) {
+
+        }
+    });
 
     return menuItem;
   }
 
   private JMenuItem debugMenuItem() {
     JMenuItem menuItem = new JCheckBoxMenuItem("Debug");
-    menuItem.addActionListener(e -> view.getController().setDebug());
+    menuItem.addActionListener(e -> {
+        try {
+            view.getController().setDebug();
+        } catch (ControllerNotSetException e1) {
+            ((JCheckBoxMenuItem) menuItem).setState(false);
+        }
+    });
     return menuItem;
   }
 
@@ -156,15 +176,15 @@ public class ProjectMenu extends JMenu implements ProjectListener {
   }
 
   private void loadProject(File file) {
-//    if (view.getProjectManager().isProjectLoaded()
-//        && JOptionPane.showConfirmDialog(
-//                view,
-//                "Save changes to Knowtator project?",
-//                "Save Project",
-//                JOptionPane.YES_NO_OPTION)
-//            == JOptionPane.YES_OPTION) {
-//      view.getProjectManager().saveProject();
-//    }
+    //    if (view.getProjectManager().isProjectLoaded()
+    //        && JOptionPane.showConfirmDialog(
+    //                view,
+    //                "Save changes to Knowtator project?",
+    //                "Save Project",
+    //                JOptionPane.YES_NO_OPTION)
+    //            == JOptionPane.YES_OPTION) {
+    //      view.getProjectManager().saveProject();
+    //    }
     view.reset();
     view.getProjectManager().loadProject(file);
     view.getPrefs().put("Last Project", file.getAbsolutePath());
@@ -186,16 +206,14 @@ public class ProjectMenu extends JMenu implements ProjectListener {
                     + "a project first. (Project -> New Project or Project -> Load Project)");
           } else {
             JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(
-                view.getProjectManager().getAnnotationsLocation());
+            fileChooser.setCurrentDirectory(view.getProjectManager().getAnnotationsLocation());
             FileFilter fileFilter =
                 new FileNameExtensionFilter("Annotation File (XML, ann, a1)", "xml", "ann", "a1");
             fileChooser.setFileFilter(fileFilter);
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
             if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-              view.getProjectManager()
-                  .loadWithAppropriateFormat(fileChooser.getSelectedFile());
+              view.getProjectManager().loadWithAppropriateFormat(fileChooser.getSelectedFile());
             }
           }
         });
@@ -207,8 +225,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
     menuItem.addActionListener(
         e -> {
           JFileChooser fileChooser = new JFileChooser();
-          fileChooser.setCurrentDirectory(
-              view.getProjectManager().getArticlesLocation());
+          fileChooser.setCurrentDirectory(view.getProjectManager().getArticlesLocation());
 
           if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
             view.getProjectManager().addDocument(fileChooser.getSelectedFile());
@@ -307,7 +324,11 @@ public class ProjectMenu extends JMenu implements ProjectListener {
                   view, message, "Enter profile name", JOptionPane.OK_CANCEL_OPTION);
           if (option == JOptionPane.OK_OPTION) {
             String annotator = field1.getText();
-            view.getController().getProfileManager().addProfile(annotator);
+              try {
+                  view.getController().getProfileManager().addProfile(annotator);
+              } catch (ControllerNotSetException ignored) {
+
+              }
           }
         });
 
@@ -317,7 +338,13 @@ public class ProjectMenu extends JMenu implements ProjectListener {
   private JMenuItem removeProfileMenu() {
     JMenuItem removeProfileMenu = new JMenuItem("Remove profile");
     removeProfileMenu.addActionListener(
-        e -> view.getController().getProfileManager().removeActiveProfile());
+        e -> {
+            try {
+                view.getController().getProfileManager().removeActiveProfile();
+            } catch (ControllerNotSetException ignored) {
+
+            }
+        });
 
     return removeProfileMenu;
   }
@@ -328,8 +355,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
     runIAA.addActionListener(
         e -> {
           JFileChooser fileChooser = new JFileChooser();
-          fileChooser.setCurrentDirectory(
-              view.getProjectManager().getProjectLocation());
+          fileChooser.setCurrentDirectory(view.getProjectManager().getProjectLocation());
           fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
           //
           // disable the "All files" option.
@@ -354,6 +380,8 @@ public class ProjectMenu extends JMenu implements ProjectListener {
               knowtatorIAA.closeHTML();
             } catch (IAAException e1) {
               e1.printStackTrace();
+            } catch (ControllerNotSetException ignored) {
+
             }
           }
         });

@@ -2,6 +2,7 @@ package edu.ucdenver.ccp.knowtator.model.text.annotation;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.events.AnnotationChangeEvent;
+import edu.ucdenver.ccp.knowtator.events.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.events.SpanChangeEvent;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
@@ -10,6 +11,7 @@ import edu.ucdenver.ccp.knowtator.model.*;
 import edu.ucdenver.ccp.knowtator.model.collection.AnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.graph.ActiveGraphSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import org.apache.log4j.Logger;
@@ -460,7 +462,8 @@ public class AnnotationManager implements Savable {
   }
 
   public void setSelectedSpan(Span newSpan) {
-    SpanChangeEvent e = new SpanChangeEvent(selectedSpan, newSpan);
+    List<ChangeEvent> changeEvents = new ArrayList<>();
+    changeEvents.add(new SpanChangeEvent(selectedSpan, newSpan));
 
     this.selectedSpan = newSpan;
     if (newSpan != null) {
@@ -478,8 +481,10 @@ public class AnnotationManager implements Savable {
         if (selectedAnnotation != null) {
           setSelectedSpan(newSpan);
           controller.getSelectionManager().setSelectedOWLEntity(selectedAnnotation.getOwlClass());
-        } else if (textSource.getGraphSpaceManager().getActiveGraphSpace() != null) {
+        } try {
           textSource.getGraphSpaceManager().getActiveGraphSpace().setSelectionCell(null);
+        } catch (ActiveGraphSpaceNotSetException ignored) {
+
         }
         annotationListeners.forEach(
             selectionListener -> selectionListener.selectedAnnotationChanged(e));

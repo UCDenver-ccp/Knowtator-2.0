@@ -6,6 +6,7 @@ import edu.ucdenver.ccp.knowtator.listeners.DebugListener;
 import edu.ucdenver.ccp.knowtator.listeners.OWLSetupListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
+import edu.ucdenver.ccp.knowtator.model.text.graph.ActiveGraphSpaceNotSetException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.protege.editor.core.ui.util.AugmentedJTextField;
@@ -187,7 +188,7 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
     OWLObjectProperty objectProperty = factory.getOWLObjectProperty(iri);
     try {
       controller.getSelectionManager().getActiveTextSource().getGraphSpaceManager().getActiveGraphSpace().getRelationSelectionManager().setSelectedOWLObjectProperty(objectProperty);
-    } catch (ActiveTextSourceNotSetException ignored) {
+    } catch (ActiveTextSourceNotSetException | ActiveGraphSpaceNotSetException ignored) {
 
     }
   }
@@ -203,7 +204,7 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
     if (ent instanceof OWLObjectProperty) {
       try {
         controller.getSelectionManager().getActiveTextSource().getGraphSpaceManager().getActiveGraphSpace().getRelationSelectionManager().setSelectedOWLObjectProperty((OWLObjectProperty) ent);
-      } catch (ActiveTextSourceNotSetException ignored) {
+      } catch (ActiveTextSourceNotSetException | ActiveGraphSpaceNotSetException ignored) {
 
       }
     } else if (ent instanceof OWLClass) {

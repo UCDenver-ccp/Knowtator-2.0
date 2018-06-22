@@ -6,6 +6,7 @@ import edu.ucdenver.ccp.knowtator.listeners.ViewListener;
 import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Span;
+import edu.ucdenver.ccp.knowtator.view.ControllerNotSetException;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.menu.AnnotationPopupMenu;
 
@@ -48,7 +49,7 @@ public class KnowtatorTextPane extends JTextArea
     controller.getProfileManager().addColorListener(this);
   }
 
-  private void showTextPane(TextSource textSource) {
+  private void showTextPane(TextSource textSource) throws ControllerNotSetException {
     this.textSource = textSource;
     setText(textSource.getContent());
     refreshHighlights();
@@ -66,8 +67,11 @@ public class KnowtatorTextPane extends JTextArea
 
           @Override
           public void mouseReleased(MouseEvent e) {
-            if (view.getController() != null) {
-              handleMouseRelease(e, press_offset, viewToModel(e.getPoint()));
+            try {
+
+                handleMouseRelease(e, press_offset, viewToModel(e.getPoint()));
+
+            } catch (ControllerNotSetException ignored) {
             }
           }
 
@@ -82,7 +86,7 @@ public class KnowtatorTextPane extends JTextArea
         });
   }
 
-  private void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
+  private void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) throws ControllerNotSetException {
     AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e, view);
 
     Set<Span> spansContainingLocation = getSpans(press_offset);
@@ -136,7 +140,7 @@ public class KnowtatorTextPane extends JTextArea
     }
   }
 
-  private void refreshHighlights() {
+  private void refreshHighlights() throws ControllerNotSetException {
     // Remove all previous highlights in case a span has been deleted
     getHighlighter().removeAllHighlights();
 
@@ -233,7 +237,7 @@ public class KnowtatorTextPane extends JTextArea
 
               }
             }
-          } catch (ActiveTextSourceNotSetException ignored) {
+          } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
           }
         });
@@ -252,7 +256,7 @@ public class KnowtatorTextPane extends JTextArea
               .getActiveTextSource()
               .getAnnotationManager()
               .getSpans(loc, 0, getText().length());
-    } catch (ActiveTextSourceNotSetException e) {
+    } catch (ActiveTextSourceNotSetException | ControllerNotSetException e) {
       return new HashSet<>();
     }
   }
@@ -280,7 +284,7 @@ public class KnowtatorTextPane extends JTextArea
           }
         }
       }
-    } catch (ActiveTextSourceNotSetException ignored) {
+    } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
     }
   }
@@ -291,10 +295,10 @@ public class KnowtatorTextPane extends JTextArea
       if (this.textSource != view.getController().getSelectionManager().getActiveTextSource()) {
         showTextPane(view.getController().getSelectionManager().getActiveTextSource());
       }
-    } catch (ActiveTextSourceNotSetException ignored) {
+      refreshHighlights();
+    } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
     }
-    refreshHighlights();
   }
 
 
@@ -328,6 +332,10 @@ public class KnowtatorTextPane extends JTextArea
 
   @Override
   public void colorChanged() {
-    refreshHighlights();
+    try {
+      refreshHighlights();
+    } catch (ControllerNotSetException ignored) {
+
+    }
   }
 }

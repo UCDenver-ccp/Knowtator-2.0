@@ -36,7 +36,10 @@ public class GraphSpaceManager implements Savable {
     graphSpaceCollection = new GraphSpaceCollection(controller);
   }
 
-  public GraphSpace getActiveGraphSpace() {
+  public GraphSpace getActiveGraphSpace() throws ActiveGraphSpaceNotSetException {
+    if (activeGraphSpace == null) {
+      throw new ActiveGraphSpaceNotSetException();
+    }
     return activeGraphSpace;
   }
 

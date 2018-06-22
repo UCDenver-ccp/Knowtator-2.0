@@ -2,6 +2,8 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 
 import com.mxgraph.util.mxCellRenderer;
 import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
+import edu.ucdenver.ccp.knowtator.model.text.graph.ActiveGraphSpaceNotSetException;
+import edu.ucdenver.ccp.knowtator.view.ControllerNotSetException;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.imageio.ImageIO;
@@ -38,11 +40,11 @@ public class GraphMenu extends JMenu {
 		JMenuItem menuItem = new JMenuItem("Rename Graph");
 		menuItem.addActionListener(
 				e -> {
-					String graphName = getGraphNameInput(null);
+					String graphName = getGraphNameInput(view, null);
 					if (graphName != null) {
 						try {
 							view.getController().getSelectionManager().getActiveTextSource().getGraphSpaceManager().getActiveGraphSpace().setId(graphName);
-						} catch (ActiveTextSourceNotSetException ignored) {
+						} catch (ActiveTextSourceNotSetException | ControllerNotSetException | ActiveGraphSpaceNotSetException ignored) {
 
 						}
 					}
@@ -78,7 +80,7 @@ public class GraphMenu extends JMenu {
 							e1.printStackTrace();
 						}
 					}
-					} catch (ActiveTextSourceNotSetException ignored) {
+					} catch (ActiveTextSourceNotSetException | ControllerNotSetException | ActiveGraphSpaceNotSetException ignored) {
 					}
 				});
 
@@ -97,7 +99,7 @@ public class GraphMenu extends JMenu {
 									.getSelectionManager()
 									.getActiveTextSource()
 									.getGraphSpaceManager().removeGraphSpace(view.getController().getSelectionManager().getActiveTextSource().getGraphSpaceManager().getActiveGraphSpace());
-						} catch (ActiveTextSourceNotSetException ignored) {
+						} catch (ActiveTextSourceNotSetException | ControllerNotSetException | ActiveGraphSpaceNotSetException ignored) {
 
 						}
 					}
@@ -110,7 +112,7 @@ public class GraphMenu extends JMenu {
 		JMenuItem addNewGraphMenuItem = new JMenuItem("Create new graph");
 		addNewGraphMenuItem.addActionListener(
 				e -> {
-					String graphName = getGraphNameInput(null);
+					String graphName = getGraphNameInput(view, null);
 
 					if (graphName != null) {
 						try {
@@ -118,7 +120,7 @@ public class GraphMenu extends JMenu {
 									.getSelectionManager()
 									.getActiveTextSource()
 									.getGraphSpaceManager().addGraphSpace(graphName);
-						} catch (ActiveTextSourceNotSetException ignored) {
+						} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
 						}
 					}
@@ -127,7 +129,7 @@ public class GraphMenu extends JMenu {
 		return addNewGraphMenuItem;
 	}
 
-	private String getGraphNameInput(JTextField field1) {
+	public static String getGraphNameInput(KnowtatorView view, JTextField field1) {
 		if (field1 == null) {
 			field1 = new JTextField();
 
@@ -171,7 +173,7 @@ public class GraphMenu extends JMenu {
 										} else {
 											finalField.getHighlighter().removeAllHighlights();
 										}
-									} catch (ActiveTextSourceNotSetException ignored) {
+									} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
 									}
 								}
@@ -196,13 +198,13 @@ public class GraphMenu extends JMenu {
 					.getGraphSpaceManager().getGraphSpaceCollection()
 					.containsID(field1.getText())) {
 				JOptionPane.showMessageDialog(field1, "Graph name already in use");
-				return getGraphNameInput(field1);
+				return getGraphNameInput(view, field1);
 			} else {
 				return field1.getText();
 			}
 		}
 
-		} catch (ActiveTextSourceNotSetException ignored) {
+		} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 		}
 		return null;
 	}
@@ -210,7 +212,7 @@ public class GraphMenu extends JMenu {
 	/**
 	 * Taken from https://tips4java.wordpress.com/2010/03/14/dialog-focus/
 	 */
-	private class RequestFocusListener implements AncestorListener {
+	private static class RequestFocusListener implements AncestorListener {
 		private boolean removeListener;
 
 		/*
