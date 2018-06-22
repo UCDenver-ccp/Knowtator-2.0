@@ -2,7 +2,6 @@ package edu.ucdenver.ccp.knowtator.model.selection;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.events.ProfileChangeEvent;
-import edu.ucdenver.ccp.knowtator.events.TextSourceChangeEvent;
 import edu.ucdenver.ccp.knowtator.listeners.OWLClassSelectionListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProfileSelectionListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
@@ -90,21 +89,8 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
   }
 
   public void setActiveTextSource(TextSource newTextSource) {
-    if (controller.getProjectManager().isProjectLoaded()) {
-      TextSourceChangeEvent e = new TextSourceChangeEvent(this.activeTextSource, newTextSource);
+    if (controller.getProjectManager().isProjectLoaded() && activeTextSource != newTextSource) {
       this.activeTextSource = newTextSource;
-      //      if (newTextSource
-      //          .getAnnotationManager()
-      //          .getGraphSpaceCollection()
-      //          .getCollection()
-      //          .isEmpty()) {
-      //        newTextSource.getAnnotationManager().addGraphSpace(newTextSource.getId() + " Graph
-      // Space");
-      //      } else {
-      //        setSelectedGraphSpace(
-      //
-      // newTextSource.getAnnotationManager().getGraphSpaceCollection().getCollection().first());
-      //      }
       controller.refreshView();
     }
   }

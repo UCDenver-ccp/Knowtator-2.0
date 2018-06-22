@@ -11,12 +11,17 @@ import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.listeners.ViewListener;
 import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.model.text.graph.ActiveGraphSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.view.ControllerNotSetException;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
+import edu.ucdenver.ccp.knowtator.view.menu.GraphMenu;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -62,120 +67,59 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 		graphSpaceChooser = new GraphSpaceChooser(view);
 		mxGraph testGraph = new mxGraph();
 		graphComponent = new mxGraphComponent(testGraph);
+	}
 
+	private void quantifierButtonAction(String quantifier) {
+		try {
+			view.getController()
+					.getSelectionManager()
+					.getActiveTextSource()
+					.getGraphSpaceManager()
+					.getActiveGraphSpace()
+					.getRelationSelectionManager()
+					.setSelectedPropertyQuantifer(quantifier);
+
+			if (quantifier.equals("some") || quantifier.equals("only")) {
+				view.getController()
+						.getSelectionManager()
+						.getActiveTextSource()
+						.getGraphSpaceManager()
+						.getActiveGraphSpace()
+						.getRelationSelectionManager()
+						.setSelectedRelationQuantifierValue("");
+			}
+		} catch (ActiveTextSourceNotSetException
+				| ControllerNotSetException
+				| ActiveGraphSpaceNotSetException ignored) {
+
+		}
+	}
+
+	private void quantifierTextFieldAction(String quantifierValue) {
+		try {
+			view.getController()
+					.getSelectionManager()
+					.getActiveTextSource()
+					.getGraphSpaceManager()
+					.getActiveGraphSpace()
+					.getRelationSelectionManager()
+					.setSelectedRelationQuantifierValue(quantifierValue);
+		} catch (ControllerNotSetException
+				| ActiveTextSourceNotSetException
+				| ActiveGraphSpaceNotSetException ignored) {
+
+		}
 	}
 
 	private void makeButtons() {
-		someRadioButton.addActionListener(
-				e -> {
-					try {
-						view.getController()
-								.getSelectionManager()
-								.getActiveTextSource()
-								.getGraphSpaceManager()
-								.getActiveGraphSpace()
-								.getRelationSelectionManager()
-								.setSelectedPropertyQuantifer("some");
-
-						view.getController()
-								.getSelectionManager()
-								.getActiveTextSource()
-								.getGraphSpaceManager()
-								.getActiveGraphSpace()
-								.getRelationSelectionManager()
-								.setSelectedRelationQuantifierValue("");
-					} catch (ActiveTextSourceNotSetException ignored) {
-
-					}
-				});
-		onlyRadioButton.addActionListener(
-				e -> {
-					try {
-						view.getController()
-								.getSelectionManager()
-								.getActiveTextSource()
-								.getGraphSpaceManager()
-								.getActiveGraphSpace()
-								.getRelationSelectionManager()
-								.setSelectedPropertyQuantifer("only");
-
-						view.getController()
-								.getSelectionManager()
-								.getActiveTextSource()
-								.getGraphSpaceManager()
-								.getActiveGraphSpace()
-								.getRelationSelectionManager()
-								.setSelectedRelationQuantifierValue("");
-					} catch (ActiveTextSourceNotSetException ignored) {
-
-					}
-				});
-		minRadioButton.addActionListener(
-				e -> {
-					try {
-						view.getController()
-								.getSelectionManager()
-								.getActiveTextSource()
-								.getGraphSpaceManager()
-								.getActiveGraphSpace()
-								.getRelationSelectionManager()
-								.setSelectedPropertyQuantifer("min");
-
-						view.getController()
-								.getSelectionManager()
-								.getActiveTextSource()
-								.getGraphSpaceManager()
-								.getActiveGraphSpace()
-								.getRelationSelectionManager()
-								.setSelectedRelationQuantifierValue(minValueTextField.getText());
-					} catch (ActiveTextSourceNotSetException ignored) {
-
-					}
-				});
-		maxRadioButton.addActionListener(
-				e -> {
-					try {
-						view.getController()
-								.getSelectionManager()
-								.getActiveTextSource()
-								.getGraphSpaceManager()
-								.getActiveGraphSpace()
-								.getRelationSelectionManager()
-								.setSelectedPropertyQuantifer("max");
-
-						view.getController()
-								.getSelectionManager()
-								.getActiveTextSource()
-								.getGraphSpaceManager()
-								.getActiveGraphSpace()
-								.getRelationSelectionManager()
-								.setSelectedRelationQuantifierValue(maxValueTextField.getText());
-					} catch (ActiveTextSourceNotSetException ignored) {
-
-					}
-				});
-		exactlyRadioButton.addActionListener(
-				e -> {
-					try {
-						view.getController()
-								.getSelectionManager()
-								.getActiveTextSource()
-								.getGraphSpaceManager()
-								.getActiveGraphSpace()
-								.getRelationSelectionManager()
-								.setSelectedPropertyQuantifer("exactly");
-
-						view.getController()
-								.getSelectionManager()
-								.getActiveTextSource()
-								.getGraphSpaceManager()
-								.getActiveGraphSpace()
-								.getRelationSelectionManager()
-								.setSelectedRelationQuantifierValue(exactlyValueTextField.getText());
-					} catch (ActiveTextSourceNotSetException ignored) {
-
-					}
-				});
+		someRadioButton.addActionListener(e -> quantifierButtonAction("some"));
+		onlyRadioButton.addActionListener(e -> quantifierButtonAction("only"));
+		minRadioButton.addActionListener(e -> quantifierButtonAction("min"));
+		maxRadioButton.addActionListener(e -> quantifierButtonAction("max"));
+		exactlyRadioButton.addActionListener(e -> quantifierButtonAction("exactly"));
+		makeQuantifierTextField(minValueTextField, minRadioButton);
+		makeQuantifierTextField(maxValueTextField, maxRadioButton);
+		makeQuantifierTextField(exactlyValueTextField, exactlyRadioButton);
 		negateCheckBox.addActionListener(
 				e -> {
 					try {
@@ -186,7 +130,9 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 								.getActiveGraphSpace()
 								.getRelationSelectionManager()
 								.setNegatation(negateCheckBox.isSelected());
-					} catch (ActiveTextSourceNotSetException ignored) {
+					} catch (ActiveTextSourceNotSetException
+							| ControllerNotSetException
+							| ActiveGraphSpaceNotSetException ignored) {
 
 					}
 				});
@@ -208,7 +154,9 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 									.getGraphSpaceManager()
 									.setSelectedGraphSpace((GraphSpace) comboBox.getSelectedItem());
 						}
-					} catch (ActiveTextSourceNotSetException ignored) {
+					} catch (ActiveTextSourceNotSetException
+							| ControllerNotSetException
+							| ActiveGraphSpaceNotSetException ignored) {
 
 					}
 				});
@@ -223,7 +171,7 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 								.getActiveTextSource()
 								.getGraphSpaceManager()
 								.getPreviousGraphSpace();
-					} catch (ActiveTextSourceNotSetException ignored) {
+					} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
 					}
 				});
@@ -235,7 +183,7 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 								.getActiveTextSource()
 								.getGraphSpaceManager()
 								.getNextGraphSpace();
-					} catch (ActiveTextSourceNotSetException ignored) {
+					} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
 					}
 				});
@@ -243,26 +191,51 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 		addAnnotationNodeButton.addActionListener(
 				e -> {
 					try {
-						Annotation annotation = view.getController()
-								.getSelectionManager()
-								.getActiveTextSource()
-								.getAnnotationManager()
-								.getSelectedAnnotation();
+						Annotation annotation =
+								view.getController()
+										.getSelectionManager()
+										.getActiveTextSource()
+										.getAnnotationManager()
+										.getSelectedAnnotation();
 
-						mxCell vertex = view.getController()
-								.getSelectionManager()
-								.getActiveTextSource()
-								.getGraphSpaceManager()
-								.getActiveGraphSpace()
-								.addNode(null, annotation);
-
+						mxCell vertex =
+								view.getController()
+										.getSelectionManager()
+										.getActiveTextSource()
+										.getGraphSpaceManager()
+										.getActiveGraphSpace()
+										.addNode(null, annotation);
 
 						goToVertex(vertex);
-					} catch (ActiveTextSourceNotSetException ignored) {
+					} catch (ActiveTextSourceNotSetException
+							| ControllerNotSetException
+							| ActiveGraphSpaceNotSetException ignored) {
 
 					}
 				});
 		applyLayoutButton.addActionListener(e -> applyLayout());
+	}
+
+	private void makeQuantifierTextField(JTextField quantifierValueTextField, JRadioButton quantifierRadioButton) {
+		quantifierValueTextField
+				.getDocument()
+				.addDocumentListener(
+						new DocumentListener() {
+							@Override
+							public void insertUpdate(DocumentEvent e) {
+								quantifierTextFieldAction(quantifierValueTextField.getText());
+								quantifierRadioButton.doClick();
+							}
+
+							@Override
+							public void removeUpdate(DocumentEvent e) {
+								quantifierTextFieldAction(quantifierValueTextField.getText());
+								quantifierRadioButton.doClick();
+							}
+
+							@Override
+							public void changedUpdate(DocumentEvent e) { }
+						});
 	}
 
 	@SuppressWarnings("unused")
@@ -274,7 +247,7 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 						.getActiveTextSource()
 						.getGraphSpaceManager()
 						.setSelectedGraphSpace(graphSpace);
-			} catch (ActiveTextSourceNotSetException ignored) {
+			} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
 			}
 			List<Object> vertices = graphSpace.getVerticesForAnnotation(annotation);
@@ -294,9 +267,11 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 		graphComponent.setGraph(graphSpace);
 
 		graphComponent.setName(graphSpace.getId());
+		exactlyValueTextField.setText("");
+		minValueTextField.setText("");
+		maxValueTextField.setText("");
 
 		graphSpace.setupListeners();
-		someRadioButton.doClick();
 
 		graphSpace.reDrawGraph();
 		applyLayout();
@@ -335,7 +310,9 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 				graph.getModel().endUpdate();
 				graphComponent.zoomAndCenter();
 			}
-		} catch (ActiveTextSourceNotSetException ignored) {
+		} catch (ActiveTextSourceNotSetException
+				| ControllerNotSetException
+				| ActiveGraphSpaceNotSetException ignored) {
 		}
 	}
 
@@ -347,7 +324,9 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 					.getGraphSpaceManager()
 					.getActiveGraphSpace()
 					.removeSelectedCell();
-		} catch (ActiveTextSourceNotSetException ignored) {
+		} catch (ActiveTextSourceNotSetException
+				| ControllerNotSetException
+				| ActiveGraphSpaceNotSetException ignored) {
 
 		}
 	}
@@ -369,13 +348,62 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 	@Override
 	public void viewChanged() {
 		try {
-			GraphSpace graphSpace = view.getController().getSelectionManager().getActiveTextSource().getGraphSpaceManager().getActiveGraphSpace();
+			GraphSpace graphSpace =
+					view.getController()
+							.getSelectionManager()
+							.getActiveTextSource()
+							.getGraphSpaceManager()
+							.getActiveGraphSpace();
+			String quantifier = graphSpace.getRelationSelectionManager().getSelectedRelationQuantifier();
+			if (quantifier != null) {
+				switch (quantifier) {
+					case "only":
+						onlyRadioButton.setSelected(true);
+						break;
+					case "exactly":
+						exactlyRadioButton.setSelected(true);
+//						exactlyValueTextField.setText(
+//								graphSpace.getRelationSelectionManager().getSelectedRelationQuantifierValue());
+						break;
+					case "min":
+						minRadioButton.setSelected(true);
+//						minValueTextField.setText(
+//								graphSpace.getRelationSelectionManager().getSelectedRelationQuantifierValue());
+						break;
+					case "max":
+						maxRadioButton.setSelected(true);
+//						maxValueTextField.setText(
+//								graphSpace.getRelationSelectionManager().getSelectedRelationQuantifierValue());
+						break;
+					default:
+						someRadioButton.setSelected(true);
+						break;
+				}
+			}
+
+			negateCheckBox.setSelected(graphSpace.getRelationSelectionManager().isSelectedNegation());
 			if (graphComponent.getGraph() != graphSpace) {
-				showGraph(view.getController().getSelectionManager().getActiveTextSource().getGraphSpaceManager().getActiveGraphSpace());
+				showGraph(graphSpace);
 				applyLayout();
 			}
-		} catch (ActiveTextSourceNotSetException ignored) {
+		} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
+		} catch (ActiveGraphSpaceNotSetException e) {
+			String graphName = GraphMenu.getGraphNameInput(view, null);
+
+			if (graphName != null) {
+				try {
+					view.getController()
+							.getSelectionManager()
+							.getActiveTextSource()
+							.getGraphSpaceManager()
+							.addGraphSpace(graphName);
+					someRadioButton.doClick();
+					negateCheckBox.setSelected(false);
+				} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+
+				}
+			}
 		}
 	}
 
@@ -467,30 +495,30 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 		someRadioButton = new JRadioButton();
 		someRadioButton.setSelected(true);
 		this.$$$loadButtonText$$$(someRadioButton, ResourceBundle.getBundle("log4j").getString("some1"));
-		propertyValuePanel.add(someRadioButton, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(58, 23), null, 0, false));
+		propertyValuePanel.add(someRadioButton, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(58, 23), null, 0, false));
 		onlyRadioButton = new JRadioButton();
 		this.$$$loadButtonText$$$(onlyRadioButton, ResourceBundle.getBundle("log4j").getString("only1"));
-		propertyValuePanel.add(onlyRadioButton, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(58, 23), null, 0, false));
+		propertyValuePanel.add(onlyRadioButton, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(58, 23), null, 0, false));
 		exactlyRadioButton = new JRadioButton();
 		this.$$$loadButtonText$$$(exactlyRadioButton, ResourceBundle.getBundle("log4j").getString("exactly1"));
-		propertyValuePanel.add(exactlyRadioButton, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		propertyValuePanel.add(exactlyRadioButton, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		minRadioButton = new JRadioButton();
 		this.$$$loadButtonText$$$(minRadioButton, ResourceBundle.getBundle("log4j").getString("min1"));
-		propertyValuePanel.add(minRadioButton, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		propertyValuePanel.add(minRadioButton, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		maxRadioButton = new JRadioButton();
 		this.$$$loadButtonText$$$(maxRadioButton, ResourceBundle.getBundle("log4j").getString("max1"));
-		propertyValuePanel.add(maxRadioButton, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		negateCheckBox = new JCheckBox();
-		this.$$$loadButtonText$$$(negateCheckBox, ResourceBundle.getBundle("log4j").getString("negate"));
-		propertyValuePanel.add(negateCheckBox, new com.intellij.uiDesigner.core.GridConstraints(5, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		propertyValuePanel.add(maxRadioButton, new com.intellij.uiDesigner.core.GridConstraints(5, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		exactlyValueTextField = new JTextField();
-		propertyValuePanel.add(exactlyValueTextField, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+		propertyValuePanel.add(exactlyValueTextField, new com.intellij.uiDesigner.core.GridConstraints(3, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
 		final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
 		propertyValuePanel.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(6, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
 		minValueTextField = new JTextField();
-		propertyValuePanel.add(minValueTextField, new com.intellij.uiDesigner.core.GridConstraints(3, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+		propertyValuePanel.add(minValueTextField, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
 		maxValueTextField = new JTextField();
-		propertyValuePanel.add(maxValueTextField, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+		propertyValuePanel.add(maxValueTextField, new com.intellij.uiDesigner.core.GridConstraints(5, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+		negateCheckBox = new JCheckBox();
+		this.$$$loadButtonText$$$(negateCheckBox, ResourceBundle.getBundle("log4j").getString("negate"));
+		propertyValuePanel.add(negateCheckBox, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		ButtonGroup buttonGroup;
 		buttonGroup = new ButtonGroup();
 		buttonGroup.add(someRadioButton);

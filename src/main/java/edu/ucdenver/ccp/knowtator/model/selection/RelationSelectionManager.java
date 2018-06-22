@@ -43,6 +43,7 @@ public class RelationSelectionManager {
 			}
 		});
 		controller.getSelectionManager().setSelectedOWLEntity(owlObjectProperty);
+
 	}
 
 
@@ -61,6 +62,7 @@ public class RelationSelectionManager {
 				((Triple) cell).setQuantifier(selectedRelationQuantifier);
 			}
 		});
+		controller.refreshView();
 	}
 
 	public String getSelectedRelationQuantifierValue() {

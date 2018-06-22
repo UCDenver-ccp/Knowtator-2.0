@@ -14,6 +14,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationSelectionListener;
+import edu.ucdenver.ccp.knowtator.listeners.ViewListener;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
 import edu.ucdenver.ccp.knowtator.model.Profile;
 import edu.ucdenver.ccp.knowtator.model.Savable;
@@ -38,7 +39,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GraphSpace extends mxGraph
-    implements Savable, KnowtatorTextBoundObject, AnnotationSelectionListener {
+    implements Savable, KnowtatorTextBoundObject, AnnotationSelectionListener, ViewListener {
   @SuppressWarnings("unused")
   private Logger log = Logger.getLogger(GraphSpace.class);
 
@@ -65,6 +66,7 @@ public class GraphSpace extends mxGraph
     setCellsBendable(false);
     setResetEdgesOnMove(true);
     areListenersSet = false;
+    controller.addViewListener(this);
   }
 
   public static int compare(GraphSpace graphSpace1, GraphSpace graphSpace2) {
@@ -135,6 +137,10 @@ public class GraphSpace extends mxGraph
       String quantifierValue,
       Boolean isNegated) {
     id = textSource.getGraphSpaceManager().verifyID(id, "edge");
+
+    if (!(quantifier.equals("only") || quantifier.equals("exactly") || quantifier.equals("min") || quantifier.equals("max"))) {
+      quantifier = "some";
+    }
 
     Triple newTriple;
     if (property != null) {
@@ -436,9 +442,12 @@ public class GraphSpace extends mxGraph
                       setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[] {cell});
 
                     } else if (cell instanceof Triple) {
-                      OWLObjectProperty value = ((Triple) cell).getProperty();
+                      Triple triple = (Triple) cell;
 
-                      relationSelectionManager.setSelectedOWLObjectProperty(value);
+                      relationSelectionManager.setSelectedOWLObjectProperty(triple.getProperty());
+                      relationSelectionManager.setSelectedPropertyQuantifer(triple.getQuantifier());
+                      relationSelectionManager.setSelectedRelationQuantifierValue(triple.getQuantifierValue());
+                      relationSelectionManager.setNegatation(triple.getNegated());
                     }
                   }
                   reDrawGraph();
@@ -537,5 +546,10 @@ public class GraphSpace extends mxGraph
 
   public RelationSelectionManager getRelationSelectionManager() {
     return relationSelectionManager;
+  }
+
+  @Override
+  public void viewChanged() {
+    reDrawGraph();
   }
 }
