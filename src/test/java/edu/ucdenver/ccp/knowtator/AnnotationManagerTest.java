@@ -1,6 +1,10 @@
 package edu.ucdenver.ccp.knowtator;
 
 import edu.ucdenver.ccp.knowtator.model.*;
+import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.model.text.annotation.AnnotationManager;
+import edu.ucdenver.ccp.knowtator.model.text.annotation.Span;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 

@@ -4,6 +4,7 @@ import edu.ucdenver.ccp.knowtator.iaa.IAAException;
 import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
+import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -65,12 +66,13 @@ public class ProjectMenu extends JMenu implements ProjectListener {
     JMenuItem menuItem = new JMenuItem("Save text annotations as PNG");
     menuItem.addActionListener(
         e -> {
+            try {
           JFileChooser fileChooser =
               new JFileChooser(view.getProjectManager().getProjectLocation());
           fileChooser.setFileFilter(new FileNameExtensionFilter("PNG", "png"));
           fileChooser.setSelectedFile(new File(view.getController().getSelectionManager().getActiveTextSource().getId() + "_annotations.png"));
           if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
-            view.getController().getSelectionManager().setSelectedAnnotation(null, null);
+            view.getController().getSelectionManager().getActiveTextSource().getAnnotationManager().setSelectedAnnotation(null, null);
             BufferedImage image = getScreenShot(view.getKnowtatorTextPane());
             try {
               ImageIO.write(image, "png", fileChooser.getSelectedFile());
@@ -78,6 +80,9 @@ public class ProjectMenu extends JMenu implements ProjectListener {
               e1.printStackTrace();
             }
           }
+                } catch (ActiveTextSourceNotSetException ignored) {
+
+            }
         });
 
     return menuItem;

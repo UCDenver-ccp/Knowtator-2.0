@@ -88,7 +88,7 @@ public class ProfileManager implements Savable {
   @Override
   public void writeToGeniaXML(Document dom, Element parent) {}
 
-  Profile getDefaultProfile() {
+  public Profile getDefaultProfile() {
     return profileCollection.getDefaultProfile();
   }
 
@@ -98,7 +98,7 @@ public class ProfileManager implements Savable {
     }
   }
 
-  Profile getProfile(String profileID) {
+  public Profile getProfile(String profileID) {
     return profileCollection.get(profileID);
   }
 

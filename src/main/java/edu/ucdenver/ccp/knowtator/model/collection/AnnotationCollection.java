@@ -2,7 +2,7 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.Annotation;
+import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
 
 import java.util.TreeSet;
 

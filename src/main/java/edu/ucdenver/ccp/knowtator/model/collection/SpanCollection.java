@@ -2,7 +2,7 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.SpanCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.Span;
+import edu.ucdenver.ccp.knowtator.model.text.annotation.Span;
 
 import java.util.TreeSet;
 

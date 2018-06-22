@@ -2,8 +2,8 @@ package edu.ucdenver.ccp.knowtator.io.brat;
 
 import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.TextSource;
-import edu.ucdenver.ccp.knowtator.model.TextSourceManager;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.TextSourceManager;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 

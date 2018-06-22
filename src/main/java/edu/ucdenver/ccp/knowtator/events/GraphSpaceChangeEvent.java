@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.events;
 
-import edu.ucdenver.ccp.knowtator.model.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 
 public class GraphSpaceChangeEvent extends ChangeEvent<GraphSpace> {
 

@@ -5,6 +5,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.DebugListener;
 import edu.ucdenver.ccp.knowtator.listeners.OWLSetupListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
+import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.protege.editor.core.ui.util.AugmentedJTextField;
@@ -180,11 +181,15 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
 
     IRI iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#DomainConcept");
     OWLClass testClass = factory.getOWLClass(iri);
-    controller.getSelectionManager().setSelectedOWLClass(testClass);
+    controller.getSelectionManager().setSelectedOWLEntity(testClass);
 
     iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#HasCountryOfOrigin");
     OWLObjectProperty objectProperty = factory.getOWLObjectProperty(iri);
-    controller.getSelectionManager().setSelectedOWLObjectProperty(objectProperty);
+    try {
+      controller.getSelectionManager().getActiveTextSource().getGraphSpaceManager().getActiveGraphSpace().getRelationSelectionManager().setSelectedOWLObjectProperty(objectProperty);
+    } catch (ActiveTextSourceNotSetException ignored) {
+
+    }
   }
 
   @Override
@@ -196,9 +201,13 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
       e.printStackTrace();
     }
     if (ent instanceof OWLObjectProperty) {
-      controller.getSelectionManager().setSelectedOWLObjectProperty((OWLObjectProperty) ent);
+      try {
+        controller.getSelectionManager().getActiveTextSource().getGraphSpaceManager().getActiveGraphSpace().getRelationSelectionManager().setSelectedOWLObjectProperty((OWLObjectProperty) ent);
+      } catch (ActiveTextSourceNotSetException ignored) {
+
+      }
     } else if (ent instanceof OWLClass) {
-      controller.getSelectionManager().setSelectedOWLClass((OWLClass) ent);
+      controller.getSelectionManager().setSelectedOWLEntity(ent);
     }
   }
 

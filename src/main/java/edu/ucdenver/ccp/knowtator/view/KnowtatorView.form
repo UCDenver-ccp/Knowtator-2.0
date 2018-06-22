@@ -325,13 +325,13 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="51f70" class="edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane" binding="knowtatorTextPane" custom-create="true">
+                  <component id="51f70" class="edu.ucdenver.ccp.knowtator.view.text.textpane.KnowtatorTextPane" binding="knowtatorTextPane" custom-create="true">
                     <constraints/>
                     <properties/>
                   </component>
                 </children>
               </scrollpane>
-              <nested-form id="aac75" form-file="edu/ucdenver/ccp/knowtator/view/InfoPane.form" binding="infoPane" custom-create="true">
+              <nested-form id="aac75" form-file="edu/ucdenver/ccp/knowtator/view/text/InfoPane.form" binding="infoPane" custom-create="true">
                 <constraints>
                   <splitpane position="right"/>
                 </constraints>

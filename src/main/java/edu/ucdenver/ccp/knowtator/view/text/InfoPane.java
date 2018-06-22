@@ -1,10 +1,16 @@
-package edu.ucdenver.ccp.knowtator.view;
+package edu.ucdenver.ccp.knowtator.view.text;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.Span;
+import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.text.annotation.Span;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.chooser.AnnotationGraphSpaceChooser;
-import edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane;
+import edu.ucdenver.ccp.knowtator.view.text.AnnotationClassLabel;
+import edu.ucdenver.ccp.knowtator.view.text.AnnotationIDLabel;
+import edu.ucdenver.ccp.knowtator.view.text.AnnotatorLabel;
+import edu.ucdenver.ccp.knowtator.view.text.SpanList;
+import edu.ucdenver.ccp.knowtator.view.text.textpane.KnowtatorTextPane;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +33,7 @@ public class InfoPane {
 	private JPanel infoPanel;
 	private JLabel infoPanelTitleLabel;
 
-	InfoPane(KnowtatorView view) {
+	public InfoPane(KnowtatorView view) {
 		this.view = view;
 		$$$setupUI$$$();
 		makeButtons();
@@ -37,13 +43,17 @@ public class InfoPane {
 		graphSpaceChooser.addActionListener(
 				e -> {
 					JComboBox comboBox = (JComboBox) e.getSource();
-					if (comboBox.getSelectedItem() != null
-							&& comboBox.getSelectedItem()
-							!= view.getController().getSelectionManager().getActiveGraphSpace()) {
-						view.getGraphViewDialog().setVisible(true);
-						view.getController()
-								.getSelectionManager()
-								.setSelectedGraphSpace((GraphSpace) comboBox.getSelectedItem());
+					try {
+						if (comboBox.getSelectedItem() != null
+								&& comboBox.getSelectedItem()
+								!= view.getController().getSelectionManager().getActiveTextSource().getGraphSpaceManager().getActiveGraphSpace()) {
+							view.getGraphViewDialog().setVisible(true);
+							view.getController()
+									.getSelectionManager()
+									.getActiveTextSource().getGraphSpaceManager().setSelectedGraphSpace((GraphSpace) comboBox.getSelectedItem());
+						}
+					} catch (ActiveTextSourceNotSetException ignored) {
+
 					}
 				});
 
@@ -51,7 +61,11 @@ public class InfoPane {
 				e -> {
 					JList jList = (JList) e.getSource();
 					if (jList.getSelectedValue() != null) {
-						view.getController().getSelectionManager().setSelectedSpan((Span) jList.getSelectedValue());
+						try {
+							view.getController().getSelectionManager().getActiveTextSource().getAnnotationManager().setSelectedSpan((Span) jList.getSelectedValue());
+						} catch (ActiveTextSourceNotSetException ignored) {
+
+						}
 					}
 				});
 
@@ -94,21 +108,19 @@ public class InfoPane {
 		annotationIDLabel = new AnnotationIDLabel(view);
 		annotationClassLabel = new AnnotationClassLabel(view);
 		annotatorLabel = new AnnotatorLabel(view);
-		spanList = new SpanList();
+		spanList = new SpanList(view);
 		graphSpaceChooser = new AnnotationGraphSpaceChooser(view);
 	}
 
 	public void setController(KnowtatorController controller) {
-		controller.getSelectionManager().addAnnotationListener(annotationClassLabel);
-		controller.getSelectionManager().addAnnotationListener(annotationIDLabel);
-		controller.getSelectionManager().addAnnotationListener(annotatorLabel);
-		controller.getSelectionManager().addAnnotationListener(spanList);
-		controller.getSelectionManager().addGraphSpaceListener(graphSpaceChooser);
-		controller.getSelectionManager().addTextSourceListener(graphSpaceChooser);
-		controller.getSelectionManager().addAnnotationListener(graphSpaceChooser);
+		controller.addViewListener(annotatorLabel);
+		controller.addViewListener(annotationIDLabel);
+		controller.addViewListener(annotatorLabel);
+		controller.addViewListener(spanList);
+		controller.addViewListener(graphSpaceChooser);
 	}
 
-	AnnotationClassLabel getAnnotationClassLabel() {
+	public AnnotationClassLabel getAnnotationClassLabel() {
 		return annotationClassLabel;
 	}
 

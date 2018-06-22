@@ -6,6 +6,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
+import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -162,7 +163,7 @@ public class Profile implements Savable, KnowtatorObject {
     }
   }
 
-  static String convertToHex(Color c) {
+  public static String convertToHex(Color c) {
     return String.format("#%06x", c.getRGB() & 0x00FFFFFF);
   }
 }

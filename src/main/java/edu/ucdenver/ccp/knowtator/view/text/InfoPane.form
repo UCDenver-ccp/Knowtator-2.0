@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="edu.ucdenver.ccp.knowtator.view.InfoPane">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="edu.ucdenver.ccp.knowtator.view.text.InfoPane">
   <grid id="27dc6" binding="infoPanePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
       <xy x="20" y="20" width="500" height="400"/>
@@ -109,7 +109,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="5ca3a" class="edu.ucdenver.ccp.knowtator.view.SpanList" binding="spanList" custom-create="true">
+              <component id="5ca3a" class="edu.ucdenver.ccp.knowtator.view.text.SpanList" binding="spanList" custom-create="true">
                 <constraints/>
                 <properties>
                   <maximumSize width="-1" height="-1"/>
@@ -119,7 +119,7 @@
               </component>
             </children>
           </scrollpane>
-          <component id="2c276" class="edu.ucdenver.ccp.knowtator.view.AnnotationIDLabel" binding="annotationIDLabel" custom-create="true">
+          <component id="2c276" class="edu.ucdenver.ccp.knowtator.view.text.AnnotationIDLabel" binding="annotationIDLabel" custom-create="true">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="250" height="25"/>
@@ -135,7 +135,7 @@
               <verticalTextPosition value="1"/>
             </properties>
           </component>
-          <component id="18c16" class="edu.ucdenver.ccp.knowtator.view.AnnotationClassLabel" binding="annotationClassLabel" custom-create="true">
+          <component id="18c16" class="edu.ucdenver.ccp.knowtator.view.text.AnnotationClassLabel" binding="annotationClassLabel" custom-create="true">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="250" height="25"/>
@@ -150,7 +150,7 @@
               <verticalTextPosition value="1"/>
             </properties>
           </component>
-          <component id="cb39f" class="edu.ucdenver.ccp.knowtator.view.AnnotatorLabel" binding="annotatorLabel" custom-create="true">
+          <component id="cb39f" class="edu.ucdenver.ccp.knowtator.view.text.AnnotatorLabel" binding="annotatorLabel" custom-create="true">
             <constraints>
               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="250" height="25"/>

@@ -7,9 +7,9 @@ import edu.ucdenver.ccp.knowtator.iaa.matcher.ClassAndSpanMatcher;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.ClassMatcher;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.SpanMatcher;
-import edu.ucdenver.ccp.knowtator.model.Annotation;
+import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.Profile;
-import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.collection.AnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 

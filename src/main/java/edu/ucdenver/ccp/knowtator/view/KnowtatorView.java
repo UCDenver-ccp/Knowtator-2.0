@@ -3,16 +3,18 @@ package edu.ucdenver.ccp.knowtator.view;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.OWLClassSelectionListener;
-import edu.ucdenver.ccp.knowtator.listeners.OWLObjectPropertySelectionListener;
 import edu.ucdenver.ccp.knowtator.model.Profile;
 import edu.ucdenver.ccp.knowtator.model.ProjectManager;
-import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.view.chooser.ProfileChooser;
 import edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser;
+import edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog;
 import edu.ucdenver.ccp.knowtator.view.menu.ProjectMenu;
-import edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane;
-import edu.ucdenver.ccp.knowtator.view.textpane.MainKnowtatorTextPane;
+import edu.ucdenver.ccp.knowtator.view.text.InfoPane;
+import edu.ucdenver.ccp.knowtator.view.text.textpane.KnowtatorTextPane;
+import edu.ucdenver.ccp.knowtator.view.text.textpane.KnowtatorTextPane;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLWorkspace;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
@@ -30,7 +32,7 @@ import java.util.Set;
 import java.util.prefs.Preferences;
 
 public class KnowtatorView extends AbstractOWLClassViewComponent
-		implements DropTargetListener, OWLClassSelectionListener, OWLObjectPropertySelectionListener {
+		implements DropTargetListener, OWLClassSelectionListener {
 
 	private static final Logger log = Logger.getLogger(KnowtatorView.class);
 	private final Preferences prefs = Preferences.userRoot().node("knowtator");
@@ -93,8 +95,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 	private void makeController() {
 		log.warn("KnowtatorView: Making controller");
 		controller = new KnowtatorController();
-		controller.getSelectionManager().addOWLClassListener(this);
-		controller.getSelectionManager().addOWLObjectPropertyListener(this);
+		controller.getSelectionManager().addOWLEntityListener(this);
 		controller.setProjectManager(projectManager);
 		projectManager.setController(controller);
 		infoPane.setController(controller);
@@ -140,7 +141,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
 		panel1 = this;
 		projectMenu = new ProjectMenu(this);
-		knowtatorTextPane = new MainKnowtatorTextPane(this);
+		knowtatorTextPane = new KnowtatorTextPane(this);
 		graphViewDialog = new GraphViewDialog(this);
 
 		textSourceChooser = new TextSourceChooser(this);
@@ -162,13 +163,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
 		assignColorToClassButton.addActionListener(
 				e -> {
-					OWLClass owlClass = controller.getSelectionManager().getSelectedOWLClass();
+					OWLEntity owlClass = controller.getSelectionManager().getSelectedOWLEntity();
 					if (owlClass == null) {
-						if (projectManager.isProjectLoaded()) {
-							owlClass = controller.getSelectionManager().getSelectedAnnotation().getOwlClass();
+						try {
+							owlClass = controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getSelectedAnnotation().getOwlClass();
+						} catch (ActiveTextSourceNotSetException ignored) {
 						}
 					}
-					if (owlClass != null) {
+					if (owlClass instanceof OWLClass) {
 						Color c = JColorChooser.showDialog(this, "Pick a color for " + owlClass, Color.CYAN);
 						if (c != null) {
 							controller.getSelectionManager().getActiveProfile().addColor(owlClass, c);
@@ -178,7 +180,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 									== JOptionPane.OK_OPTION) {
 								try {
 									Set<OWLClass> descendants =
-											controller.getOWLAPIDataExtractor().getDescendants(owlClass);
+											controller.getOWLAPIDataExtractor().getDescendants((OWLClass) owlClass);
 
 									for (OWLClass descendant : descendants) {
 										controller.getSelectionManager().getActiveProfile().addColor(descendant, c);
@@ -192,57 +194,84 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
 		growSelectionStartButton.addActionListener(
 				(ActionEvent e) -> {
-					if (controller.getSelectionManager().getSelectedSpan() == null) {
-						knowtatorTextPane.growStart();
-					} else {
-						controller
-								.getSelectionManager()
-								.getActiveTextSource()
-								.getAnnotationManager()
-								.growSelectedSpanStart();
+					try {
+						if (controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getSelectedSpan() == null) {
+							knowtatorTextPane.growStart();
+						} else {
+							controller
+									.getSelectionManager()
+									.getActiveTextSource()
+									.getAnnotationManager()
+									.growSelectedSpanStart();
+						}
+					} catch (ActiveTextSourceNotSetException ignored) {
 					}
 				});
 		shrinkSelectionStartButton.addActionListener(
 				(ActionEvent e) -> {
-					if (controller.getSelectionManager().getSelectedSpan() == null) {
-						knowtatorTextPane.shrinkStart();
-					} else {
-						controller
-								.getSelectionManager()
-								.getActiveTextSource()
-								.getAnnotationManager()
-								.shrinkSelectedSpanStart();
+					try {
+						if (controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getSelectedSpan() == null) {
+							knowtatorTextPane.shrinkStart();
+						} else {
+							controller
+									.getSelectionManager()
+									.getActiveTextSource()
+									.getAnnotationManager()
+									.shrinkSelectedSpanStart();
+						}
+					} catch (ActiveTextSourceNotSetException ignored) {
+
 					}
 				});
 		shrinkSelectionEndButton.addActionListener(
 				(ActionEvent e) -> {
-					if (controller.getSelectionManager().getSelectedSpan() == null) {
-						knowtatorTextPane.shrinkEnd();
-					} else {
-						controller
-								.getSelectionManager()
-								.getActiveTextSource()
-								.getAnnotationManager()
-								.shrinkSelectedSpanEnd();
+					try {
+						if (controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getSelectedSpan() == null) {
+							knowtatorTextPane.shrinkEnd();
+						} else {
+							controller
+									.getSelectionManager()
+									.getActiveTextSource()
+									.getAnnotationManager()
+									.shrinkSelectedSpanEnd();
+						}
+					} catch (ActiveTextSourceNotSetException ignored) {
+
 					}
 				});
 		growSelectionEndButton.addActionListener(
 				(ActionEvent e) -> {
-					if (controller.getSelectionManager().getSelectedSpan() == null) {
-						knowtatorTextPane.growEnd();
-					} else {
-						controller
-								.getSelectionManager()
-								.getActiveTextSource()
-								.getAnnotationManager()
-								.growSelectedSpanEnd();
+					try {
+						if (controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getSelectedSpan() == null) {
+							knowtatorTextPane.growEnd();
+						} else {
+							controller
+									.getSelectionManager()
+									.getActiveTextSource()
+									.getAnnotationManager()
+									.growSelectedSpanEnd();
+						}
+					} catch (ActiveTextSourceNotSetException ignored) {
+
 					}
 				});
 
 		previousSpanButton.addActionListener(
-				(ActionEvent e) -> controller.getSelectionManager().getPreviousSpan());
+				(ActionEvent e) -> {
+					try {
+						controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getPreviousSpan();
+					} catch (ActiveTextSourceNotSetException ignored) {
+
+					}
+				});
 		nextSpanButton.addActionListener(
-				(ActionEvent e) -> controller.getSelectionManager().getNextSpan());
+				(ActionEvent e) -> {
+					try {
+						controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getNextSpan();
+					} catch (ActiveTextSourceNotSetException ignored) {
+
+					}
+				});
 
 		showGraphViewerButton.addActionListener(
 				e -> {
@@ -253,97 +282,103 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
 		removeAnnotationButton.addActionListener(
 				e -> {
-					if (projectManager.isProjectLoaded()
-							&& controller.getSelectionManager().getSelectedAnnotation() != null) {
-						if (controller.getSelectionManager().getSelectedAnnotation().getSpanCollection().size()
-								> 1) {
-							String[] buttons = {"Remove annotation", "Remove span from annotation", "Cancel"};
-							int response =
-									JOptionPane.showOptionDialog(
-											this,
-											"Choose an option",
-											"Remove Annotation",
-											JOptionPane.DEFAULT_OPTION,
-											JOptionPane.QUESTION_MESSAGE,
-											null,
-											buttons,
-											2);
+					try {
+						if (projectManager.isProjectLoaded()
+								&& controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getSelectedAnnotation() != null) {
+							if (controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getSelectedAnnotation().getSpanCollection().size()
+									> 1) {
+								String[] buttons = {"Remove annotation", "Remove span from annotation", "Cancel"};
+								int response =
+										JOptionPane.showOptionDialog(
+												this,
+												"Choose an option",
+												"Remove Annotation",
+												JOptionPane.DEFAULT_OPTION,
+												JOptionPane.QUESTION_MESSAGE,
+												null,
+												buttons,
+												2);
 
-							switch (response) {
-								case 0:
+								switch (response) {
+									case 0:
+										controller
+												.getSelectionManager()
+												.getActiveTextSource()
+												.removeSelectedAnnotation();
+										break;
+									case 1:
+										controller
+												.getSelectionManager()
+												.getActiveTextSource()
+												.getAnnotationManager()
+												.removeSpanFromSelectedAnnotation();
+										break;
+									case 2:
+										break;
+								}
+							} else {
+								if (JOptionPane.showConfirmDialog(
+										this,
+										"Are you sure you want to remove the selected annotation?",
+										"Remove Annotation",
+										JOptionPane.YES_NO_OPTION)
+										== JOptionPane.YES_OPTION) {
 									controller
 											.getSelectionManager()
 											.getActiveTextSource()
-											.getAnnotationManager()
 											.removeSelectedAnnotation();
-									break;
-								case 1:
-									controller
-											.getSelectionManager()
-											.getActiveTextSource()
-											.getAnnotationManager()
-											.removeSpanFromSelectedAnnotation();
-									break;
-								case 2:
-									break;
-							}
-						} else {
-							if (JOptionPane.showConfirmDialog(
-									this,
-									"Are you sure you want to remove the selected annotation?",
-									"Remove Annotation",
-									JOptionPane.YES_NO_OPTION)
-									== JOptionPane.YES_OPTION) {
-								controller
-										.getSelectionManager()
-										.getActiveTextSource()
-										.getAnnotationManager()
-										.removeSelectedAnnotation();
+								}
 							}
 						}
+					} catch (ActiveTextSourceNotSetException ignored) {
+
 					}
 				});
 		addAnnotationButton.addActionListener(
 				e -> {
 					if (projectManager.isProjectLoaded()) {
-						if (controller.getSelectionManager().getSelectedAnnotation() != null) {
-							String[] buttons = {"Add new annotation", "Add span to annotation", "Cancel"};
-							int response =
-									JOptionPane.showOptionDialog(
-											this,
-											"Choose an option",
-											"Add Annotation",
-											JOptionPane.DEFAULT_OPTION,
-											JOptionPane.PLAIN_MESSAGE,
-											null,
-											buttons,
-											2);
+						try {
+							if (controller.getSelectionManager().getActiveTextSource().getAnnotationManager().getSelectedAnnotation() != null) {
+								String[] buttons = {"Add new annotation", "Add span to annotation", "Cancel"};
+								int response =
+										JOptionPane.showOptionDialog(
+												this,
+												"Choose an option",
+												"Add Annotation",
+												JOptionPane.DEFAULT_OPTION,
+												JOptionPane.PLAIN_MESSAGE,
+												null,
+												buttons,
+												2);
 
-							switch (response) {
-								case 0:
-									controller
-											.getSelectionManager()
-											.getActiveTextSource()
-											.getAnnotationManager()
-											.addSelectedAnnotation();
-									break;
-								case 1:
-									controller
-											.getSelectionManager()
-											.getActiveTextSource()
-											.getAnnotationManager()
-											.addSpanToSelectedAnnotation();
-									break;
-								case 2:
-									break;
+								switch (response) {
+									case 0:
+										controller
+												.getSelectionManager()
+												.getActiveTextSource()
+												.getAnnotationManager()
+												.addSelectedAnnotation();
+										break;
+									case 1:
+										controller
+												.getSelectionManager()
+												.getActiveTextSource()
+												.getAnnotationManager()
+												.addSpanToSelectedAnnotation();
+										break;
+									case 2:
+										break;
+								}
+
+							} else {
+								controller
+										.getSelectionManager()
+										.getActiveTextSource()
+										.getAnnotationManager()
+										.addSelectedAnnotation();
 							}
+						} catch (ActiveTextSourceNotSetException ignored) {
 
-						} else {
-							controller
-									.getSelectionManager()
-									.getActiveTextSource()
-									.getAnnotationManager()
-									.addSelectedAnnotation();
 						}
 					}
 				});
@@ -389,7 +424,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 	protected OWLClass updateView(OWLClass selectedClass) {
 		if (controller != null) {
 			setUpOWL();
-			controller.getSelectionManager().setSelectedOWLClass(selectedClass);
+			controller.getSelectionManager().setSelectedOWLEntity(selectedClass);
 		}
 		return selectedClass;
 	}
@@ -445,19 +480,15 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 		return projectMenu;
 	}
 
-	GraphViewDialog getGraphViewDialog() {
+	public GraphViewDialog getGraphViewDialog() {
 		return graphViewDialog;
 	}
 
 	@Override
-	public void owlClassChanged(OWLClass owlClass) {
+	public void owlEntityChanged(OWLEntity owlClass) {
 		owlEntitySelectionChanged(owlClass);
 	}
 
-	@Override
-	public void owlObjectPropertyChanged(OWLObjectProperty owlObjectProperty) {
-		owlEntitySelectionChanged(owlObjectProperty);
-	}
 
 	public ProjectManager getProjectManager() {
 		return projectManager;

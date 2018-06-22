@@ -3,7 +3,7 @@ package edu.ucdenver.ccp.knowtator.iaa.html;
 import edu.ucdenver.ccp.knowtator.iaa.AnnotationSpanIndex;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher;
-import edu.ucdenver.ccp.knowtator.model.Annotation;
+import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
 
 import java.io.File;
 import java.io.PrintStream;

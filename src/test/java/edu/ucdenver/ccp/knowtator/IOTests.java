@@ -2,10 +2,9 @@ package edu.ucdenver.ccp.knowtator;
 
 import com.google.common.io.Files;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
-import edu.ucdenver.ccp.knowtator.model.AnnotationManager;
-import edu.ucdenver.ccp.knowtator.model.AnnotationNode;
-import edu.ucdenver.ccp.knowtator.model.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -94,17 +93,16 @@ public class IOTests {
     int numGraphSpaces;
     int numVertices;
     int numTriples;
-    AnnotationManager annotationManager;
+
     try {
       content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
       assert content.equals(articleContent[articleID]);
-
-      annotationManager = textSource.getAnnotationManager();
-      numAnnotations = annotationManager.getAnnotations().getCollection().size();
-      numSpans = annotationManager.getSpans(null, 0, content.length()).size();
-      numGraphSpaces = annotationManager.getGraphSpaceCollection().getCollection().size();
+      
+      numAnnotations = textSource.getAnnotationManager().getAnnotations().getCollection().size();
+      numSpans = textSource.getAnnotationManager().getSpans(null, 0, content.length()).size();
+      numGraphSpaces = textSource.getGraphSpaceManager().getGraphSpaceCollection().getCollection().size();
       numVertices =
-          annotationManager
+          textSource.getGraphSpaceManager()
               .getGraphSpaceCollection()
               .getCollection()
               .stream()
@@ -112,7 +110,7 @@ public class IOTests {
                   graphSpace -> graphSpace.getChildVertices(graphSpace.getDefaultParent()).length)
               .sum();
       numTriples =
-          annotationManager
+          textSource.getGraphSpaceManager()
               .getGraphSpaceCollection()
               .getCollection()
               .stream()
@@ -142,13 +140,12 @@ public class IOTests {
     try {
       content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
       assert content.equals(articleContent[articleID2]);
-
-      annotationManager = textSource.getAnnotationManager();
-      numAnnotations = annotationManager.getAnnotations().getCollection().size();
-      numSpans = annotationManager.getSpans(null, 0, content.length()).size();
-      numGraphSpaces = annotationManager.getGraphSpaceCollection().getCollection().size();
+      
+      numAnnotations = textSource.getAnnotationManager().getAnnotations().getCollection().size();
+      numSpans = textSource.getAnnotationManager().getSpans(null, 0, content.length()).size();
+      numGraphSpaces = textSource.getGraphSpaceManager().getGraphSpaceCollection().getCollection().size();
       numVertices =
-          annotationManager
+          textSource.getGraphSpaceManager()
               .getGraphSpaceCollection()
               .getCollection()
               .stream()
@@ -156,8 +153,7 @@ public class IOTests {
                   graphSpace -> graphSpace.getChildVertices(graphSpace.getDefaultParent()).length)
               .sum();
       numTriples =
-          annotationManager
-              .getGraphSpaceCollection()
+          textSource.getGraphSpaceManager().getGraphSpaceCollection()
               .getCollection()
               .stream()
               .mapToInt(
@@ -249,10 +245,10 @@ public class IOTests {
       content = FileUtils.readFileToString(textSource.getTextFile(), "UTF-8");
       assert content.equals(articleContent[articleID]);
 
-      AnnotationManager annotationManager1 = textSource.getAnnotationManager();
-      int numAnnotations = annotationManager1.getAnnotations().getCollection().size();
-      int numSpans = annotationManager1.getSpans(null, 0, content.length()).size();
-      int numGraphSpaces = annotationManager1.getGraphSpaceCollection().getCollection().size();
+
+      int numAnnotations = textSource.getAnnotationManager().getAnnotations().getCollection().size();
+      int numSpans = textSource.getAnnotationManager().getSpans(null, 0, content.length()).size();
+      int numGraphSpaces = textSource.getGraphSpaceManager().getGraphSpaceCollection().getCollection().size();
 
       assert numGraphSpaces == 1 : "There were " + numGraphSpaces + " graph spaces";
       assert numAnnotations == 2 : "There were " + numAnnotations + " annotations";
@@ -291,11 +287,10 @@ public class IOTests {
       e.printStackTrace();
     }
 
-    AnnotationManager annotationManager = textSource.getAnnotationManager();
-    GraphSpace graphSpace = annotationManager.addGraphSpace("graph_1");
+    GraphSpace graphSpace = textSource.getGraphSpaceManager().addGraphSpace("graph_1");
 
-    AnnotationNode v1 = graphSpace.addNode("node_0", annotationManager.getAnnotation("mention_0"));
-    AnnotationNode v2 = graphSpace.addNode("node_1", annotationManager.getAnnotation("mention_1"));
+    AnnotationNode v1 = graphSpace.addNode("node_0", textSource.getAnnotationManager().getAnnotation("mention_0"));
+    AnnotationNode v2 = graphSpace.addNode("node_1", textSource.getAnnotationManager().getAnnotation("mention_1"));
     graphSpace.addTriple(
         v1,
         v2,
@@ -307,18 +302,16 @@ public class IOTests {
         "",
         false);
 
-    int numGraphSpaces = annotationManager.getGraphSpaceCollection().getCollection().size();
+    int numGraphSpaces = textSource.getGraphSpaceManager().getGraphSpaceCollection().getCollection().size();
     int numVertices =
-        annotationManager
-            .getGraphSpaceCollection()
+        textSource.getGraphSpaceManager().getGraphSpaceCollection()
             .getCollection()
             .stream()
             .mapToInt(
                 graphSpace1 -> graphSpace1.getChildVertices(graphSpace.getDefaultParent()).length)
             .sum();
     int numTriples =
-        annotationManager
-            .getGraphSpaceCollection()
+        textSource.getGraphSpaceManager().getGraphSpaceCollection()
             .getCollection()
             .stream()
             .mapToInt(
@@ -406,21 +399,18 @@ public class IOTests {
             .findAny()
             .get();
 
-    AnnotationManager annotationManager = textSource.getAnnotationManager();
-    int numAnnotations = annotationManager.getAnnotations().getCollection().size();
-    int numSpans = annotationManager.getSpans(null, 0, textSource.getContent().length()).size();
-    int numGraphSpaces = annotationManager.getGraphSpaceCollection().getCollection().size();
+    int numAnnotations = textSource.getAnnotationManager().getAnnotations().getCollection().size();
+    int numSpans = textSource.getAnnotationManager().getSpans(null, 0, textSource.getContent().length()).size();
+    int numGraphSpaces = textSource.getGraphSpaceManager().getGraphSpaceCollection().getCollection().size();
     int numVertices =
-        annotationManager
-            .getGraphSpaceCollection()
+        textSource.getGraphSpaceManager().getGraphSpaceCollection()
             .getCollection()
             .stream()
             .mapToInt(
                 graphSpace -> graphSpace.getChildVertices(graphSpace.getDefaultParent()).length)
             .sum();
     int numTriples =
-        annotationManager
-            .getGraphSpaceCollection()
+        textSource.getGraphSpaceManager().getGraphSpaceCollection()
             .getCollection()
             .stream()
             .mapToInt(graphSpace -> graphSpace.getChildEdges(graphSpace.getDefaultParent()).length)
@@ -457,9 +447,9 @@ public class IOTests {
   //      TextSource textSource2 = textSourceIterator2.next();
   //
   //      Iterator<Annotation> annotationIterator1 =
-  //          textSource1.getAnnotationManager().getAnnotations().iterator();
+  //          textSource1.gettextSource.getAnnotationManager()().getAnnotations().iterator();
   //      Iterator<Annotation> annotationIterator2 =
-  //          textSource2.getAnnotationManager().getAnnotations().iterator();
+  //          textSource2.gettextSource.getAnnotationManager()().getAnnotations().iterator();
   //
   //      while (annotationIterator1.hasNext()) {
   //        Annotation annotation1 = annotationIterator1.next();

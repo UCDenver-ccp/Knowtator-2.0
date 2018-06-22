@@ -1,5 +1,5 @@
 TODO: Quantifier not setting initially
-TODO: "Not" for relations
+TODO: Remove checks for if project is loaded since getting active text source now throws an error if null
 TODO: Pop-up warning asking if current rendering or another rendering should be used
 TODO: Graphs should be centered
 TODO: Selecting annotation in graph should jump to annotation in doc

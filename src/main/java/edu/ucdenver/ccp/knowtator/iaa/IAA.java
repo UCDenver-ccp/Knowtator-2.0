@@ -2,8 +2,8 @@ package edu.ucdenver.ccp.knowtator.iaa;
 
 import edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher;
-import edu.ucdenver.ccp.knowtator.model.Annotation;
-import edu.ucdenver.ccp.knowtator.model.Span;
+import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.model.text.annotation.Span;
 
 import java.util.*;
 

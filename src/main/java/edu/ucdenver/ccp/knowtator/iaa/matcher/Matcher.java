@@ -1,7 +1,7 @@
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
-import edu.ucdenver.ccp.knowtator.model.Annotation;
+import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
 
 import java.util.Set;
 

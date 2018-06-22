@@ -2,8 +2,11 @@ package edu.ucdenver.ccp.knowtator;
 
 import edu.ucdenver.ccp.knowtator.listeners.DebugListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
+import edu.ucdenver.ccp.knowtator.listeners.ViewListener;
 import edu.ucdenver.ccp.knowtator.model.*;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLAPIDataExtractor;
+import edu.ucdenver.ccp.knowtator.model.selection.SelectionManager;
+import edu.ucdenver.ccp.knowtator.model.text.TextSourceManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -26,6 +29,7 @@ public class KnowtatorController implements Savable, ProjectListener {
   private OWLAPIDataExtractor owlDataExtractor;
   private TreeMap<String, KnowtatorObject> idRegistry;
   private List<DebugListener> debugListeners;
+  private List<ViewListener> viewListeners;
 
   public KnowtatorController() {
     idRegistry = new TreeMap<>();
@@ -37,6 +41,8 @@ public class KnowtatorController implements Savable, ProjectListener {
     profileManager = new ProfileManager(this); // manipulates profiles and colors
 
     projectManager.addListener(this);
+
+    viewListeners = new ArrayList<>();
   }
 
   public void setProjectManager(ProjectManager projectManager) {
@@ -146,5 +152,13 @@ public class KnowtatorController implements Savable, ProjectListener {
     selectionManager.dispose();
     profileManager.dispose();
     projectManager.dispose();
+  }
+
+  public void addViewListener(ViewListener listener) {
+    viewListeners.add(listener);
+  }
+
+  public void refreshView() {
+    viewListeners.forEach(ViewListener::viewChanged);
   }
 }
