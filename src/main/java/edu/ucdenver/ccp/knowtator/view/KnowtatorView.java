@@ -567,6 +567,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 		}
 		//		infoPane.dispose();
 		graphViewDialog.setVisible(false);
+		graphViewDialog.dispose();
 		infoPane.dispose();
 	}
 
