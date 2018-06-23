@@ -169,6 +169,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 									public void windowLostFocus(WindowEvent e) {
 										if (e.getOppositeWindow() != graphViewDialog) {
 											graphViewDialog.setAlwaysOnTop(false);
+											graphViewDialog.toBack();
 										}
 									}
 								});
