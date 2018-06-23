@@ -131,7 +131,7 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
     try{
       propertyID = controller.getOWLAPIDataExtractor().getOWLEntityRendering(property);
     } catch (OWLEntityNullException | OWLWorkSpaceNotSetException e) {
-      propertyID = getValue().toString();
+      propertyID = this.propertyID;
     }
     tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_PROPERTY, propertyID);
 
