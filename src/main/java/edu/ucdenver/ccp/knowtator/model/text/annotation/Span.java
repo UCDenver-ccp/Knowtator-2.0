@@ -23,7 +23,6 @@ public class Span implements Savable, KnowtatorTextBoundObject, Comparable<Span>
 
   private int end;
   private Annotation annotation;
-  private String spannedText;
   private String id;
   private TextSource textSource;
 
@@ -47,7 +46,6 @@ public class Span implements Savable, KnowtatorTextBoundObject, Comparable<Span>
       throw new IndexOutOfBoundsException(
           "Span is invalid because the start of the Span is less than zero: start=" + start);
     }
-    this.spannedText = textSource.getContent().substring(start, end);
   }
 
   public Span(int start, int end) {
@@ -191,8 +189,8 @@ public class Span implements Savable, KnowtatorTextBoundObject, Comparable<Span>
     this.annotation = annotation;
   }
 
-  public String getSpannedText() {
-    return spannedText;
+  String getSpannedText() {
+    return textSource.getContent().substring(start, end);
   }
 
   public Integer getStart() {
@@ -210,9 +208,9 @@ public class Span implements Savable, KnowtatorTextBoundObject, Comparable<Span>
   /**
   These methods are intended to correct for Java's handling of supplementary unicode characters.
    */
-  public int getStartCodePoint() { return Character.codePointCount(textSource.getContent(), 0, start); }
-
-  public int getEndCodePoint() { return Character.codePointCount(textSource.getContent(), 0, end); }
+//  public int getStartCodePoint() { return Character.codePointCount(textSource.getContent(), 0, start); }
+//
+//  public int getEndCodePoint() { return Character.codePointCount(textSource.getContent(), 0, end); }
 
   public void writeToKnowtatorXML(Document dom, Element annotationElem) {
     Element spanElement = dom.createElement(KnowtatorXMLTags.SPAN);

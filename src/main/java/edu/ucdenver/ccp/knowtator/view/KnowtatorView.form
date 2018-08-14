@@ -272,6 +272,12 @@
                   <toolTipText resource-bundle="ui" key="filter.annotations.by.profile"/>
                 </properties>
               </component>
+              <component id="3b89c" class="javax.swing.JCheckBox" binding="classFilterCheckBox">
+                <constraints/>
+                <properties>
+                  <text value="OWL Class Filter"/>
+                </properties>
+              </component>
             </children>
           </toolbar>
           <toolbar id="1eeb0">

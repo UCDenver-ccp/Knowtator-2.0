@@ -135,16 +135,25 @@ public class AnnotationManager implements Savable, OWLSetupListener, OWLOntology
      */
     public TreeSet<Span> getSpans(Integer loc, int start, int end) {
         Supplier<TreeSet<Span>> supplier = () -> new TreeSet<>(Span::compare);
+
+        Set<OWLClass> activeOWLClassDescendents = new HashSet<>();
+        if (controller.getSelectionManager().isFilterByOWLClass()) {
+            try {
+                activeOWLClassDescendents.addAll(controller.getOWLAPIDataExtractor().getDescendants((OWLClass) controller.getSelectionManager().getSelectedOWLEntity()));
+                activeOWLClassDescendents.add((OWLClass) controller.getSelectionManager().getSelectedOWLEntity());
+            } catch (OWLWorkSpaceNotSetException ignored) {
+            }
+        }
+
+
         return allSpanCollection
                 .stream()
                 .filter(
                         span ->
                                 (loc == null || span.contains(loc))
                                         && (start <= span.getStart() && span.getEnd() <= end)
-                                        && (!controller.getSelectionManager().isFilterByProfile()
-                                        || span.getAnnotation()
-                                        .getAnnotator()
-                                        .equals(controller.getSelectionManager().getActiveProfile())))
+                                        && (!controller.getSelectionManager().isFilterByOWLClass() || activeOWLClassDescendents.contains(span.getAnnotation().getOwlClass()))
+                                        && (!controller.getSelectionManager().isFilterByProfile() || span.getAnnotation().getAnnotator().equals(controller.getSelectionManager().getActiveProfile())))
                 .collect(Collectors.toCollection(supplier));
     }
 
@@ -594,7 +603,6 @@ public class AnnotationManager implements Savable, OWLSetupListener, OWLOntology
 //            }
 
             AnnotationCollection annotationsForOwlClass = getAnnotations((OWLClass) oldOWLClass);
-            log.warn(String.format("Number of annotations for old class: %d", annotationsForOwlClass.size()));
             for (Annotation annotation : annotationsForOwlClass) {
                 annotation.setOwlClass((OWLClass) newOWLClass);
             }

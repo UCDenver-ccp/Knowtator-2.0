@@ -10,15 +10,12 @@ import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectionManager implements CaretListener, ChangeListener, ProjectListener {
+public class SelectionManager implements CaretListener, ProjectListener {
 
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(SelectionManager.class);
@@ -35,11 +32,13 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
     private int end;
 
     private List<ProfileSelectionListener> profileListeners;
+    private boolean filterByOWLClass;
 
     public SelectionManager(KnowtatorController knowtatorController) {
         controller = knowtatorController;
         controller.getProjectManager().addListener(this);
         filterByProfile = false;
+        filterByOWLClass = false;
         owlEntityListeners = new ArrayList<>();
         profileListeners = new ArrayList<>();
 
@@ -106,11 +105,6 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
         setEnd(Math.max(e.getDot(), e.getMark()));
     }
 
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        filterByProfile = ((JCheckBox) e.getSource()).isSelected();
-    }
-
 
     public void getNextTextSource() {
         if (controller.getProjectManager().isProjectLoaded()) {
@@ -152,5 +146,19 @@ public class SelectionManager implements CaretListener, ChangeListener, ProjectL
     public void dispose() {
         owlEntityListeners.clear();
         profileListeners.clear();
+    }
+
+    public void setFilterByProfile(boolean filterByProfile) {
+        this.filterByProfile = filterByProfile;
+        controller.refreshView();
+    }
+
+    public void setFilterByOWLClass(boolean filterByOWLClass) {
+        this.filterByOWLClass = filterByOWLClass;
+        controller.refreshView();
+    }
+
+    public boolean isFilterByOWLClass() {
+        return filterByOWLClass;
     }
 }
