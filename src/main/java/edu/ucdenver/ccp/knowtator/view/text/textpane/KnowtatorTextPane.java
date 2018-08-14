@@ -32,6 +32,7 @@ public class KnowtatorTextPane extends JTextArea
   public KnowtatorTextPane(KnowtatorView view) {
     super();
     this.view = view;
+    setEditable(false);
     setLineWrap(true);
     setWrapStyleWord(true);
 
