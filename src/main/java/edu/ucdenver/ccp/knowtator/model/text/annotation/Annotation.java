@@ -3,29 +3,25 @@ package edu.ucdenver.ccp.knowtator.model.text.annotation;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
-import edu.ucdenver.ccp.knowtator.listeners.OWLSetupListener;
-import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
-import edu.ucdenver.ccp.knowtator.model.*;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
+import edu.ucdenver.ccp.knowtator.model.Profile;
+import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLClassNotFoundException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.graph.Triple;
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.OWLEntityCollector;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
-public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupListener, OWLOntologyChangeListener, ProjectListener {
+public class Annotation implements Savable, KnowtatorTextBoundObject {
 
   private final Date date;
 
@@ -65,8 +61,7 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
     this.annotation_type = annotation_type;
 
     controller.verifyId(annotationID, this, false);
-    controller.getOWLAPIDataExtractor().addOWLSetupListener(this);
-    controller.getProjectManager().addListener(this);
+
 
     spanCollection = new SpanCollection(controller);
     overlappingAnnotations = new HashSet<>();
@@ -105,8 +100,12 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
     return owlClass;
   }
 
-  private void setOwlClass(OWLClass owlClass) {
+  void setOwlClass(OWLClass owlClass) {
     this.owlClass = owlClass;
+    try {
+      this.owlClassID = controller.getOWLAPIDataExtractor().getOWLEntityRendering(owlClass);
+    } catch (OWLWorkSpaceNotSetException | OWLEntityNullException ignored) {
+    }
   }
 
   public SpanCollection getSpanCollection() {
@@ -357,48 +356,6 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
     return result;
   }
 
-  @Override
-  public void owlSetup() {
-    try {
-      setOwlClass(controller.getOWLAPIDataExtractor().getOWLClassByID(owlClassID));
-      controller.getOWLAPIDataExtractor().getWorkSpace().getOWLModelManager().addOntologyChangeListener(this);
-    } catch (OWLWorkSpaceNotSetException | OWLClassNotFoundException ignored) {
-
-    }
-  }
-
-  @Override
-  public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) {
-    Set<OWLEntity> possiblyAddedEntities = new HashSet<>();
-    Set<OWLEntity> possiblyRemovedEntities = new HashSet<>();
-    OWLEntityCollector addedCollector = new OWLEntityCollector(possiblyAddedEntities);
-    OWLEntityCollector removedCollector = new OWLEntityCollector(possiblyRemovedEntities);
-
-	  Triple.processOntologyChanges(changes, addedCollector, removedCollector);
-
-    /*
-    For now, I will assume that entity removed is the one that existed and the one
-    that is added is the new name for it.
-     */
-    if (!possiblyAddedEntities.isEmpty() && !possiblyRemovedEntities.isEmpty()) {
-      OWLEntity oldOWLClass = possiblyRemovedEntities.iterator().next();
-      OWLEntity newOWLClass = possiblyAddedEntities.iterator().next();
-      if (oldOWLClass == owlClass) {
-        setOwlClass((OWLClass) newOWLClass);
-      }
-    }
-  }
-
-  @Override
-  public void projectClosed() {
-
-  }
-
-  @Override
-  public void projectLoaded() {
-    owlSetup();
-  }
-
   void setOWLClassID(String owlClassID) {
     this.owlClassID = owlClassID;
   }
@@ -407,10 +364,7 @@ public class Annotation implements Savable, KnowtatorTextBoundObject, OWLSetupLi
 
     spanCollection.forEach(Span::dispose);
     spanCollection.getCollection().clear();
-    try {
-      controller.getOWLAPIDataExtractor().getWorkSpace().getOWLModelManager().removeOntologyChangeListener(this);
-    } catch (OWLWorkSpaceNotSetException ignored) {
-    }
+
   }
 
   //		public Set<String> getSimpleFeatureNames() {

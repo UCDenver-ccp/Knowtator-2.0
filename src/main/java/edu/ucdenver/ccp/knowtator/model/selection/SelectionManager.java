@@ -20,138 +20,137 @@ import java.util.List;
 
 public class SelectionManager implements CaretListener, ChangeListener, ProjectListener {
 
-  @SuppressWarnings("unused")
-  private static final Logger log = Logger.getLogger(SelectionManager.class);
+    @SuppressWarnings("unused")
+    private static final Logger log = Logger.getLogger(SelectionManager.class);
 
-  private KnowtatorController controller;
+    private KnowtatorController controller;
 
-  private TextSource activeTextSource;
-  private Profile activeProfile;
-  private boolean filterByProfile;
-  private OWLEntity selectedOWLEntity;
-  private List<OWLClassSelectionListener> owlEntityListeners;
+    private TextSource activeTextSource;
+    private Profile activeProfile;
+    private boolean filterByProfile;
+    private OWLEntity selectedOWLEntity;
+    private List<OWLClassSelectionListener> owlEntityListeners;
 
-  private int start;
-  private int end;
+    private int start;
+    private int end;
 
-  private List<ProfileSelectionListener> profileListeners;
+    private List<ProfileSelectionListener> profileListeners;
 
-  public SelectionManager(KnowtatorController knowtatorController) {
-    controller = knowtatorController;
-    controller.getProjectManager().addListener(this);
-    filterByProfile = false;
-    owlEntityListeners = new ArrayList<>();
-    profileListeners = new ArrayList<>();
+    public SelectionManager(KnowtatorController knowtatorController) {
+        controller = knowtatorController;
+        controller.getProjectManager().addListener(this);
+        filterByProfile = false;
+        owlEntityListeners = new ArrayList<>();
+        profileListeners = new ArrayList<>();
 
-    start = 0;
-    end = 0;
-  }
-
-  public int getStart() {
-    return start;
-  }
-
-  public void setStart(int start) {
-    this.start = start;
-  }
-
-  public Profile getActiveProfile() {
-    return activeProfile;
-  }
-
-  public void setSelectedProfile(Profile newProfile) {
-    ProfileChangeEvent e = new ProfileChangeEvent(this.activeProfile, newProfile);
-    this.activeProfile = newProfile;
-    profileListeners.forEach(selectionListener -> selectionListener.activeProfileChange(e));
-  }
-
-  public int getEnd() {
-    return end;
-  }
-
-  public void setEnd(int end) {
-    this.end = end;
-  }
-
-  public OWLEntity getSelectedOWLEntity() {
-    return selectedOWLEntity;
-  }
-
-  public boolean isFilterByProfile() {
-    return filterByProfile;
-  }
-
-  public TextSource getActiveTextSource() throws ActiveTextSourceNotSetException {
-    if (activeTextSource == null) {
-      throw new ActiveTextSourceNotSetException();
+        start = 0;
+        end = 0;
     }
-    return activeTextSource;
-  }
 
-  public void setActiveTextSource(TextSource newTextSource) {
-    if (controller.getProjectManager().isProjectLoaded() && activeTextSource != newTextSource) {
-      this.activeTextSource = newTextSource;
-      controller.refreshView();
+    public int getStart() {
+        return start;
     }
-  }
 
-  public void setSelectedOWLEntity(OWLEntity owlClass) {
-    selectedOWLEntity = owlClass;
-    owlEntityListeners.forEach(listener -> listener.owlEntityChanged(owlClass));
-  }
-
-  @Override
-  public void caretUpdate(CaretEvent e) {
-    setStart(Math.min(e.getDot(), e.getMark()));
-    setEnd(Math.max(e.getDot(), e.getMark()));
-  }
-
-  @Override
-  public void stateChanged(ChangeEvent e) {
-    filterByProfile = ((JCheckBox) e.getSource()).isSelected();
-  }
-
-
-
-  public void getNextTextSource() {
-    if (controller.getProjectManager().isProjectLoaded()) {
-      setActiveTextSource(
-          controller.getTextSourceManager().getTextSourceCollection().getNext(activeTextSource));
+    public void setStart(int start) {
+        this.start = start;
     }
-  }
 
-  public void getPreviousTextSource() {
-    if (controller.getProjectManager().isProjectLoaded()) {
-      setActiveTextSource(
-          controller
-              .getTextSourceManager()
-              .getTextSourceCollection()
-              .getPrevious(activeTextSource));
+    public Profile getActiveProfile() {
+        return activeProfile;
     }
-  }
 
-  @Override
-  public void projectClosed() {}
+    public void setSelectedProfile(Profile newProfile) {
+        ProfileChangeEvent e = new ProfileChangeEvent(this.activeProfile, newProfile);
+        this.activeProfile = newProfile;
+        profileListeners.forEach(selectionListener -> selectionListener.activeProfileChange(e));
+    }
 
-  @Override
-  public void projectLoaded() {
-    setActiveTextSource(
-        controller.getTextSourceManager().getTextSourceCollection().getCollection().first());
-  }
+    public int getEnd() {
+        return end;
+    }
+
+    public void setEnd(int end) {
+        this.end = end;
+    }
+
+    public OWLEntity getSelectedOWLEntity() {
+        return selectedOWLEntity;
+    }
+
+    public boolean isFilterByProfile() {
+        return filterByProfile;
+    }
+
+    public TextSource getActiveTextSource() throws ActiveTextSourceNotSetException {
+        if (activeTextSource == null) {
+            throw new ActiveTextSourceNotSetException();
+        }
+        return activeTextSource;
+    }
+
+    public void setActiveTextSource(TextSource newTextSource) {
+        if (controller.getProjectManager().isProjectLoaded() && activeTextSource != newTextSource) {
+            this.activeTextSource = newTextSource;
+            controller.refreshView();
+        }
+    }
+
+    public void setSelectedOWLEntity(OWLEntity owlClass) {
+        selectedOWLEntity = owlClass;
+        owlEntityListeners.forEach(listener -> listener.owlEntityChanged(owlClass));
+    }
+
+    @Override
+    public void caretUpdate(CaretEvent e) {
+        setStart(Math.min(e.getDot(), e.getMark()));
+        setEnd(Math.max(e.getDot(), e.getMark()));
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        filterByProfile = ((JCheckBox) e.getSource()).isSelected();
+    }
 
 
-  public void addProfileListener(ProfileSelectionListener listener) {
-    profileListeners.add(listener);
-  }
+    public void getNextTextSource() {
+        if (controller.getProjectManager().isProjectLoaded()) {
+            setActiveTextSource(
+                    controller.getTextSourceManager().getTextSourceCollection().getNext(activeTextSource));
+        }
+    }
+
+    public void getPreviousTextSource() {
+        if (controller.getProjectManager().isProjectLoaded()) {
+            setActiveTextSource(
+                    controller
+                            .getTextSourceManager()
+                            .getTextSourceCollection()
+                            .getPrevious(activeTextSource));
+        }
+    }
+
+    @Override
+    public void projectClosed() {
+    }
+
+    @Override
+    public void projectLoaded() {
+        setActiveTextSource(
+                controller.getTextSourceManager().getTextSourceCollection().getCollection().first());
+    }
 
 
+    public void addProfileListener(ProfileSelectionListener listener) {
+        profileListeners.add(listener);
+    }
 
-  public void addOWLEntityListener(OWLClassSelectionListener listener) {
-    owlEntityListeners.add(listener);
-  }
 
-  public void dispose() {
-    owlEntityListeners.clear();
-    profileListeners.clear();
-  }
+    public void addOWLEntityListener(OWLClassSelectionListener listener) {
+        owlEntityListeners.add(listener);
+    }
+
+    public void dispose() {
+        owlEntityListeners.clear();
+        profileListeners.clear();
+    }
 }
