@@ -16,9 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class ProjectManager {
   private static final Logger log = Logger.getLogger(ProjectManager.class);
@@ -212,11 +210,6 @@ public class ProjectManager {
   public void saveProject() {
 
     if (getProjectLocation() != null) {
-      //noinspection ResultOfMethodCallIgnored
-      Arrays.stream(Objects.requireNonNull(profilesLocation.listFiles())).forEach(File::delete);
-      //noinspection ResultOfMethodCallIgnored
-      Arrays.stream(Objects.requireNonNull(annotationsLocation.listFiles())).forEach(File::delete);
-
       this.saveToFormat(KnowtatorXMLUtil.class, controller.getProfileManager(), profilesLocation);
       this.saveToFormat(KnowtatorXMLUtil.class, annotationsLocation);
     }
