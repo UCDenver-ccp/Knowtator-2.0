@@ -234,7 +234,8 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 							}
 
 							@Override
-							public void changedUpdate(DocumentEvent e) { }
+							public void changedUpdate(DocumentEvent e) {
+							}
 						});
 	}
 
