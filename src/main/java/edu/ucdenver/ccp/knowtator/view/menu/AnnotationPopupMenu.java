@@ -23,6 +23,18 @@ public class AnnotationPopupMenu extends JPopupMenu {
     this.view = view;
   }
 
+  private JMenuItem reassignOWLClassCommand() {
+    JMenuItem menuItem = new JMenuItem("Reassign OWL class");
+    menuItem.addActionListener(e1 -> {
+      try {
+        view.getController().getSelectionManager().getActiveTextSource().getAnnotationManager().reassignSelectedOWLClassToSelectedAnnotation();
+      } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+      }
+    });
+
+    return menuItem;
+  }
+
   private JMenuItem addAnnotationCommand() {
     JMenuItem menuItem = new JMenuItem("Add annotation");
     menuItem.addActionListener(
@@ -232,6 +244,7 @@ public class AnnotationPopupMenu extends JPopupMenu {
               > 1) {
         add(removeSpanFromAnnotationCommand());
       }
+      add(reassignOWLClassCommand());
 
     } else {
       return;
