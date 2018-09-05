@@ -37,6 +37,16 @@ public class Profile implements Savable, KnowtatorObject {
     controller.verifyId(id, this, false);
   }
 
+  private void save() {
+    if (controller.getProjectManager().isProjectLoaded()) {
+      controller.getProfileManager().save();
+    }
+  }
+
+  /*
+  COMPARRISON
+   */
+
   public static int compare(Profile profile1, Profile profile2) {
     if (profile1 == profile2) {
       return 0;
@@ -50,15 +60,53 @@ public class Profile implements Savable, KnowtatorObject {
     return profile1.getId().toLowerCase().compareTo(profile2.getId().toLowerCase());
   }
 
+  /*
+  GETTERS
+   */
+
   @Override
   public String getId() {
     return id;
   }
 
+  public Color getColor(Annotation annotation) {
+    OWLClass owlClass = annotation.getOwlClass();
+    String owlClassID = annotation.getOwlClassID();
+
+    Color color = colors.get(owlClass);
+    if (color != null) {
+      return color;
+    } else {
+      color = colors.get(owlClassID);
+      if (owlClass != null) {
+        if (color == null) {
+          color = Color.CYAN;
+        }
+        colors.put(owlClass, color);
+        controller.getProfileManager().fireColorChanged();
+        return color;
+      } else if (color == null) {
+        colors.put(owlClassID, Color.CYAN);
+        controller.getProfileManager().fireColorChanged();
+        return Color.CYAN;
+      } else {
+        return color;
+      }
+    }
+  }
+
+  /*
+  SETTERS
+   */
+
   @Override
   public void setId(String id) {
     this.id = id;
   }
+
+  /*
+  ADDERS
+   */
 
   private void addColor(String classID, String color) {
     Color c = Color.decode(color);
@@ -66,18 +114,30 @@ public class Profile implements Savable, KnowtatorObject {
         new Color(
             (float) c.getRed() / 255, (float) c.getGreen() / 255, (float) c.getBlue() / 255, 1f);
 
-    colors.put(classID, c);
-    controller.getProfileManager().fireColorChanged();
+    addColor(classID, c);
   }
 
-  public void addColor(Object owlClass, Color c) {
-    colors.put(owlClass, c);
+  public void addColor(Object key, Color c) {
+    colors.put(key, c);
     controller.getProfileManager().fireColorChanged();
+    save();
+  }
+
+
+  /*
+  TRANSLATORS
+   */
+  public static String convertToHex(Color c) {
+    return String.format("#%06x", c.getRGB() & 0x00FFFFFF);
   }
 
   public String toString() {
     return id;
   }
+
+  /*
+  WRITERS
+   */
 
   @Override
   public void writeToKnowtatorXML(Document dom, Element root) {
@@ -108,6 +168,17 @@ public class Profile implements Savable, KnowtatorObject {
     root.appendChild(profileElem);
   }
 
+  @SuppressWarnings("RedundantThrows")
+  @Override
+  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {}
+
+  @Override
+  public void writeToGeniaXML(Document dom, Element parent) {}
+
+  /*
+  READERS
+   */
+
   @Override
   public void readFromKnowtatorXML(File file, Element parent) {
     for (Node highlighterNode :
@@ -127,43 +198,6 @@ public class Profile implements Savable, KnowtatorObject {
   public void readFromBratStandoff(
       File file, Map<Character, List<String[]>> annotationMap, String content) {}
 
-  @SuppressWarnings("RedundantThrows")
-  @Override
-  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {}
-
   @Override
   public void readFromGeniaXML(Element parent, String content) {}
-
-  @Override
-  public void writeToGeniaXML(Document dom, Element parent) {}
-
-  public Color getColor(Annotation annotation) {
-    OWLClass owlClass = annotation.getOwlClass();
-    String owlClassID = annotation.getOwlClassID();
-
-    Color color = colors.get(owlClass);
-    if (color != null) {
-      return color;
-    } else {
-      color = colors.get(owlClassID);
-      if (owlClass != null) {
-        if (color == null) {
-          color = Color.CYAN;
-        }
-        colors.put(owlClass, color);
-        controller.getProfileManager().fireColorChanged();
-        return color;
-      } else if (color == null) {
-        colors.put(owlClassID, Color.CYAN);
-        controller.getProfileManager().fireColorChanged();
-        return Color.CYAN;
-      } else {
-        return color;
-      }
-    }
-  }
-
-  public static String convertToHex(Color c) {
-    return String.format("#%06x", c.getRGB() & 0x00FFFFFF);
-  }
 }

@@ -296,4 +296,8 @@ public class ProjectManager {
   public void setController(KnowtatorController controller) {
     this.controller = controller;
   }
+
+  File getProfilesLocation() {
+    return profilesLocation;
+  }
 }

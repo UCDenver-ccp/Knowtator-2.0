@@ -116,4 +116,8 @@ public class ProfileManager implements Savable {
         profileCollection.getCollection().clear();
         colorListeners.clear();
     }
+
+    public void save() {
+        controller.getProjectManager().saveToFormat(KnowtatorXMLUtil.class, this, controller.getProjectManager().getProfilesLocation());
+    }
 }
