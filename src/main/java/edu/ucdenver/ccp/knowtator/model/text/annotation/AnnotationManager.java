@@ -524,18 +524,15 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
             }
         }
 
-        GraphSpace oldKnowtatorGraphSpace = textSource.getGraphSpaceManager().addGraphSpace("Old Knowtator Relations");
+
+        GraphSpace oldKnowtatorGraphSpace = new GraphSpace(controller, textSource, "Old Knowtator Relations");
+        textSource.getGraphSpaceManager().addGraphSpace(oldKnowtatorGraphSpace);
 
         annotationToSlotMap.forEach(
                 (annotation, slot) -> {
                     List<Object> vertices = oldKnowtatorGraphSpace.getVerticesForAnnotation(annotation);
 
-                    AnnotationNode source;
-                    if (vertices.isEmpty()) {
-                        source = oldKnowtatorGraphSpace.addNode(null, annotation, 20, 20);
-                    } else {
-                        source = (AnnotationNode) vertices.get(0);
-                    }
+                    AnnotationNode source = oldKnowtatorGraphSpace.makeOrGetAnnotationNode(annotation, vertices);
 
                     String propertyID =
                             ((Element) slot.getElementsByTagName(OldKnowtatorXMLTags.MENTION_SLOT).item(0))
@@ -549,12 +546,9 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
 
                         List<Object> vertices1 = oldKnowtatorGraphSpace.getVerticesForAnnotation(annotation1);
 
-                        AnnotationNode target;
-                        if (vertices1.isEmpty()) {
-                            target = oldKnowtatorGraphSpace.addNode(null, annotation1, 20, 20);
-                        } else {
-                            target = (AnnotationNode) vertices1.get(0);
-                        }
+
+                        AnnotationNode target = oldKnowtatorGraphSpace.makeOrGetAnnotationNode(annotation1, vertices1);
+
                         oldKnowtatorGraphSpace.addTriple(
                                 source,
                                 target,
@@ -610,7 +604,8 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
                             annotation.setOWLClassID(splitNormalization[2]);
                         });
 
-        GraphSpace newGraphSpace = textSource.getGraphSpaceManager().addGraphSpace("Brat Relation Graph");
+        GraphSpace newGraphSpace = new GraphSpace(controller, textSource, "Brat Relation Graph");
+        textSource.getGraphSpaceManager().addGraphSpace(newGraphSpace);
         newGraphSpace.readFromBratStandoff(null, annotationCollection, null);
     }
 
