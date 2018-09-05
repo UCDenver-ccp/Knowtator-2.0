@@ -187,14 +187,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
     private void makeButtons() {
 
-        profileFilterCheckBox.addItemListener(e -> {
-            controller.getSelectionManager().setFilterByProfile(profileFilterCheckBox.isSelected());
+        profileFilterCheckBox.addItemListener(e -> controller.getSelectionManager().setFilterByProfile(profileFilterCheckBox.isSelected()));
 
-        });
-
-        classFilterCheckBox.addItemListener(e -> {
-            controller.getSelectionManager().setFilterByOWLClass(classFilterCheckBox.isSelected());
-        });
+        classFilterCheckBox.addItemListener(e -> controller.getSelectionManager().setFilterByOWLClass(classFilterCheckBox.isSelected()));
 
         findTextButton.addActionListener(
                 e -> {
@@ -406,6 +401,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                                         getController()
                                                 .getSelectionManager()
                                                 .getActiveTextSource()
+                                                .getAnnotationManager()
                                                 .removeSelectedAnnotation();
                                         break;
                                     case 1:
@@ -428,6 +424,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                                     getController()
                                             .getSelectionManager()
                                             .getActiveTextSource()
+                                            .getAnnotationManager()
                                             .removeSelectedAnnotation();
                                 }
                             }

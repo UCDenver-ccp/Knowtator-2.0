@@ -9,6 +9,7 @@ import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +21,6 @@ public class Span implements Savable, KnowtatorTextBoundObject, Comparable<Span>
   private static Logger log = Logger.getLogger(KnowtatorController.class);
 
   private int start;
-
   private int end;
   private Annotation annotation;
   private String id;
@@ -64,6 +64,10 @@ public class Span implements Savable, KnowtatorTextBoundObject, Comparable<Span>
     }
   }
 
+  /*
+  COMPARISON
+   */
+
   public static boolean intersects(TreeSet<Span> spans1, TreeSet<Span> spans2) {
     for (Span span1 : spans1) {
       for (Span span2 : spans2) {
@@ -101,21 +105,6 @@ public class Span implements Savable, KnowtatorTextBoundObject, Comparable<Span>
     end = Math.min(end, string.length() - 1);
     return string.substring(start, end);
   }
-
-  //  public static int compare(Span span1, Span span2) {
-  //    if (span1 == span2) {
-  //      return 0;
-  //    }
-  //
-  //    int compare = span1.getStart().compareTo(span2.getStart());
-  //    if (compare == 0) {
-  //      compare = span1.getEnd().compareTo(span2.getEnd());
-  //    }
-  //    if (compare == 0) {
-  //      return -1;
-  //    }
-  //    return compare;
-  //  }
 
   public int compare(Span span2) {
     if (span2 == null) {
@@ -161,6 +150,15 @@ public class Span implements Savable, KnowtatorTextBoundObject, Comparable<Span>
             || spanStart <= getStart() && getStart() < span.getEnd());
   }
 
+  @Override
+  public int compareTo(@NotNull Span o) {
+    return compare(o);
+  }
+
+  /*
+  MODIFIERS
+   */
+
   void shrinkEnd() {
     if (end > start) end -= 1;
   }
@@ -177,16 +175,20 @@ public class Span implements Savable, KnowtatorTextBoundObject, Comparable<Span>
     if (start > 0) start -= 1;
   }
 
+  /*
+  TRANSLATORS
+   */
+
   public String toString() {
     return String.format("Start: %d, End: %d", start, end);
   }
 
+  /*
+  GETTERS
+   */
+
   public Annotation getAnnotation() {
     return annotation;
-  }
-
-  public void setAnnotation(Annotation annotation) {
-    this.annotation = annotation;
   }
 
   String getSpannedText() {
@@ -205,21 +207,40 @@ public class Span implements Savable, KnowtatorTextBoundObject, Comparable<Span>
     return getEnd() - getStart();
   }
 
+
+  @Override
+  public String getId() {
+    return id;
+  }
+
+  @Override
+  public TextSource getTextSource() {
+    return textSource;
+  }
+
   /**
-  These methods are intended to correct for Java's handling of supplementary unicode characters.
+   These methods are intended to correct for Java's handling of supplementary unicode characters.
    */
 //  public int getStartCodePoint() { return Character.codePointCount(textSource.getContent(), 0, start); }
 //
 //  public int getEndCodePoint() { return Character.codePointCount(textSource.getContent(), 0, end); }
 
-  public void writeToKnowtatorXML(Document dom, Element annotationElem) {
-    Element spanElement = dom.createElement(KnowtatorXMLTags.SPAN);
-    spanElement.setAttribute(KnowtatorXMLAttributes.SPAN_START, String.valueOf(getStart()));
-    spanElement.setAttribute(KnowtatorXMLAttributes.SPAN_END, String.valueOf(getEnd()));
-    spanElement.setAttribute(KnowtatorXMLAttributes.ID, id);
-    spanElement.setTextContent(getSpannedText());
-    annotationElem.appendChild(spanElement);
+  /*
+  SETTERS
+   */
+
+  public void setAnnotation(Annotation annotation) {
+    this.annotation = annotation;
   }
+
+  @Override
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  /*
+  READERS
+   */
 
   @Override
   public void readFromKnowtatorXML(File file, Element parent) {}
@@ -230,6 +251,23 @@ public class Span implements Savable, KnowtatorTextBoundObject, Comparable<Span>
   @Override
   public void readFromBratStandoff(
       File file, Map<Character, List<String[]>> annotationMap, String content) {}
+
+  @Override
+  public void readFromGeniaXML(Element parent, String content) {}
+
+  /*
+  WRITERS
+   */
+
+  @Override
+  public void writeToKnowtatorXML(Document dom, Element annotationElem) {
+    Element spanElement = dom.createElement(KnowtatorXMLTags.SPAN);
+    spanElement.setAttribute(KnowtatorXMLAttributes.SPAN_START, String.valueOf(getStart()));
+    spanElement.setAttribute(KnowtatorXMLAttributes.SPAN_END, String.valueOf(getEnd()));
+    spanElement.setAttribute(KnowtatorXMLAttributes.ID, id);
+    spanElement.setTextContent(getSpannedText());
+    annotationElem.appendChild(spanElement);
+  }
 
   @Override
   public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
@@ -246,90 +284,8 @@ public class Span implements Savable, KnowtatorTextBoundObject, Comparable<Span>
   }
 
   @Override
-  public void readFromGeniaXML(Element parent, String content) {}
-
-  @Override
   public void writeToGeniaXML(Document dom, Element parent) {}
-
-  @Override
-  public String getId() {
-    return id;
-  }
-
-  @Override
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  @Override
-  public TextSource getTextSource() {
-    return textSource;
-  }
 
   public void dispose() {
   }
-
-  @Override
-  public int compareTo(Span o) {
-    return compare(o);
-  }
-
-
-  //	public static Span shortest(List<Span> spans) {
-  //		if (spans.size() == 0)
-  //			return null;
-  //		if (spans.size() == 1)
-  //			return spans.get(0);
-  //
-  //		Span shortestSpan = spans.get(0);
-  //		int shortestSize = shortestSpan.getSize();
-  //		for (int i = 1; i < spans.size(); i++) {
-  //			if (spans.get(i).getSize() < shortestSize) {
-  //				shortestSpan = spans.get(i);
-  //				shortestSize = shortestSpan.getSize();
-  //			}
-  //		}
-  //
-  //		return shortestSpan;
-  //	}
-
-  //	public int compareTo(Span span) {
-  //		if (getStart() < span.getStart()) {
-  //			return -1;
-  //		} else if (getStart() == span.getStart()) {
-  //			return Integer.compare(span.getEnd(), getEnd());
-  //		} else {
-  //			return 1;
-  //		}
-  //	}
-
-  //	public boolean crosses(Span span) {
-  //		int spanStart = span.getStart();
-  //
-  //		// either s's start is in this or this' start is in s
-  //		return !this.contains(span)
-  //				&& !span.contains(this)
-  //				&& (getStart() <= spanStart && spanStart < getEnd() || spanStart <= getStart()
-  //						&& getStart() < span.getEnd());
-  //	}
-
-  //	public boolean lessThan(Span span) {
-  //		return getStart() < span.getStart() && getEnd() < span.getEnd();
-  //	}
-
-  //	public boolean greaterThan(Span span) {
-  //		return getStart() > span.getStart() && getEnd() > span.getEnd();
-  //	}
-
-  //	public static Span parseSpan(String spanString) {
-  //		String startString = spanString.substring(0, spanString.indexOf("|"));
-  //		String endString = spanString.substring(spanString.indexOf("|") + 1);
-  //		int start = Integer.parseInt(startString);
-  //		int end = Integer.parseInt(endString);
-  //		return new Span(start, end);
-  //	}
-
-  //	public static boolean isValid(int start, int end) {
-  //		return start <= end && start >= 0;
-  //	}
 }

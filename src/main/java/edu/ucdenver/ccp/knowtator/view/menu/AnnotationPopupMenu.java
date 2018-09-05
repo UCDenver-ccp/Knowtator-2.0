@@ -83,17 +83,7 @@ public class AnnotationPopupMenu extends JPopupMenu {
                     .getSelectionManager()
                     .getActiveTextSource()
                     .getAnnotationManager()
-                    .removeSpanFromAnnotation(
-                            view.getController()
-                                    .getSelectionManager()
-                                    .getActiveTextSource()
-                                    .getAnnotationManager()
-                                    .getSelectedAnnotation(),
-                            view.getController()
-                                    .getSelectionManager()
-                                    .getActiveTextSource()
-                                    .getAnnotationManager()
-                                    .getSelectedSpan());
+                    .removeSpanFromSelectedAnnotation();
           } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
 
           }
