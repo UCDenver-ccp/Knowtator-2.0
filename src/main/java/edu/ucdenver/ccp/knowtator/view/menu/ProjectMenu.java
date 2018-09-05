@@ -248,6 +248,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
 
             if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
               File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
+              view.reset();
               view.getProjectManager().newProject(projectDirectory);
             }
           }

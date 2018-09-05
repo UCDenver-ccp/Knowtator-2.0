@@ -84,11 +84,11 @@
         <!-- For now, I have to not include this since it is difficult to bundle properly. -->
         <!-- Compiler complains about missing dependencies, include it, then rebuild, then uninclude it -->
         <!-- Can be finicky, but don't try to bundle it. It is unncecessary once sources are generated -->
-        <!--<dependency>-->
-            <!--<groupId>com.intellij</groupId>-->
-            <!--<artifactId>forms_rt</artifactId>-->
-            <!--<version>7.0.3</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>forms_rt</artifactId>
+            <version>7.0.3</version>
+        </dependency>
 
 
     </dependencies>

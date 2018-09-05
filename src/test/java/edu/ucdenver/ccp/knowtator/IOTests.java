@@ -1,10 +1,9 @@
 package edu.ucdenver.ccp.knowtator;
 
 import com.google.common.io.Files;
-import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -287,10 +286,11 @@ public class IOTests {
       e.printStackTrace();
     }
 
-    GraphSpace graphSpace = textSource.getGraphSpaceManager().addGraphSpace("graph_1");
+    GraphSpace graphSpace = new GraphSpace(controller, textSource, "graph_0");
+    textSource.getGraphSpaceManager().addGraphSpace(graphSpace);
 
-    AnnotationNode v1 = graphSpace.addNode("node_0", textSource.getAnnotationManager().getAnnotation("mention_0"), 20, 20);
-    AnnotationNode v2 = graphSpace.addNode("node_1", textSource.getAnnotationManager().getAnnotation("mention_1"), 20, 20);
+    AnnotationNode v1 = graphSpace.makeOrGetAnnotationNode(textSource.getAnnotationManager().getAnnotation("mention_0"), null);
+    AnnotationNode v2 = graphSpace.makeOrGetAnnotationNode(textSource.getAnnotationManager().getAnnotation("mention_1"), null);
     graphSpace.addTriple(
         v1,
         v2,
@@ -318,9 +318,9 @@ public class IOTests {
                 graphSpace1 -> graphSpace1.getChildEdges(graphSpace.getDefaultParent()).length)
             .sum();
 
-    assert numGraphSpaces == 2 : "There were " + numGraphSpaces + " graph spaces";
-    assert numVertices == 4 : "There were " + numVertices + " vertices";
-    assert numTriples == 2 : "There were " + numTriples + " triples";
+    assert numGraphSpaces == 1 : "There were " + numGraphSpaces + " graph spaces";
+    assert numVertices == 2 : "There were " + numVertices + " vertices";
+    assert numTriples == 1 : "There were " + numTriples + " triples";
   }
 
   @Test
@@ -347,36 +347,36 @@ public class IOTests {
     projectDirectory.deleteOnExit();
   }
 
-  @Test
-  public void successfulExportToBrat() {
-    controller = new KnowtatorController();
-
-    int projectID = 0;
-    int articleID = 4;
-    String projectFileName = projectFileNames[projectID];
-    File projectFile = getProjectFile(projectFileName);
-    String article = articleFileNames[articleID];
-
-    File bratAnnotationFile = getBratFile(projectFileName, article);
-
-    File outputFile = new File("E:/Documents/Test/brat_test.ann");
-
-    controller.getProjectManager().loadProject(projectFile);
-    controller.getProjectManager().loadFromFormat(BratStandoffUtil.class, bratAnnotationFile);
-    controller
-        .getProjectManager()
-        .saveToFormat(
-            BratStandoffUtil.class,
-            controller
-                .getTextSourceManager()
-                .getTextSourceCollection()
-                .getCollection()
-                .stream()
-                .filter(textSource1 -> textSource1.getId().equals(article))
-                .findAny()
-                .get(),
-            outputFile);
-  }
+//  @Test
+//  public void successfulExportToBrat() {
+//    controller = new KnowtatorController();
+//
+//    int projectID = 0;
+//    int articleID = 4;
+//    String projectFileName = projectFileNames[projectID];
+//    File projectFile = getProjectFile(projectFileName);
+//    String article = articleFileNames[articleID];
+//
+//    File bratAnnotationFile = getBratFile(projectFileName, article);
+//
+//    File outputFile = new File("E:/Documents/Test/brat_test.ann");
+//
+//    controller.getProjectManager().loadProject(projectFile);
+//    controller.getProjectManager().loadFromFormat(BratStandoffUtil.class, bratAnnotationFile);
+//    controller
+//        .getProjectManager()
+//        .saveToFormat(
+//            BratStandoffUtil.class,
+//            controller
+//                .getTextSourceManager()
+//                .getTextSourceCollection()
+//                .getCollection()
+//                .stream()
+//                .filter(textSource1 -> textSource1.getId().equals(article))
+//                .findAny()
+//                .get(),
+//            outputFile);
+//  }
 
   @Test
   public void successfulLoadOldCoreference() {
