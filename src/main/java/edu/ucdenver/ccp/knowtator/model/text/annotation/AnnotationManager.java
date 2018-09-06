@@ -618,4 +618,12 @@ public class AnnotationManager implements Savable, OWLSetupListener, OWLOntology
     public void projectLoaded() {
         owlSetup();
     }
+
+    public void reassignSelectedOWLClassToSelectedAnnotation() {
+        OWLEntity selectedOWLEntity = controller.getSelectionManager().getSelectedOWLEntity();
+        if (selectedOWLEntity instanceof OWLClass) {
+            selectedAnnotation.setOwlClass((OWLClass) selectedOWLEntity);
+            controller.refreshView();
+        }
+    }
 }
