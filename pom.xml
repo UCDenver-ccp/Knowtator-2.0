@@ -124,6 +124,10 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <excludes>
+                        <exclude>edu/ucdenver/ccp/knowtator/uima/**</exclude>
+                        <exclude>edu/ucdenver/ccp/knowtator/io/uima/**</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
 
@@ -143,7 +147,7 @@
                         <Bundle-Vendor>The Protege Development Team</Bundle-Vendor>
                         <Import-Package>*</Import-Package>
                         <!--<Embed-Dependency>jgraphx, forms_rt, forms, asm-commons, xmlparser</Embed-Dependency>-->
-                        <Embed-Dependency>jgraphx</Embed-Dependency>
+                        <Embed-Dependency>jgraphx, commons-cli</Embed-Dependency>
                         <Include-Resource>README.md,
                             plugin.xml,
                             installation_image.PNG,
