@@ -10,7 +10,6 @@ import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.ControllerNotSetException;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.chooser.AnnotationGraphSpaceChooser;
-import edu.ucdenver.ccp.knowtator.view.text.textpane.KnowtatorTextPane;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +31,7 @@ public class InfoPane {
     private AnnotationGraphSpaceChooser graphSpaceChooser;
     private JPanel infoPanel;
     private JLabel infoPanelTitleLabel;
+    private JCheckBox onlyAnnotationsCheckBox;
 
     public InfoPane(KnowtatorView view) {
         this.view = view;
@@ -70,38 +70,13 @@ public class InfoPane {
                 });
 
         nextMatchButton.addActionListener(
-                e -> {
-                    String textToFind = matchTextField.getText();
-                    KnowtatorTextPane currentKnowtatorTextPane = view.getKnowtatorTextPane();
-                    String textToSearch = currentKnowtatorTextPane.getText();
-                    if (!caseSensitiveCheckBox.isSelected()) {
-                        textToSearch = textToSearch.toLowerCase();
-                    }
-                    int matchLoc =
-                            textToSearch.indexOf(textToFind, currentKnowtatorTextPane.getSelectionStart() + 1);
-                    if (matchLoc != -1) {
-                        currentKnowtatorTextPane.requestFocusInWindow();
-                        currentKnowtatorTextPane.select(matchLoc, matchLoc + textToFind.length());
-                    } else {
-                        currentKnowtatorTextPane.setSelectionStart(-1);
-                    }
-                });
+                e -> view.getKnowtatorTextPane().search(matchTextField.getText(),
+                        caseSensitiveCheckBox.isSelected(),
+                        onlyAnnotationsCheckBox.isSelected(), true));
         previousMatchButton.addActionListener(
-                e -> {
-                    String textToFind = matchTextField.getText();
-                    String textToSearch = view.getKnowtatorTextPane().getText();
-                    if (!caseSensitiveCheckBox.isSelected()) {
-                        textToSearch = textToSearch.toLowerCase();
-                    }
-                    int matchLoc =
-                            textToSearch.lastIndexOf(textToFind, view.getKnowtatorTextPane().getSelectionStart() - 1);
-                    if (matchLoc != -1) {
-                        view.getKnowtatorTextPane().requestFocusInWindow();
-                        view.getKnowtatorTextPane().select(matchLoc, matchLoc + textToFind.length());
-                    } else {
-                        view.getKnowtatorTextPane().setSelectionStart(textToSearch.length());
-                    }
-                });
+                e -> view.getKnowtatorTextPane().search(matchTextField.getText(),
+                        caseSensitiveCheckBox.isSelected(),
+                        onlyAnnotationsCheckBox.isSelected(), false));
     }
 
     public void createUIComponents() {
@@ -178,6 +153,11 @@ public class InfoPane {
         regexCheckBox = new JCheckBox();
         this.$$$loadButtonText$$$(regexCheckBox, ResourceBundle.getBundle("ui").getString("regex"));
         panel2.add(regexCheckBox, BorderLayout.EAST);
+        onlyAnnotationsCheckBox = new JCheckBox();
+        onlyAnnotationsCheckBox.setHorizontalAlignment(0);
+        onlyAnnotationsCheckBox.setHorizontalTextPosition(4);
+        this.$$$loadButtonText$$$(onlyAnnotationsCheckBox, ResourceBundle.getBundle("log4j").getString("only.annotations"));
+        panel2.add(onlyAnnotationsCheckBox, BorderLayout.CENTER);
         infoPanel = new JPanel();
         infoPanel.setLayout(new GridLayoutManager(7, 2, new Insets(0, 0, 0, 0), -1, -1));
         infoPanel.setMaximumSize(new Dimension(500, 2147483647));

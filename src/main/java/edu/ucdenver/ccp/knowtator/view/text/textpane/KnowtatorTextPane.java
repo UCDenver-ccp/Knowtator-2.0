@@ -27,9 +27,11 @@ import static java.lang.Math.min;
 public class KnowtatorTextPane extends JTextArea
         implements ViewListener, ColorListener {
 
+    @SuppressWarnings("unused")
+    private static Logger log = Logger.getLogger(KnowtatorTextPane.class);
+
     private KnowtatorView view;
     private TextSource textSource;
-    private static Logger log = Logger.getLogger(KnowtatorTextPane.class);
 
     public KnowtatorTextPane(KnowtatorView view) {
         super();
@@ -44,6 +46,56 @@ public class KnowtatorTextPane extends JTextArea
         requestFocusInWindow();
         select(0, 0);
         getCaret().setSelectionVisible(true);
+    }
+
+    private int find(String text, String textToFind, int fromIndex, boolean searchForward) {
+        if (searchForward) {
+            return text.indexOf(textToFind, fromIndex + 1);
+        } else {
+            return text.lastIndexOf(textToFind, fromIndex - 1);
+        }
+    }
+
+    public void search(String textToFind, boolean isCaseSensitive, boolean inAnnotations, boolean searchForward) {
+        String text = isCaseSensitive ? getText().toLowerCase() : getText();
+        textToFind = isCaseSensitive ? textToFind : textToFind.toLowerCase();
+
+        Span selectedSpan = textSource.getAnnotationManager().getSelectedSpan();
+        if (inAnnotations && selectedSpan != null) {
+            if (searchForward) {
+                select(selectedSpan.getEnd(), selectedSpan.getEnd());
+            } else {
+                select(selectedSpan.getStart(), selectedSpan.getStart());
+            }
+        }
+
+        int matchLoc = find(text, textToFind, getSelectionStart(), searchForward);
+        Set<Span> spans = null;
+        int newMatchLoc = matchLoc;
+        if (inAnnotations) {
+            do {
+                spans = getSpans(newMatchLoc);
+                if (!spans.isEmpty()) {
+                    inAnnotations = false;
+                } else {
+                    newMatchLoc = find(text, textToFind, newMatchLoc, searchForward);
+                }
+                if (!searchForward && newMatchLoc == -1) {
+                    newMatchLoc = text.length();
+                }
+            } while (inAnnotations && newMatchLoc != matchLoc);
+        }
+        matchLoc = newMatchLoc;
+        if (matchLoc != -1) {
+            if (spans != null) {
+                textSource.getAnnotationManager().setSelectedSpan(spans.iterator().next());
+            } else {
+                requestFocusInWindow();
+                select(matchLoc, matchLoc + textToFind.length());
+            }
+        } else {
+            select(searchForward ? -1 : text.length(), searchForward ? -1 : text.length());
+        }
     }
 
     public void setController(KnowtatorController controller) {
