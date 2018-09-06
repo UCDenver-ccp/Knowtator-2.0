@@ -1,5 +1,7 @@
 package edu.ucdenver.ccp.knowtator.view;
 
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.OWLClassSelectionListener;
@@ -96,7 +98,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     }
 
     private void makeController() {
-        log.warn("KnowtatorView: Making controller");
         controller = new KnowtatorController();
         controller.getSelectionManager().addOWLEntityListener(this);
         controller.setProjectManager(projectManager);
@@ -121,7 +122,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         if (workspace == null) {
             if (getOWLWorkspace() != null) {
                 controller.getOWLAPIDataExtractor().setUpOWL(getOWLWorkspace());
-                log.warn("Adding class label as renderer listener");
                 getOWLWorkspace().getOWLModelManager().addListener(infoPane.getAnnotationClassLabel());
             }
         }
@@ -644,14 +644,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         this.$$$loadButtonText$$$(projectMenu, ResourceBundle.getBundle("ui").getString("knowator.project"));
         menuBar1.add(projectMenu, BorderLayout.WEST);
         textPanel = new JPanel();
-        textPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));
+        textPanel.setLayout(new GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));
         textPanel.setMinimumSize(new Dimension(400, 350));
         textPanel.setPreferredSize(new Dimension(800, 200));
         panel1.add(textPanel, BorderLayout.CENTER);
         textPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-16777216)), null));
         textSourceToolBar = new JToolBar();
         textSourceToolBar.setFloatable(false);
-        textPanel.add(textSourceToolBar, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 50), new Dimension(-1, 50), new Dimension(2147483647, 50), 0, false));
+        textPanel.add(textSourceToolBar, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 50), new Dimension(-1, 50), new Dimension(2147483647, 50), 0, false));
         decreaseFontSizeButton = new JButton();
         decreaseFontSizeButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-Decrease Font (Custom).png")));
         decreaseFontSizeButton.setMaximumSize(new Dimension(50, 50));
@@ -716,7 +716,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         textSourceToolBar.add(profileChooser);
         annotationToolBar = new JToolBar();
         annotationToolBar.setFloatable(false);
-        textPanel.add(annotationToolBar, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 50), new Dimension(-1, 50), new Dimension(2147483647, 50), 0, false));
+        textPanel.add(annotationToolBar, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(-1, 50), new Dimension(-1, 50), new Dimension(2147483647, 50), 0, false));
         addAnnotationButton = new JButton();
         addAnnotationButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-plus-24.png")));
         addAnnotationButton.setMaximumSize(new Dimension(50, 50));
@@ -801,7 +801,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         annotationToolBar.add(classFilterCheckBox);
         final JToolBar toolBar1 = new JToolBar();
         toolBar1.setFloatable(false);
-        textPanel.add(toolBar1, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
+        textPanel.add(toolBar1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
         showGraphViewerButton = new JButton();
         showGraphViewerButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-tree-structure-32.png")));
         showGraphViewerButton.setMaximumSize(new Dimension(50, 50));
@@ -818,7 +818,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         toolBar1.add(findTextButton);
         final JSplitPane splitPane1 = new JSplitPane();
         splitPane1.setDividerLocation(800);
-        textPanel.add(splitPane1, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
+        textPanel.add(splitPane1, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
         final JScrollPane scrollPane1 = new JScrollPane();
         splitPane1.setLeftComponent(scrollPane1);
         scrollPane1.setViewportView(knowtatorTextPane);
