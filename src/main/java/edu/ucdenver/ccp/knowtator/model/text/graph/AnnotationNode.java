@@ -37,6 +37,10 @@ public class AnnotationNode extends mxCell implements Savable, KnowtatorTextBoun
 		setConnectable(true);
 	}
 
+	/*
+	WRITERS
+	 */
+
 	@Override
 	public void writeToKnowtatorXML(Document dom, Element parent) {
 		Element vertexElem = dom.createElement(KnowtatorXMLTags.VERTEX);
@@ -46,6 +50,19 @@ public class AnnotationNode extends mxCell implements Savable, KnowtatorTextBoun
 		vertexElem.setAttribute(KnowtatorXMLAttributes.Y_LOCATION, String.valueOf(getGeometry().getY()));
 		parent.appendChild(vertexElem);
 	}
+
+	@SuppressWarnings("RedundantThrows")
+	@Override
+	public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
+	}
+
+	@Override
+	public void writeToGeniaXML(Document dom, Element parent) {
+	}
+
+	/*
+	READERS
+	 */
 
 	@Override
 	public void readFromKnowtatorXML(File file, Element parent) {
@@ -60,18 +77,13 @@ public class AnnotationNode extends mxCell implements Savable, KnowtatorTextBoun
 			File file, Map<Character, List<String[]>> annotationMap, String content) {
 	}
 
-	@SuppressWarnings("RedundantThrows")
-	@Override
-	public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
-	}
-
 	@Override
 	public void readFromGeniaXML(Element parent, String content) {
 	}
 
-	@Override
-	public void writeToGeniaXML(Document dom, Element parent) {
-	}
+	/*
+	GETTERS
+	 */
 
 	public Annotation getAnnotation() {
 		return annotation;

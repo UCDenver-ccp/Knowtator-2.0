@@ -4,7 +4,6 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.listeners.GraphSpaceSelectionListener;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
@@ -15,7 +14,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,30 +23,24 @@ public class GraphSpaceManager implements Savable {
   private GraphSpace activeGraphSpace;
   private KnowtatorController controller;
   private TextSource textSource;
-  private List<GraphSpaceSelectionListener> graphSpaceListeners;
   private GraphSpaceCollection graphSpaceCollection;
 
   public GraphSpaceManager(KnowtatorController controller, TextSource textSource) {
 
     this.controller = controller;
     this.textSource = textSource;
-    graphSpaceListeners = new ArrayList<>();
     graphSpaceCollection = new GraphSpaceCollection(controller);
   }
+
+  /*
+  GETTERS
+   */
 
   public GraphSpace getActiveGraphSpace() throws ActiveGraphSpaceNotSetException {
     if (activeGraphSpace == null) {
       throw new ActiveGraphSpaceNotSetException();
     }
     return activeGraphSpace;
-  }
-
-  public void setSelectedGraphSpace(GraphSpace newGraphSpace) {
-
-    if (this.activeGraphSpace != newGraphSpace) {
-      this.activeGraphSpace = newGraphSpace;
-      controller.refreshView();
-    }
   }
 
   public void getNextGraphSpace() {
@@ -60,22 +52,41 @@ public class GraphSpaceManager implements Savable {
     setSelectedGraphSpace(graphSpaceCollection.getPrevious(activeGraphSpace));
   }
 
-  public void addGraphSpaceListener(GraphSpaceSelectionListener listener) {
-    graphSpaceListeners.add(listener);
+  public GraphSpaceCollection getGraphSpaceCollection() {
+    return graphSpaceCollection;
   }
 
-  public void dispose() {
-    this.graphSpaceListeners.clear();
-    graphSpaceCollection.forEach(GraphSpace::dispose);
-    graphSpaceCollection.getCollection().clear();
+  /*
+  SETTERS
+   */
+
+  public void setSelectedGraphSpace(GraphSpace newGraphSpace) {
+
+    if (this.activeGraphSpace != newGraphSpace) {
+      this.activeGraphSpace = newGraphSpace;
+      controller.refreshView();
+    }
   }
 
-  public GraphSpace addGraphSpace(String title) {
-    GraphSpace newGraphSpace = new GraphSpace(controller, textSource, title);
+  /*
+  ADDERS
+   */
+
+  public void addGraphSpace(String graphName) {
+    GraphSpace newGraphSpace = new GraphSpace(controller, textSource, graphName);
+    addGraphSpace(newGraphSpace);
+  }
+
+  public void addGraphSpace(GraphSpace newGraphSpace) {
     graphSpaceCollection.add(newGraphSpace);
     setSelectedGraphSpace(newGraphSpace);
-    return newGraphSpace;
+
+    save();
   }
+
+  /*
+  REMOVERS
+   */
 
   public void removeAnnotation(Annotation annotationToRemove) {
     for (GraphSpace graphSpace : graphSpaceCollection) {
@@ -86,11 +97,33 @@ public class GraphSpaceManager implements Savable {
     }
   }
 
+  public void removeGraphSpace(GraphSpace graphSpace) {
+    graphSpaceCollection.remove(graphSpace);
+    save();
+  }
+
+
+  /*
+  WRITERS
+   */
   @Override
   public void writeToKnowtatorXML(Document dom, Element parent) {
     graphSpaceCollection.forEach(graphSpace -> graphSpace.writeToKnowtatorXML(dom, parent));
   }
 
+  @Override
+  public void writeToBratStandoff(
+          Writer writer,
+          Map<String, Map<String, String>> annotationConfig,
+          Map<String, Map<String, String>> visualConfig) {}
+
+  @Override
+  public void writeToGeniaXML(Document dom, Element parent) {}
+
+
+  /*
+  READERS
+   */
   @Override
   public void readFromKnowtatorXML(File file, Element parent) {
     for (Node graphSpaceNode :
@@ -98,7 +131,9 @@ public class GraphSpaceManager implements Savable {
       Element graphSpaceElem = (Element) graphSpaceNode;
 
       String id = graphSpaceElem.getAttribute(KnowtatorXMLAttributes.ID);
-      GraphSpace graphSpace = addGraphSpace(id);
+
+      GraphSpace graphSpace = new GraphSpace(controller, textSource, id);
+      addGraphSpace(graphSpace);
 
       graphSpace.readFromKnowtatorXML(null, graphSpaceElem);
     }
@@ -114,25 +149,8 @@ public class GraphSpaceManager implements Savable {
   public void readFromBratStandoff() {}
 
   @Override
-  public void writeToBratStandoff(
-      Writer writer,
-      Map<String, Map<String, String>> annotationConfig,
-      Map<String, Map<String, String>> visualConfig)
-      throws IOException {}
-
-  @Override
   public void readFromGeniaXML(Element parent, String content) {}
 
-  @Override
-  public void writeToGeniaXML(Document dom, Element parent) {}
-
-  public GraphSpaceCollection getGraphSpaceCollection() {
-    return graphSpaceCollection;
-  }
-
-  public void removeGraphSpace(GraphSpace graphSpace) {
-    graphSpaceCollection.remove(graphSpace);
-  }
 
   String verifyID(String id, String idPrefix) {
     if (id == null) {
@@ -151,5 +169,16 @@ public class GraphSpaceManager implements Savable {
     }
 
     return id;
+  }
+
+  public void dispose() {
+    graphSpaceCollection.forEach(GraphSpace::dispose);
+    graphSpaceCollection.getCollection().clear();
+  }
+
+  private void save() {
+    if (controller.getProjectManager().isProjectLoaded()) {
+      textSource.save();
+    }
   }
 }

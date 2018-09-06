@@ -94,7 +94,6 @@ public class OWLAPIDataExtractor implements Serializable, DebugListener, OWLSele
   }
 
   public void setUpOWL(OWLWorkspace owlWorkSpace) {
-    log.warn("OWLAPIDataExtractor: setup OWL API connection");
     this.owlWorkSpace = owlWorkSpace;
     owlWorkSpace.getOWLSelectionModel().addListener(this);
     setUpOWL();

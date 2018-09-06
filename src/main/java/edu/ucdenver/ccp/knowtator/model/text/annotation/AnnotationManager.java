@@ -7,6 +7,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationSelectionListener;
 import edu.ucdenver.ccp.knowtator.listeners.OWLSetupListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Profile;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.AnnotationCollection;
@@ -37,7 +38,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class AnnotationManager implements Savable, OWLSetupListener, OWLOntologyChangeListener, ProjectListener {
+public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupListener, OWLOntologyChangeListener, ProjectListener {
 
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(AnnotationManager.class);
@@ -65,11 +66,19 @@ public class AnnotationManager implements Savable, OWLSetupListener, OWLOntology
         annotationListeners = new ArrayList<>();
     }
 
+    private void save() {
+        if (controller.getProjectManager().isProjectLoaded()) {
+            textSource.save();
+        }
+    }
+
+    /*
+    ADDERS
+     */
+
     public void addAnnotation(Annotation newAnnotation) {
         annotationCollection.add(newAnnotation);
-
         allSpanCollection.getCollection().addAll(newAnnotation.getSpanCollection().getCollection());
-
         setSelectedAnnotation(newAnnotation, null);
     }
 
@@ -78,6 +87,49 @@ public class AnnotationManager implements Savable, OWLSetupListener, OWLOntology
         allSpanCollection.add(newSpan);
         setSelectedSpan(newSpan);
     }
+
+    public void addSelectedAnnotation() {
+        OWLEntity owlClass = controller.getSelectionManager().getSelectedOWLEntity();
+        if (owlClass instanceof OWLClass) {
+            Profile annotator = controller.getSelectionManager().getActiveProfile();
+            int start = controller.getSelectionManager().getStart();
+            int end = controller.getSelectionManager().getEnd();
+            Span newSpan = new Span(null, start, end, textSource, controller);
+
+            try {
+                String owlClassID = controller.getOWLAPIDataExtractor().getOWLEntityRendering(owlClass);
+                Annotation newAnnotation =
+                        new Annotation(controller, null, (OWLClass) owlClass, owlClassID, null, annotator, "identity", textSource);
+                addAnnotation(newAnnotation);
+                addSpanToAnnotation(newAnnotation, newSpan);
+
+                save();
+            } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public void addSpanToSelectedAnnotation() {
+        addSpanToAnnotation(
+                getSelectedAnnotation(),
+                new Span(
+                        null,
+                        controller.getSelectionManager().getStart(),
+                        controller.getSelectionManager().getEnd(),
+                        textSource,
+                        controller));
+        save();
+    }
+
+    public void addAnnotationListener(AnnotationSelectionListener listener) {
+        annotationListeners.add(listener);
+    }
+
+    /*
+    REMOVERS
+     */
 
     public void removeAnnotation(Annotation annotationToRemove) {
         annotationCollection.remove(annotationToRemove);
@@ -88,10 +140,69 @@ public class AnnotationManager implements Savable, OWLSetupListener, OWLOntology
         setSelectedAnnotation(null, null);
     }
 
+    public void removeSelectedAnnotation() {
+        textSource.getGraphSpaceManager().removeAnnotation(selectedAnnotation);
+        removeAnnotation(selectedAnnotation);
+        save();
+    }
+
     public void removeSpanFromAnnotation(Annotation annotation, Span span) {
         annotation.removeSpan(span);
         allSpanCollection.remove(span);
     }
+
+    public void removeSpanFromSelectedAnnotation() {
+        removeSpanFromAnnotation(getSelectedAnnotation(), getSelectedSpan());
+        save();
+    }
+
+    /*
+    MODIFIERS
+     */
+
+    public void growSelectedSpanStart() {
+        Span span = getSelectedSpan();
+        allSpanCollection.remove(span);
+        span.growStart();
+        allSpanCollection.add(span);
+        setSelectedSpan(span);
+
+        save();
+    }
+
+    public void growSelectedSpanEnd() {
+        Span span = getSelectedSpan();
+        allSpanCollection.remove(span);
+        span.growEnd(textSource.getContent().length());
+        allSpanCollection.add(getSelectedSpan());
+        setSelectedSpan(span);
+
+        save();
+    }
+
+    public void shrinkSelectedSpanEnd() {
+        Span span = getSelectedSpan();
+        allSpanCollection.remove(span);
+        span.shrinkEnd();
+        allSpanCollection.add(span);
+        setSelectedSpan(span);
+
+        save();
+    }
+
+    public void shrinkSelectedSpanStart() {
+        Span span = getSelectedSpan();
+        allSpanCollection.remove(span);
+        span.shrinkStart();
+        allSpanCollection.add(span);
+        setSelectedSpan(span);
+
+        save();
+    }
+
+    /*
+    GETTERS
+     */
 
     public AnnotationCollection getAnnotations() {
         return annotationCollection;
@@ -116,18 +227,6 @@ public class AnnotationManager implements Savable, OWLSetupListener, OWLOntology
         }
 
         return annotationsForOwlClass;
-    }
-
-    @Override
-    public void owlSetup() {
-        try {
-            controller.getOWLAPIDataExtractor().getWorkSpace().getOWLModelManager().addOntologyChangeListener(this);
-            for (Annotation annotation : annotationCollection) {
-                annotation.setOwlClass(controller.getOWLAPIDataExtractor().getOWLClassByID(annotation.getOwlClassID()));
-            }
-        } catch (OWLClassNotFoundException | OWLWorkSpaceNotSetException ignored) {
-
-        }
     }
 
     /**
@@ -165,39 +264,6 @@ public class AnnotationManager implements Savable, OWLSetupListener, OWLOntology
                 .collect(Collectors.toCollection(supplier));
     }
 
-    public void growSelectedSpanStart() {
-        Span span = getSelectedSpan();
-        allSpanCollection.remove(span);
-        span.growStart();
-        allSpanCollection.add(span);
-        setSelectedSpan(span);
-    }
-
-    public void growSelectedSpanEnd() {
-        Span span = getSelectedSpan();
-        allSpanCollection.remove(span);
-        span.growEnd(textSource.getContent().length());
-        allSpanCollection.add(getSelectedSpan());
-        setSelectedSpan(span);
-    }
-
-    public void shrinkSelectedSpanEnd() {
-        Span span = getSelectedSpan();
-        allSpanCollection.remove(span);
-        span.shrinkEnd();
-        allSpanCollection.add(span);
-        setSelectedSpan(span);
-    }
-
-    public void shrinkSelectedSpanStart() {
-        Span span = getSelectedSpan();
-        allSpanCollection.remove(span);
-        span.shrinkStart();
-        allSpanCollection.add(span);
-        setSelectedSpan(span);
-    }
-
-    @SuppressWarnings("unused")
     public void findOverlaps() {
         List<Span> overlappingSpans = new ArrayList<>();
         allSpanCollection.forEach(
@@ -222,11 +288,141 @@ public class AnnotationManager implements Savable, OWLSetupListener, OWLOntology
         return annotationCollection.get(annotationID);
     }
 
+    private SpanCollection getAllSpanCollection() {
+        return allSpanCollection;
+    }
+
+    public Annotation getSelectedAnnotation() {
+        return selectedAnnotation;
+    }
+
+    public Span getSelectedSpan() {
+        return selectedSpan;
+    }
+
+    public void getNextSpan() {
+        if (controller.getProjectManager().isProjectLoaded()) {
+            setSelectedSpan(
+                    textSource.getAnnotationManager().getAllSpanCollection().getNext(selectedSpan));
+        }
+    }
+
+    public void getPreviousSpan() {
+        if (controller.getProjectManager().isProjectLoaded()) {
+            setSelectedSpan(
+                    textSource.getAnnotationManager().getAllSpanCollection().getPrevious(selectedSpan));
+        }
+    }
+
+    /*
+    SETTERS
+     */
+
+    public void setSelectedSpan(Span newSpan) {
+
+        this.selectedSpan = newSpan;
+        if (newSpan != null) {
+            setSelectedAnnotation(newSpan.getAnnotation(), newSpan);
+        }
+
+        controller.refreshView();
+    }
+
+    public void setSelectedAnnotation(Annotation newAnnotation, Span newSpan) {
+        if (controller.getProjectManager().isProjectLoaded()) {
+            if (selectedAnnotation != newAnnotation) {
+                AnnotationChangeEvent e = new AnnotationChangeEvent(this.selectedAnnotation, newAnnotation);
+                selectedAnnotation = newAnnotation;
+                if (selectedAnnotation != null) {
+                    setSelectedSpan(newSpan);
+                    controller.getSelectionManager().setSelectedOWLEntity(selectedAnnotation.getOwlClass());
+                }
+                try {
+                    textSource.getGraphSpaceManager().getActiveGraphSpace().setSelectionCell(null);
+                } catch (ActiveGraphSpaceNotSetException ignored) {
+
+                }
+                annotationListeners.forEach(
+                        selectionListener -> selectionListener.selectedAnnotationChanged(e));
+            }
+        }
+        controller.refreshView();
+    }
+
+    /*
+    SETUP
+     */
+
+    @Override
+    public void owlSetup() {
+        try {
+            controller.getOWLAPIDataExtractor().getWorkSpace().getOWLModelManager().addOntologyChangeListener(this);
+            for (Annotation annotation : annotationCollection) {
+                annotation.setOwlClass(controller.getOWLAPIDataExtractor().getOWLClassByID(annotation.getOwlClassID()));
+            }
+        } catch (OWLClassNotFoundException | OWLWorkSpaceNotSetException ignored) {
+
+        }
+    }
+
+    /*
+    WRITERS
+     */
+
     @Override
     public void writeToKnowtatorXML(Document dom, Element textSourceElement) {
         annotationCollection.forEach(
                 annotation -> annotation.writeToKnowtatorXML(dom, textSourceElement));
     }
+
+    @Override
+    public void writeToBratStandoff(
+            Writer writer,
+            Map<String, Map<String, String>> annotationsConfig,
+            Map<String, Map<String, String>> visualConfig)
+            throws IOException {
+        Iterator<Annotation> annotationIterator = annotationCollection.iterator();
+        for (int i = 0; i < annotationCollection.size(); i++) {
+            Annotation annotation = annotationIterator.next();
+            annotation.setBratID(String.format("T%d", i));
+
+            annotation.writeToBratStandoff(writer, annotationsConfig, visualConfig);
+        }
+
+        // Not adding relations due to complexity of relation types in Brat Standoff
+    /*int lastNumTriples = 0;
+    for (GraphSpace graphSpace : graphSpaceCollection) {
+      Object[] edges = graphSpace.getChildEdges(graphSpace.getDefaultParent());
+      int bound = edges.length;
+      for (int i = 0; i < bound; i++) {
+        Object edge = edges[i];
+        Triple triple = (Triple) edge;
+        triple.setBratID(String.format("R%d", lastNumTriples + i));
+        String propertyID;
+        try {
+          propertyID =
+              controller.getOWLAPIDataExtractor().getOWLEntityRendering(triple.getProperty());
+        } catch (OWLEntityNullException | OWLWorkSpaceNotSetException e) {
+          propertyID = triple.getValue().toString();
+        }
+        writer.append(
+            String.format(
+                "%s\t%s Arg1:%s Arg2:%s\n",
+                triple.getBratID(),
+                propertyID,
+                ((AnnotationNode) triple.getSource()).getAnnotation().getBratID(),
+                ((AnnotationNode) triple.getTarget()).getAnnotation().getBratID()));
+      }
+    }*/
+    }
+
+    @Override
+    public void writeToGeniaXML(Document dom, Element parent) {
+    }
+
+    /*
+    READERS
+     */
 
     @Override
     public void readFromKnowtatorXML(File file, Element parent) {
@@ -254,8 +450,6 @@ public class AnnotationManager implements Savable, OWLSetupListener, OWLOntology
 
             addAnnotation(newAnnotation);
         }
-
-
     }
 
     @Override
@@ -330,18 +524,15 @@ public class AnnotationManager implements Savable, OWLSetupListener, OWLOntology
             }
         }
 
-        GraphSpace oldKnowtatorGraphSpace = textSource.getGraphSpaceManager().addGraphSpace("Old Knowtator Relations");
+
+        GraphSpace oldKnowtatorGraphSpace = new GraphSpace(controller, textSource, "Old Knowtator Relations");
+        textSource.getGraphSpaceManager().addGraphSpace(oldKnowtatorGraphSpace);
 
         annotationToSlotMap.forEach(
                 (annotation, slot) -> {
                     List<Object> vertices = oldKnowtatorGraphSpace.getVerticesForAnnotation(annotation);
 
-                    AnnotationNode source;
-                    if (vertices.isEmpty()) {
-                        source = oldKnowtatorGraphSpace.addNode(null, annotation, 20, 20);
-                    } else {
-                        source = (AnnotationNode) vertices.get(0);
-                    }
+                    AnnotationNode source = oldKnowtatorGraphSpace.makeOrGetAnnotationNode(annotation, vertices);
 
                     String propertyID =
                             ((Element) slot.getElementsByTagName(OldKnowtatorXMLTags.MENTION_SLOT).item(0))
@@ -355,12 +546,9 @@ public class AnnotationManager implements Savable, OWLSetupListener, OWLOntology
 
                         List<Object> vertices1 = oldKnowtatorGraphSpace.getVerticesForAnnotation(annotation1);
 
-                        AnnotationNode target;
-                        if (vertices1.isEmpty()) {
-                            target = oldKnowtatorGraphSpace.addNode(null, annotation1, 20, 20);
-                        } else {
-                            target = (AnnotationNode) vertices1.get(0);
-                        }
+
+                        AnnotationNode target = oldKnowtatorGraphSpace.makeOrGetAnnotationNode(annotation1, vertices1);
+
                         oldKnowtatorGraphSpace.addTriple(
                                 source,
                                 target,
@@ -416,100 +604,17 @@ public class AnnotationManager implements Savable, OWLSetupListener, OWLOntology
                             annotation.setOWLClassID(splitNormalization[2]);
                         });
 
-        GraphSpace newGraphSpace = textSource.getGraphSpaceManager().addGraphSpace("Brat Relation Graph");
+        GraphSpace newGraphSpace = new GraphSpace(controller, textSource, "Brat Relation Graph");
+        textSource.getGraphSpaceManager().addGraphSpace(newGraphSpace);
         newGraphSpace.readFromBratStandoff(null, annotationCollection, null);
     }
 
-    @Override
-    public void writeToBratStandoff(
-            Writer writer,
-            Map<String, Map<String, String>> annotationsConfig,
-            Map<String, Map<String, String>> visualConfig)
-            throws IOException {
-        Iterator<Annotation> annotationIterator = annotationCollection.iterator();
-        for (int i = 0; i < annotationCollection.size(); i++) {
-            Annotation annotation = annotationIterator.next();
-            annotation.setBratID(String.format("T%d", i));
-
-            annotation.writeToBratStandoff(writer, annotationsConfig, visualConfig);
-        }
-
-        // Not adding relations due to complexity of relation types in Brat Standoff
-    /*int lastNumTriples = 0;
-    for (GraphSpace graphSpace : graphSpaceCollection) {
-      Object[] edges = graphSpace.getChildEdges(graphSpace.getDefaultParent());
-      int bound = edges.length;
-      for (int i = 0; i < bound; i++) {
-        Object edge = edges[i];
-        Triple triple = (Triple) edge;
-        triple.setBratID(String.format("R%d", lastNumTriples + i));
-        String propertyID;
-        try {
-          propertyID =
-              controller.getOWLAPIDataExtractor().getOWLEntityRendering(triple.getProperty());
-        } catch (OWLEntityNullException | OWLWorkSpaceNotSetException e) {
-          propertyID = triple.getValue().toString();
-        }
-        writer.append(
-            String.format(
-                "%s\t%s Arg1:%s Arg2:%s\n",
-                triple.getBratID(),
-                propertyID,
-                ((AnnotationNode) triple.getSource()).getAnnotation().getBratID(),
-                ((AnnotationNode) triple.getTarget()).getAnnotation().getBratID()));
-      }
-    }*/
-    }
 
     @Override
     public void readFromGeniaXML(Element parent, String content) {
     }
 
     @Override
-    public void writeToGeniaXML(Document dom, Element parent) {
-    }
-
-    public void addSelectedAnnotation() {
-        OWLEntity owlClass = controller.getSelectionManager().getSelectedOWLEntity();
-        if (owlClass instanceof OWLClass) {
-            Profile annotator = controller.getSelectionManager().getActiveProfile();
-            int start = controller.getSelectionManager().getStart();
-            int end = controller.getSelectionManager().getEnd();
-            Span newSpan = new Span(null, start, end, textSource, controller);
-
-            try {
-                String owlClassID = controller.getOWLAPIDataExtractor().getOWLEntityRendering(owlClass);
-                Annotation newAnnotation =
-                        new Annotation(controller, null, (OWLClass) owlClass, owlClassID, null, annotator, "identity", textSource);
-                addAnnotation(newAnnotation);
-                addSpanToAnnotation(newAnnotation, newSpan);
-            } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
-                e.printStackTrace();
-            }
-
-
-        }
-    }
-
-    private SpanCollection getAllSpanCollection() {
-        return allSpanCollection;
-    }
-
-    public void addSpanToSelectedAnnotation() {
-        addSpanToAnnotation(
-                getSelectedAnnotation(),
-                new Span(
-                        null,
-                        controller.getSelectionManager().getStart(),
-                        controller.getSelectionManager().getEnd(),
-                        textSource,
-                        controller));
-    }
-
-    public void removeSpanFromSelectedAnnotation() {
-        removeSpanFromAnnotation(getSelectedAnnotation(), getSelectedSpan());
-    }
-
     public void dispose() {
         annotationCollection.forEach(Annotation::dispose);
         annotationCollection.getCollection().clear();
@@ -518,64 +623,6 @@ public class AnnotationManager implements Savable, OWLSetupListener, OWLOntology
             controller.getOWLAPIDataExtractor().getWorkSpace().getOWLModelManager().removeOntologyChangeListener(this);
         } catch (OWLWorkSpaceNotSetException ignored) {
         }
-    }
-
-
-    public Annotation getSelectedAnnotation() {
-        return selectedAnnotation;
-    }
-
-    public Span getSelectedSpan() {
-        return selectedSpan;
-    }
-
-    public void setSelectedSpan(Span newSpan) {
-
-        this.selectedSpan = newSpan;
-        if (newSpan != null) {
-            setSelectedAnnotation(newSpan.getAnnotation(), newSpan);
-        }
-
-        controller.refreshView();
-    }
-
-    public void setSelectedAnnotation(Annotation newAnnotation, Span newSpan) {
-        if (controller.getProjectManager().isProjectLoaded()) {
-            if (selectedAnnotation != newAnnotation) {
-                AnnotationChangeEvent e = new AnnotationChangeEvent(this.selectedAnnotation, newAnnotation);
-                selectedAnnotation = newAnnotation;
-                if (selectedAnnotation != null) {
-                    setSelectedSpan(newSpan);
-                    controller.getSelectionManager().setSelectedOWLEntity(selectedAnnotation.getOwlClass());
-                }
-                try {
-                    textSource.getGraphSpaceManager().getActiveGraphSpace().setSelectionCell(null);
-                } catch (ActiveGraphSpaceNotSetException ignored) {
-
-                }
-                annotationListeners.forEach(
-                        selectionListener -> selectionListener.selectedAnnotationChanged(e));
-            }
-        }
-        controller.refreshView();
-    }
-
-    public void getNextSpan() {
-        if (controller.getProjectManager().isProjectLoaded()) {
-            setSelectedSpan(
-                    textSource.getAnnotationManager().getAllSpanCollection().getNext(selectedSpan));
-        }
-    }
-
-    public void getPreviousSpan() {
-        if (controller.getProjectManager().isProjectLoaded()) {
-            setSelectedSpan(
-                    textSource.getAnnotationManager().getAllSpanCollection().getPrevious(selectedSpan));
-        }
-    }
-
-    public void addAnnotationListener(AnnotationSelectionListener listener) {
-        annotationListeners.add(listener);
     }
 
     @Override

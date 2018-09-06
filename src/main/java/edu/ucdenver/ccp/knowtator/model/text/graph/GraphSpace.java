@@ -67,6 +67,16 @@ public class GraphSpace extends mxGraph
     areListenersSet = false;
   }
 
+  private void save() {
+    if (controller.getProjectManager().isProjectLoaded()) {
+      textSource.save();
+    }
+  }
+
+  /*
+  COMPARISON
+   */
+
   public static int compare(GraphSpace graphSpace1, GraphSpace graphSpace2) {
     if (graphSpace1 == graphSpace2) {
       return 0;
@@ -108,19 +118,12 @@ public class GraphSpace extends mxGraph
     //    reDrawGraph();
   }
 
-  public AnnotationNode addNode(String nodeId, Annotation annotation, double x, double y) {
-    if (annotation != null) {
-      if (nodeId == null) {
-        nodeId = textSource.getGraphSpaceManager().verifyID(null, "node");
-      }
-      AnnotationNode newVertex =
-          new AnnotationNode(controller, nodeId, annotation, textSource, x, y);
-      addCellToGraph(newVertex);
+  public void addNode(String nodeId, Annotation annotation, double x, double y) {
 
-      return newVertex;
-    } else {
-      return null;
-    }
+    AnnotationNode newVertex = new AnnotationNode(controller, nodeId, annotation, textSource, x, y);
+    addCellToGraph(newVertex);
+
+    save();
   }
 
   public void addTriple(
@@ -181,14 +184,12 @@ public class GraphSpace extends mxGraph
     setCellStyles(mxConstants.STYLE_FONTSIZE, "16", new Object[] {newTriple});
 
     addCellToGraph(newTriple);
+
+    save();
   }
 
   /*
   REMOVERS
-   */
-
-  /*
-  I/O
    */
 
   public void removeSelectedCell() {
@@ -197,8 +198,14 @@ public class GraphSpace extends mxGraph
     Object[] selectionCells = getSelectionCells();
     removeCells(selectionCells, true);
 
+    save();
+
     //    reDrawGraph();
   }
+
+  /*
+  READERS
+   */
 
   @Override
   public void readFromKnowtatorXML(File file, Element parent) {
@@ -289,26 +296,35 @@ public class GraphSpace extends mxGraph
               Annotation subjectAnnotation =
                   textSource.getAnnotationManager().getAnnotation(subjectAnnotationID);
               List<Object> subjectAnnotationVertices = getVerticesForAnnotation(subjectAnnotation);
-              AnnotationNode source;
-              if (subjectAnnotationVertices.size() == 0) {
-                source = addNode(null, subjectAnnotation, 20, 20);
-              } else {
-                source = (AnnotationNode) subjectAnnotationVertices.get(0);
-              }
+              AnnotationNode source = makeOrGetAnnotationNode(subjectAnnotation, subjectAnnotationVertices);
 
               Annotation objectAnnotation =
                   textSource.getAnnotationManager().getAnnotation(objectAnnotationID);
               List<Object> objectAnnotationVertices = getVerticesForAnnotation(objectAnnotation);
-              AnnotationNode target;
-              if (objectAnnotationVertices.size() == 0) {
-                target = addNode(null, objectAnnotation, 20, 20);
-              } else {
-                target = (AnnotationNode) objectAnnotationVertices.get(0);
-              }
+              AnnotationNode target = makeOrGetAnnotationNode(subjectAnnotation, objectAnnotationVertices);
 
               addTriple(source, target, id, annotator, null, propertyID, "", "", false);
             });
   }
+
+  public AnnotationNode makeOrGetAnnotationNode(Annotation subjectAnnotation, List<Object> vertices) {
+    AnnotationNode source;
+    if (vertices == null || vertices.isEmpty()) {
+      String nodeID = textSource.getGraphSpaceManager().verifyID(null, "node");
+      addNode(nodeID, subjectAnnotation, 20, 20);
+      source = (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(nodeID);
+    } else {
+      source = (AnnotationNode) vertices.get(0);
+    }
+    return source;
+  }
+
+  @Override
+  public void readFromGeniaXML(Element parent, String content) {}
+
+  /*
+  WRITERS
+   */
 
   @SuppressWarnings("RedundantThrows")
   @Override
@@ -317,9 +333,6 @@ public class GraphSpace extends mxGraph
       Map<String, Map<String, String>> annotationsConfig,
       Map<String, Map<String, String>> visualConfig)
       throws IOException {}
-
-  @Override
-  public void readFromGeniaXML(Element parent, String content) {}
 
   @Override
   public void writeToGeniaXML(Document dom, Element parent) {}
@@ -478,29 +491,10 @@ public class GraphSpace extends mxGraph
     }
   }
 
-  private void setVertexStyle(AnnotationNode vertex) {
-    mxGeometry g = vertex.getGeometry();
-    g.setHeight(g.getHeight() + 200);
-    g.setWidth(g.getWidth() + 200);
-
-    String color =
-        Integer.toHexString(
-                controller
-                    .getSelectionManager()
-                    .getActiveProfile()
-                    .getColor(vertex.getAnnotation())
-                    .getRGB())
-            .substring(2);
-    String shape = mxConstants.SHAPE_RECTANGLE;
-
-    setCellStyles(mxConstants.STYLE_SHAPE, shape, new Object[] {vertex});
-    setCellStyles(mxConstants.STYLE_FILLCOLOR, color, new Object[] {vertex});
-  }
 
   /*
-  GETTERS, CHECKERS, SETTERS
+  GETTERS
    */
-
   public List<Object> getVerticesForAnnotation(Annotation annotation) {
     return Arrays.stream(getChildVertices(getDefaultParent()))
         .filter(
@@ -516,18 +510,50 @@ public class GraphSpace extends mxGraph
   }
 
   @Override
-  public String toString() {
-    return id;
-  }
-
-  @Override
   public String getId() {
     return id;
   }
 
+
+  public RelationSelectionManager getRelationSelectionManager() {
+    return relationSelectionManager;
+  }
+
+  /*
+  SETTERS
+   */
+
   @Override
   public void setId(String id) {
     this.id = id;
+  }
+
+  private void setVertexStyle(AnnotationNode vertex) {
+    mxGeometry g = vertex.getGeometry();
+    g.setHeight(g.getHeight() + 200);
+    g.setWidth(g.getWidth() + 200);
+
+    String color =
+            Integer.toHexString(
+                    controller
+                            .getSelectionManager()
+                            .getActiveProfile()
+                            .getColor(vertex.getAnnotation())
+                            .getRGB())
+                    .substring(2);
+    String shape = mxConstants.SHAPE_RECTANGLE;
+
+    setCellStyles(mxConstants.STYLE_SHAPE, shape, new Object[] {vertex});
+    setCellStyles(mxConstants.STYLE_FILLCOLOR, color, new Object[] {vertex});
+  }
+
+  /*
+  TRANSLATORS
+   */
+
+  @Override
+  public String toString() {
+    return id;
   }
 
   @Override
@@ -561,9 +587,5 @@ public class GraphSpace extends mxGraph
       }
     }
     return false;
-  }
-
-  public RelationSelectionManager getRelationSelectionManager() {
-    return relationSelectionManager;
   }
 }

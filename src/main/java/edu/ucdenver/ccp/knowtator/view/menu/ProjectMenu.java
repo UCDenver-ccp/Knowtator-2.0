@@ -110,12 +110,12 @@ public class ProjectMenu extends JMenu implements ProjectListener {
   }
 
   private JMenuItem debugMenuItem() {
-    JMenuItem menuItem = new JCheckBoxMenuItem("Debug");
+    JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem("Debug");
     menuItem.addActionListener(e -> {
         try {
             view.getController().setDebug();
         } catch (ControllerNotSetException e1) {
-            ((JCheckBoxMenuItem) menuItem).setState(false);
+            menuItem.setState(false);
         }
     });
     return menuItem;
@@ -248,6 +248,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
 
             if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
               File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
+              view.reset();
               view.getProjectManager().newProject(projectDirectory);
             }
           }
