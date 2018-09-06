@@ -34,7 +34,7 @@ public class TextSource implements Savable, KnowtatorObject {
   private String id;
   private File textFile;
   private String content;
-  public GraphSpaceManager graphSpaceManager;
+  private GraphSpaceManager graphSpaceManager;
 
   public TextSource(KnowtatorController controller, File saveFile, String textFileName) {
     this.controller = controller;
