@@ -1,9 +1,7 @@
 package edu.ucdenver.ccp.knowtator.model.selection;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.events.ProfileChangeEvent;
 import edu.ucdenver.ccp.knowtator.listeners.OWLClassSelectionListener;
-import edu.ucdenver.ccp.knowtator.listeners.ProfileSelectionListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -31,7 +29,6 @@ public class SelectionManager implements CaretListener, ProjectListener {
     private int start;
     private int end;
 
-    private List<ProfileSelectionListener> profileListeners;
     private boolean filterByOWLClass;
 
     public SelectionManager(KnowtatorController knowtatorController) {
@@ -40,7 +37,6 @@ public class SelectionManager implements CaretListener, ProjectListener {
         filterByProfile = false;
         filterByOWLClass = false;
         owlEntityListeners = new ArrayList<>();
-        profileListeners = new ArrayList<>();
 
         start = 0;
         end = 0;
@@ -59,9 +55,7 @@ public class SelectionManager implements CaretListener, ProjectListener {
     }
 
     public void setSelectedProfile(Profile newProfile) {
-        ProfileChangeEvent e = new ProfileChangeEvent(this.activeProfile, newProfile);
         this.activeProfile = newProfile;
-        profileListeners.forEach(selectionListener -> selectionListener.activeProfileChange(e));
     }
 
     public int getEnd() {
@@ -134,18 +128,12 @@ public class SelectionManager implements CaretListener, ProjectListener {
     }
 
 
-    public void addProfileListener(ProfileSelectionListener listener) {
-        profileListeners.add(listener);
-    }
-
-
     public void addOWLEntityListener(OWLClassSelectionListener listener) {
         owlEntityListeners.add(listener);
     }
 
     public void dispose() {
         owlEntityListeners.clear();
-        profileListeners.clear();
     }
 
     public void setFilterByProfile(boolean filterByProfile) {

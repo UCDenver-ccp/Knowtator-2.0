@@ -18,7 +18,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectManager {
+public class ProjectManager implements KnowtatorManager {
   private static final Logger log = Logger.getLogger(ProjectManager.class);
   private KnowtatorController controller;
   private File projectLocation;
@@ -268,7 +268,7 @@ public class ProjectManager {
     }
   }
 
-  public void loadFromFormat(Class<? extends BasicIOUtil> ioClass, File file) {
+  private void loadFromFormat(Class<? extends BasicIOUtil> ioClass, File file) {
     loadFromFormat(ioClass, controller.getTextSourceManager(), file);
   }
 
@@ -289,6 +289,7 @@ public class ProjectManager {
     return projectLoaded;
   }
 
+  @Override
   public void dispose() {
     listeners.clear();
   }

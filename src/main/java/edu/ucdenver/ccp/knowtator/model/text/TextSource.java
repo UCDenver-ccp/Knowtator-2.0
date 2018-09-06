@@ -126,6 +126,12 @@ public class TextSource implements Savable, KnowtatorObject {
     }
 
     @Override
+    public void dispose() {
+        annotationManager.dispose();
+        graphSpaceManager.dispose();
+    }
+
+    @Override
     public String toString() {
         return id;
     }
@@ -194,15 +200,11 @@ public class TextSource implements Savable, KnowtatorObject {
     public void writeToGeniaXML(Document dom, Element parent) {
     }
 
-    void dispose() {
-        annotationManager.dispose();
-        graphSpaceManager.dispose();
-    }
-
     public GraphSpaceManager getGraphSpaceManager() {
         return graphSpaceManager;
     }
 
+    @Override
     public void save() {
         controller.getProjectManager().saveToFormat(KnowtatorXMLUtil.class, this, saveFile);
     }

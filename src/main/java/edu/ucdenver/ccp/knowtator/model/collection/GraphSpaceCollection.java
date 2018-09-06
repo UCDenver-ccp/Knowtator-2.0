@@ -1,7 +1,6 @@
 package edu.ucdenver.ccp.knowtator.model.collection;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.listeners.GraphSpaceCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 
 import java.util.TreeSet;

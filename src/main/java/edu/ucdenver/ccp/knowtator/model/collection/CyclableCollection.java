@@ -1,7 +1,6 @@
 package edu.ucdenver.ccp.knowtator.model.collection;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.listeners.CollectionListener;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 
 import java.util.TreeSet;

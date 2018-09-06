@@ -7,8 +7,8 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
 import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -21,6 +21,7 @@ import java.util.Map;
 public class AnnotationNode extends mxCell implements Savable, KnowtatorTextBoundObject {
 
 	private Annotation annotation;
+	private final KnowtatorController controller;
 	private TextSource textSource;
 
 	AnnotationNode(KnowtatorController controller, String id, Annotation annotation, TextSource textSource, double x, double y) {
@@ -28,6 +29,7 @@ public class AnnotationNode extends mxCell implements Savable, KnowtatorTextBoun
 				annotation.getSpannedText(),
 				new mxGeometry(x, y, 150, 150),
 				"fontSize=16;fontColor=black;strokeColor=black");
+		this.controller = controller;
 		this.textSource = textSource;
 		this.annotation = annotation;
 
@@ -58,6 +60,14 @@ public class AnnotationNode extends mxCell implements Savable, KnowtatorTextBoun
 
 	@Override
 	public void writeToGeniaXML(Document dom, Element parent) {
+	}
+
+	@Override
+	public void save() {
+		if (controller.getProjectManager().isProjectLoaded()) {
+			textSource.save();
+		}
+
 	}
 
 	/*
@@ -94,6 +104,7 @@ public class AnnotationNode extends mxCell implements Savable, KnowtatorTextBoun
 		return textSource;
 	}
 
+	@Override
 	public void dispose() {
 
 	}

@@ -25,10 +25,7 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject, ProjectListener, OWLSetupListener, OWLOntologyChangeListener, OWLModelManagerListener {
     private String quantifier;
@@ -112,7 +109,8 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
         setValue(null);
     }
 
-    private void save() {
+    @Override
+    public void save() {
         if (controller.getProjectManager().isProjectLoaded()) {
             textSource.save();
         }
@@ -347,6 +345,7 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
         owlSetup();
     }
 
+    @Override
     public void dispose() {
         try {
             controller.getOWLAPIDataExtractor().getWorkSpace().getOWLModelManager().removeListener(this);
@@ -355,8 +354,4 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
             e.printStackTrace();
         }
     }
-
-
-
-
 }

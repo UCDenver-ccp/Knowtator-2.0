@@ -18,8 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ProfileManager implements Savable {
+public class ProfileManager implements Savable, KnowtatorManager {
 
+    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(KnowtatorController.class);
 
     private ProfileCollection profileCollection;
@@ -112,11 +113,13 @@ public class ProfileManager implements Savable {
         colorListeners.forEach(ColorListener::colorChanged);
     }
 
+    @Override
     public void dispose() {
         profileCollection.getCollection().clear();
         colorListeners.clear();
     }
 
+    @Override
     public void save() {
         controller.getProjectManager().saveToFormat(KnowtatorXMLUtil.class, this, controller.getProjectManager().getProfilesLocation());
     }

@@ -1,7 +1,7 @@
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.listeners.TextSourceCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.listeners.ViewListener;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;

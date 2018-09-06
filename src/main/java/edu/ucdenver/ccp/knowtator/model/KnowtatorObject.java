@@ -5,4 +5,6 @@ public interface KnowtatorObject {
 	String getId();
 
 	void setId(String id);
+
+	void dispose();
 }

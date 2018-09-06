@@ -241,6 +241,10 @@ public class Annotation implements Savable, KnowtatorTextBoundObject {
   @Override
   public void writeToGeniaXML(Document dom, Element parent) {}
 
+  @Override
+  public void save() {
+
+  }
 
 
   /*
@@ -390,8 +394,8 @@ public class Annotation implements Savable, KnowtatorTextBoundObject {
     return false;
   }
 
-  void dispose() {
-
+  @Override
+  public void dispose() {
     spanCollection.forEach(Span::dispose);
     spanCollection.getCollection().clear();
 

@@ -67,7 +67,8 @@ public class GraphSpace extends mxGraph
     areListenersSet = false;
   }
 
-  private void save() {
+  @Override
+  public void save() {
     if (controller.getProjectManager().isProjectLoaded()) {
       textSource.save();
     }
@@ -118,7 +119,7 @@ public class GraphSpace extends mxGraph
     //    reDrawGraph();
   }
 
-  public void addNode(String nodeId, Annotation annotation, double x, double y) {
+  private void addNode(String nodeId, Annotation annotation, double x, double y) {
 
     AnnotationNode newVertex = new AnnotationNode(controller, nodeId, annotation, textSource, x, y);
     addCellToGraph(newVertex);
@@ -565,6 +566,7 @@ public class GraphSpace extends mxGraph
     }
   }
 
+  @Override
   public void dispose() {
     Arrays.stream(getChildCells(getDefaultParent()))
         .forEach(

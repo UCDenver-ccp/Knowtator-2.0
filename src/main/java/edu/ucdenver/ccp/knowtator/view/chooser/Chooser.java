@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
-import edu.ucdenver.ccp.knowtator.listeners.CollectionListener;
+import edu.ucdenver.ccp.knowtator.model.collection.CollectionListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;

@@ -25,4 +25,6 @@ public interface Savable extends Serializable {
 	void readFromGeniaXML(Element parent, String content);
 
 	void writeToGeniaXML(Document dom, Element parent);
+
+	void save();
 }

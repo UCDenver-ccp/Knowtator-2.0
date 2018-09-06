@@ -66,7 +66,8 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
         annotationListeners = new ArrayList<>();
     }
 
-    private void save() {
+    @Override
+    public void save() {
         if (controller.getProjectManager().isProjectLoaded()) {
             textSource.save();
         }
@@ -264,6 +265,7 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
                 .collect(Collectors.toCollection(supplier));
     }
 
+    @SuppressWarnings("unused")
     public void findOverlaps() {
         List<Span> overlappingSpans = new ArrayList<>();
         allSpanCollection.forEach(

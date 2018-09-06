@@ -4,6 +4,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class GraphSpaceManager implements Savable {
+public class GraphSpaceManager implements Savable, KnowtatorManager {
   private GraphSpace activeGraphSpace;
   private KnowtatorController controller;
   private TextSource textSource;
@@ -171,12 +172,14 @@ public class GraphSpaceManager implements Savable {
     return id;
   }
 
+  @Override
   public void dispose() {
     graphSpaceCollection.forEach(GraphSpace::dispose);
     graphSpaceCollection.getCollection().clear();
   }
 
-  private void save() {
+  @Override
+  public void save() {
     if (controller.getProjectManager().isProjectLoaded()) {
       textSource.save();
     }

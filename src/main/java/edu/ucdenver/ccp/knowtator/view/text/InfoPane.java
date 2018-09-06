@@ -159,7 +159,7 @@ public class InfoPane {
         this.$$$loadButtonText$$$(onlyAnnotationsCheckBox, ResourceBundle.getBundle("log4j").getString("only.annotations"));
         panel2.add(onlyAnnotationsCheckBox, BorderLayout.CENTER);
         infoPanel = new JPanel();
-        infoPanel.setLayout(new GridLayoutManager(7, 2, new Insets(0, 0, 0, 0), -1, -1));
+        infoPanel.setLayout(new GridLayoutManager(8, 2, new Insets(0, 0, 0, 0), -1, -1));
         infoPanel.setMaximumSize(new Dimension(500, 2147483647));
         infoPanel.setMinimumSize(new Dimension(250, 625));
         infoPanel.setPreferredSize(new Dimension(250, 625));
@@ -174,7 +174,7 @@ public class InfoPane {
         infoPanelTitleLabel.setVerticalTextPosition(0);
         infoPanel.add(infoPanelTitleLabel, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(250, 25), new Dimension(250, 25), new Dimension(500, 25), 0, false));
         final JScrollPane scrollPane1 = new JScrollPane();
-        infoPanel.add(scrollPane1, new GridConstraints(6, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(250, 100), new Dimension(250, 425), new Dimension(500, 2147483647), 0, false));
+        infoPanel.add(scrollPane1, new GridConstraints(7, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(250, 100), new Dimension(250, 425), new Dimension(500, 2147483647), 0, false));
         spanList.setMaximumSize(new Dimension(-1, -1));
         spanList.setMinimumSize(new Dimension(-1, -1));
         spanList.setPreferredSize(new Dimension(-1, -1));
@@ -184,10 +184,10 @@ public class InfoPane {
         this.$$$loadLabelText$$$(label1, ResourceBundle.getBundle("log4j").getString("graph.spaces.for.annotation"));
         infoPanel.add(label1, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label2 = new JLabel();
-        label2.setText("Annotation ID");
+        this.$$$loadLabelText$$$(label2, ResourceBundle.getBundle("log4j").getString("annotation.id"));
         infoPanel.add(label2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label3 = new JLabel();
-        label3.setText("Class");
+        this.$$$loadLabelText$$$(label3, ResourceBundle.getBundle("log4j").getString("class"));
         infoPanel.add(label3, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         annotationClassLabel.setHorizontalAlignment(2);
         annotationClassLabel.setHorizontalTextPosition(2);
@@ -200,14 +200,18 @@ public class InfoPane {
         annotatorLabel.setVerticalTextPosition(1);
         infoPanel.add(annotatorLabel, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(250, 25), new Dimension(250, 25), new Dimension(500, 25), 0, false));
         final JLabel label4 = new JLabel();
-        label4.setText("Annotator");
+        this.$$$loadLabelText$$$(label4, ResourceBundle.getBundle("log4j").getString("annotator"));
         infoPanel.add(label4, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         annotationIDLabel.setHorizontalAlignment(2);
         annotationIDLabel.setHorizontalTextPosition(2);
         annotationIDLabel.setVerticalAlignment(1);
         annotationIDLabel.setVerticalTextPosition(1);
         infoPanel.add(annotationIDLabel, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(250, 25), new Dimension(250, 25), new Dimension(500, 25), 0, false));
+        final JLabel label5 = new JLabel();
+        this.$$$loadLabelText$$$(label5, ResourceBundle.getBundle("log4j").getString("spans"));
+        infoPanel.add(label5, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         annotationIDLabel.setLabelFor(matchTextField);
+        label5.setLabelFor(scrollPane1);
     }
 
     /**

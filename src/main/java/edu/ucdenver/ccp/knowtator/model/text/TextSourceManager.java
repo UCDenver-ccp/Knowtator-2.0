@@ -6,6 +6,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.io.knowtator.OldKnowtatorXMLAttributes;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import org.apache.log4j.Logger;
@@ -19,7 +20,7 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
-public class TextSourceManager implements Savable {
+public class TextSourceManager implements Savable, KnowtatorManager {
   @SuppressWarnings("unused")
   private Logger log = Logger.getLogger(TextSourceManager.class);
 
@@ -95,6 +96,12 @@ public class TextSourceManager implements Savable {
   @Override
   public void writeToGeniaXML(Document dom, Element parent) {}
 
+  @Override
+  public void save() {
+    controller.getProjectManager().saveToFormat(KnowtatorXMLUtil.class, this, controller.getProjectManager().getAnnotationsLocation());
+  }
+
+  @Override
   public void dispose() {
     textSourceCollection.forEach(TextSource::dispose);
     textSourceCollection.getCollection().clear();

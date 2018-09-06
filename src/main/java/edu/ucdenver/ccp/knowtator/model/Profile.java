@@ -19,9 +19,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class Profile implements Savable, KnowtatorObject {
   @SuppressWarnings("unused")
@@ -37,7 +36,8 @@ public class Profile implements Savable, KnowtatorObject {
     controller.verifyId(id, this, false);
   }
 
-  private void save() {
+  @Override
+  public void save() {
     if (controller.getProjectManager().isProjectLoaded()) {
       controller.getProfileManager().save();
     }
@@ -102,6 +102,11 @@ public class Profile implements Savable, KnowtatorObject {
   @Override
   public void setId(String id) {
     this.id = id;
+  }
+
+  @Override
+  public void dispose() {
+
   }
 
   /*

@@ -286,6 +286,12 @@ public class Span implements Savable, KnowtatorTextBoundObject, Comparable<Span>
   @Override
   public void writeToGeniaXML(Document dom, Element parent) {}
 
+  @Override
+  public void save() {
+
+  }
+
+  @Override
   public void dispose() {
   }
 }
