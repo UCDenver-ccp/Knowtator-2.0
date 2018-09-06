@@ -106,7 +106,7 @@ public class KnowtatorStandalone extends JFrame {
                 Span fragmentSpan = fragmentAnnotation.getSpanCollection().iterator().next();
 
                 Fragment fragment =
-                        new Fragment(fragmentAnnotation.getId(), fragmentAnnotation.getOwlClassID());
+                        new Fragment(textSource2, fragmentAnnotation.getId(), fragmentAnnotation.getOwlClassID());
 
                 TreeSet<Annotation> conceptAnnotationsInFragmet =
                         textSource1
