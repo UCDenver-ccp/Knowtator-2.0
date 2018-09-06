@@ -4,7 +4,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
-import edu.ucdenver.ccp.knowtator.model.Profile;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
@@ -150,7 +150,7 @@ public class Annotation implements Savable, KnowtatorTextBoundObject {
   void setOwlClass(OWLClass owlClass) {
     this.owlClass = owlClass;
     try {
-      this.owlClassID = controller.getOWLAPIDataExtractor().getOWLEntityRendering(owlClass);
+      this.owlClassID = controller.getOWLManager().getOWLEntityRendering(owlClass);
     } catch (OWLWorkSpaceNotSetException | OWLEntityNullException ignored) {
     }
   }
@@ -173,7 +173,7 @@ public class Annotation implements Savable, KnowtatorTextBoundObject {
     String renderedOwlClassID;
     try {
       renderedOwlClassID = controller
-              .getOWLAPIDataExtractor()
+              .getOWLManager()
               .getOWLEntityRendering(owlClass);
     } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
       renderedOwlClassID = this.owlClassID;
@@ -222,7 +222,7 @@ public class Annotation implements Savable, KnowtatorTextBoundObject {
     Element classElement = dom.createElement(KnowtatorXMLTags.CLASS);
 
     try {
-      classElement.setAttribute(KnowtatorXMLAttributes.ID, controller.getOWLAPIDataExtractor().getOWLEntityRendering(owlClass));
+      classElement.setAttribute(KnowtatorXMLAttributes.ID, controller.getOWLManager().getOWLEntityRendering(owlClass));
     } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
       classElement.setAttribute(KnowtatorXMLAttributes.ID, getOwlClassID());
     }

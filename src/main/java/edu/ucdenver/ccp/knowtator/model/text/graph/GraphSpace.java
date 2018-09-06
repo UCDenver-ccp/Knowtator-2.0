@@ -15,7 +15,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationSelectionListener;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
-import edu.ucdenver.ccp.knowtator.model.Profile;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
@@ -409,7 +409,7 @@ public class GraphSpace extends mxGraph
                   String propertyID = null;
                   try {
                     propertyID =
-                        controller.getOWLAPIDataExtractor().getOWLEntityRendering(property);
+                        controller.getOWLManager().getOWLEntityRendering(property);
                   } catch (OWLWorkSpaceNotSetException | OWLEntityNullException ignored) {
 
                   }

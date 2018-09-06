@@ -17,6 +17,7 @@ import org.w3c.dom.Node;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,8 @@ public class TextSourceManager implements Savable, KnowtatorManager {
 
   private TextSourceCollection textSourceCollection;
   private KnowtatorController controller;
+  private File articlesLocation;
+  private File annotationsLocation;
 
   public TextSourceManager(KnowtatorController controller) {
     this.controller = controller;
@@ -98,12 +101,30 @@ public class TextSourceManager implements Savable, KnowtatorManager {
 
   @Override
   public void save() {
-    controller.getProjectManager().saveToFormat(KnowtatorXMLUtil.class, this, controller.getProjectManager().getAnnotationsLocation());
+    controller.getProjectManager().saveToFormat(KnowtatorXMLUtil.class, this, annotationsLocation);
   }
 
   @Override
   public void dispose() {
     textSourceCollection.forEach(TextSource::dispose);
     textSourceCollection.getCollection().clear();
+  }
+
+  public File getAnnotationsLocation() {
+    return annotationsLocation;
+  }
+
+  public File getArticlesLocation() {
+    return articlesLocation;
+  }
+
+  public void setArticlesLocation(File articlesLocation) throws IOException {
+    this.articlesLocation = articlesLocation;
+    Files.createDirectories(articlesLocation.toPath());
+  }
+
+  public void setAnnotationsLocation(File annotationsLocation) throws IOException {
+    this.annotationsLocation = annotationsLocation;
+    Files.createDirectories(annotationsLocation.toPath());
   }
 }

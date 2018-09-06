@@ -1,7 +1,7 @@
 package edu.ucdenver.ccp.knowtator.io.knowtator;
 
 import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
-import edu.ucdenver.ccp.knowtator.model.ProfileManager;
+import edu.ucdenver.ccp.knowtator.model.profile.ProfileManager;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceManager;
 import org.apache.log4j.Logger;

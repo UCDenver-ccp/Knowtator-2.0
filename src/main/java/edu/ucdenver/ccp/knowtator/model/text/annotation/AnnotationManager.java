@@ -8,7 +8,7 @@ import edu.ucdenver.ccp.knowtator.listeners.AnnotationSelectionListener;
 import edu.ucdenver.ccp.knowtator.listeners.OWLSetupListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.model.Profile;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.AnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
@@ -58,7 +58,7 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
         this.controller = controller;
         this.textSource = textSource;
 
-        controller.getOWLAPIDataExtractor().addOWLSetupListener(this);
+        controller.getOWLManager().addOWLSetupListener(this);
         controller.getProjectManager().addListener(this);
 
         annotationCollection = new AnnotationCollection(controller);
@@ -98,7 +98,7 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
             Span newSpan = new Span(null, start, end, textSource, controller);
 
             try {
-                String owlClassID = controller.getOWLAPIDataExtractor().getOWLEntityRendering(owlClass);
+                String owlClassID = controller.getOWLManager().getOWLEntityRendering(owlClass);
                 Annotation newAnnotation =
                         new Annotation(controller, null, (OWLClass) owlClass, owlClassID, null, annotator, "identity", textSource);
                 addAnnotation(newAnnotation);
@@ -213,7 +213,7 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
         AnnotationCollection annotationsForOwlClass = new AnnotationCollection(controller);
 
         try {
-            String owlClassID = controller.getOWLAPIDataExtractor().getOWLEntityRendering(owlClass);
+            String owlClassID = controller.getOWLManager().getOWLEntityRendering(owlClass);
 
             for (Annotation annotation : annotationCollection) {
                 if (annotation.getOwlClass() == owlClass) {
@@ -239,7 +239,7 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
         Set<OWLClass> activeOWLClassDescendents = new HashSet<>();
         if (controller.getSelectionManager().isFilterByOWLClass()) {
             try {
-                activeOWLClassDescendents.addAll(controller.getOWLAPIDataExtractor().getDescendants((OWLClass) controller.getSelectionManager().getSelectedOWLEntity()));
+                activeOWLClassDescendents.addAll(controller.getOWLManager().getDescendants((OWLClass) controller.getSelectionManager().getSelectedOWLEntity()));
                 activeOWLClassDescendents.add((OWLClass) controller.getSelectionManager().getSelectedOWLEntity());
             } catch (OWLWorkSpaceNotSetException ignored) {
             }
@@ -358,9 +358,9 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
     @Override
     public void owlSetup() {
         try {
-            controller.getOWLAPIDataExtractor().getWorkSpace().getOWLModelManager().addOntologyChangeListener(this);
+            controller.getOWLManager().getWorkSpace().getOWLModelManager().addOntologyChangeListener(this);
             for (Annotation annotation : annotationCollection) {
-                annotation.setOwlClass(controller.getOWLAPIDataExtractor().getOWLClassByID(annotation.getOwlClassID()));
+                annotation.setOwlClass(controller.getOWLManager().getOWLClassByID(annotation.getOwlClassID()));
             }
         } catch (OWLClassNotFoundException | OWLWorkSpaceNotSetException ignored) {
 
@@ -622,7 +622,7 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
         annotationCollection.getCollection().clear();
         annotationListeners.clear();
         try {
-            controller.getOWLAPIDataExtractor().getWorkSpace().getOWLModelManager().removeOntologyChangeListener(this);
+            controller.getOWLManager().getWorkSpace().getOWLModelManager().removeOntologyChangeListener(this);
         } catch (OWLWorkSpaceNotSetException ignored) {
         }
     }

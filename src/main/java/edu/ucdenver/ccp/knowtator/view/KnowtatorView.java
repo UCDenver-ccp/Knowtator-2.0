@@ -5,7 +5,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.OWLClassSelectionListener;
-import edu.ucdenver.ccp.knowtator.model.Profile;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.ProjectManager;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
@@ -115,13 +115,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         OWLWorkspace workspace = null;
 
         try {
-            workspace = controller.getOWLAPIDataExtractor().getWorkSpace();
+            workspace = controller.getOWLManager().getWorkSpace();
         } catch (OWLWorkSpaceNotSetException ignored) {
 
         }
         if (workspace == null) {
             if (getOWLWorkspace() != null) {
-                controller.getOWLAPIDataExtractor().setUpOWL(getOWLWorkspace());
+                controller.getOWLManager().setUpOWL(getOWLWorkspace());
                 getOWLWorkspace().getOWLModelManager().addListener(infoPane.getAnnotationClassLabel());
             }
         }
@@ -195,7 +195,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                 e -> {
                     try {
                         getController()
-                                .getOWLAPIDataExtractor()
+                                .getOWLManager()
                                 .searchForString(knowtatorTextPane.getSelectedText());
                     } catch (OWLWorkSpaceNotSetException | ControllerNotSetException ignored) {
 
@@ -229,7 +229,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                                     try {
                                         Set<OWLClass> descendants =
                                                 getController()
-                                                        .getOWLAPIDataExtractor()
+                                                        .getOWLManager()
                                                         .getDescendants((OWLClass) owlClass);
 
                                         for (OWLClass descendant : descendants) {

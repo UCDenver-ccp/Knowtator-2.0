@@ -28,7 +28,7 @@ public class AnnotationClassLabel extends JLabel
   private void displayAnnotation(Annotation annotation) {
     if (annotation != null) {
       try {
-        setText(view.getController().getOWLAPIDataExtractor().getOWLEntityRendering(annotation.getOwlClass()));
+        setText(view.getController().getOWLManager().getOWLEntityRendering(annotation.getOwlClass()));
       } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
         setText(String.format("ID: %s Label: %s", annotation.getOwlClassID(), annotation.getOwlClassLabel()));
       } catch (ControllerNotSetException ignored) {
@@ -52,7 +52,7 @@ public class AnnotationClassLabel extends JLabel
 
   public void dispose() {
     try {
-      view.getController().getOWLAPIDataExtractor().getWorkSpace().getOWLModelManager().removeListener(this);
+      view.getController().getOWLManager().getWorkSpace().getOWLModelManager().removeListener(this);
     } catch (OWLWorkSpaceNotSetException e) {
       e.printStackTrace();
     } catch (ControllerNotSetException ignored) {

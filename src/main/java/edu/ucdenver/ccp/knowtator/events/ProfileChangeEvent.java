@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.events;
 
-import edu.ucdenver.ccp.knowtator.model.Profile;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 
 public class ProfileChangeEvent extends ChangeEvent<Profile> {
 

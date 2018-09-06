@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator;
 
-import edu.ucdenver.ccp.knowtator.model.*;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.AnnotationManager;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Span;

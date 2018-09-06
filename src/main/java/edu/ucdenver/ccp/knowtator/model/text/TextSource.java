@@ -38,7 +38,7 @@ public class TextSource implements Savable, KnowtatorObject {
 
     public TextSource(KnowtatorController controller, File saveFile, String textFileName) {
         this.controller = controller;
-        this.saveFile = saveFile == null ? new File(controller.getProjectManager().getAnnotationsLocation().getAbsolutePath(), textFileName.replace(".txt", "") + ".xml") : saveFile;
+        this.saveFile = saveFile == null ? new File(controller.getTextSourceManager().getAnnotationsLocation().getAbsolutePath(), textFileName.replace(".txt", "") + ".xml") : saveFile;
         this.annotationManager = new AnnotationManager(controller, this);
         this.graphSpaceManager = new GraphSpaceManager(controller, this);
 
@@ -46,7 +46,7 @@ public class TextSource implements Savable, KnowtatorObject {
 
         textFile =
                 new File(
-                        controller.getProjectManager().getArticlesLocation(),
+                        controller.getTextSourceManager().getArticlesLocation(),
                         textFileName.endsWith(".txt") ? textFileName : textFileName + ".txt");
 
         if (!textFile.exists()) {
@@ -73,8 +73,7 @@ public class TextSource implements Savable, KnowtatorObject {
                                             Paths.get(file.toURI()),
                                             Paths.get(
                                                     controller
-                                                            .getProjectManager()
-                                                            .getArticlesLocation()
+                                                            .getTextSourceManager().getArticlesLocation()
                                                             .toURI()
                                                             .resolve(file.getName())))
                                             .toFile();
@@ -182,7 +181,7 @@ public class TextSource implements Savable, KnowtatorObject {
                     content = FileUtils.readFileToString(textFile, "UTF-8");
                     return content;
                 } catch (IOException e) {
-                    textFile = new File(controller.getProjectManager().getArticlesLocation(), id + ".txt");
+                    textFile = new File(controller.getTextSourceManager().getArticlesLocation(), id + ".txt");
                     while (!textFile.exists()) {
                         JFileChooser fileChooser = new JFileChooser();
                         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {

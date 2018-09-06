@@ -21,371 +21,383 @@ import java.io.IOException;
 import java.util.prefs.BackingStoreException;
 
 public class ProjectMenu extends JMenu implements ProjectListener {
-  @SuppressWarnings("unused")
-  private static Logger log = LogManager.getLogger(ProjectMenu.class);
+    @SuppressWarnings("unused")
+    private static Logger log = LogManager.getLogger(ProjectMenu.class);
 
-  private JCheckBoxMenuItem classIAAChoice;
-  private JCheckBoxMenuItem spanIAAChoice;
-  private JCheckBoxMenuItem classAndSpanIAAChoice;
-  private KnowtatorView view;
+    private JCheckBoxMenuItem classIAAChoice;
+    private JCheckBoxMenuItem spanIAAChoice;
+    private JCheckBoxMenuItem classAndSpanIAAChoice;
+    private KnowtatorView view;
 
-  public ProjectMenu(KnowtatorView view) {
-    super("Project");
-    this.view = view;
+    public ProjectMenu(KnowtatorView view) {
+        super("Project");
+        this.view = view;
 
-    add(newProjectCommand());
-    add(openRecentCommand());
-    add(openProjectCommand());
-    add(saveProjectCommand());
-    addSeparator();
-    add(addDocumentCommand());
-    add(importAnnotationsCommand());
-    addSeparator();
-    add(exportToBratCommand());
-    add(saveTextViewerAsPNG());
-    addSeparator();
-    add(profileMenu());
-    add(removeProfileMenu());
-    addSeparator();
-    add(IAAMenu());
-    addSeparator();
-    add(attemptOWLRenderConnectionCommand());
-    add(debugMenuItem());
-  }
-
-  private static BufferedImage getScreenShot(Component component) {
-
-    BufferedImage image =
-        new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_RGB);
-    // call the Component's paint method, using
-    // the Graphics object of the image.
-    component.paint(image.getGraphics()); // alternately use .printAll(..)
-    return image;
-  }
-
-  private JMenuItem saveTextViewerAsPNG() {
-    JMenuItem menuItem = new JMenuItem("Save text annotations as PNG");
-    menuItem.addActionListener(
-        e -> {
-          try {
-            JFileChooser fileChooser =
-                new JFileChooser(view.getProjectManager().getProjectLocation());
-            fileChooser.setFileFilter(new FileNameExtensionFilter("PNG", "png"));
-            fileChooser.setSelectedFile(
-                new File(
-                    view.getController().getSelectionManager().getActiveTextSource().getId()
-                        + "_annotations.png"));
-            if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
-              view.getController()
-                  .getSelectionManager()
-                  .getActiveTextSource()
-                  .getAnnotationManager()
-                  .setSelectedAnnotation(null, null);
-              BufferedImage image = getScreenShot(view.getKnowtatorTextPane());
-              try {
-                ImageIO.write(image, "png", fileChooser.getSelectedFile());
-              } catch (IOException e1) {
-                e1.printStackTrace();
-              }
-            }
-          } catch (ControllerNotSetException | ActiveTextSourceNotSetException ignored) {
-
-          }
-        });
-
-    return menuItem;
-  }
-
-  private JMenuItem attemptOWLRenderConnectionCommand() {
-    JMenuItem menuItem = new JMenuItem("Connect annotations using current rendering");
-    menuItem.addActionListener(e -> {
-        try {
-            view.getController().getOWLAPIDataExtractor().setUpOWL();
-        } catch (ControllerNotSetException ignored) {
-
-        }
-    });
-
-    return menuItem;
-  }
-
-  private JMenuItem debugMenuItem() {
-    JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem("Debug");
-    menuItem.addActionListener(e -> {
-        try {
-            view.getController().setDebug();
-        } catch (ControllerNotSetException e1) {
-            menuItem.setState(false);
-        }
-    });
-    return menuItem;
-  }
-
-  private JMenu profileMenu() {
-    JMenu profileMenu = new JMenu("Profile");
-    profileMenu.add(newProfile());
-    return profileMenu;
-  }
-
-  private JMenu IAAMenu() {
-    JMenu iaaMenu = new JMenu("IAA");
-
-    classIAAChoice = new JCheckBoxMenuItem("Class");
-    spanIAAChoice = new JCheckBoxMenuItem("Span");
-    classAndSpanIAAChoice = new JCheckBoxMenuItem("Class and Span");
-
-    iaaMenu.add(classIAAChoice);
-    iaaMenu.add(spanIAAChoice);
-    iaaMenu.add(classAndSpanIAAChoice);
-    iaaMenu.add(getRunIAACommand());
-
-    return iaaMenu;
-  }
-
-  private JMenuItem exportToBratCommand() {
-    JMenuItem menuItem = new JMenuItem("Export to Brat");
-    menuItem.addActionListener(
-        e -> {
-          JFileChooser fileChooser =
-              new JFileChooser(view.getProjectManager().getAnnotationsLocation());
-          fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-
-          if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-            view.getProjectManager()
-                .saveToFormat(BratStandoffUtil.class, fileChooser.getSelectedFile());
-          }
-        });
-
-    return menuItem;
-  }
-
-  private JMenu openRecentCommand() {
-    JMenu menu = new JMenu("Open recent ...");
-
-    String recentProjectName = view.getPrefs().get("Last Project", null);
-
-    if (recentProjectName != null) {
-      File recentProject = new File(recentProjectName);
-      JMenuItem recentProjectMenuItem = new JMenuItem(recentProject.getName());
-      recentProjectMenuItem.addActionListener(e -> loadProject(recentProject));
-
-      menu.add(recentProjectMenuItem);
+        add(newProjectCommand());
+        add(openRecentCommand());
+        add(openProjectCommand());
+        add(saveProjectCommand());
+        addSeparator();
+        add(addDocumentCommand());
+        add(importAnnotationsCommand());
+        addSeparator();
+        add(exportToBratCommand());
+        add(saveTextViewerAsPNG());
+        addSeparator();
+        add(profileMenu());
+        add(removeProfileMenu());
+        addSeparator();
+        add(IAAMenu());
+        addSeparator();
+        add(attemptOWLRenderConnectionCommand());
+        add(debugMenuItem());
     }
 
-    return menu;
-  }
+    private static BufferedImage getScreenShot(Component component) {
 
-  private void loadProject(File file) {
-    //    if (view.getProjectManager().isProjectLoaded()
-    //        && JOptionPane.showConfirmDialog(
-    //                view,
-    //                "Save changes to Knowtator project?",
-    //                "Save Project",
-    //                JOptionPane.YES_NO_OPTION)
-    //            == JOptionPane.YES_OPTION) {
-    //      view.getProjectManager().saveProject();
-    //    }
-    view.reset();
-    view.getProjectManager().loadProject(file);
-    view.getPrefs().put("Last Project", file.getAbsolutePath());
-    try {
-      view.getPrefs().flush();
-    } catch (BackingStoreException e) {
-      e.printStackTrace();
+        BufferedImage image =
+                new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_RGB);
+        // call the Component's paint method, using
+        // the Graphics object of the image.
+        component.paint(image.getGraphics()); // alternately use .printAll(..)
+        return image;
     }
-  }
 
-  private JMenuItem importAnnotationsCommand() {
-    JMenuItem menuItem = new JMenuItem("Import Annotations");
-    menuItem.addActionListener(
-        e -> {
-          if (view.getProjectManager().getProjectLocation() == null) {
-            JOptionPane.showMessageDialog(
-                view,
-                "Not in a project. Please create or load "
-                    + "a project first. (Project -> New Project or Project -> Load Project)");
-          } else {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(view.getProjectManager().getAnnotationsLocation());
-            FileFilter fileFilter =
-                new FileNameExtensionFilter("Annotation File (XML, ann, a1)", "xml", "ann", "a1");
-            fileChooser.setFileFilter(fileFilter);
-            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    private JMenuItem saveTextViewerAsPNG() {
+        JMenuItem menuItem = new JMenuItem("Save text annotations as PNG");
+        menuItem.addActionListener(
+                e -> {
+                    try {
+                        JFileChooser fileChooser =
+                                new JFileChooser(view.getController().getProjectLocation());
+                        fileChooser.setFileFilter(new FileNameExtensionFilter("PNG", "png"));
+                        fileChooser.setSelectedFile(
+                                new File(
+                                        view.getController().getSelectionManager().getActiveTextSource().getId()
+                                                + "_annotations.png"));
+                        if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
+                            view.getController()
+                                    .getSelectionManager()
+                                    .getActiveTextSource()
+                                    .getAnnotationManager()
+                                    .setSelectedAnnotation(null, null);
+                            BufferedImage image = getScreenShot(view.getKnowtatorTextPane());
+                            try {
+                                ImageIO.write(image, "png", fileChooser.getSelectedFile());
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    } catch (ControllerNotSetException | ActiveTextSourceNotSetException ignored) {
 
-            if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-              view.getProjectManager().loadWithAppropriateFormat(fileChooser.getSelectedFile());
-            }
-          }
-        });
-    return menuItem;
-  }
+                    }
+                });
 
-  private JMenuItem addDocumentCommand() {
-    JMenuItem menuItem = new JMenuItem("Add Document");
-    menuItem.addActionListener(
-        e -> {
-          JFileChooser fileChooser = new JFileChooser();
-          fileChooser.setCurrentDirectory(view.getProjectManager().getArticlesLocation());
+        return menuItem;
+    }
 
-          if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-            view.getProjectManager().addDocument(fileChooser.getSelectedFile());
-          }
-        });
-    return menuItem;
-  }
-
-  private JMenuItem newProjectCommand() {
-    JMenuItem menuItem = new JMenuItem("New Project");
-    menuItem.addActionListener(
-        e -> {
-          String projectName = JOptionPane.showInputDialog("Enter project name");
-
-          if (projectName != null && !projectName.equals("")) {
-
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setDialogTitle("Select project root");
-            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-
-            if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-              File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
-              view.reset();
-              view.getProjectManager().newProject(projectDirectory);
-            }
-          }
-        });
-
-    return menuItem;
-  }
-
-  private JMenuItem openProjectCommand() {
-
-    JMenuItem open = new JMenuItem("Open Project");
-    open.addActionListener(
-        e -> {
-          JFileChooser fileChooser = new JFileChooser();
-          FileFilter fileFilter = new FileNameExtensionFilter("Knowtator", "knowtator");
-          fileChooser.setFileFilter(fileFilter);
-          fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-
-          if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-            loadProject(fileChooser.getSelectedFile());
-          }
-        });
-
-    return open;
-  }
-
-  private JMenuItem saveProjectCommand() {
-    JMenuItem save = new JMenuItem("Save Project");
-    save.addActionListener(
-        e -> {
-          try {
-            view.getProjectManager().saveProject();
-          } catch (Exception e1) {
-            JOptionPane.showMessageDialog(
-                view,
-                String.format(
-                    "Something went wrong trying to save your project:\n %s", e1.getMessage()));
-            e1.printStackTrace();
-          }
-        });
-
-    return save;
-  }
-
-  @Override
-  public void projectClosed() {}
-
-  @Override
-  public void projectLoaded() {
-    removeAll();
-    add(newProjectCommand());
-    add(openRecentCommand());
-    add(openProjectCommand());
-    add(saveProjectCommand());
-    addSeparator();
-    add(addDocumentCommand());
-    add(importAnnotationsCommand());
-    addSeparator();
-    add(IAAMenu());
-    addSeparator();
-    add(profileMenu());
-  }
-
-  private JMenuItem newProfile() {
-    JMenuItem newAnnotator = new JMenuItem("New profile");
-    newAnnotator.addActionListener(
-        e -> {
-          JTextField field1 = new JTextField();
-          Object[] message = {
-            "Profile name", field1,
-          };
-          int option =
-              JOptionPane.showConfirmDialog(
-                  view, message, "Enter profile name", JOptionPane.OK_CANCEL_OPTION);
-          if (option == JOptionPane.OK_OPTION) {
-            String annotator = field1.getText();
-              try {
-                  view.getController().getProfileManager().addProfile(annotator);
-              } catch (ControllerNotSetException ignored) {
-
-              }
-          }
-        });
-
-    return newAnnotator;
-  }
-
-  private JMenuItem removeProfileMenu() {
-    JMenuItem removeProfileMenu = new JMenuItem("Remove profile");
-    removeProfileMenu.addActionListener(
-        e -> {
+    private JMenuItem attemptOWLRenderConnectionCommand() {
+        JMenuItem menuItem = new JMenuItem("Connect annotations using current rendering");
+        menuItem.addActionListener(e -> {
             try {
-                view.getController().getProfileManager().removeActiveProfile();
+                view.getController().getOWLManager().setUpOWL();
             } catch (ControllerNotSetException ignored) {
 
             }
         });
 
-    return removeProfileMenu;
-  }
+        return menuItem;
+    }
 
-  private JMenuItem getRunIAACommand() {
-    JMenuItem runIAA = new JMenuItem("Run IAA");
-
-    runIAA.addActionListener(
-        e -> {
-          JFileChooser fileChooser = new JFileChooser();
-          fileChooser.setCurrentDirectory(view.getProjectManager().getProjectLocation());
-          fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-          //
-          // disable the "All files" option.
-          //
-          fileChooser.setAcceptAllFileFilterUsed(false);
-          if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
-            File outputDirectory = fileChooser.getSelectedFile();
-
+    private JMenuItem debugMenuItem() {
+        JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem("Debug");
+        menuItem.addActionListener(e -> {
             try {
-              KnowtatorIAA knowtatorIAA = new KnowtatorIAA(outputDirectory, view.getController());
-
-              if (classIAAChoice.getState()) {
-                knowtatorIAA.runClassIAA();
-              }
-              if (spanIAAChoice.getState()) {
-                knowtatorIAA.runSpanIAA();
-              }
-              if (classAndSpanIAAChoice.getState()) {
-                knowtatorIAA.runClassAndSpanIAA();
-              }
-
-              knowtatorIAA.closeHTML();
-            } catch (IAAException e1) {
-              e1.printStackTrace();
-            } catch (ControllerNotSetException ignored) {
-
+                view.getController().setDebug();
+            } catch (ControllerNotSetException e1) {
+                menuItem.setState(false);
             }
-          }
         });
-    return runIAA;
-  }
+        return menuItem;
+    }
+
+    private JMenu profileMenu() {
+        JMenu profileMenu = new JMenu("Profile");
+        profileMenu.add(newProfile());
+        return profileMenu;
+    }
+
+    private JMenu IAAMenu() {
+        JMenu iaaMenu = new JMenu("IAA");
+
+        classIAAChoice = new JCheckBoxMenuItem("Class");
+        spanIAAChoice = new JCheckBoxMenuItem("Span");
+        classAndSpanIAAChoice = new JCheckBoxMenuItem("Class and Span");
+
+        iaaMenu.add(classIAAChoice);
+        iaaMenu.add(spanIAAChoice);
+        iaaMenu.add(classAndSpanIAAChoice);
+        iaaMenu.add(getRunIAACommand());
+
+        return iaaMenu;
+    }
+
+    private JMenuItem exportToBratCommand() {
+        JMenuItem menuItem = new JMenuItem("Export to Brat");
+        menuItem.addActionListener(
+                e -> {
+                    JFileChooser fileChooser = new JFileChooser();
+                    try {
+                        fileChooser.setCurrentDirectory(view.getController().getTextSourceManager().getAnnotationsLocation());
+                    } catch (ControllerNotSetException ignored) {
+                    }
+                    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                    if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
+                        view.getProjectManager()
+                                .saveToFormat(BratStandoffUtil.class, fileChooser.getSelectedFile());
+                    }
+
+                });
+
+        return menuItem;
+    }
+
+    private JMenu openRecentCommand() {
+        JMenu menu = new JMenu("Open recent ...");
+
+        String recentProjectName = view.getPrefs().get("Last Project", null);
+
+        if (recentProjectName != null) {
+            File recentProject = new File(recentProjectName);
+            JMenuItem recentProjectMenuItem = new JMenuItem(recentProject.getName());
+            recentProjectMenuItem.addActionListener(e -> loadProject(recentProject));
+
+            menu.add(recentProjectMenuItem);
+        }
+
+        return menu;
+    }
+
+    private void loadProject(File file) {
+        //    if (view.getProjectManager().isProjectLoaded()
+        //        && JOptionPane.showConfirmDialog(
+        //                view,
+        //                "Save changes to Knowtator project?",
+        //                "Save Project",
+        //                JOptionPane.YES_NO_OPTION)
+        //            == JOptionPane.YES_OPTION) {
+        //      view.getProjectManager().saveProject();
+        //    }
+        view.reset();
+        view.getProjectManager().loadProject(file);
+        view.getPrefs().put("Last Project", file.getAbsolutePath());
+        try {
+            view.getPrefs().flush();
+        } catch (BackingStoreException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private JMenuItem importAnnotationsCommand() {
+        JMenuItem menuItem = new JMenuItem("Import Annotations");
+        menuItem.addActionListener(
+                e -> {
+                    try {
+                        JFileChooser fileChooser = new JFileChooser();
+                        fileChooser.setCurrentDirectory(view.getController().getTextSourceManager().getAnnotationsLocation());
+
+                        FileFilter fileFilter =
+                                new FileNameExtensionFilter("Annotation File (XML, ann, a1)", "xml", "ann", "a1");
+                        fileChooser.setFileFilter(fileFilter);
+                        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+                        if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
+                            view.getProjectManager().loadWithAppropriateFormat(fileChooser.getSelectedFile());
+                        }
+
+                    } catch (ControllerNotSetException e2) {
+                        JOptionPane.showMessageDialog(
+                                view,
+                                "Not in a project. Please create or load "
+                                        + "a project first. (Project -> New Project or Project -> Load Project)");
+                    }
+                });
+        return menuItem;
+    }
+
+    private JMenuItem addDocumentCommand() {
+        JMenuItem menuItem = new JMenuItem("Add Document");
+        menuItem.addActionListener(
+                e -> {
+                    JFileChooser fileChooser = new JFileChooser();
+                    try {
+                        fileChooser.setCurrentDirectory(view.getController().getTextSourceManager().getArticlesLocation());
+                    } catch (ControllerNotSetException ignored) {
+                    }
+
+                    if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
+                        view.getProjectManager().addDocument(fileChooser.getSelectedFile());
+                    }
+                });
+        return menuItem;
+    }
+
+    private JMenuItem newProjectCommand() {
+        JMenuItem menuItem = new JMenuItem("New Project");
+        menuItem.addActionListener(
+                e -> {
+                    String projectName = JOptionPane.showInputDialog("Enter project name");
+
+                    if (projectName != null && !projectName.equals("")) {
+
+                        JFileChooser fileChooser = new JFileChooser();
+                        fileChooser.setDialogTitle("Select project root");
+                        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+                        if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
+                            File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
+                            view.reset();
+                            view.getProjectManager().newProject(projectDirectory);
+                        }
+                    }
+                });
+
+        return menuItem;
+    }
+
+    private JMenuItem openProjectCommand() {
+
+        JMenuItem open = new JMenuItem("Open Project");
+        open.addActionListener(
+                e -> {
+                    JFileChooser fileChooser = new JFileChooser();
+                    FileFilter fileFilter = new FileNameExtensionFilter("Knowtator", "knowtator");
+                    fileChooser.setFileFilter(fileFilter);
+                    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+                    if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
+                        loadProject(fileChooser.getSelectedFile());
+                    }
+                });
+
+        return open;
+    }
+
+    private JMenuItem saveProjectCommand() {
+        JMenuItem save = new JMenuItem("Save Project");
+        save.addActionListener(
+                e -> {
+                    try {
+                        view.getProjectManager().saveProject();
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(
+                                view,
+                                String.format(
+                                        "Something went wrong trying to save your project:\n %s", e1.getMessage()));
+                        e1.printStackTrace();
+                    }
+                });
+
+        return save;
+    }
+
+    @Override
+    public void projectClosed() {
+    }
+
+    @Override
+    public void projectLoaded() {
+        removeAll();
+        add(newProjectCommand());
+        add(openRecentCommand());
+        add(openProjectCommand());
+        add(saveProjectCommand());
+        addSeparator();
+        add(addDocumentCommand());
+        add(importAnnotationsCommand());
+        addSeparator();
+        add(IAAMenu());
+        addSeparator();
+        add(profileMenu());
+    }
+
+    private JMenuItem newProfile() {
+        JMenuItem newAnnotator = new JMenuItem("New profile");
+        newAnnotator.addActionListener(
+                e -> {
+                    JTextField field1 = new JTextField();
+                    Object[] message = {
+                            "Profile name", field1,
+                    };
+                    int option =
+                            JOptionPane.showConfirmDialog(
+                                    view, message, "Enter profile name", JOptionPane.OK_CANCEL_OPTION);
+                    if (option == JOptionPane.OK_OPTION) {
+                        String annotator = field1.getText();
+                        try {
+                            view.getController().getProfileManager().addProfile(annotator);
+                        } catch (ControllerNotSetException ignored) {
+
+                        }
+                    }
+                });
+
+        return newAnnotator;
+    }
+
+    private JMenuItem removeProfileMenu() {
+        JMenuItem removeProfileMenu = new JMenuItem("Remove profile");
+        removeProfileMenu.addActionListener(
+                e -> {
+                    try {
+                        view.getController().getProfileManager().removeActiveProfile();
+                    } catch (ControllerNotSetException ignored) {
+
+                    }
+                });
+
+        return removeProfileMenu;
+    }
+
+    private JMenuItem getRunIAACommand() {
+        JMenuItem runIAA = new JMenuItem("Run IAA");
+
+        runIAA.addActionListener(
+                e -> {
+                    try {
+                        JFileChooser fileChooser = new JFileChooser();
+                        fileChooser.setCurrentDirectory(view.getController().getProjectLocation());
+                        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                        //
+                        // disable the "All files" option.
+                        //
+                        fileChooser.setAcceptAllFileFilterUsed(false);
+                        if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
+                            File outputDirectory = fileChooser.getSelectedFile();
+
+                            try {
+                                KnowtatorIAA knowtatorIAA = new KnowtatorIAA(outputDirectory, view.getController());
+
+                                if (classIAAChoice.getState()) {
+                                    knowtatorIAA.runClassIAA();
+                                }
+                                if (spanIAAChoice.getState()) {
+                                    knowtatorIAA.runSpanIAA();
+                                }
+                                if (classAndSpanIAAChoice.getState()) {
+                                    knowtatorIAA.runClassAndSpanIAA();
+                                }
+
+                                knowtatorIAA.closeHTML();
+                            } catch (IAAException e1) {
+                                e1.printStackTrace();
+                            }
+
+                        }
+                    } catch (ControllerNotSetException ignored) {
+
+                    }
+                });
+        return runIAA;
+    }
 }

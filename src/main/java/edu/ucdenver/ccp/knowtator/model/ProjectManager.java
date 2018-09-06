@@ -21,11 +21,6 @@ import java.util.List;
 public class ProjectManager implements KnowtatorManager {
   private static final Logger log = Logger.getLogger(ProjectManager.class);
   private KnowtatorController controller;
-  private File projectLocation;
-  private File articlesLocation;
-  private File ontologiesLocation;
-  private File annotationsLocation;
-  private File profilesLocation;
   private boolean projectLoaded;
   private List<ProjectListener> listeners;
 
@@ -42,14 +37,6 @@ public class ProjectManager implements KnowtatorManager {
 
   public void addListener(ProjectListener listener) {
     listeners.add(listener);
-  }
-
-  public File getProjectLocation() {
-    return projectLocation;
-  }
-
-  public File getArticlesLocation() {
-    return articlesLocation;
   }
 
   public void newProject(File projectDirectory) {
@@ -81,7 +68,7 @@ public class ProjectManager implements KnowtatorManager {
                     Files.copy(
                         profileFile,
                         new File(
-                                this.profilesLocation, profileFile.getFileName().toFile().getName())
+                                controller.getProfileManager().getProfilesLocation(), profileFile.getFileName().toFile().getName())
                             .toPath());
                   } catch (IOException e) {
                     e.printStackTrace();
@@ -97,7 +84,7 @@ public class ProjectManager implements KnowtatorManager {
                     Files.copy(
                         ontologyFile,
                         new File(
-                                this.ontologiesLocation,
+                                controller.getOWLManager().getOntologiesLocation(),
                                 ontologyFile.getFileName().toFile().getName())
                             .toPath());
                   } catch (IOException e) {
@@ -114,7 +101,7 @@ public class ProjectManager implements KnowtatorManager {
                     Files.copy(
                         articleFile,
                         new File(
-                                this.articlesLocation, articleFile.getFileName().toFile().getName())
+                                controller.getTextSourceManager().getArticlesLocation(), articleFile.getFileName().toFile().getName())
                             .toPath());
                   } catch (IOException e) {
                     e.printStackTrace();
@@ -130,7 +117,7 @@ public class ProjectManager implements KnowtatorManager {
                     Files.copy(
                         profileFile,
                         new File(
-                                this.annotationsLocation,
+                                controller.getTextSourceManager().getAnnotationsLocation(),
                                 profileFile.getFileName().toFile().getName())
                             .toPath());
                   } catch (IOException e) {
@@ -148,29 +135,29 @@ public class ProjectManager implements KnowtatorManager {
     projectLoaded = false;
     listeners.forEach(ProjectListener::projectClosed);
 
-    if (ontologiesLocation != null) {
+    if (controller.getOWLManager().getOntologiesLocation() != null) {
       log.warn("Loading ontologies");
       try {
-        controller.getOWLAPIDataExtractor().read(ontologiesLocation);
+        controller.getOWLManager().read(controller.getOWLManager().getOntologiesLocation());
       } catch (IOException | OWLWorkSpaceNotSetException e) {
         log.warn("Could not load ontologies");
       }
     }
 
-    if (profilesLocation != null) {
+    if (controller.getProfileManager().getProfilesLocation() != null) {
       log.warn("Loading profiles");
-      loadFromFormat(KnowtatorXMLUtil.class, controller.getProfileManager(), profilesLocation);
+      loadFromFormat(KnowtatorXMLUtil.class, controller.getProfileManager(), controller.getProfileManager().getProfilesLocation());
     }
 
-    if (annotationsLocation != null) {
+    if (controller.getTextSourceManager().getAnnotationsLocation() != null) {
       log.warn("Loading annotations");
       loadFromFormat(
-              KnowtatorXMLUtil.class, controller.getTextSourceManager(), annotationsLocation);
+              KnowtatorXMLUtil.class, controller.getTextSourceManager(), controller.getTextSourceManager().getAnnotationsLocation());
     }
 
     if (controller.getTextSourceManager().getTextSourceCollection().getCollection().isEmpty()) {
       JFileChooser fileChooser = new JFileChooser();
-      fileChooser.setCurrentDirectory(controller.getProjectManager().getArticlesLocation());
+      fileChooser.setCurrentDirectory(controller.getTextSourceManager().getArticlesLocation());
 
       JOptionPane.showMessageDialog(null, "Please select a document to annotate");
       if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -188,17 +175,13 @@ public class ProjectManager implements KnowtatorManager {
 
   private void makeFileStructure(File projectDirectory) {
     try {
-      projectLocation = projectDirectory;
-      articlesLocation = new File(projectDirectory, "Articles");
-      ontologiesLocation = new File(projectDirectory, "Ontologies");
-      annotationsLocation = new File(projectDirectory, "Annotations");
-      profilesLocation = new File(projectDirectory, "Profiles");
+      controller.setProjectLocation(projectDirectory);
+      controller.getTextSourceManager().setArticlesLocation(new File(projectDirectory, "Articles"));
+      controller.getOWLManager().setOntologiesLocation(new File(projectDirectory, "Ontologies"));
+      controller.getTextSourceManager().setAnnotationsLocation(new File(projectDirectory, "Annotations"));
+      controller.getProfileManager().setProfilesLocation(new File(projectDirectory, "Profiles"));
 
-      Files.createDirectories(projectDirectory.toPath());
-      Files.createDirectories(articlesLocation.toPath());
-      Files.createDirectories(ontologiesLocation.toPath());
-      Files.createDirectories(annotationsLocation.toPath());
-      Files.createDirectories(profilesLocation.toPath());
+
       if (FileUtils.listFiles(projectDirectory, new String[]{"knowtator"}, false).size() == 0)
         Files.createFile(
                 new File(projectDirectory, projectDirectory.getName() + ".knowtator").toPath());
@@ -209,25 +192,21 @@ public class ProjectManager implements KnowtatorManager {
 
   public void saveProject() {
 
-    if (getProjectLocation() != null) {
-      this.saveToFormat(KnowtatorXMLUtil.class, controller.getProfileManager(), profilesLocation);
-      this.saveToFormat(KnowtatorXMLUtil.class, annotationsLocation);
+    if (controller.getProjectLocation() != null) {
+      controller.getProfileManager().save();
+      controller.getTextSourceManager().save();
     }
   }
 
   public void addDocument(File file) {
-    if (!file.getParentFile().equals(articlesLocation)) {
+    if (!file.getParentFile().equals(controller.getTextSourceManager().getArticlesLocation())) {
       try {
-        FileUtils.copyFile(file, new File(articlesLocation, file.getName()));
+        FileUtils.copyFile(file, new File(controller.getTextSourceManager().getAnnotationsLocation(), file.getName()));
       } catch (IOException e) {
         e.printStackTrace();
       }
     }
     controller.getTextSourceManager().addTextSource(null, file.getName(), file.getName());
-  }
-
-  public File getAnnotationsLocation() {
-    return annotationsLocation;
   }
 
   public void saveToFormat(Class<? extends BasicIOUtil> ioClass, File file) {
@@ -237,7 +216,7 @@ public class ProjectManager implements KnowtatorManager {
   public void saveToFormat(Class<? extends BasicIOUtil> ioClass, Savable savable, File file) {
     try {
       try {
-        controller.getOWLAPIDataExtractor().setRenderRDFSLabel();
+        controller.getOWLManager().setRenderRDFSLabel();
       } catch (OWLWorkSpaceNotSetException ignored) {
       }
       BasicIOUtil util = ioClass.getDeclaredConstructor().newInstance();
@@ -257,22 +236,18 @@ public class ProjectManager implements KnowtatorManager {
 
     switch (extension) {
       case "xml":
-        loadFromFormat(KnowtatorXMLUtil.class, file);
+        loadFromFormat(KnowtatorXMLUtil.class, controller.getTextSourceManager(), file);
         break;
       case "ann":
-        loadFromFormat(BratStandoffUtil.class, file);
+        loadFromFormat(BratStandoffUtil.class, controller.getTextSourceManager(), file);
         break;
       case "a1":
-        loadFromFormat(BratStandoffUtil.class, file);
+        loadFromFormat(BratStandoffUtil.class, controller.getTextSourceManager(), file);
         break;
     }
   }
 
-  private void loadFromFormat(Class<? extends BasicIOUtil> ioClass, File file) {
-    loadFromFormat(ioClass, controller.getTextSourceManager(), file);
-  }
-
-  private void loadFromFormat(Class<? extends BasicIOUtil> ioClass, Savable savable, File file) {
+  private static void loadFromFormat(Class<? extends BasicIOUtil> ioClass, Savable savable, File file) {
     try {
       BasicIOUtil util = ioClass.getDeclaredConstructor().newInstance();
       util.read(savable, file);
@@ -296,9 +271,5 @@ public class ProjectManager implements KnowtatorManager {
 
   public void setController(KnowtatorController controller) {
     this.controller = controller;
-  }
-
-  File getProfilesLocation() {
-    return profilesLocation;
   }
 }

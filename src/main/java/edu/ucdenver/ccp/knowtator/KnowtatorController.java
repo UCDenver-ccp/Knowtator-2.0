@@ -4,7 +4,8 @@ import edu.ucdenver.ccp.knowtator.listeners.DebugListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.listeners.ViewListener;
 import edu.ucdenver.ccp.knowtator.model.*;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLAPIDataExtractor;
+import edu.ucdenver.ccp.knowtator.model.owl.OWLManager;
+import edu.ucdenver.ccp.knowtator.model.profile.ProfileManager;
 import edu.ucdenver.ccp.knowtator.model.selection.SelectionManager;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceManager;
 import org.apache.log4j.Logger;
@@ -12,7 +13,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,16 +29,17 @@ public class KnowtatorController implements Savable, ProjectListener {
   private TextSourceManager textSourceManager;
   private ProfileManager profileManager;
   private SelectionManager selectionManager;
-  private OWLAPIDataExtractor owlDataExtractor;
+  private OWLManager owlManager;
   private TreeMap<String, KnowtatorObject> idRegistry;
   private List<DebugListener> debugListeners;
   private List<ViewListener> viewListeners;
+  private File projectLocation;
 
   public KnowtatorController() {
     idRegistry = new TreeMap<>();
     debugListeners = new ArrayList<>();
     projectManager = new ProjectManager(this); // reads and writes to XML
-    owlDataExtractor = new OWLAPIDataExtractor(this);
+    owlManager = new OWLManager(this);
     selectionManager = new SelectionManager(this);
     textSourceManager = new TextSourceManager(this);
     profileManager = new ProfileManager(this); // manipulates profiles and colors
@@ -45,11 +49,20 @@ public class KnowtatorController implements Savable, ProjectListener {
     viewListeners = new ArrayList<>();
   }
 
+  public File getProjectLocation() {
+    return projectLocation;
+  }
+
+  public void setProjectLocation(File projectLocation) throws IOException {
+    this.projectLocation = projectLocation;
+    Files.createDirectories(projectLocation.toPath());
+  }
+
   public void setProjectManager(ProjectManager projectManager) {
     this.projectManager = projectManager;
     projectManager.addListener(this);
     projectManager.addListener(selectionManager);
-    projectManager.addListener(owlDataExtractor);
+    projectManager.addListener(owlManager);
   }
 
   public static void main(String[] args) {}
@@ -63,8 +76,8 @@ public class KnowtatorController implements Savable, ProjectListener {
   }
 
   /** GETTERS */
-  public OWLAPIDataExtractor getOWLAPIDataExtractor() {
-    return owlDataExtractor;
+  public OWLManager getOWLManager() {
+    return owlManager;
   }
 
   public TextSourceManager getTextSourceManager() {
@@ -139,7 +152,7 @@ public class KnowtatorController implements Savable, ProjectListener {
   @Override
   public void projectLoaded() {
     selectionManager.projectLoaded();
-    owlDataExtractor.projectLoaded();
+    owlManager.projectLoaded();
   }
 
   public void setDebug() {
@@ -152,7 +165,7 @@ public class KnowtatorController implements Savable, ProjectListener {
 
   public void dispose() {
     textSourceManager.dispose();
-    owlDataExtractor.dispose();
+    owlManager.dispose();
     selectionManager.dispose();
     profileManager.dispose();
     projectManager.dispose();

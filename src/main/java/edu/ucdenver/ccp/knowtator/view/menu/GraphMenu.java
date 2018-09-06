@@ -58,7 +58,11 @@ public class GraphMenu extends JMenu {
 		menuItem.addActionListener(
 				e -> {
 					JFileChooser fileChooser = new JFileChooser();
-					fileChooser.setCurrentDirectory(view.getProjectManager().getProjectLocation());
+					try {
+						fileChooser.setCurrentDirectory(view.getController().getProjectLocation());
+					} catch (ControllerNotSetException ignored) {
+
+					}
 					FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
 					fileChooser.setFileFilter(fileFilter);
 					try {
