@@ -1,5 +1,5 @@
 package edu.ucdenver.ccp.knowtator.model;
 
-public interface KnowtatorManager {
+public interface KnowtatorManager extends Savable {
     void dispose();
 }
