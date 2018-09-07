@@ -52,7 +52,7 @@ public class AnnotationManagerTest {
         File project = getProjectFile(projectFileName);
         String articleName = articleFileNames[articleID];
 
-        controller.getProjectManager().loadProject(project);
+        controller.loadProject(project);
 
         //noinspection ConstantConditions
         textSource = controller.getTextSourceManager().getTextSourceCollection().getCollection().stream().filter(textSource1 -> textSource1.getId().equals(articleName)).findAny().get();

@@ -22,109 +22,127 @@ import java.util.List;
 import java.util.Map;
 
 public class TextSourceManager implements Savable, KnowtatorManager {
-  @SuppressWarnings("unused")
-  private Logger log = Logger.getLogger(TextSourceManager.class);
+    @SuppressWarnings("unused")
+    private Logger log = Logger.getLogger(TextSourceManager.class);
 
-  private TextSourceCollection textSourceCollection;
-  private KnowtatorController controller;
-  private File articlesLocation;
-  private File annotationsLocation;
+    private TextSourceCollection textSourceCollection;
+    private KnowtatorController controller;
+    private File articlesLocation;
+    private File annotationsLocation;
 
-  public TextSourceManager(KnowtatorController controller) {
-    this.controller = controller;
-    textSourceCollection = new TextSourceCollection(controller);
-  }
-
-  public TextSource addTextSource(File file, String id, String textFileName) {
-    if (textFileName == null || textFileName.equals("")) {
-      textFileName = id;
-    }
-    TextSource newTextSource = textSourceCollection.get(textFileName);
-    if (newTextSource == null){
-      newTextSource = new TextSource(controller, file, textFileName);
-      textSourceCollection.add(newTextSource);
+    public TextSourceManager(KnowtatorController controller) {
+        this.controller = controller;
+        textSourceCollection = new TextSourceCollection(controller);
     }
 
-    controller.getSelectionManager().setActiveTextSource(newTextSource);
-    return newTextSource;
-  }
+    public TextSource addTextSource(File file, String id, String textFileName) {
+        if (textFileName == null || textFileName.equals("")) {
+            textFileName = id;
+        }
+        TextSource newTextSource = textSourceCollection.get(textFileName);
+        if (newTextSource == null) {
+            newTextSource = new TextSource(controller, file, textFileName);
+            textSourceCollection.add(newTextSource);
+        }
 
-  public TextSourceCollection getTextSourceCollection() {
-    return textSourceCollection;
-  }
-
-  @Override
-  public void writeToKnowtatorXML(Document dom, Element parent) {
-    textSourceCollection
-        .getCollection()
-        .forEach(textSource -> textSource.writeToKnowtatorXML(dom, parent));
-  }
-
-  @Override
-  public void readFromKnowtatorXML(File file, Element parent) {
-    for (Node documentNode :
-        KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.DOCUMENT))) {
-      Element documentElement = (Element) documentNode;
-      String documentID = documentElement.getAttribute(KnowtatorXMLAttributes.ID);
-      String documentFile = documentElement.getAttribute(KnowtatorXMLAttributes.FILE);
-      TextSource newTextSource = addTextSource(file, documentID, documentFile);
-      newTextSource.readFromKnowtatorXML(null, documentElement);
+        controller.getSelectionManager().setActiveTextSource(newTextSource);
+        return newTextSource;
     }
-  }
 
-  @Override
-  public void readFromOldKnowtatorXML(File file, Element parent) {
+    public TextSourceCollection getTextSourceCollection() {
+        return textSourceCollection;
+    }
 
-    String docID = parent.getAttribute(OldKnowtatorXMLAttributes.TEXT_SOURCE).replace(".txt", "");
-    TextSource newTextSource = addTextSource(file, docID, null);
-    newTextSource.readFromOldKnowtatorXML(null, parent);
-  }
+    @Override
+    public void writeToKnowtatorXML(Document dom, Element parent) {
+        textSourceCollection
+                .getCollection()
+                .forEach(textSource -> textSource.writeToKnowtatorXML(dom, parent));
+    }
 
-  @Override
-  public void readFromBratStandoff(
-      File file, Map<Character, List<String[]>> annotationMap, String content) {
-    String docID = annotationMap.get(StandoffTags.DOCID).get(0)[0];
+    @Override
+    public void readFromKnowtatorXML(File file, Element parent) {
+        for (Node documentNode :
+                KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.DOCUMENT))) {
+            Element documentElement = (Element) documentNode;
+            String documentID = documentElement.getAttribute(KnowtatorXMLAttributes.ID);
+            String documentFile = documentElement.getAttribute(KnowtatorXMLAttributes.FILE);
+            TextSource newTextSource = addTextSource(file, documentID, documentFile);
+            newTextSource.readFromKnowtatorXML(null, documentElement);
+        }
+    }
 
-    TextSource newTextSource = addTextSource(file, docID, null);
-    newTextSource.readFromBratStandoff(null, annotationMap, null);
-  }
+    @Override
+    public void readFromOldKnowtatorXML(File file, Element parent) {
 
-  @SuppressWarnings("RedundantThrows")
-  @Override
-  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {}
+        String docID = parent.getAttribute(OldKnowtatorXMLAttributes.TEXT_SOURCE).replace(".txt", "");
+        TextSource newTextSource = addTextSource(file, docID, null);
+        newTextSource.readFromOldKnowtatorXML(null, parent);
+    }
 
-  @Override
-  public void readFromGeniaXML(Element parent, String content) {}
+    @Override
+    public void readFromBratStandoff(
+            File file, Map<Character, List<String[]>> annotationMap, String content) {
+        String docID = annotationMap.get(StandoffTags.DOCID).get(0)[0];
 
-  @Override
-  public void writeToGeniaXML(Document dom, Element parent) {}
+        TextSource newTextSource = addTextSource(file, docID, null);
+        newTextSource.readFromBratStandoff(null, annotationMap, null);
+    }
 
-  @Override
-  public void save() {
-    controller.getProjectManager().saveToFormat(KnowtatorXMLUtil.class, this, annotationsLocation);
-  }
+    @SuppressWarnings("RedundantThrows")
+    @Override
+    public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
+    }
 
-  @Override
-  public void dispose() {
-    textSourceCollection.forEach(TextSource::dispose);
-    textSourceCollection.getCollection().clear();
-  }
+    @Override
+    public void readFromGeniaXML(Element parent, String content) {
+    }
 
-  public File getAnnotationsLocation() {
-    return annotationsLocation;
-  }
+    @Override
+    public void writeToGeniaXML(Document dom, Element parent) {
+    }
 
-  public File getArticlesLocation() {
-    return articlesLocation;
-  }
+    @Override
+    public void save() {
+        controller.saveToFormat(KnowtatorXMLUtil.class, this, annotationsLocation);
+    }
 
-  public void setArticlesLocation(File articlesLocation) throws IOException {
-    this.articlesLocation = articlesLocation;
-    Files.createDirectories(articlesLocation.toPath());
-  }
+    @Override
+    public void dispose() {
+        textSourceCollection.forEach(TextSource::dispose);
+        textSourceCollection.getCollection().clear();
+    }
 
-  public void setAnnotationsLocation(File annotationsLocation) throws IOException {
-    this.annotationsLocation = annotationsLocation;
-    Files.createDirectories(annotationsLocation.toPath());
-  }
+    public File getAnnotationsLocation() {
+        return annotationsLocation;
+    }
+
+    public File getArticlesLocation() {
+        return articlesLocation;
+    }
+
+    //TODO: Check where articles location would be appropriate and find out how to handle that
+    @Override
+    public void setSaveLocation(File newSaveLocation, String extension) throws IOException {
+        switch (extension) {
+            case ".xml":
+                this.annotationsLocation = newSaveLocation;
+                Files.createDirectories(newSaveLocation.toPath());
+                break;
+            case ".txt":
+                this.articlesLocation = newSaveLocation;
+                Files.createDirectories(newSaveLocation.toPath());
+                break;
+        }
+    }
+
+    @Override
+    public File getSaveLocation(String extension) {
+        switch (extension) {
+            case ".txt":
+                return articlesLocation;
+            default:
+                return annotationsLocation;
+        }
+    }
 }

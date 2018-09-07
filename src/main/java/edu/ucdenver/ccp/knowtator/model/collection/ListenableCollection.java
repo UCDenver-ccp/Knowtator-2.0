@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.ProjectManager;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 
@@ -16,10 +16,10 @@ public class ListenableCollection<
   public final C collection;
   private final ArrayList<L> listeners;
 
-  ListenableCollection(KnowtatorController controller, C collection) {
+  ListenableCollection(ProjectManager controller, C collection) {
     this.collection = collection;
     listeners = new ArrayList<>();
-    controller.getProjectManager().addListener(this);
+    controller.addProjectListener(this);
   }
 
   public void add(K objectToAdd) {

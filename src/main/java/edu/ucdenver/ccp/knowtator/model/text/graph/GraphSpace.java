@@ -69,7 +69,7 @@ public class GraphSpace extends mxGraph
 
   @Override
   public void save() {
-    if (controller.getProjectManager().isProjectLoaded()) {
+    if (controller.isProjectLoaded()) {
       textSource.save();
     }
   }
@@ -363,7 +363,7 @@ public class GraphSpace extends mxGraph
   UPDATE
    */
   public void reDrawGraph() {
-    if (controller.getProjectManager().isProjectLoaded()) {
+    if (controller.isProjectLoaded()) {
       getModel().beginUpdate();
       try {
         Arrays.stream(getChildVertices(getDefaultParent()))

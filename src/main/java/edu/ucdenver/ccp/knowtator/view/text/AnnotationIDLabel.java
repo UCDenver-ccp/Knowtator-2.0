@@ -3,7 +3,6 @@ package edu.ucdenver.ccp.knowtator.view.text;
 import edu.ucdenver.ccp.knowtator.listeners.ViewListener;
 import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
-import edu.ucdenver.ccp.knowtator.view.ControllerNotSetException;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
@@ -15,6 +14,7 @@ class AnnotationIDLabel extends JLabel implements ViewListener {
   AnnotationIDLabel(KnowtatorView view) {
 
     this.view = view;
+    view.getController().addViewListener(this);
   }
 
   public void dispose() {}
@@ -34,7 +34,7 @@ class AnnotationIDLabel extends JLabel implements ViewListener {
       } else {
         setText("");
       }
-    } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+    } catch (ActiveTextSourceNotSetException ignored) {
 
     }
   }

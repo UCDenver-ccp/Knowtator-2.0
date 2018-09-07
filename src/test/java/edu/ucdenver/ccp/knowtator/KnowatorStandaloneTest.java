@@ -103,9 +103,9 @@ public class KnowatorStandaloneTest extends TestCase {
 //
 //        File outputDir = new File("E:/Documents/Test/");
 //
-//        controller.getProjectManager().loadProject(projectFile);
+//        controller.loadProject(projectFile);
 //
 ////        TextSource textSource = controller.getTextSourceManager().getTextSourceCollection().get(article);
-//        controller.getProjectManager().saveToFormat(UIMAXMIUtil.class, null, outputDir);
+//        controller.saveToFormat(UIMAXMIUtil.class, null, outputDir);
 //    }
 }

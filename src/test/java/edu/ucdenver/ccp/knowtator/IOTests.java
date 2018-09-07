@@ -47,12 +47,12 @@ public class IOTests {
             .getFile());
   }
 
-  private File getBratFile(String projectName, String bratFileName) {
-    return new File(
-        getClass()
-            .getResource(String.format("/%s/Annotations/%s.ann", projectName, bratFileName))
-            .getFile());
-  }
+//  private File getBratFile(String projectName, String bratFileName) {
+//    return new File(
+//        getClass()
+//            .getResource(String.format("/%s/Annotations/%s.ann", projectName, bratFileName))
+//            .getFile());
+//  }
 
   //    @Test
   //    public void loadLargeOld() {
@@ -62,7 +62,7 @@ public class IOTests {
   //        String projectFileName = projectFileNames[projectID];
   //        File projectFile = getProjectFile(projectFileName);
   //
-  //        controller.getProjectManager().loadProject(projectFile);
+  //        controller.loadProject(projectFile);
   //    }
 
   @Test
@@ -75,7 +75,7 @@ public class IOTests {
     String projectFileName = projectFileNames[projectID];
     File projectFile = getProjectFile(projectFileName);
 
-    controller.getProjectManager().loadProject(projectFile);
+    controller.loadProject(projectFile);
 
     TextSource textSource =
         controller
@@ -182,9 +182,9 @@ public class IOTests {
     String articleFileName = articleFileNames[articleID];
     File articleFile = getArticleFile(projectFileName, articleFileName);
 
-    controller.getProjectManager().loadProject(projectFile);
+    controller.loadProject(projectFile);
 
-    controller.getProjectManager().addDocument(articleFile);
+    controller.addDocument(articleFile);
 
     TextSource textSource =
         controller
@@ -209,7 +209,7 @@ public class IOTests {
   //    controller = new KnowtatorController();
   //
   //    File newProject = Files.createTempDir();
-  //    controller.getProjectManager().newProject(newProject);
+  //    controller.newProject(newProject);
   //
   //    assert new File(newProject, "Articles").exists();
   //    assert new File(newProject, "Annotations").exists();
@@ -229,7 +229,7 @@ public class IOTests {
     String projectFileName = projectFileNames[projectID];
     File projectFile = getProjectFile(projectFileName);
 
-    controller.getProjectManager().loadProject(projectFile);
+    controller.loadProject(projectFile);
     TextSource textSource =
         controller
             .getTextSourceManager()
@@ -267,7 +267,7 @@ public class IOTests {
     String projectFileName = projectFileNames[projectID];
     File projectFile = getProjectFile(projectFileName);
 
-    controller.getProjectManager().loadProject(projectFile);
+    controller.loadProject(projectFile);
 
     TextSource textSource =
         controller
@@ -340,8 +340,8 @@ public class IOTests {
       e.printStackTrace();
     }
     File projectFile = new File(projectDirectory, resourceProjectFile.getName());
-    controller.getProjectManager().loadProject(projectFile);
-    controller.getProjectManager().saveProject();
+    controller.loadProject(projectFile);
+    controller.saveProject();
     successfulLoad();
 
     projectDirectory.deleteOnExit();
@@ -361,8 +361,8 @@ public class IOTests {
 //
 //    File outputFile = new File("E:/Documents/Test/brat_test.ann");
 //
-//    controller.getProjectManager().loadProject(projectFile);
-//    controller.getProjectManager().loadFromFormat(BratStandoffUtil.class, bratAnnotationFile);
+//    controller.loadProject(projectFile);
+//    controller.loadFromFormat(BratStandoffUtil.class, bratAnnotationFile);
 //    controller
 //        .getProjectManager()
 //        .saveToFormat(
@@ -387,7 +387,7 @@ public class IOTests {
     String projectFileName = projectFileNames[projectID];
     File projectFile = getProjectFile(projectFileName);
 
-    controller.getProjectManager().loadProject(projectFile);
+    controller.loadProject(projectFile);
 
     TextSource textSource =
         controller

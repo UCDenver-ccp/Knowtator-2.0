@@ -66,7 +66,7 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
 
         dontRedraw = false;
         controller.getOWLManager().addOWLSetupListener(this);
-        controller.getProjectManager().addListener(this);
+        controller.addProjectListener(this);
 
         controller.verifyId(id, this, false);
 
@@ -112,7 +112,7 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
 
     @Override
     public void save() {
-        if (controller.getProjectManager().isProjectLoaded()) {
+        if (controller.isProjectLoaded()) {
             textSource.save();
         }
     }

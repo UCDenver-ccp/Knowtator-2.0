@@ -179,8 +179,18 @@ public class GraphSpaceManager implements Savable, KnowtatorManager {
   }
 
   @Override
+  public File getSaveLocation(String extension) {
+    return null;
+  }
+
+  @Override
+  public void setSaveLocation(File newSaveLocation, String extension) {
+
+  }
+
+  @Override
   public void save() {
-    if (controller.getProjectManager().isProjectLoaded()) {
+    if (controller.isProjectLoaded()) {
       textSource.save();
     }
   }

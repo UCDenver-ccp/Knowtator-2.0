@@ -38,9 +38,6 @@ public class ProfileManager implements Savable, KnowtatorManager {
         controller.getSelectionManager().setSelectedProfile(getDefaultProfile());
     }
 
-    public File getProfilesLocation() {
-        return profilesLocation;
-    }
 
     public void addColorListener(ColorListener listener) {
         colorListeners.add(listener);
@@ -128,12 +125,19 @@ public class ProfileManager implements Savable, KnowtatorManager {
     }
 
     @Override
-    public void save() {
-        controller.getProjectManager().saveToFormat(KnowtatorXMLUtil.class, this, profilesLocation);
+    public File getSaveLocation(String extension) {
+        return profilesLocation;
     }
 
-    public void setProfilesLocation(File profilesLocation) throws IOException {
-        this.profilesLocation = profilesLocation;
+    @Override
+    public void setSaveLocation(File newSaveLocation, String extension) throws IOException {
+        this.profilesLocation = newSaveLocation;
         Files.createDirectories(profilesLocation.toPath());
     }
+
+    @Override
+    public void save() {
+        controller.saveToFormat(KnowtatorXMLUtil.class, this, profilesLocation);
+    }
+
 }

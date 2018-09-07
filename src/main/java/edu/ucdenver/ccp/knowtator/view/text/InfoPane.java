@@ -2,12 +2,10 @@ package edu.ucdenver.ccp.knowtator.view.text;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.ActiveGraphSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.view.ControllerNotSetException;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.chooser.AnnotationGraphSpaceChooser;
 
@@ -52,7 +50,7 @@ public class InfoPane {
                                     .getSelectionManager()
                                     .getActiveTextSource().getGraphSpaceManager().setSelectedGraphSpace((GraphSpace) comboBox.getSelectedItem());
                         }
-                    } catch (ActiveTextSourceNotSetException | ControllerNotSetException | ActiveGraphSpaceNotSetException ignored) {
+                    } catch (ActiveTextSourceNotSetException | ActiveGraphSpaceNotSetException ignored) {
 
                     }
                 });
@@ -63,7 +61,7 @@ public class InfoPane {
                     if (jList.getSelectedValue() != null) {
                         try {
                             view.getController().getSelectionManager().getActiveTextSource().getAnnotationManager().setSelectedSpan((Span) jList.getSelectedValue());
-                        } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+                        } catch (ActiveTextSourceNotSetException ignored) {
 
                         }
                     }
@@ -85,14 +83,6 @@ public class InfoPane {
         annotatorLabel = new AnnotatorLabel(view);
         spanList = new SpanList(view);
         graphSpaceChooser = new AnnotationGraphSpaceChooser(view);
-    }
-
-    public void setController(KnowtatorController controller) {
-        controller.addViewListener(annotatorLabel);
-        controller.addViewListener(annotationIDLabel);
-        controller.addViewListener(annotatorLabel);
-        controller.addViewListener(spanList);
-        controller.addViewListener(graphSpaceChooser);
     }
 
     public AnnotationClassLabel getAnnotationClassLabel() {

@@ -5,7 +5,6 @@ import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
-import edu.ucdenver.ccp.knowtator.view.ControllerNotSetException;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.event.EventType;
@@ -23,6 +22,7 @@ public class AnnotationClassLabel extends JLabel
 
   AnnotationClassLabel(KnowtatorView view) {
     this.view = view;
+      view.getController().addViewListener(this);
   }
 
   private void displayAnnotation(Annotation annotation) {
@@ -31,10 +31,8 @@ public class AnnotationClassLabel extends JLabel
         setText(view.getController().getOWLManager().getOWLEntityRendering(annotation.getOwlClass()));
       } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
         setText(String.format("ID: %s Label: %s", annotation.getOwlClassID(), annotation.getOwlClassLabel()));
-      } catch (ControllerNotSetException ignored) {
-
-	  }
-	} else {
+      }
+    } else {
       setText("");
     }
   }
@@ -45,7 +43,7 @@ public class AnnotationClassLabel extends JLabel
 		try {
 			Annotation annotation = view.getController().getSelectionManager().getActiveTextSource().getAnnotationManager().getSelectedAnnotation();
 			displayAnnotation(annotation);
-		} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+		} catch (ActiveTextSourceNotSetException ignored) {
 		}
 	}
   }
@@ -55,16 +53,14 @@ public class AnnotationClassLabel extends JLabel
       view.getController().getOWLManager().getWorkSpace().getOWLModelManager().removeListener(this);
     } catch (OWLWorkSpaceNotSetException e) {
       e.printStackTrace();
-    } catch (ControllerNotSetException ignored) {
-
-	}
+    }
   }
 
   @Override
   public void viewChanged() {
 	  try {
 		  displayAnnotation(view.getController().getSelectionManager().getActiveTextSource().getAnnotationManager().getSelectedAnnotation());
-	  } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+	  } catch (ActiveTextSourceNotSetException ignored) {
 	  }
   }
 }

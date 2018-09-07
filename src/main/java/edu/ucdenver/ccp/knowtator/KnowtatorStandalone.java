@@ -2,7 +2,6 @@ package edu.ucdenver.ccp.knowtator;
 
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.io.genia.GeniaXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.ProjectManager;
 import edu.ucdenver.ccp.knowtator.model.text.Fragment;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
@@ -83,12 +82,12 @@ public class KnowtatorStandalone extends JFrame {
 
         loadProjectFromCommandLine(
                 cmd,
-                conceptsController.getProjectManager(),
+                conceptsController,
                 cmd.getOptionValue("project"),
                 cmd.getOptionValue("annotations"));
         loadProjectFromCommandLine(
                 cmd,
-                fragmentsController.getProjectManager(),
+                fragmentsController,
                 cmd.getOptionValue("project"),
                 cmd.getOptionValue("fragments"));
 
@@ -178,7 +177,6 @@ public class KnowtatorStandalone extends JFrame {
 
     private static void commandLineConversion(CommandLine cmd) {
         KnowtatorController controller = new KnowtatorController();
-        ProjectManager projectManager = controller.getProjectManager();
 
         String projectFileName = cmd.getOptionValue("project");
 
@@ -188,14 +186,14 @@ public class KnowtatorStandalone extends JFrame {
         String knowtatorOutputDirName = cmd.getOptionValue("knowtator");
 
         loadProjectFromCommandLine(
-                cmd, projectManager, projectFileName, cmd.getOptionValue("annotations"));
+                cmd, controller, projectFileName, cmd.getOptionValue("annotations"));
 
         if (knowtatorOutputDirName != null) {
-            projectManager.saveProject();
+            controller.saveProject();
         }
 
         if (geniaOutputDirName != null) {
-            projectManager.saveToFormat(GeniaXMLUtil.class, new File(geniaOutputDirName));
+            ((ProjectManager) controller).saveToFormat(GeniaXMLUtil.class, controller.getTextSourceManager(), new File(geniaOutputDirName));
         }
 
 //        if (uimaOutputDirName != null) {
@@ -203,7 +201,7 @@ public class KnowtatorStandalone extends JFrame {
 //        }
 
         if (bratOutputDirName != null) {
-            projectManager.saveToFormat(BratStandoffUtil.class, new File(bratOutputDirName));
+            ((ProjectManager) controller).saveToFormat(BratStandoffUtil.class, controller.getTextSourceManager(), new File(bratOutputDirName));
         }
     }
 

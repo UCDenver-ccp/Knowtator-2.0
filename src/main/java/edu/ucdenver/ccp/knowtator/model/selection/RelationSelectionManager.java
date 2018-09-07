@@ -1,14 +1,13 @@
 package edu.ucdenver.ccp.knowtator.model.selection;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.text.graph.Triple;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import java.util.Arrays;
 
-public class RelationSelectionManager implements KnowtatorManager {
+public class RelationSelectionManager {
 	private OWLObjectProperty selectedOWLObjectProperty;
 	private String selectedRelationQuantifier;
 	private boolean selectedNegation;

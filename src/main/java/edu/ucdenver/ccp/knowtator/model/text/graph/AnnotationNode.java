@@ -64,7 +64,7 @@ public class AnnotationNode extends mxCell implements Savable, KnowtatorTextBoun
 
 	@Override
 	public void save() {
-		if (controller.getProjectManager().isProjectLoaded()) {
+		if (controller.isProjectLoaded()) {
 			textSource.save();
 		}
 

@@ -16,11 +16,14 @@ import org.protege.editor.owl.model.selection.OWLSelectionModelListener;
 import org.protege.editor.owl.ui.renderer.OWLRendererPreferences;
 import org.protege.editor.owl.ui.search.SearchDialogPanel;
 import org.semanticweb.owlapi.model.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -38,7 +41,7 @@ public class OWLManager implements Serializable, DebugListener, OWLSelectionMode
 
   public OWLManager(KnowtatorController controller) {
     this.controller = controller;
-    controller.getProjectManager().addListener(this);
+    controller.addProjectListener(this);
     owlSetupListeners = new ArrayList<>();
     controller.addDebugListener(this);
   }
@@ -235,13 +238,56 @@ public class OWLManager implements Serializable, DebugListener, OWLSelectionMode
     }
   }
 
-  public File getOntologiesLocation() {
+  @Override
+  public File getSaveLocation(String extension) {
     return ontologiesLocation;
   }
 
-  public void setOntologiesLocation(File ontologiesLocation) throws IOException {
-    this.ontologiesLocation = ontologiesLocation;
+  @Override
+  public void setSaveLocation(File newSaveLocation, String extension) throws IOException {
+    this.ontologiesLocation = newSaveLocation;
     Files.createDirectories(ontologiesLocation.toPath());
+  }
+
+
+  @Override
+  public void writeToKnowtatorXML(Document dom, Element parent) {
+
+  }
+
+  @Override
+  public void readFromKnowtatorXML(File file, Element parent) {
+
+  }
+
+  @Override
+  public void readFromOldKnowtatorXML(File file, Element parent) {
+
+  }
+
+  @Override
+  public void readFromBratStandoff(File file, Map<Character, List<String[]>> annotationMap, String content) {
+
+  }
+
+  @Override
+  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationConfig, Map<String, Map<String, String>> visualConfig) {
+
+  }
+
+  @Override
+  public void readFromGeniaXML(Element parent, String content) {
+
+  }
+
+  @Override
+  public void writeToGeniaXML(Document dom, Element parent) {
+
+  }
+
+  @Override
+  public void save() {
+
   }
 }
 

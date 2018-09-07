@@ -205,6 +205,6 @@ public class TextSource implements Savable, KnowtatorObject {
 
     @Override
     public void save() {
-        controller.getProjectManager().saveToFormat(KnowtatorXMLUtil.class, this, saveFile);
+        controller.saveToFormat(KnowtatorXMLUtil.class, this, saveFile);
     }
 }

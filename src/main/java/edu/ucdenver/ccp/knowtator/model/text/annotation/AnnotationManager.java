@@ -59,7 +59,7 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
         this.textSource = textSource;
 
         controller.getOWLManager().addOWLSetupListener(this);
-        controller.getProjectManager().addListener(this);
+        controller.addProjectListener(this);
 
         annotationCollection = new AnnotationCollection(controller);
         allSpanCollection = new SpanCollection(controller);
@@ -68,7 +68,7 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
 
     @Override
     public void save() {
-        if (controller.getProjectManager().isProjectLoaded()) {
+        if (controller.isProjectLoaded()) {
             textSource.save();
         }
     }
@@ -303,14 +303,14 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
     }
 
     public void getNextSpan() {
-        if (controller.getProjectManager().isProjectLoaded()) {
+        if (controller.isProjectLoaded()) {
             setSelectedSpan(
                     textSource.getAnnotationManager().getAllSpanCollection().getNext(selectedSpan));
         }
     }
 
     public void getPreviousSpan() {
-        if (controller.getProjectManager().isProjectLoaded()) {
+        if (controller.isProjectLoaded()) {
             setSelectedSpan(
                     textSource.getAnnotationManager().getAllSpanCollection().getPrevious(selectedSpan));
         }
@@ -331,7 +331,7 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
     }
 
     public void setSelectedAnnotation(Annotation newAnnotation, Span newSpan) {
-        if (controller.getProjectManager().isProjectLoaded()) {
+        if (controller.isProjectLoaded()) {
             if (selectedAnnotation != newAnnotation) {
                 AnnotationChangeEvent e = new AnnotationChangeEvent(this.selectedAnnotation, newAnnotation);
                 selectedAnnotation = newAnnotation;
@@ -625,6 +625,16 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
             controller.getOWLManager().getWorkSpace().getOWLModelManager().removeOntologyChangeListener(this);
         } catch (OWLWorkSpaceNotSetException ignored) {
         }
+    }
+
+    @Override
+    public File getSaveLocation(String extension) {
+        return null;
+    }
+
+    @Override
+    public void setSaveLocation(File newSaveLocation, String extension) {
+
     }
 
     @Override

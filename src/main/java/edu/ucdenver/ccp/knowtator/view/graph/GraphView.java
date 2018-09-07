@@ -8,7 +8,6 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.util.mxMorphing;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.listeners.ViewListener;
 import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
@@ -16,7 +15,6 @@ import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.text.graph.ActiveGraphSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.view.ControllerNotSetException;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
 import edu.ucdenver.ccp.knowtator.view.menu.GraphMenu;
@@ -62,6 +60,8 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
         this.view = view;
         $$$setupUI$$$();
         makeButtons();
+        view.getController().addViewListener(this);
+        view.getController().addViewListener(graphSpaceChooser);
     }
 
     private void createUIComponents() {
@@ -92,7 +92,6 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
                         .setSelectedRelationQuantifierValue("");
             }
         } catch (ActiveTextSourceNotSetException
-                | ControllerNotSetException
                 | ActiveGraphSpaceNotSetException ignored) {
 
         }
@@ -107,8 +106,7 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
                     .getActiveGraphSpace()
                     .getRelationSelectionManager()
                     .setSelectedRelationQuantifierValue(quantifierValue);
-        } catch (ControllerNotSetException
-                | ActiveTextSourceNotSetException
+        } catch (ActiveTextSourceNotSetException
                 | ActiveGraphSpaceNotSetException ignored) {
 
         }
@@ -134,7 +132,6 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
                                 .getRelationSelectionManager()
                                 .setNegatation(negateCheckBox.isSelected());
                     } catch (ActiveTextSourceNotSetException
-                            | ControllerNotSetException
                             | ActiveGraphSpaceNotSetException ignored) {
 
                     }
@@ -158,7 +155,6 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
                                     .setSelectedGraphSpace((GraphSpace) comboBox.getSelectedItem());
                         }
                     } catch (ActiveTextSourceNotSetException
-                            | ControllerNotSetException
                             | ActiveGraphSpaceNotSetException ignored) {
 
                     }
@@ -174,7 +170,7 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
                                 .getActiveTextSource()
                                 .getGraphSpaceManager()
                                 .getPreviousGraphSpace();
-                    } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+                    } catch (ActiveTextSourceNotSetException ignored) {
 
                     }
                 });
@@ -186,7 +182,7 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
                                 .getActiveTextSource()
                                 .getGraphSpaceManager()
                                 .getNextGraphSpace();
-                    } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+                    } catch (ActiveTextSourceNotSetException ignored) {
 
                     }
                 });
@@ -212,7 +208,6 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 
                         goToVertex(vertex);
                     } catch (ActiveTextSourceNotSetException
-                            | ControllerNotSetException
                             | ActiveGraphSpaceNotSetException ignored) {
 
                     }
@@ -252,7 +247,7 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
                         .getActiveTextSource()
                         .getGraphSpaceManager()
                         .setSelectedGraphSpace(graphSpace);
-            } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+            } catch (ActiveTextSourceNotSetException ignored) {
 
             }
             List<Object> vertices = graphSpace.getVerticesForAnnotation(annotation);
@@ -315,7 +310,6 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
                 graphComponent.zoomAndCenter();
             }
         } catch (ActiveTextSourceNotSetException
-                | ControllerNotSetException
                 | ActiveGraphSpaceNotSetException ignored) {
         }
     }
@@ -329,7 +323,6 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
                     .getActiveGraphSpace()
                     .removeSelectedCell();
         } catch (ActiveTextSourceNotSetException
-                | ControllerNotSetException
                 | ActiveGraphSpaceNotSetException ignored) {
 
         }
@@ -344,10 +337,6 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
     public void projectLoaded() {
     }
 
-    public void setController(KnowtatorController controller) {
-        controller.addViewListener(this);
-        controller.addViewListener(graphSpaceChooser);
-    }
 
     @Override
     public void viewChanged() {
@@ -389,7 +378,7 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
             if (graphComponent.getGraph() != graphSpace) {
                 showGraph(graphSpace);
             }
-        } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+        } catch (ActiveTextSourceNotSetException ignored) {
 
         } catch (ActiveGraphSpaceNotSetException e) {
             String graphName = GraphMenu.getGraphNameInput(view, null);
@@ -403,7 +392,7 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
                             .addGraphSpace(graphName);
                     someRadioButton.doClick();
                     negateCheckBox.setSelected(false);
-                } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+                } catch (ActiveTextSourceNotSetException ignored) {
 
                 }
             }

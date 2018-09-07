@@ -40,7 +40,7 @@ public class Profile implements Savable, KnowtatorObject {
 
   @Override
   public void save() {
-    if (controller.getProjectManager().isProjectLoaded()) {
+    if (controller.isProjectLoaded()) {
       controller.getProfileManager().save();
     }
   }

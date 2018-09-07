@@ -3,7 +3,6 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import com.mxgraph.util.mxCellRenderer;
 import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.graph.ActiveGraphSpaceNotSetException;
-import edu.ucdenver.ccp.knowtator.view.ControllerNotSetException;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.imageio.ImageIO;
@@ -44,7 +43,7 @@ public class GraphMenu extends JMenu {
 					if (graphName != null) {
 						try {
 							view.getController().getSelectionManager().getActiveTextSource().getGraphSpaceManager().getActiveGraphSpace().setId(graphName);
-						} catch (ActiveTextSourceNotSetException | ControllerNotSetException | ActiveGraphSpaceNotSetException ignored) {
+						} catch (ActiveTextSourceNotSetException | ActiveGraphSpaceNotSetException ignored) {
 
 						}
 					}
@@ -58,11 +57,7 @@ public class GraphMenu extends JMenu {
 		menuItem.addActionListener(
 				e -> {
 					JFileChooser fileChooser = new JFileChooser();
-					try {
-						fileChooser.setCurrentDirectory(view.getController().getProjectLocation());
-					} catch (ControllerNotSetException ignored) {
-
-					}
+					fileChooser.setCurrentDirectory(view.getController().getSaveLocation(null));
 					FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
 					fileChooser.setFileFilter(fileFilter);
 					try {
@@ -84,7 +79,7 @@ public class GraphMenu extends JMenu {
 							e1.printStackTrace();
 						}
 					}
-					} catch (ActiveTextSourceNotSetException | ControllerNotSetException | ActiveGraphSpaceNotSetException ignored) {
+					} catch (ActiveTextSourceNotSetException | ActiveGraphSpaceNotSetException ignored) {
 					}
 				});
 
@@ -103,7 +98,7 @@ public class GraphMenu extends JMenu {
 									.getSelectionManager()
 									.getActiveTextSource()
 									.getGraphSpaceManager().removeGraphSpace(view.getController().getSelectionManager().getActiveTextSource().getGraphSpaceManager().getActiveGraphSpace());
-						} catch (ActiveTextSourceNotSetException | ControllerNotSetException | ActiveGraphSpaceNotSetException ignored) {
+						} catch (ActiveTextSourceNotSetException | ActiveGraphSpaceNotSetException ignored) {
 
 						}
 					}
@@ -124,7 +119,7 @@ public class GraphMenu extends JMenu {
 									.getSelectionManager()
 									.getActiveTextSource()
 									.getGraphSpaceManager().addGraphSpace(graphName);
-						} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+						} catch (ActiveTextSourceNotSetException ignored) {
 
 						}
 					}
@@ -177,7 +172,7 @@ public class GraphMenu extends JMenu {
 										} else {
 											finalField.getHighlighter().removeAllHighlights();
 										}
-									} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+									} catch (ActiveTextSourceNotSetException ignored) {
 
 									}
 								}
@@ -208,7 +203,7 @@ public class GraphMenu extends JMenu {
 			}
 		}
 
-		} catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+		} catch (ActiveTextSourceNotSetException ignored) {
 		}
 		return null;
 	}

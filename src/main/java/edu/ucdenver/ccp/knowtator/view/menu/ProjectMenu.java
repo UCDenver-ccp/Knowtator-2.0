@@ -5,7 +5,6 @@ import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
-import edu.ucdenver.ccp.knowtator.view.ControllerNotSetException;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -69,7 +68,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
                 e -> {
                     try {
                         JFileChooser fileChooser =
-                                new JFileChooser(view.getController().getProjectLocation());
+                                new JFileChooser(view.getController().getSaveLocation(null));
                         fileChooser.setFileFilter(new FileNameExtensionFilter("PNG", "png"));
                         fileChooser.setSelectedFile(
                                 new File(
@@ -88,7 +87,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
                                 e1.printStackTrace();
                             }
                         }
-                    } catch (ControllerNotSetException | ActiveTextSourceNotSetException ignored) {
+                    } catch (ActiveTextSourceNotSetException ignored) {
 
                     }
                 });
@@ -98,26 +97,14 @@ public class ProjectMenu extends JMenu implements ProjectListener {
 
     private JMenuItem attemptOWLRenderConnectionCommand() {
         JMenuItem menuItem = new JMenuItem("Connect annotations using current rendering");
-        menuItem.addActionListener(e -> {
-            try {
-                view.getController().getOWLManager().setUpOWL();
-            } catch (ControllerNotSetException ignored) {
-
-            }
-        });
+        menuItem.addActionListener(e -> view.getController().getOWLManager().setUpOWL());
 
         return menuItem;
     }
 
     private JMenuItem debugMenuItem() {
         JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem("Debug");
-        menuItem.addActionListener(e -> {
-            try {
-                view.getController().setDebug();
-            } catch (ControllerNotSetException e1) {
-                menuItem.setState(false);
-            }
-        });
+        menuItem.addActionListener(e -> view.getController().setDebug());
         return menuItem;
     }
 
@@ -147,14 +134,11 @@ public class ProjectMenu extends JMenu implements ProjectListener {
         menuItem.addActionListener(
                 e -> {
                     JFileChooser fileChooser = new JFileChooser();
-                    try {
-                        fileChooser.setCurrentDirectory(view.getController().getTextSourceManager().getAnnotationsLocation());
-                    } catch (ControllerNotSetException ignored) {
-                    }
+                    fileChooser.setCurrentDirectory(view.getController().getTextSourceManager().getAnnotationsLocation());
                     fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                     if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-                        view.getProjectManager()
-                                .saveToFormat(BratStandoffUtil.class, fileChooser.getSelectedFile());
+                        view.getController()
+                                .saveToFormat(BratStandoffUtil.class, view.getController().getTextSourceManager(), fileChooser.getSelectedFile());
                     }
 
                 });
@@ -179,17 +163,17 @@ public class ProjectMenu extends JMenu implements ProjectListener {
     }
 
     private void loadProject(File file) {
-        //    if (view.getProjectManager().isProjectLoaded()
+        //    if (view.getController().isProjectLoaded()
         //        && JOptionPane.showConfirmDialog(
         //                view,
         //                "Save changes to Knowtator project?",
         //                "Save Project",
         //                JOptionPane.YES_NO_OPTION)
         //            == JOptionPane.YES_OPTION) {
-        //      view.getProjectManager().saveProject();
+        //      view.getController().saveProject();
         //    }
         view.reset();
-        view.getProjectManager().loadProject(file);
+        view.getController().loadProject(file);
         view.getPrefs().put("Last Project", file.getAbsolutePath());
         try {
             view.getPrefs().flush();
@@ -202,25 +186,18 @@ public class ProjectMenu extends JMenu implements ProjectListener {
         JMenuItem menuItem = new JMenuItem("Import Annotations");
         menuItem.addActionListener(
                 e -> {
-                    try {
-                        JFileChooser fileChooser = new JFileChooser();
-                        fileChooser.setCurrentDirectory(view.getController().getTextSourceManager().getAnnotationsLocation());
+                    JFileChooser fileChooser = new JFileChooser();
+                    fileChooser.setCurrentDirectory(view.getController().getTextSourceManager().getAnnotationsLocation());
 
-                        FileFilter fileFilter =
-                                new FileNameExtensionFilter("Annotation File (XML, ann, a1)", "xml", "ann", "a1");
-                        fileChooser.setFileFilter(fileFilter);
-                        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                    FileFilter fileFilter =
+                            new FileNameExtensionFilter("Annotation File (XML, ann, a1)", "xml", "ann", "a1");
+                    fileChooser.setFileFilter(fileFilter);
+                    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
-                        if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-                            view.getProjectManager().loadWithAppropriateFormat(fileChooser.getSelectedFile());
-                        }
-
-                    } catch (ControllerNotSetException e2) {
-                        JOptionPane.showMessageDialog(
-                                view,
-                                "Not in a project. Please create or load "
-                                        + "a project first. (Project -> New Project or Project -> Load Project)");
+                    if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
+                        view.getController().loadWithAppropriateFormat(view.getController().getTextSourceManager(), fileChooser.getSelectedFile());
                     }
+
                 });
         return menuItem;
     }
@@ -230,13 +207,10 @@ public class ProjectMenu extends JMenu implements ProjectListener {
         menuItem.addActionListener(
                 e -> {
                     JFileChooser fileChooser = new JFileChooser();
-                    try {
-                        fileChooser.setCurrentDirectory(view.getController().getTextSourceManager().getArticlesLocation());
-                    } catch (ControllerNotSetException ignored) {
-                    }
+                    fileChooser.setCurrentDirectory(view.getController().getTextSourceManager().getArticlesLocation());
 
                     if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-                        view.getProjectManager().addDocument(fileChooser.getSelectedFile());
+                        view.getController().addDocument(fileChooser.getSelectedFile());
                     }
                 });
         return menuItem;
@@ -257,7 +231,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
                         if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
                             File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
                             view.reset();
-                            view.getProjectManager().newProject(projectDirectory);
+                            view.getController().newProject(projectDirectory);
                         }
                     }
                 });
@@ -288,7 +262,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
         save.addActionListener(
                 e -> {
                     try {
-                        view.getProjectManager().saveProject();
+                        view.getController().saveProject();
                     } catch (Exception e1) {
                         JOptionPane.showMessageDialog(
                                 view,
@@ -334,11 +308,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
                                     view, message, "Enter profile name", JOptionPane.OK_CANCEL_OPTION);
                     if (option == JOptionPane.OK_OPTION) {
                         String annotator = field1.getText();
-                        try {
-                            view.getController().getProfileManager().addProfile(annotator);
-                        } catch (ControllerNotSetException ignored) {
-
-                        }
+                        view.getController().getProfileManager().addProfile(annotator);
                     }
                 });
 
@@ -348,13 +318,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
     private JMenuItem removeProfileMenu() {
         JMenuItem removeProfileMenu = new JMenuItem("Remove profile");
         removeProfileMenu.addActionListener(
-                e -> {
-                    try {
-                        view.getController().getProfileManager().removeActiveProfile();
-                    } catch (ControllerNotSetException ignored) {
-
-                    }
-                });
+                e -> view.getController().getProfileManager().removeActiveProfile());
 
         return removeProfileMenu;
     }
@@ -364,37 +328,33 @@ public class ProjectMenu extends JMenu implements ProjectListener {
 
         runIAA.addActionListener(
                 e -> {
-                    try {
-                        JFileChooser fileChooser = new JFileChooser();
-                        fileChooser.setCurrentDirectory(view.getController().getProjectLocation());
-                        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                        //
-                        // disable the "All files" option.
-                        //
-                        fileChooser.setAcceptAllFileFilterUsed(false);
-                        if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
-                            File outputDirectory = fileChooser.getSelectedFile();
+                    JFileChooser fileChooser = new JFileChooser();
+                    fileChooser.setCurrentDirectory(view.getController().getSaveLocation(null));
+                    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                    //
+                    // disable the "All files" option.
+                    //
+                    fileChooser.setAcceptAllFileFilterUsed(false);
+                    if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
+                        File outputDirectory = fileChooser.getSelectedFile();
 
-                            try {
-                                KnowtatorIAA knowtatorIAA = new KnowtatorIAA(outputDirectory, view.getController());
+                        try {
+                            KnowtatorIAA knowtatorIAA = new KnowtatorIAA(outputDirectory, view.getController());
 
-                                if (classIAAChoice.getState()) {
-                                    knowtatorIAA.runClassIAA();
-                                }
-                                if (spanIAAChoice.getState()) {
-                                    knowtatorIAA.runSpanIAA();
-                                }
-                                if (classAndSpanIAAChoice.getState()) {
-                                    knowtatorIAA.runClassAndSpanIAA();
-                                }
-
-                                knowtatorIAA.closeHTML();
-                            } catch (IAAException e1) {
-                                e1.printStackTrace();
+                            if (classIAAChoice.getState()) {
+                                knowtatorIAA.runClassIAA();
+                            }
+                            if (spanIAAChoice.getState()) {
+                                knowtatorIAA.runSpanIAA();
+                            }
+                            if (classAndSpanIAAChoice.getState()) {
+                                knowtatorIAA.runClassAndSpanIAA();
                             }
 
+                            knowtatorIAA.closeHTML();
+                        } catch (IAAException e1) {
+                            e1.printStackTrace();
                         }
-                    } catch (ControllerNotSetException ignored) {
 
                     }
                 });

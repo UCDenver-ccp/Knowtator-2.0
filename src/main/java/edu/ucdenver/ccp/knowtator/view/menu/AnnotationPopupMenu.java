@@ -3,7 +3,6 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Span;
-import edu.ucdenver.ccp.knowtator.view.ControllerNotSetException;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.Logger;
 
@@ -28,7 +27,7 @@ public class AnnotationPopupMenu extends JPopupMenu {
     menuItem.addActionListener(e1 -> {
       try {
         view.getController().getSelectionManager().getActiveTextSource().getAnnotationManager().reassignSelectedOWLClassToSelectedAnnotation();
-      } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+      } catch (ActiveTextSourceNotSetException ignored) {
       }
     });
 
@@ -46,7 +45,7 @@ public class AnnotationPopupMenu extends JPopupMenu {
                 .getActiveTextSource()
                 .getAnnotationManager()
                 .addSelectedAnnotation();
-          } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+          } catch (ActiveTextSourceNotSetException ignored) {
 
           }
         });
@@ -65,7 +64,7 @@ public class AnnotationPopupMenu extends JPopupMenu {
                 .getActiveTextSource()
                 .getAnnotationManager()
                 .addSpanToSelectedAnnotation();
-          } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+          } catch (ActiveTextSourceNotSetException ignored) {
 
           }
         });
@@ -96,13 +95,13 @@ public class AnnotationPopupMenu extends JPopupMenu {
                     .getActiveTextSource()
                     .getAnnotationManager()
                     .removeSpanFromSelectedAnnotation();
-          } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+          } catch (ActiveTextSourceNotSetException ignored) {
 
           }
         });
 
     return removeSpanFromSelectedAnnotation;
-    } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+    } catch (ActiveTextSourceNotSetException ignored) {
       return null;
     }
   }
@@ -118,7 +117,7 @@ public class AnnotationPopupMenu extends JPopupMenu {
                 .getActiveTextSource()
                 .getAnnotationManager()
                 .setSelectedSpan(span);
-          }  catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+          }  catch (ActiveTextSourceNotSetException ignored) {
 
           }
         });
@@ -153,12 +152,12 @@ public class AnnotationPopupMenu extends JPopupMenu {
                   .getActiveTextSource()
                   .getAnnotationManager()
                   .addSelectedAnnotation();
-            } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+            } catch (ActiveTextSourceNotSetException ignored) {
 
             }
           }
         });
-    } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+    } catch (ActiveTextSourceNotSetException ignored) {
     }
 
     return removeAnnotationMenuItem;
@@ -241,7 +240,7 @@ public class AnnotationPopupMenu extends JPopupMenu {
     }
 
     show(e.getComponent(), e.getX(), e.getY());
-    } catch (ActiveTextSourceNotSetException | ControllerNotSetException ignored) {
+    } catch (ActiveTextSourceNotSetException ignored) {
 
     }
   }

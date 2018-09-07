@@ -16,14 +16,14 @@ public class Chooser<K extends KnowtatorObject> extends JComboBox<K> implements 
 	private KnowtatorView view;
 
 	Chooser(KnowtatorView view) {
-		view.getProjectManager().addListener(this);
+		view.getController().addProjectListener(this);
 		this.view = view;
 	}
 
 	Chooser(KnowtatorView view, K[] initialData) {
 		super(initialData);
 		this.view = view;
-		view.getProjectManager().addListener(this);
+		view.getController().addProjectListener(this);
 	}
 
 
