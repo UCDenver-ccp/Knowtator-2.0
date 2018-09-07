@@ -1,12 +1,10 @@
 package edu.ucdenver.ccp.knowtator.io;
 
-import edu.ucdenver.ccp.knowtator.model.Savable;
-
 import java.io.File;
 import java.io.IOException;
 
-public interface BasicIOUtil {
-	void read(Savable savable, File file) throws IOException;
+public interface BasicIOUtil<I extends BasicIO> {
+	void read(I reader, File file) throws IOException;
 
-	void write(Savable savable, File file) throws IOException;
+	void write(I writer, File file) throws IOException;
 }

@@ -1,7 +1,6 @@
 package edu.ucdenver.ccp.knowtator.io.brat;
 
 import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
-import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceManager;
 import org.apache.commons.io.FilenameUtils;
@@ -18,7 +17,7 @@ import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class BratStandoffUtil implements BasicIOUtil {
+public class BratStandoffUtil implements BasicIOUtil<BratStandoffIO> {
   private static final Logger log = Logger.getLogger(BratStandoffUtil.class);
 
   private static Map<Character, List<String[]>> collectAnnotations(Stream<String> standoffStream) {
@@ -46,7 +45,7 @@ public class BratStandoffUtil implements BasicIOUtil {
   }
 
   @Override
-  public void read(Savable textSourceManager, File file) {
+  public void read(BratStandoffIO textSourceManager, File file) {
     try {
       if (textSourceManager instanceof TextSourceManager) {
         Stream<String> standoffStream = Files.lines(Paths.get(file.toURI()));
@@ -65,7 +64,7 @@ public class BratStandoffUtil implements BasicIOUtil {
   }
 
   @Override
-  public void write(Savable savable, File file) {
+  public void write(BratStandoffIO savable, File file) {
     Map<String, Map<String, String>> visualConfig = new HashMap<>();
 
     visualConfig.put(StandoffTags.visualLabels, new HashMap<>());

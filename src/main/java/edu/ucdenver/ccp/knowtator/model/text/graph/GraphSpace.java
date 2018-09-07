@@ -7,7 +7,9 @@ import com.mxgraph.model.mxICell;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
+import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.events.AnnotationChangeEvent;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
@@ -16,7 +18,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationSelectionListener;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.Savable;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.selection.RelationSelectionManager;
@@ -38,7 +40,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GraphSpace extends mxGraph
-    implements Savable, KnowtatorTextBoundObject, AnnotationSelectionListener {
+    implements Savable, KnowtatorTextBoundObject, AnnotationSelectionListener, KnowtatorXMLIO, BratStandoffIO {
   @SuppressWarnings("unused")
   private Logger log = Logger.getLogger(GraphSpace.class);
 
@@ -72,6 +74,21 @@ public class GraphSpace extends mxGraph
     if (controller.isProjectLoaded()) {
       textSource.save();
     }
+  }
+
+  @Override
+  public void load() {
+
+  }
+
+  @Override
+  public File getSaveLocation() {
+    return null;
+  }
+
+  @Override
+  public void setSaveLocation(File saveLocation) {
+
   }
 
   /*
@@ -320,9 +337,6 @@ public class GraphSpace extends mxGraph
     return source;
   }
 
-  @Override
-  public void readFromGeniaXML(Element parent, String content) {}
-
   /*
   WRITERS
    */
@@ -334,9 +348,6 @@ public class GraphSpace extends mxGraph
       Map<String, Map<String, String>> annotationsConfig,
       Map<String, Map<String, String>> visualConfig)
       throws IOException {}
-
-  @Override
-  public void writeToGeniaXML(Document dom, Element parent) {}
 
   @Override
   public void writeToKnowtatorXML(Document dom, Element textSourceElement) {

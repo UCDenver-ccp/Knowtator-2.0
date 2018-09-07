@@ -3,11 +3,13 @@ package edu.ucdenver.ccp.knowtator.model.text.graph;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.Savable;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.listeners.OWLSetupListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
-import edu.ucdenver.ccp.knowtator.model.*;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLObjectPropertyNotFoundException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
@@ -24,11 +26,11 @@ import org.w3c.dom.Element;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject, ProjectListener, OWLSetupListener, OWLOntologyChangeListener, OWLModelManagerListener {
+public class Triple extends mxCell implements Savable, KnowtatorXMLIO, KnowtatorTextBoundObject, ProjectListener, OWLSetupListener, OWLOntologyChangeListener, OWLModelManagerListener {
     private String quantifier;
     private String quantifierValue;
     private Profile annotator;
@@ -115,6 +117,21 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
         if (controller.isProjectLoaded()) {
             textSource.save();
         }
+    }
+
+    @Override
+    public void load() {
+
+    }
+
+    @Override
+    public File getSaveLocation() {
+        return null;
+    }
+
+    @Override
+    public void setSaveLocation(File saveLocation) {
+
     }
 
     /*
@@ -233,14 +250,7 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
         graphElem.appendChild(tripleElem);
     }
 
-    @SuppressWarnings("RedundantThrows")
-    @Override
-    public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
-    }
 
-    @Override
-    public void writeToGeniaXML(Document dom, Element parent) {
-    }
 
     /*
     READERS
@@ -254,14 +264,6 @@ public class Triple extends mxCell implements Savable, KnowtatorTextBoundObject,
     public void readFromOldKnowtatorXML(File file, Element parent) {
     }
 
-    @Override
-    public void readFromBratStandoff(
-            File file, Map<Character, List<String[]>> annotationMap, String content) {
-    }
-
-    @Override
-    public void readFromGeniaXML(Element parent, String content) {
-    }
 
 
 

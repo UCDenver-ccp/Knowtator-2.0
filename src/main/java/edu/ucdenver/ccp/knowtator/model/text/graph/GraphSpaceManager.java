@@ -1,12 +1,13 @@
 package edu.ucdenver.ccp.knowtator.model.text.graph;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
-import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class GraphSpaceManager implements Savable, KnowtatorManager {
+public class GraphSpaceManager extends KnowtatorManager implements KnowtatorXMLIO, BratStandoffIO {
   private GraphSpace activeGraphSpace;
   private KnowtatorController controller;
   private TextSource textSource;
@@ -112,15 +113,6 @@ public class GraphSpaceManager implements Savable, KnowtatorManager {
     graphSpaceCollection.forEach(graphSpace -> graphSpace.writeToKnowtatorXML(dom, parent));
   }
 
-  @Override
-  public void writeToBratStandoff(
-          Writer writer,
-          Map<String, Map<String, String>> annotationConfig,
-          Map<String, Map<String, String>> visualConfig) {}
-
-  @Override
-  public void writeToGeniaXML(Document dom, Element parent) {}
-
 
   /*
   READERS
@@ -143,14 +135,7 @@ public class GraphSpaceManager implements Savable, KnowtatorManager {
   @Override
   public void readFromOldKnowtatorXML(File file, Element parent) {}
 
-  @Override
-  public void readFromBratStandoff(
-      File file, Map<Character, List<String[]>> annotationMap, String content) {}
 
-  public void readFromBratStandoff() {}
-
-  @Override
-  public void readFromGeniaXML(Element parent, String content) {}
 
 
   String verifyID(String id, String idPrefix) {
@@ -179,12 +164,7 @@ public class GraphSpaceManager implements Savable, KnowtatorManager {
   }
 
   @Override
-  public File getSaveLocation(String extension) {
-    return null;
-  }
-
-  @Override
-  public void setSaveLocation(File newSaveLocation, String extension) {
+  public void makeDirectory() {
 
   }
 
@@ -193,5 +173,30 @@ public class GraphSpaceManager implements Savable, KnowtatorManager {
     if (controller.isProjectLoaded()) {
       textSource.save();
     }
+  }
+
+  @Override
+  public void load() {
+
+  }
+
+  @Override
+  public File getSaveLocation() {
+    return null;
+  }
+
+  @Override
+  public void setSaveLocation(File saveLocation) {
+
+  }
+
+  @Override
+  public void readFromBratStandoff(File file, Map<Character, List<String[]>> annotationMap, String content) {
+
+  }
+
+  @Override
+  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationConfig, Map<String, Map<String, String>> visualConfig) {
+
   }
 }

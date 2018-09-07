@@ -1,12 +1,11 @@
 package edu.ucdenver.ccp.knowtator.model.profile;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.*;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.listeners.ColorListener;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollection;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -15,13 +14,12 @@ import org.w3c.dom.Node;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class ProfileManager implements Savable, KnowtatorManager {
+public class ProfileManager extends KnowtatorManager implements KnowtatorXMLIO {
 
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(KnowtatorController.class);
@@ -82,24 +80,6 @@ public class ProfileManager implements Savable, KnowtatorManager {
     public void readFromOldKnowtatorXML(File file, Element parent) {
     }
 
-    @Override
-    public void readFromBratStandoff(
-            File file, Map<Character, List<String[]>> annotationMap, String content) {
-    }
-
-    @SuppressWarnings("RedundantThrows")
-    @Override
-    public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
-    }
-
-    @Override
-    public void readFromGeniaXML(Element parent, String content) {
-    }
-
-    @Override
-    public void writeToGeniaXML(Document dom, Element parent) {
-    }
-
     public Profile getDefaultProfile() {
         return profileCollection.getDefaultProfile();
     }
@@ -116,6 +96,7 @@ public class ProfileManager implements Savable, KnowtatorManager {
 
     void fireColorChanged() {
         colorListeners.forEach(ColorListener::colorChanged);
+        save();
     }
 
     @Override
@@ -125,19 +106,44 @@ public class ProfileManager implements Savable, KnowtatorManager {
     }
 
     @Override
-    public File getSaveLocation(String extension) {
+    public File getSaveLocation() {
         return profilesLocation;
     }
 
     @Override
-    public void setSaveLocation(File newSaveLocation, String extension) throws IOException {
-        this.profilesLocation = newSaveLocation;
+    public void setSaveLocation(File saveLocation) throws IOException {
+        this.profilesLocation = saveLocation;
         Files.createDirectories(profilesLocation.toPath());
     }
 
     @Override
-    public void save() {
-        controller.saveToFormat(KnowtatorXMLUtil.class, this, profilesLocation);
+    public void makeDirectory() throws IOException {
+        setSaveLocation(new File(controller.getSaveLocation(), "Profiles"));
+
     }
+
+    @Override
+    public void load() {
+        if (getSaveLocation() != null) {
+            try {
+                log.warn("Loading profiles");
+                KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();
+                Files.newDirectoryStream(Paths.get(profilesLocation.toURI()), path -> path.toString().endsWith(".xml"))
+                        .forEach(inputFile -> xmlUtil.read(this, inputFile.toFile()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void save() {
+        profileCollection
+                .getCollection()
+                .forEach(
+                        Profile::save);
+
+    }
+
 
 }

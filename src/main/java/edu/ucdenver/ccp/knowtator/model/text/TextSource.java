@@ -1,11 +1,13 @@
 package edu.ucdenver.ccp.knowtator.model.text;
 
+import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
-import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.Savable;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.AnnotationManager;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceManager;
 import org.apache.commons.io.FileUtils;
@@ -24,7 +26,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-public class TextSource implements Savable, KnowtatorObject {
+public class TextSource implements KnowtatorObject, BratStandoffIO, Savable, KnowtatorXMLIO {
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(TextSource.class);
 
@@ -101,11 +103,6 @@ public class TextSource implements Savable, KnowtatorObject {
         return textSource1.getId().toLowerCase().compareTo(textSource2.getId().toLowerCase());
     }
 
-
-    public File getSaveFile() {
-        return saveFile;
-    }
-
     public File getTextFile() {
         return textFile;
     }
@@ -170,10 +167,6 @@ public class TextSource implements Savable, KnowtatorObject {
         graphSpaceManager.writeToBratStandoff(writer, annotationsConfig, visualConfig);
     }
 
-    @Override
-    public void readFromGeniaXML(Element parent, String content) {
-    }
-
     public String getContent() {
         if (content == null) {
             while (true) {
@@ -195,10 +188,6 @@ public class TextSource implements Savable, KnowtatorObject {
         }
     }
 
-    @Override
-    public void writeToGeniaXML(Document dom, Element parent) {
-    }
-
     public GraphSpaceManager getGraphSpaceManager() {
         return graphSpaceManager;
     }
@@ -206,5 +195,20 @@ public class TextSource implements Savable, KnowtatorObject {
     @Override
     public void save() {
         controller.saveToFormat(KnowtatorXMLUtil.class, this, saveFile);
+    }
+
+    @Override
+    public void load() {
+
+    }
+
+    @Override
+    public File getSaveLocation() {
+        return new File(controller.getTextSourceManager().getAnnotationsLocation().getAbsolutePath(), saveFile.getName());
+    }
+
+    @Override
+    public void setSaveLocation(File saveLocation) {
+
     }
 }

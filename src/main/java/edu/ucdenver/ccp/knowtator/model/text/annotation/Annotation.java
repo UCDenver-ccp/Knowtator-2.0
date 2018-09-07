@@ -1,14 +1,15 @@
 package edu.ucdenver.ccp.knowtator.model.text.annotation;
 
+import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
-import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -21,7 +22,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
-public class Annotation implements Savable, KnowtatorTextBoundObject {
+public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, BratStandoffIO {
 
   private final Date date;
 
@@ -238,15 +239,6 @@ public class Annotation implements Savable, KnowtatorTextBoundObject {
     textSourceElement.appendChild(annotationElem);
   }
 
-  @Override
-  public void writeToGeniaXML(Document dom, Element parent) {}
-
-  @Override
-  public void save() {
-
-  }
-
-
   /*
   READERS
    */
@@ -307,9 +299,6 @@ public class Annotation implements Savable, KnowtatorTextBoundObject {
       }
     }
   }
-
-  @Override
-  public void readFromGeniaXML(Element parent, String content) {}
 
   /*
   TRANSLATORS

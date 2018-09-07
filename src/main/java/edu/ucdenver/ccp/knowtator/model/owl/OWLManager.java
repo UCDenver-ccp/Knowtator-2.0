@@ -2,10 +2,10 @@ package edu.ucdenver.ccp.knowtator.model.owl;
 
 import com.google.common.base.Optional;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.listeners.DebugListener;
 import edu.ucdenver.ccp.knowtator.listeners.OWLSetupListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.graph.ActiveGraphSpaceNotSetException;
 import org.apache.log4j.LogManager;
@@ -16,21 +16,18 @@ import org.protege.editor.owl.model.selection.OWLSelectionModelListener;
 import org.protege.editor.owl.ui.renderer.OWLRendererPreferences;
 import org.protege.editor.owl.ui.search.SearchDialogPanel;
 import org.semanticweb.owlapi.model.*;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class OWLManager implements Serializable, DebugListener, OWLSelectionModelListener, ProjectListener, KnowtatorManager {
+public class OWLManager extends KnowtatorManager implements Serializable, DebugListener, OWLSelectionModelListener, ProjectListener{
   @SuppressWarnings("unused")
   private static final Logger log = LogManager.getLogger(OWLManager.class);
 
@@ -239,50 +236,31 @@ public class OWLManager implements Serializable, DebugListener, OWLSelectionMode
   }
 
   @Override
-  public File getSaveLocation(String extension) {
+  public File getSaveLocation() {
     return ontologiesLocation;
   }
 
   @Override
-  public void setSaveLocation(File newSaveLocation, String extension) throws IOException {
+  public void setSaveLocation(File newSaveLocation) throws IOException {
     this.ontologiesLocation = newSaveLocation;
     Files.createDirectories(ontologiesLocation.toPath());
   }
 
-
   @Override
-  public void writeToKnowtatorXML(Document dom, Element parent) {
-
+  public void makeDirectory() throws IOException {
+    setSaveLocation(new File(controller.getSaveLocation(), "Ontologies"));
   }
 
   @Override
-  public void readFromKnowtatorXML(File file, Element parent) {
-
-  }
-
-  @Override
-  public void readFromOldKnowtatorXML(File file, Element parent) {
-
-  }
-
-  @Override
-  public void readFromBratStandoff(File file, Map<Character, List<String[]>> annotationMap, String content) {
-
-  }
-
-  @Override
-  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationConfig, Map<String, Map<String, String>> visualConfig) {
-
-  }
-
-  @Override
-  public void readFromGeniaXML(Element parent, String content) {
-
-  }
-
-  @Override
-  public void writeToGeniaXML(Document dom, Element parent) {
-
+  public void load() {
+    if (getSaveLocation() != null) {
+      log.warn("Loading ontologies");
+      try {
+        read(getSaveLocation());
+      } catch (IOException | OWLWorkSpaceNotSetException e) {
+        log.warn("Could not load ontologies");
+      }
+    }
   }
 
   @Override

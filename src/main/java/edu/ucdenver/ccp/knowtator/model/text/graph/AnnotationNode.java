@@ -3,25 +3,20 @@ package edu.ucdenver.ccp.knowtator.model.text.graph;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
-import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.List;
-import java.util.Map;
 
-public class AnnotationNode extends mxCell implements Savable, KnowtatorTextBoundObject {
+public class AnnotationNode extends mxCell implements KnowtatorTextBoundObject, KnowtatorXMLIO {
 
 	private Annotation annotation;
-	private final KnowtatorController controller;
 	private TextSource textSource;
 
 	AnnotationNode(KnowtatorController controller, String id, Annotation annotation, TextSource textSource, double x, double y) {
@@ -29,7 +24,6 @@ public class AnnotationNode extends mxCell implements Savable, KnowtatorTextBoun
 				annotation.getSpannedText(),
 				new mxGeometry(x, y, 150, 150),
 				"fontSize=16;fontColor=black;strokeColor=black");
-		this.controller = controller;
 		this.textSource = textSource;
 		this.annotation = annotation;
 
@@ -53,23 +47,6 @@ public class AnnotationNode extends mxCell implements Savable, KnowtatorTextBoun
 		parent.appendChild(vertexElem);
 	}
 
-	@SuppressWarnings("RedundantThrows")
-	@Override
-	public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
-	}
-
-	@Override
-	public void writeToGeniaXML(Document dom, Element parent) {
-	}
-
-	@Override
-	public void save() {
-		if (controller.isProjectLoaded()) {
-			textSource.save();
-		}
-
-	}
-
 	/*
 	READERS
 	 */
@@ -80,15 +57,6 @@ public class AnnotationNode extends mxCell implements Savable, KnowtatorTextBoun
 
 	@Override
 	public void readFromOldKnowtatorXML(File file, Element parent) {
-	}
-
-	@Override
-	public void readFromBratStandoff(
-			File file, Map<Character, List<String[]>> annotationMap, String content) {
-	}
-
-	@Override
-	public void readFromGeniaXML(Element parent, String content) {
 	}
 
 	/*

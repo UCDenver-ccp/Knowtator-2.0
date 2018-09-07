@@ -75,7 +75,12 @@ public class IOTests {
     String projectFileName = projectFileNames[projectID];
     File projectFile = getProjectFile(projectFileName);
 
-    controller.loadProject(projectFile);
+    try {
+      controller.setSaveLocation(projectFile);
+      controller.loadProject();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     TextSource textSource =
         controller
@@ -182,9 +187,14 @@ public class IOTests {
     String articleFileName = articleFileNames[articleID];
     File articleFile = getArticleFile(projectFileName, articleFileName);
 
-    controller.loadProject(projectFile);
+    try {
+      controller.setSaveLocation(projectFile);
+      controller.loadProject();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
-    controller.addDocument(articleFile);
+    controller.getTextSourceManager().addDocument(articleFile);
 
     TextSource textSource =
         controller
@@ -229,7 +239,13 @@ public class IOTests {
     String projectFileName = projectFileNames[projectID];
     File projectFile = getProjectFile(projectFileName);
 
-    controller.loadProject(projectFile);
+    try {
+      controller.setSaveLocation(projectFile);
+      controller.loadProject();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
     TextSource textSource =
         controller
             .getTextSourceManager()
@@ -267,7 +283,12 @@ public class IOTests {
     String projectFileName = projectFileNames[projectID];
     File projectFile = getProjectFile(projectFileName);
 
-    controller.loadProject(projectFile);
+    try {
+      controller.setSaveLocation(projectFile);
+      controller.loadProject();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     TextSource textSource =
         controller
@@ -340,7 +361,12 @@ public class IOTests {
       e.printStackTrace();
     }
     File projectFile = new File(projectDirectory, resourceProjectFile.getName());
-    controller.loadProject(projectFile);
+    try {
+      controller.setSaveLocation(projectFile);
+      controller.loadProject();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     controller.saveProject();
     successfulLoad();
 
@@ -387,7 +413,12 @@ public class IOTests {
     String projectFileName = projectFileNames[projectID];
     File projectFile = getProjectFile(projectFileName);
 
-    controller.loadProject(projectFile);
+    try {
+      controller.setSaveLocation(projectFile);
+      controller.loadProject();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     TextSource textSource =
         controller

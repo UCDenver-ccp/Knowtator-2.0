@@ -1,20 +1,20 @@
 package edu.ucdenver.ccp.knowtator.model.text.annotation;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.events.AnnotationChangeEvent;
+import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.listeners.AnnotationSelectionListener;
 import edu.ucdenver.ccp.knowtator.listeners.OWLSetupListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.AnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLClassNotFoundException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.graph.ActiveGraphSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
@@ -38,7 +38,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupListener, OWLOntologyChangeListener, ProjectListener {
+public class AnnotationManager extends KnowtatorManager implements OWLSetupListener, OWLOntologyChangeListener, ProjectListener, KnowtatorXMLIO, BratStandoffIO {
 
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(AnnotationManager.class);
@@ -71,6 +71,21 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
         if (controller.isProjectLoaded()) {
             textSource.save();
         }
+    }
+
+    @Override
+    public void load() {
+
+    }
+
+    @Override
+    public File getSaveLocation() {
+        return null;
+    }
+
+    @Override
+    public void setSaveLocation(File saveLocation) {
+
     }
 
     /*
@@ -418,10 +433,6 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
     }*/
     }
 
-    @Override
-    public void writeToGeniaXML(Document dom, Element parent) {
-    }
-
     /*
     READERS
      */
@@ -613,10 +624,6 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
 
 
     @Override
-    public void readFromGeniaXML(Element parent, String content) {
-    }
-
-    @Override
     public void dispose() {
         annotationCollection.forEach(Annotation::dispose);
         annotationCollection.getCollection().clear();
@@ -628,12 +635,7 @@ public class AnnotationManager implements KnowtatorManager, Savable, OWLSetupLis
     }
 
     @Override
-    public File getSaveLocation(String extension) {
-        return null;
-    }
-
-    @Override
-    public void setSaveLocation(File newSaveLocation, String extension) {
+    public void makeDirectory() {
 
     }
 

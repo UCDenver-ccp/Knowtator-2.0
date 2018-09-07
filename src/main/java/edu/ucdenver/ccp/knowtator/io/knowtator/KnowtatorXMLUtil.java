@@ -1,9 +1,6 @@
 package edu.ucdenver.ccp.knowtator.io.knowtator;
 
 import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
-import edu.ucdenver.ccp.knowtator.model.profile.ProfileManager;
-import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.text.TextSourceManager;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -13,25 +10,21 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUtil {
+public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUtil<KnowtatorXMLIO> {
   private static final Logger log = Logger.getLogger(KnowtatorXMLUtil.class);
 
   @Override
-  public void read(Savable savable, File file) throws IOException {
-    if (file.isDirectory()) {
-      Files.newDirectoryStream(Paths.get(file.toURI()), path -> path.toString().endsWith(".xml"))
-          .forEach(inputFile -> readFromInputFile(savable, inputFile.toFile()));
-    } else {
-      readFromInputFile(savable, file);
-    }
-  }
-
-  private void readFromInputFile(Savable savable, File file) {
+  public void read(KnowtatorXMLIO reader, File file) {
     try {
       log.warn("Reading from " + file);
 
@@ -49,16 +42,16 @@ public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUt
         doc.getDocumentElement().normalize();
 
         List<Node> knowtatorNodes =
-            asList(doc.getElementsByTagName(KnowtatorXMLTags.KNOWTATOR_PROJECT));
+                asList(doc.getElementsByTagName(KnowtatorXMLTags.KNOWTATOR_PROJECT));
         if (knowtatorNodes.size() > 0) {
           Element knowtatorElement = (Element) knowtatorNodes.get(0);
-          savable.readFromKnowtatorXML(file, knowtatorElement);
+          reader.readFromKnowtatorXML(file, knowtatorElement);
         }
 
         List<Node> annotationNodes =
-            asList(doc.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATIONS));
+                asList(doc.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATIONS));
         if (annotationNodes.size() > 0) {
-          savable.readFromOldKnowtatorXML(file, doc.getDocumentElement());
+          reader.readFromOldKnowtatorXML(file, doc.getDocumentElement());
         }
       } catch (IllegalArgumentException | IOException | SAXException e) {
         e.printStackTrace();
@@ -69,36 +62,11 @@ public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUt
   }
 
   @Override
-  public void write(Savable savable, File file) {
-    if (savable instanceof TextSourceManager) {
-      ((TextSourceManager) savable)
-          .getTextSourceCollection()
-          .getCollection()
-          .forEach(
-              textSource -> {
-                File outputFile =
-                    new File(file.getAbsolutePath(), textSource.getSaveFile().getName());
-                writeToOutputFile(textSource, outputFile);
-              });
-    } else if (savable instanceof ProfileManager) {
-      ((ProfileManager) savable)
-          .getProfileCollection()
-          .getCollection()
-          .forEach(
-              profile -> {
-                File outputFile = new File(file.getAbsolutePath(), profile.getId() + ".xml");
-                writeToOutputFile(profile, outputFile);
-              });
-    } else {
-      writeToOutputFile(savable, file);
-    }
-  }
-
-  private void writeToOutputFile(Savable savable, File outputFile) {
+  public void write(KnowtatorXMLIO writer, File file) {
     Document dom;
 
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-    log.warn("Writing to " + outputFile.getAbsolutePath());
+    log.warn("Writing to " + file.getAbsolutePath());
     try {
 
       DocumentBuilder db = dbf.newDocumentBuilder();
@@ -108,14 +76,38 @@ public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUt
 
         Element root = dom.createElement(KnowtatorXMLTags.KNOWTATOR_PROJECT);
         dom.appendChild(root);
-        savable.writeToKnowtatorXML(dom, root);
+        writer.writeToKnowtatorXML(dom, root);
 
-        finishWritingXML(dom, outputFile);
+        finishWritingXML(dom, file);
       } catch (NullPointerException npe) {
-        finishWritingXML(dom, outputFile);
+        finishWritingXML(dom, file);
       }
     } catch (ParserConfigurationException e1) {
       e1.printStackTrace();
     }
   }
+
+  private static void finishWritingXML(Document dom, File file) {
+    try {
+      TransformerFactory transformerFactory = TransformerFactory.newInstance();
+      transformerFactory.setAttribute("indent-number", 2);
+      Transformer tr = transformerFactory.newTransformer();
+      tr.setOutputProperty(OutputKeys.INDENT, "yes");
+      tr.setOutputProperty(OutputKeys.METHOD, "xml");
+      tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+      tr.setOutputProperty("{http://knowtator.apache.org/xslt}indent-amount", "4");
+
+      // send DOM to test_project
+      PrintWriter pw = new PrintWriter(file);
+      pw.close();
+      OutputStream os = new FileOutputStream(file, false);
+      tr.transform(new DOMSource(dom), new StreamResult(new OutputStreamWriter(os, StandardCharsets.UTF_8)));
+      os.close();
+
+    } catch (TransformerException | IOException te) {
+      System.out.println(te.getMessage());
+    }
+  }
+
+
 }

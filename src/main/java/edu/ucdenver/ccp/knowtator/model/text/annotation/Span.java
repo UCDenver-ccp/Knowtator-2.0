@@ -1,22 +1,23 @@
 package edu.ucdenver.ccp.knowtator.model.text.annotation;
 
+import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
-import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
-public class Span implements Savable, KnowtatorTextBoundObject, Comparable<Span> {
+public class Span implements KnowtatorTextBoundObject, Comparable<Span>, KnowtatorXMLIO, BratStandoffIO {
   @SuppressWarnings("unused")
   private static Logger log = Logger.getLogger(KnowtatorController.class);
 
@@ -248,12 +249,6 @@ public class Span implements Savable, KnowtatorTextBoundObject, Comparable<Span>
   @Override
   public void readFromOldKnowtatorXML(File file, Element parent) {}
 
-  @Override
-  public void readFromBratStandoff(
-      File file, Map<Character, List<String[]>> annotationMap, String content) {}
-
-  @Override
-  public void readFromGeniaXML(Element parent, String content) {}
 
   /*
   WRITERS
@@ -270,6 +265,11 @@ public class Span implements Savable, KnowtatorTextBoundObject, Comparable<Span>
   }
 
   @Override
+  public void readFromBratStandoff(File file, Map<Character, List<String[]>> annotationMap, String content) {
+
+  }
+
+  @Override
   public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
     String[] spanLines = getSpannedText().split("\n");
     int spanStart = getStart();
@@ -280,14 +280,6 @@ public class Span implements Savable, KnowtatorTextBoundObject, Comparable<Span>
       }
       spanStart += spanLines[j].length() + 1;
     }
-
-  }
-
-  @Override
-  public void writeToGeniaXML(Document dom, Element parent) {}
-
-  @Override
-  public void save() {
 
   }
 

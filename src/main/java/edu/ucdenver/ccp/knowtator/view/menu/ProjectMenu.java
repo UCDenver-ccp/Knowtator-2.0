@@ -68,7 +68,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
                 e -> {
                     try {
                         JFileChooser fileChooser =
-                                new JFileChooser(view.getController().getSaveLocation(null));
+                                new JFileChooser(view.getController().getSaveLocation());
                         fileChooser.setFileFilter(new FileNameExtensionFilter("PNG", "png"));
                         fileChooser.setSelectedFile(
                                 new File(
@@ -163,18 +163,16 @@ public class ProjectMenu extends JMenu implements ProjectListener {
     }
 
     private void loadProject(File file) {
-        //    if (view.getController().isProjectLoaded()
-        //        && JOptionPane.showConfirmDialog(
-        //                view,
-        //                "Save changes to Knowtator project?",
-        //                "Save Project",
-        //                JOptionPane.YES_NO_OPTION)
-        //            == JOptionPane.YES_OPTION) {
-        //      view.getController().saveProject();
-        //    }
         view.reset();
-        view.getController().loadProject(file);
+        try {
+            view.getController().setSaveLocation(file.getParentFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        view.getController().loadProject();
+
         view.getPrefs().put("Last Project", file.getAbsolutePath());
+
         try {
             view.getPrefs().flush();
         } catch (BackingStoreException e) {
@@ -210,7 +208,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
                     fileChooser.setCurrentDirectory(view.getController().getTextSourceManager().getArticlesLocation());
 
                     if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-                        view.getController().addDocument(fileChooser.getSelectedFile());
+                        view.getController().getTextSourceManager().addDocument(fileChooser.getSelectedFile());
                     }
                 });
         return menuItem;
@@ -329,7 +327,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
         runIAA.addActionListener(
                 e -> {
                     JFileChooser fileChooser = new JFileChooser();
-                    fileChooser.setCurrentDirectory(view.getController().getSaveLocation(null));
+                    fileChooser.setCurrentDirectory(view.getController().getSaveLocation());
                     fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                     //
                     // disable the "All files" option.

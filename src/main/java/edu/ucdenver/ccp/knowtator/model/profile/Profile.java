@@ -1,11 +1,12 @@
 package edu.ucdenver.ccp.knowtator.model.profile;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.Savable;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
-import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
@@ -19,12 +20,9 @@ import org.w3c.dom.Node;
 
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.*;
-import java.util.List;
+import java.util.HashMap;
 
-public class Profile implements Savable, KnowtatorObject {
+public class Profile implements KnowtatorObject, Savable, KnowtatorXMLIO {
   @SuppressWarnings("unused")
   private static Logger log = LogManager.getLogger(Profile.class);
 
@@ -36,13 +34,6 @@ public class Profile implements Savable, KnowtatorObject {
     colors = new HashMap<>();
     this.controller = controller;
     controller.verifyId(id, this, false);
-  }
-
-  @Override
-  public void save() {
-    if (controller.isProjectLoaded()) {
-      controller.getProfileManager().save();
-    }
   }
 
   /*
@@ -127,7 +118,7 @@ public class Profile implements Savable, KnowtatorObject {
   public void addColor(Object key, Color c) {
     colors.put(key, c);
     controller.getProfileManager().fireColorChanged();
-    save();
+
   }
 
 
@@ -145,6 +136,7 @@ public class Profile implements Savable, KnowtatorObject {
   /*
   WRITERS
    */
+
 
   @Override
   public void writeToKnowtatorXML(Document dom, Element root) {
@@ -175,12 +167,6 @@ public class Profile implements Savable, KnowtatorObject {
     root.appendChild(profileElem);
   }
 
-  @SuppressWarnings("RedundantThrows")
-  @Override
-  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {}
-
-  @Override
-  public void writeToGeniaXML(Document dom, Element parent) {}
 
   /*
   READERS
@@ -201,10 +187,24 @@ public class Profile implements Savable, KnowtatorObject {
   @Override
   public void readFromOldKnowtatorXML(File file, Element parent) {}
 
-  @Override
-  public void readFromBratStandoff(
-      File file, Map<Character, List<String[]>> annotationMap, String content) {}
 
   @Override
-  public void readFromGeniaXML(Element parent, String content) {}
+  public void save() {
+    controller.saveToFormat(KnowtatorXMLUtil.class, this, getSaveLocation());
+  }
+
+  @Override
+  public void load() {
+
+  }
+
+  @Override
+  public File getSaveLocation() {
+    return new File(controller.getProfileManager().getSaveLocation().getAbsolutePath(), id + ".xml");
+  }
+
+  @Override
+  public void setSaveLocation(File saveLocation) {
+
+  }
 }

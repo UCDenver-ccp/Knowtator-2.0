@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 
 @SuppressWarnings("unused")
 public class AnnotationManagerTest {
@@ -52,7 +53,12 @@ public class AnnotationManagerTest {
         File project = getProjectFile(projectFileName);
         String articleName = articleFileNames[articleID];
 
-        controller.loadProject(project);
+        try {
+            controller.setSaveLocation(project);
+            controller.loadProject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //noinspection ConstantConditions
         textSource = controller.getTextSourceManager().getTextSourceCollection().getCollection().stream().filter(textSource1 -> textSource1.getId().equals(articleName)).findAny().get();

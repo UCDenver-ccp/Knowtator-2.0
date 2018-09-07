@@ -1,27 +1,28 @@
 package edu.ucdenver.ccp.knowtator.model.text;
 
+import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.io.knowtator.OldKnowtatorXMLAttributes;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorManager;
-import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
+import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-public class TextSourceManager implements Savable, KnowtatorManager {
+public class TextSourceManager extends KnowtatorManager implements BratStandoffIO, KnowtatorXMLIO {
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(TextSourceManager.class);
 
@@ -35,7 +36,7 @@ public class TextSourceManager implements Savable, KnowtatorManager {
         textSourceCollection = new TextSourceCollection(controller);
     }
 
-    public TextSource addTextSource(File file, String id, String textFileName) {
+    private TextSource addTextSource(File file, String id, String textFileName) {
         if (textFileName == null || textFileName.equals("")) {
             textFileName = id;
         }
@@ -89,22 +90,62 @@ public class TextSourceManager implements Savable, KnowtatorManager {
         newTextSource.readFromBratStandoff(null, annotationMap, null);
     }
 
-    @SuppressWarnings("RedundantThrows")
     @Override
-    public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
+    public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) {
+    }
+
+
+    @Override
+    public void makeDirectory() throws IOException {
+        articlesLocation = new File(controller.getSaveLocation(), "Articles");
+        Files.createDirectories(articlesLocation.toPath());
+
+        setSaveLocation(new File(controller.getSaveLocation(), "Annotations"));
+    }
+
+    public void addDocument(File file) {
+        if (!file.getParentFile().equals(getArticlesLocation())) {
+            try {
+                FileUtils.copyFile(file, new File(getAnnotationsLocation(), file.getName()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        addTextSource(null, file.getName(), file.getName());
     }
 
     @Override
-    public void readFromGeniaXML(Element parent, String content) {
-    }
+    public void load() {
+        try {
+            log.warn("Loading annotations");
+            KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();
+            Files.newDirectoryStream(Paths.get(annotationsLocation.toURI()), path -> path.toString().endsWith(".xml"))
+                    .forEach(inputFile -> xmlUtil.read(this, inputFile.toFile()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-    @Override
-    public void writeToGeniaXML(Document dom, Element parent) {
+        if (getTextSourceCollection().getCollection().isEmpty()) {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(getArticlesLocation());
+
+            JOptionPane.showMessageDialog(null, "Please select a document to annotate");
+            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                addDocument(fileChooser.getSelectedFile());
+            }
+        }
     }
 
     @Override
     public void save() {
-        controller.saveToFormat(KnowtatorXMLUtil.class, this, annotationsLocation);
+        try {
+            controller.getOWLManager().setRenderRDFSLabel();
+        } catch (OWLWorkSpaceNotSetException ignored) {
+        }
+        textSourceCollection
+                .getCollection()
+                .forEach(
+                        TextSource::save);
     }
 
     @Override
@@ -123,26 +164,14 @@ public class TextSourceManager implements Savable, KnowtatorManager {
 
     //TODO: Check where articles location would be appropriate and find out how to handle that
     @Override
-    public void setSaveLocation(File newSaveLocation, String extension) throws IOException {
-        switch (extension) {
-            case ".xml":
-                this.annotationsLocation = newSaveLocation;
-                Files.createDirectories(newSaveLocation.toPath());
-                break;
-            case ".txt":
-                this.articlesLocation = newSaveLocation;
-                Files.createDirectories(newSaveLocation.toPath());
-                break;
-        }
+    public void setSaveLocation(File newSaveLocation) throws IOException {
+        this.annotationsLocation = newSaveLocation;
+        Files.createDirectories(newSaveLocation.toPath());
     }
 
     @Override
-    public File getSaveLocation(String extension) {
-        switch (extension) {
-            case ".txt":
-                return articlesLocation;
-            default:
-                return annotationsLocation;
-        }
+    public File getSaveLocation() {
+        return annotationsLocation;
+
     }
 }

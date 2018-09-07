@@ -1,7 +1,6 @@
 package edu.ucdenver.ccp.knowtator;
 
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
-import edu.ucdenver.ccp.knowtator.io.genia.GeniaXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.text.Fragment;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
@@ -171,7 +170,12 @@ public class KnowtatorStandalone extends JFrame {
                     new File(knowtatorOutputDirName));
 
         } else {
-            projectManager.loadProject(new File(projectFileName));
+            try {
+                projectManager.setSaveLocation(new File(projectFileName));
+                projectManager.loadProject();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -192,16 +196,16 @@ public class KnowtatorStandalone extends JFrame {
             controller.saveProject();
         }
 
-        if (geniaOutputDirName != null) {
-            ((ProjectManager) controller).saveToFormat(GeniaXMLUtil.class, controller.getTextSourceManager(), new File(geniaOutputDirName));
-        }
+//        if (geniaOutputDirName != null) {
+//            controller.saveToFormat(GeniaXMLUtil.class, controller.getTextSourceManager(), new File(geniaOutputDirName));
+//        }
 
 //        if (uimaOutputDirName != null) {
 //            projectManager.saveToFormat(UIMAXMIUtil.class, new File(uimaOutputDirName));
 //        }
 
         if (bratOutputDirName != null) {
-            ((ProjectManager) controller).saveToFormat(BratStandoffUtil.class, controller.getTextSourceManager(), new File(bratOutputDirName));
+            controller.saveToFormat(BratStandoffUtil.class, controller.getTextSourceManager(), new File(bratOutputDirName));
         }
     }
 

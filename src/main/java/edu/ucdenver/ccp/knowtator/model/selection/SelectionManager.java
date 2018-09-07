@@ -1,25 +1,21 @@
 package edu.ucdenver.ccp.knowtator.model.selection;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.listeners.OWLClassSelectionListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import java.io.File;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class SelectionManager implements CaretListener, ProjectListener, KnowtatorManager {
+public class SelectionManager extends KnowtatorManager implements CaretListener, ProjectListener {
 
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(SelectionManager.class);
@@ -37,9 +33,9 @@ public class SelectionManager implements CaretListener, ProjectListener, Knowtat
 
     private boolean filterByOWLClass;
 
-    public SelectionManager(KnowtatorController knowtatorController) {
-        controller = knowtatorController;
-        controller.addProjectListener(this);
+    public SelectionManager(KnowtatorController controller) {
+        this.controller = controller;
+        this.controller.addProjectListener(this);
         filterByProfile = false;
         filterByOWLClass = false;
         owlEntityListeners = new ArrayList<>();
@@ -143,12 +139,17 @@ public class SelectionManager implements CaretListener, ProjectListener, Knowtat
     }
 
     @Override
-    public File getSaveLocation(String extension) {
+    public void makeDirectory() {
+
+    }
+
+    @Override
+    public File getSaveLocation() {
         return null;
     }
 
     @Override
-    public void setSaveLocation(File newSaveLocation, String extension) {
+    public void setSaveLocation(File saveLocation) {
 
     }
 
@@ -166,43 +167,14 @@ public class SelectionManager implements CaretListener, ProjectListener, Knowtat
         return filterByOWLClass;
     }
 
-    @Override
-    public void writeToKnowtatorXML(Document dom, Element parent) {
-
-    }
-
-    @Override
-    public void readFromKnowtatorXML(File file, Element parent) {
-
-    }
-
-    @Override
-    public void readFromOldKnowtatorXML(File file, Element parent) {
-
-    }
-
-    @Override
-    public void readFromBratStandoff(File file, Map<Character, List<String[]>> annotationMap, String content) {
-
-    }
-
-    @Override
-    public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationConfig, Map<String, Map<String, String>> visualConfig) {
-
-    }
-
-    @Override
-    public void readFromGeniaXML(Element parent, String content) {
-
-    }
-
-    @Override
-    public void writeToGeniaXML(Document dom, Element parent) {
-
-    }
 
     @Override
     public void save() {
+
+    }
+
+    @Override
+    public void load() {
 
     }
 }
