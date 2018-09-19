@@ -15,40 +15,55 @@ Plugin for Protege
 - [Known bugs](#known-bugs)
 
 ## Installation Windows
-
-1. Install [Desktop Protege 5.X.X][protege link]
-2. Copy Knowtator-2.X.X.jar to Protege-5.X.X/plugins/
-3. Restart Protege
+1. Download the [Knowtator][knowtator link] jar file
+2. Install [Desktop Protege 5.X.X][protege link]
+3. Copy Knowtator-2.X.X.jar to Protege-5.X.X/plugins/
+4. Restart Protege
 
 ## Installation Mac
-1. Install [Desktop Protege 5.X.X][protege link]
-2. In Finder, right click the Protege 5 app icon
-3. Click "Show Package Contents"
-4. Go to Contents -> Java -> Plugins
-5. You should see the other plugins included in Protege 5 in that folder. If so, copy the Knowtator-2.X.X.jar into it.
-6. Restart Protege
+1. Download [Knowtator][knowtator link] jar file
+2. Install [Desktop Protege 5.X.X][protege link]
+3. In Finder, right click the Protege 5 app icon
+4. Click "Show Package Contents"
+5. Go to Contents -> Java -> Plugins
+6. You should see the other plugins included in Protege 5 in that folder. If so, copy the Knowtator-2.X.X.jar into it. (Important: Be sure that you are copying the jar file itself and not a link to the jar file)
+7. Restart Protege
 
 (See [this comment thread][mac osx plugin intallation comment thread] for more help) 
 
 ## Installation from source
-1. Download source files
-2. `cd` into project directory
-3. `mvn clean install`
+1. Install Maven
+2. Install [Desktop Protege 5.X.X][protege link]
+3. Set PROTEGE_HOME environment variable to location of Protege installation
+4. Download source files
+```console
+~$ git clone https://github.com/UCDenver-ccp/Knowtator-2.0.git
+```
+5. Change to project directory
+```console
+~$ cd Knowtator-2.0
+```
+6. Install
+```console
+~$ mvn clean install
+```
+7. Restart Protege
 
 ## Setup
-1. Launch Protege.exe
-2. Add a Knowtator view (Window -> Miscellaneous views -> Knowtator). Click somewhere in Protege to add it in.
-3. Make a new project. Enter a name for the project. Select parent directory. Knowtator will make
+1. Launch Protege
+2. Click the "Entities" tab
+3. Add a Knowtator view (Window -> Miscellaneous views -> Knowtator). Position your cursor in the Protege window so that the blue outline fills the right side of the window. Click to place the view.
+4. Make a new project (Knowtator Project -> New Project. Note: The Knowtator menu is inside the Knowtator view). Enter a name for the project. Select parent directory. Knowtator will make
 a directory tree that looks like this:
 Project
 -Articles
 -Ontologies
 -project.xml
-4. Add a profile (Profile -> New Profile)
-5. Load a document (Project -> Add Document)
-5. To save (Project -> Save Project)
-6. To open a pre-existing project (Project -> Open Project)
-7. To load annotations from the old Knowtator (Project -> Open Project) 
+5. Add a profile (Profile -> New Profile)
+6. Load a document (Project -> Add Document)
+7. To save (Project -> Save Project)
+8. To open a pre-existing project (Project -> Open Project)
+9. To load annotations from the old Knowtator (Project -> Open Project) 
 
 ![After installation][installation image]
 Add as a View to a Protege tab by going to Window -> Views -> Miscellaneous Views -> Knowtator
@@ -80,6 +95,7 @@ Selecting a span will show its meta-data in the right-hand side of the view.
 
 All icons used are from https://icons8.com/
 
+[knowtator link]:https://github.com/UCDenver-ccp/Knowtator-2.0/releases/latest
 [protege link]:http://protege.stanford.edu/products.php#desktop-protege
 [installation image]:installation_image.PNG
 [ontology example]:http://purl.obolibrary.org/obo/go/go-basic.obo
