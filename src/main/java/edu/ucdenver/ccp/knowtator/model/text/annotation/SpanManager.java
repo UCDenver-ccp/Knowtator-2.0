@@ -17,8 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class SpanManager extends SelectionModel<Span> implements KnowtatorManager, BratStandoffIO, KnowtatorXMLIO {
-    private SpanCollection spanCollection;
+public class SpanManager extends SpanCollection implements KnowtatorManager, BratStandoffIO, KnowtatorXMLIO {
     private KnowtatorController controller;
     private final TextSource textSource;
     private final Annotation annotation;

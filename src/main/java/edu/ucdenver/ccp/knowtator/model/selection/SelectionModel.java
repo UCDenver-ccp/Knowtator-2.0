@@ -1,16 +1,21 @@
 package edu.ucdenver.ccp.knowtator.model.selection;
 
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
+import edu.ucdenver.ccp.knowtator.model.collection.CollectionListener;
+import edu.ucdenver.ccp.knowtator.model.collection.CyclableCollection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
-public abstract class SelectionModel<K extends KnowtatorObject> {
+public abstract class SelectionModel<K extends KnowtatorObject, L extends CollectionListener<K>> extends CyclableCollection<K, L> {
 
     private K selection;
     private List<SelectionListener<K>> selectionListeners;
 
-    protected SelectionModel() {
+    protected SelectionModel(KnowtatorController controller, TreeSet<K> collection) {
+        super(controller, collection);
         selection = null;
         selectionListeners = new ArrayList<>();
     }

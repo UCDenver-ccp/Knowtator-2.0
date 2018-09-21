@@ -20,12 +20,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileManager extends SelectionModel<Profile> implements KnowtatorXMLIO, SavableKnowtatorManager {
+public class ProfileManager extends ProfileCollection implements KnowtatorXMLIO, SavableKnowtatorManager {
 
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(KnowtatorController.class);
 
-    private ProfileCollection profileCollection;
     private KnowtatorController controller;
     private List<ColorListener> colorListeners;
     private File profilesLocation;

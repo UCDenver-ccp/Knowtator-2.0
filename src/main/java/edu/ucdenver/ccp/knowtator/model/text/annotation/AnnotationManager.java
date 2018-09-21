@@ -36,7 +36,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class AnnotationManager extends SelectionModel<Annotation> implements OWLSetupListener, OWLOntologyChangeListener, ProjectListener, KnowtatorXMLIO, BratStandoffIO, KnowtatorManager {
+public class AnnotationManager extends AnnotationCollection implements OWLSetupListener, OWLOntologyChangeListener, ProjectListener, KnowtatorXMLIO, BratStandoffIO, KnowtatorManager {
 
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(AnnotationManager.class);
@@ -45,8 +45,6 @@ public class AnnotationManager extends SelectionModel<Annotation> implements OWL
 
     private SpanCollection allSpanCollection;
     private TextSource textSource;
-    private AnnotationCollection annotationCollection;
-
 
     public AnnotationManager(KnowtatorController controller, TextSource textSource) {
         this.controller = controller;

@@ -9,7 +9,6 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
-import edu.ucdenver.ccp.knowtator.model.selection.SelectionModel;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
 import org.w3c.dom.Document;
@@ -22,10 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class GraphSpaceManager extends SelectionModel<GraphSpace> implements KnowtatorXMLIO, BratStandoffIO, KnowtatorManager {
+public class GraphSpaceManager extends GraphSpaceCollection implements KnowtatorXMLIO, BratStandoffIO, KnowtatorManager {
   private KnowtatorController controller;
   private TextSource textSource;
-  private GraphSpaceCollection graphSpaceCollection;
 
   public GraphSpaceManager(KnowtatorController controller, TextSource textSource) {
 

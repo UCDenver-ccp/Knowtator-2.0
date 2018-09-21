@@ -8,7 +8,6 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
-import edu.ucdenver.ccp.knowtator.model.selection.SelectionModel;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -24,19 +23,18 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-public class TextSourceManager extends SelectionModel<TextSource> implements ProjectListener, BratStandoffIO, KnowtatorXMLIO, SavableKnowtatorManager {
+public class TextSourceManager extends TextSourceCollection implements ProjectListener, BratStandoffIO, KnowtatorXMLIO, SavableKnowtatorManager {
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(TextSourceManager.class);
 
-    private TextSourceCollection textSourceCollection;
     private KnowtatorController controller;
     private File articlesLocation;
     private File annotationsLocation;
 
 
     public TextSourceManager(KnowtatorController controller) {
+        super(controller);
         this.controller = controller;
-        textSourceCollection = new TextSourceCollection(controller);
         controller.addProjectListener(this);
 
     }
@@ -45,10 +43,10 @@ public class TextSourceManager extends SelectionModel<TextSource> implements Pro
         if (textFileName == null || textFileName.equals("")) {
             textFileName = id;
         }
-        TextSource newTextSource = textSourceCollection.get(textFileName);
+        TextSource newTextSource = get(textFileName);
         if (newTextSource == null) {
             newTextSource = new TextSource(controller, file, textFileName);
-            textSourceCollection.add(newTextSource);
+            add(newTextSource);
         }
 
         setSelection(newTextSource);
@@ -56,22 +54,17 @@ public class TextSourceManager extends SelectionModel<TextSource> implements Pro
     }
 
     public void getNextTextSource() {
-        setSelection(textSourceCollection.getNext(getSelection()));
-
+        setSelection(getNext(getSelection()));
     }
 
     public void getPreviousTextSource() {
-        setSelection(textSourceCollection.getPrevious(getSelection()));
+        setSelection(getPrevious(getSelection()));
     }
 
-    public TextSourceCollection getTextSourceCollection() {
-        return textSourceCollection;
-    }
 
     @Override
     public void writeToKnowtatorXML(Document dom, Element parent) {
-        textSourceCollection
-                .getCollection()
+        getCollection()
                 .forEach(textSource -> textSource.writeToKnowtatorXML(dom, parent));
     }
 
@@ -139,7 +132,7 @@ public class TextSourceManager extends SelectionModel<TextSource> implements Pro
             e.printStackTrace();
         }
 
-        if (textSourceCollection.getCollection().isEmpty()) {
+        if (getCollection().isEmpty()) {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(getArticlesLocation());
 
@@ -156,16 +149,15 @@ public class TextSourceManager extends SelectionModel<TextSource> implements Pro
             controller.getOWLManager().setRenderRDFSLabel();
         } catch (OWLWorkSpaceNotSetException ignored) {
         }
-        textSourceCollection
-                .getCollection()
+        getCollection()
                 .forEach(
                         TextSource::save);
     }
 
     @Override
     public void dispose() {
-        textSourceCollection.forEach(TextSource::dispose);
-        textSourceCollection.getCollection().clear();
+        forEach(TextSource::dispose);
+        getCollection().clear();
     }
 
     public File getAnnotationsLocation() {
@@ -196,6 +188,6 @@ public class TextSourceManager extends SelectionModel<TextSource> implements Pro
 
     @Override
     public void projectLoaded() {
-        setSelection(textSourceCollection.getCollection().first());
+        setSelection(getCollection().first());
     }
 }

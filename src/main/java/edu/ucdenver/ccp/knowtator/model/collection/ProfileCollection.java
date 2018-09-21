@@ -2,10 +2,11 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import edu.ucdenver.ccp.knowtator.model.selection.SelectionModel;
 
 import java.util.TreeSet;
 
-public class ProfileCollection extends CyclableCollection<Profile, ProfileCollectionListener> {
+public class ProfileCollection extends SelectionModel<Profile, ProfileCollectionListener> {
 
   private Profile defaultProfile;
 

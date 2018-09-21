@@ -8,7 +8,7 @@ import java.util.TreeSet;
 public class CyclableCollection<K extends KnowtatorObject, L extends CollectionListener<K>>
     extends ListenableCollection<K, TreeSet<K>, L> {
 
-  CyclableCollection(KnowtatorController controller, TreeSet<K> collection) {
+  public CyclableCollection(KnowtatorController controller, TreeSet<K> collection) {
     super(controller, collection);
   }
 
