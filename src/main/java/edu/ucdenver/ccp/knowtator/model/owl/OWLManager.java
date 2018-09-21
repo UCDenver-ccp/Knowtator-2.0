@@ -2,12 +2,10 @@ package edu.ucdenver.ccp.knowtator.model.owl;
 
 import com.google.common.base.Optional;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.SavableKnowtatorManager;
 import edu.ucdenver.ccp.knowtator.listeners.DebugListener;
 import edu.ucdenver.ccp.knowtator.listeners.OWLSetupListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
-import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
-import edu.ucdenver.ccp.knowtator.model.text.graph.ActiveGraphSpaceNotSetException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.protege.editor.core.ui.util.AugmentedJTextField;
@@ -27,7 +25,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class OWLManager extends KnowtatorManager implements Serializable, DebugListener, OWLSelectionModelListener, ProjectListener{
+public class OWLManager implements Serializable, DebugListener, OWLSelectionModelListener, ProjectListener, SavableKnowtatorManager {
   @SuppressWarnings("unused")
   private static final Logger log = LogManager.getLogger(OWLManager.class);
 
@@ -186,11 +184,9 @@ public class OWLManager extends KnowtatorManager implements Serializable, DebugL
 
     iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#HasCountryOfOrigin");
     OWLObjectProperty objectProperty = factory.getOWLObjectProperty(iri);
-    try {
-      controller.getSelectionManager().getActiveTextSource().getGraphSpaceManager().getActiveGraphSpace().getRelationSelectionManager().setSelectedOWLObjectProperty(objectProperty);
-    } catch (ActiveTextSourceNotSetException | ActiveGraphSpaceNotSetException ignored) {
-
-    }
+    controller.getTextSourceManager().getSelection()
+            .getGraphSpaceManager().getSelection()
+            .getRelationSelectionManager().setSelectedOWLObjectProperty(objectProperty);
   }
 
   @Override
@@ -202,11 +198,9 @@ public class OWLManager extends KnowtatorManager implements Serializable, DebugL
       e.printStackTrace();
     }
     if (ent instanceof OWLObjectProperty) {
-      try {
-        controller.getSelectionManager().getActiveTextSource().getGraphSpaceManager().getActiveGraphSpace().getRelationSelectionManager().setSelectedOWLObjectProperty((OWLObjectProperty) ent);
-      } catch (ActiveTextSourceNotSetException | ActiveGraphSpaceNotSetException ignored) {
-
-      }
+      controller.getTextSourceManager().getSelection()
+              .getGraphSpaceManager().getSelection()
+              .getRelationSelectionManager().setSelectedOWLObjectProperty((OWLObjectProperty) ent);
     } else if (ent instanceof OWLClass) {
       controller.getSelectionManager().setSelectedOWLEntity(ent);
     }
@@ -230,8 +224,8 @@ public class OWLManager extends KnowtatorManager implements Serializable, DebugL
     owlSetupListeners.clear();
     try {
       getWorkSpace().getOWLSelectionModel().removeListener(this);
-    } catch (OWLWorkSpaceNotSetException e) {
-      e.printStackTrace();
+    } catch (OWLWorkSpaceNotSetException ignored) {
+
     }
   }
 

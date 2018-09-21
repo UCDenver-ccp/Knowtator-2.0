@@ -1,12 +1,10 @@
 package edu.ucdenver.ccp.knowtator.model.text.annotation;
 
-import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
+import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
-import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
@@ -31,7 +29,7 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
 
   private OWLClass owlClass;
   private String annotation_type;
-  private SpanCollection spanCollection;
+
   private Set<Annotation> overlappingAnnotations;
   private String id;
   private TextSource textSource;
@@ -40,16 +38,17 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
   private String owlClassID;
   private String owlClassLabel;
   private KnowtatorController controller;
+  private SpanManager spanManager;
 
-  public Annotation(
-      KnowtatorController controller,
-      String annotationID,
-      OWLClass owlClass,
-      String owlClassID,
-      String owlClassLabel,
-      Profile annotator,
-      String annotation_type,
-      TextSource textSource) {
+  Annotation(
+          KnowtatorController controller,
+          String annotationID,
+          OWLClass owlClass,
+          String owlClassID,
+          String owlClassLabel,
+          Profile annotator,
+          String annotation_type,
+          TextSource textSource) {
     this.textSource = textSource;
     this.annotator = annotator;
     this.controller = controller;
@@ -59,10 +58,9 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
     this.owlClassLabel = owlClassLabel;
     this.annotation_type = annotation_type;
 
+    spanManager = new SpanManager(controller, textSource, this);
     controller.verifyId(annotationID, this, false);
 
-
-    spanCollection = new SpanCollection(controller);
     overlappingAnnotations = new HashSet<>();
   }
 
@@ -79,12 +77,15 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
     return owlClassID;
   }
 
-  public String getOwlClassLabel() { return owlClassLabel;}
+  public String getOwlClassLabel() {
+    return owlClassLabel;
+  }
 
   public Profile getAnnotator() {
     return annotator;
   }
 
+  @SuppressWarnings("unused")
   public Date getDate() {
     return date;
   }
@@ -98,17 +99,17 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
     return owlClass;
   }
 
-  public SpanCollection getSpanCollection() {
-    return spanCollection;
+  public SpanManager getSpanManager() {
+    return spanManager;
   }
 
   /**
    * @return the size of the Span associated with the annotation. If the annotation has more than
-   *     one Span, then the sum of the size of the spanCollection is returned.
+   * one Span, then the sum of the size of the spanCollection is returned.
    */
   public int getSize() {
     int size = 0;
-    for (Span span : this.spanCollection) {
+    for (Span span : spanManager.getSpans()) {
       size += span.getSize();
     }
     return size;
@@ -116,7 +117,7 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
 
   public String getSpannedText() {
     StringBuilder sb = new StringBuilder();
-    spanCollection
+    spanManager.getSpans()
             .forEach(
                     span -> {
                       sb.append(String.format("%s", span.getSpannedText()));
@@ -170,7 +171,7 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
    */
 
   @Override
-  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
+  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
     String renderedOwlClassID;
     try {
       renderedOwlClassID = controller
@@ -181,7 +182,7 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
 
     }
     renderedOwlClassID = renderedOwlClassID.replace(":", "_").replace(" ", "_");
-    annotationsConfig.get(StandoffTags.annotationsEntities).put(renderedOwlClassID, "");
+    annotationConfig.get(StandoffTags.annotationsEntities).put(renderedOwlClassID, "");
 
     writer.append(String.format("%s\t%s ", getBratID(), renderedOwlClassID));
 
@@ -193,24 +194,7 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
     }
 
 
-    Iterator<Span> spanIterator = spanCollection.iterator();
-    StringBuilder spannedText = new StringBuilder();
-    for (int i = 0; i < spanCollection.size(); i++) {
-      Span span = spanIterator.next();
-      span.writeToBratStandoff(writer, annotationsConfig, visualConfig);
-      String[] spanLines = span.getSpannedText().split("\n");
-      for (int j = 0; j < spanLines.length; j++) {
-        spannedText.append(spanLines[j]);
-        if (j != spanLines.length -1) {
-          spannedText.append(" ");
-        }
-      }
-      if (i != spanCollection.size() - 1) {
-        writer.append(";");
-        spannedText.append(" ");
-      }
-    }
-    writer.append(String.format("\t%s\n", spannedText.toString()));
+    spanManager.writeToBratStandoff(writer, annotationConfig, visualConfig);
   }
 
   @Override
@@ -234,7 +218,7 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
 
     annotationElem.appendChild(classElement);
 
-    spanCollection.forEach(span -> span.writeToKnowtatorXML(dom, annotationElem));
+    spanManager.writeToKnowtatorXML(dom, annotationElem);
 
     textSourceElement.appendChild(annotationElem);
   }
@@ -256,8 +240,7 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
         spanEnd = Integer.parseInt(spanElement.getAttribute(KnowtatorXMLAttributes.SPAN_END));
         spanId = spanElement.getAttribute(KnowtatorXMLAttributes.ID);
 
-        Span newSpan = new Span(spanId, spanStart, spanEnd, textSource, controller);
-        addSpan(newSpan);
+        spanManager.addSpan(spanId, spanStart, spanEnd);
       }
     }
   }
@@ -273,7 +256,7 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
         int spanEnd =
                 Integer.parseInt(spanElement.getAttribute(OldKnowtatorXMLAttributes.SPAN_END));
 
-        addSpan(new Span(null, spanStart, spanEnd, textSource, controller));
+        spanManager.addSpan(null, spanStart, spanEnd);
       }
     }
 
@@ -291,8 +274,7 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
     for (int i = 2; i < triple.length; i++) {
       int end = Integer.parseInt(triple[i].split(StandoffTags.spanDelimiter)[0]);
 
-      Span newSpan = new Span(null, start, end, textSource, controller);
-      addSpan(newSpan);
+      spanManager.addSpan(null, start, end);
 
       if (i != triple.length - 1) {
         start = Integer.parseInt(triple[i].split(StandoffTags.spanDelimiter)[1]);
@@ -315,7 +297,7 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
 
     sb.append("<li>class = ").append(getOwlClass()).append("</li>");
     sb.append("<li>spanCollection = ");
-    for (Span span : spanCollection) sb.append(span.toString()).append(" ");
+    for (Span span : spanManager.getSpans()) sb.append(span.toString()).append(" ");
     sb.append("</li>");
 
     sb.append("</ul>");
@@ -325,17 +307,14 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
   @Override
   public String toString() {
     return String.format(
-        "Annotation: %s owl class: %s annotation_type: %s", id, getOwlClass(), annotation_type);
+            "Annotation: %s owl class: %s annotation_type: %s", id, getOwlClass(), annotation_type);
   }
 
 
   /*
   ADDERS
    */
-  void addSpan(Span newSpan) {
-    spanCollection.add(newSpan);
-    newSpan.setAnnotation(this);
-  }
+
 
   void addOverlappingAnnotation(Annotation annotation) {
     overlappingAnnotations.add(annotation);
@@ -344,22 +323,19 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
   /*
   REMOVERS
    */
-  void removeSpan(Span span) {
-    spanCollection.remove(span);
-  }
+
 
 
   public static int compare(Annotation annotation1, Annotation annotation2) {
-    Iterator<Span> spanIterator1 = annotation1.getSpanCollection().iterator();
-    Iterator<Span> spanIterator2 = annotation2.getSpanCollection().iterator();
+    Iterator<Span> spanIterator1 = annotation1.getSpanManager().getSpans().iterator();
+    Iterator<Span> spanIterator2 = annotation2.getSpanManager().getSpans().iterator();
     int result = 0;
-    while(result == 0 && spanIterator1.hasNext() && spanIterator2.hasNext()) {
+    while (result == 0 && spanIterator1.hasNext() && spanIterator2.hasNext()) {
       Span span1 = spanIterator1.next();
       Span span2 = spanIterator2.next();
       if (span2 == null) {
         result = 1;
-      }
-      else if (span1 == null) {
+      } else if (span1 == null) {
         result = -1;
       } else {
         result = span1.getStart().compareTo(span2.getStart());
@@ -375,7 +351,7 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
   }
 
   public boolean contains(Integer loc) {
-    for (Span span : spanCollection) {
+    for (Span span : spanManager.getSpans()) {
       if (span.contains(loc)) {
         return true;
       }
@@ -385,8 +361,6 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
 
   @Override
   public void dispose() {
-    spanCollection.forEach(Span::dispose);
-    spanCollection.getCollection().clear();
-
+    spanManager.dispose();
   }
 }

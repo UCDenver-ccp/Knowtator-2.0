@@ -9,6 +9,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
+import edu.ucdenver.ccp.knowtator.model.selection.SelectionModel;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
 import org.w3c.dom.Document;
@@ -21,8 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class GraphSpaceManager extends KnowtatorManager implements KnowtatorXMLIO, BratStandoffIO {
-  private GraphSpace activeGraphSpace;
+public class GraphSpaceManager extends SelectionModel<GraphSpace> implements KnowtatorXMLIO, BratStandoffIO, KnowtatorManager {
   private KnowtatorController controller;
   private TextSource textSource;
   private GraphSpaceCollection graphSpaceCollection;
@@ -38,20 +38,12 @@ public class GraphSpaceManager extends KnowtatorManager implements KnowtatorXMLI
   GETTERS
    */
 
-  public GraphSpace getActiveGraphSpace() throws ActiveGraphSpaceNotSetException {
-    if (activeGraphSpace == null) {
-      throw new ActiveGraphSpaceNotSetException();
-    }
-    return activeGraphSpace;
-  }
-
   public void getNextGraphSpace() {
-    setSelectedGraphSpace(graphSpaceCollection.getNext(activeGraphSpace));
+    setSelection(graphSpaceCollection.getNext(getSelection()));
   }
 
   public void getPreviousGraphSpace() {
-
-    setSelectedGraphSpace(graphSpaceCollection.getPrevious(activeGraphSpace));
+    setSelection(graphSpaceCollection.getPrevious(getSelection()));
   }
 
   public GraphSpaceCollection getGraphSpaceCollection() {
@@ -62,13 +54,7 @@ public class GraphSpaceManager extends KnowtatorManager implements KnowtatorXMLI
   SETTERS
    */
 
-  public void setSelectedGraphSpace(GraphSpace newGraphSpace) {
 
-    if (this.activeGraphSpace != newGraphSpace) {
-      this.activeGraphSpace = newGraphSpace;
-      controller.refreshView();
-    }
-  }
 
   /*
   ADDERS
@@ -81,9 +67,9 @@ public class GraphSpaceManager extends KnowtatorManager implements KnowtatorXMLI
 
   public void addGraphSpace(GraphSpace newGraphSpace) {
     graphSpaceCollection.add(newGraphSpace);
-    setSelectedGraphSpace(newGraphSpace);
+    setSelection(newGraphSpace);
 
-    save();
+    textSource.save();
   }
 
   /*
@@ -101,9 +87,9 @@ public class GraphSpaceManager extends KnowtatorManager implements KnowtatorXMLI
 
   public void removeGraphSpace(GraphSpace graphSpace) {
     graphSpaceCollection.remove(graphSpace);
-    save();
+    setSelection(null);
+    textSource.save();
   }
-
 
   /*
   WRITERS
@@ -165,28 +151,6 @@ public class GraphSpaceManager extends KnowtatorManager implements KnowtatorXMLI
 
   @Override
   public void makeDirectory() {
-
-  }
-
-  @Override
-  public void save() {
-    if (controller.isProjectLoaded()) {
-      textSource.save();
-    }
-  }
-
-  @Override
-  public void load() {
-
-  }
-
-  @Override
-  public File getSaveLocation() {
-    return null;
-  }
-
-  @Override
-  public void setSaveLocation(File saveLocation) {
 
   }
 

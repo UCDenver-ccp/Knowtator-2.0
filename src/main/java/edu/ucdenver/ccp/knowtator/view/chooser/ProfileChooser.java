@@ -30,6 +30,7 @@ public class ProfileChooser extends Chooser<Profile>
     @Override
     public void viewChanged() {
         setModel(new DefaultComboBoxModel<>(collection.getCollection().toArray(new Profile[0])));
-        setSelectedItem(getView().getController().getSelectionManager().getActiveProfile());
+        setSelectedItem(getView().getController()
+                .getProfileManager().getSelection());
     }
 }

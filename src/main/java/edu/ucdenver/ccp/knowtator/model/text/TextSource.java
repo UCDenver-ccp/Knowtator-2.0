@@ -211,4 +211,6 @@ public class TextSource implements KnowtatorObject, BratStandoffIO, Savable, Kno
     public void setSaveLocation(File saveLocation) {
 
     }
+
+
 }

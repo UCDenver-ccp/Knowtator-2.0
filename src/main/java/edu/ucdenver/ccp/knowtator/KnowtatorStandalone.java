@@ -101,7 +101,7 @@ public class KnowtatorStandalone extends JFrame {
             TextSource textSource2 = textSourceIterator2.next();
 
             for (Annotation fragmentAnnotation : textSource2.getAnnotationManager().getAnnotations()) {
-                Span fragmentSpan = fragmentAnnotation.getSpanCollection().iterator().next();
+                Span fragmentSpan = fragmentAnnotation.getSpanManager().getSpans().iterator().next();
 
                 Fragment fragment =
                         new Fragment(textSource2, fragmentAnnotation.getId(), fragmentAnnotation.getOwlClassID());
@@ -184,7 +184,7 @@ public class KnowtatorStandalone extends JFrame {
 
         String projectFileName = cmd.getOptionValue("project");
 
-        String geniaOutputDirName = cmd.getOptionValue("genia");
+//        String geniaOutputDirName = cmd.getOptionValue("genia");
 //        String uimaOutputDirName = cmd.getOptionValue("uima");
         String bratOutputDirName = cmd.getOptionValue("brat");
         String knowtatorOutputDirName = cmd.getOptionValue("knowtator");

@@ -3,7 +3,6 @@ package edu.ucdenver.ccp.knowtator.view.chooser;
 import edu.ucdenver.ccp.knowtator.listeners.ViewListener;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
@@ -27,13 +26,10 @@ public class TextSourceChooser extends Chooser<TextSource> implements TextSource
     @Override
     public void viewChanged() {
         setModel(new DefaultComboBoxModel<>(collection.getCollection().toArray(new TextSource[0])));
-        try {
-            TextSource textSource = getView().getController().getSelectionManager().getActiveTextSource();
+        TextSource textSource = getView().getController()
+                .getTextSourceManager().getSelection();
 
-            setSelectedItem(textSource);
-        } catch (ActiveTextSourceNotSetException ignored) {
-
-        }
+        setSelectedItem(textSource);
     }
 
     @Override

@@ -7,20 +7,19 @@ import com.mxgraph.model.mxICell;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
-import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
-import edu.ucdenver.ccp.knowtator.events.AnnotationChangeEvent;
+import edu.ucdenver.ccp.knowtator.Savable;
+import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.listeners.AnnotationSelectionListener;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
-import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.Savable;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import edu.ucdenver.ccp.knowtator.model.selection.AnnotationSelectionListener;
 import edu.ucdenver.ccp.knowtator.model.selection.RelationSelectionManager;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
@@ -57,7 +56,7 @@ public class GraphSpace extends mxGraph
     this.relationSelectionManager = new RelationSelectionManager(controller, this);
 
     controller.verifyId(id, this, false);
-    textSource.getAnnotationManager().addAnnotationListener(this);
+    textSource.getAnnotationManager().addSelectionListener(this);
 
     setCellsResizable(false);
     setEdgeLabelsMovable(false);
@@ -71,9 +70,7 @@ public class GraphSpace extends mxGraph
 
   @Override
   public void save() {
-    if (controller.isProjectLoaded()) {
-      textSource.save();
-    }
+    textSource.save();
   }
 
   @Override
@@ -374,32 +371,30 @@ public class GraphSpace extends mxGraph
   UPDATE
    */
   public void reDrawGraph() {
-    if (controller.isProjectLoaded()) {
-      getModel().beginUpdate();
-      try {
-        Arrays.stream(getChildVertices(getDefaultParent()))
-            .forEach(
-                vertex -> {
-                  if (vertex instanceof AnnotationNode) {
-                    setVertexStyle((AnnotationNode) vertex);
-                  }
-                  updateCellSize(vertex);
+    getModel().beginUpdate();
+    try {
+      Arrays.stream(getChildVertices(getDefaultParent()))
+          .forEach(
+              vertex -> {
+                if (vertex instanceof AnnotationNode) {
+                  setVertexStyle((AnnotationNode) vertex);
+                }
+                updateCellSize(vertex);
 
-                  getView().validateCell(vertex);
-                });
-        Arrays.stream(getChildEdges(getDefaultParent()))
-            .forEach(
-                edge -> {
-                  updateCellSize(edge);
-                  //                if (edge instanceof Triple) {
-                  //                    ((Triple) edge).setValue(((Triple) edge).getValue());
-                  //                }
-                  getView().validateCell(edge);
-                });
-      } finally {
-        getModel().endUpdate();
-        refresh();
-      }
+                getView().validateCell(vertex);
+              });
+      Arrays.stream(getChildEdges(getDefaultParent()))
+          .forEach(
+              edge -> {
+                updateCellSize(edge);
+                //                if (edge instanceof Triple) {
+                //                    ((Triple) edge).setValue(((Triple) edge).getValue());
+                //                }
+                getView().validateCell(edge);
+              });
+    } finally {
+      getModel().endUpdate();
+      refresh();
     }
   }
 
@@ -436,7 +431,7 @@ public class GraphSpace extends mxGraph
                         (AnnotationNode) source,
                         (AnnotationNode) target,
                         null,
-                        controller.getSelectionManager().getActiveProfile(),
+                        controller.getProfileManager().getSelection(),
                         property,
                         propertyID,
                         quantifier,
@@ -548,8 +543,7 @@ public class GraphSpace extends mxGraph
     String color =
             Integer.toHexString(
                     controller
-                            .getSelectionManager()
-                            .getActiveProfile()
+                            .getProfileManager().getSelection()
                             .getColor(vertex.getAnnotation())
                             .getRGB())
                     .substring(2);
@@ -569,12 +563,13 @@ public class GraphSpace extends mxGraph
   }
 
   @Override
-  public void selectedAnnotationChanged(AnnotationChangeEvent e) {
-    if (e.getNew() != null) {
-      setSelectionCells(getVerticesForAnnotation(e.getNew()));
-    } else {
+  public void selected(Annotation previousSelection, Annotation currentSelection) {
+    setSelectionCells(getVerticesForAnnotation(textSource.getAnnotationManager().getSelection()));
+  }
+
+  @Override
+  public void noSelection(Annotation previousSelection) {
       setSelectionCell(null);
-    }
   }
 
   @Override

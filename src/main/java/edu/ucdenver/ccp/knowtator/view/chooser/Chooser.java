@@ -38,6 +38,16 @@ public class Chooser<K extends KnowtatorObject> extends JComboBox<K> implements 
 	}
 
 	@Override
+	public void emptied(K object) {
+		setEnabled(false);
+	}
+
+	@Override
+	public void firstAdded(K object) {
+		setEnabled(true);
+	}
+
+	@Override
 	public void projectClosed() {
 		removeAllItems();
 	}

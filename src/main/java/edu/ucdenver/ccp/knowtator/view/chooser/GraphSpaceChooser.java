@@ -1,8 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
 import edu.ucdenver.ccp.knowtator.listeners.ViewListener;
-import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
-import edu.ucdenver.ccp.knowtator.model.text.graph.ActiveGraphSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
@@ -19,16 +17,15 @@ public class GraphSpaceChooser extends Chooser<GraphSpace>
 
 	@Override
 	public void viewChanged() {
-      try {
         setModel(
                 new DefaultComboBoxModel<>(
-                        getView().getController().getSelectionManager().getActiveTextSource()
+                        getView().getController()
+                                .getTextSourceManager().getSelection()
                                 .getGraphSpaceManager().getGraphSpaceCollection()
                                 .getCollection()
                                 .toArray(new GraphSpace[0])));
-        setSelectedItem(getView().getController().getSelectionManager().getActiveTextSource().getGraphSpaceManager().getActiveGraphSpace());
-      } catch (ActiveTextSourceNotSetException | ActiveGraphSpaceNotSetException ignored) {
-
-      }
+        setSelectedItem(getView().getController()
+                .getTextSourceManager().getSelection()
+                .getGraphSpaceManager().getSelection());
     }
 }

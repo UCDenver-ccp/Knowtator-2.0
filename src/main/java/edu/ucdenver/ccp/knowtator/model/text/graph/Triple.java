@@ -114,9 +114,7 @@ public class Triple extends mxCell implements Savable, KnowtatorXMLIO, Knowtator
 
     @Override
     public void save() {
-        if (controller.isProjectLoaded()) {
-            textSource.save();
-        }
+        textSource.save();
     }
 
     @Override

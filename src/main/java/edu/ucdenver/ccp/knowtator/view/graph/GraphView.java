@@ -10,14 +10,11 @@ import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.listeners.ViewListener;
-import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
-import edu.ucdenver.ccp.knowtator.model.text.graph.ActiveGraphSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
-import edu.ucdenver.ccp.knowtator.view.menu.GraphMenu;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -73,43 +70,27 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
     }
 
     private void quantifierButtonAction(String quantifier) {
-        try {
+        view.getController()
+                .getTextSourceManager().getSelection()
+                .getGraphSpaceManager().getSelection()
+                .getRelationSelectionManager()
+                .setSelectedPropertyQuantifer(quantifier);
+
+        if (quantifier.equals("some") || quantifier.equals("only")) {
             view.getController()
-                    .getSelectionManager()
-                    .getActiveTextSource()
-                    .getGraphSpaceManager()
-                    .getActiveGraphSpace()
+                    .getTextSourceManager().getSelection()
+                    .getGraphSpaceManager().getSelection()
                     .getRelationSelectionManager()
-                    .setSelectedPropertyQuantifer(quantifier);
-
-            if (quantifier.equals("some") || quantifier.equals("only")) {
-                view.getController()
-                        .getSelectionManager()
-                        .getActiveTextSource()
-                        .getGraphSpaceManager()
-                        .getActiveGraphSpace()
-                        .getRelationSelectionManager()
-                        .setSelectedRelationQuantifierValue("");
-            }
-        } catch (ActiveTextSourceNotSetException
-                | ActiveGraphSpaceNotSetException ignored) {
-
+                    .setSelectedRelationQuantifierValue("");
         }
     }
 
     private void quantifierTextFieldAction(String quantifierValue) {
-        try {
-            view.getController()
-                    .getSelectionManager()
-                    .getActiveTextSource()
-                    .getGraphSpaceManager()
-                    .getActiveGraphSpace()
-                    .getRelationSelectionManager()
-                    .setSelectedRelationQuantifierValue(quantifierValue);
-        } catch (ActiveTextSourceNotSetException
-                | ActiveGraphSpaceNotSetException ignored) {
-
-        }
+        view.getController()
+                .getTextSourceManager().getSelection()
+                .getGraphSpaceManager().getSelection()
+                .getRelationSelectionManager()
+                .setSelectedRelationQuantifierValue(quantifierValue);
     }
 
     private void makeButtons() {
@@ -122,95 +103,55 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
         makeQuantifierTextField(maxValueTextField, maxRadioButton);
         makeQuantifierTextField(exactlyValueTextField, exactlyRadioButton);
         negateCheckBox.addActionListener(
-                e -> {
-                    try {
-                        view.getController()
-                                .getSelectionManager()
-                                .getActiveTextSource()
-                                .getGraphSpaceManager()
-                                .getActiveGraphSpace()
-                                .getRelationSelectionManager()
-                                .setNegatation(negateCheckBox.isSelected());
-                    } catch (ActiveTextSourceNotSetException
-                            | ActiveGraphSpaceNotSetException ignored) {
-
-                    }
-                });
+                e -> view.getController()
+                        .getTextSourceManager().getSelection()
+                        .getGraphSpaceManager().getSelection()
+                        .getRelationSelectionManager()
+                        .setNegatation(negateCheckBox.isSelected()));
 
         graphSpaceChooser.addActionListener(
                 e -> {
                     JComboBox comboBox = (JComboBox) e.getSource();
-                    try {
-                        if (comboBox.getSelectedItem() != null
-                                && comboBox.getSelectedItem()
-                                != view.getController()
-                                .getSelectionManager()
-                                .getActiveTextSource()
-                                .getGraphSpaceManager()
-                                .getActiveGraphSpace()) {
-                            view.getController()
-                                    .getSelectionManager()
-                                    .getActiveTextSource()
-                                    .getGraphSpaceManager()
-                                    .setSelectedGraphSpace((GraphSpace) comboBox.getSelectedItem());
-                        }
-                    } catch (ActiveTextSourceNotSetException
-                            | ActiveGraphSpaceNotSetException ignored) {
-
+                    if (comboBox.getSelectedItem() != null
+                            && comboBox.getSelectedItem()
+                            != view.getController()
+                            .getTextSourceManager().getSelection()
+                            .getGraphSpaceManager().getSelection()) {
+                        view.getController()
+                                .getTextSourceManager().getSelection()
+                                .getGraphSpaceManager().setSelection((GraphSpace) comboBox.getSelectedItem());
                     }
+
                 });
 
         zoomOutButton.addActionListener(e -> graphComponent.zoomOut());
         zoomInButton.addActionListener(e -> graphComponent.zoomIn());
         previousGraphSpaceButton.addActionListener(
-                e -> {
-                    try {
-                        view.getController()
-                                .getSelectionManager()
-                                .getActiveTextSource()
-                                .getGraphSpaceManager()
-                                .getPreviousGraphSpace();
-                    } catch (ActiveTextSourceNotSetException ignored) {
-
-                    }
-                });
+                e -> view.getController()
+                        .getTextSourceManager().getSelection()
+                        .getGraphSpaceManager()
+                        .getPreviousGraphSpace());
         nextGraphSpaceButton.addActionListener(
-                e -> {
-                    try {
-                        view.getController()
-                                .getSelectionManager()
-                                .getActiveTextSource()
-                                .getGraphSpaceManager()
-                                .getNextGraphSpace();
-                    } catch (ActiveTextSourceNotSetException ignored) {
-
-                    }
-                });
+                e -> view.getController()
+                        .getTextSourceManager().getSelection()
+                        .getGraphSpaceManager()
+                        .getNextGraphSpace());
         removeCellButton.addActionListener(e -> removeSelectedCell());
         addAnnotationNodeButton.addActionListener(
                 e -> {
-                    try {
-                        Annotation annotation =
-                                view.getController()
-                                        .getSelectionManager()
-                                        .getActiveTextSource()
-                                        .getAnnotationManager()
-                                        .getSelectedAnnotation();
+                    Annotation annotation =
+                            view.getController()
+                                    .getTextSourceManager().getSelection()
+                                    .getAnnotationManager().getSelection();
 
-                        AnnotationNode vertex =
-                                view.getController()
-                                        .getSelectionManager()
-                                        .getActiveTextSource()
-                                        .getGraphSpaceManager()
-                                        .getActiveGraphSpace()
-                                        .makeOrGetAnnotationNode(annotation, null);
+                    AnnotationNode vertex =
+                            view.getController()
+                                    .getTextSourceManager().getSelection()
+                                    .getGraphSpaceManager().getSelection()
+                                    .makeOrGetAnnotationNode(annotation, null);
 
 
-                        goToVertex(vertex);
-                    } catch (ActiveTextSourceNotSetException
-                            | ActiveGraphSpaceNotSetException ignored) {
-
-                    }
+                    goToVertex(vertex);
                 });
         applyLayoutButton.addActionListener(e -> applyLayout());
     }
@@ -241,15 +182,9 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
     @SuppressWarnings("unused")
     public void goToAnnotationVertex(GraphSpace graphSpace, Annotation annotation) {
         if (annotation != null && graphSpace != null) {
-            try {
-                view.getController()
-                        .getSelectionManager()
-                        .getActiveTextSource()
-                        .getGraphSpaceManager()
-                        .setSelectedGraphSpace(graphSpace);
-            } catch (ActiveTextSourceNotSetException ignored) {
-
-            }
+            view.getController()
+                    .getTextSourceManager().getSelection()
+                    .getGraphSpaceManager().setSelection(graphSpace);
             List<Object> vertices = graphSpace.getVerticesForAnnotation(annotation);
             if (vertices.size() > 0) {
                 graphSpace.setSelectionCells(vertices);
@@ -279,53 +214,40 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 
     private void applyLayout() {
         GraphSpace graph;
+        graph =
+                view.getController()
+                        .getTextSourceManager().getSelection()
+                        .getGraphSpaceManager().getSelection();
+
+        //		graph.reDrawGraph();
+        mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
+        layout.setOrientation(SwingConstants.WEST);
+        layout.setIntraCellSpacing(50);
+        layout.setInterRankCellSpacing(125);
+        layout.setOrientation(SwingConstants.NORTH);
+
         try {
-            graph =
-                    view.getController()
-                            .getSelectionManager()
-                            .getActiveTextSource()
-                            .getGraphSpaceManager()
-                            .getActiveGraphSpace();
-
-            //		graph.reDrawGraph();
-            mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
-            layout.setOrientation(SwingConstants.WEST);
-            layout.setIntraCellSpacing(50);
-            layout.setInterRankCellSpacing(125);
-            layout.setOrientation(SwingConstants.NORTH);
-
+            graph.getModel().beginUpdate();
             try {
-                graph.getModel().beginUpdate();
-                try {
-                    layout.execute(graph.getDefaultParent());
-                } finally {
-                    mxMorphing morph = new mxMorphing(graphComponent, 20, 1.2, 20);
-
-                    morph.addListener(mxEvent.DONE, (arg0, arg1) -> graph.getModel().endUpdate());
-
-                    morph.startAnimation();
-                }
+                layout.execute(graph.getDefaultParent());
             } finally {
-                graph.getModel().endUpdate();
-                graphComponent.zoomAndCenter();
+                mxMorphing morph = new mxMorphing(graphComponent, 20, 1.2, 20);
+
+                morph.addListener(mxEvent.DONE, (arg0, arg1) -> graph.getModel().endUpdate());
+
+                morph.startAnimation();
             }
-        } catch (ActiveTextSourceNotSetException
-                | ActiveGraphSpaceNotSetException ignored) {
+        } finally {
+            graph.getModel().endUpdate();
+            graphComponent.zoomAndCenter();
         }
     }
 
     private void removeSelectedCell() {
-        try {
-            view.getController()
-                    .getSelectionManager()
-                    .getActiveTextSource()
-                    .getGraphSpaceManager()
-                    .getActiveGraphSpace()
-                    .removeSelectedCell();
-        } catch (ActiveTextSourceNotSetException
-                | ActiveGraphSpaceNotSetException ignored) {
-
-        }
+        view.getController()
+                .getTextSourceManager().getSelection()
+                .getGraphSpaceManager().getSelection()
+                .removeSelectedCell();
     }
 
     @Override
@@ -340,13 +262,11 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 
     @Override
     public void viewChanged() {
-        try {
-            GraphSpace graphSpace =
-                    view.getController()
-                            .getSelectionManager()
-                            .getActiveTextSource()
-                            .getGraphSpaceManager()
-                            .getActiveGraphSpace();
+        GraphSpace graphSpace =
+                view.getController()
+                        .getTextSourceManager().getSelection()
+                        .getGraphSpaceManager().getSelection();
+        if (graphSpace != null) {
             String quantifier = graphSpace.getRelationSelectionManager().getSelectedRelationQuantifier();
             if (quantifier != null) {
                 switch (quantifier) {
@@ -377,24 +297,6 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
             negateCheckBox.setSelected(graphSpace.getRelationSelectionManager().isSelectedNegation());
             if (graphComponent.getGraph() != graphSpace) {
                 showGraph(graphSpace);
-            }
-        } catch (ActiveTextSourceNotSetException ignored) {
-
-        } catch (ActiveGraphSpaceNotSetException e) {
-            String graphName = GraphMenu.getGraphNameInput(view, null);
-
-            if (graphName != null) {
-                try {
-                    view.getController()
-                            .getSelectionManager()
-                            .getActiveTextSource()
-                            .getGraphSpaceManager()
-                            .addGraphSpace(graphName);
-                    someRadioButton.doClick();
-                    negateCheckBox.setSelected(false);
-                } catch (ActiveTextSourceNotSetException ignored) {
-
-                }
             }
         }
     }

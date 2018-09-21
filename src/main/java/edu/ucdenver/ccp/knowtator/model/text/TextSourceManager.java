@@ -1,12 +1,14 @@
 package edu.ucdenver.ccp.knowtator.model.text;
 
-import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
+import edu.ucdenver.ccp.knowtator.SavableKnowtatorManager;
+import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
+import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
+import edu.ucdenver.ccp.knowtator.model.selection.SelectionModel;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -22,7 +24,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-public class TextSourceManager extends KnowtatorManager implements BratStandoffIO, KnowtatorXMLIO {
+public class TextSourceManager extends SelectionModel<TextSource> implements ProjectListener, BratStandoffIO, KnowtatorXMLIO, SavableKnowtatorManager {
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(TextSourceManager.class);
 
@@ -31,9 +33,12 @@ public class TextSourceManager extends KnowtatorManager implements BratStandoffI
     private File articlesLocation;
     private File annotationsLocation;
 
+
     public TextSourceManager(KnowtatorController controller) {
         this.controller = controller;
         textSourceCollection = new TextSourceCollection(controller);
+        controller.addProjectListener(this);
+
     }
 
     private TextSource addTextSource(File file, String id, String textFileName) {
@@ -46,8 +51,17 @@ public class TextSourceManager extends KnowtatorManager implements BratStandoffI
             textSourceCollection.add(newTextSource);
         }
 
-        controller.getSelectionManager().setActiveTextSource(newTextSource);
+        setSelection(newTextSource);
         return newTextSource;
+    }
+
+    public void getNextTextSource() {
+        setSelection(textSourceCollection.getNext(getSelection()));
+
+    }
+
+    public void getPreviousTextSource() {
+        setSelection(textSourceCollection.getPrevious(getSelection()));
     }
 
     public TextSourceCollection getTextSourceCollection() {
@@ -125,7 +139,7 @@ public class TextSourceManager extends KnowtatorManager implements BratStandoffI
             e.printStackTrace();
         }
 
-        if (getTextSourceCollection().getCollection().isEmpty()) {
+        if (textSourceCollection.getCollection().isEmpty()) {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(getArticlesLocation());
 
@@ -173,5 +187,15 @@ public class TextSourceManager extends KnowtatorManager implements BratStandoffI
     public File getSaveLocation() {
         return annotationsLocation;
 
+    }
+
+    @Override
+    public void projectClosed() {
+
+    }
+
+    @Override
+    public void projectLoaded() {
+        setSelection(textSourceCollection.getCollection().first());
     }
 }

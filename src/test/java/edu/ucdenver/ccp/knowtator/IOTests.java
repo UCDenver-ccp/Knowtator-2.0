@@ -316,7 +316,7 @@ public class IOTests {
         v1,
         v2,
         "edge_1",
-        controller.getSelectionManager().getActiveProfile(),
+        controller.getProfileManager().getSelection(),
         null,
         "property_0",
         "",

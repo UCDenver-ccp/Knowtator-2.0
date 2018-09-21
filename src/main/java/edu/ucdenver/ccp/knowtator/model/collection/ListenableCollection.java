@@ -24,12 +24,18 @@ public class ListenableCollection<
 
   public void add(K objectToAdd) {
     collection.add(objectToAdd);
-    listeners.forEach(profilesListener -> profilesListener.added(objectToAdd));
+    listeners.forEach(listener -> listener.added(objectToAdd));
+    if (collection.size() == 1) {
+      listeners.forEach(listener -> listener.firstAdded(objectToAdd));
+    }
   }
 
   public void remove(K objectToRemove) {
     collection.remove(objectToRemove);
     listeners.forEach(listener -> listener.removed(objectToRemove));
+    if (collection.size() == 0) {
+      listeners.forEach(listener -> listener.emptied(objectToRemove));
+    }
   }
 
   public K get(String id) {

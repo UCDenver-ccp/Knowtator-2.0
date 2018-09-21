@@ -2,9 +2,7 @@ package edu.ucdenver.ccp.knowtator.view.text;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.annotation.Span;
-import edu.ucdenver.ccp.knowtator.model.text.graph.ActiveGraphSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.chooser.AnnotationGraphSpaceChooser;
@@ -33,6 +31,8 @@ public class InfoPane {
 
     public InfoPane(KnowtatorView view) {
         this.view = view;
+        //TODO: add selection and collection listeners. disable buttons unless they can be used
+
         $$$setupUI$$$();
         makeButtons();
     }
@@ -41,17 +41,15 @@ public class InfoPane {
         graphSpaceChooser.addActionListener(
                 e -> {
                     JComboBox comboBox = (JComboBox) e.getSource();
-                    try {
-                        if (comboBox.getSelectedItem() != null
-                                && comboBox.getSelectedItem()
-                                != view.getController().getSelectionManager().getActiveTextSource().getGraphSpaceManager().getActiveGraphSpace()) {
-                            view.getGraphViewDialog().setVisible(true);
-                            view.getController()
-                                    .getSelectionManager()
-                                    .getActiveTextSource().getGraphSpaceManager().setSelectedGraphSpace((GraphSpace) comboBox.getSelectedItem());
-                        }
-                    } catch (ActiveTextSourceNotSetException | ActiveGraphSpaceNotSetException ignored) {
-
+                    if (comboBox.getSelectedItem() != null
+                            && comboBox.getSelectedItem()
+                            != view.getController()
+                            .getTextSourceManager().getSelection()
+                            .getGraphSpaceManager().getSelection()) {
+                        view.getGraphViewDialog().setVisible(true);
+                        view.getController()
+                                .getTextSourceManager().getSelection()
+                                .getGraphSpaceManager().setSelection((GraphSpace) comboBox.getSelectedItem());
                     }
                 });
 
@@ -59,11 +57,10 @@ public class InfoPane {
                 e -> {
                     JList jList = (JList) e.getSource();
                     if (jList.getSelectedValue() != null) {
-                        try {
-                            view.getController().getSelectionManager().getActiveTextSource().getAnnotationManager().setSelectedSpan((Span) jList.getSelectedValue());
-                        } catch (ActiveTextSourceNotSetException ignored) {
-
-                        }
+                        view.getController()
+                                .getTextSourceManager().getSelection()
+                                .getAnnotationManager().getSelection()
+                                .getSpanManager().setSelection((Span) jList.getSelectedValue());
                     }
                 });
 

@@ -2,8 +2,8 @@ package edu.ucdenver.ccp.knowtator;
 
 import java.io.IOException;
 
-abstract public class KnowtatorManager implements Savable {
-    protected abstract void dispose();
+public interface KnowtatorManager {
+    void dispose();
 
-    abstract public void makeDirectory() throws IOException;
+    void makeDirectory() throws IOException;
 }

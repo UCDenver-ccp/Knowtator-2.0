@@ -23,6 +23,7 @@ public class CyclableCollection<K extends KnowtatorObject, L extends CollectionL
     }
     if (previous == null) previous = collection.last();
 
+
     return previous;
   }
 
@@ -35,6 +36,7 @@ public class CyclableCollection<K extends KnowtatorObject, L extends CollectionL
       next = null;
     }
     if (next == null) next = collection.first();
+
     return next;
   }
 }

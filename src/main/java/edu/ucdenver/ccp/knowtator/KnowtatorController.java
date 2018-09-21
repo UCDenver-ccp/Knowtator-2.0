@@ -1,7 +1,6 @@
 package edu.ucdenver.ccp.knowtator;
 
 import edu.ucdenver.ccp.knowtator.listeners.DebugListener;
-import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.listeners.ViewListener;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
-public class KnowtatorController extends ProjectManager implements ProjectListener {
+public class KnowtatorController extends ProjectManager {
   @SuppressWarnings("unused")
   private static final Logger log = Logger.getLogger(KnowtatorController.class);
 
@@ -36,7 +35,6 @@ public class KnowtatorController extends ProjectManager implements ProjectListen
     idRegistry = new TreeMap<>();
     debugListeners = new ArrayList<>();
 
-    addProjectListener(this);
     selectionManager = new SelectionManager(this);
 
     owlManager = new OWLManager(this);
@@ -50,10 +48,9 @@ public class KnowtatorController extends ProjectManager implements ProjectListen
 
 
   @Override
-  List<KnowtatorManager> getManagers() {
-    List<KnowtatorManager> managers = new ArrayList<>();
+  List<SavableKnowtatorManager> getManagers() {
+    List<SavableKnowtatorManager> managers = new ArrayList<>();
     managers.add(owlManager);
-    managers.add(selectionManager);
     managers.add(textSourceManager);
     managers.add(profileManager);
     return managers;
@@ -99,15 +96,6 @@ public class KnowtatorController extends ProjectManager implements ProjectListen
     return selectionManager;
   }
 
-  @Override
-  public void save() {
-
-  }
-
-  @Override
-  public void load() {
-
-  }
 
   public void verifyId(String id, KnowtatorObject obj, Boolean hasPriority) {
   	String verifiedId = id;
@@ -129,16 +117,6 @@ public class KnowtatorController extends ProjectManager implements ProjectListen
 
   }
 
-  @Override
-  public void projectClosed() {
-    idRegistry.clear();
-  }
-
-  @Override
-  public void projectLoaded() {
-
-  }
-
   public void setDebug() {
     debugListeners.forEach(DebugListener::setDebug);
   }
@@ -153,6 +131,7 @@ public class KnowtatorController extends ProjectManager implements ProjectListen
     owlManager.dispose();
     selectionManager.dispose();
     profileManager.dispose();
+    idRegistry.clear();
   }
 
   @Override
@@ -165,12 +144,9 @@ public class KnowtatorController extends ProjectManager implements ProjectListen
   }
 
   public void refreshView() {
-    if (projectLoaded) {
-      viewListeners.forEach(ViewListener::viewChanged);
+    for (ViewListener viewListener : viewListeners) {
+      viewListener.viewChanged();
     }
   }
 
-  public boolean isProjectLoaded() {
-    return projectLoaded;
-  }
 }

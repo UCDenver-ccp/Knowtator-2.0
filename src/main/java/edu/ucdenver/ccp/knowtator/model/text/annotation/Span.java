@@ -27,12 +27,13 @@ public class Span implements KnowtatorTextBoundObject, Comparable<Span>, Knowtat
   private String id;
   private TextSource textSource;
 
-  public Span(
-      String id, int start, int end, TextSource textSource, KnowtatorController controller) {
+  Span(
+      String id, int start, int end, TextSource textSource, KnowtatorController controller, Annotation annotation) {
 
     this.textSource = textSource;
     this.start = start;
     this.end = end;
+    this.annotation = annotation;
 
     controller.verifyId(id, this, false);
 
@@ -229,10 +230,6 @@ public class Span implements KnowtatorTextBoundObject, Comparable<Span>, Knowtat
   /*
   SETTERS
    */
-
-  public void setAnnotation(Annotation annotation) {
-    this.annotation = annotation;
-  }
 
   @Override
   public void setId(String id) {

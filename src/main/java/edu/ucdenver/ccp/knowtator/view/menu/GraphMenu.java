@@ -1,8 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view.menu;
 
 import com.mxgraph.util.mxCellRenderer;
-import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
-import edu.ucdenver.ccp.knowtator.model.text.graph.ActiveGraphSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.imageio.ImageIO;
@@ -41,11 +39,9 @@ public class GraphMenu extends JMenu {
 				e -> {
 					String graphName = getGraphNameInput(view, null);
 					if (graphName != null) {
-						try {
-							view.getController().getSelectionManager().getActiveTextSource().getGraphSpaceManager().getActiveGraphSpace().setId(graphName);
-						} catch (ActiveTextSourceNotSetException | ActiveGraphSpaceNotSetException ignored) {
-
-						}
+						view.getController()
+								.getTextSourceManager().getSelection()
+								.getGraphSpaceManager().getSelection().setId(graphName);
 					}
 				});
 
@@ -60,13 +56,18 @@ public class GraphMenu extends JMenu {
 					fileChooser.setCurrentDirectory(view.getController().getSaveLocation());
 					FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
 					fileChooser.setFileFilter(fileFilter);
-					try {
-						fileChooser.setSelectedFile(new File(view.getController().getSelectionManager().getActiveTextSource().getId() + "_" + view.getController().getSelectionManager().getActiveTextSource().getGraphSpaceManager().getActiveGraphSpace().getId() + ".png"));
-
+					fileChooser.setSelectedFile(new File(view.getController()
+							.getTextSourceManager().getSelection()
+							.getId() + "_" + view.getController()
+							.getTextSourceManager().getSelection()
+							.getGraphSpaceManager().getSelection()
+							.getId() + ".png"));
 					if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
 						BufferedImage image =
 								mxCellRenderer.createBufferedImage(
-										view.getController().getSelectionManager().getActiveTextSource().getGraphSpaceManager().getActiveGraphSpace(),
+										view.getController()
+												.getTextSourceManager().getSelection()
+												.getGraphSpaceManager().getSelection(),
 										null,
 										1,
 										Color.WHITE,
@@ -79,8 +80,7 @@ public class GraphMenu extends JMenu {
 							e1.printStackTrace();
 						}
 					}
-					} catch (ActiveTextSourceNotSetException | ActiveGraphSpaceNotSetException ignored) {
-					}
+
 				});
 
 		return menuItem;
@@ -93,14 +93,11 @@ public class GraphMenu extends JMenu {
 					if (JOptionPane.showConfirmDialog(
 							view, "Are you sure you want to delete this graph?")
 							== JOptionPane.YES_OPTION) {
-						try {
-							view.getController()
-									.getSelectionManager()
-									.getActiveTextSource()
-									.getGraphSpaceManager().removeGraphSpace(view.getController().getSelectionManager().getActiveTextSource().getGraphSpaceManager().getActiveGraphSpace());
-						} catch (ActiveTextSourceNotSetException | ActiveGraphSpaceNotSetException ignored) {
-
-						}
+						view.getController()
+								.getTextSourceManager().getSelection()
+								.getGraphSpaceManager()
+								.removeGraphSpace(view.getController().getTextSourceManager().getSelection()
+										.getGraphSpaceManager().getSelection());
 					}
 				});
 
@@ -114,21 +111,16 @@ public class GraphMenu extends JMenu {
 					String graphName = getGraphNameInput(view, null);
 
 					if (graphName != null) {
-						try {
-							view.getController()
-									.getSelectionManager()
-									.getActiveTextSource()
-									.getGraphSpaceManager().addGraphSpace(graphName);
-						} catch (ActiveTextSourceNotSetException ignored) {
-
-						}
+						view.getController()
+								.getTextSourceManager().getSelection()
+								.getGraphSpaceManager().addGraphSpace(graphName);
 					}
 				});
 
 		return addNewGraphMenuItem;
 	}
 
-	public static String getGraphNameInput(KnowtatorView view, JTextField field1) {
+	private static String getGraphNameInput(KnowtatorView view, JTextField field1) {
 		if (field1 == null) {
 			field1 = new JTextField();
 
@@ -153,27 +145,22 @@ public class GraphMenu extends JMenu {
 								}
 
 								private void warn() {
-									try {
-										if (view.getController()
-												.getSelectionManager()
-												.getActiveTextSource()
-												.getGraphSpaceManager().getGraphSpaceCollection()
-												.containsID(finalField.getText())) {
-											try {
-												finalField
-														.getHighlighter()
-														.addHighlight(
-																0,
-																finalField.getText().length(),
-																new DefaultHighlighter.DefaultHighlightPainter(Color.RED));
-											} catch (BadLocationException e1) {
-												e1.printStackTrace();
-											}
-										} else {
-											finalField.getHighlighter().removeAllHighlights();
+									if (view.getController()
+											.getTextSourceManager().getSelection()
+											.getGraphSpaceManager().getGraphSpaceCollection()
+											.containsID(finalField.getText())) {
+										try {
+											finalField
+													.getHighlighter()
+													.addHighlight(
+															0,
+															finalField.getText().length(),
+															new DefaultHighlighter.DefaultHighlightPainter(Color.RED));
+										} catch (BadLocationException e1) {
+											e1.printStackTrace();
 										}
-									} catch (ActiveTextSourceNotSetException ignored) {
-
+									} else {
+										finalField.getHighlighter().removeAllHighlights();
 									}
 								}
 							});
@@ -182,8 +169,9 @@ public class GraphMenu extends JMenu {
 				"Graph Title", field1,
 		};
 		field1.addAncestorListener(new RequestFocusListener());
-		try {
-			field1.setText("Graph Space " + Integer.toString(view.getController().getSelectionManager().getActiveTextSource().getGraphSpaceManager().getGraphSpaceCollection().size()));
+		field1.setText("Graph Space " + Integer.toString(view.getController()
+				.getTextSourceManager().getSelection()
+				.getGraphSpaceManager().getGraphSpaceCollection().size()));
 		int option =
 				JOptionPane.showConfirmDialog(
 						view,
@@ -192,8 +180,7 @@ public class GraphMenu extends JMenu {
 						JOptionPane.OK_CANCEL_OPTION);
 		if (option == JOptionPane.OK_OPTION) {
 			if (view.getController()
-					.getSelectionManager()
-					.getActiveTextSource()
+					.getTextSourceManager().getSelection()
 					.getGraphSpaceManager().getGraphSpaceCollection()
 					.containsID(field1.getText())) {
 				JOptionPane.showMessageDialog(field1, "Graph name already in use");
@@ -203,8 +190,6 @@ public class GraphMenu extends JMenu {
 			}
 		}
 
-		} catch (ActiveTextSourceNotSetException ignored) {
-		}
 		return null;
 	}
 

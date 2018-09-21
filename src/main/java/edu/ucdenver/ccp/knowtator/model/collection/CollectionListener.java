@@ -6,4 +6,8 @@ public interface CollectionListener<K extends KnowtatorObject> {
 	void added(K addedObject);
 
 	void removed(K removedObject);
+
+	void emptied(K object);
+
+	void firstAdded(K object);
 }

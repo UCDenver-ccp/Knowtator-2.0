@@ -7,6 +7,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.listeners.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollection;
+import edu.ucdenver.ccp.knowtator.model.selection.SelectionModel;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,7 +20,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileManager extends KnowtatorManager implements KnowtatorXMLIO {
+public class ProfileManager extends SelectionModel<Profile> implements KnowtatorXMLIO, SavableKnowtatorManager {
 
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(KnowtatorController.class);
@@ -33,9 +34,8 @@ public class ProfileManager extends KnowtatorManager implements KnowtatorXMLIO {
         this.controller = controller;
         colorListeners = new ArrayList<>();
         profileCollection = new ProfileCollection(controller);
-        controller.getSelectionManager().setSelectedProfile(getDefaultProfile());
+        setSelection(getDefaultProfile());
     }
-
 
     public void addColorListener(ColorListener listener) {
         colorListeners.add(listener);
@@ -47,13 +47,13 @@ public class ProfileManager extends KnowtatorManager implements KnowtatorXMLIO {
             newProfile = new Profile(controller, profileID);
             profileCollection.add(newProfile);
         }
-        controller.getSelectionManager().setSelectedProfile(newProfile);
+        setSelection(newProfile);
         return newProfile;
     }
 
     private void removeProfile(Profile profile) {
         profileCollection.remove(profile);
-        controller.getSelectionManager().setSelectedProfile(profileCollection.iterator().next());
+        setSelection(profileCollection.iterator().next());
     }
 
     public ProfileCollection getProfileCollection() {
@@ -85,8 +85,8 @@ public class ProfileManager extends KnowtatorManager implements KnowtatorXMLIO {
     }
 
     public void removeActiveProfile() {
-        if (controller.getSelectionManager().getActiveProfile() != profileCollection.getDefaultProfile()) {
-            removeProfile(controller.getSelectionManager().getActiveProfile());
+        if (getSelection() != profileCollection.getDefaultProfile()) {
+            removeProfile(getSelection());
         }
     }
 
@@ -144,6 +144,4 @@ public class ProfileManager extends KnowtatorManager implements KnowtatorXMLIO {
                         Profile::save);
 
     }
-
-
 }

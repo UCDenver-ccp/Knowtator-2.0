@@ -18,29 +18,26 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ProjectManager extends KnowtatorManager {
+public abstract class ProjectManager implements Savable, KnowtatorManager {
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(ProjectManager.class);
 
     private File projectLocation;
-    boolean projectLoaded;
     private List<ProjectListener> projectListeners;
 
     ProjectManager() {
-        projectLoaded = false;
         projectListeners = new ArrayList<>();
     }
 
     public void loadProject() {
-        projectLoaded = false;
 
         projectListeners.forEach(ProjectListener::projectClosed);
 
         makeProjectStructure(projectLocation);
 
-        getManagers().forEach(KnowtatorManager::load);
+        getManagers().forEach(SavableKnowtatorManager::load);
 
-        projectLoaded = true;
+        saveProject();
 
         for (ProjectListener listener : projectListeners) {
             listener.projectLoaded();
@@ -71,7 +68,7 @@ public abstract class ProjectManager extends KnowtatorManager {
         loadProject();
     }
 
-    void importToManager(File directory, KnowtatorManager manager, String extension) throws IOException {
+    void importToManager(File directory, SavableKnowtatorManager manager, String extension) throws IOException {
         if (directory != null && directory.exists()) {
             Files.newDirectoryStream(
                     Paths.get(directory.toURI()), path -> path.toString().endsWith(extension))
@@ -116,10 +113,10 @@ public abstract class ProjectManager extends KnowtatorManager {
 
     public void saveProject() {
 
-        getManagers().forEach(KnowtatorManager::save);
+        getManagers().forEach(SavableKnowtatorManager::save);
     }
 
-    abstract List<KnowtatorManager> getManagers();
+    abstract List<SavableKnowtatorManager> getManagers();
 
     public void loadWithAppropriateFormat(BasicIO basicIO, File file) {
         String[] splitOnDots = file.getName().split("\\.");
@@ -163,5 +160,15 @@ public abstract class ProjectManager extends KnowtatorManager {
                 | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void save() {
+
+    }
+
+    @Override
+    public void load() {
+
     }
 }

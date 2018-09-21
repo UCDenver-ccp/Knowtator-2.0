@@ -1,7 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
 import edu.ucdenver.ccp.knowtator.listeners.ViewListener;
-import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
@@ -19,48 +18,29 @@ public class AnnotationGraphSpaceChooser extends Chooser<GraphSpace> implements 
 
   @Override
   public void added(GraphSpace graphSpace) {
-    try {
-      if (graphSpace.containsAnnotation(
-          view.getController()
-              .getSelectionManager()
-              .getActiveTextSource()
-              .getAnnotationManager()
-              .getSelectedAnnotation())) {
-        addItem(graphSpace);
-      }
-    } catch (ActiveTextSourceNotSetException ignored) {
-
+    if (graphSpace.containsAnnotation(
+        view.getController()
+            .getTextSourceManager().getSelection()
+            .getAnnotationManager().getSelection())) {
+      addItem(graphSpace);
     }
   }
 
   @Override
   public void viewChanged() {
-    try {
-      setModel(
-          new DefaultComboBoxModel<>(
-              view.getController()
-                  .getSelectionManager()
-                  .getActiveTextSource()
-                  .getGraphSpaceManager()
-                  .getGraphSpaceCollection()
-                  .stream()
-                  .filter(
-                      graphSpace ->
-                      {
-                        try {
-                          return graphSpace.containsAnnotation(
-                              view.getController()
-                                  .getSelectionManager()
-                                  .getActiveTextSource()
-                                  .getAnnotationManager()
-                                  .getSelectedAnnotation());
-                        } catch (ActiveTextSourceNotSetException e) {
-                          return false;
-                        }
-                      })
-                  .toArray(GraphSpace[]::new)));
-    } catch (ActiveTextSourceNotSetException ignored) {
-
-    }
+    setModel(
+        new DefaultComboBoxModel<>(
+            view.getController()
+                .getTextSourceManager().getSelection()
+                .getGraphSpaceManager()
+                .getGraphSpaceCollection()
+                .stream()
+                .filter(
+                    graphSpace ->
+                            graphSpace.containsAnnotation(
+                                view.getController()
+                                    .getTextSourceManager().getSelection()
+                                    .getAnnotationManager().getSelection()))
+                .toArray(GraphSpace[]::new)));
   }
 }

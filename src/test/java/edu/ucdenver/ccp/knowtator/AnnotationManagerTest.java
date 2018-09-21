@@ -26,7 +26,6 @@ public class AnnotationManagerTest {
     private AnnotationManager annotationManager;
     private TextSource textSource;
     private Profile profile;
-    private KnowtatorController controller;
 
     private File getProjectFile(String projectName) {
         return new File(getClass().getResource(String.format(
@@ -45,7 +44,7 @@ public class AnnotationManagerTest {
     }
 
     public void setUp() {
-        controller = new KnowtatorController();
+        KnowtatorController controller = new KnowtatorController();
 
         int projectID = 0;
         int articleID = 0;
@@ -70,8 +69,7 @@ public class AnnotationManagerTest {
     @Test
     public void addAnnotation() {
         setUp();
-        Annotation annotation1 = new Annotation(controller, "mention_3", null, "class_2", "class_2", profile, "identity", textSource);
-        annotationManager.addAnnotation(annotation1);
+        Annotation annotation1 = annotationManager.addAnnotation("mention_3", null, "class_2", "class_2", profile, "identity");
 
         int numAnnotations = annotationManager.getAnnotations().getCollection().size();
         int numSpans = annotationManager.getSpans(null, 0, textSource.getContent().length()).size();
@@ -83,11 +81,9 @@ public class AnnotationManagerTest {
     @Test
     public void addSpanToAnnotation() {
         setUp();
-        Annotation annotation1 = new Annotation(controller, "mention_3", null, "class_2", "class_2", profile, "identity", textSource);
-        annotationManager.addAnnotation(annotation1);
 
-        Span span1 = new Span(null, 1, 6, textSource, controller);
-        annotationManager.addSpanToAnnotation(annotation1, span1);
+        Annotation annotation1 = annotationManager.addAnnotation("mention_3", null, "class_2", "class_2", profile, "identity");
+        Span span1 = annotation1.getSpanManager().addSpan(null,1, 6);
 
         int numAnnotations = annotationManager.getAnnotations().getCollection().size();
         int numSpans = annotationManager.getSpans(null, 0, textSource.getContent().length()).size();
@@ -116,11 +112,8 @@ public class AnnotationManagerTest {
     @Test
     public void removeSpanFromAnnotation() {
         setUp();
-        Annotation annotation1 = new Annotation(controller, "mention_3", null, "class_2", "class_2", profile, "identity", textSource);
-        annotationManager.addAnnotation(annotation1);
-
-        Span span1 = new Span(null, 1, 6, textSource, controller);
-        annotationManager.addSpanToAnnotation(annotation1, span1);
+        Annotation annotation1 = annotationManager.addAnnotation("mention_3", null, "class_2", "class_2", profile, "identity");
+        Span span1 = annotation1.getSpanManager().addSpan(null,1, 6);
 
         annotationManager.removeSpanFromAnnotation(annotation1, span1);
         int numAnnotations = annotationManager.getAnnotations().getCollection().size();

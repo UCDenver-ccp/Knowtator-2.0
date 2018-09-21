@@ -4,11 +4,19 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.listeners.OWLClassSelectionListener;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
+import edu.ucdenver.ccp.knowtator.model.collection.AnnotationCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.collection.SpanCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.model.selection.ActiveTextSourceNotSetException;
+import edu.ucdenver.ccp.knowtator.model.selection.AnnotationSelectionListener;
+import edu.ucdenver.ccp.knowtator.model.selection.OWLClassSelectionListener;
+import edu.ucdenver.ccp.knowtator.model.selection.SpanSelectionListener;
+import edu.ucdenver.ccp.knowtator.model.selection.TextSourceSelectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.model.text.annotation.Span;
 import edu.ucdenver.ccp.knowtator.view.chooser.ProfileChooser;
 import edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog;
@@ -27,15 +35,18 @@ import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.*;
-import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.prefs.Preferences;
 
 public class KnowtatorView extends AbstractOWLClassViewComponent
-        implements DropTargetListener, OWLClassSelectionListener {
+        implements DropTargetListener {
 
     private static final Logger log = Logger.getLogger(KnowtatorView.class);
     private final Preferences prefs = Preferences.userRoot().node("knowtator");
@@ -68,12 +79,157 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     private InfoPane infoPane;
     private JCheckBox classFilterCheckBox;
 
+    private Map<JButton, ActionListener> textSourceButtons;
+    private Map<JCheckBox, ItemListener> textSourceCheckBoxes;
+    private Map<JButton, ActionListener> annotationButtons;
+    private Map<JButton, ActionListener> spanButtons;
+    private Map<JButton, ActionListener> spanSizeButtons;
+    private Map<JButton, ActionListener> selectionSizeButtons;
+
+    private AnnotationCollectionListener annotationCollectionListener;
+    private SpanCollectionListener spanCollectionListener;
+    private AnnotationSelectionListener annotationSelectionListener;
+    private SpanSelectionListener spanSelectionListener;
+
+
     public KnowtatorView() {
         controller = new KnowtatorController();
-        controller.getSelectionManager().addOWLEntityListener(this);
+
+        OWLClassSelectionListener owlClassSelectionListener = new OWLClassSelectionListener() {
+            @Override
+            public void noSelection(KnowtatorObject previousSelection) {
+
+            }
+
+            @Override
+            public void selected(KnowtatorObject previousSelection, KnowtatorObject currentSelection) {
+
+            }
+
+            @Override
+            public void owlEntityChanged(OWLEntity owlClass) {
+                owlEntitySelectionChanged(owlClass);
+            }
+        };
+        TextSourceSelectionListener textSourceSelectionListener = new TextSourceSelectionListener() {
+
+            @Override
+            public void noSelection(TextSource previousSelection) {
+                previousSelection.getAnnotationManager().removeSelectionListener(annotationSelectionListener);
+                previousSelection.getAnnotationManager().getAnnotations().removeListener(annotationCollectionListener);
+            }
+
+            @Override
+            public void selected(TextSource previousSelection, TextSource currentSelection) {
+                if (previousSelection != null) {
+                    previousSelection.getAnnotationManager().removeSelectionListener(annotationSelectionListener);
+                    previousSelection.getAnnotationManager().getAnnotations().removeListener(annotationCollectionListener);
+                }
+                currentSelection.getAnnotationManager().addSelectionListener(annotationSelectionListener);
+                currentSelection.getAnnotationManager().getAnnotations().addListener(annotationCollectionListener);
+                controller.refreshView();
+            }
+        };
+        annotationSelectionListener = new AnnotationSelectionListener() {
+            @Override
+            public void noSelection(Annotation previousSelection) {
+                previousSelection.getSpanManager().removeSelectionListener(spanSelectionListener);
+                previousSelection.getSpanManager().getSpans().removeListener(spanCollectionListener);
+                controller.refreshView();
+            }
+
+            @Override
+            public void selected(Annotation previousSelection, Annotation currentSelection) {
+                if (previousSelection != null) {
+                    previousSelection.getSpanManager().removeSelectionListener(spanSelectionListener);
+                    previousSelection.getSpanManager().getSpans().removeListener(spanCollectionListener);
+                }
+                currentSelection.getSpanManager().addSelectionListener(spanSelectionListener);
+                currentSelection.getSpanManager().getSpans().addListener(spanCollectionListener);
+                controller.refreshView();
+            }
+        };
+        spanSelectionListener = new SpanSelectionListener() {
+            @Override
+            public void noSelection(Span previousSelection) {
+                controller.refreshView();
+            }
+
+            @Override
+            public void selected(Span previousSelection, Span currentSelection) {
+                controller.refreshView();
+            }
+        };
+
+
+        TextSourceCollectionListener textSourceCollectionListener = new TextSourceCollectionListener() {
+            @Override
+            public void added(TextSource object) {
+
+            }
+
+            @Override
+            public void removed(TextSource removedObject) {
+
+            }
+
+            @Override
+            public void emptied(TextSource object) {
+                disableTextSourceButtons();
+            }
+
+            @Override
+            public void firstAdded(TextSource object) {
+                enableTextSourceButtons();
+            }
+        };
+        annotationCollectionListener = new AnnotationCollectionListener() {
+
+            @Override
+            public void added(Annotation addedObject) {
+
+            }
+
+            @Override
+            public void removed(Annotation removedObject) {
+
+            }
+
+            @Override
+            public void emptied(Annotation object) {
+                disableAnnotationButtons();
+            }
+
+            @Override
+            public void firstAdded(Annotation object) {
+                enableAnnotationButtons();
+            }
+        };
+        spanCollectionListener = new SpanCollectionListener() {
+            @Override
+            public void added(Span addedObject) {
+            }
+
+            @Override
+            public void removed(Span removedObject) {
+            }
+
+            @Override
+            public void emptied(Span object) {
+                disableSpanButtons();
+            }
+
+            @Override
+            public void firstAdded(Span object) {
+                enableSpanButtons();
+            }
+        };
+
+        controller.getSelectionManager().addOWLEntityListener(owlClassSelectionListener);
+        controller.getTextSourceManager().addSelectionListener(textSourceSelectionListener);
+        controller.getTextSourceManager().getTextSourceCollection().addListener(textSourceCollectionListener);
 
         $$$setupUI$$$();
-
 
         makeButtons();
 
@@ -172,10 +328,151 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     }
 
     private void makeButtons() {
+        textSourceButtons = new HashMap<>();
+        textSourceButtons.put(showGraphViewerButton, e -> graphViewDialog.setVisible(true));
+        textSourceButtons.put(decreaseFontSizeButton, e -> knowtatorTextPane.decreaseFontSize());
+        textSourceButtons.put(increaseFontSizeButton, e -> knowtatorTextPane.increaseFindSize());
+        textSourceButtons.put(previousTextSourceButton, e -> getController().getTextSourceManager().getPreviousTextSource());
+        textSourceButtons.put(nextTextSourceButton, e -> getController().getTextSourceManager().getNextTextSource());
 
-        profileFilterCheckBox.addItemListener(e -> controller.getSelectionManager().setFilterByProfile(profileFilterCheckBox.isSelected()));
+        annotationButtons = new HashMap<>();
+        annotationButtons.put(addAnnotationButton, e -> {
+            String[] buttons = {"Add new annotation", "Add span to annotation", "Cancel"};
+            int response =
+                    JOptionPane.showOptionDialog(
+                            this,
+                            "Choose an option",
+                            "Add Annotation",
+                            JOptionPane.DEFAULT_OPTION,
+                            JOptionPane.PLAIN_MESSAGE,
+                            null,
+                            buttons,
+                            2);
 
-        classFilterCheckBox.addItemListener(e -> controller.getSelectionManager().setFilterByOWLClass(classFilterCheckBox.isSelected()));
+            switch (response) {
+                case 0:
+                    getController()
+                            .getTextSourceManager().getSelection()
+                            .getAnnotationManager()
+                            .addSelectedAnnotation();
+                    break;
+                case 1:
+                    getController()
+                            .getTextSourceManager().getSelection()
+                            .getAnnotationManager()
+                            .addSpanToSelectedAnnotation();
+                    break;
+                case 2:
+                    break;
+            }
+        });
+        annotationButtons.put(removeAnnotationButton, e -> {
+            if (getController()
+                    .getTextSourceManager().getSelection()
+                    .getAnnotationManager()
+                    .getSelection().getSpanManager().getSpans()
+                    .size()
+                    > 1) {
+                String[] buttons = {"Remove annotation", "Remove span from annotation", "Cancel"};
+                int response =
+                        JOptionPane.showOptionDialog(
+                                this,
+                                "Choose an option",
+                                "Remove Annotation",
+                                JOptionPane.DEFAULT_OPTION,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null,
+                                buttons,
+                                2);
+
+                switch (response) {
+                    case 0:
+                        getController()
+                                .getTextSourceManager().getSelection()
+                                .getAnnotationManager()
+                                .removeSelectedAnnotation();
+                        break;
+                    case 1:
+                        getController()
+                                .getTextSourceManager().getSelection()
+                                .getAnnotationManager()
+                                .removeSpanFromSelectedAnnotation();
+                        break;
+                    case 2:
+                        break;
+                }
+            } else {
+                if (JOptionPane.showConfirmDialog(
+                        this,
+                        "Are you sure you want to remove the selected annotation?",
+                        "Remove Annotation",
+                        JOptionPane.YES_NO_OPTION)
+                        == JOptionPane.YES_OPTION) {
+                    getController()
+                            .getTextSourceManager().getSelection()
+                            .getAnnotationManager()
+                            .removeSelectedAnnotation();
+                }
+            }
+        });
+        annotationButtons.put(assignColorToClassButton, e -> {
+            OWLEntity owlClass = getController().getSelectionManager().getSelectedOWLEntity();
+            if (owlClass == null) {
+                owlClass =
+                        getController()
+                                .getTextSourceManager().getSelection()
+                                .getAnnotationManager()
+                                .getSelection()
+                                .getOwlClass();
+            }
+            if (owlClass instanceof OWLClass) {
+                Color c = JColorChooser.showDialog(this, "Pick a color for " + owlClass, Color.CYAN);
+                if (c != null) {
+                    getController().getProfileManager().getSelection().addColor(owlClass, c);
+
+                    if (JOptionPane.showConfirmDialog(
+                            this, "Assign color to descendants of " + owlClass + "?")
+                            == JOptionPane.OK_OPTION) {
+                        try {
+                            Set<OWLClass> descendants =
+                                    getController()
+                                            .getOWLManager()
+                                            .getDescendants((OWLClass) owlClass);
+
+                            for (OWLClass descendant : descendants) {
+                                controller.getProfileManager()
+                                        .getSelection()
+                                        .addColor(descendant, c);
+                            }
+                        } catch (OWLWorkSpaceNotSetException ignored) {
+                        }
+                    }
+                }
+            }
+        });
+
+        spanButtons = new HashMap<>();
+        spanButtons.put(nextSpanButton, e -> getController().getTextSourceManager().getSelection().getAnnotationManager().getNextSpan());
+        spanButtons.put(previousSpanButton, e -> getController().getTextSourceManager().getSelection().getAnnotationManager().getPreviousSpan());
+
+        spanSizeButtons = new HashMap<>();
+        spanSizeButtons.put(shrinkSelectionEndButton, e -> getController().getTextSourceManager().getSelection().getAnnotationManager().shrinkSelectedSpanEnd());
+        spanSizeButtons.put(shrinkSelectionStartButton, e -> getController().getTextSourceManager().getSelection().getAnnotationManager().shrinkSelectedSpanStart());
+        spanSizeButtons.put(growSelectionEndButton, e -> getController().getTextSourceManager().getSelection().getAnnotationManager().growSelectedSpanEnd());
+        spanSizeButtons.put(growSelectionStartButton, e -> getController().getTextSourceManager().getSelection().getAnnotationManager().growSelectedSpanStart());
+
+        selectionSizeButtons = new HashMap<>();
+        selectionSizeButtons.put(growSelectionStartButton, e -> knowtatorTextPane.growStart());
+        selectionSizeButtons.put(shrinkSelectionStartButton, e -> knowtatorTextPane.shrinkStart());
+        selectionSizeButtons.put(shrinkSelectionEndButton, e -> knowtatorTextPane.shrinkEnd());
+        selectionSizeButtons.put(growSelectionEndButton, e -> knowtatorTextPane.growEnd());
+
+        textSourceCheckBoxes = new HashMap<>();
+        textSourceCheckBoxes.put(profileFilterCheckBox, e -> controller.getSelectionManager().setFilterByProfile(profileFilterCheckBox.isSelected()));
+        textSourceCheckBoxes.put(classFilterCheckBox, e -> controller.getSelectionManager().setFilterByOWLClass(classFilterCheckBox.isSelected()));
+
+        // Disable
+        disableTextSourceButtons();
 
         findTextButton.addActionListener(
                 e -> {
@@ -188,303 +485,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                     }
                 });
 
-        assignColorToClassButton.addActionListener(
-                e -> {
-                    OWLEntity owlClass = getController().getSelectionManager().getSelectedOWLEntity();
-                    if (owlClass == null) {
-                        try {
-                            owlClass =
-                                    getController()
-                                            .getSelectionManager()
-                                            .getActiveTextSource()
-                                            .getAnnotationManager()
-                                            .getSelectedAnnotation()
-                                            .getOwlClass();
-                        } catch (ActiveTextSourceNotSetException ignored) {
-                        }
-                    }
-                    if (owlClass instanceof OWLClass) {
-                        Color c = JColorChooser.showDialog(this, "Pick a color for " + owlClass, Color.CYAN);
-                        if (c != null) {
-                            getController().getSelectionManager().getActiveProfile().addColor(owlClass, c);
 
-                            if (JOptionPane.showConfirmDialog(
-                                    this, "Assign color to descendants of " + owlClass + "?")
-                                    == JOptionPane.OK_OPTION) {
-                                try {
-                                    Set<OWLClass> descendants =
-                                            getController()
-                                                    .getOWLManager()
-                                                    .getDescendants((OWLClass) owlClass);
-
-                                    for (OWLClass descendant : descendants) {
-                                        getController()
-                                                .getSelectionManager()
-                                                .getActiveProfile()
-                                                .addColor(descendant, c);
-                                    }
-                                } catch (OWLWorkSpaceNotSetException ignored) {
-                                }
-                            }
-                        }
-                    }
-                });
-
-        growSelectionStartButton.addActionListener(
-                (ActionEvent e) -> {
-                    try {
-                        if (getController()
-                                .getSelectionManager()
-                                .getActiveTextSource()
-                                .getAnnotationManager()
-                                .getSelectedSpan()
-                                == null) {
-                            knowtatorTextPane.growStart();
-                        } else {
-                            getController()
-                                    .getSelectionManager()
-                                    .getActiveTextSource()
-                                    .getAnnotationManager()
-                                    .growSelectedSpanStart();
-                        }
-                    } catch (ActiveTextSourceNotSetException ignored) {
-                    }
-                });
-        shrinkSelectionStartButton.addActionListener(
-                (ActionEvent e) -> {
-                    try {
-                        if (getController()
-                                .getSelectionManager()
-                                .getActiveTextSource()
-                                .getAnnotationManager()
-                                .getSelectedSpan()
-                                == null) {
-                            knowtatorTextPane.shrinkStart();
-                        } else {
-                            getController()
-                                    .getSelectionManager()
-                                    .getActiveTextSource()
-                                    .getAnnotationManager()
-                                    .shrinkSelectedSpanStart();
-                        }
-                    } catch (ActiveTextSourceNotSetException ignored) {
-
-                    }
-                });
-        shrinkSelectionEndButton.addActionListener(
-                (ActionEvent e) -> {
-                    try {
-                        if (getController()
-                                .getSelectionManager()
-                                .getActiveTextSource()
-                                .getAnnotationManager()
-                                .getSelectedSpan()
-                                == null) {
-                            knowtatorTextPane.shrinkEnd();
-                        } else {
-                            getController()
-                                    .getSelectionManager()
-                                    .getActiveTextSource()
-                                    .getAnnotationManager()
-                                    .shrinkSelectedSpanEnd();
-                        }
-                    } catch (ActiveTextSourceNotSetException ignored) {
-
-                    }
-                });
-        growSelectionEndButton.addActionListener(
-                (ActionEvent e) -> {
-                    try {
-                        if (getController()
-                                .getSelectionManager()
-                                .getActiveTextSource()
-                                .getAnnotationManager()
-                                .getSelectedSpan()
-                                == null) {
-                            knowtatorTextPane.growEnd();
-                        } else {
-                            getController()
-                                    .getSelectionManager()
-                                    .getActiveTextSource()
-                                    .getAnnotationManager()
-                                    .growSelectedSpanEnd();
-                        }
-                    } catch (ActiveTextSourceNotSetException ignored) {
-
-                    }
-                });
-
-        previousSpanButton.addActionListener(
-                (ActionEvent e) -> {
-                    if (controller.isProjectLoaded()) {
-                        try {
-                            getController()
-                                    .getSelectionManager()
-                                    .getActiveTextSource()
-                                    .getAnnotationManager()
-                                    .getPreviousSpan();
-                        } catch (ActiveTextSourceNotSetException ignored) {
-
-                        }
-                    }
-                });
-        nextSpanButton.addActionListener(
-                (ActionEvent e) -> {
-                    try {
-                        getController()
-                                .getSelectionManager()
-                                .getActiveTextSource()
-                                .getAnnotationManager()
-                                .getNextSpan();
-                    } catch (ActiveTextSourceNotSetException ignored) {
-
-                    }
-                });
-
-        showGraphViewerButton.addActionListener(
-                e -> {
-                    if (controller.isProjectLoaded()) {
-                        graphViewDialog.setVisible(true);
-                    }
-                });
-
-        removeAnnotationButton.addActionListener(
-                e -> {
-                    try {
-                        if (controller.isProjectLoaded()
-                                && getController()
-                                .getSelectionManager()
-                                .getActiveTextSource()
-                                .getAnnotationManager()
-                                .getSelectedAnnotation()
-                                != null) {
-                            if (getController()
-                                    .getSelectionManager()
-                                    .getActiveTextSource()
-                                    .getAnnotationManager()
-                                    .getSelectedAnnotation()
-                                    .getSpanCollection()
-                                    .size()
-                                    > 1) {
-                                String[] buttons = {"Remove annotation", "Remove span from annotation", "Cancel"};
-                                int response =
-                                        JOptionPane.showOptionDialog(
-                                                this,
-                                                "Choose an option",
-                                                "Remove Annotation",
-                                                JOptionPane.DEFAULT_OPTION,
-                                                JOptionPane.QUESTION_MESSAGE,
-                                                null,
-                                                buttons,
-                                                2);
-
-                                switch (response) {
-                                    case 0:
-                                        getController()
-                                                .getSelectionManager()
-                                                .getActiveTextSource()
-                                                .getAnnotationManager()
-                                                .removeSelectedAnnotation();
-                                        break;
-                                    case 1:
-                                        getController()
-                                                .getSelectionManager()
-                                                .getActiveTextSource()
-                                                .getAnnotationManager()
-                                                .removeSpanFromSelectedAnnotation();
-                                        break;
-                                    case 2:
-                                        break;
-                                }
-                            } else {
-                                if (JOptionPane.showConfirmDialog(
-                                        this,
-                                        "Are you sure you want to remove the selected annotation?",
-                                        "Remove Annotation",
-                                        JOptionPane.YES_NO_OPTION)
-                                        == JOptionPane.YES_OPTION) {
-                                    getController()
-                                            .getSelectionManager()
-                                            .getActiveTextSource()
-                                            .getAnnotationManager()
-                                            .removeSelectedAnnotation();
-                                }
-                            }
-                        }
-                    } catch (ActiveTextSourceNotSetException ignored) {
-
-                    }
-                });
-        addAnnotationButton.addActionListener(
-                e -> {
-                    if (controller.isProjectLoaded()) {
-                        try {
-                            if (getController()
-                                    .getSelectionManager()
-                                    .getActiveTextSource()
-                                    .getAnnotationManager()
-                                    .getSelectedAnnotation()
-                                    != null) {
-                                String[] buttons = {"Add new annotation", "Add span to annotation", "Cancel"};
-                                int response =
-                                        JOptionPane.showOptionDialog(
-                                                this,
-                                                "Choose an option",
-                                                "Add Annotation",
-                                                JOptionPane.DEFAULT_OPTION,
-                                                JOptionPane.PLAIN_MESSAGE,
-                                                null,
-                                                buttons,
-                                                2);
-
-                                switch (response) {
-                                    case 0:
-                                        getController()
-                                                .getSelectionManager()
-                                                .getActiveTextSource()
-                                                .getAnnotationManager()
-                                                .addSelectedAnnotation();
-                                        break;
-                                    case 1:
-                                        getController()
-                                                .getSelectionManager()
-                                                .getActiveTextSource()
-                                                .getAnnotationManager()
-                                                .addSpanToSelectedAnnotation();
-                                        break;
-                                    case 2:
-                                        break;
-                                }
-
-                            } else {
-                                getController()
-                                        .getSelectionManager()
-                                        .getActiveTextSource()
-                                        .getAnnotationManager()
-                                        .addSelectedAnnotation();
-                            }
-                        } catch (ActiveTextSourceNotSetException ignored) {
-
-                        }
-                    }
-                });
-
-        previousTextSourceButton.addActionListener(
-                e -> getController().getSelectionManager().getPreviousTextSource());
-        nextTextSourceButton.addActionListener(
-                e -> getController().getSelectionManager().getNextTextSource());
-
-        decreaseFontSizeButton.addActionListener(
-                (ActionEvent e) -> knowtatorTextPane.decreaseFontSize());
-        increaseFontSizeButton.addActionListener(
-                (ActionEvent e) -> knowtatorTextPane.increaseFindSize());
         textSourceChooser.addActionListener(
                 e -> {
                     JComboBox comboBox = (JComboBox) e.getSource();
                     if (comboBox.getSelectedItem() != null) {
                         getController()
-                                .getSelectionManager()
-                                .setActiveTextSource((TextSource) comboBox.getSelectedItem());
+                                .getTextSourceManager().setSelection((TextSource) comboBox.getSelectedItem());
                     }
                 });
         profileChooser.addActionListener(
@@ -492,8 +499,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                     JComboBox comboBox = (JComboBox) e.getSource();
                     if (comboBox.getSelectedItem() != null) {
                         getController()
-                                .getSelectionManager()
-                                .setSelectedProfile((Profile) comboBox.getSelectedItem());
+                                .getProfileManager().setSelection((Profile) comboBox.getSelectedItem());
                     }
                 });
     }
@@ -523,8 +529,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
     @Override
     public void disposeView() {
-        if (controller.isProjectLoaded()
-                && JOptionPane.showConfirmDialog(
+        if (JOptionPane.showConfirmDialog(
                 this,
                 "Save changes to Knowtator project?",
                 "Save Project",
@@ -573,9 +578,42 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         return graphViewDialog;
     }
 
-    @Override
-    public void owlEntityChanged(OWLEntity owlClass) {
-        owlEntitySelectionChanged(owlClass);
+    private void enableTextSourceButtons() {
+        textSourceButtons.forEach((button, e) -> button.setEnabled(true));
+        textSourceButtons.forEach(AbstractButton::addActionListener);
+        textSourceCheckBoxes.forEach((checkBox, e) -> checkBox.setEnabled(true));
+        textSourceCheckBoxes.forEach(AbstractButton::addItemListener);
+    }
+
+    private void disableTextSourceButtons() {
+        textSourceButtons.forEach((button, e) -> button.setEnabled(false));
+        textSourceButtons.forEach(AbstractButton::removeActionListener);
+        textSourceCheckBoxes.forEach((checkBox, e) -> checkBox.setEnabled(false));
+        textSourceCheckBoxes.forEach(AbstractButton::removeItemListener);
+        disableAnnotationButtons();
+    }
+
+    private void enableAnnotationButtons() {
+        annotationButtons.forEach((button, e) -> button.setEnabled(true));
+        annotationButtons.forEach(AbstractButton::addActionListener);
+    }
+
+    private void disableAnnotationButtons() {
+        annotationButtons.forEach((button, e) -> button.setEnabled(false));
+        annotationButtons.forEach(AbstractButton::removeActionListener);
+        disableSpanButtons();
+    }
+
+    private void enableSpanButtons() {
+        spanButtons.forEach((button, e) -> button.setEnabled(true));
+        selectionSizeButtons.forEach(AbstractButton::removeActionListener);
+        spanSizeButtons.forEach(AbstractButton::addActionListener);
+    }
+
+    private void disableSpanButtons() {
+        spanButtons.forEach((button, e) -> button.setEnabled(false));
+        spanSizeButtons.forEach(AbstractButton::removeActionListener);
+        selectionSizeButtons.forEach(AbstractButton::addActionListener);
     }
 
     /**
