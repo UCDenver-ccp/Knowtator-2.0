@@ -59,8 +59,7 @@ public class AnnotationManagerTest {
             e.printStackTrace();
         }
 
-        //noinspection ConstantConditions
-        textSource = controller.getTextSourceManager().getTextSourceCollection().getCollection().stream().filter(textSource1 -> textSource1.getId().equals(articleName)).findAny().get();
+        textSource = controller.getTextSourceManager().stream().filter(textSource1 -> textSource1.getId().equals(articleName)).findAny().get();
         annotationManager = textSource.getAnnotationManager();
         profile = controller.getProfileManager().addProfile("Default");
 
@@ -71,7 +70,7 @@ public class AnnotationManagerTest {
         setUp();
         Annotation annotation1 = annotationManager.addAnnotation("mention_3", null, "class_2", "class_2", profile, "identity");
 
-        int numAnnotations = annotationManager.getAnnotations().getCollection().size();
+        int numAnnotations = annotationManager.size();
         int numSpans = annotationManager.getSpans(null, 0, textSource.getContent().length()).size();
 
         assert numAnnotations == 3;
@@ -85,7 +84,7 @@ public class AnnotationManagerTest {
         Annotation annotation1 = annotationManager.addAnnotation("mention_3", null, "class_2", "class_2", profile, "identity");
         Span span1 = annotation1.getSpanManager().addSpan(null,1, 6);
 
-        int numAnnotations = annotationManager.getAnnotations().getCollection().size();
+        int numAnnotations = annotationManager.size();
         int numSpans = annotationManager.getSpans(null, 0, textSource.getContent().length()).size();
 
         assert numAnnotations == 3;
@@ -95,9 +94,9 @@ public class AnnotationManagerTest {
     @Test
     public void removeAnnotation() {
         setUp();
-        annotationManager.removeAnnotation(annotationManager.getAnnotation("mention_1"));
+        annotationManager.removeAnnotation(annotationManager.get("mention_1"));
 
-        int numAnnotations = annotationManager.getAnnotations().getCollection().size();
+        int numAnnotations = annotationManager.size();
         int numSpans = annotationManager.getSpans(null, 0, textSource.getContent().length()).size();
 
         assert numAnnotations == 1;
@@ -116,7 +115,7 @@ public class AnnotationManagerTest {
         Span span1 = annotation1.getSpanManager().addSpan(null,1, 6);
 
         annotationManager.removeSpanFromAnnotation(annotation1, span1);
-        int numAnnotations = annotationManager.getAnnotations().getCollection().size();
+        int numAnnotations = annotationManager.size();
         int numSpans = annotationManager.getSpans(null, 0, textSource.getContent().length()).size();
 
         assert numAnnotations == 3;

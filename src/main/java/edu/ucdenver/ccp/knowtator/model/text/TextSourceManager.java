@@ -154,12 +154,6 @@ public class TextSourceManager extends TextSourceCollection implements ProjectLi
                         TextSource::save);
     }
 
-    @Override
-    public void dispose() {
-        forEach(TextSource::dispose);
-        getCollection().clear();
-    }
-
     public File getAnnotationsLocation() {
         return annotationsLocation;
     }

@@ -9,29 +9,29 @@ import java.util.Set;
 
 public class SpanList extends JList<Span> implements ViewListener {
 
-	private KnowtatorView view;
+    private KnowtatorView view;
 
-	SpanList(KnowtatorView view) {
-		this.view = view;
-		view.getController().addViewListener(this);
-	}
+    SpanList(KnowtatorView view) {
+        this.view = view;
+        view.getController().addViewListener(this);
+    }
 
-	public void dispose() {
+    public void dispose() {
 
-	}
+    }
 
-	@Override
-	public void viewChanged() {
-		if (view.getController()
-				.getTextSourceManager().getSelection()
-				.getAnnotationManager().getSelection() != null) {
-			Set<Span> spans = view.getController()
-					.getTextSourceManager().getSelection()
-					.getAnnotationManager().getSelection()
-					.getSpanManager().getSpans().getCollection();
-			setListData(spans.toArray(new Span[0]));
-		} else {
-			setListData(new Span[0]);
-		}
-	}
+    @Override
+    public void viewChanged() {
+        if (view.getController()
+                .getTextSourceManager().getSelection()
+                .getAnnotationManager().getSelection() != null) {
+            Set<Span> spans = view.getController()
+                    .getTextSourceManager().getSelection()
+                    .getAnnotationManager().getSelection()
+                    .getSpanManager().getCollection();
+            setListData(spans.toArray(new Span[0]));
+        } else {
+            setListData(new Span[0]);
+        }
+    }
 }

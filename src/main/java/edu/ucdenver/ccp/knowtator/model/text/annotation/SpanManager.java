@@ -5,7 +5,6 @@ import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
-import edu.ucdenver.ccp.knowtator.model.selection.SelectionModel;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -23,19 +22,15 @@ public class SpanManager extends SpanCollection implements KnowtatorManager, Bra
     private final Annotation annotation;
 
     SpanManager(KnowtatorController controller, TextSource textSource, Annotation annotation) {
-        spanCollection = new SpanCollection(controller);
+        super(controller);
         this.controller = controller;
         this.textSource = textSource;
         this.annotation = annotation;
     }
 
     void removeSpan(Span span) {
-        spanCollection.remove(span);
+        remove(span);
         setSelection(null);
-    }
-
-    public SpanCollection getSpans() {
-        return spanCollection;
     }
 
     @Override
@@ -50,9 +45,9 @@ public class SpanManager extends SpanCollection implements KnowtatorManager, Bra
 
     @Override
     public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
-        Iterator<Span> spanIterator = spanCollection.iterator();
+        Iterator<Span> spanIterator = iterator();
         StringBuilder spannedText = new StringBuilder();
-        for (int i = 0; i < spanCollection.size(); i++) {
+        for (int i = 0; i < size(); i++) {
             Span span = spanIterator.next();
             span.writeToBratStandoff(writer, annotationConfig, visualConfig);
             String[] spanLines = span.getSpannedText().split("\n");
@@ -62,7 +57,7 @@ public class SpanManager extends SpanCollection implements KnowtatorManager, Bra
                     spannedText.append(" ");
                 }
             }
-            if (i != spanCollection.size() - 1) {
+            if (i != size() - 1) {
                 writer.append(";");
                 spannedText.append(" ");
             }
@@ -72,7 +67,7 @@ public class SpanManager extends SpanCollection implements KnowtatorManager, Bra
 
     @Override
     public void writeToKnowtatorXML(Document dom, Element parent) {
-        spanCollection.forEach(span -> span.writeToKnowtatorXML(dom, parent));
+        forEach(span -> span.writeToKnowtatorXML(dom, parent));
     }
 
     @Override
@@ -85,16 +80,9 @@ public class SpanManager extends SpanCollection implements KnowtatorManager, Bra
 
     }
 
-    @Override
-    public void dispose() {
-        super.dispose();
-        spanCollection.forEach(Span::dispose);
-        spanCollection.getCollection().clear();
-    }
-
     public Span addSpan(String spanId, int spanStart, int spanEnd) {
         Span newSpan = new Span(spanId, spanStart, spanEnd, textSource, controller, annotation);
-        spanCollection.add(newSpan);
+        add(newSpan);
         textSource.getAnnotationManager().getAllSpanCollection().add(newSpan);
         setSelection(newSpan);
         return newSpan;

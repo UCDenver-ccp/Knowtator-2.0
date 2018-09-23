@@ -109,7 +109,7 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
    */
   public int getSize() {
     int size = 0;
-    for (Span span : spanManager.getSpans()) {
+    for (Span span : spanManager) {
       size += span.getSize();
     }
     return size;
@@ -117,7 +117,7 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
 
   public String getSpannedText() {
     StringBuilder sb = new StringBuilder();
-    spanManager.getSpans()
+    spanManager
             .forEach(
                     span -> {
                       sb.append(String.format("%s", span.getSpannedText()));
@@ -189,7 +189,7 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
 
     if (getOwlClassLabel() != null) {
       visualConfig.get("labels").put(renderedOwlClassID, getOwlClassLabel());
-      visualConfig.get("drawing").put(renderedOwlClassID, String.format("bgColor:%s", Profile.convertToHex(controller.getProfileManager().getProfile("Default").getColor(this))));
+      visualConfig.get("drawing").put(renderedOwlClassID, String.format("bgColor:%s", Profile.convertToHex(controller.getProfileManager().get("Default").getColor(this))));
 
     }
 
@@ -297,7 +297,7 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
 
     sb.append("<li>class = ").append(getOwlClass()).append("</li>");
     sb.append("<li>spanCollection = ");
-    for (Span span : spanManager.getSpans()) sb.append(span.toString()).append(" ");
+    for (Span span : spanManager) sb.append(span.toString()).append(" ");
     sb.append("</li>");
 
     sb.append("</ul>");
@@ -327,8 +327,8 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
 
 
   public static int compare(Annotation annotation1, Annotation annotation2) {
-    Iterator<Span> spanIterator1 = annotation1.getSpanManager().getSpans().iterator();
-    Iterator<Span> spanIterator2 = annotation2.getSpanManager().getSpans().iterator();
+    Iterator<Span> spanIterator1 = annotation1.getSpanManager().iterator();
+    Iterator<Span> spanIterator2 = annotation2.getSpanManager().iterator();
     int result = 0;
     while (result == 0 && spanIterator1.hasNext() && spanIterator2.hasNext()) {
       Span span1 = spanIterator1.next();
@@ -351,7 +351,7 @@ public class Annotation implements KnowtatorTextBoundObject, KnowtatorXMLIO, Bra
   }
 
   public boolean contains(Integer loc) {
-    for (Span span : spanManager.getSpans()) {
+    for (Span span : spanManager) {
       if (span.contains(loc)) {
         return true;
       }

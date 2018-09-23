@@ -45,6 +45,8 @@ public abstract class SelectionModel<K extends KnowtatorObject, L extends Collec
     }
 
     public void dispose() {
+        forEach(KnowtatorObject::dispose);
+        getCollection().clear();
         selectionListeners.clear();
     }
 }

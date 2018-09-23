@@ -7,21 +7,20 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import javax.swing.*;
 
 public class GraphSpaceChooser extends Chooser<GraphSpace>
-    implements ViewListener {
+        implements ViewListener {
 
-  public GraphSpaceChooser(KnowtatorView view) {
-    super(view);
-  }
+    public GraphSpaceChooser(KnowtatorView view) {
+        super(view);
+    }
 
 
-
-	@Override
-	public void viewChanged() {
+    @Override
+    public void viewChanged() {
         setModel(
                 new DefaultComboBoxModel<>(
                         getView().getController()
                                 .getTextSourceManager().getSelection()
-                                .getGraphSpaceManager().getGraphSpaceCollection()
+                                .getGraphSpaceManager()
                                 .getCollection()
                                 .toArray(new GraphSpace[0])));
         setSelectedItem(getView().getController()

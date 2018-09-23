@@ -16,9 +16,9 @@ public class TextSourceChooser extends Chooser<TextSource> implements TextSource
         super(
                 view,
                 new TextSource[0]);
-        collection = view.getController().getTextSourceManager().getTextSourceCollection();
+        collection = view.getController().getTextSourceManager();
         view.getController().addViewListener(this);
-        collection.addListener(this);
+        collection.addCollectionListener(this);
 
     }
 

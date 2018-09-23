@@ -15,9 +15,9 @@ public class ProfileChooser extends Chooser<Profile>
 
     public ProfileChooser(KnowtatorView view) {
         super(view, new Profile[0]);
-        this.collection = view.getController().getProfileManager().getProfileCollection();
-        collection.addListener(this);
-        view.getController().getProfileManager().getProfileCollection().addListener(this);
+        this.collection = view.getController().getProfileManager();
+        collection.addCollectionListener(this);
+        view.getController().getProfileManager().addCollectionListener(this);
         view.getController().addViewListener(this);
     }
 

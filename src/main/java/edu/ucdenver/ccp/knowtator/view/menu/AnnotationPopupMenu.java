@@ -190,8 +190,6 @@ public class AnnotationPopupMenu extends JPopupMenu {
                     .getAnnotationManager()
                     .getSelection()
                     .getSpanManager()
-                    .getSpans()
-                    .getCollection()
                     .size()
                     > 1) {
                 add(removeSpanFromAnnotationCommand());

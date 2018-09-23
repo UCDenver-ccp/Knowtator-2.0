@@ -93,15 +93,15 @@ public class KnowtatorStandalone extends JFrame {
         List<Fragment> fragmentList = new ArrayList<>();
 
         Iterator<TextSource> textSourceIterator1 =
-                conceptsController.getTextSourceManager().getTextSourceCollection().iterator();
+                conceptsController.getTextSourceManager().iterator();
         Iterator<TextSource> textSourceIterator2 =
-                fragmentsController.getTextSourceManager().getTextSourceCollection().iterator();
+                fragmentsController.getTextSourceManager().iterator();
         while (textSourceIterator1.hasNext()) {
             TextSource textSource1 = textSourceIterator1.next();
             TextSource textSource2 = textSourceIterator2.next();
 
-            for (Annotation fragmentAnnotation : textSource2.getAnnotationManager().getAnnotations()) {
-                Span fragmentSpan = fragmentAnnotation.getSpanManager().getSpans().iterator().next();
+            for (Annotation fragmentAnnotation : textSource2.getAnnotationManager()) {
+                Span fragmentSpan = fragmentAnnotation.getSpanManager().iterator().next();
 
                 Fragment fragment =
                         new Fragment(textSource2, fragmentAnnotation.getId(), fragmentAnnotation.getOwlClassID());

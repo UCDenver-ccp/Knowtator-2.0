@@ -263,7 +263,7 @@ public class KnowtatorTextPane extends JTextArea
                                             view.getController()
                                                     .getTextSourceManager().getSelection()
                                                     .getAnnotationManager().getSelection()
-                                                    .getSpanManager().getSpans()
+                                                    .getSpanManager()
                                                     .getCollection()
                                                     .first()
                                                     .getStart()));
@@ -302,7 +302,7 @@ public class KnowtatorTextPane extends JTextArea
                     view.getController()
                             .getTextSourceManager().getSelection()
                             .getAnnotationManager().getSelection()
-                            .getSpanManager().getSpans().getCollection()) {
+                            .getSpanManager().getCollection()) {
                 try {
                     highlightSpan(span.getStart(), span.getEnd(), new RectanglePainter(Color.BLACK));
                 } catch (BadLocationException e) {

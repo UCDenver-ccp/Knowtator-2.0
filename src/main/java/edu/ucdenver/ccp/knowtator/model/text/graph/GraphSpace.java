@@ -103,11 +103,11 @@ public class GraphSpace extends mxGraph
       return 1;
     }
 
-    int intcompare = extractInt(graphSpace1.getId()) - extractInt(graphSpace2.getId());
-    if (intcompare == 0) {
+    int result = extractInt(graphSpace1.getId()) - extractInt(graphSpace2.getId());
+    if (result == 0) {
       return graphSpace1.getId().compareTo(graphSpace2.getId());
     } else {
-      return intcompare;
+      return result;
     }
   }
 
@@ -242,7 +242,7 @@ public class GraphSpace extends mxGraph
         y = Double.parseDouble(y_string);
       }
 
-      Annotation annotation = this.textSource.getAnnotationManager().getAnnotation(annotationID);
+      Annotation annotation = this.textSource.getAnnotationManager().get(annotationID);
       addNode(id, annotation, x, y);
     }
 
@@ -309,12 +309,12 @@ public class GraphSpace extends mxGraph
               Profile annotator = controller.getProfileManager().getDefaultProfile();
 
               Annotation subjectAnnotation =
-                  textSource.getAnnotationManager().getAnnotation(subjectAnnotationID);
+                  textSource.getAnnotationManager().get(subjectAnnotationID);
               List<Object> subjectAnnotationVertices = getVerticesForAnnotation(subjectAnnotation);
               AnnotationNode source = makeOrGetAnnotationNode(subjectAnnotation, subjectAnnotationVertices);
 
               Annotation objectAnnotation =
-                  textSource.getAnnotationManager().getAnnotation(objectAnnotationID);
+                  textSource.getAnnotationManager().get(objectAnnotationID);
               List<Object> objectAnnotationVertices = getVerticesForAnnotation(objectAnnotation);
               AnnotationNode target = makeOrGetAnnotationNode(subjectAnnotation, objectAnnotationVertices);
 

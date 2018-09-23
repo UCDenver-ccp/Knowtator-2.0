@@ -14,27 +14,27 @@ public class ListenableCollection<
         K extends KnowtatorObject, C extends Collection<K>, L extends CollectionListener<K>>
         implements ProjectListener, Iterable<K> {
   public final C collection;
-  private final ArrayList<L> listeners;
+  private final ArrayList<L> collectionListeners;
 
   ListenableCollection(ProjectManager controller, C collection) {
     this.collection = collection;
-    listeners = new ArrayList<>();
+    collectionListeners = new ArrayList<>();
     controller.addProjectListener(this);
   }
 
   public void add(K objectToAdd) {
     collection.add(objectToAdd);
-    listeners.forEach(listener -> listener.added(objectToAdd));
+    collectionListeners.forEach(listener -> listener.added(objectToAdd));
     if (collection.size() == 1) {
-      listeners.forEach(listener -> listener.firstAdded(objectToAdd));
+      collectionListeners.forEach(listener -> listener.firstAdded(objectToAdd));
     }
   }
 
   public void remove(K objectToRemove) {
     collection.remove(objectToRemove);
-    listeners.forEach(listener -> listener.removed(objectToRemove));
+    collectionListeners.forEach(listener -> listener.removed(objectToRemove));
     if (collection.size() == 0) {
-      listeners.forEach(listener -> listener.emptied(objectToRemove));
+      collectionListeners.forEach(listener -> listener.emptied(objectToRemove));
     }
   }
 
@@ -60,18 +60,18 @@ public class ListenableCollection<
     return false;
   }
 
-  public void addListener(L listener) {
-    listeners.add(listener);
+  public void addCollectionListener(L listener) {
+    collectionListeners.add(listener);
   }
 
-  public void removeListener(L listener) {
-    listeners.remove(listener);
+  public void removeCollectionListener(L listener) {
+    collectionListeners.remove(listener);
   }
 
   @Override
   public void projectClosed() {
     collection.clear();
-    listeners.clear();
+    collectionListeners.clear();
   }
 
   @Override

@@ -75,11 +75,8 @@ public abstract class ProjectManager implements Savable, KnowtatorManager {
                     .forEach(
                             fileName -> {
                                 try {
-                                    Files.copy(
-                                            fileName,
-                                            new File(
-                                                    manager.getSaveLocation(), fileName.getFileName().toFile().getName())
-                                                    .toPath());
+                                    Files.copy(fileName,
+                                            new File(manager.getSaveLocation(), fileName.getFileName().toFile().getName()).toPath());
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -112,7 +109,6 @@ public abstract class ProjectManager implements Savable, KnowtatorManager {
     }
 
     public void saveProject() {
-
         getManagers().forEach(SavableKnowtatorManager::save);
     }
 

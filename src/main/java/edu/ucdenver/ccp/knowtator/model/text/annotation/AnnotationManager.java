@@ -13,7 +13,6 @@ import edu.ucdenver.ccp.knowtator.model.owl.OWLClassNotFoundException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.model.selection.SelectionModel;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
@@ -47,13 +46,13 @@ public class AnnotationManager extends AnnotationCollection implements OWLSetupL
     private TextSource textSource;
 
     public AnnotationManager(KnowtatorController controller, TextSource textSource) {
+        super(controller);
         this.controller = controller;
         this.textSource = textSource;
 
         controller.getOWLManager().addOWLSetupListener(this);
         controller.addProjectListener(this);
 
-        annotationCollection = new AnnotationCollection(controller);
         allSpanCollection = new SpanCollection(controller);
     }
 
@@ -63,8 +62,8 @@ public class AnnotationManager extends AnnotationCollection implements OWLSetupL
 
     public Annotation addAnnotation(String annotationID, OWLClass owlClass, String owlClassID, String owlClassLabel, Profile annotator, String annotation_type) {
         Annotation newAnnotation = new Annotation(controller, annotationID, owlClass, owlClassID, owlClassLabel, annotator, annotation_type, textSource);
-        annotationCollection.add(newAnnotation);
-        allSpanCollection.getCollection().addAll(newAnnotation.getSpanManager().getSpans().getCollection());
+        add(newAnnotation);
+        allSpanCollection.getCollection().addAll(newAnnotation.getSpanManager().getCollection());
         setSelectedAnnotation(newAnnotation, null);
         return newAnnotation;
     }
@@ -102,8 +101,8 @@ public class AnnotationManager extends AnnotationCollection implements OWLSetupL
      */
 
     public void removeAnnotation(Annotation annotationToRemove) {
-        annotationCollection.remove(annotationToRemove);
-        for (Span span : annotationToRemove.getSpanManager().getSpans()) {
+        remove(annotationToRemove);
+        for (Span span : annotationToRemove.getSpanManager()) {
             allSpanCollection.remove(span);
         }
 
@@ -174,17 +173,13 @@ public class AnnotationManager extends AnnotationCollection implements OWLSetupL
     GETTERS
      */
 
-    public AnnotationCollection getAnnotations() {
-        return annotationCollection;
-    }
-
     private AnnotationCollection getAnnotations(OWLClass owlClass) {
         AnnotationCollection annotationsForOwlClass = new AnnotationCollection(controller);
 
         try {
             String owlClassID = controller.getOWLManager().getOWLEntityRendering(owlClass);
 
-            for (Annotation annotation : annotationCollection) {
+            for (Annotation annotation : this) {
                 if (annotation.getOwlClass() == owlClass) {
                     annotationsForOwlClass.add(annotation);
                 } else if (annotation.getOwlClassID().equals(owlClassID)) {
@@ -228,8 +223,7 @@ public class AnnotationManager extends AnnotationCollection implements OWLSetupL
 
     public TreeSet<Annotation> getAnnotations(int start, int end) {
         Supplier<TreeSet<Annotation>> supplier = () -> new TreeSet<>(Annotation::compare);
-        return annotationCollection
-                .stream()
+        return stream()
                 .filter(annotation -> (annotation.contains(start) && annotation.contains(end)))
                 .collect(Collectors.toCollection(supplier));
     }
@@ -253,10 +247,6 @@ public class AnnotationManager extends AnnotationCollection implements OWLSetupL
 
                     overlappingSpans.add(span);
                 });
-    }
-
-    public Annotation getAnnotation(String annotationID) {
-        return annotationCollection.get(annotationID);
     }
 
     public void getNextSpan() {
@@ -297,7 +287,7 @@ public class AnnotationManager extends AnnotationCollection implements OWLSetupL
     public void owlSetup() {
         try {
             controller.getOWLManager().getWorkSpace().getOWLModelManager().addOntologyChangeListener(this);
-            for (Annotation annotation : annotationCollection) {
+            for (Annotation annotation : this) {
                 annotation.setOwlClass(controller.getOWLManager().getOWLClassByID(annotation.getOwlClassID()));
             }
         } catch (OWLClassNotFoundException | OWLWorkSpaceNotSetException ignored) {
@@ -311,7 +301,7 @@ public class AnnotationManager extends AnnotationCollection implements OWLSetupL
 
     @Override
     public void writeToKnowtatorXML(Document dom, Element textSourceElement) {
-        annotationCollection.forEach(
+        forEach(
                 annotation -> annotation.writeToKnowtatorXML(dom, textSourceElement));
     }
 
@@ -321,8 +311,8 @@ public class AnnotationManager extends AnnotationCollection implements OWLSetupL
             Map<String, Map<String, String>> annotationsConfig,
             Map<String, Map<String, String>> visualConfig)
             throws IOException {
-        Iterator<Annotation> annotationIterator = annotationCollection.iterator();
-        for (int i = 0; i < annotationCollection.size(); i++) {
+        Iterator<Annotation> annotationIterator = iterator();
+        for (int i = 0; i < size(); i++) {
             Annotation annotation = annotationIterator.next();
             annotation.setBratID(String.format("T%d", i));
 
@@ -370,7 +360,7 @@ public class AnnotationManager extends AnnotationCollection implements OWLSetupL
             String profileID = annotationElement.getAttribute(KnowtatorXMLAttributes.ANNOTATOR);
             String type = annotationElement.getAttribute(KnowtatorXMLAttributes.TYPE);
 
-            Profile profile = controller.getProfileManager().getProfile(profileID);
+            Profile profile = controller.getProfileManager().get(profileID);
             profile = profile == null ? controller.getProfileManager().getDefaultProfile() : profile;
             String owlClassID =
                     ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0))
@@ -431,7 +421,7 @@ public class AnnotationManager extends AnnotationCollection implements OWLSetupL
             newAnnotation.readFromOldKnowtatorXML(null, annotationElement);
 
             // No need to keep annotations with no allSpanCollection
-            if (newAnnotation.getSpanManager().getSpans().getCollection().isEmpty()) {
+            if (newAnnotation.getSpanManager().getCollection().isEmpty()) {
                 removeAnnotation(newAnnotation);
             } else {
                 for (Node slotMentionNode :
@@ -465,7 +455,7 @@ public class AnnotationManager extends AnnotationCollection implements OWLSetupL
                                     slot.getElementsByTagName(OldKnowtatorXMLTags.COMPLEX_SLOT_MENTION_VALUE))) {
                         Element slotMentionValueElement = (Element) slotMentionValueNode;
                         String value = slotMentionValueElement.getAttribute(OldKnowtatorXMLAttributes.VALUE);
-                        Annotation annotation1 = textSource.getAnnotationManager().getAnnotation(value);
+                        Annotation annotation1 = textSource.getAnnotationManager().get(value);
 
                         List<Object> vertices1 = oldKnowtatorGraphSpace.getVerticesForAnnotation(annotation1);
 
@@ -514,7 +504,7 @@ public class AnnotationManager extends AnnotationCollection implements OWLSetupL
                         normalizaion -> {
                             String[] splitNormalization =
                                     normalizaion[1].split(StandoffTags.relationTripleDelimiter);
-                            Annotation annotation = getAnnotation(splitNormalization[1]);
+                            Annotation annotation = get(splitNormalization[1]);
                             annotation.setOWLClassID(splitNormalization[2]);
                         });
 
@@ -527,8 +517,6 @@ public class AnnotationManager extends AnnotationCollection implements OWLSetupL
     @Override
     public void dispose() {
         super.dispose();
-        annotationCollection.forEach(Annotation::dispose);
-        annotationCollection.getCollection().clear();
         try {
             controller.getOWLManager().getWorkSpace().getOWLModelManager().removeOntologyChangeListener(this);
         } catch (OWLWorkSpaceNotSetException ignored) {

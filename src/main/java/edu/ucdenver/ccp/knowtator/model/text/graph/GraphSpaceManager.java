@@ -26,10 +26,9 @@ public class GraphSpaceManager extends GraphSpaceCollection implements Knowtator
   private TextSource textSource;
 
   public GraphSpaceManager(KnowtatorController controller, TextSource textSource) {
-
+    super(controller);
     this.controller = controller;
     this.textSource = textSource;
-    graphSpaceCollection = new GraphSpaceCollection(controller);
   }
 
   /*
@@ -37,15 +36,11 @@ public class GraphSpaceManager extends GraphSpaceCollection implements Knowtator
    */
 
   public void getNextGraphSpace() {
-    setSelection(graphSpaceCollection.getNext(getSelection()));
+    setSelection(getNext(getSelection()));
   }
 
   public void getPreviousGraphSpace() {
-    setSelection(graphSpaceCollection.getPrevious(getSelection()));
-  }
-
-  public GraphSpaceCollection getGraphSpaceCollection() {
-    return graphSpaceCollection;
+    setSelection(getPrevious(getSelection()));
   }
 
   /*
@@ -64,7 +59,7 @@ public class GraphSpaceManager extends GraphSpaceCollection implements Knowtator
   }
 
   public void addGraphSpace(GraphSpace newGraphSpace) {
-    graphSpaceCollection.add(newGraphSpace);
+    add(newGraphSpace);
     setSelection(newGraphSpace);
 
     textSource.save();
@@ -75,7 +70,7 @@ public class GraphSpaceManager extends GraphSpaceCollection implements Knowtator
    */
 
   public void removeAnnotation(Annotation annotationToRemove) {
-    for (GraphSpace graphSpace : graphSpaceCollection) {
+    for (GraphSpace graphSpace : this) {
       for (Object vertex : graphSpace.getVerticesForAnnotation(annotationToRemove)) {
         graphSpace.setSelectionCell(vertex);
         graphSpace.removeSelectedCell();
@@ -84,7 +79,7 @@ public class GraphSpaceManager extends GraphSpaceCollection implements Knowtator
   }
 
   public void removeGraphSpace(GraphSpace graphSpace) {
-    graphSpaceCollection.remove(graphSpace);
+    remove(graphSpace);
     setSelection(null);
     textSource.save();
   }
@@ -94,7 +89,7 @@ public class GraphSpaceManager extends GraphSpaceCollection implements Knowtator
    */
   @Override
   public void writeToKnowtatorXML(Document dom, Element parent) {
-    graphSpaceCollection.forEach(graphSpace -> graphSpace.writeToKnowtatorXML(dom, parent));
+    forEach(graphSpace -> graphSpace.writeToKnowtatorXML(dom, parent));
   }
 
 
@@ -127,7 +122,7 @@ public class GraphSpaceManager extends GraphSpaceCollection implements Knowtator
       id = String.format("%s_0", idPrefix);
     }
     List<String> ids = new ArrayList<>();
-    for (GraphSpace graphSpace : graphSpaceCollection) {
+    for (GraphSpace graphSpace : this) {
       for (Object cell : graphSpace.getChildVertices(graphSpace.getDefaultParent())) {
         ids.add(((KnowtatorObject) cell).getId());
       }
@@ -139,12 +134,6 @@ public class GraphSpaceManager extends GraphSpaceCollection implements Knowtator
     }
 
     return id;
-  }
-
-  @Override
-  public void dispose() {
-    graphSpaceCollection.forEach(GraphSpace::dispose);
-    graphSpaceCollection.getCollection().clear();
   }
 
   @Override

@@ -8,39 +8,37 @@ import javax.swing.*;
 
 public class AnnotationGraphSpaceChooser extends Chooser<GraphSpace> implements ViewListener {
 
-  private KnowtatorView view;
+    private KnowtatorView view;
 
-  public AnnotationGraphSpaceChooser(KnowtatorView view) {
-    super(view);
-    this.view = view;
-    view.getController().addViewListener(this);
-  }
-
-  @Override
-  public void added(GraphSpace graphSpace) {
-    if (graphSpace.containsAnnotation(
-        view.getController()
-            .getTextSourceManager().getSelection()
-            .getAnnotationManager().getSelection())) {
-      addItem(graphSpace);
+    public AnnotationGraphSpaceChooser(KnowtatorView view) {
+        super(view);
+        this.view = view;
+        view.getController().addViewListener(this);
     }
-  }
 
-  @Override
-  public void viewChanged() {
-    setModel(
-        new DefaultComboBoxModel<>(
-            view.getController()
-                .getTextSourceManager().getSelection()
-                .getGraphSpaceManager()
-                .getGraphSpaceCollection()
-                .stream()
-                .filter(
-                    graphSpace ->
-                            graphSpace.containsAnnotation(
-                                view.getController()
-                                    .getTextSourceManager().getSelection()
-                                    .getAnnotationManager().getSelection()))
-                .toArray(GraphSpace[]::new)));
-  }
+    @Override
+    public void added(GraphSpace graphSpace) {
+        if (graphSpace.containsAnnotation(
+                view.getController()
+                        .getTextSourceManager().getSelection()
+                        .getAnnotationManager().getSelection())) {
+            addItem(graphSpace);
+        }
+    }
+
+    @Override
+    public void viewChanged() {
+        setModel(
+                new DefaultComboBoxModel<>(
+                        view.getController()
+                                .getTextSourceManager().getSelection()
+                                .getGraphSpaceManager()
+                                .stream().filter(
+                                graphSpace ->
+                                        graphSpace.containsAnnotation(
+                                                view.getController()
+                                                        .getTextSourceManager().getSelection()
+                                                        .getAnnotationManager().getSelection()))
+                                .toArray(GraphSpace[]::new)));
+    }
 }

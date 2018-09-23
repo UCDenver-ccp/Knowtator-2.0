@@ -49,7 +49,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         implements DropTargetListener {
 
     private static final Logger log = Logger.getLogger(KnowtatorView.class);
-    private final Preferences prefs = Preferences.userRoot().node("knowtator");
+    private final Preferences preferences = Preferences.userRoot().node("knowtator");
     private KnowtatorController controller;
     private GraphViewDialog graphViewDialog;
     private JMenu projectMenu;
@@ -116,17 +116,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
             @Override
             public void noSelection(TextSource previousSelection) {
                 previousSelection.getAnnotationManager().removeSelectionListener(annotationSelectionListener);
-                previousSelection.getAnnotationManager().getAnnotations().removeListener(annotationCollectionListener);
+                previousSelection.getAnnotationManager().removeCollectionListener(annotationCollectionListener);
             }
 
             @Override
             public void selected(TextSource previousSelection, TextSource currentSelection) {
                 if (previousSelection != null) {
                     previousSelection.getAnnotationManager().removeSelectionListener(annotationSelectionListener);
-                    previousSelection.getAnnotationManager().getAnnotations().removeListener(annotationCollectionListener);
+                    previousSelection.getAnnotationManager().removeCollectionListener(annotationCollectionListener);
                 }
                 currentSelection.getAnnotationManager().addSelectionListener(annotationSelectionListener);
-                currentSelection.getAnnotationManager().getAnnotations().addListener(annotationCollectionListener);
+                currentSelection.getAnnotationManager().addCollectionListener(annotationCollectionListener);
                 controller.refreshView();
             }
         };
@@ -134,7 +134,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
             @Override
             public void noSelection(Annotation previousSelection) {
                 previousSelection.getSpanManager().removeSelectionListener(spanSelectionListener);
-                previousSelection.getSpanManager().getSpans().removeListener(spanCollectionListener);
+                previousSelection.getSpanManager().removeCollectionListener(spanCollectionListener);
                 controller.refreshView();
             }
 
@@ -142,10 +142,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
             public void selected(Annotation previousSelection, Annotation currentSelection) {
                 if (previousSelection != null) {
                     previousSelection.getSpanManager().removeSelectionListener(spanSelectionListener);
-                    previousSelection.getSpanManager().getSpans().removeListener(spanCollectionListener);
+                    previousSelection.getSpanManager().removeCollectionListener(spanCollectionListener);
                 }
                 currentSelection.getSpanManager().addSelectionListener(spanSelectionListener);
-                currentSelection.getSpanManager().getSpans().addListener(spanCollectionListener);
+                currentSelection.getSpanManager().addCollectionListener(spanCollectionListener);
                 controller.refreshView();
             }
         };
@@ -227,7 +227,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
         controller.getSelectionManager().addOWLEntityListener(owlClassSelectionListener);
         controller.getTextSourceManager().addSelectionListener(textSourceSelectionListener);
-        controller.getTextSourceManager().getTextSourceCollection().addListener(textSourceCollectionListener);
+        controller.getTextSourceManager().addCollectionListener(textSourceCollectionListener);
 
         $$$setupUI$$$();
 
@@ -252,8 +252,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         setUpOWL();
     }
 
-    public Preferences getPrefs() {
-        return prefs;
+    public Preferences getPreferences() {
+        return preferences;
     }
 
     private void setUpOWL() {
@@ -370,7 +370,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
             if (getController()
                     .getTextSourceManager().getSelection()
                     .getAnnotationManager()
-                    .getSelection().getSpanManager().getSpans()
+                    .getSelection().getSpanManager()
                     .size()
                     > 1) {
                 String[] buttons = {"Remove annotation", "Remove span from annotation", "Cancel"};

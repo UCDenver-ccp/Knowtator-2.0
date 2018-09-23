@@ -1,13 +1,13 @@
 package edu.ucdenver.ccp.knowtator.model.profile;
 
-import edu.ucdenver.ccp.knowtator.*;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.SavableKnowtatorManager;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.listeners.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollection;
-import edu.ucdenver.ccp.knowtator.model.selection.SelectionModel;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -30,9 +30,9 @@ public class ProfileManager extends ProfileCollection implements KnowtatorXMLIO,
     private File profilesLocation;
 
     public ProfileManager(KnowtatorController controller) {
+        super(controller);
         this.controller = controller;
         colorListeners = new ArrayList<>();
-        profileCollection = new ProfileCollection(controller);
         setSelection(getDefaultProfile());
     }
 
@@ -41,26 +41,22 @@ public class ProfileManager extends ProfileCollection implements KnowtatorXMLIO,
     }
 
     public Profile addProfile(String profileID) {
-        Profile newProfile = profileCollection.get(profileID);
+        Profile newProfile = get(profileID);
         if (newProfile == null) {
             newProfile = new Profile(controller, profileID);
-            profileCollection.add(newProfile);
+            add(newProfile);
         }
         setSelection(newProfile);
         return newProfile;
     }
 
     private void removeProfile(Profile profile) {
-        profileCollection.remove(profile);
-        setSelection(profileCollection.iterator().next());
-    }
-
-    public ProfileCollection getProfileCollection() {
-        return profileCollection;
+        remove(profile);
+        setSelection(iterator().next());
     }
 
     public void writeToKnowtatorXML(Document dom, Element root) {
-        profileCollection.forEach(profile -> profile.writeToKnowtatorXML(dom, root));
+        forEach(profile -> profile.writeToKnowtatorXML(dom, root));
     }
 
     @Override
@@ -79,18 +75,10 @@ public class ProfileManager extends ProfileCollection implements KnowtatorXMLIO,
     public void readFromOldKnowtatorXML(File file, Element parent) {
     }
 
-    public Profile getDefaultProfile() {
-        return profileCollection.getDefaultProfile();
-    }
-
     public void removeActiveProfile() {
-        if (getSelection() != profileCollection.getDefaultProfile()) {
+        if (getSelection() != getDefaultProfile()) {
             removeProfile(getSelection());
         }
-    }
-
-    public Profile getProfile(String profileID) {
-        return profileCollection.get(profileID);
     }
 
     void fireColorChanged() {
@@ -100,7 +88,7 @@ public class ProfileManager extends ProfileCollection implements KnowtatorXMLIO,
 
     @Override
     public void dispose() {
-        profileCollection.getCollection().clear();
+        super.dispose();
         colorListeners.clear();
     }
 
@@ -137,10 +125,6 @@ public class ProfileManager extends ProfileCollection implements KnowtatorXMLIO,
 
     @Override
     public void save() {
-        profileCollection
-                .getCollection()
-                .forEach(
-                        Profile::save);
-
+        getCollection().forEach(Profile::save);
     }
 }

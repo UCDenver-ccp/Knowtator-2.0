@@ -144,7 +144,7 @@ public class ProjectMenu extends JMenu implements ProjectListener {
     private JMenu openRecentCommand() {
         JMenu menu = new JMenu("Open recent ...");
 
-        String recentProjectName = view.getPrefs().get("Last Project", null);
+        String recentProjectName = view.getPreferences().get("Last Project", null);
 
         if (recentProjectName != null) {
             File recentProject = new File(recentProjectName);
@@ -166,10 +166,10 @@ public class ProjectMenu extends JMenu implements ProjectListener {
         }
         view.getController().loadProject();
 
-        view.getPrefs().put("Last Project", file.getAbsolutePath());
+        view.getPreferences().put("Last Project", file.getAbsolutePath());
 
         try {
-            view.getPrefs().flush();
+            view.getPreferences().flush();
         } catch (BackingStoreException e) {
             e.printStackTrace();
         }
