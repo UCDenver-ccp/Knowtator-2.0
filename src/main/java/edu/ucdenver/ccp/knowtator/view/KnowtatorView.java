@@ -529,14 +529,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
     @Override
     public void disposeView() {
-        if (JOptionPane.showConfirmDialog(
-                this,
-                "Save changes to Knowtator project?",
-                "Save Project",
-                JOptionPane.YES_NO_OPTION)
-                == JOptionPane.YES_OPTION) {
-            controller.saveProject();
-        }
         if (controller != null) {
             controller.dispose();
         }
