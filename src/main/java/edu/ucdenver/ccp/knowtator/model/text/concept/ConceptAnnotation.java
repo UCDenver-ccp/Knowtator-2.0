@@ -140,7 +140,8 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundObject<ConceptA
     this.owlClass = owlClass;
     try {
       this.owlClassID = controller.getOWLManager().getOWLEntityRendering(owlClass);
-    } catch (OWLWorkSpaceNotSetException | OWLEntityNullException ignored) {
+    } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
+      e.printStackTrace();
     }
   }
 

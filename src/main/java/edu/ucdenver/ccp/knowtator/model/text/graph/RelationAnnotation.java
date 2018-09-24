@@ -8,7 +8,6 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.listeners.OWLSetupListener;
-import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLObjectPropertyNotFoundException;
@@ -30,7 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class RelationAnnotation extends mxCell implements Savable, KnowtatorXMLIO, KnowtatorTextBoundObject, ProjectListener, OWLSetupListener, OWLOntologyChangeListener, OWLModelManagerListener {
+public class RelationAnnotation extends mxCell implements Savable, KnowtatorXMLIO, KnowtatorTextBoundObject, OWLSetupListener, OWLOntologyChangeListener, OWLModelManagerListener {
     private String quantifier;
     private String quantifierValue;
     private Profile annotator;
@@ -68,7 +67,6 @@ public class RelationAnnotation extends mxCell implements Savable, KnowtatorXMLI
 
         dontRedraw = false;
         controller.getOWLManager().addOWLSetupListener(this);
-        controller.addProjectListener(this);
 
         controller.verifyId(id, this, false);
 
@@ -140,6 +138,7 @@ public class RelationAnnotation extends mxCell implements Savable, KnowtatorXMLI
         return annotator;
     }
 
+    @SuppressWarnings("unused")
     String getBratID() {
         return bratID;
     }
@@ -169,6 +168,7 @@ public class RelationAnnotation extends mxCell implements Savable, KnowtatorXMLI
     SETTERS
      */
 
+    @SuppressWarnings("unused")
     void setBratID(String bratID) {
         this.bratID = bratID;
     }
@@ -198,7 +198,7 @@ public class RelationAnnotation extends mxCell implements Savable, KnowtatorXMLI
         }
     }
 
-    public void setQuantifierValue(String quantifierValue) {
+    void setQuantifierValue(String quantifierValue) {
         this.quantifierValue = quantifierValue;
         setValue(null);
     }
@@ -208,12 +208,12 @@ public class RelationAnnotation extends mxCell implements Savable, KnowtatorXMLI
         setValue(null);
     }
 
-    public void setQuantifier(String quantifier) {
+    void setQuantifier(String quantifier) {
         this.quantifier = quantifier;
         setValue(null);
     }
 
-    public void setNegation(boolean negation) {
+    void setNegation(boolean negation) {
         this.isNegated = negation;
         setValue(null);
     }
@@ -275,7 +275,8 @@ public class RelationAnnotation extends mxCell implements Savable, KnowtatorXMLI
             dontRedraw = true;
             setValue(String.format("%s\n%s %s", controller.getOWLManager().getOWLEntityRendering(property), quantifier, quantifierValue));
             dontRedraw = false;
-        } catch (OWLWorkSpaceNotSetException | OWLObjectPropertyNotFoundException | OWLEntityNullException ignored) {
+        } catch (OWLWorkSpaceNotSetException | OWLObjectPropertyNotFoundException | OWLEntityNullException e) {
+            e.printStackTrace();
 
         }
     }
@@ -332,18 +333,10 @@ public class RelationAnnotation extends mxCell implements Savable, KnowtatorXMLI
         if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
             try {
                 setValue(String.format("%s\n%s %s", controller.getOWLManager().getOWLEntityRendering(property), quantifier, quantifierValue));
-            } catch (OWLWorkSpaceNotSetException | OWLEntityNullException ignored) {
+            } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
+                e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public void projectClosed() {
-    }
-
-    @Override
-    public void projectLoaded() {
-        owlSetup();
     }
 
     @Override

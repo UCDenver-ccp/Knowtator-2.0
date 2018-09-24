@@ -9,6 +9,7 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.commons.cli.*;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -19,12 +20,12 @@ import java.util.List;
 import java.util.TreeSet;
 
 public class KnowtatorStandalone extends JFrame {
-    private JComponent contentPane;
+    private KnowtatorView view;
+    private JPanel panel1;
 
-    private KnowtatorStandalone(KnowtatorView view) {
-        contentPane = view;
-        setContentPane(contentPane);
+    private KnowtatorStandalone() {
         $$$setupUI$$$();
+        setContentPane(panel1);
     }
 
     public static void main(String[] args) {
@@ -219,17 +220,20 @@ public class KnowtatorStandalone extends JFrame {
             e.printStackTrace();
         }
 
-        KnowtatorView view = new KnowtatorView();
-        KnowtatorStandalone dialog = new KnowtatorStandalone(view);
+        KnowtatorStandalone dialog = new KnowtatorStandalone();
 
         if (dialog.getJMenuBar() == null) {
             JMenuBar menuBar = new JMenuBar();
             dialog.setJMenuBar(menuBar);
         }
-        dialog.getJMenuBar().add(view.getProjectMenu());
+        dialog.getJMenuBar().add(dialog.getView().getProjectMenu());
         dialog.pack();
         dialog.setVisible(true);
         //        System.exit(0);
+    }
+
+    private KnowtatorView getView() {
+        return view;
     }
 
     private void createUIComponents() {
@@ -244,14 +248,17 @@ public class KnowtatorStandalone extends JFrame {
      * @noinspection ALL
      */
     private void $$$setupUI$$$() {
-        createUIComponents();
-        contentPane.setAutoscrolls(true);
+        panel1 = new JPanel();
+        panel1.setLayout(new BorderLayout(0, 0));
+        panel1.setAutoscrolls(true);
+        view = new KnowtatorView();
+        panel1.add(view.$$$getRootComponent$$$(), BorderLayout.CENTER);
     }
 
     /**
      * @noinspection ALL
      */
     public JComponent $$$getRootComponent$$$() {
-        return contentPane;
+        return panel1;
     }
 }

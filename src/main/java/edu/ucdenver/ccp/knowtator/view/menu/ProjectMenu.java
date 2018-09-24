@@ -3,8 +3,8 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import edu.ucdenver.ccp.knowtator.iaa.IAAException;
 import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
-import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorViewComponent;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -16,9 +16,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.prefs.BackingStoreException;
 
-public class ProjectMenu extends JMenu implements ProjectListener {
+public class ProjectMenu extends JMenu implements KnowtatorViewComponent {
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(ProjectMenu.class);
 
@@ -31,19 +30,10 @@ public class ProjectMenu extends JMenu implements ProjectListener {
         super("Project");
         this.view = view;
 
-        add(newProjectCommand());
-        add(openRecentCommand());
-        add(openProjectCommand());
-        add(saveProjectCommand());
-        addSeparator();
-        add(addDocumentCommand());
         add(importAnnotationsCommand());
         addSeparator();
         add(exportToBratCommand());
         add(saveTextViewerAsPNG());
-        addSeparator();
-        add(profileMenu());
-        add(removeProfileMenu());
         addSeparator();
         add(IAAMenu());
         addSeparator();
@@ -103,12 +93,6 @@ public class ProjectMenu extends JMenu implements ProjectListener {
         return menuItem;
     }
 
-    private JMenu profileMenu() {
-        JMenu profileMenu = new JMenu("Profile");
-        profileMenu.add(newProfile());
-        return profileMenu;
-    }
-
     private JMenu IAAMenu() {
         JMenu iaaMenu = new JMenu("IAA");
 
@@ -141,40 +125,6 @@ public class ProjectMenu extends JMenu implements ProjectListener {
         return menuItem;
     }
 
-    private JMenu openRecentCommand() {
-        JMenu menu = new JMenu("Open recent ...");
-
-        String recentProjectName = view.getPreferences().get("Last Project", null);
-
-        if (recentProjectName != null) {
-            File recentProject = new File(recentProjectName);
-            JMenuItem recentProjectMenuItem = new JMenuItem(recentProject.getName());
-            recentProjectMenuItem.addActionListener(e -> loadProject(recentProject));
-
-            menu.add(recentProjectMenuItem);
-        }
-
-        return menu;
-    }
-
-    private void loadProject(File file) {
-        view.reset();
-        try {
-            view.getController().setSaveLocation(file.getParentFile());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        view.getController().loadProject();
-
-        view.getPreferences().put("Last Project", file.getAbsolutePath());
-
-        try {
-            view.getPreferences().flush();
-        } catch (BackingStoreException e) {
-            e.printStackTrace();
-        }
-    }
-
     private JMenuItem importAnnotationsCommand() {
         JMenuItem menuItem = new JMenuItem("Import Annotations");
         menuItem.addActionListener(
@@ -193,127 +143,6 @@ public class ProjectMenu extends JMenu implements ProjectListener {
 
                 });
         return menuItem;
-    }
-
-    private JMenuItem addDocumentCommand() {
-        JMenuItem menuItem = new JMenuItem("Add Document");
-        menuItem.addActionListener(
-                e -> {
-                    JFileChooser fileChooser = new JFileChooser();
-                    fileChooser.setCurrentDirectory(view.getController().getTextSourceCollection().getArticlesLocation());
-
-                    if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-                        view.getController().getTextSourceCollection().addDocument(fileChooser.getSelectedFile());
-                    }
-                });
-        return menuItem;
-    }
-
-    private JMenuItem newProjectCommand() {
-        JMenuItem menuItem = new JMenuItem("New Project");
-        menuItem.addActionListener(
-                e -> {
-                    String projectName = JOptionPane.showInputDialog("Enter project name");
-
-                    if (projectName != null && !projectName.equals("")) {
-
-                        JFileChooser fileChooser = new JFileChooser();
-                        fileChooser.setDialogTitle("Select project root");
-                        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-
-                        if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-                            File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
-                            view.reset();
-                            view.getController().newProject(projectDirectory);
-                        }
-                    }
-                });
-
-        return menuItem;
-    }
-
-    private JMenuItem openProjectCommand() {
-
-        JMenuItem open = new JMenuItem("Open Project");
-        open.addActionListener(
-                e -> {
-                    JFileChooser fileChooser = new JFileChooser();
-                    FileFilter fileFilter = new FileNameExtensionFilter("Knowtator", "knowtator");
-                    fileChooser.setFileFilter(fileFilter);
-                    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-
-                    if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-                        loadProject(fileChooser.getSelectedFile());
-                    }
-                });
-
-        return open;
-    }
-
-    private JMenuItem saveProjectCommand() {
-        JMenuItem save = new JMenuItem("Save Project");
-        save.addActionListener(
-                e -> {
-                    try {
-                        view.getController().saveProject();
-                    } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(
-                                view,
-                                String.format(
-                                        "Something went wrong trying to save your project:\n %s", e1.getMessage()));
-                        e1.printStackTrace();
-                    }
-                });
-
-        return save;
-    }
-
-    @Override
-    public void projectClosed() {
-    }
-
-    @Override
-    public void projectLoaded() {
-        removeAll();
-        add(newProjectCommand());
-        add(openRecentCommand());
-        add(openProjectCommand());
-        add(saveProjectCommand());
-        addSeparator();
-        add(addDocumentCommand());
-        add(importAnnotationsCommand());
-        addSeparator();
-        add(IAAMenu());
-        addSeparator();
-        add(profileMenu());
-    }
-
-    private JMenuItem newProfile() {
-        JMenuItem newAnnotator = new JMenuItem("New profile");
-        newAnnotator.addActionListener(
-                e -> {
-                    JTextField field1 = new JTextField();
-                    Object[] message = {
-                            "Profile name", field1,
-                    };
-                    int option =
-                            JOptionPane.showConfirmDialog(
-                                    view, message, "Enter profile name", JOptionPane.OK_CANCEL_OPTION);
-                    if (option == JOptionPane.OK_OPTION) {
-                        String annotator = field1.getText();
-                        view.getController().getProfileCollection().addProfile(annotator);
-                    }
-                });
-
-        return newAnnotator;
-    }
-
-    private JMenuItem removeProfileMenu() {
-        JMenuItem removeProfileMenu = new JMenuItem("Remove profile");
-        removeProfileMenu.addActionListener(
-                e -> view.getController().getProfileCollection().removeActiveProfile());
-
-        return removeProfileMenu;
     }
 
     private JMenuItem getRunIAACommand() {
@@ -352,5 +181,18 @@ public class ProjectMenu extends JMenu implements ProjectListener {
                     }
                 });
         return runIAA;
+    }
+
+    @Override
+    public void reset() {
+        removeAll();
+        add(importAnnotationsCommand());
+        addSeparator();
+        add(IAAMenu());
+    }
+
+    @Override
+    public void dispose() {
+
     }
 }

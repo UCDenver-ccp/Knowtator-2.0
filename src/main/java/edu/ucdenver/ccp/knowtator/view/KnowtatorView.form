@@ -1,354 +1,345 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="edu.ucdenver.ccp.knowtator.view.KnowtatorView">
-  <grid id="27dc6" binding="panel1" custom-create="true" default-binding="true" layout-manager="BorderLayout" hgap="0" vgap="0">
+  <grid id="27dc6" binding="panel1" default-binding="true" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="20" y="20" width="2062" height="657"/>
+      <xy x="20" y="20" width="1523" height="547"/>
     </constraints>
-    <properties>
-      <minimumSize width="450" height="375"/>
-      <preferredSize width="900" height="800"/>
-    </properties>
+    <properties/>
     <border type="none"/>
     <children>
-      <grid id="e2c13" class="javax.swing.JMenuBar" layout-manager="BorderLayout" hgap="0" vgap="0">
+      <grid id="eee66" layout-manager="GridBagLayout">
         <constraints border-constraint="North"/>
         <properties>
-          <maximumSize width="2147483647" height="25"/>
-          <minimumSize width="-1" height="-1"/>
-          <preferredSize width="900" height="25"/>
+          <preferredSize width="672" height="182"/>
         </properties>
         <border type="none"/>
         <children>
-          <component id="9fd96" class="javax.swing.JMenu" binding="projectMenu" custom-create="true">
-            <constraints border-constraint="West"/>
+          <component id="a977e" class="javax.swing.JButton" binding="showGraphViewerButton">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="1.0" weighty="1.0"/>
+            </constraints>
             <properties>
-              <maximumSize width="120" height="20"/>
-              <minimumSize width="-1" height="-1"/>
-              <preferredSize width="120" height="20"/>
-              <selected value="false"/>
-              <text resource-bundle="ui" key="knowator.project"/>
+              <icon value="icon/icons8-tree-structure-32.png"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <grid id="49c09" layout-manager="GridBagLayout">
+            <constraints>
+              <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="1.0" weighty="1.0"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="6005e" class="javax.swing.JCheckBox" binding="classFilterCheckBox">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text resource-bundle="log4j" key="owl.class.filter1"/>
+                </properties>
+              </component>
+              <component id="ae628" class="javax.swing.JCheckBox" binding="profileFilterCheckBox">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                    <preferred-size width="80" height="11"/>
+                  </grid>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text resource-bundle="log4j" key="profile.filter"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <component id="e76c9" class="javax.swing.JButton" binding="openProjectButton">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                <preferred-size width="78" height="36"/>
+              </grid>
+              <gridbag weightx="1.0" weighty="1.0"/>
+            </constraints>
+            <properties>
+              <text resource-bundle="log4j" key="open.project"/>
+            </properties>
+          </component>
+          <grid id="37310" binding="profilePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="98" height="36"/>
+              </grid>
+              <gridbag weightx="1.0" weighty="1.0"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="2531e" class="edu.ucdenver.ccp.knowtator.view.chooser.ProfileChooser" binding="profileChooser" custom-create="true">
+                <constraints border-constraint="Center"/>
+                <properties/>
+              </component>
+              <component id="2e340" class="javax.swing.JButton" binding="button4" default-binding="true">
+                <constraints border-constraint="South"/>
+                <properties>
+                  <icon value="icon/icons8-sort-down-24.png"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="27fa7" class="javax.swing.JButton" binding="button6" default-binding="true">
+                <constraints border-constraint="North"/>
+                <properties>
+                  <icon value="icon/icons8-sort-up-24.png"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="ea52b" class="javax.swing.JButton" binding="addProfileButton">
+                <constraints border-constraint="West"/>
+                <properties>
+                  <icon value="icon/icons8-plus-24.png"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="25d72" class="javax.swing.JButton" binding="removeProfileButton">
+                <constraints border-constraint="East"/>
+                <properties>
+                  <icon value="icon/icons8-delete-24.png"/>
+                  <text value=""/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="bada3" binding="textSourcePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <grid id="54d1f" binding="textSourceChooserPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints border-constraint="Center"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="50aa5" class="edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser" binding="textSourceChooser" custom-create="true">
+                    <constraints border-constraint="Center"/>
+                    <properties/>
+                  </component>
+                  <component id="d6b3d" class="javax.swing.JButton" binding="previousTextSourceButton">
+                    <constraints border-constraint="North"/>
+                    <properties>
+                      <icon value="icon/icons8-sort-up-24.png"/>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="6c4fd" class="javax.swing.JButton" binding="nextTextSourceButton">
+                    <constraints border-constraint="South"/>
+                    <properties>
+                      <icon value="icon/icons8-sort-down-24.png"/>
+                      <minimumSize width="30" height="30"/>
+                      <preferredSize width="30" height="30"/>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="84384" class="javax.swing.JButton" binding="addTextSourceButton">
+                    <constraints border-constraint="West"/>
+                    <properties>
+                      <icon value="icon/icons8-plus-24.png"/>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="a16e" class="javax.swing.JButton" binding="removeTextSourceButton">
+                    <constraints border-constraint="East"/>
+                    <properties>
+                      <icon value="icon/icons8-delete-24.png"/>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="cada" binding="textSizePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints border-constraint="West"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="60fbd" class="javax.swing.JButton" binding="increaseFontSizeButton">
+                    <constraints border-constraint="North"/>
+                    <properties>
+                      <icon value="icon/icons8-Increase Font.png"/>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="88558" class="javax.swing.JButton" binding="decreaseFontSizeButton">
+                    <constraints border-constraint="South"/>
+                    <properties>
+                      <icon value="icon/icons8-Decrease Font (Custom).png"/>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </grid>
+          <grid id="2d0e6" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="19627" class="javax.swing.JButton" binding="previousSpanButton">
+                <constraints border-constraint="West"/>
+                <properties>
+                  <icon value="icon/icons8-advance-24 (reversed).png"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="9e098" class="javax.swing.JButton" binding="nextSpanButton">
+                <constraints border-constraint="East"/>
+                <properties>
+                  <icon value="icon/icons8-advance-24.png"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <grid id="fbe95" binding="spanPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints border-constraint="Center"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <grid id="a7c4a" binding="annotationPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints border-constraint="Center"/>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <grid id="b111c" layout-manager="BorderLayout" hgap="0" vgap="0">
+                        <constraints border-constraint="East"/>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="8d772" class="javax.swing.JButton" binding="growSelectionEndButton">
+                            <constraints border-constraint="East"/>
+                            <properties>
+                              <icon value="icon/icons8-exit-32.png"/>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                          <component id="f4f09" class="javax.swing.JButton" binding="shrinkSelectionEndButton">
+                            <constraints border-constraint="West"/>
+                            <properties>
+                              <icon value="icon/icons8-enter-32 (reversed).png"/>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="8d9a2" layout-manager="BorderLayout" hgap="0" vgap="0">
+                        <constraints border-constraint="West"/>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="aef02" class="javax.swing.JButton" binding="shrinkSelectionStartButton">
+                            <constraints border-constraint="Center"/>
+                            <properties>
+                              <icon value="icon/icons8-enter-32.png"/>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                          <component id="b5efd" class="javax.swing.JButton" binding="growSelectionStartButton">
+                            <constraints border-constraint="West"/>
+                            <properties>
+                              <icon value="icon/icons8-exit-32 (reversed).png"/>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="ba4ef" layout-manager="BorderLayout" hgap="0" vgap="0">
+                        <constraints border-constraint="Center"/>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="1c2ad" class="javax.swing.JButton" binding="addAnnotationButton">
+                            <constraints border-constraint="North"/>
+                            <properties>
+                              <icon value="icon/icons8-plus-24.png"/>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                          <component id="3ab3a" class="javax.swing.JButton" binding="removeAnnotationButton">
+                            <constraints border-constraint="South"/>
+                            <properties>
+                              <icon value="icon/icons8-delete-24.png"/>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                    </children>
+                  </grid>
+                </children>
+              </grid>
+            </children>
+          </grid>
+          <component id="ea1ea" class="javax.swing.JButton" binding="assignColorToClassButton">
+            <constraints>
+              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                <preferred-size width="78" height="11"/>
+              </grid>
+              <gridbag weightx="1.0" weighty="1.0"/>
+            </constraints>
+            <properties>
+              <icon value="icon/icons8-color-dropper-filled-50 (Custom).png"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="1ca14" class="javax.swing.JButton" binding="findTextButton">
+            <constraints>
+              <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                <preferred-size width="121" height="108"/>
+              </grid>
+              <gridbag weightx="1.0" weighty="1.0"/>
+            </constraints>
+            <properties>
+              <text resource-bundle="log4j" key="find.in.ontology1"/>
             </properties>
           </component>
         </children>
       </grid>
-      <grid id="80292" binding="textPanel" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
+      <splitpane id="d3d8a">
         <constraints border-constraint="Center"/>
         <properties>
-          <minimumSize width="400" height="350"/>
-          <preferredSize width="800" height="200"/>
+          <continuousLayout value="false"/>
+          <dividerLocation value="478"/>
         </properties>
-        <border type="line">
-          <color color="-16777216"/>
-        </border>
+        <border type="none"/>
         <children>
-          <toolbar id="fb13b" binding="textSourceToolBar">
+          <nested-form id="da807" form-file="edu/ucdenver/ccp/knowtator/view/text/concept/InfoPane.form" binding="infoPane" custom-create="true">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <minimum-size width="-1" height="50"/>
-                <preferred-size width="-1" height="50"/>
-                <maximum-size width="2147483647" height="50"/>
-              </grid>
+              <splitpane position="right"/>
             </constraints>
-            <properties>
-              <floatable value="false"/>
-            </properties>
+          </nested-form>
+          <scrollpane id="4503">
+            <constraints>
+              <splitpane position="left"/>
+            </constraints>
+            <properties/>
             <border type="none"/>
             <children>
-              <component id="25976" class="javax.swing.JButton" binding="decreaseFontSizeButton">
+              <component id="1039" class="edu.ucdenver.ccp.knowtator.view.text.KnowtatorTextPane" binding="knowtatorTextPane" custom-create="true">
                 <constraints/>
                 <properties>
-                  <icon value="icon/icons8-Decrease Font (Custom).png"/>
-                  <maximumSize width="50" height="50"/>
-                  <minimumSize width="50" height="50"/>
-                  <preferredSize width="50" height="50"/>
-                  <text value=""/>
-                  <toolTipText resource-bundle="ui" key="decrease.font.size"/>
-                </properties>
-              </component>
-              <component id="4a29e" class="javax.swing.JButton" binding="increaseFontSizeButton">
-                <constraints/>
-                <properties>
-                  <icon value="icon/icons8-Increase Font (Custom).png"/>
-                  <maximumSize width="50" height="50"/>
-                  <minimumSize width="50" height="50"/>
-                  <preferredSize width="72" height="72"/>
-                  <text value=""/>
-                  <toolTipText resource-bundle="ui" key="increase.font.size"/>
-                </properties>
-              </component>
-              <grid id="ce31e" layout-manager="BorderLayout" hgap="0" vgap="0">
-                <constraints/>
-                <properties>
-                  <maximumSize width="64" height="50"/>
-                  <minimumSize width="64" height="50"/>
-                  <preferredSize width="64" height="50"/>
-                </properties>
-                <border type="none"/>
-                <children>
-                  <component id="cb700" class="javax.swing.JLabel">
-                    <constraints border-constraint="Center"/>
-                    <properties>
-                      <horizontalAlignment value="0"/>
-                      <horizontalTextPosition value="0"/>
-                      <maximumSize width="64" height="24"/>
-                      <minimumSize width="64" height="24"/>
-                      <preferredSize width="64" height="24"/>
-                      <text resource-bundle="ui" key="document"/>
-                    </properties>
-                  </component>
-                  <component id="873c4" class="javax.swing.JButton" binding="nextTextSourceButton">
-                    <constraints border-constraint="South"/>
-                    <properties>
-                      <icon value="icon/icons8-sort-down-24.png"/>
-                      <maximumSize width="100" height="100"/>
-                      <minimumSize width="16" height="16"/>
-                      <preferredSize width="24" height="16"/>
-                      <text value=""/>
-                      <toolTipText resource-bundle="ui" key="next.text.source"/>
-                    </properties>
-                  </component>
-                  <component id="91f86" class="javax.swing.JButton" binding="previousTextSourceButton">
-                    <constraints border-constraint="North"/>
-                    <properties>
-                      <icon value="icon/icons8-sort-up-24.png"/>
-                      <maximumSize width="100" height="100"/>
-                      <minimumSize width="16" height="16"/>
-                      <preferredSize width="24" height="16"/>
-                      <text value=""/>
-                      <toolTipText resource-bundle="ui" key="previous.text.source"/>
-                    </properties>
-                  </component>
-                </children>
-              </grid>
-              <component id="99b61" class="edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser" binding="textSourceChooser" custom-create="true">
-                <constraints/>
-                <properties>
-                  <maximumSize width="200" height="50"/>
-                  <minimumSize width="200" height="50"/>
-                  <preferredSize width="200" height="50"/>
-                </properties>
-              </component>
-              <component id="823b5" class="javax.swing.JLabel">
-                <constraints/>
-                <properties>
-                  <horizontalAlignment value="0"/>
-                  <horizontalTextPosition value="0"/>
-                  <maximumSize width="50" height="50"/>
-                  <minimumSize width="50" height="50"/>
-                  <preferredSize width="50" height="50"/>
-                  <text resource-bundle="ui" key="profile"/>
-                </properties>
-              </component>
-              <component id="19af8" class="edu.ucdenver.ccp.knowtator.view.chooser.ProfileChooser" binding="profileChooser" custom-create="true">
-                <constraints/>
-                <properties>
-                  <maximumSize width="200" height="50"/>
-                  <minimumSize width="200" height="50"/>
-                  <preferredSize width="200" height="50"/>
+                  <editable value="false"/>
                 </properties>
               </component>
             </children>
-          </toolbar>
-          <toolbar id="2f627" binding="annotationToolBar">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <minimum-size width="-1" height="50"/>
-                <preferred-size width="-1" height="50"/>
-                <maximum-size width="2147483647" height="50"/>
-              </grid>
-            </constraints>
-            <properties>
-              <floatable value="false"/>
-            </properties>
-            <border type="none"/>
-            <children>
-              <component id="e649c" class="javax.swing.JButton" binding="addAnnotationButton">
-                <constraints/>
-                <properties>
-                  <icon value="icon/icons8-plus-24.png"/>
-                  <maximumSize width="50" height="50"/>
-                  <minimumSize width="50" height="50"/>
-                  <preferredSize width="50" height="50"/>
-                  <text value=""/>
-                  <toolTipText resource-bundle="ui" key="add.conceptAnnotation"/>
-                </properties>
-              </component>
-              <component id="4cab1" class="javax.swing.JButton" binding="removeAnnotationButton">
-                <constraints/>
-                <properties>
-                  <icon value="icon/icons8-delete-24.png"/>
-                  <maximumSize width="50" height="50"/>
-                  <minimumSize width="50" height="50"/>
-                  <preferredSize width="50" height="50"/>
-                  <text value=""/>
-                  <toolTipText resource-bundle="ui" key="remove.conceptAnnotation"/>
-                </properties>
-              </component>
-              <component id="f7b38" class="javax.swing.JButton" binding="previousSpanButton">
-                <constraints/>
-                <properties>
-                  <icon value="icon/icons8-advance-24 (reversed).png"/>
-                  <maximumSize width="50" height="50"/>
-                  <minimumSize width="50" height="50"/>
-                  <preferredSize width="50" height="50"/>
-                  <text value=""/>
-                  <toolTipText resource-bundle="ui" key="previous.span"/>
-                </properties>
-              </component>
-              <component id="3f2f4" class="javax.swing.JButton" binding="growSelectionStartButton">
-                <constraints/>
-                <properties>
-                  <icon value="icon/icons8-exit-32 (reversed).png"/>
-                  <maximumSize width="50" height="50"/>
-                  <minimumSize width="72" height="72"/>
-                  <preferredSize width="50" height="50"/>
-                  <text value=""/>
-                  <toolTipText resource-bundle="ui" key="grow.selection.start"/>
-                </properties>
-              </component>
-              <component id="20674" class="javax.swing.JButton" binding="shrinkSelectionStartButton">
-                <constraints/>
-                <properties>
-                  <icon value="icon/icons8-enter-32.png"/>
-                  <maximumSize width="50" height="50"/>
-                  <minimumSize width="50" height="50"/>
-                  <preferredSize width="50" height="50"/>
-                  <text value=""/>
-                  <toolTipText resource-bundle="ui" key="shrink.selection.start"/>
-                </properties>
-              </component>
-              <component id="76f59" class="javax.swing.JButton" binding="shrinkSelectionEndButton">
-                <constraints/>
-                <properties>
-                  <icon value="icon/icons8-enter-32 (reversed).png"/>
-                  <maximumSize width="50" height="50"/>
-                  <minimumSize width="50" height="50"/>
-                  <preferredSize width="50" height="50"/>
-                  <text value=""/>
-                  <toolTipText resource-bundle="ui" key="shrink.selection.end"/>
-                </properties>
-              </component>
-              <component id="eab35" class="javax.swing.JButton" binding="growSelectionEndButton">
-                <constraints/>
-                <properties>
-                  <icon value="icon/icons8-exit-32.png"/>
-                  <maximumSize width="50" height="50"/>
-                  <minimumSize width="50" height="50"/>
-                  <preferredSize width="50" height="50"/>
-                  <text value=""/>
-                  <toolTipText resource-bundle="ui" key="grow.selection.end"/>
-                </properties>
-              </component>
-              <component id="6f7d7" class="javax.swing.JButton" binding="nextSpanButton">
-                <constraints/>
-                <properties>
-                  <icon value="icon/icons8-advance-24.png"/>
-                  <maximumSize width="50" height="50"/>
-                  <minimumSize width="50" height="50"/>
-                  <preferredSize width="50" height="50"/>
-                  <text value=""/>
-                  <toolTipText resource-bundle="ui" key="next.span"/>
-                </properties>
-              </component>
-              <component id="b8164" class="javax.swing.JButton" binding="assignColorToClassButton">
-                <constraints/>
-                <properties>
-                  <icon value="icon/icons8-color-dropper-filled-50 (Custom).png"/>
-                  <maximumSize width="50" height="50"/>
-                  <minimumSize width="50" height="50"/>
-                  <preferredSize width="50" height="50"/>
-                  <text value=""/>
-                  <toolTipText resource-bundle="ui" key="assign.color.to.class"/>
-                </properties>
-              </component>
-              <component id="69cd1" class="javax.swing.JCheckBox" binding="profileFilterCheckBox" default-binding="true">
-                <constraints/>
-                <properties>
-                  <maximumSize width="100" height="50"/>
-                  <minimumSize width="100" height="50"/>
-                  <preferredSize width="100" height="50"/>
-                  <text resource-bundle="ui" key="profile.filter"/>
-                  <toolTipText resource-bundle="ui" key="filter.conceptAnnotations.by.profile"/>
-                </properties>
-              </component>
-              <component id="3b89c" class="javax.swing.JCheckBox" binding="classFilterCheckBox">
-                <constraints/>
-                <properties>
-                  <text resource-bundle="log4j" key="owl.class.filter"/>
-                </properties>
-              </component>
-            </children>
-          </toolbar>
-          <toolbar id="1eeb0">
-            <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="-1" height="20"/>
-              </grid>
-            </constraints>
-            <properties>
-              <floatable value="false"/>
-            </properties>
-            <border type="none"/>
-            <children>
-              <component id="59592" class="javax.swing.JButton" binding="showGraphViewerButton">
-                <constraints/>
-                <properties>
-                  <icon value="icon/icons8-tree-structure-32.png"/>
-                  <maximumSize width="50" height="50"/>
-                  <minimumSize width="50" height="50"/>
-                  <preferredSize width="50" height="50"/>
-                  <text value=""/>
-                  <toolTipText resource-bundle="ui" key="show.graph.viewer"/>
-                </properties>
-              </component>
-              <component id="97f14" class="javax.swing.JButton" binding="findTextButton">
-                <constraints/>
-                <properties>
-                  <maximumSize width="100" height="50"/>
-                  <minimumSize width="100" height="50"/>
-                  <preferredSize width="100" height="50"/>
-                  <text resource-bundle="log4j" key="find.in.ontology"/>
-                </properties>
-              </component>
-            </children>
-          </toolbar>
-          <splitpane id="19274">
-            <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="200" height="200"/>
-              </grid>
-            </constraints>
-            <properties>
-              <dividerLocation value="800"/>
-            </properties>
-            <border type="none"/>
-            <children>
-              <scrollpane id="f3620">
-                <constraints>
-                  <splitpane position="left"/>
-                </constraints>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <component id="51f70" class="edu.ucdenver.ccp.knowtator.view.text.textpane.KnowtatorTextPane" binding="knowtatorTextPane" custom-create="true">
-                    <constraints/>
-                    <properties/>
-                  </component>
-                </children>
-              </scrollpane>
-              <nested-form id="aac75" form-file="edu/ucdenver/ccp/knowtator/view/text/InfoPane.form" binding="infoPane" custom-create="true">
-                <constraints>
-                  <splitpane position="right"/>
-                </constraints>
-              </nested-form>
-            </children>
-          </splitpane>
+          </scrollpane>
         </children>
-      </grid>
+      </splitpane>
     </children>
   </grid>
   <inspectionSuppressions>
-    <suppress inspection="NoLabelFor"/>
+    <suppress inspection="NoLabelFor" id="4503"/>
   </inspectionSuppressions>
 </form>

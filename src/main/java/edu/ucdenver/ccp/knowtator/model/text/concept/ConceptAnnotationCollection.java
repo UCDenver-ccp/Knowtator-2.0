@@ -1,12 +1,10 @@
 package edu.ucdenver.ccp.knowtator.model.text.concept;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.listeners.OWLSetupListener;
-import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLClassNotFoundException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
@@ -36,7 +34,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnnotation> implements OWLSetupListener, OWLOntologyChangeListener, ProjectListener, KnowtatorXMLIO, BratStandoffIO, KnowtatorManager {
+public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnnotation> implements OWLSetupListener, OWLOntologyChangeListener, KnowtatorXMLIO, BratStandoffIO {
 
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(ConceptAnnotationCollection.class);
@@ -52,7 +50,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         this.textSource = textSource;
 
         controller.getOWLManager().addOWLSetupListener(this);
-        controller.addProjectListener(this);
 
         allSpanCollection = new SpanCollection(controller, textSource, null);
     }
@@ -209,7 +206,8 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
             try {
                 activeOWLClassDescendents.addAll(controller.getOWLManager().getDescendants((OWLClass) controller.getOWLManager().getSelectedOWLEntity()));
                 activeOWLClassDescendents.add((OWLClass) controller.getOWLManager().getSelectedOWLEntity());
-            } catch (OWLWorkSpaceNotSetException ignored) {
+            } catch (OWLWorkSpaceNotSetException e) {
+                e.printStackTrace();
             }
         }
 
@@ -290,7 +288,8 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
             for (ConceptAnnotation conceptAnnotation : this) {
                 conceptAnnotation.setOwlClass(controller.getOWLManager().getOWLClassByID(conceptAnnotation.getOwlClassID()));
             }
-        } catch (OWLClassNotFoundException | OWLWorkSpaceNotSetException ignored) {
+        } catch (OWLClassNotFoundException | OWLWorkSpaceNotSetException e) {
+            e.printStackTrace();
 
         }
     }
@@ -519,13 +518,9 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         super.dispose();
         try {
             controller.getOWLManager().getWorkSpace().getOWLModelManager().removeOntologyChangeListener(this);
-        } catch (OWLWorkSpaceNotSetException ignored) {
+        } catch (OWLWorkSpaceNotSetException e) {
+            e.printStackTrace();
         }
-    }
-
-    @Override
-    public void makeDirectory() {
-
     }
 
     @Override
@@ -557,16 +552,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                 conceptAnnotation.setOwlClass((OWLClass) newOWLClass);
             }
         }
-    }
-
-    @Override
-    public void projectClosed() {
-
-    }
-
-    @Override
-    public void projectLoaded() {
-        owlSetup();
     }
 
     public void reassignSelectedOWLClassToSelectedAnnotation() {

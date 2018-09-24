@@ -6,7 +6,6 @@ import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -15,33 +14,24 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ProjectManager implements Savable, KnowtatorManager {
+public abstract class ProjectManager implements Savable {
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(ProjectManager.class);
 
     private File projectLocation;
-    private List<ProjectListener> projectListeners;
 
     ProjectManager() {
-        projectListeners = new ArrayList<>();
     }
 
     public void loadProject() {
 
-        projectListeners.forEach(ProjectListener::projectClosed);
-
         makeProjectStructure(projectLocation);
 
-        getManagers().forEach(SavableKnowtatorManager::load);
+        getManagers().forEach(Savable::load);
 
         saveProject();
-
-        for (ProjectListener listener : projectListeners) {
-            listener.projectLoaded();
-        }
     }
 
     @Override
@@ -58,17 +48,12 @@ public abstract class ProjectManager implements Savable, KnowtatorManager {
         Files.createDirectories(projectLocation.toPath());
     }
 
-
-    public void addProjectListener(ProjectListener listener) {
-        projectListeners.add(listener);
-    }
-
     public void newProject(File projectDirectory) {
         makeProjectStructure(projectDirectory);
         loadProject();
     }
 
-    void importToManager(File directory, SavableKnowtatorManager manager, String extension) throws IOException {
+    void importToManager(File directory, Savable manager, String extension) throws IOException {
         if (directory != null && directory.exists()) {
             Files.newDirectoryStream(
                     Paths.get(directory.toURI()), path -> path.toString().endsWith(extension))
@@ -95,8 +80,8 @@ public abstract class ProjectManager implements Savable, KnowtatorManager {
         try {
             setSaveLocation(projectDirectory);
 
-            for (KnowtatorManager knowtatorManager : getManagers()) {
-                knowtatorManager.makeDirectory();
+            for (Savable knowtatorManager : getManagers()) {
+                knowtatorManager.setSaveLocation(projectDirectory);
             }
 
 
@@ -108,11 +93,11 @@ public abstract class ProjectManager implements Savable, KnowtatorManager {
         }
     }
 
-    public void saveProject() {
-        getManagers().forEach(SavableKnowtatorManager::save);
+    void saveProject() {
+        getManagers().forEach(Savable::save);
     }
 
-    abstract List<SavableKnowtatorManager> getManagers();
+    abstract List<Savable> getManagers();
 
     public void loadWithAppropriateFormat(BasicIO basicIO, File file) {
         String[] splitOnDots = file.getName().split("\\.");

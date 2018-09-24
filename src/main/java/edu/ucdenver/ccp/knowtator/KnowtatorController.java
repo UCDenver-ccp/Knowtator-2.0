@@ -5,7 +5,6 @@ import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLManager;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileCollection;
-import edu.ucdenver.ccp.knowtator.model.selection.SelectionManager;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollection;
 import org.apache.log4j.Logger;
 
@@ -19,7 +18,6 @@ public class KnowtatorController extends ProjectManager {
   @SuppressWarnings("unused")
   private static final Logger log = Logger.getLogger(KnowtatorController.class);
 
-  private SelectionManager selectionManager;
   private TextSourceCollection textSourceCollection;
   private ProfileCollection profileCollection;
   private OWLManager owlManager;
@@ -33,8 +31,6 @@ public class KnowtatorController extends ProjectManager {
     idRegistry = new TreeMap<>();
     debugListeners = new ArrayList<>();
 
-    selectionManager = new SelectionManager(this);
-
     owlManager = new OWLManager(this);
     textSourceCollection = new TextSourceCollection(this);
     profileCollection = new ProfileCollection(this); // manipulates profiles and colors
@@ -43,8 +39,8 @@ public class KnowtatorController extends ProjectManager {
 
 
   @Override
-  List<SavableKnowtatorManager> getManagers() {
-    List<SavableKnowtatorManager> managers = new ArrayList<>();
+  List<Savable> getManagers() {
+    List<Savable> managers = new ArrayList<>();
     managers.add(owlManager);
     managers.add(textSourceCollection);
     managers.add(profileCollection);
@@ -85,13 +81,6 @@ public class KnowtatorController extends ProjectManager {
     return textSourceCollection;
   }
 
-
-
-  public SelectionManager getSelectionManager() {
-    return selectionManager;
-  }
-
-
   public void verifyId(String id, KnowtatorObject obj, Boolean hasPriority) {
   	String verifiedId = id;
     if (hasPriority && idRegistry.keySet().contains(id)) {
@@ -120,17 +109,11 @@ public class KnowtatorController extends ProjectManager {
     debugListeners.add(listener);
   }
 
-  @Override
+
   public void dispose() {
     textSourceCollection.dispose();
     owlManager.dispose();
-    selectionManager.dispose();
     profileCollection.dispose();
     idRegistry.clear();
-  }
-
-  @Override
-  public void makeDirectory() {
-
   }
 }

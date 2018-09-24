@@ -1,7 +1,6 @@
 package edu.ucdenver.ccp.knowtator.model.text.concept.span;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
@@ -17,7 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class SpanCollection extends KnowtatorCollection<Span> implements KnowtatorManager, BratStandoffIO, KnowtatorXMLIO {
+public class SpanCollection extends KnowtatorCollection<Span> implements BratStandoffIO, KnowtatorXMLIO {
     private KnowtatorController controller;
     private final TextSource textSource;
     private final ConceptAnnotation conceptAnnotation;
@@ -32,11 +31,6 @@ public class SpanCollection extends KnowtatorCollection<Span> implements Knowtat
     public void removeSpan(Span span) {
         remove(span);
         setSelection(null);
-    }
-
-    @Override
-    public void makeDirectory() {
-
     }
 
     @Override

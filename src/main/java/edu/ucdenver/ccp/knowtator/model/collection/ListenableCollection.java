@@ -1,7 +1,5 @@
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.ProjectManager;
-import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 
 import javax.annotation.Nonnull;
@@ -11,14 +9,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
-public abstract class ListenableCollection<K extends KnowtatorObject, C extends Collection<K>, L extends CollectionListener<K>> implements ProjectListener, Iterable<K> {
+public abstract class ListenableCollection<K extends KnowtatorObject, C extends Collection<K>, L extends CollectionListener<K>> implements Iterable<K> {
   public final C collection;
   protected final List<L> collectionListeners;
 
-  ListenableCollection(ProjectManager controller, C collection) {
+  ListenableCollection(C collection) {
     this.collection = collection;
     collectionListeners = new ArrayList<>();
-    controller.addProjectListener(this);
   }
 
   public void add(K objectToAdd) {
@@ -66,15 +63,6 @@ public abstract class ListenableCollection<K extends KnowtatorObject, C extends 
   public void removeCollectionListener(L listener) {
     collectionListeners.remove(listener);
   }
-
-  @Override
-  public void projectClosed() {
-    collection.clear();
-    collectionListeners.clear();
-  }
-
-  @Override
-  public void projectLoaded() {}
 
   @Override
   @Nonnull

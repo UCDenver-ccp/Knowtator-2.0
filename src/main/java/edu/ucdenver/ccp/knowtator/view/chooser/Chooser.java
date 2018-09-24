@@ -3,21 +3,17 @@ package edu.ucdenver.ccp.knowtator.view.chooser;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollectionListener;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorViewComponent;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
 
-public abstract class Chooser<K extends KnowtatorObject> extends JComboBox<K> implements KnowtatorCollectionListener<K> {
+public abstract class Chooser<K extends KnowtatorObject> extends JComboBox<K> implements KnowtatorCollectionListener<K>, KnowtatorViewComponent {
 
 	private ActionListener al;
-	KnowtatorCollection<K> collection;
+	private KnowtatorCollection<K> collection;
 	KnowtatorView view;
-	private ConceptAnnotationCollectionListener conceptAnnotationCollectionListener;
 
 	Chooser(KnowtatorView view) {
 		this.view = view;
@@ -29,90 +25,23 @@ public abstract class Chooser<K extends KnowtatorObject> extends JComboBox<K> im
 			}
 		};
 
-		conceptAnnotationCollectionListener = new ConceptAnnotationCollectionListener() {
-			@Override
-			public void updated(ConceptAnnotation updatedItem) {
 
-			}
-
-			@Override
-			public void noSelection(ConceptAnnotation previousSelection) {
-
-			}
-
-			@Override
-			public void selected(ConceptAnnotation previousSelection, ConceptAnnotation currentSelection) {
-				reactToAnnotationChange(previousSelection, currentSelection);
-			}
-
-			@Override
-			public void added(ConceptAnnotation addedObject) {
-
-			}
-
-			@Override
-			public void removed(ConceptAnnotation removedObject) {
-
-			}
-
-			@Override
-			public void emptied(ConceptAnnotation object) {
-
-			}
-
-			@Override
-			public void firstAdded(ConceptAnnotation object) {
-
-			}
-		};
-
-		TextSourceCollectionListener textSourceCollectionListener = new TextSourceCollectionListener() {
-			@Override
-			public void updated(TextSource updatedItem) {
-
-			}
-
-			@Override
-			public void noSelection(TextSource previousSelection) {
-
-			}
-
-			@Override
-			public void selected(TextSource previousSelection, TextSource currentSelection) {
-				reactToTextSourceChange(previousSelection, currentSelection);
-			}
-
-			@Override
-			public void added(TextSource addedObject) {
-
-			}
-
-			@Override
-			public void removed(TextSource removedObject) {
-
-			}
-
-			@Override
-			public void emptied(TextSource object) {
-
-			}
-
-			@Override
-			public void firstAdded(TextSource object) {
-
-			}
-		};
-
-		view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
 	}
 
 	public void setCollection(KnowtatorCollection<K> collection) {
 		if (this.collection != null) {
 			this.collection.removeCollectionListener(this);
+			this.collection.forEach(this::removeItem);
 		}
 
 		this.collection = collection;
 		this.collection.addCollectionListener(this);
+
+		collection.forEach(this::addItem);
+
+		for (ActionListener a : getActionListeners()) {
+			removeActionListener(a);
+		}
 
 		addActionListener(al);
 	}
@@ -159,8 +88,4 @@ public abstract class Chooser<K extends KnowtatorObject> extends JComboBox<K> im
 		setSelectedItem(updatedItem);
 		addActionListener(al);
 	}
-
-	abstract void reactToTextSourceChange(TextSource previousSelection, TextSource currentSelection);
-	abstract void reactToAnnotationChange(ConceptAnnotation previousSelection, ConceptAnnotation currentSelection);
-
 }

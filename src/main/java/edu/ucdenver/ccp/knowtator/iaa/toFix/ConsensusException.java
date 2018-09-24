@@ -23,7 +23,7 @@
 // * http://knowtator.sourceforge.net/
 // *
 // * Contributor(s):
-// *   Philip V. Ogren <philip@ogren.info> (Original Author)
+// *   Philip V. Ogren <philip@ogren.concept> (Original Author)
 // */
 // package edu.ucdenver.ccp.knowtator.iaa;
 //

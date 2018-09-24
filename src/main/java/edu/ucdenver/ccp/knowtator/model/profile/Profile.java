@@ -158,7 +158,8 @@ public class Profile implements KnowtatorObject<Profile>, Savable, KnowtatorXMLI
                 KnowtatorXMLAttributes.COLOR, convertToHex(c));
             profileElem.appendChild(e);
 
-          } catch (OWLWorkSpaceNotSetException | OWLEntityNullException ignored) {
+          } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e1) {
+            e1.printStackTrace();
 
           }
         });

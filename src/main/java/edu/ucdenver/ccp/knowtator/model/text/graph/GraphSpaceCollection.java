@@ -1,7 +1,6 @@
 package edu.ucdenver.ccp.knowtator.model.text.graph;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implements KnowtatorXMLIO, BratStandoffIO, KnowtatorManager {
+public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implements KnowtatorXMLIO, BratStandoffIO {
   private KnowtatorController controller;
   private TextSource textSource;
 
@@ -131,11 +130,6 @@ public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implem
   }
 
   @Override
-  public void makeDirectory() {
-
-  }
-
-  @Override
   public void readFromBratStandoff(File file, Map<Character, List<String[]>> annotationMap, String content) {
 
   }
@@ -145,7 +139,7 @@ public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implem
 
   }
 
-  public void refresh() {
+    void refresh() {
     collectionListeners.forEach(l -> l.updated(getSelection()));
   }
 }

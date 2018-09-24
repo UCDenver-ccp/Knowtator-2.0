@@ -1,7 +1,7 @@
 package edu.ucdenver.ccp.knowtator.model.profile;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.SavableKnowtatorManager;
+import edu.ucdenver.ccp.knowtator.Savable;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
@@ -20,7 +20,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileCollection extends KnowtatorCollection<Profile> implements KnowtatorXMLIO, SavableKnowtatorManager {
+public class ProfileCollection extends KnowtatorCollection<Profile> implements KnowtatorXMLIO, Savable {
 
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(KnowtatorController.class);
@@ -48,12 +48,6 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
         forEach(Profile::save);
     }
 
-    @Override
-    public void projectLoaded() {
-        super.projectLoaded();
-        add(defaultProfile);
-    }
-
     public void addColorListener(ColorListener listener) {
         colorListeners.add(listener);
     }
@@ -70,7 +64,9 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 
     private void removeProfile(Profile profile) {
         remove(profile);
-        setSelection(iterator().next());
+        if (size() > 0) {
+            setSelection(iterator().next());
+        }
     }
 
     public void writeToKnowtatorXML(Document dom, Element root) {
@@ -106,7 +102,9 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 
     @Override
     public void dispose() {
-        super.dispose();
+        for (Profile profile : this) {
+            removeProfile(profile);
+        }
         colorListeners.clear();
     }
 
@@ -117,14 +115,8 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 
     @Override
     public void setSaveLocation(File saveLocation) throws IOException {
-        this.profilesLocation = saveLocation;
+        profilesLocation = (new File(controller.getSaveLocation(), "Profiles"));
         Files.createDirectories(profilesLocation.toPath());
-    }
-
-    @Override
-    public void makeDirectory() throws IOException {
-        setSaveLocation(new File(controller.getSaveLocation(), "Profiles"));
-
     }
 
     @Override

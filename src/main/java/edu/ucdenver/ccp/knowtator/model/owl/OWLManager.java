@@ -2,11 +2,9 @@ package edu.ucdenver.ccp.knowtator.model.owl;
 
 import com.google.common.base.Optional;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.SavableKnowtatorManager;
+import edu.ucdenver.ccp.knowtator.Savable;
 import edu.ucdenver.ccp.knowtator.listeners.DebugListener;
 import edu.ucdenver.ccp.knowtator.listeners.OWLSetupListener;
-import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
-import edu.ucdenver.ccp.knowtator.model.selection.OWLClassSelectionListener;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.protege.editor.core.ui.util.AugmentedJTextField;
@@ -26,7 +24,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class OWLManager implements Serializable, DebugListener, OWLSelectionModelListener, ProjectListener, SavableKnowtatorManager {
+public class OWLManager implements Serializable, DebugListener, OWLSelectionModelListener, Savable {
   @SuppressWarnings("unused")
   private static final Logger log = LogManager.getLogger(OWLManager.class);
 
@@ -40,7 +38,6 @@ public class OWLManager implements Serializable, DebugListener, OWLSelectionMode
   public OWLManager(KnowtatorController controller) {
     this.controller = controller;
     owlEntityListeners = new ArrayList<>();
-    controller.addProjectListener(this);
     owlSetupListeners = new ArrayList<>();
     controller.addDebugListener(this);
   }
@@ -219,20 +216,6 @@ public class OWLManager implements Serializable, DebugListener, OWLSelectionMode
     }
   }
 
-  @Override
-  public void projectClosed() {
-
-  }
-
-  @Override
-  public void projectLoaded() {
-    try {
-      setRenderRDFSLabel();
-    } catch (OWLWorkSpaceNotSetException ignored) {
-
-    }
-  }
-
   public void addOWLEntityListener(OWLClassSelectionListener listener) {
     owlEntityListeners.add(listener);
   }
@@ -242,7 +225,9 @@ public class OWLManager implements Serializable, DebugListener, OWLSelectionMode
     owlSetupListeners.clear();
     try {
       getWorkSpace().getOWLSelectionModel().removeListener(this);
-    } catch (OWLWorkSpaceNotSetException ignored) {
+      setRenderRDFSLabel();
+    } catch (OWLWorkSpaceNotSetException e) {
+      e.printStackTrace();
 
     }
   }
@@ -254,14 +239,10 @@ public class OWLManager implements Serializable, DebugListener, OWLSelectionMode
 
   @Override
   public void setSaveLocation(File newSaveLocation) throws IOException {
-    this.ontologiesLocation = newSaveLocation;
+    this.ontologiesLocation = new File(newSaveLocation, "Ontologies");
     Files.createDirectories(ontologiesLocation.toPath());
   }
 
-  @Override
-  public void makeDirectory() throws IOException {
-    setSaveLocation(new File(controller.getSaveLocation(), "Ontologies"));
-  }
 
   @Override
   public void load() {

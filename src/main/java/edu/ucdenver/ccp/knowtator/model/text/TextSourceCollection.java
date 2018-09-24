@@ -1,11 +1,10 @@
 package edu.ucdenver.ccp.knowtator.model.text;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.SavableKnowtatorManager;
+import edu.ucdenver.ccp.knowtator.Savable;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
-import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import org.apache.commons.io.FileUtils;
@@ -25,7 +24,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-public class TextSourceCollection extends KnowtatorCollection<TextSource> implements CaretListener, ProjectListener, BratStandoffIO, KnowtatorXMLIO, SavableKnowtatorManager {
+public class TextSourceCollection extends KnowtatorCollection<TextSource> implements CaretListener, BratStandoffIO, KnowtatorXMLIO, Savable {
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(TextSourceCollection.class);
 
@@ -37,37 +36,47 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 
     private int start;
     private int end;
-    public boolean isFilterByOWLClass() {
-        return filterByOWLClass;
+    private boolean filterByOWLClass;
+
+
+    public TextSourceCollection(KnowtatorController controller) {
+        super(controller);
+        this.controller = controller;
+
+        filterByProfile = false;
+        filterByOWLClass = false;
+
+
+        start = 0;
+        end = 0;
+
     }
 
-    private boolean filterByOWLClass;
     public int getStart() {
         return start;
     }
-
-    public void setStart(int start) {
-        this.start = start;
-    }
-
 
     public int getEnd() {
         return end;
     }
 
+    public void setStart(int start) {
+        this.start = start;
+    }
     public void setEnd(int end) {
         this.end = end;
     }
 
+    public boolean isFilterByOWLClass() {
+        return filterByOWLClass;
+    }
     public boolean isFilterByProfile() {
         return filterByProfile;
     }
-
     public void setFilterByProfile(boolean filterByProfile) {
         this.filterByProfile = filterByProfile;
         collectionListeners.forEach(l -> l.updated(getSelection()));
     }
-
     public void setFilterByOWLClass(boolean filterByOWLClass) {
         this.filterByOWLClass = filterByOWLClass;
         collectionListeners.forEach(l -> l.updated(getSelection()));
@@ -77,21 +86,6 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
     public void caretUpdate(CaretEvent e) {
         setStart(Math.min(e.getDot(), e.getMark()));
         setEnd(Math.max(e.getDot(), e.getMark()));
-    }
-
-
-    public TextSourceCollection(KnowtatorController controller) {
-        super(controller);
-        this.controller = controller;
-        controller.addProjectListener(this);
-
-        filterByProfile = false;
-        filterByOWLClass = false;
-
-
-        start = 0;
-        end = 0;
-
     }
 
     private TextSource addTextSource(File file, String id, String textFileName) {
@@ -146,15 +140,6 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
     public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) {
     }
 
-
-    @Override
-    public void makeDirectory() throws IOException {
-        articlesLocation = new File(controller.getSaveLocation(), "Articles");
-        Files.createDirectories(articlesLocation.toPath());
-
-        setSaveLocation(new File(controller.getSaveLocation(), "Annotations"));
-    }
-
     public void addDocument(File file) {
         if (!file.getParentFile().equals(getArticlesLocation())) {
             try {
@@ -192,7 +177,8 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
     public void save() {
         try {
             controller.getOWLManager().setRenderRDFSLabel();
-        } catch (OWLWorkSpaceNotSetException ignored) {
+        } catch (OWLWorkSpaceNotSetException e) {
+            e.printStackTrace();
         }
         forEach(TextSource::save);
     }
@@ -208,23 +194,15 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
     //TODO: Check where articles location would be appropriate and find out how to handle that
     @Override
     public void setSaveLocation(File newSaveLocation) throws IOException {
-        this.annotationsLocation = newSaveLocation;
-        Files.createDirectories(newSaveLocation.toPath());
+        articlesLocation = new File(newSaveLocation, "Articles");
+        Files.createDirectories(articlesLocation.toPath());
+        annotationsLocation = new File(newSaveLocation, "Annotations");
+        Files.createDirectories(annotationsLocation.toPath());
     }
 
     @Override
     public File getSaveLocation() {
         return annotationsLocation;
 
-    }
-
-    @Override
-    public void projectClosed() {
-
-    }
-
-    @Override
-    public void projectLoaded() {
-        setSelection(first());
     }
 }

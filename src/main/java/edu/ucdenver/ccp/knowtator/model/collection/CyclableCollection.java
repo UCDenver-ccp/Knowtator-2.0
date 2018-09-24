@@ -9,7 +9,7 @@ public abstract class CyclableCollection<K extends KnowtatorObject, L extends Co
     extends ListenableCollection<K, TreeSet<K>, L> {
 
   CyclableCollection(KnowtatorController controller, TreeSet<K> collection) {
-    super(controller, collection);
+    super(collection);
   }
 
   public K getPrevious(K current) {
