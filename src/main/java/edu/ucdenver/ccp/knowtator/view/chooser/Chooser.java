@@ -1,8 +1,7 @@
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorViewComponent;
 
@@ -51,22 +50,22 @@ public abstract class Chooser<K extends KnowtatorObject> extends JComboBox<K> im
 	}
 
 	@Override
-	public void added(K addedObject) {
-		addItem(addedObject);
+	public void added(AddEvent<K> event) {
+		addItem(event.getAdded());
 	}
 
 	@Override
-	public void removed(K removedObject) {
-		removeItem(removedObject);
+	public void removed(RemoveEvent<K> event) {
+		removeItem(event.getRemoved());
 	}
 
 	@Override
-	public void emptied(K object) {
+	public void emptied(RemoveEvent<K> event) {
 		setEnabled(false);
 	}
 
 	@Override
-	public void firstAdded(K object) {
+	public void firstAdded(AddEvent<K> event) {
 		setEnabled(true);
 	}
 
@@ -76,9 +75,13 @@ public abstract class Chooser<K extends KnowtatorObject> extends JComboBox<K> im
 	}
 
 	@Override
-	public void selected(K previousSelection, K currentSelection) {
+	public void changed(ChangeEvent<K> event) {
+	}
+
+	@Override
+	public void selected(SelectionChangeEvent<K> event) {
 		removeActionListener(al);
-		setSelectedItem(currentSelection);
+		setSelectedItem(event.getNew());
 		addActionListener(al);
 	}
 

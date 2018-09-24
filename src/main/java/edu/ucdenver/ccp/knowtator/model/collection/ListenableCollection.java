@@ -20,17 +20,23 @@ public abstract class ListenableCollection<K extends KnowtatorObject, C extends 
 
   public void add(K objectToAdd) {
     collection.add(objectToAdd);
-    collectionListeners.forEach(listener -> listener.added(objectToAdd));
+
+    AddEvent<K> event = new AddEvent<>(objectToAdd);
+
+    collectionListeners.forEach(listener -> listener.added(event));
     if (collection.size() == 1) {
-      collectionListeners.forEach(listener -> listener.firstAdded(objectToAdd));
+      collectionListeners.forEach(listener -> listener.firstAdded(event));
     }
   }
 
   public void remove(K objectToRemove) {
     collection.remove(objectToRemove);
-    collectionListeners.forEach(listener -> listener.removed(objectToRemove));
+
+    RemoveEvent<K> event = new RemoveEvent<>(objectToRemove);
+
+    collectionListeners.forEach(listener -> listener.removed(event));
     if (collection.size() == 0) {
-      collectionListeners.forEach(listener -> listener.emptied(objectToRemove));
+      collectionListeners.forEach(listener -> listener.emptied(event));
     }
   }
 

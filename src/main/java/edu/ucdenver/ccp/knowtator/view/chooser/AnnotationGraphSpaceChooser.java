@@ -1,5 +1,9 @@
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
@@ -18,6 +22,31 @@ public class AnnotationGraphSpaceChooser extends Chooser<GraphSpace> {
         super(view);
         conceptAnnotationCollectionListener = new ConceptAnnotationCollectionListener() {
             @Override
+            public void added(AddEvent<ConceptAnnotation> addedObject) {
+
+            }
+
+            @Override
+            public void removed(RemoveEvent<ConceptAnnotation> removedObject) {
+
+            }
+
+            @Override
+            public void changed(ChangeEvent<ConceptAnnotation> changeEvent) {
+
+            }
+
+            @Override
+            public void emptied(RemoveEvent<ConceptAnnotation> object) {
+
+            }
+
+            @Override
+            public void firstAdded(AddEvent<ConceptAnnotation> object) {
+
+            }
+
+            @Override
             public void updated(ConceptAnnotation updatedItem) {
 
             }
@@ -28,32 +57,37 @@ public class AnnotationGraphSpaceChooser extends Chooser<GraphSpace> {
             }
 
             @Override
-            public void selected(ConceptAnnotation previousSelection, ConceptAnnotation currentSelection) {
-                reactToAnnotationChange(currentSelection);
-            }
-
-            @Override
-            public void added(ConceptAnnotation addedObject) {
-
-            }
-
-            @Override
-            public void removed(ConceptAnnotation removedObject) {
-
-            }
-
-            @Override
-            public void emptied(ConceptAnnotation object) {
-
-            }
-
-            @Override
-            public void firstAdded(ConceptAnnotation object) {
-
+            public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
+                reactToAnnotationChange(event.getNew());
             }
         };
 
         textSourceCollectionListener = new TextSourceCollectionListener() {
+            @Override
+            public void added(AddEvent<TextSource> addedObject) {
+
+            }
+
+            @Override
+            public void removed(RemoveEvent<TextSource> removedObject) {
+
+            }
+
+            @Override
+            public void changed(ChangeEvent<TextSource> changeEvent) {
+
+            }
+
+            @Override
+            public void emptied(RemoveEvent<TextSource> object) {
+
+            }
+
+            @Override
+            public void firstAdded(AddEvent<TextSource> object) {
+
+            }
+
             @Override
             public void updated(TextSource updatedItem) {
 
@@ -65,41 +99,22 @@ public class AnnotationGraphSpaceChooser extends Chooser<GraphSpace> {
             }
 
             @Override
-            public void selected(TextSource previousSelection, TextSource currentSelection) {
-                reactToTextSourceChange(previousSelection, currentSelection);
+            public void selected(SelectionChangeEvent<TextSource> event) {
+                reactToTextSourceChange(event.getOld(), event.getNew());
             }
 
-            @Override
-            public void added(TextSource addedObject) {
-
-            }
-
-            @Override
-            public void removed(TextSource removedObject) {
-
-            }
-
-            @Override
-            public void emptied(TextSource object) {
-
-            }
-
-            @Override
-            public void firstAdded(TextSource object) {
-
-            }
         };
 
         view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
     }
 
     @Override
-    public void added(GraphSpace graphSpace) {
-        if (graphSpace.containsAnnotation(
+    public void added(AddEvent<GraphSpace> event) {
+        if (event.getAdded().containsAnnotation(
                 view.getController()
                         .getTextSourceCollection().getSelection()
                         .getConceptAnnotationCollection().getSelection())) {
-            addItem(graphSpace);
+            addItem(event.getAdded());
         }
     }
 

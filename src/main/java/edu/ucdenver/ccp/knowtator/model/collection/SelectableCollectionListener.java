@@ -4,5 +4,6 @@ import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 
 public interface SelectableCollectionListener<K extends KnowtatorObject> extends CollectionListener<K> {
     void noSelection(K previousSelection);
-    void selected(K previousSelection, K currentSelection);
+
+    void selected(SelectionChangeEvent<K> event);
 }

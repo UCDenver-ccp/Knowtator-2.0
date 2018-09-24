@@ -3,11 +3,13 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 
 public interface CollectionListener<K extends KnowtatorObject> {
-	void added(K addedObject);
+	void added(AddEvent<K> addedObject);
 
-	void removed(K removedObject);
+	void removed(RemoveEvent<K> removedObject);
 
-	void emptied(K object);
+	void changed(ChangeEvent<K> changeEvent);
 
-	void firstAdded(K object);
+	void emptied(RemoveEvent<K> object);
+
+	void firstAdded(AddEvent<K> object);
 }

@@ -2,6 +2,10 @@ package edu.ucdenver.ccp.knowtator.view;
 
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLClassSelectionListener;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
@@ -462,27 +466,33 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
             }
 
             @Override
-            public void selected(Profile previousSelection, Profile currentSelection) {
+            public void selected(SelectionChangeEvent<Profile> event) {
+
+            }
+
+
+            @Override
+            public void added(AddEvent<Profile> addedObject) {
 
             }
 
             @Override
-            public void added(Profile addedObject) {
+            public void removed(RemoveEvent<Profile> removedObject) {
 
             }
 
             @Override
-            public void removed(Profile removedObject) {
+            public void changed(ChangeEvent<Profile> changeEvent) {
 
             }
 
             @Override
-            public void emptied(Profile object) {
+            public void emptied(RemoveEvent<Profile> object) {
                 disableProfileButtons();
             }
 
             @Override
-            public void firstAdded(Profile object) {
+            public void firstAdded(AddEvent<Profile> object) {
                 enableProfileButtons();
             }
         };
@@ -501,30 +511,35 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
             }
 
             @Override
-            public void selected(TextSource previousSelection, TextSource currentSelection) {
-                if (previousSelection != null) {
-                    previousSelection.getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
+            public void selected(SelectionChangeEvent<TextSource> event) {
+                if (event.getOld() != null) {
+                    event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
                 }
-                currentSelection.getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
+                event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
             }
 
             @Override
-            public void added(TextSource object) {
-
-            }
-
-            @Override
-            public void removed(TextSource removedObject) {
+            public void added(AddEvent<TextSource> addedObject) {
 
             }
 
             @Override
-            public void emptied(TextSource object) {
+            public void removed(RemoveEvent<TextSource> removedObject) {
+
+            }
+
+            @Override
+            public void changed(ChangeEvent<TextSource> changeEvent) {
+
+            }
+
+            @Override
+            public void emptied(RemoveEvent<TextSource> object) {
                 disableTextSourceButtons();
             }
 
             @Override
-            public void firstAdded(TextSource object) {
+            public void firstAdded(AddEvent<TextSource> object) {
                 enableTextSourceButtons();
             }
         };
@@ -540,63 +555,77 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
             }
 
             @Override
-            public void selected(ConceptAnnotation previousSelection, ConceptAnnotation currentSelection) {
-                if (previousSelection != null) {
-                    previousSelection.getSpanCollection().removeCollectionListener(spanCollectionListener);
+            public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
+                if (event.getOld() != null) {
+                    event.getOld().getSpanCollection().removeCollectionListener(spanCollectionListener);
                 }
-                currentSelection.getSpanCollection().addCollectionListener(spanCollectionListener);
+                event.getNew().getSpanCollection().addCollectionListener(spanCollectionListener);
             }
 
             @Override
-            public void added(ConceptAnnotation addedObject) {
-
-            }
-
-            @Override
-            public void removed(ConceptAnnotation removedObject) {
+            public void added(AddEvent<ConceptAnnotation> addedObject) {
 
             }
 
             @Override
-            public void emptied(ConceptAnnotation object) {
+            public void removed(RemoveEvent<ConceptAnnotation> removedObject) {
+
+            }
+
+            @Override
+            public void changed(ChangeEvent<ConceptAnnotation> changeEvent) {
+
+            }
+
+            @Override
+            public void emptied(RemoveEvent<ConceptAnnotation> object) {
                 disableAnnotationButtons();
             }
 
             @Override
-            public void firstAdded(ConceptAnnotation object) {
+            public void firstAdded(AddEvent<ConceptAnnotation> object) {
                 enableAnnotationButtons();
             }
         };
 
         spanCollectionListener = new SpanCollectionListener() {
             @Override
+            public void noSelection(Span previousSelection) {
+
+            }
+
+            @Override
+            public void selected(SelectionChangeEvent<Span> event) {
+
+            }
+
+            @Override
             public void updated(Span updatedItem) {
 
             }
 
             @Override
-            public void noSelection(Span previousSelection) {
+            public void added(AddEvent<Span> addedObject) {
+
             }
 
             @Override
-            public void selected(Span previousSelection, Span currentSelection) {
+            public void removed(RemoveEvent<Span> removedObject) {
+
             }
 
             @Override
-            public void added(Span addedObject) {
+            public void changed(ChangeEvent<Span> changeEvent) {
+
             }
 
             @Override
-            public void removed(Span removedObject) {
-            }
-
-            @Override
-            public void emptied(Span object) {
+            public void emptied(RemoveEvent<Span> object) {
                 disableSpanButtons();
             }
 
             @Override
-            public void firstAdded(Span object) {
+            public void firstAdded(AddEvent<Span> object) {
                 enableSpanButtons();
             }
         };
@@ -746,13 +775,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         panel1.add(panel2, BorderLayout.NORTH);
         showGraphViewerButton = new JButton();
         showGraphViewerButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-tree-structure-32.png")));
-        showGraphViewerButton.setText("");
+        showGraphViewerButton.setText("Graph Viewer");
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
         panel2.add(showGraphViewerButton, gbc);
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridBagLayout());
@@ -778,12 +808,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         gbc.anchor = GridBagConstraints.WEST;
         panel3.add(profileFilterCheckBox, gbc);
         openProjectButton = new JButton();
+        openProjectButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-document-32.png")));
         this.$$$loadButtonText$$$(openProjectButton, ResourceBundle.getBundle("log4j").getString("open.project"));
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
         panel2.add(openProjectButton, gbc);
         profilePanel = new JPanel();
         profilePanel.setLayout(new BorderLayout(0, 0));
@@ -834,12 +866,15 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         nextTextSourceButton.setText("");
         textSourceChooserPanel.add(nextTextSourceButton, BorderLayout.SOUTH);
         addTextSourceButton = new JButton();
+        addTextSourceButton.setHorizontalTextPosition(4);
         addTextSourceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-plus-24.png")));
-        addTextSourceButton.setText("");
+        addTextSourceButton.setText("Add Document");
+        addTextSourceButton.setVerticalTextPosition(0);
         textSourceChooserPanel.add(addTextSourceButton, BorderLayout.WEST);
         removeTextSourceButton = new JButton();
+        removeTextSourceButton.setHorizontalTextPosition(2);
         removeTextSourceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-delete-24.png")));
-        removeTextSourceButton.setText("");
+        removeTextSourceButton.setText("Remove Document");
         textSourceChooserPanel.add(removeTextSourceButton, BorderLayout.EAST);
         textSizePanel = new JPanel();
         textSizePanel.setLayout(new BorderLayout(0, 0));
@@ -877,34 +912,48 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         panel5.setLayout(new BorderLayout(0, 0));
         annotationPanel.add(panel5, BorderLayout.EAST);
         growSelectionEndButton = new JButton();
+        growSelectionEndButton.setHorizontalTextPosition(0);
         growSelectionEndButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-exit-32.png")));
-        growSelectionEndButton.setText("");
+        growSelectionEndButton.setText("Grow Span");
+        growSelectionEndButton.setVerticalTextPosition(3);
         panel5.add(growSelectionEndButton, BorderLayout.EAST);
         shrinkSelectionEndButton = new JButton();
+        shrinkSelectionEndButton.setHorizontalTextPosition(0);
         shrinkSelectionEndButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-enter-32 (reversed).png")));
-        shrinkSelectionEndButton.setText("");
+        shrinkSelectionEndButton.setText("Shrink Span");
+        shrinkSelectionEndButton.setVerticalTextPosition(3);
         panel5.add(shrinkSelectionEndButton, BorderLayout.WEST);
         final JPanel panel6 = new JPanel();
         panel6.setLayout(new BorderLayout(0, 0));
         annotationPanel.add(panel6, BorderLayout.WEST);
         shrinkSelectionStartButton = new JButton();
+        shrinkSelectionStartButton.setHorizontalTextPosition(0);
         shrinkSelectionStartButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-enter-32.png")));
-        shrinkSelectionStartButton.setText("");
+        shrinkSelectionStartButton.setText("Shrink Span");
+        shrinkSelectionStartButton.setVerticalTextPosition(3);
         panel6.add(shrinkSelectionStartButton, BorderLayout.CENTER);
         growSelectionStartButton = new JButton();
+        growSelectionStartButton.setHorizontalAlignment(0);
+        growSelectionStartButton.setHorizontalTextPosition(0);
         growSelectionStartButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-exit-32 (reversed).png")));
-        growSelectionStartButton.setText("");
+        growSelectionStartButton.setText("Grow Span");
+        growSelectionStartButton.setVerticalAlignment(0);
+        growSelectionStartButton.setVerticalTextPosition(3);
         panel6.add(growSelectionStartButton, BorderLayout.WEST);
         final JPanel panel7 = new JPanel();
         panel7.setLayout(new BorderLayout(0, 0));
         annotationPanel.add(panel7, BorderLayout.CENTER);
         addAnnotationButton = new JButton();
+        addAnnotationButton.setHorizontalTextPosition(0);
         addAnnotationButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-plus-24.png")));
-        addAnnotationButton.setText("");
+        addAnnotationButton.setText("Add Concept");
+        addAnnotationButton.setVerticalTextPosition(3);
         panel7.add(addAnnotationButton, BorderLayout.NORTH);
         removeAnnotationButton = new JButton();
+        removeAnnotationButton.setHorizontalTextPosition(0);
         removeAnnotationButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-delete-24.png")));
-        removeAnnotationButton.setText("");
+        removeAnnotationButton.setText("Remove Concept");
+        removeAnnotationButton.setVerticalTextPosition(3);
         panel7.add(removeAnnotationButton, BorderLayout.SOUTH);
         assignColorToClassButton = new JButton();
         assignColorToClassButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-color-dropper-filled-50 (Custom).png")));

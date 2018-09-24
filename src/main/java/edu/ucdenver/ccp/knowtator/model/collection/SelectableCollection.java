@@ -27,15 +27,12 @@ public abstract class SelectableCollection<K extends KnowtatorObject, L extends 
         setSelection(getPrevious(getSelection()));
     }
 
-    public void setSelection(K selection) {
-        if (this.selection != selection) {
-            K previousSelection = this.selection;
-            this.selection = selection;
-            if (selection == null) {
-                collectionListeners.forEach(kSelectionListener -> kSelectionListener.noSelection(previousSelection));
-            } else {
-                collectionListeners.forEach(kSelectionListener -> kSelectionListener.selected(previousSelection, this.selection));
-            }
+    public void setSelection(K newSelection) {
+        if (this.selection != newSelection) {
+            SelectionChangeEvent<K> selectionChangeEvent = new SelectionChangeEvent<>(this.selection, newSelection);
+            this.selection = newSelection;
+            collectionListeners.forEach(kSelectionListener -> kSelectionListener.selected(selectionChangeEvent));
+
         }
     }
 }

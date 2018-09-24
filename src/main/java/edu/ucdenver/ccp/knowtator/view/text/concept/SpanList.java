@@ -1,5 +1,9 @@
 package edu.ucdenver.ccp.knowtator.view.text.concept;
 
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
@@ -24,6 +28,31 @@ public class SpanList extends JList<Span> implements KnowtatorViewComponent {
 
         textSourceCollectionListener = new TextSourceCollectionListener() {
             @Override
+            public void added(AddEvent<TextSource> addedObject) {
+
+            }
+
+            @Override
+            public void removed(RemoveEvent<TextSource> removedObject) {
+
+            }
+
+            @Override
+            public void changed(ChangeEvent<TextSource> changeEvent) {
+
+            }
+
+            @Override
+            public void emptied(RemoveEvent<TextSource> object) {
+
+            }
+
+            @Override
+            public void firstAdded(AddEvent<TextSource> object) {
+
+            }
+
+            @Override
             public void updated(TextSource updatedItem) {
 
             }
@@ -34,34 +63,39 @@ public class SpanList extends JList<Span> implements KnowtatorViewComponent {
             }
 
             @Override
-            public void selected(TextSource previousSelection, TextSource currentSelection) {
-                if (previousSelection != null) {
-                    previousSelection.getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
+            public void selected(SelectionChangeEvent<TextSource> event) {
+                if (event.getOld() != null) {
+                    event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
                 }
-                currentSelection.getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
-            }
-
-            @Override
-            public void added(TextSource addedObject) {
-
-            }
-
-            @Override
-            public void removed(TextSource removedObject) {
-
-            }
-
-            @Override
-            public void emptied(TextSource object) {
-
-            }
-
-            @Override
-            public void firstAdded(TextSource object) {
-
+                event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
             }
         };
         conceptAnnotationCollectionListener = new ConceptAnnotationCollectionListener() {
+            @Override
+            public void added(AddEvent<ConceptAnnotation> addedObject) {
+
+            }
+
+            @Override
+            public void removed(RemoveEvent<ConceptAnnotation> removedObject) {
+
+            }
+
+            @Override
+            public void changed(ChangeEvent<ConceptAnnotation> changeEvent) {
+
+            }
+
+            @Override
+            public void emptied(RemoveEvent<ConceptAnnotation> object) {
+
+            }
+
+            @Override
+            public void firstAdded(AddEvent<ConceptAnnotation> object) {
+
+            }
+
             @Override
             public void updated(ConceptAnnotation updatedItem) {
 
@@ -73,37 +107,42 @@ public class SpanList extends JList<Span> implements KnowtatorViewComponent {
             }
 
             @Override
-            public void selected(ConceptAnnotation previousSelection, ConceptAnnotation currentSelection) {
-                setListData(currentSelection.getSpanCollection().toArray(new Span[0]));
+            public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
+                setListData(event.getNew().getSpanCollection().toArray(new Span[0]));
 
-                if (previousSelection != null) {
-                    previousSelection.getSpanCollection().removeCollectionListener(spanCollectionListener);
+                if (event.getOld() != null) {
+                    event.getOld().getSpanCollection().removeCollectionListener(spanCollectionListener);
                 }
-                currentSelection.getSpanCollection().addCollectionListener(spanCollectionListener);
-            }
-
-            @Override
-            public void added(ConceptAnnotation addedObject) {
-
-            }
-
-            @Override
-            public void removed(ConceptAnnotation removedObject) {
-
-            }
-
-            @Override
-            public void emptied(ConceptAnnotation object) {
-
-            }
-
-            @Override
-            public void firstAdded(ConceptAnnotation object) {
-
+                event.getNew().getSpanCollection().addCollectionListener(spanCollectionListener);
             }
         };
 
         spanCollectionListener = new SpanCollectionListener() {
+            @Override
+            public void added(AddEvent<Span> addedObject) {
+
+            }
+
+            @Override
+            public void removed(RemoveEvent<Span> removedObject) {
+
+            }
+
+            @Override
+            public void changed(ChangeEvent<Span> changeEvent) {
+
+            }
+
+            @Override
+            public void emptied(RemoveEvent<Span> object) {
+
+            }
+
+            @Override
+            public void firstAdded(AddEvent<Span> object) {
+
+            }
+
             @Override
             public void updated(Span updatedItem) {
                 setListData(updatedItem.getConceptAnnotation().getSpanCollection().toArray(new Span[0]));
@@ -115,27 +154,7 @@ public class SpanList extends JList<Span> implements KnowtatorViewComponent {
             }
 
             @Override
-            public void selected(Span previousSelection, Span currentSelection) {
-
-            }
-
-            @Override
-            public void added(Span addedObject) {
-
-            }
-
-            @Override
-            public void removed(Span removedObject) {
-
-            }
-
-            @Override
-            public void emptied(Span object) {
-
-            }
-
-            @Override
-            public void firstAdded(Span object) {
+            public void selected(SelectionChangeEvent<Span> event) {
 
             }
         };

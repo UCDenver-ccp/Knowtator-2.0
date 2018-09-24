@@ -16,12 +16,12 @@
         <children>
           <component id="a977e" class="javax.swing.JButton" binding="showGraphViewerButton">
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="1.0" weighty="1.0"/>
             </constraints>
             <properties>
               <icon value="icon/icons8-tree-structure-32.png"/>
-              <text value=""/>
+              <text value="Graph Viewer"/>
             </properties>
           </component>
           <grid id="49c09" layout-manager="GridBagLayout">
@@ -56,12 +56,13 @@
           </grid>
           <component id="e76c9" class="javax.swing.JButton" binding="openProjectButton">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="78" height="36"/>
               </grid>
               <gridbag weightx="1.0" weighty="1.0"/>
             </constraints>
             <properties>
+              <icon value="icon/icons8-document-32.png"/>
               <text resource-bundle="log4j" key="open.project"/>
             </properties>
           </component>
@@ -145,15 +146,18 @@
                   <component id="84384" class="javax.swing.JButton" binding="addTextSourceButton">
                     <constraints border-constraint="West"/>
                     <properties>
+                      <horizontalTextPosition value="4"/>
                       <icon value="icon/icons8-plus-24.png"/>
-                      <text value=""/>
+                      <text value="Add Document"/>
+                      <verticalTextPosition value="0"/>
                     </properties>
                   </component>
                   <component id="a16e" class="javax.swing.JButton" binding="removeTextSourceButton">
                     <constraints border-constraint="East"/>
                     <properties>
+                      <horizontalTextPosition value="2"/>
                       <icon value="icon/icons8-delete-24.png"/>
-                      <text value=""/>
+                      <text value="Remove Document"/>
                     </properties>
                   </component>
                 </children>
@@ -221,15 +225,19 @@
                           <component id="8d772" class="javax.swing.JButton" binding="growSelectionEndButton">
                             <constraints border-constraint="East"/>
                             <properties>
+                              <horizontalTextPosition value="0"/>
                               <icon value="icon/icons8-exit-32.png"/>
-                              <text value=""/>
+                              <text value="Grow Span"/>
+                              <verticalTextPosition value="3"/>
                             </properties>
                           </component>
                           <component id="f4f09" class="javax.swing.JButton" binding="shrinkSelectionEndButton">
                             <constraints border-constraint="West"/>
                             <properties>
+                              <horizontalTextPosition value="0"/>
                               <icon value="icon/icons8-enter-32 (reversed).png"/>
-                              <text value=""/>
+                              <text value="Shrink Span"/>
+                              <verticalTextPosition value="3"/>
                             </properties>
                           </component>
                         </children>
@@ -242,15 +250,21 @@
                           <component id="aef02" class="javax.swing.JButton" binding="shrinkSelectionStartButton">
                             <constraints border-constraint="Center"/>
                             <properties>
+                              <horizontalTextPosition value="0"/>
                               <icon value="icon/icons8-enter-32.png"/>
-                              <text value=""/>
+                              <text value="Shrink Span"/>
+                              <verticalTextPosition value="3"/>
                             </properties>
                           </component>
                           <component id="b5efd" class="javax.swing.JButton" binding="growSelectionStartButton">
                             <constraints border-constraint="West"/>
                             <properties>
+                              <horizontalAlignment value="0"/>
+                              <horizontalTextPosition value="0"/>
                               <icon value="icon/icons8-exit-32 (reversed).png"/>
-                              <text value=""/>
+                              <text value="Grow Span"/>
+                              <verticalAlignment value="0"/>
+                              <verticalTextPosition value="3"/>
                             </properties>
                           </component>
                         </children>
@@ -263,15 +277,19 @@
                           <component id="1c2ad" class="javax.swing.JButton" binding="addAnnotationButton">
                             <constraints border-constraint="North"/>
                             <properties>
+                              <horizontalTextPosition value="0"/>
                               <icon value="icon/icons8-plus-24.png"/>
-                              <text value=""/>
+                              <text value="Add Concept"/>
+                              <verticalTextPosition value="3"/>
                             </properties>
                           </component>
                           <component id="3ab3a" class="javax.swing.JButton" binding="removeAnnotationButton">
                             <constraints border-constraint="South"/>
                             <properties>
+                              <horizontalTextPosition value="0"/>
                               <icon value="icon/icons8-delete-24.png"/>
-                              <text value=""/>
+                              <text value="Remove Concept"/>
+                              <verticalTextPosition value="3"/>
                             </properties>
                           </component>
                         </children>

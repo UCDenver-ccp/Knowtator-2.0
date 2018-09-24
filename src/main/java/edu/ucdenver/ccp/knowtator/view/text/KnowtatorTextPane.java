@@ -1,5 +1,9 @@
 package edu.ucdenver.ccp.knowtator.view.text;
 
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
@@ -38,6 +42,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
         super();
         this.view = view;
         setEditable(false);
+        setEnabled(false);
         setLineWrap(true);
         setWrapStyleWord(true);
 
@@ -118,126 +123,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
         addCaretListener(view.getController().getTextSourceCollection());
         view.getController().getProfileCollection().addColorListener(this);
 
-        textSourceCollectionListener = new TextSourceCollectionListener() {
-            @Override
-            public void updated(TextSource updatedItem) {
-
-            }
-
-            @Override
-            public void noSelection(TextSource previousSelection) {
-                refreshHighlights();
-            }
-
-            @Override
-            public void selected(TextSource previousSelection, TextSource currentSelection) {
-                if (previousSelection != null) {
-                    previousSelection.getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
-                }
-                currentSelection.getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
-                showTextPane();
-            }
-
-            @Override
-            public void added(TextSource object) {
-
-            }
-
-            @Override
-            public void removed(TextSource removedObject) {
-            }
-
-            @Override
-            public void emptied(TextSource object) {
-
-            }
-
-            @Override
-            public void firstAdded(TextSource object) {
-            }
-        };
-        conceptAnnotationCollectionListener = new ConceptAnnotationCollectionListener() {
-            @Override
-            public void updated(ConceptAnnotation updatedItem) {
-                refreshHighlights();
-            }
-
-            @Override
-            public void noSelection(ConceptAnnotation previousSelection) {
-                previousSelection.getSpanCollection().removeCollectionListener(spanCollectionListener);
-                refreshHighlights();
-            }
-
-            @Override
-            public void selected(ConceptAnnotation previousSelection, ConceptAnnotation currentSelection) {
-                if (previousSelection != null) {
-                    previousSelection.getSpanCollection().removeCollectionListener(spanCollectionListener);
-                }
-                currentSelection.getSpanCollection().addCollectionListener(spanCollectionListener);
-                refreshHighlights();
-            }
-
-            @Override
-            public void added(ConceptAnnotation addedObject) {
-
-            }
-
-            @Override
-            public void removed(ConceptAnnotation removedObject) {
-
-            }
-
-            @Override
-            public void emptied(ConceptAnnotation object) {
-
-            }
-
-            @Override
-            public void firstAdded(ConceptAnnotation object) {
-
-            }
-        };
-
-        spanCollectionListener = new SpanCollectionListener() {
-            @Override
-            public void updated(Span updatedItem) {
-                refreshHighlights();
-            }
-
-            @Override
-            public void noSelection(Span previousSelection) {
-                refreshHighlights();
-            }
-
-            @Override
-            public void selected(Span previousSelection, Span currentSelection) {
-                refreshHighlights();
-            }
-
-            @Override
-            public void added(Span addedObject) {
-                refreshHighlights();
-            }
-
-            @Override
-            public void removed(Span removedObject) {
-                refreshHighlights();
-            }
-
-            @Override
-            public void emptied(Span object) {
-                refreshHighlights();
-            }
-
-            @Override
-            public void firstAdded(Span object) {
-                refreshHighlights();
-            }
-        };
-
-        view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
-
-        addMouseListener(new MouseListener() {
+        MouseListener mouseListener = new MouseListener() {
             int press_offset;
 
             @Override
@@ -247,9 +133,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-
                 handleMouseRelease(e, press_offset, viewToModel(e.getPoint()));
-
             }
 
             @Override
@@ -263,7 +147,148 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
             @Override
             public void mouseClicked(MouseEvent e) {
             }
-        });
+        };
+
+        textSourceCollectionListener = new TextSourceCollectionListener() {
+            @Override
+            public void added(AddEvent<TextSource> addedObject) {
+
+            }
+
+            @Override
+            public void removed(RemoveEvent<TextSource> removedObject) {
+
+            }
+
+            @Override
+            public void changed(ChangeEvent<TextSource> changeEvent) {
+
+            }
+
+            @Override
+            public void emptied(RemoveEvent<TextSource> object) {
+                setEnabled(false);
+                removeMouseListener(mouseListener);
+            }
+
+            @Override
+            public void firstAdded(AddEvent<TextSource> object) {
+                setEnabled(true);
+                addMouseListener(mouseListener);
+            }
+
+            @Override
+            public void updated(TextSource updatedItem) {
+
+            }
+
+            @Override
+            public void noSelection(TextSource previousSelection) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void selected(SelectionChangeEvent<TextSource> event) {
+                if (event.getOld() != null) {
+                    event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
+                }
+                event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
+                showTextPane();
+            }
+        };
+        conceptAnnotationCollectionListener = new ConceptAnnotationCollectionListener() {
+            @Override
+            public void added(AddEvent<ConceptAnnotation> addedObject) {
+
+            }
+
+            @Override
+            public void removed(RemoveEvent<ConceptAnnotation> removedObject) {
+
+            }
+
+            @Override
+            public void changed(ChangeEvent<ConceptAnnotation> changeEvent) {
+
+            }
+
+            @Override
+            public void emptied(RemoveEvent<ConceptAnnotation> object) {
+
+            }
+
+            @Override
+            public void firstAdded(AddEvent<ConceptAnnotation> object) {
+
+            }
+
+            @Override
+            public void updated(ConceptAnnotation updatedItem) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void noSelection(ConceptAnnotation previousSelection) {
+                previousSelection.getSpanCollection().removeCollectionListener(spanCollectionListener);
+                refreshHighlights();
+            }
+
+            @Override
+            public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
+                if (event.getOld() != null) {
+                    event.getOld().getSpanCollection().removeCollectionListener(spanCollectionListener);
+                }
+                event.getNew().getSpanCollection().addCollectionListener(spanCollectionListener);
+                refreshHighlights();
+            }
+        };
+
+        spanCollectionListener = new SpanCollectionListener() {
+            @Override
+            public void added(AddEvent<Span> addedObject) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void removed(RemoveEvent<Span> removedObject) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void changed(ChangeEvent<Span> changeEvent) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void emptied(RemoveEvent<Span> object) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void firstAdded(AddEvent<Span> object) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void updated(Span updatedItem) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void noSelection(Span previousSelection) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void selected(SelectionChangeEvent<Span> event) {
+                refreshHighlights();
+            }
+
+        };
+
+        view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
+
+
     }
 
     private void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {

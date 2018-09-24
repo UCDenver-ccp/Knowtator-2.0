@@ -15,6 +15,10 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
@@ -528,8 +532,8 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObject<Grap
     }
 
     @Override
-    public void selected(ConceptAnnotation previousSelection, ConceptAnnotation currentSelection) {
-        setSelectionCells(getVerticesForAnnotation(textSource.getConceptAnnotationCollection().getSelection()));
+    public void selected(SelectionChangeEvent<ConceptAnnotation> changeEvent) {
+        setSelectionCells(getVerticesForAnnotation(changeEvent.getNew().getTextSource().getConceptAnnotationCollection().getSelection()));
     }
 
     @Override
@@ -573,22 +577,27 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObject<Grap
     }
 
     @Override
-    public void added(ConceptAnnotation addedObject) {
+    public void added(AddEvent<ConceptAnnotation> event) {
 
     }
 
     @Override
-    public void removed(ConceptAnnotation removedObject) {
+    public void removed(RemoveEvent<ConceptAnnotation> removedObject) {
 
     }
 
     @Override
-    public void emptied(ConceptAnnotation object) {
+    public void changed(ChangeEvent<ConceptAnnotation> changeEvent) {
 
     }
 
     @Override
-    public void firstAdded(ConceptAnnotation object) {
+    public void emptied(RemoveEvent<ConceptAnnotation> object) {
+
+    }
+
+    @Override
+    public void firstAdded(AddEvent<ConceptAnnotation> object) {
 
     }
 

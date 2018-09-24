@@ -1,5 +1,9 @@
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
@@ -16,6 +20,31 @@ public class GraphSpaceChooser extends Chooser<GraphSpace> {
 
         textSourceCollectionListener = new TextSourceCollectionListener() {
             @Override
+            public void added(AddEvent<TextSource> addedObject) {
+
+            }
+
+            @Override
+            public void removed(RemoveEvent<TextSource> removedObject) {
+
+            }
+
+            @Override
+            public void changed(ChangeEvent<TextSource> changeEvent) {
+
+            }
+
+            @Override
+            public void emptied(RemoveEvent<TextSource> object) {
+
+            }
+
+            @Override
+            public void firstAdded(AddEvent<TextSource> object) {
+
+            }
+
+            @Override
             public void updated(TextSource updatedItem) {
 
             }
@@ -26,28 +55,8 @@ public class GraphSpaceChooser extends Chooser<GraphSpace> {
             }
 
             @Override
-            public void selected(TextSource previousSelection, TextSource currentSelection) {
-                reactToTextSourceChange(currentSelection);
-            }
-
-            @Override
-            public void added(TextSource addedObject) {
-
-            }
-
-            @Override
-            public void removed(TextSource removedObject) {
-
-            }
-
-            @Override
-            public void emptied(TextSource object) {
-
-            }
-
-            @Override
-            public void firstAdded(TextSource object) {
-
+            public void selected(SelectionChangeEvent<TextSource> event) {
+                reactToTextSourceChange(event.getNew());
             }
         };
 

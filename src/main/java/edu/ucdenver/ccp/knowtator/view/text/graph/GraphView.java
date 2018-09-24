@@ -8,6 +8,10 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.util.mxMorphing;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
@@ -66,6 +70,31 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
 
         textSourceCollectionListener = new TextSourceCollectionListener() {
             @Override
+            public void added(AddEvent<TextSource> addedObject) {
+
+            }
+
+            @Override
+            public void removed(RemoveEvent<TextSource> removedObject) {
+
+            }
+
+            @Override
+            public void changed(ChangeEvent<TextSource> changeEvent) {
+
+            }
+
+            @Override
+            public void emptied(RemoveEvent<TextSource> object) {
+
+            }
+
+            @Override
+            public void firstAdded(AddEvent<TextSource> object) {
+
+            }
+
+            @Override
             public void updated(TextSource updatedItem) {
 
             }
@@ -76,31 +105,11 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
             }
 
             @Override
-            public void selected(TextSource previousSelection, TextSource currentSelection) {
-                if (previousSelection != null) {
-                    previousSelection.getGraphSpaceCollection().removeCollectionListener(graphView);
+            public void selected(SelectionChangeEvent<TextSource> event) {
+                if (event.getOld() != null) {
+                    event.getOld().getGraphSpaceCollection().removeCollectionListener(graphView);
                 }
-                currentSelection.getGraphSpaceCollection().addCollectionListener(graphView);
-            }
-
-            @Override
-            public void added(TextSource addedObject) {
-
-            }
-
-            @Override
-            public void removed(TextSource removedObject) {
-
-            }
-
-            @Override
-            public void emptied(TextSource object) {
-
-            }
-
-            @Override
-            public void firstAdded(TextSource object) {
-
+                event.getNew().getGraphSpaceCollection().addCollectionListener(graphView);
             }
         };
         view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
@@ -306,9 +315,9 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
     }
 
     @Override
-    public void selected(GraphSpace previousSelection, GraphSpace currentSelection) {
-        if (currentSelection != null) {
-            String quantifier = currentSelection.getRelationSelectionManager().getSelectedRelationQuantifier();
+    public void selected(SelectionChangeEvent<GraphSpace> event) {
+        if (event.getNew() != null) {
+            String quantifier = event.getNew().getRelationSelectionManager().getSelectedRelationQuantifier();
             if (quantifier != null) {
                 switch (quantifier) {
                     case "only":
@@ -329,31 +338,11 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
                 }
             }
 
-            negateCheckBox.setSelected(currentSelection.getRelationSelectionManager().isSelectedNegation());
-            if (graphComponent.getGraph() != currentSelection) {
-                showGraph(currentSelection);
+            negateCheckBox.setSelected(event.getNew().getRelationSelectionManager().isSelectedNegation());
+            if (graphComponent.getGraph() != event.getNew()) {
+                showGraph(event.getNew());
             }
         }
-    }
-
-    @Override
-    public void added(GraphSpace addedObject) {
-
-    }
-
-    @Override
-    public void removed(GraphSpace removedObject) {
-
-    }
-
-    @Override
-    public void emptied(GraphSpace object) {
-
-    }
-
-    @Override
-    public void firstAdded(GraphSpace object) {
-
     }
 
     @Override
@@ -364,6 +353,31 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
 
     @Override
     public void dispose() {
+
+    }
+
+    @Override
+    public void added(AddEvent<GraphSpace> addedObject) {
+
+    }
+
+    @Override
+    public void removed(RemoveEvent<GraphSpace> removedObject) {
+
+    }
+
+    @Override
+    public void changed(ChangeEvent<GraphSpace> changeEvent) {
+
+    }
+
+    @Override
+    public void emptied(RemoveEvent<GraphSpace> object) {
+
+    }
+
+    @Override
+    public void firstAdded(AddEvent<GraphSpace> object) {
 
     }
 
