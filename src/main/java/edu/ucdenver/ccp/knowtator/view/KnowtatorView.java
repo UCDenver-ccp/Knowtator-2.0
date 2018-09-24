@@ -275,7 +275,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
             }
         });
         annotationButtons.put(assignColorToClassButton, e -> {
-            OWLEntity owlClass = getController().getSelectionManager().getSelectedOWLEntity();
+            OWLEntity owlClass = getController().getOWLManager().getSelectedOWLEntity();
             if (owlClass == null) {
                 owlClass =
                         getController()
@@ -327,8 +327,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         selectionSizeButtons.put(growSelectionEndButton, e -> knowtatorTextPane.growEnd());
 
         textSourceCheckBoxes = new HashMap<>();
-        textSourceCheckBoxes.put(profileFilterCheckBox, e -> controller.getSelectionManager().setFilterByProfile(profileFilterCheckBox.isSelected()));
-        textSourceCheckBoxes.put(classFilterCheckBox, e -> controller.getSelectionManager().setFilterByOWLClass(classFilterCheckBox.isSelected()));
+        textSourceCheckBoxes.put(profileFilterCheckBox, e -> controller.getTextSourceCollection().setFilterByProfile(profileFilterCheckBox.isSelected()));
+        textSourceCheckBoxes.put(classFilterCheckBox, e -> controller.getTextSourceCollection().setFilterByOWLClass(classFilterCheckBox.isSelected()));
 
         // Disable
         disableTextSourceButtons();
@@ -356,7 +356,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     private void setupListeners() {
         OWLClassSelectionListener owlClassSelectionListener = this::owlEntitySelectionChanged;
-        controller.getSelectionManager().addOWLEntityListener(owlClassSelectionListener);
+        controller.getOWLManager().addOWLEntityListener(owlClassSelectionListener);
 
         TextSourceCollectionListener textSourceCollectionListener = new TextSourceCollectionListener() {
             @Override
@@ -485,7 +485,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     protected OWLClass updateView(OWLClass selectedClass) {
         if (controller != null) {
             setUpOWL();
-            controller.getSelectionManager().setSelectedOWLEntity(selectedClass);
+            controller.getOWLManager().setSelectedOWLEntity(selectedClass);
         }
         return selectedClass;
     }
@@ -754,7 +754,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         profileFilterCheckBox.setToolTipText(ResourceBundle.getBundle("ui").getString("filter.conceptAnnotations.by.profile"));
         annotationToolBar.add(profileFilterCheckBox);
         classFilterCheckBox = new JCheckBox();
-        classFilterCheckBox.setText("OWL Class Filter");
+        this.$$$loadButtonText$$$(classFilterCheckBox, ResourceBundle.getBundle("log4j").getString("owl.class.filter"));
         annotationToolBar.add(classFilterCheckBox);
         final JToolBar toolBar1 = new JToolBar();
         toolBar1.setFloatable(false);

@@ -15,6 +15,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import javax.swing.*;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
@@ -23,7 +25,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-public class TextSourceCollection extends KnowtatorCollection<TextSource> implements ProjectListener, BratStandoffIO, KnowtatorXMLIO, SavableKnowtatorManager {
+public class TextSourceCollection extends KnowtatorCollection<TextSource> implements CaretListener, ProjectListener, BratStandoffIO, KnowtatorXMLIO, SavableKnowtatorManager {
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(TextSourceCollection.class);
 
@@ -31,11 +33,64 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
     private File articlesLocation;
     private File annotationsLocation;
 
+    private boolean filterByProfile;
+
+    private int start;
+    private int end;
+    public boolean isFilterByOWLClass() {
+        return filterByOWLClass;
+    }
+
+    private boolean filterByOWLClass;
+    public int getStart() {
+        return start;
+    }
+
+    public void setStart(int start) {
+        this.start = start;
+    }
+
+
+    public int getEnd() {
+        return end;
+    }
+
+    public void setEnd(int end) {
+        this.end = end;
+    }
+
+    public boolean isFilterByProfile() {
+        return filterByProfile;
+    }
+
+    public void setFilterByProfile(boolean filterByProfile) {
+        this.filterByProfile = filterByProfile;
+        collectionListeners.forEach(l -> l.updated(getSelection()));
+    }
+
+    public void setFilterByOWLClass(boolean filterByOWLClass) {
+        this.filterByOWLClass = filterByOWLClass;
+        collectionListeners.forEach(l -> l.updated(getSelection()));
+    }
+
+    @Override
+    public void caretUpdate(CaretEvent e) {
+        setStart(Math.min(e.getDot(), e.getMark()));
+        setEnd(Math.max(e.getDot(), e.getMark()));
+    }
+
 
     public TextSourceCollection(KnowtatorController controller) {
         super(controller);
         this.controller = controller;
         controller.addProjectListener(this);
+
+        filterByProfile = false;
+        filterByOWLClass = false;
+
+
+        start = 0;
+        end = 0;
 
     }
 

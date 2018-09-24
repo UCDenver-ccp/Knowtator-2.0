@@ -39,7 +39,6 @@ public class TextSource extends AbstractKnowtatorObject<TextSource> implements B
 
     public TextSource(KnowtatorController controller, File saveFile, String textFileName) {
         super(null);
-
         this.controller = controller;
         this.saveFile = saveFile == null ? new File(controller.getTextSourceCollection().getAnnotationsLocation().getAbsolutePath(), textFileName.replace(".txt", "") + ".xml") : saveFile;
         this.conceptAnnotationCollection = new ConceptAnnotationCollection(controller, this);

@@ -2,7 +2,7 @@ package edu.ucdenver.ccp.knowtator.model.selection;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.text.graph.Triple;
+import edu.ucdenver.ccp.knowtator.model.text.graph.RelationAnnotation;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import java.util.Arrays;
@@ -28,8 +28,8 @@ public class RelationSelectionManager {
 	public void setSelectedRelationQuantifierValue(String selectedRelationQuantifierValue) {
 		this.selectedRelationQuantifierValue = selectedRelationQuantifierValue;
 		Arrays.stream(graphSpace.getSelectionCells()).forEach(cell -> {
-			if (cell instanceof Triple) {
-				((Triple) cell).setQuantifierValue(selectedRelationQuantifierValue);
+			if (cell instanceof RelationAnnotation) {
+				((RelationAnnotation) cell).setQuantifierValue(selectedRelationQuantifierValue);
 			}
 		});
 
@@ -38,11 +38,11 @@ public class RelationSelectionManager {
 	public void setSelectedOWLObjectProperty(OWLObjectProperty owlObjectProperty) {
 		this.selectedOWLObjectProperty = owlObjectProperty;
 		Arrays.stream(graphSpace.getSelectionCells()).forEach(cell -> {
-			if (cell instanceof Triple) {
-				((Triple) cell).setProperty(owlObjectProperty);
+			if (cell instanceof RelationAnnotation) {
+				((RelationAnnotation) cell).setProperty(owlObjectProperty);
 			}
 		});
-		controller.getSelectionManager().setSelectedOWLEntity(owlObjectProperty);
+		controller.getOWLManager().setSelectedOWLEntity(owlObjectProperty);
 
 	}
 
@@ -58,11 +58,11 @@ public class RelationSelectionManager {
 	public void setSelectedPropertyQuantifer(String relationQuantifier) {
 		selectedRelationQuantifier = relationQuantifier;
 		Arrays.stream(graphSpace.getSelectionCells()).forEach(cell -> {
-			if (cell instanceof Triple) {
-				((Triple) cell).setQuantifier(selectedRelationQuantifier);
+			if (cell instanceof RelationAnnotation) {
+				((RelationAnnotation) cell).setQuantifier(selectedRelationQuantifier);
 			}
 		});
-		controller.refreshView();
+		graphSpace.getTextSource().getGraphSpaceCollection().refresh();
 	}
 
 	public String getSelectedRelationQuantifierValue() {
@@ -72,8 +72,8 @@ public class RelationSelectionManager {
 	public void setNegatation(boolean selectedNegation) {
 		this.selectedNegation = selectedNegation;
 		Arrays.stream(graphSpace.getSelectionCells()).forEach(cell -> {
-			if (cell instanceof Triple) {
-				((Triple) cell).setNegation(selectedNegation);
+			if (cell instanceof RelationAnnotation) {
+				((RelationAnnotation) cell).setNegation(selectedNegation);
 			}
 		});
 	}

@@ -114,7 +114,7 @@ public class KnowtatorTextPane extends JTextArea
     }
 
     private void setupListeners() {
-        addCaretListener(view.getController().getSelectionManager());
+        addCaretListener(view.getController().getTextSourceCollection());
         view.getController().getProfileCollection().addColorListener(this);
 
 

@@ -6,6 +6,7 @@ import edu.ucdenver.ccp.knowtator.SavableKnowtatorManager;
 import edu.ucdenver.ccp.knowtator.listeners.DebugListener;
 import edu.ucdenver.ccp.knowtator.listeners.OWLSetupListener;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
+import edu.ucdenver.ccp.knowtator.model.selection.OWLClassSelectionListener;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.protege.editor.core.ui.util.AugmentedJTextField;
@@ -33,12 +34,24 @@ public class OWLManager implements Serializable, DebugListener, OWLSelectionMode
   private KnowtatorController controller;
   private List<OWLSetupListener> owlSetupListeners;
   private File ontologiesLocation;
+  private OWLEntity selectedOWLEntity;
+  private List<OWLClassSelectionListener> owlEntityListeners;
 
   public OWLManager(KnowtatorController controller) {
     this.controller = controller;
+    owlEntityListeners = new ArrayList<>();
     controller.addProjectListener(this);
     owlSetupListeners = new ArrayList<>();
     controller.addDebugListener(this);
+  }
+
+  public OWLEntity getSelectedOWLEntity() {
+    return selectedOWLEntity;
+  }
+
+  public void setSelectedOWLEntity(OWLEntity owlClass) {
+    selectedOWLEntity = owlClass;
+    owlEntityListeners.forEach(listener -> listener.owlEntityChanged(owlClass));
   }
 
   public void addOWLSetupListener(OWLSetupListener listener) {
@@ -180,7 +193,7 @@ public class OWLManager implements Serializable, DebugListener, OWLSelectionMode
 
     IRI iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#DomainConcept");
     OWLClass testClass = factory.getOWLClass(iri);
-    controller.getSelectionManager().setSelectedOWLEntity(testClass);
+    setSelectedOWLEntity(testClass);
 
     iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#HasCountryOfOrigin");
     OWLObjectProperty objectProperty = factory.getOWLObjectProperty(iri);
@@ -202,7 +215,7 @@ public class OWLManager implements Serializable, DebugListener, OWLSelectionMode
               .getGraphSpaceCollection().getSelection()
               .getRelationSelectionManager().setSelectedOWLObjectProperty((OWLObjectProperty) ent);
     } else if (ent instanceof OWLClass) {
-      controller.getSelectionManager().setSelectedOWLEntity(ent);
+      setSelectedOWLEntity(ent);
     }
   }
 
@@ -220,7 +233,12 @@ public class OWLManager implements Serializable, DebugListener, OWLSelectionMode
     }
   }
 
+  public void addOWLEntityListener(OWLClassSelectionListener listener) {
+    owlEntityListeners.add(listener);
+  }
+
   public void dispose() {
+    owlEntityListeners.clear();
     owlSetupListeners.clear();
     try {
       getWorkSpace().getOWLSelectionModel().removeListener(this);

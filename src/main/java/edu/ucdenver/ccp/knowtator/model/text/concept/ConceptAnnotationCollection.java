@@ -69,11 +69,11 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     }
 
     public void addSelectedAnnotation() {
-        OWLEntity owlClass = controller.getSelectionManager().getSelectedOWLEntity();
+        OWLEntity owlClass = controller.getOWLManager().getSelectedOWLEntity();
         if (owlClass instanceof OWLClass) {
             Profile annotator = controller.getProfileCollection().getSelection();
-            int start = controller.getSelectionManager().getStart();
-            int end = controller.getSelectionManager().getEnd();
+            int start = controller.getTextSourceCollection().getStart();
+            int end = controller.getTextSourceCollection().getEnd();
 
 
             try {
@@ -91,8 +91,8 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
     public void addSpanToSelectedAnnotation() {
         getSelection().getSpanCollection().addSpan(null,
-                controller.getSelectionManager().getStart(),
-                controller.getSelectionManager().getEnd());
+                controller.getTextSourceCollection().getStart(),
+                controller.getTextSourceCollection().getEnd());
         textSource.save();
     }
 
@@ -205,10 +205,10 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         Supplier<TreeSet<Span>> supplier = TreeSet::new;
 
         Set<OWLClass> activeOWLClassDescendents = new HashSet<>();
-        if (controller.getSelectionManager().isFilterByOWLClass()) {
+        if (controller.getTextSourceCollection().isFilterByOWLClass()) {
             try {
-                activeOWLClassDescendents.addAll(controller.getOWLManager().getDescendants((OWLClass) controller.getSelectionManager().getSelectedOWLEntity()));
-                activeOWLClassDescendents.add((OWLClass) controller.getSelectionManager().getSelectedOWLEntity());
+                activeOWLClassDescendents.addAll(controller.getOWLManager().getDescendants((OWLClass) controller.getOWLManager().getSelectedOWLEntity()));
+                activeOWLClassDescendents.add((OWLClass) controller.getOWLManager().getSelectedOWLEntity());
             } catch (OWLWorkSpaceNotSetException ignored) {
             }
         }
@@ -220,8 +220,8 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                         span ->
                                 (loc == null || span.contains(loc))
                                         && (start <= span.getStart() && span.getEnd() <= end)
-                                        && (!controller.getSelectionManager().isFilterByOWLClass() || activeOWLClassDescendents.contains(span.getConceptAnnotation().getOwlClass()))
-                                        && (!controller.getSelectionManager().isFilterByProfile() || span.getConceptAnnotation().getAnnotator().equals(controller.getProfileCollection().getSelection())))
+                                        && (!controller.getTextSourceCollection().isFilterByOWLClass() || activeOWLClassDescendents.contains(span.getConceptAnnotation().getOwlClass()))
+                                        && (!controller.getTextSourceCollection().isFilterByProfile() || span.getConceptAnnotation().getAnnotator().equals(controller.getProfileCollection().getSelection())))
                 .collect(Collectors.toCollection(supplier));
     }
 
@@ -275,7 +275,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         if (getSelection() != newSpan.getConceptAnnotation()) {
             setSelection(newSpan.getConceptAnnotation());
             newSpan.getConceptAnnotation().getSpanCollection().setSelection(newSpan);
-            controller.getSelectionManager().setSelectedOWLEntity(newSpan.getConceptAnnotation().getOwlClass());
+            controller.getOWLManager().setSelectedOWLEntity(newSpan.getConceptAnnotation().getOwlClass());
         }
     }
 
@@ -570,7 +570,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     }
 
     public void reassignSelectedOWLClassToSelectedAnnotation() {
-        OWLEntity selectedOWLEntity = controller.getSelectionManager().getSelectedOWLEntity();
+        OWLEntity selectedOWLEntity = controller.getOWLManager().getSelectedOWLEntity();
         if (selectedOWLEntity instanceof OWLClass) {
             getSelection().setOwlClass((OWLClass) selectedOWLEntity);
             collectionListeners.forEach(listener -> listener.updated(getSelection()));

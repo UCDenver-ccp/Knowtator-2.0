@@ -144,4 +144,8 @@ public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implem
   public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationConfig, Map<String, Map<String, String>> visualConfig) {
 
   }
+
+  public void refresh() {
+    collectionListeners.forEach(l -> l.updated(getSelection()));
+  }
 }
