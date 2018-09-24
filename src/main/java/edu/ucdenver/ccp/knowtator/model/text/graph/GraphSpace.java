@@ -115,6 +115,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObject<Grap
         addCellToGraph(newVertex);
 
         textSource.save();
+        textSource.getGraphSpaceCollection().update(this);
     }
 
     public void addTriple(

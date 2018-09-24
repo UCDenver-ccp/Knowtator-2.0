@@ -226,9 +226,7 @@ public class OWLManager implements Serializable, DebugListener, OWLSelectionMode
     try {
       getWorkSpace().getOWLSelectionModel().removeListener(this);
       setRenderRDFSLabel();
-    } catch (OWLWorkSpaceNotSetException e) {
-      e.printStackTrace();
-
+    } catch (OWLWorkSpaceNotSetException ignored) {
     }
   }
 

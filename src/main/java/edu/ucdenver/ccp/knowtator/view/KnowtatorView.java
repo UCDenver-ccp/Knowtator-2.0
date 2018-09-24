@@ -40,6 +40,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -134,8 +135,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
         try {
             workspace = controller.getOWLManager().getWorkSpace();
-        } catch (OWLWorkSpaceNotSetException e) {
-            e.printStackTrace();
+        } catch (OWLWorkSpaceNotSetException ignored) {
+
 
         }
         if (workspace == null) {
@@ -763,21 +764,21 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         gbc.fill = GridBagConstraints.BOTH;
         panel2.add(panel3, gbc);
         classFilterCheckBox = new JCheckBox();
-        classFilterCheckBox.setText("OWL class filter");
+        this.$$$loadButtonText$$$(classFilterCheckBox, ResourceBundle.getBundle("log4j").getString("owl.class.filter1"));
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         panel3.add(classFilterCheckBox, gbc);
         profileFilterCheckBox = new JCheckBox();
-        profileFilterCheckBox.setText("Profile filter");
+        this.$$$loadButtonText$$$(profileFilterCheckBox, ResourceBundle.getBundle("log4j").getString("profile.filter"));
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.WEST;
         panel3.add(profileFilterCheckBox, gbc);
         openProjectButton = new JButton();
-        openProjectButton.setText("Open Project");
+        this.$$$loadButtonText$$$(openProjectButton, ResourceBundle.getBundle("log4j").getString("open.project"));
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -915,7 +916,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         gbc.weighty = 1.0;
         panel2.add(assignColorToClassButton, gbc);
         findTextButton = new JButton();
-        findTextButton.setText("Find in ontology");
+        this.$$$loadButtonText$$$(findTextButton, ResourceBundle.getBundle("log4j").getString("find.in.ontology1"));
         gbc = new GridBagConstraints();
         gbc.gridx = 3;
         gbc.gridy = 1;
@@ -931,6 +932,33 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         splitPane1.setLeftComponent(scrollPane1);
         knowtatorTextPane.setEditable(false);
         scrollPane1.setViewportView(knowtatorTextPane);
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private void $$$loadButtonText$$$(AbstractButton component, String text) {
+        StringBuffer result = new StringBuffer();
+        boolean haveMnemonic = false;
+        char mnemonic = '\0';
+        int mnemonicIndex = -1;
+        for (int i = 0; i < text.length(); i++) {
+            if (text.charAt(i) == '&') {
+                i++;
+                if (i == text.length()) break;
+                if (!haveMnemonic && text.charAt(i) != '&') {
+                    haveMnemonic = true;
+                    mnemonic = text.charAt(i);
+                    mnemonicIndex = result.length();
+                }
+            }
+            result.append(text.charAt(i));
+        }
+        component.setText(result.toString());
+        if (haveMnemonic) {
+            component.setMnemonic(mnemonic);
+            component.setDisplayedMnemonicIndex(mnemonicIndex);
+        }
     }
 
     /**

@@ -177,8 +177,8 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
     public void save() {
         try {
             controller.getOWLManager().setRenderRDFSLabel();
-        } catch (OWLWorkSpaceNotSetException e) {
-            e.printStackTrace();
+        } catch (OWLWorkSpaceNotSetException ignored) {
+
         }
         forEach(TextSource::save);
     }

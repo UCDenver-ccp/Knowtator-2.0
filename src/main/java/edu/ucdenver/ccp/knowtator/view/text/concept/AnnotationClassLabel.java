@@ -136,8 +136,8 @@ public class AnnotationClassLabel extends JLabel implements OWLModelManagerListe
     public void dispose() {
         try {
             view.getController().getOWLManager().getWorkSpace().getOWLModelManager().removeListener(this);
-        } catch (OWLWorkSpaceNotSetException e) {
-            e.printStackTrace();
+        } catch (OWLWorkSpaceNotSetException ignored) {
+
         }
     }
 }

@@ -103,6 +103,12 @@ public class AnnotationGraphSpaceChooser extends Chooser<GraphSpace> {
         }
     }
 
+    @Override
+    public void updated(GraphSpace updatedItem) {
+        //TODO: This should update when a node is added
+        reactToAnnotationChange(updatedItem.getTextSource().getConceptAnnotationCollection().getSelection());
+    }
+
     private void reactToTextSourceChange(TextSource previousSelection, TextSource currentSelection) {
         if (previousSelection != null) {
             previousSelection.getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
