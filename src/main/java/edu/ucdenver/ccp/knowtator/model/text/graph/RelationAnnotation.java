@@ -30,7 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Triple extends mxCell implements Savable, KnowtatorXMLIO, KnowtatorTextBoundObject, ProjectListener, OWLSetupListener, OWLOntologyChangeListener, OWLModelManagerListener {
+public class RelationAnnotation extends mxCell implements Savable, KnowtatorXMLIO, KnowtatorTextBoundObject, ProjectListener, OWLSetupListener, OWLOntologyChangeListener, OWLModelManagerListener {
     private String quantifier;
     private String quantifierValue;
     private Profile annotator;
@@ -42,10 +42,10 @@ public class Triple extends mxCell implements Savable, KnowtatorXMLIO, Knowtator
     private String propertyID;
     private GraphSpace graphSpace;
     @SuppressWarnings("unused")
-    private Logger log = Logger.getLogger(Triple.class);
+    private Logger log = Logger.getLogger(RelationAnnotation.class);
     private boolean dontRedraw;
 
-    Triple(
+    RelationAnnotation(
             String id,
             mxCell source,
             mxCell target,
@@ -79,15 +79,15 @@ public class Triple extends mxCell implements Savable, KnowtatorXMLIO, Knowtator
         setValue(null);
     }
 
-    Triple(String id,
-           mxCell source,
-           mxCell target,
-           String propertyID,
-           Profile annotator,
-           String quantifier,
-           String quantifierValue,
-           Boolean isNegated,
-           KnowtatorController controller, TextSource textSource, GraphSpace graphSpace) {
+    RelationAnnotation(String id,
+                       mxCell source,
+                       mxCell target,
+                       String propertyID,
+                       Profile annotator,
+                       String quantifier,
+                       String quantifierValue,
+                       Boolean isNegated,
+                       KnowtatorController controller, TextSource textSource, GraphSpace graphSpace) {
         super(null, new mxGeometry(), null);
         this.isNegated = isNegated;
 
@@ -354,5 +354,10 @@ public class Triple extends mxCell implements Savable, KnowtatorXMLIO, Knowtator
         } catch (OWLWorkSpaceNotSetException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return 0;
     }
 }

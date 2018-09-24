@@ -1,11 +1,12 @@
-package edu.ucdenver.ccp.knowtator.model.text.annotation;
+package edu.ucdenver.ccp.knowtator.model.text.concept.span;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.KnowtatorManager;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
-import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -16,19 +17,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class SpanManager extends SpanCollection implements KnowtatorManager, BratStandoffIO, KnowtatorXMLIO {
+public class SpanCollection extends KnowtatorCollection<Span> implements KnowtatorManager, BratStandoffIO, KnowtatorXMLIO {
     private KnowtatorController controller;
     private final TextSource textSource;
-    private final Annotation annotation;
+    private final ConceptAnnotation conceptAnnotation;
 
-    SpanManager(KnowtatorController controller, TextSource textSource, Annotation annotation) {
+    public SpanCollection(KnowtatorController controller, TextSource textSource, ConceptAnnotation conceptAnnotation) {
         super(controller);
         this.controller = controller;
         this.textSource = textSource;
-        this.annotation = annotation;
+        this.conceptAnnotation = conceptAnnotation;
     }
 
-    void removeSpan(Span span) {
+    public void removeSpan(Span span) {
         remove(span);
         setSelection(null);
     }
@@ -81,9 +82,9 @@ public class SpanManager extends SpanCollection implements KnowtatorManager, Bra
     }
 
     public Span addSpan(String spanId, int spanStart, int spanEnd) {
-        Span newSpan = new Span(spanId, spanStart, spanEnd, textSource, controller, annotation);
+        Span newSpan = new Span(spanId, spanStart, spanEnd, textSource, controller, conceptAnnotation);
         add(newSpan);
-        textSource.getAnnotationManager().getAllSpanCollection().add(newSpan);
+        textSource.getConceptAnnotationCollection().getAllSpanCollection().add(newSpan);
         setSelection(newSpan);
         return newSpan;
     }

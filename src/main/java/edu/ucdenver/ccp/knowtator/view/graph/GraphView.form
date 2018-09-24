@@ -105,7 +105,7 @@
                 <properties>
                   <icon value="icon/icons8-plus-24.png"/>
                   <text value=""/>
-                  <toolTipText resource-bundle="ui" key="add.annotation.node"/>
+                  <toolTipText resource-bundle="ui" key="add.conceptAnnotation.node"/>
                 </properties>
               </component>
               <component id="505b9" class="javax.swing.JButton" binding="removeCellButton">
@@ -242,7 +242,7 @@
       <member id="fc2a6"/>
       <member id="c3312"/>
     </group>
-    <group name="buttonGroup">
+    <group name="buttonGroup1">
       <member id="f9a7"/>
       <member id="5f65d"/>
       <member id="aa2f5"/>

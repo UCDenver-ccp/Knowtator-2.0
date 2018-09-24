@@ -2,7 +2,7 @@ package edu.ucdenver.ccp.knowtator.view.text;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import edu.ucdenver.ccp.knowtator.model.text.annotation.Span;
+import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.chooser.AnnotationGraphSpaceChooser;
@@ -44,12 +44,12 @@ public class InfoPane {
                     if (comboBox.getSelectedItem() != null
                             && comboBox.getSelectedItem()
                             != view.getController()
-                            .getTextSourceManager().getSelection()
-                            .getGraphSpaceManager().getSelection()) {
+                            .getTextSourceCollection().getSelection()
+                            .getGraphSpaceCollection().getSelection()) {
                         view.getGraphViewDialog().setVisible(true);
                         view.getController()
-                                .getTextSourceManager().getSelection()
-                                .getGraphSpaceManager().setSelection((GraphSpace) comboBox.getSelectedItem());
+                                .getTextSourceCollection().getSelection()
+                                .getGraphSpaceCollection().setSelection((GraphSpace) comboBox.getSelectedItem());
                     }
                 });
 
@@ -58,9 +58,9 @@ public class InfoPane {
                     JList jList = (JList) e.getSource();
                     if (jList.getSelectedValue() != null) {
                         view.getController()
-                                .getTextSourceManager().getSelection()
-                                .getAnnotationManager().getSelection()
-                                .getSpanManager().setSelection((Span) jList.getSelectedValue());
+                                .getTextSourceCollection().getSelection()
+                                .getConceptAnnotationCollection().getSelection()
+                                .getSpanCollection().setSelection((Span) jList.getSelectedValue());
                     }
                 });
 
@@ -143,7 +143,7 @@ public class InfoPane {
         onlyAnnotationsCheckBox = new JCheckBox();
         onlyAnnotationsCheckBox.setHorizontalAlignment(0);
         onlyAnnotationsCheckBox.setHorizontalTextPosition(4);
-        this.$$$loadButtonText$$$(onlyAnnotationsCheckBox, ResourceBundle.getBundle("log4j").getString("only.annotations"));
+        this.$$$loadButtonText$$$(onlyAnnotationsCheckBox, ResourceBundle.getBundle("log4j").getString("only.conceptAnnotations"));
         panel2.add(onlyAnnotationsCheckBox, BorderLayout.CENTER);
         infoPanel = new JPanel();
         infoPanel.setLayout(new GridLayoutManager(8, 2, new Insets(0, 0, 0, 0), -1, -1));
@@ -156,7 +156,7 @@ public class InfoPane {
         if (infoPanelTitleLabelFont != null) infoPanelTitleLabel.setFont(infoPanelTitleLabelFont);
         infoPanelTitleLabel.setHorizontalAlignment(0);
         infoPanelTitleLabel.setHorizontalTextPosition(0);
-        this.$$$loadLabelText$$$(infoPanelTitleLabel, ResourceBundle.getBundle("ui").getString("annotation.information"));
+        this.$$$loadLabelText$$$(infoPanelTitleLabel, ResourceBundle.getBundle("ui").getString("conceptAnnotation.information"));
         infoPanelTitleLabel.setVerticalAlignment(0);
         infoPanelTitleLabel.setVerticalTextPosition(0);
         infoPanel.add(infoPanelTitleLabel, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(250, 25), new Dimension(250, 25), new Dimension(500, 25), 0, false));
@@ -168,10 +168,10 @@ public class InfoPane {
         scrollPane1.setViewportView(spanList);
         infoPanel.add(graphSpaceChooser, new GridConstraints(5, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label1 = new JLabel();
-        this.$$$loadLabelText$$$(label1, ResourceBundle.getBundle("log4j").getString("graph.spaces.for.annotation"));
+        this.$$$loadLabelText$$$(label1, ResourceBundle.getBundle("log4j").getString("graph.spaces.for.conceptAnnotation"));
         infoPanel.add(label1, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label2 = new JLabel();
-        this.$$$loadLabelText$$$(label2, ResourceBundle.getBundle("log4j").getString("annotation.id"));
+        this.$$$loadLabelText$$$(label2, ResourceBundle.getBundle("log4j").getString("conceptAnnotation.id"));
         infoPanel.add(label2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label3 = new JLabel();
         this.$$$loadLabelText$$$(label3, ResourceBundle.getBundle("log4j").getString("class"));

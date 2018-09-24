@@ -7,12 +7,10 @@ Plugin for Protege
 - [Installation from source](#installation-from-source)
 - [Setup](#setup)
 - [Features](#features)
-	- [TextAnnotation highlighting](#texttnnotation-highlighting)
-	- [Load plain text documents](#load-plain-text-documets)
-	- [TextAnnotation profiles](#textannotation-profiles)
-	- [Save annotations to XML](#save-annotations-to-xml)
-	- [Reload annotations](#reload-annotations)
-- [Known bugs](#known-bugs)
+	- [Annotate with ontology terms](#annotate-with-ontology-terms)
+	- [Inter Annotator Agreement (IAA)](#inter-annotator-agreement)
+	- [Graphical Annotations](#graphical-annotations)
+	- [Annotation Information](#annotation-information)
 
 ## Installation Windows
 
@@ -28,7 +26,7 @@ Plugin for Protege
 5. You should see the other plugins included in Protege 5 in that folder. If so, copy the Knowtator-2.X.X.jar into it.
 6. Restart Protege
 
-(See [this comment thread][mac osx plugin intallation comment thread] for more help) 
+(See [this comment thread][mac osx plugin installation comment thread] for more help) 
 
 ## Installation from source
 1. Download source files
@@ -48,7 +46,7 @@ Project
 5. Load a document (Project -> Add Document)
 5. To save (Project -> Save Project)
 6. To open a pre-existing project (Project -> Open Project)
-7. To load annotations from the old Knowtator (Project -> Open Project) 
+7. To load conceptAnnotations from the old Knowtator (Project -> Open Project) 
 
 ![After installation][installation image]
 Add as a View to a Protege tab by going to Window -> Views -> Miscellaneous Views -> Knowtator
@@ -61,15 +59,15 @@ Protege is first and foremost, an ontology editor. This plugin is intended to ma
 to annotate text with OWL classes. To do so, simply select a term from the Class Hierarchy (Window -> Views -> Class views -> Class hierarchy),
 highlight a span of text in a document, and click the "+" button. To remove the selected icon, click the "-" button.
 
-### Inter-Annotator Agreement (IAA)
+### Inter-Annotator Agreement
 
 IAA between the annotators in the same project can be run. Select the types of IAA you wish to run from the IAA menu
 and click IAA -> Run IAA. Select a folder for the results to be written to.
 
 ### Graphical Annotations
 
-Open the graph viewer by clicking View -> Show graph viewer. To add the selected annotation to the graph viewer, right click on it
-and select Add annotation no to graph. You will see the node apear in the viewer. Select an object property (these can be found
+Open the graph viewer by clicking View -> Show graph viewer. To add the selected conceptAnnotation to the graph viewer, right click on it
+and select Add conceptAnnotation no to graph. You will see the node appear in the viewer. Select an object property (these can be found
 in the Object property hierarchy view in Window -> Views -> Object property views -> Object property hierarchy), then hover
 over a node in the viewer until a pointer hand appears. Click and drag between nodes to make a connection. Graphs are saved
 in the project (Project -> Save Project).

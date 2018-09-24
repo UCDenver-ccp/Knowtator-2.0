@@ -8,9 +8,9 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
-import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -21,11 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class GraphSpaceManager extends GraphSpaceCollection implements KnowtatorXMLIO, BratStandoffIO, KnowtatorManager {
+public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implements KnowtatorXMLIO, BratStandoffIO, KnowtatorManager {
   private KnowtatorController controller;
   private TextSource textSource;
 
-  public GraphSpaceManager(KnowtatorController controller, TextSource textSource) {
+  public GraphSpaceCollection(KnowtatorController controller, TextSource textSource) {
     super(controller);
     this.controller = controller;
     this.textSource = textSource;
@@ -35,13 +35,7 @@ public class GraphSpaceManager extends GraphSpaceCollection implements Knowtator
   GETTERS
    */
 
-  public void getNextGraphSpace() {
-    setSelection(getNext(getSelection()));
-  }
 
-  public void getPreviousGraphSpace() {
-    setSelection(getPrevious(getSelection()));
-  }
 
   /*
   SETTERS
@@ -69,9 +63,9 @@ public class GraphSpaceManager extends GraphSpaceCollection implements Knowtator
   REMOVERS
    */
 
-  public void removeAnnotation(Annotation annotationToRemove) {
+  public void removeAnnotation(ConceptAnnotation conceptAnnotationToRemove) {
     for (GraphSpace graphSpace : this) {
-      for (Object vertex : graphSpace.getVerticesForAnnotation(annotationToRemove)) {
+      for (Object vertex : graphSpace.getVerticesForAnnotation(conceptAnnotationToRemove)) {
         graphSpace.setSelectionCell(vertex);
         graphSpace.removeSelectedCell();
       }

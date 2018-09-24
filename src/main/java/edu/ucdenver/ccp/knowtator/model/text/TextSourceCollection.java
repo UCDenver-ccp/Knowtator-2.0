@@ -6,7 +6,7 @@ import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
-import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -23,16 +23,16 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-public class TextSourceManager extends TextSourceCollection implements ProjectListener, BratStandoffIO, KnowtatorXMLIO, SavableKnowtatorManager {
+public class TextSourceCollection extends KnowtatorCollection<TextSource> implements ProjectListener, BratStandoffIO, KnowtatorXMLIO, SavableKnowtatorManager {
     @SuppressWarnings("unused")
-    private Logger log = Logger.getLogger(TextSourceManager.class);
+    private Logger log = Logger.getLogger(TextSourceCollection.class);
 
     private KnowtatorController controller;
     private File articlesLocation;
     private File annotationsLocation;
 
 
-    public TextSourceManager(KnowtatorController controller) {
+    public TextSourceCollection(KnowtatorController controller) {
         super(controller);
         this.controller = controller;
         controller.addProjectListener(this);
@@ -53,19 +53,9 @@ public class TextSourceManager extends TextSourceCollection implements ProjectLi
         return newTextSource;
     }
 
-    public void getNextTextSource() {
-        setSelection(getNext(getSelection()));
-    }
-
-    public void getPreviousTextSource() {
-        setSelection(getPrevious(getSelection()));
-    }
-
-
     @Override
     public void writeToKnowtatorXML(Document dom, Element parent) {
-        getCollection()
-                .forEach(textSource -> textSource.writeToKnowtatorXML(dom, parent));
+        forEach(textSource -> textSource.writeToKnowtatorXML(dom, parent));
     }
 
     @Override
@@ -132,7 +122,7 @@ public class TextSourceManager extends TextSourceCollection implements ProjectLi
             e.printStackTrace();
         }
 
-        if (getCollection().isEmpty()) {
+        if (size() == 0) {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(getArticlesLocation());
 
@@ -149,9 +139,7 @@ public class TextSourceManager extends TextSourceCollection implements ProjectLi
             controller.getOWLManager().setRenderRDFSLabel();
         } catch (OWLWorkSpaceNotSetException ignored) {
         }
-        getCollection()
-                .forEach(
-                        TextSource::save);
+        forEach(TextSource::save);
     }
 
     public File getAnnotationsLocation() {
@@ -182,6 +170,6 @@ public class TextSourceManager extends TextSourceCollection implements ProjectLi
 
     @Override
     public void projectLoaded() {
-        setSelection(getCollection().first());
+        setSelection(first());
     }
 }

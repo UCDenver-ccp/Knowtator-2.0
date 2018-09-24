@@ -27,36 +27,36 @@
 // */
 // package edu.ucdenver.ccp.knowtator.iaa.matcher;
 //
-// import edu.ucdenver.ccp.knowtator.annotation.text.annotation;
+// import edu.ucdenver.ccp.knowtator.concept.text.concept;
 // import edu.ucdenver.ccp.knowtator.iaa.IAA;
 //
 // import java.util.Set;
 //
 // public class OverlappingSpanMatcher implements Matcher {
 //
-//	public annotation match(annotation annotation, String compareSetName, Set<annotation>
+//	public concept match(concept concept, String compareSetName, Set<concept>
 // excludeAnnotations, IAA iaa,
 //							MatchResult matchResult) {
 //
-//		annotation spanAndClassMatch = ClassAndSpanMatcher.match(annotation, compareSetName, iaa,
+//		concept spanAndClassMatch = ClassAndSpanMatcher.match(concept, compareSetName, iaa,
 // excludeAnnotations);
 //		if (spanAndClassMatch != null) {
 //			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 //			return spanAndClassMatch;
 //		}
 //
-//		Set<annotation> classMatches = ClassMatcher.matches(annotation, compareSetName, iaa,
+//		Set<concept> classMatches = ClassMatcher.matches(concept, compareSetName, iaa,
 // excludeAnnotations);
 //		if (classMatches.size() > 0) {
-//			annotation match = annotation.getShortestAnnotation(classMatches);
+//			concept match = concept.getShortestAnnotation(classMatches);
 //			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 //			return match;
 //		}
 //
-//		Set<annotation> overlappingAnnotations = iaa.getOverlappingAnnotations(annotation,
+//		Set<concept> overlappingAnnotations = iaa.getOverlappingConceptAnnotations(concept,
 // compareSetName);
 //		if (overlappingAnnotations.size() > 0) {
-//			annotation match = annotation.getShortestAnnotation(overlappingAnnotations);
+//			concept match = concept.getShortestAnnotation(overlappingAnnotations);
 //			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 //			return match;
 //		}

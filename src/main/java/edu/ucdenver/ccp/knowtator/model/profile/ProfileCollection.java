@@ -7,7 +7,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.listeners.ColorListener;
-import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -20,7 +20,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileManager extends ProfileCollection implements KnowtatorXMLIO, SavableKnowtatorManager {
+public class ProfileCollection extends KnowtatorCollection<Profile> implements KnowtatorXMLIO, SavableKnowtatorManager {
 
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(KnowtatorController.class);
@@ -28,12 +28,30 @@ public class ProfileManager extends ProfileCollection implements KnowtatorXMLIO,
     private KnowtatorController controller;
     private List<ColorListener> colorListeners;
     private File profilesLocation;
+    private Profile defaultProfile;
 
-    public ProfileManager(KnowtatorController controller) {
+    public ProfileCollection(KnowtatorController controller) {
         super(controller);
+        defaultProfile = new Profile(controller, "Default");
+        add(defaultProfile);
         this.controller = controller;
         colorListeners = new ArrayList<>();
         setSelection(getDefaultProfile());
+    }
+
+    public Profile getDefaultProfile() {
+        return defaultProfile;
+    }
+
+    @Override
+    public void save() {
+        forEach(Profile::save);
+    }
+
+    @Override
+    public void projectLoaded() {
+        super.projectLoaded();
+        add(defaultProfile);
     }
 
     public void addColorListener(ColorListener listener) {
@@ -121,10 +139,5 @@ public class ProfileManager extends ProfileCollection implements KnowtatorXMLIO,
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public void save() {
-        getCollection().forEach(Profile::save);
     }
 }

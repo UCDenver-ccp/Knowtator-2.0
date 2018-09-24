@@ -1,13 +1,12 @@
 package edu.ucdenver.ccp.knowtator;
 
 import edu.ucdenver.ccp.knowtator.listeners.DebugListener;
-import edu.ucdenver.ccp.knowtator.listeners.ViewListener;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLManager;
-import edu.ucdenver.ccp.knowtator.model.profile.ProfileManager;
+import edu.ucdenver.ccp.knowtator.model.profile.ProfileCollection;
 import edu.ucdenver.ccp.knowtator.model.selection.SelectionManager;
-import edu.ucdenver.ccp.knowtator.model.text.TextSourceManager;
+import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollection;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -21,13 +20,12 @@ public class KnowtatorController extends ProjectManager {
   private static final Logger log = Logger.getLogger(KnowtatorController.class);
 
   private SelectionManager selectionManager;
-  private TextSourceManager textSourceManager;
-  private ProfileManager profileManager;
+  private TextSourceCollection textSourceCollection;
+  private ProfileCollection profileCollection;
   private OWLManager owlManager;
 
   private TreeMap<String, KnowtatorObject> idRegistry;
   private List<DebugListener> debugListeners;
-  private List<ViewListener> viewListeners;
 
 
   public KnowtatorController() {
@@ -38,12 +36,9 @@ public class KnowtatorController extends ProjectManager {
     selectionManager = new SelectionManager(this);
 
     owlManager = new OWLManager(this);
-    textSourceManager = new TextSourceManager(this);
-    profileManager = new ProfileManager(this); // manipulates profiles and colors
+    textSourceCollection = new TextSourceCollection(this);
+    profileCollection = new ProfileCollection(this); // manipulates profiles and colors
 
-
-
-    viewListeners = new ArrayList<>();
   }
 
 
@@ -51,8 +46,8 @@ public class KnowtatorController extends ProjectManager {
   List<SavableKnowtatorManager> getManagers() {
     List<SavableKnowtatorManager> managers = new ArrayList<>();
     managers.add(owlManager);
-    managers.add(textSourceManager);
-    managers.add(profileManager);
+    managers.add(textSourceCollection);
+    managers.add(profileCollection);
     return managers;
   }
 
@@ -60,10 +55,10 @@ public class KnowtatorController extends ProjectManager {
   void importProject(File profilesLocation, File ontologiesLocation, File articlesLocation, File annotationsLocation, File projectLocation) {
     makeProjectStructure(projectLocation);
     try {
-      importToManager(profilesLocation, profileManager, ".xml");
+      importToManager(profilesLocation, profileCollection, ".xml");
       importToManager(ontologiesLocation, owlManager, ".obo");
-      importToManager(ontologiesLocation, textSourceManager, ".txt");
-      importToManager(ontologiesLocation, textSourceManager, ".xml");
+      importToManager(ontologiesLocation, textSourceCollection, ".txt");
+      importToManager(ontologiesLocation, textSourceCollection, ".xml");
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -82,12 +77,12 @@ public class KnowtatorController extends ProjectManager {
     return owlManager;
   }
 
-  public ProfileManager getProfileManager() {
-    return profileManager;
+  public ProfileCollection getProfileCollection() {
+    return profileCollection;
   }
 
-  public TextSourceManager getTextSourceManager() {
-    return textSourceManager;
+  public TextSourceCollection getTextSourceCollection() {
+    return textSourceCollection;
   }
 
 
@@ -127,10 +122,10 @@ public class KnowtatorController extends ProjectManager {
 
   @Override
   public void dispose() {
-    textSourceManager.dispose();
+    textSourceCollection.dispose();
     owlManager.dispose();
     selectionManager.dispose();
-    profileManager.dispose();
+    profileCollection.dispose();
     idRegistry.clear();
   }
 
@@ -138,15 +133,4 @@ public class KnowtatorController extends ProjectManager {
   public void makeDirectory() {
 
   }
-
-  public void addViewListener(ViewListener listener) {
-    viewListeners.add(listener);
-  }
-
-  public void refreshView() {
-    for (ViewListener viewListener : viewListeners) {
-      viewListener.viewChanged();
-    }
-  }
-
 }

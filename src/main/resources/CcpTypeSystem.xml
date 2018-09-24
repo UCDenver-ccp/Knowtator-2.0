@@ -5,7 +5,7 @@
     <name>TypeSystem</name>
 
 
-    <description>This is a default Type System. It includes general types necessary to store annotations in the
+    <description>This is a default Type System. It includes general types necessary to store conceptAnnotations in the
         Annotation DB and interface with Protege
     </description>
 
@@ -22,10 +22,10 @@
         <typeDescription>
 
 
-            <name>edu.ucdenver.ccp.knowtator.uima.annotation.CCPDocumentInformation</name>
+            <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.CCPDocumentInformation</name>
 
 
-            <description>The CCPDocumentInformation annotation includes document metadata such as the document ID,
+            <description>The CCPDocumentInformation conceptAnnotation includes document metadata such as the document ID,
                 document collection ID, secondary document IDs, document size, etc.
             </description>
 
@@ -144,17 +144,17 @@
         <typeDescription>
 
 
-            <name>edu.ucdenver.ccp.knowtator.uima.annotation.CCPTextAnnotation</name>
+            <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.CCPTextAnnotation</name>
 
 
-            <description>The CCP TextAnnotation extends the base annotation class to include an annotation ID, the
-                capability for multiple annotation spans, a link to the annotator responsible for generating the
-                annotation, membership to annotation sets, and a link to a class mention which defines the class of this
-                annotation.
+            <description>The CCP TextAnnotation extends the base conceptAnnotation class to include an conceptAnnotation ID, the
+                capability for multiple conceptAnnotation spans, a link to the annotator responsible for generating the
+                conceptAnnotation, membership to conceptAnnotation sets, and a link to a class mention which defines the class of this
+                conceptAnnotation.
             </description>
 
 
-            <supertypeName>edu.ucdenver.ccp.knowtator.uima.annotation.CCPAnnotation</supertypeName>
+            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.CCPAnnotation</supertypeName>
 
 
             <features>
@@ -166,7 +166,7 @@
                     <name>annotationID</name>
 
 
-                    <description>The annotation ID provides a means for identifying a particular annotation. Setting
+                    <description>The conceptAnnotation ID provides a means for identifying a particular conceptAnnotation. Setting
                         this ID is optional. The default value should be -1.
                     </description>
 
@@ -183,10 +183,10 @@
                     <name>annotator</name>
 
 
-                    <description>The annotator was responsible for generating this annotation.</description>
+                    <description>The annotator was responsible for generating this conceptAnnotation.</description>
 
 
-                    <rangeTypeName>edu.ucdenver.ccp.knowtator.uima.annotation.CCPAnnotator</rangeTypeName>
+                    <rangeTypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.CCPAnnotator</rangeTypeName>
 
 
                 </featureDescription>
@@ -199,7 +199,7 @@
 
 
                     <description>The document section ID is optionally used to log what section of a document this
-                        annotation is from. Values can be specified by the user. See
+                        conceptAnnotation is from. Values can be specified by the user. See
                         edu.uchsc.ccp.util.nlp.document.DocumentSectionTypes for a few common sections.
                     </description>
 
@@ -216,7 +216,7 @@
                     <name>annotationSets</name>
 
 
-                    <description>Annotation Sets provide an arbitrary means of categorizing and clustering annotations
+                    <description>Annotation Sets provide an arbitrary means of categorizing and clustering conceptAnnotations
                         into groups.
                     </description>
 
@@ -224,7 +224,7 @@
                     <rangeTypeName>uima.cas.FSArray</rangeTypeName>
 
 
-                    <elementType>edu.ucdenver.ccp.knowtator.uima.annotation.CCPAnnotationSet</elementType>
+                    <elementType>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.CCPAnnotationSet</elementType>
 
 
                 </featureDescription>
@@ -236,8 +236,8 @@
                     <name>numberOfSpans</name>
 
 
-                    <description>The number of spans comprising this annotation. The CCP TextAnnotation allows the use
-                        of multiple spans for a single annotation.
+                    <description>The number of spans comprising this conceptAnnotation. The CCP TextAnnotation allows the use
+                        of multiple spans for a single conceptAnnotation.
                     </description>
 
 
@@ -253,8 +253,8 @@
                     <name>spans</name>
 
 
-                    <description>This FSArray stores the CCPSpans which comprise this annotation. It should be noted
-                        that for an annotation with multiple spans, the default begin and end fields are set to the
+                    <description>This FSArray stores the CCPSpans which comprise this conceptAnnotation. It should be noted
+                        that for an conceptAnnotation with multiple spans, the default begin and end fields are set to the
                         beginning of the first span and the end of the final span, respectively.
                     </description>
 
@@ -262,7 +262,7 @@
                     <rangeTypeName>uima.cas.FSArray</rangeTypeName>
 
 
-                    <elementType>edu.ucdenver.ccp.knowtator.uima.annotation.CCPSpan</elementType>
+                    <elementType>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.CCPSpan</elementType>
 
 
                 </featureDescription>
@@ -274,7 +274,7 @@
                     <name>owlClass</name>
 
 
-                    <description>The CCP Class indicates the type (or class) for this annotation.</description>
+                    <description>The CCP Class indicates the type (or class) for this conceptAnnotation.</description>
 
 
                     <rangeTypeName>uima.cas.String</rangeTypeName>
@@ -342,7 +342,7 @@
                     </description>
 
 
-                    <rangeTypeName>edu.ucdenver.ccp.knowtator.uima.annotation.CCPTextAnnotation</rangeTypeName>
+                    <rangeTypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.CCPTextAnnotation</rangeTypeName>
 
 
                 </featureDescription>
@@ -357,10 +357,10 @@
         <typeDescription>
 
 
-            <name>edu.ucdenver.ccp.knowtator.uima.annotation.CCPAnnotation</name>
+            <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.CCPAnnotation</name>
 
 
-            <description>The superclass for all CCP annotations.</description>
+            <description>The superclass for all CCP conceptAnnotations.</description>
 
 
             <supertypeName>uima.tcas.Annotation</supertypeName>
@@ -375,10 +375,10 @@
                     <name>annotationMetadata</name>
 
 
-                    <description>Stores metadata for an annotation.</description>
+                    <description>Stores metadata for an conceptAnnotation.</description>
 
 
-                    <rangeTypeName>edu.ucdenver.ccp.knowtator.uima.annotation.AnnotationMetadata</rangeTypeName>
+                    <rangeTypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.AnnotationMetadata</rangeTypeName>
 
 
                 </featureDescription>
@@ -534,11 +534,11 @@
         <typeDescription>
 
 
-            <name>edu.ucdenver.ccp.knowtator.uima.annotation.CCPSpan</name>
+            <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.CCPSpan</name>
 
 
-            <description>The span object holds span information.This is a supplement to the default UIMA annotation
-                which cannot handle multi-span annotations.
+            <description>The span object holds span information.This is a supplement to the default UIMA conceptAnnotation
+                which cannot handle multi-span conceptAnnotations.
             </description>
 
 
@@ -587,11 +587,11 @@
         <typeDescription>
 
 
-            <name>edu.ucdenver.ccp.knowtator.uima.annotation.CCPAnnotator</name>
+            <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.CCPAnnotator</name>
 
 
             <description>The annotator object contains information which is used to determine who/what generated an
-                annotation.
+                conceptAnnotation.
             </description>
 
 
@@ -623,7 +623,7 @@
 
 
                     <description>The first name of the annotator. Use of this field is optional as the annotator ID is
-                        primarily used for determining the source of an annotation.
+                        primarily used for determining the source of an conceptAnnotation.
                     </description>
 
 
@@ -640,7 +640,7 @@
 
 
                     <description>The last name of the annotator. Use of this field is optional as the annotator ID is
-                        primarily used for determining the source of an annotation.
+                        primarily used for determining the source of an conceptAnnotation.
                     </description>
 
 
@@ -657,7 +657,7 @@
 
 
                     <description>The affiliation of the annotator. Use of this field is optional as the annotator ID is
-                        primarily used for determining the source of an annotation.
+                        primarily used for determining the source of an conceptAnnotation.
                     </description>
 
 
@@ -676,13 +676,13 @@
         <typeDescription>
 
 
-            <name>edu.ucdenver.ccp.knowtator.uima.annotation.CCPAnnotationSet</name>
+            <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.CCPAnnotationSet</name>
 
 
-            <description>The annotation set provides a means for arbitrarily categorizing or clustering groups of
-                annotations. Annotations can be associated with multiple annotation groups. Examples of use include,
-                defining Gold Standard annotation sets, and delineating between the use of different parameters during
-                annotation, among others. Each annotation set is associated with a unique ID, a name and a description.
+            <description>The conceptAnnotation set provides a means for arbitrarily categorizing or clustering groups of
+                conceptAnnotations. Annotations can be associated with multiple conceptAnnotation groups. Examples of use include,
+                defining Gold Standard conceptAnnotation sets, and delineating between the use of different parameters during
+                conceptAnnotation, among others. Each conceptAnnotation set is associated with a unique ID, a name and a description.
             </description>
 
 
@@ -698,7 +698,7 @@
                     <name>annotationSetID</name>
 
 
-                    <description>An integer uniquely identifying a particular annotation set.</description>
+                    <description>An integer uniquely identifying a particular conceptAnnotation set.</description>
 
 
                     <rangeTypeName>uima.cas.Integer</rangeTypeName>
@@ -713,7 +713,7 @@
                     <name>annotationSetName</name>
 
 
-                    <description>The name of the annotation set.</description>
+                    <description>The name of the conceptAnnotation set.</description>
 
 
                     <rangeTypeName>uima.cas.String</rangeTypeName>
@@ -728,7 +728,7 @@
                     <name>annotationSetDescription</name>
 
 
-                    <description>A textual description of an annotation set.</description>
+                    <description>A textual description of an conceptAnnotation set.</description>
 
 
                     <rangeTypeName>uima.cas.String</rangeTypeName>
@@ -746,10 +746,10 @@
         <typeDescription>
 
 
-            <name>edu.ucdenver.ccp.knowtator.uima.annotation.AnnotationMetadata</name>
+            <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.AnnotationMetadata</name>
 
 
-            <description>A class to store annotation metadata, provenance, etc.</description>
+            <description>A class to store conceptAnnotation metadata, provenance, etc.</description>
 
 
             <supertypeName>uima.cas.TOP</supertypeName>
@@ -785,7 +785,7 @@
                     <rangeTypeName>uima.cas.FSArray</rangeTypeName>
 
 
-                    <elementType>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.AnnotationMetadataProperty
+                    <elementType>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.AnnotationMetadataProperty
                     </elementType>
 
 
@@ -801,10 +801,10 @@
         <typeDescription>
 
 
-            <name>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.AnnotationMetadataProperty</name>
+            <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.AnnotationMetadataProperty</name>
 
 
-            <description>Superclass for annotation metadata properties</description>
+            <description>Superclass for conceptAnnotation metadata properties</description>
 
 
             <supertypeName>uima.cas.TOP</supertypeName>
@@ -816,7 +816,7 @@
         <typeDescription>
 
 
-            <name>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.AnnotationSetMembershipProperty</name>
+            <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.AnnotationSetMembershipProperty</name>
 
 
             <description>A metadata property for declaring AnnotationSet membership. This will eventually replace the
@@ -824,7 +824,7 @@
             </description>
 
 
-            <supertypeName>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.AnnotationMetadataProperty</supertypeName>
+            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.AnnotationMetadataProperty</supertypeName>
 
 
             <features>
@@ -839,7 +839,7 @@
                     <description/>
 
 
-                    <rangeTypeName>edu.ucdenver.ccp.knowtator.uima.annotation.CCPAnnotationSet</rangeTypeName>
+                    <rangeTypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.CCPAnnotationSet</rangeTypeName>
 
 
                 </featureDescription>
@@ -854,7 +854,7 @@
         <typeDescription>
 
 
-            <name>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.EvaluationResultProperty</name>
+            <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.EvaluationResultProperty</name>
 
 
             <description>Superclass for metadata properties describing the result of an evaluation against a gold
@@ -862,7 +862,7 @@
             </description>
 
 
-            <supertypeName>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.AnnotationMetadataProperty</supertypeName>
+            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.AnnotationMetadataProperty</supertypeName>
 
 
         </typeDescription>
@@ -871,28 +871,13 @@
         <typeDescription>
 
 
-            <name>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.TruePositiveProperty</name>
+            <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.TruePositiveProperty</name>
 
 
-            <description>Indicates this annotation was scored as a True Positive during an evaluation.</description>
+            <description>Indicates this conceptAnnotation was scored as a True Positive during an evaluation.</description>
 
 
-            <supertypeName>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.TestSetProperty</supertypeName>
-
-
-        </typeDescription>
-
-
-        <typeDescription>
-
-
-            <name>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.FalsePositiveProperty</name>
-
-
-            <description>Indicates that an annotation was scored as a False Positive during an evaluation.</description>
-
-
-            <supertypeName>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.TestSetProperty</supertypeName>
+            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.TestSetProperty</supertypeName>
 
 
         </typeDescription>
@@ -901,13 +886,13 @@
         <typeDescription>
 
 
-            <name>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.GoldStandardSetProperty</name>
+            <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.FalsePositiveProperty</name>
 
 
-            <description>Indicates that an annotation was part of the Gold Standard during an evaluation.</description>
+            <description>Indicates that an conceptAnnotation was scored as a False Positive during an evaluation.</description>
 
 
-            <supertypeName>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.EvaluationResultProperty</supertypeName>
+            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.TestSetProperty</supertypeName>
 
 
         </typeDescription>
@@ -916,17 +901,32 @@
         <typeDescription>
 
 
-            <name>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.PartialMatchProperty</name>
+            <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.GoldStandardSetProperty</name>
 
 
-            <description>A subclass of False Positive Property. This property is used to indicate an annotation that was
+            <description>Indicates that an conceptAnnotation was part of the Gold Standard during an evaluation.</description>
+
+
+            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.EvaluationResultProperty</supertypeName>
+
+
+        </typeDescription>
+
+
+        <typeDescription>
+
+
+            <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.PartialMatchProperty</name>
+
+
+            <description>A subclass of False Positive Property. This property is used to indicate an conceptAnnotation that was
                 scored as a False Positive during an evaluation, but is a partial match to the Gold Standard. That is,
                 what is present is correct and the reason it was scored as a False Positive is because it is missing
                 something.
             </description>
 
 
-            <supertypeName>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.TruePositiveProperty</supertypeName>
+            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.TruePositiveProperty</supertypeName>
 
 
         </typeDescription>
@@ -935,7 +935,7 @@
         <typeDescription>
 
 
-            <name>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.FalseNegativeProperty</name>
+            <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.FalseNegativeProperty</name>
 
 
             <description>A subclass of the Gold Standard Property, the False Negative Property indicates a Gold Standard
@@ -943,7 +943,7 @@
             </description>
 
 
-            <supertypeName>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.GoldStandardSetProperty</supertypeName>
+            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.GoldStandardSetProperty</supertypeName>
 
 
         </typeDescription>
@@ -952,13 +952,13 @@
         <typeDescription>
 
 
-            <name>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.TestSetProperty</name>
+            <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.TestSetProperty</name>
 
 
             <description/>
 
 
-            <supertypeName>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.EvaluationResultProperty</supertypeName>
+            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.EvaluationResultProperty</supertypeName>
 
 
         </typeDescription>
@@ -1163,13 +1163,13 @@
         <typeDescription>
 
 
-            <name>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.AnnotationCommentProperty</name>
+            <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.AnnotationCommentProperty</name>
 
 
             <description/>
 
 
-            <supertypeName>edu.ucdenver.ccp.knowtator.uima.annotation.metadata.AnnotationMetadataProperty</supertypeName>
+            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.AnnotationMetadataProperty</supertypeName>
 
 
             <features>
@@ -1340,7 +1340,7 @@
                 <featureDescription>
 
 
-                    <name>annotation</name>
+                    <name>conceptAnnotation</name>
 
 
                     <description/>

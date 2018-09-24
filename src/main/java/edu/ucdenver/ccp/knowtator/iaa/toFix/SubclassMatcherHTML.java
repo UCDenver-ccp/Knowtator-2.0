@@ -31,7 +31,7 @@
 // public class SubclassMatcherHTML {
 
 //	public static void printIAA(IAA iaa, SubclassMatcher matcher, File directory, int numberOfDocs,
-//								Map<annotation, String> annotationTexts, Map<annotation, String> annotationTextNames)
+//								Map<concept, String> annotationTexts, Map<concept, String> annotationTextNames)
 // throws IOException {
 //		String fileName = matcher.getId();
 //		PrintStream html = new PrintStream(new File(directory, fileName + ".html"));
@@ -48,11 +48,11 @@
 //
 //		Set<String> sets = iaa.getSetNames();
 //
-//		Map<String, Set<annotation>> allwayMatches = iaa.getNontrivialAllwayMatches();
-//		Map<String, Set<annotation>> allwayNonmatches = iaa.getNontrivialAllwayNonmatches();
+//		Map<String, Set<concept>> allwayMatches = iaa.getNontrivialAllwayMatches();
+//		Map<String, Set<concept>> allwayNonmatches = iaa.getNontrivialAllwayNonmatches();
 //
-//		Set<annotation> allwayMatchesSingleSet = IAA2HTML.getSingleSet(allwayMatches);
-//		Set<annotation> allwayNonmatchesSingleSet = IAA2HTML.getSingleSet(allwayNonmatches);
+//		Set<concept> allwayMatchesSingleSet = IAA2HTML.getSingleSet(allwayMatches);
+//		Set<concept> allwayNonmatchesSingleSet = IAA2HTML.getSingleSet(allwayNonmatches);
 //
 //		int totalAllwayMatches = allwayMatchesSingleSet.size();
 //		int totalAllwayNonmatches = allwayNonmatchesSingleSet.size();
@@ -70,8 +70,8 @@
 //		html.println("<br>There are " + (totalAllwayMatches + totalAllwayNonmatches)
 //				+ " annotations with the class or subclass of " + matcher.getIAAClass());
 //
-//		Map<String, Set<annotation>> nonmatches = iaa.getAllwayNonmatches();
-//		Set<annotation> nonmatchesSingleSet = IAA2HTML.getSingleSet(nonmatches);
+//		Map<String, Set<concept>> nonmatches = iaa.getAllwayNonmatches();
+//		Set<concept> nonmatchesSingleSet = IAA2HTML.getSingleSet(nonmatches);
 //		AnnotationSpanIndex spanIndex = new AnnotationSpanIndex(nonmatchesSingleSet);
 //
 //		IAA2HTML.printMatchData(html, sets, fileName, directory, allwayMatches, annotationTexts,
@@ -82,8 +82,8 @@
 // annotationTexts,
 //				annotationTextNames, matcher.getSubclasses());
 //
-//		Map<String, Map<String, Set<annotation>>> pairwiseMatches = iaa.getNontrivialPairwiseMatches();
-//		Map<String, Map<String, Set<annotation>>> pairwiseNonmatches =
+//		Map<String, Map<String, Set<concept>>> pairwiseMatches = iaa.getNontrivialPairwiseMatches();
+//		Map<String, Map<String, Set<concept>>> pairwiseNonmatches =
 // iaa.getNontrivialPairwiseNonmatches();
 //
 //		IAA2HTML.printPairwiseAgreement(html, sets, pairwiseMatches, pairwiseNonmatches,

@@ -1,22 +1,22 @@
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
-import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 public class ClassMatcher implements Matcher {
-	private static Annotation match(
-			Annotation annotation, String compareSetName, IAA iaa, Set<Annotation> excludeAnnotations) {
-		Annotation spanAndClassMatch =
-				ClassAndSpanMatcher.match(annotation, compareSetName, iaa, excludeAnnotations);
+	private static ConceptAnnotation match(
+			ConceptAnnotation conceptAnnotation, String compareSetName, IAA iaa, Set<ConceptAnnotation> excludeConceptAnnotations) {
+		ConceptAnnotation spanAndClassMatch =
+				ClassAndSpanMatcher.match(conceptAnnotation, compareSetName, iaa, excludeConceptAnnotations);
 		if (spanAndClassMatch != null) {
 			return spanAndClassMatch;
 		}
 
-		Set<Annotation> matches = matches(annotation, compareSetName, iaa, excludeAnnotations);
+		Set<ConceptAnnotation> matches = matches(conceptAnnotation, compareSetName, iaa, excludeConceptAnnotations);
 		if (matches.size() > 0) {
 			if (matches.size() == 1) return matches.iterator().next();
 			else {
@@ -27,45 +27,45 @@ public class ClassMatcher implements Matcher {
 		}
 	}
 
-	private static Set<Annotation> matches(
-			Annotation annotation, String compareSetName, IAA iaa, Set<Annotation> excludeAnnotations) {
+	private static Set<ConceptAnnotation> matches(
+			ConceptAnnotation conceptAnnotation, String compareSetName, IAA iaa, Set<ConceptAnnotation> excludeConceptAnnotations) {
 
-		Set<Annotation> overlappingAnnotations =
-				iaa.getOverlappingAnnotations(annotation, compareSetName);
-		Set<Annotation> annotationsOfSameType =
-				iaa.getAnnotationsOfSameType(annotation, compareSetName);
-		Set<Annotation> candidateAnnotations = new HashSet<>(overlappingAnnotations);
-		candidateAnnotations.retainAll(annotationsOfSameType);
-		candidateAnnotations.removeAll(excludeAnnotations);
+		Set<ConceptAnnotation> overlappingConceptAnnotations =
+				iaa.getOverlappingAnnotations(conceptAnnotation, compareSetName);
+		Set<ConceptAnnotation> annotationsOfSameType =
+				iaa.getAnnotationsOfSameType(conceptAnnotation, compareSetName);
+		Set<ConceptAnnotation> candidateConceptAnnotations = new HashSet<>(overlappingConceptAnnotations);
+		candidateConceptAnnotations.retainAll(annotationsOfSameType);
+		candidateConceptAnnotations.removeAll(excludeConceptAnnotations);
 
-		if (candidateAnnotations.size() > 0) {
-			return Collections.unmodifiableSet(candidateAnnotations);
+		if (candidateConceptAnnotations.size() > 0) {
+			return Collections.unmodifiableSet(candidateConceptAnnotations);
 		} else {
 			return Collections.emptySet();
 		}
 	}
 
 	/**
-	 * This method will return an annotation with the same class and spans. If one does not exist,
-	 * then it will return an annotation with the same class and overlapping spans. If more than one
-	 * of these exists, then the shortest annotation with the same class and overlapping spans will be
+	 * This method will return an concept with the same class and spans. If one does not exist,
+	 * then it will return an concept with the same class and overlapping spans. If more than one
+	 * of these exists, then the shortest concept with the same class and overlapping spans will be
 	 * returned. Otherwise, null is returned.
 	 *
 	 * @param matchResult will be set to NONTRIVIAL_MATCH or NONTRIVIAL_NONMATCH. Trivial matches and
 	 *                    non-matches are not defined for this matcher.
-	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher#match(Annotation, String, Set, IAA,
+	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher#match(ConceptAnnotation, String, Set, IAA,
 	 * MatchResult)
 	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
 	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
 	 */
 	@SuppressWarnings("Duplicates")
-	public Annotation match(
-			Annotation annotation,
+	public ConceptAnnotation match(
+			ConceptAnnotation conceptAnnotation,
 			String compareSetName,
-			Set<Annotation> excludeAnnotations,
+			Set<ConceptAnnotation> excludeConceptAnnotations,
 			IAA iaa,
 			MatchResult matchResult) {
-		Annotation match = match(annotation, compareSetName, iaa, excludeAnnotations);
+		ConceptAnnotation match = match(conceptAnnotation, compareSetName, iaa, excludeConceptAnnotations);
 		if (match != null) {
 			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 			return match;

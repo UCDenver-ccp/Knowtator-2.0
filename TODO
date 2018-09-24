@@ -9,14 +9,14 @@ TODO: Edge coloring
 TODO: Regex search
 TODO: Expand and collapse by sentence
 TODO: Toggle expand to show ontology terms as separate nodes
-TODO: Edit coreference annotation
+TODO: Edit coreference conceptAnnotation
 TODO: Labels not overlapping
 TODO: Separators
 TODO: Undo: either save state or do reverse actions
 TODO: No empty string values for property specifications (value, etc.)
 TODO: Save project saves ontology too
 TODO: Autoload the AO or at least provide the functionality to convert to it if desired.
-TODO: Add annotations as subclasses of their assigned classes as well as of the AO
+TODO: Add conceptAnnotations as subclasses of their assigned classes as well as of the AO
 TODO: Server based collaboration
 TODO: Annotation suggestions
 TODO: JavaScript graph viz

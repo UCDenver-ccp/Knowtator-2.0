@@ -1,8 +1,12 @@
 package edu.ucdenver.ccp.knowtator.view.text.textpane;
 
 import edu.ucdenver.ccp.knowtator.listeners.ColorListener;
-import edu.ucdenver.ccp.knowtator.listeners.ViewListener;
-import edu.ucdenver.ccp.knowtator.model.text.annotation.Span;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
+import edu.ucdenver.ccp.knowtator.model.text.concept.span.SpanCollectionListener;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.menu.AnnotationPopupMenu;
 import org.apache.log4j.Logger;
@@ -21,12 +25,14 @@ import static java.lang.Math.min;
 
 @SuppressWarnings("deprecation")
 public class KnowtatorTextPane extends JTextArea
-        implements ViewListener, ColorListener {
+        implements ColorListener {
 
     @SuppressWarnings("unused")
     private static Logger log = Logger.getLogger(KnowtatorTextPane.class);
 
     private KnowtatorView view;
+    private ConceptAnnotationCollectionListener conceptAnnotationCollectionListener;
+    private SpanCollectionListener spanCollectionListener;
 
     public KnowtatorTextPane(KnowtatorView view) {
         super();
@@ -35,9 +41,7 @@ public class KnowtatorTextPane extends JTextArea
         setLineWrap(true);
         setWrapStyleWord(true);
 
-        addCaretListener(view.getController().getSelectionManager());
-        view.getController().addViewListener(this);
-        view.getController().getProfileManager().addColorListener(this);
+        setupListeners();
 
         getCaret().setVisible(true);
 
@@ -61,9 +65,9 @@ public class KnowtatorTextPane extends JTextArea
 
         if (inAnnotations) {
             Span selectedSpan = view.getController()
-                    .getTextSourceManager().getSelection()
-                    .getAnnotationManager().getSelection()
-                    .getSpanManager().getSelection();
+                    .getTextSourceCollection().getSelection()
+                    .getConceptAnnotationCollection().getSelection()
+                    .getSpanCollection().getSelection();
             if (searchForward) {
                 select(selectedSpan.getEnd(), selectedSpan.getEnd());
             } else {
@@ -90,9 +94,9 @@ public class KnowtatorTextPane extends JTextArea
         matchLoc = newMatchLoc;
         if (matchLoc != -1) {
             if (spans != null) {
-                view.getController().getTextSourceManager().getSelection()
-                        .getAnnotationManager().getSelection()
-                        .getSpanManager()
+                view.getController().getTextSourceCollection().getSelection()
+                        .getConceptAnnotationCollection().getSelection()
+                        .getSpanCollection()
                         .setSelection(spans.iterator().next());
             } else {
                 requestFocusInWindow();
@@ -105,39 +109,161 @@ public class KnowtatorTextPane extends JTextArea
 
 
     private void showTextPane() {
-        setText(view.getController().getTextSourceManager().getSelection().getContent());
+        setText(view.getController().getTextSourceCollection().getSelection().getContent());
         refreshHighlights();
     }
 
     private void setupListeners() {
-        addMouseListener(
-                new MouseListener() {
-                    int press_offset;
+        addCaretListener(view.getController().getSelectionManager());
+        view.getController().getProfileCollection().addColorListener(this);
 
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                        press_offset = viewToModel(e.getPoint());
-                    }
 
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
+        TextSourceCollectionListener textSourceCollectionListener = new TextSourceCollectionListener() {
+            @Override
+            public void updated(TextSource updatedItem) {
 
-                        handleMouseRelease(e, press_offset, viewToModel(e.getPoint()));
+            }
 
-                    }
+            @Override
+            public void noSelection(TextSource previousSelection) {
+                refreshHighlights();
+            }
 
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-                    }
+            @Override
+            public void selected(TextSource previousSelection, TextSource currentSelection) {
+                if (previousSelection != null) {
+                    previousSelection.getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
+                }
+                currentSelection.getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
+                showTextPane();
+            }
 
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-                    }
+            @Override
+            public void added(TextSource object) {
 
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                    }
-                });
+            }
+
+            @Override
+            public void removed(TextSource removedObject) {
+            }
+
+            @Override
+            public void emptied(TextSource object) {
+
+            }
+
+            @Override
+            public void firstAdded(TextSource object) {
+            }
+        };
+        conceptAnnotationCollectionListener = new ConceptAnnotationCollectionListener() {
+            @Override
+            public void updated(ConceptAnnotation updatedItem) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void noSelection(ConceptAnnotation previousSelection) {
+                previousSelection.getSpanCollection().removeCollectionListener(spanCollectionListener);
+                refreshHighlights();
+            }
+
+            @Override
+            public void selected(ConceptAnnotation previousSelection, ConceptAnnotation currentSelection) {
+                if (previousSelection != null) {
+                    previousSelection.getSpanCollection().removeCollectionListener(spanCollectionListener);
+                }
+                currentSelection.getSpanCollection().addCollectionListener(spanCollectionListener);
+                refreshHighlights();
+            }
+
+            @Override
+            public void added(ConceptAnnotation addedObject) {
+
+            }
+
+            @Override
+            public void removed(ConceptAnnotation removedObject) {
+
+            }
+
+            @Override
+            public void emptied(ConceptAnnotation object) {
+
+            }
+
+            @Override
+            public void firstAdded(ConceptAnnotation object) {
+
+            }
+        };
+
+        spanCollectionListener = new SpanCollectionListener() {
+            @Override
+            public void updated(Span updatedItem) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void noSelection(Span previousSelection) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void selected(Span previousSelection, Span currentSelection) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void added(Span addedObject) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void removed(Span removedObject) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void emptied(Span object) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void firstAdded(Span object) {
+                refreshHighlights();
+            }
+        };
+
+        view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
+
+        addMouseListener(new MouseListener() {
+            int press_offset;
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                press_offset = viewToModel(e.getPoint());
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+                handleMouseRelease(e, press_offset, viewToModel(e.getPoint()));
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            }
+        });
     }
 
     private void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
@@ -150,27 +276,21 @@ public class KnowtatorTextPane extends JTextArea
             if (spansContainingLocation.size() == 1) {
                 Span span = spansContainingLocation.iterator().next();
                 view.getController()
-                        .getTextSourceManager()
-                        .getSelection()
-                        .getAnnotationManager().getSelection()
-                        .getSpanManager()
-                        .setSelection(span);
+                        .getTextSourceCollection().getSelection()
+                        .getConceptAnnotationCollection().setSelectedAnnotation(span);
             }
             popupMenu.showPopUpMenu(release_offset);
         } else if (press_offset == release_offset) {
             if (spansContainingLocation.size() == 1) {
                 Span span = spansContainingLocation.iterator().next();
                 view.getController()
-                        .getTextSourceManager().getSelection()
-                        .getAnnotationManager().getSelection()
-                        .getSpanManager()
-                        .setSelection(span);
+                        .getTextSourceCollection().getSelection()
+                        .getConceptAnnotationCollection().setSelectedAnnotation(span);
             } else if (spansContainingLocation.size() > 1) {
                 popupMenu.chooseAnnotation(spansContainingLocation);
             }
 
         } else {
-            //        view.getController().getSelectionManager().setSelectedAnnotation(null, null);
             setSelectionAtWordLimits(press_offset, release_offset);
         }
     }
@@ -192,7 +312,7 @@ public class KnowtatorTextPane extends JTextArea
         // Remove all previous highlights in case a span has been deleted
         getHighlighter().removeAllHighlights();
 
-        // Always highlight the selected annotation first so its color and border show up
+        // Always highlight the selected concept first so its color and border show up
         highlightSelectedAnnotation();
 
         // Highlight overlaps first, then spans
@@ -225,8 +345,8 @@ public class KnowtatorTextPane extends JTextArea
                         span.getEnd(),
                         new DefaultHighlighter.DefaultHighlightPainter(
                                 view.getController()
-                                        .getProfileManager().getSelection()
-                                        .getColor(span.getAnnotation())));
+                                        .getProfileCollection().getSelection()
+                                        .getColor(span.getConceptAnnotation())));
             } catch (BadLocationException e) {
                 e.printStackTrace();
             }
@@ -238,34 +358,32 @@ public class KnowtatorTextPane extends JTextArea
         SwingUtilities.invokeLater(
                 () -> {
                     if (view.getController()
-                            .getTextSourceManager().getSelection()
-                            .getAnnotationManager().getSelection()
-                            .getSpanManager().getSelection()
+                            .getTextSourceCollection().getSelection()
+                            .getConceptAnnotationCollection().getSelection()
+                            .getSpanCollection().getSelection()
                             != null) {
                         try {
                             scrollRectToVisible(
                                     modelToView(
                                             view.getController()
-                                                    .getTextSourceManager().getSelection()
-                                                    .getAnnotationManager().getSelection()
-                                                    .getSpanManager().getSelection()
+                                                    .getTextSourceCollection().getSelection()
+                                                    .getConceptAnnotationCollection().getSelection()
+                                                    .getSpanCollection().getSelection()
                                                     .getStart()));
                         } catch (BadLocationException | NullPointerException ignored) {
 
                         }
                     } else if (view.getController()
-                            .getTextSourceManager().getSelection()
-                            .getAnnotationManager().getSelection()
+                            .getTextSourceCollection().getSelection()
+                            .getConceptAnnotationCollection().getSelection()
                             != null) {
                         try {
                             scrollRectToVisible(
                                     modelToView(
                                             view.getController()
-                                                    .getTextSourceManager().getSelection()
-                                                    .getAnnotationManager().getSelection()
-                                                    .getSpanManager()
-                                                    .getCollection()
-                                                    .first()
+                                                    .getTextSourceCollection().getSelection()
+                                                    .getConceptAnnotationCollection().getSelection()
+                                                    .getSpanCollection().first()
                                                     .getStart()));
                         } catch (BadLocationException | NullPointerException ignored) {
 
@@ -288,21 +406,17 @@ public class KnowtatorTextPane extends JTextArea
 
     private Set<Span> getSpans(Integer loc) {
         return view.getController()
-                .getTextSourceManager().getSelection()
-                .getAnnotationManager()
+                .getTextSourceCollection().getSelection()
+                .getConceptAnnotationCollection()
                 .getSpans(loc, 0, getText().length());
     }
 
     private void highlightSelectedAnnotation() {
-        if (view.getController()
-                .getTextSourceManager().getSelection()
-                .getAnnotationManager().getSelection()
-                != null) {
-            for (Span span :
-                    view.getController()
-                            .getTextSourceManager().getSelection()
-                            .getAnnotationManager().getSelection()
-                            .getSpanManager().getCollection()) {
+        ConceptAnnotation selectedConceptAnnotation = view.getController()
+                .getTextSourceCollection().getSelection()
+                .getConceptAnnotationCollection().getSelection();
+        if (selectedConceptAnnotation != null) {
+            for (Span span : selectedConceptAnnotation.getSpanCollection()) {
                 try {
                     highlightSpan(span.getStart(), span.getEnd(), new RectanglePainter(Color.BLACK));
                 } catch (BadLocationException e) {
@@ -311,16 +425,6 @@ public class KnowtatorTextPane extends JTextArea
             }
         }
     }
-
-    @Override
-    public void viewChanged() {
-        if (!getText().equals(view.getController().getTextSourceManager().getSelection()
-                .getContent())) {
-            showTextPane();
-        }
-        refreshHighlights();
-    }
-
 
     public void decreaseFontSize() {
         Font font = getFont();

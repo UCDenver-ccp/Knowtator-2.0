@@ -1,19 +1,16 @@
 package edu.ucdenver.ccp.knowtator.model.text;
 
-import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
+import edu.ucdenver.ccp.knowtator.model.AbstractKnowtatorTextBoundObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Fragment implements KnowtatorTextBoundObject {
-	private TextSource textSource;
-	private String id;
+public class Fragment extends AbstractKnowtatorTextBoundObject {
 	private String type;
 	private Map<String, Integer> conceptCountMap;
 
 	public Fragment(TextSource textSource, String id, String type) {
-		this.textSource = textSource;
-		this.id = id;
+		super(textSource, id);
 		this.type = type;
 
 		conceptCountMap = new HashMap<>();
@@ -26,16 +23,6 @@ public class Fragment implements KnowtatorTextBoundObject {
 		else {
 			conceptCountMap.put(concept, 1);
 		}
-	}
-
-	@Override
-	public String getId() {
-		return id;
-	}
-
-	@Override
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	@Override
@@ -52,7 +39,7 @@ public class Fragment implements KnowtatorTextBoundObject {
 	}
 
 	@Override
-	public TextSource getTextSource() {
-		return textSource;
+	public int compareTo(Object o) {
+		return 0;
 	}
 }

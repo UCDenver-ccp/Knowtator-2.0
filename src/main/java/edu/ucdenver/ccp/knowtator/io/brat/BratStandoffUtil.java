@@ -2,7 +2,7 @@ package edu.ucdenver.ccp.knowtator.io.brat;
 
 import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.TextSourceManager;
+import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollection;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
@@ -47,7 +47,7 @@ public class BratStandoffUtil implements BasicIOUtil<BratStandoffIO> {
   @Override
   public void read(BratStandoffIO textSourceManager, File file) {
     try {
-      if (textSourceManager instanceof TextSourceManager) {
+      if (textSourceManager instanceof TextSourceCollection) {
         Stream<String> standoffStream = Files.lines(Paths.get(file.toURI()));
 
         Map<Character, List<String[]>> annotationMap = collectAnnotations(standoffStream);
@@ -76,8 +76,8 @@ public class BratStandoffUtil implements BasicIOUtil<BratStandoffIO> {
     annotationConfig.put(StandoffTags.annotationsEntities, new HashMap<>());
     annotationConfig.put(StandoffTags.annotationsAttributes, new HashMap<>());
 
-    if (savable instanceof TextSourceManager) {
-      ((TextSourceManager) savable)
+    if (savable instanceof TextSourceCollection) {
+      ((TextSourceCollection) savable)
           .forEach(
               textSource -> {
                 File outputFile =
@@ -99,7 +99,7 @@ public class BratStandoffUtil implements BasicIOUtil<BratStandoffIO> {
 
       BufferedWriter annotationConfigWriter =
           new BufferedWriter(
-              new FileWriter(file.getAbsolutePath() + File.separator + "annotation.conf"));
+              new FileWriter(file.getAbsolutePath() + File.separator + "concept.conf"));
 
       annotationConfig.forEach(
           (key, map) -> {

@@ -5,10 +5,10 @@ import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 
 import java.util.TreeSet;
 
-public class CyclableCollection<K extends KnowtatorObject, L extends CollectionListener<K>>
+public abstract class CyclableCollection<K extends KnowtatorObject, L extends CollectionListener<K>>
     extends ListenableCollection<K, TreeSet<K>, L> {
 
-  public CyclableCollection(KnowtatorController controller, TreeSet<K> collection) {
+  CyclableCollection(KnowtatorController controller, TreeSet<K> collection) {
     super(controller, collection);
   }
 
@@ -38,5 +38,14 @@ public class CyclableCollection<K extends KnowtatorObject, L extends CollectionL
     if (next == null) next = collection.first();
 
     return next;
+  }
+
+  public K first() {
+    return collection.first();
+  }
+
+  protected void dispose() {
+    super.dispose();
+    collection.clear();
   }
 }

@@ -1,10 +1,10 @@
 package edu.ucdenver.ccp.knowtator.events;
 
-import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 
-public class AnnotationChangeEvent extends ChangeEvent<Annotation> {
+public class AnnotationChangeEvent extends ChangeEvent<ConceptAnnotation> {
 
-	public AnnotationChangeEvent(Annotation oldAnnotation, Annotation newAnnotation) {
-		super(oldAnnotation, newAnnotation);
+	public AnnotationChangeEvent(ConceptAnnotation oldConceptAnnotation, ConceptAnnotation newConceptAnnotation) {
+		super(oldConceptAnnotation, newConceptAnnotation);
 	}
 }

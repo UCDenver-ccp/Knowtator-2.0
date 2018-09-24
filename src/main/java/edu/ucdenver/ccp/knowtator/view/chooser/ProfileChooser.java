@@ -1,36 +1,24 @@
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
-import edu.ucdenver.ccp.knowtator.listeners.ViewListener;
-import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollection;
-import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
-import javax.swing.*;
-
-public class ProfileChooser extends Chooser<Profile>
-        implements ProfileCollectionListener, ViewListener {
-
-    private ProfileCollection collection;
+public class ProfileChooser extends Chooser<Profile> {
 
     public ProfileChooser(KnowtatorView view) {
-        super(view, new Profile[0]);
-        this.collection = view.getController().getProfileManager();
-        collection.addCollectionListener(this);
-        view.getController().getProfileManager().addCollectionListener(this);
-        view.getController().addViewListener(this);
+        super(view);
+        setCollection(view.getController().getProfileCollection());
     }
 
     @Override
-    public void projectLoaded() {
+    void reactToTextSourceChange(TextSource previousSelection, TextSource currentSelection) {
 
-        setModel(new DefaultComboBoxModel<>(collection.getCollection().toArray(new Profile[0])));
     }
 
     @Override
-    public void viewChanged() {
-        setModel(new DefaultComboBoxModel<>(collection.getCollection().toArray(new Profile[0])));
-        setSelectedItem(getView().getController()
-                .getProfileManager().getSelection());
+    void reactToAnnotationChange(ConceptAnnotation previousSelection, ConceptAnnotation currentSelection) {
+
     }
 }

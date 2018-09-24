@@ -1,14 +1,14 @@
-package edu.ucdenver.ccp.knowtator.model.text.annotation;
+package edu.ucdenver.ccp.knowtator.model.text.concept.span;
 
-import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
+import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
+import edu.ucdenver.ccp.knowtator.model.AbstractKnowtatorTextBoundObject;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import org.apache.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -17,23 +17,20 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
-public class Span implements KnowtatorTextBoundObject, Comparable<Span>, KnowtatorXMLIO, BratStandoffIO {
+public class Span extends AbstractKnowtatorTextBoundObject<Span> implements KnowtatorXMLIO, BratStandoffIO {
   @SuppressWarnings("unused")
   private static Logger log = Logger.getLogger(KnowtatorController.class);
 
   private int start;
   private int end;
-  private Annotation annotation;
-  private String id;
-  private TextSource textSource;
+  private ConceptAnnotation conceptAnnotation;
 
   Span(
-      String id, int start, int end, TextSource textSource, KnowtatorController controller, Annotation annotation) {
-
-    this.textSource = textSource;
+      String id, int start, int end, TextSource textSource, KnowtatorController controller, ConceptAnnotation conceptAnnotation) {
+    super(textSource, id);
     this.start = start;
     this.end = end;
-    this.annotation = annotation;
+    this.conceptAnnotation = conceptAnnotation;
 
     controller.verifyId(id, this, false);
 
@@ -51,6 +48,7 @@ public class Span implements KnowtatorTextBoundObject, Comparable<Span>, Knowtat
   }
 
   public Span(int start, int end) {
+    super(null, null);
     this.start = start;
     this.end = end;
     if (start > end) {
@@ -108,7 +106,8 @@ public class Span implements KnowtatorTextBoundObject, Comparable<Span>, Knowtat
     return string.substring(start, end);
   }
 
-  public int compare(Span span2) {
+  @Override
+  public int compareTo(Span span2) {
     if (span2 == null) {
       return 1;
     }
@@ -152,29 +151,40 @@ public class Span implements KnowtatorTextBoundObject, Comparable<Span>, Knowtat
             || spanStart <= getStart() && getStart() < span.getEnd());
   }
 
-  @Override
-  public int compareTo(@NotNull Span o) {
-    return compare(o);
-  }
-
   /*
   MODIFIERS
    */
 
-  void shrinkEnd() {
-    if (end > start) end -= 1;
+  public void shrinkEnd() {
+    if (end > start) {
+      end -= 1;
+      conceptAnnotation.getSpanCollection().update(this);
+      textSource.save();
+    }
   }
 
-  void shrinkStart() {
-    if (start < end) start += 1;
+  public void shrinkStart() {
+    if (start < end) {
+      start += 1;
+      conceptAnnotation.getSpanCollection().update(this);
+      textSource.save();
+    }
   }
 
-  void growEnd(int limit) {
-    if (end < limit) end += 1;
+  public void growEnd(int limit) {
+    if (end < limit) {
+      end += 1;
+      conceptAnnotation.getSpanCollection().update(this);
+      textSource.save();
+    }
   }
 
-  void growStart() {
-    if (start > 0) start -= 1;
+  public void growStart() {
+    if (start > 0) {
+      start -= 1;
+      conceptAnnotation.getSpanCollection().update(this);
+      textSource.save();
+    }
   }
 
   /*
@@ -189,11 +199,11 @@ public class Span implements KnowtatorTextBoundObject, Comparable<Span>, Knowtat
   GETTERS
    */
 
-  public Annotation getAnnotation() {
-    return annotation;
+  public ConceptAnnotation getConceptAnnotation() {
+    return conceptAnnotation;
   }
 
-  String getSpannedText() {
+  public String getSpannedText() {
     return textSource.getContent().substring(start, end);
   }
 
@@ -210,16 +220,6 @@ public class Span implements KnowtatorTextBoundObject, Comparable<Span>, Knowtat
   }
 
 
-  @Override
-  public String getId() {
-    return id;
-  }
-
-  @Override
-  public TextSource getTextSource() {
-    return textSource;
-  }
-
   /**
    These methods are intended to correct for Java's handling of supplementary unicode characters.
    */
@@ -230,11 +230,6 @@ public class Span implements KnowtatorTextBoundObject, Comparable<Span>, Knowtat
   /*
   SETTERS
    */
-
-  @Override
-  public void setId(String id) {
-    this.id = id;
-  }
 
   /*
   READERS
@@ -282,5 +277,6 @@ public class Span implements KnowtatorTextBoundObject, Comparable<Span>, Knowtat
 
   @Override
   public void dispose() {
+
   }
 }

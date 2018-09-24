@@ -184,8 +184,8 @@ public class OWLManager implements Serializable, DebugListener, OWLSelectionMode
 
     iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#HasCountryOfOrigin");
     OWLObjectProperty objectProperty = factory.getOWLObjectProperty(iri);
-    controller.getTextSourceManager().getSelection()
-            .getGraphSpaceManager().getSelection()
+    controller.getTextSourceCollection().getSelection()
+            .getGraphSpaceCollection().getSelection()
             .getRelationSelectionManager().setSelectedOWLObjectProperty(objectProperty);
   }
 
@@ -198,8 +198,8 @@ public class OWLManager implements Serializable, DebugListener, OWLSelectionMode
       e.printStackTrace();
     }
     if (ent instanceof OWLObjectProperty) {
-      controller.getTextSourceManager().getSelection()
-              .getGraphSpaceManager().getSelection()
+      controller.getTextSourceCollection().getSelection()
+              .getGraphSpaceCollection().getSelection()
               .getRelationSelectionManager().setSelectedOWLObjectProperty((OWLObjectProperty) ent);
     } else if (ent instanceof OWLClass) {
       controller.getSelectionManager().setSelectedOWLEntity(ent);

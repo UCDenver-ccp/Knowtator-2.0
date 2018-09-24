@@ -3,7 +3,7 @@ package edu.ucdenver.ccp.knowtator.iaa.html;
 import edu.ucdenver.ccp.knowtator.iaa.AnnotationSpanIndex;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher;
-import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -17,8 +17,8 @@ public class SpanMatcherHTML {
 			Matcher matcher,
 			File directory,
 			int numberOfDocs,
-			Map<Annotation, String> annotationTexts,
-			Map<Annotation, String> annotationTextNames)
+			Map<ConceptAnnotation, String> annotationTexts,
+			Map<ConceptAnnotation, String> annotationTextNames)
 			throws Exception {
 		NumberFormat percentageFormat = NumberFormat.getPercentInstance();
 		percentageFormat.setMinimumFractionDigits(2);
@@ -41,13 +41,13 @@ public class SpanMatcherHTML {
 		Set<String> classes = iaa.getAnnotationClasses();
 		Set<String> sets = iaa.getSetNames();
 
-		Map<String, Set<Annotation>> allwayMatches = iaa.getAllwayMatches();
-		Map<String, Set<Annotation>> allwayNonmatches = iaa.getAllwayNonmatches();
+		Map<String, Set<ConceptAnnotation>> allwayMatches = iaa.getAllwayMatches();
+		Map<String, Set<ConceptAnnotation>> allwayNonmatches = iaa.getAllwayNonmatches();
 
-		Map<Annotation, Set<Annotation>> matchSets = iaa.getAllwayMatchSets();
+		Map<ConceptAnnotation, Set<ConceptAnnotation>> matchSets = iaa.getAllwayMatchSets();
 
-		Set<Annotation> allwayMatchesSingleSet = IAA2HTML.getSingleSet(allwayMatches);
-		Set<Annotation> allwayNonmatchesSingleSet = IAA2HTML.getSingleSet(allwayNonmatches);
+		Set<ConceptAnnotation> allwayMatchesSingleSet = IAA2HTML.getSingleSet(allwayMatches);
+		Set<ConceptAnnotation> allwayNonmatchesSingleSet = IAA2HTML.getSingleSet(allwayNonmatches);
 
 		AnnotationSpanIndex spanIndex = new AnnotationSpanIndex(allwayNonmatchesSingleSet);
 
@@ -70,9 +70,9 @@ public class SpanMatcherHTML {
 						+ totalAllwayNonmatches
 						+ "</td></tr>");
 
-		Map<String, Set<Annotation>> sortedAllwayMatches =
+		Map<String, Set<ConceptAnnotation>> sortedAllwayMatches =
 				IAA2HTML.sortByType(classes, allwayMatchesSingleSet);
-		Map<String, Set<Annotation>> sortedAllwayNonmatches =
+		Map<String, Set<ConceptAnnotation>> sortedAllwayNonmatches =
 				IAA2HTML.sortByType(classes, allwayNonmatchesSingleSet);
 
 		List<String> sortedTypes = new ArrayList<>(classes);
@@ -132,8 +132,8 @@ public class SpanMatcherHTML {
 				annotationTextNames,
 				classes);
 
-		Map<String, Map<String, Set<Annotation>>> pairwiseMatches = iaa.getPairwiseMatches();
-		Map<String, Map<String, Set<Annotation>>> pairwiseNonmatches = iaa.getPairwiseNonmatches();
+		Map<String, Map<String, Set<ConceptAnnotation>>> pairwiseMatches = iaa.getPairwiseMatches();
+		Map<String, Map<String, Set<ConceptAnnotation>>> pairwiseNonmatches = iaa.getPairwiseNonmatches();
 
 		IAA2HTML.printPairwiseAgreement(
 				html, sets, pairwiseMatches, pairwiseNonmatches, percentageFormat);
@@ -143,14 +143,14 @@ public class SpanMatcherHTML {
 	}
 
 	private static Map<String, int[]> errorMatrix(
-			Set<Annotation> matches, Map<Annotation, Set<Annotation>> matchSets) {
+			Set<ConceptAnnotation> matches, Map<ConceptAnnotation, Set<ConceptAnnotation>> matchSets) {
 		Map<String, int[]> counts = new HashMap<>();
 
-		for (Annotation match : matches) {
-			Set<Annotation> matchedAnnotations = matchSets.get(match);
-			for (Annotation matchedAnnotation : matchedAnnotations) {
-				if (!matchedAnnotation.equals(match)) {
-					String annotationClass = matchedAnnotation.getOwlClass().toString();
+		for (ConceptAnnotation match : matches) {
+			Set<ConceptAnnotation> matchedConceptAnnotations = matchSets.get(match);
+			for (ConceptAnnotation matchedConceptAnnotation : matchedConceptAnnotations) {
+				if (!matchedConceptAnnotation.equals(match)) {
+					String annotationClass = matchedConceptAnnotation.getOwlClass().toString();
 					if (!counts.containsKey(annotationClass)) {
 						counts.put(annotationClass, new int[1]);
 					}

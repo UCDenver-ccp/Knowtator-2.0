@@ -27,7 +27,7 @@
 // */
 // package edu.ucdenver.ccp.knowtator.iaa.matcher;
 //
-// import edu.ucdenver.ccp.knowtator.annotation.text.annotation;
+// import edu.ucdenver.ccp.knowtator.concept.text.concept;
 // import edu.ucdenver.ccp.knowtator.iaa.IAA;
 //
 // import java.util.ArrayList;
@@ -38,36 +38,36 @@
 // public class SpansOverlapSimpleFeatureMatcher implements Matcher {
 //
 //	/**
-//	 * This method will return an annotation that has overlapping spans and the
-//	 * same simple features. It is not required that the annotation class match.
-//	 * Preference will be given to an annotation that has the same class and
-//	 * spans. Secondary preference will be given to an annotation with the same
-//	 * Span followed by an the shortest annotation with overlapping spans and
-//	 * the same simple features. If no annotation has overlapping spans and the
+//	 * This method will return an concept that has overlapping spans and the
+//	 * same simple features. It is not required that the concept class match.
+//	 * Preference will be given to an concept that has the same class and
+//	 * spans. Secondary preference will be given to an concept with the same
+//	 * Span followed by an the shortest concept with overlapping spans and
+//	 * the same simple features. If no concept has overlapping spans and the
 //	 * same simple features, then null is returned.
 //	 *
 //	 * @param matchResult
 //	 *            will be set to:
 //	 *            <ul>
 //	 *            <li>TRIVIAL_NONMATCH if there are no overlapping annotations
-//	 *            with the passed in annotation
-//	 *            <li>NONTRIVIAL_MATCH if there is an annotation that is
-//	 *            overlapping and the annotation.compareSimpleFeatures returns
+//	 *            with the passed in concept
+//	 *            <li>NONTRIVIAL_MATCH if there is an concept that is
+//	 *            overlapping and the concept.compareSimpleFeatures returns
 //	 *            NONTRIVIAL_MATCH
-//	 *            <li>TRIVIAL_MATCH if there is an annotation that is
-//	 *            overlapping and the annotation.compareSimpleFeatures returns
+//	 *            <li>TRIVIAL_MATCH if there is an concept that is
+//	 *            overlapping and the concept.compareSimpleFeatures returns
 //	 *            TRIVIAL_MATCH <br>
 //	 *            Note: if there is a trivial_match then there cannot possibly
 //	 *            be a NONTRIVIAL_MATCH because one of the simple features of
-//	 *            the passed in annotation must have a null value or there are
+//	 *            the passed in concept must have a null value or there are
 //	 *            no simple features.
-//	 *            <li>NONTRIVIAL_NONMATCH if there an annotation that is
-//	 *            overlapping and the annotation.compareSimpleFeatures returns
+//	 *            <li>NONTRIVIAL_NONMATCH if there an concept that is
+//	 *            overlapping and the concept.compareSimpleFeatures returns
 //	 *            NONTRIVIAL_NONMATCH
 //	 *            <li>TRIVIAL_NONMATCH if there is no match or non-trivial
 //	 *            non-match found.
 //	 * @return will return the first nontrivial match that it finds preferring
-//	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher#match(annotation, String, Set,
+//	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher#match(concept, String, Set,
 //	 *      IAA, MatchResult)
 //	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
 //	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
@@ -75,11 +75,11 @@
 //	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#TRIVIAL_NONMATCH
 //	 */
 //
-//	public annotation match(annotation annotation, String compareSetName, Set<annotation>
+//	public concept match(concept concept, String compareSetName, Set<concept>
 // excludeAnnotations, IAA iaa,
 //							MatchResult matchResult) {
 //
-//		annotation spansExactSimpleFeatureMatch = SpansExactSimpleFeatureMatcher.match(annotation,
+//		concept spansExactSimpleFeatureMatch = SpansExactSimpleFeatureMatcher.match(concept,
 // compareSetName, iaa,
 //				excludeAnnotations, matchResult);
 //
@@ -92,20 +92,20 @@
 //			return spansExactSimpleFeatureMatch;
 //		}
 //
-//		Set<annotation> candidateAnnotations = new HashSet<>(iaa.getOverlappingAnnotations(annotation,
+//		Set<concept> candidateAnnotations = new HashSet<>(iaa.getOverlappingConceptAnnotations(concept,
 //				compareSetName));
 //		candidateAnnotations.clear(excludeAnnotations);
 //
 //		// we are going to collect all matches because we want to return the
 //		// shortest of the matches if there is more than one.
-//		List<annotation> nontrivialMatches = new ArrayList<>();
-//		List<annotation> trivialMatches = new ArrayList<>();
+//		List<concept> nontrivialMatches = new ArrayList<>();
+//		List<concept> trivialMatches = new ArrayList<>();
 //
 //		boolean nontrivialNonmatch = false;
 //
-//		for (annotation candidateAnnotation : candidateAnnotations) {
+//		for (concept candidateAnnotation : candidateAnnotations) {
 //			if (!excludeAnnotations.contains(candidateAnnotation)) {
-//				int result = annotation.compareSimpleFeatures(annotation, candidateAnnotation);
+//				int result = concept.compareSimpleFeatures(concept, candidateAnnotation);
 //				if (result == MatchResult.NONTRIVIAL_MATCH) {
 //					nontrivialMatches.add(candidateAnnotation);
 //				} else if (result == MatchResult.TRIVIAL_MATCH) {
@@ -122,7 +122,7 @@
 //			if (nontrivialMatches.size() == 1) {
 //				return nontrivialMatches.iterator().next();
 //			} else {
-//				return annotation.getShortestAnnotation(nontrivialMatches);
+//				return concept.getShortestAnnotation(nontrivialMatches);
 //			}
 //		}
 //		if (trivialMatches.size() > 0) {
@@ -130,7 +130,7 @@
 //			if (trivialMatches.size() == 1) {
 //				return trivialMatches.iterator().next();
 //			} else {
-//				return annotation.getShortestAnnotation(trivialMatches);
+//				return concept.getShortestAnnotation(trivialMatches);
 //			}
 //		}
 //

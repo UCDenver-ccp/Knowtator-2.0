@@ -8,13 +8,12 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Stream;
 
-public class ListenableCollection<
-        K extends KnowtatorObject, C extends Collection<K>, L extends CollectionListener<K>>
-        implements ProjectListener, Iterable<K> {
+public abstract class ListenableCollection<K extends KnowtatorObject, C extends Collection<K>, L extends CollectionListener<K>> implements ProjectListener, Iterable<K> {
   public final C collection;
-  private final ArrayList<L> collectionListeners;
+  protected final List<L> collectionListeners;
 
   ListenableCollection(ProjectManager controller, C collection) {
     this.collection = collection;
@@ -89,6 +88,14 @@ public class ListenableCollection<
 
   public int size() {
     return collection.size();
+  }
+
+  void dispose() {
+    collectionListeners.clear();
+  }
+
+  public K[] toArray(K[] newArray) {
+    return collection.toArray(newArray);
   }
 
   public C getCollection() {

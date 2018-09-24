@@ -9,7 +9,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
-import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -22,7 +22,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.HashMap;
 
-public class Profile implements KnowtatorObject, Savable, KnowtatorXMLIO {
+public class Profile implements KnowtatorObject<Profile>, Savable, KnowtatorXMLIO {
   @SuppressWarnings("unused")
   private static Logger log = LogManager.getLogger(Profile.class);
 
@@ -40,17 +40,15 @@ public class Profile implements KnowtatorObject, Savable, KnowtatorXMLIO {
   COMPARRISON
    */
 
-  public static int compare(Profile profile1, Profile profile2) {
-    if (profile1 == profile2) {
+  @Override
+  public int compareTo(Profile profile2) {
+    if (this == profile2) {
       return 0;
     }
     if (profile2 == null) {
       return 1;
     }
-    if (profile1 == null) {
-      return -1;
-    }
-    return profile1.getId().toLowerCase().compareTo(profile2.getId().toLowerCase());
+    return this.getId().toLowerCase().compareTo(profile2.getId().toLowerCase());
   }
 
   /*
@@ -62,9 +60,9 @@ public class Profile implements KnowtatorObject, Savable, KnowtatorXMLIO {
     return id;
   }
 
-  public Color getColor(Annotation annotation) {
-    OWLClass owlClass = annotation.getOwlClass();
-    String owlClassID = annotation.getOwlClassID();
+  public Color getColor(ConceptAnnotation conceptAnnotation) {
+    OWLClass owlClass = conceptAnnotation.getOwlClass();
+    String owlClassID = conceptAnnotation.getOwlClassID();
 
     Color color = colors.get(owlClass);
     if (color != null) {
@@ -76,11 +74,11 @@ public class Profile implements KnowtatorObject, Savable, KnowtatorXMLIO {
           color = Color.CYAN;
         }
         colors.put(owlClass, color);
-        controller.getProfileManager().fireColorChanged();
+        controller.getProfileCollection().fireColorChanged();
         return color;
       } else if (color == null) {
         colors.put(owlClassID, Color.CYAN);
-        controller.getProfileManager().fireColorChanged();
+        controller.getProfileCollection().fireColorChanged();
         return Color.CYAN;
       } else {
         return color;
@@ -117,7 +115,7 @@ public class Profile implements KnowtatorObject, Savable, KnowtatorXMLIO {
 
   public void addColor(Object key, Color c) {
     colors.put(key, c);
-    controller.getProfileManager().fireColorChanged();
+    controller.getProfileCollection().fireColorChanged();
 
   }
 
@@ -200,7 +198,7 @@ public class Profile implements KnowtatorObject, Savable, KnowtatorXMLIO {
 
   @Override
   public File getSaveLocation() {
-    return new File(controller.getProfileManager().getSaveLocation().getAbsolutePath(), id + ".xml");
+    return new File(controller.getProfileCollection().getSaveLocation().getAbsolutePath(), id + ".xml");
   }
 
   @Override

@@ -27,7 +27,7 @@
 // */
 // package edu.ucdenver.ccp.knowtator.iaa.matcher;
 //
-// import edu.ucdenver.ccp.knowtator.annotation.text.annotation;
+// import edu.ucdenver.ccp.knowtator.concept.text.concept;
 // import edu.ucdenver.ccp.knowtator.iaa.IAA;
 //
 // import java.util.*;
@@ -35,7 +35,7 @@
 // public class FeatureMatcher implements Matcher {
 //	boolean matchClasses = true;
 //
-//	int matchSpans = annotation.SPANS_OVERLAP_COMPARISON;
+//	int matchSpans = concept.SPANS_OVERLAP_COMPARISON;
 //
 //	Set<String> comparedSimpleFeatures = new HashSet<>();
 //
@@ -64,58 +64,58 @@
 //		comparedComplexFeatures.put(complexFeatureName, matchCriteria);
 //	}
 //
-//	public annotation match(annotation annotation, String compareSetName, Set<annotation>
+//	public concept match(concept concept, String compareSetName, Set<concept>
 // excludeAnnotations, IAA iaa,
 //							MatchResult matchResult) {
-//		Set<annotation> candidateAnnotations = new HashSet<>();
+//		Set<concept> candidateAnnotations = new HashSet<>();
 //		if (matchClasses) {
-//			if (matchSpans == annotation.SPANS_EXACT_COMPARISON) {
-//				candidateAnnotations.addAll(iaa.getAnnotationsOfSameType(annotation, compareSetName));
-//				candidateAnnotations.retainAll(iaa.getExactlyOverlappingAnnotations(annotation,
+//			if (matchSpans == concept.SPANS_EXACT_COMPARISON) {
+//				candidateAnnotations.addAll(iaa.getAnnotationsOfSameType(concept, compareSetName));
+//				candidateAnnotations.retainAll(iaa.getExactlyOverlappingAnnotations(concept,
 // compareSetName));
-//			} else if (matchSpans == annotation.SPANS_OVERLAP_COMPARISON) {
-//				// Set<annotation> someAnnotations =
-//				// iaa.getExactlyOverlappingAnnotations(annotation,
+//			} else if (matchSpans == concept.SPANS_OVERLAP_COMPARISON) {
+//				// Set<concept> someAnnotations =
+//				// iaa.getExactlyOverlappingAnnotations(concept,
 //				// compareSetName);
 //				//
-//				// Set<annotation> someAnnotations =
-//				// iaa.getExactlyOverlappingAnnotations(annotation,
+//				// Set<concept> someAnnotations =
+//				// iaa.getExactlyOverlappingAnnotations(concept,
 //				// compareSetName);
 //				//
-//				candidateAnnotations.addAll(iaa.getExactlyOverlappingAnnotations(annotation, compareSetName));
-//				candidateAnnotations.addAll(iaa.getOverlappingAnnotations(annotation, compareSetName));
-//				candidateAnnotations.retainAll(iaa.getAnnotationsOfSameType(annotation, compareSetName));
+//				candidateAnnotations.addAll(iaa.getExactlyOverlappingAnnotations(concept, compareSetName));
+//				candidateAnnotations.addAll(iaa.getOverlappingConceptAnnotations(concept, compareSetName));
+//				candidateAnnotations.retainAll(iaa.getAnnotationsOfSameType(concept, compareSetName));
 //			}
 //		} else {
-//			if (matchSpans == annotation.SPANS_EXACT_COMPARISON) {
+//			if (matchSpans == concept.SPANS_EXACT_COMPARISON) {
 //				// we want all annotations that have the exactly matching spans,
 //				// but we want them ordered in the following way:
 //				// 1) annotations with the same class and same spans
 //				// 2) annotations with the same spans
-//				candidateAnnotations.addAll(iaa.getAnnotationsOfSameType(annotation, compareSetName));
-//				Set<annotation> exactlyOverlappingAnnotations =
-// iaa.getExactlyOverlappingAnnotations(annotation,
+//				candidateAnnotations.addAll(iaa.getAnnotationsOfSameType(concept, compareSetName));
+//				Set<concept> exactlyOverlappingAnnotations =
+// iaa.getExactlyOverlappingAnnotations(concept,
 //						compareSetName);
 //				candidateAnnotations.retainAll(exactlyOverlappingAnnotations);
 //				candidateAnnotations.addAll(exactlyOverlappingAnnotations);
-//			} else if (matchSpans == annotation.SPANS_OVERLAP_COMPARISON) {
+//			} else if (matchSpans == concept.SPANS_OVERLAP_COMPARISON) {
 //				// we want all annotations that are overlapping, but we want
 //				// them ordered in the following way:
 //				// 1) annotations with the same class and same spans
 //				// 2) annotations with the same class and overlapping spans
 //				// 3) annotations with the same spans
 //				// 4) annotations with overlapping spans
-//				Set<annotation> classAnnotations = iaa.getAnnotationsOfSameType(annotation, compareSetName);
-//				Set<annotation> exactlyOverlappingAnnotations =
-// iaa.getExactlyOverlappingAnnotations(annotation,
+//				Set<concept> classAnnotations = iaa.getAnnotationsOfSameType(concept, compareSetName);
+//				Set<concept> exactlyOverlappingAnnotations =
+// iaa.getExactlyOverlappingAnnotations(concept,
 //						compareSetName);
-//				Set<annotation> overlappingAnnotations = iaa.getOverlappingAnnotations(annotation,
+//				Set<concept> overlappingAnnotations = iaa.getOverlappingConceptAnnotations(concept,
 // compareSetName);
 //
-//				Set<annotation> classAndExactSpanAnnotations = new HashSet<>(classAnnotations);
+//				Set<concept> classAndExactSpanAnnotations = new HashSet<>(classAnnotations);
 //				classAndExactSpanAnnotations.retainAll(exactlyOverlappingAnnotations);
 //
-//				Set<annotation> classAndOverlappingSpanAnnotations = new HashSet<>(classAnnotations);
+//				Set<concept> classAndOverlappingSpanAnnotations = new HashSet<>(classAnnotations);
 //				classAndOverlappingSpanAnnotations.retainAll(overlappingAnnotations);
 //
 //				candidateAnnotations.addAll(classAndExactSpanAnnotations);
@@ -131,17 +131,17 @@
 //				// 4) annotations with overlapping spans
 //				// 5) annotations with the same class
 //				// 6) all other annotations
-//				Set<annotation> classAnnotations = iaa.getAnnotationsOfSameType(annotation, compareSetName);
-//				Set<annotation> exactlyOverlappingAnnotations =
-// iaa.getExactlyOverlappingAnnotations(annotation,
+//				Set<concept> classAnnotations = iaa.getAnnotationsOfSameType(concept, compareSetName);
+//				Set<concept> exactlyOverlappingAnnotations =
+// iaa.getExactlyOverlappingAnnotations(concept,
 //						compareSetName);
-//				Set<annotation> overlappingAnnotations = iaa.getOverlappingAnnotations(annotation,
+//				Set<concept> overlappingAnnotations = iaa.getOverlappingConceptAnnotations(concept,
 // compareSetName);
 //
-//				Set<annotation> classAndExactSpanAnnotations = new HashSet<>(classAnnotations);
+//				Set<concept> classAndExactSpanAnnotations = new HashSet<>(classAnnotations);
 //				classAndExactSpanAnnotations.retainAll(exactlyOverlappingAnnotations);
 //
-//				Set<annotation> classAndOverlappingSpanAnnotations = new HashSet<>(classAnnotations);
+//				Set<concept> classAndOverlappingSpanAnnotations = new HashSet<>(classAnnotations);
 //				classAndOverlappingSpanAnnotations.retainAll(overlappingAnnotations);
 //
 //				candidateAnnotations.addAll(classAndExactSpanAnnotations);
@@ -162,14 +162,14 @@
 //
 //		// we are going to collect all matches because we want to return the
 //		// shortest of the matches if there is more than one.
-//		List<annotation> nontrivialMatches = new ArrayList<>();
-//		List<annotation> trivialMatches = new ArrayList<>();
+//		List<concept> nontrivialMatches = new ArrayList<>();
+//		List<concept> trivialMatches = new ArrayList<>();
 //		boolean nontrivialNonmatch = false;
 //
-//		for (annotation candidateAnnotation : candidateAnnotations) {
+//		for (concept candidateAnnotation : candidateAnnotations) {
 //			int result;
 //			if (comparedSimpleFeatures.size() > 0)
-//				result = annotation.compareSimpleFeatures(annotation, candidateAnnotation,
+//				result = concept.compareSimpleFeatures(concept, candidateAnnotation,
 // comparedSimpleFeatures);
 //			else
 //				result = MatchResult.NONTRIVIAL_MATCH;
@@ -180,7 +180,7 @@
 //			for (String complexFeatureName : comparedComplexFeatures.keySet()) {
 //				ComplexFeatureMatchCriteria matchCriteria = comparedComplexFeatures.get(complexFeatureName);
 //
-//				int complexResult = annotation.compareComplexFeature(annotation, candidateAnnotation,
+//				int complexResult = concept.compareComplexFeature(concept, candidateAnnotation,
 //						complexFeatureName, matchCriteria.matchSpans, matchCriteria.matchClasses,
 //						matchCriteria.comparedSimpleFeatures,
 //						matchCriteria.trivialSimpleFeatureMatchesCauseTrivialMatch);
@@ -211,14 +211,14 @@
 //			if (nontrivialMatches.size() == 1)
 //				return nontrivialMatches.iterator().next();
 //			else
-//				return annotation.getShortestAnnotation(nontrivialMatches);
+//				return concept.getShortestAnnotation(nontrivialMatches);
 //		}
 //		if (trivialMatches.size() > 0) {
 //			matchResult.setResult(MatchResult.TRIVIAL_MATCH);
 //			if (trivialMatches.size() == 1)
 //				return trivialMatches.iterator().next();
 //			else
-//				return annotation.getShortestAnnotation(trivialMatches);
+//				return concept.getShortestAnnotation(trivialMatches);
 //		}
 //
 //		if (nontrivialNonmatch)

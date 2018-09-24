@@ -72,7 +72,7 @@
                 <properties>
                   <horizontalAlignment value="0"/>
                   <horizontalTextPosition value="4"/>
-                  <text resource-bundle="log4j" key="only.annotations"/>
+                  <text resource-bundle="log4j" key="only.conceptAnnotations"/>
                 </properties>
               </component>
             </children>
@@ -101,7 +101,7 @@
               <font size="18" style="1"/>
               <horizontalAlignment value="0"/>
               <horizontalTextPosition value="0"/>
-              <text resource-bundle="ui" key="annotation.information"/>
+              <text resource-bundle="ui" key="conceptAnnotation.information"/>
               <verticalAlignment value="0"/>
               <verticalTextPosition value="0"/>
             </properties>
@@ -139,7 +139,7 @@
             </constraints>
             <properties>
               <labelFor value="4591d"/>
-              <text resource-bundle="log4j" key="graph.spaces.for.annotation"/>
+              <text resource-bundle="log4j" key="graph.spaces.for.conceptAnnotation"/>
             </properties>
           </component>
           <component id="793fa" class="javax.swing.JLabel">
@@ -147,7 +147,7 @@
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="log4j" key="annotation.id"/>
+              <text resource-bundle="log4j" key="conceptAnnotation.id"/>
             </properties>
           </component>
           <component id="50d60" class="javax.swing.JLabel">

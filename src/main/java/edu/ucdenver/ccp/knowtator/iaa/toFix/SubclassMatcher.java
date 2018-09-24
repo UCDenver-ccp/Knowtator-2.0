@@ -27,7 +27,7 @@
 // */
 // package edu.ucdenver.ccp.knowtator.iaa.matcher;
 //
-// import edu.ucdenver.ccp.knowtator.annotation.text.annotation;
+// import edu.ucdenver.ccp.knowtator.concept.text.concept;
 // import edu.ucdenver.ccp.knowtator.iaa.IAA;
 //
 // import java.util.HashSet;
@@ -61,39 +61,39 @@
 //	 * @param matchResult
 //	 *            will be set to NONTRIVIAL_MATCH, NONTRIVIAL_NONMATCH, or
 //	 *            TRIVIAL_NONMATCH. Trivial non-matches occur when the
-//	 *            annotation is not of the class specified by setIAAClass or a
+//	 *            concept is not of the class specified by setIAAClass or a
 //	 *            subclass of it. Trivial non-matches should be ignored and not
 //	 *            counted in any IAA metrics.
-//	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher#match(annotation, String, Set,
+//	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher#match(concept, String, Set,
 //	 *      IAA, MatchResult)
 //	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
 //	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
 //	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#TRIVIAL_NONMATCH
 //	 */
-//	public annotation match(annotation annotation, String compareSetName, Set<annotation>
+//	public concept match(concept concept, String compareSetName, Set<concept>
 // excludeAnnotations, IAA iaa,
 //							MatchResult matchResult) {
 //
-//		String annotationClassName = annotation.getOWLEntityRendering();
+//		String annotationClassName = concept.getOWLEntityRendering();
 //		if (!subclassNames.contains(annotationClassName)) {
 //			matchResult.setResult(MatchResult.TRIVIAL_NONMATCH);
 //			return null;
 //		}
 //
-//		annotation classMatch = ClassMatcher.match(annotation, compareSetName, iaa, excludeAnnotations);
+//		concept classMatch = ClassMatcher.match(concept, compareSetName, iaa, excludeAnnotations);
 //		if (classMatch != null) {
 //			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 //			return classMatch;
 //		}
 //
-//		Set<annotation> candidateAnnotations = new HashSet<>();
+//		Set<concept> candidateAnnotations = new HashSet<>();
 //		for (String subclassName : subclassNames) {
 //			candidateAnnotations.addAll(iaa.getAnnotationsOfClass(subclassName, compareSetName));
 //		}
 //
-//		Set<annotation> exactlyOverlappingAnnotations = new
+//		Set<concept> exactlyOverlappingAnnotations = new
 // HashSet<>(iaa.getExactlyOverlappingAnnotations(
-//				annotation, compareSetName));
+//				concept, compareSetName));
 //		exactlyOverlappingAnnotations.retainAll(candidateAnnotations);
 //		exactlyOverlappingAnnotations.clear(excludeAnnotations);
 //		if (exactlyOverlappingAnnotations.size() > 0) {
@@ -101,7 +101,7 @@
 //			return exactlyOverlappingAnnotations.iterator().next();
 //		}
 //
-//		Set<annotation> overlappingAnnotations = new HashSet<>(iaa.getOverlappingAnnotations(annotation,
+//		Set<concept> overlappingAnnotations = new HashSet<>(iaa.getOverlappingConceptAnnotations(concept,
 //				compareSetName));
 //		overlappingAnnotations.retainAll(candidateAnnotations);
 //		overlappingAnnotations.clear(excludeAnnotations);
@@ -109,7 +109,7 @@
 //			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 //			if (overlappingAnnotations.size() == 1)
 //				return overlappingAnnotations.iterator().next();
-//			return annotation.getShortestAnnotation(overlappingAnnotations);
+//			return concept.getShortestAnnotation(overlappingAnnotations);
 //		}
 //
 //		matchResult.setResult(MatchResult.NONTRIVIAL_NONMATCH);

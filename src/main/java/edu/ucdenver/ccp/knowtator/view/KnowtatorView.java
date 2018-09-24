@@ -4,19 +4,15 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
-import edu.ucdenver.ccp.knowtator.model.collection.AnnotationCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.collection.SpanCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.text.concept.span.SpanCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.model.selection.AnnotationSelectionListener;
 import edu.ucdenver.ccp.knowtator.model.selection.OWLClassSelectionListener;
-import edu.ucdenver.ccp.knowtator.model.selection.SpanSelectionListener;
-import edu.ucdenver.ccp.knowtator.model.selection.TextSourceSelectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
-import edu.ucdenver.ccp.knowtator.model.text.annotation.Span;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.view.chooser.ProfileChooser;
 import edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog;
@@ -45,8 +41,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.prefs.Preferences;
 
-public class KnowtatorView extends AbstractOWLClassViewComponent
-        implements DropTargetListener {
+public class KnowtatorView extends AbstractOWLClassViewComponent implements DropTargetListener {
 
     private static final Logger log = Logger.getLogger(KnowtatorView.class);
     private final Preferences preferences = Preferences.userRoot().node("knowtator");
@@ -86,148 +81,12 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     private Map<JButton, ActionListener> spanSizeButtons;
     private Map<JButton, ActionListener> selectionSizeButtons;
 
-    private AnnotationCollectionListener annotationCollectionListener;
+    private ConceptAnnotationCollectionListener conceptAnnotationCollectionListener;
     private SpanCollectionListener spanCollectionListener;
-    private AnnotationSelectionListener annotationSelectionListener;
-    private SpanSelectionListener spanSelectionListener;
 
 
     public KnowtatorView() {
         controller = new KnowtatorController();
-
-        OWLClassSelectionListener owlClassSelectionListener = new OWLClassSelectionListener() {
-            @Override
-            public void noSelection(KnowtatorObject previousSelection) {
-
-            }
-
-            @Override
-            public void selected(KnowtatorObject previousSelection, KnowtatorObject currentSelection) {
-
-            }
-
-            @Override
-            public void owlEntityChanged(OWLEntity owlClass) {
-                owlEntitySelectionChanged(owlClass);
-            }
-        };
-        TextSourceSelectionListener textSourceSelectionListener = new TextSourceSelectionListener() {
-
-            @Override
-            public void noSelection(TextSource previousSelection) {
-                previousSelection.getAnnotationManager().removeSelectionListener(annotationSelectionListener);
-                previousSelection.getAnnotationManager().removeCollectionListener(annotationCollectionListener);
-            }
-
-            @Override
-            public void selected(TextSource previousSelection, TextSource currentSelection) {
-                if (previousSelection != null) {
-                    previousSelection.getAnnotationManager().removeSelectionListener(annotationSelectionListener);
-                    previousSelection.getAnnotationManager().removeCollectionListener(annotationCollectionListener);
-                }
-                currentSelection.getAnnotationManager().addSelectionListener(annotationSelectionListener);
-                currentSelection.getAnnotationManager().addCollectionListener(annotationCollectionListener);
-                controller.refreshView();
-            }
-        };
-        annotationSelectionListener = new AnnotationSelectionListener() {
-            @Override
-            public void noSelection(Annotation previousSelection) {
-                previousSelection.getSpanManager().removeSelectionListener(spanSelectionListener);
-                previousSelection.getSpanManager().removeCollectionListener(spanCollectionListener);
-                controller.refreshView();
-            }
-
-            @Override
-            public void selected(Annotation previousSelection, Annotation currentSelection) {
-                if (previousSelection != null) {
-                    previousSelection.getSpanManager().removeSelectionListener(spanSelectionListener);
-                    previousSelection.getSpanManager().removeCollectionListener(spanCollectionListener);
-                }
-                currentSelection.getSpanManager().addSelectionListener(spanSelectionListener);
-                currentSelection.getSpanManager().addCollectionListener(spanCollectionListener);
-                controller.refreshView();
-            }
-        };
-        spanSelectionListener = new SpanSelectionListener() {
-            @Override
-            public void noSelection(Span previousSelection) {
-                controller.refreshView();
-            }
-
-            @Override
-            public void selected(Span previousSelection, Span currentSelection) {
-                controller.refreshView();
-            }
-        };
-
-
-        TextSourceCollectionListener textSourceCollectionListener = new TextSourceCollectionListener() {
-            @Override
-            public void added(TextSource object) {
-
-            }
-
-            @Override
-            public void removed(TextSource removedObject) {
-
-            }
-
-            @Override
-            public void emptied(TextSource object) {
-                disableTextSourceButtons();
-            }
-
-            @Override
-            public void firstAdded(TextSource object) {
-                enableTextSourceButtons();
-            }
-        };
-        annotationCollectionListener = new AnnotationCollectionListener() {
-
-            @Override
-            public void added(Annotation addedObject) {
-
-            }
-
-            @Override
-            public void removed(Annotation removedObject) {
-
-            }
-
-            @Override
-            public void emptied(Annotation object) {
-                disableAnnotationButtons();
-            }
-
-            @Override
-            public void firstAdded(Annotation object) {
-                enableAnnotationButtons();
-            }
-        };
-        spanCollectionListener = new SpanCollectionListener() {
-            @Override
-            public void added(Span addedObject) {
-            }
-
-            @Override
-            public void removed(Span removedObject) {
-            }
-
-            @Override
-            public void emptied(Span object) {
-                disableSpanButtons();
-            }
-
-            @Override
-            public void firstAdded(Span object) {
-                enableSpanButtons();
-            }
-        };
-
-        controller.getSelectionManager().addOWLEntityListener(owlClassSelectionListener);
-        controller.getTextSourceManager().addSelectionListener(textSourceSelectionListener);
-        controller.getTextSourceManager().addCollectionListener(textSourceCollectionListener);
 
         $$$setupUI$$$();
 
@@ -332,17 +191,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         textSourceButtons.put(showGraphViewerButton, e -> graphViewDialog.setVisible(true));
         textSourceButtons.put(decreaseFontSizeButton, e -> knowtatorTextPane.decreaseFontSize());
         textSourceButtons.put(increaseFontSizeButton, e -> knowtatorTextPane.increaseFindSize());
-        textSourceButtons.put(previousTextSourceButton, e -> getController().getTextSourceManager().getPreviousTextSource());
-        textSourceButtons.put(nextTextSourceButton, e -> getController().getTextSourceManager().getNextTextSource());
+        textSourceButtons.put(previousTextSourceButton, e -> getController().getTextSourceCollection().selectPrevious());
+        textSourceButtons.put(nextTextSourceButton, e -> getController().getTextSourceCollection().selectNext());
 
         annotationButtons = new HashMap<>();
         annotationButtons.put(addAnnotationButton, e -> {
-            String[] buttons = {"Add new annotation", "Add span to annotation", "Cancel"};
+            String[] buttons = {"Add new concept", "Add span to concept", "Cancel"};
             int response =
                     JOptionPane.showOptionDialog(
                             this,
                             "Choose an option",
-                            "Add Annotation",
+                            "Add ConceptAnnotation",
                             JOptionPane.DEFAULT_OPTION,
                             JOptionPane.PLAIN_MESSAGE,
                             null,
@@ -352,14 +211,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
             switch (response) {
                 case 0:
                     getController()
-                            .getTextSourceManager().getSelection()
-                            .getAnnotationManager()
+                            .getTextSourceCollection().getSelection()
+                            .getConceptAnnotationCollection()
                             .addSelectedAnnotation();
                     break;
                 case 1:
                     getController()
-                            .getTextSourceManager().getSelection()
-                            .getAnnotationManager()
+                            .getTextSourceCollection().getSelection()
+                            .getConceptAnnotationCollection()
                             .addSpanToSelectedAnnotation();
                     break;
                 case 2:
@@ -368,17 +227,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         });
         annotationButtons.put(removeAnnotationButton, e -> {
             if (getController()
-                    .getTextSourceManager().getSelection()
-                    .getAnnotationManager()
-                    .getSelection().getSpanManager()
+                    .getTextSourceCollection().getSelection()
+                    .getConceptAnnotationCollection()
+                    .getSelection().getSpanCollection()
                     .size()
                     > 1) {
-                String[] buttons = {"Remove annotation", "Remove span from annotation", "Cancel"};
+                String[] buttons = {"Remove concept", "Remove span from concept", "Cancel"};
                 int response =
                         JOptionPane.showOptionDialog(
                                 this,
                                 "Choose an option",
-                                "Remove Annotation",
+                                "Remove ConceptAnnotation",
                                 JOptionPane.DEFAULT_OPTION,
                                 JOptionPane.QUESTION_MESSAGE,
                                 null,
@@ -388,14 +247,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                 switch (response) {
                     case 0:
                         getController()
-                                .getTextSourceManager().getSelection()
-                                .getAnnotationManager()
+                                .getTextSourceCollection().getSelection()
+                                .getConceptAnnotationCollection()
                                 .removeSelectedAnnotation();
                         break;
                     case 1:
                         getController()
-                                .getTextSourceManager().getSelection()
-                                .getAnnotationManager()
+                                .getTextSourceCollection().getSelection()
+                                .getConceptAnnotationCollection()
                                 .removeSpanFromSelectedAnnotation();
                         break;
                     case 2:
@@ -404,13 +263,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
             } else {
                 if (JOptionPane.showConfirmDialog(
                         this,
-                        "Are you sure you want to remove the selected annotation?",
-                        "Remove Annotation",
+                        "Are you sure you want to remove the selected concept?",
+                        "Remove ConceptAnnotation",
                         JOptionPane.YES_NO_OPTION)
                         == JOptionPane.YES_OPTION) {
                     getController()
-                            .getTextSourceManager().getSelection()
-                            .getAnnotationManager()
+                            .getTextSourceCollection().getSelection()
+                            .getConceptAnnotationCollection()
                             .removeSelectedAnnotation();
                 }
             }
@@ -420,15 +279,15 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
             if (owlClass == null) {
                 owlClass =
                         getController()
-                                .getTextSourceManager().getSelection()
-                                .getAnnotationManager()
+                                .getTextSourceCollection().getSelection()
+                                .getConceptAnnotationCollection()
                                 .getSelection()
                                 .getOwlClass();
             }
             if (owlClass instanceof OWLClass) {
                 Color c = JColorChooser.showDialog(this, "Pick a color for " + owlClass, Color.CYAN);
                 if (c != null) {
-                    getController().getProfileManager().getSelection().addColor(owlClass, c);
+                    getController().getProfileCollection().getSelection().addColor(owlClass, c);
 
                     if (JOptionPane.showConfirmDialog(
                             this, "Assign color to descendants of " + owlClass + "?")
@@ -440,7 +299,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                                             .getDescendants((OWLClass) owlClass);
 
                             for (OWLClass descendant : descendants) {
-                                controller.getProfileManager()
+                                controller.getProfileCollection()
                                         .getSelection()
                                         .addColor(descendant, c);
                             }
@@ -452,14 +311,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         });
 
         spanButtons = new HashMap<>();
-        spanButtons.put(nextSpanButton, e -> getController().getTextSourceManager().getSelection().getAnnotationManager().getNextSpan());
-        spanButtons.put(previousSpanButton, e -> getController().getTextSourceManager().getSelection().getAnnotationManager().getPreviousSpan());
+        spanButtons.put(nextSpanButton, e -> getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getNextSpan());
+        spanButtons.put(previousSpanButton, e -> getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getPreviousSpan());
 
         spanSizeButtons = new HashMap<>();
-        spanSizeButtons.put(shrinkSelectionEndButton, e -> getController().getTextSourceManager().getSelection().getAnnotationManager().shrinkSelectedSpanEnd());
-        spanSizeButtons.put(shrinkSelectionStartButton, e -> getController().getTextSourceManager().getSelection().getAnnotationManager().shrinkSelectedSpanStart());
-        spanSizeButtons.put(growSelectionEndButton, e -> getController().getTextSourceManager().getSelection().getAnnotationManager().growSelectedSpanEnd());
-        spanSizeButtons.put(growSelectionStartButton, e -> getController().getTextSourceManager().getSelection().getAnnotationManager().growSelectedSpanStart());
+        spanSizeButtons.put(shrinkSelectionEndButton, e -> getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().shrinkSelectedSpanEnd());
+        spanSizeButtons.put(shrinkSelectionStartButton, e -> getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().shrinkSelectedSpanStart());
+        spanSizeButtons.put(growSelectionEndButton, e -> getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().growSelectedSpanEnd());
+        spanSizeButtons.put(growSelectionStartButton, e -> getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().growSelectedSpanStart());
 
         selectionSizeButtons = new HashMap<>();
         selectionSizeButtons.put(growSelectionStartButton, e -> knowtatorTextPane.growStart());
@@ -485,23 +344,133 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                     }
                 });
 
-
-        textSourceChooser.addActionListener(
-                e -> {
-                    JComboBox comboBox = (JComboBox) e.getSource();
-                    if (comboBox.getSelectedItem() != null) {
-                        getController()
-                                .getTextSourceManager().setSelection((TextSource) comboBox.getSelectedItem());
-                    }
-                });
         profileChooser.addActionListener(
                 e -> {
                     JComboBox comboBox = (JComboBox) e.getSource();
                     if (comboBox.getSelectedItem() != null) {
                         getController()
-                                .getProfileManager().setSelection((Profile) comboBox.getSelectedItem());
+                                .getProfileCollection().setSelection((Profile) comboBox.getSelectedItem());
                     }
                 });
+    }
+
+    private void setupListeners() {
+        OWLClassSelectionListener owlClassSelectionListener = this::owlEntitySelectionChanged;
+        controller.getSelectionManager().addOWLEntityListener(owlClassSelectionListener);
+
+        TextSourceCollectionListener textSourceCollectionListener = new TextSourceCollectionListener() {
+            @Override
+            public void updated(TextSource updatedItem) {
+
+            }
+
+            @Override
+            public void noSelection(TextSource previousSelection) {
+                previousSelection.getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
+            }
+
+            @Override
+            public void selected(TextSource previousSelection, TextSource currentSelection) {
+                if (previousSelection != null) {
+                    previousSelection.getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
+                }
+                currentSelection.getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
+            }
+
+            @Override
+            public void added(TextSource object) {
+
+            }
+
+            @Override
+            public void removed(TextSource removedObject) {
+
+            }
+
+            @Override
+            public void emptied(TextSource object) {
+                disableTextSourceButtons();
+            }
+
+            @Override
+            public void firstAdded(TextSource object) {
+                enableTextSourceButtons();
+            }
+        };
+        conceptAnnotationCollectionListener = new ConceptAnnotationCollectionListener() {
+            @Override
+            public void updated(ConceptAnnotation updatedItem) {
+
+            }
+
+            @Override
+            public void noSelection(ConceptAnnotation previousSelection) {
+                previousSelection.getSpanCollection().removeCollectionListener(spanCollectionListener);
+            }
+
+            @Override
+            public void selected(ConceptAnnotation previousSelection, ConceptAnnotation currentSelection) {
+                if (previousSelection != null) {
+                    previousSelection.getSpanCollection().removeCollectionListener(spanCollectionListener);
+                }
+                currentSelection.getSpanCollection().addCollectionListener(spanCollectionListener);
+            }
+
+            @Override
+            public void added(ConceptAnnotation addedObject) {
+
+            }
+
+            @Override
+            public void removed(ConceptAnnotation removedObject) {
+
+            }
+
+            @Override
+            public void emptied(ConceptAnnotation object) {
+                disableAnnotationButtons();
+            }
+
+            @Override
+            public void firstAdded(ConceptAnnotation object) {
+                enableAnnotationButtons();
+            }
+        };
+
+        spanCollectionListener = new SpanCollectionListener() {
+            @Override
+            public void updated(Span updatedItem) {
+
+            }
+
+            @Override
+            public void noSelection(Span previousSelection) {
+            }
+
+            @Override
+            public void selected(Span previousSelection, Span currentSelection) {
+            }
+
+            @Override
+            public void added(Span addedObject) {
+            }
+
+            @Override
+            public void removed(Span removedObject) {
+            }
+
+            @Override
+            public void emptied(Span object) {
+                disableSpanButtons();
+            }
+
+            @Override
+            public void firstAdded(Span object) {
+                enableSpanButtons();
+            }
+        };
+
+        controller.getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
     }
 
     private void owlEntitySelectionChanged(OWLEntity owlEntity) {
@@ -517,25 +486,22 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         if (controller != null) {
             setUpOWL();
             controller.getSelectionManager().setSelectedOWLEntity(selectedClass);
-            controller.refreshView();
         }
         return selectedClass;
     }
 
     public void reset() {
         disposeView();
-        controller.dispose();
+        setupListeners();
     }
 
     @Override
     public void disposeView() {
-        if (controller != null) {
-            controller.dispose();
-        }
-        //		infoPane.dispose();
+        controller.dispose();
         graphViewDialog.setVisible(false);
         graphViewDialog.dispose();
         infoPane.dispose();
+
     }
 
     @Override
@@ -599,12 +565,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     private void enableSpanButtons() {
         spanButtons.forEach((button, e) -> button.setEnabled(true));
         selectionSizeButtons.forEach(AbstractButton::removeActionListener);
+        spanSizeButtons.forEach(AbstractButton::removeActionListener);
         spanSizeButtons.forEach(AbstractButton::addActionListener);
     }
 
     private void disableSpanButtons() {
         spanButtons.forEach((button, e) -> button.setEnabled(false));
         spanSizeButtons.forEach(AbstractButton::removeActionListener);
+        selectionSizeButtons.forEach(AbstractButton::removeActionListener);
         selectionSizeButtons.forEach(AbstractButton::addActionListener);
     }
 
@@ -712,7 +680,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         addAnnotationButton.setMinimumSize(new Dimension(50, 50));
         addAnnotationButton.setPreferredSize(new Dimension(50, 50));
         addAnnotationButton.setText("");
-        addAnnotationButton.setToolTipText(ResourceBundle.getBundle("ui").getString("add.annotation"));
+        addAnnotationButton.setToolTipText(ResourceBundle.getBundle("ui").getString("add.conceptAnnotation"));
         annotationToolBar.add(addAnnotationButton);
         removeAnnotationButton = new JButton();
         removeAnnotationButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-delete-24.png")));
@@ -720,7 +688,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         removeAnnotationButton.setMinimumSize(new Dimension(50, 50));
         removeAnnotationButton.setPreferredSize(new Dimension(50, 50));
         removeAnnotationButton.setText("");
-        removeAnnotationButton.setToolTipText(ResourceBundle.getBundle("ui").getString("remove.annotation"));
+        removeAnnotationButton.setToolTipText(ResourceBundle.getBundle("ui").getString("remove.conceptAnnotation"));
         annotationToolBar.add(removeAnnotationButton);
         previousSpanButton = new JButton();
         previousSpanButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-advance-24 (reversed).png")));
@@ -783,7 +751,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         profileFilterCheckBox.setMinimumSize(new Dimension(100, 50));
         profileFilterCheckBox.setPreferredSize(new Dimension(100, 50));
         this.$$$loadButtonText$$$(profileFilterCheckBox, ResourceBundle.getBundle("ui").getString("profile.filter"));
-        profileFilterCheckBox.setToolTipText(ResourceBundle.getBundle("ui").getString("filter.annotations.by.profile"));
+        profileFilterCheckBox.setToolTipText(ResourceBundle.getBundle("ui").getString("filter.conceptAnnotations.by.profile"));
         annotationToolBar.add(profileFilterCheckBox);
         classFilterCheckBox = new JCheckBox();
         classFilterCheckBox.setText("OWL Class Filter");

@@ -1,46 +1,46 @@
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
-import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class SpanMatcher implements Matcher {
 	/**
-	 * This method will return an annotation with the same class and spans. If one does not exist,
-	 * then it will return an annotation with the same spans (but different class). Otherwise, null is
+	 * This method will return an concept with the same class and spans. If one does not exist,
+	 * then it will return an concept with the same spans (but different class). Otherwise, null is
 	 * returned.
 	 *
 	 * @param matchResult will be set to NONTRIVIAL_MATCH or NONTRIVIAL_NONMATCH. Trivial matches and
 	 *                    non-matches are not defined for this matcher.
-	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher#match(Annotation, String, Set, IAA,
+	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher#match(ConceptAnnotation, String, Set, IAA,
 	 * MatchResult)
 	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
 	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_NONMATCH
 	 */
 	@SuppressWarnings("SuspiciousMethodCalls")
-	public Annotation match(
-			Annotation annotation,
+	public ConceptAnnotation match(
+			ConceptAnnotation conceptAnnotation,
 			String compareSetName,
-			Set<Annotation> excludeAnnotations,
+			Set<ConceptAnnotation> excludeConceptAnnotations,
 			IAA iaa,
 			MatchResult matchResult) {
-		Annotation spanAndClassMatch =
-				ClassAndSpanMatcher.match(annotation, compareSetName, iaa, excludeAnnotations);
+		ConceptAnnotation spanAndClassMatch =
+				ClassAndSpanMatcher.match(conceptAnnotation, compareSetName, iaa, excludeConceptAnnotations);
 		if (spanAndClassMatch != null) {
 			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 			return spanAndClassMatch;
 		}
 
-		Set<Annotation> candidateAnnotations =
-				new HashSet<>(iaa.getExactlyOverlappingAnnotations(annotation, compareSetName));
-		candidateAnnotations.remove(excludeAnnotations);
+		Set<ConceptAnnotation> candidateConceptAnnotations =
+				new HashSet<>(iaa.getExactlyOverlappingAnnotations(conceptAnnotation, compareSetName));
+		candidateConceptAnnotations.remove(excludeConceptAnnotations);
 
-		for (Annotation candidateAnnotation : candidateAnnotations) {
-			if (!excludeAnnotations.contains(candidateAnnotation)) {
+		for (ConceptAnnotation candidateConceptAnnotation : candidateConceptAnnotations) {
+			if (!excludeConceptAnnotations.contains(candidateConceptAnnotation)) {
 				matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
-				return candidateAnnotation;
+				return candidateConceptAnnotation;
 			}
 		}
 		matchResult.setResult(MatchResult.NONTRIVIAL_NONMATCH);

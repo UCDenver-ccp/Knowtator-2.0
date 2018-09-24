@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<annotations textSource="small_11319941.txt">
+<conceptAnnotations textSource="small_11319941.txt">
 
-    <annotation>
+    <conceptAnnotation>
         <mention id="11319941-KC-practice_Instance_8"/>
         <annotator id="11319941_AL_Instance_0">gold</annotator>
         <span start="26" end="44"/>
         <spannedText>the mouse striatum</spannedText>
-    </annotation>
+    </conceptAnnotation>
     <classMention id="11319941-KC-practice_Instance_8">
         <mentionClass id="Noun Phrase">Noun Phrase</mentionClass>
     </classMention>
 
-    <annotation>
+    <conceptAnnotation>
         <mention id="11319941-KC-practice_Instance_0"/>
         <annotator id="11319941_AL_Instance_0">gold</annotator>
         <span start="3560" end="3578"/>
         <spannedText>the mouse striatum</spannedText>
-    </annotation>
+    </conceptAnnotation>
     <classMention id="11319941-KC-practice_Instance_0">
         <mentionClass id="Noun Phrase">Noun Phrase</mentionClass>
     </classMention>
 
-    <annotation>
+    <conceptAnnotation>
         <mention id="11319941-KC-practice_Instance_2"/>
         <annotator id="11319941_AL_Instance_0">gold</annotator>
         <span start="3612" end="3614"/>
         <spannedText>it</spannedText>
-    </annotation>
+    </conceptAnnotation>
     <classMention id="11319941-KC-practice_Instance_2">
         <mentionClass id="Noun Phrase">Noun Phrase</mentionClass>
     </classMention>
 
-    <annotation>
+    <conceptAnnotation>
         <mention id="11319941-KC-practice_Instance_10002"/>
         <annotator id="11319941_AL_Instance_0">gold</annotator>
         <span start="1566" end="1584"/>
         <spannedText>the mouse striatum</spannedText>
-    </annotation>
+    </conceptAnnotation>
     <classMention id="11319941-KC-practice_Instance_10002">
         <mentionClass id="Noun Phrase">Noun Phrase</mentionClass>
     </classMention>
 
-    <annotation>
+    <conceptAnnotation>
         <mention id="11319941-KC-practice_Instance_10"/>
         <annotator id="11319941_AL_Instance_0">gold</annotator>
         <span start="26" end="44"/>
         <spannedText>the mouse striatum</spannedText>
-    </annotation>
+    </conceptAnnotation>
     <classMention id="11319941-KC-practice_Instance_10">
         <mentionClass id="IDENTITY chain">IDENTITY chain</mentionClass>
         <hasSlotMention id="11319941-KC-practice_Instance_12"/>
@@ -66,64 +66,64 @@
         <complexSlotMentionValue value="11319941-KC-practice_Instance_20066"/>
     </complexSlotMention>
 
-    <annotation>
+    <conceptAnnotation>
         <mention id="11319941-KC-practice_Instance_4"/>
         <annotator id="11319941_AL_Instance_0">gold</annotator>
         <span start="3691" end="3693"/>
         <spannedText>it</spannedText>
-    </annotation>
+    </conceptAnnotation>
     <classMention id="11319941-KC-practice_Instance_4">
         <mentionClass id="Noun Phrase">Noun Phrase</mentionClass>
     </classMention>
 
-    <annotation>
+    <conceptAnnotation>
         <mention id="11319941-KC-practice_Instance_10012"/>
         <annotator id="11319941_AL_Instance_0">gold</annotator>
         <span start="4544" end="4558"/>
         <spannedText>mouse striatum</spannedText>
-    </annotation>
+    </conceptAnnotation>
     <classMention id="11319941-KC-practice_Instance_10012">
         <mentionClass id="Noun Phrase">Noun Phrase</mentionClass>
     </classMention>
 
-    <annotation>
+    <conceptAnnotation>
         <mention id="11319941-KC-practice_Instance_10014"/>
         <annotator id="11319941_AL_Instance_0">gold</annotator>
         <span start="4685" end="4703"/>
         <spannedText>the mouse striatum</spannedText>
-    </annotation>
+    </conceptAnnotation>
     <classMention id="11319941-KC-practice_Instance_10014">
         <mentionClass id="Noun Phrase">Noun Phrase</mentionClass>
     </classMention>
 
-    <annotation>
+    <conceptAnnotation>
         <mention id="11319941-KC-practice_Instance_20060"/>
         <annotator id="11319941_AL_Instance_0">gold</annotator>
         <span start="28770" end="28782"/>
         <spannedText>the striatum</spannedText>
-    </annotation>
+    </conceptAnnotation>
     <classMention id="11319941-KC-practice_Instance_20060">
         <mentionClass id="Noun Phrase">Noun Phrase</mentionClass>
     </classMention>
 
-    <annotation>
+    <conceptAnnotation>
         <mention id="11319941-KC-practice_Instance_20062"/>
         <annotator id="11319941_AL_Instance_0">gold</annotator>
         <span start="29355" end="29367"/>
         <spannedText>the striatum</spannedText>
-    </annotation>
-    <annotation>
+    </conceptAnnotation>
+    <conceptAnnotation>
         <mention id="11319941-KC-practice_Instance_20064"/>
         <annotator id="11319941_AL_Instance_0">gold</annotator>
         <span start="29810" end="29822"/>
         <spannedText>the striatum</spannedText>
-    </annotation>
-    <annotation>
+    </conceptAnnotation>
+    <conceptAnnotation>
         <mention id="11319941-KC-practice_Instance_20066"/>
         <annotator id="11319941_AL_Instance_0">gold</annotator>
         <span start="29826" end="29829"/>
         <spannedText>its</spannedText>
-    </annotation>
+    </conceptAnnotation>
     <classMention id="11319941-KC-practice_Instance_20062">
         <mentionClass id="Noun Phrase">Noun Phrase</mentionClass>
     </classMention>
@@ -133,4 +133,4 @@
     <classMention id="11319941-KC-practice_Instance_20066">
         <mentionClass id="Noun Phrase">Noun Phrase</mentionClass>
     </classMention>
-</annotations>
+</conceptAnnotations>

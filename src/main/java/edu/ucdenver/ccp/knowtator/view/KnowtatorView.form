@@ -171,7 +171,7 @@
                   <minimumSize width="50" height="50"/>
                   <preferredSize width="50" height="50"/>
                   <text value=""/>
-                  <toolTipText resource-bundle="ui" key="add.annotation"/>
+                  <toolTipText resource-bundle="ui" key="add.conceptAnnotation"/>
                 </properties>
               </component>
               <component id="4cab1" class="javax.swing.JButton" binding="removeAnnotationButton">
@@ -182,7 +182,7 @@
                   <minimumSize width="50" height="50"/>
                   <preferredSize width="50" height="50"/>
                   <text value=""/>
-                  <toolTipText resource-bundle="ui" key="remove.annotation"/>
+                  <toolTipText resource-bundle="ui" key="remove.conceptAnnotation"/>
                 </properties>
               </component>
               <component id="f7b38" class="javax.swing.JButton" binding="previousSpanButton">
@@ -269,13 +269,13 @@
                   <minimumSize width="100" height="50"/>
                   <preferredSize width="100" height="50"/>
                   <text resource-bundle="ui" key="profile.filter"/>
-                  <toolTipText resource-bundle="ui" key="filter.annotations.by.profile"/>
+                  <toolTipText resource-bundle="ui" key="filter.conceptAnnotations.by.profile"/>
                 </properties>
               </component>
               <component id="3b89c" class="javax.swing.JCheckBox" binding="classFilterCheckBox">
                 <constraints/>
                 <properties>
-                  <text value="OWL Class Filter"/>
+                  <text resource-bundle="log4j" key="owl.class.filter"/>
                 </properties>
               </component>
             </children>

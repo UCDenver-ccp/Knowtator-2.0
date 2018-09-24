@@ -3,8 +3,8 @@ package edu.ucdenver.ccp.knowtator.iaa.html;
 import edu.ucdenver.ccp.knowtator.iaa.AnnotationSpanIndex;
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher;
-import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
-import edu.ucdenver.ccp.knowtator.model.text.annotation.Span;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,8 +19,8 @@ public class IAA2HTML {
 			Matcher matcher,
 			File directory,
 			int numberOfDocs,
-			Map<Annotation, String> annotationTexts,
-			Map<Annotation, String> annotationTextNames)
+			Map<ConceptAnnotation, String> annotationTexts,
+			Map<ConceptAnnotation, String> annotationTextNames)
 			throws Exception {
 		NumberFormat percentageFormat = NumberFormat.getPercentInstance();
 		percentageFormat.setMinimumFractionDigits(2);
@@ -50,19 +50,19 @@ public class IAA2HTML {
 		Set<String> classes = iaa.getAnnotationClasses();
 		Set<String> sets = iaa.getSetNames();
 
-		Map<String, Set<Annotation>> allwayMatches = iaa.getAllwayMatches();
-		Map<String, Set<Annotation>> nontrivialAllwayMatches = iaa.getNontrivialAllwayMatches();
-		Map<String, Set<Annotation>> trivialAllwayMatches = iaa.getTrivialAllwayMatches();
-		Map<String, Set<Annotation>> allwayNonmatches = iaa.getAllwayNonmatches();
-		Map<String, Set<Annotation>> nontrivialAllwayNonmatches = iaa.getNontrivialAllwayNonmatches();
-		Map<String, Set<Annotation>> trivialAllwayNonmatches = iaa.getTrivialAllwayNonmatches();
+		Map<String, Set<ConceptAnnotation>> allwayMatches = iaa.getAllwayMatches();
+		Map<String, Set<ConceptAnnotation>> nontrivialAllwayMatches = iaa.getNontrivialAllwayMatches();
+		Map<String, Set<ConceptAnnotation>> trivialAllwayMatches = iaa.getTrivialAllwayMatches();
+		Map<String, Set<ConceptAnnotation>> allwayNonmatches = iaa.getAllwayNonmatches();
+		Map<String, Set<ConceptAnnotation>> nontrivialAllwayNonmatches = iaa.getNontrivialAllwayNonmatches();
+		Map<String, Set<ConceptAnnotation>> trivialAllwayNonmatches = iaa.getTrivialAllwayNonmatches();
 
-		Set<Annotation> allwayMatchesSingleSet = getSingleSet(allwayMatches);
-		Set<Annotation> trivialAllwayMatchesSingleSet = getSingleSet(trivialAllwayMatches);
-		Set<Annotation> nontrivialAllwayMatchesSingleSet = getSingleSet(nontrivialAllwayMatches);
-		Set<Annotation> allwayNonmatchesSingleSet = getSingleSet(allwayNonmatches);
-		Set<Annotation> trivialAllwayNonmatchesSingleSet = getSingleSet(trivialAllwayNonmatches);
-		Set<Annotation> nontrivialAllwayNonmatchesSingleSet = getSingleSet(nontrivialAllwayNonmatches);
+		Set<ConceptAnnotation> allwayMatchesSingleSet = getSingleSet(allwayMatches);
+		Set<ConceptAnnotation> trivialAllwayMatchesSingleSet = getSingleSet(trivialAllwayMatches);
+		Set<ConceptAnnotation> nontrivialAllwayMatchesSingleSet = getSingleSet(nontrivialAllwayMatches);
+		Set<ConceptAnnotation> allwayNonmatchesSingleSet = getSingleSet(allwayNonmatches);
+		Set<ConceptAnnotation> trivialAllwayNonmatchesSingleSet = getSingleSet(trivialAllwayNonmatches);
+		Set<ConceptAnnotation> nontrivialAllwayNonmatchesSingleSet = getSingleSet(nontrivialAllwayNonmatches);
 
 		AnnotationSpanIndex spanIndex = new AnnotationSpanIndex(allwayNonmatchesSingleSet);
 
@@ -147,16 +147,16 @@ public class IAA2HTML {
 			tabular.println("All classes\t" + totalAllwayMatches + "\t" + totalAllwayNonmatches);
 		}
 
-		Map<String, Set<Annotation>> sortedAllwayMatches = sortByType(classes, allwayMatchesSingleSet);
-		Map<String, Set<Annotation>> sortedAllwayTrivialMatches =
+		Map<String, Set<ConceptAnnotation>> sortedAllwayMatches = sortByType(classes, allwayMatchesSingleSet);
+		Map<String, Set<ConceptAnnotation>> sortedAllwayTrivialMatches =
 				sortByType(classes, trivialAllwayMatchesSingleSet);
-		Map<String, Set<Annotation>> sortedAllwayNontrivialMatches =
+		Map<String, Set<ConceptAnnotation>> sortedAllwayNontrivialMatches =
 				sortByType(classes, nontrivialAllwayMatchesSingleSet);
-		Map<String, Set<Annotation>> sortedAllwayNonmatches =
+		Map<String, Set<ConceptAnnotation>> sortedAllwayNonmatches =
 				sortByType(classes, allwayNonmatchesSingleSet);
-		Map<String, Set<Annotation>> sortedAllwayTrivialNonmatches =
+		Map<String, Set<ConceptAnnotation>> sortedAllwayTrivialNonmatches =
 				sortByType(classes, trivialAllwayNonmatchesSingleSet);
-		Map<String, Set<Annotation>> sortedAllwayNontrivialNonmatches =
+		Map<String, Set<ConceptAnnotation>> sortedAllwayNontrivialNonmatches =
 				sortByType(classes, nontrivialAllwayNonmatchesSingleSet);
 
 		List<String> sortedTypes = new ArrayList<>(classes);
@@ -278,8 +278,8 @@ public class IAA2HTML {
 				trivialAllwayNonmatches,
 				nontrivialAllwayNonmatches);
 
-		Map<String, Map<String, Set<Annotation>>> pairwiseMatches = iaa.getPairwiseMatches();
-		Map<String, Map<String, Set<Annotation>>> pairwiseNonmatches = iaa.getPairwiseNonmatches();
+		Map<String, Map<String, Set<ConceptAnnotation>>> pairwiseMatches = iaa.getPairwiseMatches();
+		Map<String, Map<String, Set<ConceptAnnotation>>> pairwiseNonmatches = iaa.getPairwiseNonmatches();
 
 		printPairwiseAgreement(html, sets, pairwiseMatches, pairwiseNonmatches, percentageFormat);
 
@@ -294,34 +294,34 @@ public class IAA2HTML {
 			Set<String> sets,
 			String fileName,
 			File directory,
-			Map<String, Set<Annotation>> allwayMatches,
+			Map<String, Set<ConceptAnnotation>> allwayMatches,
 			Set<String> classes,
 			List<String> sortedTypes,
-			Map<Annotation, String> annotationTexts,
-			Map<Annotation, String> annotationTextNames,
+			Map<ConceptAnnotation, String> annotationTexts,
+			Map<ConceptAnnotation, String> annotationTextNames,
 			Matcher matcher,
-			Map<String, Set<Annotation>> trivialAllwayMatches,
-			Map<String, Set<Annotation>> nontrivialAllwayMatches,
+			Map<String, Set<ConceptAnnotation>> trivialAllwayMatches,
+			Map<String, Set<ConceptAnnotation>> nontrivialAllwayMatches,
 			IAA iaa)
 			throws Exception {
 		html.println("<h2>match data</h2>");
 		html.println("<ul>");
 
-		Map<Annotation, Set<Annotation>> matchSets = iaa.getAllwayMatchSets();
+		Map<ConceptAnnotation, Set<ConceptAnnotation>> matchSets = iaa.getAllwayMatchSets();
 
 		for (String set : sets) {
 			String matchesFileName = fileName + ".matches." + set + ".html";
 			html.println("<li><a href=\"" + matchesFileName + "\">matches for " + set + "</a></li>");
 			PrintStream matchesStream = new PrintStream(new File(directory, matchesFileName));
-			Set<Annotation> matches = allwayMatches.get(set);
-			Map<String, Set<Annotation>> sortedMatches = sortByType(classes, matches);
+			Set<ConceptAnnotation> matches = allwayMatches.get(set);
+			Map<String, Set<ConceptAnnotation>> sortedMatches = sortByType(classes, matches);
 
 			initHTML(
 					matchesStream,
 					"Matches for " + set,
 					fileName + ".html",
 					fileName,
-					"Each annotation that was considered a match is shown in the text that it was found in.  The matching annotations from the other annotation sets are also shown.");
+					"Each concept that was considered a match is shown in the text that it was found in.  The matching annotations from the other concept sets are also shown.");
 			printInstances(
 					matchesStream,
 					sortedMatches,
@@ -342,14 +342,14 @@ public class IAA2HTML {
 								+ "</a></li>");
 				PrintStream trivialMatchesStream =
 						new PrintStream(new File(directory, trivialMatchesFileName));
-				Set<Annotation> trivialMatches = trivialAllwayMatches.get(set);
-				Map<String, Set<Annotation>> sortedTrivialMatches = sortByType(classes, trivialMatches);
+				Set<ConceptAnnotation> trivialMatches = trivialAllwayMatches.get(set);
+				Map<String, Set<ConceptAnnotation>> sortedTrivialMatches = sortByType(classes, trivialMatches);
 				initHTML(
 						trivialMatchesStream,
 						"Trivial matches for " + set,
 						fileName + ".html",
 						fileName,
-						"Each annotation that was considered a trival match is shown in the text that it was found in.  The matching annotations from the other annotation sets are also shown.");
+						"Each concept that was considered a trival match is shown in the text that it was found in.  The matching annotations from the other concept sets are also shown.");
 				printInstances(
 						trivialMatchesStream,
 						sortedTrivialMatches,
@@ -369,15 +369,15 @@ public class IAA2HTML {
 								+ "</a></li>");
 				PrintStream nontrivialMatchesStream =
 						new PrintStream(new File(directory, nontrivialMatchesFileName));
-				Set<Annotation> nontrivialMatches = nontrivialAllwayMatches.get(set);
-				Map<String, Set<Annotation>> sortedNontrivialMatches =
+				Set<ConceptAnnotation> nontrivialMatches = nontrivialAllwayMatches.get(set);
+				Map<String, Set<ConceptAnnotation>> sortedNontrivialMatches =
 						sortByType(classes, nontrivialMatches);
 				initHTML(
 						nontrivialMatchesStream,
 						"non-trivial non-matches for " + set,
 						fileName + ".html",
 						fileName,
-						"Each annotation that was considered a non-trival match is shown in the text that it was found in.  The matching from the other annotation sets are also shown.");
+						"Each concept that was considered a non-trival match is shown in the text that it was found in.  The matching from the other concept sets are also shown.");
 				printInstances(
 						nontrivialMatchesStream,
 						sortedNontrivialMatches,
@@ -397,15 +397,15 @@ public class IAA2HTML {
 			Set<String> sets,
 			String fileName,
 			File directory,
-			Map<String, Set<Annotation>> allwayNonmatches,
+			Map<String, Set<ConceptAnnotation>> allwayNonmatches,
 			Set<String> classes,
 			AnnotationSpanIndex spanIndex,
 			List<String> sortedTypes,
-			Map<Annotation, String> annotationTexts,
-			Map<Annotation, String> annotationTextNames,
+			Map<ConceptAnnotation, String> annotationTexts,
+			Map<ConceptAnnotation, String> annotationTextNames,
 			Matcher matcher,
-			Map<String, Set<Annotation>> trivialAllwayNonmatches,
-			Map<String, Set<Annotation>> nontrivialAllwayNonmatches)
+			Map<String, Set<ConceptAnnotation>> trivialAllwayNonmatches,
+			Map<String, Set<ConceptAnnotation>> nontrivialAllwayNonmatches)
 			throws Exception {
 		html.println("<h2>non-match data</h2>");
 		html.println("<ul>");
@@ -414,11 +414,11 @@ public class IAA2HTML {
 			String errorsFileName = fileName + ".nonmatches." + set + ".html";
 			html.println("<li><a href=\"" + errorsFileName + "\">non-matches for " + set + "</a></li>");
 			PrintStream errors = new PrintStream(new File(directory, errorsFileName));
-			Set<Annotation> nonmatches = allwayNonmatches.get(set);
-			Map<String, Set<Annotation>> sortedNonmatches = sortByType(classes, nonmatches);
+			Set<ConceptAnnotation> nonmatches = allwayNonmatches.get(set);
+			Map<String, Set<ConceptAnnotation>> sortedNonmatches = sortByType(classes, nonmatches);
 
-			Map<Annotation, Set<Annotation>> comparisonAnnotations = new HashMap<>();
-			for (Annotation nonmatch : nonmatches) {
+			Map<ConceptAnnotation, Set<ConceptAnnotation>> comparisonAnnotations = new HashMap<>();
+			for (ConceptAnnotation nonmatch : nonmatches) {
 				comparisonAnnotations.put(nonmatch, getCandidateAnnotations(nonmatch, spanIndex));
 			}
 
@@ -427,7 +427,7 @@ public class IAA2HTML {
 					"Non-matches for " + set,
 					fileName + ".html",
 					fileName,
-					"Each annotation that was considered a non-match is shown in the text that it was found in.  Overlapping annotations from the other annotation sets are also shown.");
+					"Each concept that was considered a non-match is shown in the text that it was found in.  Overlapping annotations from the other concept sets are also shown.");
 			printInstances(
 					errors,
 					sortedNonmatches,
@@ -447,15 +447,15 @@ public class IAA2HTML {
 								+ set
 								+ "</a></li>");
 				PrintStream trivialErrors = new PrintStream(new File(directory, trivialNonMatchesFileName));
-				Set<Annotation> trivialNonmatches = trivialAllwayNonmatches.get(set);
-				Map<String, Set<Annotation>> sortedTrivialNonmatches =
+				Set<ConceptAnnotation> trivialNonmatches = trivialAllwayNonmatches.get(set);
+				Map<String, Set<ConceptAnnotation>> sortedTrivialNonmatches =
 						sortByType(classes, trivialNonmatches);
 				initHTML(
 						trivialErrors,
 						"Trivial non-matches for " + set,
 						fileName + ".html",
 						fileName,
-						"Each annotation that was considered a trival non-match is shown in the text that it was found in.  Overlapping annotations from the other annotation sets are also shown.");
+						"Each concept that was considered a trival non-match is shown in the text that it was found in.  Overlapping annotations from the other concept sets are also shown.");
 				printInstances(
 						trivialErrors,
 						sortedTrivialNonmatches,
@@ -475,15 +475,15 @@ public class IAA2HTML {
 								+ "</a></li>");
 				PrintStream nontrivialErrors =
 						new PrintStream(new File(directory, nontrivialNonMatchesFileName));
-				Set<Annotation> nontrivialNonmatches = nontrivialAllwayNonmatches.get(set);
-				Map<String, Set<Annotation>> sortedNontrivialNonmatches =
+				Set<ConceptAnnotation> nontrivialNonmatches = nontrivialAllwayNonmatches.get(set);
+				Map<String, Set<ConceptAnnotation>> sortedNontrivialNonmatches =
 						sortByType(classes, nontrivialNonmatches);
 				initHTML(
 						nontrivialErrors,
 						"non-trivial non-matches for " + set,
 						fileName + ".html",
 						fileName,
-						"Each annotation that was considered a non-trival non-match is shown in the text that it was found in.  Overlapping annotations from the other annotation sets are also shown.");
+						"Each concept that was considered a non-trival non-match is shown in the text that it was found in.  Overlapping annotations from the other concept sets are also shown.");
 				printInstances(
 						nontrivialErrors,
 						sortedNontrivialNonmatches,
@@ -498,48 +498,48 @@ public class IAA2HTML {
 		html.println("</ul><hr>");
 	}
 
-	private static Set<Annotation> getCandidateAnnotations(
-			Annotation annotation, AnnotationSpanIndex spanIndex) {
-		Set<Annotation> candidateAnnotations = new HashSet<>();
-		String set = annotation.getAnnotator().getId();
-		String docID = annotation.getTextSource().getId();
+	private static Set<ConceptAnnotation> getCandidateAnnotations(
+            ConceptAnnotation conceptAnnotation, AnnotationSpanIndex spanIndex) {
+		Set<ConceptAnnotation> candidateConceptAnnotations = new HashSet<>();
+		String set = conceptAnnotation.getAnnotator().getId();
+		String docID = conceptAnnotation.getTextSource().getId();
 
-		Set<Annotation> overlappingAnnotations = spanIndex.getOverlappingAnnotations(annotation);
-		for (Annotation overlappingAnnotation : overlappingAnnotations) {
-			String candidateAnnotationSet = overlappingAnnotation.getAnnotator().getId();
+		Set<ConceptAnnotation> overlappingConceptAnnotations = spanIndex.getOverlappingAnnotations(conceptAnnotation);
+		for (ConceptAnnotation overlappingConceptAnnotation : overlappingConceptAnnotations) {
+			String candidateAnnotationSet = overlappingConceptAnnotation.getAnnotator().getId();
 			if (!candidateAnnotationSet.equals(set)) {
-				String candidateDocID = overlappingAnnotation.getTextSource().getId();
+				String candidateDocID = overlappingConceptAnnotation.getTextSource().getId();
 				if (candidateDocID.equals(docID)) {
-					candidateAnnotations.add(overlappingAnnotation);
+					candidateConceptAnnotations.add(overlappingConceptAnnotation);
 				}
 			}
 		}
-		return candidateAnnotations;
+		return candidateConceptAnnotations;
 	}
 
 	private static void printInstances(
 			PrintStream out,
-			Map<String, Set<Annotation>> sortedAnnotations,
+			Map<String, Set<ConceptAnnotation>> sortedAnnotations,
 			List<String> sortedTypes,
-			Map<Annotation, String> annotationTexts,
-			Map<Annotation, String> annotationTextNames,
-			Map<Annotation, Set<Annotation>> comparisonAnnotations) {
+			Map<ConceptAnnotation, String> annotationTexts,
+			Map<ConceptAnnotation, String> annotationTextNames,
+			Map<ConceptAnnotation, Set<ConceptAnnotation>> comparisonAnnotations) {
 		for (String type : sortedTypes) {
 			out.println("<h2>" + type + "</h2>");
-			Set<Annotation> typeAnnotations = sortedAnnotations.get(type);
-			for (Annotation annotation : typeAnnotations) {
+			Set<ConceptAnnotation> typeConceptAnnotations = sortedAnnotations.get(type);
+			for (ConceptAnnotation conceptAnnotation : typeConceptAnnotations) {
 				writeAnnotationTextSourceHTML(
-						out, annotation, annotationTexts.get(annotation), annotationTextNames.get(annotation));
+						out, conceptAnnotation, annotationTexts.get(conceptAnnotation), annotationTextNames.get(conceptAnnotation));
 				out.println("<ul><li>");
-				printAnnotationHTML(out, annotation, annotationTexts.get(annotation));
+				printAnnotationHTML(out, conceptAnnotation, annotationTexts.get(conceptAnnotation));
 
-				Set<Annotation> comparisons = comparisonAnnotations.get(annotation);
+				Set<ConceptAnnotation> comparisons = comparisonAnnotations.get(conceptAnnotation);
 				if (comparisons != null) {
-					for (Annotation comparisonAnnotation : comparisons) {
-						if (!comparisonAnnotation.equals(annotation)) {
+					for (ConceptAnnotation comparisonConceptAnnotation : comparisons) {
+						if (!comparisonConceptAnnotation.equals(conceptAnnotation)) {
 							out.println("<li>");
 							printAnnotationHTML(
-									out, comparisonAnnotation, annotationTexts.get(comparisonAnnotation));
+									out, comparisonConceptAnnotation, annotationTexts.get(comparisonConceptAnnotation));
 						}
 					}
 				}
@@ -548,8 +548,8 @@ public class IAA2HTML {
 		}
 	}
 
-	static Set<Annotation> getSingleSet(Map<String, Set<Annotation>> annotations) {
-		Set<Annotation> returnValues = new HashSet<>();
+	static Set<ConceptAnnotation> getSingleSet(Map<String, Set<ConceptAnnotation>> annotations) {
+		Set<ConceptAnnotation> returnValues = new HashSet<>();
 		for (String setName : annotations.keySet()) {
 			returnValues.addAll(annotations.get(setName));
 		}
@@ -567,28 +567,28 @@ public class IAA2HTML {
 		html.println("<hr>");
 	}
 
-	static Map<String, Set<Annotation>> sortByType(
-			Set<String> types, Collection<Annotation> annotations) {
-		Map<String, Set<Annotation>> sortedAnnotations = new HashMap<>();
+	static Map<String, Set<ConceptAnnotation>> sortByType(
+			Set<String> types, Collection<ConceptAnnotation> conceptAnnotations) {
+		Map<String, Set<ConceptAnnotation>> sortedAnnotations = new HashMap<>();
 
 		for (String type : types) {
 			sortedAnnotations.put(type, new HashSet<>());
 		}
-		for (Annotation annotation : annotations) {
-			String type = annotation.getOwlClass().toString();
-			sortedAnnotations.get(type).add(annotation);
+		for (ConceptAnnotation conceptAnnotation : conceptAnnotations) {
+			String type = conceptAnnotation.getOwlClass().toString();
+			sortedAnnotations.get(type).add(conceptAnnotation);
 		}
 		return sortedAnnotations;
 	}
 
 	private static void writeAnnotationTextSourceHTML(
-			PrintStream out, Annotation annotation, String annotationText, String annotationTextName) {
+            PrintStream out, ConceptAnnotation conceptAnnotation, String annotationText, String annotationTextName) {
 		StringBuilder html = new StringBuilder("<hr><p>");
 		if (annotationTextName != null)
 			html.append("Text source docID = ").append(annotationTextName).append("<p>");
 
 		if (annotationText != null) {
-			TreeSet<Span> spans = annotation.getSpanManager().getCollection();
+			TreeSet<Span> spans = conceptAnnotation.getSpanCollection().getCollection();
 			List<Span> modifiedSpans = new ArrayList<>(spans);
 
 			annotationText = shortenText(annotationText, modifiedSpans);
@@ -630,14 +630,14 @@ public class IAA2HTML {
 	}
 
 	private static void printAnnotationHTML(
-			PrintStream out, Annotation annotation, String annotationText) {
+            PrintStream out, ConceptAnnotation conceptAnnotation, String annotationText) {
 		StringBuilder html = new StringBuilder();
 
 		if (annotationText != null) {
-			String coveredText = IAA.getCoveredText(annotation, annotationText, " ... ");
+			String coveredText = IAA.getCoveredText(conceptAnnotation, annotationText, " ... ");
 			html.append(coveredText);
 		}
-		html.append("  ").append(annotation.toHTML());
+		html.append("  ").append(conceptAnnotation.toHTML());
 		out.print(html.toString());
 	}
 
@@ -700,9 +700,9 @@ public class IAA2HTML {
 			Set<String> sets,
 			String fileName,
 			File directory,
-			Map<String, Set<Annotation>> allwayMatches,
-			Map<Annotation, String> annotationTexts,
-			Map<Annotation, String> annotationTextNames,
+			Map<String, Set<ConceptAnnotation>> allwayMatches,
+			Map<ConceptAnnotation, String> annotationTexts,
+			Map<ConceptAnnotation, String> annotationTextNames,
 			Set<String> classes,
 			IAA iaa)
 			throws IOException {
@@ -710,7 +710,7 @@ public class IAA2HTML {
 		html.println("<h2>match data</h2>");
 		html.println("<ul>");
 
-		Map<Annotation, Set<Annotation>> matchSets = iaa.getAllwayMatchSets();
+		Map<ConceptAnnotation, Set<ConceptAnnotation>> matchSets = iaa.getAllwayMatchSets();
 		List<String> sortedTypes = new ArrayList<>(classes);
 		Collections.sort(sortedTypes);
 
@@ -718,13 +718,13 @@ public class IAA2HTML {
 			String matchesFileName = fileName + ".matches." + set + ".html";
 			html.println("<li><a href=\"" + matchesFileName + "\">matches for " + set + "</a></li>");
 			PrintStream matchesStream = new PrintStream(new File(directory, matchesFileName));
-			Set<Annotation> matches = allwayMatches.get(set);
-			Map<String, Set<Annotation>> sortedMatches = IAA2HTML.sortByType(classes, matches);
+			Set<ConceptAnnotation> matches = allwayMatches.get(set);
+			Map<String, Set<ConceptAnnotation>> sortedMatches = IAA2HTML.sortByType(classes, matches);
 
 			matchesStream.println(
 					initHTML(
 							"Matches for " + set,
-							"Each annotation that was considered a match is shown in the text that it was found in.  The matching annotations from the other annotation sets are also shown."));
+							"Each concept that was considered a match is shown in the text that it was found in.  The matching annotations from the other concept sets are also shown."));
 			IAA2HTML.printInstances(
 					matchesStream,
 					sortedMatches,
@@ -743,10 +743,10 @@ public class IAA2HTML {
 			Set<String> sets,
 			String fileName,
 			File directory,
-			Map<String, Set<Annotation>> allwayNonmatches,
+			Map<String, Set<ConceptAnnotation>> allwayNonmatches,
 			AnnotationSpanIndex spanIndex,
-			Map<Annotation, String> annotationTexts,
-			Map<Annotation, String> annotationTextNames,
+			Map<ConceptAnnotation, String> annotationTexts,
+			Map<ConceptAnnotation, String> annotationTextNames,
 			Set<String> classes)
 			throws IOException {
 		html.println("<h2>non-match data</h2>");
@@ -759,18 +759,18 @@ public class IAA2HTML {
 			String errorsFileName = fileName + ".nonmatches." + set + ".html";
 			html.println("<li><a href=\"" + errorsFileName + "\">non-matches for " + set + "</a></li>");
 			PrintStream errors = new PrintStream(new File(directory, errorsFileName));
-			Set<Annotation> nonmatches = allwayNonmatches.get(set);
-			Map<String, Set<Annotation>> sortedNonmatches = IAA2HTML.sortByType(classes, nonmatches);
+			Set<ConceptAnnotation> nonmatches = allwayNonmatches.get(set);
+			Map<String, Set<ConceptAnnotation>> sortedNonmatches = IAA2HTML.sortByType(classes, nonmatches);
 
-			Map<Annotation, Set<Annotation>> comparisonAnnotations = new HashMap<>();
-			for (Annotation nonmatch : nonmatches) {
+			Map<ConceptAnnotation, Set<ConceptAnnotation>> comparisonAnnotations = new HashMap<>();
+			for (ConceptAnnotation nonmatch : nonmatches) {
 				comparisonAnnotations.put(nonmatch, IAA2HTML.getCandidateAnnotations(nonmatch, spanIndex));
 			}
 
 			errors.println(
 					initHTML(
 							"Non-matches for " + set,
-							"Each annotation that was considered a non-match is shown in the text that it was found in.  Overlapping annotations from the other annotation sets are also shown."));
+							"Each concept that was considered a non-match is shown in the text that it was found in.  Overlapping annotations from the other concept sets are also shown."));
 			IAA2HTML.printInstances(
 					errors,
 					sortedNonmatches,
@@ -787,8 +787,8 @@ public class IAA2HTML {
 	static void printPairwiseAgreement(
 			PrintStream html,
 			Set<String> sets,
-			Map<String, Map<String, Set<Annotation>>> pairwiseMatches,
-			Map<String, Map<String, Set<Annotation>>> pairwiseNonmatches,
+			Map<String, Map<String, Set<ConceptAnnotation>>> pairwiseMatches,
+			Map<String, Map<String, Set<ConceptAnnotation>>> pairwiseNonmatches,
 			NumberFormat percentageFormat) {
 		html.println("<h2>Pair-wise agreement</h2>");
 		html.println(
@@ -805,9 +805,9 @@ public class IAA2HTML {
 			for (String setName2 : sets) {
 
 				if (!setName.equals(setName2)) {
-					Set<Annotation> truePositives = pairwiseMatches.get(setName).get(setName2);
-					Set<Annotation> falseNegatives = pairwiseNonmatches.get(setName).get(setName2);
-					Set<Annotation> falsePositives = pairwiseNonmatches.get(setName2).get(setName);
+					Set<ConceptAnnotation> truePositives = pairwiseMatches.get(setName).get(setName2);
+					Set<ConceptAnnotation> falseNegatives = pairwiseNonmatches.get(setName).get(setName2);
+					Set<ConceptAnnotation> falsePositives = pairwiseNonmatches.get(setName2).get(setName);
 					double precision =
 							(double) truePositives.size()
 									/ ((double) truePositives.size() + (double) falsePositives.size());
@@ -852,18 +852,18 @@ public class IAA2HTML {
 // for(String type : sortedTypes)
 // {
 // errors.println("<h2>"+type+"</h2>");
-// Set<annotation> typeNonmatches = sortedNonmatches.get(type);
-// for(annotation annotation : typeNonmatches)
+// Set<concept> typeNonmatches = sortedNonmatches.get(type);
+// for(concept concept : typeNonmatches)
 // {
-// String docID = annotation.getId();
-// writeAnnotationTextSourceHTML(errors, annotation,
-// annotationTexts.get(annotation), annotationTextNames.get(annotation));
+// String docID = concept.getId();
+// writeAnnotationTextSourceHTML(errors, concept,
+// annotationTexts.get(concept), annotationTextNames.get(concept));
 // errors.println("<ul><li>");
-// printAnnotationHTML(errors, annotation, annotationTexts.get(annotation));
+// printAnnotationHTML(errors, concept, annotationTexts.get(concept));
 //
-// Set<annotation> candidateAnnotations =
-// spanIndex.getOverlappingAnnotations(annotation);
-// for(annotation candidateAnnotation : candidateAnnotations)
+// Set<concept> candidateAnnotations =
+// spanIndex.getOverlappingConceptAnnotations(concept);
+// for(concept candidateAnnotation : candidateAnnotations)
 // {
 // String candidateAnnotationSet = candidateAnnotation.getId();
 // if(!candidateAnnotationSet.equalStartAndEnd(set))
@@ -888,19 +888,19 @@ public class IAA2HTML {
 // );
 // PrintStream matchesStream = new PrintStream(new File(directory,
 // matchesFileName));
-// Set<annotation> matches = allwayMatches.get(set);
-// Map<String, Set<annotation>> sortedMatches = sortByType(classes, matches);
-// Map<annotation, Set<annotation>> matchSets = new HashMap<annotation,
-// Set<annotation>>();
-// for(annotation nonmatch : nonmatches)
+// Set<concept> matches = allwayMatches.get(set);
+// Map<String, Set<concept>> sortedMatches = sortByType(classes, matches);
+// Map<concept, Set<concept>> matchSets = new HashMap<concept,
+// Set<concept>>();
+// for(concept nonmatch : nonmatches)
 // {
 // comparisonAnnotations.put(nonmatch, getCandidateAnnotations(nonmatch,
 // spanIndex));
 // }
 //
 // initHTML(errors, "Non-matches for "+set, fileName+".html", fileName,
-// "Each annotation that was considered a non-match is shown in the text that it was found in.
-// Overlapping annotations from the other annotation sets are also shown."
+// "Each concept that was considered a non-match is shown in the text that it was found in.
+// Overlapping annotations from the other concept sets are also shown."
 // );
 // printInstances(errors, sortedNonmatches, sortedTypes, annotationTexts,
 // annotationTextNames, comparisonAnnotations);
@@ -927,74 +927,74 @@ public class IAA2HTML {
 // }
 // html.println("</ul>");
 //
-// Map<annotation, Set<annotation>> matchSets = iaa.getAllwayMatchSets();
+// Map<concept, Set<concept>> matchSets = iaa.getAllwayMatchSets();
 // initHTML(matchesStream, "Matches", fileName+".html", fileName,
-// "Each annotation that was considered a match is shown in the text that it was found in.
-// Annotations from each of annotation sets are shown because there may be differences in the
+// "Each concept that was considered a match is shown in the text that it was found in.
+// Annotations from each of concept sets are shown because there may be differences in the
 // individual annotations if the match criteria ignored those differences.  Only one of the
-// annotation's spans are bolded in the text."
+// concept's spans are bolded in the text."
 // );
 // if(matcher.returnsTrivials())
 // {
 // initHTML(trivialMatchesStream, "Trivial matches", fileName+".html", fileName,
-// "Each annotation that was considered a match is shown in the text that it was found in.
-// Annotations from each of annotation sets are shown because there may be differences in the
+// "Each concept that was considered a match is shown in the text that it was found in.
+// Annotations from each of concept sets are shown because there may be differences in the
 // individual annotations if the match criteria ignored those differences.  Only one of the
-// annotation's spans are bolded in the text."
+// concept's spans are bolded in the text."
 // );
 // initHTML(nontrivialMatchesStream, "Non-trivial matches", fileName+".html",
 // fileName,
-// "Each annotation that was considered a match is shown in the text that it was found in.
-// Annotations from each of annotation sets are shown because there may be differences in the
+// "Each concept that was considered a match is shown in the text that it was found in.
+// Annotations from each of concept sets are shown because there may be differences in the
 // individual annotations if the match criteria ignored those differences.  Only one of the
-// annotation's Span is bolded in the text."
+// concept's Span is bolded in the text."
 // );
 // }
 //
-// Set<annotation> printedAnnotations = new HashSet<annotation>();
+// Set<concept> printedAnnotations = new HashSet<concept>();
 // for(String type : sortedTypes)
 // {
 // matchesStream.println("<h2>"+type+"</h2>");
 // trivialMatchesStream.println("<h2>"+type+"</h2>");
 // nontrivialMatchesStream.println("<h2>"+type+"</h2>");
 //
-// Set<annotation> typeTrivialMatches = sortedAllwayTrivialMatches.get(type);
-// Set<annotation> typeNontrivialMatches =
+// Set<concept> typeTrivialMatches = sortedAllwayTrivialMatches.get(type);
+// Set<concept> typeNontrivialMatches =
 // sortedAllwayNontrivialMatches.get(type);
-// Set<annotation> typeMatches = sortedAllwayMatches.get(type);
+// Set<concept> typeMatches = sortedAllwayMatches.get(type);
 //
-// for(annotation annotation : typeMatches)
+// for(concept concept : typeMatches)
 // {
-// if(printedAnnotations.contains(annotation)) continue;
-// Set<annotation> matchSet = matchSets.get(annotation);
+// if(printedAnnotations.contains(concept)) continue;
+// Set<concept> matchSet = matchSets.get(concept);
 //
-// writeAnnotationTextSourceHTML(matchesStream, annotation,
-// annotationTexts.get(annotation), annotationTextNames.get(annotation));
+// writeAnnotationTextSourceHTML(matchesStream, concept,
+// annotationTexts.get(concept), annotationTextNames.get(concept));
 // matchesStream.println("<p>");
-// printAnnotationHTML(matchesStream, annotation,
-// annotationTexts.get(annotation));
-// if(typeTrivialMatches.contains(annotation) && matcher.returnsTrivials())
+// printAnnotationHTML(matchesStream, concept,
+// annotationTexts.get(concept));
+// if(typeTrivialMatches.contains(concept) && matcher.returnsTrivials())
 // {
-// writeAnnotationTextSourceHTML(trivialMatchesStream, annotation,
-// annotationTexts.get(annotation), annotationTextNames.get(annotation));
+// writeAnnotationTextSourceHTML(trivialMatchesStream, concept,
+// annotationTexts.get(concept), annotationTextNames.get(concept));
 // trivialMatchesStream.println("<p>");
-// printAnnotationHTML(trivialMatchesStream, annotation,
-// annotationTexts.get(annotation));
+// printAnnotationHTML(trivialMatchesStream, concept,
+// annotationTexts.get(concept));
 // }
-// else if(typeNontrivialMatches.contains(annotation) &&
+// else if(typeNontrivialMatches.contains(concept) &&
 // matcher.returnsTrivials())
 // {
-// writeAnnotationTextSourceHTML(nontrivialMatchesStream, annotation,
-// annotationTexts.get(annotation), annotationTextNames.get(annotation));
+// writeAnnotationTextSourceHTML(nontrivialMatchesStream, concept,
+// annotationTexts.get(concept), annotationTextNames.get(concept));
 // nontrivialMatchesStream.println("<p>");
-// printAnnotationHTML(nontrivialMatchesStream, annotation,
-// annotationTexts.get(annotation));
+// printAnnotationHTML(nontrivialMatchesStream, concept,
+// annotationTexts.get(concept));
 // }
 //
-// printedAnnotations.add(annotation);
-// for(annotation matchedAnnotation : matchSet)
+// printedAnnotations.add(concept);
+// for(concept matchedAnnotation : matchSet)
 // {
-// if(!matchedAnnotation.equalStartAndEnd(annotation))
+// if(!matchedAnnotation.equalStartAndEnd(concept))
 // {
 // printAnnotationHTML(matchesStream, matchedAnnotation,
 // annotationTexts.get(matchedAnnotation));

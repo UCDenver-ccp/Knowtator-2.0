@@ -1,15 +1,15 @@
 package edu.ucdenver.ccp.knowtator.model.text;
 
-import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
+import edu.ucdenver.ccp.knowtator.Savable;
+import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
-import edu.ucdenver.ccp.knowtator.Savable;
-import edu.ucdenver.ccp.knowtator.model.text.annotation.AnnotationManager;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceManager;
+import edu.ucdenver.ccp.knowtator.model.AbstractKnowtatorObject;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollection;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollection;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.LogManager;
@@ -26,29 +26,30 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-public class TextSource implements KnowtatorObject, BratStandoffIO, Savable, KnowtatorXMLIO {
+public class TextSource extends AbstractKnowtatorObject<TextSource> implements BratStandoffIO, Savable, KnowtatorXMLIO {
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(TextSource.class);
 
     private final KnowtatorController controller;
     private final File saveFile;
-    private AnnotationManager annotationManager;
-    private String id;
+    private ConceptAnnotationCollection conceptAnnotationCollection;
     private File textFile;
     private String content;
-    private GraphSpaceManager graphSpaceManager;
+    private GraphSpaceCollection graphSpaceCollection;
 
     public TextSource(KnowtatorController controller, File saveFile, String textFileName) {
+        super(null);
+
         this.controller = controller;
-        this.saveFile = saveFile == null ? new File(controller.getTextSourceManager().getAnnotationsLocation().getAbsolutePath(), textFileName.replace(".txt", "") + ".xml") : saveFile;
-        this.annotationManager = new AnnotationManager(controller, this);
-        this.graphSpaceManager = new GraphSpaceManager(controller, this);
+        this.saveFile = saveFile == null ? new File(controller.getTextSourceCollection().getAnnotationsLocation().getAbsolutePath(), textFileName.replace(".txt", "") + ".xml") : saveFile;
+        this.conceptAnnotationCollection = new ConceptAnnotationCollection(controller, this);
+        this.graphSpaceCollection = new GraphSpaceCollection(controller, this);
 
         controller.verifyId(FilenameUtils.getBaseName(textFileName), this, true);
 
         textFile =
                 new File(
-                        controller.getTextSourceManager().getArticlesLocation(),
+                        controller.getTextSourceCollection().getArticlesLocation(),
                         textFileName.endsWith(".txt") ? textFileName : textFileName + ".txt");
 
         if (!textFile.exists()) {
@@ -75,7 +76,7 @@ public class TextSource implements KnowtatorObject, BratStandoffIO, Savable, Kno
                                             Paths.get(file.toURI()),
                                             Paths.get(
                                                     controller
-                                                            .getTextSourceManager().getArticlesLocation()
+                                                            .getTextSourceCollection().getArticlesLocation()
                                                             .toURI()
                                                             .resolve(file.getName())))
                                             .toFile();
@@ -90,41 +91,29 @@ public class TextSource implements KnowtatorObject, BratStandoffIO, Savable, Kno
         }
     }
 
-    public static int compare(TextSource textSource1, TextSource textSource2) {
-        if (textSource1 == textSource2) {
+    @Override
+    public int compareTo(TextSource textSource2) {
+        if (this == textSource2) {
             return 0;
         }
         if (textSource2 == null) {
             return 1;
         }
-        if (textSource1 == null) {
-            return -1;
-        }
-        return textSource1.getId().toLowerCase().compareTo(textSource2.getId().toLowerCase());
+        return id.toLowerCase().compareTo(textSource2.getId().toLowerCase());
     }
 
     public File getTextFile() {
         return textFile;
     }
 
-    public AnnotationManager getAnnotationManager() {
-        return annotationManager;
-    }
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(String id) {
-        this.id = id;
+    public ConceptAnnotationCollection getConceptAnnotationCollection() {
+        return conceptAnnotationCollection;
     }
 
     @Override
     public void dispose() {
-        annotationManager.dispose();
-        graphSpaceManager.dispose();
+        conceptAnnotationCollection.dispose();
+        graphSpaceCollection.dispose();
     }
 
     @Override
@@ -134,8 +123,8 @@ public class TextSource implements KnowtatorObject, BratStandoffIO, Savable, Kno
 
     @Override
     public void readFromKnowtatorXML(File file, Element parent) {
-        annotationManager.readFromKnowtatorXML(null, parent);
-        graphSpaceManager.readFromKnowtatorXML(null, parent);
+        conceptAnnotationCollection.readFromKnowtatorXML(null, parent);
+        graphSpaceCollection.readFromKnowtatorXML(null, parent);
     }
 
     @Override
@@ -144,27 +133,27 @@ public class TextSource implements KnowtatorObject, BratStandoffIO, Savable, Kno
         parent.appendChild(textSourceElement);
         textSourceElement.setAttribute(KnowtatorXMLAttributes.ID, id);
         textSourceElement.setAttribute(KnowtatorXMLAttributes.FILE, textFile.getName());
-        annotationManager.writeToKnowtatorXML(dom, textSourceElement);
-        graphSpaceManager.writeToKnowtatorXML(dom, textSourceElement);
+        conceptAnnotationCollection.writeToKnowtatorXML(dom, textSourceElement);
+        graphSpaceCollection.writeToKnowtatorXML(dom, textSourceElement);
     }
 
     @Override
     public void readFromOldKnowtatorXML(File file, Element parent) {
-        annotationManager.readFromOldKnowtatorXML(null, parent);
-        graphSpaceManager.readFromOldKnowtatorXML(null, parent);
+        conceptAnnotationCollection.readFromOldKnowtatorXML(null, parent);
+        graphSpaceCollection.readFromOldKnowtatorXML(null, parent);
     }
 
     @Override
     public void readFromBratStandoff(
             File file, Map<Character, List<String[]>> annotationMap, String content) {
-        annotationManager.readFromBratStandoff(null, annotationMap, getContent());
-        graphSpaceManager.readFromBratStandoff(null, annotationMap, getContent());
+        conceptAnnotationCollection.readFromBratStandoff(null, annotationMap, getContent());
+        graphSpaceCollection.readFromBratStandoff(null, annotationMap, getContent());
     }
 
     @Override
     public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
-        annotationManager.writeToBratStandoff(writer, annotationsConfig, visualConfig);
-        graphSpaceManager.writeToBratStandoff(writer, annotationsConfig, visualConfig);
+        conceptAnnotationCollection.writeToBratStandoff(writer, annotationsConfig, visualConfig);
+        graphSpaceCollection.writeToBratStandoff(writer, annotationsConfig, visualConfig);
     }
 
     public String getContent() {
@@ -174,7 +163,7 @@ public class TextSource implements KnowtatorObject, BratStandoffIO, Savable, Kno
                     content = FileUtils.readFileToString(textFile, "UTF-8");
                     return content;
                 } catch (IOException e) {
-                    textFile = new File(controller.getTextSourceManager().getArticlesLocation(), id + ".txt");
+                    textFile = new File(controller.getTextSourceCollection().getArticlesLocation(), id + ".txt");
                     while (!textFile.exists()) {
                         JFileChooser fileChooser = new JFileChooser();
                         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -188,8 +177,8 @@ public class TextSource implements KnowtatorObject, BratStandoffIO, Savable, Kno
         }
     }
 
-    public GraphSpaceManager getGraphSpaceManager() {
-        return graphSpaceManager;
+    public GraphSpaceCollection getGraphSpaceCollection() {
+        return graphSpaceCollection;
     }
 
     @Override
@@ -204,13 +193,11 @@ public class TextSource implements KnowtatorObject, BratStandoffIO, Savable, Kno
 
     @Override
     public File getSaveLocation() {
-        return new File(controller.getTextSourceManager().getAnnotationsLocation().getAbsolutePath(), saveFile.getName());
+        return new File(controller.getTextSourceCollection().getAnnotationsLocation().getAbsolutePath(), saveFile.getName());
     }
 
     @Override
     public void setSaveLocation(File saveLocation) {
 
     }
-
-
 }

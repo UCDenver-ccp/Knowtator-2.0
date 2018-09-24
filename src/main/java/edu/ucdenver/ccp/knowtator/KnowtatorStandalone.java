@@ -3,8 +3,8 @@ package edu.ucdenver.ccp.knowtator;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.model.text.Fragment;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
-import edu.ucdenver.ccp.knowtator.model.text.annotation.Span;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.commons.cli.*;
 
@@ -93,25 +93,25 @@ public class KnowtatorStandalone extends JFrame {
         List<Fragment> fragmentList = new ArrayList<>();
 
         Iterator<TextSource> textSourceIterator1 =
-                conceptsController.getTextSourceManager().iterator();
+                conceptsController.getTextSourceCollection().iterator();
         Iterator<TextSource> textSourceIterator2 =
-                fragmentsController.getTextSourceManager().iterator();
+                fragmentsController.getTextSourceCollection().iterator();
         while (textSourceIterator1.hasNext()) {
             TextSource textSource1 = textSourceIterator1.next();
             TextSource textSource2 = textSourceIterator2.next();
 
-            for (Annotation fragmentAnnotation : textSource2.getAnnotationManager()) {
-                Span fragmentSpan = fragmentAnnotation.getSpanManager().iterator().next();
+            for (ConceptAnnotation fragmentConceptAnnotation : textSource2.getConceptAnnotationCollection()) {
+                Span fragmentSpan = fragmentConceptAnnotation.getSpanCollection().iterator().next();
 
                 Fragment fragment =
-                        new Fragment(textSource2, fragmentAnnotation.getId(), fragmentAnnotation.getOwlClassID());
+                        new Fragment(textSource2, fragmentConceptAnnotation.getId(), fragmentConceptAnnotation.getOwlClassID());
 
-                TreeSet<Annotation> conceptAnnotationsInFragmet =
+                TreeSet<ConceptAnnotation> conceptAnnotationsInFragmet =
                         textSource1
-                                .getAnnotationManager()
+                                .getConceptAnnotationCollection()
                                 .getAnnotations(fragmentSpan.getStart(), fragmentSpan.getStart());
 
-                for (Annotation conceptAnnotation : conceptAnnotationsInFragmet) {
+                for (ConceptAnnotation conceptAnnotation : conceptAnnotationsInFragmet) {
                     fragment.add(conceptAnnotation.getOwlClassID());
                 }
 
@@ -197,7 +197,7 @@ public class KnowtatorStandalone extends JFrame {
         }
 
 //        if (geniaOutputDirName != null) {
-//            controller.saveToFormat(GeniaXMLUtil.class, controller.getTextSourceManager(), new File(geniaOutputDirName));
+//            controller.saveToFormat(GeniaXMLUtil.class, controller.getTextSourceCollection(), new File(geniaOutputDirName));
 //        }
 
 //        if (uimaOutputDirName != null) {
@@ -205,7 +205,7 @@ public class KnowtatorStandalone extends JFrame {
 //        }
 
         if (bratOutputDirName != null) {
-            controller.saveToFormat(BratStandoffUtil.class, controller.getTextSourceManager(), new File(bratOutputDirName));
+            controller.saveToFormat(BratStandoffUtil.class, controller.getTextSourceCollection(), new File(bratOutputDirName));
         }
     }
 

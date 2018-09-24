@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.events;
 
-import edu.ucdenver.ccp.knowtator.model.text.annotation.Span;
+import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 
 public class SpanChangeEvent extends ChangeEvent<Span> {
 

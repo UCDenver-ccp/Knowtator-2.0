@@ -9,10 +9,12 @@ import com.mxgraph.swing.util.mxMorphing;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.listeners.ProjectListener;
-import edu.ucdenver.ccp.knowtator.listeners.ViewListener;
-import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollectionListener;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
 import org.apache.log4j.Logger;
@@ -24,7 +26,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class GraphView extends JPanel implements ViewListener, ProjectListener {
+public class GraphView extends JPanel implements ProjectListener, GraphSpaceCollectionListener {
     private JButton removeCellButton;
     private JButton addAnnotationNodeButton;
     private JButton applyLayoutButton;
@@ -57,8 +59,49 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
         this.view = view;
         $$$setupUI$$$();
         makeButtons();
-        view.getController().addViewListener(this);
-        view.getController().addViewListener(graphSpaceChooser);
+
+        GraphView graphView = this;
+
+        TextSourceCollectionListener textSourceCollectionListener = new TextSourceCollectionListener() {
+            @Override
+            public void updated(TextSource updatedItem) {
+
+            }
+
+            @Override
+            public void noSelection(TextSource previousSelection) {
+
+            }
+
+            @Override
+            public void selected(TextSource previousSelection, TextSource currentSelection) {
+                if (previousSelection != null) {
+                    previousSelection.getGraphSpaceCollection().removeCollectionListener(graphView);
+                }
+                currentSelection.getGraphSpaceCollection().addCollectionListener(graphView);
+            }
+
+            @Override
+            public void added(TextSource addedObject) {
+
+            }
+
+            @Override
+            public void removed(TextSource removedObject) {
+
+            }
+
+            @Override
+            public void emptied(TextSource object) {
+
+            }
+
+            @Override
+            public void firstAdded(TextSource object) {
+
+            }
+        };
+        view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
     }
 
     private void createUIComponents() {
@@ -71,15 +114,15 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 
     private void quantifierButtonAction(String quantifier) {
         view.getController()
-                .getTextSourceManager().getSelection()
-                .getGraphSpaceManager().getSelection()
+                .getTextSourceCollection().getSelection()
+                .getGraphSpaceCollection().getSelection()
                 .getRelationSelectionManager()
                 .setSelectedPropertyQuantifer(quantifier);
 
         if (quantifier.equals("some") || quantifier.equals("only")) {
             view.getController()
-                    .getTextSourceManager().getSelection()
-                    .getGraphSpaceManager().getSelection()
+                    .getTextSourceCollection().getSelection()
+                    .getGraphSpaceCollection().getSelection()
                     .getRelationSelectionManager()
                     .setSelectedRelationQuantifierValue("");
         }
@@ -87,8 +130,8 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 
     private void quantifierTextFieldAction(String quantifierValue) {
         view.getController()
-                .getTextSourceManager().getSelection()
-                .getGraphSpaceManager().getSelection()
+                .getTextSourceCollection().getSelection()
+                .getGraphSpaceCollection().getSelection()
                 .getRelationSelectionManager()
                 .setSelectedRelationQuantifierValue(quantifierValue);
     }
@@ -104,8 +147,8 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
         makeQuantifierTextField(exactlyValueTextField, exactlyRadioButton);
         negateCheckBox.addActionListener(
                 e -> view.getController()
-                        .getTextSourceManager().getSelection()
-                        .getGraphSpaceManager().getSelection()
+                        .getTextSourceCollection().getSelection()
+                        .getGraphSpaceCollection().getSelection()
                         .getRelationSelectionManager()
                         .setNegatation(negateCheckBox.isSelected()));
 
@@ -115,11 +158,11 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
                     if (comboBox.getSelectedItem() != null
                             && comboBox.getSelectedItem()
                             != view.getController()
-                            .getTextSourceManager().getSelection()
-                            .getGraphSpaceManager().getSelection()) {
+                            .getTextSourceCollection().getSelection()
+                            .getGraphSpaceCollection().getSelection()) {
                         view.getController()
-                                .getTextSourceManager().getSelection()
-                                .getGraphSpaceManager().setSelection((GraphSpace) comboBox.getSelectedItem());
+                                .getTextSourceCollection().getSelection()
+                                .getGraphSpaceCollection().setSelection((GraphSpace) comboBox.getSelectedItem());
                     }
 
                 });
@@ -128,27 +171,27 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
         zoomInButton.addActionListener(e -> graphComponent.zoomIn());
         previousGraphSpaceButton.addActionListener(
                 e -> view.getController()
-                        .getTextSourceManager().getSelection()
-                        .getGraphSpaceManager()
-                        .getPreviousGraphSpace());
+                        .getTextSourceCollection().getSelection()
+                        .getGraphSpaceCollection()
+                        .selectPrevious());
         nextGraphSpaceButton.addActionListener(
                 e -> view.getController()
-                        .getTextSourceManager().getSelection()
-                        .getGraphSpaceManager()
-                        .getNextGraphSpace());
+                        .getTextSourceCollection().getSelection()
+                        .getGraphSpaceCollection()
+                        .selectNext());
         removeCellButton.addActionListener(e -> removeSelectedCell());
         addAnnotationNodeButton.addActionListener(
                 e -> {
-                    Annotation annotation =
+                    ConceptAnnotation conceptAnnotation =
                             view.getController()
-                                    .getTextSourceManager().getSelection()
-                                    .getAnnotationManager().getSelection();
+                                    .getTextSourceCollection().getSelection()
+                                    .getConceptAnnotationCollection().getSelection();
 
                     AnnotationNode vertex =
                             view.getController()
-                                    .getTextSourceManager().getSelection()
-                                    .getGraphSpaceManager().getSelection()
-                                    .makeOrGetAnnotationNode(annotation, null);
+                                    .getTextSourceCollection().getSelection()
+                                    .getGraphSpaceCollection().getSelection()
+                                    .makeOrGetAnnotationNode(conceptAnnotation, null);
 
 
                     goToVertex(vertex);
@@ -180,12 +223,12 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
     }
 
     @SuppressWarnings("unused")
-    public void goToAnnotationVertex(GraphSpace graphSpace, Annotation annotation) {
-        if (annotation != null && graphSpace != null) {
+    public void goToAnnotationVertex(GraphSpace graphSpace, ConceptAnnotation conceptAnnotation) {
+        if (conceptAnnotation != null && graphSpace != null) {
             view.getController()
-                    .getTextSourceManager().getSelection()
-                    .getGraphSpaceManager().setSelection(graphSpace);
-            List<Object> vertices = graphSpace.getVerticesForAnnotation(annotation);
+                    .getTextSourceCollection().getSelection()
+                    .getGraphSpaceCollection().setSelection(graphSpace);
+            List<Object> vertices = graphSpace.getVerticesForAnnotation(conceptAnnotation);
             if (vertices.size() > 0) {
                 graphSpace.setSelectionCells(vertices);
                 goToVertex(vertices.get(0));
@@ -216,8 +259,8 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
         GraphSpace graph;
         graph =
                 view.getController()
-                        .getTextSourceManager().getSelection()
-                        .getGraphSpaceManager().getSelection();
+                        .getTextSourceCollection().getSelection()
+                        .getGraphSpaceCollection().getSelection();
 
         //		graph.reDrawGraph();
         mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
@@ -245,8 +288,8 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
 
     private void removeSelectedCell() {
         view.getController()
-                .getTextSourceManager().getSelection()
-                .getGraphSpaceManager().getSelection()
+                .getTextSourceCollection().getSelection()
+                .getGraphSpaceCollection().getSelection()
                 .removeSelectedCell();
     }
 
@@ -259,47 +302,6 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
     public void projectLoaded() {
     }
 
-
-    @Override
-    public void viewChanged() {
-        GraphSpace graphSpace =
-                view.getController()
-                        .getTextSourceManager().getSelection()
-                        .getGraphSpaceManager().getSelection();
-        if (graphSpace != null) {
-            String quantifier = graphSpace.getRelationSelectionManager().getSelectedRelationQuantifier();
-            if (quantifier != null) {
-                switch (quantifier) {
-                    case "only":
-                        onlyRadioButton.setSelected(true);
-                        break;
-                    case "exactly":
-                        exactlyRadioButton.setSelected(true);
-//						exactlyValueTextField.setText(
-//								graphSpace.getRelationSelectionManager().getSelectedRelationQuantifierValue());
-                        break;
-                    case "min":
-                        minRadioButton.setSelected(true);
-//						minValueTextField.setText(
-//								graphSpace.getRelationSelectionManager().getSelectedRelationQuantifierValue());
-                        break;
-                    case "max":
-                        maxRadioButton.setSelected(true);
-//						maxValueTextField.setText(
-//								graphSpace.getRelationSelectionManager().getSelectedRelationQuantifierValue());
-                        break;
-                    default:
-                        someRadioButton.setSelected(true);
-                        break;
-                }
-            }
-
-            negateCheckBox.setSelected(graphSpace.getRelationSelectionManager().isSelectedNegation());
-            if (graphComponent.getGraph() != graphSpace) {
-                showGraph(graphSpace);
-            }
-        }
-    }
 
     /**
      * Method generated by IntelliJ IDEA GUI Designer
@@ -368,7 +370,7 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
         addAnnotationNodeButton = new JButton();
         addAnnotationNodeButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-plus-24.png")));
         addAnnotationNodeButton.setText("");
-        addAnnotationNodeButton.setToolTipText(ResourceBundle.getBundle("ui").getString("add.annotation.node"));
+        addAnnotationNodeButton.setToolTipText(ResourceBundle.getBundle("ui").getString("add.conceptAnnotation.node"));
         toolBar2.add(addAnnotationNodeButton);
         removeCellButton = new JButton();
         removeCellButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-delete-24.png")));
@@ -481,5 +483,66 @@ public class GraphView extends JPanel implements ViewListener, ProjectListener {
      */
     public JComponent $$$getRootComponent$$$() {
         return panel1;
+    }
+
+    @Override
+    public void updated(GraphSpace updatedItem) {
+
+    }
+
+    @Override
+    public void noSelection(GraphSpace previousSelection) {
+
+    }
+
+    @Override
+    public void selected(GraphSpace previousSelection, GraphSpace currentSelection) {
+        if (currentSelection != null) {
+            String quantifier = currentSelection.getRelationSelectionManager().getSelectedRelationQuantifier();
+            if (quantifier != null) {
+                switch (quantifier) {
+                    case "only":
+                        onlyRadioButton.setSelected(true);
+                        break;
+                    case "exactly":
+                        exactlyRadioButton.setSelected(true);
+                        break;
+                    case "min":
+                        minRadioButton.setSelected(true);
+                        break;
+                    case "max":
+                        maxRadioButton.setSelected(true);
+                        break;
+                    default:
+                        someRadioButton.setSelected(true);
+                        break;
+                }
+            }
+
+            negateCheckBox.setSelected(currentSelection.getRelationSelectionManager().isSelectedNegation());
+            if (graphComponent.getGraph() != currentSelection) {
+                showGraph(currentSelection);
+            }
+        }
+    }
+
+    @Override
+    public void added(GraphSpace addedObject) {
+
+    }
+
+    @Override
+    public void removed(GraphSpace removedObject) {
+
+    }
+
+    @Override
+    public void emptied(GraphSpace object) {
+
+    }
+
+    @Override
+    public void firstAdded(GraphSpace object) {
+
     }
 }

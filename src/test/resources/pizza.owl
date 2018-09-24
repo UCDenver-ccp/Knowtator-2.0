@@ -16,7 +16,7 @@
         <terms:contributor>Nick Drummond</terms:contributor>
         <terms:license rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Creative Commons Attribution 3.0 (CC BY 3.0)</terms:license>
         <rdfs:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">pizza</rdfs:label>
-        <terms:provenance xml:lang="en">v2.0 Added new annotations to the ontology using standard/well-know annotation properties
+        <terms:provenance xml:lang="en">v2.0 Added new conceptAnnotations to the ontology using standard/well-know conceptAnnotation properties
 
 v1.5. Removed protege.owl import and references. Made ontology URI date-independent
 
