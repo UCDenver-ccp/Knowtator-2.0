@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view.text;
 
-import edu.ucdenver.ccp.knowtator.listeners.ColorListener;
+import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;

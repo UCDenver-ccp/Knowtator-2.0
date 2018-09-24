@@ -6,7 +6,6 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.listeners.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;

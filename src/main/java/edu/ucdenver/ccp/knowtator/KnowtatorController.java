@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator;
 
-import edu.ucdenver.ccp.knowtator.listeners.DebugListener;
+import edu.ucdenver.ccp.knowtator.model.DebugListener;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLManager;
