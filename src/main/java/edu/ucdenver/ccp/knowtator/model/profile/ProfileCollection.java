@@ -44,7 +44,9 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 
     @Override
     public void save() {
-        forEach(Profile::save);
+        if (controller.isNotLoading()) {
+            forEach(Profile::save);
+        }
     }
 
     public void addColorListener(ColorListener listener) {
@@ -74,6 +76,7 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 
     @Override
     public void readFromKnowtatorXML(File file, Element parent) {
+        controller.setLoading(true);
         for (Node profileNode :
                 KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.PROFILE))) {
             Element profileElement = (Element) profileNode;
@@ -82,6 +85,7 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
             Profile newProfile = addProfile(profileID);
             newProfile.readFromKnowtatorXML(null, profileElement);
         }
+        controller.setLoading(false);
     }
 
     @Override

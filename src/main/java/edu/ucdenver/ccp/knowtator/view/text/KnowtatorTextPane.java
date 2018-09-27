@@ -338,6 +338,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
         try {
             int start = Utilities.getWordStart(this, min(press_offset, release_offset));
             int end = Utilities.getWordEnd(this, max(press_offset, release_offset));
+//            view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().setSelection(null);
             requestFocusInWindow();
             select(start, end);
 
@@ -346,99 +347,102 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
         }
     }
 
-    private void refreshHighlights() {
-        // Remove all previous highlights in case a span has been deleted
-        getHighlighter().removeAllHighlights();
+    public void refreshHighlights() {
+        if (view.getController().isNotLoading()) {
+            // Remove all previous highlights in case a span has been deleted
+            getHighlighter().removeAllHighlights();
 
-        // Always highlight the selected concept first so its color and border show up
-        highlightSelectedAnnotation();
+            // Always highlight the selected concept first so its color and border show up
+            highlightSelectedAnnotation();
 
-        // Highlight overlaps first, then spans
-        Span lastSpan = null;
+            // Highlight overlaps first, then spans
+            Span lastSpan = null;
 
-        Set<Span> spans = getSpans(null);
-        for (Span span : spans) {
-            if (lastSpan != null) {
-                if (span.intersects(lastSpan)) {
-                    try {
-                        highlightSpan(
-                                span.getStart(),
-                                min(lastSpan.getEnd(), span.getEnd()),
-                                new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY));
-                    } catch (BadLocationException e) {
-                        e.printStackTrace();
+            Set<Span> spans = getSpans(null);
+            for (Span span : spans) {
+                if (lastSpan != null) {
+                    if (span.intersects(lastSpan)) {
+                        try {
+                            highlightSpan(
+                                    span.getStart(),
+                                    min(lastSpan.getEnd(), span.getEnd()),
+                                    new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY));
+                        } catch (BadLocationException e) {
+                            e.printStackTrace();
+                        }
                     }
+                }
+
+                if (lastSpan == null || span.getEnd() > lastSpan.getEnd()) {
+                    lastSpan = span;
                 }
             }
 
-            if (lastSpan == null || span.getEnd() > lastSpan.getEnd()) {
-                lastSpan = span;
+            for (Span span : spans) {
+                try {
+                    highlightSpan(
+                            span.getStart(),
+                            span.getEnd(),
+                            new DefaultHighlighter.DefaultHighlightPainter(
+                                    view.getController()
+                                            .getProfileCollection().getSelection()
+                                            .getColor(span.getConceptAnnotation())));
+                } catch (BadLocationException e) {
+                    e.printStackTrace();
+                }
             }
-        }
 
-        for (Span span : spans) {
-            try {
-                highlightSpan(
-                        span.getStart(),
-                        span.getEnd(),
-                        new DefaultHighlighter.DefaultHighlightPainter(
-                                view.getController()
-                                        .getProfileCollection().getSelection()
-                                        .getColor(span.getConceptAnnotation())));
-            } catch (BadLocationException e) {
-                e.printStackTrace();
-            }
-        }
+            revalidate();
+            repaint();
 
-        revalidate();
-        repaint();
+            SwingUtilities.invokeLater(
+                    () -> {
+                        if (view.getController()
+                                .getTextSourceCollection().getSelection()
+                                .getConceptAnnotationCollection().getSelection() != null && view.getController()
+                                .getTextSourceCollection().getSelection()
+                                .getConceptAnnotationCollection().getSelection()
+                                .getSpanCollection().getSelection()
+                                != null) {
+                            try {
+                                scrollRectToVisible(
+                                        modelToView(
+                                                view.getController()
+                                                        .getTextSourceCollection().getSelection()
+                                                        .getConceptAnnotationCollection().getSelection()
+                                                        .getSpanCollection().getSelection()
+                                                        .getStart()));
+                            } catch (BadLocationException | NullPointerException e) {
+                                e.printStackTrace();
 
-        SwingUtilities.invokeLater(
-                () -> {
-                    if (view.getController()
-                            .getTextSourceCollection().getSelection()
-                            .getConceptAnnotationCollection().getSelection() != null && view.getController()
-                            .getTextSourceCollection().getSelection()
-                            .getConceptAnnotationCollection().getSelection()
-                            .getSpanCollection().getSelection()
-                            != null) {
-                        try {
-                            scrollRectToVisible(
-                                    modelToView(
-                                            view.getController()
-                                                    .getTextSourceCollection().getSelection()
-                                                    .getConceptAnnotationCollection().getSelection()
-                                                    .getSpanCollection().getSelection()
-                                                    .getStart()));
-                        } catch (BadLocationException | NullPointerException e) {
-                            e.printStackTrace();
+                            }
+                        } else if (view.getController()
+                                .getTextSourceCollection().getSelection()
+                                .getConceptAnnotationCollection().getSelection()
+                                != null) {
+                            try {
+                                scrollRectToVisible(
+                                        modelToView(
+                                                view.getController()
+                                                        .getTextSourceCollection().getSelection()
+                                                        .getConceptAnnotationCollection().getSelection()
+                                                        .getSpanCollection().first()
+                                                        .getStart()));
+                            } catch (BadLocationException | NullPointerException e) {
+                                e.printStackTrace();
 
-                        }
-                    } else if (view.getController()
-                            .getTextSourceCollection().getSelection()
-                            .getConceptAnnotationCollection().getSelection()
-                            != null) {
-                        try {
-                            scrollRectToVisible(
-                                    modelToView(
-                                            view.getController()
-                                                    .getTextSourceCollection().getSelection()
-                                                    .getConceptAnnotationCollection().getSelection()
-                                                    .getSpanCollection().first()
-                                                    .getStart()));
-                        } catch (BadLocationException | NullPointerException e) {
-                            e.printStackTrace();
+                            }
+                        } else {
+                            try {
+                                scrollRectToVisible(modelToView(0));
+                            } catch (BadLocationException | NullPointerException e) {
+                                e.printStackTrace();
 
-                        }
-                    } else {
-                        try {
-                            scrollRectToVisible(modelToView(0));
-                        } catch (BadLocationException | NullPointerException e) {
-                            e.printStackTrace();
-
+                            }
                         }
                     }
-                });
+            );
+        }
     }
 
     private void highlightSpan(

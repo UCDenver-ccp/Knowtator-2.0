@@ -38,6 +38,7 @@ public class TextSource extends AbstractKnowtatorObject<TextSource> implements B
     private File textFile;
     private String content;
     private GraphSpaceCollection graphSpaceCollection;
+    private boolean isLoading;
 
     public TextSource(KnowtatorController controller, File saveFile, String textFileName) {
         super(null);
@@ -129,8 +130,10 @@ public class TextSource extends AbstractKnowtatorObject<TextSource> implements B
 
     @Override
     public void readFromKnowtatorXML(File file, Element parent) {
+        controller.setLoading(true);
         conceptAnnotationCollection.readFromKnowtatorXML(null, parent);
         graphSpaceCollection.readFromKnowtatorXML(null, parent);
+        controller.setLoading(false);
     }
 
     @Override
@@ -189,7 +192,9 @@ public class TextSource extends AbstractKnowtatorObject<TextSource> implements B
 
     @Override
     public void save() {
-        controller.saveToFormat(KnowtatorXMLUtil.class, this, saveFile);
+        if (controller.isNotLoading()) {
+            controller.saveToFormat(KnowtatorXMLUtil.class, this, saveFile);
+        }
     }
 
     @Override

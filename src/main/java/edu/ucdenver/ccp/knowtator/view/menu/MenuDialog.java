@@ -73,6 +73,7 @@ public class MenuDialog extends JDialog {
                     e1.printStackTrace();
                 }
                 view.getController().loadProject();
+                view.getKnowtatorTextPane().refreshHighlights();
 
                 view.getPreferences().put("Last Project", fileChooser.getSelectedFile().getAbsolutePath());
 

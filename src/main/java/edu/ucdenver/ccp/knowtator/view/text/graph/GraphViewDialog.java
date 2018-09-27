@@ -2,7 +2,6 @@ package edu.ucdenver.ccp.knowtator.view.text.graph;
 
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorViewComponent;
-import edu.ucdenver.ccp.knowtator.view.menu.GraphMenu;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,10 +26,6 @@ public class GraphViewDialog extends JDialog implements KnowtatorViewComponent {
         setContentPane(contentPane);
         setModal(false);
 
-        setJMenuBar(new JMenuBar());
-        GraphMenu graphMenu = new GraphMenu(view);
-        getJMenuBar().add(graphMenu);
-
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(
@@ -40,7 +35,6 @@ public class GraphViewDialog extends JDialog implements KnowtatorViewComponent {
                     }
                 });
 
-        JDialog dialog = this;
         addWindowFocusListener(
                 new WindowFocusListener() {
                     @Override
@@ -50,7 +44,7 @@ public class GraphViewDialog extends JDialog implements KnowtatorViewComponent {
 
                     @Override
                     public void windowLostFocus(WindowEvent e) {
-                        if (e.getOppositeWindow() != SwingUtilities.getWindowAncestor(view) || e.getOppositeWindow() != dialog) {
+                        if (e.getOppositeWindow() != SwingUtilities.getWindowAncestor(view)) {
                             setAlwaysOnTop(false);
                             toBack();
                         }

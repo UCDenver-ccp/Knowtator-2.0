@@ -81,15 +81,7 @@ public class AnnotationPopupMenu extends JPopupMenu {
 
     private JMenuItem selectAnnotationCommand(ConceptAnnotation conceptAnnotation, Span span) {
         JMenuItem selectAnnotationMenuItem = new JMenuItem("Select " + conceptAnnotation.getOwlClassID());
-        selectAnnotationMenuItem.addActionListener(
-                e3 ->
-                        view.getController()
-                                .getTextSourceCollection()
-                                .getSelection()
-                                .getConceptAnnotationCollection()
-                                .getSelection()
-                                .getSpanCollection()
-                                .setSelection(span));
+        selectAnnotationMenuItem.addActionListener(e3 -> conceptAnnotation.getSpanCollection().setSelection(span));
 
         return selectAnnotationMenuItem;
     }

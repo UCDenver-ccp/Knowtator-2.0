@@ -22,6 +22,16 @@ public abstract class ProjectManager implements Savable {
 
     private File projectLocation;
 
+    public boolean isNotLoading() {
+        return !isLoading;
+    }
+
+    public void setLoading(boolean loading) {
+        isLoading = loading;
+    }
+
+    private boolean isLoading;
+
     ProjectManager() {
     }
 

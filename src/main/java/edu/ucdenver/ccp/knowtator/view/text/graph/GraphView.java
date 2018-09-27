@@ -1,5 +1,8 @@
 package edu.ucdenver.ccp.knowtator.view.text.graph;
 
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.util.mxMorphing;
@@ -18,12 +21,18 @@ import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollectionListener;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorViewComponent;
 import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
+import edu.ucdenver.ccp.knowtator.view.menu.GraphMenuDialog;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
 import java.util.List;
-import java.util.ResourceBundle;
 
 public class GraphView extends JPanel implements GraphSpaceCollectionListener, KnowtatorViewComponent {
     private JButton removeCellButton;
@@ -32,10 +41,13 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
     private JButton previousGraphSpaceButton;
     private JButton nextGraphSpaceButton;
     private mxGraphComponent graphComponent;
-    private JButton zoomOutButton;
-    private JButton zoomInButton;
     private JPanel panel1;
     private GraphSpaceChooser graphSpaceChooser;
+    private JButton addGraphSpaceButton;
+    private JButton removeGraphSpaceButton;
+    private JSlider zoomSlider;
+    private JButton graphMenuButton;
+    private JButton renameButton;
     private JDialog dialog;
 
     @SuppressWarnings("unused")
@@ -100,6 +112,79 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
         view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
     }
 
+    private static String getGraphNameInput(KnowtatorView view, JTextField field1) {
+        if (field1 == null) {
+            field1 = new JTextField();
+
+            JTextField finalField = field1;
+            field1
+                    .getDocument()
+                    .addDocumentListener(
+                            new DocumentListener() {
+                                @Override
+                                public void insertUpdate(DocumentEvent e) {
+                                    warn();
+                                }
+
+                                @Override
+                                public void removeUpdate(DocumentEvent e) {
+                                    warn();
+                                }
+
+                                @Override
+                                public void changedUpdate(DocumentEvent e) {
+                                    warn();
+                                }
+
+                                private void warn() {
+                                    if (view.getController()
+                                            .getTextSourceCollection().getSelection()
+                                            .getGraphSpaceCollection()
+                                            .containsID(finalField.getText())) {
+                                        try {
+                                            finalField
+                                                    .getHighlighter()
+                                                    .addHighlight(
+                                                            0,
+                                                            finalField.getText().length(),
+                                                            new DefaultHighlighter.DefaultHighlightPainter(Color.RED));
+                                        } catch (BadLocationException e1) {
+                                            e1.printStackTrace();
+                                        }
+                                    } else {
+                                        finalField.getHighlighter().removeAllHighlights();
+                                    }
+                                }
+                            });
+        }
+        Object[] message = {
+                "Graph Title", field1,
+        };
+        field1.addAncestorListener(new RequestFocusListener());
+        field1.setText("Graph Space " + Integer.toString(view.getController()
+                .getTextSourceCollection().getSelection()
+                .getGraphSpaceCollection().size()));
+        int option =
+                JOptionPane.showConfirmDialog(
+                        view,
+                        message,
+                        "Enter a name for this graph",
+                        JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            if (view.getController()
+                    .getTextSourceCollection().getSelection()
+                    .getGraphSpaceCollection()
+                    .containsID(field1.getText())) {
+                JOptionPane.showMessageDialog(field1, "Graph name already in use");
+                return getGraphNameInput(view, field1);
+            } else {
+                return field1.getText();
+            }
+        }
+
+        return null;
+    }
+
     private void createUIComponents() {
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.getVerticalScrollBar().setUnitIncrement(20);
@@ -109,6 +194,12 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
     }
 
     private void makeButtons() {
+
+        graphMenuButton.addActionListener(e -> {
+            GraphMenuDialog graphMenuDialog = new GraphMenuDialog(view);
+            graphMenuDialog.pack();
+            graphMenuDialog.setVisible(true);
+        });
 
         graphSpaceChooser.addActionListener(
                 e -> {
@@ -125,8 +216,39 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
 
                 });
 
-        zoomOutButton.addActionListener(e -> graphComponent.zoomOut());
-        zoomInButton.addActionListener(e -> graphComponent.zoomIn());
+        zoomSlider.addChangeListener(e -> graphComponent.zoomTo(zoomSlider.getValue() / 50.0, false));
+
+        renameButton.addActionListener(e -> {
+            String graphName = getGraphNameInput(view, null);
+            if (graphName != null) {
+                view.getController()
+                        .getTextSourceCollection().getSelection()
+                        .getGraphSpaceCollection().getSelection().setId(graphName);
+            }
+        });
+
+        addGraphSpaceButton.addActionListener(e -> {
+            String graphName = getGraphNameInput(view, null);
+
+            if (graphName != null) {
+                view.getController()
+                        .getTextSourceCollection().getSelection()
+                        .getGraphSpaceCollection().addGraphSpace(graphName);
+            }
+        });
+
+        removeGraphSpaceButton.addActionListener(e -> {
+            if (JOptionPane.showConfirmDialog(
+                    view, "Are you sure you want to delete this graph?")
+                    == JOptionPane.YES_OPTION) {
+                view.getController()
+                        .getTextSourceCollection().getSelection()
+                        .getGraphSpaceCollection()
+                        .removeGraphSpace(view.getController().getTextSourceCollection().getSelection()
+                                .getGraphSpaceCollection().getSelection());
+            }
+        });
+
         previousGraphSpaceButton.addActionListener(
                 e -> view.getController()
                         .getTextSourceCollection().getSelection()
@@ -294,125 +416,59 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
         panel1.setAlignmentY(0.0f);
         panel1.setMinimumSize(new Dimension(400, 400));
         final JPanel panel2 = new JPanel();
-        panel2.setLayout(new BorderLayout(0, 0));
+        panel2.setLayout(new GridLayoutManager(1, 5, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(panel2, BorderLayout.NORTH);
-        final JToolBar toolBar1 = new JToolBar();
-        toolBar1.setAlignmentX(0.0f);
-        toolBar1.setAlignmentY(0.0f);
-        toolBar1.setFloatable(false);
-        toolBar1.setMinimumSize(new Dimension(630, 100));
-        panel2.add(toolBar1, BorderLayout.NORTH);
-        zoomOutButton = new JButton();
-        zoomOutButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-zoom-out-filled-50 (Custom).png")));
-        zoomOutButton.setText("");
-        zoomOutButton.setToolTipText(ResourceBundle.getBundle("ui").getString("zoom.out"));
-        toolBar1.add(zoomOutButton);
-        zoomInButton = new JButton();
-        zoomInButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-zoom-in-filled-50 (Custom).png")));
-        zoomInButton.setText("");
-        zoomInButton.setToolTipText(ResourceBundle.getBundle("ui").getString("zoom.in"));
-        toolBar1.add(zoomInButton);
-        applyLayoutButton = new JButton();
-        this.$$$loadButtonText$$$(applyLayoutButton, ResourceBundle.getBundle("ui").getString("apply.layout"));
-        applyLayoutButton.setToolTipText(ResourceBundle.getBundle("ui").getString("apply.layout1"));
-        toolBar1.add(applyLayoutButton);
-        final JPanel panel3 = new JPanel();
-        panel3.setLayout(new BorderLayout(0, 0));
-        panel3.setMaximumSize(new Dimension(100, 100));
-        panel3.setMinimumSize(new Dimension(24, 48));
-        toolBar1.add(panel3);
-        previousGraphSpaceButton = new JButton();
-        previousGraphSpaceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-sort-up-24.png")));
-        previousGraphSpaceButton.setPreferredSize(new Dimension(24, 16));
-        previousGraphSpaceButton.setText("");
-        previousGraphSpaceButton.setToolTipText(ResourceBundle.getBundle("ui").getString("previous.graph.space"));
-        panel3.add(previousGraphSpaceButton, BorderLayout.NORTH);
-        final JLabel label1 = new JLabel();
-        label1.setPreferredSize(new Dimension(24, 16));
-        this.$$$loadLabelText$$$(label1, ResourceBundle.getBundle("ui").getString("graph.space"));
-        panel3.add(label1, BorderLayout.CENTER);
-        nextGraphSpaceButton = new JButton();
-        nextGraphSpaceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-sort-down-24.png")));
-        nextGraphSpaceButton.setPreferredSize(new Dimension(24, 16));
-        nextGraphSpaceButton.setText("");
-        nextGraphSpaceButton.setToolTipText(ResourceBundle.getBundle("ui").getString("next.graph.space"));
-        panel3.add(nextGraphSpaceButton, BorderLayout.SOUTH);
-        graphSpaceChooser.setMaximumSize(new Dimension(200, 32767));
-        graphSpaceChooser.setMinimumSize(new Dimension(80, 30));
-        toolBar1.add(graphSpaceChooser);
-        final JToolBar toolBar2 = new JToolBar();
-        toolBar2.setFloatable(false);
-        panel2.add(toolBar2, BorderLayout.CENTER);
         addAnnotationNodeButton = new JButton();
         addAnnotationNodeButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-plus-24.png")));
         addAnnotationNodeButton.setText("");
-        addAnnotationNodeButton.setToolTipText(ResourceBundle.getBundle("ui").getString("add.conceptAnnotation.node"));
-        toolBar2.add(addAnnotationNodeButton);
+        panel2.add(addAnnotationNodeButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer1 = new Spacer();
+        panel2.add(spacer1, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         removeCellButton = new JButton();
         removeCellButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-delete-24.png")));
         removeCellButton.setText("");
-        removeCellButton.setToolTipText(ResourceBundle.getBundle("ui").getString("remove.item"));
-        toolBar2.add(removeCellButton);
-        final JPanel panel4 = new JPanel();
-        panel4.setLayout(new BorderLayout(0, 0));
-        panel1.add(panel4, BorderLayout.CENTER);
+        panel2.add(removeCellButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        applyLayoutButton = new JButton();
+        applyLayoutButton.setText("Apply Layout");
+        panel2.add(applyLayoutButton, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        graphMenuButton = new JButton();
+        graphMenuButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-menu-24.png")));
+        graphMenuButton.setText("");
+        panel2.add(graphMenuButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel3 = new JPanel();
+        panel3.setLayout(new BorderLayout(0, 0));
+        panel1.add(panel3, BorderLayout.CENTER);
         graphComponent.setCenterPage(false);
         graphComponent.setGridVisible(true);
-        panel4.add(graphComponent, BorderLayout.CENTER);
-    }
-
-    /**
-     * @noinspection ALL
-     */
-    private void $$$loadLabelText$$$(JLabel component, String text) {
-        StringBuffer result = new StringBuffer();
-        boolean haveMnemonic = false;
-        char mnemonic = '\0';
-        int mnemonicIndex = -1;
-        for (int i = 0; i < text.length(); i++) {
-            if (text.charAt(i) == '&') {
-                i++;
-                if (i == text.length()) break;
-                if (!haveMnemonic && text.charAt(i) != '&') {
-                    haveMnemonic = true;
-                    mnemonic = text.charAt(i);
-                    mnemonicIndex = result.length();
-                }
-            }
-            result.append(text.charAt(i));
-        }
-        component.setText(result.toString());
-        if (haveMnemonic) {
-            component.setDisplayedMnemonic(mnemonic);
-            component.setDisplayedMnemonicIndex(mnemonicIndex);
-        }
-    }
-
-    /**
-     * @noinspection ALL
-     */
-    private void $$$loadButtonText$$$(AbstractButton component, String text) {
-        StringBuffer result = new StringBuffer();
-        boolean haveMnemonic = false;
-        char mnemonic = '\0';
-        int mnemonicIndex = -1;
-        for (int i = 0; i < text.length(); i++) {
-            if (text.charAt(i) == '&') {
-                i++;
-                if (i == text.length()) break;
-                if (!haveMnemonic && text.charAt(i) != '&') {
-                    haveMnemonic = true;
-                    mnemonic = text.charAt(i);
-                    mnemonicIndex = result.length();
-                }
-            }
-            result.append(text.charAt(i));
-        }
-        component.setText(result.toString());
-        if (haveMnemonic) {
-            component.setMnemonic(mnemonic);
-            component.setDisplayedMnemonicIndex(mnemonicIndex);
-        }
+        panel3.add(graphComponent, BorderLayout.CENTER);
+        final JPanel panel4 = new JPanel();
+        panel4.setLayout(new GridLayoutManager(2, 6, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(panel4, BorderLayout.SOUTH);
+        previousGraphSpaceButton = new JButton();
+        previousGraphSpaceButton.setText("Previous");
+        panel4.add(previousGraphSpaceButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        graphSpaceChooser.setMaximumSize(new Dimension(200, 32767));
+        graphSpaceChooser.setMinimumSize(new Dimension(80, 30));
+        panel4.add(graphSpaceChooser, new GridConstraints(0, 1, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        addGraphSpaceButton = new JButton();
+        addGraphSpaceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-plus-24.png")));
+        addGraphSpaceButton.setText("");
+        panel4.add(addGraphSpaceButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        removeGraphSpaceButton = new JButton();
+        removeGraphSpaceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-delete-24.png")));
+        removeGraphSpaceButton.setText("");
+        panel4.add(removeGraphSpaceButton, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        zoomSlider = new JSlider();
+        zoomSlider.setMaximum(100);
+        panel4.add(zoomSlider, new GridConstraints(1, 3, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(194, 16), null, 0, false));
+        final Spacer spacer2 = new Spacer();
+        panel4.add(spacer2, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        renameButton = new JButton();
+        renameButton.setText("Rename");
+        panel4.add(renameButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        nextGraphSpaceButton = new JButton();
+        nextGraphSpaceButton.setText("Next");
+        panel4.add(nextGraphSpaceButton, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
@@ -421,4 +477,48 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
     public JComponent $$$getRootComponent$$$() {
         return panel1;
     }
+
+    /**
+     * Taken from https://tips4java.wordpress.com/2010/03/14/dialog-focus/
+     */
+    private static class RequestFocusListener implements AncestorListener {
+        private boolean removeListener;
+
+        /*
+         *  Convenience constructor. The listener is only used once and then it is
+         *  removed from the component.
+         */
+        RequestFocusListener() {
+            this(true);
+        }
+
+        /*
+         *  Constructor that controls whether this listen can be used once or
+         *  multiple times.
+         *
+         *  @param removeCollectionListener when true this listener is only invoked once
+         *                        otherwise it can be invoked multiple times.
+         */
+        RequestFocusListener(boolean removeListener) {
+            this.removeListener = removeListener;
+        }
+
+        @Override
+        public void ancestorAdded(AncestorEvent e) {
+            JComponent component = e.getComponent();
+            component.requestFocusInWindow();
+
+            if (removeListener) component.removeAncestorListener(this);
+        }
+
+        @Override
+        public void ancestorMoved(AncestorEvent e) {
+        }
+
+        @Override
+        public void ancestorRemoved(AncestorEvent e) {
+        }
+    }
+
+
 }

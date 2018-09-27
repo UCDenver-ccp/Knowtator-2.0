@@ -202,9 +202,8 @@ public class OWLManager implements Serializable, DebugListener, OWLSelectionMode
   public void selectionChanged() {
     try {
       OWLEntity ent = getWorkSpace().getOWLSelectionModel().getSelectedEntity();
-      log.warn(getOWLEntityRendering(ent));
       setSelectedOWLEntity(ent);
-    } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
+    } catch (OWLWorkSpaceNotSetException e) {
       e.printStackTrace();
     }
   }

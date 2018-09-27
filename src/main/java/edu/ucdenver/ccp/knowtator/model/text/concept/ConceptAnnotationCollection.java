@@ -282,11 +282,17 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         }
     }
 
+    @Override
+    public void setSelection(ConceptAnnotation selection) {
+        if (getSelection()!= null && getSelection() != selection) {
+            getSelection().getSpanCollection().setSelection(null);
+        }
+        super.setSelection(selection);
+    }
+
     private void setOWLClassForAnnotations() throws OWLWorkSpaceNotSetException {
-        log.warn("Setting owl classes");
         Map<String, List<ConceptAnnotation>> unmatchedAnnotations = new HashMap<>();
         for (ConceptAnnotation conceptAnnotation : this) {
-            log.warn(String.format("%s %s", conceptAnnotation.getId(), conceptAnnotation.getOwlClassID()));
             try {
                 OWLClass owlClass = controller.getOWLManager().getOWLClassByID(conceptAnnotation.getOwlClassID());
                 conceptAnnotation.setOwlClass(owlClass);
