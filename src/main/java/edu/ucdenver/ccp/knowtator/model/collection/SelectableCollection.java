@@ -30,7 +30,6 @@ public abstract class SelectableCollection<K extends KnowtatorObject, L extends 
     public void setSelection(K newSelection) {
         if (this.selection != newSelection) {
             SelectionChangeEvent<K> selectionChangeEvent = new SelectionChangeEvent<>(this.selection, newSelection);
-            //TODO: Figure out why selecting overlapping annotations doesn't call refresh highlights
             this.selection = newSelection;
             collectionListeners.forEach(selectionListener -> selectionListener.selected(selectionChangeEvent));
 

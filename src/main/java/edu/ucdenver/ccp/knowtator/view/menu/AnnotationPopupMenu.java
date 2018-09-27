@@ -79,9 +79,9 @@ public class AnnotationPopupMenu extends JPopupMenu {
         return removeSpanFromSelectedAnnotation;
     }
 
-    private JMenuItem selectAnnotationCommand(ConceptAnnotation conceptAnnotation, Span span) {
-        JMenuItem selectAnnotationMenuItem = new JMenuItem("Select " + conceptAnnotation.getOwlClassID());
-        selectAnnotationMenuItem.addActionListener(e3 -> conceptAnnotation.getSpanCollection().setSelection(span));
+    private JMenuItem selectAnnotationCommand(Span span) {
+        JMenuItem selectAnnotationMenuItem = new JMenuItem("Select " + span.getConceptAnnotation().getOwlClassID());
+        selectAnnotationMenuItem.addActionListener(e3 -> view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().setSelectedAnnotation(span));
 
         return selectAnnotationMenuItem;
     }
@@ -118,7 +118,7 @@ public class AnnotationPopupMenu extends JPopupMenu {
     public void chooseAnnotation(Set<Span> spansContainingLocation) {
         // Menu items to select and remove annotations
         spansContainingLocation.forEach(
-                span -> add(selectAnnotationCommand(span.getConceptAnnotation(), span)));
+                span -> add(selectAnnotationCommand(span)));
 
         show(e.getComponent(), e.getX(), e.getY());
     }

@@ -41,7 +41,7 @@ public abstract class ProjectManager implements Savable {
 
         getManagers().forEach(Savable::load);
 
-        saveProject();
+//        saveProject();
     }
 
     @Override
