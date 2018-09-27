@@ -12,7 +12,6 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import javax.swing.*;
 
 public class GraphSpaceChooser extends Chooser<GraphSpace> {
-    //TODO: Convert to JList
     private TextSourceCollectionListener textSourceCollectionListener;
 
     public GraphSpaceChooser(KnowtatorView view) {

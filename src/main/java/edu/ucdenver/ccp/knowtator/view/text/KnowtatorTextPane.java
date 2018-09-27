@@ -305,7 +305,6 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
     }
 
     private void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
-        //TODO: test selecting of annotations
         AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e, view);
 
         Set<Span> spansContainingLocation = getSpans(press_offset);

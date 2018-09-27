@@ -20,7 +20,6 @@ import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollection
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.SpanCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.view.chooser.ProfileChooser;
 import edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser;
 import edu.ucdenver.ccp.knowtator.view.menu.MenuDialog;
 import edu.ucdenver.ccp.knowtator.view.text.KnowtatorTextPane;
@@ -68,7 +67,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     private JButton assignColorToClassButton;
     private KnowtatorTextPane knowtatorTextPane;
     private TextSourceChooser textSourceChooser;
-    private ProfileChooser profileChooser;
     private JButton findTextButton;
     private JButton addTextSourceButton;
     private JButton removeTextSourceButton;
@@ -162,7 +160,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         graphViewDialog = new GraphViewDialog(this);
 
         textSourceChooser = new TextSourceChooser(this);
-        profileChooser = new ProfileChooser(this);
 
         spanList = new SpanList(this);
         graphSpaceList = new GraphSpaceList(this);
@@ -634,7 +631,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         annotationAnnotatorLabel.reset();
         spanList.reset();
         textSourceChooser.reset();
-        profileChooser.reset();
         graphViewDialog.reset();
 
         if (getOWLWorkspace() != null) {

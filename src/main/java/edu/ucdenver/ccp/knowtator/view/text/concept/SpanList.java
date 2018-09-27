@@ -15,17 +15,18 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorViewComponent;
 
 import javax.swing.*;
 
-public class SpanList extends JList<Span> implements KnowtatorViewComponent {
+public class SpanList extends JList<Span> implements KnowtatorViewComponent, SpanCollectionListener {
 
     private ConceptAnnotationCollectionListener conceptAnnotationCollectionListener;
-    private SpanCollectionListener spanCollectionListener;
     private KnowtatorView view;
     private TextSourceCollectionListener textSourceCollectionListener;
+
 
 
     public SpanList(KnowtatorView view) {
         this.view = view;
 
+        SpanCollectionListener spanList = this;
         textSourceCollectionListener = new TextSourceCollectionListener() {
             @Override
             public void added(AddEvent<TextSource> addedObject) {
@@ -110,61 +111,59 @@ public class SpanList extends JList<Span> implements KnowtatorViewComponent {
             public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
                 if (event.getNew() != null) {
                     setListData(event.getNew().getSpanCollection().toArray(new Span[0]));
-                    event.getNew().getSpanCollection().addCollectionListener(spanCollectionListener);
+                    event.getNew().getSpanCollection().addCollectionListener(spanList);
                 } else {
                     setListData(new Span[0]);
                 }
 
                 if (event.getOld() != null) {
-                    event.getOld().getSpanCollection().removeCollectionListener(spanCollectionListener);
+                    event.getOld().getSpanCollection().removeCollectionListener(spanList);
                 }
 
             }
         };
 
-        spanCollectionListener = new SpanCollectionListener() {
-            @Override
-            public void added(AddEvent<Span> addedObject) {
-
-            }
-
-            @Override
-            public void removed(RemoveEvent<Span> removedObject) {
-
-            }
-
-            @Override
-            public void changed(ChangeEvent<Span> changeEvent) {
-
-            }
-
-            @Override
-            public void emptied(RemoveEvent<Span> object) {
-
-            }
-
-            @Override
-            public void firstAdded(AddEvent<Span> object) {
-
-            }
-
-            @Override
-            public void updated(Span updatedItem) {
-                setListData(updatedItem.getConceptAnnotation().getSpanCollection().toArray(new Span[0]));
-            }
-
-            @Override
-            public void noSelection(Span previousSelection) {
-
-            }
-
-            @Override
-            public void selected(SelectionChangeEvent<Span> event) {
-
-            }
-        };
-
         view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
+
+    }
+
+    @Override
+    public void added(AddEvent<Span> addEvent) {
+        setListData(addEvent.getAdded().getConceptAnnotation().getSpanCollection().toArray(new Span[0]));
+    }
+
+    @Override
+    public void removed(RemoveEvent<Span> removeEvent) {
+        setListData(removeEvent.getRemoved().getConceptAnnotation().getSpanCollection().toArray(new Span[0]));
+    }
+
+    @Override
+    public void changed(ChangeEvent<Span> changeEvent) {
+
+    }
+
+    @Override
+    public void emptied(RemoveEvent<Span> object) {
+
+    }
+
+    @Override
+    public void firstAdded(AddEvent<Span> object) {
+
+    }
+
+    @Override
+    public void updated(Span updatedItem) {
+        setListData(updatedItem.getConceptAnnotation().getSpanCollection().toArray(new Span[0]));
+    }
+
+    @Override
+    public void noSelection(Span previousSelection) {
+
+    }
+
+    @Override
+    public void selected(SelectionChangeEvent<Span> event) {
 
     }
 
