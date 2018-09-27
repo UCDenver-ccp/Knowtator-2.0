@@ -205,4 +205,11 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
         return annotationsLocation;
 
     }
+
+    public void removeActiveTextSource() {
+        TextSource oldTextSource = getSelection();
+        selectPrevious();
+        oldTextSource.dispose();
+        remove(oldTextSource);
+    }
 }

@@ -224,9 +224,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
                 controller.getTextSourceCollection().addDocument(fileChooser.getSelectedFile());
             }
         });
-        textSourceButtons.put(removeTextSourceButton, e -> {
-            //TODO: add remove text source action
-        });
+        textSourceButtons.put(removeTextSourceButton, e -> controller.getTextSourceCollection().removeActiveTextSource());
 
         fontSizeSlider.addChangeListener(e -> knowtatorTextPane.setFontSize(fontSizeSlider.getValue()));
 

@@ -549,8 +549,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         super.dispose();
         try {
             controller.getOWLManager().getWorkSpace().getOWLModelManager().removeOntologyChangeListener(this);
-        } catch (OWLWorkSpaceNotSetException e) {
-            e.printStackTrace();
+        } catch (OWLWorkSpaceNotSetException ignored) {
         }
     }
 
