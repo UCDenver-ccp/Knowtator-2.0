@@ -1,17 +1,19 @@
 package edu.ucdenver.ccp.knowtator.model.text.graph;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import java.util.Arrays;
 
 public class RelationSelectionManager {
-    private OWLObjectProperty selectedOWLObjectProperty;
     private String selectedRelationQuantifier;
     private boolean selectedNegation;
     private String selectedRelationQuantifierValue;
     private KnowtatorController controller;
     private GraphSpace graphSpace;
+    @SuppressWarnings("unused")
+    private Logger log = Logger.getLogger(RelationSelectionManager.class);
 
 
     RelationSelectionManager(KnowtatorController controller, GraphSpace graphSpace) {
@@ -23,26 +25,15 @@ public class RelationSelectionManager {
         return selectedNegation;
     }
 
-    OWLObjectProperty getSelectedOWLObjectProperty() {
-        return selectedOWLObjectProperty;
-    }
-
     public void setSelectedOWLObjectProperty(OWLObjectProperty owlObjectProperty) {
-        this.selectedOWLObjectProperty = owlObjectProperty;
-        Arrays.stream(graphSpace.getSelectionCells()).forEach(cell -> {
-            if (cell instanceof RelationAnnotation) {
-                ((RelationAnnotation) cell).setProperty(owlObjectProperty);
-            }
-        });
         controller.getOWLManager().setSelectedOWLEntity(owlObjectProperty);
-
     }
 
     public String getSelectedRelationQuantifier() {
         return selectedRelationQuantifier;
     }
 
-    public void setSelectedPropertyQuantifer(String relationQuantifier) {
+    void setSelectedPropertyQuantifer(String relationQuantifier) {
         selectedRelationQuantifier = relationQuantifier;
         Arrays.stream(graphSpace.getSelectionCells()).forEach(cell -> {
             if (cell instanceof RelationAnnotation) {
@@ -56,7 +47,7 @@ public class RelationSelectionManager {
         return selectedRelationQuantifierValue;
     }
 
-    public void setSelectedRelationQuantifierValue(String selectedRelationQuantifierValue) {
+    void setSelectedRelationQuantifierValue(String selectedRelationQuantifierValue) {
         this.selectedRelationQuantifierValue = selectedRelationQuantifierValue;
         Arrays.stream(graphSpace.getSelectionCells()).forEach(cell -> {
             if (cell instanceof RelationAnnotation) {
@@ -66,7 +57,7 @@ public class RelationSelectionManager {
 
     }
 
-    public void setNegatation(boolean selectedNegation) {
+    void setNegatation(boolean selectedNegation) {
         this.selectedNegation = selectedNegation;
         Arrays.stream(graphSpace.getSelectionCells()).forEach(cell -> {
             if (cell instanceof RelationAnnotation) {

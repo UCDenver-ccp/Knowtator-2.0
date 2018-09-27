@@ -3,7 +3,6 @@ package edu.ucdenver.ccp.knowtator.model.text.graph;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxGraphModel;
-import com.mxgraph.model.mxICell;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
@@ -25,12 +24,15 @@ import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollectionListener;
+import edu.ucdenver.ccp.knowtator.view.text.graph.RelationOptionsDialog;
 import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
@@ -49,6 +51,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObject<Grap
     private RelationSelectionManager relationSelectionManager;
     private final TextSource textSource;
     private String id;
+    private Window parentWindow;
 
     public GraphSpace(KnowtatorController controller, TextSource textSource, String id) {
 
@@ -68,6 +71,10 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObject<Grap
         setCellsBendable(false);
         setResetEdgesOnMove(true);
         areListenersSet = false;
+    }
+
+    public void setParentWindow(Window parentWindow) {
+        this.parentWindow = parentWindow;
     }
 
   /*
@@ -108,8 +115,8 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObject<Grap
         } finally {
             //      reDrawGraph();
             getModel().endUpdate();
+            textSource.getGraphSpaceCollection().update(this);
         }
-
         //    reDrawGraph();
     }
 
@@ -118,7 +125,6 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObject<Grap
         AnnotationNode newVertex = new AnnotationNode(controller, nodeId, conceptAnnotation, textSource, x, y);
         addCellToGraph(newVertex);
 
-        textSource.save();
         textSource.getGraphSpaceCollection().update(this);
     }
 
@@ -180,8 +186,6 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObject<Grap
         setCellStyles(mxConstants.STYLE_FONTSIZE, "16", new Object[]{newRelationAnnotation});
 
         addCellToGraph(newRelationAnnotation);
-
-        textSource.save();
     }
 
   /*
@@ -194,8 +198,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObject<Grap
         Object[] selectionCells = getSelectionCells();
         removeCells(selectionCells, true);
 
-        textSource.save();
-
+        textSource.getGraphSpaceCollection().update(this);
         //    reDrawGraph();
     }
 
@@ -393,36 +396,33 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObject<Grap
                             for (Object cell : cells) {
                                 if (getModel().isEdge(cell) && "".equals(((mxCell) cell).getValue())) {
                                     mxCell edge = (mxCell) cell;
-                                    OWLObjectProperty property =
-                                            relationSelectionManager.getSelectedOWLObjectProperty();
-                                    String propertyID = null;
-                                    try {
-                                        propertyID =
-                                                controller.getOWLManager().getOWLEntityRendering(property);
-                                    } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
-                                        e.printStackTrace();
+                                    OWLEntity owlEntity = controller.getOWLManager().getSelectedOWLEntity();
+                                    if (owlEntity instanceof OWLObjectProperty) {
+                                        try {
+                                            String propertyID = controller.getOWLManager().getOWLEntityRendering(owlEntity);
+                                            RelationOptionsDialog relationOptionsDialog = new RelationOptionsDialog(parentWindow, propertyID);
+                                            relationOptionsDialog.pack();
+                                            relationOptionsDialog.setAlwaysOnTop(true);
+                                            relationOptionsDialog.setLocationRelativeTo(parentWindow);
+                                            relationOptionsDialog.requestFocus();
+                                            relationOptionsDialog.setVisible(true);
+                                            if (relationOptionsDialog.getResult() == RelationOptionsDialog.OK_OPTION) {
 
+                                                addTriple(
+                                                        (AnnotationNode) edge.getSource(),
+                                                        (AnnotationNode) edge.getTarget(),
+                                                        null,
+                                                        controller.getProfileCollection().getSelection(),
+                                                        (OWLObjectProperty) owlEntity,
+                                                        propertyID,
+                                                        relationOptionsDialog.getQuantifierButtonGroup().getSelection().getActionCommand(),
+                                                        relationOptionsDialog.getQuantifierValueTextField().getText(),
+                                                        relationOptionsDialog.getNegation());
+                                            }
+                                        } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
-                                    if (property != null) {
-                                        mxICell source = edge.getSource();
-                                        mxICell target = edge.getTarget();
-
-                                        String quantifier = relationSelectionManager.getSelectedRelationQuantifier();
-                                        String value = relationSelectionManager.getSelectedRelationQuantifierValue();
-                                        Boolean isNegated = relationSelectionManager.isSelectedNegation();
-
-                                        addTriple(
-                                                (AnnotationNode) source,
-                                                (AnnotationNode) target,
-                                                null,
-                                                controller.getProfileCollection().getSelection(),
-                                                property,
-                                                propertyID,
-                                                quantifier,
-                                                value,
-                                                isNegated);
-                                    }
-
                                     getModel().remove(edge);
                                 }
                             }
@@ -533,7 +533,11 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObject<Grap
 
     @Override
     public void selected(SelectionChangeEvent<ConceptAnnotation> changeEvent) {
-        setSelectionCells(getVerticesForAnnotation(changeEvent.getNew().getTextSource().getConceptAnnotationCollection().getSelection()));
+        if (changeEvent.getNew() == null) {
+            setSelectionCells(new Object[0]);
+        } else {
+            setSelectionCells(getVerticesForAnnotation(changeEvent.getNew().getTextSource().getConceptAnnotationCollection().getSelection()));
+        }
     }
 
     @Override

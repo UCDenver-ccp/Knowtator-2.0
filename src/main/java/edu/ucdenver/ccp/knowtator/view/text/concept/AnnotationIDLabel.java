@@ -13,12 +13,12 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorViewComponent;
 
 import javax.swing.*;
 
-class AnnotationIDLabel extends JLabel implements KnowtatorViewComponent {
+public class AnnotationIDLabel extends JLabel implements KnowtatorViewComponent {
   private TextSourceCollectionListener textSourceCollectionListener;
   private KnowtatorView view;
 
 
-  AnnotationIDLabel(KnowtatorView view) {
+  public AnnotationIDLabel(KnowtatorView view) {
     this.view = view;
 
     final ConceptAnnotationCollectionListener conceptAnnotationCollectionListener = new ConceptAnnotationCollectionListener() {

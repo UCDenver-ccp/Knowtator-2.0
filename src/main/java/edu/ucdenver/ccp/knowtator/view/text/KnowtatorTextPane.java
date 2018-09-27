@@ -22,6 +22,7 @@ import javax.swing.text.Utilities;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.util.Set;
 
 import static java.lang.Math.max;
@@ -62,6 +63,16 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
         } else {
             return text.lastIndexOf(textToFind, fromIndex - 1);
         }
+    }
+
+    public BufferedImage getScreenShot() {
+
+        BufferedImage image =
+                new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+        // call the Component's paint method, using
+        // the Graphics object of the image.
+        paint(image.getGraphics()); // alternately use .printAll(..)
+        return image;
     }
 
     public void search(String textToFind, boolean isCaseSensitive, boolean inAnnotations, boolean searchForward) {
@@ -238,7 +249,9 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
                 if (event.getOld() != null) {
                     event.getOld().getSpanCollection().removeCollectionListener(spanCollectionListener);
                 }
-                event.getNew().getSpanCollection().addCollectionListener(spanCollectionListener);
+                if (event.getNew() != null) {
+                    event.getNew().getSpanCollection().addCollectionListener(spanCollectionListener);
+                }
                 refreshHighlights();
             }
         };
@@ -456,15 +469,9 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
         }
     }
 
-    public void decreaseFontSize() {
+    public void setFontSize(int size) {
         Font font = getFont();
-        setFont(new Font(font.getName(), font.getStyle(), font.getSize() - 2));
-        repaint();
-    }
-
-    public void increaseFindSize() {
-        Font font = getFont();
-        setFont(new Font(font.getName(), font.getStyle(), font.getSize() + 2));
+        setFont(new Font(font.getName(), font.getStyle(), size));
         repaint();
     }
 

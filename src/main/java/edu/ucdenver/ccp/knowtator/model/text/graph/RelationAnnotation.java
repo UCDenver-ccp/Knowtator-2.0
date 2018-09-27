@@ -3,7 +3,6 @@ package edu.ucdenver.ccp.knowtator.model.text.graph;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.Savable;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
@@ -29,7 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class RelationAnnotation extends mxCell implements Savable, KnowtatorXMLIO, KnowtatorTextBoundObject, OWLSetupListener, OWLOntologyChangeListener, OWLModelManagerListener {
+public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, KnowtatorTextBoundObject, OWLSetupListener, OWLOntologyChangeListener, OWLModelManagerListener {
     private String quantifier;
     private String quantifierValue;
     private Profile annotator;
@@ -110,26 +109,6 @@ public class RelationAnnotation extends mxCell implements Savable, KnowtatorXMLI
         setValue(null);
     }
 
-    @Override
-    public void save() {
-        textSource.save();
-    }
-
-    @Override
-    public void load() {
-
-    }
-
-    @Override
-    public File getSaveLocation() {
-        return null;
-    }
-
-    @Override
-    public void setSaveLocation(File saveLocation) {
-
-    }
-
     /*
     GETTERS
      */
@@ -194,7 +173,7 @@ public class RelationAnnotation extends mxCell implements Savable, KnowtatorXMLI
             if (graphSpace != null && !dontRedraw) {
                 graphSpace.reDrawGraph();
             }
-            save();
+            textSource.save();
         }
     }
 
@@ -275,8 +254,7 @@ public class RelationAnnotation extends mxCell implements Savable, KnowtatorXMLI
             dontRedraw = true;
             setValue(String.format("%s\n%s %s", controller.getOWLManager().getOWLEntityRendering(property), quantifier, quantifierValue));
             dontRedraw = false;
-        } catch (OWLWorkSpaceNotSetException | OWLObjectPropertyNotFoundException | OWLEntityNullException e) {
-            e.printStackTrace();
+        } catch (OWLWorkSpaceNotSetException | OWLObjectPropertyNotFoundException | OWLEntityNullException ignored) {
 
         }
     }

@@ -2,9 +2,6 @@
 <project version="4">
   <component name="Palette2">
     <group name="Swing">
-      <item class="com.intellij.uiDesigner.HSpacer" tooltip-text="Horizontal Spacer" icon="/com/intellij/uiDesigner/icons/hspacer.png" removable="false" auto-create-binding="false" can-attach-label="false">
-        <default-constraints vsize-policy="1" hsize-policy="6" anchor="0" fill="1" />
-      </item>
       <item class="com.intellij.uiDesigner.VSpacer" tooltip-text="Vertical Spacer" icon="/com/intellij/uiDesigner/icons/vspacer.png" removable="false" auto-create-binding="false" can-attach-label="false">
         <default-constraints vsize-policy="6" hsize-policy="1" anchor="0" fill="2" />
       </item>
@@ -13,6 +10,9 @@
       </item>
       <item class="javax.swing.JScrollPane" icon="/com/intellij/uiDesigner/icons/scrollPane.png" removable="false" auto-create-binding="false" can-attach-label="true">
         <default-constraints vsize-policy="7" hsize-policy="7" anchor="0" fill="3" />
+      </item>
+      <item class="com.intellij.uiDesigner.HSpacer" tooltip-text="Horizontal Spacer" icon="/com/intellij/uiDesigner/icons/hspacer.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="1" hsize-policy="6" anchor="0" fill="1" />
       </item>
       <item class="javax.swing.JButton" icon="/com/intellij/uiDesigner/icons/button.png" removable="false" auto-create-binding="true" can-attach-label="false">
         <default-constraints vsize-policy="0" hsize-policy="3" anchor="0" fill="1" />
@@ -129,6 +129,12 @@
         <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
       </item>
       <item class="com.mxgraph.swing.mxGraphComponent" icon="/com/intellij/uiDesigner/icons/scrollPane.png" removable="true" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
+      </item>
+      <item class="edu.ucdenver.ccp.knowtator.view.text.concept.GraphSpaceList" icon="/com/intellij/uiDesigner/icons/list.png" removable="true" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
+      </item>
+      <item class="edu.ucdenver.ccp.knowtator.view.text.concept.AnnotationAnnotatorLabel" icon="/com/intellij/uiDesigner/icons/label.png" removable="true" auto-create-binding="false" can-attach-label="false">
         <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
       </item>
     </group>

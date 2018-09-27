@@ -8,6 +8,8 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.AbstractKnowtatorObject;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
+import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollection;
 import org.apache.commons.io.FileUtils;
@@ -26,7 +28,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-public class TextSource extends AbstractKnowtatorObject<TextSource> implements BratStandoffIO, Savable, KnowtatorXMLIO {
+public class TextSource extends AbstractKnowtatorObject<TextSource> implements BratStandoffIO, Savable, KnowtatorXMLIO, KnowtatorCollectionListener {
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(TextSource.class);
 
@@ -43,6 +45,11 @@ public class TextSource extends AbstractKnowtatorObject<TextSource> implements B
         this.saveFile = saveFile == null ? new File(controller.getTextSourceCollection().getAnnotationsLocation().getAbsolutePath(), textFileName.replace(".txt", "") + ".xml") : saveFile;
         this.conceptAnnotationCollection = new ConceptAnnotationCollection(controller, this);
         this.graphSpaceCollection = new GraphSpaceCollection(controller, this);
+
+        //noinspection unchecked
+        conceptAnnotationCollection.addCollectionListener(this);
+        //noinspection unchecked
+        graphSpaceCollection.addCollectionListener(this);
 
         controller.verifyId(FilenameUtils.getBaseName(textFileName), this, true);
 
@@ -197,6 +204,46 @@ public class TextSource extends AbstractKnowtatorObject<TextSource> implements B
 
     @Override
     public void setSaveLocation(File saveLocation) {
+
+    }
+
+    @Override
+    public void added(AddEvent addedObject) {
+        save();
+    }
+
+    @Override
+    public void removed(RemoveEvent removedObject) {
+        save();
+    }
+
+    @Override
+    public void changed(ChangeEvent changeEvent) {
+        save();
+    }
+
+    @Override
+    public void emptied(RemoveEvent object) {
+
+    }
+
+    @Override
+    public void firstAdded(AddEvent object) {
+
+    }
+
+    @Override
+    public void updated(KnowtatorObject updatedItem) {
+        save();
+    }
+
+    @Override
+    public void noSelection(KnowtatorObject previousSelection) {
+
+    }
+
+    @Override
+    public void selected(SelectionChangeEvent event) {
 
     }
 }

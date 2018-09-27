@@ -54,8 +54,6 @@ public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implem
   public void addGraphSpace(GraphSpace newGraphSpace) {
     add(newGraphSpace);
     setSelection(newGraphSpace);
-
-    textSource.save();
   }
 
   /*
@@ -74,7 +72,6 @@ public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implem
   public void removeGraphSpace(GraphSpace graphSpace) {
     remove(graphSpace);
     setSelection(null);
-    textSource.save();
   }
 
   /*

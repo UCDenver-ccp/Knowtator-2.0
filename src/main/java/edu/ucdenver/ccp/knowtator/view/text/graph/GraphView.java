@@ -1,8 +1,5 @@
 package edu.ucdenver.ccp.knowtator.view.text.graph;
 
-import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.util.mxMorphing;
@@ -24,8 +21,6 @@ import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -41,16 +36,6 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
     private JButton zoomInButton;
     private JPanel panel1;
     private GraphSpaceChooser graphSpaceChooser;
-    private JRadioButton someRadioButton;
-    private JRadioButton onlyRadioButton;
-    private JRadioButton exactlyRadioButton;
-    private JRadioButton minRadioButton;
-    private JRadioButton maxRadioButton;
-    private JTextField exactlyValueTextField;
-    private JCheckBox negateCheckBox;
-    private JPanel propertyValuePanel;
-    private JTextField minValueTextField;
-    private JTextField maxValueTextField;
     private JDialog dialog;
 
     @SuppressWarnings("unused")
@@ -123,45 +108,7 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
         graphComponent = new mxGraphComponent(testGraph);
     }
 
-    private void quantifierButtonAction(String quantifier) {
-        view.getController()
-                .getTextSourceCollection().getSelection()
-                .getGraphSpaceCollection().getSelection()
-                .getRelationSelectionManager()
-                .setSelectedPropertyQuantifer(quantifier);
-
-        if (quantifier.equals("some") || quantifier.equals("only")) {
-            view.getController()
-                    .getTextSourceCollection().getSelection()
-                    .getGraphSpaceCollection().getSelection()
-                    .getRelationSelectionManager()
-                    .setSelectedRelationQuantifierValue("");
-        }
-    }
-
-    private void quantifierTextFieldAction(String quantifierValue) {
-        view.getController()
-                .getTextSourceCollection().getSelection()
-                .getGraphSpaceCollection().getSelection()
-                .getRelationSelectionManager()
-                .setSelectedRelationQuantifierValue(quantifierValue);
-    }
-
     private void makeButtons() {
-        someRadioButton.addActionListener(e -> quantifierButtonAction("some"));
-        onlyRadioButton.addActionListener(e -> quantifierButtonAction("only"));
-        minRadioButton.addActionListener(e -> quantifierButtonAction("min"));
-        maxRadioButton.addActionListener(e -> quantifierButtonAction("max"));
-        exactlyRadioButton.addActionListener(e -> quantifierButtonAction("exactly"));
-        makeQuantifierTextField(minValueTextField, minRadioButton);
-        makeQuantifierTextField(maxValueTextField, maxRadioButton);
-        makeQuantifierTextField(exactlyValueTextField, exactlyRadioButton);
-        negateCheckBox.addActionListener(
-                e -> view.getController()
-                        .getTextSourceCollection().getSelection()
-                        .getGraphSpaceCollection().getSelection()
-                        .getRelationSelectionManager()
-                        .setNegatation(negateCheckBox.isSelected()));
 
         graphSpaceChooser.addActionListener(
                 e -> {
@@ -210,29 +157,6 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
         applyLayoutButton.addActionListener(e -> applyLayout());
     }
 
-    private void makeQuantifierTextField(JTextField quantifierValueTextField, JRadioButton quantifierRadioButton) {
-        quantifierValueTextField
-                .getDocument()
-                .addDocumentListener(
-                        new DocumentListener() {
-                            @Override
-                            public void insertUpdate(DocumentEvent e) {
-                                quantifierTextFieldAction(quantifierValueTextField.getText());
-                                quantifierRadioButton.doClick();
-                            }
-
-                            @Override
-                            public void removeUpdate(DocumentEvent e) {
-                                quantifierTextFieldAction(quantifierValueTextField.getText());
-                                quantifierRadioButton.doClick();
-                            }
-
-                            @Override
-                            public void changedUpdate(DocumentEvent e) {
-                            }
-                        });
-    }
-
     @SuppressWarnings("unused")
     public void goToAnnotationVertex(GraphSpace graphSpace, ConceptAnnotation conceptAnnotation) {
         if (conceptAnnotation != null && graphSpace != null) {
@@ -254,11 +178,9 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
 
     private void showGraph(GraphSpace graphSpace) {
         graphComponent.setGraph(graphSpace);
+        graphSpace.setParentWindow(dialog);
 
         graphComponent.setName(graphSpace.getId());
-        exactlyValueTextField.setText("");
-        minValueTextField.setText("");
-        maxValueTextField.setText("");
 
         graphSpace.setupListeners();
 
@@ -316,32 +238,8 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
 
     @Override
     public void selected(SelectionChangeEvent<GraphSpace> event) {
-        if (event.getNew() != null) {
-            String quantifier = event.getNew().getRelationSelectionManager().getSelectedRelationQuantifier();
-            if (quantifier != null) {
-                switch (quantifier) {
-                    case "only":
-                        onlyRadioButton.setSelected(true);
-                        break;
-                    case "exactly":
-                        exactlyRadioButton.setSelected(true);
-                        break;
-                    case "min":
-                        minRadioButton.setSelected(true);
-                        break;
-                    case "max":
-                        maxRadioButton.setSelected(true);
-                        break;
-                    default:
-                        someRadioButton.setSelected(true);
-                        break;
-                }
-            }
-
-            negateCheckBox.setSelected(event.getNew().getRelationSelectionManager().isSelectedNegation());
-            if (graphComponent.getGraph() != event.getNew()) {
-                showGraph(event.getNew());
-            }
+        if (event.getNew() != null && event.getNew() != graphComponent.getGraph()) {
+            showGraph(event.getNew());
         }
     }
 
@@ -461,46 +359,6 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
         graphComponent.setCenterPage(false);
         graphComponent.setGridVisible(true);
         panel4.add(graphComponent, BorderLayout.CENTER);
-        propertyValuePanel = new JPanel();
-        propertyValuePanel.setLayout(new GridLayoutManager(7, 2, new Insets(0, 0, 0, 0), -1, -1));
-        propertyValuePanel.setMaximumSize(new Dimension(2147483647, 2147483647));
-        propertyValuePanel.setMinimumSize(new Dimension(30, 55));
-        panel1.add(propertyValuePanel, BorderLayout.EAST);
-        someRadioButton = new JRadioButton();
-        someRadioButton.setSelected(true);
-        this.$$$loadButtonText$$$(someRadioButton, ResourceBundle.getBundle("log4j").getString("some1"));
-        propertyValuePanel.add(someRadioButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(58, 23), null, 0, false));
-        onlyRadioButton = new JRadioButton();
-        this.$$$loadButtonText$$$(onlyRadioButton, ResourceBundle.getBundle("log4j").getString("only1"));
-        propertyValuePanel.add(onlyRadioButton, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(58, 23), null, 0, false));
-        exactlyRadioButton = new JRadioButton();
-        this.$$$loadButtonText$$$(exactlyRadioButton, ResourceBundle.getBundle("log4j").getString("exactly1"));
-        propertyValuePanel.add(exactlyRadioButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        minRadioButton = new JRadioButton();
-        this.$$$loadButtonText$$$(minRadioButton, ResourceBundle.getBundle("log4j").getString("min1"));
-        propertyValuePanel.add(minRadioButton, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        maxRadioButton = new JRadioButton();
-        this.$$$loadButtonText$$$(maxRadioButton, ResourceBundle.getBundle("log4j").getString("max1"));
-        propertyValuePanel.add(maxRadioButton, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        exactlyValueTextField = new JTextField();
-        propertyValuePanel.add(exactlyValueTextField, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        final Spacer spacer1 = new Spacer();
-        propertyValuePanel.add(spacer1, new GridConstraints(6, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        minValueTextField = new JTextField();
-        minValueTextField.setText("");
-        propertyValuePanel.add(minValueTextField, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        maxValueTextField = new JTextField();
-        propertyValuePanel.add(maxValueTextField, new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        negateCheckBox = new JCheckBox();
-        this.$$$loadButtonText$$$(negateCheckBox, ResourceBundle.getBundle("log4j").getString("negate"));
-        propertyValuePanel.add(negateCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        ButtonGroup buttonGroup;
-        buttonGroup = new ButtonGroup();
-        buttonGroup.add(someRadioButton);
-        buttonGroup.add(onlyRadioButton);
-        buttonGroup.add(exactlyRadioButton);
-        buttonGroup.add(minRadioButton);
-        buttonGroup.add(maxRadioButton);
     }
 
     /**

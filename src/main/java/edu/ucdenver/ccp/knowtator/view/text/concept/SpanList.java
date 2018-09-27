@@ -23,7 +23,7 @@ public class SpanList extends JList<Span> implements KnowtatorViewComponent {
     private TextSourceCollectionListener textSourceCollectionListener;
 
 
-    SpanList(KnowtatorView view) {
+    public SpanList(KnowtatorView view) {
         this.view = view;
 
         textSourceCollectionListener = new TextSourceCollectionListener() {
@@ -108,12 +108,17 @@ public class SpanList extends JList<Span> implements KnowtatorViewComponent {
 
             @Override
             public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
-                setListData(event.getNew().getSpanCollection().toArray(new Span[0]));
+                if (event.getNew() != null) {
+                    setListData(event.getNew().getSpanCollection().toArray(new Span[0]));
+                    event.getNew().getSpanCollection().addCollectionListener(spanCollectionListener);
+                } else {
+                    setListData(new Span[0]);
+                }
 
                 if (event.getOld() != null) {
                     event.getOld().getSpanCollection().removeCollectionListener(spanCollectionListener);
                 }
-                event.getNew().getSpanCollection().addCollectionListener(spanCollectionListener);
+
             }
         };
 

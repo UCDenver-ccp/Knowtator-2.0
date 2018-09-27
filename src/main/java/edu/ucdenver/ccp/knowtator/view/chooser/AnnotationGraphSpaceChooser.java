@@ -132,10 +132,14 @@ public class AnnotationGraphSpaceChooser extends Chooser<GraphSpace> {
     }
 
     private void reactToAnnotationChange(ConceptAnnotation currentSelection) {
-        setModel(new DefaultComboBoxModel<>(currentSelection.getTextSource()
-                .getGraphSpaceCollection()
-                .stream().filter(graphSpace -> graphSpace.containsAnnotation(currentSelection))
-                .toArray(GraphSpace[]::new)));
+        if (currentSelection == null) {
+            setModel(new DefaultComboBoxModel<>(new GraphSpace[0]));
+        } else {
+            setModel(new DefaultComboBoxModel<>(currentSelection.getTextSource()
+                    .getGraphSpaceCollection()
+                    .stream().filter(graphSpace -> graphSpace.containsAnnotation(currentSelection))
+                    .toArray(GraphSpace[]::new)));
+        }
     }
 
     @Override

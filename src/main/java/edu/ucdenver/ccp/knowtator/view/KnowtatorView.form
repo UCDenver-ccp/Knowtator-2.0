@@ -1,363 +1,447 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="edu.ucdenver.ccp.knowtator.view.KnowtatorView">
-  <grid id="27dc6" binding="panel1" default-binding="true" layout-manager="BorderLayout" hgap="0" vgap="0">
+  <grid id="2416f" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="20" y="20" width="1523" height="547"/>
+      <xy x="20" y="20" width="1892" height="553"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="eee66" layout-manager="GridBagLayout">
-        <constraints border-constraint="North"/>
-        <properties>
-          <preferredSize width="672" height="182"/>
-        </properties>
+      <grid id="48e9a" binding="panel1" custom-create="true" default-binding="true" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints border-constraint="Center"/>
+        <properties/>
         <border type="none"/>
         <children>
-          <component id="a977e" class="javax.swing.JButton" binding="showGraphViewerButton">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="1.0" weighty="1.0"/>
-            </constraints>
+          <grid id="2034" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints border-constraint="North"/>
             <properties>
-              <icon value="icon/icons8-tree-structure-32.png"/>
-              <text value="Graph Viewer"/>
+              <preferredSize width="672" height="150"/>
             </properties>
-          </component>
-          <grid id="49c09" layout-manager="GridBagLayout">
-            <constraints>
-              <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="1.0" weighty="1.0"/>
-            </constraints>
-            <properties/>
             <border type="none"/>
             <children>
-              <component id="6005e" class="javax.swing.JCheckBox" binding="classFilterCheckBox">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                  <gridbag weightx="0.0" weighty="0.0"/>
-                </constraints>
+              <grid id="8b615" binding="searchPanel" layout-manager="GridLayoutManager" row-count="3" column-count="8" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints border-constraint="Center"/>
                 <properties>
-                  <text resource-bundle="log4j" key="owl.class.filter1"/>
+                  <alignmentX value="0.0"/>
                 </properties>
-              </component>
-              <component id="ae628" class="javax.swing.JCheckBox" binding="profileFilterCheckBox">
-                <constraints>
-                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
-                    <preferred-size width="80" height="11"/>
+                <border type="none"/>
+                <children>
+                  <component id="826ab" class="javax.swing.JButton" binding="menuButton">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <icon value="icon/icons8-menu-24.png"/>
+                      <text value=""/>
+                      <verticalAlignment value="0"/>
+                    </properties>
+                  </component>
+                  <component id="47c07" class="javax.swing.JButton" binding="showGraphViewerButton">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <icon value="icon/icons8-tree-structure-32.png"/>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="49d0a" class="javax.swing.JButton" binding="previousMatchButton">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Previous"/>
+                    </properties>
+                  </component>
+                  <component id="62dcb" class="javax.swing.JTextField" binding="matchTextField">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="3" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="25"/>
+                        <maximum-size width="-1" height="25"/>
+                      </grid>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="cae47" class="javax.swing.JButton" binding="assignColorToClassButton">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <icon value="icon/icons8-color-dropper-filled-50 (Custom).png"/>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="ad9e7" class="javax.swing.JButton" binding="addAnnotationButton">
+                    <constraints>
+                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <horizontalTextPosition value="0"/>
+                      <icon value="icon/icons8-plus-24.png"/>
+                      <text value=""/>
+                      <verticalTextPosition value="3"/>
+                    </properties>
+                  </component>
+                  <component id="c69b3" class="javax.swing.JButton" binding="removeAnnotationButton">
+                    <constraints>
+                      <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <horizontalTextPosition value="0"/>
+                      <icon value="icon/icons8-delete-24.png"/>
+                      <text value=""/>
+                      <verticalTextPosition value="3"/>
+                    </properties>
+                  </component>
+                  <component id="1b569" class="javax.swing.JCheckBox" binding="onlyAnnotationsCheckBox">
+                    <constraints>
+                      <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Only in Annotations"/>
+                    </properties>
+                  </component>
+                  <component id="ce715" class="javax.swing.JButton" binding="nextMatchButton">
+                    <constraints>
+                      <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Next"/>
+                    </properties>
+                  </component>
+                  <component id="93bd1" class="javax.swing.JButton" binding="findTextButton">
+                    <constraints>
+                      <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text resource-bundle="log4j" key="find.in.ontology1"/>
+                    </properties>
+                  </component>
+                  <component id="c4d9f" class="javax.swing.JCheckBox" binding="regexCheckBox">
+                    <constraints>
+                      <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Regex"/>
+                    </properties>
+                  </component>
+                  <component id="ce469" class="javax.swing.JCheckBox" binding="caseSensitiveCheckBox">
+                    <constraints>
+                      <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Case Sensitive"/>
+                    </properties>
+                  </component>
+                  <grid id="750fb" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="89505" class="javax.swing.JButton" binding="growSelectionStartButton">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <icon value="icon/icons8-exit-32 (reversed).png"/>
+                          <text value=""/>
+                        </properties>
+                      </component>
+                      <component id="29e60" class="javax.swing.JButton" binding="shrinkSelectionStartButton">
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <icon value="icon/icons8-enter-32.png"/>
+                          <text value=""/>
+                        </properties>
+                      </component>
+                      <component id="74a07" class="javax.swing.JButton" binding="shrinkSelectionEndButton">
+                        <constraints>
+                          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <icon value="icon/icons8-enter-32 (reversed).png"/>
+                          <text value=""/>
+                        </properties>
+                      </component>
+                      <component id="8b60d" class="javax.swing.JButton" binding="growSelectionEndButton">
+                        <constraints>
+                          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <icon value="icon/icons8-exit-32.png"/>
+                          <text value=""/>
+                        </properties>
+                      </component>
+                    </children>
                   </grid>
-                  <gridbag weightx="0.0" weighty="0.0"/>
-                </constraints>
-                <properties>
-                  <text resource-bundle="log4j" key="profile.filter"/>
-                </properties>
-              </component>
+                  <hspacer id="aadfd">
+                    <constraints>
+                      <grid row="0" column="7" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                  </hspacer>
+                </children>
+              </grid>
             </children>
           </grid>
-          <component id="e76c9" class="javax.swing.JButton" binding="openProjectButton">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
-                <preferred-size width="78" height="36"/>
-              </grid>
-              <gridbag weightx="1.0" weighty="1.0"/>
-            </constraints>
-            <properties>
-              <icon value="icon/icons8-document-32.png"/>
-              <text resource-bundle="log4j" key="open.project"/>
-            </properties>
-          </component>
-          <grid id="37310" binding="profilePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
-            <constraints>
-              <grid row="0" column="2" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="98" height="36"/>
-              </grid>
-              <gridbag weightx="1.0" weighty="1.0"/>
-            </constraints>
+          <grid id="12138" layout-manager="GridLayoutManager" row-count="2" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints border-constraint="South"/>
             <properties/>
             <border type="none"/>
             <children>
-              <component id="2531e" class="edu.ucdenver.ccp.knowtator.view.chooser.ProfileChooser" binding="profileChooser" custom-create="true">
-                <constraints border-constraint="Center"/>
+              <component id="ced6a" class="javax.swing.JButton" binding="previousTextSourceButton">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Previous"/>
+                </properties>
+              </component>
+              <component id="a16fd" class="javax.swing.JSlider" binding="fontSizeSlider">
+                <constraints>
+                  <grid row="1" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <inverted value="false"/>
+                  <majorTickSpacing value="8"/>
+                  <maximum value="28"/>
+                  <minimum value="8"/>
+                  <minorTickSpacing value="1"/>
+                  <snapToTicks value="true"/>
+                  <value value="16"/>
+                </properties>
+              </component>
+              <component id="349eb" class="edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser" binding="textSourceChooser" custom-create="true">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
                 <properties/>
               </component>
-              <component id="2e340" class="javax.swing.JButton" binding="button4" default-binding="true">
-                <constraints border-constraint="South"/>
-                <properties>
-                  <icon value="icon/icons8-sort-down-24.png"/>
-                  <text value=""/>
-                </properties>
-              </component>
-              <component id="27fa7" class="javax.swing.JButton" binding="button6" default-binding="true">
-                <constraints border-constraint="North"/>
-                <properties>
-                  <icon value="icon/icons8-sort-up-24.png"/>
-                  <text value=""/>
-                </properties>
-              </component>
-              <component id="ea52b" class="javax.swing.JButton" binding="addProfileButton">
-                <constraints border-constraint="West"/>
+              <component id="cfed4" class="javax.swing.JButton" binding="addTextSourceButton">
+                <constraints>
+                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
                 <properties>
                   <icon value="icon/icons8-plus-24.png"/>
                   <text value=""/>
                 </properties>
               </component>
-              <component id="25d72" class="javax.swing.JButton" binding="removeProfileButton">
-                <constraints border-constraint="East"/>
+              <component id="4041f" class="javax.swing.JButton" binding="removeTextSourceButton">
+                <constraints>
+                  <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
                 <properties>
                   <icon value="icon/icons8-delete-24.png"/>
                   <text value=""/>
                 </properties>
               </component>
+              <hspacer id="ff36e">
+                <constraints>
+                  <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </hspacer>
+              <component id="491ab" class="javax.swing.JButton" binding="nextTextSourceButton">
+                <constraints>
+                  <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Next"/>
+                </properties>
+              </component>
             </children>
           </grid>
-          <grid id="bada3" binding="textSourcePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
+          <splitpane id="db9a3">
+            <constraints border-constraint="Center"/>
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="54d1f" binding="textSourceChooserPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
-                <constraints border-constraint="Center"/>
-                <properties/>
+              <scrollpane id="a3a41">
+                <constraints>
+                  <splitpane position="left"/>
+                </constraints>
+                <properties>
+                  <minimumSize width="500" height="100"/>
+                  <preferredSize width="500" height="100"/>
+                </properties>
                 <border type="none"/>
                 <children>
-                  <component id="50aa5" class="edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser" binding="textSourceChooser" custom-create="true">
-                    <constraints border-constraint="Center"/>
-                    <properties/>
-                  </component>
-                  <component id="d6b3d" class="javax.swing.JButton" binding="previousTextSourceButton">
-                    <constraints border-constraint="North"/>
+                  <component id="9db2f" class="edu.ucdenver.ccp.knowtator.view.text.KnowtatorTextPane" binding="knowtatorTextPane" custom-create="true">
+                    <constraints/>
                     <properties>
-                      <icon value="icon/icons8-sort-up-24.png"/>
-                      <text value=""/>
-                    </properties>
-                  </component>
-                  <component id="6c4fd" class="javax.swing.JButton" binding="nextTextSourceButton">
-                    <constraints border-constraint="South"/>
-                    <properties>
-                      <icon value="icon/icons8-sort-down-24.png"/>
-                      <minimumSize width="30" height="30"/>
-                      <preferredSize width="30" height="30"/>
-                      <text value=""/>
-                    </properties>
-                  </component>
-                  <component id="84384" class="javax.swing.JButton" binding="addTextSourceButton">
-                    <constraints border-constraint="West"/>
-                    <properties>
-                      <horizontalTextPosition value="4"/>
-                      <icon value="icon/icons8-plus-24.png"/>
-                      <text value="Add Document"/>
-                      <verticalTextPosition value="0"/>
-                    </properties>
-                  </component>
-                  <component id="a16e" class="javax.swing.JButton" binding="removeTextSourceButton">
-                    <constraints border-constraint="East"/>
-                    <properties>
-                      <horizontalTextPosition value="2"/>
-                      <icon value="icon/icons8-delete-24.png"/>
-                      <text value="Remove Document"/>
+                      <editable value="false"/>
                     </properties>
                   </component>
                 </children>
-              </grid>
-              <grid id="cada" binding="textSizePanel" layout-manager="BorderLayout" hgap="0" vgap="0">
-                <constraints border-constraint="West"/>
-                <properties/>
+              </scrollpane>
+              <grid id="f1eae" binding="infoPane" layout-manager="GridLayoutManager" row-count="12" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <splitpane position="right"/>
+                </constraints>
+                <properties>
+                  <maximumSize width="170" height="2147483647"/>
+                </properties>
                 <border type="none"/>
                 <children>
-                  <component id="60fbd" class="javax.swing.JButton" binding="increaseFontSizeButton">
-                    <constraints border-constraint="North"/>
+                  <component id="aa5d1" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
                     <properties>
-                      <icon value="icon/icons8-Increase Font.png"/>
-                      <text value=""/>
+                      <font style="1"/>
+                      <text value="ID"/>
                     </properties>
                   </component>
-                  <component id="88558" class="javax.swing.JButton" binding="decreaseFontSizeButton">
-                    <constraints border-constraint="South"/>
+                  <component id="9d605" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
                     <properties>
-                      <icon value="icon/icons8-Decrease Font (Custom).png"/>
-                      <text value=""/>
+                      <font style="1"/>
+                      <text value="Annotator"/>
                     </properties>
                   </component>
-                </children>
-              </grid>
-            </children>
-          </grid>
-          <grid id="2d0e6" layout-manager="BorderLayout" hgap="0" vgap="0">
-            <constraints>
-              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <component id="19627" class="javax.swing.JButton" binding="previousSpanButton">
-                <constraints border-constraint="West"/>
-                <properties>
-                  <icon value="icon/icons8-advance-24 (reversed).png"/>
-                  <text value=""/>
-                </properties>
-              </component>
-              <component id="9e098" class="javax.swing.JButton" binding="nextSpanButton">
-                <constraints border-constraint="East"/>
-                <properties>
-                  <icon value="icon/icons8-advance-24.png"/>
-                  <text value=""/>
-                </properties>
-              </component>
-              <grid id="fbe95" binding="spanPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
-                <constraints border-constraint="Center"/>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <grid id="a7c4a" binding="annotationPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
-                    <constraints border-constraint="Center"/>
+                  <component id="9066a" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <font style="1"/>
+                      <text value="Class"/>
+                    </properties>
+                  </component>
+                  <component id="71cd1" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <font size="18" style="1"/>
+                      <labelFor value="280d3"/>
+                      <text value="Spans"/>
+                    </properties>
+                  </component>
+                  <component id="b50f8" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <font size="18" style="1"/>
+                      <labelFor value="fcd1b"/>
+                      <text value="Graph Spaces"/>
+                    </properties>
+                  </component>
+                  <scrollpane id="fc471">
+                    <constraints>
+                      <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <grid id="b111c" layout-manager="BorderLayout" hgap="0" vgap="0">
-                        <constraints border-constraint="East"/>
+                      <component id="ff32f" class="edu.ucdenver.ccp.knowtator.view.text.concept.SpanList" binding="spanList" custom-create="true">
+                        <constraints/>
                         <properties/>
-                        <border type="none"/>
-                        <children>
-                          <component id="8d772" class="javax.swing.JButton" binding="growSelectionEndButton">
-                            <constraints border-constraint="East"/>
-                            <properties>
-                              <horizontalTextPosition value="0"/>
-                              <icon value="icon/icons8-exit-32.png"/>
-                              <text value="Grow Span"/>
-                              <verticalTextPosition value="3"/>
-                            </properties>
-                          </component>
-                          <component id="f4f09" class="javax.swing.JButton" binding="shrinkSelectionEndButton">
-                            <constraints border-constraint="West"/>
-                            <properties>
-                              <horizontalTextPosition value="0"/>
-                              <icon value="icon/icons8-enter-32 (reversed).png"/>
-                              <text value="Shrink Span"/>
-                              <verticalTextPosition value="3"/>
-                            </properties>
-                          </component>
-                        </children>
-                      </grid>
-                      <grid id="8d9a2" layout-manager="BorderLayout" hgap="0" vgap="0">
-                        <constraints border-constraint="West"/>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <scrollpane id="d8af4">
+                    <constraints>
+                      <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="4eb01" class="edu.ucdenver.ccp.knowtator.view.text.concept.GraphSpaceList" binding="graphSpaceList" custom-create="true">
+                        <constraints/>
                         <properties/>
-                        <border type="none"/>
-                        <children>
-                          <component id="aef02" class="javax.swing.JButton" binding="shrinkSelectionStartButton">
-                            <constraints border-constraint="Center"/>
-                            <properties>
-                              <horizontalTextPosition value="0"/>
-                              <icon value="icon/icons8-enter-32.png"/>
-                              <text value="Shrink Span"/>
-                              <verticalTextPosition value="3"/>
-                            </properties>
-                          </component>
-                          <component id="b5efd" class="javax.swing.JButton" binding="growSelectionStartButton">
-                            <constraints border-constraint="West"/>
-                            <properties>
-                              <horizontalAlignment value="0"/>
-                              <horizontalTextPosition value="0"/>
-                              <icon value="icon/icons8-exit-32 (reversed).png"/>
-                              <text value="Grow Span"/>
-                              <verticalAlignment value="0"/>
-                              <verticalTextPosition value="3"/>
-                            </properties>
-                          </component>
-                        </children>
-                      </grid>
-                      <grid id="ba4ef" layout-manager="BorderLayout" hgap="0" vgap="0">
-                        <constraints border-constraint="Center"/>
-                        <properties/>
-                        <border type="none"/>
-                        <children>
-                          <component id="1c2ad" class="javax.swing.JButton" binding="addAnnotationButton">
-                            <constraints border-constraint="North"/>
-                            <properties>
-                              <horizontalTextPosition value="0"/>
-                              <icon value="icon/icons8-plus-24.png"/>
-                              <text value="Add Concept"/>
-                              <verticalTextPosition value="3"/>
-                            </properties>
-                          </component>
-                          <component id="3ab3a" class="javax.swing.JButton" binding="removeAnnotationButton">
-                            <constraints border-constraint="South"/>
-                            <properties>
-                              <horizontalTextPosition value="0"/>
-                              <icon value="icon/icons8-delete-24.png"/>
-                              <text value="Remove Concept"/>
-                              <verticalTextPosition value="3"/>
-                            </properties>
-                          </component>
-                        </children>
-                      </grid>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <grid id="a1fcc" layout-manager="GridBagLayout">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <hspacer id="72242">
+                        <constraints>
+                          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </hspacer>
+                      <vspacer id="fb328">
+                        <constraints>
+                          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </vspacer>
+                      <component id="5983e" class="javax.swing.JButton" binding="nextSpanButton">
+                        <constraints>
+                          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <horizontalAlignment value="0"/>
+                          <icon value="icon/icons8-advance-24.png"/>
+                          <text value=""/>
+                        </properties>
+                      </component>
+                      <component id="eb74b" class="javax.swing.JButton" binding="previousSpanButton">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <icon value="icon/icons8-advance-24 (reversed).png"/>
+                          <text value=""/>
+                        </properties>
+                      </component>
                     </children>
                   </grid>
+                  <hspacer id="b0db7">
+                    <constraints>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                  </hspacer>
+                  <component id="ceac6" class="edu.ucdenver.ccp.knowtator.view.text.concept.AnnotationIDLabel" binding="annotationIDLabel" custom-create="true">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="a240d" class="edu.ucdenver.ccp.knowtator.view.text.concept.AnnotationAnnotatorLabel" binding="annotationAnnotatorLabel" custom-create="true">
+                    <constraints>
+                      <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="a34f" class="edu.ucdenver.ccp.knowtator.view.text.concept.AnnotationClassLabel" binding="annotationClassLabel" custom-create="true">
+                    <constraints>
+                      <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
                 </children>
               </grid>
             </children>
-          </grid>
-          <component id="ea1ea" class="javax.swing.JButton" binding="assignColorToClassButton">
-            <constraints>
-              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
-                <preferred-size width="78" height="11"/>
-              </grid>
-              <gridbag weightx="1.0" weighty="1.0"/>
-            </constraints>
-            <properties>
-              <icon value="icon/icons8-color-dropper-filled-50 (Custom).png"/>
-              <text value=""/>
-            </properties>
-          </component>
-          <component id="1ca14" class="javax.swing.JButton" binding="findTextButton">
-            <constraints>
-              <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
-                <preferred-size width="121" height="108"/>
-              </grid>
-              <gridbag weightx="1.0" weighty="1.0"/>
-            </constraints>
-            <properties>
-              <text resource-bundle="log4j" key="find.in.ontology1"/>
-            </properties>
-          </component>
+          </splitpane>
         </children>
       </grid>
-      <splitpane id="d3d8a">
-        <constraints border-constraint="Center"/>
-        <properties>
-          <continuousLayout value="false"/>
-          <dividerLocation value="478"/>
-        </properties>
-        <border type="none"/>
-        <children>
-          <nested-form id="da807" form-file="edu/ucdenver/ccp/knowtator/view/text/concept/InfoPane.form" binding="infoPane" custom-create="true">
-            <constraints>
-              <splitpane position="right"/>
-            </constraints>
-          </nested-form>
-          <scrollpane id="4503">
-            <constraints>
-              <splitpane position="left"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <component id="1039" class="edu.ucdenver.ccp.knowtator.view.text.KnowtatorTextPane" binding="knowtatorTextPane" custom-create="true">
-                <constraints/>
-                <properties>
-                  <editable value="false"/>
-                </properties>
-              </component>
-            </children>
-          </scrollpane>
-        </children>
-      </splitpane>
     </children>
   </grid>
   <inspectionSuppressions>
-    <suppress inspection="NoLabelFor" id="4503"/>
+    <suppress inspection="I18nForm"/>
+    <suppress inspection="MissingMnemonic"/>
+    <suppress inspection="NoLabelFor"/>
   </inspectionSuppressions>
 </form>

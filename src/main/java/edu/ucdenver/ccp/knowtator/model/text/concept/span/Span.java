@@ -159,7 +159,6 @@ public class Span extends AbstractKnowtatorTextBoundObject<Span> implements Know
     if (end > start) {
       end -= 1;
       conceptAnnotation.getSpanCollection().update(this);
-      textSource.save();
     }
   }
 
@@ -167,7 +166,6 @@ public class Span extends AbstractKnowtatorTextBoundObject<Span> implements Know
     if (start < end) {
       start += 1;
       conceptAnnotation.getSpanCollection().update(this);
-      textSource.save();
     }
   }
 
@@ -175,7 +173,6 @@ public class Span extends AbstractKnowtatorTextBoundObject<Span> implements Know
     if (end < limit) {
       end += 1;
       conceptAnnotation.getSpanCollection().update(this);
-      textSource.save();
     }
   }
 
@@ -183,7 +180,6 @@ public class Span extends AbstractKnowtatorTextBoundObject<Span> implements Know
     if (start > 0) {
       start -= 1;
       conceptAnnotation.getSpanCollection().update(this);
-      textSource.save();
     }
   }
 

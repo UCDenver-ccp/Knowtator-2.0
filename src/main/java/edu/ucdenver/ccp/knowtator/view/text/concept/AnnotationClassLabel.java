@@ -21,14 +21,16 @@ import javax.swing.*;
 
 public class AnnotationClassLabel extends JLabel implements OWLModelManagerListener, KnowtatorViewComponent {
 
+    private ConceptAnnotation conceptAnnotation;
     private KnowtatorView view;
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(AnnotationClassLabel.class);
     private TextSourceCollectionListener textSourceCollectionListener;
 
 
-    AnnotationClassLabel(KnowtatorView view) {
+    public AnnotationClassLabel(KnowtatorView view) {
         this.view = view;
+        this.conceptAnnotation = null;
 
         final ConceptAnnotationCollectionListener conceptAnnotationCollectionListener = new ConceptAnnotationCollectionListener() {
             @Override
@@ -58,7 +60,7 @@ public class AnnotationClassLabel extends JLabel implements OWLModelManagerListe
 
             @Override
             public void updated(ConceptAnnotation updatedItem) {
-
+                displayAnnotation();
             }
 
             @Override
@@ -68,7 +70,8 @@ public class AnnotationClassLabel extends JLabel implements OWLModelManagerListe
 
             @Override
             public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
-                displayAnnotation(event.getNew());
+                conceptAnnotation = event.getNew();
+                displayAnnotation();
             }
         };
         textSourceCollectionListener = new TextSourceCollectionListener() {
@@ -120,7 +123,7 @@ public class AnnotationClassLabel extends JLabel implements OWLModelManagerListe
 
     }
 
-    private void displayAnnotation(ConceptAnnotation conceptAnnotation) {
+    private void displayAnnotation() {
         if (conceptAnnotation != null) {
             try {
                 setText(view.getController().getOWLManager().getOWLEntityRendering(conceptAnnotation.getOwlClass()));
@@ -135,10 +138,7 @@ public class AnnotationClassLabel extends JLabel implements OWLModelManagerListe
     @Override
     public void handleChange(OWLModelManagerChangeEvent event) {
         if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
-            ConceptAnnotation conceptAnnotation = view.getController()
-                    .getTextSourceCollection().getSelection()
-                    .getConceptAnnotationCollection().getSelection();
-            displayAnnotation(conceptAnnotation);
+            displayAnnotation();
         }
     }
 

@@ -77,8 +77,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                 String owlClassID = controller.getOWLManager().getOWLEntityRendering(owlClass);
                 ConceptAnnotation newConceptAnnotation = addAnnotation(null, (OWLClass) owlClass, owlClassID, null, annotator, "identity");
                 newConceptAnnotation.getSpanCollection().addSpan(null, start, end);
-
-                textSource.save();
             } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
                 e.printStackTrace();
             }
@@ -90,7 +88,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         getSelection().getSpanCollection().addSpan(null,
                 controller.getTextSourceCollection().getStart(),
                 controller.getTextSourceCollection().getEnd());
-        textSource.save();
     }
 
     /*
@@ -98,10 +95,11 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
      */
 
     public void removeAnnotation(ConceptAnnotation conceptAnnotationToRemove) {
-        remove(conceptAnnotationToRemove);
         for (Span span : conceptAnnotationToRemove.getSpanCollection()) {
             allSpanCollection.remove(span);
         }
+        conceptAnnotationToRemove.dispose();
+        remove(conceptAnnotationToRemove);
 
         setSelection(null);
     }
@@ -110,7 +108,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         textSource.getGraphSpaceCollection().removeAnnotation(getSelection());
         removeAnnotation(getSelection());
         setSelection(null);
-        textSource.save();
     }
 
     public void removeSpanFromAnnotation(ConceptAnnotation conceptAnnotation, Span span) {
@@ -122,7 +119,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     public void removeSpanFromSelectedAnnotation() {
         ConceptAnnotation conceptAnnotation = getSelection();
         removeSpanFromAnnotation(conceptAnnotation, conceptAnnotation.getSpanCollection().getSelection());
-        textSource.save();
     }
 
     /*
@@ -135,7 +131,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         span.growStart();
         allSpanCollection.add(span);
 
-        textSource.save();
         collectionListeners.forEach(listener -> listener.updated(getSelection()));
     }
 
@@ -145,7 +140,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         span.growEnd(textSource.getContent().length());
         allSpanCollection.add(span);
 
-        textSource.save();
         collectionListeners.forEach(listener -> listener.updated(getSelection()));
     }
 
@@ -155,7 +149,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         span.shrinkEnd();
         allSpanCollection.add(span);
 
-        textSource.save();
         collectionListeners.forEach(listener -> listener.updated(getSelection()));
     }
 
@@ -165,7 +158,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         span.shrinkStart();
         allSpanCollection.add(span);
 
-        textSource.save();
         collectionListeners.forEach(listener -> listener.updated(getSelection()));
     }
 
@@ -285,12 +277,31 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     public void owlSetup() {
         try {
             controller.getOWLManager().getWorkSpace().getOWLModelManager().addOntologyChangeListener(this);
-            for (ConceptAnnotation conceptAnnotation : this) {
-                conceptAnnotation.setOwlClass(controller.getOWLManager().getOWLClassByID(conceptAnnotation.getOwlClassID()));
-            }
-        } catch (OWLClassNotFoundException | OWLWorkSpaceNotSetException e) {
-            e.printStackTrace();
+            setOWLClassForAnnotations();
+        } catch (OWLWorkSpaceNotSetException ignored) {
+        }
+    }
 
+    private void setOWLClassForAnnotations() throws OWLWorkSpaceNotSetException {
+        log.warn("Setting owl classes");
+        Map<String, List<ConceptAnnotation>> unmatchedAnnotations = new HashMap<>();
+        for (ConceptAnnotation conceptAnnotation : this) {
+            log.warn(String.format("%s %s", conceptAnnotation.getId(), conceptAnnotation.getOwlClassID()));
+            try {
+                OWLClass owlClass = controller.getOWLManager().getOWLClassByID(conceptAnnotation.getOwlClassID());
+                conceptAnnotation.setOwlClass(owlClass);
+            } catch (OWLClassNotFoundException e) {
+                List<ConceptAnnotation> conceptAnnotationList = unmatchedAnnotations.computeIfAbsent(conceptAnnotation.getOwlClassID(), k -> new ArrayList<>());
+                conceptAnnotationList.add(conceptAnnotation);
+            }
+        }
+        if (!unmatchedAnnotations.isEmpty()) {
+            log.warn("The following classes could not be matched to annotations");
+            unmatchedAnnotations.forEach((concept, conceptAnnotationList) -> {
+                log.warn(String.format("Concept: %s", concept));
+                log.warn("\tAnnotations:");
+                conceptAnnotationList.forEach(conceptAnnotation -> log.warn(String.format("\t%s", conceptAnnotation.getId())));
+            });
         }
     }
 
@@ -370,6 +381,11 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
             ConceptAnnotation newConceptAnnotation = addAnnotation(annotationID, null, owlClassID, owlClassLabel, profile, type);
             newConceptAnnotation.readFromKnowtatorXML(null, annotationElement);
+        }
+
+        try {
+            setOWLClassForAnnotations();
+        } catch (OWLWorkSpaceNotSetException ignored) {
         }
     }
 
@@ -472,9 +488,13 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                                 "",
                                 false);
                     }
-                });
+                }
+        );
 
-
+        try {
+            setOWLClassForAnnotations();
+        } catch (OWLWorkSpaceNotSetException ignored) {
+        }
     }
 
     @Override
@@ -510,6 +530,11 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         GraphSpace newGraphSpace = new GraphSpace(controller, textSource, "Brat Relation Graph");
         textSource.getGraphSpaceCollection().addGraphSpace(newGraphSpace);
         newGraphSpace.readFromBratStandoff(null, annotationCollection, null);
+
+        try {
+            setOWLClassForAnnotations();
+        } catch (OWLWorkSpaceNotSetException ignored) {
+        }
     }
 
 

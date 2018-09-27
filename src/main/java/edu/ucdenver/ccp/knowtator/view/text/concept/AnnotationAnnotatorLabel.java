@@ -13,13 +13,13 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorViewComponent;
 
 import javax.swing.*;
 
-public class AnnotatorLabel extends JLabel implements KnowtatorViewComponent {
+public class AnnotationAnnotatorLabel extends JLabel implements KnowtatorViewComponent {
 
 	private TextSourceCollectionListener textSourceCollectionListener;
 	private KnowtatorView view;
 
 
-	AnnotatorLabel(KnowtatorView view) {
+    public AnnotationAnnotatorLabel(KnowtatorView view) {
 		this.view = view;
 		final ConceptAnnotationCollectionListener conceptAnnotationCollectionListener = new ConceptAnnotationCollectionListener() {
 			@Override

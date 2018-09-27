@@ -32,7 +32,7 @@ public class OWLManager implements Serializable, DebugListener, OWLSelectionMode
   private List<OWLSetupListener> owlSetupListeners;
   private File ontologiesLocation;
   private OWLEntity selectedOWLEntity;
-  private List<OWLClassSelectionListener> owlEntityListeners;
+  private List<OWLEntitySelectionListener> owlEntityListeners;
 
   public OWLManager(KnowtatorController controller) {
     this.controller = controller;
@@ -107,7 +107,7 @@ public class OWLManager implements Serializable, DebugListener, OWLSelectionMode
     setUpOWL();
   }
 
-  public void setUpOWL() {
+  private void setUpOWL() {
     owlSetupListeners.forEach(OWLSetupListener::owlSetup);
   }
 
@@ -200,22 +200,16 @@ public class OWLManager implements Serializable, DebugListener, OWLSelectionMode
 
   @Override
   public void selectionChanged() {
-    OWLEntity ent = null;
     try {
-      ent = getWorkSpace().getOWLSelectionModel().getSelectedEntity();
-    } catch (OWLWorkSpaceNotSetException e) {
-      e.printStackTrace();
-    }
-    if (ent instanceof OWLObjectProperty) {
-      controller.getTextSourceCollection().getSelection()
-              .getGraphSpaceCollection().getSelection()
-              .getRelationSelectionManager().setSelectedOWLObjectProperty((OWLObjectProperty) ent);
-    } else if (ent instanceof OWLClass) {
+      OWLEntity ent = getWorkSpace().getOWLSelectionModel().getSelectedEntity();
+      log.warn(getOWLEntityRendering(ent));
       setSelectedOWLEntity(ent);
+    } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
+      e.printStackTrace();
     }
   }
 
-  public void addOWLEntityListener(OWLClassSelectionListener listener) {
+  public void addOWLEntityListener(OWLEntitySelectionListener listener) {
     owlEntityListeners.add(listener);
   }
 

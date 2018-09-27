@@ -1,15 +1,19 @@
 package edu.ucdenver.ccp.knowtator;
 
+import com.google.common.io.Files;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings("unused")
 public class ConceptAnnotationCollectionTest {
@@ -44,12 +48,25 @@ public class ConceptAnnotationCollectionTest {
     }
 
     public void setUp() {
+        Map<String, File> tempProjectDirs = new HashMap<>();
+        try {
+
+            for (String projectFileName : projectFileNames) {
+                File projectDirectory = getProjectFile(projectFileName).getParentFile();
+                File tempProjectDir = Files.createTempDir();
+                FileUtils.copyDirectory(projectDirectory, tempProjectDir);
+                tempProjectDirs.put(projectFileName, tempProjectDir);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         KnowtatorController controller = new KnowtatorController();
 
         int projectID = 0;
         int articleID = 0;
         String projectFileName = projectFileNames[projectID];
-        File project = getProjectFile(projectFileName);
+        File project = tempProjectDirs.get(projectFileName);
         String articleName = articleFileNames[articleID];
 
         try {
