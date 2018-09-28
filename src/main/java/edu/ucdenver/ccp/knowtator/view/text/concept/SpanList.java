@@ -14,6 +14,7 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorViewComponent;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
 
 public class SpanList extends JList<Span> implements KnowtatorViewComponent, SpanCollectionListener {
 
@@ -22,9 +23,20 @@ public class SpanList extends JList<Span> implements KnowtatorViewComponent, Spa
     private TextSourceCollectionListener textSourceCollectionListener;
 
 
-
     public SpanList(KnowtatorView view) {
         this.view = view;
+
+        ListSelectionListener al = e -> {
+            JList jList = (JList) e.getSource();
+            if (jList.getSelectedValue() != null) {
+                view.getController()
+                        .getTextSourceCollection().getSelection()
+                        .getConceptAnnotationCollection().getSelection()
+                        .getSpanCollection().setSelection((Span) jList.getSelectedValue());
+            }
+        };
+
+        addListSelectionListener(al);
 
         SpanCollectionListener spanList = this;
         textSourceCollectionListener = new TextSourceCollectionListener() {

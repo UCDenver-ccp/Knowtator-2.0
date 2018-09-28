@@ -14,7 +14,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 import java.util.prefs.BackingStoreException;
 
 public class MenuDialog extends JDialog {
@@ -30,15 +29,15 @@ public class MenuDialog extends JDialog {
     private JButton importButton;
     private JButton profileButton;
 
-    public MenuDialog(Window parent, KnowtatorView view, Map<String, Boolean> filters) {
+    public MenuDialog(Window parent, KnowtatorView view) {
         super(parent);
         setLocationRelativeTo(view);
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
-        owlClassFilterCheckBox.setSelected(filters.get("owl class"));
-        profileFilterCheckBox.setSelected(filters.get("profile"));
+        owlClassFilterCheckBox.setSelected(view.getController().getFilterModel().isFilterByOWLClass());
+        profileFilterCheckBox.setSelected(view.getController().getFilterModel().isFilterByProfile());
 
         buttonOK.addActionListener(e -> onOK());
 
@@ -105,8 +104,8 @@ public class MenuDialog extends JDialog {
 
         });
 
-        profileFilterCheckBox.addItemListener(e -> view.getController().getTextSourceCollection().setFilterByProfile(profileFilterCheckBox.isSelected()));
-        owlClassFilterCheckBox.addItemListener(e -> view.getController().getTextSourceCollection().setFilterByOWLClass(owlClassFilterCheckBox.isSelected()));
+        profileFilterCheckBox.addItemListener(e -> view.getController().getFilterModel().setFilterByProfile(profileFilterCheckBox.isSelected()));
+        owlClassFilterCheckBox.addItemListener(e -> view.getController().getFilterModel().setFilterByOWLClass(owlClassFilterCheckBox.isSelected()));
 
         exportButton.addActionListener(e -> {
             ExportDialog exportDialog = new ExportDialog(this, view);

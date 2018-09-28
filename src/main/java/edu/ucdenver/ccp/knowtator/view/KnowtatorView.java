@@ -19,9 +19,8 @@ import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.SpanCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorActions;
 import edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser;
-import edu.ucdenver.ccp.knowtator.view.menu.MenuDialog;
 import edu.ucdenver.ccp.knowtator.view.text.KnowtatorTextPane;
 import edu.ucdenver.ccp.knowtator.view.text.concept.*;
 import edu.ucdenver.ccp.knowtator.view.text.graph.GraphViewDialog;
@@ -34,6 +33,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.*;
@@ -43,7 +43,6 @@ import java.awt.event.WindowFocusListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.prefs.Preferences;
 
 public class KnowtatorView extends AbstractOWLClassViewComponent implements DropTargetListener, KnowtatorViewComponent {
@@ -55,10 +54,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     private JComponent panel1;
     private JButton showGraphViewerButton;
     private JButton removeAnnotationButton;
-    private JButton growSelectionStartButton;
-    private JButton shrinkSelectionEndButton;
-    private JButton growSelectionEndButton;
-    private JButton shrinkSelectionStartButton;
+    private JButton growStartButton;
+    private JButton shrinkEndButton;
+    private JButton growEndButton;
+    private JButton shrinkStartButton;
     private JButton addAnnotationButton;
     private JButton previousTextSourceButton;
     private JButton nextTextSourceButton;
@@ -201,226 +200,69 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     }
 
     private void makeButtons() {
-        fontSizeSlider.setValue(knowtatorTextPane.getFont().getSize());
+        makeMenuButtons();
+        makeTextSourceButtons();
+        makeAnnotationButtons();
+        makeSpanButtons();
+        makeSearchButtons();
+    }
+    private void makeMenuButtons() {
+        menuButton.addActionListener(e -> KnowtatorActions.openMenu(this));
+    }
 
-        menuButton.addActionListener(e -> {
-            MenuDialog menuDialog = new MenuDialog(SwingUtilities.getWindowAncestor(this), this, getFilters());
-            menuDialog.pack();
-            menuDialog.setVisible(true);
-        });
+    private void makeTextSourceButtons() {
+
+        fontSizeSlider.setValue(knowtatorTextPane.getFont().getSize());
+        fontSizeSlider.addChangeListener(e -> KnowtatorActions.setFontSize(this, fontSizeSlider.getValue()));
 
         textSourceButtons = new HashMap<>();
-        textSourceButtons.put(showGraphViewerButton, e -> graphViewDialog.setVisible(true));
-        textSourceButtons.put(previousTextSourceButton, e -> getController().getTextSourceCollection().selectPrevious());
-        textSourceButtons.put(nextTextSourceButton, e -> getController().getTextSourceCollection().selectNext());
-        textSourceButtons.put(addTextSourceButton, e -> {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(controller.getTextSourceCollection().getArticlesLocation());
-
-            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                controller.getTextSourceCollection().addDocument(fileChooser.getSelectedFile());
-            }
-        });
-        textSourceButtons.put(removeTextSourceButton, e -> controller.getTextSourceCollection().removeActiveTextSource());
-
-        fontSizeSlider.addChangeListener(e -> knowtatorTextPane.setFontSize(fontSizeSlider.getValue()));
-
-        annotationButtons = new HashMap<>();
-        annotationButtons.put(addAnnotationButton, e -> {
-            String[] buttons = {"Add new concept", "Add span to concept", "Cancel"};
-            int response =
-                    JOptionPane.showOptionDialog(
-                            this,
-                            "Choose an option",
-                            "Add ConceptAnnotation",
-                            JOptionPane.DEFAULT_OPTION,
-                            JOptionPane.PLAIN_MESSAGE,
-                            null,
-                            buttons,
-                            2);
-
-            switch (response) {
-                case 0:
-                    getController()
-                            .getTextSourceCollection().getSelection()
-                            .getConceptAnnotationCollection()
-                            .addSelectedAnnotation();
-                    break;
-                case 1:
-                    getController()
-                            .getTextSourceCollection().getSelection()
-                            .getConceptAnnotationCollection()
-                            .addSpanToSelectedAnnotation();
-                    break;
-                case 2:
-                    break;
-            }
-        });
-        annotationButtons.put(removeAnnotationButton, e -> {
-            if (getController()
-                    .getTextSourceCollection().getSelection()
-                    .getConceptAnnotationCollection()
-                    .getSelection().getSpanCollection()
-                    .size()
-                    > 1) {
-                String[] buttons = {"Remove concept", "Remove span from concept", "Cancel"};
-                int response =
-                        JOptionPane.showOptionDialog(
-                                this,
-                                "Choose an option",
-                                "Remove ConceptAnnotation",
-                                JOptionPane.DEFAULT_OPTION,
-                                JOptionPane.QUESTION_MESSAGE,
-                                null,
-                                buttons,
-                                2);
-
-                switch (response) {
-                    case 0:
-                        getController()
-                                .getTextSourceCollection().getSelection()
-                                .getConceptAnnotationCollection()
-                                .removeSelectedAnnotation();
-                        break;
-                    case 1:
-                        getController()
-                                .getTextSourceCollection().getSelection()
-                                .getConceptAnnotationCollection()
-                                .removeSpanFromSelectedAnnotation();
-                        break;
-                    case 2:
-                        break;
-                }
-            } else {
-                if (JOptionPane.showConfirmDialog(
-                        this,
-                        "Are you sure you want to remove the selected concept?",
-                        "Remove ConceptAnnotation",
-                        JOptionPane.YES_NO_OPTION)
-                        == JOptionPane.YES_OPTION) {
-                    getController()
-                            .getTextSourceCollection().getSelection()
-                            .getConceptAnnotationCollection()
-                            .removeSelectedAnnotation();
-                }
-            }
-        });
-        annotationButtons.put(assignColorToClassButton, e -> {
-            OWLEntity owlClass = getController().getOWLManager().getSelectedOWLEntity();
-            if (owlClass == null) {
-                owlClass =
-                        getController()
-                                .getTextSourceCollection().getSelection()
-                                .getConceptAnnotationCollection()
-                                .getSelection()
-                                .getOwlClass();
-            }
-            if (owlClass instanceof OWLClass) {
-                Color c = JColorChooser.showDialog(this, "Pick a color for " + owlClass, Color.CYAN);
-                if (c != null) {
-                    getController().getProfileCollection().getSelection().addColor(owlClass, c);
-
-                    if (JOptionPane.showConfirmDialog(
-                            this, "Assign color to descendants of " + owlClass + "?")
-                            == JOptionPane.OK_OPTION) {
-                        try {
-                            Set<OWLClass> descendants =
-                                    getController()
-                                            .getOWLManager()
-                                            .getDescendants((OWLClass) owlClass);
-
-                            for (OWLClass descendant : descendants) {
-                                controller.getProfileCollection()
-                                        .getSelection()
-                                        .addColor(descendant, c);
-                            }
-                        } catch (OWLWorkSpaceNotSetException e1) {
-                            e1.printStackTrace();
-                        }
-                    }
-                }
-            }
-        });
-
-        spanButtons = new HashMap<>();
-        spanButtons.put(nextSpanButton, e -> getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getNextSpan());
-        spanButtons.put(previousSpanButton, e -> getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getPreviousSpan());
-
-        spanSizeButtons = new HashMap<>();
-        spanSizeButtons.put(shrinkSelectionEndButton, e -> getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().shrinkSelectedSpanEnd());
-        spanSizeButtons.put(shrinkSelectionStartButton, e -> getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().shrinkSelectedSpanStart());
-        spanSizeButtons.put(growSelectionEndButton, e -> getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().growSelectedSpanEnd());
-        spanSizeButtons.put(growSelectionStartButton, e -> getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().growSelectedSpanStart());
-
-        selectionSizeButtons = new HashMap<>();
-        selectionSizeButtons.put(growSelectionStartButton, e -> knowtatorTextPane.growStart());
-        selectionSizeButtons.put(shrinkSelectionStartButton, e -> knowtatorTextPane.shrinkStart());
-        selectionSizeButtons.put(shrinkSelectionEndButton, e -> knowtatorTextPane.shrinkEnd());
-        selectionSizeButtons.put(growSelectionEndButton, e -> knowtatorTextPane.growEnd());
+        textSourceButtons.put(showGraphViewerButton, e -> KnowtatorActions.showGraphViewer(graphViewDialog));
+        textSourceButtons.put(previousTextSourceButton, e -> KnowtatorActions.selectPreviousTextSource(this));
+        textSourceButtons.put(nextTextSourceButton, e -> KnowtatorActions.selectNextTextSource(this));
+        textSourceButtons.put(addTextSourceButton, e -> KnowtatorActions.addTextSource(this));
+        textSourceButtons.put(removeTextSourceButton, e -> KnowtatorActions.removeTextSource(this));
 
         // Disable
         disableTextSourceButtons();
-
-        findTextButton.addActionListener(
-                e -> {
-                    try {
-                        getController()
-                                .getOWLManager()
-                                .searchForString(matchTextField.getSelectedText());
-                    } catch (OWLWorkSpaceNotSetException e1) {
-                        e1.printStackTrace();
-
-                    }
-                });
-
-        nextMatchButton.addActionListener(
-                e -> knowtatorTextPane.search(matchTextField.getText(),
-                        caseSensitiveCheckBox.isSelected(),
-                        onlyAnnotationsCheckBox.isSelected(), true));
-        previousMatchButton.addActionListener(
-                e -> knowtatorTextPane.search(matchTextField.getText(),
-                        caseSensitiveCheckBox.isSelected(),
-                        onlyAnnotationsCheckBox.isSelected(), false));
-
-        graphSpaceList.addListSelectionListener(
-                e -> {
-                    JComboBox comboBox = (JComboBox) e.getSource();
-                    if (comboBox.getSelectedItem() != null
-                            && comboBox.getSelectedItem()
-                            != controller
-                            .getTextSourceCollection().getSelection()
-                            .getGraphSpaceCollection().getSelection()) {
-                        graphViewDialog.setVisible(true);
-                        controller
-                                .getTextSourceCollection().getSelection()
-                                .getGraphSpaceCollection().setSelection((GraphSpace) comboBox.getSelectedItem());
-                    }
-                });
-
-        spanList.addListSelectionListener(
-                e -> {
-                    JList jList = (JList) e.getSource();
-                    if (jList.getSelectedValue() != null) {
-                        controller
-                                .getTextSourceCollection().getSelection()
-                                .getConceptAnnotationCollection().getSelection()
-                                .getSpanCollection().setSelection((Span) jList.getSelectedValue());
-                    }
-                });
-
-        knowtatorTextPane.addCaretListener(e -> matchTextField.setText(knowtatorTextPane.getSelectedText()));
     }
 
-    private Map<String, Boolean> getFilters() {
-        Map<String, Boolean> filters = new HashMap<>();
-        filters.put("owl class", controller.getTextSourceCollection().isFilterByOWLClass());
-        filters.put("profile", controller.getTextSourceCollection().isFilterByProfile());
-        return filters;
+    private void makeAnnotationButtons() {
+
+        annotationButtons = new HashMap<>();
+        annotationButtons.put(addAnnotationButton, e -> KnowtatorActions.addAnnotation(this));
+        annotationButtons.put(removeAnnotationButton, e -> KnowtatorActions.removeAnnotation(this));
+        annotationButtons.put(assignColorToClassButton, e -> KnowtatorActions.assignColorToClassButton(this));
+    }
+
+    private void makeSpanButtons() {
+
+        spanButtons = new HashMap<>();
+        spanButtons.put(nextSpanButton, e -> KnowtatorActions.selectNextSpan(this));
+        spanButtons.put(previousSpanButton, e -> KnowtatorActions.selectPreviousSpan(this));
+
+        spanSizeButtons = new HashMap<>();
+        spanSizeButtons.put(shrinkEndButton, e -> KnowtatorActions.modifySelectedSpan(this, "end", "shrink"));
+        spanSizeButtons.put(shrinkStartButton, e -> KnowtatorActions.modifySelectedSpan(this, "start", "shrink"));
+        spanSizeButtons.put(growEndButton, e -> KnowtatorActions.modifySelectedSpan(this, "end", "grow"));
+        spanSizeButtons.put(growStartButton, e -> KnowtatorActions.modifySelectedSpan(this, "start", "grow"));
+
+        selectionSizeButtons = new HashMap<>();
+        selectionSizeButtons.put(growStartButton, e -> KnowtatorActions.modifySelection(this, "end", "shrink"));
+        selectionSizeButtons.put(shrinkStartButton, e -> KnowtatorActions.modifySelection(this, "start", "shrink"));
+        selectionSizeButtons.put(shrinkEndButton, e -> KnowtatorActions.modifySelection(this, "end", "grow"));
+        selectionSizeButtons.put(growEndButton, e -> KnowtatorActions.modifySelection(this, "start", "grow"));
+    }
+
+    private void makeSearchButtons() {
+        findTextButton.addActionListener(e -> KnowtatorActions.findText(this, matchTextField.getSelectedText()));
+        nextMatchButton.addActionListener(e -> KnowtatorActions.findNextMatch(this, matchTextField.getText(), caseSensitiveCheckBox.isSelected(), onlyAnnotationsCheckBox.isSelected()));
+        previousMatchButton.addActionListener(e -> KnowtatorActions.findPreviousMatch(this, matchTextField.getText(), caseSensitiveCheckBox.isSelected(), onlyAnnotationsCheckBox.isSelected()));
     }
 
     private void setupListeners() {
         OWLEntitySelectionListener owlEntitySelectionListener = this::owlEntitySelectionChanged;
         controller.getOWLManager().addOWLEntityListener(owlEntitySelectionListener);
+
 
         ProfileCollectionListener profileCollectionListener = new ProfileCollectionListener() {
             @Override
@@ -667,6 +509,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         return knowtatorTextPane;
     }
 
+    public JTextComponent getMatchTextField() {
+        return matchTextField;
+    }
+
     @Override
     public void dragEnter(DropTargetDragEvent e) {
     }
@@ -785,22 +631,22 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
         searchPanel.add(panel4, new GridConstraints(2, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        growSelectionStartButton = new JButton();
-        growSelectionStartButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-exit-32 (reversed).png")));
-        growSelectionStartButton.setText("");
-        panel4.add(growSelectionStartButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        shrinkSelectionStartButton = new JButton();
-        shrinkSelectionStartButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-enter-32.png")));
-        shrinkSelectionStartButton.setText("");
-        panel4.add(shrinkSelectionStartButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        shrinkSelectionEndButton = new JButton();
-        shrinkSelectionEndButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-enter-32 (reversed).png")));
-        shrinkSelectionEndButton.setText("");
-        panel4.add(shrinkSelectionEndButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        growSelectionEndButton = new JButton();
-        growSelectionEndButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-exit-32.png")));
-        growSelectionEndButton.setText("");
-        panel4.add(growSelectionEndButton, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        growStartButton = new JButton();
+        growStartButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-exit-32 (reversed).png")));
+        growStartButton.setText("");
+        panel4.add(growStartButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        shrinkStartButton = new JButton();
+        shrinkStartButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-enter-32.png")));
+        shrinkStartButton.setText("");
+        panel4.add(shrinkStartButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        shrinkEndButton = new JButton();
+        shrinkEndButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-enter-32 (reversed).png")));
+        shrinkEndButton.setText("");
+        panel4.add(shrinkEndButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        growEndButton = new JButton();
+        growEndButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-exit-32.png")));
+        growEndButton.setText("");
+        panel4.add(growEndButton, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
         searchPanel.add(spacer1, new GridConstraints(0, 7, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final JPanel panel5 = new JPanel();

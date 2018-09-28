@@ -1,8 +1,6 @@
 package edu.ucdenver.ccp.knowtator;
 
-import edu.ucdenver.ccp.knowtator.model.DebugListener;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
+import edu.ucdenver.ccp.knowtator.model.*;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLManager;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileCollection;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollection;
@@ -17,6 +15,13 @@ import java.util.TreeMap;
 public class KnowtatorController extends ProjectManager {
   @SuppressWarnings("unused")
   private static final Logger log = Logger.getLogger(KnowtatorController.class);
+  private SelectionModel selectionModel;
+
+  public FilterModel getFilterModel() {
+    return filterModel;
+  }
+
+  private final FilterModel filterModel;
 
   private TextSourceCollection textSourceCollection;
   private ProfileCollection profileCollection;
@@ -34,6 +39,8 @@ public class KnowtatorController extends ProjectManager {
     owlManager = new OWLManager(this);
     textSourceCollection = new TextSourceCollection(this);
     profileCollection = new ProfileCollection(this); // manipulates profiles and colors
+    filterModel = new FilterModel();
+    selectionModel = new SelectionModel();
 
   }
 
@@ -115,5 +122,9 @@ public class KnowtatorController extends ProjectManager {
     owlManager.dispose();
     profileCollection.dispose();
     idRegistry.clear();
+  }
+
+  public SelectionModel getSelectionModel() {
+    return selectionModel;
   }
 }

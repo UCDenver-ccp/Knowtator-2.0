@@ -18,17 +18,17 @@ public class GraphSpaceList extends JList<GraphSpace> implements KnowtatorViewCo
     private ConceptAnnotationCollectionListener conceptAnnotationCollectionListener;
     private TextSourceCollectionListener textSourceCollectionListener;
     private KnowtatorView view;
-    private ListSelectionListener al;
 
 
     public GraphSpaceList(KnowtatorView view) {
         this.view = view;
-        al = e -> {
-            JComboBox comboBox = (JComboBox) e.getSource();
-            if (comboBox.getSelectedItem() != null) {
-                this.collection.setSelection(getModel().getElementAt(getSelectedIndex()));
+        ListSelectionListener al = e -> {
+            JList jList = (JList) e.getSource();
+            if (jList.getSelectedValue() != null) {
+                this.collection.setSelection((GraphSpace) jList.getSelectedValue());
             }
         };
+        addListSelectionListener(al);
 
         conceptAnnotationCollectionListener = new ConceptAnnotationCollectionListener() {
             @Override
@@ -118,7 +118,7 @@ public class GraphSpaceList extends JList<GraphSpace> implements KnowtatorViewCo
         view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
     }
 
-    public void setCollection(KnowtatorCollection<GraphSpace> collection, ConceptAnnotation conceptAnnotation) {
+    private void setCollection(KnowtatorCollection<GraphSpace> collection, ConceptAnnotation conceptAnnotation) {
         if (this.collection != null) {
             this.collection.removeCollectionListener(this);
             setListData(new GraphSpace[0]);
@@ -129,11 +129,6 @@ public class GraphSpaceList extends JList<GraphSpace> implements KnowtatorViewCo
 
         setList(conceptAnnotation);
 
-        for (ListSelectionListener a : getListSelectionListeners()) {
-            removeListSelectionListener(a);
-        }
-
-        addListSelectionListener(al);
     }
 
     private void setList(ConceptAnnotation conceptAnnotation) {
@@ -185,6 +180,8 @@ public class GraphSpaceList extends JList<GraphSpace> implements KnowtatorViewCo
             previousSelection.getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
         }
         currentSelection.getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
+
+        setCollection(currentSelection.getGraphSpaceCollection(), currentSelection.getConceptAnnotationCollection().getSelection());
     }
 
     private void reactToAnnotationChange(ConceptAnnotation currentSelection) {

@@ -1,6 +1,7 @@
 # Knowtator
 Plugin for Protege
 
+
 ## Table of Contents
 - [Installation Windows](#installation-windows)
 - [Installation Mac](#installation-mac)
@@ -12,11 +13,14 @@ Plugin for Protege
 	- [Graphical Annotations](#graphical-annotations)
 	- [Annotation Information](#annotation-information)
 
+
 ## Installation Windows
+
 
 1. Install [Desktop Protege 5.X.X][protege link]
 2. Copy Knowtator-2.X.X.jar to Protege-5.X.X/plugins/
 3. Restart Protege
+
 
 ## Installation Mac
 1. Install [Desktop Protege 5.X.X][protege link]
@@ -26,12 +30,15 @@ Plugin for Protege
 5. You should see the other plugins included in Protege 5 in that folder. If so, copy the Knowtator-2.X.X.jar into it.
 6. Restart Protege
 
+
 (See [this comment thread][mac osx plugin installation comment thread] for more help) 
+
 
 ## Installation from source
 1. Download source files
 2. `cd` into project directory
 3. `mvn clean install`
+
 
 ## Setup
 1. Launch Protege.exe
@@ -48,23 +55,31 @@ Project
 6. To open a pre-existing project (Project -> Open Project)
 7. To load conceptAnnotations from the old Knowtator (Project -> Open Project) 
 
+
 ![After installation][installation image]
 Add as a View to a Protege tab by going to Window -> Views -> Miscellaneous Views -> Knowtator
 
+
 ## Features
 
+
 ### Annotate with ontology terms
+
 
 Protege is first and foremost, an ontology editor. This plugin is intended to make use of Protege's built-in OWL-API
 to annotate text with OWL classes. To do so, simply select a term from the Class Hierarchy (Window -> Views -> Class views -> Class hierarchy),
 highlight a span of text in a document, and click the "+" button. To remove the selected icon, click the "-" button.
 
+
 ### Inter-Annotator Agreement
+
 
 IAA between the annotators in the same project can be run. Select the types of IAA you wish to run from the IAA menu
 and click IAA -> Run IAA. Select a folder for the results to be written to.
 
+
 ### Graphical Annotations
+
 
 Open the graph viewer by clicking View -> Show graph viewer. To add the selected conceptAnnotation to the graph viewer, right click on it
 and select Add conceptAnnotation no to graph. You will see the node appear in the viewer. Select an object property (these can be found
@@ -72,11 +87,15 @@ in the Object property hierarchy view in Window -> Views -> Object property view
 over a node in the viewer until a pointer hand appears. Click and drag between nodes to make a connection. Graphs are saved
 in the project (Project -> Save Project).
 
+
 ### Annotation Information
+
 
 Selecting a span will show its meta-data in the right-hand side of the view.
 
+
 All icons used are from https://icons8.com/
+
 
 [protege link]:http://protege.stanford.edu/products.php#desktop-protege
 [installation image]:installation_image.PNG
@@ -84,3 +103,7 @@ All icons used are from https://icons8.com/
 [mac osx plugin intallation comment thread]:http://protege-project.136.n4.nabble.com/Installing-Plugins-on-Protege-5-MacOSX-td4665874.html
 [sample files location]:https://github.com/tuh8888/Knowtator-2.0/tree/master/src/main/resources/file
 
+
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbMTE5NTc3MTE5M119
+-->

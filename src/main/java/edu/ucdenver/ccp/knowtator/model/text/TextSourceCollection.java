@@ -14,8 +14,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import javax.swing.*;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
@@ -24,7 +22,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-public class TextSourceCollection extends KnowtatorCollection<TextSource> implements CaretListener, BratStandoffIO, KnowtatorXMLIO, Savable {
+public class TextSourceCollection extends KnowtatorCollection<TextSource> implements BratStandoffIO, KnowtatorXMLIO, Savable {
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(TextSourceCollection.class);
 
@@ -32,61 +30,14 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
     private File articlesLocation;
     private File annotationsLocation;
 
-    private boolean filterByProfile;
-
-    private int start;
-    private int end;
-    private boolean filterByOWLClass;
-
 
     public TextSourceCollection(KnowtatorController controller) {
         super(controller);
         this.controller = controller;
 
-        filterByProfile = false;
-        filterByOWLClass = false;
-
-
-        start = 0;
-        end = 0;
-
     }
 
-    public int getStart() {
-        return start;
-    }
 
-    public int getEnd() {
-        return end;
-    }
-
-    public void setStart(int start) {
-        this.start = start;
-    }
-    public void setEnd(int end) {
-        this.end = end;
-    }
-
-    public boolean isFilterByOWLClass() {
-        return filterByOWLClass;
-    }
-    public boolean isFilterByProfile() {
-        return filterByProfile;
-    }
-    public void setFilterByProfile(boolean filterByProfile) {
-        this.filterByProfile = filterByProfile;
-        collectionListeners.forEach(l -> l.updated(getSelection()));
-    }
-    public void setFilterByOWLClass(boolean filterByOWLClass) {
-        this.filterByOWLClass = filterByOWLClass;
-        collectionListeners.forEach(l -> l.updated(getSelection()));
-    }
-
-    @Override
-    public void caretUpdate(CaretEvent e) {
-        setStart(Math.min(e.getDot(), e.getMark()));
-        setEnd(Math.max(e.getDot(), e.getMark()));
-    }
 
     private TextSource addTextSource(File file, String id, String textFileName) {
         if (textFileName == null || textFileName.equals("")) {
@@ -191,7 +142,6 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
         return articlesLocation;
     }
 
-    //TODO: Check where articles location would be appropriate and find out how to handle that
     @Override
     public void setSaveLocation(File newSaveLocation) throws IOException {
         articlesLocation = new File(newSaveLocation, "Articles");

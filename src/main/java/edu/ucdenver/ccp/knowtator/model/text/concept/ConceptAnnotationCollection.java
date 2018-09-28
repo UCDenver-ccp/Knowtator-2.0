@@ -69,8 +69,8 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         OWLEntity owlClass = controller.getOWLManager().getSelectedOWLEntity();
         if (owlClass instanceof OWLClass) {
             Profile annotator = controller.getProfileCollection().getSelection();
-            int start = controller.getTextSourceCollection().getStart();
-            int end = controller.getTextSourceCollection().getEnd();
+            int start = controller.getSelectionModel().getStart();
+            int end = controller.getSelectionModel().getEnd();
 
 
             try {
@@ -86,8 +86,8 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
     public void addSpanToSelectedAnnotation() {
         getSelection().getSpanCollection().addSpan(null,
-                controller.getTextSourceCollection().getStart(),
-                controller.getTextSourceCollection().getEnd());
+                controller.getSelectionModel().getStart(),
+                controller.getSelectionModel().getEnd());
     }
 
     /*
@@ -194,7 +194,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         Supplier<TreeSet<Span>> supplier = TreeSet::new;
 
         Set<OWLClass> activeOWLClassDescendents = new HashSet<>();
-        if (controller.getTextSourceCollection().isFilterByOWLClass()) {
+        if (controller.getFilterModel().isFilterByOWLClass()) {
             try {
                 activeOWLClassDescendents.addAll(controller.getOWLManager().getDescendants((OWLClass) controller.getOWLManager().getSelectedOWLEntity()));
                 activeOWLClassDescendents.add((OWLClass) controller.getOWLManager().getSelectedOWLEntity());
@@ -210,8 +210,8 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                         span ->
                                 (loc == null || span.contains(loc))
                                         && (start <= span.getStart() && span.getEnd() <= end)
-                                        && (!controller.getTextSourceCollection().isFilterByOWLClass() || activeOWLClassDescendents.contains(span.getConceptAnnotation().getOwlClass()))
-                                        && (!controller.getTextSourceCollection().isFilterByProfile() || span.getConceptAnnotation().getAnnotator().equals(controller.getProfileCollection().getSelection())))
+                                        && (!controller.getFilterModel().isFilterByOWLClass() || activeOWLClassDescendents.contains(span.getConceptAnnotation().getOwlClass()))
+                                        && (!controller.getFilterModel().isFilterByProfile() || span.getConceptAnnotation().getAnnotator().equals(controller.getProfileCollection().getSelection())))
                 .collect(Collectors.toCollection(supplier));
     }
 
