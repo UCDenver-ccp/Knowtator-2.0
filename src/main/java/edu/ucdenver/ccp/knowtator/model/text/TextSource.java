@@ -8,7 +8,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.AbstractKnowtatorObject;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollection;
@@ -238,12 +238,12 @@ public class TextSource extends AbstractKnowtatorObject<TextSource> implements B
     }
 
     @Override
-    public void updated(KnowtatorObject updatedItem) {
+    public void updated(KnowtatorObjectInterface updatedItem) {
         save();
     }
 
     @Override
-    public void noSelection(KnowtatorObject previousSelection) {
+    public void noSelection(KnowtatorObjectInterface previousSelection) {
 
     }
 

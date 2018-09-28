@@ -9,7 +9,6 @@ import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLEntitySelectionListener;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -26,7 +25,6 @@ import edu.ucdenver.ccp.knowtator.view.text.concept.*;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
 import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
@@ -125,7 +123,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     private void setUpOWL() {
         if (!controller.getOWLModel().isWorkSpaceSet()) {
             if (getOWLWorkspace() != null) {
-                controller.getOWLModel().setUpOWL(getOWLWorkspace());
+                controller.getOWLModel().setOwlWorkSpace(getOWLWorkspace());
                 getOWLWorkspace().getOWLModelManager().addListener(annotationClassLabel);
             }
         }
@@ -251,9 +249,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     }
 
     private void setupListeners() {
-        OWLEntitySelectionListener owlEntitySelectionListener = this::owlEntitySelectionChanged;
-        controller.getOWLModel().addOWLEntityListener(owlEntitySelectionListener);
-
 
         ProfileCollectionListener profileCollectionListener = new ProfileCollectionListener() {
             @Override
@@ -436,19 +431,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         controller.getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
     }
 
-    private void owlEntitySelectionChanged(OWLEntity owlEntity) {
-        if (getView() != null) {
-            if (getView().isSyncronizing()) {
-                getOWLWorkspace().getOWLSelectionModel().setSelectedEntity(owlEntity);
-            }
-        }
-    }
-
     @Override
     protected OWLClass updateView(OWLClass selectedClass) {
         if (controller != null) {
             setUpOWL();
-            controller.getOWLModel().setSelectedOWLEntity(selectedClass);
         }
         return selectedClass;
     }
@@ -466,9 +452,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         textSourceChooser.reset();
         graphViewDialog.reset();
 
-        if (getOWLWorkspace() != null) {
-            controller.getOWLModel().setUpOWL(getOWLWorkspace());
-        }
+        controller.getOWLModel().setOwlWorkSpace(getOWLWorkspace());
     }
 
     @Override

@@ -4,9 +4,8 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
+import edu.ucdenver.ccp.knowtator.model.OWLModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLModel;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLSetupListener;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
@@ -31,7 +30,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnnotation> implements OWLSetupListener, OWLOntologyChangeListener, KnowtatorXMLIO, BratStandoffIO {
+public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnnotation> implements OWLOntologyChangeListener, KnowtatorXMLIO, BratStandoffIO {
 
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(ConceptAnnotationCollection.class);
@@ -46,7 +45,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         this.controller = controller;
         this.textSource = textSource;
 
-        controller.getOWLModel().addOWLSetupListener(this);
+        controller.getOWLModel().addOntologyChangeListener(this);
 
         allSpanCollection = new SpanCollection(controller, textSource, null);
     }
@@ -240,13 +239,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     /*
     SETUP
      */
-
-    @Override
-    public void owlSetup() {
-        controller.getOWLModel().addOntologyChangeListener(this);
-        setOWLClassForAnnotations();
-
-    }
 
     @Override
     public void setSelection(ConceptAnnotation selection) {

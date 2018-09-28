@@ -1,7 +1,6 @@
 package edu.ucdenver.ccp.knowtator;
 
 import edu.ucdenver.ccp.knowtator.model.*;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLModel;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileCollection;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollection;
 import org.apache.log4j.Logger;
@@ -27,14 +26,12 @@ public class KnowtatorController extends ProjectManager {
   private ProfileCollection profileCollection;
   private OWLModel owlModel;
 
-  private TreeMap<String, KnowtatorObject> idRegistry;
-  private List<DebugListener> debugListeners;
+  private TreeMap<String, KnowtatorObjectInterface> idRegistry;
 
 
   public KnowtatorController() {
     super();
     idRegistry = new TreeMap<>();
-    debugListeners = new ArrayList<>();
 
     owlModel = new OWLModel(this);
     textSourceCollection = new TextSourceCollection(this);
@@ -88,15 +85,15 @@ public class KnowtatorController extends ProjectManager {
     return textSourceCollection;
   }
 
-  public void verifyId(String id, KnowtatorObject obj, Boolean hasPriority) {
+  public void verifyId(String id, KnowtatorObjectInterface obj, Boolean hasPriority) {
   	String verifiedId = id;
     if (hasPriority && idRegistry.keySet().contains(id)) {
 		verifyId(id, idRegistry.get(id), false);
     } else {
       int i = idRegistry.size();
       while (verifiedId == null || idRegistry.keySet().contains(verifiedId)) {
-        if (obj instanceof  KnowtatorTextBoundObject && ((KnowtatorTextBoundObject) obj).getTextSource() != null) {
-          verifiedId = ((KnowtatorTextBoundObject) obj).getTextSource().getId() + "-" + Integer.toString(i);
+        if (obj instanceof KnowtatorTextBoundObjectInterface && ((KnowtatorTextBoundObjectInterface) obj).getTextSource() != null) {
+          verifiedId = ((KnowtatorTextBoundObjectInterface) obj).getTextSource().getId() + "-" + Integer.toString(i);
         } else {
           verifiedId = Integer.toString(i);
         }
@@ -107,15 +104,6 @@ public class KnowtatorController extends ProjectManager {
   	obj.setId(id == null ? verifiedId : id);
 
   }
-
-  public void setDebug() {
-    debugListeners.forEach(DebugListener::setDebug);
-  }
-
-  public void addDebugListener(DebugListener listener) {
-    debugListeners.add(listener);
-  }
-
 
   public void dispose() {
     textSourceCollection.dispose();

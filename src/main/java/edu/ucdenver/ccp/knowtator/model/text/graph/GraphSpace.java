@@ -13,7 +13,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class GraphSpace extends mxGraph implements KnowtatorTextBoundObject<GraphSpace>, KnowtatorXMLIO, BratStandoffIO, ConceptAnnotationCollectionListener {
+public class GraphSpace extends mxGraph implements KnowtatorTextBoundObjectInterface<GraphSpace>, KnowtatorXMLIO, BratStandoffIO, ConceptAnnotationCollectionListener {
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(GraphSpace.class);
 

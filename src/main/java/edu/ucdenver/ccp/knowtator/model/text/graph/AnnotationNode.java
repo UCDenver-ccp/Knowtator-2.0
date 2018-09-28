@@ -6,7 +6,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import org.w3c.dom.Document;
@@ -14,7 +14,7 @@ import org.w3c.dom.Element;
 
 import java.io.File;
 
-public class AnnotationNode extends mxCell implements KnowtatorTextBoundObject, KnowtatorXMLIO {
+public class AnnotationNode extends mxCell implements KnowtatorTextBoundObjectInterface, KnowtatorXMLIO {
 
 	private ConceptAnnotation conceptAnnotation;
 	private TextSource textSource;

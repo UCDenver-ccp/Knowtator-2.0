@@ -6,7 +6,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -20,7 +20,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.HashMap;
 
-public class Profile implements KnowtatorObject<Profile>, Savable, KnowtatorXMLIO {
+public class Profile implements KnowtatorObjectInterface<Profile>, Savable, KnowtatorXMLIO {
   @SuppressWarnings("unused")
   private static Logger log = LogManager.getLogger(Profile.class);
 

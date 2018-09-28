@@ -6,9 +6,8 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObject;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLModel;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLSetupListener;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.OWLModel;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.apache.log4j.Logger;
@@ -29,7 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, KnowtatorTextBoundObject, OWLSetupListener, OWLOntologyChangeListener, OWLModelManagerListener {
+public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, KnowtatorTextBoundObjectInterface, OWLOntologyChangeListener, OWLModelManagerListener {
     private String quantifier;
     private String quantifierValue;
     private Profile annotator;
@@ -68,7 +67,6 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
         this.graphSpace = graphSpace;
 
         dontRedraw = false;
-        controller.getOWLModel().addOWLSetupListener(this);
 
         controller.verifyId(id, this, false);
 
@@ -78,8 +76,16 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
         setTarget(target);
         setValue(property);
 
-        owlSetup();
-        setValue(property);
+        controller.getOWLModel().addOWLModelManagerListener(this);
+        controller.getOWLModel().addOntologyChangeListener(this);
+
+        dontRedraw = true;
+        if (property == null) {
+            setProperty(controller.getOWLModel().getOWLObjectPropertyByID(propertyID));
+        } else {
+            setProperty(property);
+        }
+        dontRedraw = false;
     }
 
     /*
@@ -208,21 +214,6 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 
     @Override
     public void readFromOldKnowtatorXML(File file, Element parent) {
-    }
-
-
-
-
-    @Override
-    public void owlSetup() {
-        controller.getOWLModel().addOWLModelManagerListener(this);
-        controller.getOWLModel().addOntologyChangeListener(this);
-
-        dontRedraw = true;
-        if (property == null) {
-            setProperty(controller.getOWLModel().getOWLObjectPropertyByID(propertyID));
-        }
-        dontRedraw = false;
     }
 
     @Override

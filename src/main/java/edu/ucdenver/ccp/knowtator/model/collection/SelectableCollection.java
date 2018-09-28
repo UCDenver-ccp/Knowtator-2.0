@@ -1,11 +1,11 @@
 package edu.ucdenver.ccp.knowtator.model.collection;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorObjectInterface;
 
 import java.util.TreeSet;
 
-public abstract class SelectableCollection<K extends KnowtatorObject, L extends SelectableCollectionListener<K>> extends CyclableCollection<K, L> {
+public abstract class SelectableCollection<K extends KnowtatorObjectInterface, L extends SelectableCollectionListener<K>> extends CyclableCollection<K, L> {
 
     private K selection;
 

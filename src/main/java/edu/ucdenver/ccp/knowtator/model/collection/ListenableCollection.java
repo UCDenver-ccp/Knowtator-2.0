@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorObjectInterface;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
-public abstract class ListenableCollection<K extends KnowtatorObject, C extends Collection<K>, L extends CollectionListener<K>> implements Iterable<K> {
+public abstract class ListenableCollection<K extends KnowtatorObjectInterface, C extends Collection<K>, L extends CollectionListener<K>> implements Iterable<K> {
   public final C collection;
   protected final List<L> collectionListeners;
 

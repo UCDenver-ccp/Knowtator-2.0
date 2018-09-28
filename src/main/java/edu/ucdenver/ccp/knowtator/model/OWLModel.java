@@ -1,15 +1,13 @@
-package edu.ucdenver.ccp.knowtator.model.owl;
+package edu.ucdenver.ccp.knowtator.model;
 
 import com.google.common.base.Optional;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.Savable;
-import edu.ucdenver.ccp.knowtator.model.DebugListener;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.protege.editor.core.ui.util.AugmentedJTextField;
 import org.protege.editor.owl.model.OWLWorkspace;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
-import org.protege.editor.owl.model.selection.OWLSelectionModelListener;
 import org.protege.editor.owl.ui.renderer.OWLRendererPreferences;
 import org.protege.editor.owl.ui.search.SearchDialogPanel;
 import org.semanticweb.owlapi.model.*;
@@ -26,35 +24,24 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class OWLModel implements Serializable, DebugListener, OWLSelectionModelListener, Savable {
+public class OWLModel implements Serializable, Savable {
     @SuppressWarnings("unused")
     private static final Logger log = LogManager.getLogger(OWLModel.class);
 
     private OWLWorkspace owlWorkSpace;
     private KnowtatorController controller;
-    private List<OWLSetupListener> owlSetupListeners;
     private File ontologiesLocation;
-    private OWLEntity selectedOWLEntity;
-    private List<OWLEntitySelectionListener> owlEntityListeners;
 
     public OWLModel(KnowtatorController controller) {
         this.controller = controller;
-        owlEntityListeners = new ArrayList<>();
-        owlSetupListeners = new ArrayList<>();
-        controller.addDebugListener(this);
     }
 
     public OWLEntity getSelectedOWLEntity() {
-        return selectedOWLEntity;
-    }
-
-    public void setSelectedOWLEntity(OWLEntity owlClass) {
-        selectedOWLEntity = owlClass;
-        owlEntityListeners.forEach(listener -> listener.owlEntityChanged(owlClass));
-    }
-
-    public void addOWLSetupListener(OWLSetupListener listener) {
-        owlSetupListeners.add(listener);
+        try {
+            return getWorkSpace().getOWLSelectionModel().getSelectedEntity();
+        } catch (OWLWorkSpaceNotSetException e) {
+            return null;
+        }
     }
 
     public OWLClass getOWLClassByID(String classID) {
@@ -113,14 +100,8 @@ public class OWLModel implements Serializable, DebugListener, OWLSelectionModelL
         }
     }
 
-    public void setUpOWL(OWLWorkspace owlWorkSpace) {
+    public void setOwlWorkSpace(OWLWorkspace owlWorkSpace) {
         this.owlWorkSpace = owlWorkSpace;
-        owlWorkSpace.getOWLSelectionModel().addListener(this);
-        setUpOWL();
-    }
-
-    private void setUpOWL() {
-        owlSetupListeners.forEach(OWLSetupListener::owlSetup);
     }
 
     public void searchForString(String stringToSearch) {
@@ -138,49 +119,30 @@ public class OWLModel implements Serializable, DebugListener, OWLSelectionModelL
         }
     }
 
-    @Override
-    public void setDebug() {
-        OWLOntologyManager manager = org.semanticweb.owlapi.apibinding.OWLManager.createOWLOntologyManager();
-        //    OWLWorkspace workspace = new OWLWorkspace();
-        //    OWLEditorKitFactory editorKitFactory = new OWLEditorKitFactory();
-        //    OWLEditorKit editorKit = new OWLEditorKit(editorKitFactory);
-        //    workspace.setup(editorKit);
-        //    workspace.initialise();
-        OWLDataFactory factory = manager.getOWLDataFactory();
+//    @Override
+//    public void setDebug() {
+//        OWLOntologyManager manager = org.semanticweb.owlapi.apibinding.OWLManager.createOWLOntologyManager();
+//        //    OWLWorkspace workspace = new OWLWorkspace();
+//        //    OWLEditorKitFactory editorKitFactory = new OWLEditorKitFactory();
+//        //    OWLEditorKit editorKit = new OWLEditorKit(editorKitFactory);
+//        //    workspace.setup(editorKit);
+//        //    workspace.initialise();
+//        OWLDataFactory factory = manager.getOWLDataFactory();
+//
+//        IRI iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#DomainConcept");
+//        OWLEntity testClass = factory.getOWLClass(iri);
+////        setSelectedOWLEntity(testClass);
+//
+//        iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#HasCountryOfOrigin");
+//        OWLObjectProperty objectProperty = factory.getOWLObjectProperty(iri);
+//        controller.getTextSourceCollection().getSelection()
+//                .getGraphSpaceCollection().getSelection()
+//                .getRelationSelectionManager().setSelectedOWLObjectProperty(objectProperty);
+//    }
 
-        IRI iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#DomainConcept");
-        OWLClass testClass = factory.getOWLClass(iri);
-        setSelectedOWLEntity(testClass);
-
-        iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#HasCountryOfOrigin");
-        OWLObjectProperty objectProperty = factory.getOWLObjectProperty(iri);
-        controller.getTextSourceCollection().getSelection()
-                .getGraphSpaceCollection().getSelection()
-                .getRelationSelectionManager().setSelectedOWLObjectProperty(objectProperty);
-    }
-
-    @Override
-    public void selectionChanged() {
-        try {
-            OWLEntity ent = getWorkSpace().getOWLSelectionModel().getSelectedEntity();
-            setSelectedOWLEntity(ent);
-        } catch (OWLWorkSpaceNotSetException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void addOWLEntityListener(OWLEntitySelectionListener listener) {
-        owlEntityListeners.add(listener);
-    }
 
     public void dispose() {
-        owlEntityListeners.clear();
-        owlSetupListeners.clear();
-        try {
-            getWorkSpace().getOWLSelectionModel().removeListener(this);
-            setRenderRDFSLabel();
-        } catch (OWLWorkSpaceNotSetException ignored) {
-        }
+        setRenderRDFSLabel();
     }
 
     @Override
@@ -310,6 +272,15 @@ public class OWLModel implements Serializable, DebugListener, OWLSelectionModelL
             }
         }
     }
+
+    public void setSelectedOWLEntity(OWLEntity owlEntity) {
+        try {
+            getWorkSpace().getOWLSelectionModel().setSelectedEntity(owlEntity);
+        } catch (OWLWorkSpaceNotSetException ignored) {
+
+        }
+    }
+
     private class OWLWorkSpaceNotSetException extends Exception {
     }
 }

@@ -2,7 +2,7 @@ package edu.ucdenver.ccp.knowtator.model;
 
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 
-public abstract class AbstractKnowtatorTextBoundObject<K extends AbstractKnowtatorObject<K>> extends AbstractKnowtatorObject<K> implements KnowtatorTextBoundObject<K> {
+public abstract class AbstractKnowtatorTextBoundObject<K extends AbstractKnowtatorObject<K>> extends AbstractKnowtatorObject<K> implements KnowtatorTextBoundObjectInterface<K> {
 
     protected TextSource textSource;
 

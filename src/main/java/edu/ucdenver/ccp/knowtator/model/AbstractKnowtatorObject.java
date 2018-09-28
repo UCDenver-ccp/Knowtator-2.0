@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.model;
 
-public abstract class AbstractKnowtatorObject<K extends KnowtatorObject<K>> implements KnowtatorObject<K> {
+public abstract class AbstractKnowtatorObject<K extends KnowtatorObjectInterface<K>> implements KnowtatorObjectInterface<K> {
     protected String id;
 
     protected AbstractKnowtatorObject(String id) {
