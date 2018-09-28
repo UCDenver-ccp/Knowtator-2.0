@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog">
+  <grid id="e4a20" binding="contentPane" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="5" y="5" width="621" height="400"/>
+    </constraints>
+    <properties>
+      <preferredSize width="600" height="103"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <nested-form id="26ec4" form-file="edu/ucdenver/ccp/knowtator/view/graph/GraphView.form" binding="graphView" custom-create="true">
+        <constraints border-constraint="Center"/>
+      </nested-form>
+    </children>
+  </grid>
+</form>

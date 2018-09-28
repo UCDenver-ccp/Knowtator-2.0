@@ -1,12 +1,9 @@
-package edu.ucdenver.ccp.knowtator.view.text.graph;
+package edu.ucdenver.ccp.knowtator.view.graph;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.swing.util.mxMorphing;
-import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
@@ -14,14 +11,11 @@ import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollectionListener;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorViewComponent;
 import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
-import edu.ucdenver.ccp.knowtator.view.menu.GraphMenuDialog;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -32,7 +26,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
-import java.util.List;
 
 public class GraphView extends JPanel implements GraphSpaceCollectionListener, KnowtatorViewComponent {
     private JButton removeCellButton;
@@ -250,52 +243,13 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
         });
 
         previousGraphSpaceButton.addActionListener(
-                e -> view.getController()
-                        .getTextSourceCollection().getSelection()
-                        .getGraphSpaceCollection()
-                        .selectPrevious());
+                e -> GraphActions.selectPreviousGraphSpace(view));
         nextGraphSpaceButton.addActionListener(
-                e -> view.getController()
-                        .getTextSourceCollection().getSelection()
-                        .getGraphSpaceCollection()
-                        .selectNext());
-        removeCellButton.addActionListener(e -> removeSelectedCell());
+                e -> GraphActions.selectNextGraphSpace(view));
+        removeCellButton.addActionListener(e -> GraphActions.removeSelectedCell(view));
         addAnnotationNodeButton.addActionListener(
-                e -> {
-                    ConceptAnnotation conceptAnnotation =
-                            view.getController()
-                                    .getTextSourceCollection().getSelection()
-                                    .getConceptAnnotationCollection().getSelection();
-
-                    AnnotationNode vertex =
-                            view.getController()
-                                    .getTextSourceCollection().getSelection()
-                                    .getGraphSpaceCollection().getSelection()
-                                    .makeOrGetAnnotationNode(conceptAnnotation, null);
-
-
-                    goToVertex(vertex);
-                });
-        applyLayoutButton.addActionListener(e -> applyLayout());
-    }
-
-    @SuppressWarnings("unused")
-    public void goToAnnotationVertex(GraphSpace graphSpace, ConceptAnnotation conceptAnnotation) {
-        if (conceptAnnotation != null && graphSpace != null) {
-            view.getController()
-                    .getTextSourceCollection().getSelection()
-                    .getGraphSpaceCollection().setSelection(graphSpace);
-            List<Object> vertices = graphSpace.getVerticesForAnnotation(conceptAnnotation);
-            if (vertices.size() > 0) {
-                graphSpace.setSelectionCells(vertices);
-                goToVertex(vertices.get(0));
-            }
-        }
-    }
-
-    private void goToVertex(Object vertex) {
-        dialog.requestFocusInWindow();
-        graphComponent.scrollCellToVisible(vertex, true);
+                e -> GraphActions.addAnnotationNode(view));
+        applyLayoutButton.addActionListener(e -> GraphActions.applyLayout(view));
     }
 
     private void showGraph(GraphSpace graphSpace) {
@@ -308,44 +262,6 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
 
         graphSpace.reDrawGraph();
         graphComponent.refresh();
-    }
-
-    private void applyLayout() {
-        GraphSpace graph;
-        graph =
-                view.getController()
-                        .getTextSourceCollection().getSelection()
-                        .getGraphSpaceCollection().getSelection();
-
-        //		graph.reDrawGraph();
-        mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
-        layout.setOrientation(SwingConstants.WEST);
-        layout.setIntraCellSpacing(50);
-        layout.setInterRankCellSpacing(125);
-        layout.setOrientation(SwingConstants.NORTH);
-
-        try {
-            graph.getModel().beginUpdate();
-            try {
-                layout.execute(graph.getDefaultParent());
-            } finally {
-                mxMorphing morph = new mxMorphing(graphComponent, 20, 1.2, 20);
-
-                morph.addListener(mxEvent.DONE, (arg0, arg1) -> graph.getModel().endUpdate());
-
-                morph.startAnimation();
-            }
-        } finally {
-            graph.getModel().endUpdate();
-            graphComponent.zoomAndCenter();
-        }
-    }
-
-    private void removeSelectedCell() {
-        view.getController()
-                .getTextSourceCollection().getSelection()
-                .getGraphSpaceCollection().getSelection()
-                .removeSelectedCell();
     }
 
     @Override
@@ -399,6 +315,10 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
     @Override
     public void firstAdded(AddEvent<GraphSpace> object) {
 
+    }
+
+    mxGraphComponent getGraphComponent() {
+        return graphComponent;
     }
 
     /**

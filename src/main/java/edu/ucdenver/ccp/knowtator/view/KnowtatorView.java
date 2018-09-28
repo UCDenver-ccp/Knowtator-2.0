@@ -10,7 +10,6 @@ import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.owl.OWLEntitySelectionListener;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -21,11 +20,10 @@ import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.SpanCollectionListener;
 import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorActions;
 import edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser;
+import edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog;
 import edu.ucdenver.ccp.knowtator.view.text.KnowtatorTextPane;
 import edu.ucdenver.ccp.knowtator.view.text.concept.*;
-import edu.ucdenver.ccp.knowtator.view.text.graph.GraphViewDialog;
 import org.apache.log4j.Logger;
-import org.protege.editor.owl.model.OWLWorkspace;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -125,17 +123,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     }
 
     private void setUpOWL() {
-        OWLWorkspace workspace = null;
-
-        try {
-            workspace = controller.getOWLManager().getWorkSpace();
-        } catch (OWLWorkSpaceNotSetException ignored) {
-
-
-        }
-        if (workspace == null) {
+        if (!controller.getOWLModel().isWorkSpaceSet()) {
             if (getOWLWorkspace() != null) {
-                controller.getOWLManager().setUpOWL(getOWLWorkspace());
+                controller.getOWLModel().setUpOWL(getOWLWorkspace());
                 getOWLWorkspace().getOWLModelManager().addListener(annotationClassLabel);
             }
         }
@@ -206,6 +196,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         makeSpanButtons();
         makeSearchButtons();
     }
+
     private void makeMenuButtons() {
         menuButton.addActionListener(e -> KnowtatorActions.openMenu(this));
     }
@@ -261,7 +252,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     private void setupListeners() {
         OWLEntitySelectionListener owlEntitySelectionListener = this::owlEntitySelectionChanged;
-        controller.getOWLManager().addOWLEntityListener(owlEntitySelectionListener);
+        controller.getOWLModel().addOWLEntityListener(owlEntitySelectionListener);
 
 
         ProfileCollectionListener profileCollectionListener = new ProfileCollectionListener() {
@@ -457,7 +448,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     protected OWLClass updateView(OWLClass selectedClass) {
         if (controller != null) {
             setUpOWL();
-            controller.getOWLManager().setSelectedOWLEntity(selectedClass);
+            controller.getOWLModel().setSelectedOWLEntity(selectedClass);
         }
         return selectedClass;
     }
@@ -476,7 +467,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         graphViewDialog.reset();
 
         if (getOWLWorkspace() != null) {
-            controller.getOWLManager().setUpOWL(getOWLWorkspace());
+            controller.getOWLModel().setUpOWL(getOWLWorkspace());
         }
     }
 
@@ -560,6 +551,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         spanSizeButtons.forEach(AbstractButton::removeActionListener);
         selectionSizeButtons.forEach(AbstractButton::removeActionListener);
         selectionSizeButtons.forEach(AbstractButton::addActionListener);
+    }
+
+    public GraphViewDialog getGraphViewDialog() {
+        return graphViewDialog;
     }
 
     /**

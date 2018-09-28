@@ -1,11 +1,10 @@
 package edu.ucdenver.ccp.knowtator.view.actions;
 
-import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog;
 import edu.ucdenver.ccp.knowtator.view.menu.MenuDialog;
 import edu.ucdenver.ccp.knowtator.view.text.KnowtatorTextPane;
-import edu.ucdenver.ccp.knowtator.view.text.graph.GraphViewDialog;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -131,7 +130,7 @@ public class KnowtatorActions {
     }
 
     public static void assignColorToClassButton(KnowtatorView view) {
-        OWLEntity owlClass = view.getController().getOWLManager().getSelectedOWLEntity();
+        OWLEntity owlClass = view.getController().getOWLModel().getSelectedOWLEntity();
         if (owlClass == null) {
             owlClass =
                     view.getController()
@@ -148,19 +147,15 @@ public class KnowtatorActions {
                 if (JOptionPane.showConfirmDialog(
                         view, "Assign color to descendants of " + owlClass + "?")
                         == JOptionPane.OK_OPTION) {
-                    try {
-                        Set<OWLClass> descendants =
-                                view.getController()
-                                        .getOWLManager()
-                                        .getDescendants((OWLClass) owlClass);
+                    Set<OWLClass> descendants =
+                            view.getController()
+                                    .getOWLModel()
+                                    .getDescendants((OWLClass) owlClass);
 
-                        for (OWLClass descendant : descendants) {
-                            view.getController().getProfileCollection()
-                                    .getSelection()
-                                    .addColor(descendant, c);
-                        }
-                    } catch (OWLWorkSpaceNotSetException e1) {
-                        e1.printStackTrace();
+                    for (OWLClass descendant : descendants) {
+                        view.getController().getProfileCollection()
+                                .getSelection()
+                                .addColor(descendant, c);
                     }
                 }
             }
@@ -227,14 +222,9 @@ public class KnowtatorActions {
     }
 
     public static void findText(KnowtatorView view, String textToFind) {
-        try {
-            view.getController()
-                    .getOWLManager()
-                    .searchForString(textToFind);
-        } catch (OWLWorkSpaceNotSetException e1) {
-            e1.printStackTrace();
-
-        }
+        view.getController()
+                .getOWLModel()
+                .searchForString(textToFind);
     }
 
     public static void findNextMatch(KnowtatorView view, String textToFind, boolean isCaseSensitive, boolean isOnlyInAnnotations) {

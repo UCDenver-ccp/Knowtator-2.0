@@ -1,7 +1,7 @@
 package edu.ucdenver.ccp.knowtator;
 
 import edu.ucdenver.ccp.knowtator.model.*;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLManager;
+import edu.ucdenver.ccp.knowtator.model.owl.OWLModel;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileCollection;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollection;
 import org.apache.log4j.Logger;
@@ -25,7 +25,7 @@ public class KnowtatorController extends ProjectManager {
 
   private TextSourceCollection textSourceCollection;
   private ProfileCollection profileCollection;
-  private OWLManager owlManager;
+  private OWLModel owlModel;
 
   private TreeMap<String, KnowtatorObject> idRegistry;
   private List<DebugListener> debugListeners;
@@ -36,7 +36,7 @@ public class KnowtatorController extends ProjectManager {
     idRegistry = new TreeMap<>();
     debugListeners = new ArrayList<>();
 
-    owlManager = new OWLManager(this);
+    owlModel = new OWLModel(this);
     textSourceCollection = new TextSourceCollection(this);
     profileCollection = new ProfileCollection(this); // manipulates profiles and colors
     filterModel = new FilterModel();
@@ -48,7 +48,7 @@ public class KnowtatorController extends ProjectManager {
   @Override
   List<Savable> getManagers() {
     List<Savable> managers = new ArrayList<>();
-    managers.add(owlManager);
+    managers.add(owlModel);
     managers.add(textSourceCollection);
     managers.add(profileCollection);
     return managers;
@@ -59,7 +59,7 @@ public class KnowtatorController extends ProjectManager {
     makeProjectStructure(projectLocation);
     try {
       importToManager(profilesLocation, profileCollection, ".xml");
-      importToManager(ontologiesLocation, owlManager, ".obo");
+      importToManager(ontologiesLocation, owlModel, ".obo");
       importToManager(ontologiesLocation, textSourceCollection, ".txt");
       importToManager(ontologiesLocation, textSourceCollection, ".xml");
 
@@ -76,8 +76,8 @@ public class KnowtatorController extends ProjectManager {
   GETTERS
    */
 
-  public OWLManager getOWLManager() {
-    return owlManager;
+  public OWLModel getOWLModel() {
+    return owlModel;
   }
 
   public ProfileCollection getProfileCollection() {
@@ -119,7 +119,7 @@ public class KnowtatorController extends ProjectManager {
 
   public void dispose() {
     textSourceCollection.dispose();
-    owlManager.dispose();
+    owlModel.dispose();
     profileCollection.dispose();
     idRegistry.clear();
   }

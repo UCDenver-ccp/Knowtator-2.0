@@ -26,7 +26,7 @@ public class RelationSelectionManager {
     }
 
     public void setSelectedOWLObjectProperty(OWLObjectProperty owlObjectProperty) {
-        controller.getOWLManager().setSelectedOWLEntity(owlObjectProperty);
+        controller.getOWLModel().setSelectedOWLEntity(owlObjectProperty);
     }
 
     public String getSelectedRelationQuantifier() {

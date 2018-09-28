@@ -18,13 +18,11 @@ import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollectionListener;
-import edu.ucdenver.ccp.knowtator.view.text.graph.RelationOptionsDialog;
+import edu.ucdenver.ccp.knowtator.view.graph.RelationOptionsDialog;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
@@ -148,35 +146,20 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObject<Grap
         }
 
         RelationAnnotation newRelationAnnotation;
-        if (property != null) {
-            newRelationAnnotation =
-                    new RelationAnnotation(
-                            id,
-                            source,
-                            target,
-                            property,
-                            annotator,
-                            quantifier,
-                            quantifierValue,
-                            isNegated,
-                            controller,
-                            textSource,
-                            this);
-        } else {
-            newRelationAnnotation =
-                    new RelationAnnotation(
-                            id,
-                            source,
-                            target,
-                            propertyID,
-                            annotator,
-                            quantifier,
-                            quantifierValue,
-                            isNegated,
-                            controller,
-                            textSource,
-                            this);
-        }
+        newRelationAnnotation =
+                new RelationAnnotation(
+                        id,
+                        source,
+                        target,
+                        property,
+                        propertyID,
+                        annotator,
+                        quantifier,
+                        quantifierValue,
+                        isNegated,
+                        controller,
+                        textSource,
+                        this);
 
         setCellStyles(mxConstants.STYLE_STARTARROW, "dash", new Object[]{newRelationAnnotation});
         setCellStyles(mxConstants.STYLE_STARTSIZE, "12", new Object[]{newRelationAnnotation});
@@ -396,31 +379,27 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObject<Grap
                             for (Object cell : cells) {
                                 if (getModel().isEdge(cell) && "".equals(((mxCell) cell).getValue())) {
                                     mxCell edge = (mxCell) cell;
-                                    OWLEntity owlEntity = controller.getOWLManager().getSelectedOWLEntity();
+                                    OWLEntity owlEntity = controller.getOWLModel().getSelectedOWLEntity();
                                     if (owlEntity instanceof OWLObjectProperty) {
-                                        try {
-                                            String propertyID = controller.getOWLManager().getOWLEntityRendering(owlEntity);
-                                            RelationOptionsDialog relationOptionsDialog = new RelationOptionsDialog(parentWindow, propertyID);
-                                            relationOptionsDialog.pack();
-                                            relationOptionsDialog.setAlwaysOnTop(true);
-                                            relationOptionsDialog.setLocationRelativeTo(parentWindow);
-                                            relationOptionsDialog.requestFocus();
-                                            relationOptionsDialog.setVisible(true);
-                                            if (relationOptionsDialog.getResult() == RelationOptionsDialog.OK_OPTION) {
+                                        String propertyID = controller.getOWLModel().getOWLEntityRendering(owlEntity);
+                                        RelationOptionsDialog relationOptionsDialog = new RelationOptionsDialog(parentWindow, propertyID);
+                                        relationOptionsDialog.pack();
+                                        relationOptionsDialog.setAlwaysOnTop(true);
+                                        relationOptionsDialog.setLocationRelativeTo(parentWindow);
+                                        relationOptionsDialog.requestFocus();
+                                        relationOptionsDialog.setVisible(true);
+                                        if (relationOptionsDialog.getResult() == RelationOptionsDialog.OK_OPTION) {
 
-                                                addTriple(
-                                                        (AnnotationNode) edge.getSource(),
-                                                        (AnnotationNode) edge.getTarget(),
-                                                        null,
-                                                        controller.getProfileCollection().getSelection(),
-                                                        (OWLObjectProperty) owlEntity,
-                                                        propertyID,
-                                                        relationOptionsDialog.getQuantifierButtonGroup().getSelection().getActionCommand(),
-                                                        relationOptionsDialog.getQuantifierValueTextField().getText(),
-                                                        relationOptionsDialog.getNegation());
-                                            }
-                                        } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
-                                            e.printStackTrace();
+                                            addTriple(
+                                                    (AnnotationNode) edge.getSource(),
+                                                    (AnnotationNode) edge.getTarget(),
+                                                    null,
+                                                    controller.getProfileCollection().getSelection(),
+                                                    (OWLObjectProperty) owlEntity,
+                                                    propertyID,
+                                                    relationOptionsDialog.getQuantifierButtonGroup().getSelection().getActionCommand(),
+                                                    relationOptionsDialog.getQuantifierValueTextField().getText(),
+                                                    relationOptionsDialog.getNegation());
                                         }
                                     }
                                     getModel().remove(edge);

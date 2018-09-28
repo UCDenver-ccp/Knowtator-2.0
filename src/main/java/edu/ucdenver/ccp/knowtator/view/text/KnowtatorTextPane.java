@@ -12,7 +12,6 @@ import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollection
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.SpanCollectionListener;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.menu.AnnotationPopupMenu;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;

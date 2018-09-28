@@ -1,4 +1,4 @@
-package edu.ucdenver.ccp.knowtator.view.menu;
+package edu.ucdenver.ccp.knowtator.view.graph;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -24,7 +24,7 @@ public class GraphMenuDialog extends JDialog {
     private JButton buttonCancel;
     private JButton exportToImagePNGButton;
 
-    public GraphMenuDialog(KnowtatorView view) {
+    GraphMenuDialog(KnowtatorView view) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);

@@ -5,8 +5,6 @@ import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.AbstractKnowtatorTextBoundObject;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
@@ -92,6 +90,14 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundObject<ConceptA
         return owlClass;
     }
 
+    private String getOwlClassRendering() {
+        if (controller.getOWLModel().isWorkSpaceSet()) {
+            return controller.getOWLModel().getOWLEntityRendering(owlClass);
+        } else {
+            return owlClassID;
+        }
+    }
+
     public SpanCollection getSpanCollection() {
         return spanCollection;
     }
@@ -140,11 +146,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundObject<ConceptA
 
     void setOwlClass(OWLClass owlClass) {
         this.owlClass = owlClass;
-        try {
-            this.owlClassID = controller.getOWLManager().getOWLEntityRendering(owlClass);
-        } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
-            e.printStackTrace();
-        }
+        this.owlClassID = controller.getOWLModel().getOWLEntityRendering(owlClass);
     }
 
     void setBratID(String bratID) {
@@ -162,15 +164,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundObject<ConceptA
 
     @Override
     public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
-        String renderedOwlClassID;
-        try {
-            renderedOwlClassID = controller
-                    .getOWLManager()
-                    .getOWLEntityRendering(owlClass);
-        } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
-            renderedOwlClassID = this.owlClassID;
-
-        }
+        String renderedOwlClassID = getOwlClassRendering();
         renderedOwlClassID = renderedOwlClassID.replace(":", "_").replace(" ", "_");
         annotationConfig.get(StandoffTags.annotationsEntities).put(renderedOwlClassID, "");
 
@@ -196,11 +190,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundObject<ConceptA
 
         Element classElement = dom.createElement(KnowtatorXMLTags.CLASS);
 
-        try {
-            classElement.setAttribute(KnowtatorXMLAttributes.ID, controller.getOWLManager().getOWLEntityRendering(owlClass));
-        } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
-            classElement.setAttribute(KnowtatorXMLAttributes.ID, getOwlClassID());
-        }
+        classElement.setAttribute(KnowtatorXMLAttributes.ID, getOwlClassRendering());
 
         if (owlClassLabel != null) {
             classElement.setAttribute(KnowtatorXMLAttributes.LABEL, getOwlClassLabel());

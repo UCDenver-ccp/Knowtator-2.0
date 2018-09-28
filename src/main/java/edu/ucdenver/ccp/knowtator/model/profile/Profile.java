@@ -7,8 +7,6 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObject;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -143,25 +141,20 @@ public class Profile implements KnowtatorObject<Profile>, Savable, KnowtatorXMLI
     colors.forEach(
         (owlEntity, c) -> {
           Element e = dom.createElement(KnowtatorXMLTags.HIGHLIGHTER);
-          try {
-            if (owlEntity instanceof OWLEntity) {
-              e.setAttribute(
-                  KnowtatorXMLAttributes.CLASS_ID,
-                  controller
-                      .getOWLManager()
-                      .getOWLEntityRendering((OWLEntity) owlEntity));
-            } else if (owlEntity instanceof String) {
-              e.setAttribute(
-                      KnowtatorXMLAttributes.CLASS_ID, (String) owlEntity);
-            }
+          if (owlEntity instanceof OWLEntity) {
             e.setAttribute(
-                KnowtatorXMLAttributes.COLOR, convertToHex(c));
-            profileElem.appendChild(e);
-
-          } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e1) {
-            e1.printStackTrace();
-
+                KnowtatorXMLAttributes.CLASS_ID,
+                controller
+                    .getOWLModel()
+                    .getOWLEntityRendering((OWLEntity) owlEntity));
+          } else if (owlEntity instanceof String) {
+            e.setAttribute(
+                    KnowtatorXMLAttributes.CLASS_ID, (String) owlEntity);
           }
+          e.setAttribute(
+              KnowtatorXMLAttributes.COLOR, convertToHex(c));
+          profileElem.appendChild(e);
+
         });
     root.appendChild(profileElem);
   }

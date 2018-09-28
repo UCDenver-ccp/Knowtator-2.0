@@ -125,7 +125,7 @@
       <item class="edu.ucdenver.ccp.knowtator.view.KnowtatorView" icon="" removable="true" auto-create-binding="false" can-attach-label="false">
         <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
       </item>
-      <item class="edu.ucdenver.ccp.knowtator.view.text.graph.GraphView" icon="/com/intellij/uiDesigner/icons/panel.png" removable="true" auto-create-binding="false" can-attach-label="false">
+      <item class="edu.ucdenver.ccp.knowtator.view.graph.GraphView" icon="/com/intellij/uiDesigner/icons/panel.png" removable="true" auto-create-binding="false" can-attach-label="false">
         <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
       </item>
       <item class="com.mxgraph.swing.mxGraphComponent" icon="/com/intellij/uiDesigner/icons/scrollPane.png" removable="true" auto-create-binding="false" can-attach-label="false">

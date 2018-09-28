@@ -4,8 +4,6 @@ import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLEntityNullException;
-import edu.ucdenver.ccp.knowtator.model.owl.OWLWorkSpaceNotSetException;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
@@ -125,11 +123,12 @@ public class AnnotationClassLabel extends JLabel implements OWLModelManagerListe
 
     private void displayAnnotation() {
         if (conceptAnnotation != null) {
-            try {
-                setText(view.getController().getOWLManager().getOWLEntityRendering(conceptAnnotation.getOwlClass()));
-            } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
-                setText(String.format("ID: %s Label: %s", conceptAnnotation.getOwlClassID(), conceptAnnotation.getOwlClassLabel()));
-            }
+            String owlClassRendering = view.getController().getOWLModel().getOWLEntityRendering(conceptAnnotation.getOwlClass());
+            setText(owlClassRendering == null ?
+                    String.format("ID: %s Label: %s",
+                            conceptAnnotation.getOwlClassID(),
+                            conceptAnnotation.getOwlClassLabel()) :
+                    owlClassRendering);
         } else {
             setText("");
         }
@@ -148,10 +147,6 @@ public class AnnotationClassLabel extends JLabel implements OWLModelManagerListe
     }
 
     public void dispose() {
-        try {
-            view.getController().getOWLManager().getWorkSpace().getOWLModelManager().removeListener(this);
-        } catch (OWLWorkSpaceNotSetException ignored) {
-
-        }
+        view.getController().getOWLModel().removeOWLModelManagerListener(this);
     }
 }

@@ -1,4 +1,4 @@
-package edu.ucdenver.ccp.knowtator.view.text.graph;
+package edu.ucdenver.ccp.knowtator.view.graph;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
