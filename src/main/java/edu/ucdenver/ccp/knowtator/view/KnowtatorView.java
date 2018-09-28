@@ -11,10 +11,14 @@ import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorActions;
+import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceList;
+import edu.ucdenver.ccp.knowtator.view.chooser.SpanList;
 import edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog;
+import edu.ucdenver.ccp.knowtator.view.text.AnnotationAnnotatorLabel;
+import edu.ucdenver.ccp.knowtator.view.text.AnnotationClassLabel;
+import edu.ucdenver.ccp.knowtator.view.text.AnnotationIDLabel;
 import edu.ucdenver.ccp.knowtator.view.text.KnowtatorTextPane;
-import edu.ucdenver.ccp.knowtator.view.text.concept.*;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -250,11 +254,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
             }
 
             @Override
-            public void noSelection(Profile previousSelection) {
-
-            }
-
-            @Override
             public void selected(SelectionChangeEvent<Profile> event) {
 
             }
@@ -292,11 +291,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
             @Override
             public void updated(TextSource updatedItem) {
 
-            }
-
-            @Override
-            public void noSelection(TextSource previousSelection) {
-                previousSelection.getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
             }
 
             @Override
@@ -339,11 +333,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
             }
 
             @Override
-            public void noSelection(ConceptAnnotation previousSelection) {
-                previousSelection.getSpanCollection().removeCollectionListener(spanCollectionListener);
-            }
-
-            @Override
             public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
                 if (event.getOld() != null) {
                     event.getOld().getSpanCollection().removeCollectionListener(spanCollectionListener);
@@ -380,10 +369,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         };
 
         spanCollectionListener = new KnowtatorCollectionListener<Span>() {
-            @Override
-            public void noSelection(Span previousSelection) {
-
-            }
 
             @Override
             public void selected(SelectionChangeEvent<Span> event) {

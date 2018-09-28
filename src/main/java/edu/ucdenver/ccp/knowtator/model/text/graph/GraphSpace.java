@@ -512,11 +512,6 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObjectInter
     }
 
     @Override
-    public void noSelection(ConceptAnnotation previousSelection) {
-        setSelectionCell(null);
-    }
-
-    @Override
     public String getId() {
         return id;
     }

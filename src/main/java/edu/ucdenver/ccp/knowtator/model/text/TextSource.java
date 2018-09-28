@@ -243,11 +243,6 @@ public class TextSource extends AbstractKnowtatorObject<TextSource> implements B
     }
 
     @Override
-    public void noSelection(KnowtatorObjectInterface previousSelection) {
-
-    }
-
-    @Override
     public void selected(SelectionChangeEvent event) {
 
     }

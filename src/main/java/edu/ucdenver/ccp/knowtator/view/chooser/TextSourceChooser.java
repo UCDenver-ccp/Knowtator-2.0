@@ -3,7 +3,7 @@ package edu.ucdenver.ccp.knowtator.view.chooser;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
-public class TextSourceChooser extends Chooser<TextSource> {
+public class TextSourceChooser extends KnowtatorChooser<TextSource> {
 
     public TextSourceChooser(KnowtatorView view) {
         super(view);

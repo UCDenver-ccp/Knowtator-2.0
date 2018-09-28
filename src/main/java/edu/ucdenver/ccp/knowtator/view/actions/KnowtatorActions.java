@@ -86,12 +86,12 @@ public class KnowtatorActions {
                 .getSelection().getSpanCollection()
                 .size()
                 > 1) {
-            String[] buttons = {"Remove concept", "Remove span from concept", "Cancel"};
+            String[] buttons = {"Remove annotation", "Remove span from annotation", "Cancel"};
             int response =
                     JOptionPane.showOptionDialog(
                             view,
                             "Choose an option",
-                            "Remove ConceptAnnotation",
+                            "Remove Annotation",
                             JOptionPane.DEFAULT_OPTION,
                             JOptionPane.QUESTION_MESSAGE,
                             null,
@@ -117,8 +117,8 @@ public class KnowtatorActions {
         } else {
             if (JOptionPane.showConfirmDialog(
                     view,
-                    "Are you sure you want to remove the selected concept?",
-                    "Remove ConceptAnnotation",
+                    "Are you sure you want to remove the selected annotation?",
+                    "Remove Annotation",
                     JOptionPane.YES_NO_OPTION)
                     == JOptionPane.YES_OPTION) {
                 view.getController()

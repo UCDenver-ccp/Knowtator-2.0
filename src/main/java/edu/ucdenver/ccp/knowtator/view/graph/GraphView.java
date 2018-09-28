@@ -85,11 +85,6 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
             }
 
             @Override
-            public void noSelection(TextSource previousSelection) {
-
-            }
-
-            @Override
             public void selected(SelectionChangeEvent<TextSource> event) {
                 if (event.getOld() != null) {
                     event.getOld().getGraphSpaceCollection().removeCollectionListener(graphView);
@@ -261,11 +256,6 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
 
     @Override
     public void updated(GraphSpace updatedItem) {
-
-    }
-
-    @Override
-    public void noSelection(GraphSpace previousSelection) {
 
     }
 

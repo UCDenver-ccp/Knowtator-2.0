@@ -7,7 +7,7 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
 
-public class GraphSpaceChooser extends Chooser<GraphSpace> {
+public class GraphSpaceChooser extends KnowtatorChooser<GraphSpace> {
     private KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
 
     public GraphSpaceChooser(KnowtatorView view) {
@@ -41,11 +41,6 @@ public class GraphSpaceChooser extends Chooser<GraphSpace> {
 
             @Override
             public void updated(TextSource updatedItem) {
-
-            }
-
-            @Override
-            public void noSelection(TextSource previousSelection) {
 
             }
 

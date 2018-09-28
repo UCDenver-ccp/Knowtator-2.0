@@ -6,6 +6,7 @@ import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorActions;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -186,11 +187,6 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
             }
 
             @Override
-            public void noSelection(TextSource previousSelection) {
-                refreshHighlights();
-            }
-
-            @Override
             public void selected(SelectionChangeEvent<TextSource> event) {
                 if (event.getOld() != null) {
                     event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
@@ -227,12 +223,6 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
 
             @Override
             public void updated(ConceptAnnotation updatedItem) {
-                refreshHighlights();
-            }
-
-            @Override
-            public void noSelection(ConceptAnnotation previousSelection) {
-                previousSelection.getSpanCollection().removeCollectionListener(spanCollectionListener);
                 refreshHighlights();
             }
 
@@ -279,10 +269,6 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
                 refreshHighlights();
             }
 
-            @Override
-            public void noSelection(Span previousSelection) {
-                refreshHighlights();
-            }
 
             @Override
             public void selected(SelectionChangeEvent<Span> event) {
@@ -297,7 +283,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
     }
 
     private void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
-        AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e, view);
+        AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e);
 
         Set<Span> spansContainingLocation = getSpans(press_offset);
 
@@ -564,6 +550,99 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
             // Can't render
 
             return null;
+        }
+    }
+
+    class AnnotationPopupMenu extends JPopupMenu {
+        private MouseEvent e;
+
+        AnnotationPopupMenu(MouseEvent e) {
+            this.e = e;
+        }
+
+        private JMenuItem reassignOWLClassCommand() {
+            JMenuItem menuItem = new JMenuItem("Reassign OWL class");
+            menuItem.addActionListener(e1 -> view.getController().getTextSourceCollection()
+                    .getSelection().getConceptAnnotationCollection().reassignSelectedOWLClassToSelectedAnnotation());
+
+            return menuItem;
+        }
+
+        private JMenuItem addAnnotationCommand() {
+            JMenuItem menuItem = new JMenuItem("Add concept");
+            menuItem.addActionListener(e12 -> KnowtatorActions.addAnnotation(view));
+
+            return menuItem;
+        }
+
+        private JMenuItem removeSpanFromAnnotationCommand() {
+            JMenuItem removeSpanFromSelectedAnnotation =
+                    new JMenuItem(
+                            String.format(
+                                    "Delete span from %s",
+                                    view.getController()
+                                            .getTextSourceCollection()
+                                            .getSelection()
+                                            .getConceptAnnotationCollection()
+                                            .getSelection()
+                                            .getOwlClass()));
+            removeSpanFromSelectedAnnotation.addActionListener(e5 -> KnowtatorActions.removeAnnotation(view));
+
+            return removeSpanFromSelectedAnnotation;
+        }
+
+        private JMenuItem selectAnnotationCommand(Span span) {
+            JMenuItem selectAnnotationMenuItem = new JMenuItem("Select " + span.getConceptAnnotation().getOwlClassID());
+            selectAnnotationMenuItem.addActionListener(e3 -> view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().setSelectedAnnotation(span));
+
+            return selectAnnotationMenuItem;
+        }
+
+        private JMenuItem removeAnnotationCommand() {
+            JMenuItem removeAnnotationMenuItem = new JMenuItem(
+                    "Delete " +
+                            view.getController()
+                                    .getTextSourceCollection()
+                                    .getSelection()
+                                    .getConceptAnnotationCollection()
+                                    .getSelection()
+                                    .getOwlClass());
+
+            removeAnnotationMenuItem.addActionListener(e4 -> KnowtatorActions.removeAnnotation(view));
+
+            return removeAnnotationMenuItem;
+        }
+
+        void chooseAnnotation(Set<Span> spansContainingLocation) {
+            // Menu items to select and remove annotations
+            spansContainingLocation.forEach(span -> add(selectAnnotationCommand(span)));
+
+            show(e.getComponent(), e.getX(), e.getY());
+        }
+
+        void showPopUpMenu(int release_offset) {
+            TextSource textSource = view.getController().getTextSourceCollection().getSelection();
+            ConceptAnnotation selectedConceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
+
+            if (getSelectionStart() <= release_offset && release_offset <= getSelectionEnd() && getSelectionStart() != getSelectionEnd()) {
+                select(getSelectionStart(), getSelectionEnd());
+                add(addAnnotationCommand());
+            } else if (selectedConceptAnnotation != null) {
+                Span selectedSpan = selectedConceptAnnotation.getSpanCollection().getSelection();
+                if (selectedSpan != null && selectedSpan.getStart() <= release_offset && release_offset <= selectedSpan.getEnd()) {
+                    add(removeAnnotationCommand());
+                    if (selectedConceptAnnotation.getSpanCollection().size() > 1) {
+                        add(removeSpanFromAnnotationCommand());
+                    }
+                    add(reassignOWLClassCommand());
+                } else {
+                    return;
+                }
+            } else {
+                return;
+            }
+
+            show(e.getComponent(), e.getX(), e.getY());
         }
     }
 }

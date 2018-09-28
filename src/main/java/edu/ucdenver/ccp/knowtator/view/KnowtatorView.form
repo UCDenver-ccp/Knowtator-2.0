@@ -343,7 +343,7 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="ff32f" class="edu.ucdenver.ccp.knowtator.view.text.concept.SpanList" binding="spanList" custom-create="true">
+                      <component id="ff32f" class="edu.ucdenver.ccp.knowtator.view.chooser.SpanList" binding="spanList" custom-create="true">
                         <constraints/>
                         <properties/>
                       </component>
@@ -356,7 +356,7 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="4eb01" class="edu.ucdenver.ccp.knowtator.view.text.concept.GraphSpaceList" binding="graphSpaceList" custom-create="true">
+                      <component id="4eb01" class="edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceList" binding="graphSpaceList" custom-create="true">
                         <constraints/>
                         <properties/>
                       </component>
@@ -409,7 +409,7 @@
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                   </hspacer>
-                  <component id="ceac6" class="edu.ucdenver.ccp.knowtator.view.text.concept.AnnotationIDLabel" binding="annotationIDLabel" custom-create="true">
+                  <component id="ceac6" class="edu.ucdenver.ccp.knowtator.view.text.AnnotationIDLabel" binding="annotationIDLabel" custom-create="true">
                     <constraints>
                       <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -417,13 +417,13 @@
                       <text value=""/>
                     </properties>
                   </component>
-                  <component id="a240d" class="edu.ucdenver.ccp.knowtator.view.text.concept.AnnotationAnnotatorLabel" binding="annotationAnnotatorLabel" custom-create="true">
+                  <component id="a240d" class="edu.ucdenver.ccp.knowtator.view.text.AnnotationAnnotatorLabel" binding="annotationAnnotatorLabel" custom-create="true">
                     <constraints>
                       <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties/>
                   </component>
-                  <component id="a34f" class="edu.ucdenver.ccp.knowtator.view.text.concept.AnnotationClassLabel" binding="annotationClassLabel" custom-create="true">
+                  <component id="a34f" class="edu.ucdenver.ccp.knowtator.view.text.AnnotationClassLabel" binding="annotationClassLabel" custom-create="true">
                     <constraints>
                       <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>

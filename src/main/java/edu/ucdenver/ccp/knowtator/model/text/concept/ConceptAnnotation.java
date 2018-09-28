@@ -342,4 +342,8 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundObject<ConceptA
     public void dispose() {
         spanCollection.dispose();
     }
+
+    public KnowtatorController getController() {
+        return controller;
+    }
 }
