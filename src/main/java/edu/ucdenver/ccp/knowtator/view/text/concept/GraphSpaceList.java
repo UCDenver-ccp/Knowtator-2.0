@@ -2,21 +2,18 @@ package edu.ucdenver.ccp.knowtator.view.text.concept;
 
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollectionListener;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorViewComponent;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 
-public class GraphSpaceList extends JList<GraphSpace> implements KnowtatorViewComponent, GraphSpaceCollectionListener {
+public class GraphSpaceList extends JList<GraphSpace> implements KnowtatorViewComponent, KnowtatorCollectionListener<GraphSpace> {
     private KnowtatorCollection<GraphSpace> collection;
-    private ConceptAnnotationCollectionListener conceptAnnotationCollectionListener;
-    private TextSourceCollectionListener textSourceCollectionListener;
+    private KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
+    private KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
     private KnowtatorView view;
 
 
@@ -30,7 +27,7 @@ public class GraphSpaceList extends JList<GraphSpace> implements KnowtatorViewCo
         };
         addListSelectionListener(al);
 
-        conceptAnnotationCollectionListener = new ConceptAnnotationCollectionListener() {
+        conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
             @Override
             public void added(AddEvent<ConceptAnnotation> addedObject) {
 
@@ -72,7 +69,7 @@ public class GraphSpaceList extends JList<GraphSpace> implements KnowtatorViewCo
             }
         };
 
-        textSourceCollectionListener = new TextSourceCollectionListener() {
+        textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
             @Override
             public void added(AddEvent<TextSource> addedObject) {
 

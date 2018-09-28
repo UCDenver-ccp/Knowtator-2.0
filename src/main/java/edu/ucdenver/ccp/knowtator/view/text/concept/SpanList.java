@@ -1,26 +1,20 @@
 package edu.ucdenver.ccp.knowtator.view.text.concept;
 
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
-import edu.ucdenver.ccp.knowtator.model.text.concept.span.SpanCollectionListener;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorViewComponent;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 
-public class SpanList extends JList<Span> implements KnowtatorViewComponent, SpanCollectionListener {
+public class SpanList extends JList<Span> implements KnowtatorViewComponent, KnowtatorCollectionListener<Span> {
 
-    private ConceptAnnotationCollectionListener conceptAnnotationCollectionListener;
+    private KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
     private KnowtatorView view;
-    private TextSourceCollectionListener textSourceCollectionListener;
+    private KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
 
 
     public SpanList(KnowtatorView view) {
@@ -38,8 +32,8 @@ public class SpanList extends JList<Span> implements KnowtatorViewComponent, Spa
 
         addListSelectionListener(al);
 
-        SpanCollectionListener spanList = this;
-        textSourceCollectionListener = new TextSourceCollectionListener() {
+        KnowtatorCollectionListener<Span> spanList = this;
+        textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
             @Override
             public void added(AddEvent<TextSource> addedObject) {
 
@@ -83,7 +77,7 @@ public class SpanList extends JList<Span> implements KnowtatorViewComponent, Spa
                 event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
             }
         };
-        conceptAnnotationCollectionListener = new ConceptAnnotationCollectionListener() {
+        conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
             @Override
             public void added(AddEvent<ConceptAnnotation> addedObject) {
 

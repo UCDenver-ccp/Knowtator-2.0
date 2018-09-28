@@ -135,9 +135,6 @@ public class OWLModel implements Serializable, Savable {
 //
 //        iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#HasCountryOfOrigin");
 //        OWLObjectProperty objectProperty = factory.getOWLObjectProperty(iri);
-//        controller.getTextSourceCollection().getSelection()
-//                .getGraphSpaceCollection().getSelection()
-//                .getRelationSelectionManager().setSelectedOWLObjectProperty(objectProperty);
 //    }
 
 

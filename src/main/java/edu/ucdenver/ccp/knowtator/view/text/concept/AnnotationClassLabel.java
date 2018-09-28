@@ -1,13 +1,8 @@
 package edu.ucdenver.ccp.knowtator.view.text.concept;
 
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollectionListener;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorViewComponent;
 import org.apache.log4j.Logger;
@@ -23,14 +18,14 @@ public class AnnotationClassLabel extends JLabel implements OWLModelManagerListe
     private KnowtatorView view;
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(AnnotationClassLabel.class);
-    private TextSourceCollectionListener textSourceCollectionListener;
+    private KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
 
 
     public AnnotationClassLabel(KnowtatorView view) {
         this.view = view;
         this.conceptAnnotation = null;
 
-        final ConceptAnnotationCollectionListener conceptAnnotationCollectionListener = new ConceptAnnotationCollectionListener() {
+        final KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
             @Override
             public void added(AddEvent<ConceptAnnotation> addedObject) {
 
@@ -72,7 +67,7 @@ public class AnnotationClassLabel extends JLabel implements OWLModelManagerListe
                 displayAnnotation();
             }
         };
-        textSourceCollectionListener = new TextSourceCollectionListener() {
+        textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
             @Override
             public void added(AddEvent<TextSource> addedObject) {
 

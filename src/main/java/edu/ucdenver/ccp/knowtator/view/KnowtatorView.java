@@ -5,18 +5,11 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.model.profile.ProfileCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
-import edu.ucdenver.ccp.knowtator.model.text.concept.span.SpanCollectionListener;
 import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorActions;
 import edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog;
@@ -87,8 +80,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     private Map<JButton, ActionListener> spanSizeButtons;
     private Map<JButton, ActionListener> selectionSizeButtons;
 
-    private ConceptAnnotationCollectionListener conceptAnnotationCollectionListener;
-    private SpanCollectionListener spanCollectionListener;
+    private KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
+    private KnowtatorCollectionListener<Span> spanCollectionListener;
 
 
     public KnowtatorView() {
@@ -250,7 +243,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     private void setupListeners() {
 
-        ProfileCollectionListener profileCollectionListener = new ProfileCollectionListener() {
+        KnowtatorCollectionListener<Profile> profileCollectionListener = new KnowtatorCollectionListener<Profile>() {
             @Override
             public void updated(Profile updatedItem) {
 
@@ -295,7 +288,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
         controller.getProfileCollection().addCollectionListener(profileCollectionListener);
 
-        TextSourceCollectionListener textSourceCollectionListener = new TextSourceCollectionListener() {
+        KnowtatorCollectionListener<TextSource> textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
             @Override
             public void updated(TextSource updatedItem) {
 
@@ -339,7 +332,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
                 enableTextSourceButtons();
             }
         };
-        conceptAnnotationCollectionListener = new ConceptAnnotationCollectionListener() {
+        conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
             @Override
             public void updated(ConceptAnnotation updatedItem) {
 
@@ -386,7 +379,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
             }
         };
 
-        spanCollectionListener = new SpanCollectionListener() {
+        spanCollectionListener = new KnowtatorCollectionListener<Span>() {
             @Override
             public void noSelection(Span previousSelection) {
 

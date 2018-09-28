@@ -14,14 +14,10 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorTextBoundObjectInterface;
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollectionListener;
 import edu.ucdenver.ccp.knowtator.view.graph.RelationOptionsDialog;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -40,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class GraphSpace extends mxGraph implements KnowtatorTextBoundObjectInterface<GraphSpace>, KnowtatorXMLIO, BratStandoffIO, ConceptAnnotationCollectionListener {
+public class GraphSpace extends mxGraph implements KnowtatorTextBoundObjectInterface<GraphSpace>, KnowtatorXMLIO, BratStandoffIO, KnowtatorCollectionListener<ConceptAnnotation> {
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(GraphSpace.class);
 
@@ -475,11 +471,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObjectInter
     }
 
 
-    public RelationSelectionManager getRelationSelectionManager() {
-        return relationSelectionManager;
-    }
-
-  /*
+    /*
   SETTERS
    */
 

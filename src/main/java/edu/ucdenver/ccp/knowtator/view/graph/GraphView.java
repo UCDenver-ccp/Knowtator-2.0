@@ -5,14 +5,9 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollectionListener;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorViewComponent;
 import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
@@ -27,7 +22,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
 
-public class GraphView extends JPanel implements GraphSpaceCollectionListener, KnowtatorViewComponent {
+public class GraphView extends JPanel implements KnowtatorCollectionListener<GraphSpace>, KnowtatorViewComponent {
     private JButton removeCellButton;
     private JButton addAnnotationNodeButton;
     private JButton applyLayoutButton;
@@ -47,7 +42,7 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
     private Logger log = Logger.getLogger(GraphView.class);
 
     private KnowtatorView view;
-    private TextSourceCollectionListener textSourceCollectionListener;
+    private KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
 
 
     GraphView(JDialog dialog, KnowtatorView view) {
@@ -58,7 +53,7 @@ public class GraphView extends JPanel implements GraphSpaceCollectionListener, K
 
         GraphView graphView = this;
 
-        textSourceCollectionListener = new TextSourceCollectionListener() {
+        textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
             @Override
             public void added(AddEvent<TextSource> addedObject) {
 

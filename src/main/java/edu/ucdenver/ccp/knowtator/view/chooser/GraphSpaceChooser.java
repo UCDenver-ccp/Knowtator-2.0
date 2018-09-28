@@ -1,23 +1,19 @@
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
 
 public class GraphSpaceChooser extends Chooser<GraphSpace> {
-    private TextSourceCollectionListener textSourceCollectionListener;
+    private KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
 
     public GraphSpaceChooser(KnowtatorView view) {
         super(view);
 
-        textSourceCollectionListener = new TextSourceCollectionListener() {
+        textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
             @Override
             public void added(AddEvent<TextSource> addedObject) {
 

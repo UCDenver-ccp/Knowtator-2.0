@@ -1,16 +1,10 @@
 package edu.ucdenver.ccp.knowtator.view.text;
 
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
-import edu.ucdenver.ccp.knowtator.model.text.concept.span.SpanCollectionListener;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.Logger;
 
@@ -32,9 +26,9 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
     private static Logger log = Logger.getLogger(KnowtatorTextPane.class);
 
     private KnowtatorView view;
-    private TextSourceCollectionListener textSourceCollectionListener;
-    private ConceptAnnotationCollectionListener conceptAnnotationCollectionListener;
-    private SpanCollectionListener spanCollectionListener;
+    private KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
+    private KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
+    private KnowtatorCollectionListener<Span> spanCollectionListener;
 
     public KnowtatorTextPane(KnowtatorView view) {
         super();
@@ -158,7 +152,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
             }
         };
 
-        textSourceCollectionListener = new TextSourceCollectionListener() {
+        textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
             @Override
             public void added(AddEvent<TextSource> addedObject) {
 
@@ -205,7 +199,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
                 showTextPane();
             }
         };
-        conceptAnnotationCollectionListener = new ConceptAnnotationCollectionListener() {
+        conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
             @Override
             public void added(AddEvent<ConceptAnnotation> addedObject) {
 
@@ -254,7 +248,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
             }
         };
 
-        spanCollectionListener = new SpanCollectionListener() {
+        spanCollectionListener = new KnowtatorCollectionListener<Span>() {
             @Override
             public void added(AddEvent<Span> addedObject) {
                 refreshHighlights();
