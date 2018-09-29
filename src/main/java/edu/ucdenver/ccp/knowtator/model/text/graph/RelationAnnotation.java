@@ -142,18 +142,20 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 
     @Override
     public void setValue(Object value) {
-        value = String.format("%s%s\n%s %s",
-                isNegated ? "not " : "",
-                getOwlPropertyRendering(),
-                quantifier,
-                quantifierValue);
+        if (value != null) {
+            value = String.format("%s%s\n%s %s",
+                    isNegated ? "not " : "",
+                    getOwlPropertyRendering(),
+                    quantifier,
+                    quantifierValue);
 
 
-        super.setValue(value);
-        if (graphSpace != null && !dontRedraw) {
-            graphSpace.reDrawGraph();
+            super.setValue(value);
+            if (graphSpace != null && !dontRedraw) {
+                graphSpace.reDrawGraph();
+            }
+            textSource.save();
         }
-        textSource.save();
     }
 
     void setQuantifierValue(String quantifierValue) {

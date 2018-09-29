@@ -393,8 +393,8 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObjectInter
                                                     controller.getProfileCollection().getSelection(),
                                                     (OWLObjectProperty) owlEntity,
                                                     propertyID,
-                                                    relationOptionsDialog.getQuantifierButtonGroup().getSelection().getActionCommand(),
-                                                    relationOptionsDialog.getQuantifierValueTextField().getText(),
+                                                    relationOptionsDialog.getQuantifier(),
+                                                    relationOptionsDialog.getQuantifierValue(),
                                                     relationOptionsDialog.getNegation());
                                         }
                                     }

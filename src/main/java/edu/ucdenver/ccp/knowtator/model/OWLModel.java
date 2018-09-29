@@ -1,7 +1,6 @@
 package edu.ucdenver.ccp.knowtator.model;
 
 import com.google.common.base.Optional;
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.Savable;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -29,11 +28,9 @@ public class OWLModel implements Serializable, Savable {
     private static final Logger log = LogManager.getLogger(OWLModel.class);
 
     private OWLWorkspace owlWorkSpace;
-    private KnowtatorController controller;
     private File ontologiesLocation;
 
-    public OWLModel(KnowtatorController controller) {
-        this.controller = controller;
+    public OWLModel() {
     }
 
     public OWLEntity getSelectedOWLEntity() {
@@ -213,32 +210,32 @@ public class OWLModel implements Serializable, Savable {
     public void addOntologyChangeListener(OWLOntologyChangeListener listener) {
         try {
             getWorkSpace().getOWLModelManager().addOntologyChangeListener(listener);
-        } catch (OWLWorkSpaceNotSetException e) {
-            e.printStackTrace();
+        } catch (OWLWorkSpaceNotSetException ignored) {
+
         }
     }
 
     public void removeOntologyChangeListener(OWLOntologyChangeListener listener) {
         try {
             getWorkSpace().getOWLModelManager().removeOntologyChangeListener(listener);
-        } catch (OWLWorkSpaceNotSetException e) {
-            e.printStackTrace();
+        } catch (OWLWorkSpaceNotSetException ignored) {
+
         }
     }
 
     public void removeOWLModelManagerListener(OWLModelManagerListener listener) {
         try {
             getWorkSpace().getOWLModelManager().removeListener(listener);
-        } catch (OWLWorkSpaceNotSetException e) {
-            e.printStackTrace();
+        } catch (OWLWorkSpaceNotSetException ignored) {
+
         }
     }
 
     public void addOWLModelManagerListener(OWLModelManagerListener listener) {
         try {
             getWorkSpace().getOWLModelManager().addListener(listener);
-        } catch (OWLWorkSpaceNotSetException e) {
-            e.printStackTrace();
+        } catch (OWLWorkSpaceNotSetException ignored) {
+
         }
     }
 

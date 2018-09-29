@@ -85,7 +85,6 @@ public abstract class KnowtatorList<K extends KnowtatorObjectInterface> extends 
 
     @Override
     public void dispose() {
-        this.collection.removeCollectionListener(this);
-        this.collection.forEach(k -> ((DefaultListModel) getModel()).removeElement(k));
+        if (collection != null) collection.forEach(k -> ((DefaultListModel) getModel()).removeElement(k));
     }
 }

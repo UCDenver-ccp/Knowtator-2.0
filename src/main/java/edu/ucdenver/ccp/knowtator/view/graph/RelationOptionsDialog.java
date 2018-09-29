@@ -6,13 +6,10 @@ import com.intellij.uiDesigner.core.Spacer;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Collections;
 import java.util.ResourceBundle;
 
 public class RelationOptionsDialog extends JDialog {
@@ -22,21 +19,21 @@ public class RelationOptionsDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JRadioButton someRadioButton;
-    private JRadioButton onlyRadioButton;
-    private JRadioButton exactlyRadioButton;
-    private JRadioButton minRadioButton;
-    private JRadioButton maxRadioButton;
     private JCheckBox negateCheckBox;
     private JTextField quantifierValueTextField;
     private JTextArea previewTextArea;
-    private ButtonGroup quantifierButtonGroup;
-    private String propertyID;
+    private JComboBox<String> quantifierChooser;
+
+    private static final String SOME = "some";
+    private static final String ONLY = "only";
+    private static final String EXACTLY = "exactly";
+    private static final String MAX = "max";
+    private static final String MIN = "min";
+
     private int result;
 
     public RelationOptionsDialog(Window parent, String propertyID) {
         super(parent);
-        this.propertyID = propertyID;
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -59,45 +56,20 @@ public class RelationOptionsDialog extends JDialog {
         // call onCancel() on ESCAPE
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        Collections.list(quantifierButtonGroup.getElements()).forEach(button -> button.addActionListener(e -> setPreviewText()));
+        quantifierChooser.setModel(new DefaultComboBoxModel<>(new String[]{SOME, ONLY, EXACTLY, MAX, MIN}));
 
-        quantifierValueTextField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                setPreviewText();
-            }
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                setPreviewText();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                setPreviewText();
-            }
-        });
-
-        negateCheckBox.addItemListener(e -> setPreviewText());
     }
 
     public int getResult() {
         return result;
     }
 
-    private void setPreviewText() {
-        previewTextArea.setText(String.format("%s%s\n%s %s",
-                negateCheckBox.isSelected() ? "not " : "",
-                propertyID,
-                quantifierButtonGroup.getSelection().getActionCommand(),
-                quantifierValueTextField.getText()));
-    }
-
     private void onOK() {
-        if (exactlyRadioButton.isSelected() ||
-                minRadioButton.isSelected() ||
-                maxRadioButton.isSelected() &&
-                        StringUtils.isNumeric(quantifierValueTextField.getText())) {
+        String quantifier = (String) quantifierChooser.getSelectedItem();
+        if (quantifier != null &&
+                (quantifier.equals(EXACTLY) || quantifier.equals(MIN) || quantifier.equals(MAX)) &&
+                !StringUtils.isNumeric(quantifierValueTextField.getText())) {
             JOptionPane.showMessageDialog(this, "Please enter a numeric value");
         } else {
             result = OK_OPTION;
@@ -108,14 +80,6 @@ public class RelationOptionsDialog extends JDialog {
     private void onCancel() {
         result = CANCEL_OPTION;
         dispose();
-    }
-
-    public ButtonGroup getQuantifierButtonGroup() {
-        return quantifierButtonGroup;
-    }
-
-    public JTextField getQuantifierValueTextField() {
-        return quantifierValueTextField;
     }
 
     public Boolean getNegation() {
@@ -154,49 +118,25 @@ public class RelationOptionsDialog extends JDialog {
         buttonCancel.setText("Cancel");
         panel2.add(buttonCancel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayoutManager(9, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel3.setLayout(new GridLayoutManager(2, 4, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        negateCheckBox = new JCheckBox();
-        this.$$$loadButtonText$$$(negateCheckBox, ResourceBundle.getBundle("log4j").getString("negate1"));
-        panel3.add(negateCheckBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer2 = new Spacer();
-        panel3.add(spacer2, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        final JLabel label1 = new JLabel();
-        this.$$$loadLabelText$$$(label1, ResourceBundle.getBundle("log4j").getString("preview"));
-        panel3.add(label1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        quantifierValueTextField = new JTextField();
-        panel3.add(quantifierValueTextField, new GridConstraints(8, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        someRadioButton = new JRadioButton();
-        someRadioButton.setSelected(true);
-        this.$$$loadButtonText$$$(someRadioButton, ResourceBundle.getBundle("log4j").getString("some2"));
-        panel3.add(someRadioButton, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        onlyRadioButton = new JRadioButton();
-        this.$$$loadButtonText$$$(onlyRadioButton, ResourceBundle.getBundle("log4j").getString("only2"));
-        panel3.add(onlyRadioButton, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        exactlyRadioButton = new JRadioButton();
-        this.$$$loadButtonText$$$(exactlyRadioButton, ResourceBundle.getBundle("log4j").getString("exactly2"));
-        panel3.add(exactlyRadioButton, new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        minRadioButton = new JRadioButton();
-        this.$$$loadButtonText$$$(minRadioButton, ResourceBundle.getBundle("log4j").getString("min2"));
-        panel3.add(minRadioButton, new GridConstraints(6, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        maxRadioButton = new JRadioButton();
-        this.$$$loadButtonText$$$(maxRadioButton, ResourceBundle.getBundle("log4j").getString("max2"));
-        panel3.add(maxRadioButton, new GridConstraints(7, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label2 = new JLabel();
-        this.$$$loadLabelText$$$(label2, ResourceBundle.getBundle("log4j").getString("value2"));
-        panel3.add(label2, new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JScrollPane scrollPane1 = new JScrollPane();
         panel3.add(scrollPane1, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         previewTextArea = new JTextArea();
         scrollPane1.setViewportView(previewTextArea);
-        label1.setLabelFor(previewTextArea);
-        label2.setLabelFor(quantifierValueTextField);
-        quantifierButtonGroup = new ButtonGroup();
-        quantifierButtonGroup.add(someRadioButton);
-        quantifierButtonGroup.add(onlyRadioButton);
-        quantifierButtonGroup.add(exactlyRadioButton);
-        quantifierButtonGroup.add(minRadioButton);
-        quantifierButtonGroup.add(maxRadioButton);
+        final JLabel label1 = new JLabel();
+        this.$$$loadLabelText$$$(label1, ResourceBundle.getBundle("log4j").getString("value2"));
+        panel3.add(label1, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(125, 16), null, 0, false));
+        quantifierChooser = new JComboBox();
+        panel3.add(quantifierChooser, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        negateCheckBox = new JCheckBox();
+        this.$$$loadButtonText$$$(negateCheckBox, ResourceBundle.getBundle("log4j").getString("negate1"));
+        panel3.add(negateCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label2 = new JLabel();
+        label2.setText("Quantifier");
+        panel3.add(label2, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        quantifierValueTextField = new JTextField();
+        panel3.add(quantifierValueTextField, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(125, 30), null, 0, false));
     }
 
     /**
@@ -258,5 +198,13 @@ public class RelationOptionsDialog extends JDialog {
      */
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
+    }
+
+    public String getQuantifier() {
+        return (String) quantifierChooser.getSelectedItem();
+    }
+
+    public String getQuantifierValue() {
+        return quantifierValueTextField.getText();
     }
 }

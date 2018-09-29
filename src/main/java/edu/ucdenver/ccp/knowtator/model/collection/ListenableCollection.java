@@ -63,7 +63,7 @@ public abstract class ListenableCollection<K extends KnowtatorObjectInterface, C
   }
 
   public void addCollectionListener(L listener) {
-    collectionListeners.add(listener);
+    if (!collectionListeners.contains(listener)) collectionListeners.add(listener);
   }
 
   public void removeCollectionListener(L listener) {

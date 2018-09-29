@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="edu.ucdenver.ccp.knowtator.view.KnowtatorView">
   <grid id="2416f" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="20" y="20" width="1892" height="553"/>
+      <xy x="20" y="20" width="969" height="627"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -259,7 +259,8 @@
           <splitpane id="e579b">
             <constraints border-constraint="Center"/>
             <properties>
-              <dividerLocation value="989"/>
+              <dividerLocation value="682"/>
+              <minimumSize width="0" height="0"/>
             </properties>
             <border type="none"/>
             <children>
@@ -268,7 +269,7 @@
                   <splitpane position="left"/>
                 </constraints>
                 <properties>
-                  <minimumSize width="500" height="100"/>
+                  <minimumSize width="0" height="100"/>
                   <preferredSize width="500" height="100"/>
                 </properties>
                 <border type="none"/>
@@ -281,11 +282,21 @@
                   </component>
                 </children>
               </scrollpane>
-              <nested-form id="2a231" form-file="edu/ucdenver/ccp/knowtator/view/AnnotationPane.form" binding="annotationPane" custom-create="true">
+              <grid id="f7a74" layout-manager="BorderLayout" hgap="0" vgap="0">
                 <constraints>
                   <splitpane position="right"/>
                 </constraints>
-              </nested-form>
+                <properties>
+                  <maximumSize width="262" height="2147483647"/>
+                  <minimumSize width="262" height="158"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <nested-form id="2a231" form-file="edu/ucdenver/ccp/knowtator/view/AnnotationPane.form" binding="annotationPane" custom-create="true">
+                    <constraints border-constraint="Center"/>
+                  </nested-form>
+                </children>
+              </grid>
             </children>
           </splitpane>
         </children>

@@ -1,166 +1,155 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="edu.ucdenver.ccp.knowtator.view.AnnotationPane">
-  <grid id="27dc6" binding="annotationPane" layout-manager="GridBagLayout">
+  <grid id="639ac" binding="root" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="78" y="20" width="432" height="443"/>
+      <xy x="78" y="20" width="262" height="447"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <component id="bae26" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <font style="1"/>
-          <text value="ID"/>
-        </properties>
-      </component>
-      <component id="cabd0" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <font style="1"/>
-          <text value="Annotator"/>
-        </properties>
-      </component>
-      <component id="4a2a9" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <font style="1"/>
-          <text value="Class"/>
-        </properties>
-      </component>
-      <component id="56304" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <font size="18" style="1"/>
-          <labelFor value="280d3"/>
-          <text value="Spans"/>
-        </properties>
-      </component>
-      <component id="eed96" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <font size="18" style="1"/>
-          <labelFor value="fcd1b"/>
-          <text value="Graph Spaces"/>
-        </properties>
-      </component>
-      <scrollpane id="1a70a">
-        <constraints>
-          <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
+      <grid id="27dc6" binding="annotationPane" layout-manager="GridBagLayout">
+        <constraints border-constraint="West"/>
         <properties/>
         <border type="none"/>
         <children>
-          <component id="3e0b7" class="edu.ucdenver.ccp.knowtator.view.SpanList" binding="spanList" custom-create="true">
-            <constraints/>
-            <properties/>
-          </component>
-        </children>
-      </scrollpane>
-      <scrollpane id="b9e2f">
-        <constraints>
-          <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties/>
-        <border type="none"/>
-        <children>
-          <component id="5e0cf" class="edu.ucdenver.ccp.knowtator.view.GraphSpaceList" binding="graphSpaceList" custom-create="true">
-            <constraints/>
-            <properties/>
-          </component>
-        </children>
-      </scrollpane>
-      <grid id="46ab9" layout-manager="GridBagLayout">
-        <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties/>
-        <border type="none"/>
-        <children>
-          <hspacer id="6f8bb">
+          <component id="bae26" class="javax.swing.JLabel">
             <constraints>
-              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-          </hspacer>
-          <vspacer id="d7b63">
-            <constraints>
-              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-          </vspacer>
-          <component id="d4142" class="javax.swing.JButton" binding="nextSpanButton">
-            <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
-              <horizontalAlignment value="0"/>
-              <icon value="icon/icons8-advance-24.png"/>
+              <font style="1"/>
+              <text value="ID"/>
+            </properties>
+          </component>
+          <component id="cabd0" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <font style="1"/>
+              <text value="Annotator"/>
+            </properties>
+          </component>
+          <component id="4a2a9" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <font style="1"/>
+              <text value="Class"/>
+            </properties>
+          </component>
+          <component id="56304" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <font size="18" style="1"/>
+              <labelFor value="280d3"/>
+              <text value="Spans"/>
+            </properties>
+          </component>
+          <component id="eed96" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <font size="18" style="1"/>
+              <labelFor value="fcd1b"/>
+              <text value="Graph Spaces"/>
+            </properties>
+          </component>
+          <scrollpane id="1a70a">
+            <constraints>
+              <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="3e0b7" class="edu.ucdenver.ccp.knowtator.view.SpanList" binding="spanList" custom-create="true">
+                <constraints/>
+                <properties/>
+              </component>
+            </children>
+          </scrollpane>
+          <scrollpane id="b9e2f">
+            <constraints>
+              <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="5e0cf" class="edu.ucdenver.ccp.knowtator.view.GraphSpaceList" binding="graphSpaceList" custom-create="true">
+                <constraints/>
+                <properties/>
+              </component>
+            </children>
+          </scrollpane>
+          <grid id="46ab9" layout-manager="GridBagLayout">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="d4142" class="javax.swing.JButton" binding="nextSpanButton">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <horizontalAlignment value="0"/>
+                  <icon value="icon/icons8-advance-24.png"/>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="e5e37" class="javax.swing.JButton" binding="previousSpanButton">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <icon value="icon/icons8-advance-24 (reversed).png"/>
+                  <text value=""/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <component id="2453c" class="edu.ucdenver.ccp.knowtator.view.AnnotationIDLabel" binding="annotationIDLabel" custom-create="true">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
               <text value=""/>
             </properties>
           </component>
-          <component id="e5e37" class="javax.swing.JButton" binding="previousSpanButton">
+          <component id="5f417" class="edu.ucdenver.ccp.knowtator.view.AnnotationAnnotatorLabel" binding="annotationAnnotatorLabel" custom-create="true">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="42f47" class="edu.ucdenver.ccp.knowtator.view.AnnotationClassLabel" binding="annotationClassLabel" custom-create="true">
+            <constraints>
+              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
-              <icon value="icon/icons8-advance-24 (reversed).png"/>
               <text value=""/>
             </properties>
           </component>
         </children>
       </grid>
-      <hspacer id="d7c67">
-        <constraints>
-          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-      </hspacer>
-      <component id="2453c" class="edu.ucdenver.ccp.knowtator.view.AnnotationIDLabel" binding="annotationIDLabel" custom-create="true">
-        <constraints>
-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <text value=""/>
-        </properties>
-      </component>
-      <component id="5f417" class="edu.ucdenver.ccp.knowtator.view.AnnotationAnnotatorLabel" binding="annotationAnnotatorLabel" custom-create="true">
-        <constraints>
-          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties/>
-      </component>
-      <component id="42f47" class="edu.ucdenver.ccp.knowtator.view.AnnotationClassLabel" binding="annotationClassLabel" custom-create="true">
-        <constraints>
-          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <gridbag weightx="0.0" weighty="0.0"/>
-        </constraints>
-        <properties>
-          <text value=""/>
-        </properties>
-      </component>
     </children>
   </grid>
   <inspectionSuppressions>

@@ -172,6 +172,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         makeAnnotationButtons();
         makeSpanButtons();
         makeSearchButtons();
+
+        // Disable
+        disableTextSourceButtons();
     }
 
     private void makeMenuButtons() {
@@ -189,9 +192,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         textSourceButtons.put(nextTextSourceButton, (ActionListener) e -> TextSourceActions.selectNextTextSource(view));
         textSourceButtons.put(addTextSourceButton, (ActionListener) e -> TextSourceActions.addTextSource(view));
         textSourceButtons.put(removeTextSourceButton, (ActionListener) e -> TextSourceActions.removeTextSource(view));
-
-        // Disable
-        disableTextSourceButtons();
     }
 
     private void makeAnnotationButtons() {
@@ -624,15 +624,21 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         nextTextSourceButton.setText("Next");
         panel5.add(nextTextSourceButton, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JSplitPane splitPane1 = new JSplitPane();
-        splitPane1.setDividerLocation(989);
+        splitPane1.setDividerLocation(682);
+        splitPane1.setMinimumSize(new Dimension(0, 0));
         panel1.add(splitPane1, BorderLayout.CENTER);
         final JScrollPane scrollPane1 = new JScrollPane();
-        scrollPane1.setMinimumSize(new Dimension(500, 100));
+        scrollPane1.setMinimumSize(new Dimension(0, 100));
         scrollPane1.setPreferredSize(new Dimension(500, 100));
         splitPane1.setLeftComponent(scrollPane1);
         knowtatorTextPane.setEditable(false);
         scrollPane1.setViewportView(knowtatorTextPane);
-        splitPane1.setRightComponent(annotationPane.$$$getRootComponent$$$());
+        final JPanel panel6 = new JPanel();
+        panel6.setLayout(new BorderLayout(0, 0));
+        panel6.setMaximumSize(new Dimension(262, 2147483647));
+        panel6.setMinimumSize(new Dimension(262, 158));
+        splitPane1.setRightComponent(panel6);
+        panel6.add(annotationPane.$$$getRootComponent$$$(), BorderLayout.CENTER);
     }
 
     /**

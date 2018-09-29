@@ -37,7 +37,7 @@ public class KnowtatorController extends ProjectManager {
     super();
     idRegistry = new TreeMap<>();
 
-    owlModel = new OWLModel(this);
+    owlModel = new OWLModel();
     textSourceCollection = new TextSourceCollection(this);
     profileCollection = new ProfileCollection(this); // manipulates profiles and colors
     filterModel = new FilterModel();
