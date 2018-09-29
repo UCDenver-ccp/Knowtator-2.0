@@ -1,14 +1,12 @@
-package edu.ucdenver.ccp.knowtator.view.text;
+package edu.ucdenver.ccp.knowtator.view;
 
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorViewComponent;
 
 import javax.swing.*;
 
-public abstract class KnowtatorLabel extends JLabel implements KnowtatorViewComponent {
+public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponent {
 
     private final KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
     private final KnowtatorCollectionListener<TextSource> textSourceCollectionListener;

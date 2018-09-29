@@ -33,7 +33,7 @@ class MenuActions {
                 e1.printStackTrace();
             }
             view.getController().loadProject();
-            view.getTextView().getKnowtatorTextPane().refreshHighlights();
+            view.getKnowtatorTextPane().refreshHighlights();
 
             view.getPreferences().put("Last Project", fileChooser.getSelectedFile().getAbsolutePath());
 
@@ -120,7 +120,7 @@ class MenuActions {
                     .getTextSourceCollection().getSelection()
                     .getConceptAnnotationCollection()
                     .setSelection(null);
-            BufferedImage image = view.getTextView().getKnowtatorTextPane().getScreenShot();
+            BufferedImage image = view.getKnowtatorTextPane().getScreenShot();
             try {
                 ImageIO.write(image, "png", fileChooser.getSelectedFile());
             } catch (IOException e1) {

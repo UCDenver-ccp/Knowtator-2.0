@@ -1,11 +1,10 @@
-package edu.ucdenver.ccp.knowtator.view.text;
+package edu.ucdenver.ccp.knowtator.view;
 
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -22,7 +21,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 @SuppressWarnings("deprecation")
-public class KnowtatorTextPane extends JTextArea implements ColorListener {
+public class KnowtatorTextPane extends JTextArea implements ColorListener, KnowtatorComponent {
 
     @SuppressWarnings("unused")
     private static Logger log = Logger.getLogger(KnowtatorTextPane.class);
@@ -68,7 +67,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
         return image;
     }
 
-    public void search(String textToFind, boolean isCaseSensitive, boolean inAnnotations, boolean isRegex, boolean searchForward) {
+    void search(String textToFind, boolean isCaseSensitive, boolean inAnnotations, boolean isRegex, boolean searchForward) {
         String text = isCaseSensitive ? getText().toLowerCase() : getText();
         textToFind = isCaseSensitive ? textToFind : textToFind.toLowerCase();
 
@@ -459,26 +458,14 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
         }
     }
 
-    public void setFontSize(int size) {
+    void setFontSize(int size) {
         Font font = getFont();
         setFont(new Font(font.getName(), font.getStyle(), size));
         repaint();
     }
 
-    public void growStart() {
-        select(getSelectionStart() - 1, getSelectionEnd());
-    }
-
-    public void shrinkStart() {
-        select(getSelectionStart() + 1, getSelectionEnd());
-    }
-
-    public void shrinkEnd() {
-        select(getSelectionStart(), getSelectionEnd() - 1);
-    }
-
-    public void growEnd() {
-        select(getSelectionStart(), getSelectionEnd() + 1);
+    void modifySelection(int startModification, int endModification) {
+        select(getSelectionStart() + startModification, getSelectionEnd() + endModification);
     }
 
     @Override
@@ -486,8 +473,14 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
         refreshHighlights();
     }
 
+    @Override
     public void reset() {
         view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
+    }
+
+    @Override
+    public void dispose() {
+
     }
 
     public class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {

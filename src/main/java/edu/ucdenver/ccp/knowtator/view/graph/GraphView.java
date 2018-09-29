@@ -8,9 +8,8 @@ import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorViewComponent;
-import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -22,7 +21,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
 
-public class GraphView extends JPanel implements KnowtatorCollectionListener<GraphSpace>, KnowtatorViewComponent {
+public class GraphView extends JPanel implements KnowtatorCollectionListener<GraphSpace>, KnowtatorComponent {
     private JButton removeCellButton;
     private JButton addAnnotationNodeButton;
     private JButton applyLayoutButton;

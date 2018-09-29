@@ -1,20 +1,18 @@
-package edu.ucdenver.ccp.knowtator.view.chooser;
+package edu.ucdenver.ccp.knowtator.view;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorViewComponent;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
 
-public abstract class KnowtatorChooser<K extends KnowtatorObjectInterface> extends JComboBox<K> implements KnowtatorCollectionListener<K>, KnowtatorViewComponent {
+public abstract class KnowtatorChooser<K extends KnowtatorObjectInterface> extends JComboBox<K> implements KnowtatorCollectionListener<K>, KnowtatorComponent {
 
 	private ActionListener al;
 	private KnowtatorCollection<K> collection;
-	KnowtatorView view;
+	protected KnowtatorView view;
 
-	KnowtatorChooser(KnowtatorView view) {
+	protected KnowtatorChooser(KnowtatorView view) {
 		this.view = view;
 
 		al = e -> {

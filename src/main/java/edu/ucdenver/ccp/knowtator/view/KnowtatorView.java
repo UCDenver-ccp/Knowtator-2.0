@@ -10,10 +10,7 @@ import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
-import edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog;
-import edu.ucdenver.ccp.knowtator.view.text.AnnotationActions;
-import edu.ucdenver.ccp.knowtator.view.text.TextView;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -21,6 +18,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -28,12 +26,13 @@ import java.awt.dnd.*;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
+import java.util.EventListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
-public class KnowtatorView extends AbstractOWLClassViewComponent implements DropTargetListener, KnowtatorViewComponent {
+public class KnowtatorView extends AbstractOWLClassViewComponent implements DropTargetListener, KnowtatorComponent {
 
     private static final Logger log = Logger.getLogger(KnowtatorView.class);
     private final Preferences preferences = Preferences.userRoot().node("knowtator");
@@ -63,9 +62,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     private JSlider fontSizeSlider;
     private JPanel searchPanel;
     private JCheckBox regexCheckBox;
-    private TextView textView;
+    private KnowtatorTextPane knowtatorTextPane;
+    private AnnotationPane annotationPane;
 
-    private Map<JButton, ActionListener> textSourceButtons;
+    private Map<JComponent, EventListener> textSourceButtons;
     private Map<JButton, ActionListener> annotationButtons;
     private Map<JButton, ActionListener> spanButtons;
     private Map<JButton, ActionListener> spanSizeButtons;
@@ -108,7 +108,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         if (!controller.getOWLModel().isWorkSpaceSet()) {
             if (getOWLWorkspace() != null) {
                 controller.getOWLModel().setOwlWorkSpace(getOWLWorkspace());
-                textView.setupOWL();
+                annotationPane.setupOWL();
 
             }
         }
@@ -127,7 +127,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         dt.setActive(true);
 
         panel1 = this;
-        textView = new TextView(this);
+        annotationPane = new AnnotationPane(this);
+        knowtatorTextPane = new KnowtatorTextPane(this);
         graphViewDialog = new GraphViewDialog(this);
 
         textSourceChooser = new TextSourceChooser(this);
@@ -178,15 +179,16 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     }
 
     private void makeTextSourceButtons() {
-        fontSizeSlider.setValue(textView.getKnowtatorTextPane().getFont().getSize());
-        fontSizeSlider.addChangeListener(e -> KnowtatorActions.setFontSize(this, fontSizeSlider.getValue()));
+        fontSizeSlider.setValue(knowtatorTextPane.getFont().getSize());
 
+        KnowtatorView view = this;
         textSourceButtons = new HashMap<>();
-        textSourceButtons.put(showGraphViewerButton, e -> KnowtatorActions.showGraphViewer(graphViewDialog));
-        textSourceButtons.put(previousTextSourceButton, e -> KnowtatorActions.selectPreviousTextSource(this));
-        textSourceButtons.put(nextTextSourceButton, e -> KnowtatorActions.selectNextTextSource(this));
-        textSourceButtons.put(addTextSourceButton, e -> KnowtatorActions.addTextSource(this));
-        textSourceButtons.put(removeTextSourceButton, e -> KnowtatorActions.removeTextSource(this));
+        textSourceButtons.put(fontSizeSlider, (ChangeListener) e -> TextSourceActions.setFontSize(view, fontSizeSlider.getValue()));
+        textSourceButtons.put(showGraphViewerButton, (ActionListener) e -> KnowtatorActions.showGraphViewer(graphViewDialog));
+        textSourceButtons.put(previousTextSourceButton, (ActionListener) e -> TextSourceActions.selectPreviousTextSource(view));
+        textSourceButtons.put(nextTextSourceButton, (ActionListener) e -> TextSourceActions.selectNextTextSource(view));
+        textSourceButtons.put(addTextSourceButton, (ActionListener) e -> TextSourceActions.addTextSource(view));
+        textSourceButtons.put(removeTextSourceButton, (ActionListener) e -> TextSourceActions.removeTextSource(view));
 
         // Disable
         disableTextSourceButtons();
@@ -203,26 +205,26 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     private void makeSpanButtons() {
 
         spanButtons = new HashMap<>();
-        spanButtons.put(textView.getNextSpanButton(), e -> KnowtatorActions.selectNextSpan(this));
-        spanButtons.put(textView.getPreviousSpanButton(), e -> KnowtatorActions.selectPreviousSpan(this));
+        spanButtons.put(annotationPane.getNextSpanButton(), e -> SpanActions.selectNextSpan(this));
+        spanButtons.put(annotationPane.getPreviousSpanButton(), e -> SpanActions.selectPreviousSpan(this));
 
         spanSizeButtons = new HashMap<>();
-        spanSizeButtons.put(shrinkEndButton, e -> KnowtatorActions.modifySelectedSpan(this, "end", "shrink"));
-        spanSizeButtons.put(shrinkStartButton, e -> KnowtatorActions.modifySelectedSpan(this, "start", "shrink"));
-        spanSizeButtons.put(growEndButton, e -> KnowtatorActions.modifySelectedSpan(this, "end", "grow"));
-        spanSizeButtons.put(growStartButton, e -> KnowtatorActions.modifySelectedSpan(this, "start", "grow"));
+        spanSizeButtons.put(shrinkEndButton, e -> SpanActions.modifySelectedSpan(this, SpanActions.END, SpanActions.SHRINK));
+        spanSizeButtons.put(shrinkStartButton, e -> SpanActions.modifySelectedSpan(this, SpanActions.START, SpanActions.SHRINK));
+        spanSizeButtons.put(growEndButton, e -> SpanActions.modifySelectedSpan(this, SpanActions.END, SpanActions.GROW));
+        spanSizeButtons.put(growStartButton, e -> SpanActions.modifySelectedSpan(this, SpanActions.START, SpanActions.GROW));
 
         selectionSizeButtons = new HashMap<>();
-        selectionSizeButtons.put(growStartButton, e -> KnowtatorActions.modifySelection(this, "end", "shrink"));
-        selectionSizeButtons.put(shrinkStartButton, e -> KnowtatorActions.modifySelection(this, "start", "shrink"));
-        selectionSizeButtons.put(shrinkEndButton, e -> KnowtatorActions.modifySelection(this, "end", "grow"));
-        selectionSizeButtons.put(growEndButton, e -> KnowtatorActions.modifySelection(this, "start", "grow"));
+        selectionSizeButtons.put(growStartButton, e -> SpanActions.modifySelection(this, SpanActions.END, SpanActions.SHRINK));
+        selectionSizeButtons.put(shrinkStartButton, e -> SpanActions.modifySelection(this, SpanActions.START, SpanActions.SHRINK));
+        selectionSizeButtons.put(shrinkEndButton, e -> SpanActions.modifySelection(this, SpanActions.END, SpanActions.GROW));
+        selectionSizeButtons.put(growEndButton, e -> SpanActions.modifySelection(this, SpanActions.START, SpanActions.GROW));
     }
 
     private void makeSearchButtons() {
-        findTextInOntologyButton.addActionListener(e -> KnowtatorActions.findText(this, matchTextField.getSelectedText()));
-        nextMatchButton.addActionListener(e -> KnowtatorActions.findNextMatch(this, matchTextField.getText(), caseSensitiveCheckBox.isSelected(), onlyAnnotationsCheckBox.isSelected(), regexCheckBox.isSelected()));
-        previousMatchButton.addActionListener(e -> KnowtatorActions.findPreviousMatch(this, matchTextField.getText(), caseSensitiveCheckBox.isSelected(), onlyAnnotationsCheckBox.isSelected(), regexCheckBox.isSelected()));
+        findTextInOntologyButton.addActionListener(e -> SearchActions.findText(this, matchTextField.getSelectedText()));
+        nextMatchButton.addActionListener(e -> SearchActions.findNextMatch(this, matchTextField.getText(), caseSensitiveCheckBox.isSelected(), onlyAnnotationsCheckBox.isSelected(), regexCheckBox.isSelected()));
+        previousMatchButton.addActionListener(e -> SearchActions.findPreviousMatch(this, matchTextField.getText(), caseSensitiveCheckBox.isSelected(), onlyAnnotationsCheckBox.isSelected(), regexCheckBox.isSelected()));
     }
 
     private void setupListeners() {
@@ -401,7 +403,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     public void reset() {
         disposeView();
         setupListeners();
-        textView.reset();
+        annotationPane.reset();
+        knowtatorTextPane.reset();
         textSourceChooser.reset();
         graphViewDialog.reset();
 
@@ -413,7 +416,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         controller.dispose();
         graphViewDialog.setVisible(false);
         graphViewDialog.dispose();
-        textView.dispose();
+        annotationPane.dispose();
+        knowtatorTextPane.dispose();
 
     }
 
@@ -429,7 +433,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     public void drop(DropTargetDropEvent e) {
     }
 
-    public JTextComponent getMatchTextField() {
+    JTextComponent getMatchTextField() {
         return matchTextField;
     }
 
@@ -443,12 +447,24 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     private void enableTextSourceButtons() {
         textSourceButtons.forEach((button, e) -> button.setEnabled(true));
-        textSourceButtons.forEach(AbstractButton::addActionListener);
+        textSourceButtons.forEach((component, e) -> {
+            if (component instanceof AbstractButton) {
+                ((AbstractButton) component).addActionListener((ActionListener) e);
+            } else if (component instanceof JSlider) {
+                ((JSlider) component).addChangeListener((ChangeListener) e);
+            }
+        });
     }
 
     private void disableTextSourceButtons() {
         textSourceButtons.forEach((button, e) -> button.setEnabled(false));
-        textSourceButtons.forEach(AbstractButton::removeActionListener);
+        textSourceButtons.forEach((component, e) -> {
+            if (component instanceof AbstractButton) {
+                ((AbstractButton) component).removeActionListener((ActionListener) e);
+            } else if (component instanceof JSlider) {
+                ((JSlider) component).removeChangeListener((ChangeListener) e);
+            }
+        });
         disableAnnotationButtons();
     }
 
@@ -486,8 +502,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         return graphViewDialog;
     }
 
-    public TextView getTextView() {
-        return textView;
+
+    public KnowtatorTextPane getKnowtatorTextPane() {
+        return knowtatorTextPane;
     }
 
     /**
@@ -606,7 +623,16 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         nextTextSourceButton = new JButton();
         nextTextSourceButton.setText("Next");
         panel5.add(nextTextSourceButton, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        panel1.add(textView.$$$getRootComponent$$$(), BorderLayout.CENTER);
+        final JSplitPane splitPane1 = new JSplitPane();
+        splitPane1.setDividerLocation(989);
+        panel1.add(splitPane1, BorderLayout.CENTER);
+        final JScrollPane scrollPane1 = new JScrollPane();
+        scrollPane1.setMinimumSize(new Dimension(500, 100));
+        scrollPane1.setPreferredSize(new Dimension(500, 100));
+        splitPane1.setLeftComponent(scrollPane1);
+        knowtatorTextPane.setEditable(false);
+        scrollPane1.setViewportView(knowtatorTextPane);
+        splitPane1.setRightComponent(annotationPane.$$$getRootComponent$$$());
     }
 
     /**

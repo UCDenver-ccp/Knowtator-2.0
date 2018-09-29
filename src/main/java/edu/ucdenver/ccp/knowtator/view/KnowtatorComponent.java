@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view;
 
-public interface KnowtatorViewComponent {
+public interface KnowtatorComponent {
     void reset();
 
     void dispose();

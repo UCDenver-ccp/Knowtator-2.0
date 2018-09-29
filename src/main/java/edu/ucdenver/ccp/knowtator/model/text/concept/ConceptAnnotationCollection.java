@@ -82,10 +82,10 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                 controller.getSelectionModel().getEnd());
     }
 
+
     /*
     REMOVERS
      */
-
     public void removeAnnotation(ConceptAnnotation conceptAnnotationToRemove) {
         for (Span span : conceptAnnotationToRemove.getSpanCollection()) {
             allSpanCollection.remove(span);
@@ -113,46 +113,19 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         removeSpanFromAnnotation(conceptAnnotation, conceptAnnotation.getSpanCollection().getSelection());
     }
 
+
+
     /*
     MODIFIERS
      */
-
-    public void growSelectedSpanStart() {
+    public void modifySelection(int startModification, int endModification) {
         Span span = getSelection().getSpanCollection().getSelection();
         allSpanCollection.remove(span);
-        span.growStart();
+        span.modifySpan(startModification, endModification, textSource.getContent().length());
         allSpanCollection.add(span);
 
         collectionListeners.forEach(listener -> listener.updated(getSelection()));
     }
-
-    public void growSelectedSpanEnd() {
-        Span span = getSelection().getSpanCollection().getSelection();
-        allSpanCollection.remove(span);
-        span.growEnd(textSource.getContent().length());
-        allSpanCollection.add(span);
-
-        collectionListeners.forEach(listener -> listener.updated(getSelection()));
-    }
-
-    public void shrinkSelectedSpanEnd() {
-        Span span = getSelection().getSpanCollection().getSelection();
-        allSpanCollection.remove(span);
-        span.shrinkEnd();
-        allSpanCollection.add(span);
-
-        collectionListeners.forEach(listener -> listener.updated(getSelection()));
-    }
-
-    public void shrinkSelectedSpanStart() {
-        Span span = getSelection().getSpanCollection().getSelection();
-        allSpanCollection.remove(span);
-        span.shrinkStart();
-        allSpanCollection.add(span);
-
-        collectionListeners.forEach(listener -> listener.updated(getSelection()));
-    }
-
 
     /*
     GETTERS

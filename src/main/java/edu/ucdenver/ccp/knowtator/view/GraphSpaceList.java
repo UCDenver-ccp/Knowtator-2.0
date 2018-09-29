@@ -1,11 +1,10 @@
-package edu.ucdenver.ccp.knowtator.view.chooser;
+package edu.ucdenver.ccp.knowtator.view;
 
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollection;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import java.util.stream.Collector;
 
@@ -13,7 +12,7 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
     private KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
 
 
-    public GraphSpaceList(KnowtatorView view) {
+    GraphSpaceList(KnowtatorView view) {
         super(view);
 
         conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {

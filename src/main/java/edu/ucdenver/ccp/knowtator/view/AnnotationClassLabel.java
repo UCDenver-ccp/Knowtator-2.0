@@ -1,9 +1,8 @@
-package edu.ucdenver.ccp.knowtator.view.text;
+package edu.ucdenver.ccp.knowtator.view;
 
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.event.EventType;
 import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
@@ -16,7 +15,7 @@ public class AnnotationClassLabel extends KnowtatorLabel implements OWLModelMana
     private Logger log = Logger.getLogger(AnnotationClassLabel.class);
 
 
-    public AnnotationClassLabel(KnowtatorView view) {
+    AnnotationClassLabel(KnowtatorView view) {
         super(view);
         this.conceptAnnotation = null;
     }

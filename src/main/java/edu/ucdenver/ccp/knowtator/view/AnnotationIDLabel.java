@@ -1,11 +1,10 @@
-package edu.ucdenver.ccp.knowtator.view.text;
+package edu.ucdenver.ccp.knowtator.view;
 
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 public class AnnotationIDLabel extends KnowtatorLabel {
-  public AnnotationIDLabel(KnowtatorView view) {
+  AnnotationIDLabel(KnowtatorView view) {
     super(view);
     this.view = view;
   }

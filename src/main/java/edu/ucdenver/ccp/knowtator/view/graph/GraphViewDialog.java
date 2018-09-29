@@ -1,7 +1,7 @@
 package edu.ucdenver.ccp.knowtator.view.graph;
 
+import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorViewComponent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +10,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 
-public class GraphViewDialog extends JDialog implements KnowtatorViewComponent {
+public class GraphViewDialog extends JDialog implements KnowtatorComponent {
     private JPanel contentPane;
     private GraphView graphView;
     private KnowtatorView view;

@@ -134,10 +134,13 @@
       <item class="edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceList" icon="/com/intellij/uiDesigner/icons/list.png" removable="true" auto-create-binding="false" can-attach-label="false">
         <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
       </item>
-      <item class="edu.ucdenver.ccp.knowtator.view.text.AnnotationAnnotatorLabel" icon="/com/intellij/uiDesigner/icons/label.png" removable="true" auto-create-binding="false" can-attach-label="false">
+      <item class="edu.ucdenver.ccp.knowtator.view.AnnotationAnnotatorLabel" icon="/com/intellij/uiDesigner/icons/label.png" removable="true" auto-create-binding="false" can-attach-label="false">
         <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
       </item>
       <item class="edu.ucdenver.ccp.knowtator.view.text.TextView" icon="" removable="true" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
+      </item>
+      <item class="edu.ucdenver.ccp.knowtator.view.text.AnnotationPane" icon="" removable="true" auto-create-binding="false" can-attach-label="false">
         <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
       </item>
     </group>

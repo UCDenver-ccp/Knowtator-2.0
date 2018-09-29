@@ -155,32 +155,22 @@ public class Span extends AbstractKnowtatorTextBoundObject<Span> implements Know
   MODIFIERS
    */
 
-  public void shrinkEnd() {
-    if (end > start) {
-      end -= 1;
-      conceptAnnotation.getSpanCollection().update(this);
+  public void modifySpan(int startModification, int endModification, int limit) {
+    start += startModification;
+    if (end < start) {
+      start = end;
     }
-  }
-
-  public void shrinkStart() {
-    if (start < end) {
-      start += 1;
-      conceptAnnotation.getSpanCollection().update(this);
+    if (start < 0) {
+      start = 0;
     }
-  }
-
-  public void growEnd(int limit) {
-    if (end < limit) {
-      end += 1;
-      conceptAnnotation.getSpanCollection().update(this);
+    end += endModification;
+    if (end < start) {
+      end = start;
     }
-  }
-
-  public void growStart() {
-    if (start > 0) {
-      start -= 1;
-      conceptAnnotation.getSpanCollection().update(this);
+    if (end > limit) {
+      end = limit;
     }
+    conceptAnnotation.getSpanCollection().update(this);
   }
 
   /*

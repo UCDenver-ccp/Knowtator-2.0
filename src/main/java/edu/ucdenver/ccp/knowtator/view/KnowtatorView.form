@@ -217,7 +217,7 @@
                   <value value="16"/>
                 </properties>
               </component>
-              <component id="349eb" class="edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser" binding="textSourceChooser" custom-create="true">
+              <component id="349eb" class="edu.ucdenver.ccp.knowtator.view.TextSourceChooser" binding="textSourceChooser" custom-create="true">
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -256,9 +256,38 @@
               </component>
             </children>
           </grid>
-          <nested-form id="a8c86" form-file="edu/ucdenver/ccp/knowtator/view/text/TextView.form" binding="textView" custom-create="true">
+          <splitpane id="e579b">
             <constraints border-constraint="Center"/>
-          </nested-form>
+            <properties>
+              <dividerLocation value="989"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <scrollpane id="56983">
+                <constraints>
+                  <splitpane position="left"/>
+                </constraints>
+                <properties>
+                  <minimumSize width="500" height="100"/>
+                  <preferredSize width="500" height="100"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="b018" class="edu.ucdenver.ccp.knowtator.view.KnowtatorTextPane" binding="knowtatorTextPane" custom-create="true">
+                    <constraints/>
+                    <properties>
+                      <editable value="false"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
+              <nested-form id="2a231" form-file="edu/ucdenver/ccp/knowtator/view/AnnotationPane.form" binding="annotationPane" custom-create="true">
+                <constraints>
+                  <splitpane position="right"/>
+                </constraints>
+              </nested-form>
+            </children>
+          </splitpane>
         </children>
       </grid>
     </children>
