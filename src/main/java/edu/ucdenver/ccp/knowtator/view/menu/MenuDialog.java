@@ -4,17 +4,13 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorActions;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
-import java.util.prefs.BackingStoreException;
 
 public class MenuDialog extends JDialog {
     private JPanel contentPane;
@@ -54,85 +50,15 @@ public class MenuDialog extends JDialog {
         // call onCancel() on ESCAPE
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        openButton.addActionListener(e -> {
-            File lastProjectFile = new File(view.getPreferences().get("Last Project", null));
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(lastProjectFile.getParentFile());
-            fileChooser.setSelectedFile(lastProjectFile);
-            FileFilter fileFilter = new FileNameExtensionFilter("Knowtator", "knowtator");
-            fileChooser.setFileFilter(fileFilter);
-            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        openButton.addActionListener(e -> KnowtatorActions.openProject(this, view));
+        newButton.addActionListener(e -> KnowtatorActions.newProject(this, view));
 
-            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                dispose();
-                view.reset();
-                try {
-                    view.getController().setSaveLocation(fileChooser.getSelectedFile().getParentFile());
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                view.getController().loadProject();
-                view.getKnowtatorTextPane().refreshHighlights();
+        profileFilterCheckBox.addItemListener(e -> KnowtatorActions.changeProfileFilter(view, profileFilterCheckBox.isSelected()));
+        owlClassFilterCheckBox.addItemListener(e -> KnowtatorActions.changeOWLClassFilter(view, owlClassFilterCheckBox.isSelected()));
 
-                view.getPreferences().put("Last Project", fileChooser.getSelectedFile().getAbsolutePath());
-
-                try {
-                    view.getPreferences().flush();
-                } catch (BackingStoreException e1) {
-                    e1.printStackTrace();
-                }
-            }
-
-
-        });
-
-        newButton.addActionListener(e -> {
-            String projectName = JOptionPane.showInputDialog("Enter project name");
-
-            if (projectName != null && !projectName.equals("")) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setDialogTitle("Select project root");
-                fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-
-                if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                    dispose();
-                    File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
-                    view.reset();
-                    view.getController().newProject(projectDirectory);
-                }
-            }
-
-        });
-
-        profileFilterCheckBox.addItemListener(e -> view.getController().getFilterModel().setFilterByProfile(profileFilterCheckBox.isSelected()));
-        owlClassFilterCheckBox.addItemListener(e -> view.getController().getFilterModel().setFilterByOWLClass(owlClassFilterCheckBox.isSelected()));
-
-        exportButton.addActionListener(e -> {
-            ExportDialog exportDialog = new ExportDialog(this, view);
-            exportDialog.pack();
-            exportDialog.setVisible(true);
-        });
-
-        importButton.addActionListener(e -> {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(view.getController().getTextSourceCollection().getAnnotationsLocation());
-
-            FileFilter fileFilter =
-                    new FileNameExtensionFilter("ConceptAnnotation File (XML, ann, a1)", "xml", "ann", "a1");
-            fileChooser.setFileFilter(fileFilter);
-            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-
-            if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-                dispose();
-                view.getController().loadWithAppropriateFormat(view.getController().getTextSourceCollection(), fileChooser.getSelectedFile());
-            }
-        });
-
-        IAAButton.addActionListener(e -> {
-            IAADialog iaaDialog = new IAADialog(view);
-            iaaDialog.pack();
-            iaaDialog.setVisible(true);
-        });
+        exportButton.addActionListener(e -> KnowtatorActions.showExportDialog(this, view));
+        importButton.addActionListener(e -> KnowtatorActions.showImportDialog(this, view));
+        IAAButton.addActionListener(e -> KnowtatorActions.showIAADialog(this, view));
 
 
     }

@@ -2,13 +2,21 @@ package edu.ucdenver.ccp.knowtator.view.graph;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.util.mxMorphing;
+import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxEvent;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 class GraphActions {
@@ -95,6 +103,37 @@ class GraphActions {
             if (vertices.size() > 0) {
                 graphSpace.setSelectionCells(vertices);
                 goToVertex(view, (AnnotationNode) vertices.get(0));
+            }
+        }
+    }
+
+    static void exportToPNG(JDialog parent, KnowtatorView view) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(view.getController().getSaveLocation());
+        FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
+        fileChooser.setFileFilter(fileFilter);
+        fileChooser.setSelectedFile(new File(view.getController()
+                .getTextSourceCollection().getSelection()
+                .getId() + "_" + view.getController()
+                .getTextSourceCollection().getSelection()
+                .getGraphSpaceCollection().getSelection()
+                .getId() + ".png"));
+        if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
+            BufferedImage image =
+                    mxCellRenderer.createBufferedImage(
+                            view.getController()
+                                    .getTextSourceCollection().getSelection()
+                                    .getGraphSpaceCollection().getSelection(),
+                            null,
+                            1,
+                            Color.WHITE,
+                            true,
+                            null);
+            try {
+                ImageIO.write(
+                        image, "PNG", new File(fileChooser.getSelectedFile().getAbsolutePath()));
+            } catch (IOException e1) {
+                e1.printStackTrace();
             }
         }
     }

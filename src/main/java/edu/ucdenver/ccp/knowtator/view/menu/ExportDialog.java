@@ -3,19 +3,14 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorActions;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ResourceBundle;
 
 public class ExportDialog extends JDialog {
@@ -25,7 +20,7 @@ public class ExportDialog extends JDialog {
     private JButton exportToBratButton;
     private JButton exportToImagePNGButton;
 
-    ExportDialog(Window parent, KnowtatorView view) {
+    public ExportDialog(Window parent, KnowtatorView view) {
         super(parent);
         setContentPane(contentPane);
         setModal(true);
@@ -46,39 +41,8 @@ public class ExportDialog extends JDialog {
         // call onCancel() on ESCAPE
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        exportToBratButton.addActionListener(e -> {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(view.getController().getTextSourceCollection().getAnnotationsLocation());
-            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-                view.getController()
-                        .saveToFormat(BratStandoffUtil.class, view.getController().getTextSourceCollection(), fileChooser.getSelectedFile());
-            }
-        });
-
-        exportToImagePNGButton.addActionListener(e -> {
-            JFileChooser fileChooser = new JFileChooser(view.getController().getSaveLocation());
-            fileChooser.setFileFilter(new FileNameExtensionFilter("PNG", "png"));
-            fileChooser.setSelectedFile(
-                    new File(
-                            view.getController()
-                                    .getTextSourceCollection().getSelection()
-                                    .getId() + "_annotations.png"));
-            if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
-                view.getController()
-                        .getTextSourceCollection().getSelection()
-                        .getConceptAnnotationCollection()
-                        .setSelection(null);
-                BufferedImage image = view.getKnowtatorTextPane().getScreenShot();
-                try {
-                    ImageIO.write(image, "png", fileChooser.getSelectedFile());
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
-
-
-        });
+        exportToBratButton.addActionListener(e -> KnowtatorActions.exportToBrat(view));
+        exportToImagePNGButton.addActionListener(e -> KnowtatorActions.exportToPNG(view));
     }
 
     private void onOK() {

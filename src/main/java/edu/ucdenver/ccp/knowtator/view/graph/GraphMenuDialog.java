@@ -3,20 +3,13 @@ package edu.ucdenver.ccp.knowtator.view.graph;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import com.mxgraph.util.mxCellRenderer;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 public class GraphMenuDialog extends JDialog {
     private JPanel contentPane;
@@ -44,36 +37,7 @@ public class GraphMenuDialog extends JDialog {
         // call onCancel() on ESCAPE
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        exportToImagePNGButton.addActionListener(e -> {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(view.getController().getSaveLocation());
-            FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
-            fileChooser.setFileFilter(fileFilter);
-            fileChooser.setSelectedFile(new File(view.getController()
-                    .getTextSourceCollection().getSelection()
-                    .getId() + "_" + view.getController()
-                    .getTextSourceCollection().getSelection()
-                    .getGraphSpaceCollection().getSelection()
-                    .getId() + ".png"));
-            if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
-                BufferedImage image =
-                        mxCellRenderer.createBufferedImage(
-                                view.getController()
-                                        .getTextSourceCollection().getSelection()
-                                        .getGraphSpaceCollection().getSelection(),
-                                null,
-                                1,
-                                Color.WHITE,
-                                true,
-                                null);
-                try {
-                    ImageIO.write(
-                            image, "PNG", new File(fileChooser.getSelectedFile().getAbsolutePath()));
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        });
+        exportToImagePNGButton.addActionListener(e -> GraphActions.exportToPNG(this, view));
     }
 
     private void onOK() {

@@ -3,16 +3,14 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import edu.ucdenver.ccp.knowtator.iaa.IAAException;
-import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorActions;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
 import java.util.ResourceBundle;
 
 public class IAADialog extends JDialog {
@@ -24,7 +22,8 @@ public class IAADialog extends JDialog {
     private JCheckBox classAndSpanCheckBox;
     private KnowtatorView view;
 
-    IAADialog(KnowtatorView view) {
+    public IAADialog(JDialog parent, KnowtatorView view) {
+        super(parent);
         this.view = view;
         setContentPane(contentPane);
         setModal(true);
@@ -47,35 +46,7 @@ public class IAADialog extends JDialog {
     }
 
     private void onOK() {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(view.getController().getSaveLocation());
-        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        //
-        // disable the "All files" option.
-        //
-        fileChooser.setAcceptAllFileFilterUsed(false);
-        if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
-            File outputDirectory = fileChooser.getSelectedFile();
-
-            try {
-                KnowtatorIAA knowtatorIAA = new KnowtatorIAA(outputDirectory, view.getController());
-
-                if (classCheckBox.isSelected()) {
-                    knowtatorIAA.runClassIAA();
-                }
-                if (spanCheckBox.isSelected()) {
-                    knowtatorIAA.runSpanIAA();
-                }
-                if (classAndSpanCheckBox.isSelected()) {
-                    knowtatorIAA.runClassAndSpanIAA();
-                }
-
-                knowtatorIAA.closeHTML();
-            } catch (IAAException e1) {
-                e1.printStackTrace();
-            }
-
-        }
+        KnowtatorActions.runIAA(view, classCheckBox.isSelected(), spanCheckBox.isSelected(), classAndSpanCheckBox.isSelected());
         dispose();
     }
 
