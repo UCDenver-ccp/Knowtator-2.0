@@ -1,7 +1,11 @@
 package edu.ucdenver.ccp.knowtator;
 
-import edu.ucdenver.ccp.knowtator.model.*;
+import edu.ucdenver.ccp.knowtator.model.FilterModel;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.OWLModel;
+import edu.ucdenver.ccp.knowtator.model.SelectionModel;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileCollection;
+import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollection;
 import org.apache.log4j.Logger;
 

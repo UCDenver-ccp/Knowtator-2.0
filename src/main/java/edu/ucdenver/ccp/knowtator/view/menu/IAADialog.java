@@ -4,7 +4,6 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorActions;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +21,7 @@ public class IAADialog extends JDialog {
     private JCheckBox classAndSpanCheckBox;
     private KnowtatorView view;
 
-    public IAADialog(JDialog parent, KnowtatorView view) {
+    IAADialog(JDialog parent, KnowtatorView view) {
         super(parent);
         this.view = view;
         setContentPane(contentPane);
@@ -46,7 +45,7 @@ public class IAADialog extends JDialog {
     }
 
     private void onOK() {
-        KnowtatorActions.runIAA(view, classCheckBox.isSelected(), spanCheckBox.isSelected(), classAndSpanCheckBox.isSelected());
+        MenuActions.runIAA(view, classCheckBox.isSelected(), spanCheckBox.isSelected(), classAndSpanCheckBox.isSelected());
         dispose();
     }
 

@@ -1,7 +1,5 @@
 package edu.ucdenver.ccp.knowtator.model.text;
 
-import edu.ucdenver.ccp.knowtator.model.AbstractKnowtatorTextBoundObject;
-
 import java.util.HashMap;
 import java.util.Map;
 

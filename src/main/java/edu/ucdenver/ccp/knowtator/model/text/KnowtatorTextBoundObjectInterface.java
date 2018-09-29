@@ -1,6 +1,6 @@
-package edu.ucdenver.ccp.knowtator.model;
+package edu.ucdenver.ccp.knowtator.model.text;
 
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorObjectInterface;
 
 public interface KnowtatorTextBoundObjectInterface<K extends KnowtatorObjectInterface> extends KnowtatorObjectInterface<K> {
 

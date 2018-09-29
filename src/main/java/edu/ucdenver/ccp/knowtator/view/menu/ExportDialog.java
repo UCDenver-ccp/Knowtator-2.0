@@ -4,7 +4,6 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorActions;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +19,7 @@ public class ExportDialog extends JDialog {
     private JButton exportToBratButton;
     private JButton exportToImagePNGButton;
 
-    public ExportDialog(Window parent, KnowtatorView view) {
+    ExportDialog(Window parent, KnowtatorView view) {
         super(parent);
         setContentPane(contentPane);
         setModal(true);
@@ -41,8 +40,8 @@ public class ExportDialog extends JDialog {
         // call onCancel() on ESCAPE
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        exportToBratButton.addActionListener(e -> KnowtatorActions.exportToBrat(view));
-        exportToImagePNGButton.addActionListener(e -> KnowtatorActions.exportToPNG(view));
+        exportToBratButton.addActionListener(e -> MenuActions.exportToBrat(view));
+        exportToImagePNGButton.addActionListener(e -> MenuActions.exportToPNG(view));
     }
 
     private void onOK() {

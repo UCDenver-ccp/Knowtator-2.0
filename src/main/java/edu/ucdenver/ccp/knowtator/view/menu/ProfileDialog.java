@@ -4,7 +4,6 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorActions;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,8 +40,8 @@ public class ProfileDialog extends JDialog {
         // call onCancel() on ESCAPE
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        addProfileButton.addActionListener(e -> KnowtatorActions.addProfile(this, view));
-        removeProfileButton.addActionListener(e -> KnowtatorActions.removeProfile(view));
+        addProfileButton.addActionListener(e -> ProfileActions.addProfile(this, view));
+        removeProfileButton.addActionListener(e -> ProfileActions.removeProfile(view));
     }
 
     private void onOK() {

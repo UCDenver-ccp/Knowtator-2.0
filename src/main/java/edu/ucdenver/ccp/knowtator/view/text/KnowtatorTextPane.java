@@ -6,7 +6,6 @@ import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorActions;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -16,6 +15,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -31,7 +32,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
     private KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
     private KnowtatorCollectionListener<Span> spanCollectionListener;
 
-    public KnowtatorTextPane(KnowtatorView view) {
+    KnowtatorTextPane(KnowtatorView view) {
         super();
         this.view = view;
         setEditable(false);
@@ -67,7 +68,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
         return image;
     }
 
-    public void search(String textToFind, boolean isCaseSensitive, boolean inAnnotations, boolean searchForward) {
+    public void search(String textToFind, boolean isCaseSensitive, boolean inAnnotations, boolean isRegex, boolean searchForward) {
         String text = isCaseSensitive ? getText().toLowerCase() : getText();
         textToFind = isCaseSensitive ? textToFind : textToFind.toLowerCase();
 
@@ -82,8 +83,16 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
                 select(selectedSpan.getStart(), selectedSpan.getStart());
             }
         }
+        int matchLoc;
+        Matcher matcher = null;
 
-        int matchLoc = find(text, textToFind, getSelectionStart(), searchForward);
+        if (isRegex) {
+            Pattern patternToFind = Pattern.compile(textToFind);
+            matcher = patternToFind.matcher(text);
+            matchLoc = matcher.start();
+        } else {
+            matchLoc = find(text, textToFind, getSelectionStart(), searchForward);
+        }
         Set<Span> spans = null;
         int newMatchLoc = matchLoc;
         if (inAnnotations) {
@@ -92,7 +101,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
                 if (!spans.isEmpty()) {
                     inAnnotations = false;
                 } else {
-                    newMatchLoc = find(text, textToFind, newMatchLoc, searchForward);
+                    newMatchLoc = isRegex ? matcher.start() : find(text, textToFind, newMatchLoc, searchForward);
                 }
                 if (!searchForward && newMatchLoc == -1) {
                     newMatchLoc = text.length();
@@ -570,7 +579,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
 
         private JMenuItem addAnnotationCommand() {
             JMenuItem menuItem = new JMenuItem("Add concept");
-            menuItem.addActionListener(e12 -> KnowtatorActions.addAnnotation(view));
+            menuItem.addActionListener(e12 -> AnnotationActions.addAnnotation(view));
 
             return menuItem;
         }
@@ -586,7 +595,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
                                             .getConceptAnnotationCollection()
                                             .getSelection()
                                             .getOwlClass()));
-            removeSpanFromSelectedAnnotation.addActionListener(e5 -> KnowtatorActions.removeAnnotation(view));
+            removeSpanFromSelectedAnnotation.addActionListener(e5 -> AnnotationActions.removeAnnotation(view));
 
             return removeSpanFromSelectedAnnotation;
         }
@@ -608,7 +617,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener {
                                     .getSelection()
                                     .getOwlClass());
 
-            removeAnnotationMenuItem.addActionListener(e4 -> KnowtatorActions.removeAnnotation(view));
+            removeAnnotationMenuItem.addActionListener(e4 -> AnnotationActions.removeAnnotation(view));
 
             return removeAnnotationMenuItem;
         }
