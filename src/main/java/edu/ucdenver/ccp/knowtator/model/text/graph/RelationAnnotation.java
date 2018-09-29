@@ -41,7 +41,6 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
     private GraphSpace graphSpace;
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(RelationAnnotation.class);
-    private boolean dontRedraw;
 
     RelationAnnotation(
             String id,
@@ -66,8 +65,6 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
         this.quantifierValue = quantifierValue;
         this.graphSpace = graphSpace;
 
-        dontRedraw = false;
-
         controller.verifyId(id, this, false);
 
         getGeometry().setRelative(true);
@@ -79,13 +76,11 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
         controller.getOWLModel().addOWLModelManagerListener(this);
         controller.getOWLModel().addOntologyChangeListener(this);
 
-        dontRedraw = true;
         if (property == null) {
             setProperty(controller.getOWLModel().getOWLObjectPropertyByID(propertyID));
         } else {
             setProperty(property);
         }
-        dontRedraw = false;
     }
 
     /*
@@ -151,7 +146,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 
 
             super.setValue(value);
-            if (graphSpace != null && !dontRedraw) {
+            if (graphSpace != null && controller.isNotLoading()) {
                 graphSpace.reDrawGraph();
             }
             textSource.save();
@@ -165,7 +160,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 
     public void setProperty(OWLObjectProperty owlObjectProperty) {
         property = owlObjectProperty;
-        setValue(property);
+        setValue(property == null ? propertyID : property);
     }
 
     void setQuantifier(String quantifier) {

@@ -38,6 +38,7 @@ public class RelationOptionsDialog extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
         previewTextArea.setText(propertyID);
+        previewTextArea.setEditable(propertyID == null);
 
         result = 0;
 
@@ -84,6 +85,18 @@ public class RelationOptionsDialog extends JDialog {
 
     public Boolean getNegation() {
         return negateCheckBox.isSelected();
+    }
+
+    public String getQuantifier() {
+        return (String) quantifierChooser.getSelectedItem();
+    }
+
+    public String getQuantifierValue() {
+        return quantifierValueTextField.getText();
+    }
+
+    public String getPropertyID() {
+        return previewTextArea.getText();
     }
 
     {
@@ -198,13 +211,5 @@ public class RelationOptionsDialog extends JDialog {
      */
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
-    }
-
-    public String getQuantifier() {
-        return (String) quantifierChooser.getSelectedItem();
-    }
-
-    public String getQuantifierValue() {
-        return quantifierValueTextField.getText();
     }
 }

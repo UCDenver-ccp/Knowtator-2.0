@@ -376,7 +376,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObjectInter
                                 if (getModel().isEdge(cell) && "".equals(((mxCell) cell).getValue())) {
                                     mxCell edge = (mxCell) cell;
                                     OWLEntity owlEntity = controller.getOWLModel().getSelectedOWLEntity();
-                                    if (owlEntity instanceof OWLObjectProperty) {
+                                    if (owlEntity == null || owlEntity instanceof OWLObjectProperty) {
                                         String propertyID = controller.getOWLModel().getOWLEntityRendering(owlEntity);
                                         RelationOptionsDialog relationOptionsDialog = new RelationOptionsDialog(parentWindow, propertyID);
                                         relationOptionsDialog.pack();
@@ -392,7 +392,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObjectInter
                                                     null,
                                                     controller.getProfileCollection().getSelection(),
                                                     (OWLObjectProperty) owlEntity,
-                                                    propertyID,
+                                                    relationOptionsDialog.getPropertyID(),
                                                     relationOptionsDialog.getQuantifier(),
                                                     relationOptionsDialog.getQuantifierValue(),
                                                     relationOptionsDialog.getNegation());

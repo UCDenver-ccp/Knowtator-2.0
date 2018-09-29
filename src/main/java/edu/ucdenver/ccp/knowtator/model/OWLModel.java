@@ -249,7 +249,7 @@ public class OWLModel implements Serializable, Savable {
     }
 
     public boolean isWorkSpaceSet() {
-        return owlWorkSpace == null;
+        return owlWorkSpace != null;
     }
 
     public static void processOntologyChanges(@Nonnull List<? extends OWLOntologyChange> changes, OWLEntityCollector addedCollector, OWLEntityCollector removedCollector) {
