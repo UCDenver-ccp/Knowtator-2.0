@@ -8,9 +8,9 @@ import java.awt.event.ActionListener;
 
 public abstract class KnowtatorChooser<K extends KnowtatorObjectInterface> extends JComboBox<K> implements KnowtatorCollectionListener<K>, KnowtatorComponent {
 
-	private ActionListener al;
+	private final ActionListener al;
 	private KnowtatorCollection<K> collection;
-	protected KnowtatorView view;
+	protected final KnowtatorView view;
 
 	protected KnowtatorChooser(KnowtatorView view) {
 		this.view = view;
@@ -25,7 +25,7 @@ public abstract class KnowtatorChooser<K extends KnowtatorObjectInterface> exten
 
 	}
 
-	public void setCollection(KnowtatorCollection<K> collection) {
+	protected void setCollection(KnowtatorCollection<K> collection) {
 		if (this.collection != null) {
 			this.collection.removeCollectionListener(this);
 			this.collection.forEach(this::removeItem);
@@ -58,17 +58,17 @@ public abstract class KnowtatorChooser<K extends KnowtatorObjectInterface> exten
 	}
 
 	@Override
-	public void emptied(RemoveEvent<K> event) {
+	public void emptied() {
 		setEnabled(false);
 	}
 
 	@Override
-	public void firstAdded(AddEvent<K> event) {
+	public void firstAdded() {
 		setEnabled(true);
 	}
 
 	@Override
-	public void changed(ChangeEvent<K> event) {
+	public void changed() {
 	}
 
 	@Override

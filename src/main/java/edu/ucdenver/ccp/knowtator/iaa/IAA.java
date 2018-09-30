@@ -8,9 +8,9 @@ import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import java.util.*;
 
 public class IAA {
-	private Set<String> annotationClasses;
+	private final Set<String> annotationClasses;
 
-	private Set<String> setNames;
+	private final Set<String> setNames;
 
 	private Set<ConceptAnnotation> conceptAnnotations;
 
@@ -229,7 +229,7 @@ public class IAA {
 	//			return Collections.emptySet();
 	//	}
 
-	public void setConceptAnnotations(Set<ConceptAnnotation> conceptAnnotations) {
+	void setConceptAnnotations(Set<ConceptAnnotation> conceptAnnotations) {
 		this.conceptAnnotations = conceptAnnotations;
 
 		for (String setName : setNames) {

@@ -134,8 +134,7 @@ public abstract class ProjectManager implements Savable {
         } catch (InstantiationException
                 | IllegalAccessException
                 | InvocationTargetException
-                | NoSuchMethodException
-                | IOException e) {
+                | NoSuchMethodException e) {
             e.printStackTrace();
         }
     }
@@ -147,8 +146,7 @@ public abstract class ProjectManager implements Savable {
         } catch (InstantiationException
                 | IllegalAccessException
                 | InvocationTargetException
-                | NoSuchMethodException
-                | IOException e) {
+                | NoSuchMethodException e) {
             e.printStackTrace();
         }
     }

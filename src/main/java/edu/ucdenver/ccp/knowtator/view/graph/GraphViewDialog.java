@@ -13,7 +13,7 @@ import java.awt.event.WindowFocusListener;
 public class GraphViewDialog extends JDialog implements KnowtatorComponent {
     private JPanel contentPane;
     private GraphView graphView;
-    private KnowtatorView view;
+    private final KnowtatorView view;
 
     public GraphViewDialog(KnowtatorView view) {
 
@@ -70,6 +70,12 @@ public class GraphViewDialog extends JDialog implements KnowtatorComponent {
     @Override
     public void reset() {
         graphView.reset();
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        setVisible(false);
     }
 
     @Override

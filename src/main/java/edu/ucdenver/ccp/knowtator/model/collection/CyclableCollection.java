@@ -43,7 +43,7 @@ public abstract class CyclableCollection<K extends KnowtatorObjectInterface, L e
     return collection.first();
   }
 
-  protected void dispose() {
+  void dispose() {
     super.dispose();
     collection.clear();
   }

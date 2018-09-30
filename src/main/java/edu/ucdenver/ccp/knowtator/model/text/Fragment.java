@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Fragment extends AbstractKnowtatorTextBoundObject {
-	private String type;
-	private Map<String, Integer> conceptCountMap;
+	private final String type;
+	private final Map<String, Integer> conceptCountMap;
 
 	public Fragment(TextSource textSource, String id, String type) {
 		super(textSource, id);

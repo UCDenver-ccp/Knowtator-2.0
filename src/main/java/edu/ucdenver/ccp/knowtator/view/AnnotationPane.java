@@ -2,6 +2,8 @@ package edu.ucdenver.ccp.knowtator.view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AnnotationPane implements KnowtatorComponent {
     private SpanList spanList;
@@ -13,7 +15,8 @@ public class AnnotationPane implements KnowtatorComponent {
     private AnnotationClassLabel annotationClassLabel;
     private JPanel annotationPane;
     private JPanel root;
-    private KnowtatorView view;
+    private final KnowtatorView view;
+    private List<KnowtatorComponent> knowtatorComponents;
 
     AnnotationPane(KnowtatorView view) {
 
@@ -22,11 +25,18 @@ public class AnnotationPane implements KnowtatorComponent {
     }
 
     public void createUIComponents() {
+        knowtatorComponents = new ArrayList<>();
         spanList = new SpanList(view);
         graphSpaceList = new GraphSpaceList(view);
         annotationAnnotatorLabel = new AnnotationAnnotatorLabel(view);
         annotationClassLabel = new AnnotationClassLabel(view);
         annotationIDLabel = new AnnotationIDLabel(view);
+
+        knowtatorComponents.add(spanList);
+        knowtatorComponents.add(graphSpaceList);
+        knowtatorComponents.add(annotationAnnotatorLabel);
+        knowtatorComponents.add(annotationClassLabel);
+        knowtatorComponents.add(annotationIDLabel);
     }
 
 
@@ -36,20 +46,12 @@ public class AnnotationPane implements KnowtatorComponent {
 
     @Override
     public void reset() {
-        graphSpaceList.reset();
-        annotationClassLabel.reset();
-        annotationIDLabel.reset();
-        annotationAnnotatorLabel.reset();
-        spanList.reset();
+        knowtatorComponents.forEach(KnowtatorComponent::reset);
     }
 
     @Override
     public void dispose() {
-        annotationIDLabel.dispose();
-        annotationAnnotatorLabel.dispose();
-        annotationClassLabel.dispose();
-        spanList.dispose();
-        graphSpaceList.dispose();
+        knowtatorComponents.forEach(KnowtatorComponent::dispose);
     }
 
     JButton getNextSpanButton() {

@@ -8,7 +8,7 @@ public class SelectionModel implements CaretListener {
         return start;
     }
 
-    public void setStart(int start) {
+    private void setStart(int start) {
         this.start = start;
     }
 
@@ -16,7 +16,7 @@ public class SelectionModel implements CaretListener {
         return end;
     }
 
-    public void setEnd(int end) {
+    private void setEnd(int end) {
         this.end = end;
     }
 

@@ -13,7 +13,10 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.collection.*;
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -40,9 +43,8 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObjectInter
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(GraphSpace.class);
 
-    private KnowtatorController controller;
+    private final KnowtatorController controller;
     private boolean areListenersSet;
-    private RelationSelectionManager relationSelectionManager;
     private final TextSource textSource;
     private String id;
     private Window parentWindow;
@@ -50,7 +52,6 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObjectInter
     public GraphSpace(KnowtatorController controller, TextSource textSource, String id) {
 
         this.controller = controller;
-        this.relationSelectionManager = new RelationSelectionManager(controller, this);
         this.textSource = textSource;
         this.id = id;
 
@@ -440,14 +441,6 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObjectInter
 
                                             setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
 
-                                        } else if (cell instanceof RelationAnnotation) {
-                                            RelationAnnotation relationAnnotation = (RelationAnnotation) cell;
-
-                                            relationSelectionManager.setSelectedOWLObjectProperty(relationAnnotation.getProperty());
-                                            relationSelectionManager.setSelectedPropertyQuantifer(relationAnnotation.getQuantifier());
-                                            relationSelectionManager.setSelectedRelationQuantifierValue(
-                                                    relationAnnotation.getQuantifierValue());
-                                            relationSelectionManager.setNegatation(relationAnnotation.getNegated());
                                         }
                                     }
                                     reDrawGraph();
@@ -557,17 +550,17 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObjectInter
     }
 
     @Override
-    public void changed(ChangeEvent<ConceptAnnotation> changeEvent) {
+    public void changed() {
 
     }
 
     @Override
-    public void emptied(RemoveEvent<ConceptAnnotation> object) {
+    public void emptied() {
 
     }
 
     @Override
-    public void firstAdded(AddEvent<ConceptAnnotation> object) {
+    public void firstAdded() {
 
     }
 

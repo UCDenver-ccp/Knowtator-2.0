@@ -11,14 +11,15 @@ import java.util.*;
  */
 public class AnnotationSpanIndex {
 
-	private Map<Integer, Set<ConceptAnnotation>> window2AnnotationsMap;
+	private final Map<Integer, Set<ConceptAnnotation>> window2AnnotationsMap;
 
-	private int windowSize;
+	private final int windowSize;
 
 	public AnnotationSpanIndex(Collection<ConceptAnnotation> conceptAnnotations) {
 		this(conceptAnnotations, 20);
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	private AnnotationSpanIndex(Collection<ConceptAnnotation> conceptAnnotations, int windowSize) {
 		this.windowSize = windowSize;
 		window2AnnotationsMap = new HashMap<>();

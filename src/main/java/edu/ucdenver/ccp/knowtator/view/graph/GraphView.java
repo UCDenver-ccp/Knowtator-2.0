@@ -5,7 +5,10 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
-import edu.ucdenver.ccp.knowtator.model.collection.*;
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
@@ -33,15 +36,15 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
     private JSlider zoomSlider;
     private JButton graphMenuButton;
     private JButton renameButton;
-    private JDialog dialog;
+    private final JDialog dialog;
     private List<JComponent> graphSpaceButtons;
 
 
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(GraphView.class);
 
-    private KnowtatorView view;
-    private KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
+    private final KnowtatorView view;
+    private final KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
 
 
     GraphView(JDialog dialog, KnowtatorView view) {
@@ -64,17 +67,17 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
             }
 
             @Override
-            public void changed(ChangeEvent<TextSource> changeEvent) {
+            public void changed() {
 
             }
 
             @Override
-            public void emptied(RemoveEvent<TextSource> object) {
+            public void emptied() {
 
             }
 
             @Override
-            public void firstAdded(AddEvent<TextSource> object) {
+            public void firstAdded() {
 
             }
 
@@ -205,18 +208,18 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
     }
 
     @Override
-    public void changed(ChangeEvent<GraphSpace> changeEvent) {
+    public void changed() {
 
     }
 
     @Override
-    public void emptied(RemoveEvent<GraphSpace> object) {
+    public void emptied() {
         graphSpaceButtons.forEach(c -> c.setEnabled(false));
         addGraphSpaceButton.setEnabled(true);
     }
 
     @Override
-    public void firstAdded(AddEvent<GraphSpace> object) {
+    public void firstAdded() {
         graphSpaceButtons.forEach(c -> c.setEnabled(true));
     }
 
@@ -305,7 +308,7 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
      * Taken from https://tips4java.wordpress.com/2010/03/14/dialog-focus/
      */
     static class RequestFocusListener implements AncestorListener {
-        private boolean removeListener;
+        private final boolean removeListener;
 
         /*
          *  Convenience constructor. The listener is only used once and then it is
@@ -322,6 +325,7 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
          *  @param removeCollectionListener when true this listener is only invoked once
          *                        otherwise it can be invoked multiple times.
          */
+        @SuppressWarnings("SameParameterValue")
         RequestFocusListener(boolean removeListener) {
             this.removeListener = removeListener;
         }

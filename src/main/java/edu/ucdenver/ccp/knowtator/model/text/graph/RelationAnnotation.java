@@ -29,18 +29,18 @@ import java.util.List;
 import java.util.Set;
 
 public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, KnowtatorTextBoundObjectInterface, OWLOntologyChangeListener, OWLModelManagerListener {
-    private String quantifier;
-    private String quantifierValue;
-    private Profile annotator;
+    private final String quantifier;
+    private final String quantifierValue;
+    private final Profile annotator;
     private String bratID;
-    private KnowtatorController controller;
-    private Boolean isNegated;
-    private TextSource textSource;
+    private final KnowtatorController controller;
+    private final Boolean isNegated;
+    private final TextSource textSource;
     private OWLObjectProperty property;
-    private String propertyID;
-    private GraphSpace graphSpace;
+    private final String propertyID;
+    private final GraphSpace graphSpace;
     @SuppressWarnings("unused")
-    private Logger log = Logger.getLogger(RelationAnnotation.class);
+    private final Logger log = Logger.getLogger(RelationAnnotation.class);
 
     RelationAnnotation(
             String id,
@@ -87,34 +87,14 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
     GETTERS
      */
 
-    public Profile getAnnotator() {
-        return annotator;
-    }
-
     @SuppressWarnings("unused")
     String getBratID() {
         return bratID;
     }
 
-    public OWLObjectProperty getProperty() {
-        return property;
-    }
-
-    String getQuantifier() {
-        return quantifier;
-    }
-
-    String getQuantifierValue() {
-        return quantifierValue;
-    }
-
     @Override
     public TextSource getTextSource() {
         return textSource;
-    }
-
-    boolean getNegated() {
-        return isNegated;
     }
 
     /*
@@ -153,24 +133,9 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
         }
     }
 
-    void setQuantifierValue(String quantifierValue) {
-        this.quantifierValue = quantifierValue;
-        setValue(property);
-    }
-
-    public void setProperty(OWLObjectProperty owlObjectProperty) {
+    private void setProperty(OWLObjectProperty owlObjectProperty) {
         property = owlObjectProperty;
         setValue(property == null ? propertyID : property);
-    }
-
-    void setQuantifier(String quantifier) {
-        this.quantifier = quantifier;
-        setValue(property);
-    }
-
-    void setNegation(boolean negation) {
-        this.isNegated = negation;
-        setValue(property);
     }
 
     /*
@@ -223,9 +188,9 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
         OWLModel.processOntologyChanges(changes, addedCollector, removedCollector);
 
         log.warn("Added entities:");
-        possiblyAddedEntities.forEach(owlEntity -> log.warn(owlEntity));
+        possiblyAddedEntities.forEach(log::warn);
         log.warn("Removed entities");
-        possiblyRemovedEntities.forEach(owlEntity -> log.warn(owlEntity));
+        possiblyRemovedEntities.forEach(log::warn);
 
     /*
     For now, I will assume that entity removed is the one that existed and the one

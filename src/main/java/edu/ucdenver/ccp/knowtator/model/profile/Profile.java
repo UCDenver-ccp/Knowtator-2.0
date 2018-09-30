@@ -25,8 +25,8 @@ public class Profile implements KnowtatorObjectInterface<Profile>, Savable, Know
   private static Logger log = LogManager.getLogger(Profile.class);
 
   private String id;
-  private HashMap<Object, Color> colors; // <ClassName, Highlighter>
-  private KnowtatorController controller;
+  private final HashMap<Object, Color> colors; // <ClassName, Highlighter>
+  private final KnowtatorController controller;
 
   public Profile(KnowtatorController controller, String id) {
     colors = new HashMap<>();

@@ -10,7 +10,7 @@ public class AnnotationAnnotatorLabel extends KnowtatorLabel implements Knowtato
 	}
 
 	@Override
-	protected void reactToConceptAnnotationUpdated(ConceptAnnotation updatedItem) {
+	protected void reactToConceptAnnotationUpdated() {
 
 	}
 

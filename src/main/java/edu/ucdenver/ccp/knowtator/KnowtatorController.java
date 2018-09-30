@@ -18,7 +18,7 @@ import java.util.TreeMap;
 public class KnowtatorController extends ProjectManager {
   @SuppressWarnings("unused")
   private static final Logger log = Logger.getLogger(KnowtatorController.class);
-  private SelectionModel selectionModel;
+  private final SelectionModel selectionModel;
 
   public FilterModel getFilterModel() {
     return filterModel;
@@ -26,11 +26,11 @@ public class KnowtatorController extends ProjectManager {
 
   private final FilterModel filterModel;
 
-  private TextSourceCollection textSourceCollection;
-  private ProfileCollection profileCollection;
-  private OWLModel owlModel;
+  private final TextSourceCollection textSourceCollection;
+  private final ProfileCollection profileCollection;
+  private final OWLModel owlModel;
 
-  private TreeMap<String, KnowtatorObjectInterface> idRegistry;
+  private final TreeMap<String, KnowtatorObjectInterface> idRegistry;
 
 
   public KnowtatorController() {
@@ -61,8 +61,8 @@ public class KnowtatorController extends ProjectManager {
     try {
       importToManager(profilesLocation, profileCollection, ".xml");
       importToManager(ontologiesLocation, owlModel, ".obo");
-      importToManager(ontologiesLocation, textSourceCollection, ".txt");
-      importToManager(ontologiesLocation, textSourceCollection, ".xml");
+      importToManager(articlesLocation, textSourceCollection, ".txt");
+      importToManager(annotationsLocation, textSourceCollection, ".xml");
 
     } catch (IOException e) {
       e.printStackTrace();

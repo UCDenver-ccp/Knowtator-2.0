@@ -16,8 +16,8 @@ import java.io.File;
 
 public class AnnotationNode extends mxCell implements KnowtatorTextBoundObjectInterface, KnowtatorXMLIO {
 
-	private ConceptAnnotation conceptAnnotation;
-	private TextSource textSource;
+	private final ConceptAnnotation conceptAnnotation;
+	private final TextSource textSource;
 
 	AnnotationNode(KnowtatorController controller, String id, ConceptAnnotation conceptAnnotation, TextSource textSource, double x, double y) {
 		super(

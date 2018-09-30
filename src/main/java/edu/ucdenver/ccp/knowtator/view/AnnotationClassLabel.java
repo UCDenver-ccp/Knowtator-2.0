@@ -3,7 +3,6 @@ package edu.ucdenver.ccp.knowtator.view;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.event.EventType;
 import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
@@ -11,9 +10,6 @@ import org.protege.editor.owl.model.event.OWLModelManagerListener;
 public class AnnotationClassLabel extends KnowtatorLabel implements OWLModelManagerListener {
 
     private ConceptAnnotation conceptAnnotation;
-    @SuppressWarnings("unused")
-    private Logger log = Logger.getLogger(AnnotationClassLabel.class);
-
 
     AnnotationClassLabel(KnowtatorView view) {
         super(view);
@@ -21,7 +17,7 @@ public class AnnotationClassLabel extends KnowtatorLabel implements OWLModelMana
     }
 
     @Override
-    protected void reactToConceptAnnotationUpdated(ConceptAnnotation updatedItem) {
+    protected void reactToConceptAnnotationUpdated() {
         displayAnnotation();
     }
 

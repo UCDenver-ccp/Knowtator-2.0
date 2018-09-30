@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SpanCollection extends KnowtatorCollection<Span> implements BratStandoffIO, KnowtatorXMLIO {
-    private KnowtatorController controller;
+    private final KnowtatorController controller;
     private final TextSource textSource;
     private final ConceptAnnotation conceptAnnotation;
 

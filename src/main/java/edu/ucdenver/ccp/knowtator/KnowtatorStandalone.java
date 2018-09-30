@@ -18,7 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
-public class KnowtatorStandalone extends JFrame {
+class KnowtatorStandalone extends JFrame {
 
     private KnowtatorStandalone(boolean debug) {
 
@@ -247,7 +247,7 @@ public class KnowtatorStandalone extends JFrame {
             e.printStackTrace();
         }
 
-        KnowtatorStandalone dialog = new KnowtatorStandalone(true);
+        KnowtatorStandalone dialog = new KnowtatorStandalone(false);
         dialog.pack();
         dialog.setVisible(true);
         //        System.exit(0);

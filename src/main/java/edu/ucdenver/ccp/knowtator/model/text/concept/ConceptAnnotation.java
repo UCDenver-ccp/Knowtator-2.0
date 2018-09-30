@@ -9,7 +9,6 @@ import edu.ucdenver.ccp.knowtator.model.text.AbstractKnowtatorTextBoundObject;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.SpanCollection;
-import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -22,21 +21,16 @@ import java.util.*;
 
 public class ConceptAnnotation extends AbstractKnowtatorTextBoundObject<ConceptAnnotation> implements KnowtatorXMLIO, BratStandoffIO {
 
-    private final Date date;
-
-    @SuppressWarnings("unused")
-    private Logger log = Logger.getLogger(ConceptAnnotation.class);
-
     private OWLClass owlClass;
-    private String annotation_type;
+    private final String annotation_type;
 
-    private Set<ConceptAnnotation> overlappingConceptAnnotations;
-    private Profile annotator;
+    private final Set<ConceptAnnotation> overlappingConceptAnnotations;
+    private final Profile annotator;
     private String bratID;
     private String owlClassID;
-    private String owlClassLabel;
-    private KnowtatorController controller;
-    private SpanCollection spanCollection;
+    private final String owlClassLabel;
+    private final KnowtatorController controller;
+    private final SpanCollection spanCollection;
 
     ConceptAnnotation(
             KnowtatorController controller,
@@ -51,7 +45,6 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundObject<ConceptA
         this.textSource = textSource;
         this.annotator = annotator;
         this.controller = controller;
-        this.date = new Date();
         this.owlClass = owlClass;
         this.owlClassID = owlClassID;
         this.owlClassLabel = owlClassLabel;
@@ -79,11 +72,6 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundObject<ConceptA
 
     public Profile getAnnotator() {
         return annotator;
-    }
-
-    @SuppressWarnings("unused")
-    public Date getDate() {
-        return date;
     }
 
     public OWLClass getOwlClass() {
@@ -128,10 +116,6 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundObject<ConceptA
     @SuppressWarnings("unused")
     public Set<ConceptAnnotation> getOverlappingConceptAnnotations() {
         return overlappingConceptAnnotations;
-    }
-
-    public String getType() {
-        return annotation_type;
     }
 
     private String getBratID() {

@@ -22,7 +22,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 class GraphActions {
     static void selectPreviousGraphSpace(KnowtatorView view) {
@@ -98,18 +97,20 @@ class GraphActions {
         }
     }
 
-    public static void goToAnnotationVertex(KnowtatorView view, GraphSpace graphSpace, ConceptAnnotation conceptAnnotation) {
-        if (conceptAnnotation != null && graphSpace != null) {
-            view.getController()
-                    .getTextSourceCollection().getSelection()
-                    .getGraphSpaceCollection().setSelection(graphSpace);
-            List<Object> vertices = graphSpace.getVerticesForAnnotation(conceptAnnotation);
-            if (vertices.size() > 0) {
-                graphSpace.setSelectionCells(vertices);
-                goToVertex(view, (AnnotationNode) vertices.get(0));
-            }
-        }
-    }
+// --Commented out by Inspection START (9/29/2018 9:44 PM):
+//    public static void goToAnnotationVertex(KnowtatorView view, GraphSpace graphSpace, ConceptAnnotation conceptAnnotation) {
+//        if (conceptAnnotation != null && graphSpace != null) {
+//            view.getController()
+//                    .getTextSourceCollection().getSelection()
+//                    .getGraphSpaceCollection().setSelection(graphSpace);
+//            List<Object> vertices = graphSpace.getVerticesForAnnotation(conceptAnnotation);
+//            if (vertices.size() > 0) {
+//                graphSpace.setSelectionCells(vertices);
+//                goToVertex(view, (AnnotationNode) vertices.get(0));
+//            }
+//        }
+//    }
+// --Commented out by Inspection STOP (9/29/2018 9:44 PM)
 
     static void exportToPNG(KnowtatorView view) {
         JFileChooser fileChooser = new JFileChooser();

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public abstract class ListenableCollection<K extends KnowtatorObjectInterface, C extends Collection<K>, L extends CollectionListener<K>> implements Iterable<K> {
-  public final C collection;
+  final C collection;
   protected final List<L> collectionListeners;
 
   ListenableCollection(C collection) {
@@ -25,7 +25,7 @@ public abstract class ListenableCollection<K extends KnowtatorObjectInterface, C
 
     collectionListeners.forEach(listener -> listener.added(event));
     if (collection.size() == 1) {
-      collectionListeners.forEach(listener -> listener.firstAdded(event));
+      collectionListeners.forEach(CollectionListener::firstAdded);
     }
   }
 
@@ -37,7 +37,7 @@ public abstract class ListenableCollection<K extends KnowtatorObjectInterface, C
 
     collectionListeners.forEach(listener -> listener.removed(event));
     if (collection.size() == 0) {
-      collectionListeners.forEach(listener -> listener.emptied(event));
+      collectionListeners.forEach(CollectionListener::emptied);
     }
   }
 
@@ -50,6 +50,7 @@ public abstract class ListenableCollection<K extends KnowtatorObjectInterface, C
     return null;
   }
 
+  @SuppressWarnings("unused")
   public boolean contains(K objToFind) {
     return containsID(objToFind.getId());
   }

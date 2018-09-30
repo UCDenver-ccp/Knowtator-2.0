@@ -3,7 +3,7 @@ package edu.ucdenver.ccp.knowtator.io.brat;
 /**
  * Based on http://brat.nlplab.org/standoff.html
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class StandoffTags {
 
 	public static final char TEXTBOUNDANNOTATION = 'T';
@@ -24,10 +24,10 @@ public class StandoffTags {
 			TEXTBOUNDANNOTATION, RELATION, EVENT, ATTRIBUTE, MODIFICATION, NORMALIZATION, NOTE, DOCID
 	};
 
-	public static final String visual = "visual";
+	// --Commented out by Inspection (9/29/2018 9:43 PM):public static final String visual = "visual";
 	public static final String visualLabels = "labels";
 	public static final String visualDrawing = "drawing";
-	public static final String annotations = "annotations";
+	// --Commented out by Inspection (9/29/2018 9:43 PM):public static final String annotations = "annotations";
 	public static final String annotationsEntities = "entities";
 	public static final String annotationsRelations = "relations";
 	public static final String annotationsAttributes = "attributes";

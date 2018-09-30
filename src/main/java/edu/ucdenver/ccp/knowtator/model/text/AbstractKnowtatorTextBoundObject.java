@@ -6,7 +6,7 @@ public abstract class AbstractKnowtatorTextBoundObject<K extends AbstractKnowtat
 
     protected TextSource textSource;
 
-    public AbstractKnowtatorTextBoundObject(TextSource textSource, String id) {
+    protected AbstractKnowtatorTextBoundObject(TextSource textSource, String id) {
         super(id);
         this.textSource = textSource;
     }

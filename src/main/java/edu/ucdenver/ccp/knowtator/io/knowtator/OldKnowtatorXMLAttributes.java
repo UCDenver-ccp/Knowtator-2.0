@@ -13,10 +13,12 @@ public class OldKnowtatorXMLAttributes {
 	// Complex Slot Mentions
 
 	public static final String VALUE = "value";
-	// Coreference specific IDs
-	public static final String IDENTITY_CHAIN = "IDENTITY chain";
-	public static final String COREFERENCE = "Coreferring strings";
-	public static final String COMPLEX_SLOT_MENTION_ID_APPOS_HEAD = "APPOS Head";
-	public static final String COMPLEX_SLOT_MENTION_ID_APPOS_ATTRIBUTES = "APPOS Attributes";
+// --Commented out by Inspection START (9/29/2018 9:43 PM):
+//	// Coreference specific IDs
+//	public static final String IDENTITY_CHAIN = "IDENTITY chain";
+// --Commented out by Inspection STOP (9/29/2018 9:43 PM)
+	// --Commented out by Inspection (9/29/2018 9:43 PM):public static final String COREFERENCE = "Coreferring strings";
+	// --Commented out by Inspection (9/29/2018 9:43 PM):public static final String COMPLEX_SLOT_MENTION_ID_APPOS_HEAD = "APPOS Head";
+	// --Commented out by Inspection (9/29/2018 9:43 PM):public static final String COMPLEX_SLOT_MENTION_ID_APPOS_ATTRIBUTES = "APPOS Attributes";
 	public static final String ANNOTATOR = "annotator";
 }

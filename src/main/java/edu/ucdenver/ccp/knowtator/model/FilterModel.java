@@ -7,7 +7,7 @@ public class FilterModel {
     private boolean isFilterByOWLClass;
     private boolean isFilterByProfile;
 
-    private List<FilterModelListener> filterModelListeners;
+    private final List<FilterModelListener> filterModelListeners;
 
     public FilterModel() {
         filterModelListeners = new ArrayList<>();
@@ -17,10 +17,6 @@ public class FilterModel {
 
     public void addFilterModelListener(FilterModelListener listener) {
         filterModelListeners.add(listener);
-    }
-
-    public void removeFilterModelListener(FilterModelListener listener) {
-        filterModelListeners.remove(listener);
     }
 
     public boolean isFilterByOWLClass() {

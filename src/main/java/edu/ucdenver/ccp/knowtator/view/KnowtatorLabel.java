@@ -1,6 +1,9 @@
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.model.collection.*;
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 
@@ -26,23 +29,23 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
             }
 
             @Override
-            public void changed(ChangeEvent<ConceptAnnotation> changeEvent) {
+            public void changed() {
 
             }
 
             @Override
-            public void emptied(RemoveEvent<ConceptAnnotation> object) {
+            public void emptied() {
 
             }
 
             @Override
-            public void firstAdded(AddEvent<ConceptAnnotation> object) {
+            public void firstAdded() {
 
             }
 
             @Override
             public void updated(ConceptAnnotation updatedItem) {
-                reactToConceptAnnotationUpdated(updatedItem);
+                reactToConceptAnnotationUpdated();
             }
 
 
@@ -64,17 +67,17 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
             }
 
             @Override
-            public void changed(ChangeEvent<TextSource> changeEvent) {
+            public void changed() {
 
             }
 
             @Override
-            public void emptied(RemoveEvent<TextSource> object) {
+            public void emptied() {
 
             }
 
             @Override
-            public void firstAdded(AddEvent<TextSource> object) {
+            public void firstAdded() {
 
             }
 
@@ -92,9 +95,9 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
         view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
     }
 
-    protected abstract void reactToConceptAnnotationUpdated(ConceptAnnotation updatedItem);
+    protected abstract void reactToConceptAnnotationUpdated();
 
-    protected void reactToTextSourceChange(SelectionChangeEvent<TextSource> event) {
+    void reactToTextSourceChange(SelectionChangeEvent<TextSource> event) {
         if (event.getOld() != null) {
             event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
         }

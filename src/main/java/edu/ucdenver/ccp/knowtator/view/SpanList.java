@@ -1,13 +1,16 @@
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.model.collection.*;
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 
 public class SpanList extends KnowtatorList<Span> {
 
-    private KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
+    private final KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
 
 
     SpanList(KnowtatorView view) {
@@ -25,17 +28,17 @@ public class SpanList extends KnowtatorList<Span> {
             }
 
             @Override
-            public void changed(ChangeEvent<ConceptAnnotation> changeEvent) {
+            public void changed() {
 
             }
 
             @Override
-            public void emptied(RemoveEvent<ConceptAnnotation> object) {
+            public void emptied() {
 
             }
 
             @Override
-            public void firstAdded(AddEvent<ConceptAnnotation> object) {
+            public void firstAdded() {
 
             }
 
@@ -72,17 +75,17 @@ public class SpanList extends KnowtatorList<Span> {
     }
 
     @Override
-    public void changed(ChangeEvent<Span> changeEvent) {
+    public void changed() {
 
     }
 
     @Override
-    public void emptied(RemoveEvent<Span> object) {
+    public void emptied() {
 
     }
 
     @Override
-    public void firstAdded(AddEvent<Span> object) {
+    public void firstAdded() {
 
     }
 

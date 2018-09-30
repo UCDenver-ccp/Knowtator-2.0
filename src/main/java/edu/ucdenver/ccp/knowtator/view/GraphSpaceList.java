@@ -9,7 +9,7 @@ import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollection;
 import java.util.stream.Collector;
 
 public class GraphSpaceList extends KnowtatorList<GraphSpace> {
-    private KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
+    private final KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
 
 
     GraphSpaceList(KnowtatorView view) {
@@ -27,17 +27,17 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
             }
 
             @Override
-            public void changed(ChangeEvent<ConceptAnnotation> changeEvent) {
+            public void changed() {
 
             }
 
             @Override
-            public void emptied(RemoveEvent<ConceptAnnotation> object) {
+            public void emptied() {
 
             }
 
             @Override
-            public void firstAdded(AddEvent<ConceptAnnotation> object) {
+            public void firstAdded() {
 
             }
 
@@ -81,17 +81,17 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
     }
 
     @Override
-    public void emptied(RemoveEvent<GraphSpace> event) {
+    public void emptied() {
         setEnabled(false);
     }
 
     @Override
-    public void firstAdded(AddEvent<GraphSpace> event) {
+    public void firstAdded() {
         setEnabled(true);
     }
 
     @Override
-    public void changed(ChangeEvent<GraphSpace> event) {
+    public void changed() {
     }
 
     @Override

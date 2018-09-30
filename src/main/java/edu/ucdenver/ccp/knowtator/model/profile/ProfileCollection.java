@@ -24,10 +24,10 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(KnowtatorController.class);
 
-    private KnowtatorController controller;
-    private List<ColorListener> colorListeners;
+    private final KnowtatorController controller;
+    private final List<ColorListener> colorListeners;
     private File profilesLocation;
-    private Profile defaultProfile;
+    private final Profile defaultProfile;
 
     public ProfileCollection(KnowtatorController controller) {
         super(controller);
@@ -117,6 +117,16 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
     public void setSaveLocation(File saveLocation) throws IOException {
         profilesLocation = (new File(controller.getSaveLocation(), "Profiles"));
         Files.createDirectories(profilesLocation.toPath());
+    }
+
+    @Override
+    public Profile get(String id) {
+        if (id.equals("Default")) {
+            return defaultProfile;
+        }
+        else {
+            return super.get(id);
+        }
     }
 
     @Override

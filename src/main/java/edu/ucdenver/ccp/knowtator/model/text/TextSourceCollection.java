@@ -23,9 +23,9 @@ import java.util.Map;
 
 public class TextSourceCollection extends KnowtatorCollection<TextSource> implements BratStandoffIO, KnowtatorXMLIO, Savable {
     @SuppressWarnings("unused")
-    private Logger log = Logger.getLogger(TextSourceCollection.class);
+    private final Logger log = Logger.getLogger(TextSourceCollection.class);
 
-    private KnowtatorController controller;
+    private final KnowtatorController controller;
     private File articlesLocation;
     private File annotationsLocation;
 

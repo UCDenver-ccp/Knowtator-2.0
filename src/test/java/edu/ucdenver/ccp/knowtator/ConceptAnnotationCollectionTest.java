@@ -20,8 +20,8 @@ public class ConceptAnnotationCollectionTest {
     private static final Logger log = Logger.getLogger(ConceptAnnotationCollectionTest.class);
 
 
-    private String[] projectFileNames = new String[]{"test_project", "old_project"};
-    private String[] articleFileNames = new String[]{"document1", "document2"};
+    private final String[] projectFileNames = new String[]{"test_project", "old_project"};
+    private final String[] articleFileNames = new String[]{"document1", "document2"};
     private String[] articleContent = new String[]{
             "This is a test document.",
             "A second test document has appeared!"

@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implements KnowtatorXMLIO, BratStandoffIO {
-    private KnowtatorController controller;
-    private TextSource textSource;
+    private final KnowtatorController controller;
+    private final TextSource textSource;
 
     public GraphSpaceCollection(KnowtatorController controller, TextSource textSource) {
         super(controller);
@@ -125,7 +125,4 @@ public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implem
 
     }
 
-    void refresh() {
-        collectionListeners.forEach(l -> l.updated(getSelection()));
-    }
 }

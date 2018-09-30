@@ -9,7 +9,10 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.AbstractKnowtatorObject;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObjectInterface;
-import edu.ucdenver.ccp.knowtator.model.collection.*;
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollection;
 import org.apache.commons.io.FileUtils;
@@ -34,10 +37,10 @@ public class TextSource extends AbstractKnowtatorObject<TextSource> implements B
 
     private final KnowtatorController controller;
     private final File saveFile;
-    private ConceptAnnotationCollection conceptAnnotationCollection;
+    private final ConceptAnnotationCollection conceptAnnotationCollection;
     private File textFile;
     private String content;
-    private GraphSpaceCollection graphSpaceCollection;
+    private final GraphSpaceCollection graphSpaceCollection;
 
     public TextSource(KnowtatorController controller, File saveFile, String textFileName) {
         super(null);
@@ -230,17 +233,17 @@ public class TextSource extends AbstractKnowtatorObject<TextSource> implements B
     }
 
     @Override
-    public void changed(ChangeEvent changeEvent) {
+    public void changed() {
         save();
     }
 
     @Override
-    public void emptied(RemoveEvent object) {
+    public void emptied() {
 
     }
 
     @Override
-    public void firstAdded(AddEvent object) {
+    public void firstAdded() {
 
     }
 

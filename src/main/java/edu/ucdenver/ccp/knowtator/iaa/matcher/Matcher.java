@@ -26,5 +26,6 @@ public interface Matcher {
 
 	String getDescription();
 
+	@SuppressWarnings("SameReturnValue")
 	boolean returnsTrivials();
 }

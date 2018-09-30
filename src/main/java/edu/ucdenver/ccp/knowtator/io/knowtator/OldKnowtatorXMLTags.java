@@ -1,7 +1,7 @@
 package edu.ucdenver.ccp.knowtator.io.knowtator;
 
 public class OldKnowtatorXMLTags {
-	public static final String STRING_SLOT_MENTION = "stringSlotMention";
+	// --Commented out by Inspection (9/29/2018 9:43 PM):public static final String STRING_SLOT_MENTION = "stringSlotMention";
 	public static final String ANNOTATION = "annotation";
 	public static final String MENTION = "mention";
 	public static final String ANNOTATOR = "annotator";
@@ -12,7 +12,7 @@ public class OldKnowtatorXMLTags {
 	// ******************OLD Tags*****************
 	static final String ANNOTATIONS = "annotations";
 	public static final String SPAN = "span";
-	static final String SPANNED_TEXT = "spannedText";
+	// --Commented out by Inspection (9/29/2018 9:43 PM):static final String SPANNED_TEXT = "spannedText";
 	static final String CLASS_MENTION = "classMention";
 	static final String COMPLEX_SLOT_MENTION = "complexSlotMention";
 }

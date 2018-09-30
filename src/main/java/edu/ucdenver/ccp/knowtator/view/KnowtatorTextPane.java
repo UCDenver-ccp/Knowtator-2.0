@@ -1,6 +1,10 @@
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.model.collection.*;
+import edu.ucdenver.ccp.knowtator.model.FilterModelListener;
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
@@ -21,12 +25,12 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 @SuppressWarnings("deprecation")
-public class KnowtatorTextPane extends JTextArea implements ColorListener, KnowtatorComponent {
+public class KnowtatorTextPane extends JTextArea implements ColorListener, KnowtatorComponent, FilterModelListener {
 
     @SuppressWarnings("unused")
     private static Logger log = Logger.getLogger(KnowtatorTextPane.class);
 
-    private KnowtatorView view;
+    private final KnowtatorView view;
     private KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
     private KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
     private KnowtatorCollectionListener<Span> spanCollectionListener;
@@ -43,7 +47,6 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
 
         getCaret().setVisible(true);
 
-        setupListeners();
         requestFocusInWindow();
         select(0, 0);
         getCaret().setSelectionVisible(true);
@@ -134,6 +137,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
         addCaretListener(view.getController().getSelectionModel());
         addCaretListener(e -> view.getMatchTextField().setText(getSelectedText()));
         view.getController().getProfileCollection().addColorListener(this);
+        view.getController().getFilterModel().addFilterModelListener(this);
 
         MouseListener mouseListener = new MouseListener() {
             int press_offset;
@@ -173,18 +177,18 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
             }
 
             @Override
-            public void changed(ChangeEvent<TextSource> changeEvent) {
+            public void changed() {
 
             }
 
             @Override
-            public void emptied(RemoveEvent<TextSource> object) {
+            public void emptied() {
                 setEnabled(false);
                 removeMouseListener(mouseListener);
             }
 
             @Override
-            public void firstAdded(AddEvent<TextSource> object) {
+            public void firstAdded() {
                 setEnabled(true);
                 addMouseListener(mouseListener);
             }
@@ -215,17 +219,17 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
             }
 
             @Override
-            public void changed(ChangeEvent<ConceptAnnotation> changeEvent) {
+            public void changed() {
 
             }
 
             @Override
-            public void emptied(RemoveEvent<ConceptAnnotation> object) {
+            public void emptied() {
 
             }
 
             @Override
-            public void firstAdded(AddEvent<ConceptAnnotation> object) {
+            public void firstAdded() {
 
             }
 
@@ -258,17 +262,17 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
             }
 
             @Override
-            public void changed(ChangeEvent<Span> changeEvent) {
+            public void changed() {
                 refreshHighlights();
             }
 
             @Override
-            public void emptied(RemoveEvent<Span> object) {
+            public void emptied() {
                 refreshHighlights();
             }
 
             @Override
-            public void firstAdded(AddEvent<Span> object) {
+            public void firstAdded() {
                 refreshHighlights();
             }
 
@@ -455,8 +459,19 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
 
     }
 
-    public class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {
+    @Override
+    public void profileFilterChanged(boolean filterValue) {
+        refreshHighlights();
+    }
 
+    @Override
+    public void owlClassFilterChanged(boolean filterVale) {
+        refreshHighlights();
+    }
+
+    class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {
+
+        @SuppressWarnings("SameParameterValue")
         RectanglePainter(Color color) {
             super(color);
         }
@@ -528,7 +543,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
     }
 
     class AnnotationPopupMenu extends JPopupMenu {
-        private MouseEvent e;
+        private final MouseEvent e;
 
         AnnotationPopupMenu(MouseEvent e) {
             this.e = e;

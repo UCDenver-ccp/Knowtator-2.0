@@ -18,13 +18,13 @@ public class IOTests {
 
   private KnowtatorController controller;
 
-  private String[] projectFileNames =
+  private final String[] projectFileNames =
       new String[] {"test_project", "old_project", "test_load_old_coreference", "CRAFT_assertions"};
-  private String[] articleFileNames =
+  private final String[] articleFileNames =
       new String[] {
         "document1", "document2", "document3", "document1_old", "brat_test", "small_11319941"
       };
-  private String[] articleContent =
+  private final String[] articleContent =
       new String[] {
         "This is a test document.",
         "A second test document has appeared!",

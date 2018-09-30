@@ -4,6 +4,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
+import edu.ucdenver.ccp.knowtator.model.FilterModelListener;
 import edu.ucdenver.ccp.knowtator.model.OWLModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
@@ -30,15 +31,15 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnnotation> implements OWLOntologyChangeListener, KnowtatorXMLIO, BratStandoffIO {
+public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnnotation> implements OWLOntologyChangeListener, KnowtatorXMLIO, BratStandoffIO, FilterModelListener {
 
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(ConceptAnnotationCollection.class);
 
     private final KnowtatorController controller;
 
-    private SpanCollection allSpanCollection;
-    private TextSource textSource;
+    private final SpanCollection allSpanCollection;
+    private final TextSource textSource;
 
     public ConceptAnnotationCollection(KnowtatorController controller, TextSource textSource) {
         super(controller);
@@ -46,6 +47,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         this.textSource = textSource;
 
         controller.getOWLModel().addOntologyChangeListener(this);
+        controller.getFilterModel().addFilterModelListener(this);
 
         allSpanCollection = new SpanCollection(controller, textSource, null);
     }
@@ -127,8 +129,12 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     public TreeSet<Span> getSpans(Integer loc, int start, int end) {
         Supplier<TreeSet<Span>> supplier = TreeSet::new;
 
+        boolean filterByOWLClass = controller.getFilterModel().isFilterByOWLClass();
+        boolean filterByProfile = controller.getFilterModel().isFilterByProfile();
+        Profile activeProfile = controller.getProfileCollection().getSelection();
+
         Set<OWLClass> activeOWLClassDescendents = new HashSet<>();
-        if (controller.getFilterModel().isFilterByOWLClass()) {
+        if (filterByProfile) {
             activeOWLClassDescendents.addAll(controller.getOWLModel().getDescendants((OWLClass) controller.getOWLModel().getSelectedOWLEntity()));
             activeOWLClassDescendents.add((OWLClass) controller.getOWLModel().getSelectedOWLEntity());
         }
@@ -140,8 +146,8 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                         span ->
                                 (loc == null || span.contains(loc))
                                         && (start <= span.getStart() && span.getEnd() <= end)
-                                        && (!controller.getFilterModel().isFilterByOWLClass() || activeOWLClassDescendents.contains(span.getConceptAnnotation().getOwlClass()))
-                                        && (!controller.getFilterModel().isFilterByProfile() || span.getConceptAnnotation().getAnnotator().equals(controller.getProfileCollection().getSelection())))
+                                        && (!filterByOWLClass || activeOWLClassDescendents.contains(span.getConceptAnnotation().getOwlClass()))
+                                        && (!filterByProfile || span.getConceptAnnotation().getAnnotator().equals(activeProfile)))
                 .collect(Collectors.toCollection(supplier));
     }
 
@@ -517,5 +523,19 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
     public SpanCollection getAllSpanCollection() {
         return allSpanCollection;
+    }
+
+    @Override
+    public void profileFilterChanged(boolean filterValue) {
+        if (filterValue && getSelection() != null && getSelection().getAnnotator() != controller.getProfileCollection().getSelection()) {
+            setSelection(null);
+        }
+    }
+
+    @Override
+    public void owlClassFilterChanged(boolean filterValue) {
+        if (filterValue && getSelection() != null && getSelection().getOwlClass() != controller.getOWLModel().getSelectedOWLEntity()) {
+            setSelection(null);
+        }
     }
 }

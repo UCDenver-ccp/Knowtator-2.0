@@ -5,7 +5,10 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.collection.*;
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
@@ -33,7 +36,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     private static final Logger log = Logger.getLogger(KnowtatorView.class);
     private final Preferences preferences = Preferences.userRoot().node("knowtator");
-    private KnowtatorController controller;
+    private final KnowtatorController controller;
     private GraphViewDialog graphViewDialog;
     private JComponent panel1;
     private JButton showGraphViewerButton;
@@ -64,12 +67,12 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     private List<JComponent> textSourceButtons;
     private List<JButton> annotationButtons;
-    private List<JButton> spanButtons;
     private Map<JButton, ActionListener> spanSizeButtons;
     private Map<JButton, ActionListener> selectionSizeButtons;
 
     private KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
     private KnowtatorCollectionListener<Span> spanCollectionListener;
+    private List<KnowtatorComponent> knowtatorComponents;
 
 
     public KnowtatorView() {
@@ -124,11 +127,19 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         dt.setActive(true);
 
         panel1 = this;
+
+        knowtatorComponents = new ArrayList<>();
+
         annotationPane = new AnnotationPane(this);
         knowtatorTextPane = new KnowtatorTextPane(this);
         graphViewDialog = new GraphViewDialog(this);
-
         textSourceChooser = new TextSourceChooser(this);
+
+        knowtatorComponents.add(annotationPane);
+        knowtatorComponents.add(knowtatorTextPane);
+        knowtatorComponents.add(graphViewDialog);
+        knowtatorComponents.add(textSourceChooser);
+
 
         KnowtatorView view = this;
         addAncestorListener(
@@ -198,23 +209,19 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     }
 
     private void makeAnnotationButtons() {
-
         annotationButtons = new ArrayList<>();
         addAnnotationButton.addActionListener(e -> AnnotationActions.addAnnotation(this));
         removeAnnotationButton.addActionListener(e -> AnnotationActions.removeAnnotation(this));
-
+        annotationPane.getNextSpanButton().addActionListener(e -> SpanActions.selectNextSpan(this));
+        annotationPane.getPreviousSpanButton().addActionListener(e -> SpanActions.selectPreviousSpan(this));
 
         annotationButtons.add(addAnnotationButton);
         annotationButtons.add(removeAnnotationButton);
+        annotationButtons.add(annotationPane.getNextSpanButton());
+        annotationButtons.add(annotationPane.getPreviousSpanButton());
     }
 
     private void makeSpanButtons() {
-
-        spanButtons = new ArrayList<>();
-        annotationPane.getNextSpanButton().addActionListener(e -> SpanActions.selectNextSpan(this));
-        annotationPane.getPreviousSpanButton().addActionListener(e -> SpanActions.selectPreviousSpan(this));
-        spanButtons.add(annotationPane.getNextSpanButton());
-        spanButtons.add(annotationPane.getNextSpanButton());
 
         spanSizeButtons = new HashMap<>();
         spanSizeButtons.put(shrinkEndButton, e -> SpanActions.modifySelectedSpan(this, SpanActions.END, SpanActions.SHRINK));
@@ -260,17 +267,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
             }
 
             @Override
-            public void changed(ChangeEvent<Profile> changeEvent) {
+            public void changed() {
 
             }
 
             @Override
-            public void emptied(RemoveEvent<Profile> object) {
+            public void emptied() {
 
             }
 
             @Override
-            public void firstAdded(AddEvent<Profile> object) {
+            public void firstAdded() {
 
             }
         };
@@ -304,17 +311,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
             }
 
             @Override
-            public void changed(ChangeEvent<TextSource> changeEvent) {
+            public void changed() {
 
             }
 
             @Override
-            public void emptied(RemoveEvent<TextSource> object) {
+            public void emptied() {
                 disableTextSourceButtons();
             }
 
             @Override
-            public void firstAdded(AddEvent<TextSource> object) {
+            public void firstAdded() {
                 enableTextSourceButtons();
             }
         };
@@ -348,17 +355,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
             }
 
             @Override
-            public void changed(ChangeEvent<ConceptAnnotation> changeEvent) {
+            public void changed() {
 
             }
 
             @Override
-            public void emptied(RemoveEvent<ConceptAnnotation> object) {
+            public void emptied() {
                 disableAnnotationButtons();
             }
 
             @Override
-            public void firstAdded(AddEvent<ConceptAnnotation> object) {
+            public void firstAdded() {
                 enableAnnotationButtons();
             }
         };
@@ -386,17 +393,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
             }
 
             @Override
-            public void changed(ChangeEvent<Span> changeEvent) {
+            public void changed() {
 
             }
 
             @Override
-            public void emptied(RemoveEvent<Span> object) {
+            public void emptied() {
                 disableSpanButtons();
             }
 
             @Override
-            public void firstAdded(AddEvent<Span> object) {
+            public void firstAdded() {
                 enableSpanButtons();
             }
         };
@@ -416,10 +423,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     public void reset() {
         disposeView();
         setupListeners();
-        annotationPane.reset();
-        knowtatorTextPane.reset();
-        textSourceChooser.reset();
-        graphViewDialog.reset();
+        knowtatorComponents.forEach(KnowtatorComponent::reset);
 
         controller.getOWLModel().setOwlWorkSpace(getOWLWorkspace());
     }
@@ -427,11 +431,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     @Override
     public void disposeView() {
         controller.dispose();
-        graphViewDialog.setVisible(false);
-        graphViewDialog.dispose();
-        annotationPane.dispose();
-        knowtatorTextPane.dispose();
 
+        knowtatorComponents.forEach(KnowtatorComponent::dispose);
     }
 
     @Override
@@ -477,7 +478,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     }
 
     private void enableSpanButtons() {
-        spanButtons.forEach(button -> button.setEnabled(true));
         selectionSizeButtons.forEach(AbstractButton::removeActionListener);
 
         spanSizeButtons.forEach(AbstractButton::removeActionListener);
@@ -486,7 +486,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     }
 
     private void disableSpanButtons() {
-        spanButtons.forEach(button -> button.setEnabled(false));
         spanSizeButtons.forEach(AbstractButton::removeActionListener);
         selectionSizeButtons.forEach(AbstractButton::removeActionListener);
         selectionSizeButtons.forEach(AbstractButton::addActionListener);

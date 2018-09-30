@@ -22,15 +22,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class KnowtatorIAA {
-    private File outputDirectory;
+    private final File outputDirectory;
 
     // KnowtatorFilter filter;
 
-    private TextSourceCollection textSources;
+    private final TextSourceCollection textSources;
 
     // Project project;
 
-    private KnowtatorController controller;
+    private final KnowtatorController controller;
 
     // KnowtatorProjectUtil kpu;
 
@@ -38,9 +38,9 @@ public class KnowtatorIAA {
 
     //	FilterUtil filterUtil;
 
-    private Map<ConceptAnnotation, String> annotationTexts;
+    private final Map<ConceptAnnotation, String> annotationTexts;
 
-    private Map<ConceptAnnotation, String> annotationTextNames;
+    private final Map<ConceptAnnotation, String> annotationTextNames;
 
     private Map<TextSource, ConceptAnnotationCollection> textSourceAnnotationsMap;
 

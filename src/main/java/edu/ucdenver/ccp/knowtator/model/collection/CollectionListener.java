@@ -7,9 +7,9 @@ public interface CollectionListener<K extends KnowtatorObjectInterface> {
 
 	void removed(RemoveEvent<K> removedObject);
 
-	void changed(ChangeEvent<K> changeEvent);
+	void changed();
 
-	void emptied(RemoveEvent<K> object);
+	void emptied();
 
-	void firstAdded(AddEvent<K> object);
+	void firstAdded();
 }
