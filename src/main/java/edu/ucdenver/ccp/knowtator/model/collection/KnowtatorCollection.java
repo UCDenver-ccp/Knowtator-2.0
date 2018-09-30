@@ -15,7 +15,5 @@ public abstract class KnowtatorCollection<K extends KnowtatorObjectInterface> ex
         forEach(KnowtatorObjectInterface::dispose);
     }
 
-    public void update(K updatedItem) {
-        collectionListeners.forEach(l -> l.updated(updatedItem));
-    }
+
 }

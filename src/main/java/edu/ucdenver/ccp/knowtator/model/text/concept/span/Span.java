@@ -170,7 +170,7 @@ public class Span extends AbstractKnowtatorTextBoundObject<Span> implements Know
     if (end > limit) {
       end = limit;
     }
-    conceptAnnotation.getSpanCollection().update(this);
+    conceptAnnotation.getSpanCollection().change(this);
   }
 
   /*

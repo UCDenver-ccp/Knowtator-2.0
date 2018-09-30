@@ -28,17 +28,17 @@ public abstract class KnowtatorList<K extends KnowtatorObjectInterface> extends 
 
         textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
             @Override
-            public void added(AddEvent<TextSource> addedObject) {
+            public void added(AddEvent<TextSource> event) {
 
             }
 
             @Override
-            public void removed(RemoveEvent<TextSource> removedObject) {
+            public void removed(RemoveEvent<TextSource> event) {
 
             }
 
             @Override
-            public void changed() {
+            public void changed(ChangeEvent<TextSource> event) {
 
             }
 
@@ -49,11 +49,6 @@ public abstract class KnowtatorList<K extends KnowtatorObjectInterface> extends 
 
             @Override
             public void firstAdded() {
-
-            }
-
-            @Override
-            public void updated(TextSource updatedItem) {
 
             }
 

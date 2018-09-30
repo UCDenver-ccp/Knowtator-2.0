@@ -1,10 +1,7 @@
 package edu.ucdenver.ccp.knowtator.view;
 
 import edu.ucdenver.ccp.knowtator.model.FilterModelListener;
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
@@ -167,17 +164,17 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
 
         textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
             @Override
-            public void added(AddEvent<TextSource> addedObject) {
+            public void added(AddEvent<TextSource> event) {
 
             }
 
             @Override
-            public void removed(RemoveEvent<TextSource> removedObject) {
+            public void removed(RemoveEvent<TextSource> event) {
 
             }
 
             @Override
-            public void changed() {
+            public void changed(ChangeEvent<TextSource> event) {
 
             }
 
@@ -194,33 +191,31 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
             }
 
             @Override
-            public void updated(TextSource updatedItem) {
-
-            }
-
-            @Override
             public void selected(SelectionChangeEvent<TextSource> event) {
                 if (event.getOld() != null) {
                     event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
+                    event.getOld().getConceptAnnotationCollection().getAllSpanCollection().removeCollectionListener(spanCollectionListener);
                 }
                 event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
+                event.getNew().getConceptAnnotationCollection().getAllSpanCollection().addCollectionListener(spanCollectionListener);
+
                 showTextPane();
             }
         };
         conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
             @Override
-            public void added(AddEvent<ConceptAnnotation> addedObject) {
+            public void added(AddEvent<ConceptAnnotation> event) {
 
             }
 
             @Override
-            public void removed(RemoveEvent<ConceptAnnotation> removedObject) {
+            public void removed(RemoveEvent<ConceptAnnotation> event) {
 
             }
 
             @Override
-            public void changed() {
-
+            public void changed(ChangeEvent<ConceptAnnotation> event) {
+                refreshHighlights();
             }
 
             @Override
@@ -231,11 +226,6 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
             @Override
             public void firstAdded() {
 
-            }
-
-            @Override
-            public void updated(ConceptAnnotation updatedItem) {
-                refreshHighlights();
             }
 
             @Override
@@ -252,17 +242,17 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
 
         spanCollectionListener = new KnowtatorCollectionListener<Span>() {
             @Override
-            public void added(AddEvent<Span> addedObject) {
+            public void added(AddEvent<Span> event) {
                 refreshHighlights();
             }
 
             @Override
-            public void removed(RemoveEvent<Span> removedObject) {
+            public void removed(RemoveEvent<Span> event) {
                 refreshHighlights();
             }
 
             @Override
-            public void changed() {
+            public void changed(ChangeEvent<Span> event) {
                 refreshHighlights();
             }
 
@@ -275,12 +265,6 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
             public void firstAdded() {
                 refreshHighlights();
             }
-
-            @Override
-            public void updated(Span updatedItem) {
-                refreshHighlights();
-            }
-
 
             @Override
             public void selected(SelectionChangeEvent<Span> event) {

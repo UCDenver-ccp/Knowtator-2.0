@@ -1,9 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view.graph;
 
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorChooser;
@@ -19,17 +16,17 @@ public class GraphSpaceChooser extends KnowtatorChooser<GraphSpace> {
 
         textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
             @Override
-            public void added(AddEvent<TextSource> addedObject) {
+            public void added(AddEvent<TextSource> event) {
 
             }
 
             @Override
-            public void removed(RemoveEvent<TextSource> removedObject) {
+            public void removed(RemoveEvent<TextSource> event) {
 
             }
 
             @Override
-            public void changed() {
+            public void changed(ChangeEvent<TextSource> event) {
 
             }
 
@@ -40,11 +37,6 @@ public class GraphSpaceChooser extends KnowtatorChooser<GraphSpace> {
 
             @Override
             public void firstAdded() {
-
-            }
-
-            @Override
-            public void updated(TextSource updatedItem) {
 
             }
 

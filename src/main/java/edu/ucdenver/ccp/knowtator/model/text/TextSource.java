@@ -8,11 +8,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.AbstractKnowtatorObject;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorObjectInterface;
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollection;
 import org.apache.commons.io.FileUtils;
@@ -192,7 +188,7 @@ public class TextSource extends AbstractKnowtatorObject<TextSource> implements B
 
     @Override
     public void save() {
-        if (controller.isNotLoading()) {
+        if (controller.isNotLoading() && !controller.getOWLModel().renderChangeInProgress()) {
             controller.getOWLModel().setRenderRDFSLabel();
             controller.saveToFormat(KnowtatorXMLUtil.class, this, saveFile);
             controller.getOWLModel().resetRenderRDFS();
@@ -225,17 +221,17 @@ public class TextSource extends AbstractKnowtatorObject<TextSource> implements B
     }
 
     @Override
-    public void added(AddEvent addedObject) {
+    public void added(AddEvent event) {
         save();
     }
 
     @Override
-    public void removed(RemoveEvent removedObject) {
+    public void removed(RemoveEvent event) {
         save();
     }
 
     @Override
-    public void changed() {
+    public void changed(ChangeEvent event) {
         save();
     }
 
@@ -247,11 +243,6 @@ public class TextSource extends AbstractKnowtatorObject<TextSource> implements B
     @Override
     public void firstAdded() {
 
-    }
-
-    @Override
-    public void updated(KnowtatorObjectInterface updatedItem) {
-        save();
     }
 
     @Override

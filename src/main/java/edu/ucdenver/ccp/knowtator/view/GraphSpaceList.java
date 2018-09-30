@@ -17,17 +17,17 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
 
         conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
             @Override
-            public void added(AddEvent<ConceptAnnotation> addedObject) {
+            public void added(AddEvent<ConceptAnnotation> event) {
 
             }
 
             @Override
-            public void removed(RemoveEvent<ConceptAnnotation> removedObject) {
+            public void removed(RemoveEvent<ConceptAnnotation> event) {
 
             }
 
             @Override
-            public void changed() {
+            public void changed(ChangeEvent<ConceptAnnotation> event) {
 
             }
 
@@ -38,11 +38,6 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
 
             @Override
             public void firstAdded() {
-
-            }
-
-            @Override
-            public void updated(ConceptAnnotation updatedItem) {
 
             }
 
@@ -91,12 +86,8 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
     }
 
     @Override
-    public void changed() {
-    }
-
-    @Override
-    public void updated(GraphSpace updatedItem) {
-        reactToAnnotationChange(updatedItem.getTextSource().getConceptAnnotationCollection().getSelection());
+    public void changed(ChangeEvent<GraphSpace> event) {
+        reactToAnnotationChange(event.getNew().getTextSource().getConceptAnnotationCollection().getSelection());
     }
 
     @Override

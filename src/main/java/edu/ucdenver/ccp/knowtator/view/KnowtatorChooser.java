@@ -68,20 +68,16 @@ public abstract class KnowtatorChooser<K extends KnowtatorObjectInterface> exten
 	}
 
 	@Override
-	public void changed() {
-	}
-
-	@Override
-	public void selected(SelectionChangeEvent<K> event) {
+	public void changed(ChangeEvent<K> event) {
 		removeActionListener(al);
 		setSelectedItem(event.getNew());
 		addActionListener(al);
 	}
 
 	@Override
-	public void updated(K updatedItem) {
+	public void selected(SelectionChangeEvent<K> event) {
 		removeActionListener(al);
-		setSelectedItem(updatedItem);
+		setSelectedItem(event.getNew());
 		addActionListener(al);
 	}
 }

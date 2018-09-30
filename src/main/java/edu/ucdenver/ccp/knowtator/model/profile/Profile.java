@@ -184,7 +184,8 @@ public class Profile implements KnowtatorObjectInterface<Profile>, Savable, Know
 
   @Override
   public void save() {
-    controller.saveToFormat(KnowtatorXMLUtil.class, this, getSaveLocation());
+    if (controller.isNotLoading())
+      controller.saveToFormat(KnowtatorXMLUtil.class, this, getSaveLocation());
   }
 
   @Override

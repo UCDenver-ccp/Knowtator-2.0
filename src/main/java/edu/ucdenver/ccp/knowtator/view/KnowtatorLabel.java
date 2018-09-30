@@ -1,9 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 
@@ -19,18 +16,18 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
         this.view = view;
         conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
             @Override
-            public void added(AddEvent<ConceptAnnotation> addedObject) {
+            public void added(AddEvent<ConceptAnnotation> event) {
 
             }
 
             @Override
-            public void removed(RemoveEvent<ConceptAnnotation> removedObject) {
+            public void removed(RemoveEvent<ConceptAnnotation> event) {
 
             }
 
             @Override
-            public void changed() {
-
+            public void changed(ChangeEvent<ConceptAnnotation> event) {
+                reactToConceptAnnotationChanged();
             }
 
             @Override
@@ -41,11 +38,6 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
             @Override
             public void firstAdded() {
 
-            }
-
-            @Override
-            public void updated(ConceptAnnotation updatedItem) {
-                reactToConceptAnnotationUpdated();
             }
 
 
@@ -57,18 +49,17 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
         };
         textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
             @Override
-            public void added(AddEvent<TextSource> addedObject) {
+            public void added(AddEvent<TextSource> event) {
 
             }
 
             @Override
-            public void removed(RemoveEvent<TextSource> removedObject) {
+            public void removed(RemoveEvent<TextSource> event) {
 
             }
 
             @Override
-            public void changed() {
-
+            public void changed(ChangeEvent<TextSource> event) {
             }
 
             @Override
@@ -78,11 +69,6 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
 
             @Override
             public void firstAdded() {
-
-            }
-
-            @Override
-            public void updated(TextSource updatedItem) {
 
             }
 
@@ -95,9 +81,9 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
         view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
     }
 
-    protected abstract void reactToConceptAnnotationUpdated();
+    protected abstract void reactToConceptAnnotationChanged();
 
-    void reactToTextSourceChange(SelectionChangeEvent<TextSource> event) {
+    private void reactToTextSourceChange(SelectionChangeEvent<TextSource> event) {
         if (event.getOld() != null) {
             event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
         }

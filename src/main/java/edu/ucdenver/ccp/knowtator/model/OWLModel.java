@@ -31,6 +31,10 @@ public class OWLModel implements Serializable, Savable {
     private File ontologiesLocation;
     private List<IRI> iris;
 
+    public OWLModel() {
+        iris = null;
+    }
+
     public OWLEntity getSelectedOWLEntity() {
         try {
             return getWorkSpace().getOWLSelectionModel().getSelectedEntity();
@@ -60,23 +64,24 @@ public class OWLModel implements Serializable, Savable {
 
     public void setRenderRDFSLabel() {
         try {
+            if (iris == null) {
+                IRI labelIRI = getWorkSpace().getOWLModelManager().getOWLDataFactory().getRDFSLabel().getIRI();
+                iris = OWLRendererPreferences.getInstance().getAnnotationIRIs();
+                OWLRendererPreferences.getInstance().setAnnotations(Collections.singletonList(labelIRI));
 
-            IRI labelIRI = getWorkSpace().getOWLModelManager().getOWLDataFactory().getRDFSLabel().getIRI();
-            iris = OWLRendererPreferences.getInstance().getAnnotationIRIs();
-            OWLRendererPreferences.getInstance().setAnnotations(Collections.singletonList(labelIRI));
-
-            getWorkSpace().getOWLModelManager().refreshRenderer();
+                getWorkSpace().getOWLModelManager().refreshRenderer();
+            }
         } catch (OWLWorkSpaceNotSetException ignored) {
 
         }
     }
 
     public void resetRenderRDFS() {
-
         try {
-            if (getWorkSpace() != null) {
+            if (iris != null) {
                 OWLRendererPreferences.getInstance().setAnnotations(iris);
                 getWorkSpace().getOWLModelManager().refreshRenderer();
+                iris = null;
             }
         } catch (OWLWorkSpaceNotSetException ignored) {
 
@@ -146,7 +151,7 @@ public class OWLModel implements Serializable, Savable {
 
 
     public void dispose() {
-        setRenderRDFSLabel();
+
     }
 
     @Override
@@ -287,6 +292,10 @@ public class OWLModel implements Serializable, Savable {
         } catch (OWLWorkSpaceNotSetException ignored) {
 
         }
+    }
+
+    public boolean renderChangeInProgress() {
+        return iris != null;
     }
 
     private class OWLWorkSpaceNotSetException extends Exception {

@@ -16,7 +16,7 @@ public class AnnotationClassLabel extends KnowtatorLabel implements OWLModelMana
     }
 
     @Override
-    protected void reactToConceptAnnotationUpdated() {
+    protected void reactToConceptAnnotationChanged() {
         displayAnnotation();
     }
 

@@ -115,8 +115,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         allSpanCollection.remove(span);
         span.modifySpan(startModification, endModification, textSource.getContent().length());
         allSpanCollection.add(span);
-
-        collectionListeners.forEach(listener -> listener.updated(getSelection()));
     }
 
     /*
@@ -517,7 +515,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         OWLEntity selectedOWLEntity = controller.getOWLModel().getSelectedOWLEntity();
         if (selectedOWLEntity instanceof OWLClass) {
             getSelection().setOwlClass((OWLClass) selectedOWLEntity);
-            collectionListeners.forEach(listener -> listener.updated(getSelection()));
+            change(getSelection());
         }
     }
 

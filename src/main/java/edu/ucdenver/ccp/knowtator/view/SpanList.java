@@ -1,9 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
@@ -18,19 +15,20 @@ public class SpanList extends KnowtatorList<Span> {
 
         conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
             @Override
-            public void added(AddEvent<ConceptAnnotation> addedObject) {
+            public void added(AddEvent<ConceptAnnotation> event) {
 
             }
 
             @Override
-            public void removed(RemoveEvent<ConceptAnnotation> removedObject) {
+            public void removed(RemoveEvent<ConceptAnnotation> event) {
 
             }
 
             @Override
-            public void changed() {
+            public void changed(ChangeEvent<ConceptAnnotation> event) {
 
             }
+
 
             @Override
             public void emptied() {
@@ -42,10 +40,6 @@ public class SpanList extends KnowtatorList<Span> {
 
             }
 
-            @Override
-            public void updated(ConceptAnnotation updatedItem) {
-
-            }
 
             @Override
             public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
@@ -65,19 +59,20 @@ public class SpanList extends KnowtatorList<Span> {
     }
 
     @Override
-    public void added(AddEvent<Span> addEvent) {
-        setCollection(addEvent.getAdded().getConceptAnnotation().getSpanCollection());
+    public void added(AddEvent<Span> event) {
+        setCollection(event.getAdded().getConceptAnnotation().getSpanCollection());
     }
 
     @Override
-    public void removed(RemoveEvent<Span> removeEvent) {
-        setCollection(removeEvent.getRemoved().getConceptAnnotation().getSpanCollection());
+    public void removed(RemoveEvent<Span> event) {
+        setCollection(event.getRemoved().getConceptAnnotation().getSpanCollection());
     }
 
     @Override
-    public void changed() {
-
+    public void changed(ChangeEvent<Span> event) {
+        setCollection(event.getNew().getConceptAnnotation().getSpanCollection());
     }
+
 
     @Override
     public void emptied() {
@@ -89,10 +84,7 @@ public class SpanList extends KnowtatorList<Span> {
 
     }
 
-    @Override
-    public void updated(Span updatedItem) {
-        setCollection(updatedItem.getConceptAnnotation().getSpanCollection());
-    }
+
 
 
     @Override

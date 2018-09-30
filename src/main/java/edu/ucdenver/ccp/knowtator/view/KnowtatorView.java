@@ -5,10 +5,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
@@ -258,9 +255,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     private void setupListeners() {
         KnowtatorCollectionListener<TextSource> textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
-            @Override
-            public void updated(TextSource updatedItem) {
-            }
 
             @Override
             public void selected(SelectionChangeEvent<TextSource> event) {
@@ -273,15 +267,15 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
             }
 
             @Override
-            public void added(AddEvent<TextSource> addedObject) {
+            public void added(AddEvent<TextSource> event) {
             }
 
             @Override
-            public void removed(RemoveEvent<TextSource> removedObject) {
+            public void removed(RemoveEvent<TextSource> event) {
             }
 
             @Override
-            public void changed() {
+            public void changed(ChangeEvent<TextSource> event) {
             }
 
             @Override
@@ -295,9 +289,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
             }
         };
         conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
-            @Override
-            public void updated(ConceptAnnotation updatedItem) {
-            }
 
             @Override
             public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
@@ -313,15 +304,15 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
             }
 
             @Override
-            public void added(AddEvent<ConceptAnnotation> addedObject) {
+            public void added(AddEvent<ConceptAnnotation> event) {
             }
 
             @Override
-            public void removed(RemoveEvent<ConceptAnnotation> removedObject) {
+            public void removed(RemoveEvent<ConceptAnnotation> event) {
             }
 
             @Override
-            public void changed() {
+            public void changed(ChangeEvent<ConceptAnnotation> event) {
             }
 
             @Override
@@ -347,19 +338,15 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
             }
 
             @Override
-            public void updated(Span updatedItem) {
+            public void added(AddEvent<Span> event) {
             }
 
             @Override
-            public void added(AddEvent<Span> addedObject) {
+            public void removed(RemoveEvent<Span> event) {
             }
 
             @Override
-            public void removed(RemoveEvent<Span> removedObject) {
-            }
-
-            @Override
-            public void changed() {
+            public void changed(ChangeEvent<Span> event) {
             }
 
             @Override

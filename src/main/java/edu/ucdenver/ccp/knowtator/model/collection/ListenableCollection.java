@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 public abstract class ListenableCollection<K extends KnowtatorObjectInterface, C extends Collection<K>, L extends CollectionListener<K>> implements Iterable<K> {
   final C collection;
-  protected final List<L> collectionListeners;
+  final List<L> collectionListeners;
 
   ListenableCollection(C collection) {
     this.collection = collection;
@@ -39,6 +39,10 @@ public abstract class ListenableCollection<K extends KnowtatorObjectInterface, C
     if (collection.size() == 0) {
       collectionListeners.forEach(CollectionListener::emptied);
     }
+  }
+
+  public void change(K item) {
+      collectionListeners.forEach(l -> l.changed(new ChangeEvent<>(null, item)));
   }
 
   public K get(String id) {

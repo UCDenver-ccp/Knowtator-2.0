@@ -13,10 +13,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -110,7 +107,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObjectInter
         } finally {
             //      reDrawGraph();
             getModel().endUpdate();
-            textSource.getGraphSpaceCollection().update(this);
+            textSource.getGraphSpaceCollection().change(this);
         }
         //    reDrawGraph();
     }
@@ -120,7 +117,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObjectInter
         AnnotationNode newVertex = new AnnotationNode(controller, nodeId, conceptAnnotation, textSource, x, y);
         addCellToGraph(newVertex);
 
-        textSource.getGraphSpaceCollection().update(this);
+        textSource.getGraphSpaceCollection().change(this);
     }
 
     public void addTriple(
@@ -178,7 +175,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObjectInter
         Object[] selectionCells = getSelectionCells();
         removeCells(selectionCells, true);
 
-        textSource.getGraphSpaceCollection().update(this);
+        textSource.getGraphSpaceCollection().change(this);
         //    reDrawGraph();
     }
 
@@ -545,12 +542,12 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObjectInter
     }
 
     @Override
-    public void removed(RemoveEvent<ConceptAnnotation> removedObject) {
+    public void removed(RemoveEvent<ConceptAnnotation> event) {
 
     }
 
     @Override
-    public void changed() {
+    public void changed(ChangeEvent<ConceptAnnotation> event) {
 
     }
 
@@ -564,11 +561,6 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObjectInter
 
     }
 
-
-    @Override
-    public void updated(ConceptAnnotation annotation) {
-
-    }
 
     @Override
     public TextSource getTextSource() {

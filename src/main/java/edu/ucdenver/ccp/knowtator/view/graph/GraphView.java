@@ -5,10 +5,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
@@ -57,17 +54,17 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
 
         textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
             @Override
-            public void added(AddEvent<TextSource> addedObject) {
+            public void added(AddEvent<TextSource> event) {
 
             }
 
             @Override
-            public void removed(RemoveEvent<TextSource> removedObject) {
+            public void removed(RemoveEvent<TextSource> event) {
 
             }
 
             @Override
-            public void changed() {
+            public void changed(ChangeEvent<TextSource> event) {
 
             }
 
@@ -78,11 +75,6 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
 
             @Override
             public void firstAdded() {
-
-            }
-
-            @Override
-            public void updated(TextSource updatedItem) {
 
             }
 
@@ -151,11 +143,6 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
     }
 
     @Override
-    public void updated(GraphSpace updatedItem) {
-
-    }
-
-    @Override
     public void selected(SelectionChangeEvent<GraphSpace> event) {
         if (event.getNew() != null && event.getNew() != graphComponent.getGraph()) {
             showGraph(event.getNew());
@@ -198,17 +185,17 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
     }
 
     @Override
-    public void added(AddEvent<GraphSpace> addedObject) {
+    public void added(AddEvent<GraphSpace> event) {
 
     }
 
     @Override
-    public void removed(RemoveEvent<GraphSpace> removedObject) {
+    public void removed(RemoveEvent<GraphSpace> event) {
 
     }
 
     @Override
-    public void changed() {
+    public void changed(ChangeEvent<GraphSpace> event) {
 
     }
 
