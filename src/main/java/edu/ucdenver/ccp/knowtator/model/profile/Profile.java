@@ -73,10 +73,12 @@ public class Profile implements KnowtatorObjectInterface<Profile>, Savable, Know
         }
         colors.put(owlClass, color);
         controller.getProfileCollection().fireColorChanged();
+        save();
         return color;
       } else if (color == null) {
         colors.put(owlClassID, Color.CYAN);
         controller.getProfileCollection().fireColorChanged();
+        save();
         return Color.CYAN;
       } else {
         return color;
@@ -114,7 +116,7 @@ public class Profile implements KnowtatorObjectInterface<Profile>, Savable, Know
   public void addColor(Object key, Color c) {
     colors.put(key, c);
     controller.getProfileCollection().fireColorChanged();
-
+    save();
   }
 
 

@@ -103,10 +103,6 @@ public abstract class ProjectManager implements Savable {
         }
     }
 
-    void saveProject() {
-        getManagers().forEach(Savable::save);
-    }
-
     abstract List<Savable> getManagers();
 
     public void loadWithAppropriateFormat(BasicIO basicIO, File file) {

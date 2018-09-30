@@ -127,6 +127,7 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
     public void save() {
         controller.getOWLModel().setRenderRDFSLabel();
         forEach(TextSource::save);
+        controller.getOWLModel().resetRenderRDFS();
     }
 
     public File getAnnotationsLocation() {

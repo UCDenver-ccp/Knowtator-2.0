@@ -88,6 +88,7 @@ public abstract class ListenableCollection<K extends KnowtatorObjectInterface, C
 
   void dispose() {
     collectionListeners.clear();
+    collection.forEach(KnowtatorObjectInterface::dispose);
   }
 
   public K[] toArray(K[] newArray) {

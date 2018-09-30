@@ -29,6 +29,7 @@ public class OWLModel implements Serializable, Savable {
 
     private OWLWorkspace owlWorkSpace;
     private File ontologiesLocation;
+    private List<IRI> iris;
 
     public OWLEntity getSelectedOWLEntity() {
         try {
@@ -49,9 +50,9 @@ public class OWLModel implements Serializable, Savable {
     public OWLObjectProperty getOWLObjectPropertyByID(String propertyID) {
         try {
             return getWorkSpace()
-                        .getOWLModelManager()
-                        .getOWLEntityFinder()
-                        .getOWLObjectProperty(propertyID);
+                    .getOWLModelManager()
+                    .getOWLEntityFinder()
+                    .getOWLObjectProperty(propertyID);
         } catch (OWLWorkSpaceNotSetException e) {
             return null;
         }
@@ -59,17 +60,29 @@ public class OWLModel implements Serializable, Savable {
 
     public void setRenderRDFSLabel() {
         try {
+
             IRI labelIRI = getWorkSpace().getOWLModelManager().getOWLDataFactory().getRDFSLabel().getIRI();
-            OWLRendererPreferences.getInstance()
-                    .setAnnotations(
-                            Collections.singletonList(
-                                    labelIRI));
+            iris = OWLRendererPreferences.getInstance().getAnnotationIRIs();
+            OWLRendererPreferences.getInstance().setAnnotations(Collections.singletonList(labelIRI));
 
             getWorkSpace().getOWLModelManager().refreshRenderer();
         } catch (OWLWorkSpaceNotSetException ignored) {
 
         }
     }
+
+    public void resetRenderRDFS() {
+
+        try {
+            if (getWorkSpace() != null) {
+                OWLRendererPreferences.getInstance().setAnnotations(iris);
+                getWorkSpace().getOWLModelManager().refreshRenderer();
+            }
+        } catch (OWLWorkSpaceNotSetException ignored) {
+
+        }
+    }
+
 
     public Set<OWLClass> getDescendants(OWLClass cls) {
         try {
@@ -244,8 +257,7 @@ public class OWLModel implements Serializable, Savable {
     private OWLWorkspace getWorkSpace() throws OWLWorkSpaceNotSetException {
         if (owlWorkSpace == null) {
             throw new OWLWorkSpaceNotSetException();
-        }
-        else {
+        } else {
             return owlWorkSpace;
         }
     }

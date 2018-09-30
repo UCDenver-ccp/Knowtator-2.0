@@ -327,8 +327,9 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
         try {
             int start = Utilities.getWordStart(this, min(press_offset, release_offset));
             int end = Utilities.getWordEnd(this, max(press_offset, release_offset));
-//            view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().setSelection(null);
-            view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().setSelectedAnnotation(null);
+
+            //I don't want to deselect the annotation here because I may want to add a span to it
+
             requestFocusInWindow();
             select(start, end);
 

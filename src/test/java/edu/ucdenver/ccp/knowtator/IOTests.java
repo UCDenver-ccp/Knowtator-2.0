@@ -337,7 +337,6 @@ public class IOTests {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    controller.saveProject();
     successfulLoad();
 
     projectDirectory.deleteOnExit();

@@ -220,9 +220,9 @@ class KnowtatorStandalone extends JFrame {
         loadProjectFromCommandLine(
                 cmd, controller, projectFileName, cmd.getOptionValue("annotations"));
 
-        if (knowtatorOutputDirName != null) {
-            controller.saveProject();
-        }
+//        if (knowtatorOutputDirName != null) {
+//            controller.saveProject();
+//        }
 
 //        if (geniaOutputDirName != null) {
 //            controller.saveToFormat(GeniaXMLUtil.class, controller.getTextSourceCollection(), new File(geniaOutputDirName));

@@ -193,7 +193,9 @@ public class TextSource extends AbstractKnowtatorObject<TextSource> implements B
     @Override
     public void save() {
         if (controller.isNotLoading()) {
+            controller.getOWLModel().setRenderRDFSLabel();
             controller.saveToFormat(KnowtatorXMLUtil.class, this, saveFile);
+            controller.getOWLModel().resetRenderRDFS();
         }
     }
 

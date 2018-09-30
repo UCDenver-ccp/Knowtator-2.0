@@ -216,6 +216,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 
     @Override
     public void dispose() {
+        log.warn("I'm gone");
         controller.getOWLModel().removeOWLModelManagerListener(this);
         controller.getOWLModel().removeOntologyChangeListener(this);
     }

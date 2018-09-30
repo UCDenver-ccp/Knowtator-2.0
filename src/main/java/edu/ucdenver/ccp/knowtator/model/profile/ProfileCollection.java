@@ -97,7 +97,6 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 
     void fireColorChanged() {
         colorListeners.forEach(ColorListener::colorChanged);
-        save();
     }
 
     @Override
