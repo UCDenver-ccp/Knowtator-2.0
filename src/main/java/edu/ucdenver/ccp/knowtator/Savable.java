@@ -12,4 +12,6 @@ public interface Savable extends Serializable {
     File getSaveLocation();
 
     void setSaveLocation(File saveLocation) throws IOException;
+
+    void finishLoad();
 }

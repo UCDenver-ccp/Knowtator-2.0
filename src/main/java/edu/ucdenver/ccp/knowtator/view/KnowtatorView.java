@@ -18,7 +18,6 @@ import org.semanticweb.owlapi.model.OWLClass;
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
-import javax.swing.event.ChangeListener;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -26,10 +25,8 @@ import java.awt.dnd.*;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
-import java.util.EventListener;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 public class KnowtatorView extends AbstractOWLClassViewComponent implements DropTargetListener, KnowtatorComponent {
@@ -65,9 +62,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     private KnowtatorTextPane knowtatorTextPane;
     private AnnotationPane annotationPane;
 
-    private Map<JComponent, EventListener> textSourceButtons;
-    private Map<JButton, ActionListener> annotationButtons;
-    private Map<JButton, ActionListener> spanButtons;
+    private List<JComponent> textSourceButtons;
+    private List<JButton> annotationButtons;
+    private List<JButton> spanButtons;
     private Map<JButton, ActionListener> spanSizeButtons;
     private Map<JButton, ActionListener> selectionSizeButtons;
 
@@ -179,34 +176,45 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     private void makeMenuButtons() {
         menuButton.addActionListener(e -> KnowtatorActions.showMainMenuDialog(this));
+        assignColorToClassButton.addActionListener(e -> KnowtatorActions.assignColorToClassButton(this));
     }
 
     private void makeTextSourceButtons() {
         fontSizeSlider.setValue(knowtatorTextPane.getFont().getSize());
+        fontSizeSlider.addChangeListener(e -> TextSourceActions.setFontSize(this, fontSizeSlider.getValue()));
+        showGraphViewerButton.addActionListener(e -> KnowtatorActions.showGraphViewer(graphViewDialog));
+        previousTextSourceButton.addActionListener(e -> TextSourceActions.selectPreviousTextSource(this));
+        nextTextSourceButton.addActionListener(e -> TextSourceActions.selectNextTextSource(this));
+        addTextSourceButton.addActionListener(e -> TextSourceActions.addTextSource(this));
+        removeTextSourceButton.addActionListener(e -> TextSourceActions.removeTextSource(this));
 
-        KnowtatorView view = this;
-        textSourceButtons = new HashMap<>();
-        textSourceButtons.put(fontSizeSlider, (ChangeListener) e -> TextSourceActions.setFontSize(view, fontSizeSlider.getValue()));
-        textSourceButtons.put(showGraphViewerButton, (ActionListener) e -> KnowtatorActions.showGraphViewer(graphViewDialog));
-        textSourceButtons.put(previousTextSourceButton, (ActionListener) e -> TextSourceActions.selectPreviousTextSource(view));
-        textSourceButtons.put(nextTextSourceButton, (ActionListener) e -> TextSourceActions.selectNextTextSource(view));
-        textSourceButtons.put(addTextSourceButton, (ActionListener) e -> TextSourceActions.addTextSource(view));
-        textSourceButtons.put(removeTextSourceButton, (ActionListener) e -> TextSourceActions.removeTextSource(view));
+        textSourceButtons = new ArrayList<>();
+        textSourceButtons.add(fontSizeSlider);
+        textSourceButtons.add(showGraphViewerButton);
+        textSourceButtons.add(previousTextSourceButton);
+        textSourceButtons.add(nextTextSourceButton);
+        textSourceButtons.add(addTextSourceButton);
+        textSourceButtons.add(removeTextSourceButton);
     }
 
     private void makeAnnotationButtons() {
 
-        annotationButtons = new HashMap<>();
-        annotationButtons.put(addAnnotationButton, e -> AnnotationActions.addAnnotation(this));
-        annotationButtons.put(removeAnnotationButton, e -> AnnotationActions.removeAnnotation(this));
-        annotationButtons.put(assignColorToClassButton, e -> KnowtatorActions.assignColorToClassButton(this));
+        annotationButtons = new ArrayList<>();
+        addAnnotationButton.addActionListener(e -> AnnotationActions.addAnnotation(this));
+        removeAnnotationButton.addActionListener(e -> AnnotationActions.removeAnnotation(this));
+
+
+        annotationButtons.add(addAnnotationButton);
+        annotationButtons.add(removeAnnotationButton);
     }
 
     private void makeSpanButtons() {
 
-        spanButtons = new HashMap<>();
-        spanButtons.put(annotationPane.getNextSpanButton(), e -> SpanActions.selectNextSpan(this));
-        spanButtons.put(annotationPane.getPreviousSpanButton(), e -> SpanActions.selectPreviousSpan(this));
+        spanButtons = new ArrayList<>();
+        annotationPane.getNextSpanButton().addActionListener(e -> SpanActions.selectNextSpan(this));
+        annotationPane.getPreviousSpanButton().addActionListener(e -> SpanActions.selectPreviousSpan(this));
+        spanButtons.add(annotationPane.getNextSpanButton());
+        spanButtons.add(annotationPane.getNextSpanButton());
 
         spanSizeButtons = new HashMap<>();
         spanSizeButtons.put(shrinkEndButton, e -> SpanActions.modifySelectedSpan(this, SpanActions.END, SpanActions.SHRINK));
@@ -280,7 +288,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
                 if (event.getOld() != null) {
                     event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
                 }
-                event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
+                if (event.getNew() != null) {
+                    event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
+                }
             }
 
             @Override
@@ -319,8 +329,11 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
                 if (event.getOld() != null) {
                     event.getOld().getSpanCollection().removeCollectionListener(spanCollectionListener);
                 }
-                if (event.getNew() != null) {
+                if (event.getNew() == null) {
+                    removeAnnotationButton.setEnabled(false);
+                } else {
                     event.getNew().getSpanCollection().addCollectionListener(spanCollectionListener);
+                    enableAnnotationButtons();
                 }
             }
 
@@ -446,53 +459,34 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     }
 
     private void enableTextSourceButtons() {
-        textSourceButtons.forEach((button, e) -> button.setEnabled(true));
-        textSourceButtons.forEach((component, e) -> {
-            if (component instanceof AbstractButton) {
-                ((AbstractButton) component).addActionListener((ActionListener) e);
-            } else if (component instanceof JSlider) {
-                ((JSlider) component).addChangeListener((ChangeListener) e);
-            }
-        });
+        textSourceButtons.forEach(button -> button.setEnabled(true));
     }
 
     private void disableTextSourceButtons() {
-        textSourceButtons.forEach((button, e) -> button.setEnabled(false));
-        textSourceButtons.forEach((component, e) -> {
-            if (component instanceof AbstractButton) {
-                ((AbstractButton) component).removeActionListener((ActionListener) e);
-            } else if (component instanceof JSlider) {
-                ((JSlider) component).removeChangeListener((ChangeListener) e);
-            }
-        });
+        textSourceButtons.forEach(button -> button.setEnabled(false));
         disableAnnotationButtons();
     }
 
     private void enableAnnotationButtons() {
-        annotationButtons.forEach((button, e) -> button.setEnabled(true));
-        annotationButtons.forEach(AbstractButton::addActionListener);
+        annotationButtons.forEach(button -> button.setEnabled(true));
     }
 
     private void disableAnnotationButtons() {
-        annotationButtons.forEach((button, e) -> button.setEnabled(false));
-        annotationButtons.forEach(AbstractButton::removeActionListener);
+        annotationButtons.forEach(button -> button.setEnabled(false));
         disableSpanButtons();
     }
 
     private void enableSpanButtons() {
-        spanButtons.forEach((button, e) -> button.setEnabled(true));
+        spanButtons.forEach(button -> button.setEnabled(true));
         selectionSizeButtons.forEach(AbstractButton::removeActionListener);
 
         spanSizeButtons.forEach(AbstractButton::removeActionListener);
         spanSizeButtons.forEach(AbstractButton::addActionListener);
 
-        spanButtons.forEach(AbstractButton::removeActionListener);
-        spanButtons.forEach(AbstractButton::addActionListener);
-
     }
 
     private void disableSpanButtons() {
-        spanButtons.forEach((button, e) -> button.setEnabled(false));
+        spanButtons.forEach(button -> button.setEnabled(false));
         spanSizeButtons.forEach(AbstractButton::removeActionListener);
         selectionSizeButtons.forEach(AbstractButton::removeActionListener);
         selectionSizeButtons.forEach(AbstractButton::addActionListener);

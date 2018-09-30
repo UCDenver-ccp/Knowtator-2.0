@@ -37,7 +37,7 @@ public class GraphMenuDialog extends JDialog {
         // call onCancel() on ESCAPE
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        exportToImagePNGButton.addActionListener(e -> GraphActions.exportToPNG(this, view));
+        exportToImagePNGButton.addActionListener(e -> GraphActions.exportToPNG(view));
     }
 
     private void onOK() {

@@ -324,6 +324,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
             int start = Utilities.getWordStart(this, min(press_offset, release_offset));
             int end = Utilities.getWordEnd(this, max(press_offset, release_offset));
 //            view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().setSelection(null);
+            view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().setSelectedAnnotation(null);
             requestFocusInWindow();
             select(start, end);
 
@@ -382,47 +383,18 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
 
             SwingUtilities.invokeLater(
                     () -> {
-                        if (view.getController()
-                                .getTextSourceCollection().getSelection()
-                                .getConceptAnnotationCollection().getSelection() != null && view.getController()
-                                .getTextSourceCollection().getSelection()
-                                .getConceptAnnotationCollection().getSelection()
-                                .getSpanCollection().getSelection()
-                                != null) {
-                            try {
-                                scrollRectToVisible(
-                                        modelToView(
-                                                view.getController()
-                                                        .getTextSourceCollection().getSelection()
-                                                        .getConceptAnnotationCollection().getSelection()
-                                                        .getSpanCollection().getSelection()
-                                                        .getStart()));
-                            } catch (BadLocationException | NullPointerException e) {
-                                e.printStackTrace();
+                        TextSource textSource = view.getController().getTextSourceCollection().getSelection();
+                        ConceptAnnotation annotation = textSource.getConceptAnnotationCollection().getSelection();
 
+                        if (annotation != null) {
+                            Span span = annotation.getSpanCollection().getSelection();
+                            if (span == null) {
+                                span = annotation.getSpanCollection().first();
                             }
-                        } else if (view.getController()
-                                .getTextSourceCollection().getSelection()
-                                .getConceptAnnotationCollection().getSelection()
-                                != null) {
                             try {
-                                scrollRectToVisible(
-                                        modelToView(
-                                                view.getController()
-                                                        .getTextSourceCollection().getSelection()
-                                                        .getConceptAnnotationCollection().getSelection()
-                                                        .getSpanCollection().first()
-                                                        .getStart()));
+                                scrollRectToVisible(modelToView(span.getStart()));
                             } catch (BadLocationException | NullPointerException e) {
                                 e.printStackTrace();
-
-                            }
-                        } else {
-                            try {
-                                scrollRectToVisible(modelToView(0));
-                            } catch (BadLocationException | NullPointerException e) {
-                                e.printStackTrace();
-
                             }
                         }
                     }

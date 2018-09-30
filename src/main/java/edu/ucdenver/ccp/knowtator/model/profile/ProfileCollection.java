@@ -35,7 +35,6 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
         add(defaultProfile);
         this.controller = controller;
         colorListeners = new ArrayList<>();
-        setSelection(getDefaultProfile());
     }
 
     public Profile getDefaultProfile() {
@@ -76,7 +75,6 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 
     @Override
     public void readFromKnowtatorXML(File file, Element parent) {
-        controller.setLoading(true);
         for (Node profileNode :
                 KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.PROFILE))) {
             Element profileElement = (Element) profileNode;
@@ -85,7 +83,6 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
             Profile newProfile = addProfile(profileID);
             newProfile.readFromKnowtatorXML(null, profileElement);
         }
-        controller.setLoading(false);
     }
 
     @Override
@@ -120,6 +117,15 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
     public void setSaveLocation(File saveLocation) throws IOException {
         profilesLocation = (new File(controller.getSaveLocation(), "Profiles"));
         Files.createDirectories(profilesLocation.toPath());
+    }
+
+    @Override
+    public void finishLoad() {
+        if (size() > 1) {
+            setSelection(first());
+        } else {
+            setSelection(getDefaultProfile());
+        }
     }
 
     @Override

@@ -199,4 +199,9 @@ public class Profile implements KnowtatorObjectInterface<Profile>, Savable, Know
   public void setSaveLocation(File saveLocation) {
 
   }
+
+  @Override
+  public void finishLoad() {
+
+  }
 }

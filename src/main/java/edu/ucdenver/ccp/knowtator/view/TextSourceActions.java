@@ -21,7 +21,7 @@ class TextSourceActions {
     }
 
     static void removeTextSource(KnowtatorView view) {
-        view.getController().getTextSourceCollection().removeActiveTextSource();
+        view.getController().getTextSourceCollection().removeSelected();
     }
 
     static void setFontSize(KnowtatorView view, int fontSize) {

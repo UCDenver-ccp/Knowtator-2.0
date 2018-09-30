@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator.view.graph;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
+import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.util.mxMorphing;
 import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxEvent;
@@ -11,8 +12,12 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -59,16 +64,15 @@ class GraphActions {
     }
 
     private static void goToVertex(KnowtatorView view, AnnotationNode vertex) {
-            view.getGraphViewDialog().requestFocusInWindow();
-            view.getGraphViewDialog().getGraphView().getGraphComponent().scrollCellToVisible(vertex, true);
+        view.getGraphViewDialog().requestFocusInWindow();
+        view.getGraphViewDialog().getGraphView().getGraphComponent().scrollCellToVisible(vertex, true);
     }
 
     static void applyLayout(KnowtatorView view) {
         GraphSpace graph;
-        graph =
-                view.getController()
-                        .getTextSourceCollection().getSelection()
-                        .getGraphSpaceCollection().getSelection();
+        graph = view.getController()
+                .getTextSourceCollection().getSelection()
+                .getGraphSpaceCollection().getSelection();
 
         //		graph.reDrawGraph();
         mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
@@ -107,7 +111,7 @@ class GraphActions {
         }
     }
 
-    static void exportToPNG(JDialog parent, KnowtatorView view) {
+    static void exportToPNG(KnowtatorView view) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(view.getController().getSaveLocation());
         FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
@@ -136,5 +140,118 @@ class GraphActions {
                 e1.printStackTrace();
             }
         }
+    }
+
+    static void showGraphMenuDialog(KnowtatorView view) {
+        GraphMenuDialog graphMenuDialog = new GraphMenuDialog(view);
+        graphMenuDialog.pack();
+        graphMenuDialog.setVisible(true);
+    }
+
+    static void zoomGraph(mxGraphComponent graphComponent, int zoomValue) {
+        graphComponent.zoomTo(zoomValue / 50.0, false);
+    }
+
+    static void renameGraphSpace(KnowtatorView view) {
+        String graphName = getGraphNameInput(view, null);
+        if (graphName != null) {
+            view.getController()
+                    .getTextSourceCollection().getSelection()
+                    .getGraphSpaceCollection().getSelection().setId(graphName);
+        }
+    }
+
+    static void addGraphSpace(KnowtatorView view) {
+        String graphName = getGraphNameInput(view, null);
+
+        if (graphName != null) {
+            view.getController()
+                    .getTextSourceCollection().getSelection()
+                    .getGraphSpaceCollection().addGraphSpace(graphName);
+        }
+    }
+
+    static void removeGraphSpace(KnowtatorView view) {
+        if (JOptionPane.showConfirmDialog(
+                view, "Are you sure you want to delete this graph?")
+                == JOptionPane.YES_OPTION) {
+            view.getController()
+                    .getTextSourceCollection().getSelection()
+                    .getGraphSpaceCollection()
+                    .removeSelected();
+        }
+    }
+
+    private static String getGraphNameInput(KnowtatorView view, JTextField field1) {
+        if (field1 == null) {
+            field1 = new JTextField();
+
+            JTextField finalField = field1;
+            field1
+                    .getDocument()
+                    .addDocumentListener(
+                            new DocumentListener() {
+                                @Override
+                                public void insertUpdate(DocumentEvent e) {
+                                    warn();
+                                }
+
+                                @Override
+                                public void removeUpdate(DocumentEvent e) {
+                                    warn();
+                                }
+
+                                @Override
+                                public void changedUpdate(DocumentEvent e) {
+                                    warn();
+                                }
+
+                                private void warn() {
+                                    if (view.getController()
+                                            .getTextSourceCollection().getSelection()
+                                            .getGraphSpaceCollection()
+                                            .containsID(finalField.getText())) {
+                                        try {
+                                            finalField
+                                                    .getHighlighter()
+                                                    .addHighlight(
+                                                            0,
+                                                            finalField.getText().length(),
+                                                            new DefaultHighlighter.DefaultHighlightPainter(Color.RED));
+                                        } catch (BadLocationException e1) {
+                                            e1.printStackTrace();
+                                        }
+                                    } else {
+                                        finalField.getHighlighter().removeAllHighlights();
+                                    }
+                                }
+                            });
+        }
+        Object[] message = {
+                "Graph Title", field1,
+        };
+        field1.addAncestorListener(new GraphView.RequestFocusListener());
+        field1.setText("Graph Space " + Integer.toString(view.getController()
+                .getTextSourceCollection().getSelection()
+                .getGraphSpaceCollection().size()));
+        int option =
+                JOptionPane.showConfirmDialog(
+                        view,
+                        message,
+                        "Enter a name for this graph",
+                        JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            if (view.getController()
+                    .getTextSourceCollection().getSelection()
+                    .getGraphSpaceCollection()
+                    .containsID(field1.getText())) {
+                JOptionPane.showMessageDialog(field1, "Graph name already in use");
+                return getGraphNameInput(view, field1);
+            } else {
+                return field1.getText();
+            }
+        }
+
+        return null;
     }
 }

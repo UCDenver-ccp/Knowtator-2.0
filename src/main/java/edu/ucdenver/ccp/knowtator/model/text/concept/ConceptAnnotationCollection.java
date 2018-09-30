@@ -57,7 +57,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     public ConceptAnnotation addAnnotation(String annotationID, OWLClass owlClass, String owlClassID, String owlClassLabel, Profile annotator, String annotation_type) {
         ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, annotationID, owlClass, owlClassID, owlClassLabel, annotator, annotation_type, textSource);
         add(newConceptAnnotation);
-        setSelection(newConceptAnnotation);
         return newConceptAnnotation;
     }
 
@@ -86,31 +85,22 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     /*
     REMOVERS
      */
-    public void removeAnnotation(ConceptAnnotation conceptAnnotationToRemove) {
+    @Override
+    public void remove(ConceptAnnotation conceptAnnotationToRemove) {
         for (Span span : conceptAnnotationToRemove.getSpanCollection()) {
             allSpanCollection.remove(span);
         }
-        conceptAnnotationToRemove.dispose();
-        remove(conceptAnnotationToRemove);
-
-        setSelection(null);
+        super.remove(conceptAnnotationToRemove);
     }
 
-    public void removeSelectedAnnotation() {
-        textSource.getGraphSpaceCollection().removeAnnotation(getSelection());
-        removeAnnotation(getSelection());
-        setSelection(null);
-    }
-
-    public void removeSpanFromAnnotation(ConceptAnnotation conceptAnnotation, Span span) {
-        conceptAnnotation.getSpanCollection().removeSpan(span);
+    public void removeSpanFromAnnotation(Span span) {
+        span.getConceptAnnotation().getSpanCollection().removeSpan(span);
         allSpanCollection.remove(span);
-
     }
 
     public void removeSpanFromSelectedAnnotation() {
         ConceptAnnotation conceptAnnotation = getSelection();
-        removeSpanFromAnnotation(conceptAnnotation, conceptAnnotation.getSpanCollection().getSelection());
+        removeSpanFromAnnotation(conceptAnnotation.getSpanCollection().getSelection());
     }
 
 
@@ -202,7 +192,10 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
     public void setSelectedAnnotation(Span newSpan) {
 
-        if (getSelection() != newSpan.getConceptAnnotation()) {
+        if (newSpan == null) {
+            setSelection(null);
+        }
+        else if (getSelection() != newSpan.getConceptAnnotation()) {
             setSelection(newSpan.getConceptAnnotation());
             newSpan.getConceptAnnotation().getSpanCollection().setSelection(newSpan);
             controller.getOWLModel().setSelectedOWLEntity(newSpan.getConceptAnnotation().getOwlClass());
@@ -371,7 +364,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
             // No need to keep annotations with no allSpanCollection
             if (newConceptAnnotation.getSpanCollection().size() == 0) {
-                removeAnnotation(newConceptAnnotation);
+                remove(newConceptAnnotation);
             } else {
                 for (Node slotMentionNode :
                         KnowtatorXMLUtil.asList(
@@ -388,7 +381,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
 
         GraphSpace oldKnowtatorGraphSpace = new GraphSpace(controller, textSource, "Old Knowtator Relations");
-        textSource.getGraphSpaceCollection().addGraphSpace(oldKnowtatorGraphSpace);
+        textSource.getGraphSpaceCollection().add(oldKnowtatorGraphSpace);
 
         annotationToSlotMap.forEach(
                 (annotation, slot) -> {
@@ -459,7 +452,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                         });
 
         GraphSpace newGraphSpace = new GraphSpace(controller, textSource, "Brat Relation Graph");
-        textSource.getGraphSpaceCollection().addGraphSpace(newGraphSpace);
+        textSource.getGraphSpaceCollection().add(newGraphSpace);
         newGraphSpace.readFromBratStandoff(null, annotationCollection, null);
 
         setOWLClassForAnnotations();

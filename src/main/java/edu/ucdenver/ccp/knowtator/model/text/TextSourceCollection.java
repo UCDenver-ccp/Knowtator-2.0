@@ -146,12 +146,20 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
     }
 
     @Override
+    public void finishLoad() {
+        if (size() > 0) {
+            setSelection(first());
+        }
+    }
+
+    @Override
     public File getSaveLocation() {
         return annotationsLocation;
 
     }
 
-    public void removeActiveTextSource() {
+    @Override
+    public void removeSelected() {
         TextSource oldTextSource = getSelection();
         selectPrevious();
         oldTextSource.dispose();

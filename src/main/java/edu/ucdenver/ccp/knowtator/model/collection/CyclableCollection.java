@@ -1,6 +1,5 @@
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorObjectInterface;
 
 import java.util.TreeSet;
@@ -8,7 +7,7 @@ import java.util.TreeSet;
 public abstract class CyclableCollection<K extends KnowtatorObjectInterface, L extends CollectionListener<K>>
     extends ListenableCollection<K, TreeSet<K>, L> {
 
-  CyclableCollection(KnowtatorController controller, TreeSet<K> collection) {
+  CyclableCollection(TreeSet<K> collection) {
     super(collection);
   }
 

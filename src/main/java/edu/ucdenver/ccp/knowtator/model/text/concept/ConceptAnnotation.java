@@ -340,6 +340,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundObject<ConceptA
 
     @Override
     public void dispose() {
+        textSource.getGraphSpaceCollection().removeAnnotation(this);
         spanCollection.dispose();
     }
 

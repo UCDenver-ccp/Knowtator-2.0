@@ -49,9 +49,9 @@ public class KnowtatorController extends ProjectManager {
   @Override
   List<Savable> getManagers() {
     List<Savable> managers = new ArrayList<>();
+    managers.add(profileCollection);
     managers.add(owlModel);
     managers.add(textSourceCollection);
-    managers.add(profileCollection);
     return managers;
   }
 

@@ -20,13 +20,26 @@ import java.util.TreeSet;
 
 public class KnowtatorStandalone extends JFrame {
 
-    private KnowtatorStandalone() {
-        setContentPane(new KnowtatorView());
+    private KnowtatorStandalone(boolean debug) {
+
+        KnowtatorView view = new KnowtatorView();
+        setContentPane(view);
+        if (debug) {
+            view.reset();
+            try {
+                view.getController().setSaveLocation(new File(view.getPreferences().get("Last Project", null)));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            view.getController().loadProject();
+            view.getKnowtatorTextPane().refreshHighlights();
+        }
     }
 
     public static void main(String[] args) {
         Options options = new Options();
         options.addOption("g", "gui", false, "Start GUI");
+        options.addOption("d", "debug", false, "Debug");
         options.addOption("c", "convert", false, "Convert formats");
         options.addOption("f", "fragment", false, "Count fragments");
 
@@ -69,7 +82,25 @@ public class KnowtatorStandalone extends JFrame {
             commandLineConversion(cmd);
         } else if (cmd.getArgList().contains("f")) {
             fragmentCount(cmd);
+        } else if (cmd.getArgList().contains("d")) {
+            debug();
         }
+    }
+
+    private static void debug() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException
+                | InstantiationException
+                | IllegalAccessException
+                | UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+
+        KnowtatorStandalone dialog = new KnowtatorStandalone(true);
+        dialog.pack();
+        dialog.setVisible(true);
+        //        System.exit(0);
     }
 
     private static void fragmentCount(CommandLine cmd) {
@@ -216,7 +247,7 @@ public class KnowtatorStandalone extends JFrame {
             e.printStackTrace();
         }
 
-        KnowtatorStandalone dialog = new KnowtatorStandalone();
+        KnowtatorStandalone dialog = new KnowtatorStandalone(true);
         dialog.pack();
         dialog.setVisible(true);
         //        System.exit(0);

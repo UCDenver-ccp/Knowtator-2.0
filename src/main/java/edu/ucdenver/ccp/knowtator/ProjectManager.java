@@ -26,20 +26,20 @@ public abstract class ProjectManager implements Savable {
         return !isLoading;
     }
 
-    public void setLoading(boolean loading) {
-        isLoading = loading;
-    }
-
     private boolean isLoading;
 
     ProjectManager() {
+        isLoading = false;
     }
 
     public void loadProject() {
 
         makeProjectStructure(projectLocation);
 
+        isLoading = true;
         getManagers().forEach(Savable::load);
+        isLoading = false;
+        getManagers().forEach(Savable::finishLoad);
 
 //        saveProject();
     }
@@ -160,6 +160,11 @@ public abstract class ProjectManager implements Savable {
 
     @Override
     public void load() {
+
+    }
+
+    @Override
+    public void finishLoad() {
 
     }
 }

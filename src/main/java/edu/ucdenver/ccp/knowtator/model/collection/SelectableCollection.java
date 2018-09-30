@@ -7,10 +7,12 @@ import java.util.TreeSet;
 
 public abstract class SelectableCollection<K extends KnowtatorObjectInterface, L extends SelectableCollectionListener<K>> extends CyclableCollection<K, L> {
 
+    private final KnowtatorController controller;
     private K selection;
 
     SelectableCollection(KnowtatorController controller, TreeSet<K> collection) {
-        super(controller, collection);
+        super(collection);
+        this.controller = controller;
         selection = null;
     }
 
@@ -28,11 +30,22 @@ public abstract class SelectableCollection<K extends KnowtatorObjectInterface, L
     }
 
     public void setSelection(K newSelection) {
-        if (this.selection != newSelection) {
+        if (controller.isNotLoading() && this.selection != newSelection) {
             SelectionChangeEvent<K> selectionChangeEvent = new SelectionChangeEvent<>(this.selection, newSelection);
             this.selection = newSelection;
             collectionListeners.forEach(selectionListener -> selectionListener.selected(selectionChangeEvent));
 
         }
+    }
+
+    @Override
+    public void add(K item) {
+        super.add(item);
+        setSelection(item);
+    }
+
+    public void removeSelected() {
+        remove(selection);
+        setSelection(null);
     }
 }

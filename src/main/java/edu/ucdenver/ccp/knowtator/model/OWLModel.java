@@ -30,9 +30,6 @@ public class OWLModel implements Serializable, Savable {
     private OWLWorkspace owlWorkSpace;
     private File ontologiesLocation;
 
-    public OWLModel() {
-    }
-
     public OWLEntity getSelectedOWLEntity() {
         try {
             return getWorkSpace().getOWLSelectionModel().getSelectedEntity();
@@ -148,6 +145,11 @@ public class OWLModel implements Serializable, Savable {
     public void setSaveLocation(File newSaveLocation) throws IOException {
         this.ontologiesLocation = new File(newSaveLocation, "Ontologies");
         Files.createDirectories(ontologiesLocation.toPath());
+    }
+
+    @Override
+    public void finishLoad() {
+
     }
 
 

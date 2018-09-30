@@ -72,6 +72,13 @@ public class GraphViewDialog extends JDialog implements KnowtatorComponent {
         graphView.reset();
     }
 
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        graphView.setVisible(visible);
+
+    }
+
     GraphView getGraphView() {
         return graphView;
     }

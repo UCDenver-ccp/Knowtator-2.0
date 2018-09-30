@@ -1,5 +1,8 @@
 package edu.ucdenver.ccp.knowtator.view;
 
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+
 import javax.swing.*;
 
 class AnnotationActions {
@@ -35,12 +38,9 @@ class AnnotationActions {
     }
 
     static void removeAnnotation(KnowtatorView view) {
-        if (view.getController()
-                .getTextSourceCollection().getSelection()
-                .getConceptAnnotationCollection()
-                .getSelection().getSpanCollection()
-                .size()
-                > 1) {
+        TextSource textSource = view.getController().getTextSourceCollection().getSelection();
+        ConceptAnnotation annotation = textSource.getConceptAnnotationCollection().getSelection();
+        if (annotation.getSpanCollection().size() > 1) {
             String[] buttons = {"Remove annotation", "Remove span from annotation", "Cancel"};
             int response =
                     JOptionPane.showOptionDialog(
@@ -55,16 +55,10 @@ class AnnotationActions {
 
             switch (response) {
                 case 0:
-                    view.getController()
-                            .getTextSourceCollection().getSelection()
-                            .getConceptAnnotationCollection()
-                            .removeSelectedAnnotation();
+                    textSource.getConceptAnnotationCollection().removeSelected();
                     break;
                 case 1:
-                    view.getController()
-                            .getTextSourceCollection().getSelection()
-                            .getConceptAnnotationCollection()
-                            .removeSpanFromSelectedAnnotation();
+                    textSource.getConceptAnnotationCollection().removeSpanFromSelectedAnnotation();
                     break;
                 case 2:
                     break;
@@ -76,10 +70,7 @@ class AnnotationActions {
                     "Remove Annotation",
                     JOptionPane.YES_NO_OPTION)
                     == JOptionPane.YES_OPTION) {
-                view.getController()
-                        .getTextSourceCollection().getSelection()
-                        .getConceptAnnotationCollection()
-                        .removeSelectedAnnotation();
+                textSource.getConceptAnnotationCollection().removeSelected();
             }
         }
     }

@@ -12,7 +12,7 @@ public class FilterModel {
     public FilterModel() {
         filterModelListeners = new ArrayList<>();
         isFilterByOWLClass = false;
-        isFilterByProfile = true;
+        isFilterByProfile = false;
     }
 
     public void addFilterModelListener(FilterModelListener listener) {

@@ -15,11 +15,9 @@ import org.apache.log4j.Logger;
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GraphView extends JPanel implements KnowtatorCollectionListener<GraphSpace>, KnowtatorComponent {
     private JButton removeCellButton;
@@ -36,6 +34,8 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
     private JButton graphMenuButton;
     private JButton renameButton;
     private JDialog dialog;
+    private List<JComponent> graphSpaceButtons;
+
 
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(GraphView.class);
@@ -88,83 +88,16 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
                 if (event.getOld() != null) {
                     event.getOld().getGraphSpaceCollection().removeCollectionListener(graphView);
                 }
-                event.getNew().getGraphSpaceCollection().addCollectionListener(graphView);
+                if (event.getNew() != null) {
+                    event.getNew().getGraphSpaceCollection().addCollectionListener(graphView);
+                    if (event.getNew().getGraphSpaceCollection().getSelection() != null) {
+                        showGraph(event.getNew().getGraphSpaceCollection().getSelection());
+                    } else {
+                        showGraph(event.getNew().getGraphSpaceCollection().first());
+                    }
+                }
             }
         };
-        view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
-    }
-
-    private static String getGraphNameInput(KnowtatorView view, JTextField field1) {
-        if (field1 == null) {
-            field1 = new JTextField();
-
-            JTextField finalField = field1;
-            field1
-                    .getDocument()
-                    .addDocumentListener(
-                            new DocumentListener() {
-                                @Override
-                                public void insertUpdate(DocumentEvent e) {
-                                    warn();
-                                }
-
-                                @Override
-                                public void removeUpdate(DocumentEvent e) {
-                                    warn();
-                                }
-
-                                @Override
-                                public void changedUpdate(DocumentEvent e) {
-                                    warn();
-                                }
-
-                                private void warn() {
-                                    if (view.getController()
-                                            .getTextSourceCollection().getSelection()
-                                            .getGraphSpaceCollection()
-                                            .containsID(finalField.getText())) {
-                                        try {
-                                            finalField
-                                                    .getHighlighter()
-                                                    .addHighlight(
-                                                            0,
-                                                            finalField.getText().length(),
-                                                            new DefaultHighlighter.DefaultHighlightPainter(Color.RED));
-                                        } catch (BadLocationException e1) {
-                                            e1.printStackTrace();
-                                        }
-                                    } else {
-                                        finalField.getHighlighter().removeAllHighlights();
-                                    }
-                                }
-                            });
-        }
-        Object[] message = {
-                "Graph Title", field1,
-        };
-        field1.addAncestorListener(new RequestFocusListener());
-        field1.setText("Graph Space " + Integer.toString(view.getController()
-                .getTextSourceCollection().getSelection()
-                .getGraphSpaceCollection().size()));
-        int option =
-                JOptionPane.showConfirmDialog(
-                        view,
-                        message,
-                        "Enter a name for this graph",
-                        JOptionPane.OK_CANCEL_OPTION);
-        if (option == JOptionPane.OK_OPTION) {
-            if (view.getController()
-                    .getTextSourceCollection().getSelection()
-                    .getGraphSpaceCollection()
-                    .containsID(field1.getText())) {
-                JOptionPane.showMessageDialog(field1, "Graph name already in use");
-                return getGraphNameInput(view, field1);
-            } else {
-                return field1.getText();
-            }
-        }
-
-        return null;
     }
 
     private void createUIComponents() {
@@ -177,68 +110,29 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
 
     private void makeButtons() {
 
-        graphMenuButton.addActionListener(e -> {
-            GraphMenuDialog graphMenuDialog = new GraphMenuDialog(view);
-            graphMenuDialog.pack();
-            graphMenuDialog.setVisible(true);
-        });
+        graphSpaceButtons = new ArrayList<>();
 
-        graphSpaceChooser.addActionListener(
-                e -> {
-                    JComboBox comboBox = (JComboBox) e.getSource();
-                    if (comboBox.getSelectedItem() != null
-                            && comboBox.getSelectedItem()
-                            != view.getController()
-                            .getTextSourceCollection().getSelection()
-                            .getGraphSpaceCollection().getSelection()) {
-                        view.getController()
-                                .getTextSourceCollection().getSelection()
-                                .getGraphSpaceCollection().setSelection((GraphSpace) comboBox.getSelectedItem());
-                    }
+        graphMenuButton.addActionListener(e -> GraphActions.showGraphMenuDialog(view));
 
-                });
-
-        zoomSlider.addChangeListener(e -> graphComponent.zoomTo(zoomSlider.getValue() / 50.0, false));
-
-        renameButton.addActionListener(e -> {
-            String graphName = getGraphNameInput(view, null);
-            if (graphName != null) {
-                view.getController()
-                        .getTextSourceCollection().getSelection()
-                        .getGraphSpaceCollection().getSelection().setId(graphName);
-            }
-        });
-
-        addGraphSpaceButton.addActionListener(e -> {
-            String graphName = getGraphNameInput(view, null);
-
-            if (graphName != null) {
-                view.getController()
-                        .getTextSourceCollection().getSelection()
-                        .getGraphSpaceCollection().addGraphSpace(graphName);
-            }
-        });
-
-        removeGraphSpaceButton.addActionListener(e -> {
-            if (JOptionPane.showConfirmDialog(
-                    view, "Are you sure you want to delete this graph?")
-                    == JOptionPane.YES_OPTION) {
-                view.getController()
-                        .getTextSourceCollection().getSelection()
-                        .getGraphSpaceCollection()
-                        .removeGraphSpace(view.getController().getTextSourceCollection().getSelection()
-                                .getGraphSpaceCollection().getSelection());
-            }
-        });
-
-        previousGraphSpaceButton.addActionListener(
-                e -> GraphActions.selectPreviousGraphSpace(view));
-        nextGraphSpaceButton.addActionListener(
-                e -> GraphActions.selectNextGraphSpace(view));
+        zoomSlider.addChangeListener(e -> GraphActions.zoomGraph(graphComponent, zoomSlider.getValue()));
+        renameButton.addActionListener(e -> GraphActions.renameGraphSpace(view));
+        addGraphSpaceButton.addActionListener(e -> GraphActions.addGraphSpace(view));
+        removeGraphSpaceButton.addActionListener(e -> GraphActions.removeGraphSpace(view));
+        previousGraphSpaceButton.addActionListener(e -> GraphActions.selectPreviousGraphSpace(view));
+        nextGraphSpaceButton.addActionListener(e -> GraphActions.selectNextGraphSpace(view));
         removeCellButton.addActionListener(e -> GraphActions.removeSelectedCell(view));
-        addAnnotationNodeButton.addActionListener(
-                e -> GraphActions.addAnnotationNode(view));
+        addAnnotationNodeButton.addActionListener(e -> GraphActions.addAnnotationNode(view));
         applyLayoutButton.addActionListener(e -> GraphActions.applyLayout(view));
+
+        graphSpaceButtons.add(renameButton);
+        graphSpaceButtons.add(removeCellButton);
+        graphSpaceButtons.add(removeGraphSpaceButton);
+        graphSpaceButtons.add(previousGraphSpaceButton);
+        graphSpaceButtons.add(nextGraphSpaceButton);
+        graphSpaceButtons.add(addAnnotationNodeButton);
+        graphSpaceButtons.add(applyLayoutButton);
+        graphSpaceButtons.add(zoomSlider);
+        graphSpaceButtons.add(addGraphSpaceButton);
     }
 
     private void showGraph(GraphSpace graphSpace) {
@@ -266,8 +160,32 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
     }
 
     @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        if (visible) {
+            view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
+            graphSpaceChooser.reset();
+            TextSource textSource = view.getController().getTextSourceCollection().getSelection();
+            if (textSource != null) {
+                textSource.getGraphSpaceCollection().addCollectionListener(this);
+                if (textSource.getGraphSpaceCollection().size() > 0) {
+                    GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection();
+                    if (graphSpace != null) {
+                        showGraph(graphSpace);
+                    } else {
+                        showGraph(textSource.getGraphSpaceCollection().first());
+                    }
+                } else {
+                    GraphActions.addGraphSpace(view);
+                }
+            }
+        } else {
+            view.getController().getTextSourceCollection().removeCollectionListener(textSourceCollectionListener);
+        }
+    }
+
+    @Override
     public void reset() {
-        view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
         graphSpaceChooser.reset();
     }
 
@@ -293,12 +211,13 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
 
     @Override
     public void emptied(RemoveEvent<GraphSpace> object) {
-
+        graphSpaceButtons.forEach(c -> c.setEnabled(false));
+        addGraphSpaceButton.setEnabled(true);
     }
 
     @Override
     public void firstAdded(AddEvent<GraphSpace> object) {
-
+        graphSpaceButtons.forEach(c -> c.setEnabled(true));
     }
 
     mxGraphComponent getGraphComponent() {
@@ -385,7 +304,7 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
     /**
      * Taken from https://tips4java.wordpress.com/2010/03/14/dialog-focus/
      */
-    private static class RequestFocusListener implements AncestorListener {
+    static class RequestFocusListener implements AncestorListener {
         private boolean removeListener;
 
         /*
