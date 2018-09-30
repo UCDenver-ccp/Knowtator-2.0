@@ -1,7 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view;
 
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import org.protege.editor.owl.model.event.EventType;
 import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
@@ -19,11 +18,6 @@ public class AnnotationClassLabel extends KnowtatorLabel implements OWLModelMana
     @Override
     protected void reactToConceptAnnotationUpdated() {
         displayAnnotation();
-    }
-
-    @Override
-    protected void reactToTextSourceChange(SelectionChangeEvent<TextSource> event) {
-
     }
 
     @Override

@@ -19,7 +19,7 @@
             </properties>
             <border type="none"/>
             <children>
-              <grid id="8b615" binding="searchPanel" layout-manager="GridLayoutManager" row-count="3" column-count="9" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="8b615" binding="searchPanel" layout-manager="GridLayoutManager" row-count="3" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints border-constraint="Center"/>
                 <properties>
@@ -47,7 +47,7 @@
                   </component>
                   <component id="ce715" class="javax.swing.JButton" binding="nextMatchButton">
                     <constraints>
-                      <grid row="0" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <text value="Next"/>
@@ -55,39 +55,15 @@
                   </component>
                   <hspacer id="aadfd">
                     <constraints>
-                      <grid row="0" column="8" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                   </hspacer>
-                  <component id="1b569" class="javax.swing.JCheckBox" binding="onlyAnnotationsCheckBox">
-                    <constraints>
-                      <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <text value="Only in Annotations"/>
-                    </properties>
-                  </component>
-                  <component id="ce469" class="javax.swing.JCheckBox" binding="caseSensitiveCheckBox">
-                    <constraints>
-                      <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <text value="Case Sensitive"/>
-                    </properties>
-                  </component>
                   <component id="93bd1" class="javax.swing.JButton" binding="findTextInOntologyButton">
                     <constraints>
-                      <grid row="1" column="6" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <text resource-bundle="log4j" key="find.in.ontology1"/>
-                    </properties>
-                  </component>
-                  <component id="c4d9f" class="javax.swing.JCheckBox" binding="regexCheckBox">
-                    <constraints>
-                      <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <text value="Regex"/>
                     </properties>
                   </component>
                   <component id="47c07" class="javax.swing.JButton" binding="showGraphViewerButton">
@@ -99,18 +75,9 @@
                       <text value=""/>
                     </properties>
                   </component>
-                  <component id="62dcb" class="javax.swing.JTextField" binding="matchTextField">
-                    <constraints>
-                      <grid row="0" column="2" row-span="1" col-span="5" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                        <preferred-size width="150" height="25"/>
-                        <maximum-size width="-1" height="25"/>
-                      </grid>
-                    </constraints>
-                    <properties/>
-                  </component>
                   <toolbar id="96be4">
                     <constraints>
-                      <grid row="2" column="0" row-span="1" col-span="8" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                      <grid row="2" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="-1" height="20"/>
                       </grid>
                     </constraints>
@@ -183,6 +150,49 @@
                       </component>
                     </children>
                   </toolbar>
+                  <grid id="cfd09" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="62dcb" class="javax.swing.JTextField" binding="matchTextField">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                            <preferred-size width="150" height="25"/>
+                            <maximum-size width="-1" height="25"/>
+                          </grid>
+                        </constraints>
+                        <properties/>
+                      </component>
+                      <component id="1b569" class="javax.swing.JCheckBox" binding="onlyAnnotationsCheckBox">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Only in Annotations"/>
+                        </properties>
+                      </component>
+                      <component id="ce469" class="javax.swing.JCheckBox" binding="caseSensitiveCheckBox">
+                        <constraints>
+                          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Case Sensitive"/>
+                        </properties>
+                      </component>
+                      <component id="c4d9f" class="javax.swing.JCheckBox" binding="regexCheckBox">
+                        <constraints>
+                          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Regex"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
                 </children>
               </grid>
             </children>
@@ -291,28 +301,6 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="33643" class="edu.ucdenver.ccp.knowtator.view.AnnotationIDLabel" binding="annotationIDLabel" custom-create="true">
-                    <constraints>
-                      <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <text value=""/>
-                    </properties>
-                  </component>
-                  <component id="9a74d" class="edu.ucdenver.ccp.knowtator.view.AnnotationAnnotatorLabel" binding="annotationAnnotatorLabel" custom-create="true">
-                    <constraints>
-                      <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties/>
-                  </component>
-                  <component id="853ee" class="edu.ucdenver.ccp.knowtator.view.AnnotationClassLabel" binding="annotationClassLabel" custom-create="true">
-                    <constraints>
-                      <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <text value=""/>
-                    </properties>
-                  </component>
                   <grid id="9765e" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
@@ -345,7 +333,7 @@
                   </grid>
                   <component id="b88a8" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <font style="1"/>
@@ -354,7 +342,7 @@
                   </component>
                   <component id="8dc51" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <font style="1"/>
@@ -363,7 +351,7 @@
                   </component>
                   <component id="c96e3" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <font style="1"/>
@@ -372,7 +360,7 @@
                   </component>
                   <component id="9f31f" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <font size="18" style="1"/>
@@ -382,7 +370,7 @@
                   </component>
                   <scrollpane id="6e081">
                     <constraints>
-                      <grid row="5" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <grid row="5" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties/>
                     <border type="none"/>
@@ -395,7 +383,7 @@
                   </scrollpane>
                   <component id="e33c8" class="javax.swing.JLabel">
                     <constraints>
-                      <grid row="6" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                      <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
                       <font size="18" style="1"/>
@@ -405,7 +393,7 @@
                   </component>
                   <scrollpane id="f6927">
                     <constraints>
-                      <grid row="7" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <grid row="7" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties/>
                     <border type="none"/>
@@ -416,6 +404,33 @@
                       </component>
                     </children>
                   </scrollpane>
+                  <hspacer id="ca624">
+                    <constraints>
+                      <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                  </hspacer>
+                  <component id="33643" class="edu.ucdenver.ccp.knowtator.view.AnnotationIDLabel" binding="annotationIDLabel" custom-create="true">
+                    <constraints>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="9a74d" class="edu.ucdenver.ccp.knowtator.view.AnnotationAnnotatorLabel" binding="annotationAnnotatorLabel" custom-create="true">
+                    <constraints>
+                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                  </component>
+                  <component id="853ee" class="edu.ucdenver.ccp.knowtator.view.AnnotationClassLabel" binding="annotationClassLabel" custom-create="true">
+                    <constraints>
+                      <grid row="3" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
                 </children>
               </grid>
             </children>
