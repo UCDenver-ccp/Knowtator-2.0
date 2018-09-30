@@ -425,7 +425,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         controller.dispose();
 
         knowtatorComponents.forEach(KnowtatorComponent::dispose);
-        super.dispose();
+        if (getOWLWorkspace() != null) super.dispose();
     }
 
     @Override
