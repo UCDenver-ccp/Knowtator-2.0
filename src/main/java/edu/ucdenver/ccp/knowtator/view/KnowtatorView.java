@@ -63,7 +63,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     private JPanel searchPanel;
     private JCheckBox regexCheckBox;
     private KnowtatorTextPane knowtatorTextPane;
-    private AnnotationPane annotationPane;
+    private SpanList spanList;
+    private GraphSpaceList graphSpaceList;
+    private JButton nextSpanButton;
+    private JButton previousSpanButton;
+    private AnnotationIDLabel annotationIDLabel;
+    private AnnotationAnnotatorLabel annotationAnnotatorLabel;
+    private AnnotationClassLabel annotationClassLabel;
 
     private List<JComponent> textSourceButtons;
     private List<JButton> annotationButtons;
@@ -108,7 +114,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         if (!controller.getOWLModel().isWorkSpaceSet()) {
             if (getOWLWorkspace() != null) {
                 controller.getOWLModel().setOwlWorkSpace(getOWLWorkspace());
-                annotationPane.setupOWL();
+                controller.getOWLModel().addOWLModelManagerListener(annotationClassLabel);
 
             }
         }
@@ -130,12 +136,21 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
         knowtatorComponents = new ArrayList<>();
 
-        annotationPane = new AnnotationPane(this);
         knowtatorTextPane = new KnowtatorTextPane(this);
         graphViewDialog = new GraphViewDialog(this);
         textSourceChooser = new TextSourceChooser(this);
 
-        knowtatorComponents.add(annotationPane);
+        spanList = new SpanList(this);
+        graphSpaceList = new GraphSpaceList(this);
+        annotationAnnotatorLabel = new AnnotationAnnotatorLabel(this);
+        annotationClassLabel = new AnnotationClassLabel(this);
+        annotationIDLabel = new AnnotationIDLabel(this);
+
+        knowtatorComponents.add(spanList);
+        knowtatorComponents.add(graphSpaceList);
+        knowtatorComponents.add(annotationAnnotatorLabel);
+        knowtatorComponents.add(annotationClassLabel);
+        knowtatorComponents.add(annotationIDLabel);
         knowtatorComponents.add(knowtatorTextPane);
         knowtatorComponents.add(graphViewDialog);
         knowtatorComponents.add(textSourceChooser);
@@ -212,13 +227,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         annotationButtons = new ArrayList<>();
         addAnnotationButton.addActionListener(e -> AnnotationActions.addAnnotation(this));
         removeAnnotationButton.addActionListener(e -> AnnotationActions.removeAnnotation(this));
-        annotationPane.getNextSpanButton().addActionListener(e -> SpanActions.selectNextSpan(this));
-        annotationPane.getPreviousSpanButton().addActionListener(e -> SpanActions.selectPreviousSpan(this));
+        nextSpanButton.addActionListener(e -> SpanActions.selectNextSpan(this));
+        previousSpanButton.addActionListener(e -> SpanActions.selectPreviousSpan(this));
 
         annotationButtons.add(addAnnotationButton);
         annotationButtons.add(removeAnnotationButton);
-        annotationButtons.add(annotationPane.getNextSpanButton());
-        annotationButtons.add(annotationPane.getPreviousSpanButton());
+        annotationButtons.add(nextSpanButton);
+        annotationButtons.add(previousSpanButton);
     }
 
     private void makeSpanButtons() {
@@ -617,7 +632,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         nextTextSourceButton.setText("Next");
         panel5.add(nextTextSourceButton, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JSplitPane splitPane1 = new JSplitPane();
-        splitPane1.setDividerLocation(682);
+        splitPane1.setDividerLocation(648);
         splitPane1.setMinimumSize(new Dimension(0, 0));
         panel1.add(splitPane1, BorderLayout.CENTER);
         final JScrollPane scrollPane1 = new JScrollPane();
@@ -627,11 +642,142 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         knowtatorTextPane.setEditable(false);
         scrollPane1.setViewportView(knowtatorTextPane);
         final JPanel panel6 = new JPanel();
-        panel6.setLayout(new BorderLayout(0, 0));
-        panel6.setMaximumSize(new Dimension(262, 2147483647));
-        panel6.setMinimumSize(new Dimension(262, 158));
+        panel6.setLayout(new GridBagLayout());
         splitPane1.setRightComponent(panel6);
-        panel6.add(annotationPane.$$$getRootComponent$$$(), BorderLayout.CENTER);
+        annotationIDLabel.setText("");
+        GridBagConstraints gbc;
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel6.add(annotationIDLabel, gbc);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel6.add(annotationAnnotatorLabel, gbc);
+        annotationClassLabel.setText("");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel6.add(annotationClassLabel, gbc);
+        final JPanel panel7 = new JPanel();
+        panel7.setLayout(new GridBagLayout());
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.VERTICAL;
+        panel6.add(panel7, gbc);
+        nextSpanButton = new JButton();
+        nextSpanButton.setHorizontalAlignment(0);
+        nextSpanButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-advance-24.png")));
+        nextSpanButton.setText("");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel7.add(nextSpanButton, gbc);
+        previousSpanButton = new JButton();
+        previousSpanButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-advance-24 (reversed).png")));
+        previousSpanButton.setText("");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel7.add(previousSpanButton, gbc);
+        final JLabel label1 = new JLabel();
+        Font label1Font = this.$$$getFont$$$(null, Font.BOLD, -1, label1.getFont());
+        if (label1Font != null) label1.setFont(label1Font);
+        label1.setText("ID");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel6.add(label1, gbc);
+        final JLabel label2 = new JLabel();
+        Font label2Font = this.$$$getFont$$$(null, Font.BOLD, -1, label2.getFont());
+        if (label2Font != null) label2.setFont(label2Font);
+        label2.setText("Annotator");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel6.add(label2, gbc);
+        final JLabel label3 = new JLabel();
+        Font label3Font = this.$$$getFont$$$(null, Font.BOLD, -1, label3.getFont());
+        if (label3Font != null) label3.setFont(label3Font);
+        label3.setText("Class");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel6.add(label3, gbc);
+        final JLabel label4 = new JLabel();
+        Font label4Font = this.$$$getFont$$$(null, Font.BOLD, 18, label4.getFont());
+        if (label4Font != null) label4.setFont(label4Font);
+        label4.setText("Spans");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel6.add(label4, gbc);
+        final JScrollPane scrollPane2 = new JScrollPane();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.BOTH;
+        panel6.add(scrollPane2, gbc);
+        scrollPane2.setViewportView(spanList);
+        final JLabel label5 = new JLabel();
+        Font label5Font = this.$$$getFont$$$(null, Font.BOLD, 18, label5.getFont());
+        if (label5Font != null) label5.setFont(label5Font);
+        label5.setText("Graph Spaces");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel6.add(label5, gbc);
+        final JScrollPane scrollPane3 = new JScrollPane();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.BOTH;
+        panel6.add(scrollPane3, gbc);
+        scrollPane3.setViewportView(graphSpaceList);
+        final JPanel spacer3 = new JPanel();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel6.add(spacer3, gbc);
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+        if (currentFont == null) return null;
+        String resultName;
+        if (fontName == null) {
+            resultName = currentFont.getName();
+        } else {
+            Font testFont = new Font(fontName, Font.PLAIN, 10);
+            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
+                resultName = fontName;
+            } else {
+                resultName = currentFont.getName();
+            }
+        }
+        return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
     }
 
     /**
