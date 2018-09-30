@@ -161,4 +161,8 @@ public abstract class ProjectManager implements Savable {
     public void finishLoad() {
 
     }
+
+    public File getProjectLocation() {
+        return projectLocation;
+    }
 }

@@ -16,10 +16,16 @@ import java.util.prefs.BackingStoreException;
 
 class MenuActions {
     static void openProject(JDialog parent, KnowtatorView view) {
-        File lastProjectFile = new File(view.getPreferences().get("Last Project", null));
+        String lastProjectFileName = view.getPreferences().get("Last Project", null);
+
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(lastProjectFile.getParentFile());
-        fileChooser.setSelectedFile(lastProjectFile);
+        if (lastProjectFileName != null) {
+            File lastProjectFile = new File(lastProjectFileName);
+            if (lastProjectFile.exists()) {
+                fileChooser.setCurrentDirectory(lastProjectFile.getParentFile());
+                fileChooser.setSelectedFile(lastProjectFile);
+            }
+        }
         FileFilter fileFilter = new FileNameExtensionFilter("Knowtator", "knowtator");
         fileChooser.setFileFilter(fileFilter);
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -34,6 +40,7 @@ class MenuActions {
             }
             view.getController().loadProject();
             view.getKnowtatorTextPane().refreshHighlights();
+            view.getAddTextSourceButton().setEnabled(true);
 
             view.getPreferences().put("Last Project", fileChooser.getSelectedFile().getAbsolutePath());
 
@@ -58,6 +65,8 @@ class MenuActions {
                 File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
                 view.reset();
                 view.getController().newProject(projectDirectory);
+
+                view.getPreferences().put("Last Project", view.getController().getProjectLocation().getAbsolutePath());
             }
         }
     }
