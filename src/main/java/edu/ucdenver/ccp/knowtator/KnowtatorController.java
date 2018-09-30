@@ -120,4 +120,7 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
     idRegistry.clear();
   }
 
+  public static void main(String[] args) {
+    log.warn("Knowtator");
+  }
 }
