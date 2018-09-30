@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.model.KnowtatorObjectInterface;
+import edu.ucdenver.ccp.knowtator.KnowtatorObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
-public abstract class ListenableCollection<K extends KnowtatorObjectInterface, C extends Collection<K>, L extends CollectionListener<K>> implements Iterable<K> {
+public abstract class ListenableCollection<K extends KnowtatorDataObjectInterface, C extends Collection<K>, L extends CollectionListener<K>> implements Iterable<K>, KnowtatorObjectInterface {
   final C collection;
   final List<L> collectionListeners;
 
@@ -90,9 +91,11 @@ public abstract class ListenableCollection<K extends KnowtatorObjectInterface, C
     return collection.size();
   }
 
-  void dispose() {
+  @Override
+  public void dispose() {
     collectionListeners.clear();
-    collection.forEach(KnowtatorObjectInterface::dispose);
+    forEach(KnowtatorDataObjectInterface::dispose);
+    collection.clear();
   }
 
   public K[] toArray(K[] newArray) {

@@ -8,7 +8,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.OWLModel;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.event.EventType;
@@ -28,7 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, KnowtatorTextBoundObjectInterface, OWLOntologyChangeListener, OWLModelManagerListener {
+public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, KnowtatorTextBoundDataObjectInterface, OWLOntologyChangeListener, OWLModelManagerListener {
     private final String quantifier;
     private final String quantifierValue;
     private final Profile annotator;
@@ -216,8 +216,6 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 
     @Override
     public void dispose() {
-        //TODO
-        log.warn("I'm gone");
         controller.getOWLModel().removeOWLModelManagerListener(this);
         controller.getOWLModel().removeOntologyChangeListener(this);
     }

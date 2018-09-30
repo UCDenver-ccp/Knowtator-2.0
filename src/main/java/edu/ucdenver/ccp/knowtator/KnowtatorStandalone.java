@@ -9,6 +9,8 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.commons.cli.*;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -19,10 +21,10 @@ import java.util.List;
 import java.util.TreeSet;
 
 class KnowtatorStandalone extends JFrame {
+    private KnowtatorView view;
 
     private KnowtatorStandalone(boolean debug) {
-
-        KnowtatorView view = new KnowtatorView();
+        view = new KnowtatorView();
         setContentPane(view);
         if (debug) {
             view.reset();
@@ -34,6 +36,19 @@ class KnowtatorStandalone extends JFrame {
             view.getController().loadProject();
             view.getKnowtatorTextPane().refreshHighlights();
         }
+
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                onCancel();
+            }
+        });
+    }
+
+    private void onCancel() {
+        view.disposeView();
+        dispose();
+        view = null;
     }
 
     public static void main(String[] args) {
@@ -215,7 +230,7 @@ class KnowtatorStandalone extends JFrame {
 //        String geniaOutputDirName = cmd.getOptionValue("genia");
 //        String uimaOutputDirName = cmd.getOptionValue("uima");
         String bratOutputDirName = cmd.getOptionValue("brat");
-        String knowtatorOutputDirName = cmd.getOptionValue("knowtator");
+//        String knowtatorOutputDirName = cmd.getOptionValue("knowtator");
 
         loadProjectFromCommandLine(
                 cmd, controller, projectFileName, cmd.getOptionValue("annotations"));

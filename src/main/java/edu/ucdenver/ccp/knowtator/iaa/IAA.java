@@ -14,7 +14,7 @@ public class IAA {
 
 	private Set<ConceptAnnotation> conceptAnnotations;
 
-	private Set<ConceptAnnotation> emptyConceptAnnotationSet;
+	private final Set<ConceptAnnotation> emptyConceptAnnotationSet;
 
 	// key is an concept set, value is a map whose value is an concept
 	// class
@@ -64,7 +64,7 @@ public class IAA {
 	private Map<String, Map<String, Set<ConceptAnnotation>>> nontrivialPairwiseNonmatches;
 
 	private Map<ConceptAnnotation, Set<ConceptAnnotation>> pairwiseMatchPairs;
-	private HashMap<String, Collection<ConceptAnnotation>> annotationSets;
+	private final HashMap<String, Collection<ConceptAnnotation>> annotationSets;
 
 	public IAA(Set<String> setNames) {
 		this.setNames = setNames;
@@ -79,12 +79,14 @@ public class IAA {
 		reset();
 	}
 
-	public IAA(Set<String> setNames, Set<ConceptAnnotation> conceptAnnotations) {
-		this.setNames = setNames;
-		annotationClasses = new HashSet<>();
-		setConceptAnnotations(conceptAnnotations);
-		reset();
-	}
+// --Commented out by Inspection START (9/30/2018 3:07 PM):
+//	public IAA(Set<String> setNames, Set<ConceptAnnotation> conceptAnnotations) {
+//		this.setNames = setNames;
+//		annotationClasses = new HashSet<>();
+//		setConceptAnnotations(conceptAnnotations);
+//		reset();
+//	}
+// --Commented out by Inspection STOP (9/30/2018 3:07 PM)
 
 	/**
 	 * @param conceptAnnotation1

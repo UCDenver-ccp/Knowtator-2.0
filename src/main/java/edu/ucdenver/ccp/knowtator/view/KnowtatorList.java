@@ -1,13 +1,13 @@
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.model.KnowtatorObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 
-public abstract class KnowtatorList<K extends KnowtatorObjectInterface> extends JList<K> implements KnowtatorComponent, KnowtatorCollectionListener<K> {
+public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> extends JList<K> implements KnowtatorComponent, KnowtatorCollectionListener<K> {
 
     private final KnowtatorView view;
     private KnowtatorCollection<K> collection;

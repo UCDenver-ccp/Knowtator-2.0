@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator.model;
 
 import com.google.common.base.Optional;
+import edu.ucdenver.ccp.knowtator.KnowtatorObjectInterface;
 import edu.ucdenver.ccp.knowtator.Savable;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -23,7 +24,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class OWLModel implements Serializable, Savable {
+public class OWLModel implements Serializable, Savable, KnowtatorObjectInterface {
     @SuppressWarnings("unused")
     private static final Logger log = LogManager.getLogger(OWLModel.class);
 
@@ -150,8 +151,9 @@ public class OWLModel implements Serializable, Savable {
 //    }
 
 
+    @Override
     public void dispose() {
-
+        iris = null;
     }
 
     @Override

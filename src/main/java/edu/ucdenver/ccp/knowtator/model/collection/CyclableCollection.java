@@ -1,10 +1,10 @@
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.model.KnowtatorObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 
 import java.util.TreeSet;
 
-public abstract class CyclableCollection<K extends KnowtatorObjectInterface, L extends CollectionListener<K>> extends ListenableCollection<K, TreeSet<K>, L> {
+public abstract class CyclableCollection<K extends KnowtatorDataObjectInterface, L extends CollectionListener<K>> extends ListenableCollection<K, TreeSet<K>, L> {
 
   CyclableCollection(TreeSet<K> collection) {
     super(collection);
@@ -40,10 +40,5 @@ public abstract class CyclableCollection<K extends KnowtatorObjectInterface, L e
 
   public K first() {
     return collection.first();
-  }
-
-  void dispose() {
-    super.dispose();
-    collection.clear();
   }
 }

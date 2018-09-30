@@ -6,7 +6,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
@@ -103,7 +103,7 @@ public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implem
         List<String> ids = new ArrayList<>();
         for (GraphSpace graphSpace : this) {
             for (Object cell : graphSpace.getChildVertices(graphSpace.getDefaultParent())) {
-                ids.add(((KnowtatorObjectInterface) cell).getId());
+                ids.add(((KnowtatorDataObjectInterface) cell).getId());
             }
         }
 

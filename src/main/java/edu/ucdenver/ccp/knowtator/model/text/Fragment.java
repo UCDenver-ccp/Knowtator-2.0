@@ -3,7 +3,7 @@ package edu.ucdenver.ccp.knowtator.model.text;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Fragment extends AbstractKnowtatorTextBoundObject {
+public class Fragment extends AbstractKnowtatorTextBoundDataObject {
 	private final String type;
 	private final Map<String, Integer> conceptCountMap;
 

@@ -5,7 +5,7 @@ import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
-import edu.ucdenver.ccp.knowtator.model.text.AbstractKnowtatorTextBoundObject;
+import edu.ucdenver.ccp.knowtator.model.text.AbstractKnowtatorTextBoundDataObject;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import org.apache.log4j.Logger;
@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
-public class Span extends AbstractKnowtatorTextBoundObject<Span> implements KnowtatorXMLIO, BratStandoffIO {
+public class Span extends AbstractKnowtatorTextBoundDataObject<Span> implements KnowtatorXMLIO, BratStandoffIO {
   @SuppressWarnings("unused")
   private static Logger log = Logger.getLogger(KnowtatorController.class);
 

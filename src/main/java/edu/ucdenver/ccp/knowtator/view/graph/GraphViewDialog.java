@@ -75,6 +75,7 @@ public class GraphViewDialog extends JDialog implements KnowtatorComponent {
     @Override
     public void dispose() {
         super.dispose();
+        graphView.dispose();
         setVisible(false);
     }
 

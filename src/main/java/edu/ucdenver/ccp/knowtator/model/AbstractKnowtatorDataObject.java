@@ -1,9 +1,9 @@
 package edu.ucdenver.ccp.knowtator.model;
 
-public abstract class AbstractKnowtatorObject<K extends KnowtatorObjectInterface<K>> implements KnowtatorObjectInterface<K> {
+public abstract class AbstractKnowtatorDataObject<K extends KnowtatorDataObjectInterface<K>> implements KnowtatorDataObjectInterface<K> {
     protected String id;
 
-    protected AbstractKnowtatorObject(String id) {
+    protected AbstractKnowtatorDataObject(String id) {
         this.id = id;
     }
 

@@ -1,19 +1,12 @@
 package edu.ucdenver.ccp.knowtator.model.collection;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 
 import java.util.TreeSet;
 
-public abstract class KnowtatorCollection<K extends KnowtatorObjectInterface> extends SelectableCollection<K, KnowtatorCollectionListener<K>> {
+public abstract class KnowtatorCollection<K extends KnowtatorDataObjectInterface> extends SelectableCollection<K, KnowtatorCollectionListener<K>> {
     protected KnowtatorCollection(KnowtatorController controller) {
         super(controller, new TreeSet<>());
     }
-
-    public void dispose() {
-        super.dispose();
-        forEach(KnowtatorObjectInterface::dispose);
-    }
-
-
 }

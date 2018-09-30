@@ -181,7 +181,7 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
 
     @Override
     public void dispose() {
-
+        graphSpaceChooser.dispose();
     }
 
     @Override

@@ -1,8 +1,8 @@
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.model.KnowtatorObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 
-public interface CollectionListener<K extends KnowtatorObjectInterface> {
+public interface CollectionListener<K extends KnowtatorDataObjectInterface> {
 	void added(AddEvent<K> event);
 
 	void removed(RemoveEvent<K> event);

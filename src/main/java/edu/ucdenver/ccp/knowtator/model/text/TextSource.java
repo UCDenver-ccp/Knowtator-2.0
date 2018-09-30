@@ -7,7 +7,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.AbstractKnowtatorObject;
+import edu.ucdenver.ccp.knowtator.model.AbstractKnowtatorDataObject;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollection;
@@ -27,7 +27,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-public class TextSource extends AbstractKnowtatorObject<TextSource> implements BratStandoffIO, Savable, KnowtatorXMLIO, KnowtatorCollectionListener {
+public class TextSource extends AbstractKnowtatorDataObject<TextSource> implements BratStandoffIO, Savable, KnowtatorXMLIO, KnowtatorCollectionListener {
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(TextSource.class);
 

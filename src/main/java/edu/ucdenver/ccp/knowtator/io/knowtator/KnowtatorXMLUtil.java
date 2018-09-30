@@ -20,7 +20,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public final class KnowtatorXMLUtil extends OldKnowatorUtil implements BasicIOUtil<KnowtatorXMLIO> {
+public final class KnowtatorXMLUtil extends OldKnowtatorUtil implements BasicIOUtil<KnowtatorXMLIO> {
   private static final Logger log = Logger.getLogger(KnowtatorXMLUtil.class);
 
   @Override

@@ -101,10 +101,8 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 
     @Override
     public void dispose() {
-        for (Profile profile : this) {
-            removeProfile(profile);
-        }
         colorListeners.clear();
+        super.dispose();
     }
 
     @Override

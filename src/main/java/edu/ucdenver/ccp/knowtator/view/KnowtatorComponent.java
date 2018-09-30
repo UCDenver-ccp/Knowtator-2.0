@@ -1,7 +1,7 @@
 package edu.ucdenver.ccp.knowtator.view;
 
-public interface KnowtatorComponent {
-    void reset();
+import edu.ucdenver.ccp.knowtator.KnowtatorObjectInterface;
 
-    void dispose();
+public interface KnowtatorComponent extends KnowtatorObjectInterface {
+    void reset();
 }

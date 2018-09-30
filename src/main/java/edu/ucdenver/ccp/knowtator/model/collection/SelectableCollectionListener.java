@@ -1,7 +1,7 @@
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.model.KnowtatorObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 
-public interface SelectableCollectionListener<K extends KnowtatorObjectInterface> extends CollectionListener<K> {
+public interface SelectableCollectionListener<K extends KnowtatorDataObjectInterface> extends CollectionListener<K> {
     void selected(SelectionChangeEvent<K> event);
 }

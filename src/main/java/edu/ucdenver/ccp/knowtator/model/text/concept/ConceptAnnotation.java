@@ -5,7 +5,7 @@ import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.model.text.AbstractKnowtatorTextBoundObject;
+import edu.ucdenver.ccp.knowtator.model.text.AbstractKnowtatorTextBoundDataObject;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.SpanCollection;
@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
-public class ConceptAnnotation extends AbstractKnowtatorTextBoundObject<ConceptAnnotation> implements KnowtatorXMLIO, BratStandoffIO {
+public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<ConceptAnnotation> implements KnowtatorXMLIO, BratStandoffIO {
 
     private OWLClass owlClass;
     private final String annotation_type;
@@ -324,7 +324,6 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundObject<ConceptA
 
     @Override
     public void dispose() {
-        textSource.getGraphSpaceCollection().removeAnnotation(this);
         spanCollection.dispose();
     }
 

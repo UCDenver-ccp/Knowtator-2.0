@@ -92,6 +92,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         for (Span span : conceptAnnotationToRemove.getSpanCollection()) {
             allSpanCollection.remove(span);
         }
+        textSource.getGraphSpaceCollection().removeAnnotation(conceptAnnotationToRemove);
         super.remove(conceptAnnotationToRemove);
     }
 
@@ -397,7 +398,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                             ((Element) slot.getElementsByTagName(OldKnowtatorXMLTags.MENTION_SLOT).item(0))
                                     .getAttribute(OldKnowtatorXMLAttributes.ID);
                     for (Node slotMentionValueNode :
-                            OldKnowatorUtil.asList(
+                            OldKnowtatorUtil.asList(
                                     slot.getElementsByTagName(OldKnowtatorXMLTags.COMPLEX_SLOT_MENTION_VALUE))) {
                         Element slotMentionValueElement = (Element) slotMentionValueNode;
                         String value = slotMentionValueElement.getAttribute(OldKnowtatorXMLAttributes.VALUE);
@@ -465,8 +466,9 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
     @Override
     public void dispose() {
-        super.dispose();
         controller.getOWLModel().removeOntologyChangeListener(this);
+        allSpanCollection.dispose();
+        super.dispose();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package edu.ucdenver.ccp.knowtator.io.knowtator;
 
-@SuppressWarnings("WeakerAccess")
 public class OldKnowtatorXMLAttributes {
 
 	public static final String ID = "id";

@@ -1,12 +1,13 @@
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.model.KnowtatorObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
-public abstract class KnowtatorChooser<K extends KnowtatorObjectInterface> extends JComboBox<K> implements KnowtatorCollectionListener<K>, KnowtatorComponent {
+public abstract class KnowtatorChooser<K extends KnowtatorDataObjectInterface> extends JComboBox<K> implements KnowtatorCollectionListener<K>, KnowtatorComponent {
 
 	private final ActionListener al;
 	private KnowtatorCollection<K> collection;
@@ -32,19 +33,22 @@ public abstract class KnowtatorChooser<K extends KnowtatorObjectInterface> exten
 		}
 
 		this.collection = collection;
-		this.collection.addCollectionListener(this);
+		if (collection != null) {
+			this.collection.addCollectionListener(this);
 
-		collection.forEach(this::addItem);
+			collection.forEach(this::addItem);
 
-		for (ActionListener a : getActionListeners()) {
-			removeActionListener(a);
+			if (!Arrays.asList(getActionListeners()).contains(al)) {
+				addActionListener(al);
+			}
 		}
-
-		addActionListener(al);
 	}
 
+	@Override
 	public void dispose() {
 		removeAllItems();
+		collection = null;
+		setSelectedItem(null);
 	}
 
 	@Override

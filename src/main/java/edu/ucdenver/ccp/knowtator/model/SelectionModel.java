@@ -1,9 +1,11 @@
 package edu.ucdenver.ccp.knowtator.model;
 
+import edu.ucdenver.ccp.knowtator.KnowtatorObjectInterface;
+
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
-public class SelectionModel implements CaretListener {
+public class SelectionModel implements CaretListener, KnowtatorObjectInterface {
     public int getStart() {
         return start;
     }
@@ -34,4 +36,8 @@ public class SelectionModel implements CaretListener {
         setEnd(Math.max(e.getDot(), e.getMark()));
     }
 
+    @Override
+    public void dispose() {
+
+    }
 }

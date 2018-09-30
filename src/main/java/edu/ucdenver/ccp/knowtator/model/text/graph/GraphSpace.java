@@ -15,7 +15,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.graph.RelationOptionsDialog;
@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class GraphSpace extends mxGraph implements KnowtatorTextBoundObjectInterface<GraphSpace>, KnowtatorXMLIO, BratStandoffIO, KnowtatorCollectionListener<ConceptAnnotation> {
+public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectInterface<GraphSpace>, KnowtatorXMLIO, BratStandoffIO, KnowtatorCollectionListener<ConceptAnnotation> {
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(GraphSpace.class);
 
@@ -513,16 +513,15 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundObjectInter
 
     @Override
     public void dispose() {
-        Arrays.stream(getChildCells(getDefaultParent()))
-                .forEach(
-                        cell -> {
-                            if (cell instanceof RelationAnnotation) {
-                                ((RelationAnnotation) cell).dispose();
-                            }
-                            if (cell instanceof AnnotationNode) {
-                                ((AnnotationNode) cell).dispose();
-                            }
-                        });
+        Arrays.stream(getChildCells(getDefaultParent())).forEach(cell -> {
+            if (cell instanceof RelationAnnotation) {
+                ((RelationAnnotation) cell).dispose();
+            }
+            if (cell instanceof AnnotationNode) {
+                ((AnnotationNode) cell).dispose();
+            }
+        });
+        removeCells(getChildCells(getDefaultParent()));
     }
 
     public boolean containsAnnotation(ConceptAnnotation conceptAnnotation) {
