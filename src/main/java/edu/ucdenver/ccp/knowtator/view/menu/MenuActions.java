@@ -4,6 +4,7 @@ import edu.ucdenver.ccp.knowtator.iaa.IAAException;
 import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import org.apache.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -15,6 +16,8 @@ import java.io.IOException;
 import java.util.prefs.BackingStoreException;
 
 class MenuActions {
+    private static final Logger log = Logger.getLogger(MenuActions.class);
+
     static void openProject(JDialog parent, KnowtatorView view) {
         String lastProjectFileName = view.getPreferences().get("Last Project", null);
 
@@ -31,18 +34,20 @@ class MenuActions {
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
         if (fileChooser.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
             parent.dispose();
             view.reset();
             try {
-                view.getController().setSaveLocation(fileChooser.getSelectedFile().getParentFile());
+                view.getController().setSaveLocation(file.getParentFile());
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
+            log.warn(String.format("Opening from %s", file.getAbsolutePath()));
             view.getController().loadProject();
             view.getKnowtatorTextPane().refreshHighlights();
             view.getAddTextSourceButton().setEnabled(true);
 
-            view.getPreferences().put("Last Project", fileChooser.getSelectedFile().getAbsolutePath());
+            view.getPreferences().put("Last Project", file.getAbsolutePath());
 
             try {
                 view.getPreferences().flush();

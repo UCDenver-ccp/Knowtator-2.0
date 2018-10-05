@@ -4,9 +4,9 @@
     <option name="GROUP_BY_SEVERITY" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aaa66eaa-1de7-4fc8-9d1f-61ae6cd37f93" name="Default" comment="OWL space disposes if not">
+    <list default="true" id="aaa66eaa-1de7-4fc8-9d1f-61ae6cd37f93" name="Default" comment="Changed to version 2.1.5">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/ProjectManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/ProjectManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/menu/MenuActions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/menu/MenuActions.java" afterDir="false" />
     </list>
@@ -28,16 +28,19 @@
     <session id="599918418">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="13" />
+          <entry key="project.closed" value="17" />
           <entry key="project.open.time.0" value="1" />
-          <entry key="project.open.time.10" value="2" />
+          <entry key="project.open.time.10" value="3" />
           <entry key="project.open.time.11" value="3" />
           <entry key="project.open.time.12" value="2" />
           <entry key="project.open.time.15" value="1" />
           <entry key="project.open.time.17" value="1" />
+          <entry key="project.open.time.2" value="1" />
           <entry key="project.open.time.3" value="1" />
+          <entry key="project.open.time.7" value="1" />
+          <entry key="project.open.time.8" value="1" />
           <entry key="project.open.time.9" value="3" />
-          <entry key="project.opened" value="14" />
+          <entry key="project.opened" value="18" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -46,7 +49,7 @@
           <entry key="form" value="82" />
           <entry key="gitignore" value="1" />
           <entry key="iml" value="1" />
-          <entry key="java" value="1525" />
+          <entry key="java" value="3" />
           <entry key="md" value="1" />
           <entry key="properties" value="4" />
           <entry key="xml" value="38" />
@@ -57,7 +60,7 @@
           <entry key="CLASS" value="3" />
           <entry key="GUI_DESIGNER_FORM" value="82" />
           <entry key="IDEA_MODULE" value="1" />
-          <entry key="JAVA" value="1525" />
+          <entry key="JAVA" value="3" />
           <entry key="Markdown" value="1" />
           <entry key="PLAIN_TEXT" value="1" />
           <entry key="Properties" value="4" />
@@ -67,18 +70,14 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="190" />
-          <entry key="java" value="45725" />
+          <entry key="java" value="46000" />
           <entry key="md" value="37" />
-          <entry key="txt" value="1675" />
-          <entry key="xml" value="45" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="45725" />
+          <entry key="JAVA" value="46000" />
           <entry key="Markdown" value="37" />
-          <entry key="PLAIN_TEXT" value="1865" />
-          <entry key="XML" value="45" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages" />
@@ -118,12 +117,38 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="249">
-              <caret line="450" column="13" lean-forward="true" selection-start-line="450" selection-start-column="13" selection-end-line="450" selection-end-column="13" />
+              <caret line="426" column="65" selection-start-line="426" selection-start-column="65" selection-end-line="426" selection-end-column="65" />
               <folding>
                 <element signature="e#17064#17065#0" expanded="true" />
                 <element signature="e#17106#17107#0" expanded="true" />
-                <element signature="e#17113#33942#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/menu/MenuActions.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="38" column="18" lean-forward="true" selection-start-line="38" selection-start-column="18" selection-end-line="38" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorComponent.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="119">
+              <caret line="7" selection-start-line="7" selection-end-line="7" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/KnowtatorObjectInterface.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="34">
+              <caret line="2" column="17" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -252,9 +277,9 @@
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/IAA.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.form" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorComponent.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/ProjectManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/menu/MenuActions.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java" />
       </list>
     </option>
   </component>
@@ -293,9 +318,9 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-959" />
-    <option name="y" value="230" />
-    <option name="width" value="3654" />
+    <option name="x" value="-289" />
+    <option name="y" value="-14" />
+    <option name="width" value="3837" />
     <option name="height" value="732" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -306,8 +331,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -348,25 +371,6 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="knowtator" type="462c0819:PsiDirectoryNode" />
-              <item name="model" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="knowtator" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Knowtator-2.0" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="knowtator" type="462c0819:PsiDirectoryNode" />
-              <item name="model" type="462c0819:PsiDirectoryNode" />
-              <item name="text" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="knowtator" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Knowtator-2.0" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="knowtator" type="462c0819:PsiDirectoryNode" />
               <item name="view" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -388,6 +392,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="AndroidView" />
     </panes>
   </component>
@@ -404,7 +410,7 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
@@ -441,7 +447,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Standalone">
+  <component name="RunManager" selected="Application.Run Protege">
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
       <properties />
@@ -465,7 +471,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.KnowtatorStandalone" />
       <module name="knowtator" />
-      <option name="PROGRAM_PARAMETERS" value="d" />
+      <option name="PROGRAM_PARAMETERS" value="g" />
       <RunnerSettings RunnerId="Debug with VisualVM">
         <option name="visualVMId" value="227559246242800" />
       </RunnerSettings>
@@ -482,6 +488,24 @@
         <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="install" />
         <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_Protege" />
       </method>
+    </configuration>
+    <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
+      <setting name="replType" value="NREPL" />
+      <setting name="execution" value="LEININGEN" />
+      <module name="" />
+      <setting name="jvmArgs" value="" />
+      <setting name="parameters" value="" />
+      <setting name="workingDir" value="" />
+      <setting name="profiles" value="" />
+      <setting name="aliases" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="ClojureREPL" factoryName="Remote" activateToolWindowBeforeRun="false">
+      <setting name="host" value="" />
+      <setting name="port" value="0" />
+      <setting name="replType" value="0" />
+      <module name="" />
+      <method v="2" />
     </configuration>
     <configuration name="All in knowtator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="knowtator" />
@@ -550,6 +574,10 @@
       <workItem from="1538244921664" duration="4804000" />
       <workItem from="1538270015512" duration="22389000" />
       <workItem from="1538334102090" duration="7596000" />
+      <workItem from="1538418562294" duration="325000" />
+      <workItem from="1538418913155" duration="164000" />
+      <workItem from="1538695845035" duration="496000" />
+      <workItem from="1538697653628" duration="522000" />
     </task>
     <task id="LOCAL-00001" summary="Collection listeners moved to collection package">
       <created>1536273026070</created>
@@ -810,7 +838,14 @@
       <option name="project" value="LOCAL" />
       <updated>1538343503641</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="Changed to version 2.1.5">
+      <created>1538348320446</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1538348320446</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -846,7 +881,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="218678000" />
+    <option name="totallyTimeSpent" value="221728000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -861,16 +896,16 @@
     <frame x="-8" y="-8" width="1696" height="1066" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49836066" visible="true" weight="0.23166259" />
-      <window_info id="Structure" order="1" sideWeight="0.50163937" side_tool="true" weight="0.2771862" />
-      <window_info id="Designer" order="2" />
-      <window_info id="UI Designer" order="3" />
-      <window_info id="Favorites" order="4" side_tool="true" />
-      <window_info id="Image Layers" order="5" />
-      <window_info id="Capture Tool" order="6" />
+      <window_info content_ui="combo" id="Project" visible="true" weight="0.3294621" />
+      <window_info id="Structure" order="0" sideWeight="0.50163937" side_tool="true" weight="0.2771862" />
+      <window_info id="Designer" order="1" />
+      <window_info id="UI Designer" order="2" />
+      <window_info id="Favorites" order="3" side_tool="true" />
+      <window_info id="Image Layers" order="4" />
+      <window_info id="Capture Tool" order="5" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3278328" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.37733772" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.46094608" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.45764577" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -892,6 +927,8 @@
       <window_info anchor="right" id="Maven Projects" order="6" weight="0.3386308" />
       <window_info anchor="right" id="Capture Analysis" order="7" />
       <window_info anchor="right" id="Theme Preview" order="8" />
+      <window_info anchor="right" id="Leiningen" order="9" />
+      <window_info anchor="right" id="REPL" order="10" side_tool="true" />
     </layout>
     <layout-to-restore>
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49836066" visible="true" weight="0.23166259" />
@@ -974,7 +1011,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/src/main/java/Swing-Slide-Menu" />
     </ignored-roots>
-    <MESSAGE value="Graph space chooser for annotation updates on node add" />
     <MESSAGE value="Deleted listener package" />
     <MESSAGE value="Added change events" />
     <MESSAGE value="Changed from menus to dialogs" />
@@ -999,8 +1035,21 @@
     <MESSAGE value="Potentially allowed for rendering reset" />
     <MESSAGE value="Resets render after saving with rdfs label" />
     <MESSAGE value="OWL space disposes if not" />
-    <option name="LAST_COMMIT_MESSAGE" value="OWL space disposes if not" />
+    <MESSAGE value="Changed to version 2.1.5" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed to version 2.1.5" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/menu/MenuActions.java</url>
+          <line>45</line>
+          <properties />
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateCodeFragment">
@@ -1066,20 +1115,6 @@ graphSpace.getChildEdges(graphSpace.getDefaultParent())</expression-string>
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/KnowtatorObjectInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="19" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/KnowtatorDataObjectInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="134" selection-start-line="2" selection-start-column="134" selection-end-line="2" selection-end-column="134" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/collection/CyclableCollection.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -1147,10 +1182,6 @@ graphSpace.getChildEdges(graphSpace.getDefaultParent())</expression-string>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
           <caret line="154" column="20" selection-start-line="154" selection-start-column="20" selection-end-line="154" selection-end-column="20" />
-          <folding>
-            <element signature="e#5304#5305#0" expanded="true" />
-            <element signature="e#5331#5332#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1172,10 +1203,6 @@ graphSpace.getChildEdges(graphSpace.getDefaultParent())</expression-string>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="138">
           <caret line="104" column="24" selection-start-line="104" selection-start-column="24" selection-end-line="104" selection-end-column="24" />
-          <folding>
-            <element signature="e#3116#3117#0" expanded="true" />
-            <element signature="e#3183#3184#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1183,10 +1210,6 @@ graphSpace.getChildEdges(graphSpace.getDefaultParent())</expression-string>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="935">
           <caret line="98" column="17" selection-start-line="98" selection-start-column="17" selection-end-line="98" selection-end-column="17" />
-          <folding>
-            <element signature="e#2643#2644#0" expanded="true" />
-            <element signature="e#2667#2668#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1194,10 +1217,6 @@ graphSpace.getChildEdges(graphSpace.getDefaultParent())</expression-string>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="156">
           <caret line="2792" column="20" selection-start-line="2792" selection-start-column="20" selection-end-line="2792" selection-end-column="20" />
-          <folding>
-            <element signature="e#74380#74381#0" expanded="true" />
-            <element signature="e#74411#74412#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1205,10 +1224,6 @@ graphSpace.getChildEdges(graphSpace.getDefaultParent())</expression-string>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
           <caret line="515" column="8" lean-forward="true" selection-start-line="515" selection-start-column="8" selection-end-line="515" selection-end-column="8" />
-          <folding>
-            <element signature="e#14837#17356#0" />
-            <element signature="e#17656#19714#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1223,10 +1238,6 @@ graphSpace.getChildEdges(graphSpace.getDefaultParent())</expression-string>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="156">
           <caret line="1145" column="16" selection-start-line="1145" selection-start-column="16" selection-end-line="1145" selection-end-column="16" />
-          <folding>
-            <element signature="e#40240#40241#0" expanded="true" />
-            <element signature="e#40267#40268#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1255,17 +1266,6 @@ graphSpace.getChildEdges(graphSpace.getDefaultParent())</expression-string>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
           <caret line="40" column="64" selection-start-line="40" selection-start-column="64" selection-end-line="40" selection-end-column="64" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1387#1388#0" expanded="true" />
-            <element signature="e#1419#1420#0" expanded="true" />
-            <element signature="e#1476#1477#0" expanded="true" />
-            <element signature="e#1513#1514#0" expanded="true" />
-            <element signature="e#1550#1551#0" expanded="true" />
-            <element signature="e#1574#1575#0" expanded="true" />
-            <element signature="e#1614#1615#0" expanded="true" />
-            <element signature="e#1637#1638#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1273,10 +1273,6 @@ graphSpace.getChildEdges(graphSpace.getDefaultParent())</expression-string>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
           <caret line="183" column="36" selection-start-line="183" selection-start-column="36" selection-end-line="183" selection-end-column="36" />
-          <folding>
-            <element signature="e#6791#6792#0" expanded="true" />
-            <element signature="e#6834#6835#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1340,22 +1336,13 @@ graphSpace.getChildEdges(graphSpace.getDefaultParent())</expression-string>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="185">
           <caret line="192" column="27" selection-start-line="192" selection-start-column="27" selection-end-line="192" selection-end-column="27" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/brat/BratStandoffUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="78" column="10" lean-forward="true" selection-start-line="78" selection-start-column="10" selection-end-line="78" selection-end-column="10" />
-          <folding>
-            <element signature="method#collectAnnotations#0;class#BratStandoffUtil#0" />
-            <element signature="method#createAnnotationCollector#0;class#BratStandoffUtil#0" />
-            <element signature="method#writeAnnotationsConfiguration#0;class#BratStandoffUtil#0" />
-            <element signature="method#writeVisualConfiguration#0;class#BratStandoffUtil#0" />
-          </folding>
+        <state relative-caret-position="748">
+          <caret line="78" column="10" selection-start-line="78" selection-start-column="10" selection-end-line="78" selection-end-column="10" />
         </state>
       </provider>
     </entry>
@@ -1390,16 +1377,6 @@ graphSpace.getChildEdges(graphSpace.getDefaultParent())</expression-string>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.form">
       <provider selected="true" editor-type-id="ui-designer" />
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/edu/stanford/protege/protege-editor-owl/5.0.0-RC1/protege-editor-owl-5.0.0-RC1-sources.jar!/org/protege/editor/owl/ui/view/AbstractOWLViewComponent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="109" selection-start-line="109" selection-end-line="109" />
-          <folding>
-            <element signature="e#3653#3654#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/edu/stanford/protege/protege-editor-owl/5.0.0-RC1/protege-editor-owl-5.0.0-RC1-sources.jar!/org/protege/editor/owl/ui/view/AbstractOWLSelectionViewComponent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -1421,13 +1398,6 @@ graphSpace.getChildEdges(graphSpace.getDefaultParent())</expression-string>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorComponent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="68" selection-start-line="4" selection-start-column="68" selection-end-line="4" selection-end-column="68" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/TextSourceCollection.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="416">
@@ -1439,12 +1409,6 @@ graphSpace.getChildEdges(graphSpace.getDefaultParent())</expression-string>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="365">
           <caret line="165" column="30" selection-start-line="165" selection-start-column="30" selection-end-line="165" selection-end-column="30" />
-          <folding>
-            <element signature="e#960#961#0" expanded="true" />
-            <element signature="e#993#994#0" expanded="true" />
-            <element signature="e#5227#5228#0" expanded="true" />
-            <element signature="e#5254#5255#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1455,28 +1419,59 @@ graphSpace.getChildEdges(graphSpace.getDefaultParent())</expression-string>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/menu/MenuActions.java">
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-85">
-          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+        <state relative-caret-position="204">
+          <caret line="1499" column="12" selection-start-line="1499" selection-start-column="12" selection-end-line="1499" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorActions.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorComponent.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="11" column="6" selection-start-line="11" selection-start-column="6" selection-end-line="11" selection-end-column="6" />
+        <state relative-caret-position="119">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/KnowtatorObjectInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="17" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/menu/MenuDialog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="155">
+          <caret line="51" column="54" selection-start-line="51" selection-start-column="54" selection-end-line="51" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/menu/MenuActions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="38" column="18" lean-forward="true" selection-start-line="38" selection-start-column="18" selection-end-line="38" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/edu/stanford/protege/protege-editor-owl/5.0.0-RC1/protege-editor-owl-5.0.0-RC1-sources.jar!/org/protege/editor/owl/ui/view/AbstractOWLViewComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="108" column="22" selection-start-line="108" selection-start-column="22" selection-end-line="108" selection-end-column="22" />
+          <folding>
+            <element signature="e#3621#3622#0" expanded="true" />
+            <element signature="e#3653#3654#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="249">
-          <caret line="450" column="13" lean-forward="true" selection-start-line="450" selection-start-column="13" selection-end-line="450" selection-end-column="13" />
+          <caret line="426" column="65" selection-start-line="426" selection-start-column="65" selection-end-line="426" selection-end-column="65" />
           <folding>
             <element signature="e#17064#17065#0" expanded="true" />
             <element signature="e#17106#17107#0" expanded="true" />
-            <element signature="e#17113#33942#0" expanded="true" />
           </folding>
         </state>
       </provider>

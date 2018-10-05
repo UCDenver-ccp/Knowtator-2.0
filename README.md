@@ -40,15 +40,15 @@ Plugin for Protege
 3. Set PROTEGE_HOME environment variable to location of Protege installation
 4. Download source files
 ```console
-~$ git clone https://github.com/UCDenver-ccp/Knowtator-2.0.git
+$ git clone https://github.com/UCDenver-ccp/Knowtator-2.0.git
 ```
 5. Change to project directory
 ```console
-~$ cd Knowtator-2.0
+$ cd Knowtator-2.0
 ```
 6. Install
 ```console
-~$ mvn clean install
+$ mvn clean install
 ```
 7. Restart Protege
 
@@ -60,14 +60,13 @@ Plugin for Protege
 4. Make a new project (Knowtator Project -> New Project. Note: The Knowtator menu is inside the Knowtator view). Enter a name for the project. Select parent directory. Knowtator will make
 a directory tree that looks like this:
 Project
+-Annotations
 -Articles
 -Ontologies
--project.xml
-5. Add a profile (Profile -> New Profile)
-6. Load a document (Project -> Add Document)
-7. To save (Project -> Save Project)
-8. To open a pre-existing project (Project -> Open Project)
-9. To load annotations from the old Knowtator (Project -> Open Project) 
+-profiles
+-project_name.knowtator
+5. Load a document (![][plus] at bottom of Knowtator)
+7. To open a pre-existing project (![][menu] then "New")
 
 ![After installation][installation image]
 Add as a View to a Protege tab by going to Window -> Views -> Miscellaneous Views -> Knowtator
@@ -79,25 +78,26 @@ Add as a View to a Protege tab by going to Window -> Views -> Miscellaneous View
 ### Annotate with ontology terms
 
 
-Protege is first and foremost, an ontology editor. This plugin is intended to make use of Protege's built-in OWL-API
-to annotate text with OWL classes. To do so, simply select a term from the Class Hierarchy (Window -> Views -> Class views -> Class hierarchy),
-highlight a span of text in a document, and click the "+" button. To remove the selected icon, click the "-" button.
+Protege is first and foremost, an ontology editor. This plugin is intended to make use of Protege's built-in OWL-API to annotate text with OWL classes. To do so, simply select a term from the Class Hierarchy (Window -> Views -> Class views -> Class hierarchy), highlight a span of text in a document, and click the ![][plus] button. 
+
+To remove the selected icon, click the ![][remove] button.
+
+To change the color assignment of an OWL class, click the ![][change color] button
 
 
 ### Inter-Annotator Agreement
 
 
-IAA between the annotators in the same project can be run. Select the types of IAA you wish to run from the IAA menu
-and click IAA -> Run IAA. Select a folder for the results to be written to.
+IAA between the annotators in the same project can be run. Select the types of IAA you wish to run from the IAA menu and click IAA -> Run IAA. Select a folder for the results to be written to.
 
 
 ### Graphical Annotations
 
-Open the graph viewer by clicking View -> Show graph viewer. To add the selected annotation to the graph viewer, right click on it
-and select Add annotation no to graph. You will see the node apear in the viewer. Select an object property (these can be found
-in the Object property hierarchy view in Window -> Views -> Object property views -> Object property hierarchy), then hover
-over a node in the viewer until a pointer hand appears. Click and drag between nodes to make a connection. Graphs are saved
-in the project (Project -> Save Project).
+Open the graph viewer by clicking ![][graph viewer]. 
+
+To add the selected annotation to the graph viewer, simply click ![][plus] in the graph viewer. You will see the node apear in the viewer.
+
+To add a relation (edge), first select an object property (these can be found in the Object property hierarchy view in Window -> Views -> Object property views -> Object property hierarchy), then hover over a node in the viewer until a pointer hand appears. Click and drag between nodes to make a connection.
 
 
 ### Annotation Information
@@ -113,7 +113,12 @@ All icons used are from https://icons8.com/
 [installation image]:installation_image.PNG
 [ontology example]:http://purl.obolibrary.org/obo/go/go-basic.obo
 [mac osx plugin installation comment thread]:http://protege-project.136.n4.nabble.com/Installing-Plugins-on-Protege-5-MacOSX-td4665874.html
-[sample files location]:https://github.com/tuh8888/Knowtator-2.0/tree/master/src/main/resources/file
+[sample files location]:https://github.com/tuh8888/Knowtator-2.0/tree/master/src/test/resources
+[plus]:src/main/resources/icon/icons8-plus-24.png
+[menu]:src/main/resources/icon/icons8-menu-24.png
+[remove]:src/main/resources/icon/icons8-delete-24.png
+[change color]:src/main/resources/icon/icons8-color-dropper-filled-50.png
+[change color]:src/main/resources/icon/icons8-tree-structure-32.png
 
 
 <!--stackedit_data:
