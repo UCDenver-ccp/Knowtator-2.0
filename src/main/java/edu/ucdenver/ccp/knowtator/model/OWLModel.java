@@ -313,7 +313,11 @@ public class OWLModel implements Serializable, Savable, BaseKnowtatorModel {
 
     @Override
     public void save() {
+        try {
+            getWorkSpace().getOWLModelManager().save();
+        } catch (OWLWorkSpaceNotSetException | OWLOntologyStorageException ignored) {
 
+        }
     }
 
     public void addOntologyChangeListener(OWLOntologyChangeListener listener) {
