@@ -1,11 +1,9 @@
 package edu.ucdenver.ccp.knowtator.model;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorObjectInterface;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class FilterModel implements KnowtatorObjectInterface {
+public class FilterModel implements BaseKnowtatorModel {
     private boolean isFilterByOWLClass;
     private boolean isFilterByProfile;
 
@@ -43,5 +41,10 @@ public class FilterModel implements KnowtatorObjectInterface {
     @Override
     public void dispose() {
         filterModelListeners.clear();
+    }
+
+    @Override
+    public void reset() {
+
     }
 }

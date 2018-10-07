@@ -1,13 +1,11 @@
 package edu.ucdenver.ccp.knowtator;
 
-import edu.ucdenver.ccp.knowtator.model.FilterModel;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
-import edu.ucdenver.ccp.knowtator.model.OWLModel;
-import edu.ucdenver.ccp.knowtator.model.SelectionModel;
+import edu.ucdenver.ccp.knowtator.model.*;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileCollection;
 import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollection;
 import org.apache.log4j.Logger;
+import org.protege.editor.owl.model.OWLWorkspace;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +17,7 @@ import java.util.stream.Collectors;
 public class KnowtatorController extends ProjectManager implements KnowtatorObjectInterface {
   @SuppressWarnings("unused")
   private static final Logger log = Logger.getLogger(KnowtatorController.class);
-  private final List<KnowtatorObjectInterface> models;
+  private final List<BaseKnowtatorModel> models;
 
   public FilterModel getFilterModel() {
     return filterModel;
@@ -40,8 +38,8 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
     idRegistry = new TreeMap<>();
 
     models = new ArrayList<>();
-    owlModel = new OWLModel();
     textSourceCollection = new TextSourceCollection(this);
+    owlModel = new OWLModel(this);
     profileCollection = new ProfileCollection(this); // manipulates profiles and colors
     filterModel = new FilterModel();
     selectionModel = new SelectionModel();
@@ -122,5 +120,10 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 
   public static void main(String[] args) {
     log.warn("Knowtator");
+  }
+
+  public void reset(OWLWorkspace owlWorkspace) {
+    owlModel.setOwlWorkSpace(owlWorkspace);
+    models.forEach(BaseKnowtatorModel::reset);
   }
 }

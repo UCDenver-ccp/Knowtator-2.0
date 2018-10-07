@@ -129,7 +129,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
             if (graphSpace != null && controller.isNotLoading()) {
                 graphSpace.reDrawGraph();
             }
-            textSource.save();
+//            textSource.save();
         }
     }
 

@@ -27,7 +27,7 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
 
             @Override
             public void changed(ChangeEvent<ConceptAnnotation> event) {
-                reactToConceptAnnotationChanged();
+                reactToConceptAnnotationChange(event);
             }
 
             @Override
@@ -43,7 +43,7 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
 
             @Override
             public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
-                reactToConceptAnnotationChange(event);
+                reactToConceptAnnotationSelectionChange(event);
 
             }
         };
@@ -81,8 +81,6 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
         view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
     }
 
-    protected abstract void reactToConceptAnnotationChanged();
-
     private void reactToTextSourceChange(SelectionChangeEvent<TextSource> event) {
         if (event.getOld() != null) {
             event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
@@ -90,7 +88,8 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
         event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
     }
 
-    abstract void reactToConceptAnnotationChange(SelectionChangeEvent<ConceptAnnotation> event);
+    abstract void reactToConceptAnnotationSelectionChange(SelectionChangeEvent<ConceptAnnotation> event);
+    abstract void reactToConceptAnnotationChange(ChangeEvent<ConceptAnnotation> event);
 
 
     @Override

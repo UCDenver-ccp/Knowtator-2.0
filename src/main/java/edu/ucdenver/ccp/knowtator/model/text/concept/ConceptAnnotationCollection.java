@@ -203,7 +203,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         else if (getSelection() != newSpan.getConceptAnnotation()) {
             setSelection(newSpan.getConceptAnnotation());
             newSpan.getConceptAnnotation().getSpanCollection().setSelection(newSpan);
-            controller.getOWLModel().setSelectedOWLEntity(newSpan.getConceptAnnotation().getOwlClass());
         }
     }
 

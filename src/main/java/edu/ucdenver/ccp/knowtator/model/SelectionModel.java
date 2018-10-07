@@ -1,11 +1,9 @@
 package edu.ucdenver.ccp.knowtator.model;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorObjectInterface;
-
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
-public class SelectionModel implements CaretListener, KnowtatorObjectInterface {
+public class SelectionModel implements CaretListener, BaseKnowtatorModel {
     public int getStart() {
         return start;
     }
@@ -38,6 +36,11 @@ public class SelectionModel implements CaretListener, KnowtatorObjectInterface {
 
     @Override
     public void dispose() {
+
+    }
+
+    @Override
+    public void reset() {
 
     }
 }

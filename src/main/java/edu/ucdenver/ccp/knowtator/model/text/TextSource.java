@@ -37,6 +37,7 @@ public class TextSource extends AbstractKnowtatorDataObject<TextSource> implemen
     private File textFile;
     private String content;
     private final GraphSpaceCollection graphSpaceCollection;
+    private boolean notSaving;
 
     public TextSource(KnowtatorController controller, File saveFile, String textFileName) {
         super(null);
@@ -44,6 +45,7 @@ public class TextSource extends AbstractKnowtatorDataObject<TextSource> implemen
         this.saveFile = saveFile == null ? new File(controller.getTextSourceCollection().getAnnotationsLocation().getAbsolutePath(), textFileName.replace(".txt", "") + ".xml") : saveFile;
         this.conceptAnnotationCollection = new ConceptAnnotationCollection(controller, this);
         this.graphSpaceCollection = new GraphSpaceCollection(controller, this);
+        notSaving = true;
 
         //noinspection unchecked
         conceptAnnotationCollection.addCollectionListener(this);
@@ -188,10 +190,12 @@ public class TextSource extends AbstractKnowtatorDataObject<TextSource> implemen
 
     @Override
     public void save() {
-        if (controller.isNotLoading() && !controller.getOWLModel().renderChangeInProgress()) {
+        if (controller.isNotLoading() && !controller.getOWLModel().renderChangeInProgress() && notSaving) {
+            notSaving = false;
             controller.getOWLModel().setRenderRDFSLabel();
             controller.saveToFormat(KnowtatorXMLUtil.class, this, saveFile);
             controller.getOWLModel().resetRenderRDFS();
+            notSaving = true;
         }
     }
 

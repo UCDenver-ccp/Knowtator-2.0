@@ -376,8 +376,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         disposeView();
         setupListeners();
         knowtatorComponents.forEach(KnowtatorComponent::reset);
+        controller.reset(getOWLWorkspace());
 
-        controller.getOWLModel().setOwlWorkSpace(getOWLWorkspace());
     }
 
 
