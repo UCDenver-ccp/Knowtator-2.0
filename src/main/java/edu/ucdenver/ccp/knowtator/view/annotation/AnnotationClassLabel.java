@@ -1,8 +1,10 @@
-package edu.ucdenver.ccp.knowtator.view;
+package edu.ucdenver.ccp.knowtator.view.annotation;
 
 import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorLabel;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.protege.editor.owl.model.event.EventType;
 import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
@@ -11,18 +13,18 @@ public class AnnotationClassLabel extends KnowtatorLabel implements OWLModelMana
 
     private ConceptAnnotation conceptAnnotation;
 
-    AnnotationClassLabel(KnowtatorView view) {
+    public AnnotationClassLabel(KnowtatorView view) {
         super(view);
         this.conceptAnnotation = null;
     }
 
     @Override
-    protected void reactToConceptAnnotationChange(ChangeEvent<ConceptAnnotation> event) {
+    public void reactToConceptAnnotationChange(ChangeEvent<ConceptAnnotation> event) {
         displayAnnotation();
     }
 
     @Override
-    void reactToConceptAnnotationSelectionChange(SelectionChangeEvent<ConceptAnnotation> event) {
+    protected void reactToConceptAnnotationSelectionChange(SelectionChangeEvent<ConceptAnnotation> event) {
         conceptAnnotation = event.getNew();
         displayAnnotation();
     }

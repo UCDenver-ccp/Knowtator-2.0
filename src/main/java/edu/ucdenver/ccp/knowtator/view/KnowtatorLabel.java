@@ -10,9 +10,9 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
 
     private final KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
     private final KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
-    KnowtatorView view;
+    protected KnowtatorView view;
 
-    KnowtatorLabel(KnowtatorView view) {
+    protected KnowtatorLabel(KnowtatorView view) {
         this.view = view;
         conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
             @Override
@@ -88,8 +88,8 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
         event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
     }
 
-    abstract void reactToConceptAnnotationSelectionChange(SelectionChangeEvent<ConceptAnnotation> event);
-    abstract void reactToConceptAnnotationChange(ChangeEvent<ConceptAnnotation> event);
+    protected abstract void reactToConceptAnnotationSelectionChange(SelectionChangeEvent<ConceptAnnotation> event);
+    public abstract void reactToConceptAnnotationChange(ChangeEvent<ConceptAnnotation> event);
 
 
     @Override

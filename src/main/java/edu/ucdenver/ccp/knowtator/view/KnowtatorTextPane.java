@@ -6,6 +6,7 @@ import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
+import edu.ucdenver.ccp.knowtator.view.annotation.AnnotationActions;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -68,7 +69,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
         return image;
     }
 
-    void search(String textToFind, boolean isCaseSensitive, boolean inAnnotations, boolean isRegex, boolean searchForward) {
+    public void search(String textToFind, boolean isCaseSensitive, boolean inAnnotations, boolean isRegex, boolean searchForward) {
         String text = isCaseSensitive ? getText().toLowerCase() : getText();
         textToFind = isCaseSensitive ? textToFind : textToFind.toLowerCase();
 
@@ -133,7 +134,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
 
     private void setupListeners() {
         addCaretListener(view.getController().getSelectionModel());
-        addCaretListener(e -> view.getMatchTextField().setText(getSelectedText()));
+        addCaretListener(e -> view.getSearchTextField().setText(getSelectedText()));
         view.getController().getProfileCollection().addColorListener(this);
         view.getController().getFilterModel().addFilterModelListener(this);
 
@@ -420,7 +421,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
         }
     }
 
-    void setFontSize(int size) {
+    public void setFontSize(int size) {
         Font font = getFont();
         setFont(new Font(font.getName(), font.getStyle(), size));
         repaint();

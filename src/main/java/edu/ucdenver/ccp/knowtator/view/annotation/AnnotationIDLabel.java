@@ -1,17 +1,19 @@
-package edu.ucdenver.ccp.knowtator.view;
+package edu.ucdenver.ccp.knowtator.view.annotation;
 
 import edu.ucdenver.ccp.knowtator.model.collection.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorLabel;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 public class AnnotationIDLabel extends KnowtatorLabel {
-  AnnotationIDLabel(KnowtatorView view) {
+  public AnnotationIDLabel(KnowtatorView view) {
     super(view);
     this.view = view;
   }
 
   @Override
-  void reactToConceptAnnotationSelectionChange(SelectionChangeEvent<ConceptAnnotation> event) {
+  protected void reactToConceptAnnotationSelectionChange(SelectionChangeEvent<ConceptAnnotation> event) {
     if (event.getNew() != null) {
       setText(event.getNew().getId());
     } else {
@@ -20,7 +22,7 @@ public class AnnotationIDLabel extends KnowtatorLabel {
   }
 
   @Override
-  void reactToConceptAnnotationChange(ChangeEvent<ConceptAnnotation> event) {
+  public void reactToConceptAnnotationChange(ChangeEvent<ConceptAnnotation> event) {
 
   }
 

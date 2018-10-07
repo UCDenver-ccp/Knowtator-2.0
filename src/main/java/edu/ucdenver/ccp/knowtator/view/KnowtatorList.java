@@ -13,7 +13,7 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
     private KnowtatorCollection<K> collection;
     private final KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
 
-    KnowtatorList(KnowtatorView view) {
+    protected KnowtatorList(KnowtatorView view) {
         this.view = view;
         setModel(new DefaultListModel<>());
 
@@ -64,7 +64,7 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
 
     protected abstract void reactToTextSourceChange(SelectionChangeEvent<TextSource> event);
 
-    void setCollection(KnowtatorCollection<K> collection) {
+    public void setCollection(KnowtatorCollection<K> collection) {
         //clear collection
         dispose();
 

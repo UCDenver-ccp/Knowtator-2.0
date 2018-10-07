@@ -1,16 +1,18 @@
-package edu.ucdenver.ccp.knowtator.view;
+package edu.ucdenver.ccp.knowtator.view.annotation;
 
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorList;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 public class SpanList extends KnowtatorList<Span> {
 
     private final KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
 
 
-    SpanList(KnowtatorView view) {
+    public SpanList(KnowtatorView view) {
         super(view);
 
         conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {

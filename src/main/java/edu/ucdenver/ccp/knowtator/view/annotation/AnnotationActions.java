@@ -1,12 +1,13 @@
-package edu.ucdenver.ccp.knowtator.view;
+package edu.ucdenver.ccp.knowtator.view.annotation;
 
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
 
-class AnnotationActions {
-    static void addAnnotation(KnowtatorView view) {
+public class AnnotationActions {
+    public static void addAnnotation(KnowtatorView view) {
         String[] buttons = {"Add new concept", "Add span to concept", "Cancel"};
         int response =
                 JOptionPane.showOptionDialog(
@@ -37,7 +38,7 @@ class AnnotationActions {
         }
     }
 
-    static void removeAnnotation(KnowtatorView view) {
+    public static void removeAnnotation(KnowtatorView view) {
         TextSource textSource = view.getController().getTextSourceCollection().getSelection();
         ConceptAnnotation annotation = textSource.getConceptAnnotationCollection().getSelection();
         if (annotation.getSpanCollection().size() > 1) {
