@@ -286,6 +286,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
             @Override
             public void firstAdded() {
                 enableTextSourceButtons();
+                addAnnotationButton.setEnabled(true);
             }
         };
         conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
