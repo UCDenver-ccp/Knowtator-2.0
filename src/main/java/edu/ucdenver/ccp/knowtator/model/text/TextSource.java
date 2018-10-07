@@ -8,6 +8,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.AbstractKnowtatorDataObject;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollection;
@@ -97,7 +98,6 @@ public class TextSource extends AbstractKnowtatorDataObject<TextSource> implemen
             }
         }
     }
-
     @Override
     public int compareTo(TextSource textSource2) {
         if (this == textSource2) {
@@ -106,7 +106,13 @@ public class TextSource extends AbstractKnowtatorDataObject<TextSource> implemen
         if (textSource2 == null) {
             return 1;
         }
-        return id.toLowerCase().compareTo(textSource2.getId().toLowerCase());
+
+        int result = KnowtatorDataObjectInterface.extractInt(this.getId()) - KnowtatorDataObjectInterface.extractInt(textSource2.getId());
+        if (result == 0) {
+            return id.toLowerCase().compareTo(textSource2.getId().toLowerCase());
+        } else {
+            return result;
+        }
     }
 
     public File getTextFile() {
