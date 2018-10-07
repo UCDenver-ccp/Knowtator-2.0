@@ -207,6 +207,7 @@ public class OWLModel implements Serializable, Savable, BaseKnowtatorModel {
         try {
             JDialog dialog = SearchDialogPanel.createDialog(null, getWorkSpace().getOWLEditorKit());
             Arrays.stream(dialog.getContentPane().getComponents()).forEach(component -> {
+                log.warn(component);
                 if (component instanceof AugmentedJTextField) {
                     ((AugmentedJTextField) component).setText(stringToSearch);
                 }

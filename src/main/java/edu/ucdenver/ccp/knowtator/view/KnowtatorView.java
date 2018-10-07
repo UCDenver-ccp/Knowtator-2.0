@@ -248,7 +248,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     }
 
     private void makeSearchButtons() {
-        findTextInOntologyButton.addActionListener(e -> SearchActions.findText(this, matchTextField.getSelectedText()));
+        findTextInOntologyButton.addActionListener(e -> SearchActions.findText(this, matchTextField.getText()));
         nextMatchButton.addActionListener(e -> SearchActions.findNextMatch(this, matchTextField.getText(), caseSensitiveCheckBox.isSelected(), onlyAnnotationsCheckBox.isSelected(), regexCheckBox.isSelected()));
         previousMatchButton.addActionListener(e -> SearchActions.findPreviousMatch(this, matchTextField.getText(), caseSensitiveCheckBox.isSelected(), onlyAnnotationsCheckBox.isSelected(), regexCheckBox.isSelected()));
     }
