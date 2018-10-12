@@ -1,6 +1,19 @@
 <component name="InspectionProjectProfileManager">
   <profile version="1.0">
     <option name="myName" value="Project Default" />
+    <inspection_tool class="EmptyMethod" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="EXCLUDE_ANNOS">
+        <value>
+          <list size="4">
+            <item index="0" class="java.lang.String" itemvalue="org.junit.Before" />
+            <item index="1" class="java.lang.String" itemvalue="org.junit.Test" />
+            <item index="2" class="java.lang.String" itemvalue="org.junit.Test" />
+            <item index="3" class="java.lang.String" itemvalue="org.junit.Test" />
+          </list>
+        </value>
+      </option>
+      <option name="commentsAreContent" value="false" />
+    </inspection_tool>
     <inspection_tool class="NullableProblems" enabled="false" level="WARNING" enabled_by_default="false">
       <option name="REPORT_NULLABLE_METHOD_OVERRIDES_NOTNULL" value="true" />
       <option name="REPORT_NOT_ANNOTATED_METHOD_OVERRIDES_NOTNULL" value="true" />

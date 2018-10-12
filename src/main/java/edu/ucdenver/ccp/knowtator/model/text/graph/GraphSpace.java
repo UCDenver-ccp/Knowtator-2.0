@@ -13,6 +13,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundDataObjectInterface;
@@ -82,18 +83,12 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
             return 1;
         }
 
-        int result = extractInt(this.getId()) - extractInt(graphSpace2.getId());
+        int result = KnowtatorDataObjectInterface.extractInt(this.getId()) - KnowtatorDataObjectInterface.extractInt(graphSpace2.getId());
         if (result == 0) {
             return this.getId().compareTo(graphSpace2.getId());
         } else {
             return result;
         }
-    }
-
-    private static int extractInt(String s) {
-        String num = s.replaceAll("\\D", "");
-        // return 0 if no digits found
-        return num.isEmpty() ? 0 : Integer.parseInt(num);
     }
 
   /*

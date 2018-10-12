@@ -1,10 +1,12 @@
-package edu.ucdenver.ccp.knowtator.view;
+package edu.ucdenver.ccp.knowtator.view.textsource;
 
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorChooser;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 public class TextSourceChooser extends KnowtatorChooser<TextSource> {
 
-    TextSourceChooser(KnowtatorView view) {
+    public TextSourceChooser(KnowtatorView view) {
         super(view);
         setCollection(view.getController().getTextSourceCollection());
     }

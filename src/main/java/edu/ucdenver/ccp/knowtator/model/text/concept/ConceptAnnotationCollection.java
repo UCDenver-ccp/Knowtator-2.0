@@ -14,6 +14,9 @@ import edu.ucdenver.ccp.knowtator.model.text.concept.span.SpanCollection;
 import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import org.apache.log4j.Logger;
+import org.protege.editor.owl.model.event.EventType;
+import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
+import org.protege.editor.owl.model.event.OWLModelManagerListener;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
@@ -31,7 +34,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnnotation> implements OWLOntologyChangeListener, KnowtatorXMLIO, BratStandoffIO, FilterModelListener {
+public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnnotation> implements OWLOntologyChangeListener, KnowtatorXMLIO, BratStandoffIO, FilterModelListener, OWLModelManagerListener {
 
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(ConceptAnnotationCollection.class);
@@ -47,6 +50,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         this.textSource = textSource;
 
         controller.getOWLModel().addOntologyChangeListener(this);
+        controller.getOWLModel().addOWLModelManagerListener(this);
         controller.getFilterModel().addFilterModelListener(this);
 
         allSpanCollection = new SpanCollection(controller, textSource, null);
@@ -105,7 +109,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         ConceptAnnotation conceptAnnotation = getSelection();
         removeSpanFromAnnotation(conceptAnnotation.getSpanCollection().getSelection());
     }
-
 
 
     /*
@@ -199,11 +202,9 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
         if (newSpan == null) {
             setSelection(null);
-        }
-        else if (getSelection() != newSpan.getConceptAnnotation()) {
+        } else if (getSelection() != newSpan.getConceptAnnotation()) {
             setSelection(newSpan.getConceptAnnotation());
             newSpan.getConceptAnnotation().getSpanCollection().setSelection(newSpan);
-            controller.getOWLModel().setSelectedOWLEntity(newSpan.getConceptAnnotation().getOwlClass());
         }
     }
 
@@ -213,7 +214,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
     @Override
     public void setSelection(ConceptAnnotation selection) {
-        if (getSelection()!= null && getSelection() != selection) {
+        if (getSelection() != null && getSelection() != selection) {
             getSelection().getSpanCollection().setSelection(null);
         }
         super.setSelection(selection);
@@ -234,7 +235,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
             log.warn("The following classes could not be matched to annotations");
             unmatchedAnnotations.forEach((concept, conceptAnnotationList) -> {
                 log.warn(String.format("Concept: %s", concept));
-                log.warn("\tAnnotations:");
+                log.warn("Annotations:");
                 conceptAnnotationList.forEach(conceptAnnotation -> log.warn(String.format("\t%s", conceptAnnotation.getId())));
             });
         }
@@ -467,6 +468,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     @Override
     public void dispose() {
         controller.getOWLModel().removeOntologyChangeListener(this);
+        controller.getOWLModel().removeOWLModelManagerListener(this);
         allSpanCollection.dispose();
         super.dispose();
     }
@@ -507,8 +509,12 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                 }
             }
 
-            for (ConceptAnnotation conceptAnnotation : annotationsForOwlClass) {
-                conceptAnnotation.setOwlClass(newOWLClass);
+            if (newOWLClass == null) {
+                annotationsForOwlClass.forEach(this::remove);
+            } else {
+                for (ConceptAnnotation conceptAnnotation : annotationsForOwlClass) {
+                    conceptAnnotation.setOwlClass(newOWLClass);
+                }
             }
         }
     }
@@ -536,6 +542,13 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     public void owlClassFilterChanged(boolean filterValue) {
         if (filterValue && getSelection() != null && getSelection().getOwlClass() != controller.getOWLModel().getSelectedOWLEntity()) {
             setSelection(null);
+        }
+    }
+
+    @Override
+    public void handleChange(OWLModelManagerChangeEvent event) {
+        if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
+            setOWLClassForAnnotations();
         }
     }
 }

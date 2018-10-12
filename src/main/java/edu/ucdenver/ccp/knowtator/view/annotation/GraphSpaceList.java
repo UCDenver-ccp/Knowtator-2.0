@@ -1,10 +1,12 @@
-package edu.ucdenver.ccp.knowtator.view;
+package edu.ucdenver.ccp.knowtator.view.annotation;
 
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollection;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorList;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import java.util.stream.Collector;
 
@@ -12,7 +14,7 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
     private final KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
 
 
-    GraphSpaceList(KnowtatorView view) {
+    public GraphSpaceList(KnowtatorView view) {
         super(view);
 
         conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {

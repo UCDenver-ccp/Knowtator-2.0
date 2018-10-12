@@ -5,6 +5,7 @@ import edu.ucdenver.ccp.knowtator.Savable;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
+import edu.ucdenver.ccp.knowtator.model.BaseKnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -21,7 +22,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-public class TextSourceCollection extends KnowtatorCollection<TextSource> implements BratStandoffIO, KnowtatorXMLIO, Savable {
+public class TextSourceCollection extends KnowtatorCollection<TextSource> implements BratStandoffIO, KnowtatorXMLIO, Savable, BaseKnowtatorModel {
     @SuppressWarnings("unused")
     private final Logger log = Logger.getLogger(TextSourceCollection.class);
 
@@ -167,5 +168,10 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
         selectPrevious();
         oldTextSource.dispose();
         remove(oldTextSource);
+    }
+
+    @Override
+    public void reset() {
+
     }
 }

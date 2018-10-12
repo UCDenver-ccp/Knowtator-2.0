@@ -1,8 +1,11 @@
 package edu.ucdenver.ccp.knowtator.model;
 
 import com.google.common.base.Optional;
-import edu.ucdenver.ccp.knowtator.KnowtatorObjectInterface;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.Savable;
+import edu.ucdenver.ccp.knowtator.model.collection.*;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.protege.editor.core.ui.util.AugmentedJTextField;
@@ -24,16 +27,99 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class OWLModel implements Serializable, Savable, KnowtatorObjectInterface {
+public class OWLModel implements Serializable, Savable, BaseKnowtatorModel {
     @SuppressWarnings("unused")
     private static final Logger log = LogManager.getLogger(OWLModel.class);
+    private final KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
 
     private OWLWorkspace owlWorkSpace;
     private File ontologiesLocation;
     private List<IRI> iris;
+    private final KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
+    private final KnowtatorController controller;
 
-    public OWLModel() {
+    public OWLModel(KnowtatorController controller) {
+        this.controller = controller;
         iris = null;
+
+        conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
+            @Override
+            public void added(AddEvent<ConceptAnnotation> event) {
+
+            }
+
+            @Override
+            public void removed(RemoveEvent<ConceptAnnotation> event) {
+
+            }
+
+            @Override
+            public void changed(ChangeEvent<ConceptAnnotation> event) {
+
+            }
+
+            @Override
+            public void emptied() {
+
+            }
+
+            @Override
+            public void firstAdded() {
+
+            }
+
+
+            @Override
+            public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
+                reactToConceptAnnotationSelectionChange(event);
+
+            }
+        };
+        textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
+            @Override
+            public void added(AddEvent<TextSource> event) {
+
+            }
+
+            @Override
+            public void removed(RemoveEvent<TextSource> event) {
+
+            }
+
+            @Override
+            public void changed(ChangeEvent<TextSource> event) {
+            }
+
+            @Override
+            public void emptied() {
+
+            }
+
+            @Override
+            public void firstAdded() {
+
+            }
+
+            @Override
+            public void selected(SelectionChangeEvent<TextSource> event) {
+                reactToTextSourceChange(event);
+            }
+        };
+
+        controller.getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
+    }
+
+    private void reactToTextSourceChange(SelectionChangeEvent<TextSource> event) {
+        if (event.getOld() != null) {
+            event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
+        }
+        event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
+    }
+
+    private void reactToConceptAnnotationSelectionChange(SelectionChangeEvent<ConceptAnnotation> event){
+        if (event.getNew() != null && event.getNew().getOwlClass() != null) {
+            setSelectedOWLEntity(event.getNew().getOwlClass());
+        }
     }
 
     public OWLEntity getSelectedOWLEntity() {
@@ -121,6 +207,7 @@ public class OWLModel implements Serializable, Savable, KnowtatorObjectInterface
         try {
             JDialog dialog = SearchDialogPanel.createDialog(null, getWorkSpace().getOWLEditorKit());
             Arrays.stream(dialog.getContentPane().getComponents()).forEach(component -> {
+                log.warn(component);
                 if (component instanceof AugmentedJTextField) {
                     ((AugmentedJTextField) component).setText(stringToSearch);
                 }
@@ -226,7 +313,11 @@ public class OWLModel implements Serializable, Savable, KnowtatorObjectInterface
 
     @Override
     public void save() {
+        try {
+            getWorkSpace().getOWLModelManager().save();
+        } catch (OWLWorkSpaceNotSetException | OWLOntologyStorageException ignored) {
 
+        }
     }
 
     public void addOntologyChangeListener(OWLOntologyChangeListener listener) {
@@ -288,7 +379,7 @@ public class OWLModel implements Serializable, Savable, KnowtatorObjectInterface
         }
     }
 
-    public void setSelectedOWLEntity(OWLEntity owlEntity) {
+    private void setSelectedOWLEntity(OWLEntity owlEntity) {
         try {
             getWorkSpace().getOWLSelectionModel().setSelectedEntity(owlEntity);
         } catch (OWLWorkSpaceNotSetException ignored) {
@@ -298,6 +389,11 @@ public class OWLModel implements Serializable, Savable, KnowtatorObjectInterface
 
     public boolean renderChangeInProgress() {
         return iris != null;
+    }
+
+    @Override
+    public void reset() {
+        controller.getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
     }
 
     private class OWLWorkSpaceNotSetException extends Exception {

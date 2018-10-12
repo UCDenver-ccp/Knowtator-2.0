@@ -1,17 +1,19 @@
-package edu.ucdenver.ccp.knowtator.view;
+package edu.ucdenver.ccp.knowtator.view.textsource;
+
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
 
-class TextSourceActions {
-    static void selectPreviousTextSource(KnowtatorView view) {
+public class TextSourceActions {
+    public static void selectPreviousTextSource(KnowtatorView view) {
         view.getController().getTextSourceCollection().selectPrevious();
     }
 
-    static void selectNextTextSource(KnowtatorView view) {
+    public static void selectNextTextSource(KnowtatorView view) {
         view.getController().getTextSourceCollection().selectNext();
     }
 
-    static void addTextSource(KnowtatorView view) {
+    public static void addTextSource(KnowtatorView view) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(view.getController().getTextSourceCollection().getArticlesLocation());
 
@@ -20,11 +22,11 @@ class TextSourceActions {
         }
     }
 
-    static void removeTextSource(KnowtatorView view) {
+    public static void removeTextSource(KnowtatorView view) {
         view.getController().getTextSourceCollection().removeSelected();
     }
 
-    static void setFontSize(KnowtatorView view, int fontSize) {
+    public static void setFontSize(KnowtatorView view, int fontSize) {
         view.getKnowtatorTextPane().setFontSize(fontSize);
     }
 }

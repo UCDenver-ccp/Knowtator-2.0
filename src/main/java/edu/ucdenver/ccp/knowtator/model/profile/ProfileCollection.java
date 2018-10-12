@@ -6,6 +6,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
+import edu.ucdenver.ccp.knowtator.model.BaseKnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -19,7 +20,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileCollection extends KnowtatorCollection<Profile> implements KnowtatorXMLIO, Savable {
+public class ProfileCollection extends KnowtatorCollection<Profile> implements KnowtatorXMLIO, Savable, BaseKnowtatorModel {
 
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(KnowtatorController.class);
@@ -147,5 +148,10 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void reset() {
+
     }
 }

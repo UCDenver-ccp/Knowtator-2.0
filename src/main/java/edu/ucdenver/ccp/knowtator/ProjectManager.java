@@ -122,7 +122,7 @@ public abstract class ProjectManager implements Savable {
         }
     }
 
-    public <I extends BasicIO> void saveToFormat(Class<? extends BasicIOUtil<I>> ioClass, I basicIO, File file) {
+    <I extends BasicIO> void saveToFormat(Class<? extends BasicIOUtil<I>> ioClass, I basicIO, File file) {
         try {
 
             BasicIOUtil<I> util = ioClass.getDeclaredConstructor().newInstance();
