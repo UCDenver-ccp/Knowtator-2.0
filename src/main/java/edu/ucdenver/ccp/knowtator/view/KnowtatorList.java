@@ -64,7 +64,7 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
 
     protected abstract void reactToTextSourceChange(SelectionChangeEvent<TextSource> event);
 
-    public void setCollection(KnowtatorCollection<K> collection) {
+    protected void setCollection(KnowtatorCollection<K> collection) {
         //clear collection
         dispose();
 

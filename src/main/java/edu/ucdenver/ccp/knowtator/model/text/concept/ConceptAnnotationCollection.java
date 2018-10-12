@@ -468,6 +468,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     @Override
     public void dispose() {
         controller.getOWLModel().removeOntologyChangeListener(this);
+        controller.getOWLModel().removeOWLModelManagerListener(this);
         allSpanCollection.dispose();
         super.dispose();
     }

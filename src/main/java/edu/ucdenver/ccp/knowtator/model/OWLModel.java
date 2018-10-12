@@ -35,8 +35,8 @@ public class OWLModel implements Serializable, Savable, BaseKnowtatorModel {
     private OWLWorkspace owlWorkSpace;
     private File ontologiesLocation;
     private List<IRI> iris;
-    private KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
-    private KnowtatorController controller;
+    private final KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
+    private final KnowtatorController controller;
 
     public OWLModel(KnowtatorController controller) {
         this.controller = controller;

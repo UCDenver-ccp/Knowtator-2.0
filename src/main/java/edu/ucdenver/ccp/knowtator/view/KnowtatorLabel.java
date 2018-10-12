@@ -89,7 +89,7 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
     }
 
     protected abstract void reactToConceptAnnotationSelectionChange(SelectionChangeEvent<ConceptAnnotation> event);
-    public abstract void reactToConceptAnnotationChange(ChangeEvent<ConceptAnnotation> event);
+    protected abstract void reactToConceptAnnotationChange(ChangeEvent<ConceptAnnotation> event);
 
 
     @Override

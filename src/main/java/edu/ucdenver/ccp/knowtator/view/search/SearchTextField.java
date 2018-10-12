@@ -12,8 +12,8 @@ import javax.swing.*;
 public class SearchTextField extends JTextField implements KnowtatorCollectionListener<Span>, KnowtatorComponent {
 
     private final KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
-    private KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
-    private KnowtatorView view;
+    private final KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
+    private final KnowtatorView view;
 
     public SearchTextField(KnowtatorView view) {
         this.view = view;
