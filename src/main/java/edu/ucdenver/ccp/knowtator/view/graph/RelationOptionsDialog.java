@@ -73,6 +73,8 @@ public class RelationOptionsDialog extends JDialog {
                 !StringUtils.isNumeric(quantifierValueTextField.getText())) {
             JOptionPane.showMessageDialog(this, "Please enter a numeric value");
             return;
+        } else {
+            quantifierValueTextField.setText("");
         }
         if (previewTextArea.getText().length() == 0) {
             JOptionPane.showMessageDialog(this, "Please enter a name for this relation");
