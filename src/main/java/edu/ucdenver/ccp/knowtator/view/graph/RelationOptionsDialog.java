@@ -72,10 +72,15 @@ public class RelationOptionsDialog extends JDialog {
                 (quantifier.equals(EXACTLY) || quantifier.equals(MIN) || quantifier.equals(MAX)) &&
                 !StringUtils.isNumeric(quantifierValueTextField.getText())) {
             JOptionPane.showMessageDialog(this, "Please enter a numeric value");
-        } else {
-            result = OK_OPTION;
-            dispose();
+            return;
         }
+        if (previewTextArea.getText().length() == 0) {
+            JOptionPane.showMessageDialog(this, "Please enter a name for this relation");
+            return;
+        }
+        result = OK_OPTION;
+        dispose();
+
     }
 
     private void onCancel() {
