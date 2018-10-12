@@ -93,7 +93,7 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="cb503" class="javax.swing.JTextField" binding="quantifierValueTextField">
+              <component id="e171f" class="javax.swing.JTextField" binding="quantifierValueTextField">
                 <constraints>
                   <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="50" height="30"/>

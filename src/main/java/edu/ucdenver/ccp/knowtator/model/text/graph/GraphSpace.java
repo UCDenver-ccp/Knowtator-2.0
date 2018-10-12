@@ -275,7 +275,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
                             List<Object> objectAnnotationVertices = getVerticesForAnnotation(objectConceptAnnotation);
                             AnnotationNode target = makeOrGetAnnotationNode(subjectConceptAnnotation, objectAnnotationVertices);
 
-                            addTriple(source, target, id, annotator, null, propertyID, "", "", false);
+                            addTriple(source, target, id, annotator, null, propertyID, "", null, false);
                         });
     }
 
