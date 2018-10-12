@@ -59,6 +59,15 @@ public class RelationOptionsDialog extends JDialog {
 
         quantifierChooser.setModel(new DefaultComboBoxModel<>(new String[]{SOME, ONLY, EXACTLY, MAX, MIN}));
 
+        quantifierChooser.addItemListener(e -> {
+            if (e.getItem().equals("some") || e.getItem().equals("only")) {
+                quantifierValueTextField.setText("");
+                quantifierValueTextField.setEnabled(false);
+            } else {
+                quantifierValueTextField.setEnabled(true);
+            }
+        });
+
 
     }
 

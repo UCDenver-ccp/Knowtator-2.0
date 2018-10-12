@@ -4,8 +4,7 @@
     <option name="GROUP_BY_SEVERITY" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aaa66eaa-1de7-4fc8-9d1f-61ae6cd37f93" name="Default" comment="Search text field shows text of selected span">
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+    <list default="true" id="aaa66eaa-1de7-4fc8-9d1f-61ae6cd37f93" name="Default" comment="Some or only quantifier disregards value">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/RelationOptionsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/RelationOptionsDialog.java" afterDir="false" />
     </list>
@@ -70,17 +69,17 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="190" />
-          <entry key="java" value="47668" />
+          <entry key="java" value="47863" />
           <entry key="md" value="37" />
           <entry key="testing_procedure" value="973" />
-          <entry key="txt" value="432" />
+          <entry key="txt" value="566" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="47668" />
+          <entry key="JAVA" value="47863" />
           <entry key="Markdown" value="37" />
-          <entry key="PLAIN_TEXT" value="1405" />
+          <entry key="PLAIN_TEXT" value="1539" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages">
@@ -132,8 +131,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/graph/GraphSpace.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="249">
-              <caret line="373" column="99" lean-forward="true" selection-start-line="373" selection-start-column="99" selection-end-line="373" selection-end-column="99" />
+            <state relative-caret-position="300">
+              <caret line="376" column="66" lean-forward="true" selection-start-line="376" selection-start-column="66" selection-end-line="376" selection-end-column="66" />
             </state>
           </provider>
         </entry>
@@ -141,11 +140,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/RelationOptionsDialog.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="454">
-              <caret line="78" column="19" selection-start-line="78" selection-start-column="19" selection-end-line="78" selection-end-column="19" />
+            <state relative-caret-position="341">
+              <caret line="64" column="24" selection-start-line="64" selection-start-column="24" selection-end-line="64" selection-end-column="24" />
               <folding>
-                <element signature="e#11786#11787#0" expanded="true" />
-                <element signature="e#11820#11821#0" expanded="true" />
+                <element signature="e#12094#12095#0" expanded="true" />
+                <element signature="e#12128#12129#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -163,7 +162,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>=</find>
       <find>setupowl</find>
       <find>regex</find>
       <find>publi</find>
@@ -193,6 +191,7 @@
       <find>setOWL</find>
       <find>save</find>
       <find>disp</find>
+      <find>list</find>
     </findStrings>
     <replaceStrings>
       <replace>controller.getProjectManager()</replace>
@@ -930,7 +929,21 @@
       <option name="project" value="LOCAL" />
       <updated>1538949749212</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="Insist on a name for the relation">
+      <created>1539368581825</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1539368581825</updated>
+    </task>
+    <task id="LOCAL-00047" summary="Some or only quantifier disregards value">
+      <created>1539368660988</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1539368660988</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -966,7 +979,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="234037000" />
+    <option name="totallyTimeSpent" value="234309000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1096,8 +1109,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/src/main/java/Swing-Slide-Menu" />
     </ignored-roots>
-    <MESSAGE value="Moved actions out of view" />
-    <MESSAGE value="Removed owl workspace exception from outside of owl model" />
     <MESSAGE value="Removed owl setup" />
     <MESSAGE value="Removed specific collection listeners" />
     <MESSAGE value="Simplified view components" />
@@ -1121,7 +1132,9 @@
     <MESSAGE value="Ontology saves when knowtator saves" />
     <MESSAGE value="Add annotation button activates on first text source added" />
     <MESSAGE value="Search text field shows text of selected span" />
-    <option name="LAST_COMMIT_MESSAGE" value="Search text field shows text of selected span" />
+    <MESSAGE value="Insist on a name for the relation" />
+    <MESSAGE value="Some or only quantifier disregards value" />
+    <option name="LAST_COMMIT_MESSAGE" value="Some or only quantifier disregards value" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -1618,18 +1631,18 @@ graphSpace.getChildEdges(graphSpace.getDefaultParent())</expression-string>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/graph/GraphSpace.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="249">
-          <caret line="373" column="99" lean-forward="true" selection-start-line="373" selection-start-column="99" selection-end-line="373" selection-end-column="99" />
+        <state relative-caret-position="300">
+          <caret line="376" column="66" lean-forward="true" selection-start-line="376" selection-start-column="66" selection-end-line="376" selection-end-column="66" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/RelationOptionsDialog.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="454">
-          <caret line="78" column="19" selection-start-line="78" selection-start-column="19" selection-end-line="78" selection-end-column="19" />
+        <state relative-caret-position="341">
+          <caret line="64" column="24" selection-start-line="64" selection-start-column="24" selection-end-line="64" selection-end-column="24" />
           <folding>
-            <element signature="e#11786#11787#0" expanded="true" />
-            <element signature="e#11820#11821#0" expanded="true" />
+            <element signature="e#12094#12095#0" expanded="true" />
+            <element signature="e#12128#12129#0" expanded="true" />
           </folding>
         </state>
       </provider>
