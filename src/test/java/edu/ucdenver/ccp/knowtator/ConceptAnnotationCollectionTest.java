@@ -131,7 +131,7 @@ public class ConceptAnnotationCollectionTest {
         ConceptAnnotation conceptAnnotation1 = conceptAnnotationCollection.addAnnotation("mention_3", null, "class_2", "class_2", profile, "identity");
         Span span1 = conceptAnnotation1.getSpanCollection().addSpan(null,1, 6);
 
-        conceptAnnotationCollection.removeSpanFromAnnotation(span1);
+        span1.getConceptAnnotation().getSpanCollection().remove(span1);
         int numAnnotations = conceptAnnotationCollection.size();
         int numSpans = conceptAnnotationCollection.getSpans(null, 0, textSource.getContent().length()).size();
 

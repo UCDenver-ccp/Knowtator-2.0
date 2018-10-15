@@ -69,12 +69,20 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
 
     @Override
     public void added(AddEvent<GraphSpace> event) {
-        setCollection(event.getAdded().getTextSource().getConceptAnnotationCollection().getSelection());
+        try {
+            setCollection(event.getAdded().getTextSource().getConceptAnnotationCollection().getSelection());
+        } catch (NoSelectionException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void removed(RemoveEvent<GraphSpace> event) {
-        setCollection(event.getRemoved().getTextSource().getConceptAnnotationCollection().getSelection());
+        try {
+            setCollection(event.getRemoved().getTextSource().getConceptAnnotationCollection().getSelection());
+        } catch (NoSelectionException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -89,7 +97,11 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
 
     @Override
     public void changed(ChangeEvent<GraphSpace> event) {
-        reactToAnnotationChange(event.getNew().getTextSource().getConceptAnnotationCollection().getSelection());
+        try {
+            reactToAnnotationChange(event.getNew().getTextSource().getConceptAnnotationCollection().getSelection());
+        } catch (NoSelectionException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -99,7 +111,11 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
         }
         event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
 
-        setCollection(event.getNew().getConceptAnnotationCollection().getSelection());
+        try {
+            setCollection(event.getNew().getConceptAnnotationCollection().getSelection());
+        } catch (NoSelectionException e) {
+            e.printStackTrace();
+        }
     }
 
     private void reactToAnnotationChange(ConceptAnnotation currentSelection) {

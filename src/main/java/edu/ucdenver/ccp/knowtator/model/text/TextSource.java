@@ -221,16 +221,6 @@ public class TextSource extends AbstractKnowtatorDataObject<TextSource> implemen
     }
 
     @Override
-    public void finishLoad() {
-        if (conceptAnnotationCollection.size() > 0) {
-            conceptAnnotationCollection.setSelection(conceptAnnotationCollection.first());
-        }
-        if (graphSpaceCollection.size() > 0) {
-            graphSpaceCollection.setSelection(graphSpaceCollection.first());
-        }
-    }
-
-    @Override
     public void added(AddEvent event) {
         save();
     }

@@ -2,7 +2,6 @@ package edu.ucdenver.ccp.knowtator.model;
 
 import com.google.common.base.Optional;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
@@ -27,7 +26,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class OWLModel implements Serializable, Savable, BaseKnowtatorModel {
+public class OWLModel implements Serializable, BaseKnowtatorManager {
     @SuppressWarnings("unused")
     private static final Logger log = LogManager.getLogger(OWLModel.class);
     private final KnowtatorCollectionListener<TextSource> textSourceCollectionListener;

@@ -70,66 +70,83 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
     }
 
     public void search(String textToFind, boolean isCaseSensitive, boolean inAnnotations, boolean isRegex, boolean searchForward) {
-        String text = isCaseSensitive ? getText().toLowerCase() : getText();
-        textToFind = isCaseSensitive ? textToFind : textToFind.toLowerCase();
+        try {
+            TextSource textSource = view.getController().getTextSourceCollection().getSelection();
 
-        if (inAnnotations) {
-            Span selectedSpan = view.getController()
-                    .getTextSourceCollection().getSelection()
-                    .getConceptAnnotationCollection().getSelection()
-                    .getSpanCollection().getSelection();
-            if (searchForward) {
-                select(selectedSpan.getEnd(), selectedSpan.getEnd());
-            } else {
-                select(selectedSpan.getStart(), selectedSpan.getStart());
+            String text = isCaseSensitive ? getText().toLowerCase() : getText();
+            textToFind = isCaseSensitive ? textToFind : textToFind.toLowerCase();
+
+            if (inAnnotations) {
+                try {
+                    Span selectedSpan = textSource
+                            .getConceptAnnotationCollection().getSelection()
+                            .getSpanCollection().getSelection();
+                    if (searchForward) {
+                        select(selectedSpan.getEnd(), selectedSpan.getEnd());
+                    } else {
+                        select(selectedSpan.getStart(), selectedSpan.getStart());
+                    }
+                } catch (NoSelectionException e) {
+                    e.printStackTrace();
+                }
+
             }
-        }
-        int matchLoc;
-        Matcher matcher = null;
+            int matchLoc;
+            Matcher matcher = null;
 
-        if (isRegex) {
-            Pattern patternToFind = Pattern.compile(textToFind);
-            matcher = patternToFind.matcher(text);
-            matchLoc = matcher.start();
-        } else {
-            matchLoc = find(text, textToFind, getSelectionStart(), searchForward);
-        }
-        Set<Span> spans = null;
-        int newMatchLoc = matchLoc;
-        if (inAnnotations) {
-            do {
-                spans = getSpans(newMatchLoc);
-                if (!spans.isEmpty()) {
-                    inAnnotations = false;
+            if (isRegex) {
+                Pattern patternToFind = Pattern.compile(textToFind);
+                matcher = patternToFind.matcher(text);
+                matchLoc = matcher.start();
+            } else {
+                matchLoc = find(text, textToFind, getSelectionStart(), searchForward);
+            }
+            Set<Span> spans = null;
+            int newMatchLoc = matchLoc;
+            if (inAnnotations) {
+                do {
+                    spans = getSpans(newMatchLoc);
+                    if (!spans.isEmpty()) {
+                        inAnnotations = false;
+                    } else {
+                        newMatchLoc = isRegex ? matcher.start() : find(text, textToFind, newMatchLoc, searchForward);
+                    }
+                    if (!searchForward && newMatchLoc == -1) {
+                        newMatchLoc = text.length();
+                    }
+                } while (inAnnotations && newMatchLoc != matchLoc);
+            }
+            matchLoc = newMatchLoc;
+            if (matchLoc != -1) {
+                if (spans != null) {
+                    textSource
+                            .getConceptAnnotationCollection().getSelection()
+                            .getSpanCollection()
+                            .setSelection(spans.iterator().next());
                 } else {
-                    newMatchLoc = isRegex ? matcher.start() : find(text, textToFind, newMatchLoc, searchForward);
+                    requestFocusInWindow();
+                    select(matchLoc, matchLoc + textToFind.length());
                 }
-                if (!searchForward && newMatchLoc == -1) {
-                    newMatchLoc = text.length();
-                }
-            } while (inAnnotations && newMatchLoc != matchLoc);
-        }
-        matchLoc = newMatchLoc;
-        if (matchLoc != -1) {
-            if (spans != null) {
-                view.getController().getTextSourceCollection().getSelection()
-                        .getConceptAnnotationCollection().getSelection()
-                        .getSpanCollection()
-                        .setSelection(spans.iterator().next());
             } else {
-                requestFocusInWindow();
-                select(matchLoc, matchLoc + textToFind.length());
+                select(searchForward ? -1 : text.length(), searchForward ? -1 : text.length());
             }
-        } else {
-            select(searchForward ? -1 : text.length(), searchForward ? -1 : text.length());
+
+        } catch (NoSelectionException e) {
+            e.printStackTrace();
         }
+
+
     }
 
 
     private void showTextPane() {
-        String text = view.getController().getTextSourceCollection().getSelection().getContent();
-        setText(text);
-        refreshHighlights();
+        try {
+            String text = view.getController().getTextSourceCollection().getSelection().getContent();
+            setText(text);
+            refreshHighlights();
+        } catch (NoSelectionException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setupListeners() {
@@ -281,30 +298,32 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
     }
 
     private void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
-        AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e);
+        try {
+            TextSource textSource = view.getController().getTextSourceCollection().getSelection();
 
-        Set<Span> spansContainingLocation = getSpans(press_offset);
+            AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e, textSource);
 
-        if (SwingUtilities.isRightMouseButton(e)) {
-            if (spansContainingLocation.size() == 1) {
-                Span span = spansContainingLocation.iterator().next();
-                view.getController()
-                        .getTextSourceCollection().getSelection()
-                        .getConceptAnnotationCollection().setSelectedAnnotation(span);
+            Set<Span> spansContainingLocation = getSpans(press_offset);
+
+            if (SwingUtilities.isRightMouseButton(e)) {
+                if (spansContainingLocation.size() == 1) {
+                    Span span = spansContainingLocation.iterator().next();
+                    textSource.getConceptAnnotationCollection().setSelectedAnnotation(span);
+                }
+                popupMenu.showPopUpMenu(release_offset);
+            } else if (press_offset == release_offset) {
+                if (spansContainingLocation.size() == 1) {
+                    Span span = spansContainingLocation.iterator().next();
+                    textSource.getConceptAnnotationCollection().setSelectedAnnotation(span);
+                } else if (spansContainingLocation.size() > 1) {
+                    popupMenu.chooseAnnotation(spansContainingLocation);
+                }
+
+            } else {
+                setSelectionAtWordLimits(press_offset, release_offset);
             }
-            popupMenu.showPopUpMenu(release_offset);
-        } else if (press_offset == release_offset) {
-            if (spansContainingLocation.size() == 1) {
-                Span span = spansContainingLocation.iterator().next();
-                view.getController()
-                        .getTextSourceCollection().getSelection()
-                        .getConceptAnnotationCollection().setSelectedAnnotation(span);
-            } else if (spansContainingLocation.size() > 1) {
-                popupMenu.chooseAnnotation(spansContainingLocation);
-            }
-
-        } else {
-            setSelectionAtWordLimits(press_offset, release_offset);
+        } catch (NoSelectionException e1) {
+            e1.printStackTrace();
         }
     }
 
@@ -325,71 +344,79 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
     }
 
     public void refreshHighlights() {
-        if (view.getController().isNotLoading()) {
-            // Remove all previous highlights in case a span has been deleted
-            getHighlighter().removeAllHighlights();
+        try {
+            if (view.getController().isNotLoading()) {
+                // Remove all previous highlights in case a span has been deleted
+                getHighlighter().removeAllHighlights();
 
-            // Always highlight the selected concept first so its color and border show up
-            highlightSelectedAnnotation();
+                // Always highlight the selected concept first so its color and border show up
+                highlightSelectedAnnotation();
 
-            // Highlight overlaps first, then spans
-            Span lastSpan = null;
+                // Highlight overlaps first, then spans
+                Span lastSpan = null;
 
-            Set<Span> spans = getSpans(null);
-            for (Span span : spans) {
-                if (lastSpan != null) {
-                    if (span.intersects(lastSpan)) {
-                        try {
-                            highlightSpan(
-                                    span.getStart(),
-                                    min(lastSpan.getEnd(), span.getEnd()),
-                                    new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY));
-                        } catch (BadLocationException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-                if (lastSpan == null || span.getEnd() > lastSpan.getEnd()) {
-                    lastSpan = span;
-                }
-            }
-
-            for (Span span : spans) {
-                try {
-                    highlightSpan(
-                            span.getStart(),
-                            span.getEnd(),
-                            new DefaultHighlighter.DefaultHighlightPainter(
-                                    view.getController()
-                                            .getProfileCollection().getSelection()
-                                            .getColor(span.getConceptAnnotation())));
-                } catch (BadLocationException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            revalidate();
-            repaint();
-
-            SwingUtilities.invokeLater(
-                    () -> {
-                        TextSource textSource = view.getController().getTextSourceCollection().getSelection();
-                        ConceptAnnotation annotation = textSource.getConceptAnnotationCollection().getSelection();
-
-                        if (annotation != null) {
-                            Span span = annotation.getSpanCollection().getSelection();
-                            if (span == null) {
-                                span = annotation.getSpanCollection().first();
-                            }
+                Set<Span> spans = getSpans(null);
+                for (Span span : spans) {
+                    if (lastSpan != null) {
+                        if (span.intersects(lastSpan)) {
                             try {
-                                scrollRectToVisible(modelToView(span.getStart()));
-                            } catch (BadLocationException | NullPointerException e) {
+                                highlightSpan(
+                                        span.getStart(),
+                                        min(lastSpan.getEnd(), span.getEnd()),
+                                        new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY));
+                            } catch (BadLocationException e) {
                                 e.printStackTrace();
                             }
                         }
                     }
-            );
+
+                    if (lastSpan == null || span.getEnd() > lastSpan.getEnd()) {
+                        lastSpan = span;
+                    }
+                }
+
+                for (Span span : spans) {
+                    try {
+                        highlightSpan(
+                                span.getStart(),
+                                span.getEnd(),
+                                new DefaultHighlighter.DefaultHighlightPainter(
+                                        view.getController()
+                                                .getProfileCollection().getSelection()
+                                                .getColor(span.getConceptAnnotation())));
+                    } catch (BadLocationException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                revalidate();
+                repaint();
+
+                TextSource textSource = view.getController().getTextSourceCollection().getSelection();
+                ConceptAnnotation annotation = textSource.getConceptAnnotationCollection().getSelection();
+                Span span = null;
+                if (annotation != null) {
+                    span = annotation.getSpanCollection().getSelection();
+                    if (span == null) {
+                        span = annotation.getSpanCollection().first();
+                    }
+                }
+
+                Span finalSpan = span;
+                SwingUtilities.invokeLater(
+                        () -> {
+                            if (finalSpan != null) {
+                                try {
+                                    scrollRectToVisible(modelToView(finalSpan.getStart()));
+                                } catch (BadLocationException | NullPointerException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                );
+            }
+        } catch (NoSelectionException e) {
+            e.printStackTrace();
         }
     }
 
@@ -399,14 +426,14 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
         getHighlighter().addHighlight(start, end, highlighter);
     }
 
-    private Set<Span> getSpans(Integer loc) {
+    private Set<Span> getSpans(Integer loc) throws NoSelectionException {
         return view.getController()
                 .getTextSourceCollection().getSelection()
                 .getConceptAnnotationCollection()
                 .getSpans(loc, 0, getText().length());
     }
 
-    private void highlightSelectedAnnotation() {
+    private void highlightSelectedAnnotation() throws NoSelectionException {
         ConceptAnnotation selectedConceptAnnotation = view.getController()
                 .getTextSourceCollection().getSelection()
                 .getConceptAnnotationCollection().getSelection();
@@ -531,60 +558,57 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
 
     class AnnotationPopupMenu extends JPopupMenu {
         private final MouseEvent e;
+        private final TextSource textSource;
 
-        AnnotationPopupMenu(MouseEvent e) {
+        AnnotationPopupMenu(MouseEvent e, TextSource textSource) {
             this.e = e;
+            this.textSource = textSource;
         }
 
-        private JMenuItem reassignOWLClassCommand() {
+        private JMenuItem reassignOWLClassCommand(ConceptAnnotation conceptAnnotation) {
             JMenuItem menuItem = new JMenuItem("Reassign OWL class");
-            menuItem.addActionListener(e1 -> view.getController().getTextSourceCollection()
-                    .getSelection().getConceptAnnotationCollection().reassignSelectedOWLClassToSelectedAnnotation());
+            menuItem.addActionListener(e -> AnnotationActions.reassignOWLClass(view, conceptAnnotation));
 
             return menuItem;
         }
 
         private JMenuItem addAnnotationCommand() {
             JMenuItem menuItem = new JMenuItem("Add concept");
-            menuItem.addActionListener(e12 -> AnnotationActions.addAnnotation(view));
+            menuItem.addActionListener(e12 -> AnnotationActions.addAnnotation(view, textSource));
 
             return menuItem;
         }
 
-        private JMenuItem removeSpanFromAnnotationCommand() {
+        private JMenuItem removeSpanFromAnnotationCommand(ConceptAnnotation conceptAnnotation) {
             JMenuItem removeSpanFromSelectedAnnotation =
                     new JMenuItem(
                             String.format(
                                     "Delete span from %s",
-                                    view.getController()
-                                            .getTextSourceCollection()
-                                            .getSelection()
-                                            .getConceptAnnotationCollection()
-                                            .getSelection()
-                                            .getOwlClass()));
-            removeSpanFromSelectedAnnotation.addActionListener(e5 -> AnnotationActions.removeAnnotation(view));
+                                    conceptAnnotation.getOwlClass()));
+            removeSpanFromSelectedAnnotation.addActionListener(e5 -> AnnotationActions.removeAnnotation(view, textSource, conceptAnnotation));
 
             return removeSpanFromSelectedAnnotation;
         }
 
         private JMenuItem selectAnnotationCommand(Span span) {
             JMenuItem selectAnnotationMenuItem = new JMenuItem("Select " + span.getConceptAnnotation().getOwlClassID());
-            selectAnnotationMenuItem.addActionListener(e3 -> view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().setSelectedAnnotation(span));
+            selectAnnotationMenuItem.addActionListener(e3 -> {
+                try {
+                    view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().setSelectedAnnotation(span);
+                } catch (NoSelectionException e1) {
+                    e1.printStackTrace();
+                }
+            });
 
             return selectAnnotationMenuItem;
         }
 
-        private JMenuItem removeAnnotationCommand() {
+        private JMenuItem removeAnnotationCommand(ConceptAnnotation conceptAnnotation) {
             JMenuItem removeAnnotationMenuItem = new JMenuItem(
                     "Delete " +
-                            view.getController()
-                                    .getTextSourceCollection()
-                                    .getSelection()
-                                    .getConceptAnnotationCollection()
-                                    .getSelection()
-                                    .getOwlClass());
+                            conceptAnnotation.getOwlClass());
 
-            removeAnnotationMenuItem.addActionListener(e4 -> AnnotationActions.removeAnnotation(view));
+            removeAnnotationMenuItem.addActionListener(e4 -> AnnotationActions.removeAnnotation(view, textSource, conceptAnnotation));
 
             return removeAnnotationMenuItem;
         }
@@ -597,28 +621,32 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
         }
 
         void showPopUpMenu(int release_offset) {
-            TextSource textSource = view.getController().getTextSourceCollection().getSelection();
-            ConceptAnnotation selectedConceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
+
 
             if (getSelectionStart() <= release_offset && release_offset <= getSelectionEnd() && getSelectionStart() != getSelectionEnd()) {
                 select(getSelectionStart(), getSelectionEnd());
                 add(addAnnotationCommand());
-            } else if (selectedConceptAnnotation != null) {
-                Span selectedSpan = selectedConceptAnnotation.getSpanCollection().getSelection();
-                if (selectedSpan != null && selectedSpan.getStart() <= release_offset && release_offset <= selectedSpan.getEnd()) {
-                    add(removeAnnotationCommand());
-                    if (selectedConceptAnnotation.getSpanCollection().size() > 1) {
-                        add(removeSpanFromAnnotationCommand());
-                    }
-                    add(reassignOWLClassCommand());
-                } else {
-                    return;
-                }
             } else {
-                return;
+                try {
+                    ConceptAnnotation selectedConceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
+                    Span selectedSpan = selectedConceptAnnotation.getSpanCollection().getSelection();
+                    if (selectedSpan.getStart() <= release_offset && release_offset <= selectedSpan.getEnd()) {
+                        add(removeAnnotationCommand(selectedConceptAnnotation));
+                        if (selectedConceptAnnotation.getSpanCollection().size() > 1) {
+                            add(removeSpanFromAnnotationCommand(selectedConceptAnnotation));
+                        }
+                        add(reassignOWLClassCommand(selectedConceptAnnotation));
+                    } else {
+                        return;
+                    }
+                } catch (NoSelectionException e1) {
+                    e1.printStackTrace();
+                }
             }
 
             show(e.getComponent(), e.getX(), e.getY());
         }
+
+
     }
 }

@@ -492,7 +492,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
         if (changeEvent.getNew() == null) {
             setSelectionCells(new Object[0]);
         } else {
-            setSelectionCells(getVerticesForAnnotation(changeEvent.getNew().getTextSource().getConceptAnnotationCollection().getSelection()));
+            setSelectionCells(getVerticesForAnnotation(changeEvent.getNew()));
         }
     }
 

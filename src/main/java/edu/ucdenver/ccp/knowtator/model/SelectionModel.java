@@ -43,4 +43,9 @@ public class SelectionModel implements CaretListener, BaseKnowtatorModel {
     public void reset() {
 
     }
+
+    @Override
+    public void finishLoad() {
+
+    }
 }

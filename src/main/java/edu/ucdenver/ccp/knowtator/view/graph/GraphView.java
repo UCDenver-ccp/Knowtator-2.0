@@ -85,10 +85,10 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
                 }
                 if (event.getNew() != null) {
                     event.getNew().getGraphSpaceCollection().addCollectionListener(graphView);
-                    if (event.getNew().getGraphSpaceCollection().getSelection() != null) {
+                    try {
                         showGraph(event.getNew().getGraphSpaceCollection().getSelection());
-                    } else {
-                        showGraph(event.getNew().getGraphSpaceCollection().first());
+                    } catch (NoSelectionException e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -155,19 +155,16 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
         if (visible) {
             view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
             graphSpaceChooser.reset();
-            TextSource textSource = view.getController().getTextSourceCollection().getSelection();
-            if (textSource != null) {
+            try {
+                TextSource textSource = view.getController().getTextSourceCollection().getSelection();
                 textSource.getGraphSpaceCollection().addCollectionListener(this);
-                if (textSource.getGraphSpaceCollection().size() > 0) {
-                    GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection();
-                    if (graphSpace != null) {
-                        showGraph(graphSpace);
-                    } else {
-                        showGraph(textSource.getGraphSpaceCollection().first());
-                    }
-                } else {
+                try {
+                    showGraph(textSource.getGraphSpaceCollection().getSelection());
+                } catch (NoSelectionException e) {
                     GraphActions.addGraphSpace(view);
                 }
+            } catch (NoSelectionException e) {
+                e.printStackTrace();
             }
         } else {
             view.getController().getTextSourceCollection().removeCollectionListener(textSourceCollectionListener);

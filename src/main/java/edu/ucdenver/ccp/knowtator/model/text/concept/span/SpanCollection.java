@@ -28,9 +28,13 @@ public class SpanCollection extends KnowtatorCollection<Span> implements BratSta
         this.conceptAnnotation = conceptAnnotation;
     }
 
-    public void removeSpan(Span span) {
-        remove(span);
+    @Override
+    public void remove(Span span) {
         setSelection(null);
+        if (! textSource.getConceptAnnotationCollection().getAllSpanCollection().equals(this)) {
+            textSource.getConceptAnnotationCollection().getAllSpanCollection().remove(span);
+        }
+        super.remove(span);
     }
 
     @Override

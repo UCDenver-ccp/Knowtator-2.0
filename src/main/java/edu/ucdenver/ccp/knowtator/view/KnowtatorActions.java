@@ -1,5 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view;
 
+import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog;
 import edu.ucdenver.ccp.knowtator.view.menu.MenuDialog;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -23,12 +24,16 @@ class KnowtatorActions {
     static void assignColorToClassButton(KnowtatorView view) {
         OWLEntity owlClass = view.getController().getOWLModel().getSelectedOWLEntity();
         if (owlClass == null) {
-            owlClass =
-                    view.getController()
-                            .getTextSourceCollection().getSelection()
-                            .getConceptAnnotationCollection()
-                            .getSelection()
-                            .getOwlClass();
+            try {
+                owlClass =
+                        view.getController()
+                                .getTextSourceCollection().getSelection()
+                                .getConceptAnnotationCollection()
+                                .getSelection()
+                                .getOwlClass();
+            } catch (NoSelectionException e) {
+                e.printStackTrace();
+            }
         }
         if (owlClass instanceof OWLClass) {
             Color c = JColorChooser.showDialog(view, "Pick a color for " + owlClass, Color.CYAN);

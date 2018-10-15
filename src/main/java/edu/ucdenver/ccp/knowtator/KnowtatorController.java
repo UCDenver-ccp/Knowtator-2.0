@@ -56,8 +56,8 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 
 
     @Override
-    List<Savable> getManagers() {
-        return models.stream().filter(model -> model instanceof Savable).map(model -> (Savable) model).collect(Collectors.toList());
+    List<BaseKnowtatorManager> getManagers() {
+        return models.stream().filter(model -> model instanceof BaseKnowtatorManager).map(model -> (BaseKnowtatorManager) model).collect(Collectors.toList());
     }
 
     @Override

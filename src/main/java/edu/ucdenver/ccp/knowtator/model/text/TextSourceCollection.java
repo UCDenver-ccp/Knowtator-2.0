@@ -1,12 +1,12 @@
 package edu.ucdenver.ccp.knowtator.model.text;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.Savable;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
-import edu.ucdenver.ccp.knowtator.model.BaseKnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.BaseKnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -22,7 +22,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-public class TextSourceCollection extends KnowtatorCollection<TextSource> implements BratStandoffIO, KnowtatorXMLIO, Savable, BaseKnowtatorModel {
+public class TextSourceCollection extends KnowtatorCollection<TextSource> implements BratStandoffIO, KnowtatorXMLIO, BaseKnowtatorManager {
     @SuppressWarnings("unused")
     private final Logger log = Logger.getLogger(TextSourceCollection.class);
 
@@ -164,10 +164,14 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 
     @Override
     public void removeSelected() {
-        TextSource oldTextSource = getSelection();
+        try {
+            TextSource oldTextSource = getSelection();
+            oldTextSource.dispose();
+            remove(oldTextSource);
+        } catch (NoSelectionException e) {
+            e.printStackTrace();
+        }
         selectPrevious();
-        oldTextSource.dispose();
-        remove(oldTextSource);
     }
 
     @Override

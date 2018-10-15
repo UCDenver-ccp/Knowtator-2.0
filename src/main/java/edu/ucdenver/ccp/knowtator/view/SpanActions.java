@@ -1,6 +1,8 @@
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 
 class SpanActions {
     final static String GROW = "grow";
@@ -8,17 +10,17 @@ class SpanActions {
     final static String START = "start";
     final static String END = "end";
 
-    static void selectNextSpan(KnowtatorView view) {
-        view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getNextSpan();
+    static void selectNextSpan(TextSource textSource) throws NoSelectionException {
+        textSource.getConceptAnnotationCollection().getNextSpan();
     }
 
-    static void selectPreviousSpan(KnowtatorView view) {
-        view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getPreviousSpan();
+    static void selectPreviousSpan(TextSource textSource) throws NoSelectionException {
+        textSource.getConceptAnnotationCollection().getPreviousSpan();
     }
 
-    static void modifySelectedSpan(KnowtatorView view, String startOrEnd, String growOrShrink) {
-        ConceptAnnotationCollection conceptAnnotationCollection = view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection();
-        conceptAnnotationCollection.modifySelection(
+    static void modifySpan(Span span, String startOrEnd, String growOrShrink) {
+        span.getTextSource().getConceptAnnotationCollection().modifySpan(
+                span,
                 startOrEnd.equals(START) ?
                         growOrShrink.equals(GROW) ?
                                 -1 : growOrShrink.equals(SHRINK) ?

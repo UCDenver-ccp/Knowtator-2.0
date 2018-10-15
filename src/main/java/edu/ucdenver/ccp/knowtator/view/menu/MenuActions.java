@@ -3,6 +3,8 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import edu.ucdenver.ccp.knowtator.iaa.IAAException;
 import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
+import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.Logger;
 
@@ -122,24 +124,27 @@ class MenuActions {
     }
 
     static void exportToPNG(KnowtatorView view) {
-        JFileChooser fileChooser = new JFileChooser(view.getController().getSaveLocation());
-        fileChooser.setFileFilter(new FileNameExtensionFilter("PNG", "png"));
-        fileChooser.setSelectedFile(
-                new File(
-                        view.getController()
-                                .getTextSourceCollection().getSelection()
-                                .getId() + "_annotations.png"));
-        if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
-            view.getController()
-                    .getTextSourceCollection().getSelection()
-                    .getConceptAnnotationCollection()
-                    .setSelection(null);
-            BufferedImage image = view.getKnowtatorTextPane().getScreenShot();
-            try {
-                ImageIO.write(image, "png", fileChooser.getSelectedFile());
-            } catch (IOException e1) {
-                e1.printStackTrace();
+        try {
+            TextSource textSource = view.getController().getTextSourceCollection().getSelection();
+            JFileChooser fileChooser = new JFileChooser(view.getController().getSaveLocation());
+            fileChooser.setFileFilter(new FileNameExtensionFilter("PNG", "png"));
+            fileChooser.setSelectedFile(
+                    new File(
+                            textSource
+                                    .getId() + "_annotations.png"));
+            if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
+                textSource
+                        .getConceptAnnotationCollection()
+                        .setSelection(null);
+                BufferedImage image = view.getKnowtatorTextPane().getScreenShot();
+                try {
+                    ImageIO.write(image, "png", fileChooser.getSelectedFile());
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
             }
+        } catch (NoSelectionException e) {
+            e.printStackTrace();
         }
     }
 

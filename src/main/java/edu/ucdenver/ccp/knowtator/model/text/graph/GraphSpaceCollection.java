@@ -40,7 +40,12 @@ public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implem
   SETTERS
    */
 
-
+    @Override
+    public void setSelection(GraphSpace graphSpace) {
+        if (graphSpace != null) {
+            super.setSelection(graphSpace);
+        }
+    }
 
   /*
   ADDERS

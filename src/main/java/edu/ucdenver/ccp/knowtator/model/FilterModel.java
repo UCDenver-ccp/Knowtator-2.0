@@ -47,4 +47,9 @@ public class FilterModel implements BaseKnowtatorModel {
     public void reset() {
 
     }
+
+    @Override
+    public void finishLoad() {
+
+    }
 }

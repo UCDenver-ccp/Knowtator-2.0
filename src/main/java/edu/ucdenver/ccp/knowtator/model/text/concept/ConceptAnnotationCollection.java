@@ -7,6 +7,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.FilterModelListener;
 import edu.ucdenver.ccp.knowtator.model.OWLModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
@@ -81,12 +82,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
     }
 
-    public void addSpanToSelectedAnnotation() {
-        getSelection().getSpanCollection().addSpan(null,
-                controller.getSelectionModel().getStart(),
-                controller.getSelectionModel().getEnd());
-    }
-
 
     /*
     REMOVERS
@@ -100,22 +95,10 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         super.remove(conceptAnnotationToRemove);
     }
 
-    public void removeSpanFromAnnotation(Span span) {
-        span.getConceptAnnotation().getSpanCollection().removeSpan(span);
-        allSpanCollection.remove(span);
-    }
-
-    public void removeSpanFromSelectedAnnotation() {
-        ConceptAnnotation conceptAnnotation = getSelection();
-        removeSpanFromAnnotation(conceptAnnotation.getSpanCollection().getSelection());
-    }
-
-
     /*
     MODIFIERS
      */
-    public void modifySelection(int startModification, int endModification) {
-        Span span = getSelection().getSpanCollection().getSelection();
+    public void modifySpan(Span span, int startModification, int endModification) {
         allSpanCollection.remove(span);
         span.modifySpan(startModification, endModification, textSource.getContent().length());
         allSpanCollection.add(span);
@@ -181,13 +164,13 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                 });
     }
 
-    public void getNextSpan() {
+    public void getNextSpan() throws NoSelectionException {
         Span nextSpan = allSpanCollection.getNext(getSelection().getSpanCollection().getSelection());
         setSelection(nextSpan.getConceptAnnotation());
         nextSpan.getConceptAnnotation().getSpanCollection().setSelection(nextSpan);
     }
 
-    public void getPreviousSpan() {
+    public void getPreviousSpan() throws NoSelectionException {
         Span previousSpan = allSpanCollection.getPrevious(getSelection().getSpanCollection().getSelection());
         setSelection(previousSpan.getConceptAnnotation());
         previousSpan.getConceptAnnotation().getSpanCollection().setSelection(previousSpan);
@@ -200,11 +183,15 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
     public void setSelectedAnnotation(Span newSpan) {
 
-        if (newSpan == null) {
-            setSelection(null);
-        } else if (getSelection() != newSpan.getConceptAnnotation()) {
-            setSelection(newSpan.getConceptAnnotation());
-            newSpan.getConceptAnnotation().getSpanCollection().setSelection(newSpan);
+        try {
+            if (newSpan == null) {
+                setSelection(null);
+            } else if (getSelection() != newSpan.getConceptAnnotation()) {
+                setSelection(newSpan.getConceptAnnotation());
+                newSpan.getConceptAnnotation().getSpanCollection().setSelection(newSpan);
+            }
+        } catch (NoSelectionException e) {
+            e.printStackTrace();
         }
     }
 
@@ -214,8 +201,11 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
     @Override
     public void setSelection(ConceptAnnotation selection) {
-        if (getSelection() != null && getSelection() != selection) {
-            getSelection().getSpanCollection().setSelection(null);
+        try {
+            if (getSelection() != selection) {
+                getSelection().getSpanCollection().setSelection(null);
+            }
+        } catch (NoSelectionException ignored) {
         }
         super.setSelection(selection);
     }
@@ -519,29 +509,29 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         }
     }
 
-    public void reassignSelectedOWLClassToSelectedAnnotation() {
-        OWLEntity selectedOWLEntity = controller.getOWLModel().getSelectedOWLEntity();
-        if (selectedOWLEntity instanceof OWLClass) {
-            getSelection().setOwlClass((OWLClass) selectedOWLEntity);
-            change(getSelection());
-        }
-    }
-
     public SpanCollection getAllSpanCollection() {
         return allSpanCollection;
     }
 
     @Override
     public void profileFilterChanged(boolean filterValue) {
-        if (filterValue && getSelection() != null && getSelection().getAnnotator() != controller.getProfileCollection().getSelection()) {
-            setSelection(null);
+        try {
+            if (filterValue && getSelection().getAnnotator() != controller.getProfileCollection().getSelection()) {
+                setSelection(null);
+            }
+        } catch (NoSelectionException e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public void owlClassFilterChanged(boolean filterValue) {
-        if (filterValue && getSelection() != null && getSelection().getOwlClass() != controller.getOWLModel().getSelectedOWLEntity()) {
-            setSelection(null);
+        try {
+            if (filterValue && getSelection().getOwlClass() != controller.getOWLModel().getSelectedOWLEntity()) {
+                setSelection(null);
+            }
+        } catch (NoSelectionException e) {
+            e.printStackTrace();
         }
     }
 

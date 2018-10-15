@@ -1,13 +1,13 @@
 package edu.ucdenver.ccp.knowtator.model.profile;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.Savable;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.BaseKnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.BaseKnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -20,7 +20,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileCollection extends KnowtatorCollection<Profile> implements KnowtatorXMLIO, Savable, BaseKnowtatorModel {
+public class ProfileCollection extends KnowtatorCollection<Profile> implements KnowtatorXMLIO, BaseKnowtatorManager {
 
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(KnowtatorController.class);
@@ -46,6 +46,17 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
     public void save() {
         if (controller.isNotLoading()) {
             forEach(Profile::save);
+        }
+    }
+
+    @Override
+    public Profile getSelection() {
+        //Profile should never be null
+        try {
+            return super.getSelection();
+        } catch (NoSelectionException e) {
+            setSelection(defaultProfile);
+            return defaultProfile;
         }
     }
 

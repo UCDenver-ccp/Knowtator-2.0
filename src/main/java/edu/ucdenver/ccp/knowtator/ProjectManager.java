@@ -6,6 +6,7 @@ import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
+import edu.ucdenver.ccp.knowtator.model.BaseKnowtatorManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -37,9 +38,9 @@ public abstract class ProjectManager implements Savable {
         makeProjectStructure(projectLocation);
 
         isLoading = true;
-        getManagers().forEach(Savable::load);
+        getManagers().forEach(BaseKnowtatorManager::load);
         isLoading = false;
-        getManagers().forEach(Savable::finishLoad);
+        getManagers().forEach(BaseKnowtatorManager::finishLoad);
 
 //        saveProject();
     }
@@ -90,7 +91,7 @@ public abstract class ProjectManager implements Savable {
         try {
             setSaveLocation(projectDirectory);
 
-            for (Savable knowtatorManager : getManagers()) {
+            for (BaseKnowtatorManager knowtatorManager : getManagers()) {
                 knowtatorManager.setSaveLocation(projectDirectory);
             }
 
@@ -103,7 +104,7 @@ public abstract class ProjectManager implements Savable {
         }
     }
 
-    abstract List<Savable> getManagers();
+    abstract List<BaseKnowtatorManager> getManagers();
 
     public void loadWithAppropriateFormat(BasicIO basicIO, File file) {
         String[] splitOnDots = file.getName().split("\\.");
@@ -154,11 +155,6 @@ public abstract class ProjectManager implements Savable {
 
     @Override
     public void load() {
-
-    }
-
-    @Override
-    public void finishLoad() {
 
     }
 

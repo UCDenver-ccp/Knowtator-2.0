@@ -229,10 +229,34 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     private void makeAnnotationButtons() {
         annotationButtons = new ArrayList<>();
-        addAnnotationButton.addActionListener(e -> AnnotationActions.addAnnotation(this));
-        removeAnnotationButton.addActionListener(e -> AnnotationActions.removeAnnotation(this));
-        nextSpanButton.addActionListener(e -> SpanActions.selectNextSpan(this));
-        previousSpanButton.addActionListener(e -> SpanActions.selectPreviousSpan(this));
+        addAnnotationButton.addActionListener(e -> {
+            try {
+                AnnotationActions.addAnnotation(this, getController().getTextSourceCollection().getSelection());
+            } catch (NoSelectionException e1) {
+                e1.printStackTrace();
+            }
+        });
+        removeAnnotationButton.addActionListener(e -> {
+            try {
+                AnnotationActions.removeAnnotation(this, getController().getTextSourceCollection().getSelection(), getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection());
+            } catch (NoSelectionException e1) {
+                e1.printStackTrace();
+            }
+        });
+        nextSpanButton.addActionListener(e -> {
+            try {
+                SpanActions.selectNextSpan(getController().getTextSourceCollection().getSelection());
+            } catch (NoSelectionException e1) {
+                e1.printStackTrace();
+            }
+        });
+        previousSpanButton.addActionListener(e -> {
+            try {
+                SpanActions.selectPreviousSpan(getController().getTextSourceCollection().getSelection());
+            } catch (NoSelectionException e1) {
+                e1.printStackTrace();
+            }
+        });
 
         annotationButtons.add(addAnnotationButton);
         annotationButtons.add(removeAnnotationButton);
@@ -243,10 +267,36 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     private void makeSpanButtons() {
 
         spanSizeButtons = new HashMap<>();
-        spanSizeButtons.put(shrinkEndButton, e -> SpanActions.modifySelectedSpan(this, SpanActions.END, SpanActions.SHRINK));
-        spanSizeButtons.put(shrinkStartButton, e -> SpanActions.modifySelectedSpan(this, SpanActions.START, SpanActions.SHRINK));
-        spanSizeButtons.put(growEndButton, e -> SpanActions.modifySelectedSpan(this, SpanActions.END, SpanActions.GROW));
-        spanSizeButtons.put(growStartButton, e -> SpanActions.modifySelectedSpan(this, SpanActions.START, SpanActions.GROW));
+        spanSizeButtons.put(shrinkEndButton, e -> {
+            try {
+                SpanActions.modifySpan(getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getSpanCollection().getSelection(),
+                        SpanActions.END,
+                        SpanActions.SHRINK);
+            } catch (NoSelectionException e1) {
+                e1.printStackTrace();
+            }
+        });
+        spanSizeButtons.put(shrinkStartButton, e -> {
+            try {
+                SpanActions.modifySpan(getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getSpanCollection().getSelection(), SpanActions.START, SpanActions.SHRINK);
+            } catch (NoSelectionException e1) {
+                e1.printStackTrace();
+            }
+        });
+        spanSizeButtons.put(growEndButton, e -> {
+            try {
+                SpanActions.modifySpan(getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getSpanCollection().getSelection(), SpanActions.END, SpanActions.GROW);
+            } catch (NoSelectionException e1) {
+                e1.printStackTrace();
+            }
+        });
+        spanSizeButtons.put(growStartButton, e -> {
+            try {
+                SpanActions.modifySpan(getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getSpanCollection().getSelection(), SpanActions.START, SpanActions.GROW);
+            } catch (NoSelectionException e1) {
+                e1.printStackTrace();
+            }
+        });
 
         selectionSizeButtons = new HashMap<>();
         selectionSizeButtons.put(shrinkEndButton, e -> SpanActions.modifySelection(this, SpanActions.END, SpanActions.SHRINK));

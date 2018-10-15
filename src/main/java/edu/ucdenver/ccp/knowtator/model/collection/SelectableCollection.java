@@ -16,17 +16,20 @@ public abstract class SelectableCollection<K extends KnowtatorDataObjectInterfac
         selection = null;
     }
 
-    public K getSelection() {
+    public K getSelection() throws NoSelectionException {
+        if (selection == null) {
+            throw new NoSelectionException();
+        }
         return selection;
 
     }
 
     public void selectNext() {
-        setSelection(getNext(getSelection()));
+        setSelection(getNext(selection));
     }
 
     public void selectPrevious() {
-        setSelection(getPrevious(getSelection()));
+        setSelection(getPrevious(selection));
     }
 
     public void setSelection(K newSelection) {
