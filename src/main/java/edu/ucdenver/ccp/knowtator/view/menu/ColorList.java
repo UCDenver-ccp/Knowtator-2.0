@@ -7,10 +7,12 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorActions;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLObject;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.util.Comparator;
 
 public class ColorList extends JList<Object> implements KnowtatorCollectionListener<Profile>, KnowtatorComponent, ColorListener {
 
@@ -30,7 +32,13 @@ public class ColorList extends JList<Object> implements KnowtatorCollectionListe
 
     void setCollection(Profile profile) {
         dispose();
-        profile.getColors().forEach((object, color) -> ((DefaultListModel<Object>) getModel()).addElement(object));
+        profile.getColors().keySet().stream().filter(o -> o instanceof OWLObject)
+                .map(o -> (OWLObject) o)
+                .sorted(view.getController().getOWLModel().getOWLObjectComparator())
+                .forEach(o -> ((DefaultListModel<Object>) getModel()).addElement(o));
+        profile.getColors().keySet().stream().filter(o -> !(o instanceof OWLObject))
+                .sorted(Comparator.comparing(Object::toString))
+                .forEach(o -> ((DefaultListModel<Object>) getModel()).addElement(o));
         reset();
     }
 

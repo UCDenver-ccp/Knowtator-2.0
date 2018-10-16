@@ -395,6 +395,14 @@ public class OWLModel implements Serializable, BaseKnowtatorManager {
         controller.getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
     }
 
+    public Comparator<OWLObject> getOWLObjectComparator() {
+        try {
+            return getWorkSpace().getOWLModelManager().getOWLObjectComparator();
+        } catch (OWLWorkSpaceNotSetException e) {
+            return Comparator.comparing(Object::toString);
+        }
+    }
+
     private class OWLWorkSpaceNotSetException extends Exception {
     }
 }
