@@ -29,8 +29,9 @@ public abstract class KnowtatorChooser<K extends KnowtatorDataObjectInterface> e
 	protected void setCollection(KnowtatorCollection<K> collection) {
 		if (this.collection != null) {
 			this.collection.removeCollectionListener(this);
-			this.collection.forEach(this::removeItem);
 		}
+
+        removeAllItems();
 
 		this.collection = collection;
 		if (collection != null) {
@@ -53,12 +54,14 @@ public abstract class KnowtatorChooser<K extends KnowtatorDataObjectInterface> e
 
 	@Override
 	public void added(AddEvent<K> event) {
-		addItem(event.getAdded());
+		removeAllItems();
+		collection.forEach(this::addItem);
 	}
 
 	@Override
 	public void removed(RemoveEvent<K> event) {
-		removeItem(event.getRemoved());
+        removeAllItems();
+		collection.forEach(this::addItem);
 	}
 
 	@Override
