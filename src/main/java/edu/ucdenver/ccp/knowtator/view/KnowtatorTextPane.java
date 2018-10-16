@@ -372,7 +372,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
             try {
                 TextSource textSource = view.getController().getTextSourceCollection().getSelection();
                 ConceptAnnotation annotation = textSource.getConceptAnnotationCollection().getSelection();
-                if (annotation != null) {
+                if (annotation != null && annotation.getSpanCollection().size() > 0) {
                     try {
                         span = annotation.getSpanCollection().getSelection();
                     } catch (NoSelectionException e) {

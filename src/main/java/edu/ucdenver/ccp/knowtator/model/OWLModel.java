@@ -26,7 +26,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class OWLModel implements Serializable, BaseKnowtatorManager {
+public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListener {
     @SuppressWarnings("unused")
     private static final Logger log = LogManager.getLogger(OWLModel.class);
     private final KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
@@ -36,9 +36,12 @@ public class OWLModel implements Serializable, BaseKnowtatorManager {
     private List<IRI> iris;
     private final KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
     private final KnowtatorController controller;
+    private OWLClass testClass;
+    private OWLObjectProperty testProperty;
 
     public OWLModel(KnowtatorController controller) {
         this.controller = controller;
+        controller.addDebugListener(this);
         iris = null;
 
         conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
@@ -122,6 +125,9 @@ public class OWLModel implements Serializable, BaseKnowtatorManager {
     }
 
     public OWLEntity getSelectedOWLEntity() {
+        if (controller.isDebug()) {
+            return testClass;
+        }
         try {
             return getWorkSpace().getOWLSelectionModel().getSelectedEntity();
         } catch (OWLWorkSpaceNotSetException e) {
@@ -218,23 +224,27 @@ public class OWLModel implements Serializable, BaseKnowtatorManager {
         }
     }
 
-//    @Override
-//    public void setDebug() {
-//        OWLOntologyManager manager = org.semanticweb.owlapi.apibinding.OWLManager.createOWLOntologyManager();
-//        //    OWLWorkspace workspace = new OWLWorkspace();
-//        //    OWLEditorKitFactory editorKitFactory = new OWLEditorKitFactory();
-//        //    OWLEditorKit editorKit = new OWLEditorKit(editorKitFactory);
-//        //    workspace.setup(editorKit);
-//        //    workspace.initialise();
-//        OWLDataFactory factory = manager.getOWLDataFactory();
-//
-//        IRI iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#DomainConcept");
-//        OWLEntity testClass = factory.getOWLClass(iri);
-////        setSelectedOWLEntity(testClass);
-//
-//        iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#HasCountryOfOrigin");
-//        OWLObjectProperty objectProperty = factory.getOWLObjectProperty(iri);
-//    }
+    @Override
+    public void setDebug(boolean debug) {
+        if (debug) {
+            OWLOntologyManager manager = org.semanticweb.owlapi.apibinding.OWLManager.createOWLOntologyManager();
+            //    OWLWorkspace workspace = new OWLWorkspace();
+            //    OWLEditorKitFactory editorKitFactory = new OWLEditorKitFactory();
+            //    OWLEditorKit editorKit = new OWLEditorKit(editorKitFactory);
+            //    workspace.setup(editorKit);
+            //    workspace.initialise();
+            OWLDataFactory factory = manager.getOWLDataFactory();
+
+            IRI iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#DomainConcept");
+            testClass = factory.getOWLClass(iri);
+
+            iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#HasCountryOfOrigin");
+            testProperty = factory.getOWLObjectProperty(iri);
+        } else {
+            testClass = null;
+            testProperty = null;
+        }
+    }
 
 
     @Override

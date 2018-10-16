@@ -26,6 +26,7 @@ class KnowtatorStandalone extends JFrame {
     private KnowtatorStandalone(boolean debug) {
         view = new KnowtatorView();
         setContentPane(view);
+        view.getController().setDebug(debug);
         if (debug) {
             view.reset();
             try {

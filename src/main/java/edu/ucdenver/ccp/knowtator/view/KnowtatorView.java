@@ -389,6 +389,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
             @Override
             public void emptied() {
                 disableAnnotationButtons();
+                addAnnotationButton.setEnabled(true);
             }
 
             @Override

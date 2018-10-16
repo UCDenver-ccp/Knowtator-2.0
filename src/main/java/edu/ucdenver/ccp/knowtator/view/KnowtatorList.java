@@ -68,9 +68,11 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
         //clear collection
         dispose();
 
-        collection.removeCollectionListener(this);
-        this.collection = collection;
-        this.collection.addCollectionListener(this);
+        if (this.collection != collection) {
+            collection.removeCollectionListener(this);
+            this.collection = collection;
+            this.collection.addCollectionListener(this);
+        }
         this.collection.forEach(k -> ((DefaultListModel<K>) getModel()).addElement(k));
     }
 

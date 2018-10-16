@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<knowtator-project>
+  <profile id="Default">
+    <highlighter class="" color="#00ffff"/>
+    <highlighter class="" color="#00ffff"/>
+    <highlighter class="owl:Thing" color="#00ffff"/>
+  </profile>
+</knowtator-project>
