@@ -73,6 +73,7 @@ class ProfilePane {
         this.$$$loadButtonText$$$(addProfileButton, ResourceBundle.getBundle("ui").getString("add.profile"));
         panel1.add(addProfileButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         label1.setLabelFor(scrollPane1);
+        label2.setLabelFor(scrollPane2);
     }
 
     /**

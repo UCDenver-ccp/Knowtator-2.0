@@ -35,6 +35,7 @@ public class GraphViewDialog extends JDialog implements KnowtatorComponent {
                     }
                 });
 
+        JDialog graphViewDialog = this;
         addWindowFocusListener(
                 new WindowFocusListener() {
                     @Override
@@ -44,7 +45,7 @@ public class GraphViewDialog extends JDialog implements KnowtatorComponent {
 
                     @Override
                     public void windowLostFocus(WindowEvent e) {
-                        if (e.getOppositeWindow() != SwingUtilities.getWindowAncestor(view)) {
+                        if (e.getOppositeWindow() == null || (e.getOppositeWindow() != SwingUtilities.getWindowAncestor(view)  && e.getOppositeWindow().getOwner() != graphViewDialog)) {
                             setAlwaysOnTop(false);
                             toBack();
                         }

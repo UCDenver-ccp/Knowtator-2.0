@@ -161,7 +161,12 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
                 try {
                     showGraph(textSource.getGraphSpaceCollection().getSelection());
                 } catch (NoSelectionException e) {
-                    GraphActions.addGraphSpace(view);
+                    textSource.getGraphSpaceCollection().selectNext();
+                    try {
+                        showGraph(textSource.getGraphSpaceCollection().getSelection());
+                    } catch (NoSelectionException e1) {
+                        GraphActions.addGraphSpace(view);
+                    }
                 }
             } catch (NoSelectionException e) {
                 e.printStackTrace();

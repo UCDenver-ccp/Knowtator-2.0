@@ -199,7 +199,7 @@ public class MenuDialog extends JDialog {
         splitPane1.setLeftComponent(panel1);
         final JScrollPane scrollPane1 = new JScrollPane();
         panel1.add(scrollPane1, BorderLayout.CENTER);
-        menuOptionsList.setBackground(new Color(-986896));
+        menuOptionsList.setBackground(new Color(-1118482));
         menuOptionsList.setFocusCycleRoot(true);
         Font menuOptionsListFont = this.$$$getFont$$$(null, -1, 16, menuOptionsList.getFont());
         if (menuOptionsListFont != null) menuOptionsList.setFont(menuOptionsListFont);
