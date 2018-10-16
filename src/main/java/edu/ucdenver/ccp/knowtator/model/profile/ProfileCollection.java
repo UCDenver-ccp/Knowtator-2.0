@@ -124,11 +124,6 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
     }
 
     @Override
-    public Profile get(String id) {
-        return super.get(id);
-    }
-
-    @Override
     public void finishLoad() {
         if (size() > 1) {
             setSelection(first());

@@ -35,7 +35,7 @@ public class ProfileList extends KnowtatorList<Profile> {
     // I am overriding here because the base method adds this as a collection listener to its collection,
     // but that generates a concurrent modification exception during "added" events
     @Override
-    public void setCollection(KnowtatorCollection<Profile> collection) {
+    protected void setCollection(KnowtatorCollection<Profile> collection) {
         dispose();
         this.collection = collection;
         collection.forEach(k -> ((DefaultListModel<Profile>) getModel()).addElement(k));

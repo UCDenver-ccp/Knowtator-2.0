@@ -11,6 +11,7 @@ import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.view.annotation.*;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog;
+import edu.ucdenver.ccp.knowtator.view.menu.MenuActions;
 import edu.ucdenver.ccp.knowtator.view.search.SearchActions;
 import edu.ucdenver.ccp.knowtator.view.search.SearchTextField;
 import edu.ucdenver.ccp.knowtator.view.textsource.TextSourceActions;
@@ -71,6 +72,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     private AnnotationIDLabel annotationIDLabel;
     private AnnotationAnnotatorLabel annotationAnnotatorLabel;
     private AnnotationClassLabel annotationClassLabel;
+    private JCheckBox profileFilterCheckBox;
+    private JCheckBox owlClassFilterCheckBox;
 
     private List<JComponent> textSourceButtons;
     private List<JButton> annotationButtons;
@@ -199,9 +202,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         makeAnnotationButtons();
         makeSpanButtons();
         makeSearchButtons();
+        makeFilterButtons();
 
         // Disable
         disableTextSourceButtons();
+    }
+
+    private void makeFilterButtons() {
+        owlClassFilterCheckBox.setSelected(getController().getFilterModel().isFilterByOWLClass());
+        profileFilterCheckBox.setSelected(getController().getFilterModel().isFilterByProfile());
+        profileFilterCheckBox.addItemListener(e -> MenuActions.changeProfileFilter(this, profileFilterCheckBox.isSelected()));
+        owlClassFilterCheckBox.addItemListener(e -> MenuActions.changeOWLClassFilter(this, owlClassFilterCheckBox.isSelected()));
     }
 
     private void makeMenuButtons() {
@@ -561,8 +572,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         assignColorToClassButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-color-dropper-filled-50 (Custom).png")));
         assignColorToClassButton.setText("");
         toolBar1.add(assignColorToClassButton);
-        final JToolBar.Separator toolBar$Separator1 = new JToolBar.Separator();
-        toolBar1.add(toolBar$Separator1);
         addAnnotationButton = new JButton();
         addAnnotationButton.setHorizontalTextPosition(0);
         addAnnotationButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-plus-24.png")));
@@ -576,8 +585,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         removeAnnotationButton.setText("");
         removeAnnotationButton.setVerticalTextPosition(3);
         toolBar1.add(removeAnnotationButton);
-        final JToolBar.Separator toolBar$Separator2 = new JToolBar.Separator();
-        toolBar1.add(toolBar$Separator2);
         growStartButton = new JButton();
         growStartButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-exit-32 (reversed).png")));
         growStartButton.setText("");
@@ -594,6 +601,12 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         growEndButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-exit-32.png")));
         growEndButton.setText("");
         toolBar1.add(growEndButton);
+        profileFilterCheckBox = new JCheckBox();
+        profileFilterCheckBox.setText("Profile");
+        toolBar1.add(profileFilterCheckBox);
+        owlClassFilterCheckBox = new JCheckBox();
+        owlClassFilterCheckBox.setText("OWL Class");
+        toolBar1.add(owlClassFilterCheckBox);
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
         searchPanel.add(panel4, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));

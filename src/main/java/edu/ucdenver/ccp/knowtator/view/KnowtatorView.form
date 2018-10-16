@@ -93,10 +93,6 @@
                           <text value=""/>
                         </properties>
                       </component>
-                      <component id="41fd4" class="javax.swing.JToolBar$Separator">
-                        <constraints/>
-                        <properties/>
-                      </component>
                       <component id="ad9e7" class="javax.swing.JButton" binding="addAnnotationButton">
                         <constraints/>
                         <properties>
@@ -115,10 +111,6 @@
                           <text value=""/>
                           <verticalTextPosition value="3"/>
                         </properties>
-                      </component>
-                      <component id="57b8a" class="javax.swing.JToolBar$Separator">
-                        <constraints/>
-                        <properties/>
                       </component>
                       <component id="89505" class="javax.swing.JButton" binding="growStartButton">
                         <constraints/>
@@ -146,6 +138,18 @@
                         <properties>
                           <icon value="icon/icons8-exit-32.png"/>
                           <text value=""/>
+                        </properties>
+                      </component>
+                      <component id="16197" class="javax.swing.JCheckBox" binding="profileFilterCheckBox">
+                        <constraints/>
+                        <properties>
+                          <text value="Profile"/>
+                        </properties>
+                      </component>
+                      <component id="3fc73" class="javax.swing.JCheckBox" binding="owlClassFilterCheckBox">
+                        <constraints/>
+                        <properties>
+                          <text value="OWL Class"/>
                         </properties>
                       </component>
                     </children>

@@ -16,8 +16,8 @@ import java.util.Comparator;
 
 public class ColorList extends JList<Object> implements KnowtatorCollectionListener<Profile>, KnowtatorComponent, ColorListener {
 
-    private KnowtatorView view;
-    private ListSelectionListener lsl;
+    private final KnowtatorView view;
+    private final ListSelectionListener lsl;
 
     ColorList(KnowtatorView view) {
         this.view = view;
@@ -30,7 +30,7 @@ public class ColorList extends JList<Object> implements KnowtatorCollectionListe
         setCollection(view.getController().getProfileCollection().getSelection());
     }
 
-    void setCollection(Profile profile) {
+    private void setCollection(Profile profile) {
         dispose();
         profile.getColors().keySet().stream().filter(o -> o instanceof OWLObject)
                 .map(o -> (OWLObject) o)
