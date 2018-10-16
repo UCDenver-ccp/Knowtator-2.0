@@ -9,8 +9,8 @@ import javax.swing.event.ListSelectionListener;
 
 public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> extends JList<K> implements KnowtatorComponent, KnowtatorCollectionListener<K> {
 
-    private final KnowtatorView view;
-    private KnowtatorCollection<K> collection;
+    protected final KnowtatorView view;
+    protected KnowtatorCollection<K> collection;
     private final KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
 
     protected KnowtatorList(KnowtatorView view) {
@@ -68,6 +68,7 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
         //clear collection
         dispose();
 
+        collection.removeCollectionListener(this);
         this.collection = collection;
         this.collection.addCollectionListener(this);
         this.collection.forEach(k -> ((DefaultListModel<K>) getModel()).addElement(k));

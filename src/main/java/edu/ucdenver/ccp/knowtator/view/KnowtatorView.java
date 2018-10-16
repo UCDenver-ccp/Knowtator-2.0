@@ -206,7 +206,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     private void makeMenuButtons() {
         menuButton.addActionListener(e -> KnowtatorActions.showMainMenuDialog(this));
-        assignColorToClassButton.addActionListener(e -> KnowtatorActions.assignColorToClassButton(this));
+        assignColorToClassButton.addActionListener(e -> KnowtatorActions.assignColorToClass(this, getController().getOWLModel().getSelectedOWLEntity()));
     }
 
     private void makeTextSourceButtons() {

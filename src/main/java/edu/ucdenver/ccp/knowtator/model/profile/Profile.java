@@ -19,6 +19,7 @@ import org.w3c.dom.Node;
 import java.awt.*;
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, KnowtatorXMLIO {
   @SuppressWarnings("unused")
@@ -201,5 +202,9 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
   @Override
   public void setSaveLocation(File saveLocation) {
 
+  }
+
+  public Map<Object, Color> getColors() {
+    return colors;
   }
 }

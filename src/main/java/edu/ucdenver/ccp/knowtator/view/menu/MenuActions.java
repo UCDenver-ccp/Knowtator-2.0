@@ -181,4 +181,9 @@ class MenuActions {
     }
 
 
+    static void showProfileDialog(JDialog parent, KnowtatorView view) {
+        ProfileDialog profileDialog = new ProfileDialog(parent, view);
+        profileDialog.pack();
+        profileDialog.setVisible(true);
+    }
 }

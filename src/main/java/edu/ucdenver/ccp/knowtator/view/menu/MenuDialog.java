@@ -59,6 +59,8 @@ public class MenuDialog extends JDialog {
         importButton.addActionListener(e -> MenuActions.showImportDialog(this, view));
         IAAButton.addActionListener(e -> MenuActions.showIAADialog(this, view));
 
+        profileButton.addActionListener(e -> MenuActions.showProfileDialog(this, view));
+
 
     }
 

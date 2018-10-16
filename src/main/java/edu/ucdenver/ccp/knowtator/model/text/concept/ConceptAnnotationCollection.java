@@ -191,7 +191,8 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                 newSpan.getConceptAnnotation().getSpanCollection().setSelection(newSpan);
             }
         } catch (NoSelectionException e) {
-            e.printStackTrace();
+            setSelection(newSpan.getConceptAnnotation());
+            newSpan.getConceptAnnotation().getSpanCollection().setSelection(newSpan);
         }
     }
 
@@ -519,8 +520,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
             if (filterValue && getSelection().getAnnotator() != controller.getProfileCollection().getSelection()) {
                 setSelection(null);
             }
-        } catch (NoSelectionException e) {
-            e.printStackTrace();
+        } catch (NoSelectionException ignored) {
         }
     }
 

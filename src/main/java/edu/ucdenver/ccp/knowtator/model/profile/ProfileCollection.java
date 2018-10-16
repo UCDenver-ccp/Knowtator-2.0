@@ -74,9 +74,10 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
         return newProfile;
     }
 
-    private void removeProfile(Profile profile) {
-        remove(profile);
-        if (size() > 0) {
+    @Override
+    public void remove(Profile profile) {
+        if (! profile.equals(defaultProfile)) {
+            super.remove(profile);
             setSelection(iterator().next());
         }
     }
@@ -99,12 +100,6 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 
     @Override
     public void readFromOldKnowtatorXML(File file, Element parent) {
-    }
-
-    public void removeActiveProfile() {
-        if (getSelection() != getDefaultProfile()) {
-            removeProfile(getSelection());
-        }
     }
 
     void fireColorChanged() {
@@ -130,12 +125,7 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 
     @Override
     public Profile get(String id) {
-        if (id.equals("Default")) {
-            return defaultProfile;
-        }
-        else {
-            return super.get(id);
-        }
+        return super.get(id);
     }
 
     @Override
@@ -163,6 +153,6 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 
     @Override
     public void reset() {
-
+        add(defaultProfile);
     }
 }

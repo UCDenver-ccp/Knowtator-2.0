@@ -91,7 +91,9 @@ public class SearchTextField extends JTextField implements KnowtatorCollectionLi
         if (event.getOld() != null) {
             event.getOld().getSpanCollection().removeCollectionListener(this);
         }
-        event.getNew().getSpanCollection().addCollectionListener(this);
+        if (event.getNew() != null) {
+            event.getNew().getSpanCollection().addCollectionListener(this);
+        }
     }
 
     private void reactToTextSourceChange(SelectionChangeEvent<TextSource> event) {

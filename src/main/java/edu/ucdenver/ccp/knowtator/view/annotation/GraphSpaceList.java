@@ -113,8 +113,8 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
 
         try {
             setCollection(event.getNew().getConceptAnnotationCollection().getSelection());
-        } catch (NoSelectionException e) {
-            e.printStackTrace();
+        } catch (NoSelectionException ignored) {
+
         }
     }
 

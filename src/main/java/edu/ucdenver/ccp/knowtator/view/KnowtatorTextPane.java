@@ -3,6 +3,7 @@ package edu.ucdenver.ccp.knowtator.view;
 import edu.ucdenver.ccp.knowtator.model.FilterModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
@@ -23,7 +24,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 @SuppressWarnings("deprecation")
-public class KnowtatorTextPane extends JTextArea implements ColorListener, KnowtatorComponent, FilterModelListener {
+public class KnowtatorTextPane extends JTextArea implements ColorListener, KnowtatorComponent, FilterModelListener, KnowtatorCollectionListener<Profile> {
 
     @SuppressWarnings("unused")
     private static Logger log = Logger.getLogger(KnowtatorTextPane.class);
@@ -153,6 +154,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
         addCaretListener(view.getController().getSelectionModel());
         addCaretListener(e -> view.getSearchTextField().setText(getSelectedText()));
         view.getController().getProfileCollection().addColorListener(this);
+        view.getController().getProfileCollection().addCollectionListener(this);
         view.getController().getFilterModel().addFilterModelListener(this);
 
         MouseListener mouseListener = new MouseListener() {
@@ -344,79 +346,93 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
     }
 
     public void refreshHighlights() {
-        try {
-            if (view.getController().isNotLoading()) {
-                // Remove all previous highlights in case a span has been deleted
-                getHighlighter().removeAllHighlights();
+        if (view.getController().isNotLoading()) {
+            // Remove all previous highlights in case a span has been deleted
+            getHighlighter().removeAllHighlights();
 
-                // Always highlight the selected concept first so its color and border show up
+            // Always highlight the selected concept first so its color and border show up
+            try {
                 highlightSelectedAnnotation();
+            } catch (NoSelectionException ignored) {
+            }
 
-                // Highlight overlaps first, then spans
-                Span lastSpan = null;
+            // Highlight overlaps first, then spans
 
+            try {
                 Set<Span> spans = getSpans(null);
-                for (Span span : spans) {
-                    if (lastSpan != null) {
-                        if (span.intersects(lastSpan)) {
+                highlightOverlaps(spans);
+                highlightSpans(spans);
+            } catch (NoSelectionException ignored) {
+            }
+
+            revalidate();
+            repaint();
+
+            Span span = null;
+            try {
+                TextSource textSource = view.getController().getTextSourceCollection().getSelection();
+                ConceptAnnotation annotation = textSource.getConceptAnnotationCollection().getSelection();
+                if (annotation != null) {
+                    try {
+                        span = annotation.getSpanCollection().getSelection();
+                    } catch (NoSelectionException e) {
+                        span = annotation.getSpanCollection().first();
+                    }
+                }
+            } catch (NoSelectionException ignored) {
+
+            }
+
+            Span finalSpan = span;
+            SwingUtilities.invokeLater(
+                    () -> {
+                        if (finalSpan != null) {
                             try {
-                                highlightSpan(
-                                        span.getStart(),
-                                        min(lastSpan.getEnd(), span.getEnd()),
-                                        new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY));
-                            } catch (BadLocationException e) {
+                                scrollRectToVisible(modelToView(finalSpan.getStart()));
+                            } catch (BadLocationException | NullPointerException e) {
                                 e.printStackTrace();
                             }
                         }
                     }
+            );
+        }
+    }
 
-                    if (lastSpan == null || span.getEnd() > lastSpan.getEnd()) {
-                        lastSpan = span;
-                    }
-                }
+    private void highlightSpans(Set<Span> spans) {
+        for (Span span : spans) {
+            try {
+                highlightSpan(
+                        span.getStart(),
+                        span.getEnd(),
+                        new DefaultHighlighter.DefaultHighlightPainter(
+                                span.getConceptAnnotation().getAnnotator()
+                                        .getColor(span.getConceptAnnotation())));
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-                for (Span span : spans) {
+    private void highlightOverlaps(Set<Span> spans) {
+        Span lastSpan = null;
+
+        for (Span span : spans) {
+            if (lastSpan != null) {
+                if (span.intersects(lastSpan)) {
                     try {
                         highlightSpan(
                                 span.getStart(),
-                                span.getEnd(),
-                                new DefaultHighlighter.DefaultHighlightPainter(
-                                        view.getController()
-                                                .getProfileCollection().getSelection()
-                                                .getColor(span.getConceptAnnotation())));
+                                min(lastSpan.getEnd(), span.getEnd()),
+                                new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY));
                     } catch (BadLocationException e) {
                         e.printStackTrace();
                     }
                 }
-
-                revalidate();
-                repaint();
-
-                TextSource textSource = view.getController().getTextSourceCollection().getSelection();
-                ConceptAnnotation annotation = textSource.getConceptAnnotationCollection().getSelection();
-                Span span = null;
-                if (annotation != null) {
-                    span = annotation.getSpanCollection().getSelection();
-                    if (span == null) {
-                        span = annotation.getSpanCollection().first();
-                    }
-                }
-
-                Span finalSpan = span;
-                SwingUtilities.invokeLater(
-                        () -> {
-                            if (finalSpan != null) {
-                                try {
-                                    scrollRectToVisible(modelToView(finalSpan.getStart()));
-                                } catch (BadLocationException | NullPointerException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                );
             }
-        } catch (NoSelectionException e) {
-            e.printStackTrace();
+
+            if (lastSpan == null || span.getEnd() > lastSpan.getEnd()) {
+                lastSpan = span;
+            }
         }
     }
 
@@ -466,6 +482,9 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
     @Override
     public void reset() {
         view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
+        view.getController().getProfileCollection().addColorListener(this);
+        view.getController().getProfileCollection().addCollectionListener(this);
+        view.getController().getFilterModel().addFilterModelListener(this);
     }
 
     @Override
@@ -481,6 +500,34 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
     @Override
     public void owlClassFilterChanged(boolean filterVale) {
         refreshHighlights();
+    }
+
+    @Override
+    public void selected(SelectionChangeEvent<Profile> event) {
+        refreshHighlights();
+    }
+
+    @Override
+    public void added(AddEvent<Profile> event) {
+    }
+
+    @Override
+    public void removed(RemoveEvent<Profile> event) {
+    }
+
+    @Override
+    public void changed(ChangeEvent<Profile> event) {
+
+    }
+
+    @Override
+    public void emptied() {
+
+    }
+
+    @Override
+    public void firstAdded() {
+
     }
 
     class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {
