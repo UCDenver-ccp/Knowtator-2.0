@@ -10,6 +10,7 @@ Plugin for Protege
 - [Setup](#setup)
 - [Concept Annotation](#concept-annotation)
 - [Profiles](#profiles)
+- [Search](#search)
 - [Inter Annotator Agreement (IAA)](#inter-annotator-agreement)
 - [Relation Annotation](#relation-annotation)
 - [Acknowledgements](#acknowledgements)
@@ -96,9 +97,19 @@ To change the color associated with a concept, click on the concept in the color
 
 To view only annotation made by the active profile, in the tool bar above the text pane, select the "Profile" check box. This will filter out all annotation not made by the active profile.
 
+## Search
+
+For large documents or large ontologies, it can be a challenge to find similar spans of text or to find the right concept. Knowtator provides some search tools to make the annotation process faster and easter. At the top of the text pane, there is a search box. Typing text in here and clicking "Next" or "Previous" will search the current document forward or backward respectively from the current cursor location. Alternatively, clicking "Find in ontology" will open Protege's ontology search tool. This allows you to find text in the document and then find the right concept for that text. 
+
+Instead of typing text directly, you can also simply select text in the document. You will see this text appear automatically in the search bar.
+
+Searches can be filtered to only search text that has been associated with an annotation by clicking the "Only in annotations" check box.
+
 ## Inter-Annotator Agreement
 
-IAA between the annotators in the same project can be run. Select the types of IAA you wish to run from the IAA menu and click IAA -> Run IAA. Select a folder for the results to be written to.
+IAA between the annotators in the same project can be run. 
+
+To calculate IAA, click ![][menu] the "IAA". Select the types of IAA you wish to run, then click "Run IAA" and choose a folder for the results to be written to.
 
 
 ## Relation Annotation
