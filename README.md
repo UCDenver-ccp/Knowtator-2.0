@@ -3,9 +3,10 @@ Plugin for Protege
 
 
 ## Table of Contents
-- [Installation Windows](#installation-windows)
-- [Installation Mac](#installation-mac)
-- [Installation from source](#installation-from-source)
+- [Installation](#installation]
+  - [Windows](#windows)
+  - [Mac](#mac)
+  - [Source](#source)
 - [Setup](#setup)
 - [Concept Annotation](#concept-annotation)
 - [Profiles](#profiles)
@@ -13,15 +14,16 @@ Plugin for Protege
 - [Relation Annotation](#relation-annotation)
 - [Acknowledgements](#acknowledgements)
 
+## Installation
 
-## Installation Windows
+### Windows
 1. Download the [Knowtator][knowtator link] jar file
 2. Install [Desktop Protege 5.X.X][protege link]
 3. Copy Knowtator-2.X.X.jar to Protege-5.X.X/plugins/
 4. Restart Protege
 
 
-## Installation Mac
+### Mac
 1. Download [Knowtator][knowtator link] jar file
 2. Install [Desktop Protege 5.X.X][protege link]
 3. In Finder, right click the Protege 5 app icon
@@ -34,7 +36,7 @@ Plugin for Protege
 (See [this comment thread][mac osx plugin installation comment thread] for more help) 
 
 
-## Installation from source
+### Source
 1. Install Maven
 2. Install [Desktop Protege 5.X.X][protege link]
 3. Set PROTEGE_HOME environment variable to location of Protege installation
