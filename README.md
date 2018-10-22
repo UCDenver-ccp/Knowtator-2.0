@@ -3,7 +3,7 @@ Plugin for Protege
 
 
 ## Table of Contents
-- [Installation](#installation]
+- [Installation](#installation)
   - [Windows](#windows)
   - [Mac](#mac)
   - [Source](#source)
