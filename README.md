@@ -7,11 +7,11 @@ Plugin for Protege
 - [Installation Mac](#installation-mac)
 - [Installation from source](#installation-from-source)
 - [Setup](#setup)
-- [Features](#features)
-	- [Annotate with ontology terms](#annotate-with-ontology-terms)
-	- [Inter Annotator Agreement (IAA)](#inter-annotator-agreement)
-	- [Graphical Annotations](#graphical-annotations)
-	- [Annotation Information](#annotation-information)
+- [Concept Annotation](#concept-annotation)
+- [Profiles](#profiles)
+- [Inter Annotator Agreement (IAA)](#inter-annotator-agreement)
+- [Relation Annotation](#relation-annotation)
+- [Acknowledgements](#acknowledgements)
 
 
 ## Installation Windows
@@ -71,42 +71,46 @@ Project
 ![After installation][installation image]
 Add as a View to a Protege tab by going to Window -> Views -> Miscellaneous Views -> Knowtator
 
-
-## Features
-
-
-### Annotate with ontology terms
+## Concept Annotation
 
 
-Protege is first and foremost, an ontology editor. This plugin is intended to make use of Protege's built-in OWL-API to annotate text with OWL classes. To do so, simply select a term from the Class Hierarchy (Window -> Views -> Class views -> Class hierarchy), highlight a span of text in a document, and click the ![][plus] button. 
+Protege is first and foremost, an ontology editor. This plugin is intended to make use of Protege's built-in OWL-API to annotate text with OWL entities. To do so, simply select a term from the Class Hierarchy (Window -> Views -> Class views -> Class hierarchy), highlight a span of text in a document, and click the ![][plus] button and select "Add new conecpt". 
 
 To remove the selected icon, click the ![][remove] button.
 
-To change the color assignment of an OWL class, click the ![][change color] button
+To change the color assignment of an OWL class, click the ![][change color] button.
 
+Annotations will appear as highlights in the text. Each annotation can have multiple discontinuous text spans. To add a span to an annotation, select the text to include in the span, then click the ![][plus] button and select "Add span to concept".
 
-### Inter-Annotator Agreement
+The other properties associated with an annotation are an annotation ID which is automatically generated when the annotation is made and an annotator which is discussed [below](#Profiles).
 
+## Profiles
+
+Knowtator uses profile system to keep track of who is making each annotation. This allows for the calculation of [inter-annotator agreement)[inter-annotator-agreement] metrics. A default annotator is used for each project unless the user creates their own profile. To manage profiles, click ![][menu] and then "Profile". Here you can enter a profile name and add it, remove profiles, and see the color choices for each concept.
+
+To change to a different active profile, simply select it in the profile list.
+
+To change the color associated with a concept, click on the concept in the color list.
+
+To view only annotation made by the active profile, in the tool bar above the text pane, select the "Profile" check box. This will filter out all annotation not made by the active profile.
+
+## Inter-Annotator Agreement
 
 IAA between the annotators in the same project can be run. Select the types of IAA you wish to run from the IAA menu and click IAA -> Run IAA. Select a folder for the results to be written to.
 
 
-### Graphical Annotations
+## Relation Annotation
 
-Open the graph viewer by clicking ![][graph viewer]. 
+In addition to concept annotation in text, Knowtator has also been updated to support relation annotation. Relation annotations are made by connecting two concept annotations with an OWL object property. Just like the RDF triple subject-predicate-object model, relation annotations assert a relationship between two entities. These relationships form a directed graph.
 
-To add the selected annotation to the graph viewer, simply click ![][plus] in the graph viewer. You will see the node apear in the viewer.
-
-To add a relation (edge), first select an object property (these can be found in the Object property hierarchy view in Window -> Views -> Object property views -> Object property hierarchy), then hover over a node in the viewer until a pointer hand appears. Click and drag between nodes to make a connection.
+To begin making relation annotations, open the graph viewer by clicking ![][graph viewer]. The graph viewer is used to create graph spaces and display relations. Selecting a concept annotation in the text pane, and then clicking the ![][plus] in the graph viewer will bring that concept annotation into the current graph space. It will display as a rectangle witht the color of the concept annotation and contain each of the concept annotation's the text spans. Once two or more concept annotations are in the graph space, select an object property (Window -> Views -> Object property views -> Object property hierarchy), then hover your mouse over a concept annotation node until it becomes a pointer finger. Click and drag the arrow to another concept annotation node. A window will appear allowing you to choose a quantifier or negate the relation.
 
 
-### Annotation Information
-
-
-Selecting a span will show its meta-data in the right-hand side of the view.
-
+## Acknowledgements
 
 All icons used are from https://icons8.com/
+
+Thank you to Philip Ogren, the author of the original Knowtator.
 
 [knowtator link]:https://github.com/UCDenver-ccp/Knowtator-2.0/releases/latest
 [protege link]:http://protege.stanford.edu/products.php#desktop-protege
