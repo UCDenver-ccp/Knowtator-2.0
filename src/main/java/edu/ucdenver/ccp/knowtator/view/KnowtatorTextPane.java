@@ -9,6 +9,7 @@ import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.view.annotation.AnnotationActions;
 import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -24,7 +25,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 @SuppressWarnings("deprecation")
-public class KnowtatorTextPane extends JTextArea implements ColorListener, KnowtatorComponent, FilterModelListener, KnowtatorCollectionListener<Profile> {
+public class KnowtatorTextPane extends JTextPane implements ColorListener, KnowtatorComponent, FilterModelListener, KnowtatorCollectionListener<Profile> {
 
     @SuppressWarnings("unused")
     private static Logger log = Logger.getLogger(KnowtatorTextPane.class);
@@ -39,8 +40,6 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
         this.view = view;
         setEditable(false);
         setEnabled(false);
-        setLineWrap(true);
-        setWrapStyleWord(true);
         setSelectedTextColor(Color.red);
         setFont(KnowtatorDefaultSettings.FONT);
 
@@ -400,8 +399,28 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
     }
 
     private void highlightSpans(Set<Span> spans) {
+        SimpleAttributeSet underlinedSpan = new SimpleAttributeSet();
+        StyleConstants.setUnderline(underlinedSpan, true);
+
+        SimpleAttributeSet regularSpan = new SimpleAttributeSet();
+        StyleConstants.setUnderline(regularSpan, false);
+
+        getStyledDocument().setCharacterAttributes(0,getText().length() , regularSpan, false);
+
+        Set<OWLClass> decendents = null;
+        try {
+            OWLClass owlClass = view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getOwlClass();
+            decendents = view.getController().getOWLModel().getDescendants(owlClass);
+            decendents.add(owlClass);
+        } catch (NoSelectionException ignored) {
+
+        }
         for (Span span : spans) {
             try {
+                //Underline spans for the same class
+                if (decendents != null && decendents.contains(span.getConceptAnnotation().getOwlClass())) {
+                    getStyledDocument().setCharacterAttributes(span.getStart(), span.getSize(), underlinedSpan, false);
+                }
                 highlightSpan(
                         span.getStart(),
                         span.getEnd(),
@@ -566,6 +585,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
 
             //		g.fillRect(r.x, r.y, r.width, r.height);
             g.drawRect(r.x, r.y, r.width - 1, r.height - 1);
+            ((Graphics2D) g).setStroke(new BasicStroke());
 
             // Return the drawing area
 
