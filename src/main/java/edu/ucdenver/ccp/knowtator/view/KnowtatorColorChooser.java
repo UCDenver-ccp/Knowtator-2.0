@@ -345,7 +345,7 @@ class KnowtatorColorChooser extends JColorChooser {
 
         protected void initValues() {
             swatchSize = new Dimension(100, 100);
-            numSwatches = new Dimension(3, 3);
+            numSwatches = new Dimension(4, 3);
             gap = new Dimension(1, 1);
         }
 
