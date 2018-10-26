@@ -60,7 +60,7 @@ public class TextSource extends AbstractKnowtatorDataObject<TextSource> implemen
                         controller.getTextSourceCollection().getArticlesLocation(),
                         textFileName.endsWith(".txt") ? textFileName : textFileName + ".txt");
 
-        if (!textFile.exists()) {
+        while (!textFile.exists()) {
             if (JOptionPane.showConfirmDialog(
                     null,
                     String.format("Could not find file for %s. Choose file location?", id),
@@ -72,27 +72,18 @@ public class TextSource extends AbstractKnowtatorDataObject<TextSource> implemen
 
                 if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
-                    if (JOptionPane.showConfirmDialog(
-                            null,
-                            String.format("Copy %s to project?", textFile.getName()),
-                            "Copy selected file?",
-                            JOptionPane.YES_NO_OPTION)
-                            == JOptionPane.YES_OPTION) {
-                        try {
-                            textFile =
-                                    Files.copy(
-                                            Paths.get(file.toURI()),
-                                            Paths.get(
-                                                    controller
-                                                            .getTextSourceCollection().getArticlesLocation()
-                                                            .toURI()
-                                                            .resolve(file.getName())))
-                                            .toFile();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        textFile = file;
+                    try {
+                        textFile =
+                                Files.copy(
+                                        Paths.get(file.toURI()),
+                                        Paths.get(
+                                                controller
+                                                        .getTextSourceCollection().getArticlesLocation()
+                                                        .toURI()
+                                                        .resolve(file.getName())))
+                                        .toFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
             }

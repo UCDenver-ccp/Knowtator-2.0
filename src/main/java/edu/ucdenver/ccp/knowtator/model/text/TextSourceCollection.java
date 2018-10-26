@@ -46,7 +46,9 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
         TextSource newTextSource = get(textFileName);
         if (newTextSource == null) {
             newTextSource = new TextSource(controller, file, textFileName);
-            add(newTextSource);
+            if (newTextSource.getTextFile().exists()) {
+                add(newTextSource);
+            }
         }
 
         setSelection(newTextSource);
