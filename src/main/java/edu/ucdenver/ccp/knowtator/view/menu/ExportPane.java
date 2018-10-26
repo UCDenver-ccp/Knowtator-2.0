@@ -42,13 +42,36 @@ class ExportPane {
         panel2.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         exportToBratButton = new JButton();
+        Font exportToBratButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, exportToBratButton.getFont());
+        if (exportToBratButtonFont != null) exportToBratButton.setFont(exportToBratButtonFont);
         this.$$$loadButtonText$$$(exportToBratButton, ResourceBundle.getBundle("ui").getString("export.to.brat"));
         panel2.add(exportToBratButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
         panel2.add(spacer1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         exportToImagePNGButton = new JButton();
+        Font exportToImagePNGButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, exportToImagePNGButton.getFont());
+        if (exportToImagePNGButtonFont != null) exportToImagePNGButton.setFont(exportToImagePNGButtonFont);
         this.$$$loadButtonText$$$(exportToImagePNGButton, ResourceBundle.getBundle("ui").getString("export.to.image.png"));
         panel2.add(exportToImagePNGButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+        if (currentFont == null) return null;
+        String resultName;
+        if (fontName == null) {
+            resultName = currentFont.getName();
+        } else {
+            Font testFont = new Font(fontName, Font.PLAIN, 10);
+            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
+                resultName = fontName;
+            } else {
+                resultName = currentFont.getName();
+            }
+        }
+        return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
     }
 
     /**

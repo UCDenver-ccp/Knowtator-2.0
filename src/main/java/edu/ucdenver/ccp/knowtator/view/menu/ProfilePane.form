@@ -18,6 +18,8 @@
               <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <enabled value="true"/>
+              <font name="Verdana" size="10" style="0"/>
               <text resource-bundle="ui" key="remove.profile"/>
             </properties>
           </component>
@@ -30,7 +32,9 @@
             <children>
               <component id="d523c" class="edu.ucdenver.ccp.knowtator.view.menu.ColorList" binding="colorList" custom-create="true">
                 <constraints/>
-                <properties/>
+                <properties>
+                  <font name="Verdana" size="10" style="0"/>
+                </properties>
               </component>
             </children>
           </scrollpane>
@@ -43,7 +47,9 @@
             <children>
               <component id="86849" class="edu.ucdenver.ccp.knowtator.view.menu.ProfileList" binding="profileList" custom-create="true">
                 <constraints/>
-                <properties/>
+                <properties>
+                  <font name="Verdana" size="12" style="0"/>
+                </properties>
               </component>
             </children>
           </scrollpane>
@@ -52,6 +58,7 @@
               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <font name="Verdana" size="12" style="1"/>
               <labelFor value="8672c"/>
               <text resource-bundle="ui" key="colors1"/>
             </properties>
@@ -61,6 +68,7 @@
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <font name="Verdana" size="12" style="1"/>
               <labelFor value="13483"/>
               <text resource-bundle="ui" key="profiles"/>
             </properties>
@@ -71,13 +79,16 @@
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <font name="Verdana" size="10" style="0"/>
+            </properties>
           </component>
           <component id="160db" class="javax.swing.JButton" binding="addProfileButton" default-binding="true">
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <font name="Verdana" size="10" style="0"/>
               <text resource-bundle="ui" key="add.profile"/>
             </properties>
           </component>

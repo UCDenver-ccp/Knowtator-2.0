@@ -76,7 +76,7 @@ public class MenuDialog extends JDialog {
             }
         });
 
-
+        menuOptionsList.setSelectedIndex(0);
     }
 
     private void showNewPane() {
@@ -193,6 +193,8 @@ public class MenuDialog extends JDialog {
         contentPane.add(splitPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
         menuDisplayPane = new JPanel();
         menuDisplayPane.setLayout(new BorderLayout(0, 0));
+        Font menuDisplayPaneFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, menuDisplayPane.getFont());
+        if (menuDisplayPaneFont != null) menuDisplayPane.setFont(menuDisplayPaneFont);
         splitPane1.setRightComponent(menuDisplayPane);
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new BorderLayout(0, 0));
@@ -201,7 +203,7 @@ public class MenuDialog extends JDialog {
         panel1.add(scrollPane1, BorderLayout.CENTER);
         menuOptionsList.setBackground(new Color(-1118482));
         menuOptionsList.setFocusCycleRoot(true);
-        Font menuOptionsListFont = this.$$$getFont$$$(null, -1, 16, menuOptionsList.getFont());
+        Font menuOptionsListFont = this.$$$getFont$$$("Verdana", Font.BOLD, 16, menuOptionsList.getFont());
         if (menuOptionsListFont != null) menuOptionsList.setFont(menuOptionsListFont);
         menuOptionsList.setForeground(new Color(-16777216));
         scrollPane1.setViewportView(menuOptionsList);

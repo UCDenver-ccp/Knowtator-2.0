@@ -42,6 +42,7 @@ public class KnowtatorTextPane extends JTextArea implements ColorListener, Knowt
         setLineWrap(true);
         setWrapStyleWord(true);
         setSelectedTextColor(Color.red);
+        setFont(KnowtatorDefaultSettings.FONT);
 
         setupListeners();
 

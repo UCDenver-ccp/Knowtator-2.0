@@ -14,13 +14,16 @@
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <font name="Verdana" size="10" style="0"/>
+        </properties>
       </component>
       <component id="d3295" class="javax.swing.JLabel">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <font name="Verdana" size="12" style="1"/>
           <labelFor value="213e9"/>
           <text resource-bundle="ui" key="project.name"/>
         </properties>

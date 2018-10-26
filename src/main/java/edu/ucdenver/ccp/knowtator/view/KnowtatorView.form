@@ -32,6 +32,7 @@
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
+                      <font name="Verdana" size="10" style="0"/>
                       <icon value="icon/icons8-menu-24.png"/>
                       <text value=""/>
                       <verticalAlignment value="0"/>
@@ -42,6 +43,7 @@
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
+                      <font name="Verdana" size="10" style="0"/>
                       <text value="Previous"/>
                     </properties>
                   </component>
@@ -50,6 +52,7 @@
                       <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
+                      <font name="Verdana" size="10" style="0"/>
                       <text value="Next"/>
                     </properties>
                   </component>
@@ -63,6 +66,7 @@
                       <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
+                      <font name="Verdana" size="10" style="0"/>
                       <text resource-bundle="log4j" key="find.in.ontology1"/>
                     </properties>
                   </component>
@@ -71,6 +75,7 @@
                       <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
+                      <font name="Verdana" size="10" style="0"/>
                       <icon value="icon/icons8-tree-structure-32.png"/>
                       <text value=""/>
                     </properties>
@@ -89,6 +94,8 @@
                       <component id="cae47" class="javax.swing.JButton" binding="assignColorToClassButton">
                         <constraints/>
                         <properties>
+                          <enabled value="true"/>
+                          <font name="Verdana" size="10" style="0"/>
                           <icon value="icon/icons8-color-dropper-filled-50 (Custom).png"/>
                           <text value=""/>
                         </properties>
@@ -96,6 +103,7 @@
                       <component id="ad9e7" class="javax.swing.JButton" binding="addAnnotationButton">
                         <constraints/>
                         <properties>
+                          <font name="Verdana" size="10" style="0"/>
                           <horizontalTextPosition value="0"/>
                           <icon value="icon/icons8-plus-24.png"/>
                           <text value=""/>
@@ -106,6 +114,7 @@
                       <component id="c69b3" class="javax.swing.JButton" binding="removeAnnotationButton">
                         <constraints/>
                         <properties>
+                          <font name="Verdana" size="10" style="0"/>
                           <horizontalTextPosition value="0"/>
                           <icon value="icon/icons8-delete-24.png"/>
                           <text value=""/>
@@ -115,6 +124,7 @@
                       <component id="89505" class="javax.swing.JButton" binding="growStartButton">
                         <constraints/>
                         <properties>
+                          <font name="Verdana" size="10" style="0"/>
                           <icon value="icon/icons8-exit-32 (reversed).png"/>
                           <text value=""/>
                         </properties>
@@ -122,6 +132,7 @@
                       <component id="29e60" class="javax.swing.JButton" binding="shrinkStartButton">
                         <constraints/>
                         <properties>
+                          <font name="Verdana" size="10" style="0"/>
                           <icon value="icon/icons8-enter-32.png"/>
                           <text value=""/>
                         </properties>
@@ -129,6 +140,7 @@
                       <component id="74a07" class="javax.swing.JButton" binding="shrinkEndButton">
                         <constraints/>
                         <properties>
+                          <font name="Verdana" size="10" style="0"/>
                           <icon value="icon/icons8-enter-32 (reversed).png"/>
                           <text value=""/>
                         </properties>
@@ -136,6 +148,7 @@
                       <component id="8b60d" class="javax.swing.JButton" binding="growEndButton">
                         <constraints/>
                         <properties>
+                          <font name="Verdana" size="10" style="0"/>
                           <icon value="icon/icons8-exit-32.png"/>
                           <text value=""/>
                         </properties>
@@ -143,12 +156,14 @@
                       <component id="16197" class="javax.swing.JCheckBox" binding="profileFilterCheckBox">
                         <constraints/>
                         <properties>
+                          <font name="Verdana" size="10" style="0"/>
                           <text value="Profile"/>
                         </properties>
                       </component>
                       <component id="3fc73" class="javax.swing.JCheckBox" binding="owlClassFilterCheckBox">
                         <constraints/>
                         <properties>
+                          <font name="Verdana" size="10" style="0"/>
                           <text value="OWL Class"/>
                         </properties>
                       </component>
@@ -169,13 +184,16 @@
                             <maximum-size width="-1" height="25"/>
                           </grid>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <font name="Verdana" size="10" style="0"/>
+                        </properties>
                       </component>
                       <component id="1b569" class="javax.swing.JCheckBox" binding="onlyAnnotationsCheckBox">
                         <constraints>
                           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties>
+                          <font name="Verdana" size="10" style="0"/>
                           <text value="Only in Annotations"/>
                         </properties>
                       </component>
@@ -184,6 +202,7 @@
                           <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties>
+                          <font name="Verdana" size="10" style="0"/>
                           <text value="Case Sensitive"/>
                         </properties>
                       </component>
@@ -192,6 +211,7 @@
                           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties>
+                          <font name="Verdana" size="10" style="0"/>
                           <text value="Regex"/>
                         </properties>
                       </component>
@@ -340,7 +360,7 @@
                       <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <font style="1"/>
+                      <font name="Verdana" size="12" style="1"/>
                       <text value="ID"/>
                     </properties>
                   </component>
@@ -349,7 +369,7 @@
                       <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <font style="1"/>
+                      <font name="Verdana" size="12" style="1"/>
                       <text value="Annotator"/>
                     </properties>
                   </component>
@@ -358,7 +378,7 @@
                       <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <font style="1"/>
+                      <font name="Verdana" size="12" style="1"/>
                       <text value="Class"/>
                     </properties>
                   </component>
@@ -367,7 +387,7 @@
                       <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <font size="18" style="1"/>
+                      <font name="Verdana" size="18" style="1"/>
                       <labelFor value="280d3"/>
                       <text value="Spans"/>
                     </properties>
@@ -381,7 +401,9 @@
                     <children>
                       <component id="77d83" class="edu.ucdenver.ccp.knowtator.view.annotation.SpanList" binding="spanList" custom-create="true">
                         <constraints/>
-                        <properties/>
+                        <properties>
+                          <font name="Verdana" size="10" style="0"/>
+                        </properties>
                       </component>
                     </children>
                   </scrollpane>
@@ -390,7 +412,7 @@
                       <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <font size="18" style="1"/>
+                      <font name="Verdana" size="18" style="1"/>
                       <labelFor value="fcd1b"/>
                       <text value="Graph Spaces"/>
                     </properties>
@@ -404,7 +426,9 @@
                     <children>
                       <component id="9955c" class="edu.ucdenver.ccp.knowtator.view.annotation.GraphSpaceList" binding="graphSpaceList" custom-create="true">
                         <constraints/>
-                        <properties/>
+                        <properties>
+                          <font name="Verdana" size="10" style="0"/>
+                        </properties>
                       </component>
                     </children>
                   </scrollpane>
@@ -418,6 +442,7 @@
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
+                      <font name="Verdana" size="10" style="0"/>
                       <text value=""/>
                     </properties>
                   </component>
@@ -425,13 +450,16 @@
                     <constraints>
                       <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <font name="Verdana" size="10" style="0"/>
+                    </properties>
                   </component>
                   <component id="853ee" class="edu.ucdenver.ccp.knowtator.view.annotation.AnnotationClassLabel" binding="annotationClassLabel" custom-create="true">
                     <constraints>
                       <grid row="3" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
+                      <font name="Verdana" size="10" style="0"/>
                       <text value=""/>
                     </properties>
                   </component>

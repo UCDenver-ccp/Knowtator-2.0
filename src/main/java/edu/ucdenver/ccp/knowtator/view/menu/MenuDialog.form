@@ -23,7 +23,9 @@
             <constraints>
               <splitpane position="right"/>
             </constraints>
-            <properties/>
+            <properties>
+              <font name="Verdana" size="10" style="0"/>
+            </properties>
             <border type="none"/>
             <children/>
           </grid>
@@ -44,7 +46,7 @@
                     <properties>
                       <background color="-1118482"/>
                       <focusCycleRoot value="true"/>
-                      <font size="16"/>
+                      <font name="Verdana" size="16" style="1"/>
                       <foreground color="-16777216"/>
                     </properties>
                   </component>

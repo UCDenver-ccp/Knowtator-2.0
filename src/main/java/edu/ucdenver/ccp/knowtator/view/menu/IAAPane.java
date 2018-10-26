@@ -46,22 +46,49 @@ class IAAPane {
         final Spacer spacer1 = new Spacer();
         panel2.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         buttonOK = new JButton();
+        Font buttonOKFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, buttonOK.getFont());
+        if (buttonOKFont != null) buttonOK.setFont(buttonOKFont);
         this.$$$loadButtonText$$$(buttonOK, ResourceBundle.getBundle("log4j").getString("run.iaa"));
         panel2.add(buttonOK, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         spanCheckBox = new JCheckBox();
+        Font spanCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, spanCheckBox.getFont());
+        if (spanCheckBoxFont != null) spanCheckBox.setFont(spanCheckBoxFont);
         this.$$$loadButtonText$$$(spanCheckBox, ResourceBundle.getBundle("ui").getString("span1"));
         panel3.add(spanCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         classAndSpanCheckBox = new JCheckBox();
+        Font classAndSpanCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, classAndSpanCheckBox.getFont());
+        if (classAndSpanCheckBoxFont != null) classAndSpanCheckBox.setFont(classAndSpanCheckBoxFont);
         this.$$$loadButtonText$$$(classAndSpanCheckBox, ResourceBundle.getBundle("ui").getString("class.and.span"));
         panel3.add(classAndSpanCheckBox, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         classCheckBox = new JCheckBox();
+        Font classCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, classCheckBox.getFont());
+        if (classCheckBoxFont != null) classCheckBox.setFont(classCheckBoxFont);
         this.$$$loadButtonText$$$(classCheckBox, ResourceBundle.getBundle("log4j").getString("class1"));
         panel3.add(classCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
         contentPane.add(spacer2, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+        if (currentFont == null) return null;
+        String resultName;
+        if (fontName == null) {
+            resultName = currentFont.getName();
+        } else {
+            Font testFont = new Font(fontName, Font.PLAIN, 10);
+            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
+                resultName = fontName;
+            } else {
+                resultName = currentFont.getName();
+            }
+        }
+        return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
     }
 
     /**

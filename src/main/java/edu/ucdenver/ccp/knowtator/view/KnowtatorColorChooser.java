@@ -25,7 +25,6 @@
 
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.model.profile.KnowtatorColors;
 import sun.swing.SwingUtilities2;
 
 import javax.accessibility.AccessibleContext;
@@ -351,7 +350,7 @@ class KnowtatorColorChooser extends JColorChooser {
         }
 
         protected void initColors() {
-            colors = KnowtatorColors.COLORS;
+            colors = KnowtatorDefaultSettings.COLORS;
         }
 
     }
@@ -369,6 +368,11 @@ class KnowtatorColorChooser extends JColorChooser {
         private String sampleText;
 
         private Color oldColor = null;
+
+        KnowtatorPreviewPanel(){
+            super();
+            setFont(KnowtatorDefaultSettings.FONT);
+        }
 
         private JColorChooser getColorChooser() {
             return (JColorChooser)SwingUtilities.getAncestorOfClass(
