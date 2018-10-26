@@ -26,6 +26,7 @@
 package edu.ucdenver.ccp.knowtator.view;
 
 import edu.ucdenver.ccp.knowtator.model.profile.KnowtatorColors;
+import sun.swing.SwingUtilities2;
 
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
@@ -41,18 +42,11 @@ import java.util.ArrayList;
 
 
 /**
- * The standard color swatch chooser.
+ * Modification of the standard JColorChooser by Steve Wilson to make it easier to choose
+ * colors that suit text annotation.
  * <p>
- * <strong>Warning:</strong>
- * Serialized objects of this class will not be compatible with
- * future Swing releases. The current serialization support is
- * appropriate for short term storage or RMI between applications running
- * the same version of Swing.  As of 1.4, support for long term storage
- * of all JavaBeans&trade;
- * has been added to the <code>java.beans</code> package.
- * Please see {@link java.beans.XMLEncoder}.
  *
- * @author Steve Wilson
+ * @author Harrison Pielke-Lombardo
  */
 class KnowtatorColorChooser extends JColorChooser {
 
@@ -64,6 +58,7 @@ class KnowtatorColorChooser extends JColorChooser {
 
 
         setChooserPanels(panels);
+        setPreviewPanel(new KnowtatorPreviewPanel());
     }
 
     class KnowtatorSwatchChooserPanel extends AbstractColorChooserPanel {
@@ -360,4 +355,95 @@ class KnowtatorColorChooser extends JColorChooser {
         }
 
     }
+
+    /**
+     * Modification of the default color chooser preview panel by Steve Wilson to only show the highlighted text preview.
+     * <p>
+     *
+     * @author Harrison Pielke-Lombardo
+     * @see JColorChooser
+     */
+    class KnowtatorPreviewPanel extends JPanel {
+
+        private int textGap = 5;
+        private String sampleText;
+
+        private Color oldColor = null;
+
+        private JColorChooser getColorChooser() {
+            return (JColorChooser)SwingUtilities.getAncestorOfClass(
+                    JColorChooser.class, this);
+        }
+
+        public Dimension getPreferredSize() {
+            JComponent host = getColorChooser();
+            if (host == null) {
+                host = this;
+            }
+            FontMetrics fm = host.getFontMetrics(getFont());
+
+            int height = fm.getHeight();
+            int width = SwingUtilities2.stringWidth(host, fm, getSampleText());
+
+            int y = height*3 + textGap*3;
+            int x = width + textGap*3;
+            return new Dimension( x,y );
+        }
+
+        public void paintComponent(Graphics g) {
+            if (oldColor == null)
+                oldColor = getForeground();
+
+            g.setColor(getBackground());
+            g.fillRect(0,0,getWidth(),getHeight());
+
+            if (this.getComponentOrientation().isLeftToRight()) {
+                paintText(g);
+
+            } else {
+
+                paintText(g);
+
+
+            }
+        }
+
+        private void paintText(Graphics g) {
+            g.setFont(getFont());
+            JComponent host = getColorChooser();
+            if (host == null) {
+                host = this;
+            }
+            FontMetrics fm = SwingUtilities2.getFontMetrics(host, g);
+
+            int ascent = fm.getAscent();
+            int height = fm.getHeight();
+            int width = SwingUtilities2.stringWidth(host, fm, getSampleText());
+
+            int textXOffset = textGap;
+
+            Color color = getForeground();
+
+            g.setColor(color);
+
+            g.fillRect(textXOffset,
+                    ( height) + textGap,
+                    width + (textGap),
+                    height +2);
+
+            g.setColor(Color.black);
+            SwingUtilities2.drawString(host, g, getSampleText(),
+                    textXOffset+(textGap/2),
+                    height+ascent+textGap+2);
+
+        }
+
+        private String getSampleText() {
+            if (this.sampleText == null) {
+                this.sampleText = UIManager.getString("ColorChooser.sampleText", getLocale());
+            }
+            return this.sampleText;
+        }
+    }
+
 }
