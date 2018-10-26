@@ -11,15 +11,15 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import javax.swing.*;
 
 public class AnnotationActions {
-    public static void addAnnotation(KnowtatorView view, TextSource textSource) {
+    public static void addConceptAnnotation(KnowtatorView view, TextSource textSource) {
         try {
             ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
-            String[] buttons = {"Add new concept", "Add span to concept", "Cancel"};
+            String[] buttons = {"Add new concept annotation", "Add span to selected concept annotation", "Cancel"};
             int response =
                     JOptionPane.showOptionDialog(
                             view,
                             "Choose an option",
-                            "Add ConceptAnnotation",
+                            "New Span",
                             JOptionPane.DEFAULT_OPTION,
                             JOptionPane.PLAIN_MESSAGE,
                             null,
@@ -48,15 +48,15 @@ public class AnnotationActions {
 
     }
 
-    public static void removeAnnotation(KnowtatorView view, TextSource textSource, ConceptAnnotation annotation) {
+    public static void removeConceptAnnotation(KnowtatorView view, TextSource textSource, ConceptAnnotation annotation) {
         try {
             Span span = annotation.getSpanCollection().getSelection();
-            String[] buttons = {"Remove annotation", "Remove span from annotation", "Cancel"};
+            String[] buttons = {"Remove concept annotation", "Remove span from concept annotation", "Cancel"};
             int response =
                     JOptionPane.showOptionDialog(
                             view,
                             "Choose an option",
-                            "Remove Annotation",
+                            "Remove Concept Annotation",
                             JOptionPane.DEFAULT_OPTION,
                             JOptionPane.QUESTION_MESSAGE,
                             null,
@@ -76,8 +76,8 @@ public class AnnotationActions {
         } catch (NoSelectionException e) {
             if (JOptionPane.showConfirmDialog(
                     view,
-                    "Are you sure you want to remove the selected annotation?",
-                    "Remove Annotation",
+                    "Are you sure you want to remove the selected concept annotation?",
+                    "Remove Concept Annotation",
                     JOptionPane.YES_NO_OPTION)
                     == JOptionPane.YES_OPTION) {
                 textSource.getConceptAnnotationCollection().removeSelected();

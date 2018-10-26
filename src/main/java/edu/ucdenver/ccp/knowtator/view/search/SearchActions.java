@@ -9,11 +9,11 @@ public class SearchActions {
                 .searchForString(textToFind);
     }
 
-    public static void findNextMatch(KnowtatorView view, String textToFind, boolean isCaseSensitive, boolean isOnlyInAnnotations, boolean isRegex) {
-        view.getKnowtatorTextPane().search(textToFind, isCaseSensitive, isOnlyInAnnotations, isRegex, true);
+    public static void findNextMatch(KnowtatorView view) {
+        view.getKnowtatorTextPane().search(true);
     }
 
-    public static void findPreviousMatch(KnowtatorView view, String textToFind, boolean isCaseSensitive, boolean isOnlyInAnnotations, boolean isRegex) {
-        view.getKnowtatorTextPane().search(textToFind, isCaseSensitive, isOnlyInAnnotations, isRegex, false);
+    public static void findPreviousMatch(KnowtatorView view) {
+        view.getKnowtatorTextPane().search(false);
     }
 }

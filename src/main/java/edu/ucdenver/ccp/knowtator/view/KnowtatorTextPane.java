@@ -18,8 +18,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -52,14 +50,6 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
         getCaret().setSelectionVisible(true);
     }
 
-    private int find(String text, String textToFind, int fromIndex, boolean searchForward) {
-        if (searchForward) {
-            return text.indexOf(textToFind, fromIndex + 1);
-        } else {
-            return text.lastIndexOf(textToFind, fromIndex - 1);
-        }
-    }
-
     public BufferedImage getScreenShot() {
 
         BufferedImage image =
@@ -70,67 +60,17 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
         return image;
     }
 
-    public void search(String textToFind, boolean isCaseSensitive, boolean inAnnotations, boolean isRegex, boolean searchForward) {
+    public void search(boolean searchForward) {
         try {
             TextSource textSource = view.getController().getTextSourceCollection().getSelection();
 
-            String text = isCaseSensitive ? getText().toLowerCase() : getText();
-            textToFind = isCaseSensitive ? textToFind : textToFind.toLowerCase();
-
-            if (inAnnotations) {
-                try {
-                    Span selectedSpan = textSource
-                            .getConceptAnnotationCollection().getSelection()
-                            .getSpanCollection().getSelection();
-                    if (searchForward) {
-                        select(selectedSpan.getEnd(), selectedSpan.getEnd());
-                    } else {
-                        select(selectedSpan.getStart(), selectedSpan.getStart());
-                    }
-                } catch (NoSelectionException e) {
-                    e.printStackTrace();
-                }
-
-            }
             int matchLoc;
-            Matcher matcher = null;
 
-            if (isRegex) {
-                Pattern patternToFind = Pattern.compile(textToFind);
-                matcher = patternToFind.matcher(text);
-                matchLoc = matcher.start();
-            } else {
-                matchLoc = find(text, textToFind, getSelectionStart(), searchForward);
-            }
-            Set<Span> spans = null;
-            int newMatchLoc = matchLoc;
-            if (inAnnotations) {
-                do {
-                    spans = getSpans(newMatchLoc);
-                    if (!spans.isEmpty()) {
-                        inAnnotations = false;
-                    } else {
-                        newMatchLoc = isRegex ? matcher.start() : find(text, textToFind, newMatchLoc, searchForward);
-                    }
-                    if (!searchForward && newMatchLoc == -1) {
-                        newMatchLoc = text.length();
-                    }
-                } while (inAnnotations && newMatchLoc != matchLoc);
-            }
-            matchLoc = newMatchLoc;
-            if (matchLoc != -1) {
-                if (spans != null) {
-                    textSource
-                            .getConceptAnnotationCollection().getSelection()
-                            .getSpanCollection()
-                            .setSelection(spans.iterator().next());
-                } else {
-                    requestFocusInWindow();
-                    select(matchLoc, matchLoc + textToFind.length());
-                }
-            } else {
-                select(searchForward ? -1 : text.length(), searchForward ? -1 : text.length());
-            }
+            matchLoc = searchForward ? view.getSearchTextField().searchForward(textSource) : view.getSearchTextField().searchPrevious(textSource);
+
+            requestFocusInWindow();
+            select(matchLoc, view.getSearchTextField().getMatchEnd());
+
 
         } catch (NoSelectionException e) {
             e.printStackTrace();
@@ -152,7 +92,7 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
 
     private void setupListeners() {
         addCaretListener(view.getController().getSelectionModel());
-        addCaretListener(e -> view.getSearchTextField().setText(getSelectedText()));
+
         view.getController().getProfileCollection().addColorListener(this);
         view.getController().getProfileCollection().addCollectionListener(this);
         view.getController().getFilterModel().addFilterModelListener(this);
@@ -405,20 +345,20 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
         SimpleAttributeSet regularSpan = new SimpleAttributeSet();
         StyleConstants.setUnderline(regularSpan, false);
 
-        getStyledDocument().setCharacterAttributes(0,getText().length() , regularSpan, false);
+        getStyledDocument().setCharacterAttributes(0, getText().length(), regularSpan, false);
 
-        Set<OWLClass> decendents = null;
+        Set<OWLClass> descendants = null;
         try {
             OWLClass owlClass = view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getOwlClass();
-            decendents = view.getController().getOWLModel().getDescendants(owlClass);
-            decendents.add(owlClass);
+            descendants = view.getController().getOWLModel().getDescendants(owlClass);
+            descendants.add(owlClass);
         } catch (NoSelectionException ignored) {
 
         }
         for (Span span : spans) {
             try {
                 //Underline spans for the same class
-                if (decendents != null && decendents.contains(span.getConceptAnnotation().getOwlClass())) {
+                if (descendants != null && descendants.contains(span.getConceptAnnotation().getOwlClass())) {
                     getStyledDocument().setCharacterAttributes(span.getStart(), span.getSize(), underlinedSpan, false);
                 }
                 highlightSpan(
@@ -466,7 +406,7 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
         return view.getController()
                 .getTextSourceCollection().getSelection()
                 .getConceptAnnotationCollection()
-                .getSpans(loc, 0, getText().length());
+                .getSpans(loc);
     }
 
     private void highlightSelectedAnnotation() throws NoSelectionException {
@@ -566,7 +506,7 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
          * @param bounds the bounding box of the view, which is not necessarily the region to paint.
          * @param c      the editor
          * @param view   View painting for
-         * @return region drawing occured in
+         * @return region drawing occurred in
          */
         public Shape paintLayer(
                 Graphics g, int offs0, int offs1, Shape bounds, JTextComponent c, View view) {
@@ -642,7 +582,7 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
 
         private JMenuItem addAnnotationCommand() {
             JMenuItem menuItem = new JMenuItem("Add concept");
-            menuItem.addActionListener(e12 -> AnnotationActions.addAnnotation(view, textSource));
+            menuItem.addActionListener(e12 -> AnnotationActions.addConceptAnnotation(view, textSource));
 
             return menuItem;
         }
@@ -653,7 +593,7 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
                             String.format(
                                     "Delete span from %s",
                                     conceptAnnotation.getOwlClass()));
-            removeSpanFromSelectedAnnotation.addActionListener(e5 -> AnnotationActions.removeAnnotation(view, textSource, conceptAnnotation));
+            removeSpanFromSelectedAnnotation.addActionListener(e5 -> AnnotationActions.removeConceptAnnotation(view, textSource, conceptAnnotation));
 
             return removeSpanFromSelectedAnnotation;
         }
@@ -676,7 +616,7 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
                     "Delete " +
                             conceptAnnotation.getOwlClass());
 
-            removeAnnotationMenuItem.addActionListener(e4 -> AnnotationActions.removeAnnotation(view, textSource, conceptAnnotation));
+            removeAnnotationMenuItem.addActionListener(e4 -> AnnotationActions.removeConceptAnnotation(view, textSource, conceptAnnotation));
 
             return removeAnnotationMenuItem;
         }

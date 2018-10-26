@@ -23,7 +23,6 @@ import org.semanticweb.owlapi.model.OWLClass;
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.*;
@@ -242,14 +241,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         annotationButtons = new ArrayList<>();
         addAnnotationButton.addActionListener(e -> {
             try {
-                AnnotationActions.addAnnotation(this, getController().getTextSourceCollection().getSelection());
+                AnnotationActions.addConceptAnnotation(this, getController().getTextSourceCollection().getSelection());
             } catch (NoSelectionException e1) {
                 e1.printStackTrace();
             }
         });
         removeAnnotationButton.addActionListener(e -> {
             try {
-                AnnotationActions.removeAnnotation(this, getController().getTextSourceCollection().getSelection(), getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection());
+                AnnotationActions.removeConceptAnnotation(this, getController().getTextSourceCollection().getSelection(), getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection());
             } catch (NoSelectionException e1) {
                 e1.printStackTrace();
             }
@@ -318,8 +317,11 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     private void makeSearchButtons() {
         findTextInOntologyButton.addActionListener(e -> SearchActions.findText(this, searchTextField.getText()));
-        nextMatchButton.addActionListener(e -> SearchActions.findNextMatch(this, searchTextField.getText(), caseSensitiveCheckBox.isSelected(), onlyAnnotationsCheckBox.isSelected(), regexCheckBox.isSelected()));
-        previousMatchButton.addActionListener(e -> SearchActions.findPreviousMatch(this, searchTextField.getText(), caseSensitiveCheckBox.isSelected(), onlyAnnotationsCheckBox.isSelected(), regexCheckBox.isSelected()));
+        nextMatchButton.addActionListener(e -> SearchActions.findNextMatch(this));
+        previousMatchButton.addActionListener(e -> SearchActions.findPreviousMatch(this));
+        regexCheckBox.addItemListener(e -> searchTextField.makePattern());
+        caseSensitiveCheckBox.addItemListener(e -> searchTextField.makePattern());
+        onlyAnnotationsCheckBox.addItemListener(e -> searchTextField.makePattern());
     }
 
     private void setupListeners() {
@@ -510,10 +512,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     public void drop(DropTargetDropEvent e) {
     }
 
-    JTextComponent getSearchTextField() {
-        return searchTextField;
-    }
-
     @Override
     public void dragEnter(DropTargetDragEvent e) {
     }
@@ -524,6 +522,22 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     public JButton getAddTextSourceButton() {
         return addTextSourceButton;
+    }
+
+    public JCheckBox getRegexCheckBox() {
+        return regexCheckBox;
+    }
+
+    public JCheckBox getCaseSensitiveCheckBox() {
+        return caseSensitiveCheckBox;
+    }
+
+    public JCheckBox getOnlyInAnnotationsCheckBox() {
+        return onlyAnnotationsCheckBox;
+    }
+
+    SearchTextField getSearchTextField() {
+        return searchTextField;
     }
 
     /**

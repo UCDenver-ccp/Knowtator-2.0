@@ -111,7 +111,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     /**
      * @param loc Location filter
      */
-    public TreeSet<Span> getSpans(Integer loc, int start, int end) {
+    public TreeSet<Span> getSpans(Integer loc) {
         Supplier<TreeSet<Span>> supplier = TreeSet::new;
 
         boolean filterByOWLClass = controller.getFilterModel().isFilterByOWLClass();
@@ -130,7 +130,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                 .filter(
                         span ->
                                 (loc == null || span.contains(loc))
-                                        && (start <= span.getStart() && span.getEnd() <= end)
                                         && (!filterByOWLClass || activeOWLClassDescendents.contains(span.getConceptAnnotation().getOwlClass()))
                                         && (!filterByProfile || span.getConceptAnnotation().getAnnotator().equals(activeProfile)))
                 .collect(Collectors.toCollection(supplier));

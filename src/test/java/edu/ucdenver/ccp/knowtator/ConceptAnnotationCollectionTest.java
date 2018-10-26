@@ -28,7 +28,6 @@ public class ConceptAnnotationCollectionTest {
     };
     private String[] profileFileNames = new String[]{"profile1", "profile2"};
     private ConceptAnnotationCollection conceptAnnotationCollection;
-    private TextSource textSource;
     private Profile profile;
 
     private File getProjectFile(String projectName) {
@@ -76,7 +75,7 @@ public class ConceptAnnotationCollectionTest {
             e.printStackTrace();
         }
 
-        textSource = controller.getTextSourceCollection().stream().filter(textSource1 -> textSource1.getId().equals(articleName)).findAny().get();
+        TextSource textSource = controller.getTextSourceCollection().stream().filter(textSource1 -> textSource1.getId().equals(articleName)).findAny().get();
         conceptAnnotationCollection = textSource.getConceptAnnotationCollection();
         profile = controller.getProfileCollection().addProfile("Default");
 
@@ -88,7 +87,7 @@ public class ConceptAnnotationCollectionTest {
         ConceptAnnotation conceptAnnotation1 = conceptAnnotationCollection.addAnnotation("mention_3", null, "class_2", "class_2", profile, "identity");
 
         int numAnnotations = conceptAnnotationCollection.size();
-        int numSpans = conceptAnnotationCollection.getSpans(null, 0, textSource.getContent().length()).size();
+        int numSpans = conceptAnnotationCollection.getSpans(null).size();
 
         assert numAnnotations == 3;
         assert numSpans == 3;
@@ -102,7 +101,7 @@ public class ConceptAnnotationCollectionTest {
         Span span1 = conceptAnnotation1.getSpanCollection().addSpan(null,1, 6);
 
         int numAnnotations = conceptAnnotationCollection.size();
-        int numSpans = conceptAnnotationCollection.getSpans(null, 0, textSource.getContent().length()).size();
+        int numSpans = conceptAnnotationCollection.getSpans(null).size();
 
         assert numAnnotations == 3;
         assert numSpans == 4;
@@ -114,13 +113,13 @@ public class ConceptAnnotationCollectionTest {
         conceptAnnotationCollection.remove(conceptAnnotationCollection.get("mention_1"));
 
         int numAnnotations = conceptAnnotationCollection.size();
-        int numSpans = conceptAnnotationCollection.getSpans(null, 0, textSource.getContent().length()).size();
+        int numSpans = conceptAnnotationCollection.getSpans(null).size();
 
         assert numAnnotations == 1;
         try {
             assert numSpans == 1;
         } catch (AssertionError ae) {
-            conceptAnnotationCollection.getSpans(null, 0, textSource.getContent().length()).forEach((span -> log.warn(String.format("%s, %s", span, span.getConceptAnnotation()))));
+            conceptAnnotationCollection.getSpans(null).forEach((span -> log.warn(String.format("%s, %s", span, span.getConceptAnnotation()))));
             throw new AssertionError();
         }
     }
@@ -133,13 +132,13 @@ public class ConceptAnnotationCollectionTest {
 
         span1.getConceptAnnotation().getSpanCollection().remove(span1);
         int numAnnotations = conceptAnnotationCollection.size();
-        int numSpans = conceptAnnotationCollection.getSpans(null, 0, textSource.getContent().length()).size();
+        int numSpans = conceptAnnotationCollection.getSpans(null).size();
 
         assert numAnnotations == 3;
         try {
             assert numSpans == 3;
         } catch (AssertionError ae) {
-            conceptAnnotationCollection.getSpans(null, 0, textSource.getContent().length()).forEach((span -> log.warn(String.format("%s, %s", span, span.getConceptAnnotation()))));
+            conceptAnnotationCollection.getSpans(null).forEach((span -> log.warn(String.format("%s, %s", span, span.getConceptAnnotation()))));
             throw new AssertionError();
         }
     }

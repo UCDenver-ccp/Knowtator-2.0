@@ -100,7 +100,7 @@ public class IOTests {
       assert content.equals(articleContent[articleID]);
       
       numAnnotations = textSource.getConceptAnnotationCollection().size();
-      numSpans = textSource.getConceptAnnotationCollection().getSpans(null, 0, content.length()).size();
+      numSpans = textSource.getConceptAnnotationCollection().getSpans(null).size();
       numGraphSpaces = textSource.getGraphSpaceCollection().size();
       numVertices =
           textSource.getGraphSpaceCollection().stream()
@@ -134,7 +134,7 @@ public class IOTests {
       assert content.equals(articleContent[articleID2]);
       
       numAnnotations = textSource.getConceptAnnotationCollection().size();
-      numSpans = textSource.getConceptAnnotationCollection().getSpans(null, 0, content.length()).size();
+      numSpans = textSource.getConceptAnnotationCollection().getSpans(null).size();
       numGraphSpaces = textSource.getGraphSpaceCollection().size();
       numVertices =
           textSource.getGraphSpaceCollection().stream()
@@ -239,7 +239,7 @@ public class IOTests {
 
 
       int numAnnotations = textSource.getConceptAnnotationCollection().size();
-      int numSpans = textSource.getConceptAnnotationCollection().getSpans(null, 0, content.length()).size();
+      int numSpans = textSource.getConceptAnnotationCollection().getSpans(null).size();
       int numGraphSpaces = textSource.getGraphSpaceCollection().size();
 
       assert numGraphSpaces == 1 : "There were " + numGraphSpaces + " graph spaces";
@@ -397,7 +397,7 @@ public class IOTests {
             .get();
 
     int numAnnotations = textSource.getConceptAnnotationCollection().size();
-    int numSpans = textSource.getConceptAnnotationCollection().getSpans(null, 0, textSource.getContent().length()).size();
+    int numSpans = textSource.getConceptAnnotationCollection().getSpans(null).size();
     int numGraphSpaces = textSource.getGraphSpaceCollection().size();
     int numVertices =
         textSource.getGraphSpaceCollection().stream()
