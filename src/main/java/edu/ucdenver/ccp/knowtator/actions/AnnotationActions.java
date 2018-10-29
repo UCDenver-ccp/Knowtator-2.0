@@ -93,11 +93,13 @@ public class AnnotationActions {
 
         @Override
         public void undo() {
+            super.undo();
             textSource.getConceptAnnotationCollection().remove(newConceptAnnotation);
         }
 
         @Override
         public void redo() {
+            super.redo();
             textSource.getConceptAnnotationCollection().add(newConceptAnnotation);
 
         }
@@ -136,11 +138,11 @@ public class AnnotationActions {
         }
     }
 
-    private static class RemoveConceptAnnotationAction extends KnowtatorAction {
+    public static class RemoveConceptAnnotationAction extends KnowtatorAction {
         private final TextSource textSource;
         private ConceptAnnotation oldAnnotation;
 
-        RemoveConceptAnnotationAction(TextSource textSource, ConceptAnnotation annotation) {
+        public RemoveConceptAnnotationAction(TextSource textSource, ConceptAnnotation annotation) {
             super("Remove concept annotation");
             this.textSource = textSource;
             oldAnnotation = annotation;
@@ -148,11 +150,13 @@ public class AnnotationActions {
 
         @Override
         public void undo() {
+            super.undo();
             textSource.getConceptAnnotationCollection().add(oldAnnotation);
         }
 
         @Override
         public void redo() {
+            super.redo();
             textSource.getConceptAnnotationCollection().remove(oldAnnotation);
         }
     }
@@ -169,11 +173,13 @@ public class AnnotationActions {
 
         @Override
         public void undo() {
+            super.undo();
             annotation.getSpanCollection().add(span);
         }
 
         @Override
         public void redo() {
+            super.redo();
             annotation.getSpanCollection().remove(span);
         }
     }
@@ -193,16 +199,13 @@ public class AnnotationActions {
 
         @Override
         public void undo() {
+            super.undo();
             conceptAnnotation.setOwlClass(oldOwlClass);
         }
 
         @Override
         public void redo() {
-            conceptAnnotation.setOwlClass(newOwlClass);
-        }
-
-        @Override
-        void execute() {
+            super.redo();
             conceptAnnotation.setOwlClass(newOwlClass);
         }
     }

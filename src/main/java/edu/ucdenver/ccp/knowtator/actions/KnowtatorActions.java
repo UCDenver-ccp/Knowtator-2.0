@@ -95,11 +95,14 @@ public class KnowtatorActions {
 
         @Override
         public void undo() {
+
+            super.undo();
             oldColorAssignments.forEach(profile::addColor);
         }
 
         @Override
         public void redo() {
+            super.redo();
             oldColorAssignments = new HashMap<>();
             owlClasses.forEach(owlClass -> {
                 Color oldColor = profile.getColors().get(owlClass);

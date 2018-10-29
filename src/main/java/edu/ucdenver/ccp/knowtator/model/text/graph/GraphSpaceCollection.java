@@ -9,7 +9,6 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -54,19 +53,6 @@ public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implem
     public void addGraphSpace(String graphName) {
         GraphSpace newGraphSpace = new GraphSpace(controller, textSource, graphName);
         add(newGraphSpace);
-    }
-
-  /*
-  REMOVERS
-   */
-
-    public void removeAnnotation(ConceptAnnotation conceptAnnotationToRemove) {
-        for (GraphSpace graphSpace : this) {
-            for (Object vertex : graphSpace.getVerticesForAnnotation(conceptAnnotationToRemove)) {
-                graphSpace.setSelectionCell(vertex);
-                graphSpace.removeSelectedCell();
-            }
-        }
     }
 
     /*

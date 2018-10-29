@@ -1,6 +1,9 @@
 package edu.ucdenver.ccp.knowtator.model.text.concept;
 
+import com.mxgraph.util.mxEvent;
+import com.mxgraph.util.mxEventSource;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.actions.AnnotationActions;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
@@ -67,10 +70,19 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
      */
     @Override
     public void remove(ConceptAnnotation conceptAnnotationToRemove) {
+        AnnotationActions.RemoveConceptAnnotationAction action = new AnnotationActions.RemoveConceptAnnotationAction(textSource, conceptAnnotationToRemove);
         for (Span span : conceptAnnotationToRemove.getSpanCollection()) {
             allSpanCollection.remove(span);
         }
-        textSource.getGraphSpaceCollection().removeAnnotation(conceptAnnotationToRemove);
+        for (GraphSpace graphSpace : textSource.getGraphSpaceCollection()) {
+            Object[] cells = graphSpace.getVerticesForAnnotation(conceptAnnotationToRemove).toArray();
+
+            mxEventSource.mxIEventListener listener = (sender, evt) -> action.addmxUndoableEdit(evt);
+            graphSpace.addListener(mxEvent.UNDO, listener);
+            graphSpace.removeCells(cells);
+            graphSpace.removeListener(listener, mxEvent.UNDO);
+
+        }
         super.remove(conceptAnnotationToRemove);
     }
 
