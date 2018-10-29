@@ -1,6 +1,8 @@
 package edu.ucdenver.ccp.knowtator.actions;
 
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
@@ -28,11 +30,12 @@ public class AnnotationActions {
 
             switch (response) {
                 case 0:
-                    textSource
-                            .getConceptAnnotationCollection()
-                            .addSelectedAnnotation();
+
+                    AddConceptAnnotationAction action = new AddConceptAnnotationAction(view.getController(), textSource);
+                    view.getController().registerUndoEvent(action);
                     break;
                 case 1:
+
                     conceptAnnotation.getSpanCollection().addSpan(null,
                             view.getController().getSelectionModel().getStart(),
                             view.getController().getSelectionModel().getEnd());
@@ -41,9 +44,8 @@ public class AnnotationActions {
                     break;
             }
         } catch (NoSelectionException e) {
-            textSource
-                    .getConceptAnnotationCollection()
-                    .addSelectedAnnotation();
+            AddConceptAnnotationAction action = new AddConceptAnnotationAction(view.getController(), textSource);
+            view.getController().registerUndoEvent(action);
         }
 
     }
@@ -90,6 +92,47 @@ public class AnnotationActions {
         if (selectedOWLEntity instanceof OWLClass) {
             conceptAnnotation.setOwlClass((OWLClass) selectedOWLEntity);
             conceptAnnotation.getTextSource().getConceptAnnotationCollection().change(conceptAnnotation);
+        }
+    }
+
+    static class AddConceptAnnotationAction extends UndoableAction {
+        private final TextSource textSource;
+        private String id;
+        private OWLClass owlClass;
+        private String owlClassID;
+        private String owlClassLabel;
+        private Profile annotator;
+        private String type;
+        private int start;
+        private int end;
+        private ConceptAnnotation newConceptAnnotation;
+
+        AddConceptAnnotationAction(KnowtatorController controller, TextSource textSource) {
+            super(true);
+            OWLEntity owlEntity = controller.getOWLModel().getSelectedOWLEntity();
+            if (owlEntity instanceof OWLClass) {
+                owlClass = (OWLClass) owlEntity;
+                annotator = controller.getProfileCollection().getSelection();
+                start = controller.getSelectionModel().getStart();
+                end = controller.getSelectionModel().getEnd();
+
+                owlClassID = controller.getOWLModel().getOWLEntityRendering(owlClass);
+            }
+            id = null;
+            owlClassLabel = null;
+            type = "identity";
+            this.textSource = textSource;
+        }
+
+        @Override
+        void reverse() {
+            textSource.getConceptAnnotationCollection().remove(newConceptAnnotation);
+        }
+
+        @Override
+        void execute() {
+            newConceptAnnotation = textSource.getConceptAnnotationCollection().addAnnotation(id, owlClass, owlClassID, owlClassLabel, annotator, type);
+            newConceptAnnotation.getSpanCollection().addSpan(null, start, end);
         }
     }
 }
