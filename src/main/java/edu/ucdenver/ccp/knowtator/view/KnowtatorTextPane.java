@@ -587,13 +587,13 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
             return menuItem;
         }
 
-        private JMenuItem removeSpanFromAnnotationCommand(ConceptAnnotation conceptAnnotation) {
+        private JMenuItem removeSpanFromAnnotationCommand(ConceptAnnotation conceptAnnotation, Span span) {
             JMenuItem removeSpanFromSelectedAnnotation =
                     new JMenuItem(
                             String.format(
                                     "Delete span from %s",
                                     conceptAnnotation.getOwlClass()));
-            removeSpanFromSelectedAnnotation.addActionListener(e5 -> AnnotationActions.removeConceptAnnotation(view, textSource, conceptAnnotation));
+            removeSpanFromSelectedAnnotation.addActionListener(e5 -> AnnotationActions.removeConceptAnnotation(view, textSource, conceptAnnotation, span));
 
             return removeSpanFromSelectedAnnotation;
         }
@@ -611,12 +611,12 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
             return selectAnnotationMenuItem;
         }
 
-        private JMenuItem removeAnnotationCommand(ConceptAnnotation conceptAnnotation) {
+        private JMenuItem removeAnnotationCommand(ConceptAnnotation conceptAnnotation, Span span) {
             JMenuItem removeAnnotationMenuItem = new JMenuItem(
                     "Delete " +
                             conceptAnnotation.getOwlClass());
 
-            removeAnnotationMenuItem.addActionListener(e4 -> AnnotationActions.removeConceptAnnotation(view, textSource, conceptAnnotation));
+            removeAnnotationMenuItem.addActionListener(e4 -> AnnotationActions.removeConceptAnnotation(view, textSource, conceptAnnotation, span));
 
             return removeAnnotationMenuItem;
         }
@@ -639,9 +639,9 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
                     ConceptAnnotation selectedConceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
                     Span selectedSpan = selectedConceptAnnotation.getSpanCollection().getSelection();
                     if (selectedSpan.getStart() <= release_offset && release_offset <= selectedSpan.getEnd()) {
-                        add(removeAnnotationCommand(selectedConceptAnnotation));
+                        add(removeAnnotationCommand(selectedConceptAnnotation, selectedSpan));
                         if (selectedConceptAnnotation.getSpanCollection().size() > 1) {
-                            add(removeSpanFromAnnotationCommand(selectedConceptAnnotation));
+                            add(removeSpanFromAnnotationCommand(selectedConceptAnnotation, selectedSpan));
                         }
                         add(reassignOWLClassCommand(selectedConceptAnnotation));
                     } else {

@@ -87,7 +87,7 @@ public class KnowtatorActions {
         private Map<Object, Color> oldColorAssignments;
 
         ColorChangeAction(Profile profile, Set<Object> owlClasses, Color color) {
-            super(true);
+            super(true, "Set color for OWL class");
             this.profile = profile;
             this.owlClasses = owlClasses;
             this.color = color;

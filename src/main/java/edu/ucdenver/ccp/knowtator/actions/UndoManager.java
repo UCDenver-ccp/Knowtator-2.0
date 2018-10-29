@@ -16,7 +16,7 @@ public abstract class UndoManager extends DebugManager {
     }
 
     public void registerUndoEvent(UndoableAction action) {
-        if (action != null) {
+        if (action != null && !(action instanceof UndoableAction.CancelAction)) {
             action.execute();
             undoableActions.push(action);
             redoableActions.clear();

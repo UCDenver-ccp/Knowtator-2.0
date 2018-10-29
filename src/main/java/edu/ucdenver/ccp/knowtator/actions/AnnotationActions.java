@@ -11,35 +11,27 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class AnnotationActions {
     public static void addConceptAnnotation(KnowtatorView view, TextSource textSource) {
-        UndoableAction action = null;
+        UndoableAction action;
         try {
             ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
-            String[] buttons = {"Add new concept annotation", "Add span to selected concept annotation", "Cancel"};
-            int response =
-                    JOptionPane.showOptionDialog(
-                            view,
-                            "Choose an option",
-                            "New Span",
-                            JOptionPane.DEFAULT_OPTION,
-                            JOptionPane.PLAIN_MESSAGE,
-                            null,
-                            buttons,
-                            2);
+            ArrayList<UndoableAction> actions = new ArrayList<>(
+                    Arrays.asList(
+                            new AddConceptAnnotationAction(view.getController(), textSource),
+                            new AddSpanAction(view.getController(), conceptAnnotation),
+                            new UndoableAction.CancelAction()
+                    )
+            );
 
-            switch (response) {
-                case 0:
-                    action = new AddConceptAnnotationAction(view.getController(), textSource);
-                    break;
-                case 1:
-                    action = new AddSpanAction(view.getController(), conceptAnnotation);
-                    view.getController().registerUndoEvent(action);
-                    break;
-                case 2:
-                    break;
-            }
+
+            String[] buttons = (String[]) actions.stream().map(UndoableAction::getActionText).toArray();
+            int response = JOptionPane.showOptionDialog(view, "Choose an option", "New Span", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, buttons, 2);
+
+            action = actions.get(response);
         } catch (NoSelectionException e) {
             action = new AddConceptAnnotationAction(view.getController(), textSource);
 
@@ -47,48 +39,28 @@ public class AnnotationActions {
         view.getController().registerUndoEvent(action);
     }
 
-    public static void removeConceptAnnotation(KnowtatorView view, TextSource textSource, ConceptAnnotation annotation) {
-        try {
-            Span span = annotation.getSpanCollection().getSelection();
-            String[] buttons = {"Remove concept annotation", "Remove span from concept annotation", "Cancel"};
-            int response =
-                    JOptionPane.showOptionDialog(
-                            view,
-                            "Choose an option",
-                            "Remove Concept Annotation",
-                            JOptionPane.DEFAULT_OPTION,
-                            JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            buttons,
-                            2);
+    public static void removeConceptAnnotation(KnowtatorView view, TextSource textSource, ConceptAnnotation conceptAnnotation, Span span) {
+        ArrayList<UndoableAction> actions = new ArrayList<>(
+                Arrays.asList(
+                        new RemoveConceptAnnotationAction(textSource, conceptAnnotation),
+                        new RemoveSpanAction(conceptAnnotation, span),
+                        new UndoableAction.CancelAction()
+                )
+        );
 
-            switch (response) {
-                case 0:
-                    textSource.getConceptAnnotationCollection().removeSelected();
-                    break;
-                case 1:
-                    annotation.getSpanCollection().remove(span);
-                    break;
-                case 2:
-                    break;
-            }
-        } catch (NoSelectionException e) {
-            if (JOptionPane.showConfirmDialog(
-                    view,
-                    "Are you sure you want to remove the selected concept annotation?",
-                    "Remove Concept Annotation",
-                    JOptionPane.YES_NO_OPTION)
-                    == JOptionPane.YES_OPTION) {
-                textSource.getConceptAnnotationCollection().removeSelected();
-            }
-        }
+        String[] buttons = (String[]) actions.stream().map(UndoableAction::getActionText).toArray();
+        int response = JOptionPane.showOptionDialog(view, "Choose an option", "Remove Concept Annotation", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, 2);
+
+        UndoableAction action = actions.get(response);
+
+        view.getController().registerUndoEvent(action);
     }
 
     public static void reassignOWLClass(KnowtatorView view, ConceptAnnotation conceptAnnotation) {
-        OWLEntity selectedOWLEntity = view.getController().getOWLModel().getSelectedOWLEntity();
-        if (selectedOWLEntity instanceof OWLClass) {
-            conceptAnnotation.setOwlClass((OWLClass) selectedOWLEntity);
-            conceptAnnotation.getTextSource().getConceptAnnotationCollection().change(conceptAnnotation);
+        OWLEntity owlEntity = view.getController().getOWLModel().getSelectedOWLEntity();
+        if (owlEntity instanceof OWLClass) {
+            ReassignOWLClassAction action = new ReassignOWLClassAction(conceptAnnotation, (OWLClass) owlEntity);
+            view.getController().registerUndoEvent(action);
         }
     }
 
@@ -105,7 +77,7 @@ public class AnnotationActions {
         private ConceptAnnotation newConceptAnnotation;
 
         AddConceptAnnotationAction(KnowtatorController controller, TextSource textSource) {
-            super(true);
+            super(true, "Add concept annotation");
             OWLEntity owlEntity = controller.getOWLModel().getSelectedOWLEntity();
             if (owlEntity instanceof OWLClass) {
                 owlClass = (OWLClass) owlEntity;
@@ -140,8 +112,8 @@ public class AnnotationActions {
         private ConceptAnnotation conceptAnnotation;
         private Span newSpan;
 
-        public AddSpanAction(KnowtatorController controller, ConceptAnnotation conceptAnnotation) {
-            super(true);
+        AddSpanAction(KnowtatorController controller, ConceptAnnotation conceptAnnotation) {
+            super(true, "Add span to concept annotation");
             this.conceptAnnotation = conceptAnnotation;
 
             id = null;
@@ -152,12 +124,78 @@ public class AnnotationActions {
 
         @Override
         void reverse() {
-            conceptAnnotation.getSpanCollection().remove( newSpan);
+            conceptAnnotation.getSpanCollection().remove(newSpan);
         }
 
         @Override
         void execute() {
             newSpan = conceptAnnotation.getSpanCollection().addSpan(id, start, end);
+        }
+    }
+
+    private static class RemoveConceptAnnotationAction extends UndoableAction {
+        private final TextSource textSource;
+        private ConceptAnnotation oldAnnotation;
+
+        RemoveConceptAnnotationAction(TextSource textSource, ConceptAnnotation annotation) {
+            super(true, "Remove concept annotation");
+            this.textSource = textSource;
+            oldAnnotation = annotation;
+        }
+
+        @Override
+        void reverse() {
+            textSource.getConceptAnnotationCollection().add(oldAnnotation);
+        }
+
+        @Override
+        void execute() {
+            textSource.getConceptAnnotationCollection().remove(oldAnnotation);
+        }
+    }
+
+    private static class RemoveSpanAction extends UndoableAction {
+        private final ConceptAnnotation annotation;
+        private final Span span;
+
+        RemoveSpanAction(ConceptAnnotation annotation, Span span) {
+            super(true, "Remove span from concept annotation");
+            this.annotation = annotation;
+            this.span = span;
+        }
+
+        @Override
+        void reverse() {
+            annotation.getSpanCollection().add(span);
+        }
+
+        @Override
+        void execute() {
+            annotation.getSpanCollection().remove(span);
+        }
+    }
+
+    private static class ReassignOWLClassAction extends UndoableAction {
+
+        private final OWLClass oldOwlClass;
+        private ConceptAnnotation conceptAnnotation;
+        private final OWLClass newOwlClass;
+
+        ReassignOWLClassAction(ConceptAnnotation conceptAnnotation, OWLClass newOwlClass) {
+            super(true, "Reassign OWL class");
+            oldOwlClass = conceptAnnotation.getOwlClass();
+            this.conceptAnnotation = conceptAnnotation;
+            this.newOwlClass = newOwlClass;
+        }
+
+        @Override
+        void reverse() {
+            conceptAnnotation.setOwlClass(oldOwlClass);
+        }
+
+        @Override
+        void execute() {
+            conceptAnnotation.setOwlClass(newOwlClass);
         }
     }
 }
