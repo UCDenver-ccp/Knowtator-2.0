@@ -2,10 +2,11 @@ package edu.ucdenver.ccp.knowtator;
 
 import edu.ucdenver.ccp.knowtator.model.DebugListener;
 
+import javax.swing.undo.UndoManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DebugManager {
+public abstract class DebugManager extends UndoManager {
 
     public boolean isDebug() {
         return debug;

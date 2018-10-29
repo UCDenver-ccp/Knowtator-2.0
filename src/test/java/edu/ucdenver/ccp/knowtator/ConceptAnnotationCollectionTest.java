@@ -29,6 +29,8 @@ public class ConceptAnnotationCollectionTest {
     private String[] profileFileNames = new String[]{"profile1", "profile2"};
     private ConceptAnnotationCollection conceptAnnotationCollection;
     private Profile profile;
+    private TextSource textSource;
+    private KnowtatorController controller;
 
     private File getProjectFile(String projectName) {
         return new File(getClass().getResource(String.format(
@@ -60,7 +62,7 @@ public class ConceptAnnotationCollectionTest {
             e.printStackTrace();
         }
 
-        KnowtatorController controller = new KnowtatorController();
+        controller = new KnowtatorController();
 
         int projectID = 0;
         int articleID = 0;
@@ -75,7 +77,7 @@ public class ConceptAnnotationCollectionTest {
             e.printStackTrace();
         }
 
-        TextSource textSource = controller.getTextSourceCollection().stream().filter(textSource1 -> textSource1.getId().equals(articleName)).findAny().get();
+        textSource = controller.getTextSourceCollection().stream().filter(textSource1 -> textSource1.getId().equals(articleName)).findAny().get();
         conceptAnnotationCollection = textSource.getConceptAnnotationCollection();
         profile = controller.getProfileCollection().addProfile("Default");
 
@@ -84,8 +86,8 @@ public class ConceptAnnotationCollectionTest {
     @Test
     public void addAnnotation() {
         setUp();
-        ConceptAnnotation conceptAnnotation1 = conceptAnnotationCollection.addAnnotation("mention_3", null, "class_2", "class_2", profile, "identity");
-
+        ConceptAnnotation conceptAnnotation1 = new ConceptAnnotation(controller, "mention_3", null, "class_2", "class_2", profile, "identity", textSource);
+        conceptAnnotationCollection.add(conceptAnnotation1);
         int numAnnotations = conceptAnnotationCollection.size();
         int numSpans = conceptAnnotationCollection.getSpans(null).size();
 
@@ -97,8 +99,10 @@ public class ConceptAnnotationCollectionTest {
     public void addSpanToAnnotation() {
         setUp();
 
-        ConceptAnnotation conceptAnnotation1 = conceptAnnotationCollection.addAnnotation("mention_3", null, "class_2", "class_2", profile, "identity");
-        Span span1 = conceptAnnotation1.getSpanCollection().addSpan(null,1, 6);
+        ConceptAnnotation conceptAnnotation1 = new ConceptAnnotation(controller, "mention_3", null, "class_2", "class_2", profile, "identity", textSource);
+        conceptAnnotationCollection.add(conceptAnnotation1);
+        Span span1 = new Span(controller, textSource, conceptAnnotation1, null,1, 6);
+        conceptAnnotation1.getSpanCollection().add(span1);
 
         int numAnnotations = conceptAnnotationCollection.size();
         int numSpans = conceptAnnotationCollection.getSpans(null).size();
@@ -127,8 +131,10 @@ public class ConceptAnnotationCollectionTest {
     @Test
     public void removeSpanFromAnnotation() {
         setUp();
-        ConceptAnnotation conceptAnnotation1 = conceptAnnotationCollection.addAnnotation("mention_3", null, "class_2", "class_2", profile, "identity");
-        Span span1 = conceptAnnotation1.getSpanCollection().addSpan(null,1, 6);
+        ConceptAnnotation conceptAnnotation1 = new ConceptAnnotation(controller, "mention_3", null, "class_2", "class_2", profile, "identity", textSource);
+        conceptAnnotationCollection.add(conceptAnnotation1);
+        Span span1 = new Span(controller, textSource, conceptAnnotation1, null,1, 6);
+        conceptAnnotation1.getSpanCollection().add(span1);
 
         span1.getConceptAnnotation().getSpanCollection().remove(span1);
         int numAnnotations = conceptAnnotationCollection.size();

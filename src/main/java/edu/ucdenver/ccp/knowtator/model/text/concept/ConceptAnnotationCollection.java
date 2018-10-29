@@ -61,12 +61,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     ADDERS
      */
 
-    public ConceptAnnotation addAnnotation(String annotationID, OWLClass owlClass, String owlClassID, String owlClassLabel, Profile annotator, String annotation_type) {
-        ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, annotationID, owlClass, owlClassID, owlClassLabel, annotator, annotation_type, textSource);
-        add(newConceptAnnotation);
-        return newConceptAnnotation;
-    }
-
 
     /*
     REMOVERS
@@ -290,7 +284,9 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                     ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0))
                             .getAttribute(KnowtatorXMLAttributes.LABEL);
 
-            ConceptAnnotation newConceptAnnotation = addAnnotation(annotationID, null, owlClassID, owlClassLabel, profile, type);
+
+            ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, annotationID, null, owlClassID, owlClassLabel, profile, type, textSource);
+            add(newConceptAnnotation);
             newConceptAnnotation.readFromKnowtatorXML(null, annotationElement);
         }
 
@@ -339,8 +335,8 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                             .item(0)
                             .getTextContent();
 
-            ConceptAnnotation newConceptAnnotation = addAnnotation(annotationID, null, owlClassID, owlClassName, profile, "identity");
-
+            ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, annotationID, null, owlClassID, owlClassName, profile, "identity", textSource);
+            add(newConceptAnnotation);
             newConceptAnnotation.readFromOldKnowtatorXML(null, annotationElement);
 
             // No need to keep annotations with no allSpanCollection
@@ -412,9 +408,10 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                 .get(StandoffTags.TEXTBOUNDANNOTATION)
                 .forEach(
                         annotation -> {
-                            ConceptAnnotation newConceptAnnotation = addAnnotation(annotation[0], null,
+                            ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, annotation[0], null,
                                     annotation[1].split(StandoffTags.textBoundAnnotationTripleDelimiter)[0],
-                                    null, profile, "identity");
+                                    null, profile, "identity", textSource);
+                            add(newConceptAnnotation);
                             Map<Character, List<String[]>> map = new HashMap<>();
                             List<String[]> list = new ArrayList<>();
                             list.add(annotation);

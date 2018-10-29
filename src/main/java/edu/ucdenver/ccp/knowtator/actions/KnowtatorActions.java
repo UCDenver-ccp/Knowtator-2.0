@@ -69,8 +69,8 @@ public class KnowtatorActions {
                                         .getDescendants((OWLClass) owlClass));
                     }
                     ColorChangeAction action = new ColorChangeAction(view.getController().getProfileCollection().getSelection(), owlClasses, c);
-
-                    view.getController().registerUndoEvent(action);
+                    action.execute();
+                    view.getController().addEdit(action);
                 }
 
 
@@ -79,7 +79,7 @@ public class KnowtatorActions {
 
     }
 
-    static class ColorChangeAction extends UndoableAction {
+    static class ColorChangeAction extends KnowtatorAction {
 
         private final Profile profile;
         private final Set<Object> owlClasses;
@@ -87,19 +87,19 @@ public class KnowtatorActions {
         private Map<Object, Color> oldColorAssignments;
 
         ColorChangeAction(Profile profile, Set<Object> owlClasses, Color color) {
-            super(true, "Set color for OWL class");
+            super( "Set color for OWL class");
             this.profile = profile;
             this.owlClasses = owlClasses;
             this.color = color;
         }
 
         @Override
-        void reverse() {
+        public void undo() {
             oldColorAssignments.forEach(profile::addColor);
         }
 
         @Override
-        void execute() {
+        public void redo() {
             oldColorAssignments = new HashMap<>();
             owlClasses.forEach(owlClass -> {
                 Color oldColor = profile.getColors().get(owlClass);

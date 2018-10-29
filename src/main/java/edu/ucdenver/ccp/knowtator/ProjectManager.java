@@ -1,6 +1,5 @@
 package edu.ucdenver.ccp.knowtator;
 
-import edu.ucdenver.ccp.knowtator.actions.UndoManager;
 import edu.ucdenver.ccp.knowtator.io.BasicIO;
 import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
@@ -18,7 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-public abstract class ProjectManager extends UndoManager implements Savable {
+public abstract class ProjectManager extends DebugManager implements Savable {
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(ProjectManager.class);
 

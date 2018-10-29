@@ -246,7 +246,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         });
         removeAnnotationButton.addActionListener(e -> {
             try {
-                AnnotationActions.removeConceptAnnotation(this, getController().getTextSourceCollection().getSelection(), getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection());
+                TextSource textSource = getController().getTextSourceCollection().getSelection();
+                ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
+                Span span = conceptAnnotation.getSpanCollection().getSelection();
+                AnnotationActions.removeConceptAnnotation(this, textSource, conceptAnnotation, span);
             } catch (NoSelectionException e1) {
                 e1.printStackTrace();
             }

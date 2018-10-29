@@ -25,8 +25,8 @@ public class Span extends AbstractKnowtatorTextBoundDataObject<Span> implements 
   private int end;
   private ConceptAnnotation conceptAnnotation;
 
-  Span(
-      String id, int start, int end, TextSource textSource, KnowtatorController controller, ConceptAnnotation conceptAnnotation) {
+  public Span(
+          KnowtatorController controller, TextSource textSource, ConceptAnnotation conceptAnnotation, String id, int start, int end) {
     super(textSource, id);
     this.start = start;
     this.end = end;

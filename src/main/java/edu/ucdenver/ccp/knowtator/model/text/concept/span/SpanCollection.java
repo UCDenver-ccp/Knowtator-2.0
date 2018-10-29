@@ -79,11 +79,11 @@ public class SpanCollection extends KnowtatorCollection<Span> implements BratSta
 
     }
 
-    public Span addSpan(String spanId, int spanStart, int spanEnd) {
-        Span newSpan = new Span(spanId, spanStart, spanEnd, textSource, controller, conceptAnnotation);
-        add(newSpan);
-        textSource.getConceptAnnotationCollection().getAllSpanCollection().add(newSpan);
-        setSelection(newSpan);
-        return newSpan;
+    @Override
+    public void add(Span span) {
+        super.add(span);
+        if (!this.equals(textSource.getConceptAnnotationCollection().getAllSpanCollection())) {
+            textSource.getConceptAnnotationCollection().getAllSpanCollection().add(span);
+        }
     }
 }

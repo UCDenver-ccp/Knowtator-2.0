@@ -32,7 +32,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
     private final KnowtatorController controller;
     private final SpanCollection spanCollection;
 
-    ConceptAnnotation(
+    public ConceptAnnotation(
             KnowtatorController controller,
             String annotationID,
             OWLClass owlClass,
@@ -205,7 +205,8 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
                 spanEnd = Integer.parseInt(spanElement.getAttribute(KnowtatorXMLAttributes.SPAN_END));
                 spanId = spanElement.getAttribute(KnowtatorXMLAttributes.ID);
 
-                spanCollection.addSpan(spanId, spanStart, spanEnd);
+                Span span = new Span(controller, textSource, this, spanId, spanStart, spanEnd);
+                spanCollection.add(span);
             }
         }
     }
@@ -220,8 +221,8 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
                         Integer.parseInt(spanElement.getAttribute(OldKnowtatorXMLAttributes.SPAN_START));
                 int spanEnd =
                         Integer.parseInt(spanElement.getAttribute(OldKnowtatorXMLAttributes.SPAN_END));
-
-                spanCollection.addSpan(null, spanStart, spanEnd);
+                Span span = new Span(controller, textSource, this, null, spanStart, spanEnd);
+                spanCollection.add(span);
             }
         }
 
@@ -235,14 +236,15 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
                         .get(StandoffTags.TEXTBOUNDANNOTATION)
                         .get(0)[1]
                         .split(StandoffTags.textBoundAnnotationTripleDelimiter);
-        int start = Integer.parseInt(triple[1]);
+        int spanStart = Integer.parseInt(triple[1]);
         for (int i = 2; i < triple.length; i++) {
-            int end = Integer.parseInt(triple[i].split(StandoffTags.spanDelimiter)[0]);
+            int spanEnd = Integer.parseInt(triple[i].split(StandoffTags.spanDelimiter)[0]);
 
-            spanCollection.addSpan(null, start, end);
+            Span span = new Span(controller, textSource, this, null, spanStart, spanEnd);
+            spanCollection.add(span);
 
             if (i != triple.length - 1) {
-                start = Integer.parseInt(triple[i].split(StandoffTags.spanDelimiter)[1]);
+                spanStart = Integer.parseInt(triple[i].split(StandoffTags.spanDelimiter)[1]);
             }
         }
     }

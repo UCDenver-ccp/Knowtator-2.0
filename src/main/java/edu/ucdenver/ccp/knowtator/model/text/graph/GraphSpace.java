@@ -5,6 +5,8 @@ import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
+import com.mxgraph.util.mxUndoManager;
+import com.mxgraph.util.mxUndoableEdit;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
@@ -38,6 +40,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectInterface<GraphSpace>, KnowtatorXMLIO, BratStandoffIO, KnowtatorCollectionListener<ConceptAnnotation> {
+    private final mxUndoManager undoManager;
+    private mxIEventListener undoHandler;
     @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(GraphSpace.class);
 
@@ -52,6 +56,8 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
         this.controller = controller;
         this.textSource = textSource;
         this.id = id;
+        this.undoManager = new mxUndoManager();
+        this.undoHandler = (sender, evt) -> undoManager.undoableEditHappened((mxUndoableEdit) evt.getProperty("edit"));
 
         controller.verifyId(id, this, false);
         textSource.getConceptAnnotationCollection().addCollectionListener(this);
@@ -360,6 +366,17 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
         // Handle drag and drop
         // Adds the current selected object property as the edge value
         if (!areListenersSet) {
+            getModel().addListener(mxEvent.UNDO, undoHandler);
+            getModel().addListener(mxEvent.REDO, undoHandler);
+
+            undoHandler = (sender, evt) -> {
+                List<mxUndoableEdit.mxUndoableChange> changes = ((mxUndoableEdit) evt.getProperty("edit")).getChanges();
+                setSelectionCells(getSelectionCellsForChanges(changes));
+            };
+
+            undoManager.addListener(mxEvent.UNDO, undoHandler);
+            undoManager.addListener(mxEvent.REDO, undoHandler);
+
             addListener(
                     mxEvent.ADD_CELLS,
                     (sender, evt) -> {
