@@ -1,5 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view;
 
+import edu.ucdenver.ccp.knowtator.actions.AnnotationActions;
 import edu.ucdenver.ccp.knowtator.model.FilterModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
@@ -7,7 +8,6 @@ import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
-import edu.ucdenver.ccp.knowtator.view.annotation.AnnotationActions;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
 
@@ -430,7 +430,7 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
         repaint();
     }
 
-    void modifySelection(int startModification, int endModification) {
+    public void modifySelection(int startModification, int endModification) {
         select(getSelectionStart() + startModification, getSelectionEnd() + endModification);
     }
 

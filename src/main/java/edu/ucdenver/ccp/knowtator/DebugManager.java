@@ -14,7 +14,7 @@ public abstract class DebugManager {
     private boolean debug;
     private List<DebugListener> debugListeners;
 
-    DebugManager() {
+    protected DebugManager() {
         debug = false;
         debugListeners = new ArrayList<>();
     }

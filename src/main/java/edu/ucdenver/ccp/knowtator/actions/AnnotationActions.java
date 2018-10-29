@@ -1,4 +1,4 @@
-package edu.ucdenver.ccp.knowtator.view.annotation;
+package edu.ucdenver.ccp.knowtator.actions;
 
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;

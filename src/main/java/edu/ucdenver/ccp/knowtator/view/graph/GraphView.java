@@ -5,6 +5,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
+import edu.ucdenver.ccp.knowtator.actions.GraphActions;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
@@ -212,7 +213,7 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
         graphSpaceButtons.forEach(c -> c.setEnabled(true));
     }
 
-    mxGraphComponent getGraphComponent() {
+    public mxGraphComponent getGraphComponent() {
         return graphComponent;
     }
 
@@ -301,14 +302,14 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
     /**
      * Taken from https://tips4java.wordpress.com/2010/03/14/dialog-focus/
      */
-    static class RequestFocusListener implements AncestorListener {
+    public static class RequestFocusListener implements AncestorListener {
         private final boolean removeListener;
 
         /*
          *  Convenience constructor. The listener is only used once and then it is
          *  removed from the component.
          */
-        RequestFocusListener() {
+        public RequestFocusListener() {
             this(true);
         }
 

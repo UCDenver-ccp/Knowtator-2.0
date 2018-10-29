@@ -1,4 +1,4 @@
-package edu.ucdenver.ccp.knowtator.view.search;
+package edu.ucdenver.ccp.knowtator.actions;
 
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 

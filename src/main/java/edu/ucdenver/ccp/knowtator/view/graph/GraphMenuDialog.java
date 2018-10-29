@@ -3,6 +3,7 @@ package edu.ucdenver.ccp.knowtator.view.graph;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import edu.ucdenver.ccp.knowtator.actions.GraphActions;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
@@ -11,13 +12,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-class GraphMenuDialog extends JDialog {
+public class GraphMenuDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JButton exportToImagePNGButton;
 
-    GraphMenuDialog(KnowtatorView view) {
+    public GraphMenuDialog(KnowtatorView view) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);

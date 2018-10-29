@@ -1,9 +1,9 @@
 package edu.ucdenver.ccp.knowtator.view.menu;
 
+import edu.ucdenver.ccp.knowtator.actions.KnowtatorActions;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorActions;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.semanticweb.owlapi.model.OWLEntity;

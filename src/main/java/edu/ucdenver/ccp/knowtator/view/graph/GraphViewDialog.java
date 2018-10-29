@@ -87,7 +87,7 @@ public class GraphViewDialog extends JDialog implements KnowtatorComponent {
 
     }
 
-    GraphView getGraphView() {
+    public GraphView getGraphView() {
         return graphView;
     }
 

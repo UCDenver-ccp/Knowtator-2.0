@@ -1,4 +1,4 @@
-package edu.ucdenver.ccp.knowtator.view.textsource;
+package edu.ucdenver.ccp.knowtator.actions;
 
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 

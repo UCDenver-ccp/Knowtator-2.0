@@ -1,4 +1,4 @@
-package edu.ucdenver.ccp.knowtator.view.menu;
+package edu.ucdenver.ccp.knowtator.actions;
 
 import edu.ucdenver.ccp.knowtator.iaa.IAAException;
 import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
@@ -24,7 +24,7 @@ public class MenuActions {
         view.getController().getFilterModel().setFilterByOWLClass(isFilterByOWLClass);
     }
 
-    static void exportToBrat(KnowtatorView view) {
+    public static void exportToBrat(KnowtatorView view) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(view.getController().getTextSourceCollection().getAnnotationsLocation());
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -34,7 +34,7 @@ public class MenuActions {
         }
     }
 
-    static void exportToPNG(KnowtatorView view) {
+    public static void exportToPNG(KnowtatorView view) {
         try {
             TextSource textSource = view.getController().getTextSourceCollection().getSelection();
             JFileChooser fileChooser = new JFileChooser(view.getController().getSaveLocation());
@@ -59,7 +59,7 @@ public class MenuActions {
         }
     }
 
-    static void runIAA(KnowtatorView view, boolean runClass, boolean runSpan, boolean runClassAndSpan) {
+    public static void runIAA(KnowtatorView view, boolean runClass, boolean runSpan, boolean runClassAndSpan) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(view.getController().getSaveLocation());
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);

@@ -1,5 +1,6 @@
 package edu.ucdenver.ccp.knowtator;
 
+import edu.ucdenver.ccp.knowtator.actions.UndoManager;
 import edu.ucdenver.ccp.knowtator.io.BasicIO;
 import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
@@ -30,6 +31,7 @@ public abstract class ProjectManager extends UndoManager implements Savable {
     private boolean isLoading;
 
     ProjectManager() {
+        super();
         isLoading = false;
     }
 

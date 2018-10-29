@@ -1,4 +1,4 @@
-package edu.ucdenver.ccp.knowtator.view.graph;
+package edu.ucdenver.ccp.knowtator.actions;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
@@ -11,6 +11,8 @@ import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.graph.GraphMenuDialog;
+import edu.ucdenver.ccp.knowtator.view.graph.GraphView;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -25,8 +27,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-class GraphActions {
-    static void selectPreviousGraphSpace(KnowtatorView view) {
+public class GraphActions {
+    public static void selectPreviousGraphSpace(KnowtatorView view) {
         try {
             view.getController().getTextSourceCollection().getSelection().getGraphSpaceCollection()
                     .selectPrevious();
@@ -35,7 +37,7 @@ class GraphActions {
         }
     }
 
-    static void selectNextGraphSpace(KnowtatorView view) {
+    public static void selectNextGraphSpace(KnowtatorView view) {
         try {
             view.getController().getTextSourceCollection().getSelection().getGraphSpaceCollection()
                     .selectNext();
@@ -44,7 +46,7 @@ class GraphActions {
         }
     }
 
-    static void removeSelectedCell(KnowtatorView view) {
+    public static void removeSelectedCell(KnowtatorView view) {
         try {
             view.getController().getTextSourceCollection().getSelection().getGraphSpaceCollection().getSelection()
                     .removeSelectedCell();
@@ -53,7 +55,7 @@ class GraphActions {
         }
     }
 
-    static void addAnnotationNode(KnowtatorView view) {
+    public static void addAnnotationNode(KnowtatorView view) {
         try {
 
 
@@ -78,7 +80,7 @@ class GraphActions {
         view.getGraphViewDialog().getGraphView().getGraphComponent().scrollCellToVisible(vertex, true);
     }
 
-    static void applyLayout(KnowtatorView view) {
+    public static void applyLayout(KnowtatorView view) {
         try {
 
 
@@ -128,7 +130,7 @@ class GraphActions {
 //    }
 // --Commented out by Inspection STOP (9/29/2018 9:44 PM)
 
-    static void exportToPNG(KnowtatorView view) {
+    public static void exportToPNG(KnowtatorView view) {
         try {
             TextSource textSource = view.getController().getTextSourceCollection().getSelection();
             GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection();
@@ -153,17 +155,17 @@ class GraphActions {
         }
     }
 
-    static void showGraphMenuDialog(KnowtatorView view) {
+    public static void showGraphMenuDialog(KnowtatorView view) {
         GraphMenuDialog graphMenuDialog = new GraphMenuDialog(view);
         graphMenuDialog.pack();
         graphMenuDialog.setVisible(true);
     }
 
-    static void zoomGraph(mxGraphComponent graphComponent, int zoomValue) {
+    public static void zoomGraph(mxGraphComponent graphComponent, int zoomValue) {
         graphComponent.zoomTo(zoomValue / 50.0, false);
     }
 
-    static void renameGraphSpace(KnowtatorView view) {
+    public static void renameGraphSpace(KnowtatorView view) {
         try {
 
 
@@ -177,7 +179,7 @@ class GraphActions {
         }
     }
 
-    static void addGraphSpace(KnowtatorView view) {
+    public static void addGraphSpace(KnowtatorView view) {
         try {
             TextSource textSource = view.getController().getTextSourceCollection().getSelection();
             String graphName = getGraphNameInput(view, textSource, null);
@@ -190,7 +192,7 @@ class GraphActions {
         }
     }
 
-    static void removeGraphSpace(KnowtatorView view) {
+    public static void removeGraphSpace(KnowtatorView view) {
         try {
 
 
