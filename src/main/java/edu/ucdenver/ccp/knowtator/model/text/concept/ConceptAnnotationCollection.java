@@ -67,21 +67,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         return newConceptAnnotation;
     }
 
-    public void addSelectedAnnotation() {
-        OWLEntity owlClass = controller.getOWLModel().getSelectedOWLEntity();
-        if (owlClass instanceof OWLClass) {
-            Profile annotator = controller.getProfileCollection().getSelection();
-            int start = controller.getSelectionModel().getStart();
-            int end = controller.getSelectionModel().getEnd();
-
-
-            String owlClassID = controller.getOWLModel().getOWLEntityRendering(owlClass);
-            ConceptAnnotation newConceptAnnotation = addAnnotation(null, (OWLClass) owlClass, owlClassID, null, annotator, "identity");
-            newConceptAnnotation.getSpanCollection().addSpan(null, start, end);
-        }
-
-    }
-
 
     /*
     REMOVERS

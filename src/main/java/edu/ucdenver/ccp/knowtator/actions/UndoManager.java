@@ -15,10 +15,12 @@ public abstract class UndoManager extends DebugManager {
         redoableActions = new Stack<>();
     }
 
-    protected void registerUndoEvent(UndoableAction action) {
-        action.execute();
-        undoableActions.push(action);
-        redoableActions.clear();
+    public void registerUndoEvent(UndoableAction action) {
+        if (action != null) {
+            action.execute();
+            undoableActions.push(action);
+            redoableActions.clear();
+        }
     }
 
     private void addRedoAction(UndoableAction action) {

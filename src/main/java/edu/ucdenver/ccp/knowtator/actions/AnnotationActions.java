@@ -14,6 +14,7 @@ import javax.swing.*;
 
 public class AnnotationActions {
     public static void addConceptAnnotation(KnowtatorView view, TextSource textSource) {
+        UndoableAction action = null;
         try {
             ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
             String[] buttons = {"Add new concept annotation", "Add span to selected concept annotation", "Cancel"};
@@ -30,24 +31,20 @@ public class AnnotationActions {
 
             switch (response) {
                 case 0:
-
-                    AddConceptAnnotationAction action = new AddConceptAnnotationAction(view.getController(), textSource);
-                    view.getController().registerUndoEvent(action);
+                    action = new AddConceptAnnotationAction(view.getController(), textSource);
                     break;
                 case 1:
-
-                    conceptAnnotation.getSpanCollection().addSpan(null,
-                            view.getController().getSelectionModel().getStart(),
-                            view.getController().getSelectionModel().getEnd());
+                    action = new AddSpanAction(view.getController(), conceptAnnotation);
+                    view.getController().registerUndoEvent(action);
                     break;
                 case 2:
                     break;
             }
         } catch (NoSelectionException e) {
-            AddConceptAnnotationAction action = new AddConceptAnnotationAction(view.getController(), textSource);
-            view.getController().registerUndoEvent(action);
-        }
+            action = new AddConceptAnnotationAction(view.getController(), textSource);
 
+        }
+        view.getController().registerUndoEvent(action);
     }
 
     public static void removeConceptAnnotation(KnowtatorView view, TextSource textSource, ConceptAnnotation annotation) {
@@ -133,6 +130,34 @@ public class AnnotationActions {
         void execute() {
             newConceptAnnotation = textSource.getConceptAnnotationCollection().addAnnotation(id, owlClass, owlClassID, owlClassLabel, annotator, type);
             newConceptAnnotation.getSpanCollection().addSpan(null, start, end);
+        }
+    }
+
+    private static class AddSpanAction extends UndoableAction {
+        private final String id;
+        private final int start;
+        private final int end;
+        private ConceptAnnotation conceptAnnotation;
+        private Span newSpan;
+
+        public AddSpanAction(KnowtatorController controller, ConceptAnnotation conceptAnnotation) {
+            super(true);
+            this.conceptAnnotation = conceptAnnotation;
+
+            id = null;
+            start = controller.getSelectionModel().getStart();
+            end = controller.getSelectionModel().getEnd();
+
+        }
+
+        @Override
+        void reverse() {
+            conceptAnnotation.getSpanCollection().remove( newSpan);
+        }
+
+        @Override
+        void execute() {
+            newSpan = conceptAnnotation.getSpanCollection().addSpan(id, start, end);
         }
     }
 }
