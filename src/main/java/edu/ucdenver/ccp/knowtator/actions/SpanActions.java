@@ -12,6 +12,20 @@ public class SpanActions {
     public final static String START = "start";
     public final static String END = "end";
 
+    private static int getEndModification(String startOrEnd, String growOrShrink) {
+        return startOrEnd.equals(END) ?
+                growOrShrink.equals(GROW) ?
+                        +1 : growOrShrink.equals(SHRINK) ?
+                        -1 : 0 : 0;
+    }
+
+    private static int getStartModification(String startOrEnd, String growOrShrink) {
+        return  startOrEnd.equals(START) ?
+                growOrShrink.equals(GROW) ?
+                        -1 : growOrShrink.equals(SHRINK) ?
+                        +1 : 0 : 0;
+    }
+
     public static void selectNextSpan(TextSource textSource) throws NoSelectionException {
         textSource.getConceptAnnotationCollection().getNextSpan();
     }
@@ -21,29 +35,15 @@ public class SpanActions {
     }
 
     public static void modifySpan(Span span, String startOrEnd, String growOrShrink) {
-        span.getTextSource().getConceptAnnotationCollection().modifySpan(
-                span,
-                startOrEnd.equals(START) ?
-                        growOrShrink.equals(GROW) ?
-                                -1 : growOrShrink.equals(SHRINK) ?
-                                +1 : 0 : 0,
-                startOrEnd.equals(END) ?
-                        growOrShrink.equals(GROW) ?
-                                +1 : growOrShrink.equals(SHRINK) ?
-                                -1 : 0 : 0);
+        int startModification = getStartModification(startOrEnd, growOrShrink);
+        int endModification = getEndModification(startOrEnd, growOrShrink);
+        span.getTextSource().getConceptAnnotationCollection().modifySpan(span, startModification, endModification);
     }
 
     public static void modifySelection(KnowtatorView view, String startOrEnd, String growOrShrink) {
+        int startModification = getStartModification(startOrEnd, growOrShrink);
+        int endModification = getEndModification(startOrEnd, growOrShrink);
         KnowtatorTextPane textPane = view.getKnowtatorTextPane();
-        textPane.modifySelection(
-                startOrEnd.equals(START) ?
-                        growOrShrink.equals(GROW) ?
-                                -1 : growOrShrink.equals(SHRINK) ?
-                                +1 : 0 : 0,
-                startOrEnd.equals(END) ?
-                        growOrShrink.equals(GROW) ?
-                                +1 : growOrShrink.equals(SHRINK) ?
-                                -1 : 0 : 0);
-
+        textPane.modifySelection(startModification, endModification);
     }
 }

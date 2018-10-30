@@ -12,7 +12,7 @@ public abstract class KnowtatorEdit extends AbstractUndoableEdit implements mxEv
     private final String presentationName;
     private mxUndoManager mxUndoManager;
 
-    KnowtatorEdit(String presentationName) {
+    protected KnowtatorEdit(String presentationName) {
         this.presentationName = presentationName;
         mxUndoManager = new mxUndoManager();
     }

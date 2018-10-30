@@ -146,7 +146,7 @@ public class AnnotationActions {
 
         @Override
         void execute() {
-            AbstractUndoableEdit edit = new AbstractUndoableEdit() {
+            AbstractUndoableEdit edit = new KnowtatorEdit(getPresentationName()) {
                 @Override
                 public void undo() {
                     super.undo();

@@ -27,6 +27,20 @@ public class TextSourceActions {
     }
 
     public static void setFontSize(KnowtatorView view, int fontSize) {
+        int previousFontSize = view.getKnowtatorTextPane().getFont().getSize();
         view.getKnowtatorTextPane().setFontSize(fontSize);
+        KnowtatorEdit edit = new KnowtatorEdit("Set font size") {
+            @Override
+            public void undo() {
+                view.getKnowtatorTextPane().setFontSize(previousFontSize);
+            }
+
+            @Override
+            public void redo() {
+                view.getKnowtatorTextPane().setFontSize(fontSize);
+            }
+        };
+
+        view.getController().addEdit(edit);
     }
 }

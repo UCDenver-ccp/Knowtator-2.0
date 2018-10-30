@@ -3,6 +3,7 @@ package edu.ucdenver.ccp.knowtator.model.text.concept;
 import com.mxgraph.util.mxEvent;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionEdit;
+import edu.ucdenver.ccp.knowtator.actions.KnowtatorEdit;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
@@ -30,6 +31,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import javax.annotation.Nonnull;
+import javax.swing.undo.AbstractUndoableEdit;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
@@ -95,6 +97,18 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         allSpanCollection.remove(span);
         span.modifySpan(startModification, endModification, textSource.getContent().length());
         allSpanCollection.add(span);
+
+        AbstractUndoableEdit edit = new KnowtatorEdit("Span modification") {
+            @Override
+            public void undo() {
+                modifySpan(span, (-1) * startModification, (-1) * endModification);
+            }
+            @Override
+            public void redo() {
+                modifySpan(span, startModification, endModification);
+            }
+        };
+        controller.addEdit(edit);
     }
 
     /*
