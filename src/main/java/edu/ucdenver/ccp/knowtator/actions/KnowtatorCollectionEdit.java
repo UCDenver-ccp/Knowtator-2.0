@@ -1,18 +1,17 @@
 package edu.ucdenver.ccp.knowtator.actions;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectableCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.collection.UndoableCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 
-public class KnowtatorCollectionEdit<K extends KnowtatorDataObjectInterface, L extends SelectableCollectionListener<K>> extends KnowtatorEdit {
+public class KnowtatorCollectionEdit<K extends KnowtatorDataObjectInterface> extends KnowtatorEdit {
     public final static String ADD = "add";
     public static final String REMOVE = "remove";
 
     private final String actionName;
-    private final UndoableCollection<K, L> collection;
+    private final KnowtatorCollection<K> collection;
     private final K object;
 
-    public KnowtatorCollectionEdit(String actionName, UndoableCollection<K, L> collection, K object, String presentationName) {
+    public KnowtatorCollectionEdit(String actionName, KnowtatorCollection<K> collection, K object, String presentationName) {
         super(presentationName);
         this.actionName = actionName;
         this.collection = collection;

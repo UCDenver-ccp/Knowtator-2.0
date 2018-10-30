@@ -19,6 +19,7 @@ public abstract class KnowtatorEdit extends AbstractUndoableEdit implements mxEv
 
     @Override
     public void undo(){
+        super.undo();
         while(mxUndoManager.canUndo()) {
             mxUndoManager.undo();
         }
@@ -26,6 +27,7 @@ public abstract class KnowtatorEdit extends AbstractUndoableEdit implements mxEv
 
     @Override
     public void redo(){
+        super.redo();
         while(mxUndoManager.canRedo()) {
             mxUndoManager.redo();
         }

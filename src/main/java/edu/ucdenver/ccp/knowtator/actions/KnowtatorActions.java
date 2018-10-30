@@ -68,6 +68,7 @@ public class KnowtatorActions {
                                         .getOWLModel()
                                         .getDescendants((OWLClass) owlClass));
                     }
+                    //TODO: Change to edit
                     ColorChangeAction action = new ColorChangeAction(view.getController().getProfileCollection().getSelection(), owlClasses, c);
                     action.execute();
                     view.getController().addEdit(action);

@@ -1,7 +1,6 @@
 package edu.ucdenver.ccp.knowtator.actions;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -32,8 +31,7 @@ public class AnnotationActions {
             actions.add(new AddSpanAction(view.getController(), conceptAnnotation));
 
 
-            String[] buttons = (String[]) actions.stream().map(KnowtatorAction::getPresentationName).toArray();
-            int response = JOptionPane.showOptionDialog(view, "Choose an option", "New Concept Annotation or Span", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, buttons, 2);
+            int response = JOptionPane.showOptionDialog(view, "Choose an option", "New Concept Annotation or Span", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, actions.stream().map(KnowtatorAction::getPresentationName).toArray(), 2);
             action = actions.get(response);
 
         } catch (NoSelectionException e) {
@@ -50,13 +48,12 @@ public class AnnotationActions {
     public static void removeConceptAnnotation(KnowtatorView view, TextSource textSource, ConceptAnnotation conceptAnnotation, Span span) {
         ArrayList<KnowtatorAction> actions = new ArrayList<>(
                 Arrays.asList(
-                        new RemoveConceptAnnotationAction(textSource, conceptAnnotation),
-                        new RemoveSpanAction(conceptAnnotation, span)
+                        new RemoveConceptAnnotationAction(view.getController(), textSource, conceptAnnotation),
+                        new RemoveSpanAction(view.getController(), conceptAnnotation, span)
                 )
         );
 
-        String[] buttons = (String[]) actions.stream().map(KnowtatorAction::getPresentationName).toArray();
-        int response = JOptionPane.showOptionDialog(view, "Choose an option", "Remove Concept Annotation", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, 2);
+        int response = JOptionPane.showOptionDialog(view, "Choose an option", "Remove Concept Annotation", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, actions.stream().map(KnowtatorAction::getPresentationName).toArray(), 2);
 
         KnowtatorAction action = actions.get(response);
         action.execute();
@@ -72,22 +69,32 @@ public class AnnotationActions {
 
     static class AddConceptAnnotationAction extends KnowtatorCollectionAction<ConceptAnnotation> {
 
+        private ConceptAnnotation newConceptAnnotation;
+        private TextSource textSource;
+
         AddConceptAnnotationAction(KnowtatorController controller, TextSource textSource, OWLClass owlClass) {
-            super(KnowtatorCollectionAction.ADD, textSource.getConceptAnnotationCollection(), "Add concept annotation");
+            super(KnowtatorCollectionAction.ADD, textSource.getConceptAnnotationCollection(), "Add concept annotation", controller);
             Profile annotator = controller.getProfileCollection().getSelection();
             String owlClassID = controller.getOWLModel().getOWLEntityRendering(owlClass);
             String id = null;
             String owlClassLabel = null;
             String annotationType = "identity";
-
-            ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, id, owlClass, owlClassID, owlClassLabel, annotator, annotationType, textSource);
+            this.textSource = textSource;
+            newConceptAnnotation = new ConceptAnnotation(controller, id, owlClass, owlClassID, owlClassLabel, annotator, annotationType, textSource);
             setObject(newConceptAnnotation);
+        }
+
+        @Override
+        public void execute() {
+            super.execute();
+            newConceptAnnotation.getSpanCollection().add(new Span(controller, textSource, newConceptAnnotation, null, controller.getSelectionModel().getStart(), controller.getSelectionModel().getEnd()));
         }
     }
 
     private static class AddSpanAction extends KnowtatorCollectionAction<Span> {
         AddSpanAction(KnowtatorController controller, ConceptAnnotation conceptAnnotation) {
-            super(KnowtatorCollectionAction.ADD, conceptAnnotation.getSpanCollection(), "Add span to concept annotation");
+            super(KnowtatorCollectionAction.ADD, conceptAnnotation.getSpanCollection(), "Add span to concept annotation", controller);
+
             String id = null;
             int start = controller.getSelectionModel().getStart();
             int end = controller.getSelectionModel().getEnd();
@@ -101,8 +108,8 @@ public class AnnotationActions {
     public static class RemoveConceptAnnotationAction extends KnowtatorCollectionAction<ConceptAnnotation> {
         private TextSource textSource;
 
-        RemoveConceptAnnotationAction(TextSource textSource, ConceptAnnotation annotation) {
-            super(KnowtatorCollectionAction.REMOVE, textSource.getConceptAnnotationCollection(), "Remove concept annotation");
+        RemoveConceptAnnotationAction(KnowtatorController controller, TextSource textSource, ConceptAnnotation annotation) {
+            super(KnowtatorCollectionAction.REMOVE, textSource.getConceptAnnotationCollection(), "Remove concept annotation", controller);
             setObject(annotation);
             this.textSource = textSource;
         }
@@ -110,7 +117,7 @@ public class AnnotationActions {
         @Override
         public void execute() {
             ConceptAnnotationCollection collection = textSource.getConceptAnnotationCollection();
-            KnowtatorCollectionEdit<ConceptAnnotation, KnowtatorCollectionListener<ConceptAnnotation>> edit = new KnowtatorCollectionEdit<>(KnowtatorCollectionAction.ADD, collection, object, "Add concept annotation");
+            KnowtatorCollectionEdit<ConceptAnnotation> edit = new KnowtatorCollectionEdit<>(KnowtatorCollectionAction.ADD, collection, object, "Add concept annotation");
 
             switch (actionName) {
                 case ADD:
@@ -123,8 +130,8 @@ public class AnnotationActions {
     }
 
     private static class RemoveSpanAction extends KnowtatorCollectionAction<Span> {
-        RemoveSpanAction(ConceptAnnotation annotation, Span span) {
-            super(KnowtatorCollectionAction.REMOVE, annotation.getSpanCollection(), "Remove span from concept annotation");
+        RemoveSpanAction(KnowtatorController controller, ConceptAnnotation annotation, Span span) {
+            super(KnowtatorCollectionAction.REMOVE, annotation.getSpanCollection(), "Remove span from concept annotation", controller);
             setObject(span);
         }
     }
