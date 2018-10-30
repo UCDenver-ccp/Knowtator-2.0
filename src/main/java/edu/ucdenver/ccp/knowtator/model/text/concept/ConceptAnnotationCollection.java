@@ -65,6 +65,12 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     ADDERS
      */
 
+    @Override
+    public void add(ConceptAnnotation conceptAnnotation) {
+        allSpanCollection.getCollection().addAll(conceptAnnotation.getSpanCollection().getCollection());
+        super.add(conceptAnnotation);
+    }
+
 
     /*
     REMOVERS

@@ -47,8 +47,16 @@ public abstract class SelectableCollection<K extends KnowtatorDataObjectInterfac
         setSelection(item);
     }
 
+    @Override
+    public void remove(K item) {
+        super.remove(item);
+        if (item == selection) {
+            setSelection(null);
+        }
+    }
+
     public void removeSelected() {
-        remove(selection);
+        super.remove(selection);
         setSelection(null);
     }
 }
