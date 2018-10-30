@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FilterModel implements BaseKnowtatorModel {
+    public static final String PROFILE = "profile";
+    public static final String OWLCLASS = "owl-class";
     private boolean isFilterByOWLClass;
     private boolean isFilterByProfile;
 
@@ -23,20 +25,9 @@ public class FilterModel implements BaseKnowtatorModel {
         return isFilterByOWLClass;
     }
 
-    public void setFilterByOWLClass(boolean filterByOWLClass) {
-        isFilterByOWLClass = filterByOWLClass;
-        filterModelListeners.forEach(l -> l.owlClassFilterChanged(isFilterByOWLClass));
-    }
-
     public boolean isFilterByProfile() {
         return isFilterByProfile;
     }
-
-    public void setFilterByProfile(boolean filterByProfile) {
-        isFilterByProfile = filterByProfile;
-        filterModelListeners.forEach(listener -> listener.profileFilterChanged(isFilterByProfile));
-    }
-
 
     @Override
     public void dispose() {
@@ -51,5 +42,18 @@ public class FilterModel implements BaseKnowtatorModel {
     @Override
     public void finishLoad() {
 
+    }
+
+    public void setFilter(String filter, boolean isFilter) {
+        switch (filter) {
+            case PROFILE:
+                isFilterByProfile = isFilter;
+                filterModelListeners.forEach(listener -> listener.profileFilterChanged(isFilterByProfile));
+                break;
+            case OWLCLASS:
+                isFilterByOWLClass = isFilter;
+                filterModelListeners.forEach(l -> l.owlClassFilterChanged(isFilterByOWLClass));
+                break;
+        }
     }
 }

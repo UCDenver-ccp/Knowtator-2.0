@@ -1,5 +1,6 @@
 package edu.ucdenver.ccp.knowtator.actions;
 
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.iaa.IAAException;
 import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
@@ -16,12 +17,10 @@ import java.io.IOException;
 
 public class MenuActions {
 
-    public static void changeProfileFilter(KnowtatorView view, boolean isFilterByProfile) {
-        view.getController().getFilterModel().setFilterByProfile(isFilterByProfile);
-    }
-
-    public static void changeOWLClassFilter(KnowtatorView view, boolean isFilterByOWLClass) {
-        view.getController().getFilterModel().setFilterByOWLClass(isFilterByOWLClass);
+    public static void changeFilter(KnowtatorView view, String filter, boolean isFilterByProfile) {
+        view.getController().getFilterModel().setFilter(filter, isFilterByProfile);
+        FilterEdit edit = new FilterEdit(view.getController(), filter, isFilterByProfile);
+        view.getController().addEdit(edit);
     }
 
     public static void exportToBrat(KnowtatorView view) {
@@ -92,4 +91,28 @@ public class MenuActions {
     }
 
 
+    private static class FilterEdit extends KnowtatorEdit {
+        private final KnowtatorController controller;
+        private final boolean isFilter;
+        private String filter;
+
+        FilterEdit(KnowtatorController controller, String filter, boolean isFilter) {
+            super("Change filter");
+            this.controller = controller;
+            this.isFilter = isFilter;
+            this.filter = filter;
+        }
+
+        @Override
+        public void undo() {
+            controller.getFilterModel().setFilter(filter, !isFilter);
+        }
+
+        @Override
+        public void redo() {
+            controller.getFilterModel().setFilter(filter,isFilter);
+        }
+
+
+    }
 }

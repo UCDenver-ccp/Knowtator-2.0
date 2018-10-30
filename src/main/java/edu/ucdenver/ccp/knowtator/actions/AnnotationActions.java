@@ -160,8 +160,8 @@ public class AnnotationActions {
                 }
 
             };
-            controller.addEdit(edit);
             conceptAnnotation.setOwlClass(newOwlClass);
+            controller.addEdit(edit);
         }
     }
 }

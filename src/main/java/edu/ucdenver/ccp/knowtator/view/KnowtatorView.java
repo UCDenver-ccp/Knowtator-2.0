@@ -6,6 +6,7 @@ import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.actions.*;
+import edu.ucdenver.ccp.knowtator.model.FilterModel;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
@@ -208,8 +209,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     private void makeFilterButtons() {
         owlClassFilterCheckBox.setSelected(getController().getFilterModel().isFilterByOWLClass());
         profileFilterCheckBox.setSelected(getController().getFilterModel().isFilterByProfile());
-        profileFilterCheckBox.addItemListener(e -> MenuActions.changeProfileFilter(this, profileFilterCheckBox.isSelected()));
-        owlClassFilterCheckBox.addItemListener(e -> MenuActions.changeOWLClassFilter(this, owlClassFilterCheckBox.isSelected()));
+        profileFilterCheckBox.addItemListener(e -> MenuActions.changeFilter(this, FilterModel.PROFILE, profileFilterCheckBox.isSelected()));
+        owlClassFilterCheckBox.addItemListener(e -> MenuActions.changeFilter(this, FilterModel.OWLCLASS, owlClassFilterCheckBox.isSelected()));
     }
 
     private void makeMenuButtons() {
