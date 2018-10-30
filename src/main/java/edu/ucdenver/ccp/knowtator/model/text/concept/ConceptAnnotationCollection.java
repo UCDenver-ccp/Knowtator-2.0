@@ -1,9 +1,8 @@
 package edu.ucdenver.ccp.knowtator.model.text.concept;
 
 import com.mxgraph.util.mxEvent;
-import com.mxgraph.util.mxEventSource;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.actions.AnnotationActions;
+import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionEdit;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
@@ -57,7 +56,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         controller.getOWLModel().addOWLModelManagerListener(this);
         controller.getFilterModel().addFilterModelListener(this);
 
-        allSpanCollection = new SpanCollection(controller, textSource, null);
+        allSpanCollection = new SpanCollection(controller, textSource);
     }
 
     /*
@@ -70,20 +69,23 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
      */
     @Override
     public void remove(ConceptAnnotation conceptAnnotationToRemove) {
-        AnnotationActions.RemoveConceptAnnotationAction action = new AnnotationActions.RemoveConceptAnnotationAction(textSource, conceptAnnotationToRemove);
         for (Span span : conceptAnnotationToRemove.getSpanCollection()) {
             allSpanCollection.remove(span);
         }
         for (GraphSpace graphSpace : textSource.getGraphSpaceCollection()) {
             Object[] cells = graphSpace.getVerticesForAnnotation(conceptAnnotationToRemove).toArray();
-
-            mxEventSource.mxIEventListener listener = (sender, evt) -> action.addmxUndoableEdit(evt);
-            graphSpace.addListener(mxEvent.UNDO, listener);
             graphSpace.removeCells(cells);
-            graphSpace.removeListener(listener, mxEvent.UNDO);
 
         }
         super.remove(conceptAnnotationToRemove);
+    }
+
+    public void remove(KnowtatorCollectionEdit edit, ConceptAnnotation conceptAnnotationToRemove) {
+        textSource.getGraphSpaceCollection().forEach(graphSpace -> graphSpace.addListener(mxEvent.UNDO, edit));
+        remove(conceptAnnotationToRemove);
+        textSource.getGraphSpaceCollection().forEach(graphSpace -> graphSpace.removeListener(edit, mxEvent.UNDO));
+
+        controller.addEdit(edit);
     }
 
     /*

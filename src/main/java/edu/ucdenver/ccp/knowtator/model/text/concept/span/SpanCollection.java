@@ -5,7 +5,6 @@ import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -17,15 +16,11 @@ import java.util.List;
 import java.util.Map;
 
 public class SpanCollection extends KnowtatorCollection<Span> implements BratStandoffIO, KnowtatorXMLIO {
-    private final KnowtatorController controller;
     private final TextSource textSource;
-    private final ConceptAnnotation conceptAnnotation;
 
-    public SpanCollection(KnowtatorController controller, TextSource textSource, ConceptAnnotation conceptAnnotation) {
+    public SpanCollection(KnowtatorController controller, TextSource textSource) {
         super(controller);
-        this.controller = controller;
         this.textSource = textSource;
-        this.conceptAnnotation = conceptAnnotation;
     }
 
     @Override

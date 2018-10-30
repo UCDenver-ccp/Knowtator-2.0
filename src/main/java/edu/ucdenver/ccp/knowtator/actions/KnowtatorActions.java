@@ -79,7 +79,7 @@ public class KnowtatorActions {
 
     }
 
-    static class ColorChangeAction extends KnowtatorAction {
+    static class ColorChangeAction extends KnowtatorEdit {
 
         private final Profile profile;
         private final Set<Object> owlClasses;

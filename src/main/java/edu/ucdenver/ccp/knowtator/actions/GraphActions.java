@@ -27,6 +27,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+//TODO: Undo/redo for graph actions
 public class GraphActions {
     public static void selectPreviousGraphSpace(KnowtatorView view) {
         try {

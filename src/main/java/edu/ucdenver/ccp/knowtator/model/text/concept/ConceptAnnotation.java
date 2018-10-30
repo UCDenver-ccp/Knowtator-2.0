@@ -50,7 +50,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
         this.owlClassLabel = owlClassLabel;
         this.annotation_type = annotation_type;
 
-        spanCollection = new SpanCollection(controller, textSource, this);
+        spanCollection = new SpanCollection(controller, textSource);
         //noinspection unchecked
         spanCollection.addCollectionListener(textSource);
         controller.verifyId(annotationID, this, false);

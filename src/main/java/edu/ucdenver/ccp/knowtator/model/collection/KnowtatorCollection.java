@@ -5,7 +5,7 @@ import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 
 import java.util.TreeSet;
 
-public abstract class KnowtatorCollection<K extends KnowtatorDataObjectInterface> extends SelectableCollection<K, KnowtatorCollectionListener<K>> {
+public abstract class KnowtatorCollection<K extends KnowtatorDataObjectInterface> extends UndoableCollection<K, KnowtatorCollectionListener<K>> {
     protected KnowtatorCollection(KnowtatorController controller) {
         super(controller, new TreeSet<>());
     }
