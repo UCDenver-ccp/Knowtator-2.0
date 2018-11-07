@@ -64,14 +64,11 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
         colorListeners.add(listener);
     }
 
-    public Profile addProfile(String profileID) {
-        Profile newProfile = get(profileID);
-        if (newProfile == null) {
-            newProfile = new Profile(controller, profileID);
-            add(newProfile);
+    @Override
+    public void add(Profile profile) {
+        if (get(profile.getId()) == null) {
+            super.add(profile);
         }
-        setSelection(newProfile);
-        return newProfile;
     }
 
     @Override
@@ -93,7 +90,8 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
             Element profileElement = (Element) profileNode;
             String profileID = profileElement.getAttribute(KnowtatorXMLAttributes.ID);
 
-            Profile newProfile = addProfile(profileID);
+            Profile newProfile = new Profile(controller, profileID);
+            add(newProfile);
             newProfile.readFromKnowtatorXML(null, profileElement);
         }
     }

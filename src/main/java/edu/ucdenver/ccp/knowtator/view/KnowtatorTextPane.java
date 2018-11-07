@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.actions.AnnotationActions;
+import edu.ucdenver.ccp.knowtator.actions.*;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.FilterModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
@@ -17,6 +18,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import static java.lang.Math.max;
@@ -60,7 +63,7 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
         return image;
     }
 
-    public void search(boolean searchForward) {
+    void search(boolean searchForward) {
         try {
             TextSource textSource = view.getController().getTextSourceCollection().getSelection();
 
@@ -573,27 +576,40 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
             this.textSource = textSource;
         }
 
-        private JMenuItem reassignOWLClassCommand(ConceptAnnotation conceptAnnotation) {
+        private JMenuItem reassignOWLClassCommand() {
             JMenuItem menuItem = new JMenuItem("Reassign OWL class");
-            menuItem.addActionListener(e -> AnnotationActions.reassignOWLClass(view, conceptAnnotation));
+            menuItem.addActionListener(e -> {
+                try {
+                    AbstractKnowtatorAction action = new OWLActions.ReassignOWLClassAction(view.getController());
+                    view.getController().registerAction(action);
+                } catch (NoSelectionException | ActionUnperformableException e1) {
+                    e1.printStackTrace();
+                }
+            });
 
             return menuItem;
         }
 
         private JMenuItem addAnnotationCommand() {
             JMenuItem menuItem = new JMenuItem("Add concept");
-            menuItem.addActionListener(e12 -> AnnotationActions.addConceptAnnotation(view, textSource));
+            menuItem.addActionListener(e12 -> {
+                Map<String, String> actionParameters = new HashMap<>();
+                actionParameters.put(KnowtatorXMLTags.ANNOTATION, AbstractKnowtatorCollectionAction.ADD);
+                actionParameters.put(KnowtatorXMLTags.SPAN, AbstractKnowtatorCollectionAction.ADD);
+                KnowtatorCollectionActions.pickAction(actionParameters, view, null, null);
+            });
 
             return menuItem;
         }
 
-        private JMenuItem removeSpanFromAnnotationCommand(ConceptAnnotation conceptAnnotation, Span span) {
-            JMenuItem removeSpanFromSelectedAnnotation =
-                    new JMenuItem(
-                            String.format(
-                                    "Delete span from %s",
-                                    conceptAnnotation.getOwlClass()));
-            removeSpanFromSelectedAnnotation.addActionListener(e5 -> AnnotationActions.removeConceptAnnotation(view, textSource, conceptAnnotation, span));
+        private JMenuItem removeSpanFromAnnotationCommand(ConceptAnnotation conceptAnnotation) {
+            JMenuItem removeSpanFromSelectedAnnotation = new JMenuItem(String.format("Delete span from %s", conceptAnnotation.getOwlClass()));
+            removeSpanFromSelectedAnnotation.addActionListener(e5 -> {
+                Map<String, String> actionParameters = new HashMap<>();
+                actionParameters.put(KnowtatorXMLTags.SPAN, AbstractKnowtatorCollectionAction.REMOVE);
+
+                KnowtatorCollectionActions.pickAction(actionParameters, view, null, null);
+            });
 
             return removeSpanFromSelectedAnnotation;
         }
@@ -611,12 +627,13 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
             return selectAnnotationMenuItem;
         }
 
-        private JMenuItem removeAnnotationCommand(ConceptAnnotation conceptAnnotation, Span span) {
-            JMenuItem removeAnnotationMenuItem = new JMenuItem(
-                    "Delete " +
-                            conceptAnnotation.getOwlClass());
-
-            removeAnnotationMenuItem.addActionListener(e4 -> AnnotationActions.removeConceptAnnotation(view, textSource, conceptAnnotation, span));
+        private JMenuItem removeAnnotationCommand(ConceptAnnotation conceptAnnotation) {
+            JMenuItem removeAnnotationMenuItem = new JMenuItem("Delete " + conceptAnnotation.getOwlClass());
+            removeAnnotationMenuItem.addActionListener(e4 -> {
+                Map<String, String> actionParameters = new HashMap<>();
+                actionParameters.put(KnowtatorXMLTags.ANNOTATION, AbstractKnowtatorCollectionAction.REMOVE);
+                KnowtatorCollectionActions.pickAction(actionParameters, view, null, null);
+            });
 
             return removeAnnotationMenuItem;
         }
@@ -629,8 +646,6 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
         }
 
         void showPopUpMenu(int release_offset) {
-
-
             if (getSelectionStart() <= release_offset && release_offset <= getSelectionEnd() && getSelectionStart() != getSelectionEnd()) {
                 select(getSelectionStart(), getSelectionEnd());
                 add(addAnnotationCommand());
@@ -639,11 +654,11 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
                     ConceptAnnotation selectedConceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
                     Span selectedSpan = selectedConceptAnnotation.getSpanCollection().getSelection();
                     if (selectedSpan.getStart() <= release_offset && release_offset <= selectedSpan.getEnd()) {
-                        add(removeAnnotationCommand(selectedConceptAnnotation, selectedSpan));
+                        add(removeAnnotationCommand(selectedConceptAnnotation));
                         if (selectedConceptAnnotation.getSpanCollection().size() > 1) {
-                            add(removeSpanFromAnnotationCommand(selectedConceptAnnotation, selectedSpan));
+                            add(removeSpanFromAnnotationCommand(selectedConceptAnnotation));
                         }
-                        add(reassignOWLClassCommand(selectedConceptAnnotation));
+                        add(reassignOWLClassCommand());
                     } else {
                         return;
                     }
@@ -657,4 +672,6 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
 
 
     }
+
+
 }

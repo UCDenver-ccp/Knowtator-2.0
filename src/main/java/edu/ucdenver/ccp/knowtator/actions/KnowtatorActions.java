@@ -9,6 +9,7 @@ import edu.ucdenver.ccp.knowtator.view.menu.MenuDialog;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.swing.*;
+import javax.swing.undo.UndoableEdit;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -68,10 +69,9 @@ public class KnowtatorActions {
                                         .getOWLModel()
                                         .getDescendants((OWLClass) owlClass));
                     }
-                    //TODO: Change to edit
+
                     ColorChangeAction action = new ColorChangeAction(view.getController().getProfileCollection().getSelection(), owlClasses, c);
-                    action.execute();
-                    view.getController().addEdit(action);
+                    view.getController().registerAction(action);
                 }
 
 
@@ -80,17 +80,53 @@ public class KnowtatorActions {
 
     }
 
-    static class ColorChangeAction extends KnowtatorEdit {
+    static class ColorChangeAction extends AbstractKnowtatorAction {
+
+
+        private final ColorChangeEdit edit;
+        private Map<Object, Color> oldColorAssignments;
+        private Profile profile;
+        private Set<Object> owlClasses;
+        private Color color;
+
+        ColorChangeAction(Profile profile, Set<Object> owlClasses, Color color) {
+            super("Change color");
+            this.profile = profile;
+            this.owlClasses = owlClasses;
+            this.color = color;
+
+            oldColorAssignments = new HashMap<>();
+            owlClasses.forEach(owlClass -> {
+                Color oldColor = profile.getColors().get(owlClass);
+                if (oldColor != null) {
+                    oldColorAssignments.put(owlClass, color);
+                }
+            });
+
+            edit = new ColorChangeEdit(profile, oldColorAssignments, color);
+        }
+
+        @Override
+        public void execute() {
+            owlClasses.forEach(owlClass -> profile.addColor(owlClass, color));
+        }
+
+        @Override
+        public UndoableEdit getEdit() {
+            return edit;
+        }
+    }
+
+    static class ColorChangeEdit extends KnowtatorEdit {
 
         private final Profile profile;
-        private final Set<Object> owlClasses;
         private final Color color;
         private Map<Object, Color> oldColorAssignments;
 
-        ColorChangeAction(Profile profile, Set<Object> owlClasses, Color color) {
-            super( "Set color for OWL class");
+        ColorChangeEdit(Profile profile, Map<Object, Color> oldColorAssignments, Color color) {
+            super("Set color for OWL class");
             this.profile = profile;
-            this.owlClasses = owlClasses;
+            this.oldColorAssignments = oldColorAssignments;
             this.color = color;
         }
 
@@ -104,14 +140,41 @@ public class KnowtatorActions {
         @Override
         public void redo() {
             super.redo();
-            oldColorAssignments = new HashMap<>();
-            owlClasses.forEach(owlClass -> {
-                Color oldColor = profile.getColors().get(owlClass);
-                if (oldColor != null) {
-                    oldColorAssignments.put(owlClass, color);
+            oldColorAssignments.keySet().forEach(owlClass -> profile.addColor(owlClass, color));
+        }
+    }
+
+    public static class SetFontSizeAction extends AbstractKnowtatorAction {
+
+        private KnowtatorView view;
+        private int previousFontSize;
+        private int fontSize;
+
+        public SetFontSizeAction(KnowtatorView view, int fontSize) {
+            super("Set font size");
+            this.view = view;
+            previousFontSize = view.getKnowtatorTextPane().getFont().getSize();
+            this.fontSize = fontSize;
+        }
+
+        @Override
+        public void execute() {
+            view.getKnowtatorTextPane().setFontSize(fontSize);
+        }
+
+        @Override
+        public UndoableEdit getEdit() {
+            return new KnowtatorEdit("Set font size") {
+                @Override
+                public void undo() {
+                    view.getKnowtatorTextPane().setFontSize(previousFontSize);
                 }
-                profile.addColor(owlClass, color);
-            });
+
+                @Override
+                public void redo() {
+                    view.getKnowtatorTextPane().setFontSize(fontSize);
+                }
+            };
         }
     }
 }

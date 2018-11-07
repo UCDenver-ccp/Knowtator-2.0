@@ -5,7 +5,11 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.actions.*;
+import edu.ucdenver.ccp.knowtator.actions.KnowtatorActions;
+import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionActions;
+import edu.ucdenver.ccp.knowtator.actions.MenuActions;
+import edu.ucdenver.ccp.knowtator.actions.SpanActions;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.FilterModel;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -225,8 +229,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     private void makeFilterButtons() {
         owlClassFilterCheckBox.setSelected(getController().getFilterModel().isFilterByOWLClass());
         profileFilterCheckBox.setSelected(getController().getFilterModel().isFilterByProfile());
-        profileFilterCheckBox.addItemListener(e -> MenuActions.changeFilter(this, FilterModel.PROFILE, profileFilterCheckBox.isSelected()));
-        owlClassFilterCheckBox.addItemListener(e -> MenuActions.changeFilter(this, FilterModel.OWLCLASS, owlClassFilterCheckBox.isSelected()));
+        profileFilterCheckBox.addItemListener(e -> getController().registerAction(new MenuActions.FilterAction(getController(), FilterModel.PROFILE, profileFilterCheckBox.isSelected())));
+        owlClassFilterCheckBox.addItemListener(e -> getController().registerAction(new MenuActions.FilterAction(getController(), FilterModel.OWLCLASS, owlClassFilterCheckBox.isSelected())));
     }
 
     private void makeMenuButtons() {
@@ -236,12 +240,25 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     private void makeTextSourceButtons() {
         fontSizeSlider.setValue(knowtatorTextPane.getFont().getSize());
-        fontSizeSlider.addChangeListener(e -> TextSourceActions.setFontSize(this, fontSizeSlider.getValue()));
+        fontSizeSlider.addChangeListener(e -> getController().registerAction(new KnowtatorActions.SetFontSizeAction(this, fontSizeSlider.getValue())));
         showGraphViewerButton.addActionListener(e -> KnowtatorActions.showGraphViewer(graphViewDialog));
-        previousTextSourceButton.addActionListener(e -> TextSourceActions.selectPreviousTextSource(this));
-        nextTextSourceButton.addActionListener(e -> TextSourceActions.selectNextTextSource(this));
-        addTextSourceButton.addActionListener(e -> TextSourceActions.addTextSource(this));
-        removeTextSourceButton.addActionListener(e -> TextSourceActions.removeTextSource(this));
+        previousTextSourceButton.addActionListener(e -> getController().getTextSourceCollection().selectPrevious());
+        nextTextSourceButton.addActionListener(e -> getController().getTextSourceCollection().selectNext());
+        addTextSourceButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(getController().getTextSourceCollection().getArticlesLocation());
+
+            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                Map<String, String> actionParameters = new HashMap<>();
+                actionParameters.put(KnowtatorCollectionActions.ADD, KnowtatorXMLTags.DOCUMENT);
+                KnowtatorCollectionActions.pickAction(actionParameters, this, null, fileChooser.getSelectedFile());
+            }
+        });
+        removeTextSourceButton.addActionListener(e -> {
+            Map<String, String> actionParameters = new HashMap<>();
+            actionParameters.put(KnowtatorCollectionActions.REMOVE, KnowtatorXMLTags.DOCUMENT);
+            KnowtatorCollectionActions.pickAction(actionParameters, this, null, null);
+        });
 
         textSourceButtons = new ArrayList<>();
         textSourceButtons.add(fontSizeSlider);
@@ -255,32 +272,29 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     private void makeAnnotationButtons() {
         annotationButtons = new ArrayList<>();
         addAnnotationButton.addActionListener(e -> {
-            try {
-                AnnotationActions.addConceptAnnotation(this, getController().getTextSourceCollection().getSelection());
-            } catch (NoSelectionException e1) {
-                e1.printStackTrace();
-            }
+            Map<String, String> actionParameters = new HashMap<>();
+            actionParameters.put(KnowtatorXMLTags.ANNOTATION, KnowtatorCollectionActions.ADD);
+            actionParameters.put(KnowtatorXMLTags.SPAN, KnowtatorCollectionActions.ADD);
+
+            KnowtatorCollectionActions.pickAction(actionParameters, this, null, null);
         });
         removeAnnotationButton.addActionListener(e -> {
-            try {
-                TextSource textSource = getController().getTextSourceCollection().getSelection();
-                ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
-                Span span = conceptAnnotation.getSpanCollection().getSelection();
-                AnnotationActions.removeConceptAnnotation(this, textSource, conceptAnnotation, span);
-            } catch (NoSelectionException e1) {
-                e1.printStackTrace();
-            }
+            Map<String, String> actionParameters = new HashMap<>();
+            actionParameters.put(KnowtatorXMLTags.ANNOTATION, KnowtatorCollectionActions.REMOVE);
+            actionParameters.put(KnowtatorXMLTags.SPAN, KnowtatorCollectionActions.REMOVE);
+
+            KnowtatorCollectionActions.pickAction(actionParameters, this, null, null);
         });
         nextSpanButton.addActionListener(e -> {
             try {
-                SpanActions.selectNextSpan(getController().getTextSourceCollection().getSelection());
+                getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getNextSpan();
             } catch (NoSelectionException e1) {
                 e1.printStackTrace();
             }
         });
         previousSpanButton.addActionListener(e -> {
             try {
-                SpanActions.selectPreviousSpan(getController().getTextSourceCollection().getSelection());
+                getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getPreviousSpan();
             } catch (NoSelectionException e1) {
                 e1.printStackTrace();
             }
@@ -297,30 +311,32 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
         spanSizeButtons = new HashMap<>();
         spanSizeButtons.put(shrinkEndButton, e -> {
             try {
-                SpanActions.modifySpan(getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getSpanCollection().getSelection(),
-                        SpanActions.END,
-                        SpanActions.SHRINK);
+                SpanActions.ModifySpanAction action = new SpanActions.ModifySpanAction(getController(), SpanActions.END, SpanActions.SHRINK);
+                getController().registerAction(action);
             } catch (NoSelectionException e1) {
                 e1.printStackTrace();
             }
         });
         spanSizeButtons.put(shrinkStartButton, e -> {
             try {
-                SpanActions.modifySpan(getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getSpanCollection().getSelection(), SpanActions.START, SpanActions.SHRINK);
+                SpanActions.ModifySpanAction action = new SpanActions.ModifySpanAction(getController(), SpanActions.START, SpanActions.SHRINK);
+                getController().registerAction(action);
             } catch (NoSelectionException e1) {
                 e1.printStackTrace();
             }
         });
         spanSizeButtons.put(growEndButton, e -> {
             try {
-                SpanActions.modifySpan(getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getSpanCollection().getSelection(), SpanActions.END, SpanActions.GROW);
+                SpanActions.ModifySpanAction action = new SpanActions.ModifySpanAction(getController(), SpanActions.END, SpanActions.GROW);
+                getController().registerAction(action);
             } catch (NoSelectionException e1) {
                 e1.printStackTrace();
             }
         });
         spanSizeButtons.put(growStartButton, e -> {
             try {
-                SpanActions.modifySpan(getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getSpanCollection().getSelection(), SpanActions.START, SpanActions.GROW);
+                SpanActions.ModifySpanAction action = new SpanActions.ModifySpanAction(getController(), SpanActions.START, SpanActions.GROW);
+                getController().registerAction(action);
             } catch (NoSelectionException e1) {
                 e1.printStackTrace();
             }
@@ -334,9 +350,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     }
 
     private void makeSearchButtons() {
-        findTextInOntologyButton.addActionListener(e -> SearchActions.findText(this, searchTextField.getText()));
-        nextMatchButton.addActionListener(e -> SearchActions.findNextMatch(this));
-        previousMatchButton.addActionListener(e -> SearchActions.findPreviousMatch(this));
+        findTextInOntologyButton.addActionListener(e -> getController().getOWLModel().searchForString(searchTextField.getText()));
+        nextMatchButton.addActionListener(e -> getKnowtatorTextPane().search(true));
+        previousMatchButton.addActionListener(e -> getKnowtatorTextPane().search(false));
         regexCheckBox.addItemListener(e -> searchTextField.makePattern());
         caseSensitiveCheckBox.addItemListener(e -> searchTextField.makePattern());
         onlyAnnotationsCheckBox.addItemListener(e -> searchTextField.makePattern());

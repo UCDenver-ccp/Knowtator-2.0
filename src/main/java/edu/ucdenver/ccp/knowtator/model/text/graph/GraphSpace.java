@@ -221,7 +221,8 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
             String quantifierValue = tripleElem.getAttribute(KnowtatorXMLAttributes.TRIPLE_VALUE);
             String propertyIsNegated = tripleElem.getAttribute(KnowtatorXMLAttributes.IS_NEGATED);
 
-            Profile annotator = controller.getProfileCollection().addProfile(annotatorID);
+            Profile annotator = new Profile(controller, annotatorID);
+            controller.getProfileCollection().add(annotator);
             AnnotationNode source =
                     (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(subjectID);
             AnnotationNode target = (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(objectID);

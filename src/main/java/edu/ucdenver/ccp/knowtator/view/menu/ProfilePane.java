@@ -2,10 +2,15 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import edu.ucdenver.ccp.knowtator.actions.AbstractKnowtatorCollectionAction;
+import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionActions;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 class ProfilePane {
@@ -22,10 +27,19 @@ class ProfilePane {
         $$$setupUI$$$();
 
         addProfileButton.addActionListener(e -> {
-            ProfileActions.addProfile(view, profileNameField.getText());
+            Map<String, String> actionParameters = new HashMap<>();
+            actionParameters.put(KnowtatorXMLTags.PROFILE, AbstractKnowtatorCollectionAction.ADD);
+
+            KnowtatorCollectionActions.pickAction(actionParameters, view, profileNameField.getText(), null);
             profileNameField.setText("");
         });
-        removeProfileButton.addActionListener(e -> ProfileActions.removeProfile(view));
+        removeProfileButton.addActionListener(e -> {
+            Map<String, String> actionParameters = new HashMap<>();
+            actionParameters.put(KnowtatorXMLTags.PROFILE, AbstractKnowtatorCollectionAction.REMOVE);
+
+            KnowtatorCollectionActions.pickAction(actionParameters, view, profileNameField.getText(), null);
+            profileNameField.setText("");
+        });
     }
 
     private void createUIComponents() {

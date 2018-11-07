@@ -38,10 +38,6 @@ public abstract class KnowtatorEdit extends AbstractUndoableEdit implements mxEv
         return this.presentationName;
     }
 
-    void execute() {
-        redo();
-    }
-
     @Override
     public void invoke(Object sender, mxEventObject evt) {
         addmxUndoableEdit(evt);

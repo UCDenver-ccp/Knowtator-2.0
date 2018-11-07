@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator;
 
-import edu.ucdenver.ccp.knowtator.actions.KnowtatorAction;
+import edu.ucdenver.ccp.knowtator.actions.AbstractKnowtatorAction;
+import edu.ucdenver.ccp.knowtator.actions.ActionUnperformableException;
 import edu.ucdenver.ccp.knowtator.io.BasicIO;
 import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.model.*;
@@ -115,9 +116,15 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 
     }
 
-    public void registerAction(KnowtatorAction action) {
-        addEdit(action.getEdit());
-        action.execute();
+    public void registerAction(AbstractKnowtatorAction action) {
+        if (action != null) {
+            try {
+                action.execute();
+                addEdit(action.getEdit());
+            } catch (ActionUnperformableException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

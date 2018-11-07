@@ -3,11 +3,18 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import edu.ucdenver.ccp.knowtator.actions.MenuActions;
+import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
+import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ResourceBundle;
 
 class ExportPane {
@@ -18,8 +25,39 @@ class ExportPane {
     ExportPane(KnowtatorView view) {
         $$$setupUI$$$();
 
-        exportToBratButton.addActionListener(e -> MenuActions.exportToBrat(view));
-        exportToImagePNGButton.addActionListener(e -> MenuActions.exportToPNG(view));
+        exportToBratButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(view.getController().getTextSourceCollection().getAnnotationsLocation());
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
+                view.getController()
+                        .saveToFormat(BratStandoffUtil.class, view.getController().getTextSourceCollection(), fileChooser.getSelectedFile());
+            }
+        });
+        exportToImagePNGButton.addActionListener(e -> {
+            try {
+                TextSource textSource = view.getController().getTextSourceCollection().getSelection();
+                JFileChooser fileChooser = new JFileChooser(view.getController().getSaveLocation());
+                fileChooser.setFileFilter(new FileNameExtensionFilter("PNG", "png"));
+                fileChooser.setSelectedFile(
+                        new File(
+                                textSource
+                                        .getId() + "_annotations.png"));
+                if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
+                    textSource
+                            .getConceptAnnotationCollection()
+                            .setSelection(null);
+                    BufferedImage image = view.getKnowtatorTextPane().getScreenShot();
+                    try {
+                        ImageIO.write(image, "png", fileChooser.getSelectedFile());
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            } catch (NoSelectionException e2) {
+                e2.printStackTrace();
+            }
+        });
     }
 
     public JPanel getContentPane() {

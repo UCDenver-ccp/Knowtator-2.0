@@ -1,8 +1,6 @@
 package edu.ucdenver.ccp.knowtator.model.text.concept;
 
-import com.mxgraph.util.mxEvent;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionEdit;
 import edu.ucdenver.ccp.knowtator.actions.KnowtatorEdit;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
@@ -86,14 +84,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
         }
         super.remove(conceptAnnotationToRemove);
-    }
-
-    public void remove(KnowtatorCollectionEdit edit, ConceptAnnotation conceptAnnotationToRemove) {
-        textSource.getGraphSpaceCollection().forEach(graphSpace -> graphSpace.addListener(mxEvent.UNDO, edit));
-        remove(conceptAnnotationToRemove);
-        textSource.getGraphSpaceCollection().forEach(graphSpace -> graphSpace.removeListener(edit, mxEvent.UNDO));
-
-        controller.addEdit(edit);
     }
 
     /*
@@ -340,20 +330,17 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
             Profile profile;
             try {
-                String profileID =
-                        annotationElement
-                                .getElementsByTagName(OldKnowtatorXMLTags.ANNOTATOR)
-                                .item(0)
-                                .getTextContent();
-                profile = controller.getProfileCollection().addProfile(profileID);
+                String profileID = annotationElement.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATOR).item(0).getTextContent();
+                profile = new Profile(controller, profileID);
             } catch (NullPointerException npe) {
                 try {
                     String profileID = annotationElement.getAttribute(OldKnowtatorXMLAttributes.ANNOTATOR);
-                    profile = controller.getProfileCollection().addProfile(profileID);
+                    profile = new Profile(controller, profileID);
                 } catch (NullPointerException npe2) {
                     profile = controller.getProfileCollection().getDefaultProfile();
                 }
             }
+            controller.getProfileCollection().add(profile);
 
             String annotationID =
                     ((Element) annotationElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION).item(0))

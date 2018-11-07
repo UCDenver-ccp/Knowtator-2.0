@@ -3,11 +3,13 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import edu.ucdenver.ccp.knowtator.actions.MenuActions;
+import edu.ucdenver.ccp.knowtator.iaa.IAAException;
+import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.ResourceBundle;
 
 class IAAPane {
@@ -20,7 +22,37 @@ class IAAPane {
     IAAPane(KnowtatorView view) {
         $$$setupUI$$$();
 
-        buttonOK.addActionListener(e -> MenuActions.runIAA(view, classCheckBox.isSelected(), spanCheckBox.isSelected(), classAndSpanCheckBox.isSelected()));
+        buttonOK.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(view.getController().getSaveLocation());
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            //
+            // disable the "All files" option.
+            //
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
+                File outputDirectory = fileChooser.getSelectedFile();
+
+                try {
+                    KnowtatorIAA knowtatorIAA = new KnowtatorIAA(outputDirectory, view.getController());
+
+                    if (classCheckBox.isSelected()) {
+                        knowtatorIAA.runClassIAA();
+                    }
+                    if (spanCheckBox.isSelected()) {
+                        knowtatorIAA.runSpanIAA();
+                    }
+                    if (classAndSpanCheckBox.isSelected()) {
+                        knowtatorIAA.runClassAndSpanIAA();
+                    }
+
+                    knowtatorIAA.closeHTML();
+                } catch (IAAException e1) {
+                    e1.printStackTrace();
+                }
+
+            }
+        });
 
     }
 

@@ -2,11 +2,11 @@ package edu.ucdenver.ccp.knowtator.actions;
 
 import javax.swing.undo.UndoableEdit;
 
-public abstract class KnowtatorAction {
+public abstract class AbstractKnowtatorAction {
 
     private String presentationName;
 
-    KnowtatorAction(String presentationName) {
+    AbstractKnowtatorAction(String presentationName) {
 
         this.presentationName = presentationName;
     }
@@ -15,7 +15,8 @@ public abstract class KnowtatorAction {
         return presentationName;
     }
 
-    public abstract void execute();
+    public abstract void execute() throws ActionUnperformableException;
 
     public abstract UndoableEdit getEdit();
+
 }

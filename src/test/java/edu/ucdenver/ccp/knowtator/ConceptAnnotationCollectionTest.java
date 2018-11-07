@@ -79,7 +79,7 @@ public class ConceptAnnotationCollectionTest {
 
         textSource = controller.getTextSourceCollection().stream().filter(textSource1 -> textSource1.getId().equals(articleName)).findAny().get();
         conceptAnnotationCollection = textSource.getConceptAnnotationCollection();
-        profile = controller.getProfileCollection().addProfile("Default");
+        profile = controller.getProfileCollection().getDefaultProfile();
 
     }
 

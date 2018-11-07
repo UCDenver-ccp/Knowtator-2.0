@@ -37,23 +37,15 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 
     }
 
-
-
-    private TextSource addTextSource(File file, String id, String textFileName) {
-        if (textFileName == null || textFileName.equals("")) {
-            textFileName = id;
-        }
-        TextSource newTextSource = get(textFileName);
-        if (newTextSource == null) {
-            newTextSource = new TextSource(controller, file, textFileName);
-            if (newTextSource.getTextFile().exists()) {
-                add(newTextSource);
+    @Override
+    public void add(TextSource textSource) {
+        if (get(textSource.getId()) == null) {
+            if (textSource.getTextFile().exists()) {
+                super.add(textSource);
             }
         }
-
-        setSelection(newTextSource);
-        return newTextSource;
     }
+
 
     @Override
     public void writeToKnowtatorXML(Document dom, Element parent) {
@@ -65,9 +57,13 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
         for (Node documentNode :
                 KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.DOCUMENT))) {
             Element documentElement = (Element) documentNode;
-            String documentID = documentElement.getAttribute(KnowtatorXMLAttributes.ID);
-            String documentFile = documentElement.getAttribute(KnowtatorXMLAttributes.FILE);
-            TextSource newTextSource = addTextSource(file, documentID, documentFile);
+            String textSourceId = documentElement.getAttribute(KnowtatorXMLAttributes.ID);
+            String textFileName = documentElement.getAttribute(KnowtatorXMLAttributes.FILE);
+            if (textFileName == null || textFileName.equals("")) {
+                textFileName = textSourceId;
+            }
+            TextSource newTextSource = new TextSource(controller, file, textFileName);
+            add(newTextSource);
             newTextSource.readFromKnowtatorXML(null, documentElement);
         }
     }
@@ -75,17 +71,19 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
     @Override
     public void readFromOldKnowtatorXML(File file, Element parent) {
 
-        String docID = parent.getAttribute(OldKnowtatorXMLAttributes.TEXT_SOURCE).replace(".txt", "");
-        TextSource newTextSource = addTextSource(file, docID, null);
+        String textSourceId = parent.getAttribute(OldKnowtatorXMLAttributes.TEXT_SOURCE).replace(".txt", "");
+        TextSource newTextSource = new TextSource(controller, file, textSourceId);
+        add(newTextSource);
         newTextSource.readFromOldKnowtatorXML(null, parent);
     }
 
     @Override
     public void readFromBratStandoff(
             File file, Map<Character, List<String[]>> annotationMap, String content) {
-        String docID = annotationMap.get(StandoffTags.DOCID).get(0)[0];
+        String textSourceId = annotationMap.get(StandoffTags.DOCID).get(0)[0];
 
-        TextSource newTextSource = addTextSource(file, docID, null);
+        TextSource newTextSource = new TextSource(controller, file, textSourceId);
+        add(newTextSource);
         newTextSource.readFromBratStandoff(null, annotationMap, null);
     }
 
@@ -94,14 +92,9 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
     }
 
     public void addDocument(File file) {
-        if (!file.getParentFile().equals(getArticlesLocation())) {
-            try {
-                FileUtils.copyFile(file, new File(getAnnotationsLocation(), file.getName()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        addTextSource(null, file.getName(), file.getName());
+
+        TextSource newTextSource = new TextSource(controller, null, file.getName());
+        add(newTextSource);
     }
 
     @Override
@@ -123,7 +116,15 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 
             JOptionPane.showMessageDialog(null, "Please select a document to annotate");
             if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                addDocument(fileChooser.getSelectedFile());
+                File file = fileChooser.getSelectedFile();
+                if (!file.getParentFile().equals(controller.getTextSourceCollection().getArticlesLocation())) {
+                    try {
+                        FileUtils.copyFile(file, new File(controller.getTextSourceCollection().getArticlesLocation(), file.getName()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                add(new TextSource(controller, null, file.getName()));
             }
         }
     }
