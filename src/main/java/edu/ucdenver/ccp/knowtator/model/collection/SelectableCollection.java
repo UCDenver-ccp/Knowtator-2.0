@@ -33,7 +33,7 @@ public abstract class SelectableCollection<K extends KnowtatorDataObjectInterfac
     }
 
     public void setSelection(K newSelection) {
-        if (controller.isNotLoading() && this.selection != newSelection) {
+        if (controller != null && controller.isNotLoading() && this.selection != newSelection) {
             SelectionChangeEvent<K> selectionChangeEvent = new SelectionChangeEvent<>(this.selection, newSelection);
             this.selection = newSelection;
             collectionListeners.forEach(selectionListener -> selectionListener.selected(selectionChangeEvent));

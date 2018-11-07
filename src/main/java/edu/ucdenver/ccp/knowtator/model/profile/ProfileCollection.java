@@ -92,7 +92,7 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 
             Profile newProfile = new Profile(controller, profileID);
             add(newProfile);
-            newProfile.readFromKnowtatorXML(null, profileElement);
+            get(profileID).readFromKnowtatorXML(null, profileElement);
         }
     }
 

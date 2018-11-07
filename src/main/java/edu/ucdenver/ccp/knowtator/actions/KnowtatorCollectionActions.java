@@ -84,7 +84,6 @@ public class KnowtatorCollectionActions {
 
         @Override
         public void cleanUpAdd() {
-            newConceptAnnotation.getSpanCollection().add(new Span(controller, textSource, newConceptAnnotation, null, controller.getSelectionModel().getStart(), controller.getSelectionModel().getEnd()));
         }
 
         @Override
@@ -120,7 +119,7 @@ public class KnowtatorCollectionActions {
 
 
                 newConceptAnnotation = new ConceptAnnotation(controller, null, (OWLClass) owlEntity, owlClassID, null, annotator, "identity", textSource);
-
+                newConceptAnnotation.getSpanCollection().add(new Span(controller, textSource, newConceptAnnotation, null, controller.getSelectionModel().getStart(), controller.getSelectionModel().getEnd()));
                 setObject(newConceptAnnotation);
             } else {
                 throw new ActionUnperformableException();

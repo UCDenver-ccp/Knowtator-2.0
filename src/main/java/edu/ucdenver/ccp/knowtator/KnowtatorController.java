@@ -49,8 +49,8 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
         selectionModel = new SelectionModel();
 
         models.add(owlModel);
-        models.add(textSourceCollection);
         models.add(profileCollection);
+        models.add(textSourceCollection);
         models.add(filterModel);
         models.add(selectionModel);
 
