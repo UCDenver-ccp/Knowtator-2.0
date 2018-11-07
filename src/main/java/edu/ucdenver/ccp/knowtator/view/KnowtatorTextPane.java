@@ -158,10 +158,8 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
             public void selected(SelectionChangeEvent<TextSource> event) {
                 if (event.getOld() != null) {
                     event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
-                    event.getOld().getConceptAnnotationCollection().getAllSpanCollection().removeCollectionListener(spanCollectionListener);
                 }
                 event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
-                event.getNew().getConceptAnnotationCollection().getAllSpanCollection().addCollectionListener(spanCollectionListener);
 
                 showTextPane();
             }
@@ -248,7 +246,10 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
 
             AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e, textSource);
 
-            Set<Span> spansContainingLocation = getSpans(press_offset);
+            Set<Span> spansContainingLocation =  view.getController()
+                    .getTextSourceCollection().getSelection()
+                    .getConceptAnnotationCollection()
+                    .getSpans(press_offset).getCollection();
 
             if (SwingUtilities.isRightMouseButton(e)) {
                 if (spansContainingLocation.size() == 1) {
@@ -302,7 +303,10 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
             // Highlight overlaps first, then spans
 
             try {
-                Set<Span> spans = getSpans(null);
+                Set<Span> spans = view.getController()
+                        .getTextSourceCollection().getSelection()
+                        .getConceptAnnotationCollection()
+                        .getSpans(null).getCollection();
                 highlightOverlaps(spans);
                 highlightSpans(spans);
             } catch (NoSelectionException ignored) {
@@ -403,13 +407,6 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
             int start, int end, DefaultHighlighter.DefaultHighlightPainter highlighter)
             throws BadLocationException {
         getHighlighter().addHighlight(start, end, highlighter);
-    }
-
-    private Set<Span> getSpans(Integer loc) throws NoSelectionException {
-        return view.getController()
-                .getTextSourceCollection().getSelection()
-                .getConceptAnnotationCollection()
-                .getSpans(loc);
     }
 
     private void highlightSelectedAnnotation() throws NoSelectionException {

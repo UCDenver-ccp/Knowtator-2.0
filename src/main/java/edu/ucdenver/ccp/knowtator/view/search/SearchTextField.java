@@ -122,7 +122,7 @@ public class SearchTextField extends JTextField implements KnowtatorCollectionLi
         int startBound = view.getKnowtatorTextPane().getSelectionEnd();
         while (matcher.find()) {
             if (matcher.start() > startBound &&
-                    (!view.getOnlyInAnnotationsCheckBox().isSelected() || !textSource.getConceptAnnotationCollection().getSpans(matcher.start()).isEmpty())) {
+                    (!view.getOnlyInAnnotationsCheckBox().isSelected() || !(textSource.getConceptAnnotationCollection().getSpans(matcher.start()).size() == 0))) {
                 start = matcher.start();
                 matchEnd = matcher.end();
                 break;
@@ -132,7 +132,7 @@ public class SearchTextField extends JTextField implements KnowtatorCollectionLi
             matcher.reset();
             //noinspection ResultOfMethodCallIgnored
             matcher.find();
-            if (!view.getOnlyInAnnotationsCheckBox().isSelected() || !textSource.getConceptAnnotationCollection().getSpans(matcher.start()).isEmpty()) {
+            if (!view.getOnlyInAnnotationsCheckBox().isSelected() || !(textSource.getConceptAnnotationCollection().getSpans(matcher.start()).size() == 0)) {
                 start = matcher.start();
                 matchEnd = matcher.end();
             }
@@ -146,7 +146,7 @@ public class SearchTextField extends JTextField implements KnowtatorCollectionLi
         matchEnd = 0;
         int endBound = view.getKnowtatorTextPane().getSelectionStart();
         while (matcher.find()) {
-            if (matcher.start() < endBound || matcher.hitEnd() && (!view.getOnlyInAnnotationsCheckBox().isSelected() || !textSource.getConceptAnnotationCollection().getSpans(matcher.start()).isEmpty())) {
+            if (matcher.start() < endBound || matcher.hitEnd() && (!view.getOnlyInAnnotationsCheckBox().isSelected() || !(textSource.getConceptAnnotationCollection().getSpans(matcher.start()).size() == 0))) {
                 start = matcher.start();
                 matchEnd = matcher.end();
             } else if (start == -1) {

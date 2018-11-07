@@ -4,7 +4,6 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -16,19 +15,13 @@ import java.util.List;
 import java.util.Map;
 
 public class SpanCollection extends KnowtatorCollection<Span> implements BratStandoffIO, KnowtatorXMLIO {
-    private final TextSource textSource;
 
-    public SpanCollection(KnowtatorController controller, TextSource textSource) {
+    public SpanCollection(KnowtatorController controller) {
         super(controller);
-        this.textSource = textSource;
     }
 
     @Override
     public void remove(Span span) {
-        setSelection(null);
-        if (! textSource.getConceptAnnotationCollection().getAllSpanCollection().equals(this)) {
-            textSource.getConceptAnnotationCollection().getAllSpanCollection().remove(span);
-        }
         super.remove(span);
     }
 
@@ -72,13 +65,5 @@ public class SpanCollection extends KnowtatorCollection<Span> implements BratSta
     @Override
     public void readFromOldKnowtatorXML(File file, Element parent) {
 
-    }
-
-    @Override
-    public void add(Span span) {
-        super.add(span);
-        if (!this.equals(textSource.getConceptAnnotationCollection().getAllSpanCollection())) {
-            textSource.getConceptAnnotationCollection().getAllSpanCollection().add(span);
-        }
     }
 }

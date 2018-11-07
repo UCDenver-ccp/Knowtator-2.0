@@ -44,7 +44,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
     private final KnowtatorController controller;
 
-    private final SpanCollection allSpanCollection;
     private final TextSource textSource;
 
     public ConceptAnnotationCollection(KnowtatorController controller, TextSource textSource) {
@@ -56,18 +55,11 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         controller.getOWLModel().addOWLModelManagerListener(this);
         controller.getFilterModel().addFilterModelListener(this);
 
-        allSpanCollection = new SpanCollection(controller, textSource);
     }
 
     /*
     ADDERS
      */
-
-    @Override
-    public void add(ConceptAnnotation conceptAnnotation) {
-        allSpanCollection.getCollection().addAll(conceptAnnotation.getSpanCollection().getCollection());
-        super.add(conceptAnnotation);
-    }
 
 
     /*
@@ -75,9 +67,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
      */
     @Override
     public void remove(ConceptAnnotation conceptAnnotationToRemove) {
-        for (Span span : conceptAnnotationToRemove.getSpanCollection()) {
-            allSpanCollection.remove(span);
-        }
         for (GraphSpace graphSpace : textSource.getGraphSpaceCollection()) {
             Object[] cells = graphSpace.getVerticesForAnnotation(conceptAnnotationToRemove).toArray();
             graphSpace.removeCells(cells);
@@ -90,15 +79,14 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     MODIFIERS
      */
     public void modifySpan(Span span, int startModification, int endModification) {
-        allSpanCollection.remove(span);
         span.modifySpan(startModification, endModification, textSource.getContent().length());
-        allSpanCollection.add(span);
 
         AbstractUndoableEdit edit = new KnowtatorEdit("Span modification") {
             @Override
             public void undo() {
                 modifySpan(span, (-1) * startModification, (-1) * endModification);
             }
+
             @Override
             public void redo() {
                 modifySpan(span, startModification, endModification);
@@ -114,9 +102,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     /**
      * @param loc Location filter
      */
-    public TreeSet<Span> getSpans(Integer loc) {
-        Supplier<TreeSet<Span>> supplier = TreeSet::new;
-
+    public SpanCollection getSpans(Integer loc) {
         boolean filterByOWLClass = controller.getFilterModel().isFilterByOWLClass();
         boolean filterByProfile = controller.getFilterModel().isFilterByProfile();
         Profile activeProfile = controller.getProfileCollection().getSelection();
@@ -127,15 +113,18 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
             activeOWLClassDescendents.add((OWLClass) controller.getOWLModel().getSelectedOWLEntity());
         }
 
-
-        return allSpanCollection
-                .stream()
-                .filter(
-                        span ->
-                                (loc == null || span.contains(loc))
-                                        && (!filterByOWLClass || activeOWLClassDescendents.contains(span.getConceptAnnotation().getOwlClass()))
-                                        && (!filterByProfile || span.getConceptAnnotation().getAnnotator().equals(activeProfile)))
-                .collect(Collectors.toCollection(supplier));
+        SpanCollection allSpans = new SpanCollection(null);
+        getCollection().forEach(conceptAnnotation -> {
+            if ((!filterByOWLClass || activeOWLClassDescendents.contains(conceptAnnotation.getOwlClass()))
+                    && (!filterByProfile || conceptAnnotation.getAnnotator().equals(activeProfile))) {
+                conceptAnnotation.getSpanCollection().forEach(span -> {
+                    if ((loc == null || span.contains(loc))) {
+                        allSpans.add(span);
+                    }
+                });
+            }
+        });
+        return allSpans;
     }
 
     public TreeSet<ConceptAnnotation> getAnnotations(int start, int end) {
@@ -145,35 +134,34 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                 .collect(Collectors.toCollection(supplier));
     }
 
-    @SuppressWarnings("unused")
-    public void findOverlaps() {
-        List<Span> overlappingSpans = new ArrayList<>();
-        allSpanCollection.forEach(
-                span -> {
-                    List<Span> toRemove = new ArrayList<>();
-                    overlappingSpans.forEach(
-                            span1 -> {
-                                if (span.intersects(span1)) {
-                                    span.getConceptAnnotation().addOverlappingAnnotation(span1.getConceptAnnotation());
-                                    span1.getConceptAnnotation().addOverlappingAnnotation(span.getConceptAnnotation());
-                                } else {
-                                    toRemove.add(span1);
-                                }
-                            });
-                    overlappingSpans.removeAll(toRemove);
-
-                    overlappingSpans.add(span);
-                });
-    }
+//    public void findOverlaps() {
+//        List<Span> overlappingSpans = new ArrayList<>();
+//        allSpanCollection.forEach(
+//                span -> {
+//                    List<Span> toRemove = new ArrayList<>();
+//                    overlappingSpans.forEach(
+//                            span1 -> {
+//                                if (span.intersects(span1)) {
+//                                    span.getConceptAnnotation().addOverlappingAnnotation(span1.getConceptAnnotation());
+//                                    span1.getConceptAnnotation().addOverlappingAnnotation(span.getConceptAnnotation());
+//                                } else {
+//                                    toRemove.add(span1);
+//                                }
+//                            });
+//                    overlappingSpans.removeAll(toRemove);
+//
+//                    overlappingSpans.add(span);
+//                });
+//    }
 
     public void getNextSpan() throws NoSelectionException {
-        Span nextSpan = allSpanCollection.getNext(getSelection().getSpanCollection().getSelection());
+        Span nextSpan = getSpans(null).getNext(getSelection().getSpanCollection().getSelection());
         setSelection(nextSpan.getConceptAnnotation());
         nextSpan.getConceptAnnotation().getSpanCollection().setSelection(nextSpan);
     }
 
     public void getPreviousSpan() throws NoSelectionException {
-        Span previousSpan = allSpanCollection.getPrevious(getSelection().getSpanCollection().getSelection());
+        Span previousSpan = getSpans(null).getPrevious(getSelection().getSpanCollection().getSelection());
         setSelection(previousSpan.getConceptAnnotation());
         previousSpan.getConceptAnnotation().getSpanCollection().setSelection(previousSpan);
 
@@ -462,7 +450,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     public void dispose() {
         controller.getOWLModel().removeOntologyChangeListener(this);
         controller.getOWLModel().removeOWLModelManagerListener(this);
-        allSpanCollection.dispose();
         super.dispose();
     }
 
@@ -510,10 +497,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                 }
             }
         }
-    }
-
-    public SpanCollection getAllSpanCollection() {
-        return allSpanCollection;
     }
 
     @Override
