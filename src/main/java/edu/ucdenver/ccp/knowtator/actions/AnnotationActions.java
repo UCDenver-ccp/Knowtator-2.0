@@ -12,7 +12,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.swing.*;
-import javax.swing.undo.AbstractUndoableEdit;
+import javax.swing.undo.UndoableEdit;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -41,46 +41,48 @@ public class AnnotationActions {
 
         }
         if (action != null) {
-            action.execute();
+            view.getController().registerAction(action);
         }
+
     }
 
     public static void removeConceptAnnotation(KnowtatorView view, TextSource textSource, ConceptAnnotation conceptAnnotation, Span span) {
         ArrayList<KnowtatorAction> actions = new ArrayList<>(
                 Arrays.asList(
-                        new RemoveConceptAnnotationAction(view.getController(), textSource, conceptAnnotation),
-                        new RemoveSpanAction(view.getController(), conceptAnnotation, span)
+                        new RemoveConceptAnnotationAction(textSource, conceptAnnotation),
+                        new RemoveSpanAction(conceptAnnotation, span)
                 )
         );
 
         int response = JOptionPane.showOptionDialog(view, "Choose an option", "Remove Concept Annotation", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, actions.stream().map(KnowtatorAction::getPresentationName).toArray(), 2);
 
         KnowtatorAction action = actions.get(response);
-        action.execute();
+        view.getController().registerAction(action);
     }
 
     public static void reassignOWLClass(KnowtatorView view, ConceptAnnotation conceptAnnotation) {
         OWLEntity owlEntity = view.getController().getOWLModel().getSelectedOWLEntity();
         if (owlEntity instanceof OWLClass) {
-            ReassignOWLClassAction action = new ReassignOWLClassAction(view.getController(), conceptAnnotation, (OWLClass) owlEntity);
-            action.execute();
+            ReassignOWLClassAction action = new ReassignOWLClassAction(conceptAnnotation, (OWLClass) owlEntity);
+            view.getController().registerAction(action);
         }
     }
 
     static class AddConceptAnnotationAction extends KnowtatorCollectionAction<ConceptAnnotation> {
 
+        private final KnowtatorController controller;
         private ConceptAnnotation newConceptAnnotation;
         private TextSource textSource;
 
         AddConceptAnnotationAction(KnowtatorController controller, TextSource textSource, OWLClass owlClass) {
-            super(KnowtatorCollectionAction.ADD, textSource.getConceptAnnotationCollection(), "Add concept annotation", controller);
+            super(KnowtatorCollectionAction.ADD, textSource.getConceptAnnotationCollection(), "Add concept annotation");
             Profile annotator = controller.getProfileCollection().getSelection();
             String owlClassID = controller.getOWLModel().getOWLEntityRendering(owlClass);
-            String id = null;
-            String owlClassLabel = null;
-            String annotationType = "identity";
             this.textSource = textSource;
-            newConceptAnnotation = new ConceptAnnotation(controller, id, owlClass, owlClassID, owlClassLabel, annotator, annotationType, textSource);
+            this.controller = controller;
+
+            newConceptAnnotation = new ConceptAnnotation(controller, null, owlClass, owlClassID, null, annotator, "identity", textSource);
+
             setObject(newConceptAnnotation);
         }
 
@@ -93,13 +95,12 @@ public class AnnotationActions {
 
     private static class AddSpanAction extends KnowtatorCollectionAction<Span> {
         AddSpanAction(KnowtatorController controller, ConceptAnnotation conceptAnnotation) {
-            super(KnowtatorCollectionAction.ADD, conceptAnnotation.getSpanCollection(), "Add span to concept annotation", controller);
+            super(KnowtatorCollectionAction.ADD, conceptAnnotation.getSpanCollection(), "Add span to concept annotation");
 
-            String id = null;
             int start = controller.getSelectionModel().getStart();
             int end = controller.getSelectionModel().getEnd();
 
-            Span newSpan = new Span(controller, conceptAnnotation.getTextSource(), conceptAnnotation, id, start, end);
+            Span newSpan = new Span(controller, conceptAnnotation.getTextSource(), conceptAnnotation, null, start, end);
             setObject(newSpan);
 
         }
@@ -108,8 +109,8 @@ public class AnnotationActions {
     public static class RemoveConceptAnnotationAction extends KnowtatorCollectionAction<ConceptAnnotation> {
         private TextSource textSource;
 
-        RemoveConceptAnnotationAction(KnowtatorController controller, TextSource textSource, ConceptAnnotation annotation) {
-            super(KnowtatorCollectionAction.REMOVE, textSource.getConceptAnnotationCollection(), "Remove concept annotation", controller);
+        RemoveConceptAnnotationAction(TextSource textSource, ConceptAnnotation annotation) {
+            super(KnowtatorCollectionAction.REMOVE, textSource.getConceptAnnotationCollection(), "Remove concept annotation");
             setObject(annotation);
             this.textSource = textSource;
         }
@@ -130,8 +131,8 @@ public class AnnotationActions {
     }
 
     private static class RemoveSpanAction extends KnowtatorCollectionAction<Span> {
-        RemoveSpanAction(KnowtatorController controller, ConceptAnnotation annotation, Span span) {
-            super(KnowtatorCollectionAction.REMOVE, annotation.getSpanCollection(), "Remove span from concept annotation", controller);
+        RemoveSpanAction(ConceptAnnotation annotation, Span span) {
+            super(KnowtatorCollectionAction.REMOVE, annotation.getSpanCollection(), "Remove span from concept annotation");
             setObject(span);
         }
     }
@@ -141,19 +142,22 @@ public class AnnotationActions {
         private final OWLClass oldOwlClass;
         private ConceptAnnotation conceptAnnotation;
         private final OWLClass newOwlClass;
-        private KnowtatorController controller;
 
-        ReassignOWLClassAction(KnowtatorController controller, ConceptAnnotation conceptAnnotation, OWLClass newOwlClass) {
+        ReassignOWLClassAction(ConceptAnnotation conceptAnnotation, OWLClass newOwlClass) {
             super("Reassign OWL class");
-            this.controller = controller;
             oldOwlClass = conceptAnnotation.getOwlClass();
             this.conceptAnnotation = conceptAnnotation;
             this.newOwlClass = newOwlClass;
         }
 
         @Override
-        void execute() {
-            AbstractUndoableEdit edit = new KnowtatorEdit(getPresentationName()) {
+        public void execute() {
+            conceptAnnotation.setOwlClass(newOwlClass);
+        }
+
+        @Override
+        public UndoableEdit getEdit() {
+            return new KnowtatorEdit(getPresentationName()) {
                 @Override
                 public void undo() {
                     super.undo();
@@ -167,8 +171,6 @@ public class AnnotationActions {
                 }
 
             };
-            conceptAnnotation.setOwlClass(newOwlClass);
-            controller.addEdit(edit);
         }
     }
 }

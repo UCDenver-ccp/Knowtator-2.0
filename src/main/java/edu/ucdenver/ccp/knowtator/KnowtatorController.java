@@ -1,5 +1,6 @@
 package edu.ucdenver.ccp.knowtator;
 
+import edu.ucdenver.ccp.knowtator.actions.KnowtatorAction;
 import edu.ucdenver.ccp.knowtator.io.BasicIO;
 import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.model.*;
@@ -112,6 +113,11 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
         idRegistry.put(verifiedId, obj);
         obj.setId(id == null ? verifiedId : id);
 
+    }
+
+    public void registerAction(KnowtatorAction action) {
+        addEdit(action.getEdit());
+        action.execute();
     }
 
     @Override
