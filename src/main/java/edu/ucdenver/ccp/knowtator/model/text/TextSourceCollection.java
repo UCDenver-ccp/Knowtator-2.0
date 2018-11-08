@@ -7,13 +7,11 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.BaseKnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
@@ -74,7 +72,7 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
         String textSourceId = parent.getAttribute(OldKnowtatorXMLAttributes.TEXT_SOURCE).replace(".txt", "");
         TextSource newTextSource = new TextSource(controller, file, textSourceId);
         add(newTextSource);
-        newTextSource.readFromOldKnowtatorXML(null, parent);
+        get(newTextSource.getId()).readFromOldKnowtatorXML(null, parent);
     }
 
     @Override
@@ -110,23 +108,23 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
             e.printStackTrace();
         }
 
-        if (size() == 0) {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(getArticlesLocation());
-
-            JOptionPane.showMessageDialog(null, "Please select a document to annotate");
-            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File file = fileChooser.getSelectedFile();
-                if (!file.getParentFile().equals(controller.getTextSourceCollection().getArticlesLocation())) {
-                    try {
-                        FileUtils.copyFile(file, new File(controller.getTextSourceCollection().getArticlesLocation(), file.getName()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                add(new TextSource(controller, null, file.getName()));
-            }
-        }
+//        if (size() == 0) {
+//            JFileChooser fileChooser = new JFileChooser();
+//            fileChooser.setCurrentDirectory(getArticlesLocation());
+//
+//            JOptionPane.showMessageDialog(null, "Please select a document to annotate");
+//            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+//                File file = fileChooser.getSelectedFile();
+//                if (!file.getParentFile().equals(controller.getTextSourceCollection().getArticlesLocation())) {
+//                    try {
+//                        FileUtils.copyFile(file, new File(controller.getTextSourceCollection().getArticlesLocation(), file.getName()));
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                add(new TextSource(controller, null, file.getName()));
+//            }
+//        }
     }
 
     @Override

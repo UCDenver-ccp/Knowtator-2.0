@@ -243,7 +243,7 @@ public class IAA {
 
 		for (ConceptAnnotation conceptAnnotation : conceptAnnotations) {
 			String setName = conceptAnnotation.getAnnotator().getId();
-			String annotationClass = conceptAnnotation.getOwlClass().toString();
+			String annotationClass = conceptAnnotation.getOwlClassLabel();
 			annotationClasses.add(annotationClass);
 			// throw exception here if there is a setName in the conceptAnnotations
 			// that was not passed in.
@@ -259,7 +259,7 @@ public class IAA {
 			class2AnnotationsMap.put(setName, classAnnotations);
 
 			for (ConceptAnnotation setConceptAnnotation : setConceptAnnotations) {
-				String annotationClass = setConceptAnnotation.getOwlClass().toString();
+				String annotationClass = setConceptAnnotation.getOwlClassLabel();
 				if (!classAnnotations.containsKey(annotationClass)) {
 					classAnnotations.put(annotationClass, new HashSet<>());
 				}
@@ -432,7 +432,7 @@ public class IAA {
 	}
 
 	public Set<ConceptAnnotation> getAnnotationsOfSameType(ConceptAnnotation conceptAnnotation, String compareSetName) {
-		String annotationClass = conceptAnnotation.getOwlClass().toString();
+		String annotationClass = conceptAnnotation.getOwlClassLabel();
 		return safeReturn(class2AnnotationsMap.get(compareSetName).get(annotationClass));
 	}
 

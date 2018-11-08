@@ -323,7 +323,11 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                             .item(0)
                             .getTextContent();
 
+
             ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, annotationID, null, owlClassID, owlClassName, profile, "identity", textSource);
+            if (containsID(annotationID)) {
+                controller.verifyId(null, newConceptAnnotation, false);
+            }
             add(newConceptAnnotation);
             newConceptAnnotation.readFromOldKnowtatorXML(null, annotationElement);
 

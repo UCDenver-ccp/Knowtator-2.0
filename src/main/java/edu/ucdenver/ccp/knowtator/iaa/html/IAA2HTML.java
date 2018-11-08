@@ -37,7 +37,7 @@ public class IAA2HTML {
 		printTitleRowForAllwayIAA(html, matcher);
 
 		tabular.println(
-				"This test_project is provided to facilitate cut-n-paste into a spreadsheet.\n"
+				"This file is provided to facilitate cut-n-paste into a spreadsheet.\n"
 						+ "If you cannot directly copy the data below into a spreadsheet without it all going into a single cell,\n"
 						+ "then try copying to a text editor first and then copy it from there.  There is typically a 'paste special'\n"
 						+ "option under the Edit menu that will allow you to paste the copied data as text.  This will also work.\n\n\n");
@@ -575,7 +575,7 @@ public class IAA2HTML {
 			sortedAnnotations.put(type, new HashSet<>());
 		}
 		for (ConceptAnnotation conceptAnnotation : conceptAnnotations) {
-			String type = conceptAnnotation.getOwlClass().toString();
+			String type = conceptAnnotation.getOwlClassLabel();
 			sortedAnnotations.get(type).add(conceptAnnotation);
 		}
 		return sortedAnnotations;

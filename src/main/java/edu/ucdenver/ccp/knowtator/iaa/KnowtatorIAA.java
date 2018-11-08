@@ -78,6 +78,7 @@ public class KnowtatorIAA {
                         .stream()
                         .map(Profile::getId)
                         .collect(Collectors.toSet());
+        setNames.remove("Default");
     }
 
     private void initHTML() throws IAAException {
@@ -219,6 +220,7 @@ public class KnowtatorIAA {
                             + ".html\">"
                             + classMatcher.getName()
                             + "</a></li>");
+            closeHTML();
         } catch (Exception e) {
             throw new IAAException(e);
         }
@@ -252,6 +254,7 @@ public class KnowtatorIAA {
                             + ".html\">"
                             + spanMatcher.getName()
                             + "</a></li>");
+            closeHTML();
         } catch (Exception e) {
             throw new IAAException(e);
         }
@@ -276,6 +279,7 @@ public class KnowtatorIAA {
                             + ".html\">"
                             + classAndSpanMatcher.getName()
                             + "</a></li>");
+            closeHTML();
         } catch (Exception e) {
             throw new IAAException(e);
         }

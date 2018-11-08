@@ -150,7 +150,7 @@ public class SpanMatcherHTML {
 			Set<ConceptAnnotation> matchedConceptAnnotations = matchSets.get(match);
 			for (ConceptAnnotation matchedConceptAnnotation : matchedConceptAnnotations) {
 				if (!matchedConceptAnnotation.equals(match)) {
-					String annotationClass = matchedConceptAnnotation.getOwlClass().toString();
+					String annotationClass = matchedConceptAnnotation.getOwlClassLabel();
 					if (!counts.containsKey(annotationClass)) {
 						counts.put(annotationClass, new int[1]);
 					}

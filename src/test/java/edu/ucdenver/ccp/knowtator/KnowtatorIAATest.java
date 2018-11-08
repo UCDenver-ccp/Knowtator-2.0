@@ -1,42 +1,57 @@
 package edu.ucdenver.ccp.knowtator;
 
+import com.google.common.io.Files;
+import edu.ucdenver.ccp.knowtator.iaa.IAAException;
+import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
+
 public class KnowtatorIAATest {
 
+    private KnowtatorIAA knowtatorIAA;
+    private File outputDir;
+    private File goldStandardDir;
+
     @Before
-    public void setUp() {
-//        manager.getProjectManager().read(new File("test_project/CHEBI batch 1 IAA/Kristin/11319941.txt.knowtator.knowtator"));
-//        manager.getProjectManager().read(new File("test_project/CHEBI batch 1 IAA/Kristin+Mike/11319941.txt.knowtator.knowtator"));
-//
-//        manager.getProjectManager().read(new File("test_project/CHEBI batch 1 IAA/Kristin/11532192.txt.knowtator.knowtator"));
-//        manager.getProjectManager().read(new File("test_project/CHEBI batch 1 IAA/Kristin+Mike/11532192.txt.knowtator.knowtator"));
-//
-//        manager.getProjectManager().read(new File("test_project/CHEBI batch 1 IAA/Kristin/11597317.txt.knowtator.knowtator"));
-//        manager.getProjectManager().read(new File("test_project/CHEBI batch 1 IAA/Kristin+Mike/11597317.txt.knowtator.knowtator"));
-//
-//        manager.getProjectManager().read(new File("test_project/CHEBI batch 1 IAA/Kristin/11604102.txt.knowtator.knowtator"));
-//        manager.getProjectManager().read(new File("test_project/CHEBI batch 1 IAA/Kristin+Mike/11604102.txt.knowtator.knowtator"));
+    public void setUp() throws IAAException, IOException {
+        KnowtatorController controller = new KnowtatorController();
+        String projectFileName = "iaa_test_project";
+        File projectDirectory = TestingHelpers.getProjectFile(projectFileName).getParentFile();
+        File tempProjectDir = Files.createTempDir();
+        FileUtils.copyDirectory(projectDirectory, tempProjectDir);
+        controller.setSaveLocation(tempProjectDir);
+        controller.setDebug(true);
+        controller.loadProject();
 
-//        try {
-//            KnowtatorIAA knowtatorIAA = new KnowtatorIAA(manager.getConfigProperties().getProjectLocation(), manager);
-//            knowtatorIAA.runClassIAA();
-//            knowtatorIAA.closeHTML();
-//        } catch (IAAException e) {
-//            e.printStackTrace();
-//        }
+        goldStandardDir = new File(controller.getProjectLocation(), "iaa");
+        outputDir = new File(controller.getProjectLocation(), "iaa_results");
+        //noinspection ResultOfMethodCallIgnored
+        outputDir.mkdir();
+        knowtatorIAA = new KnowtatorIAA(outputDir, controller);
+
     }
 
     @Test
-    public void runClassIAA() {
+    public void runClassIAA() throws IAAException, IOException {
+        knowtatorIAA.runClassIAA();
+
+        assert FileUtils.contentEqualsIgnoreEOL(new File(outputDir, "Class matcher.dat"), new File(goldStandardDir, "Class matcher.dat"), "utf-8");
     }
 
     @Test
-    public void runSpanIAA() {
+    public void runSpanIAA() throws IAAException, IOException {
+        knowtatorIAA.runSpanIAA();
+        assert FileUtils.contentEqualsIgnoreEOL(new File(outputDir, "Span matcher.dat"), new File(goldStandardDir, "Span matcher.dat"), "utf-8");
     }
 
     @Test
-    public void runClassAndSpanIAA() {
+    public void runClassAndSpanIAA() throws IAAException, IOException {
+        knowtatorIAA.runClassAndSpanIAA();
+
+        assert FileUtils.contentEqualsIgnoreEOL(new File(outputDir, "Class and span matcher.dat"), new File(goldStandardDir, "Class and span matcher.dat"), "utf-8");
     }
 }
