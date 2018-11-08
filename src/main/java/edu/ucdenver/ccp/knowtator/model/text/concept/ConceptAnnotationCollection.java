@@ -4,6 +4,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
+import edu.ucdenver.ccp.knowtator.model.FilterModel;
 import edu.ucdenver.ccp.knowtator.model.FilterModelListener;
 import edu.ucdenver.ccp.knowtator.model.OWLModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
@@ -81,12 +82,12 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
      * @param loc Location filter
      */
     public SpanCollection getSpans(Integer loc) {
-        boolean filterByOWLClass = controller.getFilterModel().isFilterByOWLClass();
-        boolean filterByProfile = controller.getFilterModel().isFilterByProfile();
+        boolean filterByOWLClass = controller.getFilterModel().isFilter(FilterModel.OWLCLASS);
+        boolean filterByProfile = controller.getFilterModel().isFilter(FilterModel.PROFILE);
         Profile activeProfile = controller.getProfileCollection().getSelection();
 
         Set<OWLClass> activeOWLClassDescendents = new HashSet<>();
-        if (filterByProfile) {
+        if (filterByOWLClass) {
             activeOWLClassDescendents.addAll(controller.getOWLModel().getDescendants((OWLClass) controller.getOWLModel().getSelectedOWLEntity()));
             activeOWLClassDescendents.add((OWLClass) controller.getOWLModel().getSelectedOWLEntity());
         }
@@ -493,8 +494,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
             if (filterValue && getSelection().getOwlClass() != controller.getOWLModel().getSelectedOWLEntity()) {
                 setSelection(null);
             }
-        } catch (NoSelectionException e) {
-            e.printStackTrace();
+        } catch (NoSelectionException ignored) {
         }
     }
 

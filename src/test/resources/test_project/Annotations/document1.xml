@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <knowtator-project>
     <document id="document1">
-        <annotation annotator="Default" id="mention_1" type="identity">
+        <annotation annotator="profile1" id="mention_1" type="identity">
             <class id="class_1">Class 1</class>
             <span end="14" start="10">test</span>
             <span end="24" start="15">document.</span>

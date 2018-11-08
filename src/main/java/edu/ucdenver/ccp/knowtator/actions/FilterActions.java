@@ -4,19 +4,22 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 
 import javax.swing.undo.UndoableEdit;
 
-public class MenuActions {
+public class FilterActions {
 
     public static class FilterAction extends AbstractKnowtatorAction {
 
         private final KnowtatorController controller;
         private final String filter;
         private final boolean isFilter;
+        private final boolean previousIsFilter;
 
         public FilterAction(KnowtatorController controller, String filter, boolean isFilter) {
             super("Change filter");
             this.controller = controller;
             this.filter = filter;
             this.isFilter = isFilter;
+            this.previousIsFilter = controller.getFilterModel().isFilter(filter);
+
         }
 
         @Override
@@ -26,7 +29,7 @@ public class MenuActions {
 
         @Override
         public UndoableEdit getEdit() {
-            return new FilterEdit(controller, filter, isFilter);
+            return new FilterEdit(controller, filter, isFilter, previousIsFilter);
         }
     }
 
@@ -34,17 +37,19 @@ public class MenuActions {
         private final KnowtatorController controller;
         private final boolean isFilter;
         private final String filter;
+        private boolean previousIsFilter;
 
-        FilterEdit(KnowtatorController controller, String filter, boolean isFilter) {
+        FilterEdit(KnowtatorController controller, String filter, boolean isFilter, boolean previousIsFilter) {
             super("Change filter");
             this.controller = controller;
             this.isFilter = isFilter;
             this.filter = filter;
+            this.previousIsFilter = previousIsFilter;
         }
 
         @Override
         public void undo() {
-            controller.getFilterModel().setFilter(filter, !isFilter);
+            controller.getFilterModel().setFilter(filter, previousIsFilter);
         }
 
         @Override

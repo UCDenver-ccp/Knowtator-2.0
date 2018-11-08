@@ -21,12 +21,14 @@ public class FilterModel implements BaseKnowtatorModel {
         filterModelListeners.add(listener);
     }
 
-    public boolean isFilterByOWLClass() {
-        return isFilterByOWLClass;
-    }
-
-    public boolean isFilterByProfile() {
-        return isFilterByProfile;
+    public boolean isFilter(String filter) {
+        switch (filter) {
+            case PROFILE:
+                return isFilterByProfile;
+            case OWLCLASS:
+                return isFilterByOWLClass;
+        }
+        return false;
     }
 
     @Override

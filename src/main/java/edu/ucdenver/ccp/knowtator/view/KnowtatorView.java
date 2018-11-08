@@ -5,8 +5,8 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.actions.FilterActions;
 import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionActions;
-import edu.ucdenver.ccp.knowtator.actions.MenuActions;
 import edu.ucdenver.ccp.knowtator.actions.OWLActions;
 import edu.ucdenver.ccp.knowtator.actions.SpanActions;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
@@ -228,10 +228,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     }
 
     private void makeFilterButtons() {
-        owlClassFilterCheckBox.setSelected(getController().getFilterModel().isFilterByOWLClass());
-        profileFilterCheckBox.setSelected(getController().getFilterModel().isFilterByProfile());
-        profileFilterCheckBox.addItemListener(e -> getController().registerAction(new MenuActions.FilterAction(getController(), FilterModel.PROFILE, profileFilterCheckBox.isSelected())));
-        owlClassFilterCheckBox.addItemListener(e -> getController().registerAction(new MenuActions.FilterAction(getController(), FilterModel.OWLCLASS, owlClassFilterCheckBox.isSelected())));
+        owlClassFilterCheckBox.setSelected(getController().getFilterModel().isFilter(FilterModel.OWLCLASS));
+        profileFilterCheckBox.setSelected(getController().getFilterModel().isFilter(FilterModel.PROFILE));
+        profileFilterCheckBox.addItemListener(e -> getController().registerAction(new FilterActions.FilterAction(getController(), FilterModel.PROFILE, profileFilterCheckBox.isSelected())));
+        owlClassFilterCheckBox.addItemListener(e -> getController().registerAction(new FilterActions.FilterAction(getController(), FilterModel.OWLCLASS, owlClassFilterCheckBox.isSelected())));
     }
 
     private void makeMenuButtons() {

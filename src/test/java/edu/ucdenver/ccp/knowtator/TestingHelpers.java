@@ -1,6 +1,7 @@
 package edu.ucdenver.ccp.knowtator;
 
 import com.google.common.io.Files;
+import edu.ucdenver.ccp.knowtator.actions.AbstractKnowtatorAction;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -54,7 +55,7 @@ public class TestingHelpers {
         TestingHelpers.countCollections(controller, defaultExpectedTextSources, defaultExpectedConceptAnnotations, defaultExpectedSpans, defaultExpectedGraphSpaces, defaultExpectedProfiles, defaultExpectedHighlighters, defaultExpectedAnnotationNodes, defaultExpectedTriples);
     }
 
-    public static void countCollections(
+    private static void countCollections(
             KnowtatorController controller,
             int expectedTextSources,
             int expectedConceptAnnotations,
@@ -92,5 +93,41 @@ public class TestingHelpers {
         assert actualGraphSpaces == expectedGraphSpaces : "There were " + actualGraphSpaces + " graph spaces";
         assert actualAnnotationNodes == expectedAnnotationNodes : "There were " + actualAnnotationNodes + " vertices";
         assert actualTriples == expectedTriples : "There were " + actualTriples + " triples";
+    }
+
+    public static void testKnowtatorAction(KnowtatorController controller,
+                                           AbstractKnowtatorAction action,
+                                           int expectedTextSources,
+                                           int expectedConceptAnnotations,
+                                           int expectedSpans,
+                                           int expectedGraphSpaces,
+                                           int expectedProfiles,
+                                           int expectedHighlighters,
+                                           int expectedAnnotationNodes,
+                                           int expectedTriples) {
+        TestingHelpers.checkDefaultCollectionValues(controller);
+        controller.registerAction(action);
+        TestingHelpers.countCollections(controller,
+                expectedTextSources,
+                expectedConceptAnnotations,
+                expectedSpans,
+                expectedGraphSpaces,
+                expectedProfiles,
+                expectedHighlighters,
+                expectedAnnotationNodes,
+                expectedTriples);
+        controller.undo();
+        TestingHelpers.checkDefaultCollectionValues(controller);
+        controller.redo();
+        TestingHelpers.countCollections(controller,
+                expectedTextSources,
+                expectedConceptAnnotations,
+                expectedSpans,
+                expectedGraphSpaces,
+                expectedProfiles,
+                expectedHighlighters,
+                expectedAnnotationNodes,
+                expectedTriples);
+        controller.undo();
     }
 }
