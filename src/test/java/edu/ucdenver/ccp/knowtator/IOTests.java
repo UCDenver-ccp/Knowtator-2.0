@@ -55,20 +55,10 @@ public class IOTests {
 
   @Test
   public void successfulLoad() {
-    controller = new KnowtatorController();
+    controller = TestingHelpers.getLoadedController();
 
-    int projectID = 0;
     int articleID = 0;
     int articleID2 = 2;
-    String projectFileName = projectFileNames[projectID];
-    File projectFile = TestingHelpers.getProjectFile(projectFileName);
-
-    try {
-      controller.setSaveLocation(projectFile);
-      controller.loadProject();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
     TextSource textSource =
         controller
@@ -147,23 +137,15 @@ public class IOTests {
 
   @Test
   public void successfulAddDocument() {
-    controller = new KnowtatorController();
+    controller = TestingHelpers.getLoadedController();
 
     int projectID = 0;
     int articleID = 1;
 
     String projectFileName = projectFileNames[projectID];
-    File projectFile = TestingHelpers.getProjectFile(projectFileName);
 
     String articleFileName = articleFileNames[articleID];
     File articleFile = TestingHelpers.getArticleFile(projectFileName, articleFileName);
-
-    try {
-      controller.setSaveLocation(projectFile);
-      controller.loadProject();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
     controller.getTextSourceCollection().addDocument(articleFile);
 
@@ -240,20 +222,9 @@ public class IOTests {
 
   @Test
   public void successfulAddGraphSpace() {
-    controller = new KnowtatorController();
+    controller = TestingHelpers.getLoadedController();
 
-    int projectID = 0;
     int articleID = 0;
-
-    String projectFileName = projectFileNames[projectID];
-    File projectFile = TestingHelpers.getProjectFile(projectFileName);
-
-    try {
-      controller.setSaveLocation(projectFile);
-      controller.loadProject();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
     TextSource textSource =
         controller
