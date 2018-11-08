@@ -1,6 +1,6 @@
 package edu.ucdenver.ccp.knowtator.view.menu;
 
-import edu.ucdenver.ccp.knowtator.actions.KnowtatorActions;
+import edu.ucdenver.ccp.knowtator.actions.OWLActions;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
@@ -24,7 +24,7 @@ public class ColorList extends JList<Object> implements KnowtatorCollectionListe
         setModel(new DefaultListModel<>());
 
         setCellRenderer(new ColorListRenderer<>());
-        lsl = e -> KnowtatorActions.assignColorToClass(view, getSelectedValue());
+        lsl = e -> OWLActions.assignColorToClass(view, getSelectedValue());
         view.getController().getProfileCollection().addCollectionListener(this);
         view.getController().getProfileCollection().addColorListener(this);
         setCollection(view.getController().getProfileCollection().getSelection());

@@ -5,10 +5,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.actions.KnowtatorActions;
-import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionActions;
-import edu.ucdenver.ccp.knowtator.actions.MenuActions;
-import edu.ucdenver.ccp.knowtator.actions.SpanActions;
+import edu.ucdenver.ccp.knowtator.actions.*;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.FilterModel;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
@@ -17,6 +14,7 @@ import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.view.annotation.*;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog;
+import edu.ucdenver.ccp.knowtator.view.menu.MenuDialog;
 import edu.ucdenver.ccp.knowtator.view.search.SearchTextField;
 import edu.ucdenver.ccp.knowtator.view.textsource.TextSourceChooser;
 import org.apache.log4j.Logger;
@@ -234,14 +232,18 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
     }
 
     private void makeMenuButtons() {
-        menuButton.addActionListener(e -> KnowtatorActions.showMainMenuDialog(this));
-        assignColorToClassButton.addActionListener(e -> KnowtatorActions.assignColorToClass(this, getController().getOWLModel().getSelectedOWLEntity()));
+        menuButton.addActionListener(e -> {
+            MenuDialog menuDialog = new MenuDialog(SwingUtilities.getWindowAncestor(this), this);
+            menuDialog.pack();
+            menuDialog.setVisible(true);
+        });
+        assignColorToClassButton.addActionListener(e -> OWLActions.assignColorToClass(this, getController().getOWLModel().getSelectedOWLEntity()));
     }
 
     private void makeTextSourceButtons() {
         fontSizeSlider.setValue(knowtatorTextPane.getFont().getSize());
         fontSizeSlider.addChangeListener(e -> getController().registerAction(new KnowtatorActions.SetFontSizeAction(this, fontSizeSlider.getValue())));
-        showGraphViewerButton.addActionListener(e -> KnowtatorActions.showGraphViewer(graphViewDialog));
+        showGraphViewerButton.addActionListener(e -> graphViewDialog.setVisible(true));
         previousTextSourceButton.addActionListener(e -> getController().getTextSourceCollection().selectPrevious());
         nextTextSourceButton.addActionListener(e -> getController().getTextSourceCollection().selectNext());
         addTextSourceButton.addActionListener(e -> {
