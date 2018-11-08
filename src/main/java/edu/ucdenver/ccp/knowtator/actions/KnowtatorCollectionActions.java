@@ -87,19 +87,18 @@ public class KnowtatorCollectionActions {
 
         @Override
         public void cleanUpRemove() {
-            textSource.getGraphSpaceCollection().forEach(graphSpace -> graphSpace.removeListener(edit, mxEvent.UNDO));
+            textSource.getGraphSpaceCollection().forEach(graphSpace -> graphSpace.getModel().removeListener(edit, mxEvent.UNDO));
         }
 
 
         @Override
         void prepareRemove() throws ActionUnperformableException {
             try {
-                ConceptAnnotation conceptAnnotation;
-                conceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
+                ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
 
                 setObject(conceptAnnotation);
                 edit = new KnowtatorCollectionEdit<>(REMOVE, collection, object, getPresentationName());
-                textSource.getGraphSpaceCollection().forEach(graphSpace -> graphSpace.addListener(mxEvent.UNDO, edit));
+                textSource.getGraphSpaceCollection().forEach(graphSpace -> graphSpace.getModel().addListener(mxEvent.UNDO, edit));
             } catch (NoSelectionException e) {
                 throw new ActionUnperformableException();
             }

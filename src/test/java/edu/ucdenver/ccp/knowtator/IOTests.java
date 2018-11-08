@@ -33,19 +33,7 @@ public class IOTests {
       };
   //    private String[] profileFileNames = new String[]{"profile1", "profile2"};
 
-  private File getProjectFile(String projectName) {
-    return new File(
-        getClass()
-            .getResource(String.format("/%s/%s.knowtator", projectName, projectName))
-            .getFile());
-  }
 
-  private File getArticleFile(String projectName, String articleName) {
-    return new File(
-        getClass()
-            .getResource(String.format("/%s/Articles/%s.txt", projectName, articleName))
-            .getFile());
-  }
 
 //  private File getBratFile(String projectName, String bratFileName) {
 //    return new File(
@@ -73,7 +61,7 @@ public class IOTests {
     int articleID = 0;
     int articleID2 = 2;
     String projectFileName = projectFileNames[projectID];
-    File projectFile = getProjectFile(projectFileName);
+    File projectFile = TestingHelpers.getProjectFile(projectFileName);
 
     try {
       controller.setSaveLocation(projectFile);
@@ -165,10 +153,10 @@ public class IOTests {
     int articleID = 1;
 
     String projectFileName = projectFileNames[projectID];
-    File projectFile = getProjectFile(projectFileName);
+    File projectFile = TestingHelpers.getProjectFile(projectFileName);
 
     String articleFileName = articleFileNames[articleID];
-    File articleFile = getArticleFile(projectFileName, articleFileName);
+    File articleFile = TestingHelpers.getArticleFile(projectFileName, articleFileName);
 
     try {
       controller.setSaveLocation(projectFile);
@@ -217,7 +205,7 @@ public class IOTests {
     int articleID = 3;
 
     String projectFileName = projectFileNames[projectID];
-    File projectFile = getProjectFile(projectFileName);
+    File projectFile = TestingHelpers.getProjectFile(projectFileName);
 
     try {
       controller.setSaveLocation(projectFile);
@@ -258,7 +246,7 @@ public class IOTests {
     int articleID = 0;
 
     String projectFileName = projectFileNames[projectID];
-    File projectFile = getProjectFile(projectFileName);
+    File projectFile = TestingHelpers.getProjectFile(projectFileName);
 
     try {
       controller.setSaveLocation(projectFile);
@@ -321,7 +309,7 @@ public class IOTests {
     int projectID = 0;
 
     String projectFileName = projectFileNames[projectID];
-    File resourceProjectFile = getProjectFile(projectFileName);
+    File resourceProjectFile = TestingHelpers.getProjectFile(projectFileName);
 
     File projectDirectory = Files.createTempDir();
 
@@ -380,7 +368,7 @@ public class IOTests {
     int projectID = 2;
     int articleID = 5;
     String projectFileName = projectFileNames[projectID];
-    File projectFile = getProjectFile(projectFileName);
+    File projectFile = TestingHelpers.getProjectFile(projectFileName);
 
     try {
       controller.setSaveLocation(projectFile);
