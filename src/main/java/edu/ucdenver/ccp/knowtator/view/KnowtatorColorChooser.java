@@ -83,14 +83,6 @@ public class KnowtatorColorChooser extends JColorChooser {
             return null;
         }
 
-        /**
-         * The background color, foreground color, and font are already set to the
-         * defaults from the defaults table before this method is called.
-         */
-        public void installChooserPanel(JColorChooser enclosingChooser) {
-            super.installChooserPanel(enclosingChooser);
-        }
-
         protected void buildChooser() {
 
             GridBagLayout gb = new GridBagLayout();
@@ -256,7 +248,7 @@ public class KnowtatorColorChooser extends JColorChooser {
             return getColorForCell(selCol, selRow);
         }
 
-        protected void initValues() {
+        void initValues() {
 
         }
 
@@ -302,7 +294,7 @@ public class KnowtatorColorChooser extends JColorChooser {
             return new Dimension(x, y);
         }
 
-        protected void initColors() {
+        void initColors() {
 
 
         }
@@ -364,7 +356,7 @@ public class KnowtatorColorChooser extends JColorChooser {
      */
     class KnowtatorPreviewPanel extends JPanel {
 
-        private int textGap = 5;
+        private final int textGap = 5;
         private String sampleText;
 
         private Color oldColor = null;

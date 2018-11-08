@@ -119,10 +119,10 @@ public class OWLActions {
 
 
         private final ColorChangeEdit edit;
-        private Map<Object, Color> oldColorAssignments;
-        private Profile profile;
-        private Set<Object> owlClasses;
-        private Color color;
+        private final Map<Object, Color> oldColorAssignments;
+        private final Profile profile;
+        private final Set<Object> owlClasses;
+        private final Color color;
 
         ColorChangeAction(Profile profile, Set<Object> owlClasses, Color color) {
             super("Change color");
@@ -156,7 +156,7 @@ public class OWLActions {
 
         private final Profile profile;
         private final Color color;
-        private Map<Object, Color> oldColorAssignments;
+        private final Map<Object, Color> oldColorAssignments;
 
         ColorChangeEdit(Profile profile, Map<Object, Color> oldColorAssignments, Color color) {
             super("Set color for OWL class");

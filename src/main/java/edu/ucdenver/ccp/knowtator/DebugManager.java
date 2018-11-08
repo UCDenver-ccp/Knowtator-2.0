@@ -13,19 +13,15 @@ public abstract class DebugManager extends UndoManager {
     }
 
     private boolean debug;
-    private List<DebugListener> debugListeners;
+    private final List<DebugListener> debugListeners;
 
-    protected DebugManager() {
+    DebugManager() {
         debug = false;
         debugListeners = new ArrayList<>();
     }
 
     public void addDebugListener(DebugListener listener) {
         debugListeners.add(listener);
-    }
-
-    void removeDebugListener(DebugListener listener) {
-        debugListeners.remove(listener);
     }
 
     void setDebug(boolean debug) {

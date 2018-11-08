@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 
+@SuppressWarnings("unused")
 public interface Savable extends Serializable {
     void save();
 

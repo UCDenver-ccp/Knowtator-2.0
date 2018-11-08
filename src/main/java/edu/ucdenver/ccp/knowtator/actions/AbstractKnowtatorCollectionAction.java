@@ -11,7 +11,7 @@ public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataO
 
     private final String actionName;
     KnowtatorCollectionEdit<K> edit;
-    KnowtatorCollection<K> collection;
+    final KnowtatorCollection<K> collection;
     K object;
 
     AbstractKnowtatorCollectionAction(String actionName, String presentationName, KnowtatorCollection<K> collection) {
@@ -42,6 +42,7 @@ public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataO
     abstract void prepareAdd() throws ActionUnperformableException;
 
     abstract void cleanUpRemove();
+    @SuppressWarnings("EmptyMethod")
     abstract void cleanUpAdd();
 
 
@@ -50,7 +51,7 @@ public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataO
         return edit;
     }
 
-    public void setObject(K object) {
+    void setObject(K object) {
         this.object = object;
         edit.setObject(object);
     }

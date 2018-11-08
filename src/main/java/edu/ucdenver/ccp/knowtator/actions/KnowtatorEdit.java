@@ -7,12 +7,12 @@ import com.mxgraph.util.mxUndoableEdit;
 
 import javax.swing.undo.AbstractUndoableEdit;
 
-public abstract class KnowtatorEdit extends AbstractUndoableEdit implements mxEventSource.mxIEventListener {
+abstract class KnowtatorEdit extends AbstractUndoableEdit implements mxEventSource.mxIEventListener {
 
     private final String presentationName;
-    private mxUndoManager mxUndoManager;
+    private final mxUndoManager mxUndoManager;
 
-    protected KnowtatorEdit(String presentationName) {
+    KnowtatorEdit(String presentationName) {
         this.presentationName = presentationName;
         mxUndoManager = new mxUndoManager();
     }

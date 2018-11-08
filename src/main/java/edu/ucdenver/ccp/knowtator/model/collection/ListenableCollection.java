@@ -30,7 +30,7 @@ public abstract class ListenableCollection<K extends KnowtatorDataObjectInterfac
     }
   }
 
-  public void remove(K objectToRemove) {
+  void remove(K objectToRemove) {
     collection.remove(objectToRemove);
 //    objectToRemove.dispose();
 

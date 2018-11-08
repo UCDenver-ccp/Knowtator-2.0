@@ -284,6 +284,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
    */
 
 
+    @SuppressWarnings("unused")
     void addOverlappingAnnotation(ConceptAnnotation conceptAnnotation) {
         overlappingConceptAnnotations.add(conceptAnnotation);
     }

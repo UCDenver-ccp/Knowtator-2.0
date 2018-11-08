@@ -4,7 +4,7 @@ import javax.swing.undo.UndoableEdit;
 
 public abstract class AbstractKnowtatorAction {
 
-    private String presentationName;
+    private final String presentationName;
 
     AbstractKnowtatorAction(String presentationName) {
 

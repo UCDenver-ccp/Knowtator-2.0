@@ -37,6 +37,7 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
     private final KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
     private final KnowtatorController controller;
     private OWLClass testClass;
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private OWLObjectProperty testProperty;
 
     public OWLModel(KnowtatorController controller) {

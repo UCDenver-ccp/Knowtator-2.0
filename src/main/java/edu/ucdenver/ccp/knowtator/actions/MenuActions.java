@@ -8,7 +8,7 @@ public class MenuActions {
 
     public static class FilterAction extends AbstractKnowtatorAction {
 
-        private KnowtatorController controller;
+        private final KnowtatorController controller;
         private final String filter;
         private final boolean isFilter;
 
@@ -33,7 +33,7 @@ public class MenuActions {
     private static class FilterEdit extends KnowtatorEdit {
         private final KnowtatorController controller;
         private final boolean isFilter;
-        private String filter;
+        private final String filter;
 
         FilterEdit(KnowtatorController controller, String filter, boolean isFilter) {
             super("Change filter");

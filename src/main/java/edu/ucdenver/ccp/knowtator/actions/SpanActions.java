@@ -21,8 +21,8 @@ public class SpanActions {
         private final int startModification;
         private final int endModification;
         private final TextSource textSource;
-        private String startOrEnd;
-        private String growOrShrink;
+        private final String startOrEnd;
+        private final String growOrShrink;
         private boolean spanStartChnged;
         private boolean spanEndChanged;
 
