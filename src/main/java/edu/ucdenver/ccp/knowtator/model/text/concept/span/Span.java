@@ -155,7 +155,7 @@ public class Span extends AbstractKnowtatorTextBoundDataObject<Span> implements 
   MODIFIERS
    */
 
-  public void modifySpan(int startModification, int endModification, int limit) {
+  public void modify(int startModification, int endModification, int limit) {
     start += startModification;
     if (end < start) {
       start = end;

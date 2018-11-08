@@ -2,6 +2,7 @@ package edu.ucdenver.ccp.knowtator.actions;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorTextPane;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
@@ -19,8 +20,11 @@ public class SpanActions {
         private final Span span;
         private final int startModification;
         private final int endModification;
+        private final TextSource textSource;
         private String startOrEnd;
         private String growOrShrink;
+        private boolean spanStartChnged;
+        private boolean spanEndChanged;
 
         public ModifySpanAction(KnowtatorController controller, String startOrEnd, String growOrShrink) throws NoSelectionException {
             super("Modify span");
@@ -28,12 +32,19 @@ public class SpanActions {
             this.growOrShrink = growOrShrink;
             startModification = getStartModification(startOrEnd, growOrShrink);
             endModification = getEndModification(startOrEnd, growOrShrink);
-            span = controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getSpanCollection().getSelection();
+            textSource = controller.getTextSourceCollection().getSelection();
+            span = textSource.getConceptAnnotationCollection().getSelection().getSpanCollection().getSelection();
+            spanStartChnged = false;
+            spanEndChanged = false;
         }
 
         @Override
         public void execute() {
-            span.getTextSource().getConceptAnnotationCollection().modifySpan(span, startModification, endModification);
+            int spanStart = span.getStart();
+            int spanEnd = span.getEnd();
+            span.modify(startModification, endModification, textSource.getContent().length());
+            spanStartChnged = spanStart != span.getStart();
+            spanEndChanged = spanEnd != span.getEnd();
         }
 
         @Override
@@ -41,19 +52,20 @@ public class SpanActions {
             return new KnowtatorEdit(getPresentationName()) {
                 private int startModification;
                 private int endModification;
+
                 @Override
                 public void undo() {
                     super.undo();
                     switch (growOrShrink) {
                         case GROW:
-                            startModification = getStartModification(startOrEnd, SHRINK);
-                            endModification = getEndModification(startOrEnd, SHRINK);
-                            span.getTextSource().getConceptAnnotationCollection().modifySpan(span, startModification, endModification);
+                            startModification = spanStartChnged ? getStartModification(startOrEnd, SHRINK) : 0;
+                            endModification = spanEndChanged ? getEndModification(startOrEnd, SHRINK) : 0;
+                            span.modify(startModification, endModification, textSource.getContent().length());
                             break;
                         case SHRINK:
-                            startModification = getStartModification(startOrEnd, GROW);
-                            endModification = getEndModification(startOrEnd, GROW);
-                            span.getTextSource().getConceptAnnotationCollection().modifySpan(span, startModification, endModification);
+                            startModification = spanStartChnged ? getStartModification(startOrEnd, GROW) : 0;
+                            endModification = spanEndChanged ? getEndModification(startOrEnd, GROW) : 0;
+                            span.modify(startModification, endModification, textSource.getContent().length());
                             break;
                     }
                 }
@@ -61,7 +73,7 @@ public class SpanActions {
                 @Override
                 public void redo() {
                     super.redo();
-                    span.getTextSource().getConceptAnnotationCollection().modifySpan(span, startModification, endModification);
+                    execute();
                 }
             };
         }
@@ -75,7 +87,7 @@ public class SpanActions {
     }
 
     private static int getStartModification(String startOrEnd, String growOrShrink) {
-        return  startOrEnd.equals(START) ?
+        return startOrEnd.equals(START) ?
                 growOrShrink.equals(GROW) ?
                         -1 : growOrShrink.equals(SHRINK) ?
                         +1 : 0 : 0;
