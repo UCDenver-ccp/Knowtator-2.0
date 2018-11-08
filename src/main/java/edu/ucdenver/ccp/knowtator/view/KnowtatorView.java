@@ -5,7 +5,10 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.actions.*;
+import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionActions;
+import edu.ucdenver.ccp.knowtator.actions.MenuActions;
+import edu.ucdenver.ccp.knowtator.actions.OWLActions;
+import edu.ucdenver.ccp.knowtator.actions.SpanActions;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.FilterModel;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
@@ -242,7 +245,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
     private void makeTextSourceButtons() {
         fontSizeSlider.setValue(knowtatorTextPane.getFont().getSize());
-        fontSizeSlider.addChangeListener(e -> getController().registerAction(new KnowtatorActions.SetFontSizeAction(this, fontSizeSlider.getValue())));
+        fontSizeSlider.addChangeListener(e -> knowtatorTextPane.setFontSize(fontSizeSlider.getValue()));
         showGraphViewerButton.addActionListener(e -> graphViewDialog.setVisible(true));
         previousTextSourceButton.addActionListener(e -> getController().getTextSourceCollection().selectPrevious());
         nextTextSourceButton.addActionListener(e -> getController().getTextSourceCollection().selectNext());
