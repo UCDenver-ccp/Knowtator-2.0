@@ -4,57 +4,7 @@
     <option name="GROUP_BY_SEVERITY" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aaa66eaa-1de7-4fc8-9d1f-61ae6cd37f93" name="Default" comment="Started moving IO tests to project manager tests">
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Annotations/11319941.txt.knowtator.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Annotations/11532192.txt.knowtator.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Annotations/11597317.txt.knowtator.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Annotations/11604102.txt.knowtator.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Annotations/kristin_11319941.txt.knowtator.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Annotations/kristin_11532192.txt.knowtator.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Annotations/kristin_11597317.txt.knowtator.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Annotations/kristin_11604102.txt.knowtator.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Articles/11319941.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Articles/11532192.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Articles/11597317.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Articles/11604102.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.dat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.matches.Kristin Garcia.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.matches.Mike Bada.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.nonmatches.Kristin Garcia.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.nonmatches.Mike Bada.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.dat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.matches.Kristin Garcia.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.matches.Mike Bada.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.nonmatches.Kristin Garcia.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.nonmatches.Mike Bada.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.matches.Kristin Garcia.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.matches.Mike Bada.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.nonmatches.Kristin Garcia.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.nonmatches.Mike Bada.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa_test_project.knowtator" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/IAA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/IAA.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/KnowtatorIAA.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/KnowtatorIAA.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/html/IAA2HTML.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/html/IAA2HTML.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/html/SpanMatcherHTML.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/html/SpanMatcherHTML.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/matcher/ClassAndSpanMatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/matcher/ClassAndSpanMatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/toFix/ComplexFeatureMatchCriteria.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/toFix/ComplexFeatureMatchCriteria.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/toFix/ConsensusException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/toFix/ConsensusException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/toFix/FeatureMatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/toFix/FeatureMatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/toFix/OverlappingSpanMatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/toFix/OverlappingSpanMatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/toFix/SpansExactComplexFeatureMatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/toFix/SpansExactComplexFeatureMatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/toFix/SpansExactSimpleFeatureMatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/toFix/SpansExactSimpleFeatureMatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/toFix/SpansOverlapSimpleFeatureMatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/toFix/SpansOverlapSimpleFeatureMatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/toFix/SubclassMatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/toFix/SubclassMatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/toFix/SubclassMatcherHTML.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/toFix/SubclassMatcherHTML.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/TextSourceCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/TextSourceCollection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/concept/ConceptAnnotationCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/concept/ConceptAnnotationCollection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIAATest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIAATest.java" afterDir="false" />
-    </list>
+    <list default="true" id="aaa66eaa-1de7-4fc8-9d1f-61ae6cd37f93" name="Default" comment="Added IAA tests" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -99,7 +49,7 @@
           <entry key="dat" value="2" />
           <entry key="form" value="118" />
           <entry key="gitignore" value="1" />
-          <entry key="html" value="1" />
+          <entry key="html" value="3" />
           <entry key="iml" value="2" />
           <entry key="java" value="688" />
           <entry key="knowtator" value="2" />
@@ -115,7 +65,7 @@
         <counts>
           <entry key="CLASS" value="8" />
           <entry key="GUI_DESIGNER_FORM" value="118" />
-          <entry key="HTML" value="1" />
+          <entry key="HTML" value="3" />
           <entry key="IDEA_MODULE" value="2" />
           <entry key="Image" value="3" />
           <entry key="JAVA" value="688" />
@@ -132,7 +82,7 @@
           <entry key="java" value="84682" />
           <entry key="md" value="37" />
           <entry key="testing_procedure" value="973" />
-          <entry key="txt" value="2830" />
+          <entry key="txt" value="2845" />
           <entry key="xml" value="38" />
         </counts>
       </usages-collector>
@@ -140,7 +90,7 @@
         <counts>
           <entry key="JAVA" value="84682" />
           <entry key="Markdown" value="37" />
-          <entry key="PLAIN_TEXT" value="3830" />
+          <entry key="PLAIN_TEXT" value="3845" />
           <entry key="XML" value="38" />
         </counts>
       </usages-collector>
@@ -182,20 +132,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIAATest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="354">
-              <caret line="53" selection-start-line="53" selection-end-line="53" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.dat">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="8" column="19" selection-start-line="8" selection-start-column="19" selection-end-line="8" selection-end-column="19" />
+            <state relative-caret-position="356">
+              <caret line="42" column="5" lean-forward="true" selection-start-line="42" selection-start-column="5" selection-end-line="42" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -205,24 +146,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="148">
               <caret line="323" column="26" selection-start-line="323" selection-start-column="26" selection-end-line="323" selection-end-column="26" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/concept/ConceptAnnotationCollection.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="72">
-              <caret line="331" selection-start-line="331" selection-end-line="331" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/TextSource.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
-              <caret line="138" selection-start-line="138" selection-end-line="138" />
             </state>
           </provider>
         </entry>
@@ -257,8 +180,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/IAA.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
-              <caret line="294" selection-start-line="294" selection-end-line="294" />
+            <state relative-caret-position="68">
+              <caret line="9" column="9" selection-start-line="9" selection-start-column="9" selection-end-line="9" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -266,8 +189,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/KnowtatorIAA.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="394">
-              <caret line="83" column="40" selection-start-line="83" selection-start-column="40" selection-end-line="83" selection-end-column="40" />
+            <state relative-caret-position="176">
+              <caret line="93" column="21" selection-start-line="93" selection-start-column="16" selection-end-line="93" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -285,7 +208,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>textSource.getConceptAnnotationCollection().getSpans(null, 0, content.length())</find>
       <find>liste</find>
       <find>Action</find>
       <find>edit</find>
@@ -315,6 +237,7 @@
       <find>proteins</find>
       <find>36080</find>
       <find>compare</find>
+      <find>close</find>
     </findStrings>
     <replaceStrings>
       <replace>controller.getProjectManager()</replace>
@@ -423,8 +346,8 @@
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/TextSourceCollection.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/concept/ConceptAnnotationCollection.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/KnowtatorIAA.java" />
-        <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIAATest.java" />
         <option value="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.dat" />
+        <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIAATest.java" />
       </list>
     </option>
   </component>
@@ -527,6 +450,25 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="knowtator" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="knowtator" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Knowtator-2.0" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="knowtator" type="462c0819:PsiDirectoryNode" />
+              <item name="iaa" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="knowtator" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Knowtator-2.0" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="knowtator" type="462c0819:PsiDirectoryNode" />
+              <item name="iaa" type="462c0819:PsiDirectoryNode" />
+              <item name="html" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="knowtator" type="b2602c69:ProjectViewProjectNode" />
@@ -971,14 +913,7 @@
       <workItem from="1540482463661" duration="5580000" />
       <workItem from="1540574156996" duration="17682000" />
       <workItem from="1540838018795" duration="26829000" />
-      <workItem from="1541617893674" duration="41060000" />
-    </task>
-    <task id="LOCAL-00042" summary="Annotation collection trys to reconnect to IRIs when rendering changes">
-      <created>1538948315275</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1538948315275</updated>
+      <workItem from="1541617893674" duration="41353000" />
     </task>
     <task id="LOCAL-00043" summary="Ontology saves when knowtator saves">
       <created>1538948337218</created>
@@ -1316,19 +1251,17 @@
       <option name="project" value="LOCAL" />
       <updated>1541649462871</updated>
     </task>
-    <option name="localTasksCounter" value="91" />
+    <task id="LOCAL-00091" summary="Added IAA tests">
+      <created>1541659206400</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1541659206400</updated>
+    </task>
+    <option name="localTasksCounter" value="92" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="KnowtatorIAATest - 2018.11.07 at 23h 21m 22s.xml">
-      <configuration name="KnowtatorIAATest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="KnowtatorIAATest - 2018.11.07 at 23h 30m 19s.xml">
-      <configuration name="KnowtatorIAATest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="KnowtatorIAATest - 2018.11.07 at 23h 30m 24s.xml">
-      <configuration name="KnowtatorIAATest" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="KnowtatorIAATest - 2018.11.07 at 23h 30m 56s.xml">
       <configuration name="KnowtatorIAATest" configurationId="JUnit" />
     </history-entry>
@@ -1350,9 +1283,18 @@
     <history-entry file="KnowtatorIAATest - 2018.11.07 at 23h 36m 30s.xml">
       <configuration name="KnowtatorIAATest" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="KnowtatorIAATest - 2018.11.07 at 23h 37m 05s.xml">
+      <configuration name="KnowtatorIAATest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="KnowtatorIAATest - 2018.11.07 at 23h 39m 21s.xml">
+      <configuration name="KnowtatorIAATest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="KnowtatorIAATest - 2018.11.07 at 23h 39m 26s.xml">
+      <configuration name="KnowtatorIAATest" configurationId="JUnit" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="366387000" />
+    <option name="totallyTimeSpent" value="366680000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1375,8 +1317,8 @@
       <window_info id="Capture Tool" order="5" />
       <window_info active="true" content_ui="combo" id="Project" order="6" sideWeight="0.64728683" visible="true" weight="0.33251834" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3278328" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3740374" />
+      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49938875" weight="0.3278328" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3740374" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49938875" weight="0.4829483" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -1384,8 +1326,8 @@
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.20352036" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.32893288" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50061125" side_tool="true" weight="0.45764577" />
-      <window_info anchor="bottom" id="Messages" order="11" weight="0.33223322" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50061125" side_tool="true" visible="true" weight="0.33223322" />
+      <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.49938875" weight="0.33223322" />
       <window_info anchor="bottom" id="Run with VisualVM" order="12" weight="0.32893288" />
       <window_info anchor="bottom" id="Debug with VisualVM" order="13" weight="0.32893288" />
       <window_info anchor="bottom" id="Inspection Results" order="14" weight="0.32893288" />
@@ -1484,7 +1426,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/src/main/java/Swing-Slide-Menu" />
     </ignored-roots>
-    <MESSAGE value="Added undoable color change action" />
     <MESSAGE value="Made add annotation undoable" />
     <MESSAGE value="Made add apan action redoable" />
     <MESSAGE value="Made the rest of annotation actions undoable" />
@@ -1509,7 +1450,8 @@
     <MESSAGE value="Fixed some code inspection suggestions" />
     <MESSAGE value="Added test for filters" />
     <MESSAGE value="Started moving IO tests to project manager tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="Started moving IO tests to project manager tests" />
+    <MESSAGE value="Added IAA tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added IAA tests" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -1595,13 +1537,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIAATest.java</url>
-          <line>53</line>
+          <line>54</line>
           <properties />
           <option name="timeStamp" value="173" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIAATest.java</url>
-          <line>40</line>
+          <line>41</line>
           <properties />
           <option name="timeStamp" value="177" />
         </line-breakpoint>
@@ -1685,9 +1627,6 @@ this.getCollection().size();</expression-string>
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.form">
-      <provider selected="true" editor-type-id="ui-designer" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="203">
@@ -1765,9 +1704,6 @@ this.getCollection().size();</expression-string>
           <caret line="143" selection-start-line="143" selection-end-line="143" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/index.html">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/KnowtatorStandalone.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -2022,20 +1958,6 @@ this.getCollection().size();</expression-string>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/KnowtatorIAA.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="394">
-          <caret line="83" column="40" selection-start-line="83" selection-start-column="40" selection-end-line="83" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/IAA.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="294" selection-start-line="294" selection-end-line="294" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/commons-io/commons-io/2.5/commons-io-2.5.jar!/org/apache/commons/io/FileUtils.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="148">
@@ -2043,17 +1965,45 @@ this.getCollection().size();</expression-string>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIAATest.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/IAA.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="354">
-          <caret line="53" selection-start-line="53" selection-end-line="53" />
+        <state relative-caret-position="68">
+          <caret line="9" column="9" selection-start-line="9" selection-start-column="9" selection-end-line="9" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/KnowtatorIAA.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="93" column="21" selection-start-line="93" selection-start-column="16" selection-end-line="93" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="142" selection-start-line="7" selection-start-column="142" selection-end-line="7" selection-end-column="142" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.dat">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="19" selection-start-line="8" selection-start-column="19" selection-end-line="8" selection-end-column="19" />
+        <state relative-caret-position="289">
+          <caret line="17" column="17" lean-forward="true" selection-start-line="17" selection-start-column="17" selection-end-line="17" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIAATest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="356">
+          <caret line="42" column="5" lean-forward="true" selection-start-line="42" selection-start-column="5" selection-end-line="42" selection-end-column="5" />
         </state>
       </provider>
     </entry>
