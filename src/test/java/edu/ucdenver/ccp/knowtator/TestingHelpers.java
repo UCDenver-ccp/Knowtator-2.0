@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class TestingHelpers {
 
-    private static final String projectFileName = "test_project";
+    public static final String projectFileName = "test_project";
 
     static File getProjectFile(String projectName) {
         return new File(
@@ -17,7 +17,7 @@ public class TestingHelpers {
                         .getFile());
     }
 
-    static File getArticleFile(String projectName, String articleName) {
+    public static File getArticleFile(String projectName, String articleName) {
         return new File(
                 TestingHelpers.class
                         .getResource(String.format("/%s/Articles/%s.txt", projectName, articleName))
@@ -45,7 +45,7 @@ public class TestingHelpers {
     public static final int defaultExpectedConceptAnnotations = 3;
     public static final int defaultExpectedSpans = 4;
     public static final int defaultExpectedGraphSpaces = 2;
-    public static final int defaultExpectedProfiles = 1;
+    public static final int defaultExpectedProfiles = 2;
     public static final int defaultExpectedHighlighters = 2;
     public static final int defaultExpectedAnnotationNodes = 4;
     public static final int defaultExpectedTriples = 2;

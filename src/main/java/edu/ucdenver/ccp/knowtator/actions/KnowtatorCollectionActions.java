@@ -165,7 +165,7 @@ public class KnowtatorCollectionActions {
 
     }
 
-    private static class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
+    static class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
         private final KnowtatorController controller;
         private final String profileId;
 
@@ -197,7 +197,7 @@ public class KnowtatorCollectionActions {
         }
     }
 
-    private static class TextSourceAction extends AbstractKnowtatorCollectionAction<TextSource> {
+    static class TextSourceAction extends AbstractKnowtatorCollectionAction<TextSource> {
         private final KnowtatorController controller;
         private final File file;
 

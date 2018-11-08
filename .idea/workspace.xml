@@ -4,11 +4,11 @@
     <option name="GROUP_BY_SEVERITY" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aaa66eaa-1de7-4fc8-9d1f-61ae6cd37f93" name="Default" comment="Fixed add annotation action">
-      <change afterPath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/TestingHelpers.java" afterDir="false" />
+    <list default="true" id="aaa66eaa-1de7-4fc8-9d1f-61ae6cd37f93" name="Default" comment="Added tests for adding and removing annotations as well as test helper functions">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionActions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionActions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/IOTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/IOTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/TextSourceCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/TextSourceCollection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/TestingHelpers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/TestingHelpers.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionActionsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionActionsTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
@@ -55,14 +55,14 @@
           <entry key="form" value="117" />
           <entry key="gitignore" value="1" />
           <entry key="iml" value="2" />
-          <entry key="java" value="583" />
+          <entry key="java" value="592" />
           <entry key="knowtator" value="1" />
           <entry key="md" value="1" />
           <entry key="png" value="2" />
           <entry key="properties" value="6" />
           <entry key="testing_procedure" value="1" />
           <entry key="txt" value="6" />
-          <entry key="xml" value="45" />
+          <entry key="xml" value="46" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
@@ -71,27 +71,27 @@
           <entry key="GUI_DESIGNER_FORM" value="117" />
           <entry key="IDEA_MODULE" value="2" />
           <entry key="Image" value="3" />
-          <entry key="JAVA" value="583" />
+          <entry key="JAVA" value="592" />
           <entry key="Markdown" value="1" />
           <entry key="PLAIN_TEXT" value="9" />
           <entry key="Properties" value="6" />
-          <entry key="XML" value="45" />
+          <entry key="XML" value="46" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="215" />
-          <entry key="java" value="80434" />
+          <entry key="java" value="81105" />
           <entry key="md" value="37" />
           <entry key="testing_procedure" value="973" />
-          <entry key="txt" value="2384" />
+          <entry key="txt" value="2465" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="80434" />
+          <entry key="JAVA" value="81105" />
           <entry key="Markdown" value="37" />
-          <entry key="PLAIN_TEXT" value="3382" />
+          <entry key="PLAIN_TEXT" value="3463" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages">
@@ -132,11 +132,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionActionsTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="429">
-              <caret line="57" selection-start-line="57" selection-end-line="57" />
+            <state relative-caret-position="266">
+              <caret line="149" column="39" lean-forward="true" selection-start-line="149" selection-start-column="39" selection-end-line="149" selection-end-column="39" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -145,39 +145,22 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorEdit.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="354">
-              <caret line="45" column="21" lean-forward="true" selection-start-line="45" selection-start-column="21" selection-end-line="45" selection-end-column="21" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1078#1079#0" expanded="true" />
-                <element signature="e#1116#1117#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionEdit.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="37">
-              <caret line="5" column="93" selection-start-line="5" selection-start-column="93" selection-end-line="5" selection-end-column="93" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionActions.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="139">
-              <caret line="89" column="92" selection-start-line="89" selection-start-column="92" selection-end-line="89" selection-end-column="92" />
+            <state relative-caret-position="133">
+              <caret line="26" column="28" selection-start-line="26" selection-start-column="28" selection-end-line="26" selection-end-column="28" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/menu/ProfilePane.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="187">
+              <caret line="39" column="96" lean-forward="true" selection-start-line="39" selection-start-column="96" selection-end-line="39" selection-end-column="96" />
             </state>
           </provider>
         </entry>
@@ -185,8 +168,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/TestingHelpers.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="428">
-              <caret line="68" selection-start-line="68" selection-end-line="68" />
+            <state relative-caret-position="173">
+              <caret line="23" selection-start-line="23" selection-end-line="23" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -214,7 +197,6 @@
       <find>get</find>
       <find>getSele</find>
       <find>addI</find>
-      <find>remove</find>
       <find>colorcho</find>
       <find>swatchsize</find>
       <find>font</find>
@@ -237,6 +219,7 @@
       <find>KnowtatorCollection</find>
       <find>expected</find>
       <find>temp</find>
+      <find>remove</find>
     </findStrings>
     <replaceStrings>
       <replace>controller.getProjectManager()</replace>
@@ -321,7 +304,6 @@
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/SpanActions.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/menu/ExportPane.java" />
         <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/ConceptAnnotationCollectionTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/TextSourceCollection.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/TextSourceActions.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorActions.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java" />
@@ -338,8 +320,9 @@
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionEdit.java" />
         <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/IOTests.java" />
         <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/TestingHelpers.java" />
-        <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionActionsTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionActions.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/TextSourceCollection.java" />
+        <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionActionsTest.java" />
       </list>
     </option>
   </component>
@@ -471,17 +454,6 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="knowtator" type="462c0819:PsiDirectoryNode" />
-              <item name="model" type="462c0819:PsiDirectoryNode" />
-              <item name="text" type="462c0819:PsiDirectoryNode" />
-              <item name="concept" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="knowtator" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Knowtator-2.0" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="knowtator" type="462c0819:PsiDirectoryNode" />
               <item name="view" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -572,6 +544,15 @@
               <item name="resources" type="462c0819:PsiDirectoryNode" />
               <item name="test_project" type="462c0819:PsiDirectoryNode" />
               <item name="Annotations" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="knowtator" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Knowtator-2.0" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="test_project" type="462c0819:PsiDirectoryNode" />
+              <item name="Articles" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="knowtator" type="b2602c69:ProjectViewProjectNode" />
@@ -748,17 +729,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ConceptAnnotationCollectionTest.addAnnotation" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="knowtator" />
-      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator" />
-      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.ConceptAnnotationCollectionTest" />
-      <option name="METHOD_NAME" value="addAnnotation" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="KnowtatorCollectionActionsTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="knowtator" />
       <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator.actions" />
@@ -768,11 +738,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="KnowtatorCollectionActionsTest.addConceptAnnotation" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="KnowtatorCollectionActionsTest.addTextSourceAction" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="knowtator" />
       <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator.actions" />
       <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionActionsTest" />
-      <option name="METHOD_NAME" value="addConceptAnnotation" />
+      <option name="METHOD_NAME" value="addTextSourceAction" />
       <option name="TEST_OBJECT" value="method" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
       <method v="2">
@@ -790,6 +760,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="KnowtatorCollectionActionsTest.removeProfileAction" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="knowtator" />
+      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator.actions" />
+      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionActionsTest" />
+      <option name="METHOD_NAME" value="removeProfileAction" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
       <method v="2">
@@ -800,18 +781,18 @@
       <item itemvalue="Application.Run Protege" />
       <item itemvalue="Application.Standalone" />
       <item itemvalue="JUnit.All in knowtator" />
-      <item itemvalue="JUnit.ConceptAnnotationCollectionTest.addAnnotation" />
-      <item itemvalue="JUnit.KnowtatorCollectionActionsTest.addConceptAnnotation" />
       <item itemvalue="JUnit.KnowtatorCollectionActionsTest" />
       <item itemvalue="JUnit.KnowtatorCollectionActionsTest.removeConceptAnnotation" />
+      <item itemvalue="JUnit.KnowtatorCollectionActionsTest.addTextSourceAction" />
+      <item itemvalue="JUnit.KnowtatorCollectionActionsTest.removeProfileAction" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.KnowtatorCollectionActionsTest" />
+        <item itemvalue="JUnit.KnowtatorCollectionActionsTest.removeProfileAction" />
+        <item itemvalue="JUnit.KnowtatorCollectionActionsTest.addTextSourceAction" />
         <item itemvalue="JUnit.KnowtatorCollectionActionsTest.removeConceptAnnotation" />
         <item itemvalue="JUnit.All in knowtator" />
-        <item itemvalue="JUnit.KnowtatorCollectionActionsTest.addConceptAnnotation" />
-        <item itemvalue="JUnit.ConceptAnnotationCollectionTest.addAnnotation" />
       </list>
     </recent_temporary>
   </component>
@@ -853,14 +834,7 @@
       <workItem from="1540482463661" duration="5580000" />
       <workItem from="1540574156996" duration="17682000" />
       <workItem from="1540838018795" duration="26829000" />
-      <workItem from="1541617893674" duration="21587000" />
-    </task>
-    <task id="LOCAL-00033" summary="Removed annotation pane">
-      <created>1538284400768</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1538284400768</updated>
+      <workItem from="1541617893674" duration="23276000" />
     </task>
     <task id="LOCAL-00034" summary="Fixed annotation class label not updating on selection">
       <created>1538285557203</created>
@@ -1198,43 +1172,50 @@
       <option name="project" value="LOCAL" />
       <updated>1541636093623</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="Added tests for adding and removing annotations as well as test helper functions">
+      <created>1541639589469</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1541639589469</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="KnowtatorCollectionActionsTest - 2018.11.07 at 18h 00m 55s.xml">
+    <history-entry file="KnowtatorCollectionActionsTest - 2018.11.07 at 18h 28m 23s.xml">
       <configuration name="KnowtatorCollectionActionsTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="KnowtatorCollectionActionsTest - 2018.11.07 at 18h 03m 55s.xml">
+    <history-entry file="KnowtatorCollectionActionsTest - 2018.11.07 at 18h 28m 51s.xml">
       <configuration name="KnowtatorCollectionActionsTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="KnowtatorCollectionActionsTest - 2018.11.07 at 18h 04m 01s.xml">
+    <history-entry file="KnowtatorCollectionActionsTest - 2018.11.07 at 18h 30m 03s.xml">
       <configuration name="KnowtatorCollectionActionsTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="KnowtatorCollectionActionsTest - 2018.11.07 at 18h 04m 23s.xml">
+    <history-entry file="KnowtatorCollectionActionsTest - 2018.11.07 at 18h 30m 46s.xml">
       <configuration name="KnowtatorCollectionActionsTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="KnowtatorCollectionActionsTest - 2018.11.07 at 18h 07m 15s.xml">
+    <history-entry file="KnowtatorCollectionActionsTest_addTextSourceAction - 2018.11.07 at 18h 34m 51s.xml">
+      <configuration name="KnowtatorCollectionActionsTest.addTextSourceAction" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="KnowtatorCollectionActionsTest_addTextSourceAction - 2018.11.07 at 18h 34m 57s.xml">
+      <configuration name="KnowtatorCollectionActionsTest.addTextSourceAction" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="KnowtatorCollectionActionsTest - 2018.11.07 at 18h 35m 17s.xml">
       <configuration name="KnowtatorCollectionActionsTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="KnowtatorCollectionActionsTest - 2018.11.07 at 18h 08m 04s.xml">
+    <history-entry file="KnowtatorCollectionActionsTest - 2018.11.07 at 18h 36m 00s.xml">
       <configuration name="KnowtatorCollectionActionsTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="KnowtatorCollectionActionsTest - 2018.11.07 at 18h 08m 41s.xml">
+    <history-entry file="KnowtatorCollectionActionsTest - 2018.11.07 at 18h 36m 36s.xml">
       <configuration name="KnowtatorCollectionActionsTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="KnowtatorCollectionActionsTest_removeConceptAnnotation - 2018.11.07 at 18h 09m 49s.xml">
-      <configuration name="KnowtatorCollectionActionsTest.removeConceptAnnotation" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="KnowtatorCollectionActionsTest - 2018.11.07 at 18h 09m 49s.xml">
+    <history-entry file="KnowtatorCollectionActionsTest - 2018.11.07 at 18h 38m 22s.xml">
       <configuration name="KnowtatorCollectionActionsTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="KnowtatorCollectionActionsTest_removeConceptAnnotation - 2018.11.07 at 18h 11m 57s.xml">
-      <configuration name="KnowtatorCollectionActionsTest.removeConceptAnnotation" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="346914000" />
+    <option name="totallyTimeSpent" value="348603000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1255,11 +1236,11 @@
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info id="Image Layers" order="4" />
       <window_info id="Capture Tool" order="5" />
-      <window_info content_ui="combo" id="Project" order="6" sideWeight="0.64728683" visible="true" weight="0.19559902" />
+      <window_info active="true" content_ui="combo" id="Project" order="6" sideWeight="0.64728683" visible="true" weight="0.19559902" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3278328" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3740374" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.49938875" visible="true" weight="0.37073708" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3740374" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49938875" weight="0.37073708" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.33333334" />
@@ -1366,7 +1347,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/src/main/java/Swing-Slide-Menu" />
     </ignored-roots>
-    <MESSAGE value="Prescription of colors in color chooser" />
     <MESSAGE value="Modified color chooser preview to only show text highlights" />
     <MESSAGE value="Set all fonts to verdana" />
     <MESSAGE value="Reviewed and changed colors" />
@@ -1391,7 +1371,8 @@
     <MESSAGE value="Removed all span collection to try to make some objects immutable" />
     <MESSAGE value="Fixed colors not loading for default annotator" />
     <MESSAGE value="Fixed add annotation action" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed add annotation action" />
+    <MESSAGE value="Added tests for adding and removing annotations as well as test helper functions" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added tests for adding and removing annotations as well as test helper functions" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -1417,34 +1398,16 @@
           <option name="timeStamp" value="44" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionActionsTest.java</url>
-          <line>58</line>
-          <properties />
-          <option name="timeStamp" value="74" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionActionsTest.java</url>
-          <line>57</line>
-          <properties />
-          <option name="timeStamp" value="75" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorEdit.java</url>
-          <line>30</line>
-          <properties />
-          <option name="timeStamp" value="76" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorEdit.java</url>
-          <line>22</line>
-          <properties />
-          <option name="timeStamp" value="77" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorEdit.java</url>
           <line>46</line>
           <properties />
           <option name="timeStamp" value="78" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/OWLModel.java</url>
+          <line>117</line>
+          <properties />
+          <option name="timeStamp" value="80" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -1512,13 +1475,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/collection/KnowtatorCollection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="7" column="110" selection-start-line="7" selection-start-column="110" selection-end-line="7" selection-end-column="110" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/KnowtatorStandalone.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="310">
@@ -1551,13 +1507,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="294">
           <caret line="496" column="32" selection-start-line="496" selection-start-column="32" selection-end-line="496" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/GraphActions.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1303">
-          <caret line="203" column="25" selection-start-line="203" selection-start-column="25" selection-end-line="203" selection-end-column="25" />
         </state>
       </provider>
     </entry>
@@ -1655,19 +1604,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/TextSourceCollection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="780">
-          <caret line="126" column="70" selection-start-line="126" selection-start-column="70" selection-end-line="126" selection-end-column="70" />
-          <folding>
-            <element signature="e#5457#5458#0" expanded="true" />
-            <element signature="e#5499#5500#0" expanded="true" />
-            <element signature="e#5540#5541#0" expanded="true" />
-            <element signature="e#5579#5580#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/TextSourceActions.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -1689,13 +1625,6 @@
             <element signature="e#5333#5334#0" expanded="true" />
             <element signature="e#5422#5423#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/menu/ProfilePane.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="15" column="19" lean-forward="true" selection-start-line="15" selection-start-column="19" selection-end-line="15" selection-end-column="19" />
         </state>
       </provider>
     </entry>
@@ -1755,24 +1684,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/profile/ProfileCollection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="395">
-          <caret line="82" column="67" lean-forward="true" selection-start-line="82" selection-start-column="67" selection-end-line="82" selection-end-column="67" />
-          <folding>
-            <element signature="e#4527#4528#0" expanded="true" />
-            <element signature="e#4562#4563#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/collection/SelectableCollection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="20" selection-start-line="20" selection-end-line="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/collection/ListenableCollection.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
@@ -1791,13 +1702,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="174">
           <caret line="218" selection-start-line="218" selection-end-line="218" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/concept/ConceptAnnotationCollection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="344">
-          <caret line="70" selection-start-line="70" selection-end-line="70" />
         </state>
       </provider>
     </entry>
@@ -1856,47 +1760,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/test_project/Annotations/document1.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="30" lean-forward="true" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/AbstractKnowtatorCollectionAction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="45" lean-forward="true" selection-start-line="20" selection-start-column="45" selection-end-line="20" selection-end-column="45" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/TestingHelpers.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="428">
-          <caret line="68" selection-start-line="68" selection-end-line="68" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionActionsTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="429">
-          <caret line="57" selection-start-line="57" selection-end-line="57" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorEdit.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="354">
-          <caret line="45" column="21" lean-forward="true" selection-start-line="45" selection-start-column="21" selection-end-line="45" selection-end-column="21" />
+        <state relative-caret-position="300">
+          <caret line="20" column="23" lean-forward="true" selection-start-line="20" selection-start-column="23" selection-end-line="20" selection-end-column="23" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1078#1079#0" expanded="true" />
@@ -1905,20 +1772,109 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionEdit.java">
+    <entry file="file://$PROJECT_DIR$/src/test/resources/test_project/Annotations/document1.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="37">
-          <caret line="5" column="93" selection-start-line="5" selection-start-column="93" selection-end-line="5" selection-end-column="93" />
+        <state relative-caret-position="272">
+          <caret line="16" column="30" lean-forward="true" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/concept/ConceptAnnotationCollection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="293">
+          <caret line="190" column="7" lean-forward="true" selection-start-line="190" selection-start-column="7" selection-end-line="190" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/TestingHelpers.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="173">
+          <caret line="23" selection-start-line="23" selection-end-line="23" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/OWLModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="174">
+          <caret line="106" selection-start-line="106" selection-end-line="106" />
+          <folding>
+            <element signature="e#3301#3302#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/collection/SelectableCollection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="337">
+          <caret line="57" column="16" selection-start-line="57" selection-start-column="16" selection-end-line="57" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/GraphActions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="411">
+          <caret line="203" column="25" selection-start-line="203" selection-start-column="25" selection-end-line="203" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/AbstractKnowtatorCollectionAction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="35" column="32" lean-forward="true" selection-start-line="35" selection-start-column="32" selection-end-line="35" selection-end-column="32" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionEdit.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="174">
+          <caret line="25" selection-start-line="25" selection-end-line="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/TextSourceCollection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="558">
+          <caret line="167" column="13" lean-forward="true" selection-start-line="167" selection-start-column="13" selection-end-line="167" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/profile/ProfileCollection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="22" selection-start-line="22" selection-end-line="22" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionActions.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="139">
-          <caret line="89" column="92" selection-start-line="89" selection-start-column="92" selection-end-line="89" selection-end-column="92" />
+        <state relative-caret-position="133">
+          <caret line="26" column="28" selection-start-line="26" selection-start-column="28" selection-end-line="26" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/menu/ProfilePane.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="39" column="96" lean-forward="true" selection-start-line="39" selection-start-column="96" selection-end-line="39" selection-end-column="96" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionActionsTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="149" column="39" lean-forward="true" selection-start-line="149" selection-start-column="39" selection-end-line="149" selection-end-column="39" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

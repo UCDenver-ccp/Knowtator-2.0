@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <knowtator-project>
-    <profile id="Default">
+    <profile id="profile1">
         <highlighter class="class_0" color="#00ffff"/>
         <highlighter class="class_1" color="#ff3333"/>
     </profile>
