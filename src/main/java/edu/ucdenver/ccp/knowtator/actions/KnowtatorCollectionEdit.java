@@ -4,14 +4,14 @@ import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 
 public class KnowtatorCollectionEdit<K extends KnowtatorDataObjectInterface> extends KnowtatorEdit {
-    public final static String ADD = "add";
-    public static final String REMOVE = "remove";
+    private final static String ADD = "add";
+    private static final String REMOVE = "remove";
 
     private final String actionName;
     private final KnowtatorCollection<K> collection;
-    private final K object;
+    private K object;
 
-    public KnowtatorCollectionEdit(String actionName, KnowtatorCollection<K> collection, K object, String presentationName) {
+    KnowtatorCollectionEdit(String actionName, KnowtatorCollection<K> collection, K object, String presentationName) {
         super(presentationName);
         this.actionName = actionName;
         this.collection = collection;
@@ -45,4 +45,7 @@ public class KnowtatorCollectionEdit<K extends KnowtatorDataObjectInterface> ext
     }
 
 
+    public void setObject(K object) {
+        this.object = object;
+    }
 }

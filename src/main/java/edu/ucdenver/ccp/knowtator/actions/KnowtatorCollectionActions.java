@@ -44,8 +44,8 @@ public class KnowtatorCollectionActions {
                         actions.add(new TextSourceAction(actionName, view.getController(), file));
                 }
 
-            } catch (NoSelectionException e) {
-                e.printStackTrace();
+            } catch (NoSelectionException ignored) {
+
             }
         });
 
@@ -76,10 +76,9 @@ public class KnowtatorCollectionActions {
         private TextSource textSource;
 
         ConceptAnnotationAction(String actionName, KnowtatorController controller) throws NoSelectionException {
-            super(actionName, "concept annotation");
+            super(actionName, "concept annotation", controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection());
             this.controller = controller;
             this.textSource = controller.getTextSourceCollection().getSelection();
-            setCollection(textSource.getConceptAnnotationCollection());
         }
 
         @Override
@@ -95,14 +94,11 @@ public class KnowtatorCollectionActions {
         @Override
         void prepareRemove() throws ActionUnperformableException {
             try {
-                setCollection(textSource.getConceptAnnotationCollection());
-
                 ConceptAnnotation conceptAnnotation;
-
                 conceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
 
                 setObject(conceptAnnotation);
-                edit = new KnowtatorCollectionEdit<>(ADD, collection, object, getPresentationName());
+                edit = new KnowtatorCollectionEdit<>(REMOVE, collection, object, getPresentationName());
                 textSource.getGraphSpaceCollection().forEach(graphSpace -> graphSpace.addListener(mxEvent.UNDO, edit));
             } catch (NoSelectionException e) {
                 throw new ActionUnperformableException();
@@ -134,9 +130,8 @@ public class KnowtatorCollectionActions {
         private final ConceptAnnotation conceptAnnotation;
 
         SpanAction(String actionName, KnowtatorController controller) throws NoSelectionException {
-            super(actionName, "span");
+            super(actionName, "span", controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getSpanCollection());
             conceptAnnotation = controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection();
-            setCollection(conceptAnnotation.getSpanCollection());
 
             this.controller = controller;
         }
@@ -144,9 +139,6 @@ public class KnowtatorCollectionActions {
         @Override
         void prepareRemove() throws ActionUnperformableException {
             try {
-                ConceptAnnotation conceptAnnotation = controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection();
-                setCollection(conceptAnnotation.getSpanCollection());
-
                 setObject(collection.getSelection());
             } catch (NoSelectionException e) {
                 throw new ActionUnperformableException();
@@ -179,8 +171,7 @@ public class KnowtatorCollectionActions {
         private final String profileId;
 
         ProfileAction(String actionName, KnowtatorController controller, String profileId) {
-            super(actionName, "Add profile");
-            setCollection(controller.getProfileCollection());
+            super(actionName, "Add profile", controller.getProfileCollection());
             this.controller = controller;
             this.profileId = profileId;
         }
@@ -212,7 +203,7 @@ public class KnowtatorCollectionActions {
         private final File file;
 
         TextSourceAction(String actionName, KnowtatorController controller, File file) {
-            super(actionName, "text source");
+            super(actionName, "text source", controller.getTextSourceCollection());
             this.controller = controller;
             this.file = file;
         }

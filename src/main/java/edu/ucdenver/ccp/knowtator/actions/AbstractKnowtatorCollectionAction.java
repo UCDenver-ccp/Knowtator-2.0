@@ -14,8 +14,9 @@ public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataO
     KnowtatorCollection<K> collection;
     K object;
 
-    AbstractKnowtatorCollectionAction(String actionName, String presentationName) {
+    AbstractKnowtatorCollectionAction(String actionName, String presentationName, KnowtatorCollection<K> collection) {
         super(String.format("%s %s",actionName, presentationName));
+        this.collection = collection;
         this.actionName = actionName;
         this.edit = new KnowtatorCollectionEdit<>(actionName, collection, object, getPresentationName());
     }
@@ -51,9 +52,6 @@ public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataO
 
     public void setObject(K object) {
         this.object = object;
-    }
-
-    public void setCollection(KnowtatorCollection<K> collection) {
-        this.collection = collection;
+        edit.setObject(object);
     }
 }
