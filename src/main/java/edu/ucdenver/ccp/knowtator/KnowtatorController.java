@@ -89,10 +89,31 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 		log.warn("Knowtator");
 	}
 
-	/*
-    GETTERS
-     */
+	/**
+	 * Saves the project. Overriden here because the OWL model needs to be saved as well.
+	 *
+	 * @param ioUtilClass The IOUtil to use to save the IO class. This specifies the output format
+	 * @param basicIO     The IO class to save
+	 * @param file        The file to save to
+	 * @param <I>         The IO class
+	 * @see edu.ucdenver.ccp.knowtator.ProjectManager
+	 */
+	@Override
+	public <I extends BasicIO> void saveToFormat(Class<? extends BasicIOUtil<I>> ioUtilClass, I basicIO, File file) {
+		if (isNotLoading()) {
+			owlModel.save();
+		}
+		super.saveToFormat(ioUtilClass, basicIO, file);
+	}
 
+	/**
+	 * Load project from non-standard directory structure
+	 * @param profilesLocation Directory of profile files
+	 * @param ontologiesLocation Directory of ontology files
+	 * @param articlesLocation Directory of article files
+	 * @param annotationsLocation Directory of annotation files
+	 * @param projectLocation Output directory for project to save to
+	 */
 	void importProject(File profilesLocation, File ontologiesLocation, File articlesLocation, File annotationsLocation, File projectLocation) {
 		try {
 			setSaveLocation(projectLocation);
@@ -116,31 +137,6 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 	}
 
 	/**
-	 * @return A list of the models that are instances of BaseKnowtatorManager
-	 */
-	@Override
-	List<BaseKnowtatorManager> getManagers() {
-		return models.stream().filter(model -> model instanceof BaseKnowtatorManager).map(model -> (BaseKnowtatorManager) model).collect(Collectors.toList());
-	}
-
-	/**
-	 * Saves the project. Overriden here because the OWL model needs to be saved as well.
-	 *
-	 * @param ioUtilClass The IOUtil to use to save the IO class. This specifies the output format
-	 * @param basicIO     The IO class to save
-	 * @param file        The file to save to
-	 * @param <I>         The IO class
-	 * @see edu.ucdenver.ccp.knowtator.ProjectManager
-	 */
-	@Override
-	public <I extends BasicIO> void saveToFormat(Class<? extends BasicIOUtil<I>> ioUtilClass, I basicIO, File file) {
-		if (isNotLoading()) {
-			owlModel.save();
-		}
-		super.saveToFormat(ioUtilClass, basicIO, file);
-	}
-
-	/**
 	 * @return The OWL model
 	 */
 	public OWLModel getOWLModel() {
@@ -153,10 +149,6 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 	public ProfileCollection getProfileCollection() {
 		return profileCollection;
 	}
-
-	/*
-	VERIFICATION
-	 */
 
 	/**
 	 * @return The selection model
@@ -253,5 +245,13 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 	@Override
 	public void load() {
 
+	}
+
+	/**
+	 * @return A list of the models that are instances of BaseKnowtatorManager
+	 */
+	@Override
+	List<BaseKnowtatorManager> getManagers() {
+		return models.stream().filter(model -> model instanceof BaseKnowtatorManager).map(model -> (BaseKnowtatorManager) model).collect(Collectors.toList());
 	}
 }
