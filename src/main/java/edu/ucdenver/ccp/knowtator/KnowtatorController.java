@@ -83,30 +83,6 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 	}
 
 	/**
-	 * @param args Unused
-	 */
-	public static void main(String[] args) {
-		log.warn("Knowtator");
-	}
-
-	/**
-	 * Saves the project. Overriden here because the OWL model needs to be saved as well.
-	 *
-	 * @param ioUtilClass The IOUtil to use to save the IO class. This specifies the output format
-	 * @param basicIO     The IO class to save
-	 * @param file        The file to save to
-	 * @param <I>         The IO class
-	 * @see edu.ucdenver.ccp.knowtator.ProjectManager
-	 */
-	@Override
-	public <I extends BasicIO> void saveToFormat(Class<? extends BasicIOUtil<I>> ioUtilClass, I basicIO, File file) {
-		if (isNotLoading()) {
-			owlModel.save();
-		}
-		super.saveToFormat(ioUtilClass, basicIO, file);
-	}
-
-	/**
 	 * Load project from non-standard directory structure
 	 * @param profilesLocation Directory of profile files
 	 * @param ontologiesLocation Directory of ontology files
@@ -130,10 +106,35 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 	}
 
 	/**
+	 * Saves the project. Overriden here because the OWL model needs to be saved as well.
+	 *
+	 * @param ioUtilClass The IOUtil to use to save the IO class. This specifies the output format
+	 * @param basicIO     The IO class to save
+	 * @param file        The file to save to
+	 * @param <I>         The IO class
+	 * @see edu.ucdenver.ccp.knowtator.ProjectManager
+	 */
+	@Override
+	public <I extends BasicIO> void saveToFormat(Class<? extends BasicIOUtil<I>> ioUtilClass, I basicIO, File file) {
+		if (isNotLoading()) {
+			owlModel.save();
+		}
+		super.saveToFormat(ioUtilClass, basicIO, file);
+	}
+
+	/**
 	 * @return The filter model
 	 */
 	public FilterModel getFilterModel() {
 		return filterModel;
+	}
+
+	/**
+	 * @return A list of the models that are instances of BaseKnowtatorManager
+	 */
+	@Override
+	List<BaseKnowtatorManager> getManagers() {
+		return models.stream().filter(model -> model instanceof BaseKnowtatorManager).map(model -> (BaseKnowtatorManager) model).collect(Collectors.toList());
 	}
 
 	/**
@@ -248,10 +249,9 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 	}
 
 	/**
-	 * @return A list of the models that are instances of BaseKnowtatorManager
+	 * @param args Unused
 	 */
-	@Override
-	List<BaseKnowtatorManager> getManagers() {
-		return models.stream().filter(model -> model instanceof BaseKnowtatorManager).map(model -> (BaseKnowtatorManager) model).collect(Collectors.toList());
+	public static void main(String[] args) {
+		log.warn("Knowtator");
 	}
 }
