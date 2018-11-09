@@ -44,12 +44,29 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
+
 /**
- * The type Knowtator standalone.
+ * Two methods of running Knowtator on its own are provided:
+ * 1. From the command line
+ * 2. As a Swing application
+ *
+ * Command line:
+ *  Knowtator can be used from the command line to convert between various kinds of annotation formats including
+ *  Brat, UIMA XML, the old Knowtator XML style, and the new Knowtator XML style.
+ *
+ * Swing application:
+ *  Knowtator can be run on its own as a Swing application. This is useful for viewing annotations without setting
+ *  up and running Protege. This is also a useful way to debug some aspects of the GUI. In standalone mode,
+ *  annotations cannot be created because there is no OWL model to use.
  */
 class KnowtatorStandalone extends JFrame {
     private KnowtatorView view;
 
+    /**
+     * The constructor for Knowtator standalone's GUI. Debug mode can be entered here which will generate some
+     * dummy OWL API variables to test adding of concept annotations and triples.
+     * @param debug Specifies if debug mode should be entered.
+     */
     private KnowtatorStandalone(boolean debug) {
         view = new KnowtatorView();
         setContentPane(view);
@@ -73,35 +90,58 @@ class KnowtatorStandalone extends JFrame {
         });
     }
 
+    /**
+     * Disposes the GUI
+     */
     private void onCancel() {
         view.disposeView();
         dispose();
         view = null;
     }
 
+    /**
+     * Main method for starting either the command line or GUI modes. Arguments include
+     * --
+     * Commands for starting the GUI
+     * g: Start GUI
+     * d: Start debug GUI
+     * --
+     * Commands for converting annotation formats from the command line
+     * c: Convert formats command
+     * p: Project directory or project file (extension .knowtator)
+     * a: Annotations directory (if not in project directory)
+     * t: Articles directory (if not in project directory)
+     * o: Ontologies directory (if not in project directory)
+     * r: Profiles directory (if not in project directory)
+     * --
+     * Parameters to specify output locations
+     * uima: Directory to output UIMA XML formatted annotations
+     * brat: Directory to output Brat Standoff formatted annotations
+     * knowtator: Directory to output Knowtator project
+     * --
+     * f: Count fragments
+     * Parameters for doing calculations on fragments
+     * fragments: Directory containing fragments
+     * @param args A list of arguments
+     */
     public static void main(String[] args) {
         Options options = new Options();
         options.addOption("g", "gui", false, "Start GUI");
-        options.addOption("d", "debug", false, "Debug");
+        options.addOption("d", "debug", false, "Start debug GUI");
         options.addOption("c", "convert", false, "Convert formats");
         options.addOption("f", "fragment", false, "Count fragments");
 
-        options.addOption(
-                "p",
-                "project",
-                true,
-                "Either a project file with extension "
+        options.addOption("p", "project", true, "Either a project file with extension "
                         + "\".knowtator\" that indicates a directory containing a Knowtator project or the directory itself.");
         options.addOption("a", "annotations", true, "A directory containing annotations to be loaded");
         options.addOption("t", "articles", true, "A directory containing text articles to be loaded");
         options.addOption("o", "ontologies", true, "A directory containing ontologies to load");
         options.addOption("r", "profiles", true, "A directory containing profiles to load");
 
-        options.addOption(null, "genia", true, "Directory to output GENIA format");
         options.addOption(null, "uima", true, "Directory to output UIMA XMI format");
         options.addOption(null, "brat", true, "Directory to output Brat format");
         options.addOption(null, "knowtator", true, "Directory to output Knowtator project format");
-        options.addOption(null, "fragments", true, "Directory containing framgments");
+        options.addOption(null, "fragments", true, "Directory containing fragments");
 
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -130,6 +170,9 @@ class KnowtatorStandalone extends JFrame {
         }
     }
 
+    /**
+     * Starts a debug GUI
+     */
     private static void debug() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -146,6 +189,10 @@ class KnowtatorStandalone extends JFrame {
         //        System.exit(0);
     }
 
+    /**
+     * Counts fragments
+     * @param cmd A command line object
+     */
     private static void fragmentCount(CommandLine cmd) {
         KnowtatorController conceptsController = new KnowtatorController();
         KnowtatorController fragmentsController = new KnowtatorController();
@@ -195,6 +242,11 @@ class KnowtatorStandalone extends JFrame {
 
     }
 
+    /**
+     * Handles output of fragments
+     * @param outputFileName Name of the file to output to
+     * @param fragmentList List of fragments
+     */
     private static void writeFragments(String outputFileName, List<Fragment> fragmentList) {
         File outputFile = new File(outputFileName);
 
@@ -222,6 +274,13 @@ class KnowtatorStandalone extends JFrame {
         }
     }
 
+    /**
+     * Loads a Knowtator project
+     * @param cmd A command line object
+     * @param projectManager A project manager implementation. Usually a KnowtatorController
+     * @param projectFileName Location of the project
+     * @param annotationsDirName Name of the directory containing annotation files
+     */
     private static void loadProjectFromCommandLine(
             CommandLine cmd,
             ProjectManager projectManager,
@@ -250,26 +309,25 @@ class KnowtatorStandalone extends JFrame {
         }
     }
 
+    /**
+     * Converts between specified formats from the command line
+     * @param cmd A command line object
+     */
     private static void commandLineConversion(CommandLine cmd) {
         KnowtatorController controller = new KnowtatorController();
 
         String projectFileName = cmd.getOptionValue("project");
 
-//        String geniaOutputDirName = cmd.getOptionValue("genia");
 //        String uimaOutputDirName = cmd.getOptionValue("uima");
         String bratOutputDirName = cmd.getOptionValue("brat");
-//        String knowtatorOutputDirName = cmd.getOptionValue("knowtator");
+        String knowtatorOutputDirName = cmd.getOptionValue("knowtator");
 
         loadProjectFromCommandLine(
                 cmd, controller, projectFileName, cmd.getOptionValue("annotations"));
 
-//        if (knowtatorOutputDirName != null) {
-//            controller.saveProject();
-//        }
-
-//        if (geniaOutputDirName != null) {
-//            controller.saveToFormat(GeniaXMLUtil.class, controller.getTextSourceCollection(), new File(geniaOutputDirName));
-//        }
+        if (knowtatorOutputDirName != null) {
+            controller.save();
+        }
 
 //        if (uimaOutputDirName != null) {
 //            projectManager.saveToFormat(UIMAXMIUtil.class, new File(uimaOutputDirName));
@@ -280,6 +338,9 @@ class KnowtatorStandalone extends JFrame {
         }
     }
 
+    /**
+     * Start a Swing application GUI
+     */
     private static void createGUI() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -293,7 +354,6 @@ class KnowtatorStandalone extends JFrame {
         KnowtatorStandalone dialog = new KnowtatorStandalone(false);
         dialog.pack();
         dialog.setVisible(true);
-        //        System.exit(0);
     }
 
 }
