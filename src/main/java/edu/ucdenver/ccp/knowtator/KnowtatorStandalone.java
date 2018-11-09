@@ -277,13 +277,13 @@ class KnowtatorStandalone extends JFrame {
     /**
      * Loads a Knowtator project
      * @param cmd A command line object
-     * @param projectManager A project manager implementation. Usually a KnowtatorController
+     * @param controller A controller to load the project into
      * @param projectFileName Location of the project
      * @param annotationsDirName Name of the directory containing annotation files
      */
     private static void loadProjectFromCommandLine(
             CommandLine cmd,
-            ProjectManager projectManager,
+            KnowtatorController controller,
             String projectFileName,
             String annotationsDirName) {
         if (projectFileName == null) {
@@ -292,7 +292,7 @@ class KnowtatorStandalone extends JFrame {
             String knowtatorOutputDirName = cmd.getOptionValue("knowtator");
             String profilesDirName = cmd.getOptionValue("profiles");
 
-            projectManager.importProject(
+            controller.importProject(
                     profilesDirName == null ? null : new File(profilesDirName),
                     ontologiesDirName == null ? null : new File(ontologiesDirName),
                     articlesDirName == null ? null : new File(articlesDirName),
@@ -301,8 +301,8 @@ class KnowtatorStandalone extends JFrame {
 
         } else {
             try {
-                projectManager.setSaveLocation(new File(projectFileName));
-                projectManager.loadProject();
+                controller.setSaveLocation(new File(projectFileName));
+                controller.loadProject();
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -86,10 +86,10 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
         return models.stream().filter(model -> model instanceof BaseKnowtatorManager).map(model -> (BaseKnowtatorManager) model).collect(Collectors.toList());
     }
 
-    @Override
     void importProject(File profilesLocation, File ontologiesLocation, File articlesLocation, File annotationsLocation, File projectLocation) {
-        makeProjectStructure(projectLocation);
         try {
+            setSaveLocation(projectLocation);
+            makeProjectStructure();
             importToManager(profilesLocation, profileCollection, ".xml");
             importToManager(ontologiesLocation, owlModel, ".obo");
             importToManager(articlesLocation, textSourceCollection, ".txt");
@@ -167,10 +167,20 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
     }
 
     @Override
-    public <I extends BasicIO> void saveToFormat(Class<? extends BasicIOUtil<I>> ioClass, I basicIO, File file) {
+    public <I extends BasicIO> void saveToFormat(Class<? extends BasicIOUtil<I>> ioUtilClass, I basicIO, File file) {
         if (isNotLoading()){
             owlModel.save();
         }
-        super.saveToFormat(ioClass, basicIO, file);
+        super.saveToFormat(ioUtilClass, basicIO, file);
+    }
+
+    @Override
+    public void save() {
+
+    }
+
+    @Override
+    public void load() {
+
     }
 }

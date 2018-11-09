@@ -41,6 +41,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+
+/**
+ * This class defines the methods for loading and saving the project
+ */
 public abstract class ProjectManager extends DebugManager implements Savable {
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(ProjectManager.class);
@@ -53,43 +57,76 @@ public abstract class ProjectManager extends DebugManager implements Savable {
 
     private boolean isLoading;
 
+    /**
+     * Constructor for project manager
+     */
     ProjectManager() {
         super();
         isLoading = false;
     }
 
+    /**
+     * Loads the project from the location defined by project location
+     */
     public void loadProject() {
+        if (projectLocation.exists()) {
+            makeProjectStructure();
 
-        makeProjectStructure(projectLocation);
-
-        isLoading = true;
-        getManagers().forEach(BaseKnowtatorManager::load);
-        isLoading = false;
-        getManagers().forEach(BaseKnowtatorManager::finishLoad);
-
-//        saveProject();
+            isLoading = true;
+            getManagers().forEach(BaseKnowtatorManager::load);
+            isLoading = false;
+            getManagers().forEach(BaseKnowtatorManager::finishLoad);
+        }
     }
 
+    /**
+     * @return Project location
+     */
     @Override
     public File getSaveLocation() {
         return projectLocation;
     }
 
+    /**
+     * Sets the project location. If it does not exist, it is created. If the save location is a file and not a
+     * directory, the parent of the file is set as the save location
+     * @param saveLocation Set the project location
+     * @throws IOException Thrown if project location could not be made
+     */
     @Override
     public void setSaveLocation(File saveLocation) throws IOException {
-        if (!saveLocation.isDirectory()) {
+        if (saveLocation.isFile() && saveLocation.getName().endsWith(".knowtator")) {
             saveLocation = new File(saveLocation.getParent());
         }
-        this.projectLocation = saveLocation;
-        Files.createDirectories(projectLocation.toPath());
+        if (saveLocation.exists() && saveLocation.isDirectory() && Files.list(saveLocation.toPath()).anyMatch(path -> path.toString().endsWith(".knowtator"))) {
+            this.projectLocation = saveLocation;
+            Files.createDirectories(projectLocation.toPath());
+        }
     }
 
+    /**
+     * Creates and loads a new project
+     * @param projectDirectory Directory of the project
+     */
     public void newProject(File projectDirectory) {
-        makeProjectStructure(projectDirectory);
-        loadProject();
+        try {
+            setSaveLocation(projectDirectory);
+            makeProjectStructure();
+            loadProject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    void importToManager(File directory, Savable manager, String extension) throws IOException {
+
+    /**
+     * Used to load the managers of a project with directories that are not all directly under the project directory
+     * @param directory The directory containing files to be loaded
+     * @param manager The manager to be loaded to
+     * @param extension The extension of the files to be loaded. For example, the profile manager should load profiles from files ending with .xml
+     * @throws IOException Thrown if the directory does not exist
+     */
+    void importToManager(File directory, BaseKnowtatorManager manager, String extension) throws IOException {
         if (directory != null && directory.exists()) {
             Files.newDirectoryStream(
                     Paths.get(directory.toURI()), path -> path.toString().endsWith(extension))
@@ -105,32 +142,34 @@ public abstract class ProjectManager extends DebugManager implements Savable {
         }
     }
 
-    abstract void importProject(
-            File profilesLocation,
-            File ontologiesLocation,
-            File articlesLocation,
-            File annotationsLocation,
-            File projectLocation);
-
-    void makeProjectStructure(File projectDirectory) {
+    /**
+     * Makes the default project structure based on the managers in the implementation.
+     */
+    void makeProjectStructure() {
         try {
-            setSaveLocation(projectDirectory);
-
             for (BaseKnowtatorManager knowtatorManager : getManagers()) {
-                knowtatorManager.setSaveLocation(projectDirectory);
+                knowtatorManager.setSaveLocation(projectLocation);
             }
 
 
-            if (FileUtils.listFiles(projectDirectory, new String[]{"knowtator"}, false).size() == 0)
+            if (FileUtils.listFiles(projectLocation, new String[]{"knowtator"}, false).size() == 0)
                 Files.createFile(
-                        new File(projectDirectory, projectDirectory.getName() + ".knowtator").toPath());
+                        new File(projectLocation, projectLocation.getName() + ".knowtator").toPath());
         } catch (IOException e) {
             System.err.println("Cannot create directories - " + e);
         }
     }
 
+    /**
+     * @return A list of the implementations managers
+     */
     abstract List<BaseKnowtatorManager> getManagers();
 
+    /**
+     * Takes a class capable of IO and a file, and loads it with the appropriate IOUtil for that extension
+     * @param basicIO A class capable of IO
+     * @param file The file to load
+     */
     public void loadWithAppropriateFormat(BasicIO basicIO, File file) {
         String[] splitOnDots = file.getName().split("\\.");
         String extension = splitOnDots[splitOnDots.length - 1];
@@ -148,10 +187,17 @@ public abstract class ProjectManager extends DebugManager implements Savable {
         }
     }
 
-    <I extends BasicIO> void saveToFormat(Class<? extends BasicIOUtil<I>> ioClass, I basicIO, File file) {
+    /**
+     * Uses an IOUtil to save an IO class to the specified file. The IOUtil specifies the output format.
+     * @param ioUtilClass The IOUtil to use to save the IO class. This specifies the output format
+     * @param basicIO The IO class to save
+     * @param file The file to save to
+     * @param <I> The IO class
+     */
+    <I extends BasicIO> void saveToFormat(Class<? extends BasicIOUtil<I>> ioUtilClass, I basicIO, File file) {
         try {
 
-            BasicIOUtil<I> util = ioClass.getDeclaredConstructor().newInstance();
+            BasicIOUtil<I> util = ioUtilClass.getDeclaredConstructor().newInstance();
             util.write(basicIO, file);
         } catch (InstantiationException
                 | IllegalAccessException
@@ -161,6 +207,13 @@ public abstract class ProjectManager extends DebugManager implements Savable {
         }
     }
 
+    /**
+     * Loads data into the IO class using the IOUtil. The IOUtil specifies the input format.
+     * @param ioClass The IOUtil to use to load the IO class. This specifies the input format
+     * @param basicIO The IO class to load
+     * @param file The file to load from
+     * @param <I> the IO class
+     */
     private <I extends BasicIO> void loadFromFormat(Class<? extends BasicIOUtil<I>> ioClass, I basicIO, File file) {
         try {
             BasicIOUtil<I> util = ioClass.getDeclaredConstructor().newInstance();
@@ -173,16 +226,9 @@ public abstract class ProjectManager extends DebugManager implements Savable {
         }
     }
 
-    @Override
-    public void save() {
-
-    }
-
-    @Override
-    public void load() {
-
-    }
-
+    /**
+     * @return The project location
+     */
     public File getProjectLocation() {
         return projectLocation;
     }
