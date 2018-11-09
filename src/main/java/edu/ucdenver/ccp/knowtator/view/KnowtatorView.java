@@ -35,8 +35,8 @@ import edu.ucdenver.ccp.knowtator.actions.OWLActions;
 import edu.ucdenver.ccp.knowtator.actions.SpanActions;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.FilterModel;
-import edu.ucdenver.ccp.knowtator.model.collection.*;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.view.annotation.*;
@@ -115,8 +115,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private Map<JButton, ActionListener> spanSizeButtons;
 	private Map<JButton, ActionListener> selectionSizeButtons;
 
-	private KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
-	private KnowtatorCollectionListener<Span> spanCollectionListener;
 	private List<KnowtatorComponent> knowtatorComponents;
 
 
@@ -427,85 +425,47 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	 * Sets up listeners to detect changes when text sources or concept annotations or spans change
 	 */
 	private void setupListeners() {
-		KnowtatorCollectionListener<TextSource> textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
-
+		new TextBoundModelListener(controller) {
 			@Override
-			public void selected(SelectionChangeEvent<TextSource> event) {
-				if (event.getOld() != null) {
-					event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
-				}
-				if (event.getNew() != null) {
-					event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
-				}
-			}
-
-			@Override
-			public void added(AddEvent<TextSource> event) {
-			}
-
-			@Override
-			public void removed(RemoveEvent<TextSource> event) {
-			}
-
-			@Override
-			public void changed(ChangeEvent<TextSource> event) {
-			}
-
-			@Override
-			public void emptied() {
+			public void respondToTextSourceCollectionEmptiedEvent() {
+				super.respondToTextSourceCollectionEmptiedEvent();
 				disableTextSourceButtons();
 				addTextSourceButton.setEnabled(true);
 			}
 
 			@Override
-			public void firstAdded() {
+			public void respondToTextSourceCollectionFirstAddedEvent() {
+				super.respondToTextSourceCollectionFirstAddedEvent();
 				enableTextSourceButtons();
 				addAnnotationButton.setEnabled(true);
 			}
-		};
-		conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
 
 			@Override
-			public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
-				if (event.getOld() != null) {
-					event.getOld().getSpanCollection().removeCollectionListener(spanCollectionListener);
-				}
+			public void respondToConceptAnnotationSelectionEvent(SelectionChangeEvent<ConceptAnnotation> event) {
+				super.respondToConceptAnnotationSelectionEvent(event);
 				if (event.getNew() == null) {
 					removeAnnotationButton.setEnabled(false);
 				} else {
-					event.getNew().getSpanCollection().addCollectionListener(spanCollectionListener);
 					enableAnnotationButtons();
 				}
 			}
 
 			@Override
-			public void added(AddEvent<ConceptAnnotation> event) {
-			}
-
-			@Override
-			public void removed(RemoveEvent<ConceptAnnotation> event) {
-			}
-
-			@Override
-			public void changed(ChangeEvent<ConceptAnnotation> event) {
-			}
-
-			@Override
-			public void emptied() {
+			public void respondToConceptAnnotationCollectionEmptiedEvent() {
+				super.respondToConceptAnnotationCollectionEmptiedEvent();
 				disableAnnotationButtons();
 				addAnnotationButton.setEnabled(true);
 			}
 
 			@Override
-			public void firstAdded() {
+			public void respondToConceptAnnotationCollectionFirstAddedEvent() {
+				super.respondToConceptAnnotationCollectionFirstAddedEvent();
 				enableAnnotationButtons();
 			}
-		};
-
-		spanCollectionListener = new KnowtatorCollectionListener<Span>() {
 
 			@Override
-			public void selected(SelectionChangeEvent<Span> event) {
+			public void respondToSpanSelectionEvent(SelectionChangeEvent<Span> event) {
+				super.respondToSpanSelectionEvent(event);
 				if (event.getNew() == null) {
 					disableSpanButtons();
 				} else {
@@ -514,29 +474,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 			}
 
 			@Override
-			public void added(AddEvent<Span> event) {
-			}
-
-			@Override
-			public void removed(RemoveEvent<Span> event) {
-			}
-
-			@Override
-			public void changed(ChangeEvent<Span> event) {
-			}
-
-			@Override
-			public void emptied() {
+			public void respondToSpanCollectionEmptiedEvent() {
+				super.respondToSpanCollectionEmptiedEvent();
 				disableSpanButtons();
 			}
 
 			@Override
-			public void firstAdded() {
+			public void respondToSpanCollectionFirstAddedEvent() {
+				super.respondToSpanCollectionFirstAddedEvent();
 				enableSpanButtons();
 			}
 		};
-
-		controller.getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
 	}
 
 	@Override
