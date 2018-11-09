@@ -24,6 +24,13 @@
 
 package edu.ucdenver.ccp.knowtator;
 
+/**
+ * The interface for all knowtator objects. Implementers need to implement the dispose method which should
+ * clear data and listeners.
+ */
 public interface KnowtatorObjectInterface {
+    /**
+     * Implementing classes should use this method to clear any data or listeners.
+     */
     void dispose();
 }
