@@ -35,7 +35,10 @@ import edu.ucdenver.ccp.knowtator.actions.OWLActions;
 import edu.ucdenver.ccp.knowtator.actions.SpanActions;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.FilterModel;
-import edu.ucdenver.ccp.knowtator.model.collection.*;
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
@@ -440,7 +443,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 			}
 
 			@Override
-			public void respondToConceptAnnotationSelectionEvent(SelectionChangeEvent<ConceptAnnotation> event) {
+			public void respondToConceptAnnotationSelectionEvent(SelectionEvent<ConceptAnnotation> event) {
 				if (event.getNew() == null) {
 					removeAnnotationButton.setEnabled(false);
 				} else {
@@ -449,7 +452,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 			}
 
 			@Override
-			public void respondToTextSourceSelectionEvent(SelectionChangeEvent<TextSource> event) {
+			public void respondToConceptAnnotationCollectionEmptiedEvent() {
+				disableAnnotationButtons();
+				addAnnotationButton.setEnabled(true);
+			}
+
+			@Override
+			public void respondToTextSourceSelectionEvent(SelectionEvent<TextSource> event) {
 
 			}
 
@@ -464,7 +473,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 			}
 
 			@Override
-			public void respondToTextSourceChangedEvent(ChangeEvent<TextSource> event) {
+			public void respondToConceptAnnotationModification() {
+
+			}
+
+			@Override
+			public void respondToSpanModification() {
+
+			}
+
+			@Override
+			public void respondToGraphSpaceModification() {
 
 			}
 
@@ -478,10 +497,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 			}
 
-			@Override
-			public void respondToGraphSpaceChangedEvent(ChangeEvent<GraphSpace> event) {
-
-			}
 
 			@Override
 			public void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event) {
@@ -494,18 +509,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 			}
 
 			@Override
-			public void respondToGraphSpaceSelectionEvent(SelectionChangeEvent<GraphSpace> event) {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationCollectionEmptiedEvent() {
-				disableAnnotationButtons();
-				addAnnotationButton.setEnabled(true);
-			}
-
-			@Override
-			public void respondToConceptAnnotationChangedEvent(ChangeEvent<ConceptAnnotation> event) {
+			public void respondToGraphSpaceSelectionEvent(SelectionEvent<GraphSpace> event) {
 
 			}
 
@@ -525,7 +529,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 			}
 
 			@Override
-			public void respondToSpanSelectionEvent(SelectionChangeEvent<Span> event) {
+			public void respondToSpanSelectionEvent(SelectionEvent<Span> event) {
 				if (event.getNew() == null) {
 					disableSpanButtons();
 				} else {
@@ -536,11 +540,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 			@Override
 			public void respondToSpanCollectionEmptiedEvent() {
 				disableSpanButtons();
-			}
-
-			@Override
-			public void respondToSpanChangedEvent(ChangeEvent<Span> event) {
-
 			}
 
 			@Override

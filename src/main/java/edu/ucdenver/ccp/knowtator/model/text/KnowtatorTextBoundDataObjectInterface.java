@@ -26,7 +26,15 @@ package edu.ucdenver.ccp.knowtator.model.text;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 
+import java.util.List;
+
 public interface KnowtatorTextBoundDataObjectInterface<K extends KnowtatorDataObjectInterface> extends KnowtatorDataObjectInterface<K> {
 
 	 TextSource getTextSource();
+
+	void addDataObjectModificationListener(DataObjectModificationListener listener);
+
+	void modify(List<Integer> parameters);
+
+	void removeDataObjectModificationListener(DataObjectModificationListener listener);
 }

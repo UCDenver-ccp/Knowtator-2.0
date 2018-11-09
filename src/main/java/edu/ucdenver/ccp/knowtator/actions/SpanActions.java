@@ -32,6 +32,7 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorTextPane;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.undo.UndoableEdit;
+import java.util.Arrays;
 
 public class SpanActions {
     public final static String GROW = "grow";
@@ -66,7 +67,7 @@ public class SpanActions {
         public void execute() {
             int spanStart = span.getStart();
             int spanEnd = span.getEnd();
-            span.modify(startModification, endModification, textSource.getContent().length());
+            span.modify(Arrays.asList(startModification, endModification, textSource.getContent().length()));
             spanStartChnged = spanStart != span.getStart();
             spanEndChanged = spanEnd != span.getEnd();
         }
@@ -84,12 +85,12 @@ public class SpanActions {
                         case GROW:
                             startModification = spanStartChnged ? getStartModification(startOrEnd, SHRINK) : 0;
                             endModification = spanEndChanged ? getEndModification(startOrEnd, SHRINK) : 0;
-                            span.modify(startModification, endModification, textSource.getContent().length());
+                            span.modify(Arrays.asList(startModification, endModification, textSource.getContent().length()));
                             break;
                         case SHRINK:
                             startModification = spanStartChnged ? getStartModification(startOrEnd, GROW) : 0;
                             endModification = spanEndChanged ? getEndModification(startOrEnd, GROW) : 0;
-                            span.modify(startModification, endModification, textSource.getContent().length());
+                            span.modify(Arrays.asList(startModification, endModification, textSource.getContent().length()));
                             break;
                     }
                 }

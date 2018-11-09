@@ -24,103 +24,149 @@
 
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.model.collection.*;
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 
 import javax.swing.*;
 
 public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponent {
 
-    private final KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
-    private final KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
     protected KnowtatorView view;
 
     protected KnowtatorLabel(KnowtatorView view) {
         this.view = view;
-        conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
+
+        new TextBoundModelListener(view.getController()) {
             @Override
-            public void added(AddEvent<ConceptAnnotation> event) {
+            public void respondToConceptAnnotationModification() {
+                react();
+            }
+
+            @Override
+            public void respondToSpanModification() {
 
             }
 
             @Override
-            public void removed(RemoveEvent<ConceptAnnotation> event) {
+            public void respondToGraphSpaceModification() {
 
             }
 
             @Override
-            public void changed(ChangeEvent<ConceptAnnotation> event) {
-                reactToConceptAnnotationChange();
-            }
-
-            @Override
-            public void emptied() {
+            public void respondToGraphSpaceCollectionFirstAddedEvent() {
 
             }
 
             @Override
-            public void firstAdded() {
+            public void respondToGraphSpaceCollectionEmptiedEvent() {
 
             }
 
+            @Override
+            public void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event) {
+
+            }
 
             @Override
-            public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
-                reactToConceptAnnotationSelectionChange(event);
+            public void respondToGraphSpaceAddedEvent(AddEvent<GraphSpace> event) {
+
+            }
+
+            @Override
+            public void respondToGraphSpaceSelectionEvent(SelectionEvent<GraphSpace> event) {
+
+            }
+
+            @Override
+            public void respondToConceptAnnotationCollectionEmptiedEvent() {
+                react();
+            }
+
+            @Override
+            public void respondToConceptAnnotationRemovedEvent(RemoveEvent<ConceptAnnotation> event) {
+                react();
+            }
+
+            @Override
+            public void respondToConceptAnnotationAddedEvent(AddEvent<ConceptAnnotation> event) {
+                react();
+            }
+
+            @Override
+            public void respondToConceptAnnotationCollectionFirstAddedEvent() {
+                react();
+            }
+
+            @Override
+            public void respondToSpanCollectionFirstAddedEvent() {
+
+            }
+
+            @Override
+            public void respondToSpanCollectionEmptiedEvent() {
+
+            }
+
+            @Override
+            public void respondToSpanRemovedEvent(RemoveEvent<Span> event) {
+
+            }
+
+            @Override
+            public void respondToSpanAddedEvent(AddEvent<Span> event) {
+
+            }
+
+            @Override
+            public void respondToSpanSelectionEvent(SelectionEvent<Span> event) {
+
+            }
+
+            @Override
+            public void respondToConceptAnnotationSelectionEvent(SelectionEvent<ConceptAnnotation> event) {
+                react();
+            }
+
+            @Override
+            public void respondToTextSourceSelectionEvent(SelectionEvent<TextSource> event) {
+
+            }
+
+            @Override
+            public void respondToTextSourceAddedEvent(AddEvent<TextSource> event) {
+
+            }
+
+            @Override
+            public void respondToTextSourceRemovedEvent(RemoveEvent<TextSource> event) {
+
+            }
+
+            @Override
+            public void respondToTextSourceCollectionEmptiedEvent() {
+
+            }
+
+            @Override
+            public void respondToTextSourceCollectionFirstAddedEvent() {
 
             }
         };
-        textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
-            @Override
-            public void added(AddEvent<TextSource> event) {
-
-            }
-
-            @Override
-            public void removed(RemoveEvent<TextSource> event) {
-
-            }
-
-            @Override
-            public void changed(ChangeEvent<TextSource> event) {
-            }
-
-            @Override
-            public void emptied() {
-
-            }
-
-            @Override
-            public void firstAdded() {
-
-            }
-
-            @Override
-            public void selected(SelectionChangeEvent<TextSource> event) {
-                reactToTextSourceChange(event);
-            }
-        };
-
-        view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
     }
 
-    private void reactToTextSourceChange(SelectionChangeEvent<TextSource> event) {
-        if (event.getOld() != null) {
-            event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
-        }
-        event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
-    }
-
-    protected abstract void reactToConceptAnnotationSelectionChange(SelectionChangeEvent<ConceptAnnotation> event);
-    protected abstract void reactToConceptAnnotationChange();
-
+    protected abstract void react();
 
     @Override
     public void reset() {
-        view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
+
     }
 
+    @Override
     public void dispose() {
 
     }

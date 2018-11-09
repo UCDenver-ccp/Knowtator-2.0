@@ -33,6 +33,7 @@ import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
 
@@ -56,9 +57,6 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
     private static Logger log = Logger.getLogger(KnowtatorTextPane.class);
 
     private final KnowtatorView view;
-    private KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
-    private KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
-    private KnowtatorCollectionListener<Span> spanCollectionListener;
 
     KnowtatorTextPane(KnowtatorView view) {
         super();
@@ -124,6 +122,7 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
         view.getController().getProfileCollection().addCollectionListener(this);
         view.getController().getFilterModel().addFilterModelListener(this);
 
+
         MouseListener mouseListener = new MouseListener() {
             int press_offset;
 
@@ -150,118 +149,124 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
             }
         };
 
-        textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
+        new TextBoundModelListener(view.getController()) {
             @Override
-            public void added(AddEvent<TextSource> event) {
+            public void respondToConceptAnnotationModification() {
+                refreshHighlights();
+            }
+
+            @Override
+            public void respondToSpanModification() {
+                refreshHighlights();
+            }
+
+            @Override
+            public void respondToGraphSpaceModification() {
 
             }
 
             @Override
-            public void removed(RemoveEvent<TextSource> event) {
+            public void respondToGraphSpaceCollectionFirstAddedEvent() {
 
             }
 
             @Override
-            public void changed(ChangeEvent<TextSource> event) {
+            public void respondToGraphSpaceCollectionEmptiedEvent() {
 
             }
 
             @Override
-            public void emptied() {
+            public void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event) {
+
+            }
+
+            @Override
+            public void respondToGraphSpaceAddedEvent(AddEvent<GraphSpace> event) {
+
+            }
+
+            @Override
+            public void respondToGraphSpaceSelectionEvent(SelectionEvent<GraphSpace> event) {
+
+            }
+
+            @Override
+            public void respondToConceptAnnotationCollectionEmptiedEvent() {
+
+            }
+
+            @Override
+            public void respondToConceptAnnotationRemovedEvent(RemoveEvent<ConceptAnnotation> event) {
+
+            }
+
+            @Override
+            public void respondToConceptAnnotationAddedEvent(AddEvent<ConceptAnnotation> event) {
+
+            }
+
+            @Override
+            public void respondToConceptAnnotationCollectionFirstAddedEvent() {
+
+            }
+
+            @Override
+            public void respondToSpanCollectionFirstAddedEvent() {
+                refreshHighlights();
+            }
+
+            @Override
+            public void respondToSpanCollectionEmptiedEvent() {
+                refreshHighlights();
+            }
+
+            @Override
+            public void respondToSpanRemovedEvent(RemoveEvent<Span> event) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void respondToSpanAddedEvent(AddEvent<Span> event) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void respondToSpanSelectionEvent(SelectionEvent<Span> event) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void respondToConceptAnnotationSelectionEvent(SelectionEvent<ConceptAnnotation> event) {
+                refreshHighlights();
+            }
+
+            @Override
+            public void respondToTextSourceSelectionEvent(SelectionEvent<TextSource> event) {
+                showTextPane();
+            }
+
+            @Override
+            public void respondToTextSourceAddedEvent(AddEvent<TextSource> event) {
+
+            }
+
+            @Override
+            public void respondToTextSourceRemovedEvent(RemoveEvent<TextSource> event) {
+
+            }
+
+            @Override
+            public void respondToTextSourceCollectionEmptiedEvent() {
                 setEnabled(false);
                 removeMouseListener(mouseListener);
             }
 
             @Override
-            public void firstAdded() {
+            public void respondToTextSourceCollectionFirstAddedEvent() {
                 setEnabled(true);
                 addMouseListener(mouseListener);
             }
-
-            @Override
-            public void selected(SelectionChangeEvent<TextSource> event) {
-                if (event.getOld() != null) {
-                    event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
-                }
-                event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
-
-                showTextPane();
-            }
         };
-        conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
-            @Override
-            public void added(AddEvent<ConceptAnnotation> event) {
-
-            }
-
-            @Override
-            public void removed(RemoveEvent<ConceptAnnotation> event) {
-
-            }
-
-            @Override
-            public void changed(ChangeEvent<ConceptAnnotation> event) {
-                refreshHighlights();
-            }
-
-            @Override
-            public void emptied() {
-
-            }
-
-            @Override
-            public void firstAdded() {
-
-            }
-
-            @Override
-            public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
-                if (event.getOld() != null) {
-                    event.getOld().getSpanCollection().removeCollectionListener(spanCollectionListener);
-                }
-                if (event.getNew() != null) {
-                    event.getNew().getSpanCollection().addCollectionListener(spanCollectionListener);
-                }
-                refreshHighlights();
-            }
-        };
-
-        spanCollectionListener = new KnowtatorCollectionListener<Span>() {
-            @Override
-            public void added(AddEvent<Span> event) {
-                refreshHighlights();
-            }
-
-            @Override
-            public void removed(RemoveEvent<Span> event) {
-                refreshHighlights();
-            }
-
-            @Override
-            public void changed(ChangeEvent<Span> event) {
-                refreshHighlights();
-            }
-
-            @Override
-            public void emptied() {
-                refreshHighlights();
-            }
-
-            @Override
-            public void firstAdded() {
-                refreshHighlights();
-            }
-
-            @Override
-            public void selected(SelectionChangeEvent<Span> event) {
-                refreshHighlights();
-            }
-
-        };
-
-        view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
-
-
     }
 
     private void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
@@ -465,7 +470,6 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
 
     @Override
     public void reset() {
-        view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
         view.getController().getProfileCollection().addColorListener(this);
         view.getController().getProfileCollection().addCollectionListener(this);
         view.getController().getFilterModel().addFilterModelListener(this);
@@ -487,7 +491,7 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
     }
 
     @Override
-    public void selected(SelectionChangeEvent<Profile> event) {
+    public void selected(SelectionEvent<Profile> event) {
         refreshHighlights();
     }
 
@@ -497,11 +501,6 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
 
     @Override
     public void removed(RemoveEvent<Profile> event) {
-    }
-
-    @Override
-    public void changed(ChangeEvent<Profile> event) {
-
     }
 
     @Override

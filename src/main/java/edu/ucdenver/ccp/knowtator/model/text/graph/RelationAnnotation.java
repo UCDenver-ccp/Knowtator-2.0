@@ -32,6 +32,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.OWLModel;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import edu.ucdenver.ccp.knowtator.model.text.DataObjectModificationListener;
 import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.apache.log4j.Logger;
@@ -119,6 +120,21 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
     @Override
     public TextSource getTextSource() {
         return textSource;
+    }
+
+    @Override
+    public void addDataObjectModificationListener(DataObjectModificationListener listener) {
+
+    }
+
+    @Override
+    public void removeDataObjectModificationListener(DataObjectModificationListener listener) {
+
+    }
+
+    @Override
+    public void modify(List parameters) {
+
     }
 
     /*

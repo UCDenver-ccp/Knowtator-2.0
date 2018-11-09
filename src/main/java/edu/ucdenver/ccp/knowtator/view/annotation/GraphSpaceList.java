@@ -24,8 +24,8 @@
 
 package edu.ucdenver.ccp.knowtator.view.annotation;
 
-import edu.ucdenver.ccp.knowtator.model.collection.*;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.collection.ListenableCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollection;
@@ -35,46 +35,22 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.util.stream.Collector;
 
 public class GraphSpaceList extends KnowtatorList<GraphSpace> {
-    private final KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
-
-
     public GraphSpaceList(KnowtatorView view) {
         super(view);
 
-        conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
-            @Override
-            public void added(AddEvent<ConceptAnnotation> event) {
-
-            }
-
-            @Override
-            public void removed(RemoveEvent<ConceptAnnotation> event) {
-
-            }
-
-            @Override
-            public void changed(ChangeEvent<ConceptAnnotation> event) {
-
-            }
-
-            @Override
-            public void emptied() {
-
-            }
-
-            @Override
-            public void firstAdded() {
-
-            }
-
-            @Override
-            public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
-                reactToAnnotationChange(event.getNew());
-            }
-        };
     }
 
-    private void setCollection(ConceptAnnotation conceptAnnotation) {
+    @Override
+    protected void react() {
+        try {
+            setCollection(view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection());
+            setSelected();
+        } catch (NoSelectionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setCollection(ConceptAnnotation conceptAnnotation) throws NoSelectionException {
         if (conceptAnnotation == null) {
             dispose();
         } else {
@@ -83,66 +59,9 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
                             () -> new GraphSpaceCollection(conceptAnnotation.getController(), conceptAnnotation.getTextSource()),
                             ListenableCollection::add,
                             (graphSpace1, graphSpace2) -> graphSpace1)));
+
+            setSelected();
         }
 
-    }
-
-    @Override
-    public void selected(SelectionChangeEvent<GraphSpace> event) {
-    }
-
-    @Override
-    public void added(AddEvent<GraphSpace> event) {
-        try {
-            setCollection(event.getAdded().getTextSource().getConceptAnnotationCollection().getSelection());
-        } catch (NoSelectionException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void removed(RemoveEvent<GraphSpace> event) {
-        try {
-            setCollection(event.getRemoved().getTextSource().getConceptAnnotationCollection().getSelection());
-        } catch (NoSelectionException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void emptied() {
-        setEnabled(false);
-    }
-
-    @Override
-    public void firstAdded() {
-        setEnabled(true);
-    }
-
-    @Override
-    public void changed(ChangeEvent<GraphSpace> event) {
-        try {
-            reactToAnnotationChange(event.getNew().getTextSource().getConceptAnnotationCollection().getSelection());
-        } catch (NoSelectionException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void reactToTextSourceChange(SelectionChangeEvent<TextSource> event) {
-        if (event.getOld() != null) {
-            event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
-        }
-        event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
-
-        try {
-            setCollection(event.getNew().getConceptAnnotationCollection().getSelection());
-        } catch (NoSelectionException ignored) {
-
-        }
-    }
-
-    private void reactToAnnotationChange(ConceptAnnotation currentSelection) {
-        setCollection(currentSelection);
     }
 }

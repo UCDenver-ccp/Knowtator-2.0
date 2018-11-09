@@ -26,9 +26,14 @@ package edu.ucdenver.ccp.knowtator.model;
 
 import com.google.common.base.Optional;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.collection.*;
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.view.TextBoundModelListener;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.protege.editor.core.ui.util.AugmentedJTextField;
@@ -53,12 +58,10 @@ import java.util.stream.Collectors;
 public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListener {
     @SuppressWarnings("unused")
     private static final Logger log = LogManager.getLogger(OWLModel.class);
-    private final KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
 
     private OWLWorkspace owlWorkSpace;
     private File ontologiesLocation;
     private List<IRI> iris;
-    private final KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
     private final KnowtatorController controller;
     private OWLClass testClass;
     @SuppressWarnings({"FieldCanBeLocal", "unused"})
@@ -69,85 +72,126 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
         controller.addDebugListener(this);
         iris = null;
 
-        conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
+        new TextBoundModelListener(controller) {
             @Override
-            public void added(AddEvent<ConceptAnnotation> event) {
+            public void respondToConceptAnnotationModification() {
 
             }
 
             @Override
-            public void removed(RemoveEvent<ConceptAnnotation> event) {
+            public void respondToSpanModification() {
 
             }
 
             @Override
-            public void changed(ChangeEvent<ConceptAnnotation> event) {
+            public void respondToGraphSpaceModification() {
 
             }
 
             @Override
-            public void emptied() {
+            public void respondToGraphSpaceCollectionFirstAddedEvent() {
 
             }
 
             @Override
-            public void firstAdded() {
+            public void respondToGraphSpaceCollectionEmptiedEvent() {
 
             }
 
+            @Override
+            public void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event) {
+
+            }
 
             @Override
-            public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
-                reactToConceptAnnotationSelectionChange(event);
+            public void respondToGraphSpaceAddedEvent(AddEvent<GraphSpace> event) {
+
+            }
+
+            @Override
+            public void respondToGraphSpaceSelectionEvent(SelectionEvent<GraphSpace> event) {
+
+            }
+
+            @Override
+            public void respondToConceptAnnotationCollectionEmptiedEvent() {
+
+            }
+
+            @Override
+            public void respondToConceptAnnotationRemovedEvent(RemoveEvent<ConceptAnnotation> event) {
+
+            }
+
+            @Override
+            public void respondToConceptAnnotationAddedEvent(AddEvent<ConceptAnnotation> event) {
+
+            }
+
+            @Override
+            public void respondToConceptAnnotationCollectionFirstAddedEvent() {
+
+            }
+
+            @Override
+            public void respondToSpanCollectionFirstAddedEvent() {
+
+            }
+
+            @Override
+            public void respondToSpanCollectionEmptiedEvent() {
+
+            }
+
+            @Override
+            public void respondToSpanRemovedEvent(RemoveEvent<Span> event) {
+
+            }
+
+            @Override
+            public void respondToSpanAddedEvent(AddEvent<Span> event) {
+
+            }
+
+            @Override
+            public void respondToSpanSelectionEvent(SelectionEvent<Span> event) {
+
+            }
+
+            @Override
+            public void respondToConceptAnnotationSelectionEvent(SelectionEvent<ConceptAnnotation> event) {
+                if (event.getNew() != null && event.getNew().getOwlClass() != null) {
+                    setSelectedOWLEntity(event.getNew().getOwlClass());
+                }
+            }
+
+            @Override
+            public void respondToTextSourceSelectionEvent(SelectionEvent<TextSource> event) {
+
+            }
+
+            @Override
+            public void respondToTextSourceAddedEvent(AddEvent<TextSource> event) {
+
+            }
+
+            @Override
+            public void respondToTextSourceRemovedEvent(RemoveEvent<TextSource> event) {
+
+            }
+
+            @Override
+            public void respondToTextSourceCollectionEmptiedEvent() {
+
+            }
+
+            @Override
+            public void respondToTextSourceCollectionFirstAddedEvent() {
 
             }
         };
-        textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
-            @Override
-            public void added(AddEvent<TextSource> event) {
-
-            }
-
-            @Override
-            public void removed(RemoveEvent<TextSource> event) {
-
-            }
-
-            @Override
-            public void changed(ChangeEvent<TextSource> event) {
-            }
-
-            @Override
-            public void emptied() {
-
-            }
-
-            @Override
-            public void firstAdded() {
-
-            }
-
-            @Override
-            public void selected(SelectionChangeEvent<TextSource> event) {
-                reactToTextSourceChange(event);
-            }
-        };
-
-        controller.getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
     }
 
-    private void reactToTextSourceChange(SelectionChangeEvent<TextSource> event) {
-        if (event.getOld() != null) {
-            event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
-        }
-        event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
-    }
-
-    private void reactToConceptAnnotationSelectionChange(SelectionChangeEvent<ConceptAnnotation> event){
-        if (event.getNew() != null && event.getNew().getOwlClass() != null) {
-            setSelectedOWLEntity(event.getNew().getOwlClass());
-        }
-    }
 
     public OWLEntity getSelectedOWLEntity() {
         if (controller.isDebug()) {
@@ -422,7 +466,7 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 
     @Override
     public void reset() {
-        controller.getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
+
     }
 
     public Comparator<OWLObject> getOWLObjectComparator() {

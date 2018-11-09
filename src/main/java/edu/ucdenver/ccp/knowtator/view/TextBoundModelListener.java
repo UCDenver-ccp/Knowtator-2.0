@@ -26,7 +26,11 @@ package edu.ucdenver.ccp.knowtator.view;
 
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.collection.*;
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
+import edu.ucdenver.ccp.knowtator.model.text.DataObjectModificationListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
@@ -41,14 +45,30 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 	private final KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
 	private final KnowtatorCollectionListener<Span> spanCollectionListener;
 	private final KnowtatorCollectionListener<GraphSpace> graphSpaceCollectionListener;
+	private final DataObjectModificationListener<GraphSpace> graphSpaceModificationListener;
+	private final DataObjectModificationListener<ConceptAnnotation> conceptAnnotationModificationListener;
+	private final DataObjectModificationListener<Span> spanModificationListener;
 
 
 	protected TextBoundModelListener(KnowtatorController controller) {
 		controller.getTextSourceCollection().addCollectionListener(this);
 
+		graphSpaceModificationListener = this::respondToGraphSpaceModification;
+
+		spanModificationListener = this::respondToSpanModification;
+
+		conceptAnnotationModificationListener = this::respondToConceptAnnotationModification;
+
 		graphSpaceCollectionListener = new KnowtatorCollectionListener<GraphSpace>() {
 			@Override
-			public void selected(SelectionChangeEvent<GraphSpace> event) {
+			public void selected(SelectionEvent<GraphSpace> event) {
+				if (event.getOld() != null) {
+					event.getOld().removeDataObjectModificationListener(graphSpaceModificationListener);
+				}
+				if (event.getNew() != null) {
+					event.getNew().addDataObjectModificationListener(graphSpaceModificationListener);
+				}
+
 				respondToGraphSpaceSelectionEvent(event);
 			}
 
@@ -60,11 +80,6 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 			@Override
 			public void removed(RemoveEvent<GraphSpace> event) {
 				respondToGraphSpaceRemovedEvent(event);
-			}
-
-			@Override
-			public void changed(ChangeEvent<GraphSpace> event) {
-				respondToGraphSpaceChangedEvent(event);
 			}
 
 			@Override
@@ -81,12 +96,14 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 		conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
 
 			@Override
-			public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
+			public void selected(SelectionEvent<ConceptAnnotation> event) {
 				if (event.getOld() != null) {
 					event.getOld().getSpanCollection().removeCollectionListener(spanCollectionListener);
+					event.getOld().removeDataObjectModificationListener(conceptAnnotationModificationListener);
 				}
 				if (event.getNew() != null) {
 					event.getNew().getSpanCollection().addCollectionListener(spanCollectionListener);
+					event.getNew().addDataObjectModificationListener(conceptAnnotationModificationListener);
 				}
 
 				respondToConceptAnnotationSelectionEvent(event);
@@ -100,11 +117,6 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 			@Override
 			public void removed(RemoveEvent<ConceptAnnotation> event) {
 				respondToConceptAnnotationRemovedEvent(event);
-			}
-
-			@Override
-			public void changed(ChangeEvent<ConceptAnnotation> event) {
-				respondToConceptAnnotationChangedEvent(event);
 			}
 
 			@Override
@@ -123,7 +135,14 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 		spanCollectionListener = new KnowtatorCollectionListener<Span>() {
 
 			@Override
-			public void selected(SelectionChangeEvent<Span> event) {
+			public void selected(SelectionEvent<Span> event) {
+				if (event.getOld() != null) {
+					event.getOld().removeDataObjectModificationListener(spanModificationListener);
+				}
+				if (event.getNew() != null) {
+					event.getNew().addDataObjectModificationListener(spanModificationListener);
+				}
+
 				respondToSpanSelectionEvent(event);
 			}
 
@@ -138,11 +157,6 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 			}
 
 			@Override
-			public void changed(ChangeEvent<Span> event) {
-				respondToSpanChangedEvent(event);
-			}
-
-			@Override
 			public void emptied() {
 				respondToSpanCollectionEmptiedEvent();
 			}
@@ -154,21 +168,23 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 		};
 	}
 
+	public abstract void respondToConceptAnnotationModification();
+
+	public abstract void respondToSpanModification();
+
+	public abstract void respondToGraphSpaceModification();
+
 	public abstract void respondToGraphSpaceCollectionFirstAddedEvent();
 
 	public abstract void respondToGraphSpaceCollectionEmptiedEvent();
-
-	public abstract void respondToGraphSpaceChangedEvent(ChangeEvent<GraphSpace> event);
 
 	public abstract void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event);
 
 	public abstract void respondToGraphSpaceAddedEvent(AddEvent<GraphSpace> event);
 
-	public abstract void respondToGraphSpaceSelectionEvent(SelectionChangeEvent<GraphSpace> event);
+	public abstract void respondToGraphSpaceSelectionEvent(SelectionEvent<GraphSpace> event);
 
 	public abstract void respondToConceptAnnotationCollectionEmptiedEvent();
-
-	public abstract void respondToConceptAnnotationChangedEvent(ChangeEvent<ConceptAnnotation> event);
 
 	public abstract void respondToConceptAnnotationRemovedEvent(RemoveEvent<ConceptAnnotation> event);
 
@@ -180,30 +196,26 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 
 	public abstract void respondToSpanCollectionEmptiedEvent();
 
-	public abstract void respondToSpanChangedEvent(ChangeEvent<Span> event);
-
 	public abstract void respondToSpanRemovedEvent(RemoveEvent<Span> event);
 
 	public abstract void respondToSpanAddedEvent(AddEvent<Span> event);
 
-	public abstract void respondToSpanSelectionEvent(SelectionChangeEvent<Span> event);
+	public abstract void respondToSpanSelectionEvent(SelectionEvent<Span> event);
 
-	public abstract void respondToConceptAnnotationSelectionEvent(SelectionChangeEvent<ConceptAnnotation> event);
+	public abstract void respondToConceptAnnotationSelectionEvent(SelectionEvent<ConceptAnnotation> event);
 
-	public abstract void respondToTextSourceSelectionEvent(SelectionChangeEvent<TextSource> event);
+	public abstract void respondToTextSourceSelectionEvent(SelectionEvent<TextSource> event);
 
 	public abstract void respondToTextSourceAddedEvent(AddEvent<TextSource> event);
 
 	public abstract void respondToTextSourceRemovedEvent(RemoveEvent<TextSource> event);
-
-	public abstract void respondToTextSourceChangedEvent(ChangeEvent<TextSource> event);
 
 	public abstract void respondToTextSourceCollectionEmptiedEvent();
 
 	public abstract void respondToTextSourceCollectionFirstAddedEvent();
 
 	@Override
-	public void selected(SelectionChangeEvent<TextSource> event) {
+	public void selected(SelectionEvent<TextSource> event) {
 		if (event.getOld() != null) {
 			event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
 			event.getOld().getGraphSpaceCollection().removeCollectionListener(graphSpaceCollectionListener);
@@ -224,11 +236,6 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 	@Override
 	public void removed(RemoveEvent<TextSource> event) {
 		respondToTextSourceRemovedEvent(event);
-	}
-
-	@Override
-	public void changed(ChangeEvent<TextSource> event) {
-		respondToTextSourceChangedEvent(event);
 	}
 
 	@Override

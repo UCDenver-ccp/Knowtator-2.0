@@ -26,13 +26,18 @@ package edu.ucdenver.ccp.knowtator.model.text;
 
 import edu.ucdenver.ccp.knowtator.model.AbstractKnowtatorDataObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class AbstractKnowtatorTextBoundDataObject<K extends AbstractKnowtatorDataObject<K>> extends AbstractKnowtatorDataObject<K> implements KnowtatorTextBoundDataObjectInterface<K> {
 
     protected TextSource textSource;
+    private List<DataObjectModificationListener> modificationListeners;
 
     protected AbstractKnowtatorTextBoundDataObject(TextSource textSource, String id) {
         super(id);
         this.textSource = textSource;
+        this.modificationListeners = new ArrayList<>();
     }
 
     @Override
@@ -40,4 +45,18 @@ public abstract class AbstractKnowtatorTextBoundDataObject<K extends AbstractKno
         return textSource;
     }
 
+    @Override
+    public void addDataObjectModificationListener(DataObjectModificationListener listener) {
+        modificationListeners.add(listener);
+    }
+
+    @Override
+    public void removeDataObjectModificationListener(DataObjectModificationListener listener) {
+        modificationListeners.remove(listener);
+    }
+
+    @Override
+    public void modify(List<Integer> parameters) {
+        modificationListeners.forEach(DataObjectModificationListener::modification);
+    }
 }

@@ -155,7 +155,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
     public void setOwlClass(OWLClass owlClass) {
         this.owlClass = owlClass;
         this.owlClassID = controller.getOWLModel().getOWLEntityRendering(owlClass);
-        textSource.getConceptAnnotationCollection().change(this);
+        modify(null);
 
     }
 

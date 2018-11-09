@@ -24,6 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.textsource;
 
+import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorChooser;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
@@ -33,6 +34,16 @@ public class TextSourceChooser extends KnowtatorChooser<TextSource> {
     public TextSourceChooser(KnowtatorView view) {
         super(view);
         setCollection(view.getController().getTextSourceCollection());
+    }
+
+    @Override
+    protected void react() {
+        try {
+            setCollection(view.getController().getTextSourceCollection());
+            setSelected();
+        } catch (NoSelectionException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

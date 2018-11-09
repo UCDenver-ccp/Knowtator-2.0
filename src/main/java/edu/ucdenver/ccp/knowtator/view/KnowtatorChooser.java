@@ -26,12 +26,15 @@ package edu.ucdenver.ccp.knowtator.view;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 
-public abstract class KnowtatorChooser<K extends KnowtatorDataObjectInterface> extends JComboBox<K> implements KnowtatorCollectionListener<K>, KnowtatorComponent {
+public abstract class KnowtatorChooser<K extends KnowtatorDataObjectInterface> extends JComboBox<K> implements KnowtatorComponent {
 
 	private final ActionListener al;
 	private KnowtatorCollection<K> collection;
@@ -47,68 +50,152 @@ public abstract class KnowtatorChooser<K extends KnowtatorDataObjectInterface> e
 			}
 		};
 
+		new TextBoundModelListener(view.getController()) {
+
+			@Override
+			public void respondToConceptAnnotationModification() {
+				react();
+			}
+
+			@Override
+			public void respondToSpanModification() {
+				react();
+			}
+
+			@Override
+			public void respondToGraphSpaceModification() {
+				react();
+			}
+
+			@Override
+			public void respondToGraphSpaceCollectionFirstAddedEvent() {
+				react();
+			}
+
+			@Override
+			public void respondToGraphSpaceCollectionEmptiedEvent() {
+				react();
+			}
+
+			@Override
+			public void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event) {
+				react();
+			}
+
+			@Override
+			public void respondToGraphSpaceAddedEvent(AddEvent<GraphSpace> event) {
+				react();
+			}
+
+			@Override
+			public void respondToGraphSpaceSelectionEvent(SelectionEvent<GraphSpace> event) {
+				react();
+			}
+
+			@Override
+			public void respondToConceptAnnotationCollectionEmptiedEvent() {
+				react();
+			}
+
+			@Override
+			public void respondToConceptAnnotationRemovedEvent(RemoveEvent<ConceptAnnotation> event) {
+				react();
+			}
+
+			@Override
+			public void respondToConceptAnnotationAddedEvent(AddEvent<ConceptAnnotation> event) {
+				react();
+			}
+
+			@Override
+			public void respondToConceptAnnotationCollectionFirstAddedEvent() {
+				react();
+			}
+
+			@Override
+			public void respondToSpanCollectionFirstAddedEvent() {
+				react();
+			}
+
+			@Override
+			public void respondToSpanCollectionEmptiedEvent() {
+				react();
+			}
+
+			@Override
+			public void respondToSpanRemovedEvent(RemoveEvent<Span> event) {
+				react();
+			}
+
+			@Override
+			public void respondToSpanAddedEvent(AddEvent<Span> event) {
+				react();
+			}
+
+			@Override
+			public void respondToSpanSelectionEvent(SelectionEvent<Span> event) {
+				react();
+			}
+
+			@Override
+			public void respondToConceptAnnotationSelectionEvent(SelectionEvent<ConceptAnnotation> event) {
+				react();
+			}
+
+			@Override
+			public void respondToTextSourceSelectionEvent(SelectionEvent<TextSource> event) {
+				react();
+			}
+
+			@Override
+			public void respondToTextSourceAddedEvent(AddEvent<TextSource> event) {
+				react();
+			}
+
+			@Override
+			public void respondToTextSourceRemovedEvent(RemoveEvent<TextSource> event) {
+				react();
+			}
+
+			@Override
+			public void respondToTextSourceCollectionEmptiedEvent() {
+				react();
+			}
+
+			@Override
+			public void respondToTextSourceCollectionFirstAddedEvent() {
+				react();
+			}
+		};
+
 
 	}
 
-	protected void setCollection(KnowtatorCollection<K> collection) {
-		if (this.collection != null) {
-			this.collection.removeCollectionListener(this);
-		}
+	protected abstract void react();
 
-        removeAllItems();
+	protected void setCollection(KnowtatorCollection<K> collection) {
+		dispose();
 
 		this.collection = collection;
-		if (collection != null) {
-			this.collection.addCollectionListener(this);
-
+		if (collection.size() == 0) {
+			setEnabled(false);
+		} else {
+			setEnabled(true);
+			removeActionListener(al);
 			collection.forEach(this::addItem);
-
-			if (!Arrays.asList(getActionListeners()).contains(al)) {
-				addActionListener(al);
-			}
+			addActionListener(al);
 		}
+	}
+
+	protected void setSelected() throws NoSelectionException {
+		setSelectedItem(collection.getSelection());
 	}
 
 	@Override
 	public void dispose() {
 		removeAllItems();
-		collection = null;
+
 		setSelectedItem(null);
 	}
 
-	@Override
-	public void added(AddEvent<K> event) {
-		removeAllItems();
-		collection.forEach(this::addItem);
-	}
-
-	@Override
-	public void removed(RemoveEvent<K> event) {
-        removeAllItems();
-		collection.forEach(this::addItem);
-	}
-
-	@Override
-	public void emptied() {
-		setEnabled(false);
-	}
-
-	@Override
-	public void firstAdded() {
-		setEnabled(true);
-	}
-
-	@Override
-	public void changed(ChangeEvent<K> event) {
-		removeActionListener(al);
-		setSelectedItem(event.getNew());
-		addActionListener(al);
-	}
-
-	@Override
-	public void selected(SelectionChangeEvent<K> event) {
-		removeActionListener(al);
-		setSelectedItem(event.getNew());
-		addActionListener(al);
-	}
 }

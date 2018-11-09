@@ -30,7 +30,10 @@ import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.actions.GraphActions;
-import edu.ucdenver.ccp.knowtator.model.collection.*;
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
@@ -75,6 +78,21 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 		makeButtons();
 
 		new TextBoundModelListener(view.getController()) {
+			@Override
+			public void respondToConceptAnnotationModification() {
+
+			}
+
+			@Override
+			public void respondToSpanModification() {
+
+			}
+
+			@Override
+			public void respondToGraphSpaceModification() {
+
+			}
+
 			public void respondToGraphSpaceCollectionFirstAddedEvent() {
 				if (isVisible()) {
 					graphSpaceButtons.forEach(c -> c.setEnabled(true));
@@ -88,7 +106,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 				}
 			}
 
-			public void respondToTextSourceSelectionEvent(SelectionChangeEvent<TextSource> event) {
+			public void respondToTextSourceSelectionEvent(SelectionEvent<TextSource> event) {
 				if (isVisible() && event.getNew() != null) {
 					try {
 						showGraph(event.getNew().getGraphSpaceCollection().getSelection());
@@ -98,13 +116,10 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 				}
 			}
 
-			public void respondToGraphSpaceSelectionEvent(SelectionChangeEvent<GraphSpace> event) {
+			public void respondToGraphSpaceSelectionEvent(SelectionEvent<GraphSpace> event) {
 				if (isVisible() && event.getNew() != null && event.getNew() != graphComponent.getGraph()) {
 					showGraph(event.getNew());
 				}
-			}
-
-			public void respondToGraphSpaceChangedEvent(ChangeEvent<GraphSpace> event) {
 			}
 
 			public void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event) {
@@ -114,9 +129,6 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 			}
 
 			public void respondToConceptAnnotationCollectionEmptiedEvent() {
-			}
-
-			public void respondToConceptAnnotationChangedEvent(ChangeEvent<ConceptAnnotation> event) {
 			}
 
 			public void respondToConceptAnnotationRemovedEvent(RemoveEvent<ConceptAnnotation> event) {
@@ -135,19 +147,16 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 			public void respondToSpanCollectionEmptiedEvent() {
 			}
 
-			public void respondToSpanChangedEvent(ChangeEvent<Span> event) {
-			}
-
 			public void respondToSpanRemovedEvent(RemoveEvent<Span> event) {
 			}
 
 			public void respondToSpanAddedEvent(AddEvent<Span> event) {
 			}
 
-			public void respondToSpanSelectionEvent(SelectionChangeEvent<Span> event) {
+			public void respondToSpanSelectionEvent(SelectionEvent<Span> event) {
 			}
 
-			public void respondToConceptAnnotationSelectionEvent(SelectionChangeEvent<ConceptAnnotation> event) {
+			public void respondToConceptAnnotationSelectionEvent(SelectionEvent<ConceptAnnotation> event) {
 			}
 
 			public void respondToTextSourceAddedEvent(AddEvent<TextSource> event) {
@@ -155,9 +164,6 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 			}
 
 			public void respondToTextSourceRemovedEvent(RemoveEvent<TextSource> event) {
-			}
-
-			public void respondToTextSourceChangedEvent(ChangeEvent<TextSource> event) {
 			}
 
 			public void respondToTextSourceCollectionEmptiedEvent() {

@@ -22,12 +22,10 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.collection;
+package edu.ucdenver.ccp.knowtator.model.text;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 
-public class SelectionChangeEvent<K extends KnowtatorDataObjectInterface> extends ChangeEvent<K> {
-    SelectionChangeEvent(K oldObject, K newObject) {
-        super(oldObject, newObject);
-    }
+public interface DataObjectModificationListener<O extends KnowtatorDataObjectInterface<O>> {
+	void modification();
 }

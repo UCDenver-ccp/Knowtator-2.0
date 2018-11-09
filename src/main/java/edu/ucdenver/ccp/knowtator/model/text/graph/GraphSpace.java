@@ -40,8 +40,12 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
-import edu.ucdenver.ccp.knowtator.model.collection.*;
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import edu.ucdenver.ccp.knowtator.model.text.DataObjectModificationListener;
 import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
@@ -57,10 +61,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectInterface<GraphSpace>, KnowtatorXMLIO, BratStandoffIO, KnowtatorCollectionListener<ConceptAnnotation> {
@@ -74,6 +76,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
     private final TextSource textSource;
     private String id;
     private Window parentWindow;
+    private List<DataObjectModificationListener> modificationListeners;
 
     public GraphSpace(KnowtatorController controller, TextSource textSource, String id) {
 
@@ -82,6 +85,8 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
         this.id = id;
         this.undoManager = new mxUndoManager();
         this.undoHandler = (sender, evt) -> undoManager.undoableEditHappened((mxUndoableEdit) evt.getProperty("edit"));
+        modificationListeners = new ArrayList<>();
+
 
         controller.verifyId(id, this, false);
         textSource.getConceptAnnotationCollection().addCollectionListener(this);
@@ -132,7 +137,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
         } finally {
             //      reDrawGraph();
             getModel().endUpdate();
-            textSource.getGraphSpaceCollection().change(this);
+            modify(null);
         }
         //    reDrawGraph();
     }
@@ -142,7 +147,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
         AnnotationNode newVertex = new AnnotationNode(controller, nodeId, conceptAnnotation, textSource, x, y);
         addCellToGraph(newVertex);
 
-        textSource.getGraphSpaceCollection().change(this);
+        modify(null);
     }
 
     public void addTriple(
@@ -195,13 +200,10 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
    */
 
     public void removeSelectedCell() {
-        //    Object cell = getSelectionModel().getCell();
-        //    Arrays.stream(getEdges(cell)).forEach(edge -> getModel().remove(edge));
         Object[] selectionCells = getSelectionCells();
         removeCells(selectionCells, true);
 
-        textSource.getGraphSpaceCollection().change(this);
-        //    reDrawGraph();
+        modify(null);
     }
 
   /*
@@ -530,7 +532,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
     }
 
     @Override
-    public void selected(SelectionChangeEvent<ConceptAnnotation> changeEvent) {
+    public void selected(SelectionEvent<ConceptAnnotation> changeEvent) {
         if (changeEvent.getNew() == null) {
             setSelectionCells(new Object[0]);
         } else {
@@ -572,6 +574,27 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
         return false;
     }
 
+
+    @Override
+    public TextSource getTextSource() {
+        return textSource;
+    }
+
+    @Override
+    public void addDataObjectModificationListener(DataObjectModificationListener listener) {
+        modificationListeners.add(listener);
+    }
+
+    @Override
+    public void modify(List<Integer> parameters) {
+        modificationListeners.forEach(DataObjectModificationListener::modification);
+    }
+
+    @Override
+    public void removeDataObjectModificationListener(DataObjectModificationListener listener) {
+        modificationListeners.remove(listener);
+    }
+
     @Override
     public void added(AddEvent<ConceptAnnotation> event) {
 
@@ -583,11 +606,6 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
     }
 
     @Override
-    public void changed(ChangeEvent<ConceptAnnotation> event) {
-
-    }
-
-    @Override
     public void emptied() {
 
     }
@@ -595,11 +613,5 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
     @Override
     public void firstAdded() {
 
-    }
-
-
-    @Override
-    public TextSource getTextSource() {
-        return textSource;
     }
 }

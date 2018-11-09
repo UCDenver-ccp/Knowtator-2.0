@@ -27,86 +27,182 @@ package edu.ucdenver.ccp.knowtator.view;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 
-public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> extends JList<K> implements KnowtatorComponent, KnowtatorCollectionListener<K> {
+public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> extends JList<K> implements KnowtatorComponent {
 
-    protected final KnowtatorView view;
-    protected KnowtatorCollection<K> collection;
-    private final KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
+	protected final KnowtatorView view;
+	protected KnowtatorCollection<K> collection;
 
-    protected KnowtatorList(KnowtatorView view) {
-        this.view = view;
-        setModel(new DefaultListModel<>());
+	protected KnowtatorList(KnowtatorView view) {
+		this.view = view;
+		setModel(new DefaultListModel<>());
 
-        ListSelectionListener al = e -> {
-            JList jList = (JList) e.getSource();
-            if (jList.getSelectedValue() != null) {
-                collection.setSelection(this.getSelectedValue());
-            }
-        };
+		ListSelectionListener al = e -> {
+			JList jList = (JList) e.getSource();
+			if (jList.getSelectedValue() != null) {
+				collection.setSelection(this.getSelectedValue());
+			}
+		};
 
-        addListSelectionListener(al);
+		addListSelectionListener(al);
 
-        textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
-            @Override
-            public void added(AddEvent<TextSource> event) {
+		new TextBoundModelListener(view.getController()) {
+			@Override
+			public void respondToConceptAnnotationModification() {
+				react();
+			}
 
-            }
+			@Override
+			public void respondToSpanModification() {
+				react();
+			}
 
-            @Override
-            public void removed(RemoveEvent<TextSource> event) {
+			@Override
+			public void respondToGraphSpaceModification() {
+				react();
+			}
 
-            }
+			@Override
+			public void respondToGraphSpaceCollectionFirstAddedEvent() {
+				react();
+			}
 
-            @Override
-            public void changed(ChangeEvent<TextSource> event) {
+			@Override
+			public void respondToGraphSpaceCollectionEmptiedEvent() {
+				react();
+			}
 
-            }
+			@Override
+			public void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event) {
+				react();
+			}
 
-            @Override
-            public void emptied() {
+			@Override
+			public void respondToGraphSpaceAddedEvent(AddEvent<GraphSpace> event) {
+				react();
+			}
 
-            }
+			@Override
+			public void respondToGraphSpaceSelectionEvent(SelectionEvent<GraphSpace> event) {
+				react();
+			}
 
-            @Override
-            public void firstAdded() {
+			@Override
+			public void respondToConceptAnnotationCollectionEmptiedEvent() {
+				react();
+			}
 
-            }
+			@Override
+			public void respondToConceptAnnotationRemovedEvent(RemoveEvent<ConceptAnnotation> event) {
+				react();
+			}
+
+			@Override
+			public void respondToConceptAnnotationAddedEvent(AddEvent<ConceptAnnotation> event) {
+				react();
+			}
+
+			@Override
+			public void respondToConceptAnnotationCollectionFirstAddedEvent() {
+				react();
+			}
+
+			@Override
+			public void respondToSpanCollectionFirstAddedEvent() {
+				react();
+			}
+
+			@Override
+			public void respondToSpanCollectionEmptiedEvent() {
+				react();
+			}
+
+			@Override
+			public void respondToSpanRemovedEvent(RemoveEvent<Span> event) {
+				react();
+			}
+
+			@Override
+			public void respondToSpanAddedEvent(AddEvent<Span> event) {
+				react();
+			}
+
+			@Override
+			public void respondToSpanSelectionEvent(SelectionEvent<Span> event) {
+				react();
+			}
+
+			@Override
+			public void respondToConceptAnnotationSelectionEvent(SelectionEvent<ConceptAnnotation> event) {
+				react();
+			}
+
+			@Override
+			public void respondToTextSourceSelectionEvent(SelectionEvent<TextSource> event) {
+				react();
+			}
+
+			@Override
+			public void respondToTextSourceAddedEvent(AddEvent<TextSource> event) {
+				react();
+			}
+
+			@Override
+			public void respondToTextSourceRemovedEvent(RemoveEvent<TextSource> event) {
+				react();
+			}
+
+			@Override
+			public void respondToTextSourceCollectionEmptiedEvent() {
+				react();
+			}
+
+			@Override
+			public void respondToTextSourceCollectionFirstAddedEvent() {
+				react();
+			}
+		};
+	}
+
+	protected abstract void react();
+
+	protected void setCollection(KnowtatorCollection<K> collection) {
+		//clear collection
+		dispose();
+		this.collection = collection;
+		if (collection.size() == 0) {
+			setEnabled(false);
+		} else {
+			setEnabled(true);
+			collection.forEach(k -> ((DefaultListModel<K>) getModel()).addElement(k));
+		}
+	}
 
 
-            @Override
-            public void selected(SelectionChangeEvent<TextSource> event) {
-                reactToTextSourceChange(event);
-            }
-        };
+	protected void setSelected() throws NoSelectionException {
+		for (int i = 0; i < getModel().getSize(); i++) {
+			K element = getModel().getElementAt(i);
+			if (element == collection.getSelection()) {
+				setSelectedIndex(i);
+				return;
+			}
+		}
 
-        view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
-    }
+	}
 
-    protected abstract void reactToTextSourceChange(SelectionChangeEvent<TextSource> event);
+	@Override
+	public void reset() {
 
-    protected void setCollection(KnowtatorCollection<K> collection) {
-        //clear collection
-        dispose();
+	}
 
-        if (this.collection != collection) {
-            collection.removeCollectionListener(this);
-            this.collection = collection;
-            this.collection.addCollectionListener(this);
-        }
-        this.collection.forEach(k -> ((DefaultListModel<K>) getModel()).addElement(k));
-    }
-
-    @Override
-    public void reset() {
-        view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
-    }
-
-    @Override
-    public void dispose() {
-        if (collection != null) collection.forEach(k -> ((DefaultListModel) getModel()).removeElement(k));
-    }
+	@Override
+	public void dispose() {
+		((DefaultListModel) getModel()).clear();
+	}
 }

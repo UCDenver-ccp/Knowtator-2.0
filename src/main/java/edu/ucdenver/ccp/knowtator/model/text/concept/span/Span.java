@@ -179,7 +179,12 @@ public class Span extends AbstractKnowtatorTextBoundDataObject<Span> implements 
   MODIFIERS
    */
 
-  public void modify(int startModification, int endModification, int limit) {
+  @Override
+  public void modify(List<Integer> parameters) {
+    int startModification = parameters.get(0);
+    int endModification = parameters.get(1);
+    int limit = parameters.get(2);
+
     start += startModification;
     if (end < start) {
       start = end;
@@ -194,7 +199,8 @@ public class Span extends AbstractKnowtatorTextBoundDataObject<Span> implements 
     if (end > limit) {
       end = limit;
     }
-    conceptAnnotation.getSpanCollection().change(this);
+
+    super.modify(parameters);
   }
 
   /*

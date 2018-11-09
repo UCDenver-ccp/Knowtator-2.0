@@ -30,6 +30,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
+import edu.ucdenver.ccp.knowtator.model.text.DataObjectModificationListener;
 import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
@@ -37,6 +38,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.File;
+import java.util.List;
 
 public class AnnotationNode extends mxCell implements KnowtatorTextBoundDataObjectInterface, KnowtatorXMLIO {
 
@@ -94,6 +96,21 @@ public class AnnotationNode extends mxCell implements KnowtatorTextBoundDataObje
 	@Override
 	public TextSource getTextSource() {
 		return textSource;
+	}
+
+	@Override
+	public void addDataObjectModificationListener(DataObjectModificationListener listener) {
+
+	}
+
+	@Override
+	public void removeDataObjectModificationListener(DataObjectModificationListener listener) {
+
+	}
+
+	@Override
+	public void modify(List parameters) {
+
 	}
 
 	@Override

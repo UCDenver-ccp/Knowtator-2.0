@@ -66,10 +66,6 @@ public abstract class ListenableCollection<K extends KnowtatorDataObjectInterfac
     }
   }
 
-  public void change(K item) {
-      collectionListeners.forEach(l -> l.changed(new ChangeEvent<>(null, item)));
-  }
-
   public K get(String id) {
     for (K obj : collection) {
       if (obj.getId().equals(id)) {

@@ -24,12 +24,16 @@
 
 package edu.ucdenver.ccp.knowtator.view.search;
 
-import edu.ucdenver.ccp.knowtator.model.collection.*;
+import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.TextBoundModelListener;
 
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
@@ -39,10 +43,8 @@ import javax.swing.event.DocumentListener;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SearchTextField extends JTextField implements KnowtatorCollectionListener<Span>, KnowtatorComponent, CaretListener {
+public class SearchTextField extends JTextField implements KnowtatorComponent, CaretListener {
 
-    private final KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
-    private final KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
     private final KnowtatorView view;
     private Pattern pattern;
     private Matcher matcher;
@@ -69,74 +71,125 @@ public class SearchTextField extends JTextField implements KnowtatorCollectionLi
 
             }
         });
-        textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
+
+        new TextBoundModelListener(view.getController()) {
             @Override
-            public void added(AddEvent<TextSource> event) {
+            public void respondToConceptAnnotationModification() {
 
             }
 
             @Override
-            public void removed(RemoveEvent<TextSource> event) {
+            public void respondToSpanModification() {
 
             }
 
             @Override
-            public void changed(ChangeEvent<TextSource> event) {
+            public void respondToGraphSpaceModification() {
 
             }
 
             @Override
-            public void emptied() {
+            public void respondToGraphSpaceCollectionFirstAddedEvent() {
 
             }
 
             @Override
-            public void firstAdded() {
+            public void respondToGraphSpaceCollectionEmptiedEvent() {
 
             }
 
+            @Override
+            public void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event) {
+
+            }
 
             @Override
-            public void selected(SelectionChangeEvent<TextSource> event) {
-                reactToTextSourceChange(event);
+            public void respondToGraphSpaceAddedEvent(AddEvent<GraphSpace> event) {
+
+            }
+
+            @Override
+            public void respondToGraphSpaceSelectionEvent(SelectionEvent<GraphSpace> event) {
+
+            }
+
+            @Override
+            public void respondToConceptAnnotationCollectionEmptiedEvent() {
+
+            }
+
+            @Override
+            public void respondToConceptAnnotationRemovedEvent(RemoveEvent<ConceptAnnotation> event) {
+
+            }
+
+            @Override
+            public void respondToConceptAnnotationAddedEvent(AddEvent<ConceptAnnotation> event) {
+
+            }
+
+            @Override
+            public void respondToConceptAnnotationCollectionFirstAddedEvent() {
+
+            }
+
+            @Override
+            public void respondToSpanCollectionFirstAddedEvent() {
+
+            }
+
+            @Override
+            public void respondToSpanCollectionEmptiedEvent() {
+
+            }
+
+            @Override
+            public void respondToSpanRemovedEvent(RemoveEvent<Span> event) {
+
+            }
+
+            @Override
+            public void respondToSpanAddedEvent(AddEvent<Span> event) {
+
+            }
+
+            @Override
+            public void respondToSpanSelectionEvent(SelectionEvent<Span> event) {
+                if (event.getNew() != null) {
+                    setText(event.getNew().getSpannedText());
+                }
+            }
+
+            @Override
+            public void respondToConceptAnnotationSelectionEvent(SelectionEvent<ConceptAnnotation> event) {
+
+            }
+
+            @Override
+            public void respondToTextSourceSelectionEvent(SelectionEvent<TextSource> event) {
+                matcher = pattern.matcher(event.getNew().getContent());
+            }
+
+            @Override
+            public void respondToTextSourceAddedEvent(AddEvent<TextSource> event) {
+
+            }
+
+            @Override
+            public void respondToTextSourceRemovedEvent(RemoveEvent<TextSource> event) {
+
+            }
+
+            @Override
+            public void respondToTextSourceCollectionEmptiedEvent() {
+
+            }
+
+            @Override
+            public void respondToTextSourceCollectionFirstAddedEvent() {
+
             }
         };
-
-        conceptAnnotationCollectionListener = new KnowtatorCollectionListener<ConceptAnnotation>() {
-            @Override
-            public void added(AddEvent<ConceptAnnotation> event) {
-
-            }
-
-            @Override
-            public void removed(RemoveEvent<ConceptAnnotation> event) {
-
-            }
-
-            @Override
-            public void changed(ChangeEvent<ConceptAnnotation> event) {
-
-            }
-
-
-            @Override
-            public void emptied() {
-
-            }
-
-            @Override
-            public void firstAdded() {
-
-            }
-
-
-            @Override
-            public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
-                reactToConceptAnnotationChange(event);
-            }
-        };
-
-        view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
     }
 
     public int searchForward(TextSource textSource) {
@@ -187,47 +240,6 @@ public class SearchTextField extends JTextField implements KnowtatorCollectionLi
         matcher.usePattern(pattern);
     }
 
-    private void reactToConceptAnnotationChange(SelectionChangeEvent<ConceptAnnotation> event) {
-        if (event.getOld() != null) {
-            event.getOld().getSpanCollection().removeCollectionListener(this);
-        }
-        if (event.getNew() != null) {
-            event.getNew().getSpanCollection().addCollectionListener(this);
-        }
-    }
-
-    private void reactToTextSourceChange(SelectionChangeEvent<TextSource> event) {
-        if (event.getOld() != null) {
-            event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
-        }
-        event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
-        matcher = pattern.matcher(event.getNew().getContent());
-    }
-
-    @Override
-    public void added(AddEvent<Span> event) {
-
-    }
-
-    @Override
-    public void removed(RemoveEvent<Span> event) {
-
-    }
-
-    @Override
-    public void changed(ChangeEvent<Span> event) {
-
-    }
-
-    @Override
-    public void emptied() {
-
-    }
-
-    @Override
-    public void firstAdded() {
-
-    }
 
     @Override
     public void dispose() {
@@ -236,15 +248,9 @@ public class SearchTextField extends JTextField implements KnowtatorCollectionLi
 
     @Override
     public void reset() {
-        view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
+
     }
 
-    @Override
-    public void selected(SelectionChangeEvent<Span> event) {
-        if (event.getNew() != null) {
-            setText(event.getNew().getSpannedText());
-        }
-    }
 
     @Override
     public void caretUpdate(CaretEvent e) {
