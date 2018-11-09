@@ -1,3 +1,3 @@
 <component name="DependencyValidationManager">
-  <scope name="src" pattern="file[knowtator]:src/main/java/*||file[knowtator]:src/test/java/*||file:pom.xml" />
+  <scope name="src" pattern="file[knowtator]:src/main/java//*||file[knowtator]:src/test/java//*||file:plugin.xml||file:pom.xml" />
 </component>
