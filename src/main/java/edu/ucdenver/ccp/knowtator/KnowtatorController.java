@@ -45,6 +45,8 @@ import java.util.stream.Collectors;
 /**
  * The Knowtator class. Contains all of the model managers. It is used to interface between the view and the model. Also handles
  * loading and saving of the project.
+ *
+ * @author Harrison Pielke-Lombardo
  */
 public class KnowtatorController extends ProjectManager implements KnowtatorObjectInterface {
     @SuppressWarnings("unused")

@@ -58,6 +58,8 @@ import java.util.TreeSet;
  * Knowtator can be run on its own as a Swing application. This is useful for viewing annotations without setting
  * up and running Protege. This is also a useful way to debug some aspects of the GUI. In standalone mode,
  * annotations cannot be created because there is no OWL model to use.
+ *
+ * @author Harrison Pielke-Lombardo
  */
 class KnowtatorStandalone extends JFrame {
 
@@ -69,9 +71,11 @@ class KnowtatorStandalone extends JFrame {
 	 */
 	private KnowtatorStandalone(boolean debug) {
 		final KnowtatorView view = new KnowtatorView();
+
 		setContentPane(view);
-		view.getController().setDebug(debug);
+
 		if (debug) {
+			view.getController().setDebug();
 			view.reset();
 			try {
 				// Use the last project opened

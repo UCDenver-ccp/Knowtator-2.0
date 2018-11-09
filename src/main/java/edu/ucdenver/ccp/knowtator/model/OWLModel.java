@@ -250,25 +250,20 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
     }
 
     @Override
-    public void setDebug(boolean debug) {
-        if (debug) {
-            OWLOntologyManager manager = org.semanticweb.owlapi.apibinding.OWLManager.createOWLOntologyManager();
-            //    OWLWorkspace workspace = new OWLWorkspace();
-            //    OWLEditorKitFactory editorKitFactory = new OWLEditorKitFactory();
-            //    OWLEditorKit editorKit = new OWLEditorKit(editorKitFactory);
-            //    workspace.setup(editorKit);
-            //    workspace.initialise();
-            OWLDataFactory factory = manager.getOWLDataFactory();
+    public void setDebug() {
+        OWLOntologyManager manager = org.semanticweb.owlapi.apibinding.OWLManager.createOWLOntologyManager();
+        //    OWLWorkspace workspace = new OWLWorkspace();
+        //    OWLEditorKitFactory editorKitFactory = new OWLEditorKitFactory();
+        //    OWLEditorKit editorKit = new OWLEditorKit(editorKitFactory);
+        //    workspace.setup(editorKit);
+        //    workspace.initialise();
+        OWLDataFactory factory = manager.getOWLDataFactory();
 
-            IRI iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#DomainConcept");
-            testClass = factory.getOWLClass(iri);
+        IRI iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#DomainConcept");
+        testClass = factory.getOWLClass(iri);
 
-            iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#HasCountryOfOrigin");
-            testProperty = factory.getOWLObjectProperty(iri);
-        } else {
-            testClass = null;
-            testProperty = null;
-        }
+        iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#HasCountryOfOrigin");
+        testProperty = factory.getOWLObjectProperty(iri);
     }
 
 

@@ -44,6 +44,8 @@ import java.util.List;
 
 /**
  * This class defines the methods for loading and saving the project
+ *
+ * @author Harrison Pielke-Lombardo
  */
 public abstract class ProjectManager extends DebugManager implements Savable {
     @SuppressWarnings("unused")

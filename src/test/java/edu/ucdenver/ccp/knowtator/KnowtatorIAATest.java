@@ -48,7 +48,7 @@ public class KnowtatorIAATest {
         File tempProjectDir = Files.createTempDir();
         FileUtils.copyDirectory(projectDirectory, tempProjectDir);
         controller.setSaveLocation(tempProjectDir);
-        controller.setDebug(true);
+        controller.setDebug();
         controller.loadProject();
 
         goldStandardDir = new File(controller.getProjectLocation(), "iaa");
