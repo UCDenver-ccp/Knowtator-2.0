@@ -29,6 +29,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
+import edu.ucdenver.ccp.knowtator.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.actions.GraphActions;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
@@ -183,9 +184,30 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 		renameButton.addActionListener(e -> GraphActions.renameGraphSpace(view));
 		addGraphSpaceButton.addActionListener(e -> GraphActions.addGraphSpace(view));
 		removeGraphSpaceButton.addActionListener(e -> GraphActions.removeGraphSpace(view));
-		previousGraphSpaceButton.addActionListener(e -> GraphActions.selectPreviousGraphSpace(view));
-		nextGraphSpaceButton.addActionListener(e -> GraphActions.selectNextGraphSpace(view));
-		removeCellButton.addActionListener(e -> GraphActions.removeSelectedCell(view));
+		previousGraphSpaceButton.addActionListener(e -> {
+			try {
+				view.getController().getTextSourceCollection().getSelection().getGraphSpaceCollection()
+						.selectPrevious();
+			} catch (NoSelectionException e2) {
+				e2.printStackTrace();
+			}
+		});
+		nextGraphSpaceButton.addActionListener(e -> {
+			try {
+				view.getController().getTextSourceCollection().getSelection().getGraphSpaceCollection()
+						.selectNext();
+			} catch (NoSelectionException e2) {
+				e2.printStackTrace();
+			}
+		});
+		removeCellButton.addActionListener(e -> {
+			try {
+				AbstractKnowtatorAction action = new GraphActions.removeCellsAction(view.getController());
+				view.getController().registerAction(action);
+			} catch (NoSelectionException e1) {
+				e1.printStackTrace();
+			}
+		});
 		addAnnotationNodeButton.addActionListener(e -> GraphActions.addAnnotationNode(view));
 		applyLayoutButton.addActionListener(e -> GraphActions.applyLayout(view));
 

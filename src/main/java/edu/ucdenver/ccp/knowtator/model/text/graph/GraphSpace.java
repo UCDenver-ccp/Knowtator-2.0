@@ -197,11 +197,11 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
   REMOVERS
    */
 
-    public void removeSelectedCell() {
-        Object[] selectionCells = getSelectionCells();
-        removeCells(selectionCells, true);
-
+    @Override
+    public Object[] removeCells(Object[] cells, boolean includeEdges) {
+        cells = super.removeCells(cells, true);
         modify(null);
+        return cells;
     }
 
   /*

@@ -29,6 +29,7 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.util.mxMorphing;
 import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxEvent;
+import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
@@ -46,39 +47,41 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
+import javax.swing.undo.UndoableEdit;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-//TODO: Undo/redo for graph actions
 public class GraphActions {
-    public static void selectPreviousGraphSpace(KnowtatorView view) {
-        try {
-            view.getController().getTextSourceCollection().getSelection().getGraphSpaceCollection()
-                    .selectPrevious();
-        } catch (NoSelectionException e) {
-            e.printStackTrace();
+
+    public static class removeCellsAction extends AbstractKnowtatorAction {
+        private final Object[] cellsToRemove;
+        private final GraphSpace graphSpace;
+        private final KnowtatorEdit edit;
+
+        public removeCellsAction(KnowtatorController controller) throws NoSelectionException {
+            super("Remove cells");
+            graphSpace = controller.getTextSourceCollection().getSelection().getGraphSpaceCollection().getSelection();
+            cellsToRemove = graphSpace.getSelectionCells();
+            edit = new KnowtatorEdit(getPresentationName()) {
+
+            };
+        }
+
+        @Override
+        public void execute() {
+            graphSpace.getModel().addListener(mxEvent.UNDO, edit);
+            graphSpace.removeCells(cellsToRemove, true);
+            graphSpace.getModel().removeListener(edit, mxEvent.UNDO);
+        }
+
+        @Override
+        public UndoableEdit getEdit() {
+            return edit;
         }
     }
 
-    public static void selectNextGraphSpace(KnowtatorView view) {
-        try {
-            view.getController().getTextSourceCollection().getSelection().getGraphSpaceCollection()
-                    .selectNext();
-        } catch (NoSelectionException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void removeSelectedCell(KnowtatorView view) {
-        try {
-            view.getController().getTextSourceCollection().getSelection().getGraphSpaceCollection().getSelection()
-                    .removeSelectedCell();
-        } catch (NoSelectionException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static void addAnnotationNode(KnowtatorView view) {
         try {
