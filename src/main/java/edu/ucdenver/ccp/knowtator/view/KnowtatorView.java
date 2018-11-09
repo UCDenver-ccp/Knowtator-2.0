@@ -134,13 +134,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		// It is kind of a hacky fix, but it works for now.
 		log.warn("Don't worry about the following exception. Just forcing loading of a class needed by mxGraph");
 		try {
-			mxGraphTransferable.dataFlavor =
-					new DataFlavor(
-							DataFlavor.javaJVMLocalObjectMimeType
-									+ "; class=com.mxgraph.swing.util.mxGraphTransferable",
-							null,
-							mxGraphTransferable.class.getClassLoader());
+			mxGraphTransferable.dataFlavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + "; class=com.mxgraph.swing.util.mxGraphTransferable", null, mxGraphTransferable.class.getClassLoader());
 		} catch (ClassNotFoundException ignored) {
+
 		}
 
 		setUpOWL();
@@ -159,14 +155,23 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		}
 	}
 
+	/**
+	 * @return The project controller
+	 */
 	public KnowtatorController getController() {
 		return controller;
 	}
 
+	/**
+	 * Inherited but not used
+	 */
 	@Override
 	public void initialiseClassView() {
 	}
 
+	/**
+	 * Creates custum UI components like chooser boxes and labels that listen to the model.
+	 */
 	private void createUIComponents() {
 		DropTarget dt = new DropTarget(this, this);
 		dt.setActive(true);
@@ -198,6 +203,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		knowtatorComponents.add(searchTextField);
 
 
+		// The following methods keep the graph view dialog on top only when the view is active.
 		KnowtatorView view = this;
 		addAncestorListener(
 				new AncestorListener() {
@@ -222,28 +228,32 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 					}
 
 					@Override
-					public void ancestorRemoved(AncestorEvent event) {
-					}
+					public void ancestorRemoved(AncestorEvent event) { }
 
 					@Override
-					public void ancestorMoved(AncestorEvent event) {
-					}
+					public void ancestorMoved(AncestorEvent event) { }
 				});
 	}
 
+	/**
+	 * Makes the buttons in the main display pane
+	 */
 	private void makeButtons() {
-		makeMenuButtons();
+		makeMenuButton();
 		makeTextSourceButtons();
 		makeAnnotationButtons();
-		makeSpanButtons();
+		makeSpanModificationButtons();
 		makeSearchButtons();
-		makeFilterButtons();
+		makeFilterCheckBoxes();
 		makeUndoButtons();
 
 		// Disable
 		disableTextSourceButtons();
 	}
 
+	/**
+	 * Make undo and redo buttons
+	 */
 	private void makeUndoButtons() {
 		undoButton.addActionListener(e -> {
 			if (getController().canUndo()) {
@@ -257,22 +267,31 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		});
 	}
 
-	private void makeFilterButtons() {
+	/**
+	 * Make filter check boxes
+	 */
+	private void makeFilterCheckBoxes() {
 		owlClassFilterCheckBox.setSelected(getController().getFilterModel().isFilter(FilterModel.OWLCLASS));
 		profileFilterCheckBox.setSelected(getController().getFilterModel().isFilter(FilterModel.PROFILE));
+
 		profileFilterCheckBox.addItemListener(e -> getController().registerAction(new FilterActions.FilterAction(getController(), FilterModel.PROFILE, profileFilterCheckBox.isSelected())));
 		owlClassFilterCheckBox.addItemListener(e -> getController().registerAction(new FilterActions.FilterAction(getController(), FilterModel.OWLCLASS, owlClassFilterCheckBox.isSelected())));
 	}
 
-	private void makeMenuButtons() {
+	/**
+	 * Makes the menu button
+	 */
+	private void makeMenuButton() {
 		menuButton.addActionListener(e -> {
 			MenuDialog menuDialog = new MenuDialog(SwingUtilities.getWindowAncestor(this), this);
 			menuDialog.pack();
 			menuDialog.setVisible(true);
 		});
-		assignColorToClassButton.addActionListener(e -> OWLActions.assignColorToClass(this, getController().getOWLModel().getSelectedOWLEntity()));
 	}
 
+	/**
+	 * Makes the text source buttons and font size slider
+	 */
 	private void makeTextSourceButtons() {
 		fontSizeSlider.setValue(knowtatorTextPane.getFont().getSize());
 		fontSizeSlider.addChangeListener(e -> knowtatorTextPane.setFontSize(fontSizeSlider.getValue()));
@@ -304,7 +323,12 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		textSourceButtons.add(removeTextSourceButton);
 	}
 
+	/**
+	 * Makes the annotation and span selection buttons
+	 */
 	private void makeAnnotationButtons() {
+		assignColorToClassButton.addActionListener(e -> OWLActions.assignColorToClass(this, getController().getOWLModel().getSelectedOWLEntity()));
+
 		annotationButtons = new ArrayList<>();
 		addAnnotationButton.addActionListener(e -> {
 			Map<String, String> actionParameters = new HashMap<>();
@@ -341,7 +365,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		annotationButtons.add(previousSpanButton);
 	}
 
-	private void makeSpanButtons() {
+	/**
+	 * Makes the span modification buttons
+	 */
+	private void makeSpanModificationButtons() {
 
 		spanSizeButtons = new HashMap<>();
 		spanSizeButtons.put(shrinkEndButton, e -> {
@@ -384,6 +411,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		selectionSizeButtons.put(growStartButton, e -> SpanActions.modifySelection(this, SpanActions.START, SpanActions.GROW));
 	}
 
+	/**
+	 * Makes the search buttons and filter checkboxes
+	 */
 	private void makeSearchButtons() {
 		findTextInOntologyButton.addActionListener(e -> getController().getOWLModel().searchForString(searchTextField.getText()));
 		nextMatchButton.addActionListener(e -> getKnowtatorTextPane().search(true));
@@ -393,6 +423,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		onlyAnnotationsCheckBox.addItemListener(e -> searchTextField.makePattern());
 	}
 
+	/**
+	 * Sets up listeners to detect changes when text sources or concept annotations or spans change
+	 */
 	private void setupListeners() {
 		KnowtatorCollectionListener<TextSource> textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
 
