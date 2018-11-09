@@ -27,27 +27,40 @@ package edu.ucdenver.ccp.knowtator.view.graph;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.actions.GraphActions;
+import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionActions;
+import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLPropertyException;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
+import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
 import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class GraphView extends JPanel implements KnowtatorComponent {
@@ -178,12 +191,51 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 
 		graphSpaceButtons = new ArrayList<>();
 
-		graphMenuButton.addActionListener(e -> GraphActions.showGraphMenuDialog(view));
+		graphMenuButton.addActionListener(e -> {
+			GraphMenuDialog graphMenuDialog = new GraphMenuDialog(view);
+			graphMenuDialog.pack();
+			graphMenuDialog.setVisible(true);
+		});
 
-		zoomSlider.addChangeListener(e -> GraphActions.zoomGraph(graphComponent, zoomSlider.getValue()));
-		renameButton.addActionListener(e -> GraphActions.renameGraphSpace(view));
-		addGraphSpaceButton.addActionListener(e -> GraphActions.addGraphSpace(view));
-		removeGraphSpaceButton.addActionListener(e -> GraphActions.removeGraphSpace(view));
+		zoomSlider.addChangeListener(e -> graphComponent.zoomTo(zoomSlider.getValue() / 50.0, false));
+		renameButton.addActionListener(e -> {
+			try {
+
+
+				TextSource textSource = view.getController().getTextSourceCollection().getSelection();
+				String graphName = getGraphNameInput(view, textSource, null);
+				if (graphName != null) {
+					textSource.getGraphSpaceCollection().getSelection().setId(graphName);
+				}
+			} catch (NoSelectionException e2) {
+				e2.printStackTrace();
+			}
+		});
+		addGraphSpaceButton.addActionListener(e -> {
+			try {
+				TextSource textSource = view.getController().getTextSourceCollection().getSelection();
+				String graphName = getGraphNameInput(view, textSource, null);
+
+				if (graphName != null) {
+					AbstractKnowtatorAction action = new KnowtatorCollectionActions.GraphSpaceAction(KnowtatorCollectionActions.ADD, view.getController(), graphName);
+					view.getController().registerAction(action);
+				}
+			} catch (NoSelectionException e2) {
+				e2.printStackTrace();
+			}
+		});
+		removeGraphSpaceButton.addActionListener(e -> {
+			try {
+
+
+				if (JOptionPane.showConfirmDialog(view, "Are you sure you want to delete this graph?") == JOptionPane.YES_OPTION) {
+					AbstractKnowtatorAction action = new KnowtatorCollectionActions.GraphSpaceAction(KnowtatorCollectionActions.REMOVE, view.getController(), null);
+					view.getController().registerAction(action);
+				}
+			} catch (NoSelectionException e2) {
+				e2.printStackTrace();
+			}
+		});
 		previousGraphSpaceButton.addActionListener(e -> {
 			try {
 				view.getController().getTextSourceCollection().getSelection().getGraphSpaceCollection()
@@ -208,8 +260,22 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 				e1.printStackTrace();
 			}
 		});
-		addAnnotationNodeButton.addActionListener(e -> GraphActions.addAnnotationNode(view));
-		applyLayoutButton.addActionListener(e -> GraphActions.applyLayout(view));
+		addAnnotationNodeButton.addActionListener(e -> {
+			try {
+				AbstractKnowtatorAction action = new GraphActions.AddAnnotationNodeAction(view, view.getController());
+				view.getController().registerAction(action);
+			} catch (NoSelectionException e1) {
+				e1.printStackTrace();
+			}
+		});
+		applyLayoutButton.addActionListener(e -> {
+			try {
+				AbstractKnowtatorAction action = new GraphActions.applyLayoutAction(view, view.getController());
+				view.getController().registerAction(action);
+			} catch (NoSelectionException e1) {
+				e1.printStackTrace();
+			}
+		});
 
 		graphSpaceButtons.add(renameButton);
 		graphSpaceButtons.add(removeCellButton);
@@ -224,11 +290,10 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 
 	private void showGraph(GraphSpace graphSpace) {
 		graphComponent.setGraph(graphSpace);
-		graphSpace.setParentWindow(dialog);
 
 		graphComponent.setName(graphSpace.getId());
 
-		graphSpace.setupListeners();
+		setupListeners(graphSpace);
 
 		graphSpace.reDrawGraph();
 		graphComponent.refresh();
@@ -256,13 +321,174 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 					try {
 						showGraph(textSource.getGraphSpaceCollection().getSelection());
 					} catch (NoSelectionException e1) {
-						GraphActions.addGraphSpace(view);
+						try {
+							String graphName = getGraphNameInput(view, textSource, null);
+
+							if (graphName != null) {
+								AbstractKnowtatorAction action = new KnowtatorCollectionActions.GraphSpaceAction(KnowtatorCollectionActions.ADD, view.getController(), graphName);
+								view.getController().registerAction(action);
+							}
+						} catch (NoSelectionException e2) {
+							e2.printStackTrace();
+						}
 					}
 				}
 			} catch (NoSelectionException e) {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private static String getGraphNameInput(KnowtatorView view, TextSource textSource, JTextField field1) {
+		if (field1 == null) {
+			field1 = new JTextField();
+
+			JTextField finalField = field1;
+			field1
+					.getDocument()
+					.addDocumentListener(
+							new DocumentListener() {
+								@Override
+								public void insertUpdate(DocumentEvent e) {
+									warn();
+								}
+
+								@Override
+								public void removeUpdate(DocumentEvent e) {
+									warn();
+								}
+
+								@Override
+								public void changedUpdate(DocumentEvent e) {
+									warn();
+								}
+
+								private void warn() {
+									if (textSource
+											.getGraphSpaceCollection()
+											.containsID(finalField.getText())) {
+										try {
+											finalField
+													.getHighlighter()
+													.addHighlight(
+															0,
+															finalField.getText().length(),
+															new DefaultHighlighter.DefaultHighlightPainter(Color.RED));
+										} catch (BadLocationException e1) {
+											e1.printStackTrace();
+										}
+									} else {
+										finalField.getHighlighter().removeAllHighlights();
+									}
+								}
+							});
+		}
+		Object[] message = {
+				"Graph Title", field1,
+		};
+		field1.addAncestorListener(new GraphView.RequestFocusListener());
+		field1.setText("Graph Space " + Integer.toString(textSource.getGraphSpaceCollection().size()));
+		int option =
+				JOptionPane.showConfirmDialog(
+						view,
+						message,
+						"Enter a name for this graph",
+						JOptionPane.OK_CANCEL_OPTION);
+		if (option == JOptionPane.OK_OPTION) {
+			if (textSource
+					.getGraphSpaceCollection()
+					.containsID(field1.getText())) {
+				JOptionPane.showMessageDialog(field1, "Graph name already in use");
+				return getGraphNameInput(view, textSource, field1);
+			} else {
+				return field1.getText();
+			}
+		}
+
+		return null;
+	}
+
+	private void setupListeners(GraphSpace graphSpace) {
+		// Handle drag and drop
+		// Adds the current selected object property as the edge value
+		if (!graphSpace.areListenersSet()) {
+			graphSpace.addListener(mxEvent.ADD_CELLS, (sender, evt) -> {
+				Object[] cells = (Object[]) evt.getProperty("cells");
+				if (cells != null && cells.length > 0) {
+					Arrays.stream(cells).filter(cell -> graphSpace.getModel().isEdge(cell) && "".equals(((mxCell) cell).getValue())).map(cell -> (mxCell) cell).forEach(edge -> {
+						try {
+							OWLObjectProperty property = view.getController().getOWLModel().getSelectedOWLObjectProperty();
+							String propertyID = view.getController().getOWLModel().getOWLEntityRendering(property);
+							RelationOptionsDialog relationOptionsDialog = getRelationOptionsDialog(propertyID);
+							if (relationOptionsDialog.getResult() == RelationOptionsDialog.OK_OPTION) {
+								try {
+									AbstractKnowtatorAction action = new GraphActions.AddTripleAction(view.getController(),
+											(AnnotationNode) edge.getSource(),
+											(AnnotationNode) edge.getTarget(),
+											property, relationOptionsDialog.getPropertyID(),
+											relationOptionsDialog.getQuantifier(), relationOptionsDialog.getQuantifierValue(),
+											relationOptionsDialog.getNegation());
+									view.getController().registerAction(action);
+								} catch (NoSelectionException e) {
+									e.printStackTrace();
+								}
+
+							}
+						} catch (NoSelectedOWLPropertyException e) {
+							e.printStackTrace();
+						}
+						graphSpace.getModel().remove(edge);
+					});
+
+					graphSpace.reDrawGraph();
+				}
+			});
+
+			graphSpace.addListener(mxEvent.MOVE_CELLS, (sender, evt) -> graphSpace.reDrawGraph());
+
+			graphSpace.addListener(mxEvent.REMOVE_CELLS, (sender, evt) -> graphSpace.reDrawGraph());
+
+			graphSpace.getSelectionModel().addListener(mxEvent.CHANGE, (sender, evt) -> {
+				Collection selectedCells = (Collection) evt.getProperty("removed");
+				Collection deselectedCells = (Collection) evt.getProperty("added");
+				if (deselectedCells != null && deselectedCells.size() > 0) {
+					for (Object cell : deselectedCells) {
+						if (cell instanceof AnnotationNode) {
+							graphSpace.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "0", new Object[]{cell});
+						}
+					}
+					graphSpace.reDrawGraph();
+				}
+
+				if (selectedCells != null && selectedCells.size() > 0) {
+					for (Object cell : selectedCells) {
+						if (cell instanceof AnnotationNode) {
+							try {
+								ConceptAnnotation conceptAnnotation = ((AnnotationNode) cell).getConceptAnnotation();
+								view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().setSelection(conceptAnnotation);
+								graphSpace.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
+							} catch (NoSelectionException e) {
+								e.printStackTrace();
+							}
+
+
+						}
+					}
+					graphSpace.reDrawGraph();
+				}
+			});
+			graphSpace.setListenersSet();
+		}
+	}
+
+	private RelationOptionsDialog getRelationOptionsDialog(String propertyID) {
+		RelationOptionsDialog relationOptionsDialog = new RelationOptionsDialog(dialog, propertyID);
+		relationOptionsDialog.pack();
+		relationOptionsDialog.setAlwaysOnTop(true);
+		relationOptionsDialog.setLocationRelativeTo(dialog);
+		relationOptionsDialog.requestFocus();
+		relationOptionsDialog.setVisible(true);
+		return relationOptionsDialog;
 	}
 
 	@Override
@@ -372,7 +598,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 		 *  Convenience constructor. The listener is only used once and then it is
 		 *  removed from the component.
 		 */
-		public RequestFocusListener() {
+		RequestFocusListener() {
 			this(true);
 		}
 

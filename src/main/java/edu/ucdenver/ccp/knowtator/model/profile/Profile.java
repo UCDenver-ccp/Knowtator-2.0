@@ -96,12 +96,12 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
         if (color == null) {
           color = Color.CYAN;
         }
-        colors.put(owlClass, color);
+        addColor(owlClass, color);
         controller.getProfileCollection().fireColorChanged();
         save();
         return color;
       } else if (color == null) {
-        colors.put(owlClassID, Color.CYAN);
+        addColor(owlClassID, Color.CYAN);
         controller.getProfileCollection().fireColorChanged();
         save();
         return Color.CYAN;
@@ -128,15 +128,6 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
   /*
   ADDERS
    */
-
-  private void addColor(String classID, String color) {
-    Color c = Color.decode(color);
-    c =
-        new Color(
-            (float) c.getRed() / 255, (float) c.getGreen() / 255, (float) c.getBlue() / 255, 1f);
-
-    addColor(classID, c);
-  }
 
   public void addColor(Object key, Color c) {
     colors.put(key, c);
@@ -199,7 +190,9 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
 
       String classID = highlighterElement.getAttribute(KnowtatorXMLAttributes.CLASS_ID);
       String color = highlighterElement.getAttribute(KnowtatorXMLAttributes.COLOR);
-      addColor(classID, color);
+      Color c = Color.decode(color);
+      c = new Color((float) c.getRed() / 255, (float) c.getGreen() / 255, (float) c.getBlue() / 255, 1f);
+      addColor(classID, c);
     }
   }
 

@@ -25,13 +25,13 @@
 package edu.ucdenver.ccp.knowtator.actions;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorColorPalette;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.swing.*;
 import javax.swing.undo.UndoableEdit;
@@ -42,49 +42,48 @@ import java.util.Map;
 import java.util.Set;
 
 public class OWLActions {
-    public static class ReassignOWLClassAction extends AbstractKnowtatorAction {
+	public static class ReassignOWLClassAction extends AbstractKnowtatorAction {
 
-        private final OWLClass oldOwlClass;
-        private ConceptAnnotation conceptAnnotation;
-        private final OWLClass newOwlClass;
+		private final OWLClass oldOwlClass;
+		private ConceptAnnotation conceptAnnotation;
+		private final OWLClass newOwlClass;
 
-        public ReassignOWLClassAction(KnowtatorController controller) throws NoSelectionException, ActionUnperformableException {
-            super("Reassign OWL class");
+		public ReassignOWLClassAction(KnowtatorController controller) throws NoSelectionException, ActionUnperformableException {
+			super("Reassign OWL class");
 
-            this.conceptAnnotation = controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection();
+			this.conceptAnnotation = controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection();
 
-            oldOwlClass = conceptAnnotation.getOwlClass();
-            OWLEntity owlEntity = controller.getOWLModel().getSelectedOWLEntity();
-            if (owlEntity instanceof OWLClass) {
-                this.newOwlClass = (OWLClass) owlEntity;
-            } else {
-                throw new ActionUnperformableException();
-            }
-        }
+			oldOwlClass = conceptAnnotation.getOwlClass();
+			try {
+				this.newOwlClass = controller.getOWLModel().getSelectedOWLClass();
+			} catch (NoSelectedOWLClassException e) {
+				throw new ActionUnperformableException();
+			}
+		}
 
-        @Override
-        public void execute() {
-            conceptAnnotation.setOwlClass(newOwlClass);
-        }
+		@Override
+		public void execute() {
+			conceptAnnotation.setOwlClass(newOwlClass);
+		}
 
-        @Override
-        public UndoableEdit getEdit() {
-            return new KnowtatorEdit(getPresentationName()) {
-                @Override
-                public void undo() {
-                    super.undo();
-                    conceptAnnotation.setOwlClass(oldOwlClass);
-                }
+		@Override
+		public UndoableEdit getEdit() {
+			return new KnowtatorEdit(getPresentationName()) {
+				@Override
+				public void undo() {
+					super.undo();
+					conceptAnnotation.setOwlClass(oldOwlClass);
+				}
 
-                @Override
-                public void redo() {
-                    super.redo();
-                    conceptAnnotation.setOwlClass(newOwlClass);
-                }
+				@Override
+				public void redo() {
+					super.redo();
+					conceptAnnotation.setOwlClass(newOwlClass);
+				}
 
-            };
-        }
-    }
+			};
+		}
+	}
 
     public static void assignColorToClass(KnowtatorView view, Object owlClass) {
         if (owlClass == null) {
@@ -139,67 +138,67 @@ public class OWLActions {
 
     }
 
-    static class ColorChangeAction extends AbstractKnowtatorAction {
+	static class ColorChangeAction extends AbstractKnowtatorAction {
 
 
-        private final ColorChangeEdit edit;
-        private final Map<Object, Color> oldColorAssignments;
-        private final Profile profile;
-        private final Set<Object> owlClasses;
-        private final Color color;
+		private final ColorChangeEdit edit;
+		private final Map<Object, Color> oldColorAssignments;
+		private final Profile profile;
+		private final Set<Object> owlClasses;
+		private final Color color;
 
-        ColorChangeAction(Profile profile, Set<Object> owlClasses, Color color) {
-            super("Change color");
-            this.profile = profile;
-            this.owlClasses = owlClasses;
-            this.color = color;
+		ColorChangeAction(Profile profile, Set<Object> owlClasses, Color color) {
+			super("Change color");
+			this.profile = profile;
+			this.owlClasses = owlClasses;
+			this.color = color;
 
-            oldColorAssignments = new HashMap<>();
-            owlClasses.forEach(owlClass -> {
-                Color oldColor = profile.getColors().get(owlClass);
-                if (oldColor != null) {
-                    oldColorAssignments.put(owlClass, oldColor);
-                }
-            });
+			oldColorAssignments = new HashMap<>();
+			owlClasses.forEach(owlClass -> {
+				Color oldColor = profile.getColors().get(owlClass);
+				if (oldColor != null) {
+					oldColorAssignments.put(owlClass, oldColor);
+				}
+			});
 
-            edit = new ColorChangeEdit(profile, oldColorAssignments, color);
-        }
+			edit = new ColorChangeEdit(profile, oldColorAssignments, color);
+		}
 
-        @Override
-        public void execute() {
-            owlClasses.forEach(owlClass -> profile.addColor(owlClass, color));
-        }
+		@Override
+		public void execute() {
+			owlClasses.forEach(owlClass -> profile.addColor(owlClass, color));
+		}
 
-        @Override
-        public UndoableEdit getEdit() {
-            return edit;
-        }
-    }
+		@Override
+		public UndoableEdit getEdit() {
+			return edit;
+		}
+	}
 
-    static class ColorChangeEdit extends KnowtatorEdit {
+	static class ColorChangeEdit extends KnowtatorEdit {
 
-        private final Profile profile;
-        private final Color color;
-        private final Map<Object, Color> oldColorAssignments;
+		private final Profile profile;
+		private final Color color;
+		private final Map<Object, Color> oldColorAssignments;
 
-        ColorChangeEdit(Profile profile, Map<Object, Color> oldColorAssignments, Color color) {
-            super("Set color for OWL class");
-            this.profile = profile;
-            this.oldColorAssignments = oldColorAssignments;
-            this.color = color;
-        }
+		ColorChangeEdit(Profile profile, Map<Object, Color> oldColorAssignments, Color color) {
+			super("Set color for OWL class");
+			this.profile = profile;
+			this.oldColorAssignments = oldColorAssignments;
+			this.color = color;
+		}
 
-        @Override
-        public void undo() {
+		@Override
+		public void undo() {
 
-            super.undo();
-            oldColorAssignments.forEach(profile::addColor);
-        }
+			super.undo();
+			oldColorAssignments.forEach(profile::addColor);
+		}
 
-        @Override
-        public void redo() {
-            super.redo();
-            oldColorAssignments.keySet().forEach(owlClass -> profile.addColor(owlClass, color));
-        }
-    }
+		@Override
+		public void redo() {
+			super.redo();
+			oldColorAssignments.keySet().forEach(owlClass -> profile.addColor(owlClass, color));
+		}
+	}
 }

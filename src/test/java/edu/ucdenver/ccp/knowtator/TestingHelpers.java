@@ -71,7 +71,7 @@ public class TestingHelpers {
     public static final int defaultExpectedSpans = 4;
     public static final int defaultExpectedGraphSpaces = 2;
     public static final int defaultExpectedProfiles = 2;
-    public static final int defaultExpectedHighlighters = 2;
+    public static final int defaultExpectedHighlighters = 3;
     public static final int defaultExpectedAnnotationNodes = 4;
     public static final int defaultExpectedTriples = 2;
 

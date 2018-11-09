@@ -35,6 +35,7 @@ import edu.ucdenver.ccp.knowtator.actions.OWLActions;
 import edu.ucdenver.ccp.knowtator.actions.SpanActions;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.FilterModel;
+import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
@@ -331,7 +332,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	 * Makes the annotation and span selection buttons
 	 */
 	private void makeAnnotationButtons() {
-		assignColorToClassButton.addActionListener(e -> OWLActions.assignColorToClass(this, getController().getOWLModel().getSelectedOWLEntity()));
+		assignColorToClassButton.addActionListener(e -> {
+			try {
+				OWLActions.assignColorToClass(this, getController().getOWLModel().getSelectedOWLClass());
+			} catch (NoSelectedOWLClassException ignored) {
+
+			}
+		});
 
 		annotationButtons = new ArrayList<>();
 		addAnnotationButton.addActionListener(e -> {

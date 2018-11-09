@@ -30,6 +30,7 @@ import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.FilterModel;
 import edu.ucdenver.ccp.knowtator.model.FilterModelListener;
+import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
 import edu.ucdenver.ccp.knowtator.model.OWLModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
@@ -111,9 +112,15 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         Profile activeProfile = controller.getProfileCollection().getSelection();
 
         Set<OWLClass> activeOWLClassDescendents = new HashSet<>();
+
         if (filterByOWLClass) {
-            activeOWLClassDescendents.addAll(controller.getOWLModel().getDescendants((OWLClass) controller.getOWLModel().getSelectedOWLEntity()));
-            activeOWLClassDescendents.add((OWLClass) controller.getOWLModel().getSelectedOWLEntity());
+            try {
+                OWLClass owlClass = controller.getOWLModel().getSelectedOWLClass();
+                activeOWLClassDescendents.addAll(controller.getOWLModel().getDescendants(owlClass));
+                activeOWLClassDescendents.add(owlClass);
+            } catch (NoSelectedOWLClassException ignored) {
+
+            }
         }
 
         SpanCollection allSpans = new SpanCollection(null);
@@ -519,10 +526,10 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     @Override
     public void owlClassFilterChanged(boolean filterValue) {
         try {
-            if (filterValue && getSelection().getOwlClass() != controller.getOWLModel().getSelectedOWLEntity()) {
+            if (filterValue && getSelection().getOwlClass() != controller.getOWLModel().getSelectedOWLClass()) {
                 setSelection(null);
             }
-        } catch (NoSelectionException ignored) {
+        } catch (NoSelectionException | NoSelectedOWLClassException ignored) {
         }
     }
 

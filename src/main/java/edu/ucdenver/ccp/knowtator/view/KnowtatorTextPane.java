@@ -403,9 +403,7 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
                 highlightSpan(
                         span.getStart(),
                         span.getEnd(),
-                        new DefaultHighlighter.DefaultHighlightPainter(
-                                span.getConceptAnnotation().getAnnotator()
-                                        .getColor(span.getConceptAnnotation())));
+                        new DefaultHighlighter.DefaultHighlightPainter(span.getConceptAnnotation().getColor()));
             } catch (BadLocationException e) {
                 e.printStackTrace();
             }

@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.actions;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
+import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -40,7 +41,7 @@ public class OWLActionsTest {
     private static final KnowtatorController controller = TestingHelpers.getLoadedController();
 
     @Test
-    public void reassignOWLClassAction() throws ActionUnperformableException, NoSelectionException {
+    public void reassignOWLClassAction() throws ActionUnperformableException, NoSelectionException, NoSelectedOWLClassException {
         TextSource textSource = controller.getTextSourceCollection().getSelection();
         ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
         textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
@@ -48,17 +49,17 @@ public class OWLActionsTest {
         assert controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getOwlClass() == null;
 
         controller.registerAction(new OWLActions.ReassignOWLClassAction(controller));
-        assert controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getOwlClass().equals(controller.getOWLModel().getSelectedOWLEntity());
+        assert controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getOwlClass().equals(controller.getOWLModel().getSelectedOWLClass());
         controller.undo();
         assert controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getOwlClass() == null;
         controller.redo();
-        assert controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getOwlClass().equals(controller.getOWLModel().getSelectedOWLEntity());
+        assert controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getOwlClass().equals(controller.getOWLModel().getSelectedOWLClass());
         controller.undo();
         //TODO: Add more to this test to see if descendants are reassigned too. Probably will need to edit OWLModel's debug to make some descendants
     }
 
     @Test
-    public void changeColorAction() throws NoSelectionException, ActionUnperformableException {
+    public void changeColorAction() throws NoSelectionException, ActionUnperformableException, NoSelectedOWLClassException {
         TextSource textSource = controller.getTextSourceCollection().getSelection();
         ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
         textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
@@ -66,7 +67,7 @@ public class OWLActionsTest {
         assert profile.getColor(conceptAnnotation).equals(Color.CYAN);
 
         Set<Object> owlClassSet = new HashSet<>();
-        owlClassSet.add(controller.getOWLModel().getSelectedOWLEntity());
+        owlClassSet.add(controller.getOWLModel().getSelectedOWLClass());
 
         controller.registerAction(new OWLActions.ReassignOWLClassAction(controller));
         assert profile.getColor(conceptAnnotation).equals(Color.CYAN);

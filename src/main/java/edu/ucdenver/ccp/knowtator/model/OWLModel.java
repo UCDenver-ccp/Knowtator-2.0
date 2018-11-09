@@ -190,15 +190,36 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
         };
     }
 
+    public OWLObjectProperty getSelectedOWLObjectProperty() throws NoSelectedOWLPropertyException {
+        if (controller.isDebug()) {
+            return testProperty;
+        } else {
+            try {
+                OWLEntity owlEntity = getWorkSpace().getOWLSelectionModel().getSelectedEntity();
+                if (owlEntity instanceof OWLObjectProperty) {
+                    return (OWLObjectProperty) owlEntity;
+                } else {
+                    throw new NoSelectedOWLPropertyException();
+                }
+            } catch (OWLWorkSpaceNotSetException e) {
+                throw new NoSelectedOWLPropertyException();
+            }
+        }
+    }
 
-    public OWLEntity getSelectedOWLEntity() {
+    public OWLClass getSelectedOWLClass() throws NoSelectedOWLClassException {
         if (controller.isDebug()) {
             return testClass;
         }
         try {
-            return getWorkSpace().getOWLSelectionModel().getSelectedEntity();
+            OWLEntity owlEntity = getWorkSpace().getOWLSelectionModel().getSelectedEntity();
+            if (owlEntity instanceof OWLClass) {
+                return (OWLClass) owlEntity;
+            } else {
+                throw new NoSelectedOWLClassException();
+            }
         } catch (OWLWorkSpaceNotSetException e) {
-            return null;
+            throw new NoSelectedOWLClassException();
         }
     }
 

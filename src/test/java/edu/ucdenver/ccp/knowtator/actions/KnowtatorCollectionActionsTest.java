@@ -147,4 +147,32 @@ public class KnowtatorCollectionActionsTest {
                 TestingHelpers.defaultExpectedAnnotationNodes,
                 TestingHelpers.defaultExpectedTriples);
     }
+
+    @Test
+    public void addGraphSpaceAction() throws NoSelectionException {
+        TestingHelpers.testKnowtatorAction(controller, new KnowtatorCollectionActions.GraphSpaceAction(KnowtatorCollectionActions.ADD, controller, "new_graph_space"),
+                TestingHelpers.defaultExpectedTextSources,
+                TestingHelpers.defaultExpectedConceptAnnotations,
+                TestingHelpers.defaultExpectedSpans,
+                TestingHelpers.defaultExpectedGraphSpaces + 1,
+                TestingHelpers.defaultExpectedProfiles,
+                TestingHelpers.defaultExpectedHighlighters,
+                TestingHelpers.defaultExpectedAnnotationNodes,
+                TestingHelpers.defaultExpectedTriples);
+    }
+
+    @Test
+    public void removeGraphSpaceAction() throws NoSelectionException {
+        TextSource textSource = controller.getTextSourceCollection().getSelection();
+        textSource.getGraphSpaceCollection().selectNext();
+        TestingHelpers.testKnowtatorAction(controller, new KnowtatorCollectionActions.GraphSpaceAction(KnowtatorCollectionActions.REMOVE, controller, null),
+                TestingHelpers.defaultExpectedTextSources,
+                TestingHelpers.defaultExpectedConceptAnnotations,
+                TestingHelpers.defaultExpectedSpans,
+                TestingHelpers.defaultExpectedGraphSpaces - 1,
+                TestingHelpers.defaultExpectedProfiles,
+                TestingHelpers.defaultExpectedHighlighters,
+                TestingHelpers.defaultExpectedAnnotationNodes - 2,
+                TestingHelpers.defaultExpectedTriples - 1);
+    }
 }

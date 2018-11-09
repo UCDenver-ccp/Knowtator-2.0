@@ -199,18 +199,6 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
     }
 
     @Override
-    public void removeSelected() {
-        try {
-            TextSource oldTextSource = getSelection();
-            oldTextSource.dispose();
-            remove(oldTextSource);
-        } catch (NoSelectionException e) {
-            e.printStackTrace();
-        }
-        selectPrevious();
-    }
-
-    @Override
     public void reset() {
 
     }

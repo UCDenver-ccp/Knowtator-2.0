@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.actions;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 
 import javax.swing.undo.UndoableEdit;
 
@@ -62,7 +63,13 @@ public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataO
         }
     }
 
-    abstract void prepareRemove() throws ActionUnperformableException;
+    void prepareRemove() throws ActionUnperformableException {
+        try {
+            setObject(collection.getSelection());
+        } catch (NoSelectionException e) {
+            throw new ActionUnperformableException();
+        }
+    }
     abstract void prepareAdd() throws ActionUnperformableException;
 
     abstract void cleanUpRemove();

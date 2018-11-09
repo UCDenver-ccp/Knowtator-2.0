@@ -74,10 +74,6 @@ public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implem
   ADDERS
    */
 
-    public void addGraphSpace(String graphName) {
-        GraphSpace newGraphSpace = new GraphSpace(controller, textSource, graphName);
-        add(newGraphSpace);
-    }
 
     /*
     WRITERS

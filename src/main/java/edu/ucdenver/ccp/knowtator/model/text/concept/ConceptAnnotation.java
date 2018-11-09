@@ -38,10 +38,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
+import java.util.List;
 
 public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<ConceptAnnotation> implements KnowtatorXMLIO, BratStandoffIO {
 
@@ -146,6 +148,10 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
         return bratID;
     }
 
+    public Color getColor() {
+        return annotator.getColor(this);
+    }
+
 
   /*
   SETTERS
@@ -183,7 +189,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
 
         if (getOwlClassLabel() != null) {
             visualConfig.get("labels").put(renderedOwlClassID, getOwlClassLabel());
-            visualConfig.get("drawing").put(renderedOwlClassID, String.format("bgColor:%s", Profile.convertToHex(controller.getProfileCollection().get("Default").getColor(this))));
+            visualConfig.get("drawing").put(renderedOwlClassID, String.format("bgColor:%s", Profile.convertToHex(controller.getProfileCollection().getDefaultProfile().getColor(this))));
 
         }
 

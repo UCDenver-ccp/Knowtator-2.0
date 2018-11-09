@@ -78,9 +78,4 @@ public abstract class SelectableCollection<K extends KnowtatorDataObjectInterfac
             setSelection(null);
         }
     }
-
-    public void removeSelected() {
-        super.remove(selection);
-        setSelection(null);
-    }
 }
