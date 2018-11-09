@@ -30,6 +30,8 @@ import edu.ucdenver.ccp.knowtator.actions.AbstractKnowtatorCollectionAction;
 import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionActions;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.list.ColorList;
+import edu.ucdenver.ccp.knowtator.view.list.ProfileList;
 
 import javax.swing.*;
 import java.awt.*;

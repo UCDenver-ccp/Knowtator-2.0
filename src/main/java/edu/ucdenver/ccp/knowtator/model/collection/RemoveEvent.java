@@ -24,16 +24,9 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
+class RemoveEvent {
 
-public class RemoveEvent<K extends KnowtatorDataObjectInterface> {
-    private final K removedOject;
-
-    RemoveEvent(K newObject) {
-        this.removedOject = newObject;
+    RemoveEvent() {
     }
 
-    public K getRemoved() {
-        return removedOject;
-    }
 }

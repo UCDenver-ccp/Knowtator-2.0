@@ -22,46 +22,31 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.annotation;
+package edu.ucdenver.ccp.knowtator.view.chooser;
 
-import edu.ucdenver.ccp.knowtator.model.collection.ListenableCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollection;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorList;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
-import java.util.stream.Collector;
+public class TextSourceChooser extends KnowtatorChooser<TextSource> {
 
-public class GraphSpaceList extends KnowtatorList<GraphSpace> {
-    public GraphSpaceList(KnowtatorView view) {
+    public TextSourceChooser(KnowtatorView view) {
         super(view);
-
+        setCollection(view.getController().getTextSourceCollection());
     }
 
     @Override
     protected void react() {
         try {
-            setCollection(view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection());
+            setCollection(view.getController().getTextSourceCollection());
             setSelected();
         } catch (NoSelectionException e) {
             e.printStackTrace();
         }
     }
 
-    private void setCollection(ConceptAnnotation conceptAnnotation) throws NoSelectionException {
-        if (conceptAnnotation == null) {
-            dispose();
-        } else {
-            setCollection(conceptAnnotation.getTextSource().getGraphSpaceCollection()
-                    .stream().filter(graphSpace -> graphSpace.containsAnnotation(conceptAnnotation)).collect(Collector.of(
-                            () -> new GraphSpaceCollection(conceptAnnotation.getController(), conceptAnnotation.getTextSource()),
-                            ListenableCollection::add,
-                            (graphSpace1, graphSpace2) -> graphSpace1)));
-
-            setSelected();
-        }
-
+    @Override
+    public void reset() {
+        setCollection(view.getController().getTextSourceCollection());
     }
 }

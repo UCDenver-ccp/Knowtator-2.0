@@ -26,14 +26,9 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 
-public class AddEvent<K extends KnowtatorDataObjectInterface> {
-    private final K newObject;
+class AddEvent<K extends KnowtatorDataObjectInterface> {
 
-    AddEvent(K newObject) {
-        this.newObject = newObject;
+    AddEvent() {
     }
 
-    public K getAdded() {
-        return newObject;
-    }
 }

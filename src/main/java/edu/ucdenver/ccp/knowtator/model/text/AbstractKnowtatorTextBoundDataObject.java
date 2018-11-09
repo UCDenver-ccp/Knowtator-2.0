@@ -32,7 +32,7 @@ import java.util.List;
 public abstract class AbstractKnowtatorTextBoundDataObject<K extends AbstractKnowtatorDataObject<K>> extends AbstractKnowtatorDataObject<K> implements KnowtatorTextBoundDataObjectInterface<K> {
 
     protected TextSource textSource;
-    private List<DataObjectModificationListener> modificationListeners;
+    private final List<DataObjectModificationListener> modificationListeners;
 
     protected AbstractKnowtatorTextBoundDataObject(TextSource textSource, String id) {
         super(id);

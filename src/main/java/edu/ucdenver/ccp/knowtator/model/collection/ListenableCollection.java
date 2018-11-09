@@ -46,9 +46,7 @@ public abstract class ListenableCollection<K extends KnowtatorDataObjectInterfac
   public void add(K objectToAdd) {
     collection.add(objectToAdd);
 
-    AddEvent<K> event = new AddEvent<>(objectToAdd);
-
-    collectionListeners.forEach(listener -> listener.added(event));
+    collectionListeners.forEach(CollectionListener::added);
     if (collection.size() == 1) {
       collectionListeners.forEach(CollectionListener::firstAdded);
     }
@@ -56,11 +54,8 @@ public abstract class ListenableCollection<K extends KnowtatorDataObjectInterfac
 
   void remove(K objectToRemove) {
     collection.remove(objectToRemove);
-//    objectToRemove.dispose();
 
-    RemoveEvent<K> event = new RemoveEvent<>(objectToRemove);
-
-    collectionListeners.forEach(listener -> listener.removed(event));
+    collectionListeners.forEach(CollectionListener::removed);
     if (collection.size() == 0) {
       collectionListeners.forEach(CollectionListener::emptied);
     }
@@ -93,7 +88,7 @@ public abstract class ListenableCollection<K extends KnowtatorDataObjectInterfac
     if (!collectionListeners.contains(listener)) collectionListeners.add(listener);
   }
 
-  public void removeCollectionListener(L listener) {
+  protected void removeCollectionListener(L listener) {
     collectionListeners.remove(listener);
   }
 
@@ -116,10 +111,6 @@ public abstract class ListenableCollection<K extends KnowtatorDataObjectInterfac
     collectionListeners.clear();
     forEach(KnowtatorDataObjectInterface::dispose);
     collection.clear();
-  }
-
-  public K[] toArray(K[] newArray) {
-    return collection.toArray(newArray);
   }
 
   public C getCollection() {

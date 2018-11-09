@@ -46,9 +46,9 @@ import java.util.ArrayList;
  *
  * @author Harrison Pielke-Lombardo
  */
-public class KnowtatorColorChooser extends JColorChooser {
+public class KnowtatorColorPalette extends JColorChooser {
 
-    public KnowtatorColorChooser() {
+	public KnowtatorColorPalette() {
         super();
         AbstractColorChooserPanel[] panels = new AbstractColorChooserPanel[6];
         panels[0] = new KnowtatorSwatchChooserPanel();

@@ -30,7 +30,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="d523c" class="edu.ucdenver.ccp.knowtator.view.menu.ColorList" binding="colorList" custom-create="true">
+              <component id="d523c" class="edu.ucdenver.ccp.knowtator.view.list.ColorList" binding="colorList" custom-create="true">
                 <constraints/>
                 <properties>
                   <font name="Verdana" size="10" style="0"/>
@@ -45,7 +45,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="86849" class="edu.ucdenver.ccp.knowtator.view.menu.ProfileList" binding="profileList" custom-create="true">
+              <component id="86849" class="edu.ucdenver.ccp.knowtator.view.list.ProfileList" binding="profileList" custom-create="true">
                 <constraints/>
                 <properties>
                   <font name="Verdana" size="12" style="0"/>

@@ -30,17 +30,16 @@ import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.actions.GraphActions;
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.TextBoundModelListener;
+import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -93,20 +92,20 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 
 			}
 
-			public void respondToGraphSpaceCollectionFirstAddedEvent() {
+			public void respondToGraphSpaceCollectionFirstAdded() {
 				if (isVisible()) {
 					graphSpaceButtons.forEach(c -> c.setEnabled(true));
 				}
 			}
 
-			public void respondToGraphSpaceCollectionEmptiedEvent() {
+			public void respondToGraphSpaceCollectionEmptied() {
 				if (isVisible()) {
 					graphSpaceButtons.forEach(c -> c.setEnabled(false));
 					addGraphSpaceButton.setEnabled(true);
 				}
 			}
 
-			public void respondToTextSourceSelectionEvent(SelectionEvent<TextSource> event) {
+			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
 				if (isVisible() && event.getNew() != null) {
 					try {
 						showGraph(event.getNew().getGraphSpaceCollection().getSelection());
@@ -116,60 +115,60 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 				}
 			}
 
-			public void respondToGraphSpaceSelectionEvent(SelectionEvent<GraphSpace> event) {
+			public void respondToGraphSpaceSelection(SelectionEvent<GraphSpace> event) {
 				if (isVisible() && event.getNew() != null && event.getNew() != graphComponent.getGraph()) {
 					showGraph(event.getNew());
 				}
 			}
 
-			public void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event) {
+			public void respondToGraphSpaceRemoved() {
 			}
 
-			public void respondToGraphSpaceAddedEvent(AddEvent<GraphSpace> event) {
+			public void respondToGraphSpaceAdded() {
 			}
 
-			public void respondToConceptAnnotationCollectionEmptiedEvent() {
+			public void respondToConceptAnnotationCollectionEmptied() {
 			}
 
-			public void respondToConceptAnnotationRemovedEvent(RemoveEvent<ConceptAnnotation> event) {
+			public void respondToConceptAnnotationRemoved() {
 			}
 
-			public void respondToConceptAnnotationAddedEvent(AddEvent<ConceptAnnotation> event) {
+			public void respondToConceptAnnotationAdded() {
 			}
 
-			public void respondToConceptAnnotationCollectionFirstAddedEvent() {
+			public void respondToConceptAnnotationCollectionFirstAdded() {
 			}
 
-			public void respondToSpanCollectionFirstAddedEvent() {
-
-			}
-
-			public void respondToSpanCollectionEmptiedEvent() {
-			}
-
-			public void respondToSpanRemovedEvent(RemoveEvent<Span> event) {
-			}
-
-			public void respondToSpanAddedEvent(AddEvent<Span> event) {
-			}
-
-			public void respondToSpanSelectionEvent(SelectionEvent<Span> event) {
-			}
-
-			public void respondToConceptAnnotationSelectionEvent(SelectionEvent<ConceptAnnotation> event) {
-			}
-
-			public void respondToTextSourceAddedEvent(AddEvent<TextSource> event) {
+			public void respondToSpanCollectionFirstAdded() {
 
 			}
 
-			public void respondToTextSourceRemovedEvent(RemoveEvent<TextSource> event) {
+			public void respondToSpanCollectionEmptied() {
 			}
 
-			public void respondToTextSourceCollectionEmptiedEvent() {
+			public void respondToSpanRemoved() {
 			}
 
-			public void respondToTextSourceCollectionFirstAddedEvent() {
+			public void respondToSpanAdded() {
+			}
+
+			public void respondToSpanSelection(SelectionEvent<Span> event) {
+			}
+
+			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
+			}
+
+			public void respondToTextSourceAdded() {
+
+			}
+
+			public void respondToTextSourceRemoved() {
+			}
+
+			public void respondToTextSourceCollectionEmptied() {
+			}
+
+			public void respondToTextSourceCollectionFirstAdded() {
 			}
 		};
 	}

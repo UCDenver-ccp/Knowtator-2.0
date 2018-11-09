@@ -171,12 +171,12 @@ class KnowtatorStandalone extends JFrame {
 				Fragment fragment =
 						new Fragment(textSource2, fragmentConceptAnnotation.getId(), fragmentConceptAnnotation.getOwlClassID());
 
-				TreeSet<ConceptAnnotation> conceptAnnotationsInFragmet =
+				TreeSet<ConceptAnnotation> conceptAnnotationsInFragment =
 						textSource1
 								.getConceptAnnotationCollection()
 								.getAnnotations(fragmentSpan.getStart(), fragmentSpan.getStart());
 
-				for (ConceptAnnotation conceptAnnotation : conceptAnnotationsInFragmet) {
+				for (ConceptAnnotation conceptAnnotation : conceptAnnotationsInFragment) {
 					fragment.add(conceptAnnotation.getOwlClassID());
 				}
 

@@ -22,12 +22,10 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.menu;
+package edu.ucdenver.ccp.knowtator.view.list;
 
 import edu.ucdenver.ccp.knowtator.actions.OWLActions;
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
@@ -46,7 +44,7 @@ public class ColorList extends JList<Object> implements KnowtatorCollectionListe
     private final KnowtatorView view;
     private final ListSelectionListener lsl;
 
-    ColorList(KnowtatorView view) {
+    public ColorList(KnowtatorView view) {
         this.view = view;
         setModel(new DefaultListModel<>());
 
@@ -75,12 +73,12 @@ public class ColorList extends JList<Object> implements KnowtatorCollectionListe
     }
 
     @Override
-    public void added(AddEvent<Profile> event) {
+    public void added() {
         setCollection(view.getController().getProfileCollection().getSelection());
     }
 
     @Override
-    public void removed(RemoveEvent<Profile> event) {
+    public void removed() {
         setCollection(view.getController().getProfileCollection().getSelection());
     }
 

@@ -22,14 +22,10 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view;
+package edu.ucdenver.ccp.knowtator.model.collection;
 
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.text.DataObjectModificationListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
@@ -37,7 +33,7 @@ import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 
 /**
- * Provides methods to respond to changes in model selction events
+ * Provides methods to respond to changes in model selection events
  *
  * @author Harrison
  */
@@ -69,27 +65,27 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 					event.getNew().addDataObjectModificationListener(graphSpaceModificationListener);
 				}
 
-				respondToGraphSpaceSelectionEvent(event);
+				respondToGraphSpaceSelection(event);
 			}
 
 			@Override
-			public void added(AddEvent<GraphSpace> event) {
-				respondToGraphSpaceAddedEvent(event);
+			public void added() {
+				respondToGraphSpaceAdded();
 			}
 
 			@Override
-			public void removed(RemoveEvent<GraphSpace> event) {
-				respondToGraphSpaceRemovedEvent(event);
+			public void removed() {
+				respondToGraphSpaceRemoved();
 			}
 
 			@Override
 			public void emptied() {
-				respondToGraphSpaceCollectionEmptiedEvent();
+				respondToGraphSpaceCollectionEmptied();
 			}
 
 			@Override
 			public void firstAdded() {
-				respondToGraphSpaceCollectionFirstAddedEvent();
+				respondToGraphSpaceCollectionFirstAdded();
 			}
 		};
 
@@ -106,27 +102,27 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 					event.getNew().addDataObjectModificationListener(conceptAnnotationModificationListener);
 				}
 
-				respondToConceptAnnotationSelectionEvent(event);
+				respondToConceptAnnotationSelection(event);
 			}
 
 			@Override
-			public void added(AddEvent<ConceptAnnotation> event) {
-				respondToConceptAnnotationAddedEvent(event);
+			public void added() {
+				respondToConceptAnnotationAdded();
 			}
 
 			@Override
-			public void removed(RemoveEvent<ConceptAnnotation> event) {
-				respondToConceptAnnotationRemovedEvent(event);
+			public void removed() {
+				respondToConceptAnnotationRemoved();
 			}
 
 			@Override
 			public void emptied() {
-				respondToConceptAnnotationCollectionEmptiedEvent();
+				respondToConceptAnnotationCollectionEmptied();
 			}
 
 			@Override
 			public void firstAdded() {
-				respondToConceptAnnotationCollectionFirstAddedEvent();
+				respondToConceptAnnotationCollectionFirstAdded();
 			}
 		}
 
@@ -143,76 +139,76 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 					event.getNew().addDataObjectModificationListener(spanModificationListener);
 				}
 
-				respondToSpanSelectionEvent(event);
+				respondToSpanSelection(event);
 			}
 
 			@Override
-			public void added(AddEvent<Span> event) {
-				respondToSpanAddedEvent(event);
+			public void added() {
+				respondToSpanAdded();
 			}
 
 			@Override
-			public void removed(RemoveEvent<Span> event) {
-				respondToSpanRemovedEvent(event);
+			public void removed() {
+				respondToSpanRemoved();
 			}
 
 			@Override
 			public void emptied() {
-				respondToSpanCollectionEmptiedEvent();
+				respondToSpanCollectionEmptied();
 			}
 
 			@Override
 			public void firstAdded() {
-				respondToSpanCollectionFirstAddedEvent();
+				respondToSpanCollectionFirstAdded();
 			}
 		};
 	}
 
-	public abstract void respondToConceptAnnotationModification();
+	protected abstract void respondToConceptAnnotationModification();
 
-	public abstract void respondToSpanModification();
+	protected abstract void respondToSpanModification();
 
-	public abstract void respondToGraphSpaceModification();
+	protected abstract void respondToGraphSpaceModification();
 
-	public abstract void respondToGraphSpaceCollectionFirstAddedEvent();
+	protected abstract void respondToGraphSpaceCollectionFirstAdded();
 
-	public abstract void respondToGraphSpaceCollectionEmptiedEvent();
+	protected abstract void respondToGraphSpaceCollectionEmptied();
 
-	public abstract void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event);
+	protected abstract void respondToGraphSpaceRemoved();
 
-	public abstract void respondToGraphSpaceAddedEvent(AddEvent<GraphSpace> event);
+	protected abstract void respondToGraphSpaceAdded();
 
-	public abstract void respondToGraphSpaceSelectionEvent(SelectionEvent<GraphSpace> event);
+	protected abstract void respondToGraphSpaceSelection(SelectionEvent<GraphSpace> event);
 
-	public abstract void respondToConceptAnnotationCollectionEmptiedEvent();
+	protected abstract void respondToConceptAnnotationCollectionEmptied();
 
-	public abstract void respondToConceptAnnotationRemovedEvent(RemoveEvent<ConceptAnnotation> event);
+	protected abstract void respondToConceptAnnotationRemoved();
 
-	public abstract void respondToConceptAnnotationAddedEvent(AddEvent<ConceptAnnotation> event);
+	protected abstract void respondToConceptAnnotationAdded();
 
-	public abstract void respondToConceptAnnotationCollectionFirstAddedEvent();
+	protected abstract void respondToConceptAnnotationCollectionFirstAdded();
 
-	public abstract void respondToSpanCollectionFirstAddedEvent();
+	protected abstract void respondToSpanCollectionFirstAdded();
 
-	public abstract void respondToSpanCollectionEmptiedEvent();
+	protected abstract void respondToSpanCollectionEmptied();
 
-	public abstract void respondToSpanRemovedEvent(RemoveEvent<Span> event);
+	protected abstract void respondToSpanRemoved();
 
-	public abstract void respondToSpanAddedEvent(AddEvent<Span> event);
+	protected abstract void respondToSpanAdded();
 
-	public abstract void respondToSpanSelectionEvent(SelectionEvent<Span> event);
+	protected abstract void respondToSpanSelection(SelectionEvent<Span> event);
 
-	public abstract void respondToConceptAnnotationSelectionEvent(SelectionEvent<ConceptAnnotation> event);
+	protected abstract void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event);
 
-	public abstract void respondToTextSourceSelectionEvent(SelectionEvent<TextSource> event);
+	protected abstract void respondToTextSourceSelection(SelectionEvent<TextSource> event);
 
-	public abstract void respondToTextSourceAddedEvent(AddEvent<TextSource> event);
+	protected abstract void respondToTextSourceAdded();
 
-	public abstract void respondToTextSourceRemovedEvent(RemoveEvent<TextSource> event);
+	protected abstract void respondToTextSourceRemoved();
 
-	public abstract void respondToTextSourceCollectionEmptiedEvent();
+	protected abstract void respondToTextSourceCollectionEmptied();
 
-	public abstract void respondToTextSourceCollectionFirstAddedEvent();
+	protected abstract void respondToTextSourceCollectionFirstAdded();
 
 	@Override
 	public void selected(SelectionEvent<TextSource> event) {
@@ -225,27 +221,27 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 			event.getNew().getGraphSpaceCollection().addCollectionListener(graphSpaceCollectionListener);
 		}
 
-		respondToTextSourceSelectionEvent(event);
+		respondToTextSourceSelection(event);
 	}
 
 	@Override
-	public void added(AddEvent<TextSource> event) {
-		respondToTextSourceAddedEvent(event);
+	public void added() {
+		respondToTextSourceAdded();
 	}
 
 	@Override
-	public void removed(RemoveEvent<TextSource> event) {
-		respondToTextSourceRemovedEvent(event);
+	public void removed() {
+		respondToTextSourceRemoved();
 	}
 
 	@Override
 	public void emptied() {
-		respondToTextSourceCollectionEmptiedEvent();
+		respondToTextSourceCollectionEmptied();
 	}
 
 	@Override
 	public void firstAdded() {
-		respondToTextSourceCollectionFirstAddedEvent();
+		respondToTextSourceCollectionFirstAdded();
 	}
 
 }

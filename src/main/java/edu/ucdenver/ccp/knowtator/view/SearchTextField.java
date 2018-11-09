@@ -22,18 +22,14 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.search;
+package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.TextBoundModelListener;
 
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
@@ -50,7 +46,7 @@ public class SearchTextField extends JTextField implements KnowtatorComponent, C
     private Matcher matcher;
     private int matchEnd;
 
-    public SearchTextField(KnowtatorView view) {
+    SearchTextField(KnowtatorView view) {
         this.view = view;
         view.getKnowtatorTextPane().addCaretListener(this);
 
@@ -89,110 +85,110 @@ public class SearchTextField extends JTextField implements KnowtatorComponent, C
             }
 
             @Override
-            public void respondToGraphSpaceCollectionFirstAddedEvent() {
+            public void respondToGraphSpaceCollectionFirstAdded() {
 
             }
 
             @Override
-            public void respondToGraphSpaceCollectionEmptiedEvent() {
+            public void respondToGraphSpaceCollectionEmptied() {
 
             }
 
             @Override
-            public void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event) {
+            public void respondToGraphSpaceRemoved() {
 
             }
 
             @Override
-            public void respondToGraphSpaceAddedEvent(AddEvent<GraphSpace> event) {
+            public void respondToGraphSpaceAdded() {
 
             }
 
             @Override
-            public void respondToGraphSpaceSelectionEvent(SelectionEvent<GraphSpace> event) {
+            public void respondToGraphSpaceSelection(SelectionEvent<GraphSpace> event) {
 
             }
 
             @Override
-            public void respondToConceptAnnotationCollectionEmptiedEvent() {
+            public void respondToConceptAnnotationCollectionEmptied() {
 
             }
 
             @Override
-            public void respondToConceptAnnotationRemovedEvent(RemoveEvent<ConceptAnnotation> event) {
+            public void respondToConceptAnnotationRemoved() {
 
             }
 
             @Override
-            public void respondToConceptAnnotationAddedEvent(AddEvent<ConceptAnnotation> event) {
+            public void respondToConceptAnnotationAdded() {
 
             }
 
             @Override
-            public void respondToConceptAnnotationCollectionFirstAddedEvent() {
+            public void respondToConceptAnnotationCollectionFirstAdded() {
 
             }
 
             @Override
-            public void respondToSpanCollectionFirstAddedEvent() {
+            public void respondToSpanCollectionFirstAdded() {
 
             }
 
             @Override
-            public void respondToSpanCollectionEmptiedEvent() {
+            public void respondToSpanCollectionEmptied() {
 
             }
 
             @Override
-            public void respondToSpanRemovedEvent(RemoveEvent<Span> event) {
+            public void respondToSpanRemoved() {
 
             }
 
             @Override
-            public void respondToSpanAddedEvent(AddEvent<Span> event) {
+            public void respondToSpanAdded() {
 
             }
 
             @Override
-            public void respondToSpanSelectionEvent(SelectionEvent<Span> event) {
+            public void respondToSpanSelection(SelectionEvent<Span> event) {
                 if (event.getNew() != null) {
                     setText(event.getNew().getSpannedText());
                 }
             }
 
             @Override
-            public void respondToConceptAnnotationSelectionEvent(SelectionEvent<ConceptAnnotation> event) {
+            public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
 
             }
 
             @Override
-            public void respondToTextSourceSelectionEvent(SelectionEvent<TextSource> event) {
+            public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
                 matcher = pattern.matcher(event.getNew().getContent());
             }
 
             @Override
-            public void respondToTextSourceAddedEvent(AddEvent<TextSource> event) {
+            public void respondToTextSourceAdded() {
 
             }
 
             @Override
-            public void respondToTextSourceRemovedEvent(RemoveEvent<TextSource> event) {
+            public void respondToTextSourceRemoved() {
 
             }
 
             @Override
-            public void respondToTextSourceCollectionEmptiedEvent() {
+            public void respondToTextSourceCollectionEmptied() {
 
             }
 
             @Override
-            public void respondToTextSourceCollectionFirstAddedEvent() {
+            public void respondToTextSourceCollectionFirstAdded() {
 
             }
         };
     }
 
-    public int searchForward(TextSource textSource) {
+    int searchForward(TextSource textSource) {
         matcher.reset();
         int start = -1;
         matchEnd = 0;
@@ -217,7 +213,7 @@ public class SearchTextField extends JTextField implements KnowtatorComponent, C
         return start;
     }
 
-    public int searchPrevious(TextSource textSource) {
+    int searchPrevious(TextSource textSource) {
         matcher.reset();
         int start = -1;
         matchEnd = 0;
@@ -235,7 +231,7 @@ public class SearchTextField extends JTextField implements KnowtatorComponent, C
         return start;
     }
 
-    public void makePattern() {
+    void makePattern() {
         pattern = Pattern.compile(getText(), (view.getRegexCheckBox().isSelected() ? 0 : Pattern.LITERAL) | (view.getCaseSensitiveCheckBox().isSelected() ? 0 : Pattern.CASE_INSENSITIVE));
         matcher.usePattern(pattern);
     }
@@ -260,7 +256,7 @@ public class SearchTextField extends JTextField implements KnowtatorComponent, C
 
     }
 
-    public int getMatchEnd() {
+    int getMatchEnd() {
         return matchEnd;
     }
 }

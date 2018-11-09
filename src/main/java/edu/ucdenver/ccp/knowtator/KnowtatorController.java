@@ -106,7 +106,7 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 	}
 
 	/**
-	 * Saves the project. Overriden here because the OWL model needs to be saved as well.
+	 * Saves the project. Overridden here because the OWL model needs to be saved as well.
 	 *
 	 * @param ioUtilClass The IOUtil to use to save the IO class. This specifies the output format
 	 * @param basicIO     The IO class to save

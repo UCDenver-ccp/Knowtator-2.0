@@ -22,31 +22,26 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.graph;
+package edu.ucdenver.ccp.knowtator.view.list;
 
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorChooser;
+import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
-public class GraphSpaceChooser extends KnowtatorChooser<GraphSpace> {
+public class SpanList extends KnowtatorList<Span> {
 
 
-    GraphSpaceChooser(KnowtatorView view) {
+    public SpanList(KnowtatorView view) {
         super(view);
     }
 
-    public void react() {
+    @Override
+    protected void react() {
         try {
-            setCollection(view.getController().getTextSourceCollection().getSelection().getGraphSpaceCollection());
+            setCollection(view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getSpanCollection());
             setSelected();
         } catch (NoSelectionException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void reset() {
-
     }
 }

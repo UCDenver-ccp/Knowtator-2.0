@@ -26,14 +26,12 @@ package edu.ucdenver.ccp.knowtator.model;
 
 import com.google.common.base.Optional;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.view.TextBoundModelListener;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.protege.editor.core.ui.util.AugmentedJTextField;
@@ -89,104 +87,104 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
             }
 
             @Override
-            public void respondToGraphSpaceCollectionFirstAddedEvent() {
+            public void respondToGraphSpaceCollectionFirstAdded() {
 
             }
 
             @Override
-            public void respondToGraphSpaceCollectionEmptiedEvent() {
+            public void respondToGraphSpaceCollectionEmptied() {
 
             }
 
             @Override
-            public void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event) {
+            public void respondToGraphSpaceRemoved() {
 
             }
 
             @Override
-            public void respondToGraphSpaceAddedEvent(AddEvent<GraphSpace> event) {
+            public void respondToGraphSpaceAdded() {
 
             }
 
             @Override
-            public void respondToGraphSpaceSelectionEvent(SelectionEvent<GraphSpace> event) {
+            public void respondToGraphSpaceSelection(SelectionEvent<GraphSpace> event) {
 
             }
 
             @Override
-            public void respondToConceptAnnotationCollectionEmptiedEvent() {
+            public void respondToConceptAnnotationCollectionEmptied() {
 
             }
 
             @Override
-            public void respondToConceptAnnotationRemovedEvent(RemoveEvent<ConceptAnnotation> event) {
+            public void respondToConceptAnnotationRemoved() {
 
             }
 
             @Override
-            public void respondToConceptAnnotationAddedEvent(AddEvent<ConceptAnnotation> event) {
+            public void respondToConceptAnnotationAdded() {
 
             }
 
             @Override
-            public void respondToConceptAnnotationCollectionFirstAddedEvent() {
+            public void respondToConceptAnnotationCollectionFirstAdded() {
 
             }
 
             @Override
-            public void respondToSpanCollectionFirstAddedEvent() {
+            public void respondToSpanCollectionFirstAdded() {
 
             }
 
             @Override
-            public void respondToSpanCollectionEmptiedEvent() {
+            public void respondToSpanCollectionEmptied() {
 
             }
 
             @Override
-            public void respondToSpanRemovedEvent(RemoveEvent<Span> event) {
+            public void respondToSpanRemoved() {
 
             }
 
             @Override
-            public void respondToSpanAddedEvent(AddEvent<Span> event) {
+            public void respondToSpanAdded() {
 
             }
 
             @Override
-            public void respondToSpanSelectionEvent(SelectionEvent<Span> event) {
+            public void respondToSpanSelection(SelectionEvent<Span> event) {
 
             }
 
             @Override
-            public void respondToConceptAnnotationSelectionEvent(SelectionEvent<ConceptAnnotation> event) {
+            public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
                 if (event.getNew() != null && event.getNew().getOwlClass() != null) {
                     setSelectedOWLEntity(event.getNew().getOwlClass());
                 }
             }
 
             @Override
-            public void respondToTextSourceSelectionEvent(SelectionEvent<TextSource> event) {
+            public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
 
             }
 
             @Override
-            public void respondToTextSourceAddedEvent(AddEvent<TextSource> event) {
+            public void respondToTextSourceAdded() {
 
             }
 
             @Override
-            public void respondToTextSourceRemovedEvent(RemoveEvent<TextSource> event) {
+            public void respondToTextSourceRemoved() {
 
             }
 
             @Override
-            public void respondToTextSourceCollectionEmptiedEvent() {
+            public void respondToTextSourceCollectionEmptied() {
 
             }
 
             @Override
-            public void respondToTextSourceCollectionFirstAddedEvent() {
+            public void respondToTextSourceCollectionFirstAdded() {
 
             }
         };

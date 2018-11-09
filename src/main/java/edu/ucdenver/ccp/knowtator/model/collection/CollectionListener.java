@@ -27,9 +27,9 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 
 public interface CollectionListener<K extends KnowtatorDataObjectInterface> {
-	void added(AddEvent<K> event);
+	void added();
 
-	void removed(RemoveEvent<K> event);
+	void removed();
 
 	void emptied();
 

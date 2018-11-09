@@ -22,23 +22,24 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view;
+package edu.ucdenver.ccp.knowtator.view.label;
 
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
 
 public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponent {
 
-    protected KnowtatorView view;
+    KnowtatorView view;
 
-    protected KnowtatorLabel(KnowtatorView view) {
+    KnowtatorLabel(KnowtatorView view) {
         this.view = view;
 
         new TextBoundModelListener(view.getController()) {
@@ -58,102 +59,102 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
             }
 
             @Override
-            public void respondToGraphSpaceCollectionFirstAddedEvent() {
+            public void respondToGraphSpaceCollectionFirstAdded() {
 
             }
 
             @Override
-            public void respondToGraphSpaceCollectionEmptiedEvent() {
+            public void respondToGraphSpaceCollectionEmptied() {
 
             }
 
             @Override
-            public void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event) {
+            public void respondToGraphSpaceRemoved() {
 
             }
 
             @Override
-            public void respondToGraphSpaceAddedEvent(AddEvent<GraphSpace> event) {
+            public void respondToGraphSpaceAdded() {
 
             }
 
             @Override
-            public void respondToGraphSpaceSelectionEvent(SelectionEvent<GraphSpace> event) {
+            public void respondToGraphSpaceSelection(SelectionEvent<GraphSpace> event) {
 
             }
 
             @Override
-            public void respondToConceptAnnotationCollectionEmptiedEvent() {
+            public void respondToConceptAnnotationCollectionEmptied() {
                 react();
             }
 
             @Override
-            public void respondToConceptAnnotationRemovedEvent(RemoveEvent<ConceptAnnotation> event) {
+            public void respondToConceptAnnotationRemoved() {
                 react();
             }
 
             @Override
-            public void respondToConceptAnnotationAddedEvent(AddEvent<ConceptAnnotation> event) {
+            public void respondToConceptAnnotationAdded() {
                 react();
             }
 
             @Override
-            public void respondToConceptAnnotationCollectionFirstAddedEvent() {
+            public void respondToConceptAnnotationCollectionFirstAdded() {
                 react();
             }
 
             @Override
-            public void respondToSpanCollectionFirstAddedEvent() {
+            public void respondToSpanCollectionFirstAdded() {
 
             }
 
             @Override
-            public void respondToSpanCollectionEmptiedEvent() {
+            public void respondToSpanCollectionEmptied() {
 
             }
 
             @Override
-            public void respondToSpanRemovedEvent(RemoveEvent<Span> event) {
+            public void respondToSpanRemoved() {
 
             }
 
             @Override
-            public void respondToSpanAddedEvent(AddEvent<Span> event) {
+            public void respondToSpanAdded() {
 
             }
 
             @Override
-            public void respondToSpanSelectionEvent(SelectionEvent<Span> event) {
+            public void respondToSpanSelection(SelectionEvent<Span> event) {
 
             }
 
             @Override
-            public void respondToConceptAnnotationSelectionEvent(SelectionEvent<ConceptAnnotation> event) {
+            public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
                 react();
             }
 
             @Override
-            public void respondToTextSourceSelectionEvent(SelectionEvent<TextSource> event) {
+            public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
 
             }
 
             @Override
-            public void respondToTextSourceAddedEvent(AddEvent<TextSource> event) {
+            public void respondToTextSourceAdded() {
 
             }
 
             @Override
-            public void respondToTextSourceRemovedEvent(RemoveEvent<TextSource> event) {
+            public void respondToTextSourceRemoved() {
 
             }
 
             @Override
-            public void respondToTextSourceCollectionEmptiedEvent() {
+            public void respondToTextSourceCollectionEmptied() {
 
             }
 
             @Override
-            public void respondToTextSourceCollectionFirstAddedEvent() {
+            public void respondToTextSourceCollectionFirstAdded() {
 
             }
         };

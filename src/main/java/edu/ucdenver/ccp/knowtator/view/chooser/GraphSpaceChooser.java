@@ -22,24 +22,22 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.textsource;
+package edu.ucdenver.ccp.knowtator.view.chooser;
 
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorChooser;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
-public class TextSourceChooser extends KnowtatorChooser<TextSource> {
+public class GraphSpaceChooser extends KnowtatorChooser<GraphSpace> {
 
-    public TextSourceChooser(KnowtatorView view) {
+
+    public GraphSpaceChooser(KnowtatorView view) {
         super(view);
-        setCollection(view.getController().getTextSourceCollection());
     }
 
-    @Override
-    protected void react() {
+    public void react() {
         try {
-            setCollection(view.getController().getTextSourceCollection());
+            setCollection(view.getController().getTextSourceCollection().getSelection().getGraphSpaceCollection());
             setSelected();
         } catch (NoSelectionException e) {
             e.printStackTrace();
@@ -48,6 +46,6 @@ public class TextSourceChooser extends KnowtatorChooser<TextSource> {
 
     @Override
     public void reset() {
-        setCollection(view.getController().getTextSourceCollection());
+
     }
 }

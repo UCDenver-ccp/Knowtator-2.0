@@ -22,39 +22,23 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.menu;
+package edu.ucdenver.ccp.knowtator.view.label;
 
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
-import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorList;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
-public class ProfileList extends KnowtatorList<Profile> {
-    ProfileList(KnowtatorView view) {
-        super(view);
+public class AnnotationIDLabel extends KnowtatorLabel {
+  public AnnotationIDLabel(KnowtatorView view) {
+    super(view);
+    this.view = view;
+  }
 
-        react();
+  @Override
+  protected void react() {
+    try {
+      setText(view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getId());
+    } catch (NoSelectionException e) {
+      setText("");
     }
-
-    @Override
-    protected void react() {
-        try {
-            setCollection(view.getController().getProfileCollection());
-            setSelected();
-        } catch (NoSelectionException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    // I am overriding here because the base method adds this as a collection listener to its collection,
-    // but that generates a concurrent modification exception during "added" events
-//    @Override
-//    protected void setCollection(KnowtatorCollection<Profile> collection) {
-//        dispose();
-//        this.collection = collection;
-//        collection.forEach(k -> ((DefaultListModel<Profile>) getModel()).addElement(k));
-//    }
-
-
+  }
 }

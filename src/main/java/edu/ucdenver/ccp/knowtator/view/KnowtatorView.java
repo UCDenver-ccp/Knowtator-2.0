@@ -35,19 +35,21 @@ import edu.ucdenver.ccp.knowtator.actions.OWLActions;
 import edu.ucdenver.ccp.knowtator.actions.SpanActions;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.FilterModel;
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.view.annotation.*;
+import edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog;
+import edu.ucdenver.ccp.knowtator.view.label.AnnotationAnnotatorLabel;
+import edu.ucdenver.ccp.knowtator.view.label.AnnotationClassLabel;
+import edu.ucdenver.ccp.knowtator.view.label.AnnotationIDLabel;
+import edu.ucdenver.ccp.knowtator.view.list.GraphSpaceList;
+import edu.ucdenver.ccp.knowtator.view.list.SpanList;
 import edu.ucdenver.ccp.knowtator.view.menu.MenuDialog;
-import edu.ucdenver.ccp.knowtator.view.search.SearchTextField;
-import edu.ucdenver.ccp.knowtator.view.textsource.TextSourceChooser;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -431,19 +433,19 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private void setupListeners() {
 		new TextBoundModelListener(controller) {
 			@Override
-			public void respondToTextSourceCollectionEmptiedEvent() {
+			public void respondToTextSourceCollectionEmptied() {
 				disableTextSourceButtons();
 				addTextSourceButton.setEnabled(true);
 			}
 
 			@Override
-			public void respondToTextSourceCollectionFirstAddedEvent() {
+			public void respondToTextSourceCollectionFirstAdded() {
 				enableTextSourceButtons();
 				addAnnotationButton.setEnabled(true);
 			}
 
 			@Override
-			public void respondToConceptAnnotationSelectionEvent(SelectionEvent<ConceptAnnotation> event) {
+			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
 				if (event.getNew() == null) {
 					removeAnnotationButton.setEnabled(false);
 				} else {
@@ -452,23 +454,23 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 			}
 
 			@Override
-			public void respondToConceptAnnotationCollectionEmptiedEvent() {
+			public void respondToConceptAnnotationCollectionEmptied() {
 				disableAnnotationButtons();
 				addAnnotationButton.setEnabled(true);
 			}
 
 			@Override
-			public void respondToTextSourceSelectionEvent(SelectionEvent<TextSource> event) {
+			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
 
 			}
 
 			@Override
-			public void respondToTextSourceAddedEvent(AddEvent<TextSource> event) {
+			public void respondToTextSourceAdded() {
 
 			}
 
 			@Override
-			public void respondToTextSourceRemovedEvent(RemoveEvent<TextSource> event) {
+			public void respondToTextSourceRemoved() {
 
 			}
 
@@ -488,48 +490,48 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 			}
 
 			@Override
-			public void respondToGraphSpaceCollectionFirstAddedEvent() {
+			public void respondToGraphSpaceCollectionFirstAdded() {
 
 			}
 
 			@Override
-			public void respondToGraphSpaceCollectionEmptiedEvent() {
+			public void respondToGraphSpaceCollectionEmptied() {
 
 			}
 
 
 			@Override
-			public void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event) {
+			public void respondToGraphSpaceRemoved() {
 
 			}
 
 			@Override
-			public void respondToGraphSpaceAddedEvent(AddEvent<GraphSpace> event) {
+			public void respondToGraphSpaceAdded() {
 
 			}
 
 			@Override
-			public void respondToGraphSpaceSelectionEvent(SelectionEvent<GraphSpace> event) {
+			public void respondToGraphSpaceSelection(SelectionEvent<GraphSpace> event) {
 
 			}
 
 			@Override
-			public void respondToConceptAnnotationRemovedEvent(RemoveEvent<ConceptAnnotation> event) {
+			public void respondToConceptAnnotationRemoved() {
 
 			}
 
 			@Override
-			public void respondToConceptAnnotationAddedEvent(AddEvent<ConceptAnnotation> event) {
+			public void respondToConceptAnnotationAdded() {
 
 			}
 
 			@Override
-			public void respondToConceptAnnotationCollectionFirstAddedEvent() {
+			public void respondToConceptAnnotationCollectionFirstAdded() {
 				enableAnnotationButtons();
 			}
 
 			@Override
-			public void respondToSpanSelectionEvent(SelectionEvent<Span> event) {
+			public void respondToSpanSelection(SelectionEvent<Span> event) {
 				if (event.getNew() == null) {
 					disableSpanButtons();
 				} else {
@@ -538,22 +540,22 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 			}
 
 			@Override
-			public void respondToSpanCollectionEmptiedEvent() {
+			public void respondToSpanCollectionEmptied() {
 				disableSpanButtons();
 			}
 
 			@Override
-			public void respondToSpanRemovedEvent(RemoveEvent<Span> event) {
+			public void respondToSpanRemoved() {
 
 			}
 
 			@Override
-			public void respondToSpanAddedEvent(AddEvent<Span> event) {
+			public void respondToSpanAdded() {
 
 			}
 
 			@Override
-			public void respondToSpanCollectionFirstAddedEvent() {
+			public void respondToSpanCollectionFirstAdded() {
 				enableSpanButtons();
 			}
 		};
@@ -646,15 +648,15 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		return addTextSourceButton;
 	}
 
-	public JCheckBox getRegexCheckBox() {
+	JCheckBox getRegexCheckBox() {
 		return regexCheckBox;
 	}
 
-	public JCheckBox getCaseSensitiveCheckBox() {
+	JCheckBox getCaseSensitiveCheckBox() {
 		return caseSensitiveCheckBox;
 	}
 
-	public JCheckBox getOnlyInAnnotationsCheckBox() {
+	JCheckBox getOnlyInAnnotationsCheckBox() {
 		return onlyAnnotationsCheckBox;
 	}
 

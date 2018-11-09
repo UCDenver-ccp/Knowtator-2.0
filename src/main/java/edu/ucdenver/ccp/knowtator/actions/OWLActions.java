@@ -28,7 +28,7 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorColorChooser;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorColorPalette;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -103,7 +103,7 @@ public class OWLActions {
             Set<Object> owlClasses = new HashSet<>();
             owlClasses.add(owlClass);
 
-            JColorChooser colorChooser = new KnowtatorColorChooser();
+            JColorChooser colorChooser = new KnowtatorColorPalette();
 
             final Color[] finalC = {null};
             JDialog dialog = JColorChooser.createDialog(view, "Pick a color for " + owlClass, true, colorChooser,

@@ -40,9 +40,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
-import edu.ucdenver.ccp.knowtator.model.collection.AddEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.collection.RemoveEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.DataObjectModificationListener;
@@ -76,7 +74,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
     private final TextSource textSource;
     private String id;
     private Window parentWindow;
-    private List<DataObjectModificationListener> modificationListeners;
+    private final List<DataObjectModificationListener> modificationListeners;
 
     public GraphSpace(KnowtatorController controller, TextSource textSource, String id) {
 
@@ -596,12 +594,12 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
     }
 
     @Override
-    public void added(AddEvent<ConceptAnnotation> event) {
+    public void added() {
 
     }
 
     @Override
-    public void removed(RemoveEvent<ConceptAnnotation> event) {
+    public void removed() {
 
     }
 

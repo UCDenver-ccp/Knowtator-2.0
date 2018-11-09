@@ -61,7 +61,7 @@ public class FilterActions {
         private final KnowtatorController controller;
         private final boolean isFilter;
         private final String filter;
-        private boolean previousIsFilter;
+        private final boolean previousIsFilter;
 
         FilterEdit(KnowtatorController controller, String filter, boolean isFilter, boolean previousIsFilter) {
             super("Change filter");

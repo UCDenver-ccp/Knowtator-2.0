@@ -22,36 +22,42 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view;
+package edu.ucdenver.ccp.knowtator.view.list;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
-import edu.ucdenver.ccp.knowtator.model.collection.*;
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
+import javax.swing.event.ListSelectionListener;
 
-public abstract class KnowtatorChooser<K extends KnowtatorDataObjectInterface> extends JComboBox<K> implements KnowtatorComponent {
+public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> extends JList<K> implements KnowtatorComponent {
 
-	private final ActionListener al;
+	final KnowtatorView view;
 	private KnowtatorCollection<K> collection;
-	protected final KnowtatorView view;
 
-	protected KnowtatorChooser(KnowtatorView view) {
+	KnowtatorList(KnowtatorView view) {
 		this.view = view;
+		setModel(new DefaultListModel<>());
 
-		al = e -> {
-			JComboBox comboBox = (JComboBox) e.getSource();
-			if (comboBox.getSelectedItem() != null) {
-				this.collection.setSelection(getItemAt(getSelectedIndex()));
+		ListSelectionListener al = e -> {
+			JList jList = (JList) e.getSource();
+			if (jList.getSelectedValue() != null) {
+				collection.setSelection(this.getSelectedValue());
 			}
 		};
 
-		new TextBoundModelListener(view.getController()) {
+		addListSelectionListener(al);
 
+		new TextBoundModelListener(view.getController()) {
 			@Override
 			public void respondToConceptAnnotationModification() {
 				react();
@@ -68,134 +74,140 @@ public abstract class KnowtatorChooser<K extends KnowtatorDataObjectInterface> e
 			}
 
 			@Override
-			public void respondToGraphSpaceCollectionFirstAddedEvent() {
+			public void respondToGraphSpaceCollectionFirstAdded() {
 				react();
 			}
 
 			@Override
-			public void respondToGraphSpaceCollectionEmptiedEvent() {
+			public void respondToGraphSpaceCollectionEmptied() {
 				react();
 			}
 
 			@Override
-			public void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event) {
+			public void respondToGraphSpaceRemoved() {
 				react();
 			}
 
 			@Override
-			public void respondToGraphSpaceAddedEvent(AddEvent<GraphSpace> event) {
+			public void respondToGraphSpaceAdded() {
 				react();
 			}
 
 			@Override
-			public void respondToGraphSpaceSelectionEvent(SelectionEvent<GraphSpace> event) {
+			public void respondToGraphSpaceSelection(SelectionEvent<GraphSpace> event) {
 				react();
 			}
 
 			@Override
-			public void respondToConceptAnnotationCollectionEmptiedEvent() {
+			public void respondToConceptAnnotationCollectionEmptied() {
 				react();
 			}
 
 			@Override
-			public void respondToConceptAnnotationRemovedEvent(RemoveEvent<ConceptAnnotation> event) {
+			public void respondToConceptAnnotationRemoved() {
 				react();
 			}
 
 			@Override
-			public void respondToConceptAnnotationAddedEvent(AddEvent<ConceptAnnotation> event) {
+			public void respondToConceptAnnotationAdded() {
 				react();
 			}
 
 			@Override
-			public void respondToConceptAnnotationCollectionFirstAddedEvent() {
+			public void respondToConceptAnnotationCollectionFirstAdded() {
 				react();
 			}
 
 			@Override
-			public void respondToSpanCollectionFirstAddedEvent() {
+			public void respondToSpanCollectionFirstAdded() {
 				react();
 			}
 
 			@Override
-			public void respondToSpanCollectionEmptiedEvent() {
+			public void respondToSpanCollectionEmptied() {
 				react();
 			}
 
 			@Override
-			public void respondToSpanRemovedEvent(RemoveEvent<Span> event) {
+			public void respondToSpanRemoved() {
 				react();
 			}
 
 			@Override
-			public void respondToSpanAddedEvent(AddEvent<Span> event) {
+			public void respondToSpanAdded() {
 				react();
 			}
 
 			@Override
-			public void respondToSpanSelectionEvent(SelectionEvent<Span> event) {
+			public void respondToSpanSelection(SelectionEvent<Span> event) {
 				react();
 			}
 
 			@Override
-			public void respondToConceptAnnotationSelectionEvent(SelectionEvent<ConceptAnnotation> event) {
+			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
 				react();
 			}
 
 			@Override
-			public void respondToTextSourceSelectionEvent(SelectionEvent<TextSource> event) {
+			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
 				react();
 			}
 
 			@Override
-			public void respondToTextSourceAddedEvent(AddEvent<TextSource> event) {
+			public void respondToTextSourceAdded() {
 				react();
 			}
 
 			@Override
-			public void respondToTextSourceRemovedEvent(RemoveEvent<TextSource> event) {
+			public void respondToTextSourceRemoved() {
 				react();
 			}
 
 			@Override
-			public void respondToTextSourceCollectionEmptiedEvent() {
+			public void respondToTextSourceCollectionEmptied() {
 				react();
 			}
 
 			@Override
-			public void respondToTextSourceCollectionFirstAddedEvent() {
+			public void respondToTextSourceCollectionFirstAdded() {
 				react();
 			}
 		};
-
-
 	}
 
 	protected abstract void react();
 
-	protected void setCollection(KnowtatorCollection<K> collection) {
+	void setCollection(KnowtatorCollection<K> collection) {
+		//clear collection
 		dispose();
-
 		this.collection = collection;
 		if (collection.size() == 0) {
 			setEnabled(false);
 		} else {
 			setEnabled(true);
-			removeActionListener(al);
-			collection.forEach(this::addItem);
-			addActionListener(al);
+			collection.forEach(k -> ((DefaultListModel<K>) getModel()).addElement(k));
 		}
 	}
 
-	protected void setSelected() throws NoSelectionException {
-		setSelectedItem(collection.getSelection());
+
+	void setSelected() throws NoSelectionException {
+		for (int i = 0; i < getModel().getSize(); i++) {
+			K element = getModel().getElementAt(i);
+			if (element == collection.getSelection()) {
+				setSelectedIndex(i);
+				return;
+			}
+		}
+
+	}
+
+	@Override
+	public void reset() {
+
 	}
 
 	@Override
 	public void dispose() {
-		removeAllItems();
-
-		setSelectedItem(null);
+		((DefaultListModel) getModel()).clear();
 	}
-
 }
