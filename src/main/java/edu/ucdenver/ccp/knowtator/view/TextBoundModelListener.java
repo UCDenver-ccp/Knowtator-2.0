@@ -37,13 +37,13 @@ import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
  *
  * @author Harrison
  */
-public class TextBoundModelListener implements KnowtatorCollectionListener<TextSource> {
+public abstract class TextBoundModelListener implements KnowtatorCollectionListener<TextSource> {
 	private final KnowtatorCollectionListener<ConceptAnnotation> conceptAnnotationCollectionListener;
 	private final KnowtatorCollectionListener<Span> spanCollectionListener;
 	private final KnowtatorCollectionListener<GraphSpace> graphSpaceCollectionListener;
 
 
-	TextBoundModelListener(KnowtatorController controller) {
+	protected TextBoundModelListener(KnowtatorController controller) {
 		controller.getTextSourceCollection().addCollectionListener(this);
 
 		graphSpaceCollectionListener = new KnowtatorCollectionListener<GraphSpace>() {
@@ -82,6 +82,13 @@ public class TextBoundModelListener implements KnowtatorCollectionListener<TextS
 
 			@Override
 			public void selected(SelectionChangeEvent<ConceptAnnotation> event) {
+				if (event.getOld() != null) {
+					event.getOld().getSpanCollection().removeCollectionListener(spanCollectionListener);
+				}
+				if (event.getNew() != null) {
+					event.getNew().getSpanCollection().addCollectionListener(spanCollectionListener);
+				}
+
 				respondToConceptAnnotationSelectionEvent(event);
 			}
 
@@ -147,81 +154,56 @@ public class TextBoundModelListener implements KnowtatorCollectionListener<TextS
 		};
 	}
 
-	public void respondToGraphSpaceCollectionFirstAddedEvent() {
+	public abstract void respondToGraphSpaceCollectionFirstAddedEvent();
 
-	}
+	public abstract void respondToGraphSpaceCollectionEmptiedEvent();
 
-	public void respondToGraphSpaceCollectionEmptiedEvent() {
+	public abstract void respondToGraphSpaceChangedEvent(ChangeEvent<GraphSpace> event);
 
-	}
+	public abstract void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event);
 
-	public void respondToGraphSpaceChangedEvent(ChangeEvent<GraphSpace> event) {
+	public abstract void respondToGraphSpaceAddedEvent(AddEvent<GraphSpace> event);
 
-	}
+	public abstract void respondToGraphSpaceSelectionEvent(SelectionChangeEvent<GraphSpace> event);
 
-	public void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event) {
+	public abstract void respondToConceptAnnotationCollectionEmptiedEvent();
 
-	}
+	public abstract void respondToConceptAnnotationChangedEvent(ChangeEvent<ConceptAnnotation> event);
 
-	public void respondToGraphSpaceAddedEvent(AddEvent<GraphSpace> event) {
+	public abstract void respondToConceptAnnotationRemovedEvent(RemoveEvent<ConceptAnnotation> event);
 
-	}
+	public abstract void respondToConceptAnnotationAddedEvent(AddEvent<ConceptAnnotation> event);
 
-	public void respondToGraphSpaceSelectionEvent(SelectionChangeEvent<GraphSpace> event) {
+	public abstract void respondToConceptAnnotationCollectionFirstAddedEvent();
 
-	}
+	public abstract void respondToSpanCollectionFirstAddedEvent();
 
-	public void respondToConceptAnnotationCollectionEmptiedEvent() {
+	public abstract void respondToSpanCollectionEmptiedEvent();
 
-	}
+	public abstract void respondToSpanChangedEvent(ChangeEvent<Span> event);
 
-	public void respondToConceptAnnotationChangedEvent(ChangeEvent<ConceptAnnotation> event) {
+	public abstract void respondToSpanRemovedEvent(RemoveEvent<Span> event);
 
-	}
+	public abstract void respondToSpanAddedEvent(AddEvent<Span> event);
 
-	public void respondToConceptAnnotationRemovedEvent(RemoveEvent<ConceptAnnotation> event) {
+	public abstract void respondToSpanSelectionEvent(SelectionChangeEvent<Span> event);
 
-	}
+	public abstract void respondToConceptAnnotationSelectionEvent(SelectionChangeEvent<ConceptAnnotation> event);
 
-	public void respondToConceptAnnotationAddedEvent(AddEvent<ConceptAnnotation> event) {
+	public abstract void respondToTextSourceSelectionEvent(SelectionChangeEvent<TextSource> event);
 
-	}
+	public abstract void respondToTextSourceAddedEvent(AddEvent<TextSource> event);
 
-	public void respondToConceptAnnotationCollectionFirstAddedEvent() {
+	public abstract void respondToTextSourceRemovedEvent(RemoveEvent<TextSource> event);
 
-	}
+	public abstract void respondToTextSourceChangedEvent(ChangeEvent<TextSource> event);
 
-	public void respondToSpanCollectionFirstAddedEvent() {
+	public abstract void respondToTextSourceCollectionEmptiedEvent();
 
-	}
+	public abstract void respondToTextSourceCollectionFirstAddedEvent();
 
-	public void respondToSpanCollectionEmptiedEvent() {
-	}
-
-	public void respondToSpanChangedEvent(ChangeEvent<Span> event) {
-
-	}
-
-	public void respondToSpanRemovedEvent(RemoveEvent<Span> event) {
-	}
-
-	public void respondToSpanAddedEvent(AddEvent<Span> event) {
-	}
-
-	public void respondToSpanSelectionEvent(SelectionChangeEvent<Span> event) {
-
-	}
-
-	public void respondToConceptAnnotationSelectionEvent(SelectionChangeEvent<ConceptAnnotation> event) {
-		if (event.getOld() != null) {
-			event.getOld().getSpanCollection().removeCollectionListener(spanCollectionListener);
-		}
-		if (event.getNew() != null) {
-			event.getNew().getSpanCollection().addCollectionListener(spanCollectionListener);
-		}
-	}
-
-	public void respondToTextSourceSelectionEvent(SelectionChangeEvent<TextSource> event) {
+	@Override
+	public void selected(SelectionChangeEvent<TextSource> event) {
 		if (event.getOld() != null) {
 			event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
 			event.getOld().getGraphSpaceCollection().removeCollectionListener(graphSpaceCollectionListener);
@@ -230,30 +212,7 @@ public class TextBoundModelListener implements KnowtatorCollectionListener<TextS
 			event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
 			event.getNew().getGraphSpaceCollection().addCollectionListener(graphSpaceCollectionListener);
 		}
-	}
 
-	public void respondToTextSourceAddedEvent(AddEvent<TextSource> event) {
-
-	}
-
-	public void respondToTextSourceRemovedEvent(RemoveEvent<TextSource> event) {
-
-	}
-
-	public void respondToTextSourceChangedEvent(ChangeEvent<TextSource> event) {
-
-	}
-
-	public void respondToTextSourceCollectionEmptiedEvent() {
-
-	}
-
-	public void respondToTextSourceCollectionFirstAddedEvent() {
-
-	}
-
-	@Override
-	public void selected(SelectionChangeEvent<TextSource> event) {
 		respondToTextSourceSelectionEvent(event);
 	}
 

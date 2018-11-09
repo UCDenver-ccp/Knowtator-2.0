@@ -35,10 +35,11 @@ import edu.ucdenver.ccp.knowtator.actions.OWLActions;
 import edu.ucdenver.ccp.knowtator.actions.SpanActions;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.FilterModel;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.*;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.annotation.*;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog;
 import edu.ucdenver.ccp.knowtator.view.menu.MenuDialog;
@@ -428,21 +429,18 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		new TextBoundModelListener(controller) {
 			@Override
 			public void respondToTextSourceCollectionEmptiedEvent() {
-				super.respondToTextSourceCollectionEmptiedEvent();
 				disableTextSourceButtons();
 				addTextSourceButton.setEnabled(true);
 			}
 
 			@Override
 			public void respondToTextSourceCollectionFirstAddedEvent() {
-				super.respondToTextSourceCollectionFirstAddedEvent();
 				enableTextSourceButtons();
 				addAnnotationButton.setEnabled(true);
 			}
 
 			@Override
 			public void respondToConceptAnnotationSelectionEvent(SelectionChangeEvent<ConceptAnnotation> event) {
-				super.respondToConceptAnnotationSelectionEvent(event);
 				if (event.getNew() == null) {
 					removeAnnotationButton.setEnabled(false);
 				} else {
@@ -451,21 +449,83 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 			}
 
 			@Override
+			public void respondToTextSourceSelectionEvent(SelectionChangeEvent<TextSource> event) {
+
+			}
+
+			@Override
+			public void respondToTextSourceAddedEvent(AddEvent<TextSource> event) {
+
+			}
+
+			@Override
+			public void respondToTextSourceRemovedEvent(RemoveEvent<TextSource> event) {
+
+			}
+
+			@Override
+			public void respondToTextSourceChangedEvent(ChangeEvent<TextSource> event) {
+
+			}
+
+			@Override
+			public void respondToGraphSpaceCollectionFirstAddedEvent() {
+
+			}
+
+			@Override
+			public void respondToGraphSpaceCollectionEmptiedEvent() {
+
+			}
+
+			@Override
+			public void respondToGraphSpaceChangedEvent(ChangeEvent<GraphSpace> event) {
+
+			}
+
+			@Override
+			public void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event) {
+
+			}
+
+			@Override
+			public void respondToGraphSpaceAddedEvent(AddEvent<GraphSpace> event) {
+
+			}
+
+			@Override
+			public void respondToGraphSpaceSelectionEvent(SelectionChangeEvent<GraphSpace> event) {
+
+			}
+
+			@Override
 			public void respondToConceptAnnotationCollectionEmptiedEvent() {
-				super.respondToConceptAnnotationCollectionEmptiedEvent();
 				disableAnnotationButtons();
 				addAnnotationButton.setEnabled(true);
 			}
 
 			@Override
+			public void respondToConceptAnnotationChangedEvent(ChangeEvent<ConceptAnnotation> event) {
+
+			}
+
+			@Override
+			public void respondToConceptAnnotationRemovedEvent(RemoveEvent<ConceptAnnotation> event) {
+
+			}
+
+			@Override
+			public void respondToConceptAnnotationAddedEvent(AddEvent<ConceptAnnotation> event) {
+
+			}
+
+			@Override
 			public void respondToConceptAnnotationCollectionFirstAddedEvent() {
-				super.respondToConceptAnnotationCollectionFirstAddedEvent();
 				enableAnnotationButtons();
 			}
 
 			@Override
 			public void respondToSpanSelectionEvent(SelectionChangeEvent<Span> event) {
-				super.respondToSpanSelectionEvent(event);
 				if (event.getNew() == null) {
 					disableSpanButtons();
 				} else {
@@ -475,13 +535,26 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 			@Override
 			public void respondToSpanCollectionEmptiedEvent() {
-				super.respondToSpanCollectionEmptiedEvent();
 				disableSpanButtons();
 			}
 
 			@Override
+			public void respondToSpanChangedEvent(ChangeEvent<Span> event) {
+
+			}
+
+			@Override
+			public void respondToSpanRemovedEvent(RemoveEvent<Span> event) {
+
+			}
+
+			@Override
+			public void respondToSpanAddedEvent(AddEvent<Span> event) {
+
+			}
+
+			@Override
 			public void respondToSpanCollectionFirstAddedEvent() {
-				super.respondToSpanCollectionFirstAddedEvent();
 				enableSpanButtons();
 			}
 		};

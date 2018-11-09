@@ -32,9 +32,12 @@ import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.actions.GraphActions;
 import edu.ucdenver.ccp.knowtator.model.collection.*;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.TextBoundModelListener;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -44,10 +47,9 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GraphView extends JPanel implements KnowtatorCollectionListener<GraphSpace>, KnowtatorComponent {
+public class GraphView extends JPanel implements KnowtatorComponent {
 	private final JDialog dialog;
 	private final KnowtatorView view;
-	private final KnowtatorCollectionListener<TextSource> textSourceCollectionListener;
 	private JButton removeCellButton;
 	private JButton addAnnotationNodeButton;
 	private JButton applyLayoutButton;
@@ -72,21 +74,22 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
 		$$$setupUI$$$();
 		makeButtons();
 
-		GraphView graphView = this;
-
-		textSourceCollectionListener = new KnowtatorCollectionListener<TextSource>() {
-			@Override
-			public void added(AddEvent<TextSource> event) {
-
+		new TextBoundModelListener(view.getController()) {
+			public void respondToGraphSpaceCollectionFirstAddedEvent() {
+				if (isVisible()) {
+					graphSpaceButtons.forEach(c -> c.setEnabled(true));
+				}
 			}
 
-			@Override
-			public void selected(SelectionChangeEvent<TextSource> event) {
-				if (event.getOld() != null) {
-					event.getOld().getGraphSpaceCollection().removeCollectionListener(graphView);
+			public void respondToGraphSpaceCollectionEmptiedEvent() {
+				if (isVisible()) {
+					graphSpaceButtons.forEach(c -> c.setEnabled(false));
+					addGraphSpaceButton.setEnabled(true);
 				}
-				if (event.getNew() != null) {
-					event.getNew().getGraphSpaceCollection().addCollectionListener(graphView);
+			}
+
+			public void respondToTextSourceSelectionEvent(SelectionChangeEvent<TextSource> event) {
+				if (isVisible() && event.getNew() != null) {
 					try {
 						showGraph(event.getNew().getGraphSpaceCollection().getSelection());
 					} catch (NoSelectionException e) {
@@ -95,27 +98,73 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
 				}
 			}
 
-			@Override
-			public void removed(RemoveEvent<TextSource> event) {
+			public void respondToGraphSpaceSelectionEvent(SelectionChangeEvent<GraphSpace> event) {
+				if (isVisible() && event.getNew() != null && event.getNew() != graphComponent.getGraph()) {
+					showGraph(event.getNew());
+				}
+			}
+
+			public void respondToGraphSpaceChangedEvent(ChangeEvent<GraphSpace> event) {
+			}
+
+			public void respondToGraphSpaceRemovedEvent(RemoveEvent<GraphSpace> event) {
+			}
+
+			public void respondToGraphSpaceAddedEvent(AddEvent<GraphSpace> event) {
+			}
+
+			public void respondToConceptAnnotationCollectionEmptiedEvent() {
+			}
+
+			public void respondToConceptAnnotationChangedEvent(ChangeEvent<ConceptAnnotation> event) {
+			}
+
+			public void respondToConceptAnnotationRemovedEvent(RemoveEvent<ConceptAnnotation> event) {
+			}
+
+			public void respondToConceptAnnotationAddedEvent(AddEvent<ConceptAnnotation> event) {
+			}
+
+			public void respondToConceptAnnotationCollectionFirstAddedEvent() {
+			}
+
+			public void respondToSpanCollectionFirstAddedEvent() {
 
 			}
 
-			@Override
-			public void changed(ChangeEvent<TextSource> event) {
+			public void respondToSpanCollectionEmptiedEvent() {
+			}
+
+			public void respondToSpanChangedEvent(ChangeEvent<Span> event) {
+			}
+
+			public void respondToSpanRemovedEvent(RemoveEvent<Span> event) {
+			}
+
+			public void respondToSpanAddedEvent(AddEvent<Span> event) {
+			}
+
+			public void respondToSpanSelectionEvent(SelectionChangeEvent<Span> event) {
+			}
+
+			public void respondToConceptAnnotationSelectionEvent(SelectionChangeEvent<ConceptAnnotation> event) {
+			}
+
+			public void respondToTextSourceAddedEvent(AddEvent<TextSource> event) {
 
 			}
 
-			@Override
-			public void emptied() {
-
+			public void respondToTextSourceRemovedEvent(RemoveEvent<TextSource> event) {
 			}
 
-			@Override
-			public void firstAdded() {
-
+			public void respondToTextSourceChangedEvent(ChangeEvent<TextSource> event) {
 			}
 
+			public void respondToTextSourceCollectionEmptiedEvent() {
+			}
 
+			public void respondToTextSourceCollectionFirstAddedEvent() {
+			}
 		};
 	}
 
@@ -167,21 +216,12 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
 	}
 
 	@Override
-	public void selected(SelectionChangeEvent<GraphSpace> event) {
-		if (event.getNew() != null && event.getNew() != graphComponent.getGraph()) {
-			showGraph(event.getNew());
-		}
-	}
-
-	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible) {
-			view.getController().getTextSourceCollection().addCollectionListener(textSourceCollectionListener);
 			graphSpaceChooser.reset();
 			try {
 				TextSource textSource = view.getController().getTextSourceCollection().getSelection();
-				textSource.getGraphSpaceCollection().addCollectionListener(this);
 				try {
 					showGraph(textSource.getGraphSpaceCollection().getSelection());
 				} catch (NoSelectionException e) {
@@ -195,8 +235,6 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
 			} catch (NoSelectionException e) {
 				e.printStackTrace();
 			}
-		} else {
-			view.getController().getTextSourceCollection().removeCollectionListener(textSourceCollectionListener);
 		}
 	}
 
@@ -214,15 +252,6 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
 		return graphComponent;
 	}
 
-	@Override
-	public void added(AddEvent<GraphSpace> event) {
-
-	}
-
-	@Override
-	public void removed(RemoveEvent<GraphSpace> event) {
-
-	}
 
 	/**
 	 * Method generated by IntelliJ IDEA GUI Designer
@@ -347,22 +376,6 @@ public class GraphView extends JPanel implements KnowtatorCollectionListener<Gra
 		@Override
 		public void ancestorMoved(AncestorEvent e) {
 		}
-	}
-
-	@Override
-	public void changed(ChangeEvent<GraphSpace> event) {
-
-	}
-
-	@Override
-	public void emptied() {
-		graphSpaceButtons.forEach(c -> c.setEnabled(false));
-		addGraphSpaceButton.setEnabled(true);
-	}
-
-	@Override
-	public void firstAdded() {
-		graphSpaceButtons.forEach(c -> c.setEnabled(true));
 	}
 
 
