@@ -42,22 +42,19 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+/**
+ * The Knowtator class. Contains all of the model managers. It is used to interface between the view and the model. Also handles
+ * loading and saving of the project.
+ */
 public class KnowtatorController extends ProjectManager implements KnowtatorObjectInterface {
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(KnowtatorController.class);
     private final List<BaseKnowtatorModel> models;
-
-    public FilterModel getFilterModel() {
-        return filterModel;
-    }
-
-
     private final SelectionModel selectionModel;
     private final FilterModel filterModel;
     private final TextSourceCollection textSourceCollection;
     private final ProfileCollection profileCollection;
     private final OWLModel owlModel;
-
     private final TreeMap<String, KnowtatorDataObjectInterface> idRegistry;
 
 
@@ -77,13 +74,15 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
         models.add(textSourceCollection);
         models.add(filterModel);
         models.add(selectionModel);
-
     }
-
 
     @Override
     List<BaseKnowtatorManager> getManagers() {
         return models.stream().filter(model -> model instanceof BaseKnowtatorManager).map(model -> (BaseKnowtatorManager) model).collect(Collectors.toList());
+    }
+
+    public FilterModel getFilterModel() {
+        return filterModel;
     }
 
     void importProject(File profilesLocation, File ontologiesLocation, File articlesLocation, File annotationsLocation, File projectLocation) {
