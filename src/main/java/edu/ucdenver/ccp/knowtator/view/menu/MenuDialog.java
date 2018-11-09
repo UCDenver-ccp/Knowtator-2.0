@@ -123,13 +123,13 @@ public class MenuDialog extends JDialog {
                 view.reset();
                 view.getController().newProject(projectDirectory);
 
-                view.getPreferences().put("Last Project", view.getController().getProjectLocation().getAbsolutePath());
+	            KnowtatorView.PREFERENCES.put("Last Project", view.getController().getProjectLocation().getAbsolutePath());
             }
         });
     }
 
     private void showOpenPane() {
-        String lastProjectFileName = view.getPreferences().get("Last Project", null);
+	    String lastProjectFileName = KnowtatorView.PREFERENCES.get("Last Project", null);
 
         JFileChooser fileChooser = new JFileChooser();
         if (lastProjectFileName != null) {
@@ -161,10 +161,10 @@ public class MenuDialog extends JDialog {
                 view.getKnowtatorTextPane().refreshHighlights();
                 view.getAddTextSourceButton().setEnabled(true);
 
-                view.getPreferences().put("Last Project", file.getAbsolutePath());
+	            KnowtatorView.PREFERENCES.put("Last Project", file.getAbsolutePath());
 
                 try {
-                    view.getPreferences().flush();
+	                KnowtatorView.PREFERENCES.flush();
                 } catch (BackingStoreException e1) {
                     e1.printStackTrace();
                 }
