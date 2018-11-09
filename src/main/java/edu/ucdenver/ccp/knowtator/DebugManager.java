@@ -30,8 +30,14 @@ import javax.swing.undo.UndoManager;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handles setting debugging
+ */
 public abstract class DebugManager extends UndoManager {
 
+    /**
+     * @return True if debugging mode is on
+     */
     public boolean isDebug() {
         return debug;
     }
@@ -39,15 +45,26 @@ public abstract class DebugManager extends UndoManager {
     private boolean debug;
     private final List<DebugListener> debugListeners;
 
+    /**
+     * Constructor for the debug manager. Defaults to debugging is off
+     */
     DebugManager() {
         debug = false;
         debugListeners = new ArrayList<>();
     }
 
+    /**
+     * Adds a debug listener
+     * @param listener A debug listener
+     */
     public void addDebugListener(DebugListener listener) {
         debugListeners.add(listener);
     }
 
+    /**
+     * Sets the debugging mode. Notifies debug listeners
+     * @param debug The debug mode
+     */
     void setDebug(boolean debug) {
         this.debug = debug;
         debugListeners.forEach(listener -> listener.setDebug(debug));
