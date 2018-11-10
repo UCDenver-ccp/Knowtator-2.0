@@ -40,7 +40,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.prefs.BackingStoreException;
 
 public class MenuDialog extends JDialog {
     private static final Logger log = Logger.getLogger(MenuDialog.class);
@@ -122,8 +121,8 @@ public class MenuDialog extends JDialog {
                 File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
                 view.reset();
                 view.getController().newProject(projectDirectory);
+                view.projectLoaded();
 
-	            KnowtatorView.PREFERENCES.put("Last Project", view.getController().getProjectLocation().getAbsolutePath());
             }
         });
     }
@@ -153,19 +152,10 @@ public class MenuDialog extends JDialog {
                 view.reset();
                 try {
                     view.getController().setSaveLocation(file.getParentFile());
+                    log.warn(String.format("Opening from %s", file.getAbsolutePath()));
+                    view.getController().loadProject();
+                    view.projectLoaded();
                 } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                log.warn(String.format("Opening from %s", file.getAbsolutePath()));
-                view.getController().loadProject();
-                view.getKnowtatorTextPane().refreshHighlights();
-                view.getAddTextSourceButton().setEnabled(true);
-
-	            KnowtatorView.PREFERENCES.put("Last Project", file.getAbsolutePath());
-
-                try {
-	                KnowtatorView.PREFERENCES.flush();
-                } catch (BackingStoreException e1) {
                     e1.printStackTrace();
                 }
             }

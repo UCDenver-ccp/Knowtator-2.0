@@ -54,15 +54,15 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 @SuppressWarnings("deprecation")
-public class KnowtatorTextPane extends JTextPane implements ColorListener, KnowtatorComponent, FilterModelListener, KnowtatorCollectionListener<Profile> {
+public class KnowtatorTextPane extends SearchableTextPane implements ColorListener, KnowtatorComponent, FilterModelListener, KnowtatorCollectionListener<Profile> {
 
     @SuppressWarnings("unused")
     private static Logger log = Logger.getLogger(KnowtatorTextPane.class);
 
     private final KnowtatorView view;
 
-    KnowtatorTextPane(KnowtatorView view) {
-        super();
+    KnowtatorTextPane(KnowtatorView view, JTextField searchTextField, JCheckBox onlyInAnnotationsCheckBox, JCheckBox regexCheckBox, JCheckBox caseSensitiveCheckBox) {
+        super(view, searchTextField, onlyInAnnotationsCheckBox, regexCheckBox, caseSensitiveCheckBox);
         this.view = view;
         setEditable(false);
         setEnabled(false);
@@ -88,34 +88,10 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
         return image;
     }
 
-    void search(boolean searchForward) {
-        try {
-            TextSource textSource = view.getController().getTextSourceCollection().getSelection();
-
-            int matchLoc;
-
-            matchLoc = searchForward ? view.getSearchTextField().searchForward(textSource) : view.getSearchTextField().searchPrevious(textSource);
-
-            requestFocusInWindow();
-            select(matchLoc, view.getSearchTextField().getMatchEnd());
-
-
-        } catch (NoSelectionException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
-
     private void showTextPane() {
-        try {
-            String text = view.getController().getTextSourceCollection().getSelection().getContent();
-            setText(text);
-            refreshHighlights();
-        } catch (NoSelectionException e) {
-            e.printStackTrace();
-        }
+        String text = textSource.getContent();
+        setText(text);
+        refreshHighlights();
     }
 
     private void setupListeners() {
@@ -274,9 +250,7 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
 
     private void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
         try {
-            TextSource textSource = view.getController().getTextSourceCollection().getSelection();
-
-            AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e, textSource);
+            AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e);
 
             Set<Span> spansContainingLocation =  view.getController()
                     .getTextSourceCollection().getSelection()
@@ -321,7 +295,7 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
         }
     }
 
-    public void refreshHighlights() {
+    void refreshHighlights() {
         if (view.getController().isNotLoading()) {
             // Remove all previous highlights in case a span has been deleted
             getHighlighter().removeAllHighlights();
@@ -349,7 +323,6 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
 
             Span span = null;
             try {
-                TextSource textSource = view.getController().getTextSourceCollection().getSelection();
                 ConceptAnnotation annotation = textSource.getConceptAnnotationCollection().getSelection();
                 if (annotation != null && annotation.getSpanCollection().size() > 0) {
                     try {
@@ -388,7 +361,7 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
 
         Set<OWLClass> descendants = null;
         try {
-            OWLClass owlClass = view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getOwlClass();
+            OWLClass owlClass = textSource.getConceptAnnotationCollection().getSelection().getOwlClass();
             descendants = view.getController().getOWLModel().getDescendants(owlClass);
             descendants.add(owlClass);
         } catch (NoSelectionException ignored) {
@@ -590,11 +563,9 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
 
     class AnnotationPopupMenu extends JPopupMenu {
         private final MouseEvent e;
-        private final TextSource textSource;
 
-        AnnotationPopupMenu(MouseEvent e, TextSource textSource) {
+        AnnotationPopupMenu(MouseEvent e) {
             this.e = e;
-            this.textSource = textSource;
         }
 
         private JMenuItem reassignOWLClassCommand() {
@@ -637,13 +608,7 @@ public class KnowtatorTextPane extends JTextPane implements ColorListener, Knowt
 
         private JMenuItem selectAnnotationCommand(Span span) {
             JMenuItem selectAnnotationMenuItem = new JMenuItem("Select " + span.getConceptAnnotation().getOwlClassID());
-            selectAnnotationMenuItem.addActionListener(e3 -> {
-                try {
-                    view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().setSelectedAnnotation(span);
-                } catch (NoSelectionException e1) {
-                    e1.printStackTrace();
-                }
-            });
+            selectAnnotationMenuItem.addActionListener(e3 -> textSource.getConceptAnnotationCollection().setSelectedAnnotation(span));
 
             return selectAnnotationMenuItem;
         }

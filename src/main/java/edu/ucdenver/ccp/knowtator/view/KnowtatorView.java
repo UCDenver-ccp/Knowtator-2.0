@@ -66,6 +66,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.util.*;
 import java.util.List;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 /**
@@ -81,6 +82,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private final KnowtatorController controller;
 	private GraphViewDialog graphViewDialog;
 	private JComponent panel1;
+	private JTextField searchTextField;
 	private JButton showGraphViewerButton;
 	private JButton removeAnnotationButton;
 	private JButton growStartButton;
@@ -97,7 +99,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private JButton removeTextSourceButton;
 	private JButton menuButton;
 	private JButton previousMatchButton;
-	private SearchTextField searchTextField;
 	private JButton nextMatchButton;
 	private JCheckBox caseSensitiveCheckBox;
 	private JCheckBox onlyAnnotationsCheckBox;
@@ -185,7 +186,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 		knowtatorComponents = new ArrayList<>();
 
-		knowtatorTextPane = new KnowtatorTextPane(this);
+		knowtatorTextPane = new KnowtatorTextPane(this, searchTextField, onlyAnnotationsCheckBox, regexCheckBox, caseSensitiveCheckBox);
 		graphViewDialog = new GraphViewDialog(this);
 		textSourceChooser = new TextSourceChooser(this);
 
@@ -195,8 +196,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		annotationClassLabel = new AnnotationClassLabel(this);
 		annotationIDLabel = new AnnotationIDLabel(this);
 
-		searchTextField = new SearchTextField(this);
-
 		knowtatorComponents.add(spanList);
 		knowtatorComponents.add(graphSpaceList);
 		knowtatorComponents.add(annotationAnnotatorLabel);
@@ -205,7 +204,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		knowtatorComponents.add(knowtatorTextPane);
 		knowtatorComponents.add(graphViewDialog);
 		knowtatorComponents.add(textSourceChooser);
-		knowtatorComponents.add(searchTextField);
 
 
 		// The following methods keep the graph view dialog on top only when the view is active.
@@ -233,10 +231,12 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 					}
 
 					@Override
-					public void ancestorRemoved(AncestorEvent event) { }
+					public void ancestorRemoved(AncestorEvent event) {
+					}
 
 					@Override
-					public void ancestorMoved(AncestorEvent event) { }
+					public void ancestorMoved(AncestorEvent event) {
+					}
 				});
 	}
 
@@ -427,11 +427,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	 */
 	private void makeSearchButtons() {
 		findTextInOntologyButton.addActionListener(e -> getController().getOWLModel().searchForString(searchTextField.getText()));
-		nextMatchButton.addActionListener(e -> getKnowtatorTextPane().search(true));
-		previousMatchButton.addActionListener(e -> getKnowtatorTextPane().search(false));
-		regexCheckBox.addItemListener(e -> searchTextField.makePattern());
-		caseSensitiveCheckBox.addItemListener(e -> searchTextField.makePattern());
-		onlyAnnotationsCheckBox.addItemListener(e -> searchTextField.makePattern());
+		nextMatchButton.addActionListener(e -> getKnowtatorTextPane().searchForward());
+		previousMatchButton.addActionListener(e -> getKnowtatorTextPane().searchPrevious());
+
 	}
 
 	/**
@@ -584,46 +582,72 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		controller.reset(getOWLWorkspace());
 	}
 
-
+	/**
+	 * Enables text source buttons
+	 */
 	private void enableTextSourceButtons() {
 		textSourceButtons.forEach(button -> button.setEnabled(true));
 	}
 
+	/**
+	 * Disables text source buttons and annotation buttons
+	 */
 	private void disableTextSourceButtons() {
 		textSourceButtons.forEach(button -> button.setEnabled(false));
 		disableAnnotationButtons();
 	}
 
+	/**
+	 * Enables annotation buttons
+	 */
 	private void enableAnnotationButtons() {
 		annotationButtons.forEach(button -> button.setEnabled(true));
 	}
 
+	/**
+	 * Disables annotation buttons and span buttons
+	 */
 	private void disableAnnotationButtons() {
 		annotationButtons.forEach(button -> button.setEnabled(false));
 		disableSpanButtons();
 	}
 
+	/**
+	 * Enables span buttons
+	 */
 	private void enableSpanButtons() {
 		selectionSizeButtons.forEach(AbstractButton::removeActionListener);
 		spanSizeButtons.forEach(AbstractButton::removeActionListener);
 		spanSizeButtons.forEach(AbstractButton::addActionListener);
 	}
 
+	/**
+	 * Disables span buttons
+	 */
 	private void disableSpanButtons() {
 		spanSizeButtons.forEach(AbstractButton::removeActionListener);
 		selectionSizeButtons.forEach(AbstractButton::removeActionListener);
 		selectionSizeButtons.forEach(AbstractButton::addActionListener);
 	}
 
+	/**
+	 * @return The graph view dialog
+	 */
 	public GraphViewDialog getGraphViewDialog() {
 		return graphViewDialog;
 	}
 
 
+	/**
+	 * @return the Knowtator text pane
+	 */
 	public KnowtatorTextPane getKnowtatorTextPane() {
 		return knowtatorTextPane;
 	}
 
+	/**
+	 * Calls dispose on the model and all components
+	 */
 	@Override
 	public void disposeView() {
 		controller.dispose();
@@ -651,10 +675,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	public void dragOver(DropTargetDragEvent e) {
 	}
 
-	public JButton getAddTextSourceButton() {
-		return addTextSourceButton;
-	}
-
 	JCheckBox getRegexCheckBox() {
 		return regexCheckBox;
 	}
@@ -667,8 +687,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		return onlyAnnotationsCheckBox;
 	}
 
-	SearchTextField getSearchTextField() {
-		return searchTextField;
+	public void projectLoaded() {
+		knowtatorTextPane.refreshHighlights();
+		addTextSourceButton.setEnabled(true);
+
+		KnowtatorView.PREFERENCES.put("Last Project", getController().getProjectLocation().getAbsolutePath());
+
+		try {
+			KnowtatorView.PREFERENCES.flush();
+		} catch (BackingStoreException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	/**
@@ -786,6 +815,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		final JPanel panel4 = new JPanel();
 		panel4.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
 		searchPanel.add(panel4, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+		searchTextField = new JTextField();
 		Font searchTextFieldFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, searchTextField.getFont());
 		if (searchTextFieldFont != null) searchTextField.setFont(searchTextFieldFont);
 		panel4.add(searchTextField, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 25), new Dimension(-1, 25), 0, false));
