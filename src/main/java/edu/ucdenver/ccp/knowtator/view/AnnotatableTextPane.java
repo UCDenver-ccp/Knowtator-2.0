@@ -33,62 +33,65 @@ import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Utilities;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-public abstract class SearchableTextPane extends JTextPane implements KnowtatorComponent {
-	private Pattern pattern;
-	private Matcher matcher;
-	private JTextField searchTextField;
-	private final JCheckBox regexCheckBox;
-	private JCheckBox onlyInAnnotationsCheckBox;
-	private JCheckBox caseSensitiveCheckBox;
-	TextSource textSource;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
-	SearchableTextPane(KnowtatorController controller, JTextField searchTextField, JCheckBox onlyInAnnotationsCheckBox, JCheckBox regexCheckBox, JCheckBox caseSensitiveCheckBox) {
-		super();
-		this.searchTextField = searchTextField;
-		this.onlyInAnnotationsCheckBox = onlyInAnnotationsCheckBox;
-		this.regexCheckBox = regexCheckBox;
-		this.caseSensitiveCheckBox = caseSensitiveCheckBox;
-		addCaretListener(e -> {
-			if (!regexCheckBox.isSelected()) {
-				searchTextField.setText(this.getSelectedText());
-			}
-		});
-		regexCheckBox.addItemListener(e -> makePattern());
-		caseSensitiveCheckBox.addItemListener(e -> makePattern());
-		onlyInAnnotationsCheckBox.addItemListener(e -> makePattern());
+public abstract class AnnotatableTextPane extends SearchableTextPane {
 
-		pattern = Pattern.compile("");
-		searchTextField.getDocument().addDocumentListener(new DocumentListener() {
+	AnnotatableTextPane(KnowtatorController controller, JTextField searchTextField, JCheckBox onlyInAnnotationsCheckBox, JCheckBox regexCheckBox, JCheckBox caseSensitiveCheckBox) {
+		super(controller, searchTextField, onlyInAnnotationsCheckBox, regexCheckBox, caseSensitiveCheckBox);
+		setEditable(false);
+		setEnabled(false);
+		setSelectedTextColor(Color.red);
+		setFont(KnowtatorDefaultSettings.FONT);
+
+		getCaret().setVisible(true);
+
+		requestFocusInWindow();
+		select(0, 0);
+		getCaret().setSelectionVisible(true);
+
+		MouseListener mouseListener = new MouseListener() {
+			int press_offset;
+
 			@Override
-			public void insertUpdate(DocumentEvent e) {
-				makePattern();
+			public void mousePressed(MouseEvent e) {
+				press_offset = viewToModel(e.getPoint());
 			}
 
 			@Override
-			public void removeUpdate(DocumentEvent e) {
-				makePattern();
+			public void mouseReleased(MouseEvent e) {
+				handleMouseRelease(e, press_offset, viewToModel(e.getPoint()));
 			}
 
 			@Override
-			public void changedUpdate(DocumentEvent e) {
-
+			public void mouseEntered(MouseEvent e) {
 			}
-		});
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+		};
 
 		new TextBoundModelListener(controller) {
 			@Override
 			public void respondToConceptAnnotationModification() {
-
+				refreshHighlights();
 			}
 
 			@Override
 			public void respondToSpanModification() {
-
+				refreshHighlights();
 			}
 
 			@Override
@@ -143,40 +146,37 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 
 			@Override
 			public void respondToSpanCollectionFirstAdded() {
-
+				refreshHighlights();
 			}
 
 			@Override
 			public void respondToSpanCollectionEmptied() {
-
+				refreshHighlights();
 			}
 
 			@Override
 			public void respondToSpanRemoved() {
-
+				refreshHighlights();
 			}
 
 			@Override
 			public void respondToSpanAdded() {
-
+				refreshHighlights();
 			}
 
 			@Override
 			public void respondToSpanSelection(SelectionEvent<Span> event) {
-				if (event.getNew() != null) {
-					searchTextField.setText(event.getNew().getSpannedText());
-				}
+				refreshHighlights();
 			}
 
 			@Override
 			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
-
+				refreshHighlights();
 			}
 
 			@Override
 			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
-				matcher = pattern.matcher(event.getNew().getContent());
-				textSource = event.getNew();
+				showTextSource();
 			}
 
 			@Override
@@ -191,74 +191,52 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 
 			@Override
 			public void respondToTextSourceCollectionEmptied() {
-
+				setEnabled(false);
+				removeMouseListener(mouseListener);
 			}
 
 			@Override
 			public void respondToTextSourceCollectionFirstAdded() {
-
+				setEnabled(true);
+				addMouseListener(mouseListener);
 			}
 		};
 	}
 
-	void searchForward() {
-		matcher.reset();
-		int matchStart = -1;
-		int matchEnd = 0;
-		int startBound = getSelectionEnd();
-		while (matcher.find()) {
-			if (matcher.start() > startBound &&
-					(!onlyInAnnotationsCheckBox.isSelected() || !(textSource.getConceptAnnotationCollection().getSpans(matcher.start()).size() == 0))) {
-				matchStart = matcher.start();
-				matchEnd = matcher.end();
-				break;
-			}
+	private void showTextSource() {
+		String text = textSource.getContent();
+		setText(text);
+		refreshHighlights();
+	}
+
+	protected abstract void handleMouseRelease(MouseEvent e, int press_offset, int viewToModel);
+
+	abstract void refreshHighlights();
+
+	void setSelectionAtWordLimits(int press_offset, int release_offset) {
+
+		try {
+			int start = Utilities.getWordStart(this, min(press_offset, release_offset));
+			int end = Utilities.getWordEnd(this, max(press_offset, release_offset));
+
+			//I don't want to deselect the annotation here because I may want to add a span to it
+
+			requestFocusInWindow();
+			select(start, end);
+
+		} catch (BadLocationException e) {
+			e.printStackTrace();
 		}
-		if (matcher.hitEnd()) {
-			matcher.reset();
-			//noinspection ResultOfMethodCallIgnored
-			matcher.find();
-			if (!onlyInAnnotationsCheckBox.isSelected() || !(textSource.getConceptAnnotationCollection().getSpans(matcher.start()).size() == 0)) {
-				matchStart = matcher.start();
-				matchEnd = matcher.end();
-			}
-		}
-		requestFocusInWindow();
-		select(matchStart, matchEnd);
 	}
 
-	void searchPrevious() {
-		matcher.reset();
-		int matchStart = -1;
-		int matchEnd = 0;
-		int endBound = getSelectionStart();
-		while (matcher.find()) {
-			if (matcher.start() < endBound || matcher.hitEnd() && (!onlyInAnnotationsCheckBox.isSelected() || !(textSource.getConceptAnnotationCollection().getSpans(matcher.start()).size() == 0))) {
-				matchStart = matcher.start();
-				matchEnd = matcher.end();
-			} else if (matchStart == -1) {
-				endBound = getText().length();
-			} else {
-				break;
-			}
-		}
-		requestFocusInWindow();
-		select(matchStart, matchEnd);
+	void setFontSize(int size) {
+		Font font = getFont();
+		setFont(new Font(font.getName(), font.getStyle(), size));
+		repaint();
 	}
 
-	private void makePattern() {
-		pattern = Pattern.compile(searchTextField.getText(), (regexCheckBox.isSelected() ? 0 : Pattern.LITERAL) | (caseSensitiveCheckBox.isSelected() ? 0 : Pattern.CASE_INSENSITIVE));
-		matcher.usePattern(pattern);
+	public void modifySelection(int startModification, int endModification) {
+		select(getSelectionStart() + startModification, getSelectionEnd() + endModification);
 	}
 
-
-	@Override
-	public void dispose() {
-
-	}
-
-	@Override
-	public void reset() {
-
-	}
 }

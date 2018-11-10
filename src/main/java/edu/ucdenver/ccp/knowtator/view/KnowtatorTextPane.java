@@ -30,13 +30,10 @@ import edu.ucdenver.ccp.knowtator.model.FilterModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
 
@@ -44,17 +41,15 @@ import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 @SuppressWarnings("deprecation")
-public class KnowtatorTextPane extends SearchableTextPane implements ColorListener, KnowtatorComponent, FilterModelListener, KnowtatorCollectionListener<Profile> {
+public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListener, KnowtatorComponent, FilterModelListener, KnowtatorCollectionListener<Profile> {
 
     @SuppressWarnings("unused")
     private static Logger log = Logger.getLogger(KnowtatorTextPane.class);
@@ -62,20 +57,13 @@ public class KnowtatorTextPane extends SearchableTextPane implements ColorListen
     private final KnowtatorView view;
 
     KnowtatorTextPane(KnowtatorView view, JTextField searchTextField, JCheckBox onlyInAnnotationsCheckBox, JCheckBox regexCheckBox, JCheckBox caseSensitiveCheckBox) {
-        super(view, searchTextField, onlyInAnnotationsCheckBox, regexCheckBox, caseSensitiveCheckBox);
+        super(view.getController(), searchTextField, onlyInAnnotationsCheckBox, regexCheckBox, caseSensitiveCheckBox);
         this.view = view;
-        setEditable(false);
-        setEnabled(false);
-        setSelectedTextColor(Color.red);
-        setFont(KnowtatorDefaultSettings.FONT);
 
-        setupListeners();
-
-        getCaret().setVisible(true);
-
-        requestFocusInWindow();
-        select(0, 0);
-        getCaret().setSelectionVisible(true);
+        view.getController().getProfileCollection().addColorListener(this);
+        view.getController().getProfileCollection().addCollectionListener(this);
+        view.getController().getFilterModel().addFilterModelListener(this);
+        addCaretListener(view.getController().getSelectionModel());
     }
 
     public BufferedImage getScreenShot() {
@@ -88,167 +76,8 @@ public class KnowtatorTextPane extends SearchableTextPane implements ColorListen
         return image;
     }
 
-    private void showTextPane() {
-        String text = textSource.getContent();
-        setText(text);
-        refreshHighlights();
-    }
 
-    private void setupListeners() {
-        addCaretListener(view.getController().getSelectionModel());
-
-        view.getController().getProfileCollection().addColorListener(this);
-        view.getController().getProfileCollection().addCollectionListener(this);
-        view.getController().getFilterModel().addFilterModelListener(this);
-
-
-        MouseListener mouseListener = new MouseListener() {
-            int press_offset;
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                press_offset = viewToModel(e.getPoint());
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                handleMouseRelease(e, press_offset, viewToModel(e.getPoint()));
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-            }
-        };
-
-        new TextBoundModelListener(view.getController()) {
-            @Override
-            public void respondToConceptAnnotationModification() {
-                refreshHighlights();
-            }
-
-            @Override
-            public void respondToSpanModification() {
-                refreshHighlights();
-            }
-
-            @Override
-            public void respondToGraphSpaceModification() {
-
-            }
-
-            @Override
-            public void respondToGraphSpaceCollectionFirstAdded() {
-
-            }
-
-            @Override
-            public void respondToGraphSpaceCollectionEmptied() {
-
-            }
-
-            @Override
-            public void respondToGraphSpaceRemoved() {
-
-            }
-
-            @Override
-            public void respondToGraphSpaceAdded() {
-
-            }
-
-            @Override
-            public void respondToGraphSpaceSelection(SelectionEvent<GraphSpace> event) {
-
-            }
-
-            @Override
-            public void respondToConceptAnnotationCollectionEmptied() {
-
-            }
-
-            @Override
-            public void respondToConceptAnnotationRemoved() {
-
-            }
-
-            @Override
-            public void respondToConceptAnnotationAdded() {
-
-            }
-
-            @Override
-            public void respondToConceptAnnotationCollectionFirstAdded() {
-
-            }
-
-            @Override
-            public void respondToSpanCollectionFirstAdded() {
-                refreshHighlights();
-            }
-
-            @Override
-            public void respondToSpanCollectionEmptied() {
-                refreshHighlights();
-            }
-
-            @Override
-            public void respondToSpanRemoved() {
-                refreshHighlights();
-            }
-
-            @Override
-            public void respondToSpanAdded() {
-                refreshHighlights();
-            }
-
-            @Override
-            public void respondToSpanSelection(SelectionEvent<Span> event) {
-                refreshHighlights();
-            }
-
-            @Override
-            public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
-                refreshHighlights();
-            }
-
-            @Override
-            public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
-                showTextPane();
-            }
-
-            @Override
-            public void respondToTextSourceAdded() {
-
-            }
-
-            @Override
-            public void respondToTextSourceRemoved() {
-
-            }
-
-            @Override
-            public void respondToTextSourceCollectionEmptied() {
-                setEnabled(false);
-                removeMouseListener(mouseListener);
-            }
-
-            @Override
-            public void respondToTextSourceCollectionFirstAdded() {
-                setEnabled(true);
-                addMouseListener(mouseListener);
-            }
-        };
-    }
-
-    private void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
+    protected void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
         try {
             AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e);
 
@@ -276,22 +105,6 @@ public class KnowtatorTextPane extends SearchableTextPane implements ColorListen
             }
         } catch (NoSelectionException e1) {
             e1.printStackTrace();
-        }
-    }
-
-    private void setSelectionAtWordLimits(int press_offset, int release_offset) {
-
-        try {
-            int start = Utilities.getWordStart(this, min(press_offset, release_offset));
-            int end = Utilities.getWordEnd(this, max(press_offset, release_offset));
-
-            //I don't want to deselect the annotation here because I may want to add a span to it
-
-            requestFocusInWindow();
-            select(start, end);
-
-        } catch (BadLocationException e) {
-            e.printStackTrace();
         }
     }
 
@@ -427,20 +240,7 @@ public class KnowtatorTextPane extends SearchableTextPane implements ColorListen
         }
     }
 
-    void setFontSize(int size) {
-        Font font = getFont();
-        setFont(new Font(font.getName(), font.getStyle(), size));
-        repaint();
-    }
 
-    public void modifySelection(int startModification, int endModification) {
-        select(getSelectionStart() + startModification, getSelectionEnd() + endModification);
-    }
-
-    @Override
-    public void colorChanged() {
-        refreshHighlights();
-    }
 
     @Override
     public void reset() {
@@ -452,6 +252,11 @@ public class KnowtatorTextPane extends SearchableTextPane implements ColorListen
     @Override
     public void dispose() {
 
+    }
+
+    @Override
+    public void colorChanged() {
+        refreshHighlights();
     }
 
     @Override
