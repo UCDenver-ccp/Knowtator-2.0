@@ -471,7 +471,7 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
         }
     }
 
-    private void setSelectedOWLEntity(OWLEntity owlEntity) {
+    public void setSelectedOWLEntity(OWLEntity owlEntity) {
         try {
             getWorkSpace().getOWLSelectionModel().setSelectedEntity(owlEntity);
         } catch (OWLWorkSpaceNotSetException ignored) {

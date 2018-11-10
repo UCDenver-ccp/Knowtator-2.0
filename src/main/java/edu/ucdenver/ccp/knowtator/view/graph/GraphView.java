@@ -44,6 +44,7 @@ import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.text.graph.RelationAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
@@ -471,7 +472,8 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 								e.printStackTrace();
 							}
 
-
+						} else if (cell instanceof RelationAnnotation) {
+							view.getController().getOWLModel().setSelectedOWLEntity(((RelationAnnotation) cell).getProperty());
 						}
 					}
 					graphSpace.reDrawGraph();
