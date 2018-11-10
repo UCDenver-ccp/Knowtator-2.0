@@ -48,7 +48,7 @@ public abstract class AbstractGraphAction extends AbstractKnowtatorAction {
 		graphSpace.getModel().addListener(mxEvent.UNDO, edit);
 	}
 
-	abstract public void perform();
+	protected abstract void perform();
 
 	private void cleanUp() {
 		graphSpace.getModel().removeListener(edit, mxEvent.UNDO);

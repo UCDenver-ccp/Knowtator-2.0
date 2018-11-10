@@ -48,6 +48,7 @@ import edu.ucdenver.ccp.knowtator.model.text.graph.RelationAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
+import edu.ucdenver.ccp.knowtator.view.menu.GraphMenuDialog;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
@@ -593,7 +594,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 	/**
 	 * Taken from https://tips4java.wordpress.com/2010/03/14/dialog-focus/
 	 */
-	public static class RequestFocusListener implements AncestorListener {
+	static class RequestFocusListener implements AncestorListener {
 		private final boolean removeListener;
 
 		/*

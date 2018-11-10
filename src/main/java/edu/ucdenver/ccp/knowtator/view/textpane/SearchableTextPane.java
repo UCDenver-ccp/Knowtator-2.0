@@ -22,7 +22,7 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view;
+package edu.ucdenver.ccp.knowtator.view.textpane;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
@@ -31,6 +31,7 @@ import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -41,10 +42,10 @@ import java.util.regex.Pattern;
 public abstract class SearchableTextPane extends JTextPane implements KnowtatorComponent {
 	private Pattern pattern;
 	private Matcher matcher;
-	private JTextField searchTextField;
+	private final JTextField searchTextField;
 	private final JCheckBox regexCheckBox;
-	private JCheckBox onlyInAnnotationsCheckBox;
-	private JCheckBox caseSensitiveCheckBox;
+	private final JCheckBox onlyInAnnotationsCheckBox;
+	private final JCheckBox caseSensitiveCheckBox;
 	TextSource textSource;
 
 	SearchableTextPane(KnowtatorController controller, JTextField searchTextField, JCheckBox onlyInAnnotationsCheckBox, JCheckBox regexCheckBox, JCheckBox caseSensitiveCheckBox) {
@@ -201,7 +202,7 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 		};
 	}
 
-	void searchForward() {
+	public void searchForward() {
 		matcher.reset();
 		int matchStart = -1;
 		int matchEnd = 0;
@@ -227,7 +228,7 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 		select(matchStart, matchEnd);
 	}
 
-	void searchPrevious() {
+	public void searchPrevious() {
 		matcher.reset();
 		int matchStart = -1;
 		int matchEnd = 0;

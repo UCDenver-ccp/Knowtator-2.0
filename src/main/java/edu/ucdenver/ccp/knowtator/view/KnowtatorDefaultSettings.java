@@ -28,8 +28,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-class KnowtatorDefaultSettings {
-    static final Font FONT = new Font("Verdana", Font.PLAIN, 10);
+public class KnowtatorDefaultSettings {
+    public static final Font FONT = new Font("Verdana", Font.PLAIN, 10);
 
     static final ArrayList<Color> COLORS = new ArrayList<>(Arrays.asList(
             new Color(255, 102, 102),

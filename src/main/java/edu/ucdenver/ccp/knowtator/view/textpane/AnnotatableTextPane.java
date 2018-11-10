@@ -22,7 +22,7 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view;
+package edu.ucdenver.ccp.knowtator.view.textpane;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
@@ -31,6 +31,7 @@ import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorDefaultSettings;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -229,7 +230,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane {
 		}
 	}
 
-	void setFontSize(int size) {
+	public void setFontSize(int size) {
 		Font font = getFont();
 		setFont(new Font(font.getName(), font.getStyle(), size));
 		repaint();

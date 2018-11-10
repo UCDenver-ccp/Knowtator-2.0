@@ -22,7 +22,7 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view;
+package edu.ucdenver.ccp.knowtator.view.textpane;
 
 import edu.ucdenver.ccp.knowtator.actions.*;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
@@ -34,6 +34,8 @@ import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
 
@@ -56,7 +58,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
     private final KnowtatorView view;
 
-    KnowtatorTextPane(KnowtatorView view, JTextField searchTextField, JCheckBox onlyInAnnotationsCheckBox, JCheckBox regexCheckBox, JCheckBox caseSensitiveCheckBox) {
+    public KnowtatorTextPane(KnowtatorView view, JTextField searchTextField, JCheckBox onlyInAnnotationsCheckBox, JCheckBox regexCheckBox, JCheckBox caseSensitiveCheckBox) {
         super(view.getController(), searchTextField, onlyInAnnotationsCheckBox, regexCheckBox, caseSensitiveCheckBox);
         this.view = view;
 
@@ -108,7 +110,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
         }
     }
 
-    void refreshHighlights() {
+    public void refreshHighlights() {
         if (view.getController().isNotLoading()) {
             // Remove all previous highlights in case a span has been deleted
             getHighlighter().removeAllHighlights();

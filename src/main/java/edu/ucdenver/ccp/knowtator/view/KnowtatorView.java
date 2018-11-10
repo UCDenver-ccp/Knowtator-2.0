@@ -51,6 +51,7 @@ import edu.ucdenver.ccp.knowtator.view.label.AnnotationIDLabel;
 import edu.ucdenver.ccp.knowtator.view.list.GraphSpaceList;
 import edu.ucdenver.ccp.knowtator.view.list.SpanList;
 import edu.ucdenver.ccp.knowtator.view.menu.MenuDialog;
+import edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -673,18 +674,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 	@Override
 	public void dragOver(DropTargetDragEvent e) {
-	}
-
-	JCheckBox getRegexCheckBox() {
-		return regexCheckBox;
-	}
-
-	JCheckBox getCaseSensitiveCheckBox() {
-		return caseSensitiveCheckBox;
-	}
-
-	JCheckBox getOnlyInAnnotationsCheckBox() {
-		return onlyAnnotationsCheckBox;
 	}
 
 	public void projectLoaded() {

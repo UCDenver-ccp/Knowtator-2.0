@@ -37,8 +37,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ResourceBundle;
 
-public class RelationOptionsDialog extends JDialog {
-    public static final int OK_OPTION = 1;
+class RelationOptionsDialog extends JDialog {
+    static final int OK_OPTION = 1;
     private static final int CANCEL_OPTION = 0;
 
     private JPanel contentPane;
@@ -57,7 +57,7 @@ public class RelationOptionsDialog extends JDialog {
 
     private int result;
 
-    public RelationOptionsDialog(Window parent, String propertyID) {
+    RelationOptionsDialog(Window parent, String propertyID) {
         super(parent);
         $$$setupUI$$$();
         setContentPane(contentPane);
@@ -141,7 +141,7 @@ public class RelationOptionsDialog extends JDialog {
         dispose();
     }
 
-    public Boolean getNegation() {
+    Boolean getNegation() {
         return negateCheckBox.isSelected();
     }
 
@@ -149,11 +149,11 @@ public class RelationOptionsDialog extends JDialog {
         return (String) quantifierChooser.getSelectedItem();
     }
 
-    public String getQuantifierValue() {
+    String getQuantifierValue() {
         return NumberUtils.createNumber(quantifierValueTextField.getText()).toString();
     }
 
-    public String getPropertyID() {
+    String getPropertyID() {
         return previewTextArea.getText();
     }
 
