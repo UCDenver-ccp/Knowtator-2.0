@@ -31,6 +31,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ResourceBundle;
 
+/**
+ * A pane for handling new project creation
+ */
 class NewPane {
     private JTextField textField1;
     private JPanel fileChooserPane;

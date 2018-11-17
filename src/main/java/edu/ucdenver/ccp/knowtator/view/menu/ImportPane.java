@@ -35,6 +35,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.util.ResourceBundle;
 
+/**
+ * A pane for handling importing functions
+ */
 class ImportPane {
     private JPanel panel1;
     private JPanel contentPane;

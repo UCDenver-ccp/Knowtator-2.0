@@ -36,6 +36,9 @@ import java.awt.*;
 import java.io.File;
 import java.util.ResourceBundle;
 
+/**
+ * A pane for handling generating IAA files
+ */
 class IAAPane {
     private JPanel contentPane;
     private JButton buttonOK;

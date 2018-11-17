@@ -45,6 +45,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * A dialog for handling graph space functions
+ */
 public class GraphMenuDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;

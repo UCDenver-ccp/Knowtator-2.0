@@ -41,6 +41,9 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * The main menu dialog for displaying other menu panes
+ */
 public class MenuDialog extends JDialog {
     private static final Logger log = Logger.getLogger(MenuDialog.class);
 
@@ -128,7 +131,7 @@ public class MenuDialog extends JDialog {
     }
 
     private void showOpenPane() {
-	    String lastProjectFileName = KnowtatorView.PREFERENCES.get("Last Project", null);
+        String lastProjectFileName = KnowtatorView.PREFERENCES.get("Last Project", null);
 
         JFileChooser fileChooser = new JFileChooser();
         if (lastProjectFileName != null) {

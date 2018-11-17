@@ -39,6 +39,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+/**
+ * A pane for handling profile functions
+ */
 class ProfilePane {
     private JButton removeProfileButton;
     private ColorList colorList;
