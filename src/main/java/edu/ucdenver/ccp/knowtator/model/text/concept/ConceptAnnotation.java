@@ -138,6 +138,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
                             sb.append(String.format("%s", span.getSpannedText()));
                             sb.append("\n");
                         });
+        sb.delete(sb.length() - 1, sb.length());
         return sb.toString();
     }
 

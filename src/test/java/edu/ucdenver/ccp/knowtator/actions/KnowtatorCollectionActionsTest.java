@@ -105,7 +105,6 @@ public class KnowtatorCollectionActionsTest {
 
     @Test
     public void removeSpanAction() throws NoSelectionException {
-
         TextSource textSource = controller.getTextSourceCollection().getSelection();
         // First test remove span if there is only one in the collection. This should be equivalent to just removing the annotation
         ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
