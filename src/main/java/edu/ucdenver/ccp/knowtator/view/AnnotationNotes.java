@@ -34,11 +34,33 @@ import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class AnnotationNotes extends JTextArea implements KnowtatorComponent {
 	private ConceptAnnotation conceptAnnotation;
 
 	AnnotationNotes(KnowtatorView view) {
+
+		addKeyListener(new KeyListener() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if (getText().length() > 100) {
+					e.consume();
+				}
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+
+			}
+		});
+
 		getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
