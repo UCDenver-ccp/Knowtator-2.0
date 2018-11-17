@@ -72,7 +72,7 @@ public class OWLActionsTest {
         controller.registerAction(new OWLActions.ReassignOWLClassAction(controller));
         assert profile.getColor(conceptAnnotation).equals(Color.CYAN);
 
-        controller.registerAction(new OWLActions.ColorChangeAction(profile, owlClassSet, Color.GREEN));
+	    controller.registerAction(new OWLActions.ColorChangeAction(controller, profile, owlClassSet, Color.GREEN));
         assert profile.getColor(conceptAnnotation).equals(Color.GREEN);
         controller.undo();
         assert profile.getColor(conceptAnnotation).equals(Color.CYAN);

@@ -207,8 +207,8 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 			try {
 				action.execute();
 				addEdit(action.getEdit());
-			} catch (ActionUnperformableException ignored) {
-
+			} catch (ActionUnperformableException e) {
+				e.printStackTrace();
 			}
 		}
 	}

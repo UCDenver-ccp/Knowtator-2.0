@@ -29,6 +29,7 @@ import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.BaseKnowtatorManager;
+import edu.ucdenver.ccp.knowtator.model.collection.CantRemoveException;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import org.apache.log4j.Logger;
@@ -188,7 +189,7 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
     }
 
     @Override
-    public void remove(TextSource textSource) {
+    public void remove(TextSource textSource) throws CantRemoveException {
         try {
             if (textSource == getSelection()) {
                 selectPrevious();

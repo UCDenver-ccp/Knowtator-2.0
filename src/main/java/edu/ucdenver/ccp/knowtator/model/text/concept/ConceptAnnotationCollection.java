@@ -32,6 +32,7 @@ import edu.ucdenver.ccp.knowtator.model.FilterModel;
 import edu.ucdenver.ccp.knowtator.model.FilterModelListener;
 import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
 import edu.ucdenver.ccp.knowtator.model.OWLModel;
+import edu.ucdenver.ccp.knowtator.model.collection.CantRemoveException;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
@@ -90,7 +91,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     REMOVERS
      */
     @Override
-    public void remove(ConceptAnnotation conceptAnnotationToRemove) {
+    public void remove(ConceptAnnotation conceptAnnotationToRemove) throws CantRemoveException {
         for (GraphSpace graphSpace : textSource.getGraphSpaceCollection()) {
             Object[] cells = graphSpace.getVerticesForAnnotation(conceptAnnotationToRemove).toArray();
             graphSpace.removeCells(cells);
@@ -366,7 +367,11 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
             // No need to keep annotations with no allSpanCollection
             if (newConceptAnnotation.getSpanCollection().size() == 0) {
-                remove(newConceptAnnotation);
+                try {
+                    remove(newConceptAnnotation);
+                } catch (CantRemoveException e) {
+                    e.printStackTrace();
+                }
             } else {
                 for (Node slotMentionNode :
                         KnowtatorXMLUtil.asList(
@@ -507,7 +512,13 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
             }
 
             if (newOWLClass == null) {
-                annotationsForOwlClass.forEach(this::remove);
+                for (ConceptAnnotation conceptAnnotation : annotationsForOwlClass) {
+                    try {
+                        remove(conceptAnnotation);
+                    } catch (CantRemoveException e) {
+                        e.printStackTrace();
+                    }
+                }
             } else {
                 for (ConceptAnnotation conceptAnnotation : annotationsForOwlClass) {
                     conceptAnnotation.setOwlClass(newOWLClass);

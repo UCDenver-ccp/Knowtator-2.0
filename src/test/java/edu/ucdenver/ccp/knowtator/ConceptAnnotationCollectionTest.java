@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator;
 
 import com.google.common.io.Files;
+import edu.ucdenver.ccp.knowtator.model.collection.CantRemoveException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
@@ -136,7 +137,7 @@ public class ConceptAnnotationCollectionTest {
 	}
 
 	@Test
-	public void removeAnnotation() {
+	public void removeAnnotation() throws CantRemoveException {
 		setUp();
 		conceptAnnotationCollection.remove(conceptAnnotationCollection.get("mention_1"));
 
@@ -153,7 +154,7 @@ public class ConceptAnnotationCollectionTest {
 	}
 
 	@Test
-	public void removeSpanFromAnnotation() {
+	public void removeSpanFromAnnotation() throws CantRemoveException {
 		setUp();
 		ConceptAnnotation conceptAnnotation1 = new ConceptAnnotation(controller, textSource, "mention_3", null, "class_2", "class_2", profile, "identity", "");
 		conceptAnnotationCollection.add(conceptAnnotation1);

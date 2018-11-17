@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator.actions;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.collection.CantRemoveException;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 
 public class KnowtatorCollectionEdit<K extends KnowtatorDataObjectInterface> extends KnowtatorEdit {
@@ -45,26 +46,31 @@ public class KnowtatorCollectionEdit<K extends KnowtatorDataObjectInterface> ext
     @Override
     public void undo() {
         super.undo();
-        switch (actionName) {
-            case ADD:
+        if (ADD.equals(actionName)) {
+            try {
                 collection.remove(object);
-                break;
-            case REMOVE:
-                collection.add(object);
-                break;
+            } catch (CantRemoveException e) {
+                e.printStackTrace();
+            }
+
+        } else if (REMOVE.equals(actionName)) {
+            collection.add(object);
+
         }
     }
 
     @Override
     public void redo() {
         super.redo();
-        switch (actionName) {
-            case ADD:
-                collection.add(object);
-                break;
-            case REMOVE:
+        if (ADD.equals(actionName)) {
+            collection.add(object);
+
+        } else if (REMOVE.equals(actionName)) {
+            try {
                 collection.remove(object);
-                break;
+            } catch (CantRemoveException e) {
+                e.printStackTrace();
+            }
         }
     }
 

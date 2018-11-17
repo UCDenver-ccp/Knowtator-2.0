@@ -48,7 +48,7 @@ public class SpanActions {
         private final TextSource textSource;
         private final String startOrEnd;
         private final String growOrShrink;
-        private boolean spanStartChnged;
+        private boolean spanStartChanged;
         private boolean spanEndChanged;
 
         public ModifySpanAction(KnowtatorController controller, String startOrEnd, String growOrShrink) throws NoSelectionException {
@@ -59,7 +59,7 @@ public class SpanActions {
             endModification = getEndModification(startOrEnd, growOrShrink);
             textSource = controller.getTextSourceCollection().getSelection();
             span = textSource.getConceptAnnotationCollection().getSelection().getSpanCollection().getSelection();
-            spanStartChnged = false;
+            spanStartChanged = false;
             spanEndChanged = false;
         }
 
@@ -68,7 +68,7 @@ public class SpanActions {
             int spanStart = span.getStart();
             int spanEnd = span.getEnd();
             span.modify(Arrays.asList(startModification, endModification, textSource.getContent().length()));
-            spanStartChnged = spanStart != span.getStart();
+            spanStartChanged = spanStart != span.getStart();
             spanEndChanged = spanEnd != span.getEnd();
         }
 
@@ -83,12 +83,12 @@ public class SpanActions {
                     super.undo();
                     switch (growOrShrink) {
                         case GROW:
-                            startModification = spanStartChnged ? getStartModification(startOrEnd, SHRINK) : 0;
+                            startModification = spanStartChanged ? getStartModification(startOrEnd, SHRINK) : 0;
                             endModification = spanEndChanged ? getEndModification(startOrEnd, SHRINK) : 0;
                             span.modify(Arrays.asList(startModification, endModification, textSource.getContent().length()));
                             break;
                         case SHRINK:
-                            startModification = spanStartChnged ? getStartModification(startOrEnd, GROW) : 0;
+                            startModification = spanStartChanged ? getStartModification(startOrEnd, GROW) : 0;
                             endModification = spanEndChanged ? getEndModification(startOrEnd, GROW) : 0;
                             span.modify(Arrays.asList(startModification, endModification, textSource.getContent().length()));
                             break;

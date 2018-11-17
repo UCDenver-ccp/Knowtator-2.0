@@ -30,6 +30,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.BaseKnowtatorManager;
+import edu.ucdenver.ccp.knowtator.model.collection.CantRemoveException;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import org.apache.log4j.Logger;
@@ -96,11 +97,12 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
     }
 
     @Override
-    public void remove(Profile profile) {
-        if (! profile.equals(defaultProfile)) {
-            super.remove(profile);
-            setSelection(iterator().next());
+    public void remove(Profile profile) throws CantRemoveException {
+        if (profile.equals(defaultProfile)) {
+            throw new CantRemoveException();
         }
+        super.remove(profile);
+        selectNext();
     }
 
     public void writeToKnowtatorXML(Document dom, Element root) {

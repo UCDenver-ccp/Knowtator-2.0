@@ -42,7 +42,7 @@ public class GraphActions {
         private final Object[] cellsToRemove;
 
         public removeCellsAction(KnowtatorController controller) throws NoSelectionException {
-            super("Remove cells", controller);
+            super(controller, "Remove cells");
             cellsToRemove = graphSpace.getSelectionCells();
         }
 
@@ -59,7 +59,7 @@ public class GraphActions {
         private final KnowtatorView view;
 
         public AddAnnotationNodeAction(KnowtatorView view, KnowtatorController controller) throws NoSelectionException {
-            super("Add annotation node", controller);
+            super(controller, "Add annotation node");
             this.view = view;
             textSource = controller.getTextSourceCollection().getSelection();
             conceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
@@ -83,7 +83,7 @@ public class GraphActions {
         private final KnowtatorView view;
 
         public applyLayoutAction(KnowtatorView view, KnowtatorController controller) throws NoSelectionException {
-            super("Apply layout", controller);
+            super(controller, "Apply layout");
             this.view = view;
         }
 
@@ -135,7 +135,7 @@ public class GraphActions {
                                String quantifier, String guantifierValue,
                                Boolean negation,
                                String motivation) throws NoSelectionException {
-            super("Add triple", controller);
+            super(controller, "Add triple");
             this.controller = controller;
             this.source = source;
             this.target = target;

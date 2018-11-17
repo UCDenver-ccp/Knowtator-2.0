@@ -128,7 +128,7 @@ public class OWLActions {
                                         .getDescendants((OWLClass) owlClass));
                     }
 
-                    ColorChangeAction action = new ColorChangeAction(view.getController().getProfileCollection().getSelection(), owlClasses, c);
+	                ColorChangeAction action = new ColorChangeAction(view.getController(), view.getController().getProfileCollection().getSelection(), owlClasses, c);
                     view.getController().registerAction(action);
                 }
 
@@ -147,7 +147,7 @@ public class OWLActions {
 		private final Set<Object> owlClasses;
 		private final Color color;
 
-		ColorChangeAction(Profile profile, Set<Object> owlClasses, Color color) {
+		ColorChangeAction(KnowtatorController controller, Profile profile, Set<Object> owlClasses, Color color) {
 			super("Change color");
 			this.profile = profile;
 			this.owlClasses = owlClasses;

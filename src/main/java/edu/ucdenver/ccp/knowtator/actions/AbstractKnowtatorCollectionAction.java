@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator.actions;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.collection.CantRemoveException;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 
@@ -62,7 +63,11 @@ public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataO
 			case REMOVE:
 				prepareRemove();
 				if (object != null) {
-					collection.remove(object);
+					try {
+						collection.remove(object);
+					} catch (CantRemoveException e) {
+						throw new ActionUnperformableException();
+					}
 				} else {
 					throw new ActionUnperformableException();
 				}
@@ -82,7 +87,7 @@ public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataO
 
 	abstract void prepareAdd() throws ActionUnperformableException;
 
-	abstract void cleanUpRemove();
+	abstract void cleanUpRemove() throws ActionUnperformableException;
 
 	@SuppressWarnings("EmptyMethod")
 	abstract void cleanUpAdd();

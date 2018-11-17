@@ -119,7 +119,8 @@ public class KnowtatorCollectionActions {
 		@Override
 		void prepareRemove() throws ActionUnperformableException {
 			super.prepareRemove();
-			edit = new KnowtatorCollectionEdit<>(REMOVE, collection, object, getPresentationName());
+			edit.setObject(object);
+//			edit = new KnowtatorCollectionEdit<>(REMOVE, collection, object, getPresentationName(), edit.isSignificant());
 			textSource.getGraphSpaceCollection().forEach(graphSpace -> graphSpace.getModel().addListener(mxEvent.UNDO, edit));
 		}
 
@@ -164,7 +165,7 @@ public class KnowtatorCollectionActions {
 
 		@Override
 		void prepareRemove() throws ActionUnperformableException {
-			// If the concept anntotation only has one, remove the annotation instead
+			// If the concept annotation only has one, remove the annotation instead
 			try {
 				if (collection.getSelection().getConceptAnnotation().getSpanCollection().size() == 1) {
 					try {
@@ -206,12 +207,7 @@ public class KnowtatorCollectionActions {
 		@Override
 		void prepareRemove() {
 			setObject(collection.get(profileId));
-			controller.getTextSourceCollection().forEach(textSource -> textSource.getConceptAnnotationCollection().forEach(conceptAnnotation -> {
-				if (conceptAnnotation.getAnnotator().equals(object)) {
-					textSource.getConceptAnnotationCollection().remove(conceptAnnotation);
-					edit.addEdit(new KnowtatorCollectionEdit<>(REMOVE, textSource.getConceptAnnotationCollection(), conceptAnnotation, "Remove annotation"));
-				}
-			}));
+
 		}
 
 		@Override
@@ -221,8 +217,21 @@ public class KnowtatorCollectionActions {
 		}
 
 		@Override
-		void cleanUpRemove() {
-
+		void cleanUpRemove() throws ActionUnperformableException {
+			for (TextSource textSource : controller.getTextSourceCollection()) {
+				for (ConceptAnnotation conceptAnnotation : textSource.getConceptAnnotationCollection()) {
+					if (conceptAnnotation.getAnnotator().equals(object)) {
+						try {
+							AbstractKnowtatorAction action = new ConceptAnnotationAction(REMOVE, controller);
+							textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
+							action.execute();
+							edit.addKnowtatorEdit(action.getEdit());
+						} catch (NoSelectionException e) {
+							throw new ActionUnperformableException();
+						}
+					}
+				}
+			}
 		}
 
 		@Override

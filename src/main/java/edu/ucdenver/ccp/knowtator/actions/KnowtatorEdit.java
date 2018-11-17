@@ -30,20 +30,28 @@ import com.mxgraph.util.mxUndoManager;
 import com.mxgraph.util.mxUndoableEdit;
 
 import javax.swing.undo.AbstractUndoableEdit;
+import javax.swing.undo.UndoManager;
+import javax.swing.undo.UndoableEdit;
 
 class KnowtatorEdit extends AbstractUndoableEdit implements mxEventSource.mxIEventListener {
 
     private final String presentationName;
     private final mxUndoManager mxUndoManager;
+    private UndoManager undoManager;
+
 
     KnowtatorEdit(String presentationName) {
         this.presentationName = presentationName;
         mxUndoManager = new mxUndoManager();
+        undoManager = new UndoManager();
     }
 
     @Override
     public void undo(){
         super.undo();
+        while (undoManager.canUndo()) {
+            undoManager.undo();
+        }
         while(mxUndoManager.canUndo()) {
             mxUndoManager.undo();
         }
@@ -52,6 +60,9 @@ class KnowtatorEdit extends AbstractUndoableEdit implements mxEventSource.mxIEve
     @Override
     public void redo(){
         super.redo();
+        while (undoManager.canRedo()) {
+            undoManager.redo();
+        }
         while(mxUndoManager.canRedo()) {
             mxUndoManager.redo();
         }
@@ -69,5 +80,9 @@ class KnowtatorEdit extends AbstractUndoableEdit implements mxEventSource.mxIEve
 
     private void addmxUndoableEdit(mxEventObject edit) {
         mxUndoManager.undoableEditHappened((mxUndoableEdit) edit.getProperty("edit"));
+    }
+
+    void addKnowtatorEdit(UndoableEdit edit) {
+        undoManager.addEdit(edit);
     }
 }

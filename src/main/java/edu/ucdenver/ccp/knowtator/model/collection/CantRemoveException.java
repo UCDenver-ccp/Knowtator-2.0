@@ -22,48 +22,7 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.actions;
+package edu.ucdenver.ccp.knowtator.model.collection;
 
-import com.mxgraph.util.mxEvent;
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
-
-import javax.swing.undo.UndoableEdit;
-
-public abstract class AbstractGraphAction extends AbstractKnowtatorAction {
-
-	final GraphSpace graphSpace;
-	private final KnowtatorEdit edit;
-
-	AbstractGraphAction(KnowtatorController controller, String presentationName) throws NoSelectionException {
-		super(presentationName);
-		graphSpace = controller.getTextSourceCollection().getSelection().getGraphSpaceCollection().getSelection();
-		edit = new KnowtatorEdit(getPresentationName()) {
-
-		};
-	}
-
-	private void prepare() {
-		graphSpace.getModel().addListener(mxEvent.UNDO, edit);
-	}
-
-	protected abstract void perform();
-
-	private void cleanUp() {
-		graphSpace.getModel().removeListener(edit, mxEvent.UNDO);
-	}
-
-	@Override
-	public void execute() {
-		prepare();
-		perform();
-		cleanUp();
-	}
-
-	@Override
-	public UndoableEdit getEdit() {
-		return edit;
-	}
+public class CantRemoveException extends Throwable {
 }
-
