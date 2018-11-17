@@ -45,11 +45,6 @@ public class SpanCollection extends KnowtatorCollection<Span> implements BratSta
     }
 
     @Override
-    public void remove(Span span) {
-        super.remove(span);
-    }
-
-    @Override
     public void readFromBratStandoff(File file, Map<Character, List<String[]>> annotationMap, String content) {
 
     }

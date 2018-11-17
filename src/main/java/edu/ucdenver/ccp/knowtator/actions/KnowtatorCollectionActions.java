@@ -163,6 +163,25 @@ public class KnowtatorCollectionActions {
 		}
 
 		@Override
+		void prepareRemove() throws ActionUnperformableException {
+			// If the concept anntotation only has one, remove the annotation instead
+			try {
+				if (collection.getSelection().getConceptAnnotation().getSpanCollection().size() == 1) {
+					try {
+						AbstractKnowtatorAction action = new ConceptAnnotationAction(REMOVE, controller);
+						controller.registerAction(action);
+					} catch (NoSelectionException e) {
+						throw new ActionUnperformableException();
+					}
+				} else {
+					super.prepareRemove();
+				}
+			} catch (NoSelectionException e) {
+				throw new ActionUnperformableException();
+			}
+		}
+
+		@Override
 		void cleanUpRemove() {
 
 		}

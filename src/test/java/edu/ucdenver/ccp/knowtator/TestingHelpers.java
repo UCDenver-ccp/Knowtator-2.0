@@ -109,14 +109,14 @@ public class TestingHelpers {
                         graphSpace1 -> graphSpace1.getChildEdges(graphSpace1.getDefaultParent()).length)
                         .sum()).sum();
 
-        assert actualTextSources == expectedTextSources : "There were " + actualTextSources + " text sources";
-        assert actualConceptAnnotations == expectedConceptAnnotations : "There were " + actualConceptAnnotations + " concept annotations";
-        assert actualSpans == expectedSpans : "There were " + actualSpans + " spans";
-        assert actualProfiles == expectedProfiles : "There were " + actualProfiles + " profiles";
-        assert actualHighlighters == expectedHighlighters : "There were " + actualHighlighters + " highlighters";
-        assert actualGraphSpaces == expectedGraphSpaces : "There were " + actualGraphSpaces + " graph spaces";
-        assert actualAnnotationNodes == expectedAnnotationNodes : "There were " + actualAnnotationNodes + " vertices";
-        assert actualTriples == expectedTriples : "There were " + actualTriples + " triples";
+        assert actualTextSources == expectedTextSources : "There were " + actualTextSources + " text sources instead of " + expectedTextSources;
+        assert actualConceptAnnotations == expectedConceptAnnotations : "There were " + actualConceptAnnotations + " concept annotations instead of " + expectedConceptAnnotations;
+        assert actualSpans == expectedSpans : "There were " + actualSpans + " spans instead of " + expectedSpans;
+        assert actualProfiles == expectedProfiles : "There were " + actualProfiles + " profiles instead of " + expectedProfiles;
+        assert actualHighlighters == expectedHighlighters : "There were " + actualHighlighters + " highlighters instead of " + expectedHighlighters;
+        assert actualGraphSpaces == expectedGraphSpaces : "There were " + actualGraphSpaces + " graph spaces instead of " + expectedGraphSpaces;
+        assert actualAnnotationNodes == expectedAnnotationNodes : "There were " + actualAnnotationNodes + " vertices instead of " + expectedAnnotationNodes;
+        assert actualTriples == expectedTriples : "There were " + actualTriples + " triples instead of " + expectedTriples;
     }
 
     public static void testKnowtatorAction(KnowtatorController controller,

@@ -31,59 +31,70 @@ import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import javax.swing.undo.UndoableEdit;
 
 public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataObjectInterface> extends AbstractKnowtatorAction {
-    public final static String ADD = "add";
-    public static final String REMOVE = "remove";
+	public final static String ADD = "add";
+	public static final String REMOVE = "remove";
 
-    private final String actionName;
-    KnowtatorCollectionEdit<K> edit;
-    final KnowtatorCollection<K> collection;
-    K object;
+	private final String actionName;
+	KnowtatorCollectionEdit<K> edit;
+	final KnowtatorCollection<K> collection;
+	K object;
 
-    AbstractKnowtatorCollectionAction(String actionName, String presentationName, KnowtatorCollection<K> collection) {
-        super(String.format("%s %s",actionName, presentationName));
-        this.collection = collection;
-        this.actionName = actionName;
-        this.edit = new KnowtatorCollectionEdit<>(actionName, collection, object, getPresentationName());
-    }
-
-
-    @Override
-    public void execute() throws ActionUnperformableException {
-        switch (actionName) {
-            case ADD:
-                prepareAdd();
-                collection.add(object);
-                cleanUpAdd();
-                break;
-            case REMOVE:
-                prepareRemove();
-                collection.remove(object);
-                cleanUpRemove();
-                break;
-        }
-    }
-
-    void prepareRemove() throws ActionUnperformableException {
-        try {
-            setObject(collection.getSelection());
-        } catch (NoSelectionException e) {
-            throw new ActionUnperformableException();
-        }
-    }
-    abstract void prepareAdd() throws ActionUnperformableException;
-
-    abstract void cleanUpRemove();
-    @SuppressWarnings("EmptyMethod")
-    abstract void cleanUpAdd();
+	AbstractKnowtatorCollectionAction(String actionName, String presentationName, KnowtatorCollection<K> collection) {
+		super(String.format("%s %s", actionName, presentationName));
+		this.collection = collection;
+		this.actionName = actionName;
+		this.edit = new KnowtatorCollectionEdit<>(actionName, collection, object, getPresentationName());
+	}
 
 
-    @Override
-    public UndoableEdit getEdit() {
-        return edit;
-    }
+	@Override
+	public void execute() throws ActionUnperformableException {
+		switch (actionName) {
+			case ADD:
+				prepareAdd();
+				if (object != null) {
+					collection.add(object);
+				} else {
+					throw new ActionUnperformableException();
+				}
+				cleanUpAdd();
+				break;
+			case REMOVE:
+				prepareRemove();
+				if (object != null) {
+					collection.remove(object);
+				} else {
+					throw new ActionUnperformableException();
+				}
+				cleanUpRemove();
+				break;
+		}
 
-    void setObject(K object) {
-        this.object = object;
-        edit.setObject(object);
-    }
+	}
+
+	void prepareRemove() throws ActionUnperformableException {
+		try {
+			setObject(collection.getSelection());
+		} catch (NoSelectionException e) {
+			throw new ActionUnperformableException();
+		}
+	}
+
+	abstract void prepareAdd() throws ActionUnperformableException;
+
+	abstract void cleanUpRemove();
+
+	@SuppressWarnings("EmptyMethod")
+	abstract void cleanUpAdd();
+
+
+	@Override
+	public UndoableEdit getEdit() {
+		return edit;
+	}
+
+	void setObject(K object) {
+		this.object = object;
+		edit.setObject(object);
+	}
 }

@@ -101,15 +101,29 @@ public class KnowtatorCollectionActionsTest {
                 TestingHelpers.defaultExpectedHighlighters,
                 TestingHelpers.defaultExpectedAnnotationNodes,
                 TestingHelpers.defaultExpectedTriples);
-
-
     }
 
     @Test
     public void removeSpanAction() throws NoSelectionException {
+
         TextSource textSource = controller.getTextSourceCollection().getSelection();
+        // First test remove span if there is only one in the collection. This should be equivalent to just removing the annotation
         ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
         textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
+        conceptAnnotation.getSpanCollection().setSelection(conceptAnnotation.getSpanCollection().first());
+        TestingHelpers.testKnowtatorAction(controller, new KnowtatorCollectionActions.SpanAction(KnowtatorCollectionActions.REMOVE, controller),
+                TestingHelpers.defaultExpectedTextSources,
+                TestingHelpers.defaultExpectedConceptAnnotations - 1,
+                TestingHelpers.defaultExpectedSpans - 1,
+                TestingHelpers.defaultExpectedGraphSpaces,
+                TestingHelpers.defaultExpectedProfiles,
+                TestingHelpers.defaultExpectedHighlighters,
+                TestingHelpers.defaultExpectedAnnotationNodes - 1,
+                TestingHelpers.defaultExpectedTriples - 1);
+
+        // Next test remove span if there are multiple spans. This should only remove the span.
+        textSource.getConceptAnnotationCollection().selectNext();
+        conceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
         conceptAnnotation.getSpanCollection().setSelection(conceptAnnotation.getSpanCollection().first());
         TestingHelpers.testKnowtatorAction(controller, new KnowtatorCollectionActions.SpanAction(KnowtatorCollectionActions.REMOVE, controller),
                 TestingHelpers.defaultExpectedTextSources,
