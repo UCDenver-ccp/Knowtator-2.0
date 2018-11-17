@@ -31,6 +31,7 @@ public class KnowtatorXMLAttributes {
 	public static final String TYPE = "type";
 	public static final String SPAN_START = "start";
 	public static final String SPAN_END = "end";
+	public static final String MOTIVATION = "motivation";
 
 	// Graph data
 	public static final String TRIPLE_SUBJECT = "subject";

@@ -57,16 +57,17 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
     private final String owlClassLabel;
     private final KnowtatorController controller;
     private final SpanCollection spanCollection;
+    private String motivation;
 
     public ConceptAnnotation(
             KnowtatorController controller,
-            String annotationID,
+            TextSource textSource, String annotationID,
             OWLClass owlClass,
             String owlClassID,
             String owlClassLabel,
             Profile annotator,
             String annotation_type,
-            TextSource textSource) {
+            String motivation) {
         super(textSource, null);
         this.textSource = textSource;
         this.annotator = annotator;
@@ -75,6 +76,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
         this.owlClassID = owlClassID;
         this.owlClassLabel = owlClassLabel;
         this.annotation_type = annotation_type;
+        this.motivation = motivation;
 
         spanCollection = new SpanCollection(controller);
         //noinspection unchecked
@@ -364,5 +366,13 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
 
     public KnowtatorController getController() {
         return controller;
+    }
+
+    public String getMotivation() {
+        return motivation;
+    }
+
+    public void setMotivation(String motivation) {
+        this.motivation = motivation;
     }
 }

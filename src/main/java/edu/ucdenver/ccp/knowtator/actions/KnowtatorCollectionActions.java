@@ -131,7 +131,7 @@ public class KnowtatorCollectionActions {
 				String owlClassID = controller.getOWLModel().getOWLEntityRendering(owlClass);
 
 
-				newConceptAnnotation = new ConceptAnnotation(controller, null, owlClass, owlClassID, null, annotator, "identity", textSource);
+				newConceptAnnotation = new ConceptAnnotation(controller, textSource, null, owlClass, owlClassID, null, annotator, "identity", "");
 				newConceptAnnotation.getSpanCollection().add(new Span(controller, textSource, newConceptAnnotation, null, controller.getSelectionModel().getStart(), controller.getSelectionModel().getEnd()));
 				setObject(newConceptAnnotation);
 			} catch (NoSelectedOWLClassException e) {

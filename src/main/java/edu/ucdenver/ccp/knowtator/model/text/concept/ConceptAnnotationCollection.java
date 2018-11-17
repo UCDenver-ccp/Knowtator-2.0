@@ -111,13 +111,13 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         boolean filterByProfile = controller.getFilterModel().isFilter(FilterModel.PROFILE);
         Profile activeProfile = controller.getProfileCollection().getSelection();
 
-        Set<OWLClass> activeOWLClassDescendents = new HashSet<>();
+        Set<OWLClass> activeOWLClassDescendants = new HashSet<>();
 
         if (filterByOWLClass) {
             try {
                 OWLClass owlClass = controller.getOWLModel().getSelectedOWLClass();
-                activeOWLClassDescendents.addAll(controller.getOWLModel().getDescendants(owlClass));
-                activeOWLClassDescendents.add(owlClass);
+                activeOWLClassDescendants.addAll(controller.getOWLModel().getDescendants(owlClass));
+                activeOWLClassDescendants.add(owlClass);
             } catch (NoSelectedOWLClassException ignored) {
 
             }
@@ -125,7 +125,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
         SpanCollection allSpans = new SpanCollection(null);
         getCollection().forEach(conceptAnnotation -> {
-            if ((!filterByOWLClass || activeOWLClassDescendents.contains(conceptAnnotation.getOwlClass()))
+            if ((!filterByOWLClass || activeOWLClassDescendants.contains(conceptAnnotation.getOwlClass()))
                     && (!filterByProfile || conceptAnnotation.getAnnotator().equals(activeProfile))) {
                 conceptAnnotation.getSpanCollection().forEach(span -> {
                     if ((loc == null || span.contains(loc))) {
@@ -306,8 +306,10 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                     ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0))
                             .getAttribute(KnowtatorXMLAttributes.LABEL);
 
+            String motivation = annotationElement.getAttribute(KnowtatorXMLAttributes.MOTIVATION);
 
-            ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, annotationID, null, owlClassID, owlClassLabel, profile, type, textSource);
+
+            ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, textSource, annotationID, null, owlClassID, owlClassLabel, profile, type, motivation);
             add(newConceptAnnotation);
             newConceptAnnotation.readFromKnowtatorXML(null, annotationElement);
         }
@@ -355,7 +357,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                             .getTextContent();
 
 
-            ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, annotationID, null, owlClassID, owlClassName, profile, "identity", textSource);
+            ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, textSource, annotationID, null, owlClassID, owlClassName, profile, "identity", "");
             if (containsID(annotationID)) {
                 controller.verifyId(null, newConceptAnnotation, false);
             }
@@ -431,9 +433,9 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                 .get(StandoffTags.TEXTBOUNDANNOTATION)
                 .forEach(
                         annotation -> {
-                            ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, annotation[0], null,
+                            ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, textSource, annotation[0], null,
                                     annotation[1].split(StandoffTags.textBoundAnnotationTripleDelimiter)[0],
-                                    null, profile, "identity", textSource);
+                                    null, profile, "identity", "");
                             add(newConceptAnnotation);
                             Map<Character, List<String[]>> map = new HashMap<>();
                             List<String[]> list = new ArrayList<>();
@@ -445,9 +447,9 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         annotationCollection
                 .get(StandoffTags.NORMALIZATION)
                 .forEach(
-                        normalizaion -> {
+                        normalization -> {
                             String[] splitNormalization =
-                                    normalizaion[1].split(StandoffTags.relationTripleDelimiter);
+                                    normalization[1].split(StandoffTags.relationTripleDelimiter);
                             ConceptAnnotation conceptAnnotation = get(splitNormalization[1]);
                             conceptAnnotation.setOWLClassID(splitNormalization[2]);
                         });

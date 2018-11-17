@@ -118,6 +118,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private JCheckBox owlClassFilterCheckBox;
 	private JButton undoButton;
 	private JButton redoButton;
+	private AnnotationNotes annotationNotes;
 
 	private List<JComponent> textSourceButtons;
 	private List<JButton> annotationButtons;
@@ -196,7 +197,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		annotationAnnotatorLabel = new AnnotationAnnotatorLabel(this);
 		annotationClassLabel = new AnnotationClassLabel(this);
 		annotationIDLabel = new AnnotationIDLabel(this);
+		annotationNotes = new AnnotationNotes(this);
 
+		knowtatorComponents.add(annotationNotes);
 		knowtatorComponents.add(spanList);
 		knowtatorComponents.add(graphSpaceList);
 		knowtatorComponents.add(annotationAnnotatorLabel);
@@ -877,7 +880,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		knowtatorTextPane.setEditable(false);
 		scrollPane1.setViewportView(knowtatorTextPane);
 		final JPanel panel7 = new JPanel();
-		panel7.setLayout(new GridLayoutManager(8, 3, new Insets(0, 0, 0, 0), -1, -1));
+		panel7.setLayout(new GridLayoutManager(10, 3, new Insets(0, 0, 0, 0), -1, -1));
 		panel7.setMaximumSize(new Dimension(200, 2147483647));
 		panel7.setMinimumSize(new Dimension(200, 158));
 		splitPane1.setRightComponent(panel7);
@@ -921,9 +924,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		Font label4Font = this.$$$getFont$$$("Verdana", Font.BOLD, 18, label4.getFont());
 		if (label4Font != null) label4.setFont(label4Font);
 		label4.setText("Spans");
-		panel7.add(label4, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		panel7.add(label4, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final JScrollPane scrollPane2 = new JScrollPane();
-		panel7.add(scrollPane2, new GridConstraints(5, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		panel7.add(scrollPane2, new GridConstraints(7, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
 		Font spanListFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, spanList.getFont());
 		if (spanListFont != null) spanList.setFont(spanListFont);
 		scrollPane2.setViewportView(spanList);
@@ -931,9 +934,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		Font label5Font = this.$$$getFont$$$("Verdana", Font.BOLD, 18, label5.getFont());
 		if (label5Font != null) label5.setFont(label5Font);
 		label5.setText("Graph Spaces");
-		panel7.add(label5, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		panel7.add(label5, new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final JScrollPane scrollPane3 = new JScrollPane();
-		panel7.add(scrollPane3, new GridConstraints(7, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		panel7.add(scrollPane3, new GridConstraints(9, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
 		Font graphSpaceListFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, graphSpaceList.getFont());
 		if (graphSpaceListFont != null) graphSpaceList.setFont(graphSpaceListFont);
 		scrollPane3.setViewportView(graphSpaceList);
@@ -950,6 +953,16 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		if (annotationClassLabelFont != null) annotationClassLabel.setFont(annotationClassLabelFont);
 		annotationClassLabel.setText("");
 		panel7.add(annotationClassLabel, new GridConstraints(3, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		final JLabel label6 = new JLabel();
+		Font label6Font = this.$$$getFont$$$("Verdana", Font.BOLD, 12, label6.getFont());
+		if (label6Font != null) label6.setFont(label6Font);
+		label6.setText("Notes");
+		panel7.add(label6, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		final JScrollPane scrollPane4 = new JScrollPane();
+		panel7.add(scrollPane4, new GridConstraints(4, 1, 2, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		scrollPane4.setViewportView(annotationNotes);
+		final Spacer spacer4 = new Spacer();
+		panel7.add(spacer4, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
 	}
 
 	/**
