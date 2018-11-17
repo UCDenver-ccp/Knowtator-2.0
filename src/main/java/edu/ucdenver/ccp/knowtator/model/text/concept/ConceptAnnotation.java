@@ -205,6 +205,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
         annotationElem.setAttribute(KnowtatorXMLAttributes.ID, id);
         annotationElem.setAttribute(KnowtatorXMLAttributes.ANNOTATOR, annotator.getId());
         annotationElem.setAttribute(KnowtatorXMLAttributes.TYPE, annotation_type);
+	    annotationElem.setAttribute(KnowtatorXMLAttributes.MOTIVATION, motivation);
 
         Element classElement = dom.createElement(KnowtatorXMLTags.CLASS);
 
