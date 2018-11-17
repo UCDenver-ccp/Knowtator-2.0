@@ -429,7 +429,8 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 											(AnnotationNode) edge.getTarget(),
 											property, relationOptionsDialog.getPropertyID(),
 											relationOptionsDialog.getQuantifier(), relationOptionsDialog.getQuantifierValue(),
-											relationOptionsDialog.getNegation());
+											relationOptionsDialog.getNegation(),
+											relationOptionsDialog.getMotivation());
 									view.getController().registerAction(action);
 								} catch (NoSelectionException e) {
 									e.printStackTrace();

@@ -127,12 +127,14 @@ public class GraphActions {
         private String quantifier;
         private String guantifierValue;
         private String propertyId;
+        private String motivation;
 
         public AddTripleAction(KnowtatorController controller,
                                AnnotationNode source, AnnotationNode target,
                                OWLObjectProperty property, String propertyId,
                                String quantifier, String guantifierValue,
-                               Boolean negation) throws NoSelectionException {
+                               Boolean negation,
+                               String motivation) throws NoSelectionException {
             super("Add triple", controller);
             this.controller = controller;
             this.source = source;
@@ -142,6 +144,7 @@ public class GraphActions {
             this.quantifier = quantifier;
             this.guantifierValue = guantifierValue;
             this.propertyId = propertyId;
+            this.motivation = motivation;
         }
 
         @Override
@@ -152,7 +155,8 @@ public class GraphActions {
                     controller.getProfileCollection().getSelection(),
                     property, propertyId,
                     quantifier, guantifierValue,
-                    negation
+                    negation,
+                    motivation
             );
         }
     }

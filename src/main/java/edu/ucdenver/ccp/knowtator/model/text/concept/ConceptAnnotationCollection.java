@@ -415,7 +415,8 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                                 propertyID,
                                 "",
                                 "",
-                                false);
+                                false,
+                                "");
                     }
                 }
         );

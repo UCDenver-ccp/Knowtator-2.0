@@ -278,7 +278,7 @@ public class IOTests {
         "property_0",
         "",
         "",
-        false);
+            false, "");
 
     int numGraphSpaces = textSource.getGraphSpaceCollection().size();
     int numVertices =

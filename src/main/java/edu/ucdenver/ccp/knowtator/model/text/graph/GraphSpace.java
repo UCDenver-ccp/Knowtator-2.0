@@ -136,7 +136,8 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
 			String propertyID,
 			String quantifier,
 			String quantifierValue,
-			Boolean isNegated) {
+			Boolean isNegated,
+			String motivation) {
 		id = textSource.getGraphSpaceCollection().verifyID(id, "edge");
 
 		if (!(quantifier.equals("only")
@@ -158,6 +159,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
 						quantifier,
 						quantifierValue,
 						isNegated,
+						motivation,
 						controller,
 						textSource,
 						this);
@@ -224,6 +226,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
 			String quantifier = tripleElem.getAttribute(KnowtatorXMLAttributes.TRIPLE_QUANTIFIER);
 			String quantifierValue = tripleElem.getAttribute(KnowtatorXMLAttributes.TRIPLE_VALUE);
 			String propertyIsNegated = tripleElem.getAttribute(KnowtatorXMLAttributes.IS_NEGATED);
+			String motivation = tripleElem.getAttribute(KnowtatorXMLAttributes.MOTIVATION);
 
 			Profile annotator = new Profile(controller, annotatorID);
 			controller.getProfileCollection().add(annotator);
@@ -241,7 +244,8 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
 						propertyID,
 						quantifier,
 						quantifierValue,
-						propertyIsNegated.equals(KnowtatorXMLAttributes.IS_NEGATED_TRUE));
+						propertyIsNegated.equals(KnowtatorXMLAttributes.IS_NEGATED_TRUE),
+						motivation);
 			}
 		}
 
@@ -286,7 +290,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
 							List<Object> objectAnnotationVertices = getVerticesForAnnotation(objectConceptAnnotation);
 							AnnotationNode target = makeOrGetAnnotationNode(subjectConceptAnnotation, objectAnnotationVertices);
 
-							addTriple(source, target, id, annotator, null, propertyID, "", null, false);
+							addTriple(source, target, id, annotator, null, propertyID, "", null, false, "");
 						});
 	}
 

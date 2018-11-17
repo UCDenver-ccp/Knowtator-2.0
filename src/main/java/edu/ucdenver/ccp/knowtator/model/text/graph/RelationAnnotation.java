@@ -64,6 +64,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
     private OWLObjectProperty property;
     private final String propertyID;
     private final GraphSpace graphSpace;
+    private String motivation;
     @SuppressWarnings("unused")
     private final Logger log = Logger.getLogger(RelationAnnotation.class);
 
@@ -77,12 +78,14 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
             String quantifier,
             String quantifierValue,
             Boolean isNegated,
+            String motivation,
             KnowtatorController controller, TextSource textSource, GraphSpace graphSpace) {
         super(null, new mxGeometry(), null);
 
         this.property = property;
         this.propertyID = propertyID;
         this.isNegated = isNegated;
+        this.motivation = motivation;
         this.textSource = textSource;
         this.controller = controller;
         this.annotator = annotator;
@@ -200,6 +203,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
         tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_QUANTIFIER, quantifier);
         tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_VALUE, quantifierValue);
         tripleElem.setAttribute(KnowtatorXMLAttributes.IS_NEGATED, isNegated ? KnowtatorXMLAttributes.IS_NEGATED_TRUE : KnowtatorXMLAttributes.IS_NEGATED_FALSE);
+        tripleElem.setAttribute(KnowtatorXMLAttributes.MOTIVATION, motivation);
 
         graphElem.appendChild(tripleElem);
     }

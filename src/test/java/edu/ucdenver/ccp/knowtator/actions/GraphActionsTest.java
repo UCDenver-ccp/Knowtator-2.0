@@ -104,7 +104,7 @@ public class GraphActionsTest {
 						target,
 						property, null,
 						"some", null,
-						false),
+						false, ""),
 				TestingHelpers.defaultExpectedTextSources,
 				TestingHelpers.defaultExpectedConceptAnnotations,
 				TestingHelpers.defaultExpectedSpans,
