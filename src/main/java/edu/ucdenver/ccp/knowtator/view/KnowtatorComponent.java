@@ -26,6 +26,9 @@ package edu.ucdenver.ccp.knowtator.view;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorObjectInterface;
 
+/**
+ * All custom Knowtator view components should implement this.
+ */
 public interface KnowtatorComponent extends KnowtatorObjectInterface {
     void reset();
 }

@@ -35,85 +35,85 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public abstract class ListenableCollection<K extends KnowtatorDataObjectInterface, C extends Collection<K>, L extends CollectionListener<K>> implements Iterable<K>, KnowtatorObjectInterface {
-  final C collection;
-  final List<L> collectionListeners;
+	final C collection;
+	final List<L> collectionListeners;
 
-  ListenableCollection(C collection) {
-    this.collection = collection;
-    collectionListeners = new ArrayList<>();
-  }
+	ListenableCollection(C collection) {
+		this.collection = collection;
+		collectionListeners = new ArrayList<>();
+	}
 
-  public void add(K objectToAdd) {
-    collection.add(objectToAdd);
+	public void add(K objectToAdd) {
+		collection.add(objectToAdd);
 
-    collectionListeners.forEach(CollectionListener::added);
-    if (collection.size() == 1) {
-      collectionListeners.forEach(CollectionListener::firstAdded);
-    }
-  }
+		collectionListeners.forEach(CollectionListener::added);
+		if (collection.size() == 1) {
+			collectionListeners.forEach(CollectionListener::firstAdded);
+		}
+	}
 
-  void remove(K objectToRemove) {
-    collection.remove(objectToRemove);
+	void remove(K objectToRemove) {
+		collection.remove(objectToRemove);
 
-    collectionListeners.forEach(CollectionListener::removed);
-    if (collection.size() == 0) {
-      collectionListeners.forEach(CollectionListener::emptied);
-    }
-  }
+		collectionListeners.forEach(CollectionListener::removed);
+		if (collection.size() == 0) {
+			collectionListeners.forEach(CollectionListener::emptied);
+		}
+	}
 
-  public K get(String id) {
-    for (K obj : collection) {
-      if (obj.getId().equals(id)) {
-        return obj;
-      }
-    }
-    return null;
-  }
+	public K get(String id) {
+		for (K obj : collection) {
+			if (obj.getId().equals(id)) {
+				return obj;
+			}
+		}
+		return null;
+	}
 
-  @SuppressWarnings("unused")
-  public boolean contains(K objToFind) {
-    return containsID(objToFind.getId());
-  }
+	@SuppressWarnings("unused")
+	public boolean contains(K objToFind) {
+		return containsID(objToFind.getId());
+	}
 
-  public boolean containsID(String idToFind) {
-    for (K id : collection) {
-      if (id.getId().equals(idToFind)) {
-        return true;
-      }
-    }
-    return false;
-  }
+	public boolean containsID(String idToFind) {
+		for (K id : collection) {
+			if (id.getId().equals(idToFind)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-  public void addCollectionListener(L listener) {
-    if (!collectionListeners.contains(listener)) collectionListeners.add(listener);
-  }
+	public void addCollectionListener(L listener) {
+		if (!collectionListeners.contains(listener)) collectionListeners.add(listener);
+	}
 
-  void removeCollectionListener(L listener) {
-    collectionListeners.remove(listener);
-  }
+	void removeCollectionListener(L listener) {
+		collectionListeners.remove(listener);
+	}
 
-  @Override
-  @Nonnull
-  public Iterator<K> iterator() {
-    return collection.iterator();
-  }
+	@Override
+	@Nonnull
+	public Iterator<K> iterator() {
+		return collection.iterator();
+	}
 
-  public Stream<K> stream() {
-    return collection.stream();
-  }
+	public Stream<K> stream() {
+		return collection.stream();
+	}
 
-  public int size() {
-    return collection.size();
-  }
+	public int size() {
+		return collection.size();
+	}
 
-  @Override
-  public void dispose() {
-    collectionListeners.clear();
-    forEach(KnowtatorDataObjectInterface::dispose);
-    collection.clear();
-  }
+	@Override
+	public void dispose() {
+		collectionListeners.clear();
+		forEach(KnowtatorDataObjectInterface::dispose);
+		collection.clear();
+	}
 
-  public C getCollection() {
-    return collection;
-  }
+	public C getCollection() {
+		return collection;
+	}
 }

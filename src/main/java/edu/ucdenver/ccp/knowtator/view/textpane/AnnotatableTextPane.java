@@ -45,8 +45,8 @@ import static java.lang.Math.min;
 
 public abstract class AnnotatableTextPane extends SearchableTextPane {
 
-	AnnotatableTextPane(KnowtatorController controller, JTextField searchTextField, JCheckBox onlyInAnnotationsCheckBox, JCheckBox regexCheckBox, JCheckBox caseSensitiveCheckBox) {
-		super(controller, searchTextField, onlyInAnnotationsCheckBox, regexCheckBox, caseSensitiveCheckBox);
+	AnnotatableTextPane(KnowtatorController controller, JTextField searchTextField) {
+		super(controller, searchTextField);
 		setEditable(false);
 		setEnabled(false);
 		setSelectedTextColor(Color.red);

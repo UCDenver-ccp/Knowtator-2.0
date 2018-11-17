@@ -47,6 +47,8 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.lang.Math.min;
 
@@ -57,10 +59,19 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
     private static Logger log = Logger.getLogger(KnowtatorTextPane.class);
 
     private final KnowtatorView view;
+	private final JCheckBox onlyInAnnotationsCheckBox;
+	private final JCheckBox regexCheckBox;
+	private final JCheckBox caseSensitiveCheckBox;
 
     public KnowtatorTextPane(KnowtatorView view, JTextField searchTextField, JCheckBox onlyInAnnotationsCheckBox, JCheckBox regexCheckBox, JCheckBox caseSensitiveCheckBox) {
-        super(view.getController(), searchTextField, onlyInAnnotationsCheckBox, regexCheckBox, caseSensitiveCheckBox);
+	    super(view.getController(), searchTextField);
         this.view = view;
+	    this.onlyInAnnotationsCheckBox = onlyInAnnotationsCheckBox;
+	    this.regexCheckBox = regexCheckBox;
+	    this.caseSensitiveCheckBox = caseSensitiveCheckBox;
+	    regexCheckBox.addItemListener(e -> makePattern());
+	    caseSensitiveCheckBox.addItemListener(e -> makePattern());
+	    onlyInAnnotationsCheckBox.addItemListener(e -> makePattern());
 
         view.getController().getProfileCollection().addColorListener(this);
         view.getController().getProfileCollection().addCollectionListener(this);
@@ -250,6 +261,21 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
         view.getController().getProfileCollection().addCollectionListener(this);
         view.getController().getFilterModel().addFilterModelListener(this);
     }
+
+	@Override
+	protected boolean updateSearchTextFieldCondition() {
+		return !regexCheckBox.isSelected();
+	}
+
+	@Override
+	protected boolean keepSearchingCondition(Matcher matcher) {
+		return (!onlyInAnnotationsCheckBox.isSelected() || !(textSource.getConceptAnnotationCollection().getSpans(matcher.start()).size() == 0));
+	}
+
+	@Override
+	protected int getPatternFlags() {
+		return (regexCheckBox.isSelected() ? 0 : Pattern.LITERAL) | (caseSensitiveCheckBox.isSelected() ? 0 : Pattern.CASE_INSENSITIVE);
+	}
 
     @Override
     public void dispose() {

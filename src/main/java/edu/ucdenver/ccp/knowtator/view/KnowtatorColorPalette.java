@@ -45,6 +45,7 @@ import java.util.ArrayList;
  * <p>
  *
  * @author Harrison Pielke-Lombardo
+ * @see JColorChooser
  */
 public class KnowtatorColorPalette extends JColorChooser {
 
@@ -59,277 +60,288 @@ public class KnowtatorColorPalette extends JColorChooser {
         setPreviewPanel(new KnowtatorPreviewPanel());
     }
 
-    class KnowtatorSwatchChooserPanel extends AbstractColorChooserPanel {
+	/**
+	 * A modification to the default swatch panel
+	 */
+	class KnowtatorSwatchChooserPanel extends AbstractColorChooserPanel {
 
-        SwatchPanel swatchPanel;
-        MouseListener mainSwatchListener;
-        private KeyListener mainSwatchKeyListener;
+		SwatchPanel swatchPanel;
+		MouseListener mainSwatchListener;
+		private KeyListener mainSwatchKeyListener;
 
-        KnowtatorSwatchChooserPanel() {
-            super();
-            setInheritsPopupMenu(true);
-        }
+		KnowtatorSwatchChooserPanel() {
+			super();
+			setInheritsPopupMenu(true);
+		}
 
-        public String getDisplayName() {
-            return "Recommended Colors";
-        }
-
-        public Icon getSmallDisplayIcon() {
-            return null;
-        }
-
-        public Icon getLargeDisplayIcon() {
-            return null;
-        }
-
-        protected void buildChooser() {
-
-            GridBagLayout gb = new GridBagLayout();
-            GridBagConstraints gbc = new GridBagConstraints();
-            JPanel superHolder = new JPanel(gb);
-
-            swatchPanel = new MainSwatchPanel();
-            swatchPanel.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
-                    getDisplayName());
-            swatchPanel.setInheritsPopupMenu(true);
-
-            mainSwatchKeyListener = new MainSwatchKeyListener();
-            mainSwatchListener = new MainSwatchListener();
-            swatchPanel.addMouseListener(mainSwatchListener);
-            swatchPanel.addKeyListener(mainSwatchKeyListener);
-
-            JPanel mainHolder = new JPanel(new BorderLayout());
-            Border border = new CompoundBorder(new LineBorder(Color.black),
-                    new LineBorder(Color.white));
-            mainHolder.setBorder(border);
-            mainHolder.add(swatchPanel, BorderLayout.CENTER);
-
-            gbc.anchor = GridBagConstraints.LAST_LINE_START;
-            gbc.gridwidth = 1;
-            gbc.gridheight = 2;
-            Insets oldInsets = gbc.insets;
-            gbc.insets = new Insets(0, 0, 0, 10);
-            superHolder.add(mainHolder, gbc);
-            gbc.insets = oldInsets;
+		/**
+		 * @return recommended colors
+		 */
+		public String getDisplayName() {
+			return "Recommended Colors";
+		}
 
 
-            gbc.gridwidth = GridBagConstraints.REMAINDER;
+		protected void buildChooser() {
 
-            gbc.weighty = 0;
-            gbc.gridheight = GridBagConstraints.REMAINDER;
-            gbc.insets = new Insets(0, 0, 0, 2);
-            superHolder.setInheritsPopupMenu(true);
+			GridBagLayout gb = new GridBagLayout();
+			GridBagConstraints gbc = new GridBagConstraints();
+			JPanel superHolder = new JPanel(gb);
 
-            add(superHolder);
-        }
+			swatchPanel = new MainSwatchPanel();
+			swatchPanel.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY,
+					getDisplayName());
+			swatchPanel.setInheritsPopupMenu(true);
 
-        public void uninstallChooserPanel(JColorChooser enclosingChooser) {
-            super.uninstallChooserPanel(enclosingChooser);
-            swatchPanel.removeMouseListener(mainSwatchListener);
-            swatchPanel.removeKeyListener(mainSwatchKeyListener);
+			mainSwatchKeyListener = new MainSwatchKeyListener();
+			mainSwatchListener = new MainSwatchListener();
+			swatchPanel.addMouseListener(mainSwatchListener);
+			swatchPanel.addKeyListener(mainSwatchKeyListener);
 
-            swatchPanel = null;
-            mainSwatchListener = null;
-            mainSwatchKeyListener = null;
+			JPanel mainHolder = new JPanel(new BorderLayout());
+			Border border = new CompoundBorder(new LineBorder(Color.black),
+					new LineBorder(Color.white));
+			mainHolder.setBorder(border);
+			mainHolder.add(swatchPanel, BorderLayout.CENTER);
 
-            removeAll();  // strip out all the sub-components
-        }
-
-        public void updateChooser() {
-
-        }
-
-
-        private class MainSwatchKeyListener extends KeyAdapter {
-            public void keyPressed(KeyEvent e) {
-                if (KeyEvent.VK_SPACE == e.getKeyCode()) {
-                    Color color = swatchPanel.getSelectedColor();
-                    getColorSelectionModel().setSelectedColor(color);
-                }
-            }
-        }
-
-        class MainSwatchListener extends MouseAdapter implements Serializable {
-            public void mousePressed(MouseEvent e) {
-                if (isEnabled()) {
-                    Color color = swatchPanel.getColorForLocation(e.getX(), e.getY());
-                    getColorSelectionModel().setSelectedColor(color);
-                    swatchPanel.setSelectedColorFromLocation(e.getX(), e.getY());
-                    swatchPanel.requestFocusInWindow();
-                }
-            }
-        }
-
-    }
+			gbc.anchor = GridBagConstraints.LAST_LINE_START;
+			gbc.gridwidth = 1;
+			gbc.gridheight = 2;
+			Insets oldInsets = gbc.insets;
+			gbc.insets = new Insets(0, 0, 0, 10);
+			superHolder.add(mainHolder, gbc);
+			gbc.insets = oldInsets;
 
 
-    class SwatchPanel extends JPanel {
+			gbc.gridwidth = GridBagConstraints.REMAINDER;
 
-        ArrayList<Color> colors;
-        Dimension swatchSize;
-        Dimension numSwatches;
-        Dimension gap;
+			gbc.weighty = 0;
+			gbc.gridheight = GridBagConstraints.REMAINDER;
+			gbc.insets = new Insets(0, 0, 0, 2);
+			superHolder.setInheritsPopupMenu(true);
 
-        private int selRow;
-        private int selCol;
+			add(superHolder);
+		}
 
-        SwatchPanel() {
-            initValues();
-            initColors();
-            setToolTipText(""); // register for events
-            setOpaque(true);
-            setBackground(Color.white);
-            setFocusable(true);
-            setInheritsPopupMenu(true);
+		public void uninstallChooserPanel(JColorChooser enclosingChooser) {
+			super.uninstallChooserPanel(enclosingChooser);
+			swatchPanel.removeMouseListener(mainSwatchListener);
+			swatchPanel.removeKeyListener(mainSwatchKeyListener);
 
-            addFocusListener(new FocusAdapter() {
-                public void focusGained(FocusEvent e) {
-                    repaint();
-                }
+			swatchPanel = null;
+			mainSwatchListener = null;
+			mainSwatchKeyListener = null;
 
-                public void focusLost(FocusEvent e) {
-                    repaint();
-                }
-            });
+			removeAll();  // strip out all the sub-components
+		}
 
-            addKeyListener(new KeyAdapter() {
-                public void keyPressed(KeyEvent e) {
-                    int typed = e.getKeyCode();
-                    switch (typed) {
-                        case KeyEvent.VK_UP:
-                            if (selRow > 0) {
-                                selRow--;
-                                repaint();
-                            }
-                            break;
-                        case KeyEvent.VK_DOWN:
-                            if (selRow < numSwatches.height - 1) {
-                                selRow++;
-                                repaint();
-                            }
-                            break;
-                        case KeyEvent.VK_LEFT:
-                            if (selCol > 0 && SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
-                                selCol--;
-                                repaint();
-                            } else if (selCol < numSwatches.width - 1
-                                    && !SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
-                                selCol++;
-                                repaint();
-                            }
-                            break;
-                        case KeyEvent.VK_RIGHT:
-                            if (selCol < numSwatches.width - 1
-                                    && SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
-                                selCol++;
-                                repaint();
-                            } else if (selCol > 0 && !SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
-                                selCol--;
-                                repaint();
-                            }
-                            break;
-                        case KeyEvent.VK_HOME:
-                            selCol = 0;
-                            selRow = 0;
-                            repaint();
-                            break;
-                        case KeyEvent.VK_END:
-                            selCol = numSwatches.width - 1;
-                            selRow = numSwatches.height - 1;
-                            repaint();
-                            break;
-                    }
-                }
-            });
-        }
+		private class MainSwatchKeyListener extends KeyAdapter {
 
-        Color getSelectedColor() {
-            return getColorForCell(selCol, selRow);
-        }
+			public void keyPressed(KeyEvent e) {
+				if (KeyEvent.VK_SPACE == e.getKeyCode()) {
+					Color color = swatchPanel.getSelectedColor();
+					getColorSelectionModel().setSelectedColor(color);
+				}
+			}
+		}
 
-        void initValues() {
+		class MainSwatchListener extends MouseAdapter implements Serializable {
+			public void mousePressed(MouseEvent e) {
+				if (isEnabled()) {
+					Color color = swatchPanel.getColorForLocation(e.getX(), e.getY());
+					getColorSelectionModel().setSelectedColor(color);
+					swatchPanel.setSelectedColorFromLocation(e.getX(), e.getY());
+					swatchPanel.requestFocusInWindow();
+				}
+			}
+		}
 
-        }
+		@Override
+		public void updateChooser() {
+		}
 
-        public void paintComponent(Graphics g) {
-            g.setColor(getBackground());
-            g.fillRect(0, 0, getWidth(), getHeight());
-            for (int row = 0; row < numSwatches.height; row++) {
-                int y = row * (swatchSize.height + gap.height);
-                for (int column = 0; column < numSwatches.width; column++) {
-                    Color c = getColorForCell(column, row);
-                    g.setColor(c);
-                    int x;
-                    if (!this.getComponentOrientation().isLeftToRight()) {
-                        x = (numSwatches.width - column - 1) * (swatchSize.width + gap.width);
-                    } else {
-                        x = column * (swatchSize.width + gap.width);
-                    }
-                    g.fillRect(x, y, swatchSize.width, swatchSize.height);
-                    g.setColor(Color.black);
-                    g.drawLine(x + swatchSize.width - 1, y, x + swatchSize.width - 1, y + swatchSize.height - 1);
-                    g.drawLine(x, y + swatchSize.height - 1, x + swatchSize.width - 1, y + swatchSize.height - 1);
+		@Override
+		public Icon getSmallDisplayIcon() {
+			return null;
+		}
 
-                    if (selRow == row && selCol == column && this.isFocusOwner()) {
-                        Color c2 = new Color(c.getRed() < 125 ? 255 : 0,
-                                c.getGreen() < 125 ? 255 : 0,
-                                c.getBlue() < 125 ? 255 : 0);
-                        g.setColor(c2);
+		@Override
+		public Icon getLargeDisplayIcon() {
+			return null;
+		}
 
-                        g.drawLine(x, y, x + swatchSize.width - 1, y);
-                        g.drawLine(x, y, x, y + swatchSize.height - 1);
-                        g.drawLine(x + swatchSize.width - 1, y, x + swatchSize.width - 1, y + swatchSize.height - 1);
-                        g.drawLine(x, y + swatchSize.height - 1, x + swatchSize.width - 1, y + swatchSize.height - 1);
-                        g.drawLine(x, y, x + swatchSize.width - 1, y + swatchSize.height - 1);
-                        g.drawLine(x, y + swatchSize.height - 1, x + swatchSize.width - 1, y);
-                    }
-                }
-            }
-        }
+	}
 
-        public Dimension getPreferredSize() {
-            int x = numSwatches.width * (swatchSize.width + gap.width) - 1;
-            int y = numSwatches.height * (swatchSize.height + gap.height) - 1;
-            return new Dimension(x, y);
-        }
+	/**
+	 * Reimplementation of the SwatchPanel class used to make the default swatch panel because it wasn't public
+	 */
+	class SwatchPanel extends JPanel {
 
-        void initColors() {
+		ArrayList<Color> colors;
+		Dimension swatchSize;
+		Dimension numSwatches;
+		Dimension gap;
+
+		private int selRow;
+		private int selCol;
+
+		SwatchPanel() {
+			initValues();
+			initColors();
+			setToolTipText(""); // register for events
+			setOpaque(true);
+			setBackground(Color.white);
+			setFocusable(true);
+			setInheritsPopupMenu(true);
+
+			addFocusListener(new FocusAdapter() {
+				public void focusGained(FocusEvent e) {
+					repaint();
+				}
+
+				public void focusLost(FocusEvent e) {
+					repaint();
+				}
+			});
+
+			addKeyListener(new KeyAdapter() {
+				public void keyPressed(KeyEvent e) {
+					int typed = e.getKeyCode();
+					switch (typed) {
+						case KeyEvent.VK_UP:
+							if (selRow > 0) {
+								selRow--;
+								repaint();
+							}
+							break;
+						case KeyEvent.VK_DOWN:
+							if (selRow < numSwatches.height - 1) {
+								selRow++;
+								repaint();
+							}
+							break;
+						case KeyEvent.VK_LEFT:
+							if (selCol > 0 && SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
+								selCol--;
+								repaint();
+							} else if (selCol < numSwatches.width - 1
+									&& !SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
+								selCol++;
+								repaint();
+							}
+							break;
+						case KeyEvent.VK_RIGHT:
+							if (selCol < numSwatches.width - 1
+									&& SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
+								selCol++;
+								repaint();
+							} else if (selCol > 0 && !SwatchPanel.this.getComponentOrientation().isLeftToRight()) {
+								selCol--;
+								repaint();
+							}
+							break;
+						case KeyEvent.VK_HOME:
+							selCol = 0;
+							selRow = 0;
+							repaint();
+							break;
+						case KeyEvent.VK_END:
+							selCol = numSwatches.width - 1;
+							selRow = numSwatches.height - 1;
+							repaint();
+							break;
+					}
+				}
+			});
+		}
+
+		Color getSelectedColor() {
+			return getColorForCell(selCol, selRow);
+		}
+
+		void initValues() {
+
+		}
+
+		public void paintComponent(Graphics g) {
+			g.setColor(getBackground());
+			g.fillRect(0, 0, getWidth(), getHeight());
+			for (int row = 0; row < numSwatches.height; row++) {
+				int y = row * (swatchSize.height + gap.height);
+				for (int column = 0; column < numSwatches.width; column++) {
+					Color c = getColorForCell(column, row);
+					g.setColor(c);
+					int x;
+					if (!this.getComponentOrientation().isLeftToRight()) {
+						x = (numSwatches.width - column - 1) * (swatchSize.width + gap.width);
+					} else {
+						x = column * (swatchSize.width + gap.width);
+					}
+					g.fillRect(x, y, swatchSize.width, swatchSize.height);
+					g.setColor(Color.black);
+					g.drawLine(x + swatchSize.width - 1, y, x + swatchSize.width - 1, y + swatchSize.height - 1);
+					g.drawLine(x, y + swatchSize.height - 1, x + swatchSize.width - 1, y + swatchSize.height - 1);
+
+					if (selRow == row && selCol == column && this.isFocusOwner()) {
+						Color c2 = new Color(c.getRed() < 125 ? 255 : 0,
+								c.getGreen() < 125 ? 255 : 0,
+								c.getBlue() < 125 ? 255 : 0);
+						g.setColor(c2);
+
+						g.drawLine(x, y, x + swatchSize.width - 1, y);
+						g.drawLine(x, y, x, y + swatchSize.height - 1);
+						g.drawLine(x + swatchSize.width - 1, y, x + swatchSize.width - 1, y + swatchSize.height - 1);
+						g.drawLine(x, y + swatchSize.height - 1, x + swatchSize.width - 1, y + swatchSize.height - 1);
+						g.drawLine(x, y, x + swatchSize.width - 1, y + swatchSize.height - 1);
+						g.drawLine(x, y + swatchSize.height - 1, x + swatchSize.width - 1, y);
+					}
+				}
+			}
+		}
+
+		public Dimension getPreferredSize() {
+			int x = numSwatches.width * (swatchSize.width + gap.width) - 1;
+			int y = numSwatches.height * (swatchSize.height + gap.height) - 1;
+			return new Dimension(x, y);
+		}
+
+		void initColors() {
 
 
-        }
+		}
 
-        public String getToolTipText(MouseEvent e) {
-            Color color = getColorForLocation(e.getX(), e.getY());
-            return color.getRed() + ", " + color.getGreen() + ", " + color.getBlue();
-        }
+		public String getToolTipText(MouseEvent e) {
+			Color color = getColorForLocation(e.getX(), e.getY());
+			return color.getRed() + ", " + color.getGreen() + ", " + color.getBlue();
+		}
 
-        void setSelectedColorFromLocation(int x, int y) {
-            if (!this.getComponentOrientation().isLeftToRight()) {
-                selCol = numSwatches.width - x / (swatchSize.width + gap.width) - 1;
-            } else {
-                selCol = x / (swatchSize.width + gap.width);
-            }
-            selRow = y / (swatchSize.height + gap.height);
-            repaint();
-        }
+		void setSelectedColorFromLocation(int x, int y) {
+			if (!this.getComponentOrientation().isLeftToRight()) {
+				selCol = numSwatches.width - x / (swatchSize.width + gap.width) - 1;
+			} else {
+				selCol = x / (swatchSize.width + gap.width);
+			}
+			selRow = y / (swatchSize.height + gap.height);
+			repaint();
+		}
 
-        Color getColorForLocation(int x, int y) {
-            int column;
-            if (!this.getComponentOrientation().isLeftToRight()) {
-                column = numSwatches.width - x / (swatchSize.width + gap.width) - 1;
-            } else {
-                column = x / (swatchSize.width + gap.width);
-            }
-            int row = y / (swatchSize.height + gap.height);
-            return getColorForCell(column, row);
-        }
+		Color getColorForLocation(int x, int y) {
+			int column;
+			if (!this.getComponentOrientation().isLeftToRight()) {
+				column = numSwatches.width - x / (swatchSize.width + gap.width) - 1;
+			} else {
+				column = x / (swatchSize.width + gap.width);
+			}
+			int row = y / (swatchSize.height + gap.height);
+			return getColorForCell(column, row);
+		}
 
-        private Color getColorForCell(int column, int row) {
-            return colors.get((row * numSwatches.width) + column); // (STEVE) - change data orientation here
-        }
+		private Color getColorForCell(int column, int row) {
+			return colors.get((row * numSwatches.width) + column); // (STEVE) - change data orientation here
+		}
 
 
-    }
+	}
 
     class MainSwatchPanel extends SwatchPanel {
 

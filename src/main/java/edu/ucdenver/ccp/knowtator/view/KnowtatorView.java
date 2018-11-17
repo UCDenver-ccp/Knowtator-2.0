@@ -656,6 +656,22 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		knowtatorComponents.forEach(KnowtatorComponent::dispose);
 	}
 
+	/**
+	 * After a project is loaded, this method should be called.
+	 */
+	public void projectLoaded() {
+		knowtatorTextPane.refreshHighlights();
+		addTextSourceButton.setEnabled(true);
+
+		KnowtatorView.PREFERENCES.put("Last Project", getController().getProjectLocation().getAbsolutePath());
+
+		try {
+			KnowtatorView.PREFERENCES.flush();
+		} catch (BackingStoreException e1) {
+			e1.printStackTrace();
+		}
+	}
+
 	@Override
 	public void dropActionChanged(DropTargetDragEvent e) {
 	}
@@ -674,19 +690,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 	@Override
 	public void dragOver(DropTargetDragEvent e) {
-	}
-
-	public void projectLoaded() {
-		knowtatorTextPane.refreshHighlights();
-		addTextSourceButton.setEnabled(true);
-
-		KnowtatorView.PREFERENCES.put("Last Project", getController().getProjectLocation().getAbsolutePath());
-
-		try {
-			KnowtatorView.PREFERENCES.flush();
-		} catch (BackingStoreException e1) {
-			e1.printStackTrace();
-		}
 	}
 
 	/**

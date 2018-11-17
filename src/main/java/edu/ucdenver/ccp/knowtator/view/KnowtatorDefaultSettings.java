@@ -28,6 +28,9 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Settings that should be consistent across the Knowtator view
+ */
 public class KnowtatorDefaultSettings {
     public static final Font FONT = new Font("Verdana", Font.PLAIN, 10);
 

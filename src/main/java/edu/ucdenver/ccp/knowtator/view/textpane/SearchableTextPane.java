@@ -39,29 +39,24 @@ import javax.swing.event.DocumentListener;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * A text pane that has search functionality
+ */
 public abstract class SearchableTextPane extends JTextPane implements KnowtatorComponent {
 	private Pattern pattern;
 	private Matcher matcher;
 	private final JTextField searchTextField;
-	private final JCheckBox regexCheckBox;
-	private final JCheckBox onlyInAnnotationsCheckBox;
-	private final JCheckBox caseSensitiveCheckBox;
 	TextSource textSource;
 
-	SearchableTextPane(KnowtatorController controller, JTextField searchTextField, JCheckBox onlyInAnnotationsCheckBox, JCheckBox regexCheckBox, JCheckBox caseSensitiveCheckBox) {
+	SearchableTextPane(KnowtatorController controller, JTextField searchTextField) {
 		super();
 		this.searchTextField = searchTextField;
-		this.onlyInAnnotationsCheckBox = onlyInAnnotationsCheckBox;
-		this.regexCheckBox = regexCheckBox;
-		this.caseSensitiveCheckBox = caseSensitiveCheckBox;
 		addCaretListener(e -> {
-			if (!regexCheckBox.isSelected()) {
+			if (updateSearchTextFieldCondition()) {
 				searchTextField.setText(this.getSelectedText());
 			}
 		});
-		regexCheckBox.addItemListener(e -> makePattern());
-		caseSensitiveCheckBox.addItemListener(e -> makePattern());
-		onlyInAnnotationsCheckBox.addItemListener(e -> makePattern());
+
 
 		pattern = Pattern.compile("");
 		searchTextField.getDocument().addDocumentListener(new DocumentListener() {
@@ -202,14 +197,15 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 		};
 	}
 
+	protected abstract boolean updateSearchTextFieldCondition();
+
 	public void searchForward() {
 		matcher.reset();
 		int matchStart = -1;
 		int matchEnd = 0;
 		int startBound = getSelectionEnd();
 		while (matcher.find()) {
-			if (matcher.start() > startBound &&
-					(!onlyInAnnotationsCheckBox.isSelected() || !(textSource.getConceptAnnotationCollection().getSpans(matcher.start()).size() == 0))) {
+			if (matcher.start() > startBound && keepSearchingCondition(matcher)) {
 				matchStart = matcher.start();
 				matchEnd = matcher.end();
 				break;
@@ -219,7 +215,7 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 			matcher.reset();
 			//noinspection ResultOfMethodCallIgnored
 			matcher.find();
-			if (!onlyInAnnotationsCheckBox.isSelected() || !(textSource.getConceptAnnotationCollection().getSpans(matcher.start()).size() == 0)) {
+			if (keepSearchingCondition(matcher)) {
 				matchStart = matcher.start();
 				matchEnd = matcher.end();
 			}
@@ -228,13 +224,15 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 		select(matchStart, matchEnd);
 	}
 
+	protected abstract boolean keepSearchingCondition(Matcher matcher);
+
 	public void searchPrevious() {
 		matcher.reset();
 		int matchStart = -1;
 		int matchEnd = 0;
 		int endBound = getSelectionStart();
 		while (matcher.find()) {
-			if (matcher.start() < endBound || matcher.hitEnd() && (!onlyInAnnotationsCheckBox.isSelected() || !(textSource.getConceptAnnotationCollection().getSpans(matcher.start()).size() == 0))) {
+			if (matcher.start() < endBound || matcher.hitEnd() && keepSearchingCondition(matcher)) {
 				matchStart = matcher.start();
 				matchEnd = matcher.end();
 			} else if (matchStart == -1) {
@@ -247,10 +245,13 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 		select(matchStart, matchEnd);
 	}
 
-	private void makePattern() {
-		pattern = Pattern.compile(searchTextField.getText(), (regexCheckBox.isSelected() ? 0 : Pattern.LITERAL) | (caseSensitiveCheckBox.isSelected() ? 0 : Pattern.CASE_INSENSITIVE));
+	void makePattern() {
+		//noinspection MagicConstant
+		pattern = Pattern.compile(searchTextField.getText(), getPatternFlags());
 		matcher.usePattern(pattern);
 	}
+
+	protected abstract int getPatternFlags();
 
 
 	@Override
