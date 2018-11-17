@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator.view.textpane;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -32,21 +33,33 @@ import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorDefaultSettings;
+import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Utilities;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Set;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
+/**
+ * A text pane that can be annotated
+ */
 public abstract class AnnotatableTextPane extends SearchableTextPane {
+
+	private ConceptAnnotation conceptAnnotation;
+	TextSource textSource;
+	private Span span;
+	private KnowtatorController controller;
+	private DefaultHighlighter.DefaultHighlightPainter overlapHighlighter = new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
+	private DefaultHighlighter.DefaultHighlightPainter selectionHighlighter = new RectanglePainter(Color.BLACK);
 
 	AnnotatableTextPane(KnowtatorController controller, JTextField searchTextField) {
 		super(controller, searchTextField);
+		this.controller = controller;
 		setEditable(false);
 		setEnabled(false);
 		setSelectedTextColor(Color.red);
@@ -167,16 +180,19 @@ public abstract class AnnotatableTextPane extends SearchableTextPane {
 
 			@Override
 			public void respondToSpanSelection(SelectionEvent<Span> event) {
+				span = event.getNew();
 				refreshHighlights();
 			}
 
 			@Override
 			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
+				conceptAnnotation = event.getNew();
 				refreshHighlights();
 			}
 
 			@Override
 			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
+				textSource = event.getNew();
 				showTextSource();
 			}
 
@@ -204,16 +220,142 @@ public abstract class AnnotatableTextPane extends SearchableTextPane {
 		};
 	}
 
+	/**
+	 * Sets the text to the text sources content
+	 */
 	private void showTextSource() {
 		String text = textSource.getContent();
 		setText(text);
 		refreshHighlights();
 	}
 
-	protected abstract void handleMouseRelease(MouseEvent e, int press_offset, int viewToModel);
+	/**
+	 * @param e              MouseEvent
+	 * @param press_offset   Mouse position at press
+	 * @param release_offset Mouse position at release
+	 */
+	protected abstract void handleMouseRelease(MouseEvent e, int press_offset, int release_offset);
 
-	abstract void refreshHighlights();
+	/**
+	 * Repaints the highlights
+	 */
+	public void refreshHighlights() {
+		if (controller.isNotLoading()) {
+			// Remove all previous highlights in case a span has been deleted
+			getHighlighter().removeAllHighlights();
 
+			// Always highlight the selected concept first so its color and border show up
+			highlightSelectedAnnotation();
+
+			// Highlight overlaps first, then spans. Overlaps must be highlighted first because the highlights are displayed
+			// in order of placement
+			Set<Span> spans = textSource.getConceptAnnotationCollection().getSpans(null).getCollection();
+			highlightOverlaps(spans);
+			highlightSpans(spans);
+
+			revalidate();
+			repaint();
+
+			SwingUtilities.invokeLater(
+					() -> {
+						if (span != null) {
+							try {
+								scrollRectToVisible(modelToView(span.getStart()));
+							} catch (BadLocationException | NullPointerException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+			);
+		}
+	}
+
+	/**
+	 * Highlights spans according to the color specified by their annotation. Underlines spans from annotations whose OWL class is selected
+	 *
+	 * @param spans A set of spans to highlight
+	 */
+	private void highlightSpans(Set<Span> spans) {
+		SimpleAttributeSet underlinedSpan = new SimpleAttributeSet();
+		StyleConstants.setUnderline(underlinedSpan, true);
+
+		SimpleAttributeSet regularSpan = new SimpleAttributeSet();
+		StyleConstants.setUnderline(regularSpan, false);
+
+		getStyledDocument().setCharacterAttributes(0, getText().length(), regularSpan, false);
+
+		Set<OWLClass> descendants = null;
+		try {
+			OWLClass owlClass = controller.getOWLModel().getSelectedOWLClass();
+			descendants = controller.getOWLModel().getDescendants(owlClass);
+			descendants.add(owlClass);
+		} catch (NoSelectedOWLClassException e) {
+			e.printStackTrace();
+		}
+		for (Span span : spans) {
+			//Underline spans for the same class
+			if (descendants != null && descendants.contains(span.getConceptAnnotation().getOwlClass())) {
+				getStyledDocument().setCharacterAttributes(span.getStart(), span.getSize(), underlinedSpan, false);
+			}
+			DefaultHighlighter.DefaultHighlightPainter spanHighlighter = new DefaultHighlighter.DefaultHighlightPainter(span.getConceptAnnotation().getColor());
+
+			highlightRegion(span.getStart(), span.getEnd(), spanHighlighter);
+		}
+	}
+
+	/**
+	 * Highlights overlapping spans
+	 *
+	 * @param spans A set of spans to highlight
+	 */
+	private void highlightOverlaps(Set<Span> spans) {
+		Span lastSpan = null;
+
+		for (Span span : spans) {
+			if (lastSpan != null) {
+				if (span.intersects(lastSpan)) {
+					highlightRegion(span.getStart(), min(lastSpan.getEnd(), span.getEnd()), overlapHighlighter);
+				}
+			}
+
+			if (lastSpan == null || span.getEnd() > lastSpan.getEnd()) {
+				lastSpan = span;
+			}
+		}
+	}
+
+	/**
+	 * Highlights a region using the given highlighter
+	 *
+	 * @param start       Start of highlight
+	 * @param end         End of highlight
+	 * @param highlighter Highlighter to use to draw the highlight
+	 */
+	private void highlightRegion(int start, int end, DefaultHighlighter.DefaultHighlightPainter highlighter) {
+		try {
+			getHighlighter().addHighlight(start, end, highlighter);
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Highlights the spans for the selected annotation
+	 */
+	private void highlightSelectedAnnotation() {
+		if (conceptAnnotation != null) {
+			for (Span span : conceptAnnotation.getSpanCollection()) {
+				highlightRegion(span.getStart(), span.getEnd(), selectionHighlighter);
+			}
+		}
+	}
+
+	/**
+	 * Snaps selection to word limits
+	 *
+	 * @param press_offset   Mouse position at press
+	 * @param release_offset Mouse position at release
+	 */
 	void setSelectionAtWordLimits(int press_offset, int release_offset) {
 
 		try {
@@ -230,14 +372,97 @@ public abstract class AnnotatableTextPane extends SearchableTextPane {
 		}
 	}
 
+	/**
+	 * @param size Value to set font size to
+	 */
 	public void setFontSize(int size) {
 		Font font = getFont();
 		setFont(new Font(font.getName(), font.getStyle(), size));
 		repaint();
 	}
 
+	/**
+	 * Alters the selection
+	 *
+	 * @param startModification Value to modify the start selection by
+	 * @param endModification   Value to modify the end selection by
+	 */
 	public void modifySelection(int startModification, int endModification) {
 		select(getSelectionStart() + startModification, getSelectionEnd() + endModification);
+	}
+
+	class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {
+
+		@SuppressWarnings("SameParameterValue")
+		RectanglePainter(Color color) {
+			super(color);
+		}
+
+		/**
+		 * Paints a portion of a highlight.
+		 *
+		 * @param g      the graphics context
+		 * @param offs0  the starting model offset >= 0
+		 * @param offs1  the ending model offset >= offs1
+		 * @param bounds the bounding box of the view, which is not necessarily the region to paint.
+		 * @param c      the editor
+		 * @param view   View painting for
+		 * @return region drawing occurred in
+		 */
+		public Shape paintLayer(
+				Graphics g, int offs0, int offs1, Shape bounds, JTextComponent c, View view) {
+			Rectangle r = getDrawingArea(offs0, offs1, bounds, view);
+
+			if (r == null) return null;
+
+			//  Do your custom painting
+
+			Color color = getColor();
+			g.setColor(color == null ? c.getSelectionColor() : color);
+
+			((Graphics2D) g).setStroke(new BasicStroke(4));
+
+			//  Code is the same as the default highlighter except we use drawRect(...)
+
+			//		g.fillRect(r.x, r.y, r.width, r.height);
+			g.drawRect(r.x, r.y, r.width - 1, r.height - 1);
+			((Graphics2D) g).setStroke(new BasicStroke());
+
+			// Return the drawing area
+
+			return r;
+		}
+
+		private Rectangle getDrawingArea(int offs0, int offs1, Shape bounds, View view) {
+			// Contained in view, can just use bounds.
+
+			if (offs0 == view.getStartOffset() && offs1 == view.getEndOffset()) {
+				Rectangle alloc;
+
+				if (bounds instanceof Rectangle) {
+					alloc = (Rectangle) bounds;
+				} else {
+					alloc = bounds.getBounds();
+				}
+
+				return alloc;
+			} else {
+				// Should only render part of View.
+				try {
+					// --- determine locations ---
+					Shape shape =
+							view.modelToView(offs0, Position.Bias.Forward, offs1, Position.Bias.Backward, bounds);
+
+					return (shape instanceof Rectangle) ? (Rectangle) shape : shape.getBounds();
+				} catch (BadLocationException e) {
+					// can't render
+				}
+			}
+
+			// Can't render
+
+			return null;
+		}
 	}
 
 }
