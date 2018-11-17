@@ -152,13 +152,13 @@ public class KnowtatorCollectionActionsTest {
     public void removeProfileAction() {
         TestingHelpers.testKnowtatorAction(controller, new KnowtatorCollectionActions.ProfileAction(KnowtatorCollectionActions.REMOVE, controller, "profile1"),
                 TestingHelpers.defaultExpectedTextSources,
-                TestingHelpers.defaultExpectedConceptAnnotations,
-                TestingHelpers.defaultExpectedSpans,
+                TestingHelpers.defaultExpectedConceptAnnotations - 1,
+                TestingHelpers.defaultExpectedSpans - 2,
                 TestingHelpers.defaultExpectedGraphSpaces,
                 TestingHelpers.defaultExpectedProfiles - 1,
                 TestingHelpers.defaultExpectedHighlighters - 2,
-                TestingHelpers.defaultExpectedAnnotationNodes,
-                TestingHelpers.defaultExpectedTriples);
+                TestingHelpers.defaultExpectedAnnotationNodes - 1,
+                TestingHelpers.defaultExpectedTriples - 1);
     }
 
     @Test

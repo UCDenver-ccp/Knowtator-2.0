@@ -206,6 +206,12 @@ public class KnowtatorCollectionActions {
 		@Override
 		void prepareRemove() {
 			setObject(collection.get(profileId));
+			controller.getTextSourceCollection().forEach(textSource -> textSource.getConceptAnnotationCollection().forEach(conceptAnnotation -> {
+				if (conceptAnnotation.getAnnotator().equals(object)) {
+					textSource.getConceptAnnotationCollection().remove(conceptAnnotation);
+					edit.addEdit(new KnowtatorCollectionEdit<>(REMOVE, textSource.getConceptAnnotationCollection(), conceptAnnotation, "Remove annotation"));
+				}
+			}));
 		}
 
 		@Override
