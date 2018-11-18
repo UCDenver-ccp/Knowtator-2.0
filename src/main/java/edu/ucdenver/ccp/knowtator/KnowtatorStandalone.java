@@ -76,17 +76,13 @@ class KnowtatorStandalone extends JFrame {
 
 		if (debug) {
 			view.getController().setDebug();
-			view.reset();
 			try {
 				// Use the last project opened
 				File projectFile = new File(KnowtatorView.PREFERENCES.get("Last Project", null));
-				view.getController().setSaveLocation(projectFile);
-				view.getController().loadProject();
-				view.projectLoaded();
+				view.loadProject(projectFile);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-
 		}
 
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);

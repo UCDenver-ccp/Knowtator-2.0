@@ -22,15 +22,22 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.collection;
+package edu.ucdenver.ccp.knowtator.view;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
+import edu.ucdenver.ccp.knowtator.TestingHelpers;
+import org.junit.jupiter.api.Test;
 
-import java.util.TreeSet;
+import java.io.IOException;
 
-public abstract class KnowtatorCollection<K extends KnowtatorDataObjectInterface> extends SelectableCollection<K, KnowtatorCollectionListener<K>> {
-    protected KnowtatorCollection(KnowtatorController controller) {
-	    super(new TreeSet<>());
-    }
+class KnowtatorViewTest {
+	private static final KnowtatorView view = new KnowtatorView();
+
+	@Test
+	void loadProject() throws IOException {
+		KnowtatorController controller = TestingHelpers.getLoadedController();
+		TestingHelpers.checkDefaultCollectionValues(controller);
+		view.loadProject(controller.getProjectLocation());
+		TestingHelpers.checkDefaultCollectionValues(view.getController());
+	}
 }

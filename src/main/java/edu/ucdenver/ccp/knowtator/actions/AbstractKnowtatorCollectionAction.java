@@ -36,7 +36,7 @@ public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataO
 	public static final String REMOVE = "remove";
 
 	private final String actionName;
-	KnowtatorCollectionEdit<K> edit;
+	final KnowtatorCollectionEdit<K> edit;
 	final KnowtatorCollection<K> collection;
 	K object;
 

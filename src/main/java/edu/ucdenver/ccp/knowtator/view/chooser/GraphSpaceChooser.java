@@ -39,13 +39,8 @@ public class GraphSpaceChooser extends KnowtatorChooser<GraphSpace> {
         try {
             setCollection(view.getController().getTextSourceCollection().getSelection().getGraphSpaceCollection());
             setSelected();
-        } catch (NoSelectionException e) {
-            e.printStackTrace();
+        } catch (NoSelectionException ignored) {
+
         }
-    }
-
-    @Override
-    public void reset() {
-
     }
 }

@@ -92,101 +92,6 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 		$$$setupUI$$$();
 		makeButtons();
 
-		new TextBoundModelListener(view.getController()) {
-			@Override
-			public void respondToConceptAnnotationModification() {
-
-			}
-
-			@Override
-			public void respondToSpanModification() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceModification() {
-
-			}
-
-			public void respondToGraphSpaceCollectionFirstAdded() {
-				if (isVisible()) {
-					graphSpaceButtons.forEach(c -> c.setEnabled(true));
-				}
-			}
-
-			public void respondToGraphSpaceCollectionEmptied() {
-				if (isVisible()) {
-					graphSpaceButtons.forEach(c -> c.setEnabled(false));
-					addGraphSpaceButton.setEnabled(true);
-				}
-			}
-
-			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
-				if (isVisible() && event.getNew() != null) {
-					try {
-						showGraph(event.getNew().getGraphSpaceCollection().getSelection());
-					} catch (NoSelectionException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-
-			public void respondToGraphSpaceSelection(SelectionEvent<GraphSpace> event) {
-				if (isVisible() && event.getNew() != null && event.getNew() != graphComponent.getGraph()) {
-					showGraph(event.getNew());
-				}
-			}
-
-			public void respondToGraphSpaceRemoved() {
-			}
-
-			public void respondToGraphSpaceAdded() {
-			}
-
-			public void respondToConceptAnnotationCollectionEmptied() {
-			}
-
-			public void respondToConceptAnnotationRemoved() {
-			}
-
-			public void respondToConceptAnnotationAdded() {
-			}
-
-			public void respondToConceptAnnotationCollectionFirstAdded() {
-			}
-
-			public void respondToSpanCollectionFirstAdded() {
-
-			}
-
-			public void respondToSpanCollectionEmptied() {
-			}
-
-			public void respondToSpanRemoved() {
-			}
-
-			public void respondToSpanAdded() {
-			}
-
-			public void respondToSpanSelection(SelectionEvent<Span> event) {
-			}
-
-			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
-			}
-
-			public void respondToTextSourceAdded() {
-
-			}
-
-			public void respondToTextSourceRemoved() {
-			}
-
-			public void respondToTextSourceCollectionEmptied() {
-			}
-
-			public void respondToTextSourceCollectionFirstAdded() {
-			}
-		};
 	}
 
 	private void makeButtons() {
@@ -498,6 +403,107 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 	@Override
 	public void reset() {
 		graphSpaceChooser.reset();
+		setupListeners();
+	}
+
+	@Override
+	public void setupListeners() {
+		new TextBoundModelListener(view.getController()) {
+			@Override
+			public void respondToConceptAnnotationModification() {
+
+			}
+
+			@Override
+			public void respondToSpanModification() {
+
+			}
+
+			@Override
+			public void respondToGraphSpaceModification() {
+
+			}
+
+			public void respondToGraphSpaceCollectionFirstAdded() {
+				if (isVisible()) {
+					graphSpaceButtons.forEach(c -> c.setEnabled(true));
+				}
+			}
+
+			public void respondToGraphSpaceCollectionEmptied() {
+				if (isVisible()) {
+					graphSpaceButtons.forEach(c -> c.setEnabled(false));
+					addGraphSpaceButton.setEnabled(true);
+				}
+			}
+
+			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
+				if (isVisible() && event.getNew() != null) {
+					try {
+						showGraph(event.getNew().getGraphSpaceCollection().getSelection());
+					} catch (NoSelectionException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+			public void respondToGraphSpaceSelection(SelectionEvent<GraphSpace> event) {
+				if (isVisible() && event.getNew() != null && event.getNew() != graphComponent.getGraph()) {
+					showGraph(event.getNew());
+				}
+			}
+
+			public void respondToGraphSpaceRemoved() {
+			}
+
+			public void respondToGraphSpaceAdded() {
+			}
+
+			public void respondToConceptAnnotationCollectionEmptied() {
+			}
+
+			public void respondToConceptAnnotationRemoved() {
+			}
+
+			public void respondToConceptAnnotationAdded() {
+			}
+
+			public void respondToConceptAnnotationCollectionFirstAdded() {
+			}
+
+			public void respondToSpanCollectionFirstAdded() {
+
+			}
+
+			public void respondToSpanCollectionEmptied() {
+			}
+
+			public void respondToSpanRemoved() {
+			}
+
+			public void respondToSpanAdded() {
+			}
+
+			public void respondToSpanSelection(SelectionEvent<Span> event) {
+			}
+
+			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
+			}
+
+			public void respondToTextSourceAdded() {
+
+			}
+
+			public void respondToTextSourceRemoved() {
+			}
+
+			public void respondToTextSourceCollectionEmptied() {
+			}
+
+			public void respondToTextSourceCollectionFirstAdded() {
+			}
+		};
+
 	}
 
 	@Override

@@ -64,7 +64,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
     private OWLObjectProperty property;
     private final String propertyID;
     private final GraphSpace graphSpace;
-    private String motivation;
+	private final String motivation;
     @SuppressWarnings("unused")
     private final Logger log = Logger.getLogger(RelationAnnotation.class);
 

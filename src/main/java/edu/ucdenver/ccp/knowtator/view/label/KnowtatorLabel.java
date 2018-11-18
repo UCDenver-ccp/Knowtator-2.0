@@ -42,6 +42,10 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
     KnowtatorLabel(KnowtatorView view) {
         this.view = view;
 
+    }
+
+    @Override
+    public void setupListeners() {
         new TextBoundModelListener(view.getController()) {
             @Override
             public void respondToConceptAnnotationModification() {
@@ -158,13 +162,14 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
 
             }
         };
+
     }
 
     protected abstract void react();
 
     @Override
     public void reset() {
-
+        setupListeners();
     }
 
     @Override

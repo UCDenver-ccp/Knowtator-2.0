@@ -40,8 +40,8 @@ public class SpanList extends KnowtatorList<Span> {
         try {
             setCollection(view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getSpanCollection());
             setSelected();
-        } catch (NoSelectionException e) {
-            e.printStackTrace();
+        } catch (NoSelectionException ignored) {
+
         }
     }
 }

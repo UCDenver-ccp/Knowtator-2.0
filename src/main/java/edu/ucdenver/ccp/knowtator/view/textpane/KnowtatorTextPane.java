@@ -76,11 +76,6 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 		regexCheckBox.addItemListener(e -> makePattern());
 		caseSensitiveCheckBox.addItemListener(e -> makePattern());
 		onlyInAnnotationsCheckBox.addItemListener(e -> makePattern());
-
-		view.getController().getProfileCollection().addColorListener(this);
-		view.getController().getProfileCollection().addCollectionListener(this);
-		view.getController().getFilterModel().addFilterModelListener(this);
-		addCaretListener(view.getController().getSelectionModel());
 	}
 
 	/**
@@ -130,10 +125,17 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 	@Override
 	public void reset() {
+		setupListeners();
+	}
+
+	@Override
+	public void setupListeners() {
+		super.setupListeners();
 		view.getController().getProfileCollection().addColorListener(this);
 		view.getController().getProfileCollection().addCollectionListener(this);
 		view.getController().getFilterModel().addFilterModelListener(this);
 	}
+
 
 	@Override
 	protected boolean shouldUpdateSearchTextFieldCondition() {

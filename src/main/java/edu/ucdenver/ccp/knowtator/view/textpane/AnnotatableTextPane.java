@@ -32,6 +32,7 @@ import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorDefaultSettings;
 import org.semanticweb.owlapi.model.OWLClass;
 
@@ -48,20 +49,20 @@ import static java.lang.Math.min;
 /**
  * A text pane that can be annotated
  */
-public abstract class AnnotatableTextPane extends SearchableTextPane {
+public abstract class AnnotatableTextPane extends SearchableTextPane implements KnowtatorComponent {
 
+	private final MouseListener mouseListener;
 	private ConceptAnnotation conceptAnnotation;
 	TextSource textSource;
 	private Span span;
-	private KnowtatorController controller;
-	private DefaultHighlighter.DefaultHighlightPainter overlapHighlighter = new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
-	private DefaultHighlighter.DefaultHighlightPainter selectionHighlighter = new RectanglePainter(Color.BLACK);
+	private final KnowtatorController controller;
+	private final DefaultHighlighter.DefaultHighlightPainter overlapHighlighter = new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
+	private final DefaultHighlighter.DefaultHighlightPainter selectionHighlighter = new RectanglePainter(Color.BLACK);
 
 	AnnotatableTextPane(KnowtatorController controller, JTextField searchTextField) {
 		super(controller, searchTextField);
 		this.controller = controller;
 		setEditable(false);
-		setEnabled(false);
 		setSelectedTextColor(Color.red);
 		setFont(KnowtatorDefaultSettings.FONT);
 
@@ -71,7 +72,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane {
 		select(0, 0);
 		getCaret().setSelectionVisible(true);
 
-		MouseListener mouseListener = new MouseListener() {
+		mouseListener = new MouseListener() {
 			int press_offset;
 
 			@Override
@@ -97,6 +98,12 @@ public abstract class AnnotatableTextPane extends SearchableTextPane {
 			}
 		};
 
+		setEnabled(true);
+		addMouseListener(mouseListener);
+	}
+
+	@Override
+	public void setupListeners() {
 		new TextBoundModelListener(controller) {
 			@Override
 			public void respondToConceptAnnotationModification() {
@@ -289,8 +296,8 @@ public abstract class AnnotatableTextPane extends SearchableTextPane {
 			OWLClass owlClass = controller.getOWLModel().getSelectedOWLClass();
 			descendants = controller.getOWLModel().getDescendants(owlClass);
 			descendants.add(owlClass);
-		} catch (NoSelectedOWLClassException e) {
-			e.printStackTrace();
+		} catch (NoSelectedOWLClassException ignored) {
+
 		}
 		for (Span span : spans) {
 			//Underline spans for the same class

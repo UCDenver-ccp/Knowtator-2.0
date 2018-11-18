@@ -178,6 +178,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
   REMOVERS
    */
 
+	@SuppressWarnings("UnusedReturnValue")
 	@Override
 	public Object[] removeCells(Object[] cells, boolean includeEdges) {
 		cells = super.removeCells(cells, true);
@@ -469,6 +470,7 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
 		modificationListeners.add(listener);
 	}
 
+	@SuppressWarnings("WeakerAccess")
 	@Override
 	public void modify(List<Integer> parameters) {
 		modificationListeners.forEach(DataObjectModificationListener::modification);

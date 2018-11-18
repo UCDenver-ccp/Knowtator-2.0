@@ -55,6 +55,17 @@ public abstract class KnowtatorChooser<K extends KnowtatorDataObjectInterface> e
 			}
 		};
 
+
+	}
+
+	@Override
+	public void reset() {
+		setupListeners();
+	}
+
+	@Override
+	public void setupListeners() {
+		//noinspection Duplicates
 		new TextBoundModelListener(view.getController()) {
 
 			@Override
@@ -172,8 +183,6 @@ public abstract class KnowtatorChooser<K extends KnowtatorDataObjectInterface> e
 				react();
 			}
 		};
-
-
 	}
 
 	protected abstract void react();
@@ -193,7 +202,7 @@ public abstract class KnowtatorChooser<K extends KnowtatorDataObjectInterface> e
 	}
 
 	void setSelected() throws NoSelectionException {
-		setSelectedItem(collection.getSelection());
+		if (view.getController().isNotLoading()) setSelectedItem(collection.getSelection());
 	}
 
 	@Override

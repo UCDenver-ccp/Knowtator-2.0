@@ -88,6 +88,7 @@ public abstract class ListenableCollection<K extends KnowtatorDataObjectInterfac
 		if (!collectionListeners.contains(listener)) collectionListeners.add(listener);
 	}
 
+	@SuppressWarnings("WeakerAccess")
 	protected void removeCollectionListener(L listener) {
 		collectionListeners.remove(listener);
 	}

@@ -65,6 +65,8 @@ import java.awt.dnd.*;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.prefs.BackingStoreException;
@@ -187,6 +189,11 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		panel1 = this;
 
 		knowtatorComponents = new ArrayList<>();
+
+		searchTextField = new JTextField();
+		regexCheckBox = new JCheckBox();
+		onlyAnnotationsCheckBox = new JCheckBox();
+		caseSensitiveCheckBox = new JCheckBox();
 
 		knowtatorTextPane = new KnowtatorTextPane(this, searchTextField, onlyAnnotationsCheckBox, regexCheckBox, caseSensitiveCheckBox);
 		graphViewDialog = new GraphViewDialog(this);
@@ -439,7 +446,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	/**
 	 * Sets up listeners to detect changes when text sources or concept annotations or spans change
 	 */
-	private void setupListeners() {
+	@Override
+	public void setupListeners() {
 		new TextBoundModelListener(controller) {
 			@Override
 			public void respondToTextSourceCollectionEmptied() {
@@ -572,18 +580,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 	@Override
 	protected OWLClass updateView(OWLClass selectedClass) {
-		if (controller != null) {
-			setUpOWL();
-		}
+		setUpOWL();
 		return selectedClass;
 	}
 
 	@Override
 	public void reset() {
-		disposeView();
 		setupListeners();
 		knowtatorComponents.forEach(KnowtatorComponent::reset);
-		controller.reset(getOWLWorkspace());
 	}
 
 	/**
@@ -659,22 +663,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		knowtatorComponents.forEach(KnowtatorComponent::dispose);
 	}
 
-	/**
-	 * After a project is loaded, this method should be called.
-	 */
-	public void projectLoaded() {
-		knowtatorTextPane.refreshHighlights();
-		addTextSourceButton.setEnabled(true);
-
-		KnowtatorView.PREFERENCES.put("Last Project", getController().getProjectLocation().getAbsolutePath());
-
-		try {
-			KnowtatorView.PREFERENCES.flush();
-		} catch (BackingStoreException e1) {
-			e1.printStackTrace();
-		}
-	}
-
 	@Override
 	public void dropActionChanged(DropTargetDragEvent e) {
 	}
@@ -693,6 +681,25 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 	@Override
 	public void dragOver(DropTargetDragEvent e) {
+	}
+
+	public void loadProject(File file) throws IOException {
+		controller.reset(getOWLWorkspace());
+		controller.setSaveLocation(file);
+		log.warn(String.format("Opening from %s", file.getAbsolutePath()));
+		controller.loadProject();
+		reset();
+		controller.getTextSourceCollection().setSelection(controller.getTextSourceCollection().first());
+		knowtatorTextPane.refreshHighlights();
+		addTextSourceButton.setEnabled(true);
+
+		KnowtatorView.PREFERENCES.put("Last Project", getController().getProjectLocation().getAbsolutePath());
+
+		try {
+			KnowtatorView.PREFERENCES.flush();
+		} catch (BackingStoreException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	/**
@@ -810,21 +817,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		final JPanel panel4 = new JPanel();
 		panel4.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
 		searchPanel.add(panel4, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-		searchTextField = new JTextField();
 		Font searchTextFieldFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, searchTextField.getFont());
 		if (searchTextFieldFont != null) searchTextField.setFont(searchTextFieldFont);
 		panel4.add(searchTextField, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 25), new Dimension(-1, 25), 0, false));
-		onlyAnnotationsCheckBox = new JCheckBox();
 		Font onlyAnnotationsCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, onlyAnnotationsCheckBox.getFont());
 		if (onlyAnnotationsCheckBoxFont != null) onlyAnnotationsCheckBox.setFont(onlyAnnotationsCheckBoxFont);
 		onlyAnnotationsCheckBox.setText("Only in Annotations");
 		panel4.add(onlyAnnotationsCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		caseSensitiveCheckBox = new JCheckBox();
 		Font caseSensitiveCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, caseSensitiveCheckBox.getFont());
 		if (caseSensitiveCheckBoxFont != null) caseSensitiveCheckBox.setFont(caseSensitiveCheckBoxFont);
 		caseSensitiveCheckBox.setText("Case Sensitive");
 		panel4.add(caseSensitiveCheckBox, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		regexCheckBox = new JCheckBox();
 		Font regexCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, regexCheckBox.getFont());
 		if (regexCheckBoxFont != null) regexCheckBox.setFont(regexCheckBoxFont);
 		regexCheckBox.setText("Regex");

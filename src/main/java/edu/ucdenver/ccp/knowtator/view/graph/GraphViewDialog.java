@@ -95,6 +95,12 @@ public class GraphViewDialog extends JDialog implements KnowtatorComponent {
     @Override
     public void reset() {
         graphView.reset();
+        setupListeners();
+    }
+
+    @Override
+    public void setupListeners() {
+
     }
 
     @Override

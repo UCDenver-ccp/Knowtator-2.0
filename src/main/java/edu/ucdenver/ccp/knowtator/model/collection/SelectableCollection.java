@@ -24,19 +24,16 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 
 import java.util.TreeSet;
 
 public abstract class SelectableCollection<K extends KnowtatorDataObjectInterface, L extends SelectableCollectionListener<K>> extends CyclableCollection<K, L> {
 
-    private final KnowtatorController controller;
     private K selection;
 
-    SelectableCollection(KnowtatorController controller, TreeSet<K> collection) {
+    SelectableCollection(TreeSet<K> collection) {
         super(collection);
-        this.controller = controller;
         selection = null;
     }
 
@@ -57,18 +54,15 @@ public abstract class SelectableCollection<K extends KnowtatorDataObjectInterfac
     }
 
     public void setSelection(K newSelection) {
-        if (controller != null && controller.isNotLoading() && this.selection != newSelection) {
-            SelectionEvent<K> selectionEvent = new SelectionEvent<>(this.selection, newSelection);
-            this.selection = newSelection;
-            collectionListeners.forEach(selectionListener -> selectionListener.selected(selectionEvent));
-
-        }
+        SelectionEvent<K> selectionEvent = new SelectionEvent<>(this.selection, newSelection);
+        this.selection = newSelection;
+        collectionListeners.forEach(selectionListener -> selectionListener.selected(selectionEvent));
     }
 
     @Override
     public void add(K item) {
-        super.add(item);
         setSelection(item);
+        super.add(item);
     }
 
     @Override

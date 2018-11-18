@@ -45,6 +45,7 @@ import java.io.IOException;
  * The main menu dialog for displaying other menu panes
  */
 public class MenuDialog extends JDialog {
+    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(MenuDialog.class);
 
     private JPanel contentPane;
@@ -120,11 +121,14 @@ public class MenuDialog extends JDialog {
         fileChooser.addActionListener(e -> {
             String projectName = newPane.getTextField1().getText();
             if (!projectName.equals("") && e.getActionCommand().equals(JFileChooser.APPROVE_SELECTION)) {
-                dispose();
+
                 File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
-                view.reset();
-                view.getController().newProject(projectDirectory);
-                view.projectLoaded();
+                try {
+                    view.loadProject(projectDirectory);
+                    dispose();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
 
             }
         });
@@ -151,16 +155,13 @@ public class MenuDialog extends JDialog {
         fileChooser.addActionListener(e -> {
             if (e.getActionCommand().equals(JFileChooser.APPROVE_SELECTION)) {
                 File file = fileChooser.getSelectedFile();
-                dispose();
-                view.reset();
                 try {
-                    view.getController().setSaveLocation(file.getParentFile());
-                    log.warn(String.format("Opening from %s", file.getAbsolutePath()));
-                    view.getController().loadProject();
-                    view.projectLoaded();
+                    view.loadProject(file.getParentFile());
+                    dispose();
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
+
             }
         });
 

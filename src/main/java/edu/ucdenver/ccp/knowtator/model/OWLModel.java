@@ -335,6 +335,7 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
         iris = null;
     }
 
+    @SuppressWarnings("WeakerAccess")
     @Override
     public File getSaveLocation() {
         return ontologiesLocation;

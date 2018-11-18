@@ -50,8 +50,7 @@ public class ColorList extends JList<Object> implements KnowtatorCollectionListe
 
         setCellRenderer(new ColorListRenderer<>());
         lsl = e -> OWLActions.assignColorToClass(view, getSelectedValue());
-        view.getController().getProfileCollection().addCollectionListener(this);
-        view.getController().getProfileCollection().addColorListener(this);
+
         setCollection(view.getController().getProfileCollection().getSelection());
     }
 
@@ -95,6 +94,13 @@ public class ColorList extends JList<Object> implements KnowtatorCollectionListe
     @Override
     public void reset() {
         addListSelectionListener(lsl);
+        setupListeners();
+    }
+
+    @Override
+    public void setupListeners() {
+        view.getController().getProfileCollection().addCollectionListener(this);
+        view.getController().getProfileCollection().addColorListener(this);
     }
 
     @Override

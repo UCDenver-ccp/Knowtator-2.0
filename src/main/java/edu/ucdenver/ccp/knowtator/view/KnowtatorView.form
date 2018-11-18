@@ -177,7 +177,7 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="eca5e" class="javax.swing.JTextField" binding="searchTextField">
+                      <component id="eca5e" class="javax.swing.JTextField" binding="searchTextField" custom-create="true">
                         <constraints>
                           <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
                             <preferred-size width="150" height="25"/>
@@ -188,7 +188,7 @@
                           <font name="Verdana" size="10" style="0"/>
                         </properties>
                       </component>
-                      <component id="1b569" class="javax.swing.JCheckBox" binding="onlyAnnotationsCheckBox">
+                      <component id="1b569" class="javax.swing.JCheckBox" binding="onlyAnnotationsCheckBox" custom-create="true">
                         <constraints>
                           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -197,7 +197,7 @@
                           <text value="Only in Annotations"/>
                         </properties>
                       </component>
-                      <component id="ce469" class="javax.swing.JCheckBox" binding="caseSensitiveCheckBox">
+                      <component id="ce469" class="javax.swing.JCheckBox" binding="caseSensitiveCheckBox" custom-create="true">
                         <constraints>
                           <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
@@ -206,7 +206,7 @@
                           <text value="Case Sensitive"/>
                         </properties>
                       </component>
-                      <component id="c4d9f" class="javax.swing.JCheckBox" binding="regexCheckBox">
+                      <component id="c4d9f" class="javax.swing.JCheckBox" binding="regexCheckBox" custom-create="true">
                         <constraints>
                           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>

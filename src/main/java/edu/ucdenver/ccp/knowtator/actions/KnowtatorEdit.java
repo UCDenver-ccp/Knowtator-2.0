@@ -37,7 +37,7 @@ class KnowtatorEdit extends AbstractUndoableEdit implements mxEventSource.mxIEve
 
     private final String presentationName;
     private final mxUndoManager mxUndoManager;
-    private UndoManager undoManager;
+    private final UndoManager undoManager;
 
 
     KnowtatorEdit(String presentationName) {

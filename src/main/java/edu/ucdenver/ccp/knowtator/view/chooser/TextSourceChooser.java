@@ -47,6 +47,7 @@ public class TextSourceChooser extends KnowtatorChooser<TextSource> {
 
     @Override
     public void reset() {
+        super.reset();
         setCollection(view.getController().getTextSourceCollection());
     }
 }

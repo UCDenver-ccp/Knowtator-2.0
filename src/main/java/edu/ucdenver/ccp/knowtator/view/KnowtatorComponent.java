@@ -34,4 +34,6 @@ public interface KnowtatorComponent extends KnowtatorObjectInterface {
      * Restores the component to its initial state
      */
     void reset();
+
+    void setupListeners();
 }

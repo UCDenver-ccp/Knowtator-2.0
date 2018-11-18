@@ -57,6 +57,11 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
 
 		addListSelectionListener(al);
 
+	}
+
+	@Override
+	public void setupListeners() {
+		//noinspection Duplicates
 		new TextBoundModelListener(view.getController()) {
 			@Override
 			public void respondToConceptAnnotationModification() {
@@ -173,6 +178,7 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
 				react();
 			}
 		};
+
 	}
 
 	protected abstract void react();
@@ -191,11 +197,13 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
 
 
 	void setSelected() throws NoSelectionException {
-		for (int i = 0; i < getModel().getSize(); i++) {
-			K element = getModel().getElementAt(i);
-			if (element == collection.getSelection()) {
-				setSelectedIndex(i);
-				return;
+		if (view.getController().isNotLoading()) {
+			for (int i = 0; i < getModel().getSize(); i++) {
+				K element = getModel().getElementAt(i);
+				if (element == collection.getSelection()) {
+					setSelectedIndex(i);
+					return;
+				}
 			}
 		}
 
@@ -203,7 +211,7 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
 
 	@Override
 	public void reset() {
-
+		setupListeners();
 	}
 
 	@Override

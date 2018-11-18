@@ -60,6 +60,7 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 
     }
 
+    @SuppressWarnings("WeakerAccess")
     @Override
     public void add(TextSource textSource) {
         if (get(textSource.getId()) == null) {

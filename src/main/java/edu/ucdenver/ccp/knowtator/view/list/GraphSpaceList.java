@@ -44,8 +44,7 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
         try {
             setCollection(view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection());
             setSelected();
-        } catch (NoSelectionException e) {
-            e.printStackTrace();
+        } catch (NoSelectionException ignored) {
         }
     }
 
