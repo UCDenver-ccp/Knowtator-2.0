@@ -41,7 +41,7 @@ import java.util.Map;
 public class SpanCollection extends KnowtatorCollection<Span> implements BratStandoffIO, KnowtatorXMLIO {
 
     public SpanCollection(KnowtatorController controller) {
-        super(controller);
+        super();
     }
 
     @Override

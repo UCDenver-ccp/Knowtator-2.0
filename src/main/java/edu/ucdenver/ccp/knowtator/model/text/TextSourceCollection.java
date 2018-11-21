@@ -46,93 +46,92 @@ import java.util.List;
 import java.util.Map;
 
 public class TextSourceCollection extends KnowtatorCollection<TextSource> implements BratStandoffIO, KnowtatorXMLIO, BaseKnowtatorManager {
-    @SuppressWarnings("unused")
-    private final Logger log = Logger.getLogger(TextSourceCollection.class);
+	@SuppressWarnings("unused")
+	private final Logger log = Logger.getLogger(TextSourceCollection.class);
 
-    private final KnowtatorController controller;
-    private File articlesLocation;
-    private File annotationsLocation;
-
-
-    public TextSourceCollection(KnowtatorController controller) {
-        super(controller);
-        this.controller = controller;
-
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    @Override
-    public void add(TextSource textSource) {
-        if (get(textSource.getId()) == null) {
-            if (textSource.getTextFile().exists()) {
-                super.add(textSource);
-            }
-        }
-    }
+	private final KnowtatorController controller;
+	private File articlesLocation;
+	private File annotationsLocation;
 
 
-    @Override
-    public void writeToKnowtatorXML(Document dom, Element parent) {
-        forEach(textSource -> textSource.writeToKnowtatorXML(dom, parent));
-    }
+	public TextSourceCollection(KnowtatorController controller) {
+		super();
+		this.controller = controller;
 
-    @Override
-    public void readFromKnowtatorXML(File file, Element parent) {
-        for (Node documentNode :
-                KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.DOCUMENT))) {
-            Element documentElement = (Element) documentNode;
-            String textSourceId = documentElement.getAttribute(KnowtatorXMLAttributes.ID);
-            String textFileName = documentElement.getAttribute(KnowtatorXMLAttributes.FILE);
-            if (textFileName == null || textFileName.equals("")) {
-                textFileName = textSourceId;
-            }
-            TextSource newTextSource = new TextSource(controller, file, textFileName);
-            add(newTextSource);
-            newTextSource.readFromKnowtatorXML(null, documentElement);
-        }
-    }
+	}
 
-    @Override
-    public void readFromOldKnowtatorXML(File file, Element parent) {
+	@Override
+	public void add(TextSource textSource) {
+		if (get(textSource.getId()) == null) {
+			if (textSource.getTextFile().exists()) {
+				super.add(textSource);
+			}
+		}
+	}
 
-        String textSourceId = parent.getAttribute(OldKnowtatorXMLAttributes.TEXT_SOURCE).replace(".txt", "");
-        TextSource newTextSource = new TextSource(controller, file, textSourceId);
-        add(newTextSource);
-        get(newTextSource.getId()).readFromOldKnowtatorXML(null, parent);
-    }
 
-    @Override
-    public void readFromBratStandoff(
-            File file, Map<Character, List<String[]>> annotationMap, String content) {
-        String textSourceId = annotationMap.get(StandoffTags.DOCID).get(0)[0];
+	@Override
+	public void writeToKnowtatorXML(Document dom, Element parent) {
+		forEach(textSource -> textSource.writeToKnowtatorXML(dom, parent));
+	}
 
-        TextSource newTextSource = new TextSource(controller, file, textSourceId);
-        add(newTextSource);
-        newTextSource.readFromBratStandoff(null, annotationMap, null);
-    }
+	@Override
+	public void readFromKnowtatorXML(File file, Element parent) {
+		for (Node documentNode :
+				KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.DOCUMENT))) {
+			Element documentElement = (Element) documentNode;
+			String textSourceId = documentElement.getAttribute(KnowtatorXMLAttributes.ID);
+			String textFileName = documentElement.getAttribute(KnowtatorXMLAttributes.FILE);
+			if (textFileName == null || textFileName.equals("")) {
+				textFileName = textSourceId;
+			}
+			TextSource newTextSource = new TextSource(controller, file, textFileName);
+			add(newTextSource);
+			newTextSource.readFromKnowtatorXML(null, documentElement);
+		}
+	}
 
-    @Override
-    public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) {
-    }
+	@Override
+	public void readFromOldKnowtatorXML(File file, Element parent) {
 
-    public void addDocument(File file) {
+		String textSourceId = parent.getAttribute(OldKnowtatorXMLAttributes.TEXT_SOURCE).replace(".txt", "");
+		TextSource newTextSource = new TextSource(controller, file, textSourceId);
+		add(newTextSource);
+		get(newTextSource.getId()).readFromOldKnowtatorXML(null, parent);
+	}
 
-        TextSource newTextSource = new TextSource(controller, null, file.getName());
-        add(newTextSource);
-    }
+	@Override
+	public void readFromBratStandoff(
+			File file, Map<Character, List<String[]>> annotationMap, String content) {
+		String textSourceId = annotationMap.get(StandoffTags.DOCID).get(0)[0];
 
-    @Override
-    public void load() {
-        try {
-            log.warn("Loading annotations");
-            controller.getOWLModel().setRenderRDFSLabel();
-            KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();
-            Files.newDirectoryStream(Paths.get(annotationsLocation.toURI()), path -> path.toString().endsWith(".xml"))
-                    .forEach(inputFile -> xmlUtil.read(this, inputFile.toFile()));
-            controller.getOWLModel().resetRenderRDFS();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+		TextSource newTextSource = new TextSource(controller, file, textSourceId);
+		add(newTextSource);
+		newTextSource.readFromBratStandoff(null, annotationMap, null);
+	}
+
+	@Override
+	public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) {
+	}
+
+	public void addDocument(File file) {
+
+		TextSource newTextSource = new TextSource(controller, null, file.getName());
+		add(newTextSource);
+	}
+
+	@Override
+	public void load() {
+		try {
+			log.warn("Loading annotations");
+			controller.getOWLModel().setRenderRDFSLabel();
+			KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();
+			Files.newDirectoryStream(Paths.get(annotationsLocation.toURI()), path -> path.toString().endsWith(".xml"))
+					.forEach(inputFile -> xmlUtil.read(this, inputFile.toFile()));
+			controller.getOWLModel().resetRenderRDFS();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 //        if (size() == 0) {
 //            JFileChooser fileChooser = new JFileChooser();
@@ -151,57 +150,56 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 //                add(new TextSource(controller, null, file.getName()));
 //            }
 //        }
-    }
+	}
 
-    @Override
-    public void save() {
-        controller.getOWLModel().setRenderRDFSLabel();
-        forEach(TextSource::save);
-        controller.getOWLModel().resetRenderRDFS();
-    }
+	@Override
+	public void save() {
+		controller.getOWLModel().setRenderRDFSLabel();
+		forEach(TextSource::save);
+		controller.getOWLModel().resetRenderRDFS();
+	}
 
-    public File getAnnotationsLocation() {
-        return annotationsLocation;
-    }
+	public File getAnnotationsLocation() {
+		return annotationsLocation;
+	}
 
-    public File getArticlesLocation() {
-        return articlesLocation;
-    }
+	public File getArticlesLocation() {
+		return articlesLocation;
+	}
 
-    @Override
-    public void setSaveLocation(File newSaveLocation) throws IOException {
-        articlesLocation = new File(newSaveLocation, "Articles");
-        Files.createDirectories(articlesLocation.toPath());
-        annotationsLocation = new File(newSaveLocation, "Annotations");
-        Files.createDirectories(annotationsLocation.toPath());
-    }
+	@Override
+	public void setSaveLocation(File newSaveLocation) throws IOException {
+		articlesLocation = new File(newSaveLocation, "Articles");
+		Files.createDirectories(articlesLocation.toPath());
+		annotationsLocation = new File(newSaveLocation, "Annotations");
+		Files.createDirectories(annotationsLocation.toPath());
+	}
 
-    @Override
-    public void finishLoad() {
-        if (size() > 0) {
-            setSelection(first());
-        }
-    }
+	@Override
+	public void finishLoad() {
+		if (size() > 0) {
+			setSelection(first());
+		}
+	}
 
-    @Override
-    public File getSaveLocation() {
-        return annotationsLocation;
+	@Override
+	public File getSaveLocation() {
+		return annotationsLocation;
 
-    }
+	}
 
-    @Override
-    public void remove(TextSource textSource) throws CantRemoveException {
-        try {
-            if (textSource == getSelection()) {
-                selectPrevious();
-            }
-        } catch (NoSelectionException ignored) {
-        }
-        super.remove(textSource);
-    }
+	@Override
+	public void remove(TextSource textSource) throws CantRemoveException {
+		try {
+			if (textSource == getSelection()) {
+				selectPrevious();
+			}
+		} catch (NoSelectionException ignored) {
+		}
+		super.remove(textSource);
+	}
 
-    @Override
-    public void reset() {
-
-    }
+	@Override
+	public void reset() {
+	}
 }

@@ -67,8 +67,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -206,15 +206,15 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		annotationIDLabel = new AnnotationIDLabel(this);
 		annotationNotes = new AnnotationNotes(this);
 
-		knowtatorComponents.add(annotationNotes);
-		knowtatorComponents.add(spanList);
-		knowtatorComponents.add(graphSpaceList);
-		knowtatorComponents.add(annotationAnnotatorLabel);
-		knowtatorComponents.add(annotationClassLabel);
-		knowtatorComponents.add(annotationIDLabel);
-		knowtatorComponents.add(knowtatorTextPane);
-		knowtatorComponents.add(graphViewDialog);
-		knowtatorComponents.add(textSourceChooser);
+		knowtatorComponents.addAll(Arrays.asList(annotationNotes,
+				spanList,
+				graphSpaceList,
+				annotationAnnotatorLabel,
+				annotationClassLabel,
+				annotationIDLabel,
+				knowtatorTextPane,
+				graphViewDialog,
+				textSourceChooser));
 
 
 		// The following methods keep the graph view dialog on top only when the view is active.
@@ -684,6 +684,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	}
 
 	public void loadProject(File file) throws IOException {
+		controller.dispose();
 		controller.reset(getOWLWorkspace());
 		controller.setSaveLocation(file);
 		log.warn(String.format("Opening from %s", file.getAbsolutePath()));
@@ -969,7 +970,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	}
 
 	/**
-	 * @noinspection ALL
 	 */
 	private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
 		if (currentFont == null) return null;

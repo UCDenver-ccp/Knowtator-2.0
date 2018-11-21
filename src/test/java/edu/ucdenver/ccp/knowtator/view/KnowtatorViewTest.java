@@ -56,5 +56,6 @@ class KnowtatorViewTest {
 		test.removeProfileAction();
 		test.removeSpanAction();
 		test.removeTextSourceAction();
+		view.loadProject(controller.getProjectLocation());
 	}
 }

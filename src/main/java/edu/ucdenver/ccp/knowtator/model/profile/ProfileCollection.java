@@ -56,7 +56,7 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
     private final Profile defaultProfile;
 
     public ProfileCollection(KnowtatorController controller) {
-        super(controller);
+        super();
         defaultProfile = new Profile(controller, "Default");
         add(defaultProfile);
         this.controller = controller;

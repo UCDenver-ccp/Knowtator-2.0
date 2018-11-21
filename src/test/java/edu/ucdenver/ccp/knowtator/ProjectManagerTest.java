@@ -33,6 +33,8 @@ public class ProjectManagerTest {
     @Test
     public void loadProject() {
         TestingHelpers.checkDefaultCollectionValues(controller);
+        controller.loadProject();
+
     }
 
     @Test

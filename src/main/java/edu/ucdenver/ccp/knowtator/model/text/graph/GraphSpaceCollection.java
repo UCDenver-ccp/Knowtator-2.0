@@ -48,7 +48,7 @@ public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implem
     private final TextSource textSource;
 
     public GraphSpaceCollection(KnowtatorController controller, TextSource textSource) {
-        super(controller);
+        super();
         this.controller = controller;
         this.textSource = textSource;
     }

@@ -72,7 +72,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 	private final TextSource textSource;
 
 	public ConceptAnnotationCollection(KnowtatorController controller, TextSource textSource) {
-		super(controller);
+		super();
 		this.controller = controller;
 		this.textSource = textSource;
 

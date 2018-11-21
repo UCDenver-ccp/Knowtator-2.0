@@ -40,6 +40,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * The main menu dialog for displaying other menu panes
@@ -57,7 +60,6 @@ public class MenuDialog extends JDialog {
         super(parent);
         this.view = view;
         $$$setupUI$$$();
-        setLocationRelativeTo(view);
         setContentPane(contentPane);
         setModal(true);
         setSize(500, 200);
@@ -141,8 +143,9 @@ public class MenuDialog extends JDialog {
         if (lastProjectFileName != null) {
             File lastProjectFile = new File(lastProjectFileName);
             if (lastProjectFile.exists()) {
-                fileChooser.setCurrentDirectory(lastProjectFile.getParentFile());
-                fileChooser.setSelectedFile(lastProjectFile);
+                fileChooser.setCurrentDirectory(lastProjectFile);
+                Optional<File> f = Arrays.stream(Objects.requireNonNull(lastProjectFile.listFiles())).filter(file -> file.getName().endsWith(".knowtator")).findAny();
+                f.ifPresent(fileChooser::setSelectedFile);
             }
         }
         FileFilter fileFilter = new FileNameExtensionFilter("Knowtator", "knowtator");
@@ -230,7 +233,6 @@ public class MenuDialog extends JDialog {
     }
 
     /**
-     * @noinspection ALL
      */
     private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
         if (currentFont == null) return null;
@@ -249,7 +251,6 @@ public class MenuDialog extends JDialog {
     }
 
     /**
-     * @noinspection ALL
      */
     public JComponent $$$getRootComponent$$$() {
         return contentPane;

@@ -89,6 +89,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 	GraphView(JDialog dialog, KnowtatorView view) {
 		this.dialog = dialog;
 		this.view = view;
+		setVisible(false);
 		$$$setupUI$$$();
 		makeButtons();
 
