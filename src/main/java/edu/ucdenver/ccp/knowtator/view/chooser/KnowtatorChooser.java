@@ -202,7 +202,11 @@ public abstract class KnowtatorChooser<K extends KnowtatorDataObjectInterface> e
 	}
 
 	void setSelected() throws NoSelectionException {
-		if (view.getController().isNotLoading()) setSelectedItem(collection.getSelection());
+		if (view.getController().isNotLoading()) {
+			removeActionListener(al);
+			setSelectedItem(collection.getSelection());
+			addActionListener(al);
+		}
 	}
 
 	@Override

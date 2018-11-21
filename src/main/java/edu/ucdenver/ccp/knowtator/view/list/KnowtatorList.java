@@ -43,12 +43,13 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
 
 	final KnowtatorView view;
 	private KnowtatorCollection<K> collection;
+	private ListSelectionListener al;
 
 	KnowtatorList(KnowtatorView view) {
 		this.view = view;
 		setModel(new DefaultListModel<>());
 
-		ListSelectionListener al = e -> {
+		al = e -> {
 			JList jList = (JList) e.getSource();
 			if (jList.getSelectedValue() != null) {
 				collection.setSelection(this.getSelectedValue());
@@ -201,7 +202,9 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
 			for (int i = 0; i < getModel().getSize(); i++) {
 				K element = getModel().getElementAt(i);
 				if (element == collection.getSelection()) {
+					removeListSelectionListener(al);
 					setSelectedIndex(i);
+					addListSelectionListener(al);
 					return;
 				}
 			}
