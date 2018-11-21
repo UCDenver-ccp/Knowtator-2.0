@@ -64,86 +64,86 @@ import java.util.stream.Collectors;
 
 public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnnotation> implements OWLOntologyChangeListener, KnowtatorXMLIO, BratStandoffIO, FilterModelListener, OWLModelManagerListener {
 
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(ConceptAnnotationCollection.class);
+	@SuppressWarnings("unused")
+	private static final Logger log = Logger.getLogger(ConceptAnnotationCollection.class);
 
-    private final KnowtatorController controller;
+	private final KnowtatorController controller;
 
-    private final TextSource textSource;
+	private final TextSource textSource;
 
-    public ConceptAnnotationCollection(KnowtatorController controller, TextSource textSource) {
-        super(controller);
-        this.controller = controller;
-        this.textSource = textSource;
+	public ConceptAnnotationCollection(KnowtatorController controller, TextSource textSource) {
+		super(controller);
+		this.controller = controller;
+		this.textSource = textSource;
 
-        controller.getOWLModel().addOntologyChangeListener(this);
-        controller.getOWLModel().addOWLModelManagerListener(this);
-        controller.getFilterModel().addFilterModelListener(this);
+		controller.getOWLModel().addOntologyChangeListener(this);
+		controller.getOWLModel().addOWLModelManagerListener(this);
+		controller.getFilterModel().addFilterModelListener(this);
 
-    }
+	}
 
     /*
     ADDERS
      */
 
 
-    /*
-    REMOVERS
-     */
-    @Override
-    public void remove(ConceptAnnotation conceptAnnotationToRemove) throws CantRemoveException {
-        for (GraphSpace graphSpace : textSource.getGraphSpaceCollection()) {
-            Object[] cells = graphSpace.getVerticesForAnnotation(conceptAnnotationToRemove).toArray();
-            graphSpace.removeCells(cells);
+	/*
+	REMOVERS
+	 */
+	@Override
+	public void remove(ConceptAnnotation conceptAnnotationToRemove) throws CantRemoveException {
+		for (GraphSpace graphSpace : textSource.getGraphSpaceCollection()) {
+			Object[] cells = graphSpace.getVerticesForAnnotation(conceptAnnotationToRemove).toArray();
+			graphSpace.removeCells(cells);
 
-        }
-        super.remove(conceptAnnotationToRemove);
-    }
+		}
+		super.remove(conceptAnnotationToRemove);
+	}
 
     /*
     GETTERS
      */
 
-    /**
-     * @param loc Location filter
-     */
-    public SpanCollection getSpans(Integer loc) {
-        boolean filterByOWLClass = controller.getFilterModel().isFilter(FilterModel.OWLCLASS);
-        boolean filterByProfile = controller.getFilterModel().isFilter(FilterModel.PROFILE);
-        Profile activeProfile = controller.getProfileCollection().getSelection();
+	/**
+	 * @param loc Location filter
+	 */
+	public SpanCollection getSpans(Integer loc) {
+		boolean filterByOWLClass = controller.getFilterModel().isFilter(FilterModel.OWLCLASS);
+		boolean filterByProfile = controller.getFilterModel().isFilter(FilterModel.PROFILE);
+		Profile activeProfile = controller.getProfileCollection().getSelection();
 
-        Set<OWLClass> activeOWLClassDescendants = new HashSet<>();
+		Set<OWLClass> activeOWLClassDescendants = new HashSet<>();
 
-        if (filterByOWLClass) {
-            try {
-                OWLClass owlClass = controller.getOWLModel().getSelectedOWLClass();
-                activeOWLClassDescendants.addAll(controller.getOWLModel().getDescendants(owlClass));
-                activeOWLClassDescendants.add(owlClass);
-            } catch (NoSelectedOWLClassException ignored) {
+		if (filterByOWLClass) {
+			try {
+				OWLClass owlClass = controller.getOWLModel().getSelectedOWLClass();
+				activeOWLClassDescendants.addAll(controller.getOWLModel().getDescendants(owlClass));
+				activeOWLClassDescendants.add(owlClass);
+			} catch (NoSelectedOWLClassException ignored) {
 
-            }
-        }
+			}
+		}
 
-        SpanCollection allSpans = new SpanCollection(null);
-        getCollection().forEach(conceptAnnotation -> {
-            if ((!filterByOWLClass || activeOWLClassDescendants.contains(conceptAnnotation.getOwlClass()))
-                    && (!filterByProfile || conceptAnnotation.getAnnotator().equals(activeProfile))) {
-                conceptAnnotation.getSpanCollection().forEach(span -> {
-                    if ((loc == null || span.contains(loc))) {
-                        allSpans.add(span);
-                    }
-                });
-            }
-        });
-        return allSpans;
-    }
+		SpanCollection allSpans = new SpanCollection(null);
+		getCollection().forEach(conceptAnnotation -> {
+			if ((!filterByOWLClass || activeOWLClassDescendants.contains(conceptAnnotation.getOwlClass()))
+					&& (!filterByProfile || conceptAnnotation.getAnnotator().equals(activeProfile))) {
+				conceptAnnotation.getSpanCollection().forEach(span -> {
+					if ((loc == null || span.contains(loc))) {
+						allSpans.add(span);
+					}
+				});
+			}
+		});
+		return allSpans;
+	}
 
-    public TreeSet<ConceptAnnotation> getAnnotations(int start, int end) {
-        Supplier<TreeSet<ConceptAnnotation>> supplier = TreeSet::new;
-        return stream()
-                .filter(annotation -> (annotation.contains(start) && annotation.contains(end)))
-                .collect(Collectors.toCollection(supplier));
-    }
+	public TreeSet<ConceptAnnotation> getAnnotations(int start, int end) {
+		Supplier<TreeSet<ConceptAnnotation>> supplier = TreeSet::new;
+		return stream()
+				.filter(annotation -> (annotation.contains(start) && annotation.contains(end)))
+				.collect(Collectors.toCollection(supplier));
+	}
 
 //    public void findOverlaps() {
 //        List<Span> overlappingSpans = new ArrayList<>();
@@ -165,99 +165,101 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 //                });
 //    }
 
-    public void getNextSpan() throws NoSelectionException {
-        Span nextSpan = getSpans(null).getNext(getSelection().getSpanCollection().getSelection());
-        setSelection(nextSpan.getConceptAnnotation());
-        nextSpan.getConceptAnnotation().getSpanCollection().setSelection(nextSpan);
-    }
+	public void getNextSpan() throws NoSelectionException {
+		Span nextSpan = getSpans(null).getNext(getSelection().getSpanCollection().getSelection());
+		setSelection(nextSpan.getConceptAnnotation());
+		nextSpan.getConceptAnnotation().getSpanCollection().setSelection(nextSpan);
+	}
 
-    public void getPreviousSpan() throws NoSelectionException {
-        Span previousSpan = getSpans(null).getPrevious(getSelection().getSpanCollection().getSelection());
-        setSelection(previousSpan.getConceptAnnotation());
-        previousSpan.getConceptAnnotation().getSpanCollection().setSelection(previousSpan);
+	public void getPreviousSpan() throws NoSelectionException {
+		Span previousSpan = getSpans(null).getPrevious(getSelection().getSpanCollection().getSelection());
+		setSelection(previousSpan.getConceptAnnotation());
+		previousSpan.getConceptAnnotation().getSpanCollection().setSelection(previousSpan);
 
-    }
+	}
 
     /*
     SETTERS
      */
 
-    public void setSelectedAnnotation(Span newSpan) {
+	public void setSelectedAnnotation(Span newSpan) {
 
-        try {
-            if (newSpan == null) {
-                setSelection(null);
-            } else if (getSelection() != newSpan.getConceptAnnotation()) {
-                setSelection(newSpan.getConceptAnnotation());
-                newSpan.getConceptAnnotation().getSpanCollection().setSelection(newSpan);
-            }
-        } catch (NoSelectionException e) {
-            setSelection(newSpan.getConceptAnnotation());
-            newSpan.getConceptAnnotation().getSpanCollection().setSelection(newSpan);
-        }
-    }
+		try {
+			if (newSpan == null) {
+				setSelection(null);
+			} else if (getSelection() != newSpan.getConceptAnnotation()) {
+				setSelection(newSpan.getConceptAnnotation());
+				newSpan.getConceptAnnotation().getSpanCollection().setSelection(newSpan);
+			}
+		} catch (NoSelectionException e) {
+			setSelection(newSpan.getConceptAnnotation());
+			newSpan.getConceptAnnotation().getSpanCollection().setSelection(newSpan);
+		}
+	}
 
     /*
     SETUP
      */
 
-    @Override
-    public void setSelection(ConceptAnnotation selection) {
-        try {
-            if (getSelection() != selection) {
-                getSelection().getSpanCollection().setSelection(null);
-            }
-        } catch (NoSelectionException ignored) {
-        }
-        super.setSelection(selection);
-    }
+	@Override
+	public void setSelection(ConceptAnnotation selection) {
+		try {
+			if (getSelection() != selection) {
+				getSelection().getSpanCollection().setSelection(null);
+				super.setSelection(selection);
+			}
+		} catch (NoSelectionException e) {
+			super.setSelection(selection);
 
-    private void setOWLClassForAnnotations() {
-        Map<String, List<ConceptAnnotation>> unmatchedAnnotations = new HashMap<>();
-        for (ConceptAnnotation conceptAnnotation : this) {
-            OWLClass owlClass = controller.getOWLModel().getOWLClassByID(conceptAnnotation.getOwlClassID());
-            if (owlClass == null) {
-                List<ConceptAnnotation> conceptAnnotationList = unmatchedAnnotations.computeIfAbsent(conceptAnnotation.getOwlClassID(), k -> new ArrayList<>());
-                conceptAnnotationList.add(conceptAnnotation);
-            } else {
-                conceptAnnotation.setOwlClass(owlClass);
-            }
-        }
-        if (!unmatchedAnnotations.isEmpty()) {
-            log.warn("The following classes could not be matched to annotations");
-            unmatchedAnnotations.forEach((concept, conceptAnnotationList) -> {
-                log.warn(String.format("Concept: %s", concept));
-                log.warn("Annotations:");
-                conceptAnnotationList.forEach(conceptAnnotation -> log.warn(String.format("\t%s", conceptAnnotation.getId())));
-            });
-        }
-    }
+		}
+	}
+
+	private void setOWLClassForAnnotations() {
+		Map<String, List<ConceptAnnotation>> unmatchedAnnotations = new HashMap<>();
+		for (ConceptAnnotation conceptAnnotation : this) {
+			OWLClass owlClass = controller.getOWLModel().getOWLClassByID(conceptAnnotation.getOwlClassID());
+			if (owlClass == null) {
+				List<ConceptAnnotation> conceptAnnotationList = unmatchedAnnotations.computeIfAbsent(conceptAnnotation.getOwlClassID(), k -> new ArrayList<>());
+				conceptAnnotationList.add(conceptAnnotation);
+			} else {
+				conceptAnnotation.setOwlClass(owlClass);
+			}
+		}
+		if (!unmatchedAnnotations.isEmpty()) {
+			log.warn("The following classes could not be matched to annotations");
+			unmatchedAnnotations.forEach((concept, conceptAnnotationList) -> {
+				log.warn(String.format("Concept: %s", concept));
+				log.warn("Annotations:");
+				conceptAnnotationList.forEach(conceptAnnotation -> log.warn(String.format("\t%s", conceptAnnotation.getId())));
+			});
+		}
+	}
 
     /*
     WRITERS
      */
 
-    @Override
-    public void writeToKnowtatorXML(Document dom, Element textSourceElement) {
-        forEach(
-                annotation -> annotation.writeToKnowtatorXML(dom, textSourceElement));
-    }
+	@Override
+	public void writeToKnowtatorXML(Document dom, Element textSourceElement) {
+		forEach(
+				annotation -> annotation.writeToKnowtatorXML(dom, textSourceElement));
+	}
 
-    @Override
-    public void writeToBratStandoff(
-            Writer writer,
-            Map<String, Map<String, String>> annotationsConfig,
-            Map<String, Map<String, String>> visualConfig)
-            throws IOException {
-        Iterator<ConceptAnnotation> annotationIterator = iterator();
-        for (int i = 0; i < size(); i++) {
-            ConceptAnnotation conceptAnnotation = annotationIterator.next();
-            conceptAnnotation.setBratID(String.format("T%d", i));
+	@Override
+	public void writeToBratStandoff(
+			Writer writer,
+			Map<String, Map<String, String>> annotationsConfig,
+			Map<String, Map<String, String>> visualConfig)
+			throws IOException {
+		Iterator<ConceptAnnotation> annotationIterator = iterator();
+		for (int i = 0; i < size(); i++) {
+			ConceptAnnotation conceptAnnotation = annotationIterator.next();
+			conceptAnnotation.setBratID(String.format("T%d", i));
 
-            conceptAnnotation.writeToBratStandoff(writer, annotationsConfig, visualConfig);
-        }
+			conceptAnnotation.writeToBratStandoff(writer, annotationsConfig, visualConfig);
+		}
 
-        // Not adding relations due to complexity of relation types in Brat Standoff
+		// Not adding relations due to complexity of relation types in Brat Standoff
     /*int lastNumTriples = 0;
     for (GraphSpace graphSpace : graphSpaceCollection) {
       Object[] edges = graphSpace.getChildEdges(graphSpace.getDefaultParent());
@@ -282,215 +284,215 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
                 ((AnnotationNode) triple.getTarget()).getConceptAnnotation().getBratID()));
       }
     }*/
-    }
+	}
 
     /*
     READERS
      */
 
-    @Override
-    public void readFromKnowtatorXML(File file, Element parent) {
-        for (Node annotationNode :
-                KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.ANNOTATION))) {
-            Element annotationElement = (Element) annotationNode;
+	@Override
+	public void readFromKnowtatorXML(File file, Element parent) {
+		for (Node annotationNode :
+				KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.ANNOTATION))) {
+			Element annotationElement = (Element) annotationNode;
 
-            String annotationID = annotationElement.getAttribute(KnowtatorXMLAttributes.ID);
-            String profileID = annotationElement.getAttribute(KnowtatorXMLAttributes.ANNOTATOR);
-            String type = annotationElement.getAttribute(KnowtatorXMLAttributes.TYPE);
+			String annotationID = annotationElement.getAttribute(KnowtatorXMLAttributes.ID);
+			String profileID = annotationElement.getAttribute(KnowtatorXMLAttributes.ANNOTATOR);
+			String type = annotationElement.getAttribute(KnowtatorXMLAttributes.TYPE);
 
-            Profile profile = controller.getProfileCollection().get(profileID);
-            profile = profile == null ? controller.getProfileCollection().getDefaultProfile() : profile;
-            String owlClassID =
-                    ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0))
-                            .getAttribute(KnowtatorXMLAttributes.ID);
-            String owlClassLabel =
-                    ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0))
-                            .getAttribute(KnowtatorXMLAttributes.LABEL);
+			Profile profile = controller.getProfileCollection().get(profileID);
+			profile = profile == null ? controller.getProfileCollection().getDefaultProfile() : profile;
+			String owlClassID =
+					((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0))
+							.getAttribute(KnowtatorXMLAttributes.ID);
+			String owlClassLabel =
+					((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0))
+							.getAttribute(KnowtatorXMLAttributes.LABEL);
 
-            String motivation = annotationElement.getAttribute(KnowtatorXMLAttributes.MOTIVATION);
-
-
-            ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, textSource, annotationID, null, owlClassID, owlClassLabel, profile, type, motivation);
-            add(newConceptAnnotation);
-            newConceptAnnotation.readFromKnowtatorXML(null, annotationElement);
-        }
-
-        setOWLClassForAnnotations();
-    }
-
-    @Override
-    public void readFromOldKnowtatorXML(File file, Element parent) {
-
-        Map<String, Element> slotToClassIDMap = KnowtatorXMLUtil.getslotsFromXml(parent);
-        Map<String, Element> classMentionToClassIDMap = KnowtatorXMLUtil.getClassIDsFromXml(parent);
-        Map<ConceptAnnotation, Element> annotationToSlotMap = new HashMap<>();
-
-        for (Node annotationNode :
-                KnowtatorXMLUtil.asList(parent.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATION))) {
-            Element annotationElement = (Element) annotationNode;
-
-            Profile profile;
-            try {
-                String profileID = annotationElement.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATOR).item(0).getTextContent();
-                profile = new Profile(controller, profileID);
-            } catch (NullPointerException npe) {
-                try {
-                    String profileID = annotationElement.getAttribute(OldKnowtatorXMLAttributes.ANNOTATOR);
-                    profile = new Profile(controller, profileID);
-                } catch (NullPointerException npe2) {
-                    profile = controller.getProfileCollection().getDefaultProfile();
-                }
-            }
-            controller.getProfileCollection().add(profile);
-
-            String annotationID =
-                    ((Element) annotationElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION).item(0))
-                            .getAttribute(OldKnowtatorXMLAttributes.ID);
-            Element classElement = classMentionToClassIDMap.get(annotationID);
-
-            String owlClassID =
-                    ((Element) classElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION_CLASS).item(0))
-                            .getAttribute(OldKnowtatorXMLAttributes.ID);
-            String owlClassName =
-                    classElement
-                            .getElementsByTagName(OldKnowtatorXMLTags.MENTION_CLASS)
-                            .item(0)
-                            .getTextContent();
+			String motivation = annotationElement.getAttribute(KnowtatorXMLAttributes.MOTIVATION);
 
 
-            ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, textSource, annotationID, null, owlClassID, owlClassName, profile, "identity", "");
-            if (containsID(annotationID)) {
-                controller.verifyId(null, newConceptAnnotation, false);
-            }
-            add(newConceptAnnotation);
-            newConceptAnnotation.readFromOldKnowtatorXML(null, annotationElement);
+			ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, textSource, annotationID, null, owlClassID, owlClassLabel, profile, type, motivation);
+			add(newConceptAnnotation);
+			newConceptAnnotation.readFromKnowtatorXML(null, annotationElement);
+		}
 
-            // No need to keep annotations with no allSpanCollection
-            if (newConceptAnnotation.getSpanCollection().size() == 0) {
-                try {
-                    remove(newConceptAnnotation);
-                } catch (CantRemoveException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                for (Node slotMentionNode :
-                        KnowtatorXMLUtil.asList(
-                                classElement.getElementsByTagName(OldKnowtatorXMLTags.HAS_SLOT_MENTION))) {
-                    Element slotMentionElement = (Element) slotMentionNode;
-                    String slotMentionID = slotMentionElement.getAttribute(OldKnowtatorXMLAttributes.ID);
-                    Element slotElement = slotToClassIDMap.get(slotMentionID);
-                    if (slotElement != null) {
-                        annotationToSlotMap.put(newConceptAnnotation, slotElement);
-                    }
-                }
-            }
-        }
+		setOWLClassForAnnotations();
+	}
 
+	@Override
+	public void readFromOldKnowtatorXML(File file, Element parent) {
 
-        GraphSpace oldKnowtatorGraphSpace = new GraphSpace(controller, textSource, "Old Knowtator Relations");
-        textSource.getGraphSpaceCollection().add(oldKnowtatorGraphSpace);
+		Map<String, Element> slotToClassIDMap = KnowtatorXMLUtil.getslotsFromXml(parent);
+		Map<String, Element> classMentionToClassIDMap = KnowtatorXMLUtil.getClassIDsFromXml(parent);
+		Map<ConceptAnnotation, Element> annotationToSlotMap = new HashMap<>();
 
-        annotationToSlotMap.forEach(
-                (annotation, slot) -> {
-                    List<Object> vertices = oldKnowtatorGraphSpace.getVerticesForAnnotation(annotation);
+		for (Node annotationNode :
+				KnowtatorXMLUtil.asList(parent.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATION))) {
+			Element annotationElement = (Element) annotationNode;
 
-                    AnnotationNode source = oldKnowtatorGraphSpace.makeOrGetAnnotationNode(annotation, vertices);
+			Profile profile;
+			try {
+				String profileID = annotationElement.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATOR).item(0).getTextContent();
+				profile = new Profile(controller, profileID);
+			} catch (NullPointerException npe) {
+				try {
+					String profileID = annotationElement.getAttribute(OldKnowtatorXMLAttributes.ANNOTATOR);
+					profile = new Profile(controller, profileID);
+				} catch (NullPointerException npe2) {
+					profile = controller.getProfileCollection().getDefaultProfile();
+				}
+			}
+			controller.getProfileCollection().add(profile);
 
-                    String propertyID =
-                            ((Element) slot.getElementsByTagName(OldKnowtatorXMLTags.MENTION_SLOT).item(0))
-                                    .getAttribute(OldKnowtatorXMLAttributes.ID);
-                    for (Node slotMentionValueNode :
-                            OldKnowtatorUtil.asList(
-                                    slot.getElementsByTagName(OldKnowtatorXMLTags.COMPLEX_SLOT_MENTION_VALUE))) {
-                        Element slotMentionValueElement = (Element) slotMentionValueNode;
-                        String value = slotMentionValueElement.getAttribute(OldKnowtatorXMLAttributes.VALUE);
-                        ConceptAnnotation conceptAnnotation1 = textSource.getConceptAnnotationCollection().get(value);
+			String annotationID =
+					((Element) annotationElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION).item(0))
+							.getAttribute(OldKnowtatorXMLAttributes.ID);
+			Element classElement = classMentionToClassIDMap.get(annotationID);
 
-                        List<Object> vertices1 = oldKnowtatorGraphSpace.getVerticesForAnnotation(conceptAnnotation1);
+			String owlClassID =
+					((Element) classElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION_CLASS).item(0))
+							.getAttribute(OldKnowtatorXMLAttributes.ID);
+			String owlClassName =
+					classElement
+							.getElementsByTagName(OldKnowtatorXMLTags.MENTION_CLASS)
+							.item(0)
+							.getTextContent();
 
 
-                        AnnotationNode target = oldKnowtatorGraphSpace.makeOrGetAnnotationNode(conceptAnnotation1, vertices1);
+			ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, textSource, annotationID, null, owlClassID, owlClassName, profile, "identity", "");
+			if (containsID(annotationID)) {
+				controller.verifyId(null, newConceptAnnotation, false);
+			}
+			add(newConceptAnnotation);
+			newConceptAnnotation.readFromOldKnowtatorXML(null, annotationElement);
 
-                        oldKnowtatorGraphSpace.addTriple(
-                                source,
-                                target,
-                                null,
-                                controller.getProfileCollection().getSelection(),
-                                null,
-                                propertyID,
-                                "",
-                                "",
-                                false,
-                                "");
-                    }
-                }
-        );
-
-        setOWLClassForAnnotations();
-    }
-
-    @Override
-    public void readFromBratStandoff(
-            File file, Map<Character, List<String[]>> annotationCollection, String content) {
-
-        Profile profile = controller.getProfileCollection().getDefaultProfile();
-
-        annotationCollection
-                .get(StandoffTags.TEXTBOUNDANNOTATION)
-                .forEach(
-                        annotation -> {
-                            ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, textSource, annotation[0], null,
-                                    annotation[1].split(StandoffTags.textBoundAnnotationTripleDelimiter)[0],
-                                    null, profile, "identity", "");
-                            add(newConceptAnnotation);
-                            Map<Character, List<String[]>> map = new HashMap<>();
-                            List<String[]> list = new ArrayList<>();
-                            list.add(annotation);
-                            map.put(StandoffTags.TEXTBOUNDANNOTATION, list);
-                            newConceptAnnotation.readFromBratStandoff(null, map, content);
-                        });
-
-        annotationCollection
-                .get(StandoffTags.NORMALIZATION)
-                .forEach(
-                        normalization -> {
-                            String[] splitNormalization =
-                                    normalization[1].split(StandoffTags.relationTripleDelimiter);
-                            ConceptAnnotation conceptAnnotation = get(splitNormalization[1]);
-                            conceptAnnotation.setOWLClassID(splitNormalization[2]);
-                        });
-
-        GraphSpace newGraphSpace = new GraphSpace(controller, textSource, "Brat Relation Graph");
-        textSource.getGraphSpaceCollection().add(newGraphSpace);
-        newGraphSpace.readFromBratStandoff(null, annotationCollection, null);
-
-        setOWLClassForAnnotations();
-    }
+			// No need to keep annotations with no allSpanCollection
+			if (newConceptAnnotation.getSpanCollection().size() == 0) {
+				try {
+					remove(newConceptAnnotation);
+				} catch (CantRemoveException e) {
+					e.printStackTrace();
+				}
+			} else {
+				for (Node slotMentionNode :
+						KnowtatorXMLUtil.asList(
+								classElement.getElementsByTagName(OldKnowtatorXMLTags.HAS_SLOT_MENTION))) {
+					Element slotMentionElement = (Element) slotMentionNode;
+					String slotMentionID = slotMentionElement.getAttribute(OldKnowtatorXMLAttributes.ID);
+					Element slotElement = slotToClassIDMap.get(slotMentionID);
+					if (slotElement != null) {
+						annotationToSlotMap.put(newConceptAnnotation, slotElement);
+					}
+				}
+			}
+		}
 
 
-    @Override
-    public void dispose() {
-        controller.getOWLModel().removeOntologyChangeListener(this);
-        controller.getOWLModel().removeOWLModelManagerListener(this);
-        super.dispose();
-    }
+		GraphSpace oldKnowtatorGraphSpace = new GraphSpace(controller, textSource, "Old Knowtator Relations");
+		textSource.getGraphSpaceCollection().add(oldKnowtatorGraphSpace);
 
-    @Override
-    public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) {
-        Set<OWLEntity> possiblyAddedEntities = new HashSet<>();
-        Set<OWLEntity> possiblyRemovedEntities = new HashSet<>();
-        OWLEntityCollector addedCollector = new OWLEntityCollector(possiblyAddedEntities);
-        OWLEntityCollector removedCollector = new OWLEntityCollector(possiblyRemovedEntities);
+		annotationToSlotMap.forEach(
+				(annotation, slot) -> {
+					List<Object> vertices = oldKnowtatorGraphSpace.getVerticesForAnnotation(annotation);
 
-        OWLModel.processOntologyChanges(changes, addedCollector, removedCollector);
+					AnnotationNode source = oldKnowtatorGraphSpace.makeOrGetAnnotationNode(annotation, vertices);
+
+					String propertyID =
+							((Element) slot.getElementsByTagName(OldKnowtatorXMLTags.MENTION_SLOT).item(0))
+									.getAttribute(OldKnowtatorXMLAttributes.ID);
+					for (Node slotMentionValueNode :
+							OldKnowtatorUtil.asList(
+									slot.getElementsByTagName(OldKnowtatorXMLTags.COMPLEX_SLOT_MENTION_VALUE))) {
+						Element slotMentionValueElement = (Element) slotMentionValueNode;
+						String value = slotMentionValueElement.getAttribute(OldKnowtatorXMLAttributes.VALUE);
+						ConceptAnnotation conceptAnnotation1 = textSource.getConceptAnnotationCollection().get(value);
+
+						List<Object> vertices1 = oldKnowtatorGraphSpace.getVerticesForAnnotation(conceptAnnotation1);
+
+
+						AnnotationNode target = oldKnowtatorGraphSpace.makeOrGetAnnotationNode(conceptAnnotation1, vertices1);
+
+						oldKnowtatorGraphSpace.addTriple(
+								source,
+								target,
+								null,
+								controller.getProfileCollection().getSelection(),
+								null,
+								propertyID,
+								"",
+								"",
+								false,
+								"");
+					}
+				}
+		);
+
+		setOWLClassForAnnotations();
+	}
+
+	@Override
+	public void readFromBratStandoff(
+			File file, Map<Character, List<String[]>> annotationCollection, String content) {
+
+		Profile profile = controller.getProfileCollection().getDefaultProfile();
+
+		annotationCollection
+				.get(StandoffTags.TEXTBOUNDANNOTATION)
+				.forEach(
+						annotation -> {
+							ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, textSource, annotation[0], null,
+									annotation[1].split(StandoffTags.textBoundAnnotationTripleDelimiter)[0],
+									null, profile, "identity", "");
+							add(newConceptAnnotation);
+							Map<Character, List<String[]>> map = new HashMap<>();
+							List<String[]> list = new ArrayList<>();
+							list.add(annotation);
+							map.put(StandoffTags.TEXTBOUNDANNOTATION, list);
+							newConceptAnnotation.readFromBratStandoff(null, map, content);
+						});
+
+		annotationCollection
+				.get(StandoffTags.NORMALIZATION)
+				.forEach(
+						normalization -> {
+							String[] splitNormalization =
+									normalization[1].split(StandoffTags.relationTripleDelimiter);
+							ConceptAnnotation conceptAnnotation = get(splitNormalization[1]);
+							conceptAnnotation.setOWLClassID(splitNormalization[2]);
+						});
+
+		GraphSpace newGraphSpace = new GraphSpace(controller, textSource, "Brat Relation Graph");
+		textSource.getGraphSpaceCollection().add(newGraphSpace);
+		newGraphSpace.readFromBratStandoff(null, annotationCollection, null);
+
+		setOWLClassForAnnotations();
+	}
+
+
+	@Override
+	public void dispose() {
+		controller.getOWLModel().removeOntologyChangeListener(this);
+		controller.getOWLModel().removeOWLModelManagerListener(this);
+		super.dispose();
+	}
+
+	@Override
+	public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) {
+		Set<OWLEntity> possiblyAddedEntities = new HashSet<>();
+		Set<OWLEntity> possiblyRemovedEntities = new HashSet<>();
+		OWLEntityCollector addedCollector = new OWLEntityCollector(possiblyAddedEntities);
+		OWLEntityCollector removedCollector = new OWLEntityCollector(possiblyRemovedEntities);
+
+		OWLModel.processOntologyChanges(changes, addedCollector, removedCollector);
 
     /*
     For now, I will assume that entity removed is the one that existed and the one
     that is added is the new name for it.
      */
-        if (!possiblyAddedEntities.isEmpty() && !possiblyRemovedEntities.isEmpty()) {
-            OWLClass oldOWLClass = (OWLClass) possiblyRemovedEntities.iterator().next();
-            OWLClass newOWLClass = (OWLClass) possiblyAddedEntities.iterator().next();
+		if (!possiblyAddedEntities.isEmpty() && !possiblyRemovedEntities.isEmpty()) {
+			OWLClass oldOWLClass = (OWLClass) possiblyRemovedEntities.iterator().next();
+			OWLClass newOWLClass = (OWLClass) possiblyAddedEntities.iterator().next();
 
 //            try {
 //                log.warn(String.format("Old: %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(oldOWLClass)));
@@ -498,59 +500,59 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 //            } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
 //                e.printStackTrace();
 //            }
-            ConceptAnnotationCollection annotationsForOwlClass = new ConceptAnnotationCollection(controller, textSource);
+			ConceptAnnotationCollection annotationsForOwlClass = new ConceptAnnotationCollection(controller, textSource);
 
-            String owlClassID = controller.getOWLModel().getOWLEntityRendering(oldOWLClass);
+			String owlClassID = controller.getOWLModel().getOWLEntityRendering(oldOWLClass);
 
-            for (ConceptAnnotation conceptAnnotation : this) {
-                if (conceptAnnotation.getOwlClass() == oldOWLClass) {
-                    annotationsForOwlClass.add(conceptAnnotation);
-                } else if (conceptAnnotation.getOwlClassID().equals(owlClassID)) {
-                    conceptAnnotation.setOwlClass(oldOWLClass);
-                    annotationsForOwlClass.add(conceptAnnotation);
-                }
-            }
+			for (ConceptAnnotation conceptAnnotation : this) {
+				if (conceptAnnotation.getOwlClass() == oldOWLClass) {
+					annotationsForOwlClass.add(conceptAnnotation);
+				} else if (conceptAnnotation.getOwlClassID().equals(owlClassID)) {
+					conceptAnnotation.setOwlClass(oldOWLClass);
+					annotationsForOwlClass.add(conceptAnnotation);
+				}
+			}
 
-            if (newOWLClass == null) {
-                for (ConceptAnnotation conceptAnnotation : annotationsForOwlClass) {
-                    try {
-                        remove(conceptAnnotation);
-                    } catch (CantRemoveException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else {
-                for (ConceptAnnotation conceptAnnotation : annotationsForOwlClass) {
-                    conceptAnnotation.setOwlClass(newOWLClass);
-                }
-            }
-        }
-    }
+			if (newOWLClass == null) {
+				for (ConceptAnnotation conceptAnnotation : annotationsForOwlClass) {
+					try {
+						remove(conceptAnnotation);
+					} catch (CantRemoveException e) {
+						e.printStackTrace();
+					}
+				}
+			} else {
+				for (ConceptAnnotation conceptAnnotation : annotationsForOwlClass) {
+					conceptAnnotation.setOwlClass(newOWLClass);
+				}
+			}
+		}
+	}
 
-    @Override
-    public void profileFilterChanged(boolean filterValue) {
-        try {
-            if (filterValue && getSelection().getAnnotator() != controller.getProfileCollection().getSelection()) {
-                setSelection(null);
-            }
-        } catch (NoSelectionException ignored) {
-        }
-    }
+	@Override
+	public void profileFilterChanged(boolean filterValue) {
+		try {
+			if (filterValue && getSelection().getAnnotator() != controller.getProfileCollection().getSelection()) {
+				setSelection(null);
+			}
+		} catch (NoSelectionException ignored) {
+		}
+	}
 
-    @Override
-    public void owlClassFilterChanged(boolean filterValue) {
-        try {
-            if (filterValue && getSelection().getOwlClass() != controller.getOWLModel().getSelectedOWLClass()) {
-                setSelection(null);
-            }
-        } catch (NoSelectionException | NoSelectedOWLClassException ignored) {
-        }
-    }
+	@Override
+	public void owlClassFilterChanged(boolean filterValue) {
+		try {
+			if (filterValue && getSelection().getOwlClass() != controller.getOWLModel().getSelectedOWLClass()) {
+				setSelection(null);
+			}
+		} catch (NoSelectionException | NoSelectedOWLClassException ignored) {
+		}
+	}
 
-    @Override
-    public void handleChange(OWLModelManagerChangeEvent event) {
-        if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
-            setOWLClassForAnnotations();
-        }
-    }
+	@Override
+	public void handleChange(OWLModelManagerChangeEvent event) {
+		if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
+			setOWLClassForAnnotations();
+		}
+	}
 }

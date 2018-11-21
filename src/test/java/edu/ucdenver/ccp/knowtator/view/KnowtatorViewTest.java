@@ -26,6 +26,8 @@ package edu.ucdenver.ccp.knowtator.view;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
+import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionActionsTest;
+import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -39,5 +41,20 @@ class KnowtatorViewTest {
 		TestingHelpers.checkDefaultCollectionValues(controller);
 		view.loadProject(controller.getProjectLocation());
 		TestingHelpers.checkDefaultCollectionValues(view.getController());
+	}
+
+	@Test
+	void testActions() throws NoSelectionException, IOException {
+		KnowtatorController controller = TestingHelpers.getLoadedController();
+		TestingHelpers.checkDefaultCollectionValues(controller);
+		view.loadProject(controller.getProjectLocation());
+		TestingHelpers.checkDefaultCollectionValues(view.getController());
+		KnowtatorCollectionActionsTest test = new KnowtatorCollectionActionsTest();
+		test.setController(view.getController());
+		test.removeConceptAnnotationAction();
+		test.removeGraphSpaceAction();
+		test.removeProfileAction();
+		test.removeSpanAction();
+		test.removeTextSourceAction();
 	}
 }

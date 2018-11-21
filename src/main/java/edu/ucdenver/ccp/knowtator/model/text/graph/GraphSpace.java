@@ -417,11 +417,11 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
 	}
 
 	@Override
-	public void selected(SelectionEvent<ConceptAnnotation> changeEvent) {
-		if (changeEvent.getNew() == null) {
+	public void selected(SelectionEvent<ConceptAnnotation> event) {
+		if (event.getNew() == null) {
 			setSelectionCells(new Object[0]);
 		} else {
-			setSelectionCells(getVerticesForAnnotation(changeEvent.getNew()));
+			setSelectionCells(getVerticesForAnnotation(event.getNew()));
 		}
 	}
 
@@ -470,7 +470,6 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
 		modificationListeners.add(listener);
 	}
 
-	@SuppressWarnings("WeakerAccess")
 	@Override
 	public void modify(List<Integer> parameters) {
 		modificationListeners.forEach(DataObjectModificationListener::modification);

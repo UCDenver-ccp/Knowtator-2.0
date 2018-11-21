@@ -63,6 +63,8 @@ import java.util.TreeSet;
  */
 class KnowtatorStandalone extends JFrame {
 
+	private KnowtatorView view;
+
 	/**
 	 * The constructor for Knowtator standalone's GUI. Debug mode can be entered here which will generate some
 	 * dummy OWL API variables to test adding of concept annotations and triples.
@@ -70,7 +72,7 @@ class KnowtatorStandalone extends JFrame {
 	 * @param debug Specifies if debug mode should be entered.
 	 */
 	private KnowtatorStandalone(boolean debug) {
-		final KnowtatorView view = new KnowtatorView();
+		view = new KnowtatorView();
 
 		setContentPane(view);
 
@@ -360,5 +362,9 @@ class KnowtatorStandalone extends JFrame {
 		}
 
 
+	}
+
+	public KnowtatorView getView() {
+		return view;
 	}
 }

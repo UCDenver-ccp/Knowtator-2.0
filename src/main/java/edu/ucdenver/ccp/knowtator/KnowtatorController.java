@@ -185,7 +185,7 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 
 			while (verifiedId == null || idRegistry.keySet().contains(verifiedId)) {
 				if (obj instanceof KnowtatorTextBoundDataObjectInterface && ((KnowtatorTextBoundDataObjectInterface) obj).getTextSource() != null) {
-					verifiedId = ((KnowtatorTextBoundDataObjectInterface) obj).getTextSource().getId() + "-" + Integer.toString(i);
+					verifiedId = ((KnowtatorTextBoundDataObjectInterface) obj).getTextSource().getId() + "-" + i;
 				} else {
 					verifiedId = Integer.toString(i);
 				}
@@ -207,8 +207,7 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 			try {
 				action.execute();
 				addEdit(action.getEdit());
-			} catch (ActionUnperformableException e) {
-				e.printStackTrace();
+			} catch (ActionUnperformableException ignored) {
 			}
 		}
 	}

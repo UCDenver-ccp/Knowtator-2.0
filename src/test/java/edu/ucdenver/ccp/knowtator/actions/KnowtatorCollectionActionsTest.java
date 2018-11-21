@@ -33,8 +33,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class KnowtatorCollectionActionsTest {
-    private static final KnowtatorController controller = TestingHelpers.getLoadedController();
+public class KnowtatorCollectionActionsTest {
+    private KnowtatorController controller = TestingHelpers.getLoadedController();
 
     @Test
     void addTextSourceAction() {
@@ -51,7 +51,7 @@ class KnowtatorCollectionActionsTest {
     }
 
     @Test
-    void removeTextSourceAction() {
+    public void removeTextSourceAction() {
         TestingHelpers.testKnowtatorAction(controller,
 
                 new KnowtatorCollectionActions.TextSourceAction(KnowtatorCollectionActions.REMOVE, controller, null),
@@ -80,7 +80,7 @@ class KnowtatorCollectionActionsTest {
     }
 
     @Test
-    void removeConceptAnnotationAction() throws NoSelectionException {
+    public void removeConceptAnnotationAction() throws NoSelectionException {
         TextSource textSource = controller.getTextSourceCollection().getSelection();
         textSource.getConceptAnnotationCollection().setSelection(textSource.getConceptAnnotationCollection().first());
         TestingHelpers.testKnowtatorAction(controller,
@@ -112,7 +112,7 @@ class KnowtatorCollectionActionsTest {
     }
 
     @Test
-    void removeSpanAction() throws NoSelectionException {
+    public void removeSpanAction() throws NoSelectionException {
         TextSource textSource = controller.getTextSourceCollection().getSelection();
         // First test remove span if there is only one in the collection. This should be equivalent to just removing the annotation
         ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
@@ -160,7 +160,7 @@ class KnowtatorCollectionActionsTest {
     }
 
     @Test
-    void removeProfileAction() {
+    public void removeProfileAction() {
         TestingHelpers.testKnowtatorAction(controller,
                 new KnowtatorCollectionActions.ProfileAction(KnowtatorCollectionActions.REMOVE, controller, "profile1"),
                 TestingHelpers.defaultExpectedTextSources,
@@ -175,7 +175,7 @@ class KnowtatorCollectionActionsTest {
         assertThrows(ActionUnperformableException.class, this::removeDefaultProfileAction);
     }
 
-    private void removeDefaultProfileAction() throws ActionUnperformableException {
+    void removeDefaultProfileAction() throws ActionUnperformableException {
         // It should not be possible to remove the default profile
         new KnowtatorCollectionActions.ProfileAction(KnowtatorCollectionActions.REMOVE, controller, "Default").execute();
 
@@ -196,7 +196,7 @@ class KnowtatorCollectionActionsTest {
     }
 
     @Test
-    void removeGraphSpaceAction() throws NoSelectionException {
+    public void removeGraphSpaceAction() throws NoSelectionException {
         TextSource textSource = controller.getTextSourceCollection().getSelection();
         textSource.getGraphSpaceCollection().selectNext();
         TestingHelpers.testKnowtatorAction(controller,
@@ -209,5 +209,9 @@ class KnowtatorCollectionActionsTest {
                 TestingHelpers.defaultExpectedHighlighters,
                 TestingHelpers.defaultExpectedAnnotationNodes - 2,
                 TestingHelpers.defaultExpectedTriples - 1);
+    }
+
+    public void setController(KnowtatorController controller) {
+        this.controller = controller;
     }
 }

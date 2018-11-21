@@ -121,12 +121,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 		addGraphSpaceButton.addActionListener(e -> {
 			try {
 				TextSource textSource = view.getController().getTextSourceCollection().getSelection();
-				String graphName = getGraphNameInput(view, textSource, null);
-
-				if (graphName != null) {
-					AbstractKnowtatorAction action = new KnowtatorCollectionActions.GraphSpaceAction(KnowtatorCollectionActions.ADD, view.getController(), graphName);
-					view.getController().registerAction(action);
-				}
+				makeGraph(textSource);
 			} catch (NoSelectionException e2) {
 				e2.printStackTrace();
 			}
@@ -183,16 +178,17 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 				e1.printStackTrace();
 			}
 		});
-
-		graphSpaceButtons.add(renameButton);
-		graphSpaceButtons.add(removeCellButton);
-		graphSpaceButtons.add(removeGraphSpaceButton);
-		graphSpaceButtons.add(previousGraphSpaceButton);
-		graphSpaceButtons.add(nextGraphSpaceButton);
-		graphSpaceButtons.add(addAnnotationNodeButton);
-		graphSpaceButtons.add(applyLayoutButton);
-		graphSpaceButtons.add(zoomSlider);
-		graphSpaceButtons.add(addGraphSpaceButton);
+		graphSpaceButtons.addAll(Arrays.asList(
+				renameButton,
+				removeCellButton,
+				removeGraphSpaceButton,
+				previousGraphSpaceButton,
+				nextGraphSpaceButton,
+				addAnnotationNodeButton,
+				applyLayoutButton,
+				zoomSlider,
+				addGraphSpaceButton
+		));
 	}
 
 	private void showGraph(GraphSpace graphSpace) {
@@ -229,12 +225,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 						showGraph(textSource.getGraphSpaceCollection().getSelection());
 					} catch (NoSelectionException e1) {
 						try {
-							String graphName = getGraphNameInput(view, textSource, null);
-
-							if (graphName != null) {
-								AbstractKnowtatorAction action = new KnowtatorCollectionActions.GraphSpaceAction(KnowtatorCollectionActions.ADD, view.getController(), graphName);
-								view.getController().registerAction(action);
-							}
+							makeGraph(textSource);
 						} catch (NoSelectionException e2) {
 							e2.printStackTrace();
 						}
@@ -243,6 +234,15 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 			} catch (NoSelectionException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	private void makeGraph(TextSource textSource) throws NoSelectionException {
+		String graphName = getGraphNameInput(view, textSource, null);
+
+		if (graphName != null) {
+			AbstractKnowtatorAction action = new KnowtatorCollectionActions.GraphSpaceAction(KnowtatorCollectionActions.ADD, view.getController(), graphName);
+			view.getController().registerAction(action);
 		}
 	}
 
@@ -294,7 +294,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 				"Graph Title", field1,
 		};
 		field1.addAncestorListener(new GraphView.RequestFocusListener());
-		field1.setText("Graph Space " + Integer.toString(textSource.getGraphSpaceCollection().size()));
+		field1.setText("Graph Space " + textSource.getGraphSpaceCollection().size());
 		int option =
 				JOptionPane.showConfirmDialog(
 						view,
@@ -371,13 +371,9 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 				if (selectedCells != null && selectedCells.size() > 0) {
 					for (Object cell : selectedCells) {
 						if (cell instanceof AnnotationNode) {
-							try {
-								ConceptAnnotation conceptAnnotation = ((AnnotationNode) cell).getConceptAnnotation();
-								view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().setSelection(conceptAnnotation);
-								graphSpace.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
-							} catch (NoSelectionException e) {
-								e.printStackTrace();
-							}
+							ConceptAnnotation conceptAnnotation = ((AnnotationNode) cell).getConceptAnnotation();
+							graphSpace.getTextSource().getConceptAnnotationCollection().setSelection(conceptAnnotation);
+							graphSpace.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
 
 						} else if (cell instanceof RelationAnnotation) {
 							view.getController().getOWLModel().setSelectedOWLEntity(((RelationAnnotation) cell).getProperty());
@@ -592,7 +588,6 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 	}
 
 	/**
-	 * @noinspection ALL
 	 */
 	public JComponent $$$getRootComponent$$$() {
 		return panel1;

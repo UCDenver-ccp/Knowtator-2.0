@@ -268,8 +268,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 						if (span != null) {
 							try {
 								scrollRectToVisible(modelToView(span.getStart()));
-							} catch (BadLocationException | NullPointerException e) {
-								e.printStackTrace();
+							} catch (BadLocationException | NullPointerException ignored) {
 							}
 						}
 					}
