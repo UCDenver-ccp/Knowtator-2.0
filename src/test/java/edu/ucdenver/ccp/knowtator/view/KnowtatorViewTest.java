@@ -30,6 +30,7 @@ import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionActionsTest;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
 import java.io.IOException;
 
 class KnowtatorViewTest {
@@ -57,5 +58,15 @@ class KnowtatorViewTest {
 		test.removeSpanAction();
 		test.removeTextSourceAction();
 		view.loadProject(controller.getProjectLocation());
+	}
+
+	@Test
+	void textSourceButtonActivation() throws IOException {
+		assert !view.textSourceButtons.stream()
+				.map(Component::isEnabled).reduce(false, (a, b) -> a || b);
+		KnowtatorController controller = TestingHelpers.getLoadedController();
+		view.loadProject(controller.getProjectLocation());
+		assert view.textSourceButtons.stream()
+				.map(Component::isEnabled).reduce(true, (a, b) -> a && b);
 	}
 }

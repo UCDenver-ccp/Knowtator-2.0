@@ -98,7 +98,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private JButton assignColorToClassButton;
 	private TextSourceChooser textSourceChooser;
 	private JButton findTextInOntologyButton;
-	private JButton addTextSourceButton;
+	JButton addTextSourceButton;
 	private JButton removeTextSourceButton;
 	private JButton menuButton;
 	private JButton previousMatchButton;
@@ -122,7 +122,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private JButton redoButton;
 	private AnnotationNotes annotationNotes;
 
-	private List<JComponent> textSourceButtons;
+	List<JComponent> textSourceButtons;
 	private List<JButton> annotationButtons;
 	private Map<JButton, ActionListener> spanSizeButtons;
 	private Map<JButton, ActionListener> selectionSizeButtons;
@@ -463,6 +463,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 			@Override
 			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
+				enableTextSourceButtons();
 				if (event.getNew() == null) {
 					removeAnnotationButton.setEnabled(false);
 				} else {
@@ -478,12 +479,12 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 			@Override
 			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
-
+				enableTextSourceButtons();
 			}
 
 			@Override
 			public void respondToTextSourceAdded() {
-
+				enableTextSourceButtons();
 			}
 
 			@Override
