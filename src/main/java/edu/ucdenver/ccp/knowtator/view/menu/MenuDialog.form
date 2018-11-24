@@ -10,13 +10,16 @@
     </properties>
     <border type="none"/>
     <children>
-      <splitpane id="905af">
+      <splitpane id="905af" binding="splitPane">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="200" height="200"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <dividerLocation value="250"/>
+          <enabled value="false"/>
+        </properties>
         <border type="none"/>
         <children>
           <grid id="9067e" binding="menuDisplayPane" layout-manager="CardLayout" hgap="0" vgap="0">
@@ -33,14 +36,14 @@
             <constraints>
               <splitpane position="left"/>
             </constraints>
-            <properties>
-              <minimumSize width="50" height="26"/>
-            </properties>
+            <properties/>
             <border type="none"/>
             <children>
               <scrollpane id="612ee">
                 <constraints border-constraint="Center"/>
-                <properties/>
+                <properties>
+                  <preferredSize width="250" height="128"/>
+                </properties>
                 <border type="none"/>
                 <children>
                   <component id="7595a" class="javax.swing.JList" binding="menuOptionsList" custom-create="true">
@@ -50,13 +53,11 @@
                       <focusCycleRoot value="true"/>
                       <font name="Verdana" size="16" style="1"/>
                       <foreground color="-16777216"/>
+                      <preferredSize width="250" height="0"/>
                     </properties>
                   </component>
                 </children>
               </scrollpane>
-              <hspacer id="6ebba">
-                <constraints border-constraint="South"/>
-              </hspacer>
             </children>
           </grid>
         </children>

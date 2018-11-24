@@ -26,16 +26,13 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.intellij.uiDesigner.core.Spacer;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.IOException;
 
 /**
@@ -48,6 +45,7 @@ public class MenuDialog extends JDialog {
 	private JPanel contentPane;
 	private JList<MenuPane> menuOptionsList;
 	private JPanel menuDisplayPane;
+	private JSplitPane splitPane;
 	private final KnowtatorView view;
 
 	public MenuDialog(Window parent, KnowtatorView view) {
@@ -64,7 +62,15 @@ public class MenuDialog extends JDialog {
 			e.printStackTrace();
 		}
 
+		addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				super.componentResized(e);
+				splitPane.setDividerLocation(250);
+			}
+		});
 
+		splitPane.setDividerLocation(250);
 		// call onCancel() when cross is clicked
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -112,27 +118,28 @@ public class MenuDialog extends JDialog {
 		contentPane = new JPanel();
 		contentPane.setLayout(new GridLayoutManager(1, 1, new Insets(10, 10, 10, 10), -1, -1));
 		contentPane.setPreferredSize(new Dimension(700, 500));
-		final JSplitPane splitPane1 = new JSplitPane();
-		contentPane.add(splitPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
+		splitPane = new JSplitPane();
+		splitPane.setDividerLocation(250);
+		splitPane.setEnabled(false);
+		contentPane.add(splitPane, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
 		menuDisplayPane = new JPanel();
 		menuDisplayPane.setLayout(new CardLayout(0, 0));
 		Font menuDisplayPaneFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, menuDisplayPane.getFont());
 		if (menuDisplayPaneFont != null) menuDisplayPane.setFont(menuDisplayPaneFont);
-		splitPane1.setRightComponent(menuDisplayPane);
+		splitPane.setRightComponent(menuDisplayPane);
 		final JPanel panel1 = new JPanel();
 		panel1.setLayout(new BorderLayout(0, 0));
-		panel1.setMinimumSize(new Dimension(50, 26));
-		splitPane1.setLeftComponent(panel1);
+		splitPane.setLeftComponent(panel1);
 		final JScrollPane scrollPane1 = new JScrollPane();
+		scrollPane1.setPreferredSize(new Dimension(250, 128));
 		panel1.add(scrollPane1, BorderLayout.CENTER);
 		menuOptionsList.setBackground(new Color(-1118482));
 		menuOptionsList.setFocusCycleRoot(true);
 		Font menuOptionsListFont = this.$$$getFont$$$("Verdana", Font.BOLD, 16, menuOptionsList.getFont());
 		if (menuOptionsListFont != null) menuOptionsList.setFont(menuOptionsListFont);
 		menuOptionsList.setForeground(new Color(-16777216));
+		menuOptionsList.setPreferredSize(new Dimension(250, 0));
 		scrollPane1.setViewportView(menuOptionsList);
-		final Spacer spacer1 = new Spacer();
-		panel1.add(spacer1, BorderLayout.SOUTH);
 	}
 
 	/**

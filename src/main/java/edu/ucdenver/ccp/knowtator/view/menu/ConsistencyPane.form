@@ -2,12 +2,12 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="edu.ucdenver.ccp.knowtator.view.menu.ConsistencyPane">
   <grid id="b4977" binding="panel1" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="20" y="20" width="1023" height="400"/>
+      <xy x="20" y="20" width="1066" height="400"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="27dc6" binding="contentPane" layout-manager="GridLayoutManager" row-count="2" column-count="8" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="27dc6" binding="contentPane" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints border-constraint="Center"/>
         <properties>
@@ -15,106 +15,144 @@
         </properties>
         <border type="none"/>
         <children>
-          <component id="c8ff0" class="javax.swing.JLabel">
+          <splitpane id="220ca">
             <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <font name="Verdana" size="12" style="1"/>
-              <labelFor value="9d0e2"/>
-              <text resource-bundle="log4j" key="annotations.for.owl.class"/>
-            </properties>
-          </component>
-          <component id="d42aa" class="javax.swing.JLabel" binding="owlClassLabel">
-            <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value=""/>
-            </properties>
-          </component>
-          <component id="bcba0" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <font name="Verdana" size="12" style="1"/>
-              <labelFor value="d1e06"/>
-              <text resource-bundle="log4j" key="annotations.containing.text"/>
-            </properties>
-          </component>
-          <component id="c784b" class="javax.swing.JLabel" binding="spanLabel">
-            <constraints>
-              <grid row="0" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value=""/>
-            </properties>
-          </component>
-          <scrollpane id="9d0e2">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="5" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <component id="bd862" class="edu.ucdenver.ccp.knowtator.view.list.AnnotationList" binding="annotationsForClassList" custom-create="true">
-                <constraints/>
-                <properties>
-                  <font name="Verdana" size="10" style="0"/>
-                </properties>
-              </component>
-            </children>
-          </scrollpane>
-          <scrollpane id="d1e06">
-            <constraints>
-              <grid row="1" column="6" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <component id="6d22b" class="edu.ucdenver.ccp.knowtator.view.list.AnnotationList" binding="spansForClassList" custom-create="true">
-                <constraints/>
-                <properties>
-                  <font name="Verdana" size="10" style="0"/>
-                </properties>
-              </component>
-            </children>
-          </scrollpane>
-          <vspacer id="1977e">
-            <constraints>
-              <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
-                <preferred-size width="-1" height="100"/>
+              <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="200" height="200"/>
               </grid>
             </constraints>
-          </vspacer>
-          <component id="34527" class="javax.swing.JCheckBox" binding="includeDescendantsCheckBox" default-binding="true">
-            <constraints>
-              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <font name="Verdana" size="12" style="0"/>
-              <text resource-bundle="log4j" key="include.descendants"/>
-            </properties>
-          </component>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <grid id="167af" layout-manager="GridLayoutManager" row-count="3" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <splitpane position="right"/>
+                </constraints>
+                <properties>
+                  <font name="Verdana" size="12" style="0"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <hspacer id="b0303">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="3" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                  </hspacer>
+                  <component id="bcba0" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <font name="Verdana" size="12" style="1"/>
+                      <labelFor value="7e92c"/>
+                      <text resource-bundle="log4j" key="annotations.containing.text"/>
+                    </properties>
+                  </component>
+                  <component id="c784b" class="javax.swing.JLabel" binding="spanLabel">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <font name="Verdana" size="12" style="0"/>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <scrollpane id="7e92c">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="b736e" class="edu.ucdenver.ccp.knowtator.view.list.AnnotationList" binding="annotationsForSpannedTextList" custom-create="true" default-binding="true">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <component id="e0336" class="javax.swing.JCheckBox" binding="exactMatchCheckBox" default-binding="true">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <font name="Verdana" size="12" style="0"/>
+                      <text resource-bundle="log4j" key="exact.match"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="3713" layout-manager="GridLayoutManager" row-count="3" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <splitpane position="left"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="c8ff0" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <font name="Verdana" size="12" style="1"/>
+                      <labelFor value="dc6b5"/>
+                      <text resource-bundle="log4j" key="annotations.for.owl.class"/>
+                    </properties>
+                  </component>
+                  <component id="d42aa" class="javax.swing.JLabel" binding="owlClassLabel">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="34527" class="javax.swing.JCheckBox" binding="includeDescendantsCheckBox" default-binding="true">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <font name="Verdana" size="12" style="0"/>
+                      <text resource-bundle="log4j" key="include.descendants"/>
+                    </properties>
+                  </component>
+                  <scrollpane id="dc6b5">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="ddc6e" class="edu.ucdenver.ccp.knowtator.view.list.AnnotationList" binding="annotationsForClassList" custom-create="true">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <hspacer id="a805f">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="3" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                  </hspacer>
+                </children>
+              </grid>
+            </children>
+          </splitpane>
           <component id="f8043" class="javax.swing.JButton" binding="refreshButton" default-binding="true">
             <constraints>
-              <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <font name="Verdana" size="12" style="0"/>
               <text resource-bundle="log4j" key="refresh"/>
             </properties>
           </component>
-          <component id="8ef63" class="javax.swing.JButton" binding="reassignButton" default-binding="true">
+          <hspacer id="6b4a4">
             <constraints>
-              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
-            <properties>
-              <font name="Verdana" size="12" style="0"/>
-              <text resource-bundle="log4j" key="reassign"/>
-            </properties>
-          </component>
+          </hspacer>
         </children>
       </grid>
     </children>

@@ -104,6 +104,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 
 	@Override
 	public void setupListeners() {
+		super.setupListeners();
 		new TextBoundModelListener(controller) {
 			@Override
 			public void respondToConceptAnnotationModification() {

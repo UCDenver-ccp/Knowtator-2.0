@@ -46,6 +46,7 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 	private Pattern pattern;
 	private Matcher matcher;
 	private final JTextField searchTextField;
+	private KnowtatorController controller;
 
 	/**
 	 * @param controller      A Knowtator controller
@@ -53,6 +54,7 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 	 */
 	SearchableTextPane(KnowtatorController controller, JTextField searchTextField) {
 		super();
+		this.controller = controller;
 		this.searchTextField = searchTextField;
 		addCaretListener(e -> {
 			if (shouldUpdateSearchTextFieldCondition()) {
@@ -79,6 +81,92 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 			}
 		});
 
+
+	}
+
+	/**
+	 * @return boolean value. True if the text field should be updated
+	 */
+	protected abstract boolean shouldUpdateSearchTextFieldCondition();
+
+	/**
+	 * Searches from the end of the selection forward, wrapping at the end
+	 */
+	public void searchForward() {
+		matcher.reset();
+		int matchStart = -1;
+		int matchEnd = 0;
+		int startBound = getSelectionEnd();
+		while (matcher.find()) {
+			if (matcher.start() > startBound && keepSearchingCondition(matcher)) {
+				matchStart = matcher.start();
+				matchEnd = matcher.end();
+				break;
+			}
+		}
+		if (matcher.hitEnd()) {
+			matcher.reset();
+			//noinspection ResultOfMethodCallIgnored
+			matcher.find();
+			if (keepSearchingCondition(matcher)) {
+				matchStart = matcher.start();
+				matchEnd = matcher.end();
+			}
+		}
+		requestFocusInWindow();
+		select(matchStart, matchEnd);
+	}
+
+	/**
+	 * @param matcher A matcher
+	 * @return Boolean value. True if should keep searching
+	 */
+	protected abstract boolean keepSearchingCondition(Matcher matcher);
+
+	/**
+	 * Searches the text pane backward from the selection start, wrapping at the beginning
+	 */
+	public void searchPrevious() {
+		matcher.reset();
+		int matchStart = -1;
+		int matchEnd = 0;
+		int endBound = getSelectionStart();
+		while (matcher.find()) {
+			if (matcher.start() < endBound || matcher.hitEnd() && keepSearchingCondition(matcher)) {
+				matchStart = matcher.start();
+				matchEnd = matcher.end();
+			} else if (matchStart == -1) {
+				endBound = getText().length();
+			} else {
+				break;
+			}
+		}
+		requestFocusInWindow();
+		select(matchStart, matchEnd);
+	}
+
+	/**
+	 * Resets the matcher to the pattern specified by the text field and pattern flags
+	 */
+	void makePattern() {
+		//noinspection MagicConstant
+		pattern = Pattern.compile(searchTextField.getText(), getPatternFlags());
+		matcher.usePattern(pattern);
+	}
+
+	/**
+	 * @return An int representing the flags for the pattern
+	 */
+	protected abstract int getPatternFlags();
+
+
+	@Override
+	public void dispose() {
+
+	}
+
+	@Override
+	public void setupListeners() {
 		new TextBoundModelListener(controller) {
 			@Override
 			public void respondToConceptAnnotationModification() {
@@ -199,89 +287,8 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 		};
 	}
 
-	/**
-	 * @return boolean value. True if the text field should be updated
-	 */
-	protected abstract boolean shouldUpdateSearchTextFieldCondition();
-
-	/**
-	 * Searches from the end of the selection forward, wrapping at the end
-	 */
-	public void searchForward() {
-		matcher.reset();
-		int matchStart = -1;
-		int matchEnd = 0;
-		int startBound = getSelectionEnd();
-		while (matcher.find()) {
-			if (matcher.start() > startBound && keepSearchingCondition(matcher)) {
-				matchStart = matcher.start();
-				matchEnd = matcher.end();
-				break;
-			}
-		}
-		if (matcher.hitEnd()) {
-			matcher.reset();
-			//noinspection ResultOfMethodCallIgnored
-			matcher.find();
-			if (keepSearchingCondition(matcher)) {
-				matchStart = matcher.start();
-				matchEnd = matcher.end();
-			}
-		}
-		requestFocusInWindow();
-		select(matchStart, matchEnd);
-	}
-
-	/**
-	 * @param matcher A matcher
-	 * @return Boolean value. True if should keep searching
-	 */
-	protected abstract boolean keepSearchingCondition(Matcher matcher);
-
-	/**
-	 * Searches the text pane backward from the selection start, wrapping at the beginning
-	 */
-	public void searchPrevious() {
-		matcher.reset();
-		int matchStart = -1;
-		int matchEnd = 0;
-		int endBound = getSelectionStart();
-		while (matcher.find()) {
-			if (matcher.start() < endBound || matcher.hitEnd() && keepSearchingCondition(matcher)) {
-				matchStart = matcher.start();
-				matchEnd = matcher.end();
-			} else if (matchStart == -1) {
-				endBound = getText().length();
-			} else {
-				break;
-			}
-		}
-		requestFocusInWindow();
-		select(matchStart, matchEnd);
-	}
-
-	/**
-	 * Resets the matcher to the pattern specified by the text field and pattern flags
-	 */
-	void makePattern() {
-		//noinspection MagicConstant
-		pattern = Pattern.compile(searchTextField.getText(), getPatternFlags());
-		matcher.usePattern(pattern);
-	}
-
-	/**
-	 * @return An int representing the flags for the pattern
-	 */
-	protected abstract int getPatternFlags();
-
-
-	@Override
-	public void dispose() {
-
-	}
-
 	@Override
 	public void reset() {
-
+		setupListeners();
 	}
 }
