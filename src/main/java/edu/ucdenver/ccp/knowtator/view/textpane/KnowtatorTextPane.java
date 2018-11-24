@@ -93,34 +93,28 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 
 	protected void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
-		try {
-			AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e);
+		AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e);
 
-			Set<Span> spansContainingLocation = view.getController()
-					.getTextSourceCollection().getSelection()
-					.getConceptAnnotationCollection()
-					.getSpans(press_offset).getCollection();
+		Set<Span> spansContainingLocation = textSource.getConceptAnnotationCollection().getSpans(press_offset).getCollection();
 
-			if (SwingUtilities.isRightMouseButton(e)) {
-				if (spansContainingLocation.size() == 1) {
-					Span span = spansContainingLocation.iterator().next();
-					textSource.getConceptAnnotationCollection().setSelectedAnnotation(span);
-				}
-				popupMenu.showPopUpMenu(release_offset);
-			} else if (press_offset == release_offset) {
-				if (spansContainingLocation.size() == 1) {
-					Span span = spansContainingLocation.iterator().next();
-					textSource.getConceptAnnotationCollection().setSelectedAnnotation(span);
-				} else if (spansContainingLocation.size() > 1) {
-					popupMenu.chooseAnnotation(spansContainingLocation);
-				}
-
-			} else {
-				setSelectionAtWordLimits(press_offset, release_offset);
+		if (SwingUtilities.isRightMouseButton(e)) {
+			if (spansContainingLocation.size() == 1) {
+				Span span = spansContainingLocation.iterator().next();
+				textSource.getConceptAnnotationCollection().setSelectedAnnotation(span);
 			}
-		} catch (NoSelectionException e1) {
-			e1.printStackTrace();
+			popupMenu.showPopUpMenu(release_offset);
+		} else if (press_offset == release_offset) {
+			if (spansContainingLocation.size() == 1) {
+				Span span = spansContainingLocation.iterator().next();
+				textSource.getConceptAnnotationCollection().setSelectedAnnotation(span);
+			} else if (spansContainingLocation.size() > 1) {
+				popupMenu.chooseAnnotation(spansContainingLocation);
+			}
+
+		} else {
+			setSelectionAtWordLimits(press_offset, release_offset);
 		}
+
 	}
 
 	@Override
