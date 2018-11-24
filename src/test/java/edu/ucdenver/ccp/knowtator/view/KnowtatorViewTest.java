@@ -62,6 +62,7 @@ class KnowtatorViewTest {
 
 	@Test
 	void textSourceButtonActivation() throws IOException {
+		KnowtatorView view = new KnowtatorView();
 		assert !view.textSourceButtons.stream()
 				.map(Component::isEnabled).reduce(false, (a, b) -> a || b);
 		KnowtatorController controller = TestingHelpers.getLoadedController();

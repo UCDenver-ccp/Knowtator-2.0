@@ -309,7 +309,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
     @Override
     public String toString() {
         return String.format(
-                "%s owl class: %s annotation_type: %s", id, getOwlClass(), annotation_type);
+                "%s owl class: %s", id, controller.getOWLModel().getOWLEntityRendering(owlClass));
     }
 
 

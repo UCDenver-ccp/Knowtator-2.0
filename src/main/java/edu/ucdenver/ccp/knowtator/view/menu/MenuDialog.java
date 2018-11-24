@@ -55,7 +55,7 @@ public class MenuDialog extends JDialog {
 		this.view = view;
 		$$$setupUI$$$();
 		setContentPane(contentPane);
-		setModal(true);
+		setModal(false);
 		setSize(500, 200);
 		setTitle("Knowtator Menu");
 		try {

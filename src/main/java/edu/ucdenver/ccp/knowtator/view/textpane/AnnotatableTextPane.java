@@ -265,10 +265,13 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 
 			SwingUtilities.invokeLater(
 					() -> {
-						if (span != null) {
-							try {
-								scrollRectToVisible(modelToView(span.getStart()));
-							} catch (BadLocationException | NullPointerException ignored) {
+						if (conceptAnnotation != null) {
+							Span span1 = span == null ? conceptAnnotation.getSpanCollection().first() : span;
+							if (span1 != null) {
+								try {
+									scrollRectToVisible(modelToView(span1.getStart()));
+								} catch (BadLocationException | NullPointerException ignored) {
+								}
 							}
 						}
 					}

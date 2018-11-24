@@ -47,7 +47,7 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 
 
 	protected TextBoundModelListener(KnowtatorController controller) {
-		controller.getTextSourceCollection().addCollectionListener(this);
+
 
 		graphSpaceModificationListener = this::respondToGraphSpaceModification;
 
@@ -162,6 +162,18 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 				respondToSpanCollectionFirstAdded();
 			}
 		};
+		controller.getTextSourceCollection().addCollectionListener(this);
+		try {
+			TextSource textSource = controller.getTextSourceCollection().getSelection();
+			textSource.getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
+			textSource.getGraphSpaceCollection().addCollectionListener(graphSpaceCollectionListener);
+			textSource.getGraphSpaceCollection().getSelection().addDataObjectModificationListener(graphSpaceModificationListener);
+			ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
+			conceptAnnotation.getSpanCollection().addCollectionListener(spanCollectionListener);
+			conceptAnnotation.addDataObjectModificationListener(conceptAnnotationModificationListener);
+			conceptAnnotation.getSpanCollection().getSelection().addDataObjectModificationListener(spanModificationListener);
+		} catch (NoSelectionException ignored) {
+		}
 	}
 
 	protected abstract void respondToConceptAnnotationModification();

@@ -27,6 +27,9 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import edu.ucdenver.ccp.knowtator.actions.AbstractKnowtatorAction;
+import edu.ucdenver.ccp.knowtator.actions.ActionUnperformableException;
+import edu.ucdenver.ccp.knowtator.actions.OWLActions;
 import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
 import edu.ucdenver.ccp.knowtator.model.OWLModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
@@ -50,6 +53,9 @@ public class ConsistencyPane extends MenuPane implements OWLModelManagerListener
 	private AnnotationList spansForClassList;
 	private JPanel contentPane;
 	private JPanel panel1;
+	private JCheckBox includeDescendantsCheckBox;
+	private JButton refreshButton;
+	private JButton reassignButton;
 	private KnowtatorView view;
 	private HashSet<OWLClass> activeOWLClassDescendants;
 
@@ -58,16 +64,31 @@ public class ConsistencyPane extends MenuPane implements OWLModelManagerListener
 		this.view = view;
 		view.getController().getOWLModel().addOWLModelManagerListener(this);
 		$$$setupUI$$$();
+		includeDescendantsCheckBox.addActionListener(e -> refresh());
+		refreshButton.addActionListener(e -> refresh());
+		reassignButton.addActionListener(e -> {
+			try {
+				AbstractKnowtatorAction action = new OWLActions.ReassignOWLClassAction(view.getController());
+				view.getController().registerAction(action);
+			} catch (NoSelectionException | ActionUnperformableException ignored) {
+			}
+		});
 	}
 
 	@Override
 	public void show() {
+		refresh();
+	}
+
+	private void refresh() {
 		try {
 			activeOWLClassDescendants = new HashSet<>();
 			OWLModel owlModel = view.getController().getOWLModel();
 			OWLClass owlClass = owlModel.getSelectedOWLClass();
 			activeOWLClassDescendants.add(owlClass);
-			activeOWLClassDescendants.addAll(owlModel.getDescendants(owlClass));
+			if (includeDescendantsCheckBox.isSelected()) {
+				activeOWLClassDescendants.addAll(owlModel.getDescendants(owlClass));
+			}
 			owlClassLabel.setText(owlModel.getOWLEntityRendering(owlClass));
 		} catch (NoSelectedOWLClassException e) {
 			e.printStackTrace();
@@ -95,40 +116,55 @@ public class ConsistencyPane extends MenuPane implements OWLModelManagerListener
 	private void $$$setupUI$$$() {
 		createUIComponents();
 		panel1 = new JPanel();
-		panel1.setLayout(new GridBagLayout());
+		panel1.setLayout(new BorderLayout(0, 0));
 		contentPane = new JPanel();
-		contentPane.setLayout(new GridLayoutManager(2, 5, new Insets(0, 0, 0, 0), -1, -1));
-		GridBagConstraints gbc;
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		panel1.add(contentPane, gbc);
+		contentPane.setLayout(new GridLayoutManager(4, 8, new Insets(0, 0, 0, 0), -1, -1));
+		Font contentPaneFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, contentPane.getFont());
+		if (contentPaneFont != null) contentPane.setFont(contentPaneFont);
+		panel1.add(contentPane, BorderLayout.CENTER);
 		final JLabel label1 = new JLabel();
 		Font label1Font = this.$$$getFont$$$("Verdana", Font.BOLD, 12, label1.getFont());
 		if (label1Font != null) label1.setFont(label1Font);
 		this.$$$loadLabelText$$$(label1, ResourceBundle.getBundle("log4j").getString("annotations.for.owl.class"));
-		contentPane.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		final Spacer spacer1 = new Spacer();
-		contentPane.add(spacer1, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		contentPane.add(label1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		owlClassLabel = new JLabel();
 		owlClassLabel.setText("");
-		contentPane.add(owlClassLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		contentPane.add(owlClassLabel, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final JLabel label2 = new JLabel();
 		Font label2Font = this.$$$getFont$$$("Verdana", Font.BOLD, 12, label2.getFont());
 		if (label2Font != null) label2.setFont(label2Font);
 		this.$$$loadLabelText$$$(label2, ResourceBundle.getBundle("log4j").getString("annotations.containing.text"));
-		contentPane.add(label2, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		contentPane.add(label2, new GridConstraints(0, 6, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		spanLabel = new JLabel();
 		spanLabel.setText("");
-		contentPane.add(spanLabel, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		contentPane.add(spanLabel, new GridConstraints(0, 7, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final JScrollPane scrollPane1 = new JScrollPane();
-		contentPane.add(scrollPane1, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		contentPane.add(scrollPane1, new GridConstraints(1, 0, 3, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		Font annotationsForClassListFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, annotationsForClassList.getFont());
+		if (annotationsForClassListFont != null) annotationsForClassList.setFont(annotationsForClassListFont);
 		scrollPane1.setViewportView(annotationsForClassList);
 		final JScrollPane scrollPane2 = new JScrollPane();
-		contentPane.add(scrollPane2, new GridConstraints(1, 3, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		contentPane.add(scrollPane2, new GridConstraints(1, 6, 3, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		Font spansForClassListFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, spansForClassList.getFont());
+		if (spansForClassListFont != null) spansForClassList.setFont(spansForClassListFont);
 		scrollPane2.setViewportView(spansForClassList);
-		final Spacer spacer2 = new Spacer();
-		contentPane.add(spacer2, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(-1, 100), null, 0, false));
+		final Spacer spacer1 = new Spacer();
+		contentPane.add(spacer1, new GridConstraints(1, 5, 3, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(-1, 100), null, 0, false));
+		includeDescendantsCheckBox = new JCheckBox();
+		Font includeDescendantsCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, includeDescendantsCheckBox.getFont());
+		if (includeDescendantsCheckBoxFont != null) includeDescendantsCheckBox.setFont(includeDescendantsCheckBoxFont);
+		this.$$$loadButtonText$$$(includeDescendantsCheckBox, ResourceBundle.getBundle("log4j").getString("include.descendants"));
+		contentPane.add(includeDescendantsCheckBox, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		refreshButton = new JButton();
+		Font refreshButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, refreshButton.getFont());
+		if (refreshButtonFont != null) refreshButton.setFont(refreshButtonFont);
+		refreshButton.setText("Refresh");
+		contentPane.add(refreshButton, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		reassignButton = new JButton();
+		Font reassignButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, reassignButton.getFont());
+		if (reassignButtonFont != null) reassignButton.setFont(reassignButtonFont);
+		reassignButton.setText("Reassign");
+		contentPane.add(reassignButton, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		label1.setLabelFor(scrollPane1);
 		label2.setLabelFor(scrollPane2);
 	}
@@ -182,11 +218,39 @@ public class ConsistencyPane extends MenuPane implements OWLModelManagerListener
 	/**
 	 * @noinspection ALL
 	 */
+	private void $$$loadButtonText$$$(AbstractButton component, String text) {
+		StringBuffer result = new StringBuffer();
+		boolean haveMnemonic = false;
+		char mnemonic = '\0';
+		int mnemonicIndex = -1;
+		for (int i = 0; i < text.length(); i++) {
+			if (text.charAt(i) == '&') {
+				i++;
+				if (i == text.length()) break;
+				if (!haveMnemonic && text.charAt(i) != '&') {
+					haveMnemonic = true;
+					mnemonic = text.charAt(i);
+					mnemonicIndex = result.length();
+				}
+			}
+			result.append(text.charAt(i));
+		}
+		component.setText(result.toString());
+		if (haveMnemonic) {
+			component.setMnemonic(mnemonic);
+			component.setDisplayedMnemonicIndex(mnemonicIndex);
+		}
+	}
+
+	/**
+	 * @noinspection ALL
+	 */
 	public JComponent $$$getRootComponent$$$() {
 		return panel1;
 	}
 
 	private void createUIComponents() {
+		ConsistencyPane consistencyPane = this;
 		annotationsForClassList = new AnnotationList(view) {
 			@Override
 			public void setCollection(KnowtatorCollection<ConceptAnnotation> collection) {
@@ -198,7 +262,7 @@ public class ConsistencyPane extends MenuPane implements OWLModelManagerListener
 				} else {
 					setEnabled(true);
 					collection.stream()
-							.filter(conceptAnnotation -> activeOWLClassDescendants.contains(conceptAnnotation.getOwlClass()))
+							.filter(conceptAnnotation -> consistencyPane.activeOWLClassDescendants.contains(conceptAnnotation.getOwlClass()))
 							.forEach(k -> ((DefaultListModel<ConceptAnnotation>) getModel()).addElement(k));
 				}
 			}
