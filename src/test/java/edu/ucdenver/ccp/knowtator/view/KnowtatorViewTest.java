@@ -40,7 +40,7 @@ class KnowtatorViewTest {
 	void loadProject() throws IOException {
 		KnowtatorController controller = TestingHelpers.getLoadedController();
 		TestingHelpers.checkDefaultCollectionValues(controller);
-		view.loadProject(controller.getProjectLocation());
+		view.loadProject(controller.getProjectLocation(), null);
 		TestingHelpers.checkDefaultCollectionValues(view.getController());
 	}
 
@@ -48,7 +48,7 @@ class KnowtatorViewTest {
 	void testActions() throws NoSelectionException, IOException {
 		KnowtatorController controller = TestingHelpers.getLoadedController();
 		TestingHelpers.checkDefaultCollectionValues(controller);
-		view.loadProject(controller.getProjectLocation());
+		view.loadProject(controller.getProjectLocation(), null);
 		TestingHelpers.checkDefaultCollectionValues(view.getController());
 		KnowtatorCollectionActionsTest test = new KnowtatorCollectionActionsTest();
 		test.setController(view.getController());
@@ -57,7 +57,7 @@ class KnowtatorViewTest {
 		test.removeProfileAction();
 		test.removeSpanAction();
 		test.removeTextSourceAction();
-		view.loadProject(controller.getProjectLocation());
+		view.loadProject(controller.getProjectLocation(), null);
 	}
 
 	@Test
@@ -65,7 +65,7 @@ class KnowtatorViewTest {
 		assert !view.textSourceButtons.stream()
 				.map(Component::isEnabled).reduce(false, (a, b) -> a || b);
 		KnowtatorController controller = TestingHelpers.getLoadedController();
-		view.loadProject(controller.getProjectLocation());
+		view.loadProject(controller.getProjectLocation(), null);
 		assert view.textSourceButtons.stream()
 				.map(Component::isEnabled).reduce(true, (a, b) -> a && b);
 	}

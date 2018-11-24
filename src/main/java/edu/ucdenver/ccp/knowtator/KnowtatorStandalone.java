@@ -81,7 +81,7 @@ class KnowtatorStandalone extends JFrame {
 			try {
 				// Use the last project opened
 				File projectFile = new File(KnowtatorView.PREFERENCES.get("Last Project", null));
-				view.loadProject(projectFile);
+				view.loadProject(projectFile, null);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}

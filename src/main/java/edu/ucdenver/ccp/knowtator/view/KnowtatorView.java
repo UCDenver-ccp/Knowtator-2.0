@@ -36,6 +36,7 @@ import edu.ucdenver.ccp.knowtator.actions.SpanActions;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.FilterModel;
 import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
@@ -684,11 +685,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	public void dragOver(DropTargetDragEvent e) {
 	}
 
-	public void loadProject(File file) throws IOException {
+	public void loadProject(File file, KnowtatorCollectionListener<TextSource> listener) throws IOException {
 		controller.dispose();
 		controller.reset(getOWLWorkspace());
 		controller.setSaveLocation(file);
 		log.warn(String.format("Opening from %s", file.getAbsolutePath()));
+		if (listener != null) {
+			controller.getTextSourceCollection().addCollectionListener(listener);
+		}
 		controller.loadProject();
 		reset();
 		controller.getTextSourceCollection().setSelection(controller.getTextSourceCollection().first());
@@ -971,6 +975,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	}
 
 	/**
+	 *
 	 */
 	private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
 		if (currentFont == null) return null;

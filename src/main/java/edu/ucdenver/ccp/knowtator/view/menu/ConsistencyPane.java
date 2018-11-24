@@ -97,7 +97,7 @@ public class ConsistencyPane extends MenuPane implements OWLModelManagerListener
 		panel1 = new JPanel();
 		panel1.setLayout(new GridBagLayout());
 		contentPane = new JPanel();
-		contentPane.setLayout(new GridLayoutManager(3, 5, new Insets(0, 0, 0, 0), -1, -1));
+		contentPane.setLayout(new GridLayoutManager(2, 5, new Insets(0, 0, 0, 0), -1, -1));
 		GridBagConstraints gbc;
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
@@ -106,7 +106,7 @@ public class ConsistencyPane extends MenuPane implements OWLModelManagerListener
 		final JLabel label1 = new JLabel();
 		Font label1Font = this.$$$getFont$$$("Verdana", Font.BOLD, 12, label1.getFont());
 		if (label1Font != null) label1.setFont(label1Font);
-		this.$$$loadLabelText$$$(label1, ResourceBundle.getBundle("log4j").getString("current.owl.class"));
+		this.$$$loadLabelText$$$(label1, ResourceBundle.getBundle("log4j").getString("annotations.for.owl.class"));
 		contentPane.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final Spacer spacer1 = new Spacer();
 		contentPane.add(spacer1, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
@@ -116,19 +116,21 @@ public class ConsistencyPane extends MenuPane implements OWLModelManagerListener
 		final JLabel label2 = new JLabel();
 		Font label2Font = this.$$$getFont$$$("Verdana", Font.BOLD, 12, label2.getFont());
 		if (label2Font != null) label2.setFont(label2Font);
-		this.$$$loadLabelText$$$(label2, ResourceBundle.getBundle("log4j").getString("current.span"));
+		this.$$$loadLabelText$$$(label2, ResourceBundle.getBundle("log4j").getString("annotations.containing.text"));
 		contentPane.add(label2, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		spanLabel = new JLabel();
 		spanLabel.setText("");
 		contentPane.add(spanLabel, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final JScrollPane scrollPane1 = new JScrollPane();
-		contentPane.add(scrollPane1, new GridConstraints(1, 0, 2, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		contentPane.add(scrollPane1, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
 		scrollPane1.setViewportView(annotationsForClassList);
 		final JScrollPane scrollPane2 = new JScrollPane();
-		contentPane.add(scrollPane2, new GridConstraints(1, 3, 2, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		contentPane.add(scrollPane2, new GridConstraints(1, 3, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
 		scrollPane2.setViewportView(spansForClassList);
 		final Spacer spacer2 = new Spacer();
-		contentPane.add(spacer2, new GridConstraints(1, 2, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(-1, 100), null, 0, false));
+		contentPane.add(spacer2, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(-1, 100), null, 0, false));
+		label1.setLabelFor(scrollPane1);
+		label2.setLabelFor(scrollPane2);
 	}
 
 	/**

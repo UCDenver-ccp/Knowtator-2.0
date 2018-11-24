@@ -148,7 +148,7 @@ class NewPane extends MenuPane {
 
                 File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
                 try {
-                    view.loadProject(projectDirectory);
+                    view.loadProject(projectDirectory, null);
                     parent.dispose();
                 } catch (IOException e1) {
                     e1.printStackTrace();
