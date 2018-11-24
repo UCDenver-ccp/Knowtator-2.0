@@ -204,6 +204,7 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
 				if (element == collection.getSelection()) {
 					removeListSelectionListener(al);
 					setSelectedIndex(i);
+					ensureIndexIsVisible(i);
 					addListSelectionListener(al);
 					return;
 				}
