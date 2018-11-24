@@ -34,8 +34,6 @@ import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.list.AnnotationList;
-import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
-import org.protege.editor.owl.model.event.OWLModelManagerListener;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.swing.*;
@@ -43,7 +41,7 @@ import java.awt.*;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 
-public class ConsistencyPane extends MenuPane implements OWLModelManagerListener {
+public class ConsistencyPane extends MenuPane {
 	private JLabel owlClassLabel;
 	private JLabel spanLabel;
 	private AnnotationList annotationsForClassList;
@@ -60,7 +58,6 @@ public class ConsistencyPane extends MenuPane implements OWLModelManagerListener
 	ConsistencyPane(KnowtatorView view) {
 		super("Consistency");
 		this.view = view;
-		view.getController().getOWLModel().addOWLModelManagerListener(this);
 		$$$setupUI$$$();
 		includeDescendantsCheckBox.addActionListener(e -> refresh());
 		exactMatchCheckBox.addActionListener(e -> refresh());
@@ -294,10 +291,5 @@ public class ConsistencyPane extends MenuPane implements OWLModelManagerListener
 				}
 			}
 		};
-	}
-
-	@Override
-	public void handleChange(OWLModelManagerChangeEvent event) {
-
 	}
 }
