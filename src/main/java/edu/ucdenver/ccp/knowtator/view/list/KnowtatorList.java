@@ -42,7 +42,7 @@ import javax.swing.event.ListSelectionListener;
 public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> extends JList<K> implements KnowtatorComponent {
 
 	final KnowtatorView view;
-	private KnowtatorCollection<K> collection;
+	protected KnowtatorCollection<K> collection;
 	private ListSelectionListener al;
 
 	KnowtatorList(KnowtatorView view) {
@@ -184,7 +184,7 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
 
 	protected abstract void react();
 
-	void setCollection(KnowtatorCollection<K> collection) {
+	public void setCollection(KnowtatorCollection<K> collection) {
 		//clear collection
 		dispose();
 		this.collection = collection;

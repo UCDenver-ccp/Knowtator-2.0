@@ -19,7 +19,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <grid id="9067e" binding="menuDisplayPane" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="9067e" binding="menuDisplayPane" layout-manager="CardLayout" hgap="0" vgap="0">
             <constraints>
               <splitpane position="right"/>
             </constraints>
@@ -33,7 +33,9 @@
             <constraints>
               <splitpane position="left"/>
             </constraints>
-            <properties/>
+            <properties>
+              <minimumSize width="50" height="26"/>
+            </properties>
             <border type="none"/>
             <children>
               <scrollpane id="612ee">

@@ -39,7 +39,7 @@ import java.util.ResourceBundle;
 /**
  * A pane for handling generating IAA files
  */
-class IAAPane {
+class IAAPane extends MenuPane {
     private JPanel contentPane;
     private JButton buttonOK;
     private JCheckBox classCheckBox;
@@ -47,6 +47,7 @@ class IAAPane {
     private JCheckBox classAndSpanCheckBox;
 
     IAAPane(KnowtatorView view) {
+        super("IAA");
         $$$setupUI$$$();
 
         buttonOK.addActionListener(e -> {
@@ -83,6 +84,12 @@ class IAAPane {
 
     }
 
+    @Override
+    public void show() {
+
+    }
+
+    @Override
     public JPanel getContentPane() {
         return contentPane;
     }
@@ -177,4 +184,5 @@ class IAAPane {
             component.setDisplayedMnemonicIndex(mnemonicIndex);
         }
     }
+
 }

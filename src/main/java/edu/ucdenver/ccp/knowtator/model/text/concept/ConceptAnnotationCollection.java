@@ -61,6 +61,7 @@ import java.io.Writer;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnnotation> implements OWLOntologyChangeListener, KnowtatorXMLIO, BratStandoffIO, FilterModelListener, OWLModelManagerListener {
 
@@ -108,34 +109,46 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 	 * @param loc Location filter
 	 */
 	public SpanCollection getSpans(Integer loc) {
+		SpanCollection allSpans = new SpanCollection(controller);
+		stream().map(conceptAnnotation -> conceptAnnotation
+				.getSpanCollection().stream()
+				.filter(span -> loc == null || span.contains(loc)).iterator())
+				.forEach(spanIterator -> {
+					while (spanIterator.hasNext()) {
+						allSpans.add(spanIterator.next());
+					}
+				});
+
+
+		return allSpans;
+	}
+
+	@Override
+	public Stream<ConceptAnnotation> stream() {
 		boolean filterByOWLClass = controller.getFilterModel().isFilter(FilterModel.OWLCLASS);
 		boolean filterByProfile = controller.getFilterModel().isFilter(FilterModel.PROFILE);
 		Profile activeProfile = controller.getProfileCollection().getSelection();
-
 		Set<OWLClass> activeOWLClassDescendants = new HashSet<>();
 
 		if (filterByOWLClass) {
 			try {
 				OWLClass owlClass = controller.getOWLModel().getSelectedOWLClass();
-				activeOWLClassDescendants.addAll(controller.getOWLModel().getDescendants(owlClass));
 				activeOWLClassDescendants.add(owlClass);
+				activeOWLClassDescendants.addAll(controller.getOWLModel().getDescendants(owlClass));
 			} catch (NoSelectedOWLClassException ignored) {
 
 			}
 		}
+		return super.stream()
+				.filter(conceptAnnotation -> !filterByOWLClass || activeOWLClassDescendants.contains(conceptAnnotation.getOwlClass()))
+				.filter(conceptAnnotation -> !filterByProfile || conceptAnnotation.getAnnotator().equals(activeProfile));
+	}
 
-		SpanCollection allSpans = new SpanCollection(null);
-		getCollection().forEach(conceptAnnotation -> {
-			if ((!filterByOWLClass || activeOWLClassDescendants.contains(conceptAnnotation.getOwlClass()))
-					&& (!filterByProfile || conceptAnnotation.getAnnotator().equals(activeProfile))) {
-				conceptAnnotation.getSpanCollection().forEach(span -> {
-					if ((loc == null || span.contains(loc))) {
-						allSpans.add(span);
-					}
-				});
-			}
-		});
-		return allSpans;
+	@Override
+	@Nonnull
+	public Iterator<ConceptAnnotation> iterator() {
+
+		return stream().iterator();
 	}
 
 	public TreeSet<ConceptAnnotation> getAnnotations(int start, int end) {

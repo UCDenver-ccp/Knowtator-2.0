@@ -42,7 +42,7 @@ import java.util.ResourceBundle;
 /**
  * A pane for handling profile functions
  */
-class ProfilePane {
+class ProfilePane extends MenuPane {
     private JButton removeProfileButton;
     private ColorList colorList;
     private ProfileList profileList;
@@ -52,6 +52,7 @@ class ProfilePane {
     private final KnowtatorView view;
 
     ProfilePane(KnowtatorView view) {
+        super("Profile");
         this.view = view;
         $$$setupUI$$$();
 
@@ -77,6 +78,12 @@ class ProfilePane {
     }
 
 
+    @Override
+    public void show() {
+
+    }
+
+    @Override
     public JPanel getContentPane() {
         return contentPane;
     }
@@ -213,4 +220,5 @@ class ProfilePane {
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
     }
+
 }

@@ -38,12 +38,13 @@ import java.util.ResourceBundle;
 /**
  * A pane for handling importing functions
  */
-class ImportPane {
+class ImportPane extends MenuPane {
     private JPanel panel1;
     private JPanel contentPane;
     private JButton importButton;
 
     ImportPane(JDialog parent, KnowtatorView view) {
+        super("Import");
         $$$setupUI$$$();
 
         importButton.addActionListener(e -> {
@@ -62,6 +63,12 @@ class ImportPane {
         });
     }
 
+    @Override
+    public void show() {
+
+    }
+
+    @Override
     public JPanel getContentPane() {
         return contentPane;
     }

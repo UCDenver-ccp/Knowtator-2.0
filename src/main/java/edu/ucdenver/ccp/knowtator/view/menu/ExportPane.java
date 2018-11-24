@@ -44,12 +44,13 @@ import java.util.ResourceBundle;
 /**
  * A pane used to handle export functions
  */
-class ExportPane {
+class ExportPane extends MenuPane {
 	private JPanel contentPane;
 	private JButton exportToBratButton;
 	private JButton exportToImagePNGButton;
 
 	ExportPane(KnowtatorView view) {
+		super("Export");
 		$$$setupUI$$$();
 
 		exportToBratButton.addActionListener(e -> {
@@ -83,6 +84,12 @@ class ExportPane {
 		});
 	}
 
+	@Override
+	public void show() {
+
+	}
+
+	@Override
 	public JPanel getContentPane() {
 		return contentPane;
 	}
@@ -162,4 +169,5 @@ class ExportPane {
 			component.setDisplayedMnemonicIndex(mnemonicIndex);
 		}
 	}
+
 }

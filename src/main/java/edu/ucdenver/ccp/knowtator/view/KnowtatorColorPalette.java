@@ -24,8 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.view;
 
-import sun.swing.SwingUtilities2;
-
 import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -50,15 +48,15 @@ import java.util.ArrayList;
 public class KnowtatorColorPalette extends JColorChooser {
 
 	public KnowtatorColorPalette() {
-        super();
-        AbstractColorChooserPanel[] panels = new AbstractColorChooserPanel[6];
-        panels[0] = new KnowtatorSwatchChooserPanel();
-        System.arraycopy(ColorChooserComponentFactory.getDefaultChooserPanels(), 0, panels, 1, 5);
+		super();
+		AbstractColorChooserPanel[] panels = new AbstractColorChooserPanel[6];
+		panels[0] = new KnowtatorSwatchChooserPanel();
+		System.arraycopy(ColorChooserComponentFactory.getDefaultChooserPanels(), 0, panels, 1, 5);
 
 
-        setChooserPanels(panels);
-        setPreviewPanel(new KnowtatorPreviewPanel());
-    }
+		setChooserPanels(panels);
+		setPreviewPanel(new KnowtatorPreviewPanel());
+	}
 
 	/**
 	 * A modification to the default swatch panel
@@ -343,114 +341,111 @@ public class KnowtatorColorPalette extends JColorChooser {
 
 	}
 
-    class MainSwatchPanel extends SwatchPanel {
+	class MainSwatchPanel extends SwatchPanel {
 
 
-        protected void initValues() {
-            swatchSize = new Dimension(100, 100);
-            numSwatches = new Dimension(4, 3);
-            gap = new Dimension(1, 1);
-        }
+		protected void initValues() {
+			swatchSize = new Dimension(100, 100);
+			numSwatches = new Dimension(4, 3);
+			gap = new Dimension(1, 1);
+		}
 
-        protected void initColors() {
-            colors = KnowtatorDefaultSettings.COLORS;
-        }
+		protected void initColors() {
+			colors = KnowtatorDefaultSettings.COLORS;
+		}
 
-    }
+	}
 
-    /**
-     * Modification of the default color chooser preview panel by Steve Wilson to only show the highlighted text preview.
-     * <p>
-     *
-     * @author Harrison Pielke-Lombardo
-     * @see JColorChooser
-     */
-    class KnowtatorPreviewPanel extends JPanel {
+	/**
+	 * Modification of the default color chooser preview panel by Steve Wilson to only show the highlighted text preview.
+	 * <p>
+	 *
+	 * @author Harrison Pielke-Lombardo
+	 * @see JColorChooser
+	 */
+	class KnowtatorPreviewPanel extends JPanel {
 
-        private final int textGap = 5;
-        private String sampleText;
+		private final int textGap = 5;
+		private String sampleText;
 
-        private Color oldColor = null;
+		private Color oldColor = null;
 
-        KnowtatorPreviewPanel(){
-            super();
-            setFont(KnowtatorDefaultSettings.FONT);
-        }
+		KnowtatorPreviewPanel() {
+			super();
+			setFont(KnowtatorDefaultSettings.FONT);
+		}
 
-        private JColorChooser getColorChooser() {
-            return (JColorChooser)SwingUtilities.getAncestorOfClass(
-                    JColorChooser.class, this);
-        }
+		private JColorChooser getColorChooser() {
+			return (JColorChooser) SwingUtilities.getAncestorOfClass(
+					JColorChooser.class, this);
+		}
 
-        public Dimension getPreferredSize() {
-            JComponent host = getColorChooser();
-            if (host == null) {
-                host = this;
-            }
-            FontMetrics fm = host.getFontMetrics(getFont());
+		public Dimension getPreferredSize() {
+			JComponent host = getColorChooser();
+			if (host == null) {
+				host = this;
+			}
+			FontMetrics fm = host.getFontMetrics(getFont());
 
-            int height = fm.getHeight();
-            int width = SwingUtilities2.stringWidth(host, fm, getSampleText());
+			int height = fm.getHeight();
+			int width = fm.stringWidth(getSampleText());
 
-            int y = height*3 + textGap*3;
-            int x = width + textGap*3;
-            return new Dimension( x,y );
-        }
+			int y = height * 3 + textGap * 3;
+			int x = width + textGap * 3;
+			return new Dimension(x, y);
+		}
 
-        public void paintComponent(Graphics g) {
-            if (oldColor == null)
-                oldColor = getForeground();
+		public void paintComponent(Graphics g) {
+			if (oldColor == null)
+				oldColor = getForeground();
 
-            g.setColor(getBackground());
-            g.fillRect(0,0,getWidth(),getHeight());
+			g.setColor(getBackground());
+			g.fillRect(0, 0, getWidth(), getHeight());
 
-            if (this.getComponentOrientation().isLeftToRight()) {
-                paintText(g);
+			if (this.getComponentOrientation().isLeftToRight()) {
+				paintText(g);
 
-            } else {
+			} else {
 
-                paintText(g);
+				paintText(g);
 
 
-            }
-        }
+			}
+		}
 
-        private void paintText(Graphics g) {
-            g.setFont(getFont());
-            JComponent host = getColorChooser();
-            if (host == null) {
-                host = this;
-            }
-            FontMetrics fm = SwingUtilities2.getFontMetrics(host, g);
+		private void paintText(Graphics g) {
+			g.setFont(getFont());
+			JComponent host = getColorChooser();
+			FontMetrics fm = g.getFontMetrics();
 
-            int ascent = fm.getAscent();
-            int height = fm.getHeight();
-            int width = SwingUtilities2.stringWidth(host, fm, getSampleText());
+			int ascent = fm.getAscent();
+			int height = fm.getHeight();
+			int width = fm.stringWidth(getSampleText());
 
-            int textXOffset = textGap;
+			int textXOffset = textGap;
 
-            Color color = getForeground();
+			Color color = getForeground();
 
-            g.setColor(color);
+			g.setColor(color);
 
-            g.fillRect(textXOffset,
-                    ( height) + textGap,
-                    width + (textGap),
-                    height +2);
+			g.fillRect(textXOffset,
+					(height) + textGap,
+					width + (textGap),
+					height + 2);
 
-            g.setColor(Color.black);
-            SwingUtilities2.drawString(host, g, getSampleText(),
-                    textXOffset+(textGap/2),
-                    height+ascent+textGap+2);
+			g.setColor(Color.black);
+			g.drawString(getSampleText(),
+					textXOffset + (textGap / 2),
+					height + ascent + textGap + 2);
 
-        }
+		}
 
-        private String getSampleText() {
-            if (this.sampleText == null) {
-                this.sampleText = UIManager.getString("ColorChooser.sampleText", getLocale());
-            }
-            return this.sampleText;
-        }
-    }
+		private String getSampleText() {
+			if (this.sampleText == null) {
+				this.sampleText = UIManager.getString("ColorChooser.sampleText", getLocale());
+			}
+			return this.sampleText;
+		}
+	}
 
 }

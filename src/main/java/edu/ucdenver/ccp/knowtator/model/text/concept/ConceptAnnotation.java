@@ -42,8 +42,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<ConceptAnnotation> implements KnowtatorXMLIO, BratStandoffIO {
 
@@ -309,7 +309,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
     @Override
     public String toString() {
         return String.format(
-                "ConceptAnnotation: %s owl class: %s annotation_type: %s", id, getOwlClass(), annotation_type);
+                "%s owl class: %s annotation_type: %s", id, getOwlClass(), annotation_type);
     }
 
 
