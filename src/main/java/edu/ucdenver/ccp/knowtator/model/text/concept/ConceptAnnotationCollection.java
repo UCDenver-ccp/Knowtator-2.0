@@ -326,8 +326,8 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
 
 			ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, textSource, annotationID, null, owlClassID, owlClassLabel, profile, type, motivation);
-			add(newConceptAnnotation);
 			newConceptAnnotation.readFromKnowtatorXML(null, annotationElement);
+			add(newConceptAnnotation);
 		}
 
 		setOWLClassForAnnotations();
