@@ -65,7 +65,7 @@ public class ConsistencyPane extends MenuPane implements OWLModelManagerListener
 		includeDescendantsCheckBox.addActionListener(e -> refresh());
 		exactMatchCheckBox.addActionListener(e -> refresh());
 		refreshButton.addActionListener(e -> refresh());
-
+		activeOWLClassDescendants = new HashSet<>();
 	}
 
 	@Override
@@ -97,6 +97,12 @@ public class ConsistencyPane extends MenuPane implements OWLModelManagerListener
 	@Override
 	public JPanel getContentPane() {
 		return contentPane;
+	}
+
+	@Override
+	void dispose() {
+		annotationsForClassList.dispose();
+		annotationsForSpannedTextList.dispose();
 	}
 
 	/**
@@ -260,7 +266,7 @@ public class ConsistencyPane extends MenuPane implements OWLModelManagerListener
 			@Override
 			public void setCollection(KnowtatorCollection<ConceptAnnotation> collection) {
 				//clear collection
-				dispose();
+				((DefaultListModel) getModel()).clear();
 				this.collection = collection;
 				if (collection.size() == 0) {
 					setEnabled(false);
@@ -276,7 +282,7 @@ public class ConsistencyPane extends MenuPane implements OWLModelManagerListener
 			@Override
 			public void setCollection(KnowtatorCollection<ConceptAnnotation> collection) {
 				//clear collection
-				dispose();
+				((DefaultListModel) getModel()).clear();
 				this.collection = collection;
 				if (collection.size() == 0) {
 					setEnabled(false);

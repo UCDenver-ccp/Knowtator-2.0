@@ -40,4 +40,6 @@ public abstract class MenuPane {
 	public String toString() {
 		return name;
 	}
+
+	abstract void dispose();
 }

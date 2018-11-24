@@ -462,17 +462,25 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 	}
 
 	public static void processOntologyChanges(@Nonnull List<? extends OWLOntologyChange> changes, OWLEntityCollector addedCollector, OWLEntityCollector removedCollector) {
+		log.warn("Changes");
 		for (OWLOntologyChange chg : changes) {
+			log.warn("\t" + chg);
+			AxiomType type = chg.getAxiom().getAxiomType();
 			if (chg.isAxiomChange()) {
 				OWLAxiomChange axChg = (OWLAxiomChange) chg;
-				if (axChg.getAxiom().getAxiomType() == AxiomType.DECLARATION) {
+				log.warn("\tAxChg");
+				if (type == AxiomType.DECLARATION || type == AxiomType.SUBCLASS_OF || type == AxiomType.SUB_OBJECT_PROPERTY) {
+					log.warn("\tDeclaration");
 					if (axChg instanceof AddAxiom) {
 						axChg.getAxiom().accept(addedCollector);
 					} else {
 						axChg.getAxiom().accept(removedCollector);
 					}
 				}
+			} else {
+				log.warn("\ttype: " + type);
 			}
+
 		}
 	}
 

@@ -503,6 +503,11 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     For now, I will assume that entity removed is the one that existed and the one
     that is added is the new name for it.
      */
+		log.warn("Added");
+		possiblyAddedEntities.forEach(owlEntity -> log.warn(controller.getOWLModel().getOWLEntityRendering(owlEntity)));
+
+		log.warn("Removed");
+		possiblyRemovedEntities.forEach(owlEntity -> log.warn(controller.getOWLModel().getOWLEntityRendering(owlEntity)));
 		if (!possiblyAddedEntities.isEmpty() && !possiblyRemovedEntities.isEmpty()) {
 			OWLClass oldOWLClass = (OWLClass) possiblyRemovedEntities.iterator().next();
 			OWLClass newOWLClass = (OWLClass) possiblyAddedEntities.iterator().next();

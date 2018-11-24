@@ -44,9 +44,11 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 	private final DataObjectModificationListener<GraphSpace> graphSpaceModificationListener;
 	private final DataObjectModificationListener<ConceptAnnotation> conceptAnnotationModificationListener;
 	private final DataObjectModificationListener<Span> spanModificationListener;
+	private KnowtatorController controller;
 
 
 	protected TextBoundModelListener(KnowtatorController controller) {
+		this.controller = controller;
 
 
 		graphSpaceModificationListener = this::respondToGraphSpaceModification;
@@ -256,4 +258,19 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 		respondToTextSourceCollectionFirstAdded();
 	}
 
+	public void dispose() {
+		controller.getTextSourceCollection().removeCollectionListener(this);
+
+		try {
+			TextSource textSource = controller.getTextSourceCollection().getSelection();
+			textSource.getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
+			textSource.getGraphSpaceCollection().removeCollectionListener(graphSpaceCollectionListener);
+			textSource.getGraphSpaceCollection().getSelection().removeDataObjectModificationListener(graphSpaceModificationListener);
+			ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
+			conceptAnnotation.getSpanCollection().removeCollectionListener(spanCollectionListener);
+			conceptAnnotation.removeDataObjectModificationListener(conceptAnnotationModificationListener);
+			conceptAnnotation.getSpanCollection().getSelection().removeDataObjectModificationListener(spanModificationListener);
+		} catch (NoSelectionException ignored) {
+		}
+	}
 }

@@ -94,6 +94,14 @@ public class MenuDialog extends JDialog {
 		menuOptionsList.setSelectedIndex(0);
 	}
 
+	@Override
+	public void dispose() {
+		for (int i = 0; i < menuOptionsList.getModel().getSize(); i++) {
+			menuOptionsList.getModel().getElementAt(i).dispose();
+		}
+		super.dispose();
+	}
+
 
 	private void createUIComponents() {
 		menuOptionsList = new JList<>(new MenuPane[]{

@@ -44,6 +44,7 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
 	final KnowtatorView view;
 	protected KnowtatorCollection<K> collection;
 	private ListSelectionListener al;
+	private TextBoundModelListener textBoundModelListener;
 
 	KnowtatorList(KnowtatorView view) {
 		this.view = view;
@@ -63,7 +64,7 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
 	@Override
 	public void setupListeners() {
 		//noinspection Duplicates
-		new TextBoundModelListener(view.getController()) {
+		textBoundModelListener = new TextBoundModelListener(view.getController()) {
 			@Override
 			public void respondToConceptAnnotationModification() {
 				react();
@@ -186,7 +187,7 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
 
 	public void setCollection(KnowtatorCollection<K> collection) {
 		//clear collection
-		dispose();
+		((DefaultListModel) getModel()).clear();
 		this.collection = collection;
 		if (collection.size() == 0) {
 			setEnabled(false);
@@ -215,11 +216,13 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
 
 	@Override
 	public void reset() {
+		dispose();
 		setupListeners();
 	}
 
 	@Override
 	public void dispose() {
 		((DefaultListModel) getModel()).clear();
+		if (textBoundModelListener != null) textBoundModelListener.dispose();
 	}
 }
