@@ -34,21 +34,23 @@ public class SelectableCollectionTest {
 
 	@Test
 	public void selectNext() throws NoSelectionException {
-		TextSource textSource = controller.getTextSourceCollection().get("document3");
+		TextSource textSource = controller.getTextSourceCollection().get("document1");
+		assert textSource.equals(controller.getTextSourceCollection().getSelection());
+		controller.getTextSourceCollection().selectNext();
+		controller.getTextSourceCollection().selectNext();
 		assert !textSource.equals(controller.getTextSourceCollection().getSelection());
 		controller.getTextSourceCollection().selectNext();
 		assert textSource.equals(controller.getTextSourceCollection().getSelection());
-		controller.getTextSourceCollection().selectNext();
-		assert !textSource.equals(controller.getTextSourceCollection().getSelection());
 	}
 
 	@Test
 	public void selectPrevious() throws NoSelectionException {
-		TextSource textSource = controller.getTextSourceCollection().get("document3");
+		TextSource textSource = controller.getTextSourceCollection().get("document1");
+		assert textSource.equals(controller.getTextSourceCollection().getSelection());
+		controller.getTextSourceCollection().selectPrevious();
+		controller.getTextSourceCollection().selectPrevious();
 		assert !textSource.equals(controller.getTextSourceCollection().getSelection());
 		controller.getTextSourceCollection().selectPrevious();
 		assert textSource.equals(controller.getTextSourceCollection().getSelection());
-		controller.getTextSourceCollection().selectPrevious();
-		assert !textSource.equals(controller.getTextSourceCollection().getSelection());
 	}
 }

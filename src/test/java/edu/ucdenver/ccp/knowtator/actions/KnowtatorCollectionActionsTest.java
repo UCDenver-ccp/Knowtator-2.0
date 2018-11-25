@@ -37,9 +37,9 @@ public class KnowtatorCollectionActionsTest {
     private KnowtatorController controller = TestingHelpers.getLoadedController();
 
     @Test
-    void addTextSourceAction() {
+    public void addTextSourceAction() {
         TestingHelpers.testKnowtatorAction(controller,
-                new KnowtatorCollectionActions.TextSourceAction(KnowtatorCollectionActions.ADD, controller, TestingHelpers.getArticleFile(TestingHelpers.projectFileName, "document2")),
+                new KnowtatorCollectionActions.TextSourceAction(KnowtatorCollectionActions.ADD, controller, TestingHelpers.getArticleFile(TestingHelpers.projectFileName, "document4")),
                 TestingHelpers.defaultExpectedTextSources + 1,
                 TestingHelpers.defaultExpectedConceptAnnotations,
                 TestingHelpers.defaultExpectedSpans,
@@ -53,7 +53,6 @@ public class KnowtatorCollectionActionsTest {
     @Test
     public void removeTextSourceAction() {
         TestingHelpers.testKnowtatorAction(controller,
-
                 new KnowtatorCollectionActions.TextSourceAction(KnowtatorCollectionActions.REMOVE, controller, null),
                 TestingHelpers.defaultExpectedTextSources - 1,
                 TestingHelpers.defaultExpectedConceptAnnotations - 2,
@@ -66,9 +65,9 @@ public class KnowtatorCollectionActionsTest {
     }
 
     @Test
-    void addConceptAnnotationAction() throws NoSelectionException {
+    public void addConceptAnnotationAction() throws NoSelectionException {
         TestingHelpers.testKnowtatorAction(controller,
-                new KnowtatorCollectionActions.ConceptAnnotationAction(KnowtatorCollectionActions.ADD, controller),
+                new KnowtatorCollectionActions.ConceptAnnotationAction(KnowtatorCollectionActions.ADD, controller, controller.getTextSourceCollection().getSelection()),
                 TestingHelpers.defaultExpectedTextSources,
                 TestingHelpers.defaultExpectedConceptAnnotations + 1,
                 TestingHelpers.defaultExpectedSpans + 1,
@@ -84,7 +83,7 @@ public class KnowtatorCollectionActionsTest {
         TextSource textSource = controller.getTextSourceCollection().getSelection();
         textSource.getConceptAnnotationCollection().setSelection(textSource.getConceptAnnotationCollection().first());
         TestingHelpers.testKnowtatorAction(controller,
-                new KnowtatorCollectionActions.ConceptAnnotationAction(KnowtatorCollectionActions.REMOVE, controller),
+                new KnowtatorCollectionActions.ConceptAnnotationAction(KnowtatorCollectionActions.REMOVE, controller, controller.getTextSourceCollection().getSelection()),
                 TestingHelpers.defaultExpectedTextSources,
                 TestingHelpers.defaultExpectedConceptAnnotations - 1,
                 TestingHelpers.defaultExpectedSpans - 1,
@@ -96,11 +95,11 @@ public class KnowtatorCollectionActionsTest {
     }
 
     @Test
-    void addSpanAction() throws NoSelectionException {
+    public void addSpanAction() throws NoSelectionException {
         TextSource textSource = controller.getTextSourceCollection().getSelection();
         textSource.getConceptAnnotationCollection().setSelection(textSource.getConceptAnnotationCollection().first());
         TestingHelpers.testKnowtatorAction(controller,
-                new KnowtatorCollectionActions.SpanAction(KnowtatorCollectionActions.ADD, controller),
+                new KnowtatorCollectionActions.SpanAction(KnowtatorCollectionActions.ADD, controller, controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection()),
                 TestingHelpers.defaultExpectedTextSources,
                 TestingHelpers.defaultExpectedConceptAnnotations,
                 TestingHelpers.defaultExpectedSpans + 1,
@@ -119,7 +118,7 @@ public class KnowtatorCollectionActionsTest {
         textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
         conceptAnnotation.getSpanCollection().setSelection(conceptAnnotation.getSpanCollection().first());
         TestingHelpers.testKnowtatorAction(controller,
-                new KnowtatorCollectionActions.SpanAction(KnowtatorCollectionActions.REMOVE, controller),
+                new KnowtatorCollectionActions.SpanAction(KnowtatorCollectionActions.REMOVE, controller, controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection()),
                 TestingHelpers.defaultExpectedTextSources,
                 TestingHelpers.defaultExpectedConceptAnnotations - 1,
                 TestingHelpers.defaultExpectedSpans - 1,
@@ -134,7 +133,7 @@ public class KnowtatorCollectionActionsTest {
         conceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
         conceptAnnotation.getSpanCollection().setSelection(conceptAnnotation.getSpanCollection().first());
         TestingHelpers.testKnowtatorAction(controller,
-                new KnowtatorCollectionActions.SpanAction(KnowtatorCollectionActions.REMOVE, controller),
+                new KnowtatorCollectionActions.SpanAction(KnowtatorCollectionActions.REMOVE, controller, controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection()),
                 TestingHelpers.defaultExpectedTextSources,
                 TestingHelpers.defaultExpectedConceptAnnotations ,
                 TestingHelpers.defaultExpectedSpans - 1,
@@ -146,7 +145,7 @@ public class KnowtatorCollectionActionsTest {
     }
 
     @Test
-    void addProfileAction() {
+    public void addProfileAction() {
         TestingHelpers.testKnowtatorAction(controller,
                 new KnowtatorCollectionActions.ProfileAction(KnowtatorCollectionActions.ADD, controller, "I'm new here"),
                 TestingHelpers.defaultExpectedTextSources,
@@ -164,13 +163,13 @@ public class KnowtatorCollectionActionsTest {
         TestingHelpers.testKnowtatorAction(controller,
                 new KnowtatorCollectionActions.ProfileAction(KnowtatorCollectionActions.REMOVE, controller, "profile1"),
                 TestingHelpers.defaultExpectedTextSources,
-                TestingHelpers.defaultExpectedConceptAnnotations - 1,
-                TestingHelpers.defaultExpectedSpans - 2,
+                TestingHelpers.defaultExpectedConceptAnnotations - 2,
+                TestingHelpers.defaultExpectedSpans - 3,
                 TestingHelpers.defaultExpectedGraphSpaces,
                 TestingHelpers.defaultExpectedProfiles - 1,
                 TestingHelpers.defaultExpectedHighlighters - 2,
-                TestingHelpers.defaultExpectedAnnotationNodes - 1,
-                TestingHelpers.defaultExpectedTriples - 1);
+                TestingHelpers.defaultExpectedAnnotationNodes - 2,
+                TestingHelpers.defaultExpectedTriples - 2);
 
         assertThrows(ActionUnperformableException.class, this::removeDefaultProfileAction);
     }
@@ -182,7 +181,7 @@ public class KnowtatorCollectionActionsTest {
     }
 
     @Test
-    void addGraphSpaceAction() throws NoSelectionException {
+    public void addGraphSpaceAction() throws NoSelectionException {
         TestingHelpers.testKnowtatorAction(controller,
                 new KnowtatorCollectionActions.GraphSpaceAction(KnowtatorCollectionActions.ADD, controller, "new_graph_space"),
                 TestingHelpers.defaultExpectedTextSources,

@@ -49,6 +49,7 @@ class KnowtatorViewTest {
 		KnowtatorController controller = TestingHelpers.getLoadedController();
 		TestingHelpers.checkDefaultCollectionValues(controller);
 		view.loadProject(controller.getProjectLocation(), null);
+		view.getController().setDebug();
 		TestingHelpers.checkDefaultCollectionValues(view.getController());
 		KnowtatorCollectionActionsTest test = new KnowtatorCollectionActionsTest();
 		test.setController(view.getController());
@@ -56,8 +57,21 @@ class KnowtatorViewTest {
 		test.removeGraphSpaceAction();
 		test.removeProfileAction();
 		test.removeSpanAction();
+		for (int i = 0; i < view.getController().getTextSourceCollection().size(); i++) {
+			view.getController().getTextSourceCollection().selectNext();
+			view.getKnowtatorTextPane().refreshHighlights();
+		}
+		int defaultExpectedHighlighers = TestingHelpers.defaultExpectedHighlighters;
+		TestingHelpers.defaultExpectedHighlighters = TestingHelpers.defaultExpectedHighlighters + 2;
 		test.removeTextSourceAction();
+		test.addConceptAnnotationAction();
+		test.addGraphSpaceAction();
+		test.addProfileAction();
+		test.addSpanAction();
+		test.addTextSourceAction();
 		view.loadProject(controller.getProjectLocation(), null);
+		TestingHelpers.defaultExpectedHighlighters = defaultExpectedHighlighers;
+
 	}
 
 	@Test

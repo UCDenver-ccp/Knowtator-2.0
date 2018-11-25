@@ -67,7 +67,7 @@ public abstract class DebugManager extends UndoManager {
 	/**
 	 * Sets the debugging mode. Notifies debug listeners
 	 */
-	void setDebug() {
+	public void setDebug() {
 		this.debug = true;
 		debugListeners.forEach(DebugListener::setDebug);
 	}

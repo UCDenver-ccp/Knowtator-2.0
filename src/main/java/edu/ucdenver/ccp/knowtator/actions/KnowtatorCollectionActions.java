@@ -57,10 +57,10 @@ public class KnowtatorCollectionActions {
 			try {
 				switch (objectName) {
 					case KnowtatorXMLTags.ANNOTATION:
-						actions.add(new ConceptAnnotationAction(actionName, view.getController()));
+						actions.add(new ConceptAnnotationAction(actionName, view.getController(), view.getController().getTextSourceCollection().getSelection()));
 						break;
 					case KnowtatorXMLTags.SPAN:
-						actions.add(new SpanAction(actionName, view.getController()));
+						actions.add(new SpanAction(actionName, view.getController(), view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection()));
 						break;
 					case KnowtatorXMLTags.PROFILE:
 						actions.add(new ProfileAction(actionName, view.getController(), id));
@@ -100,10 +100,10 @@ public class KnowtatorCollectionActions {
 		private ConceptAnnotation newConceptAnnotation;
 		private TextSource textSource;
 
-		ConceptAnnotationAction(String actionName, KnowtatorController controller) throws NoSelectionException {
-			super(actionName, "concept annotation", controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection());
+		ConceptAnnotationAction(String actionName, KnowtatorController controller, TextSource textSource) {
+			super(actionName, "concept annotation", textSource.getConceptAnnotationCollection());
+			this.textSource = textSource;
 			this.controller = controller;
-			this.textSource = controller.getTextSourceCollection().getSelection();
 		}
 
 		@Override
@@ -147,9 +147,9 @@ public class KnowtatorCollectionActions {
 		private final KnowtatorController controller;
 		private final ConceptAnnotation conceptAnnotation;
 
-		SpanAction(String actionName, KnowtatorController controller) throws NoSelectionException {
-			super(actionName, "span", controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getSpanCollection());
-			conceptAnnotation = controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection();
+		SpanAction(String actionName, KnowtatorController controller, ConceptAnnotation conceptAnnotation) {
+			super(actionName, "span", conceptAnnotation.getSpanCollection());
+			this.conceptAnnotation = conceptAnnotation;
 
 			this.controller = controller;
 		}
@@ -166,19 +166,25 @@ public class KnowtatorCollectionActions {
 		@Override
 		void prepareRemove() throws ActionUnperformableException {
 			// If the concept annotation only has one, remove the annotation instead
-			try {
-				if (collection.getSelection().getConceptAnnotation().getSpanCollection().size() == 1) {
-					try {
-						AbstractKnowtatorAction action = new ConceptAnnotationAction(REMOVE, controller);
-						controller.registerAction(action);
-					} catch (NoSelectionException e) {
-						throw new ActionUnperformableException();
-					}
-				} else {
-					super.prepareRemove();
+			if (conceptAnnotation.getSpanCollection().size() == 1) {
+				AbstractKnowtatorAction action = new ConceptAnnotationAction(REMOVE, controller, conceptAnnotation.getTextSource());
+				controller.registerAction(action);
+				edit.addKnowtatorEdit(action.getEdit());
+			} else {
+				super.prepareRemove();
+			}
+		}
+
+		@Override
+		public void execute() throws ActionUnperformableException {
+			if (this.actionName.equals(REMOVE) && conceptAnnotation.getSpanCollection().size() == 1) {
+				try {
+					super.execute();
+				} catch (ActionUnperformableException ignored) {
+
 				}
-			} catch (NoSelectionException e) {
-				throw new ActionUnperformableException();
+			} else {
+				super.execute();
 			}
 		}
 
@@ -219,16 +225,15 @@ public class KnowtatorCollectionActions {
 		@Override
 		void cleanUpRemove() throws ActionUnperformableException {
 			for (TextSource textSource : controller.getTextSourceCollection()) {
-				for (ConceptAnnotation conceptAnnotation : textSource.getConceptAnnotationCollection()) {
+				// Cast to array to avoid concurrent modification exceptions
+				Object[] array = textSource.getConceptAnnotationCollection().getCollection().toArray();
+				for (Object o : array) {
+					ConceptAnnotation conceptAnnotation = (ConceptAnnotation) o;
 					if (conceptAnnotation.getAnnotator().equals(object)) {
-						try {
-							AbstractKnowtatorAction action = new ConceptAnnotationAction(REMOVE, controller);
-							textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
-							action.execute();
-							edit.addKnowtatorEdit(action.getEdit());
-						} catch (NoSelectionException e) {
-							throw new ActionUnperformableException();
-						}
+						AbstractKnowtatorAction action = new ConceptAnnotationAction(REMOVE, controller, conceptAnnotation.getTextSource());
+						conceptAnnotation.getTextSource().getConceptAnnotationCollection().setSelection(conceptAnnotation);
+						action.execute();
+						edit.addKnowtatorEdit(action.getEdit());
 					}
 				}
 			}

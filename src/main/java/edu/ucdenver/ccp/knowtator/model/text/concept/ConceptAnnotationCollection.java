@@ -344,19 +344,19 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 				KnowtatorXMLUtil.asList(parent.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATION))) {
 			Element annotationElement = (Element) annotationNode;
 
-			Profile profile;
+			String profileID = null;
 			try {
-				String profileID = annotationElement.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATOR).item(0).getTextContent();
-				profile = new Profile(controller, profileID);
+				profileID = annotationElement.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATOR).item(0).getTextContent();
+				controller.getProfileCollection().add(new Profile(controller, profileID));
 			} catch (NullPointerException npe) {
 				try {
-					String profileID = annotationElement.getAttribute(OldKnowtatorXMLAttributes.ANNOTATOR);
-					profile = new Profile(controller, profileID);
-				} catch (NullPointerException npe2) {
-					profile = controller.getProfileCollection().getDefaultProfile();
+					profileID = annotationElement.getAttribute(OldKnowtatorXMLAttributes.ANNOTATOR);
+					controller.getProfileCollection().add(new Profile(controller, profileID));
+				} catch (NullPointerException ignored) {
 				}
 			}
-			controller.getProfileCollection().add(profile);
+			Profile profile = controller.getProfileCollection().get(profileID);
+			profile = profile == null ? controller.getProfileCollection().getDefaultProfile() : profile;
 
 			String annotationID =
 					((Element) annotationElement.getElementsByTagName(OldKnowtatorXMLTags.MENTION).item(0))

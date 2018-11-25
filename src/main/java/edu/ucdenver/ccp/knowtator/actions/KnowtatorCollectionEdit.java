@@ -53,7 +53,7 @@ public class KnowtatorCollectionEdit<K extends KnowtatorDataObjectInterface> ext
                 e.printStackTrace();
             }
 
-        } else if (REMOVE.equals(actionName)) {
+        } else if (REMOVE.equals(actionName) && object != null) {
             collection.add(object);
 
         }
@@ -65,7 +65,7 @@ public class KnowtatorCollectionEdit<K extends KnowtatorDataObjectInterface> ext
         if (ADD.equals(actionName)) {
             collection.add(object);
 
-        } else if (REMOVE.equals(actionName)) {
+        } else if (REMOVE.equals(actionName) && object != null) {
             try {
                 collection.remove(object);
             } catch (CantRemoveException e) {

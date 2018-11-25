@@ -103,6 +103,14 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	}
 
 	@Override
+	public void reset() {
+		super.reset();
+		conceptAnnotation = null;
+		textSource = null;
+		span = null;
+	}
+
+	@Override
 	public void setupListeners() {
 		super.setupListeners();
 		new TextBoundModelListener(controller) {
@@ -264,15 +272,17 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 			revalidate();
 			repaint();
 
+			Span span1 = span;
+			if (conceptAnnotation != null) {
+				span1 = span == null ? conceptAnnotation.getSpanCollection().first() : span1;
+			}
+			Span finalSpan = span1;
 			SwingUtilities.invokeLater(
 					() -> {
-						if (conceptAnnotation != null) {
-							Span span1 = span == null ? conceptAnnotation.getSpanCollection().first() : span;
-							if (span1 != null) {
-								try {
-									scrollRectToVisible(modelToView(span1.getStart()));
-								} catch (BadLocationException | NullPointerException ignored) {
-								}
+						if (finalSpan != null) {
+							try {
+								scrollRectToVisible(modelToView(finalSpan.getStart()));
+							} catch (BadLocationException | NullPointerException ignored) {
 							}
 						}
 					}

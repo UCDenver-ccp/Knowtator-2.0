@@ -119,6 +119,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 	@Override
 	public void reset() {
+		super.reset();
 		setupListeners();
 	}
 
