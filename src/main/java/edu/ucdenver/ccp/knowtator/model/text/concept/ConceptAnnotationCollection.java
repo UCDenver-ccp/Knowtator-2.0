@@ -494,7 +494,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 		OWLEntityCollector addedCollector = new OWLEntityCollector(possiblyAddedEntities);
 		OWLEntityCollector removedCollector = new OWLEntityCollector(possiblyRemovedEntities);
 
-		Set<ConceptAnnotation> nameChange = new HashSet<>();
+		Set<ConceptAnnotation> annotationsToChangeOrRemove = new HashSet<>();
 
 		for (OWLOntologyChange chg : changes) {
 			AxiomType type = chg.getAxiom().getAxiomType();
@@ -505,12 +505,12 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 					if (axiom.getEntity() instanceof OWLClass) {
 						if (axChg instanceof AddAxiom) {
 							axiom.accept(addedCollector);
-							nameChange.forEach(conceptAnnotation -> conceptAnnotation.setOwlClass((OWLClass) axiom.getEntity()));
+							annotationsToChangeOrRemove.forEach(conceptAnnotation -> conceptAnnotation.setOwlClass((OWLClass) axiom.getEntity()));
 						} else if (axChg instanceof RemoveAxiom) {
 							axiom.accept(removedCollector);
 							forEach(conceptAnnotation -> {
 								if (conceptAnnotation.getOwlClass().equals(axiom.getEntity()))
-									nameChange.add(conceptAnnotation);
+									annotationsToChangeOrRemove.add(conceptAnnotation);
 							});
 						}
 					}
@@ -524,8 +524,16 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 					}
 				}
 			}
-
 		}
+
+		annotationsToChangeOrRemove.forEach(conceptAnnotationToRemove -> {
+			try {
+				log.warn(String.format("Removing annotation %s", conceptAnnotationToRemove));
+				remove(conceptAnnotationToRemove);
+			} catch (CantRemoveException e) {
+				e.printStackTrace();
+			}
+		});
 
 
 //		OWLModel.processOntologyChanges(changes, possiblyAddedEntities, possiblyRemovedEntities);

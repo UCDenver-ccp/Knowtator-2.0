@@ -315,7 +315,7 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 			}
 			return getWorkSpace().getOWLModelManager().getOWLEntityRenderer().render(owlEntity);
 		} catch (OWLWorkSpaceNotSetException e) {
-			return null;
+			return owlEntity.toString();
 		}
 	}
 

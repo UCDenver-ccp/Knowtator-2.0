@@ -30,6 +30,7 @@ import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.util.OWLEntityRemover;
 import org.semanticweb.owlapi.util.OWLEntityRenamer;
 
 import java.util.Collections;
@@ -66,7 +67,7 @@ class OWLModelTest {
 	}
 
 	@Test
-	void changeOWLClassIRI() throws NoSelectionException {
+	void changeOWLClassIRI() throws NoSelectionException, OWLModel.OWLOntologyManagerNotSetException {
 		OWLEntityRenamer renamer = new OWLEntityRenamer(owlOntologyManager, Collections.singleton(ontology));
 
 		OWLClass class2 = controller.getOWLModel().getOWLClassByID("Pizza");
@@ -75,13 +76,20 @@ class OWLModelTest {
 		Map<OWLEntity, IRI> entityToIRIMap = new HashMap<>();
 		entityToIRIMap.put(class2, IRI.create(class2.getIRI().getNamespace(), "BetterPizza"));
 
-
-		owlOntologyManager.applyChanges(renamer.changeIRI(entityToIRIMap));
-		TestingHelpers.checkDefaultCollectionValues(controller);
-
-		assert !ontology.containsClassInSignature(class2.getIRI());
+		TestingHelpers.testOWLAction(controller,
+				renamer.changeIRI(entityToIRIMap),
+				TestingHelpers.defaultExpectedTextSources,
+				TestingHelpers.defaultExpectedConceptAnnotations,
+				TestingHelpers.defaultExpectedSpans,
+				TestingHelpers.defaultExpectedGraphSpaces,
+				TestingHelpers.defaultExpectedProfiles,
+				TestingHelpers.defaultExpectedHighlighters,
+				TestingHelpers.defaultExpectedAnnotationNodes,
+				TestingHelpers.defaultExpectedTriples);
 
 		ConceptAnnotation conceptAnnotation = controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection();
+
+		assert !ontology.containsClassInSignature(class2.getIRI());
 		assert ontology.containsClassInSignature(conceptAnnotation.getOwlClass().getIRI());
 		assert conceptAnnotation.getOwlClass().equals(controller.getOWLModel().getOWLClassByID("BetterPizza"));
 	}
@@ -92,8 +100,22 @@ class OWLModelTest {
 	}
 
 	@Test
-	void removeOWLClass() {
-
+	void removeOWLClass() throws OWLModel.OWLOntologyManagerNotSetException {
+		OWLClass class2 = controller.getOWLModel().getOWLClassByID("Pizza");
+		assert ontology.containsClassInSignature(class2.getIRI());
+		OWLEntityRemover remover = new OWLEntityRemover(owlOntologyManager.getOntologies());
+		class2.accept(remover);
+		TestingHelpers.testOWLAction(controller,
+				remover.getChanges(),
+				TestingHelpers.defaultExpectedTextSources,
+				TestingHelpers.defaultExpectedConceptAnnotations - 2,
+				TestingHelpers.defaultExpectedSpans - 2,
+				TestingHelpers.defaultExpectedGraphSpaces,
+				TestingHelpers.defaultExpectedProfiles,
+				TestingHelpers.defaultExpectedHighlighters,
+				TestingHelpers.defaultExpectedAnnotationNodes - 3,
+				TestingHelpers.defaultExpectedTriples - 2);
+		assert !ontology.containsClassInSignature(class2.getIRI());
 	}
 
 	@Test

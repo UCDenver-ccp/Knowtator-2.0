@@ -26,10 +26,13 @@ package edu.ucdenver.ccp.knowtator;
 
 import com.google.common.io.Files;
 import edu.ucdenver.ccp.knowtator.actions.AbstractKnowtatorAction;
+import edu.ucdenver.ccp.knowtator.model.OWLModel;
 import org.apache.commons.io.FileUtils;
+import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class TestingHelpers {
 
@@ -117,6 +120,29 @@ public class TestingHelpers {
         assert actualGraphSpaces == expectedGraphSpaces : "There were " + actualGraphSpaces + " graph spaces instead of " + expectedGraphSpaces;
         assert actualAnnotationNodes == expectedAnnotationNodes : "There were " + actualAnnotationNodes + " vertices instead of " + expectedAnnotationNodes;
         assert actualTriples == expectedTriples : "There were " + actualTriples + " triples instead of " + expectedTriples;
+    }
+
+    public static void testOWLAction(KnowtatorController controller,
+                                     List<? extends OWLOntologyChange> changes,
+                                     int expectedTextSources,
+                                     int expectedConceptAnnotations,
+                                     int expectedSpans,
+                                     int expectedGraphSpaces,
+                                     int expectedProfiles,
+                                     int expectedHighlighters,
+                                     int expectedAnnotationNodes,
+                                     int expectedTriples) throws OWLModel.OWLOntologyManagerNotSetException {
+        TestingHelpers.checkDefaultCollectionValues(controller);
+        controller.getOWLModel().getOwlOntologyManager().applyChanges(changes);
+        TestingHelpers.countCollections(controller,
+                expectedTextSources,
+                expectedConceptAnnotations,
+                expectedSpans,
+                expectedGraphSpaces,
+                expectedProfiles,
+                expectedHighlighters,
+                expectedAnnotationNodes,
+                expectedTriples);
     }
 
     public static void testKnowtatorAction(KnowtatorController controller,

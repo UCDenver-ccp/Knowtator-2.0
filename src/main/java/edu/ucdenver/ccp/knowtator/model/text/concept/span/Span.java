@@ -208,7 +208,7 @@ public class Span extends AbstractKnowtatorTextBoundDataObject<Span> implements 
    */
 
   public String toString() {
-    return String.format("Start: %d, End: %d", start, end);
+    return String.format("%s Start: %d, End: %d", getSpannedText(), start, end);
   }
 
   /*
