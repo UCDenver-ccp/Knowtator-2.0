@@ -43,7 +43,6 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
-import org.semanticweb.owlapi.util.OWLEntityCollector;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -225,10 +224,9 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 	public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) {
 		Set<OWLEntity> possiblyAddedEntities = new HashSet<>();
 		Set<OWLEntity> possiblyRemovedEntities = new HashSet<>();
-		OWLEntityCollector addedCollector = new OWLEntityCollector(possiblyAddedEntities);
-		OWLEntityCollector removedCollector = new OWLEntityCollector(possiblyRemovedEntities);
 
-		OWLModel.processOntologyChanges(changes, addedCollector, removedCollector);
+
+		OWLModel.processOntologyChanges(changes, possiblyAddedEntities, possiblyRemovedEntities);
 
     /*
     For now, I will assume that entity removed is the one that existed and the one

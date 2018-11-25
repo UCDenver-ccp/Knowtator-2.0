@@ -26,7 +26,7 @@
 <knowtator-project>
     <document id="document2">
         <annotation annotator="Default" id="mention_3" type="identity">
-            <class id="class_0">Class 0</class>
+            <class id="Pizza">Pizza</class>
             <span end="3" start="0">And</span>
         </annotation>
         <graph-space id="graph_2">

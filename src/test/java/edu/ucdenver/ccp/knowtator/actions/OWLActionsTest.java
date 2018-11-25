@@ -27,11 +27,14 @@ package edu.ucdenver.ccp.knowtator.actions;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
+import edu.ucdenver.ccp.knowtator.model.OWLModel;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import org.junit.Test;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClass;
 
 import java.awt.*;
 import java.util.HashSet;
@@ -46,14 +49,20 @@ public class OWLActionsTest {
         ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
         textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
 
-        assert controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getOwlClass() == null;
+        OWLClass owlClass;
+        try {
+            owlClass = controller.getOWLModel().getOwlOntologyManager().getOWLDataFactory().getOWLClass(IRI.create("Pizza"));
+        } catch (OWLModel.OWLOntologyManagerNotSetException e) {
+            owlClass = null;
+        }
+        assert controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getOwlClass() == owlClass;
 
         controller.registerAction(new OWLActions.ReassignOWLClassAction(controller));
-        assert controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getOwlClass().equals(controller.getOWLModel().getSelectedOWLClass());
+        assert conceptAnnotation.getOwlClass().equals(controller.getOWLModel().getSelectedOWLClass());
         controller.undo();
-        assert controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getOwlClass() == null;
+        assert conceptAnnotation.getOwlClass() == owlClass;
         controller.redo();
-        assert controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getOwlClass().equals(controller.getOWLModel().getSelectedOWLClass());
+        assert conceptAnnotation.getOwlClass().equals(controller.getOWLModel().getSelectedOWLClass());
         controller.undo();
         //TODO: Add more to this test to see if descendants are reassigned too. Probably will need to edit OWLModel's debug to make some descendants
     }
@@ -64,7 +73,7 @@ public class OWLActionsTest {
         ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
         textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
         Profile profile = controller.getProfileCollection().getSelection();
-        assert profile.getColor(conceptAnnotation).equals(Color.CYAN);
+        assert profile.getColor(conceptAnnotation).equals(Color.RED);
 
         Set<Object> owlClassSet = new HashSet<>();
         owlClassSet.add(controller.getOWLModel().getSelectedOWLClass());

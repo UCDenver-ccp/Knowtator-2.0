@@ -97,12 +97,11 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
           color = Color.CYAN;
         }
         addColor(owlClass, color);
-        controller.getProfileCollection().fireColorChanged();
+        colors.remove(owlClassID);
         save();
         return color;
       } else if (color == null) {
         addColor(owlClassID, Color.CYAN);
-        controller.getProfileCollection().fireColorChanged();
         save();
         return Color.CYAN;
       } else {

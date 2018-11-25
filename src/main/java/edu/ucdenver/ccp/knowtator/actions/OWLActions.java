@@ -116,7 +116,6 @@ public class OWLActions {
 
                 view.getController().getProfileCollection().getSelection().addColor(owlClass, c);
 
-
                 if (owlClass instanceof OWLClass) {
                     if (JOptionPane.showConfirmDialog(
                             view, "Assign color to descendants of " + owlClass + "?")

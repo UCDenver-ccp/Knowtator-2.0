@@ -64,6 +64,7 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 	private OWLClass testClass;
 	@SuppressWarnings({"FieldCanBeLocal", "unused"})
 	private OWLObjectProperty testProperty;
+	private OWLOntologyManager owlOntologyManager;
 
 	public OWLModel(KnowtatorController controller) {
 		this.controller = controller;
@@ -228,10 +229,26 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 	}
 
 	public OWLClass getOWLClassByID(String classID) {
-		try {
-			return getWorkSpace().getOWLModelManager().getOWLEntityFinder().getOWLClass(classID);
-		} catch (OWLWorkSpaceNotSetException e) {
+		if (classID == null) {
 			return null;
+		} else {
+			try {
+				return getWorkSpace().getOWLModelManager().getOWLEntityFinder().getOWLClass(classID);
+			} catch (OWLWorkSpaceNotSetException e) {
+				try {
+					return getOwlOntologyManager().getOWLDataFactory().getOWLClass(IRI.create(classID));
+				} catch (OWLOntologyManagerNotSetException e1) {
+					return null;
+				}
+			}
+		}
+	}
+
+	public OWLOntologyManager getOwlOntologyManager() throws OWLOntologyManagerNotSetException {
+		if (owlOntologyManager == null) {
+			throw new OWLOntologyManagerNotSetException();
+		} else {
+			return owlOntologyManager;
 		}
 	}
 
@@ -318,18 +335,13 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 
 	@Override
 	public void setDebug() {
-		OWLOntologyManager manager = org.semanticweb.owlapi.apibinding.OWLManager.createOWLOntologyManager();
-		//    OWLWorkspace workspace = new OWLWorkspace();
-		//    OWLEditorKitFactory editorKitFactory = new OWLEditorKitFactory();
-		//    OWLEditorKit editorKit = new OWLEditorKit(editorKitFactory);
-		//    workspace.setup(editorKit);
-		//    workspace.initialise();
-		OWLDataFactory factory = manager.getOWLDataFactory();
+		owlOntologyManager = org.semanticweb.owlapi.apibinding.OWLManager.createOWLOntologyManager();
+		OWLDataFactory factory = owlOntologyManager.getOWLDataFactory();
 
-		IRI iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#DomainConcept");
+		IRI iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream");
 		testClass = factory.getOWLClass(iri);
 
-		iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#HasCountryOfOrigin");
+		iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#HasIngredient");
 		testProperty = factory.getOWLObjectProperty(iri);
 	}
 
@@ -397,6 +409,11 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 												.loadOntology((IRI.create(ontologyLocation)));
 								getWorkSpace().getOWLModelManager().setActiveOntology(newOntology);
 							} catch (OWLOntologyCreationException e) {
+								try {
+									getOwlOntologyManager().loadOntology(IRI.create(ontologyLocation));
+								} catch (OWLOntologyCreationException | OWLOntologyManagerNotSetException e1) {
+									e1.printStackTrace();
+								}
 								log.warn("Knowtator: OWLModel: Ontology already loaded");
 							}
 						}
@@ -423,12 +440,21 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 		} catch (OWLWorkSpaceNotSetException ignored) {
 
 		}
+		try {
+			getOwlOntologyManager().addOntologyChangeListener(listener);
+		} catch (OWLOntologyManagerNotSetException ignored) {
+
+		}
 	}
 
 	public void removeOntologyChangeListener(OWLOntologyChangeListener listener) {
 		try {
 			getWorkSpace().getOWLModelManager().removeOntologyChangeListener(listener);
 		} catch (OWLWorkSpaceNotSetException ignored) {
+		}
+		try {
+			getOwlOntologyManager().addOntologyChangeListener(listener);
+		} catch (OWLOntologyManagerNotSetException ignored) {
 
 		}
 	}
@@ -461,16 +487,15 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 		return owlWorkSpace != null;
 	}
 
-	public static void processOntologyChanges(@Nonnull List<? extends OWLOntologyChange> changes, OWLEntityCollector addedCollector, OWLEntityCollector removedCollector) {
-		log.warn("Changes");
+	public static void processOntologyChanges(@Nonnull List<? extends OWLOntologyChange> changes, Set<OWLEntity> possiblyAddedEntities, Set<OWLEntity> possiblyRemovedEntities) {
+		OWLEntityCollector addedCollector = new OWLEntityCollector(possiblyAddedEntities);
+		OWLEntityCollector removedCollector = new OWLEntityCollector(possiblyRemovedEntities);
+
 		for (OWLOntologyChange chg : changes) {
-			log.warn("\t" + chg);
 			AxiomType type = chg.getAxiom().getAxiomType();
 			if (chg.isAxiomChange()) {
 				OWLAxiomChange axChg = (OWLAxiomChange) chg;
-				log.warn("\tAxChg");
 				if (type == AxiomType.DECLARATION || type == AxiomType.SUBCLASS_OF || type == AxiomType.SUB_OBJECT_PROPERTY) {
-					log.warn("\tDeclaration");
 					if (axChg instanceof AddAxiom) {
 						axChg.getAxiom().accept(addedCollector);
 					} else {
@@ -511,6 +536,10 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 
 	private class OWLWorkSpaceNotSetException extends Exception {
 	}
+
+	public class OWLOntologyManagerNotSetException extends Throwable {
+	}
+
 }
 
 

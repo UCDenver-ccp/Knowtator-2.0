@@ -30,7 +30,7 @@
         <spannedText>A</spannedText>
     </annotation>
     <classMention id="mention_0">
-        <mentionClass id="class_4">class_4</mentionClass>
+        <mentionClass id="Food">Food</mentionClass>
         <hasSlotMention id="slot_mention_0"/>
     </classMention>
 
@@ -41,7 +41,7 @@
         <spannedText>appeared!</spannedText>
     </annotation>
     <classMention id="mention_1">
-        <mentionClass id="class_4">class_4</mentionClass>
+        <mentionClass id="Food">Food</mentionClass>
     </classMention>
 
     <annotation>
@@ -51,7 +51,7 @@
         <spannedText>appeared!</spannedText>
     </annotation>
     <classMention id="mention_2">
-        <mentionClass id="class_4">class_4</mentionClass>
+        <mentionClass id="Food">Food</mentionClass>
     </classMention>
 
     <complexSlotMention id="slot_mention_0">

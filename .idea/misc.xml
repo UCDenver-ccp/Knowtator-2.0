@@ -3,9 +3,6 @@
   <component name="EntryPointsManager">
     <pattern value="edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundDataObjectInterface" method="addDataObjectModificationListener" />
   </component>
-  <component name="FrameworkDetectionExcludesConfiguration">
-    <file type="Osmorc" url="file://$PROJECT_DIR$" />
-  </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>

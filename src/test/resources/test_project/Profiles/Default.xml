@@ -25,6 +25,6 @@
 
 <knowtator-project>
     <profile id="Default">
-        <highlighter class="class_0" color="#00ffff"/>
+        <highlighter class="Pizza" color="#ff0000"/>
     </profile>
 </knowtator-project>
