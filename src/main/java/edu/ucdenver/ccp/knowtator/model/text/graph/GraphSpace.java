@@ -45,21 +45,23 @@ import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundDataObjectInterfa
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.protege.editor.owl.model.event.EventType;
+import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
+import org.protege.editor.owl.model.event.OWLModelManagerListener;
+import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.util.OWLEntityCollector;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectInterface<GraphSpace>, KnowtatorXMLIO, BratStandoffIO, KnowtatorCollectionListener<ConceptAnnotation> {
+public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLOntologyChangeListener, KnowtatorTextBoundDataObjectInterface<GraphSpace>, KnowtatorXMLIO, BratStandoffIO, KnowtatorCollectionListener<ConceptAnnotation> {
 	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(GraphSpace.class);
 
@@ -79,6 +81,8 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
 
 		controller.verifyId(id, this, false);
 		textSource.getConceptAnnotationCollection().addCollectionListener(this);
+		controller.getOWLModel().addOntologyChangeListener(this);
+		controller.getOWLModel().addOWLModelManagerListener(this);
 
 		setCellsResizable(false);
 		setEdgeLabelsMovable(false);
@@ -182,6 +186,11 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
 	@Override
 	public Object[] removeCells(Object[] cells, boolean includeEdges) {
 		cells = super.removeCells(cells, true);
+		Arrays.asList(cells).forEach(o -> {
+			if (o instanceof RelationAnnotation || o instanceof AnnotationNode) {
+				((KnowtatorTextBoundDataObjectInterface) o).dispose();
+			}
+		});
 		modify(null);
 		return cells;
 	}
@@ -446,6 +455,8 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
 			}
 		});
 		removeCells(getChildCells(getDefaultParent()));
+		controller.getOWLModel().removeOntologyChangeListener(this);
+		controller.getOWLModel().removeOWLModelManagerListener(this);
 	}
 
 	public boolean containsAnnotation(ConceptAnnotation conceptAnnotation) {
@@ -506,5 +517,63 @@ public class GraphSpace extends mxGraph implements KnowtatorTextBoundDataObjectI
 
 	public boolean areListenersSet() {
 		return areListenersSet;
+	}
+
+	@Override
+	public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) {
+		Set<OWLEntity> possiblyAddedEntities = new HashSet<>();
+		Set<OWLEntity> possiblyRemovedEntities = new HashSet<>();
+		OWLEntityCollector addedCollector = new OWLEntityCollector(possiblyAddedEntities);
+		OWLEntityCollector removedCollector = new OWLEntityCollector(possiblyRemovedEntities);
+
+		Set<RelationAnnotation> annotationsToChangeOrRemove = new HashSet<>();
+
+		for (OWLOntologyChange chg : changes) {
+			AxiomType type = chg.getAxiom().getAxiomType();
+			if (chg.isAxiomChange()) {
+				OWLAxiomChange axChg = (OWLAxiomChange) chg;
+				if (AxiomType.DECLARATION == type) {
+					OWLDeclarationAxiom axiom = ((OWLDeclarationAxiom) axChg.getAxiom());
+					if (axiom.getEntity() instanceof OWLObjectProperty) {
+						if (axChg instanceof AddAxiom) {
+							axiom.accept(addedCollector);
+							annotationsToChangeOrRemove.forEach(relationAnnotation -> relationAnnotation.setValue(axiom.getEntity()));
+						} else if (axChg instanceof RemoveAxiom) {
+							axiom.accept(removedCollector);
+							Arrays.asList(getChildEdges(getDefaultParent())).forEach(o -> {
+								if (o instanceof RelationAnnotation) {
+									if (((RelationAnnotation) o).getProperty() != null) {
+										if (((RelationAnnotation) o).getProperty().equals(axiom.getEntity())) {
+											annotationsToChangeOrRemove.add((RelationAnnotation) o);
+										}
+									}
+								}
+							});
+						}
+					}
+
+				}
+				if (AxiomType.SUBCLASS_OF == type) {
+					if (axChg instanceof AddAxiom) {
+						axChg.getAxiom().accept(addedCollector);
+					} else {
+						axChg.getAxiom().accept(removedCollector);
+					}
+				}
+			}
+		}
+
+		removeCells(annotationsToChangeOrRemove.toArray(), true);
+	}
+
+	@Override
+	public void handleChange(OWLModelManagerChangeEvent event) {
+		if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
+			Arrays.asList(getChildEdges(getDefaultParent())).forEach(o -> {
+				if (o instanceof RelationAnnotation) {
+					((RelationAnnotation) o).setValue(((RelationAnnotation) o).getProperty());
+				}
+			});
+		}
 	}
 }

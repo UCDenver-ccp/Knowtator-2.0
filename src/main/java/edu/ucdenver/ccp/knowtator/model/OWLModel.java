@@ -74,6 +74,46 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 		setupListeners();
 	}
 
+	public OWLClass getOWLClassByID(String classID) {
+		if (classID != null) {
+			try {
+				return getWorkSpace().getOWLModelManager().getOWLEntityFinder().getOWLClass(classID);
+			} catch (OWLWorkSpaceNotSetException e) {
+				try {
+					for (OWLOntology owlOntology : getOwlOntologyManager().getOntologies()) {
+						for (OWLClass owlClass : owlOntology.getClassesInSignature()) {
+							if (owlClass.getIRI().getShortForm().equals(classID)) {
+								return owlClass;
+							}
+						}
+					}
+				} catch (OWLOntologyManagerNotSetException ignored) {
+				}
+			}
+		}
+		return null;
+	}
+
+	public OWLObjectProperty getOWLObjectPropertyByID(String propertyID) {
+		if (propertyID != null) {
+			try {
+				return getWorkSpace().getOWLModelManager().getOWLEntityFinder().getOWLObjectProperty(propertyID);
+			} catch (OWLWorkSpaceNotSetException e) {
+				try {
+					for (OWLOntology owlOntology : getOwlOntologyManager().getOntologies()) {
+						for (OWLObjectProperty owlObjectProperty : owlOntology.getObjectPropertiesInSignature()) {
+							if (owlObjectProperty.getIRI().getShortForm().equals(propertyID)) {
+								return owlObjectProperty;
+							}
+						}
+					}
+				} catch (OWLOntologyManagerNotSetException ignored) {
+				}
+			}
+		}
+		return null;
+	}
+
 	private void setupListeners() {
 
 		new TextBoundModelListener(controller) {
@@ -229,43 +269,12 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 		}
 	}
 
-	public OWLClass getOWLClassByID(String classID) {
-		if (classID != null) {
-			try {
-				return getWorkSpace().getOWLModelManager().getOWLEntityFinder().getOWLClass(classID);
-			} catch (OWLWorkSpaceNotSetException e) {
-				try {
-					for (OWLOntology owlOntology : getOwlOntologyManager().getOntologies()) {
-						for (OWLClass owlClass : owlOntology.getClassesInSignature()) {
-							if (owlClass.getIRI().getShortForm().equals(classID)) {
-								return owlClass;
-							}
-						}
-					}
-				} catch (OWLOntologyManagerNotSetException ignored) {
-				}
-			}
-		}
-		return null;
-	}
-
 
 	public OWLOntologyManager getOwlOntologyManager() throws OWLOntologyManagerNotSetException {
 		if (owlOntologyManager == null) {
 			throw new OWLOntologyManagerNotSetException();
 		} else {
 			return owlOntologyManager;
-		}
-	}
-
-	public OWLObjectProperty getOWLObjectPropertyByID(String propertyID) {
-		try {
-			return getWorkSpace()
-					.getOWLModelManager()
-					.getOWLEntityFinder()
-					.getOWLObjectProperty(propertyID);
-		} catch (OWLWorkSpaceNotSetException e) {
-			return null;
 		}
 	}
 

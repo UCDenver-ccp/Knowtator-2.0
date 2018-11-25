@@ -29,20 +29,21 @@ import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import org.junit.jupiter.api.Test;
+import org.semanticweb.HermiT.ReasonerFactory;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.util.OWLEntityRemover;
 import org.semanticweb.owlapi.util.OWLEntityRenamer;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 class OWLModelTest {
 
 	private static final KnowtatorController controller = TestingHelpers.getLoadedController();
 	private static OWLOntologyManager owlOntologyManager;
 	private static OWLDataFactory dataFactory;
-
+	private OWLReasonerFactory reasonerFactory = new ReasonerFactory();
 	static {
 		try {
 			owlOntologyManager = controller.getOWLModel().getOwlOntologyManager();
@@ -53,6 +54,7 @@ class OWLModelTest {
 	}
 
 	private OWLOntology ontology = owlOntologyManager.getOntology(IRI.create("http://www.co-ode.org/ontologies/pizza"));
+	private OWLReasoner reasoner = reasonerFactory.createReasoner(Objects.requireNonNull(ontology));
 
 	@Test
 	void addOWLClass() {
@@ -69,7 +71,6 @@ class OWLModelTest {
 	@Test
 	void changeOWLClassIRI() throws NoSelectionException, OWLModel.OWLOntologyManagerNotSetException {
 		OWLEntityRenamer renamer = new OWLEntityRenamer(owlOntologyManager, Collections.singleton(ontology));
-
 		OWLClass class2 = controller.getOWLModel().getOWLClassByID("Pizza");
 		assert ontology.containsClassInSignature(class2.getIRI());
 
@@ -103,7 +104,7 @@ class OWLModelTest {
 	void removeOWLClass() throws OWLModel.OWLOntologyManagerNotSetException {
 		OWLClass class2 = controller.getOWLModel().getOWLClassByID("Pizza");
 		assert ontology.containsClassInSignature(class2.getIRI());
-		OWLEntityRemover remover = new OWLEntityRemover(owlOntologyManager.getOntologies());
+		OWLEntityRemover remover = new OWLEntityRemover(Collections.singleton(ontology));
 		class2.accept(remover);
 		TestingHelpers.testOWLAction(controller,
 				remover.getChanges(),
@@ -119,14 +120,64 @@ class OWLModelTest {
 	}
 
 	@Test
-	void removeObjectProperty() {
-
+	void removeObjectProperty() throws OWLModel.OWLOntologyManagerNotSetException {
+		OWLObjectProperty owlObjectProperty = controller.getOWLModel().getOWLObjectPropertyByID("isIngredientOf");
+		assert ontology.containsObjectPropertyInSignature(owlObjectProperty.getIRI());
+		OWLEntityRemover remover = new OWLEntityRemover(Collections.singleton(ontology));
+		owlObjectProperty.accept(remover);
+		TestingHelpers.testOWLAction(controller,
+				remover.getChanges(),
+				TestingHelpers.defaultExpectedTextSources,
+				TestingHelpers.defaultExpectedConceptAnnotations,
+				TestingHelpers.defaultExpectedSpans,
+				TestingHelpers.defaultExpectedGraphSpaces,
+				TestingHelpers.defaultExpectedProfiles,
+				TestingHelpers.defaultExpectedHighlighters,
+				TestingHelpers.defaultExpectedAnnotationNodes,
+				TestingHelpers.defaultExpectedTriples - 2);
+		assert !ontology.containsObjectPropertyInSignature(owlObjectProperty.getIRI());
 	}
 
 	@Test
-	void moveOWLClass() {
+	void moveOWLClass() throws OWLModel.OWLOntologyManagerNotSetException, NoSelectionException {
+		OWLClass class1 = controller.getOWLModel().getOWLClassByID("Food");
+		OWLClass class2 = controller.getOWLModel().getOWLClassByID("Pizza");
+		OWLClass class3 = controller.getOWLModel().getOWLClassByID("Thing");
 
+		assert isSubclass(class1, class2);
+
+		Set<OWLSubClassOfAxiom> subclassAxioms = ontology.getSubClassAxiomsForSubClass(class2);
+		OWLAxiom axiom2 = dataFactory.getOWLSubClassOfAxiom(class2, class3);
+
+		List<OWLOntologyChange> changes = new ArrayList<>();
+		subclassAxioms.forEach(owlSubClassOfAxiom -> changes.add(new RemoveAxiom(ontology, owlSubClassOfAxiom)));
+		changes.add(new AddAxiom(ontology, axiom2));
+
+		TestingHelpers.testOWLAction(controller,
+				changes,
+				TestingHelpers.defaultExpectedTextSources,
+				TestingHelpers.defaultExpectedConceptAnnotations,
+				TestingHelpers.defaultExpectedSpans,
+				TestingHelpers.defaultExpectedGraphSpaces,
+				TestingHelpers.defaultExpectedProfiles,
+				TestingHelpers.defaultExpectedHighlighters,
+				TestingHelpers.defaultExpectedAnnotationNodes,
+				TestingHelpers.defaultExpectedTriples);
+
+
+		assert !isSubclass(class1, class2);
+		assert isSubclass(class3, class2);
+
+		ConceptAnnotation conceptAnnotation = controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection();
+		assert conceptAnnotation.getOwlClass().equals(class2);
 	}
+
+	boolean isSubclass(OWLClass potentialSuperClass, OWLClass owlClass) {
+		reasoner.flush();
+		Set<OWLClass> subclasses = reasoner.getSubClasses(potentialSuperClass, false).getFlattened();
+		return subclasses.contains(owlClass);
+	}
+
 
 	@Test
 	void moveOWLObjectProperty() {

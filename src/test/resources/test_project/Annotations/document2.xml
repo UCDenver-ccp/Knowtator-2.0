@@ -32,7 +32,8 @@
         <graph-space id="graph_2">
             <vertex annotation="mention_3" id="node_0"/>
             <vertex annotation="mention_3" id="node_1"/>
-            <triple annotator="Default" id="edge_0" object="node_1" property="property_0" quantifier="" subject="node_0"
+            <triple annotator="Default" id="edge_0" object="node_1" property="isIngredientOf" quantifier=""
+                    subject="node_0"
                     value=""/>
         </graph-space>
     </document>

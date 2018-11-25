@@ -535,55 +535,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 			}
 		});
 
-
-//		OWLModel.processOntologyChanges(changes, possiblyAddedEntities, possiblyRemovedEntities);
-
-    /*
-    For now, I will assume that entity removed is the one that existed and the one
-    that is added is the new name for it.
-     */
-//		log.warn("Added");
-//		possiblyAddedEntities.forEach(log::warn);
-//
-//		log.warn("Removed");
-//		possiblyRemovedEntities.forEach(log::warn);
-//		if (!possiblyAddedEntities.isEmpty() && !possiblyRemovedEntities.isEmpty()) {
-//			OWLClass oldOWLClass = (OWLClass) possiblyRemovedEntities.iterator().next();
-//			OWLClass newOWLClass = (OWLClass) possiblyAddedEntities.iterator().next();
-//
-////            try {
-////                log.warn(String.format("Old: %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(oldOWLClass)));
-////                log.warn(String.format("New: %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(newOWLClass)));
-////            } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
-////                e.printStackTrace();
-////            }
-//			ConceptAnnotationCollection annotationsForOwlClass = new ConceptAnnotationCollection(controller, textSource);
-//
-//			String owlClassID = controller.getOWLModel().getOWLEntityRendering(oldOWLClass);
-//
-//			for (ConceptAnnotation conceptAnnotation : this) {
-//				if (conceptAnnotation.getOwlClass() == oldOWLClass) {
-//					annotationsForOwlClass.add(conceptAnnotation);
-//				} else if (conceptAnnotation.getOwlClassID().equals(owlClassID)) {
-//					conceptAnnotation.setOwlClass(oldOWLClass);
-//					annotationsForOwlClass.add(conceptAnnotation);
-//				}
-//			}
-//
-//			if (newOWLClass == null) {
-//				for (ConceptAnnotation conceptAnnotation : annotationsForOwlClass) {
-//					try {
-//						remove(conceptAnnotation);
-//					} catch (CantRemoveException e) {
-//						e.printStackTrace();
-//					}
-//				}
-//			} else {
-//				for (ConceptAnnotation conceptAnnotation : annotationsForOwlClass) {
-//					conceptAnnotation.setOwlClass(newOWLClass);
-//				}
-//			}
-//		}
 	}
 
 	@Override

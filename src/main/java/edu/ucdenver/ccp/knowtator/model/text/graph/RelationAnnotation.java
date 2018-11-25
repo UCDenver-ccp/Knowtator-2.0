@@ -30,29 +30,19 @@ import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
-import edu.ucdenver.ccp.knowtator.model.OWLModel;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.DataObjectModificationListener;
 import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.apache.log4j.Logger;
-import org.protege.editor.owl.model.event.EventType;
-import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
-import org.protege.editor.owl.model.event.OWLModelManagerListener;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
-import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import javax.annotation.Nonnull;
 import java.io.File;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, KnowtatorTextBoundDataObjectInterface, OWLOntologyChangeListener, OWLModelManagerListener {
+public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, KnowtatorTextBoundDataObjectInterface {
 	private final String quantifier;
 	private final String quantifierValue;
 	private final Profile annotator;
@@ -99,9 +89,6 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 		setSource(source);
 		setTarget(target);
 		setValue(property);
-
-		controller.getOWLModel().addOWLModelManagerListener(this);
-		controller.getOWLModel().addOntologyChangeListener(this);
 
 		if (property == null) {
 			setProperty(controller.getOWLModel().getOWLObjectPropertyByID(propertyID));
@@ -220,39 +207,9 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 	public void readFromOldKnowtatorXML(File file, Element parent) {
 	}
 
-	@Override
-	public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) {
-		Set<OWLEntity> possiblyAddedEntities = new HashSet<>();
-		Set<OWLEntity> possiblyRemovedEntities = new HashSet<>();
-
-
-		OWLModel.processOntologyChanges(changes, possiblyAddedEntities, possiblyRemovedEntities);
-
-    /*
-    For now, I will assume that entity removed is the one that existed and the one
-    that is added is the new name for it.
-     */
-		if (!possiblyAddedEntities.isEmpty() && !possiblyRemovedEntities.isEmpty()) {
-			OWLEntity oldProperty = possiblyRemovedEntities.iterator().next();
-			OWLEntity newProperty = possiblyAddedEntities.iterator().next();
-			if (property == oldProperty) {
-				setProperty((OWLObjectProperty) newProperty);
-			}
-		}
-	}
-
-
-	@Override
-	public void handleChange(OWLModelManagerChangeEvent event) {
-		if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
-			setValue(property);
-		}
-	}
 
 	@Override
 	public void dispose() {
-		controller.getOWLModel().removeOWLModelManagerListener(this);
-		controller.getOWLModel().removeOntologyChangeListener(this);
 	}
 
 	@Override
