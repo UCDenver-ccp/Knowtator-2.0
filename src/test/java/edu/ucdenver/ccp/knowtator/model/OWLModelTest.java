@@ -27,14 +27,34 @@ package edu.ucdenver.ccp.knowtator.model;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import org.junit.jupiter.api.Test;
+import org.semanticweb.owlapi.model.*;
 
 class OWLModelTest {
 
 	private static final KnowtatorController controller = TestingHelpers.getLoadedController();
+	private static OWLOntologyManager owlOntologyManager;
+	private static OWLDataFactory dataFactory;
+
+	static {
+		try {
+			owlOntologyManager = controller.getOWLModel().getOwlOntologyManager();
+			dataFactory = owlOntologyManager.getOWLDataFactory();
+		} catch (OWLModel.OWLOntologyManagerNotSetException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Test
-	void addOWLClass() {
+	void addOWLClass() throws OWLModel.OWLOntologyManagerNotSetException {
+		OWLOntology ontology = owlOntologyManager.getOntology(IRI.create("http://www.co-ode.org/ontologies/pizza"));
+		assert ontology != null;
 
+		OWLClass class1 = dataFactory.getOWLClass(IRI.create("X"));
+		OWLClass class2 = dataFactory.getOWLClass(IRI.create("IceCream"));
+		OWLAxiom axiom = dataFactory.getOWLSubClassOfAxiom(class1, class2);
+
+		controller.getOWLModel().getOwlOntologyManager().addAxiom(ontology, axiom);
+		TestingHelpers.checkDefaultCollectionValues(controller);
 	}
 
 	@Test

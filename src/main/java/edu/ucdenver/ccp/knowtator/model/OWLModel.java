@@ -41,6 +41,7 @@ import org.protege.editor.owl.ui.renderer.OWLRendererPreferences;
 import org.protege.editor.owl.ui.search.SearchDialogPanel;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLEntityCollector;
+import org.semanticweb.owlapi.util.SLF4JSilencer;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -373,54 +374,48 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 	public void load() {
 		if (getSaveLocation() != null) {
 			log.warn("Loading ontologies");
-			try {
-				File file = getSaveLocation();
-				if (file.isDirectory()) {
-					for (Path path1 :
-							Files.newDirectoryStream(
-									Paths.get(file.toURI()), path -> path.toString().endsWith(".owl"))) {
-						String ontologyLocation = path1.toFile().toURI().toString();
-						List<String> ontologies =
-								getWorkSpace()
-										.getOWLModelManager()
-										.getActiveOntologies()
-										.stream()
-										.map(
-												ontology -> {
-													OWLOntologyID ontID = ontology.getOntologyID();
-													//noinspection Guava
-													Optional<IRI> ontIRI = ontID.getOntologyIRI();
-													if (ontIRI.isPresent()) {
-														return ontIRI.get().toURI().toString();
-													} else {
-														return null;
-													}
-												})
-										.collect(Collectors.toList());
 
-						//        String ontologyLocation = OntologyTranslator.translate(classID);
-						if (!ontologies.contains(ontologyLocation)) {
-							log.warn("Loading ontology: " + ontologyLocation);
-							try {
-								OWLOntology newOntology =
-										getWorkSpace()
-												.getOWLModelManager()
-												.getOWLOntologyManager()
-												.loadOntology((IRI.create(ontologyLocation)));
-								getWorkSpace().getOWLModelManager().setActiveOntology(newOntology);
-							} catch (OWLOntologyCreationException e) {
-								try {
-									getOwlOntologyManager().loadOntology(IRI.create(ontologyLocation));
-								} catch (OWLOntologyCreationException | OWLOntologyManagerNotSetException e1) {
-									e1.printStackTrace();
+			File file = getSaveLocation();
+			if (file.isDirectory()) {
+				try {
+					for (Path path1 : Files.newDirectoryStream(Paths.get(file.toURI()), path -> path.toString().endsWith(".owl"))) {
+						String ontologyLocation = path1.toFile().toURI().toString();
+						try {
+							List<String> ontologies = getWorkSpace().getOWLModelManager().getActiveOntologies().stream().map(ontology -> {
+								OWLOntologyID ontID = ontology.getOntologyID();
+								//noinspection Guava
+								Optional<IRI> ontIRI = ontID.getOntologyIRI();
+								if (ontIRI.isPresent()) {
+									return ontIRI.get().toURI().toString();
+								} else {
+									return null;
 								}
-								log.warn("Knowtator: OWLModel: Ontology already loaded");
+							}).collect(Collectors.toList());
+							if (!ontologies.contains(ontologyLocation)) {
+								log.warn("Loading ontology: " + ontologyLocation);
+								try {
+									OWLOntology newOntology =
+											getWorkSpace()
+													.getOWLModelManager()
+													.getOWLOntologyManager()
+													.loadOntology((IRI.create(ontologyLocation)));
+									getWorkSpace().getOWLModelManager().setActiveOntology(newOntology);
+								} catch (OWLOntologyCreationException ignored) {
+								}
+							}
+						} catch (OWLWorkSpaceNotSetException e) {
+							try {
+								SLF4JSilencer.silence();
+								getOwlOntologyManager().loadOntology(IRI.create(ontologyLocation));
+								SLF4JSilencer.deSilence();
+							} catch (OWLOntologyCreationException | OWLOntologyManagerNotSetException e1) {
+								log.warn("Could not load ontologies");
 							}
 						}
 					}
+				} catch (IOException e) {
+					log.warn("Could not load ontologies");
 				}
-			} catch (IOException | OWLWorkSpaceNotSetException e) {
-				log.warn("Could not load ontologies");
 			}
 		}
 	}

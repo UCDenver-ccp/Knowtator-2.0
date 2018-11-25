@@ -502,10 +502,10 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     that is added is the new name for it.
      */
 		log.warn("Added");
-		possiblyAddedEntities.forEach(owlEntity -> log.warn(controller.getOWLModel().getOWLEntityRendering(owlEntity)));
+		possiblyAddedEntities.forEach(log::warn);
 
 		log.warn("Removed");
-		possiblyRemovedEntities.forEach(owlEntity -> log.warn(controller.getOWLModel().getOWLEntityRendering(owlEntity)));
+		possiblyRemovedEntities.forEach(log::warn);
 		if (!possiblyAddedEntities.isEmpty() && !possiblyRemovedEntities.isEmpty()) {
 			OWLClass oldOWLClass = (OWLClass) possiblyRemovedEntities.iterator().next();
 			OWLClass newOWLClass = (OWLClass) possiblyAddedEntities.iterator().next();
