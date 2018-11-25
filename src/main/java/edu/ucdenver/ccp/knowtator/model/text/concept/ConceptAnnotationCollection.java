@@ -506,6 +506,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 						if (axChg instanceof AddAxiom) {
 							axiom.accept(addedCollector);
 							annotationsToChangeOrRemove.forEach(conceptAnnotation -> conceptAnnotation.setOwlClass((OWLClass) axiom.getEntity()));
+							annotationsToChangeOrRemove.clear();
 						} else if (axChg instanceof RemoveAxiom) {
 							axiom.accept(removedCollector);
 							forEach(conceptAnnotation -> {

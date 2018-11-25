@@ -161,7 +161,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 		}
 	}
 
-	private void setProperty(OWLObjectProperty owlObjectProperty) {
+	void setProperty(OWLObjectProperty owlObjectProperty) {
 		property = owlObjectProperty;
 		setValue(property == null ? propertyID : property);
 	}

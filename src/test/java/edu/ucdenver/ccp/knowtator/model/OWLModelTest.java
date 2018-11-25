@@ -99,8 +99,31 @@ class OWLModelTest {
 	}
 
 	@Test
-	void changeOWLObjectPropertyIRI() {
+	void changeOWLObjectPropertyIRI() throws OWLModel.OWLOntologyManagerNotSetException, NoSelectionException {
+		OWLEntityRenamer renamer = new OWLEntityRenamer(owlOntologyManager, Collections.singleton(ontology));
+		OWLObjectProperty property = controller.getOWLModel().getOWLObjectPropertyByID("hasBase");
+		assert ontology.containsObjectPropertyInSignature(property.getIRI());
 
+		Map<OWLEntity, IRI> entityToIRIMap = new HashMap<>();
+		entityToIRIMap.put(property, IRI.create(property.getIRI().getNamespace(), "betterHasBass"));
+
+		TestingHelpers.testOWLAction(controller,
+				renamer.changeIRI(entityToIRIMap),
+				TestingHelpers.defaultExpectedTextSources,
+				TestingHelpers.defaultExpectedConceptAnnotations,
+				TestingHelpers.defaultExpectedSpans,
+				TestingHelpers.defaultExpectedGraphSpaces,
+				TestingHelpers.defaultExpectedProfiles,
+				TestingHelpers.defaultExpectedHighlighters,
+				TestingHelpers.defaultExpectedAnnotationNodes,
+				TestingHelpers.defaultExpectedTriples);
+
+		GraphSpace graphSpace = controller.getTextSourceCollection().getSelection().getGraphSpaceCollection().getSelection();
+		RelationAnnotation relationAnnotation = (RelationAnnotation) graphSpace.getChildEdges(graphSpace.getDefaultParent())[0];
+
+		assert !ontology.containsObjectPropertyInSignature(property.getIRI());
+		assert ontology.containsObjectPropertyInSignature(relationAnnotation.getProperty().getIRI());
+		assert relationAnnotation.getProperty().equals(controller.getOWLModel().getOWLObjectPropertyByID("betterHasBass"));
 	}
 
 	@Test

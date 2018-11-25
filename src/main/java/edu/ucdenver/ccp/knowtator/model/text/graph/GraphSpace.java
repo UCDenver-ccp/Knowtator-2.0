@@ -537,7 +537,8 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 					if (axiom.getEntity() instanceof OWLObjectProperty) {
 						if (axChg instanceof AddAxiom) {
 							axiom.accept(addedCollector);
-							annotationsToChangeOrRemove.forEach(relationAnnotation -> relationAnnotation.setValue(axiom.getEntity()));
+							annotationsToChangeOrRemove.forEach(relationAnnotation -> relationAnnotation.setProperty((OWLObjectProperty) axiom.getEntity()));
+							annotationsToChangeOrRemove.clear();
 						} else if (axChg instanceof RemoveAxiom) {
 							axiom.accept(removedCollector);
 							Arrays.asList(getChildEdges(getDefaultParent())).forEach(o -> {

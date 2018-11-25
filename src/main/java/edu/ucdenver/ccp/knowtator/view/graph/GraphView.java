@@ -327,19 +327,23 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 						try {
 							OWLObjectProperty property = view.getController().getOWLModel().getSelectedOWLObjectProperty();
 							String propertyID = view.getController().getOWLModel().getOWLEntityRendering(property);
-							RelationOptionsDialog relationOptionsDialog = getRelationOptionsDialog(propertyID);
-							if (relationOptionsDialog.getResult() == RelationOptionsDialog.OK_OPTION) {
-								try {
-									AbstractKnowtatorAction action = new GraphActions.AddTripleAction(view.getController(),
-											(AnnotationNode) edge.getSource(),
-											(AnnotationNode) edge.getTarget(),
-											property, relationOptionsDialog.getPropertyID(),
-											relationOptionsDialog.getQuantifier(), relationOptionsDialog.getQuantifierValue(),
-											relationOptionsDialog.getNegation(),
-											relationOptionsDialog.getMotivation());
-									view.getController().registerAction(action);
-								} catch (NoSelectionException e) {
-									e.printStackTrace();
+
+							// For some reason the top object property doesn't play nice so don't allow it
+							if (!property.getIRI().getShortForm().equals("owl:topObjectProperty")) {
+								RelationOptionsDialog relationOptionsDialog = getRelationOptionsDialog(propertyID);
+								if (relationOptionsDialog.getResult() == RelationOptionsDialog.OK_OPTION) {
+									try {
+										AbstractKnowtatorAction action = new GraphActions.AddTripleAction(view.getController(),
+												(AnnotationNode) edge.getSource(),
+												(AnnotationNode) edge.getTarget(),
+												property, relationOptionsDialog.getPropertyID(),
+												relationOptionsDialog.getQuantifier(), relationOptionsDialog.getQuantifierValue(),
+												relationOptionsDialog.getNegation(),
+												relationOptionsDialog.getMotivation());
+										view.getController().registerAction(action);
+									} catch (NoSelectionException e) {
+										e.printStackTrace();
+									}
 								}
 
 							}
@@ -589,6 +593,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 	}
 
 	/**
+	 *
 	 */
 	public JComponent $$$getRootComponent$$$() {
 		return panel1;
