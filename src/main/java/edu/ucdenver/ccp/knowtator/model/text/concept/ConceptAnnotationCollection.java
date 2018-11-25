@@ -31,7 +31,6 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.FilterModel;
 import edu.ucdenver.ccp.knowtator.model.FilterModelListener;
 import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
-import edu.ucdenver.ccp.knowtator.model.OWLModel;
 import edu.ucdenver.ccp.knowtator.model.collection.CantRemoveException;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
@@ -45,10 +44,8 @@ import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.event.EventType;
 import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
-import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
+import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.util.OWLEntityCollector;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -489,60 +486,96 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 		super.dispose();
 	}
 
+	@SuppressWarnings("Duplicates")
 	@Override
 	public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) {
 		Set<OWLEntity> possiblyAddedEntities = new HashSet<>();
 		Set<OWLEntity> possiblyRemovedEntities = new HashSet<>();
+		OWLEntityCollector addedCollector = new OWLEntityCollector(possiblyAddedEntities);
+		OWLEntityCollector removedCollector = new OWLEntityCollector(possiblyRemovedEntities);
+
+		Set<ConceptAnnotation> nameChange = new HashSet<>();
+
+		for (OWLOntologyChange chg : changes) {
+			AxiomType type = chg.getAxiom().getAxiomType();
+			if (chg.isAxiomChange()) {
+				OWLAxiomChange axChg = (OWLAxiomChange) chg;
+				if (AxiomType.DECLARATION == type) {
+					OWLDeclarationAxiom axiom = ((OWLDeclarationAxiom) axChg.getAxiom());
+					if (axiom.getEntity() instanceof OWLClass) {
+						if (axChg instanceof AddAxiom) {
+							axiom.accept(addedCollector);
+							nameChange.forEach(conceptAnnotation -> conceptAnnotation.setOwlClass((OWLClass) axiom.getEntity()));
+						} else if (axChg instanceof RemoveAxiom) {
+							axiom.accept(removedCollector);
+							forEach(conceptAnnotation -> {
+								if (conceptAnnotation.getOwlClass().equals(axiom.getEntity()))
+									nameChange.add(conceptAnnotation);
+							});
+						}
+					}
+
+				}
+				if (AxiomType.SUBCLASS_OF == type) {
+					if (axChg instanceof AddAxiom) {
+						axChg.getAxiom().accept(addedCollector);
+					} else {
+						axChg.getAxiom().accept(removedCollector);
+					}
+				}
+			}
+
+		}
 
 
-		OWLModel.processOntologyChanges(changes, possiblyAddedEntities, possiblyRemovedEntities);
+//		OWLModel.processOntologyChanges(changes, possiblyAddedEntities, possiblyRemovedEntities);
 
     /*
     For now, I will assume that entity removed is the one that existed and the one
     that is added is the new name for it.
      */
-		log.warn("Added");
-		possiblyAddedEntities.forEach(log::warn);
-
-		log.warn("Removed");
-		possiblyRemovedEntities.forEach(log::warn);
-		if (!possiblyAddedEntities.isEmpty() && !possiblyRemovedEntities.isEmpty()) {
-			OWLClass oldOWLClass = (OWLClass) possiblyRemovedEntities.iterator().next();
-			OWLClass newOWLClass = (OWLClass) possiblyAddedEntities.iterator().next();
-
-//            try {
-//                log.warn(String.format("Old: %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(oldOWLClass)));
-//                log.warn(String.format("New: %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(newOWLClass)));
-//            } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
-//                e.printStackTrace();
-//            }
-			ConceptAnnotationCollection annotationsForOwlClass = new ConceptAnnotationCollection(controller, textSource);
-
-			String owlClassID = controller.getOWLModel().getOWLEntityRendering(oldOWLClass);
-
-			for (ConceptAnnotation conceptAnnotation : this) {
-				if (conceptAnnotation.getOwlClass() == oldOWLClass) {
-					annotationsForOwlClass.add(conceptAnnotation);
-				} else if (conceptAnnotation.getOwlClassID().equals(owlClassID)) {
-					conceptAnnotation.setOwlClass(oldOWLClass);
-					annotationsForOwlClass.add(conceptAnnotation);
-				}
-			}
-
-			if (newOWLClass == null) {
-				for (ConceptAnnotation conceptAnnotation : annotationsForOwlClass) {
-					try {
-						remove(conceptAnnotation);
-					} catch (CantRemoveException e) {
-						e.printStackTrace();
-					}
-				}
-			} else {
-				for (ConceptAnnotation conceptAnnotation : annotationsForOwlClass) {
-					conceptAnnotation.setOwlClass(newOWLClass);
-				}
-			}
-		}
+//		log.warn("Added");
+//		possiblyAddedEntities.forEach(log::warn);
+//
+//		log.warn("Removed");
+//		possiblyRemovedEntities.forEach(log::warn);
+//		if (!possiblyAddedEntities.isEmpty() && !possiblyRemovedEntities.isEmpty()) {
+//			OWLClass oldOWLClass = (OWLClass) possiblyRemovedEntities.iterator().next();
+//			OWLClass newOWLClass = (OWLClass) possiblyAddedEntities.iterator().next();
+//
+////            try {
+////                log.warn(String.format("Old: %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(oldOWLClass)));
+////                log.warn(String.format("New: %s", controller.getOWLAPIDataExtractor().getOWLEntityRendering(newOWLClass)));
+////            } catch (OWLWorkSpaceNotSetException | OWLEntityNullException e) {
+////                e.printStackTrace();
+////            }
+//			ConceptAnnotationCollection annotationsForOwlClass = new ConceptAnnotationCollection(controller, textSource);
+//
+//			String owlClassID = controller.getOWLModel().getOWLEntityRendering(oldOWLClass);
+//
+//			for (ConceptAnnotation conceptAnnotation : this) {
+//				if (conceptAnnotation.getOwlClass() == oldOWLClass) {
+//					annotationsForOwlClass.add(conceptAnnotation);
+//				} else if (conceptAnnotation.getOwlClassID().equals(owlClassID)) {
+//					conceptAnnotation.setOwlClass(oldOWLClass);
+//					annotationsForOwlClass.add(conceptAnnotation);
+//				}
+//			}
+//
+//			if (newOWLClass == null) {
+//				for (ConceptAnnotation conceptAnnotation : annotationsForOwlClass) {
+//					try {
+//						remove(conceptAnnotation);
+//					} catch (CantRemoveException e) {
+//						e.printStackTrace();
+//					}
+//				}
+//			} else {
+//				for (ConceptAnnotation conceptAnnotation : annotationsForOwlClass) {
+//					conceptAnnotation.setOwlClass(newOWLClass);
+//				}
+//			}
+//		}
 	}
 
 	@Override

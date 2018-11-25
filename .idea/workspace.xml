@@ -5,9 +5,10 @@
     <option name="CUSTOM_SCOPE_NAME" value="src" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aaa66eaa-1de7-4fc8-9d1f-61ae6cd37f93" name="Default" comment="Using owl ontology manager in debug">
+    <list default="true" id="aaa66eaa-1de7-4fc8-9d1f-61ae6cd37f93" name="Default" comment="Successfully created testing environment for owl ontology changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/OWLModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/OWLModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/concept/ConceptAnnotationCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/concept/ConceptAnnotationCollection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/model/OWLModelTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/model/OWLModelTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
@@ -29,30 +30,48 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/OWLModel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="518">
-              <caret line="406" selection-start-line="406" selection-end-line="406" />
+            <state relative-caret-position="355">
+              <caret line="508" column="9" lean-forward="true" selection-start-line="490" selection-start-column="8" selection-end-line="508" selection-end-column="9" />
               <folding>
-                <element signature="e#8327#8328#0" expanded="true" />
-                <element signature="e#8366#8367#0" expanded="true" />
-                <element signature="e#9350#9351#0" expanded="true" />
-                <element signature="e#9368#9369#0" expanded="true" />
-                <element signature="e#9448#9449#0" expanded="true" />
-                <element signature="e#9480#9481#0" expanded="true" />
-                <element signature="e#12967#12968#0" expanded="true" />
-                <element signature="e#14089#14090#0" expanded="true" />
-                <element signature="e#14147#14148#0" expanded="true" />
+                <element signature="e#8563#8564#0" expanded="true" />
+                <element signature="e#9565#9566#0" expanded="true" />
+                <element signature="e#9677#9678#0" expanded="true" />
+                <element signature="e#13232#13233#0" expanded="true" />
+                <element signature="e#14354#14355#0" expanded="true" />
+                <element signature="e#14412#14413#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/model/OWLModelTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="25">
-              <caret line="56" column="62" selection-start-line="56" selection-start-column="62" selection-end-line="56" selection-end-column="62" />
+            <state relative-caret-position="185">
+              <caret line="74" column="78" lean-forward="true" selection-start-line="74" selection-start-column="78" selection-end-line="74" selection-end-column="78" />
               <folding>
                 <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/resources/test_project/Ontologies/pizza.owl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="166">
+              <caret line="1147" column="26" selection-start-line="1147" selection-start-column="26" selection-end-line="1147" selection-end-column="83" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/concept/ConceptAnnotationCollection.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1458">
+              <caret line="577" column="9" lean-forward="true" selection-start-line="536" selection-start-column="9" selection-end-line="577" selection-end-column="9" />
+              <folding>
+                <element signature="e#18474#18505#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -73,9 +92,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>refres</find>
-      <find>view</find>
-      <find>controller().get</find>
       <find>getSe</find>
       <find>setText</find>
       <find>size == 0</find>
@@ -103,6 +119,9 @@
       <find>tert</find>
       <find>getowlontology</find>
       <find>addColor</find>
+      <find>IceCre</find>
+      <find>log.</find>
+      <find>getncName</find>
     </findStrings>
     <replaceStrings>
       <replace>owlManager</replace>
@@ -203,7 +222,6 @@
         <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/actions/FilterActionsTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionActionsTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/actions/KnowtatorCollectionActions.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/concept/ConceptAnnotationCollection.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/graph/RelationAnnotation.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/OWLOntologyManagerNotSetException.java" />
         <option value="$PROJECT_DIR$/src/test/resources/test_project/Profiles/Default.xml" />
@@ -215,8 +233,9 @@
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/profile/Profile.java" />
         <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/concept/ConceptAnnotation.java" />
         <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/actions/OWLActionsTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/OWLModel.java" />
         <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/model/OWLModelTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/OWLModel.java" />
+        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/concept/ConceptAnnotationCollection.java" />
       </list>
     </option>
   </component>
@@ -695,7 +714,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.OWLModelTest.addOWLClass">
+  <component name="RunManager" selected="JUnit.OWLModelTest.changeOWLClassIRI">
     <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
       <setting name="replType" value="NREPL" />
       <setting name="execution" value="LEININGEN" />
@@ -784,15 +803,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="KnowtatorIAATest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="knowtator" />
-      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator" />
-      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.KnowtatorIAATest" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="OWLActionsTest.changeColorAction" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="knowtator" />
       <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator.actions" />
@@ -826,6 +836,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="OWLModelTest.changeOWLClassIRI" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="knowtator" />
+      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator.model" />
+      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.model.OWLModelTest" />
+      <option name="METHOD_NAME" value="changeOWLClassIRI" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
       <method v="2">
@@ -837,19 +858,19 @@
       <item itemvalue="Application.Run Protege (no tests)" />
       <item itemvalue="Application.Standalone" />
       <item itemvalue="JUnit.All in knowtator" />
-      <item itemvalue="JUnit.KnowtatorIAATest" />
       <item itemvalue="JUnit.OWLActionsTest.reassignOWLClassAction" />
       <item itemvalue="JUnit.GraphActionsTest.addTriple" />
       <item itemvalue="JUnit.OWLActionsTest.changeColorAction" />
       <item itemvalue="JUnit.OWLModelTest.addOWLClass" />
+      <item itemvalue="JUnit.OWLModelTest.changeOWLClassIRI" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.OWLModelTest.changeOWLClassIRI" />
         <item itemvalue="JUnit.OWLModelTest.addOWLClass" />
         <item itemvalue="JUnit.OWLActionsTest.changeColorAction" />
         <item itemvalue="JUnit.GraphActionsTest.addTriple" />
         <item itemvalue="JUnit.OWLActionsTest.reassignOWLClassAction" />
-        <item itemvalue="JUnit.KnowtatorIAATest" />
       </list>
     </recent_temporary>
   </component>
@@ -908,14 +929,7 @@
       <workItem from="1543017989006" duration="34657000" />
       <workItem from="1543101896497" duration="6603000" />
       <workItem from="1543109195089" duration="5656000" />
-      <workItem from="1543118771807" duration="5716000" />
-    </task>
-    <task id="LOCAL-00099" summary="Added documentation for knowtator object interface">
-      <created>1541727063672</created>
-      <option name="number" value="00099" />
-      <option name="presentableId" value="LOCAL-00099" />
-      <option name="project" value="LOCAL" />
-      <updated>1541727063672</updated>
+      <workItem from="1543118771807" duration="8263000" />
     </task>
     <task id="LOCAL-00100" summary="Added documentation for savable">
       <created>1541727245686</created>
@@ -1253,43 +1267,50 @@
       <option name="project" value="LOCAL" />
       <updated>1543123015370</updated>
     </task>
-    <option name="localTasksCounter" value="148" />
+    <task id="LOCAL-00148" summary="Successfully created testing environment for owl ontology changes">
+      <created>1543124718697</created>
+      <option name="number" value="00148" />
+      <option name="presentableId" value="LOCAL-00148" />
+      <option name="project" value="LOCAL" />
+      <updated>1543124718697</updated>
+    </task>
+    <option name="localTasksCounter" value="149" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="All_in_knowtator - 2018.11.24 at 22h 10m 47s.xml">
-      <configuration name="All in knowtator" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="All_in_knowtator - 2018.11.24 at 22h 12m 05s.xml">
-      <configuration name="All in knowtator" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="OWLActionsTest_changeColorAction - 2018.11.24 at 22h 15m 35s.xml">
-      <configuration name="OWLActionsTest.changeColorAction" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="OWLActionsTest_changeColorAction - 2018.11.24 at 22h 15m 53s.xml">
-      <configuration name="OWLActionsTest.changeColorAction" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="All_in_knowtator - 2018.11.24 at 22h 16m 08s.xml">
-      <configuration name="All in knowtator" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="OWLModelTest_addOWLClass - 2018.11.24 at 22h 30m 56s.xml">
-      <configuration name="OWLModelTest.addOWLClass" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="OWLModelTest_addOWLClass - 2018.11.24 at 22h 32m 22s.xml">
-      <configuration name="OWLModelTest.addOWLClass" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="OWLModelTest_addOWLClass - 2018.11.24 at 22h 36m 13s.xml">
-      <configuration name="OWLModelTest.addOWLClass" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="OWLModelTest_addOWLClass - 2018.11.24 at 22h 37m 24s.xml">
-      <configuration name="OWLModelTest.addOWLClass" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="OWLModelTest_addOWLClass - 2018.11.24 at 22h 40m 35s.xml">
       <configuration name="OWLModelTest.addOWLClass" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="OWLModelTest_addOWLClass - 2018.11.24 at 22h 43m 06s.xml">
+      <configuration name="OWLModelTest.addOWLClass" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="OWLModelTest_addOWLClass - 2018.11.24 at 22h 44m 59s.xml">
+      <configuration name="OWLModelTest.addOWLClass" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="OWLModelTest_changeOWLClassIRI - 2018.11.24 at 22h 55m 02s.xml">
+      <configuration name="OWLModelTest.changeOWLClassIRI" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="OWLModelTest_changeOWLClassIRI - 2018.11.24 at 22h 55m 22s.xml">
+      <configuration name="OWLModelTest.changeOWLClassIRI" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="OWLModelTest_changeOWLClassIRI - 2018.11.24 at 23h 09m 13s.xml">
+      <configuration name="OWLModelTest.changeOWLClassIRI" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="OWLModelTest_changeOWLClassIRI - 2018.11.24 at 23h 09m 22s.xml">
+      <configuration name="OWLModelTest.changeOWLClassIRI" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="OWLModelTest_changeOWLClassIRI - 2018.11.24 at 23h 13m 50s.xml">
+      <configuration name="OWLModelTest.changeOWLClassIRI" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="OWLModelTest_changeOWLClassIRI - 2018.11.24 at 23h 15m 16s.xml">
+      <configuration name="OWLModelTest.changeOWLClassIRI" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="OWLModelTest_changeOWLClassIRI - 2018.11.24 at 23h 24m 12s.xml">
+      <configuration name="OWLModelTest.changeOWLClassIRI" configurationId="JUnit" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="491612000" />
+    <option name="totallyTimeSpent" value="494159000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1302,6 +1323,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1696" height="1066" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Structure" order="0" sideWeight="0.35852373" side_tool="true" weight="0.26100245" />
       <window_info id="Designer" order="1" />
@@ -1313,7 +1335,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49938875" weight="0.32747254" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.42087913" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.4987775" visible="true" weight="0.73186815" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.4987775" visible="true" weight="0.50329673" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.33333334" />
@@ -1440,7 +1462,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/src/main/java/Swing-Slide-Menu" />
     </ignored-roots>
-    <MESSAGE value="Limited annotation note length" />
     <MESSAGE value="Added relation motivation/notes" />
     <MESSAGE value="Added test for removing a span in a span collection of size one" />
     <MESSAGE value="Added tests for concept annotation methods" />
@@ -1465,7 +1486,8 @@
     <MESSAGE value="Knowtator text pane shouldn't query for selected text source" />
     <MESSAGE value="Removed old test projects and made fixes accordingly" />
     <MESSAGE value="Using owl ontology manager in debug" />
-    <option name="LAST_COMMIT_MESSAGE" value="Using owl ontology manager in debug" />
+    <MESSAGE value="Successfully created testing environment for owl ontology changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Successfully created testing environment for owl ontology changes" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
@@ -1486,7 +1508,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/concept/ConceptAnnotationCollection.java</url>
-          <line>351</line>
+          <line>348</line>
           <properties />
           <option name="timeStamp" value="429" />
         </line-breakpoint>
@@ -1504,9 +1526,21 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/model/OWLModelTest.java</url>
-          <line>49</line>
+          <line>81</line>
           <properties />
-          <option name="timeStamp" value="461" />
+          <option name="timeStamp" value="464" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/OWLModel.java</url>
+          <line>499</line>
+          <properties />
+          <option name="timeStamp" value="465" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/OWLModel.java</url>
+          <line>501</line>
+          <properties />
+          <option name="timeStamp" value="466" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -1519,6 +1553,41 @@
   <component name="debuggerHistoryManager">
     <expressions id="evaluateCodeFragment">
       <expression>
+        <expression-string>controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>ontology.getEntitiesInSignature(IRI.create(&quot;http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream&quot;))</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>ontology.getEntitiesInSignature(IRI.create(&quot;http://www.co-ode.org/ontologies/pizza.owl#IceCream&quot;))</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>ontology.getEntitiesInSignature(IRI.create(&quot;http://www.co-ode.org/ontologies/pizza.owl#Pizza&quot;))</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>ontology.getEntitiesInSignature(IRI.create(&quot;http://www.co-ode.org/ontologies/pizza/#Pizza&quot;))</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>ontology.getEntitiesInSignature(IRI.create(&quot;http://www.co-ode.org/ontologies/pizza#Pizza&quot;))</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>ontology.getEntitiesInSignature(IRI.create(&quot;Pizza&quot;))</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
+      </expression>
+      <expression>
         <expression-string>owlOntologyManager.getOntology(IRI.create(&quot;http://www.co-ode.org/ontologies/pizza&quot;))</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
@@ -1530,41 +1599,6 @@
       </expression>
       <expression>
         <expression-string>owlOntologyManager.getOntology(IRI.create(&quot;Pizzal.owl&quot;))</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>profile.getColor(conceptAnnotation).equals(Color.RED)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>controller.getOWLModel().getOWLEntityRendering(owlClass)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>IExtensionRegistry.class.getName()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>IExtensionRegistry.class</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>workspace.getOWLModelManager()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>conceptAnnotation == null</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>conceptAnnotation.getSpanCollection().first()</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
       </expression>
@@ -1605,26 +1639,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/collection/CyclableCollection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="335">
-          <caret line="65" selection-start-line="65" selection-end-line="65" />
-          <folding>
-            <element signature="e#2243#2244#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/ProjectManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="314">
-          <caret line="234" selection-start-line="234" selection-end-line="234" />
-          <folding>
-            <element signature="e#8826#8827#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="305">
@@ -1865,13 +1879,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/concept/ConceptAnnotationCollection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="442" selection-start-line="442" selection-end-line="442" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/view/KnowtatorViewTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="167">
@@ -1958,13 +1965,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/test_project/Ontologies/pizza.owl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="65" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="65" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/net/sourceforge/owlapi/owlapi-osgidistribution/4.2.3/owlapi-osgidistribution-4.2.3-sources.jar!/org/semanticweb/owlapi/model/HasAddAxiom.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="366">
@@ -1986,24 +1986,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/OWLModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="518">
-          <caret line="406" selection-start-line="406" selection-end-line="406" />
-          <folding>
-            <element signature="e#8327#8328#0" expanded="true" />
-            <element signature="e#8366#8367#0" expanded="true" />
-            <element signature="e#9350#9351#0" expanded="true" />
-            <element signature="e#9368#9369#0" expanded="true" />
-            <element signature="e#9448#9449#0" expanded="true" />
-            <element signature="e#9480#9481#0" expanded="true" />
-            <element signature="e#12967#12968#0" expanded="true" />
-            <element signature="e#14089#14090#0" expanded="true" />
-            <element signature="e#14147#14148#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/junit/platform/junit-platform-commons/1.3.1/junit-platform-commons-1.3.1.jar!/org/junit/platform/commons/util/ReflectionUtils.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="151">
@@ -2011,12 +1993,66 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/net/sourceforge/owlapi/owlapi-api/5.1.3/owlapi-api-5.1.3.jar!/org/semanticweb/owlapi/util/SLF4JSilencer.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="167">
+          <caret line="17" column="23" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
+          <folding>
+            <element signature="e#404#405#0" expanded="true" />
+            <element signature="e#444#445#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/resources/test_project/Ontologies/pizza.owl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="166">
+          <caret line="1147" column="26" selection-start-line="1147" selection-start-column="26" selection-end-line="1147" selection-end-column="83" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/net/sourceforge/owlapi/owlapi-osgidistribution/4.2.3/owlapi-osgidistribution-4.2.3-sources.jar!/org/semanticweb/owlapi/model/IRI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="124">
+          <caret line="247" column="42" selection-start-line="247" selection-start-column="33" selection-end-line="247" selection-end-column="42" />
+          <folding>
+            <element signature="e#6688#6689#0" expanded="true" />
+            <element signature="e#6720#6721#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/model/OWLModelTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="25">
-          <caret line="56" column="62" selection-start-line="56" selection-start-column="62" selection-end-line="56" selection-end-column="62" />
+        <state relative-caret-position="185">
+          <caret line="74" column="78" lean-forward="true" selection-start-line="74" selection-start-column="78" selection-end-line="74" selection-end-column="78" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/OWLModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="355">
+          <caret line="508" column="9" lean-forward="true" selection-start-line="490" selection-start-column="8" selection-end-line="508" selection-end-column="9" />
+          <folding>
+            <element signature="e#8563#8564#0" expanded="true" />
+            <element signature="e#9565#9566#0" expanded="true" />
+            <element signature="e#9677#9678#0" expanded="true" />
+            <element signature="e#13232#13233#0" expanded="true" />
+            <element signature="e#14354#14355#0" expanded="true" />
+            <element signature="e#14412#14413#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/text/concept/ConceptAnnotationCollection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1458">
+          <caret line="577" column="9" lean-forward="true" selection-start-line="536" selection-start-column="9" selection-end-line="577" selection-end-column="9" />
+          <folding>
+            <element signature="e#18474#18505#0" expanded="true" />
           </folding>
         </state>
       </provider>

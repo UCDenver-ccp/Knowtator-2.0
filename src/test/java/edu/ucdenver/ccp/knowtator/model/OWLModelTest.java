@@ -26,8 +26,15 @@ package edu.ucdenver.ccp.knowtator.model;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
+import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.util.OWLEntityRenamer;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 class OWLModelTest {
 
@@ -44,32 +51,39 @@ class OWLModelTest {
 		}
 	}
 
-	@Test
-	void addOWLClass() throws OWLModel.OWLOntologyManagerNotSetException {
-		OWLOntology ontology = owlOntologyManager.getOntology(IRI.create("http://www.co-ode.org/ontologies/pizza"));
-		assert ontology != null;
+	private OWLOntology ontology = owlOntologyManager.getOntology(IRI.create("http://www.co-ode.org/ontologies/pizza"));
 
+	@Test
+	void addOWLClass() {
 		OWLClass class1 = dataFactory.getOWLClass(IRI.create("X"));
-		OWLClass class2 = dataFactory.getOWLClass(IRI.create("IceCream"));
+		OWLClass class2 = controller.getOWLModel().getOWLClassByID("IceCream");
 		OWLAxiom axiom = dataFactory.getOWLSubClassOfAxiom(class1, class2);
 
-		controller.getOWLModel().getOwlOntologyManager().addAxiom(ontology, axiom);
+		owlOntologyManager.addAxiom(ontology, axiom);
+		TestingHelpers.checkDefaultCollectionValues(controller);
+		owlOntologyManager.removeAxiom(ontology, axiom);
 		TestingHelpers.checkDefaultCollectionValues(controller);
 	}
 
 	@Test
-	void reassignOWLClass() {
+	void changeOWLClassIRI() throws NoSelectionException {
+		OWLEntityRenamer renamer = new OWLEntityRenamer(owlOntologyManager, Collections.singleton(ontology));
 
-	}
+		OWLClass class2 = controller.getOWLModel().getOWLClassByID("Pizza");
+		assert ontology.containsClassInSignature(class2.getIRI());
 
-	@Test
-	void reassignOWLObjectProperty() {
+		Map<OWLEntity, IRI> entityToIRIMap = new HashMap<>();
+		entityToIRIMap.put(class2, IRI.create(class2.getIRI().getNamespace(), "BetterPizza"));
 
-	}
 
-	@Test
-	void changeOWLClassIRI() {
+		owlOntologyManager.applyChanges(renamer.changeIRI(entityToIRIMap));
+		TestingHelpers.checkDefaultCollectionValues(controller);
 
+		assert !ontology.containsClassInSignature(class2.getIRI());
+
+		ConceptAnnotation conceptAnnotation = controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection();
+		assert ontology.containsClassInSignature(conceptAnnotation.getOwlClass().getIRI());
+		assert conceptAnnotation.getOwlClass().equals(controller.getOWLModel().getOWLClassByID("BetterPizza"));
 	}
 
 	@Test

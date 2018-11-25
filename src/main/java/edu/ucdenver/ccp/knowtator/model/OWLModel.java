@@ -230,20 +230,25 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 	}
 
 	public OWLClass getOWLClassByID(String classID) {
-		if (classID == null) {
-			return null;
-		} else {
+		if (classID != null) {
 			try {
 				return getWorkSpace().getOWLModelManager().getOWLEntityFinder().getOWLClass(classID);
 			} catch (OWLWorkSpaceNotSetException e) {
 				try {
-					return getOwlOntologyManager().getOWLDataFactory().getOWLClass(IRI.create(classID));
-				} catch (OWLOntologyManagerNotSetException e1) {
-					return null;
+					for (OWLOntology owlOntology : getOwlOntologyManager().getOntologies()) {
+						for (OWLClass owlClass : owlOntology.getClassesInSignature()) {
+							if (owlClass.getIRI().getShortForm().equals(classID)) {
+								return owlClass;
+							}
+						}
+					}
+				} catch (OWLOntologyManagerNotSetException ignored) {
 				}
 			}
 		}
+		return null;
 	}
+
 
 	public OWLOntologyManager getOwlOntologyManager() throws OWLOntologyManagerNotSetException {
 		if (owlOntologyManager == null) {
