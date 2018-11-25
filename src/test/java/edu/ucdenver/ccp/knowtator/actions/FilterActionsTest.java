@@ -65,7 +65,7 @@ public class FilterActionsTest {
 		TestingHelpers.testKnowtatorAction(controller, new FilterActions.FilterAction(controller, FilterModel.OWLCLASS, true),
 				TestingHelpers.defaultExpectedTextSources,
 				TestingHelpers.defaultExpectedConceptAnnotations,
-				TestingHelpers.defaultExpectedSpans - 6,
+				TestingHelpers.defaultExpectedSpans - 4,
 				TestingHelpers.defaultExpectedGraphSpaces,
 				TestingHelpers.defaultExpectedProfiles,
 				TestingHelpers.defaultExpectedHighlighters,

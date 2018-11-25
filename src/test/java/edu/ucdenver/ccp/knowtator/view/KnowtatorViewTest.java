@@ -48,8 +48,8 @@ class KnowtatorViewTest {
 	void testActions() throws NoSelectionException, IOException {
 		KnowtatorController controller = TestingHelpers.getLoadedController();
 		TestingHelpers.checkDefaultCollectionValues(controller);
-		view.loadProject(controller.getProjectLocation(), null);
 		view.getController().setDebug();
+		view.loadProject(controller.getProjectLocation(), null);
 		TestingHelpers.checkDefaultCollectionValues(view.getController());
 		KnowtatorCollectionActionsTest test = new KnowtatorCollectionActionsTest();
 		test.setController(view.getController());

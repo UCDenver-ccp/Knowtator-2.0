@@ -27,13 +27,11 @@ package edu.ucdenver.ccp.knowtator.actions;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
-import edu.ucdenver.ccp.knowtator.model.OWLModel;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import org.junit.Test;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import java.awt.*;
@@ -49,12 +47,7 @@ public class OWLActionsTest {
         ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
         textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
 
-        OWLClass owlClass;
-        try {
-            owlClass = controller.getOWLModel().getOwlOntologyManager().getOWLDataFactory().getOWLClass(IRI.create("Pizza"));
-        } catch (OWLModel.OWLOntologyManagerNotSetException e) {
-            owlClass = null;
-        }
+        OWLClass owlClass = controller.getOWLModel().getOWLClassByID("Pizza");
         assert controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getOwlClass() == owlClass;
 
         controller.registerAction(new OWLActions.ReassignOWLClassAction(controller));

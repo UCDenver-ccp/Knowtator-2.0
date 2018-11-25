@@ -220,7 +220,12 @@ public class Span extends AbstractKnowtatorTextBoundDataObject<Span> implements 
   }
 
   public String getSpannedText() {
-    return textSource.getContent().substring(start, end);
+    try {
+      return textSource.getContent().substring(start, end);
+    } catch (StringIndexOutOfBoundsException e) {
+      log.warn(String.format("The span %d, %d for %s is out of bounds", start, end, conceptAnnotation.getId()));
+      return "";
+    }
   }
 
   public Integer getStart() {

@@ -30,6 +30,7 @@ import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.text.graph.RelationAnnotation;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.HermiT.ReasonerFactory;
 import org.semanticweb.owlapi.model.*;
@@ -43,21 +44,27 @@ import java.util.stream.Collectors;
 
 class OWLModelTest {
 
-	private static final KnowtatorController controller = TestingHelpers.getLoadedController();
+	private static KnowtatorController controller;
 	private static OWLOntologyManager owlOntologyManager;
 	private static OWLDataFactory dataFactory;
-	private OWLReasonerFactory reasonerFactory = new ReasonerFactory();
-	static {
+	private static OWLOntology ontology;
+	private static OWLReasoner reasoner;
+
+	@BeforeEach
+	void setup() {
+
+		controller = TestingHelpers.getLoadedController();
+		OWLReasonerFactory reasonerFactory = new ReasonerFactory();
 		try {
 			owlOntologyManager = controller.getOWLModel().getOwlOntologyManager();
 			dataFactory = owlOntologyManager.getOWLDataFactory();
 		} catch (OWLModel.OWLOntologyManagerNotSetException e) {
 			e.printStackTrace();
 		}
-	}
 
-	private OWLOntology ontology = owlOntologyManager.getOntology(IRI.create("http://www.co-ode.org/ontologies/pizza"));
-	private OWLReasoner reasoner = reasonerFactory.createReasoner(Objects.requireNonNull(ontology));
+		ontology = owlOntologyManager.getOntology(IRI.create("http://www.co-ode.org/ontologies/pizza"));
+		reasoner = reasonerFactory.createReasoner(Objects.requireNonNull(ontology));
+	}
 
 	@Test
 	void addOWLClass() {
@@ -147,7 +154,7 @@ class OWLModelTest {
 
 	@Test
 	void removeObjectProperty() throws OWLModel.OWLOntologyManagerNotSetException {
-		OWLObjectProperty owlObjectProperty = controller.getOWLModel().getOWLObjectPropertyByID("isIngredientOf");
+		OWLObjectProperty owlObjectProperty = controller.getOWLModel().getOWLObjectPropertyByID("hasBase");
 		assert ontology.containsObjectPropertyInSignature(owlObjectProperty.getIRI());
 		OWLEntityRemover remover = new OWLEntityRemover(Collections.singleton(ontology));
 		owlObjectProperty.accept(remover);

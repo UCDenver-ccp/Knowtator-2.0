@@ -40,10 +40,8 @@ import org.protege.editor.owl.model.event.OWLModelManagerListener;
 import org.protege.editor.owl.ui.renderer.OWLRendererPreferences;
 import org.protege.editor.owl.ui.search.SearchDialogPanel;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.OWLEntityCollector;
 import org.semanticweb.owlapi.util.SLF4JSilencer;
 
-import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -494,28 +492,6 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 
 	public boolean isWorkSpaceSet() {
 		return owlWorkSpace != null;
-	}
-
-	public static void processOntologyChanges(@Nonnull List<? extends OWLOntologyChange> changes, Set<OWLEntity> possiblyAddedEntities, Set<OWLEntity> possiblyRemovedEntities) {
-		OWLEntityCollector addedCollector = new OWLEntityCollector(possiblyAddedEntities);
-		OWLEntityCollector removedCollector = new OWLEntityCollector(possiblyRemovedEntities);
-
-		for (OWLOntologyChange chg : changes) {
-			AxiomType type = chg.getAxiom().getAxiomType();
-			if (chg.isAxiomChange()) {
-				OWLAxiomChange axChg = (OWLAxiomChange) chg;
-				if (type == AxiomType.DECLARATION || type == AxiomType.SUBCLASS_OF || type == AxiomType.SUB_OBJECT_PROPERTY) {
-					if (axChg instanceof AddAxiom) {
-						axChg.getAxiom().accept(addedCollector);
-					} else {
-						axChg.getAxiom().accept(removedCollector);
-					}
-				}
-			} else {
-				log.warn("\ttype: " + type);
-			}
-
-		}
 	}
 
 	public void setSelectedOWLEntity(OWLEntity owlEntity) {
