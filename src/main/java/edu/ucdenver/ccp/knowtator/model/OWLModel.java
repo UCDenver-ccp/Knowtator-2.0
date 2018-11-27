@@ -40,7 +40,6 @@ import org.protege.editor.owl.model.event.OWLModelManagerListener;
 import org.protege.editor.owl.ui.renderer.OWLRendererPreferences;
 import org.protege.editor.owl.ui.search.SearchDialogPanel;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.SLF4JSilencer;
 
 import javax.swing.*;
 import java.io.File;
@@ -417,9 +416,7 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 							}
 						} catch (OWLWorkSpaceNotSetException e) {
 							try {
-								SLF4JSilencer.silence();
 								getOwlOntologyManager().loadOntology(IRI.create(ontologyLocation));
-								SLF4JSilencer.deSilence();
 							} catch (OWLOntologyCreationException | OWLOntologyManagerNotSetException e1) {
 								log.warn("Could not load ontologies");
 							}

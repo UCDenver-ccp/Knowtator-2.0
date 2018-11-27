@@ -22,7 +22,23 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.collection;
+package edu.ucdenver.ccp.knowtator.actions;
 
-public class NoSelectionException extends Throwable {
+public class ActionParameters {
+	private final CollectionActionType actionType;
+	private final KnowtatorCollectionType collectionType;
+
+	public ActionParameters(CollectionActionType actionType, KnowtatorCollectionType collectionType) {
+
+		this.actionType = actionType;
+		this.collectionType = collectionType;
+	}
+
+	public CollectionActionType getActionType() {
+		return actionType;
+	}
+
+	public KnowtatorCollectionType getCollectionType() {
+		return collectionType;
+	}
 }

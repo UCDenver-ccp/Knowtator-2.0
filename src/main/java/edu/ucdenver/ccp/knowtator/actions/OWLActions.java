@@ -127,7 +127,7 @@ public class OWLActions {
                                         .getDescendants((OWLClass) owlClass));
                     }
 
-	                ColorChangeAction action = new ColorChangeAction(view.getController(), view.getController().getProfileCollection().getSelection(), owlClasses, c);
+	                ColorChangeAction action = new ColorChangeAction(view.getController().getProfileCollection().getSelection(), owlClasses, c);
                     view.getController().registerAction(action);
                 }
 
@@ -146,19 +146,14 @@ public class OWLActions {
 		private final Set<Object> owlClasses;
 		private final Color color;
 
-		ColorChangeAction(KnowtatorController controller, Profile profile, Set<Object> owlClasses, Color color) {
+		ColorChangeAction(Profile profile, Set<Object> owlClasses, Color color) {
 			super("Change color");
 			this.profile = profile;
 			this.owlClasses = owlClasses;
 			this.color = color;
 
 			oldColorAssignments = new HashMap<>();
-			owlClasses.forEach(owlClass -> {
-				Color oldColor = profile.getColors().get(owlClass);
-				if (oldColor != null) {
-					oldColorAssignments.put(owlClass, oldColor);
-				}
-			});
+			owlClasses.forEach(owlClass -> profile.getColors().computeIfPresent(owlClass, oldColorAssignments::put));
 
 			edit = new ColorChangeEdit(profile, oldColorAssignments, color);
 		}

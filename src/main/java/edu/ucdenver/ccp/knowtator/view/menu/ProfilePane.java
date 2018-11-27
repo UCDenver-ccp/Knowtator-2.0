@@ -26,18 +26,21 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import edu.ucdenver.ccp.knowtator.actions.AbstractKnowtatorCollectionAction;
+import edu.ucdenver.ccp.knowtator.actions.ActionParameters;
 import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionActions;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.list.ColorList;
 import edu.ucdenver.ccp.knowtator.view.list.ProfileList;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+
+import static edu.ucdenver.ccp.knowtator.actions.CollectionActionType.ADD;
+import static edu.ucdenver.ccp.knowtator.actions.CollectionActionType.REMOVE;
+import static edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionType.PROFILE;
 
 /**
  * A pane for handling profile functions
@@ -57,15 +60,15 @@ class ProfilePane extends MenuPane {
         $$$setupUI$$$();
 
         addProfileButton.addActionListener(e -> {
-            Map<String, String> actionParameters = new HashMap<>();
-            actionParameters.put(KnowtatorXMLTags.PROFILE, AbstractKnowtatorCollectionAction.ADD);
+            List<ActionParameters> actionParameters = new ArrayList<>();
+            actionParameters.add(new ActionParameters(ADD, PROFILE));
 
             KnowtatorCollectionActions.pickAction(actionParameters, view, profileNameField.getText(), null);
             profileNameField.setText("");
         });
         removeProfileButton.addActionListener(e -> {
-            Map<String, String> actionParameters = new HashMap<>();
-            actionParameters.put(KnowtatorXMLTags.PROFILE, AbstractKnowtatorCollectionAction.REMOVE);
+            List<ActionParameters> actionParameters = new ArrayList<>();
+            actionParameters.add(new ActionParameters(REMOVE, PROFILE));
 
             KnowtatorCollectionActions.pickAction(actionParameters, view, profileNameField.getText(), null);
             profileNameField.setText("");

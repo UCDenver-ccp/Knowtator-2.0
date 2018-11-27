@@ -32,25 +32,24 @@ import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import javax.swing.undo.UndoableEdit;
 
 public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataObjectInterface> extends AbstractKnowtatorAction {
-	public final static String ADD = "add";
-	public static final String REMOVE = "remove";
 
-	final String actionName;
+
+	final CollectionActionType actionType;
 	final KnowtatorCollectionEdit<K> edit;
 	final KnowtatorCollection<K> collection;
 	K object;
 
-	AbstractKnowtatorCollectionAction(String actionName, String presentationName, KnowtatorCollection<K> collection) {
-		super(String.format("%s %s", actionName, presentationName));
+	AbstractKnowtatorCollectionAction(CollectionActionType actionType, String presentationName, KnowtatorCollection<K> collection) {
+		super(String.format("%s %s", actionType, presentationName));
 		this.collection = collection;
-		this.actionName = actionName;
-		this.edit = new KnowtatorCollectionEdit<>(actionName, collection, object, getPresentationName());
+		this.actionType = actionType;
+		this.edit = new KnowtatorCollectionEdit<>(actionType, collection, object, getPresentationName());
 	}
 
 
 	@Override
 	public void execute() throws ActionUnperformableException {
-		switch (actionName) {
+		switch (actionType) {
 			case ADD:
 				prepareAdd();
 				if (object != null) {

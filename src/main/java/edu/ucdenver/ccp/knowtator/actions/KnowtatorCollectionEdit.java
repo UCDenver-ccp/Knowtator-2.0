@@ -29,16 +29,14 @@ import edu.ucdenver.ccp.knowtator.model.collection.CantRemoveException;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 
 public class KnowtatorCollectionEdit<K extends KnowtatorDataObjectInterface> extends KnowtatorEdit {
-    private final static String ADD = "add";
-    private static final String REMOVE = "remove";
 
-    private final String actionName;
+    private final CollectionActionType actionType;
     private final KnowtatorCollection<K> collection;
     private K object;
 
-    KnowtatorCollectionEdit(String actionName, KnowtatorCollection<K> collection, K object, String presentationName) {
+    KnowtatorCollectionEdit(CollectionActionType actionType, KnowtatorCollection<K> collection, K object, String presentationName) {
         super(presentationName);
-        this.actionName = actionName;
+        this.actionType = actionType;
         this.collection = collection;
         this.object = object;
     }
@@ -46,31 +44,38 @@ public class KnowtatorCollectionEdit<K extends KnowtatorDataObjectInterface> ext
     @Override
     public void undo() {
         super.undo();
-        if (ADD.equals(actionName)) {
-            try {
-                collection.remove(object);
-            } catch (CantRemoveException e) {
-                e.printStackTrace();
-            }
-
-        } else if (REMOVE.equals(actionName) && object != null) {
-            collection.add(object);
-
+        switch (actionType) {
+            case ADD:
+                try {
+                    collection.remove(object);
+                } catch (CantRemoveException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case REMOVE:
+                if (object != null) {
+                    collection.add(object);
+                }
+                break;
         }
     }
 
     @Override
     public void redo() {
         super.redo();
-        if (ADD.equals(actionName)) {
-            collection.add(object);
-
-        } else if (REMOVE.equals(actionName) && object != null) {
-            try {
-                collection.remove(object);
-            } catch (CantRemoveException e) {
-                e.printStackTrace();
-            }
+        switch (actionType) {
+            case ADD:
+                collection.add(object);
+                break;
+            case REMOVE:
+                if (object != null) {
+                    try {
+                        collection.remove(object);
+                    } catch (CantRemoveException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
         }
     }
 

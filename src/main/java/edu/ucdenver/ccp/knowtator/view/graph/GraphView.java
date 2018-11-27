@@ -65,6 +65,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static edu.ucdenver.ccp.knowtator.actions.CollectionActionType.ADD;
+import static edu.ucdenver.ccp.knowtator.actions.CollectionActionType.REMOVE;
+
 public class GraphView extends JPanel implements KnowtatorComponent {
 	private final JDialog dialog;
 	private final KnowtatorView view;
@@ -132,7 +135,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 
 
 				if (JOptionPane.showConfirmDialog(view, "Are you sure you want to delete this graph?") == JOptionPane.YES_OPTION) {
-					AbstractKnowtatorAction action = new KnowtatorCollectionActions.GraphSpaceAction(KnowtatorCollectionActions.REMOVE, view.getController(), null);
+					AbstractKnowtatorAction action = new KnowtatorCollectionActions.GraphSpaceAction(REMOVE, view.getController(), null);
 					view.getController().registerAction(action);
 				}
 			} catch (NoSelectionException e2) {
@@ -242,7 +245,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 		String graphName = getGraphNameInput(view, textSource, null);
 
 		if (graphName != null) {
-			AbstractKnowtatorAction action = new KnowtatorCollectionActions.GraphSpaceAction(KnowtatorCollectionActions.ADD, view.getController(), graphName);
+			AbstractKnowtatorAction action = new KnowtatorCollectionActions.GraphSpaceAction(ADD, view.getController(), graphName);
 			view.getController().registerAction(action);
 		}
 	}

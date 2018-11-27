@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 
+import java.util.Optional;
 import java.util.TreeSet;
 
 public abstract class SelectableCollection<K extends KnowtatorDataObjectInterface, L extends SelectableCollectionListener<K>> extends CyclableCollection<K, L> {
@@ -37,12 +38,8 @@ public abstract class SelectableCollection<K extends KnowtatorDataObjectInterfac
         selection = null;
     }
 
-    public K getSelection() throws NoSelectionException {
-        if (selection == null) {
-            throw new NoSelectionException();
-        }
-        return selection;
-
+    public Optional<K> getSelection() {
+        return Optional.ofNullable(selection);
     }
 
     public void selectNext() {

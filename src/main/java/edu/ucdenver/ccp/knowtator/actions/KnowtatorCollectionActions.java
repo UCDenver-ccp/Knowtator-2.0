@@ -26,7 +26,6 @@ package edu.ucdenver.ccp.knowtator.actions;
 
 import com.mxgraph.util.mxEvent;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
 import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
@@ -42,36 +41,41 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+
+import static edu.ucdenver.ccp.knowtator.actions.CollectionActionType.REMOVE;
 
 public class KnowtatorCollectionActions {
-	public final static String ADD = AbstractKnowtatorCollectionAction.ADD;
-	public static final String REMOVE = AbstractKnowtatorCollectionAction.REMOVE;
 
-	public static void pickAction(Map<String, String> actionParameters, KnowtatorView view, String id, File file) {
+	public static void pickAction(KnowtatorView view, String id, File file, ActionParameters... actionParametersList) {
 		List<AbstractKnowtatorCollectionAction> actions = new ArrayList<>();
 
-		actionParameters.forEach((objectName, actionName) -> {
+		Arrays.asList(actionParametersList).forEach(parameters -> {
+			KnowtatorCollectionType collectionType = parameters.getCollectionType();
+			CollectionActionType actionType = parameters.getActionType();
 
-			try {
-				switch (objectName) {
-					case KnowtatorXMLTags.ANNOTATION:
-						actions.add(new ConceptAnnotationAction(actionName, view.getController(), view.getController().getTextSourceCollection().getSelection()));
-						break;
-					case KnowtatorXMLTags.SPAN:
-						actions.add(new SpanAction(actionName, view.getController(), view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection()));
-						break;
-					case KnowtatorXMLTags.PROFILE:
-						actions.add(new ProfileAction(actionName, view.getController(), id));
-						break;
-					case KnowtatorXMLTags.DOCUMENT:
-						actions.add(new TextSourceAction(actionName, view.getController(), file));
-				}
-
-			} catch (NoSelectionException ignored) {
-
+			switch (collectionType) {
+				case ANNOTATION:
+					view.getController().getTextSourceCollection().getSelection()
+							.ifPresent(textSource -> actions.add(new ConceptAnnotationAction(
+									parameters.getActionType(),
+									view.getController(),
+									textSource)));
+					break;
+				case SPAN:
+					view.getController().getTextSourceCollection().getSelection()
+							.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
+									.ifPresent(conceptAnnotation -> actions.add(new SpanAction(actionType, view.getController(), conceptAnnotation))));
+					break;
+				case PROFILE:
+					actions.add(new ProfileAction(actionType, view.getController(), id));
+					break;
+				case DOCUMENT:
+					actions.add(new TextSourceAction(actionType, view.getController(), file));
 			}
+
+
 		});
 
 		if (!actions.isEmpty()) {
@@ -100,8 +104,8 @@ public class KnowtatorCollectionActions {
 		private ConceptAnnotation newConceptAnnotation;
 		private TextSource textSource;
 
-		ConceptAnnotationAction(String actionName, KnowtatorController controller, TextSource textSource) {
-			super(actionName, "concept annotation", textSource.getConceptAnnotationCollection());
+		ConceptAnnotationAction(CollectionActionType actionType, KnowtatorController controller, TextSource textSource) {
+			super(actionType, "concept annotation", textSource.getConceptAnnotationCollection());
 			this.textSource = textSource;
 			this.controller = controller;
 		}
@@ -147,7 +151,7 @@ public class KnowtatorCollectionActions {
 		private final KnowtatorController controller;
 		private final ConceptAnnotation conceptAnnotation;
 
-		SpanAction(String actionName, KnowtatorController controller, ConceptAnnotation conceptAnnotation) {
+		SpanAction(CollectionActionType actionName, KnowtatorController controller, ConceptAnnotation conceptAnnotation) {
 			super(actionName, "span", conceptAnnotation.getSpanCollection());
 			this.conceptAnnotation = conceptAnnotation;
 
@@ -177,7 +181,7 @@ public class KnowtatorCollectionActions {
 
 		@Override
 		public void execute() throws ActionUnperformableException {
-			if (this.actionName.equals(REMOVE) && conceptAnnotation.getSpanCollection().size() == 1) {
+			if (this.actionType.equals(REMOVE) && conceptAnnotation.getSpanCollection().size() == 1) {
 				try {
 					super.execute();
 				} catch (ActionUnperformableException ignored) {
@@ -204,8 +208,8 @@ public class KnowtatorCollectionActions {
 		private final KnowtatorController controller;
 		private final String profileId;
 
-		ProfileAction(String actionName, KnowtatorController controller, String profileId) {
-			super(actionName, "Add profile", controller.getProfileCollection());
+		ProfileAction(CollectionActionType actionType, KnowtatorController controller, String profileId) {
+			super(actionType, "Add profile", controller.getProfileCollection());
 			this.controller = controller;
 			this.profileId = profileId;
 		}
@@ -249,8 +253,8 @@ public class KnowtatorCollectionActions {
 		private final KnowtatorController controller;
 		private final File file;
 
-		TextSourceAction(String actionName, KnowtatorController controller, File file) {
-			super(actionName, "text source", controller.getTextSourceCollection());
+		TextSourceAction(CollectionActionType actionType, KnowtatorController controller, File file) {
+			super(actionType, "text source", controller.getTextSourceCollection());
 			this.controller = controller;
 			this.file = file;
 		}
@@ -283,8 +287,8 @@ public class KnowtatorCollectionActions {
 		private final KnowtatorController controller;
 		private final String graphName;
 
-		public GraphSpaceAction(String actionName, KnowtatorController controller, String graphName) throws NoSelectionException {
-			super(actionName, "graph space", controller.getTextSourceCollection().getSelection().getGraphSpaceCollection());
+		public GraphSpaceAction(CollectionActionType actionType, KnowtatorController controller, String graphName) throws NoSelectionException {
+			super(actionType, "graph space", controller.getTextSourceCollection().getSelection().getGraphSpaceCollection());
 			this.controller = controller;
 			this.graphName = graphName;
 		}

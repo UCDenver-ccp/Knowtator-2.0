@@ -29,15 +29,10 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.actions.FilterActions;
-import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionActions;
-import edu.ucdenver.ccp.knowtator.actions.OWLActions;
-import edu.ucdenver.ccp.knowtator.actions.SpanActions;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
+import edu.ucdenver.ccp.knowtator.actions.*;
 import edu.ucdenver.ccp.knowtator.model.FilterModel;
 import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -73,6 +68,10 @@ import java.util.*;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import static edu.ucdenver.ccp.knowtator.actions.CollectionActionType.ADD;
+import static edu.ucdenver.ccp.knowtator.actions.CollectionActionType.REMOVE;
+import static edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionType.*;
+
 /**
  * Main class for GUI
  *
@@ -83,7 +82,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private static final Logger log = Logger.getLogger(KnowtatorView.class);
 	public static final Preferences PREFERENCES = Preferences.userRoot().node("knowtator");
 
-	private final KnowtatorController controller;
+	private static final KnowtatorController CONTROLLER = new KnowtatorController();
 	private GraphViewDialog graphViewDialog;
 	private JComponent panel1;
 	private JTextField searchTextField;
@@ -132,11 +131,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 
 	/**
-	 * Creates all components and sets up its controller
+	 * Creates all components and sets up its CONTROLLER
 	 */
 	public KnowtatorView() {
-		controller = new KnowtatorController();
-
 		$$$setupUI$$$();
 
 		makeButtons();
@@ -157,20 +154,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	 * Sets OWL workspace for controllers OWL model in order to interface with Protege's OWL workspace
 	 */
 	private void setUpOWL() {
-		if (!controller.getOWLModel().isWorkSpaceSet()) {
+		if (!CONTROLLER.getOWLModel().isWorkSpaceSet()) {
 			if (getOWLWorkspace() != null) {
-				controller.getOWLModel().setOwlWorkSpace(getOWLWorkspace());
-				controller.getOWLModel().addOWLModelManagerListener(annotationClassLabel);
+				CONTROLLER.getOWLModel().setOwlWorkSpace(getOWLWorkspace());
+				CONTROLLER.getOWLModel().addOWLModelManagerListener(annotationClassLabel);
 
 			}
 		}
-	}
-
-	/**
-	 * @return The project controller
-	 */
-	public KnowtatorController getController() {
-		return controller;
 	}
 
 	/**
@@ -273,13 +263,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	 */
 	private void makeUndoButtons() {
 		undoButton.addActionListener(e -> {
-			if (getController().canUndo()) {
-				getController().undo();
+			if (CONTROLLER.canUndo()) {
+				CONTROLLER.undo();
 			}
 		});
 		redoButton.addActionListener(e -> {
-			if (getController().canRedo()) {
-				getController().redo();
+			if (CONTROLLER.canRedo()) {
+				CONTROLLER.redo();
 			}
 		});
 	}
@@ -288,11 +278,11 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	 * Make filter check boxes
 	 */
 	private void makeFilterCheckBoxes() {
-		owlClassFilterCheckBox.setSelected(getController().getFilterModel().isFilter(FilterModel.OWLCLASS));
-		profileFilterCheckBox.setSelected(getController().getFilterModel().isFilter(FilterModel.PROFILE));
+		owlClassFilterCheckBox.setSelected(CONTROLLER.getFilterModel().isFilter(FilterModel.OWLCLASS));
+		profileFilterCheckBox.setSelected(CONTROLLER.getFilterModel().isFilter(FilterModel.PROFILE));
 
-		profileFilterCheckBox.addItemListener(e -> getController().registerAction(new FilterActions.FilterAction(getController(), FilterModel.PROFILE, profileFilterCheckBox.isSelected())));
-		owlClassFilterCheckBox.addItemListener(e -> getController().registerAction(new FilterActions.FilterAction(getController(), FilterModel.OWLCLASS, owlClassFilterCheckBox.isSelected())));
+		profileFilterCheckBox.addItemListener(e -> CONTROLLER.registerAction(new FilterActions.FilterAction(CONTROLLER, FilterModel.PROFILE, profileFilterCheckBox.isSelected())));
+		owlClassFilterCheckBox.addItemListener(e -> CONTROLLER.registerAction(new FilterActions.FilterAction(CONTROLLER, FilterModel.OWLCLASS, owlClassFilterCheckBox.isSelected())));
 	}
 
 	/**
@@ -313,22 +303,20 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		fontSizeSlider.setValue(knowtatorTextPane.getFont().getSize());
 		fontSizeSlider.addChangeListener(e -> knowtatorTextPane.setFontSize(fontSizeSlider.getValue()));
 		showGraphViewerButton.addActionListener(e -> graphViewDialog.setVisible(true));
-		previousTextSourceButton.addActionListener(e -> getController().getTextSourceCollection().selectPrevious());
-		nextTextSourceButton.addActionListener(e -> getController().getTextSourceCollection().selectNext());
+		previousTextSourceButton.addActionListener(e -> CONTROLLER.getTextSourceCollection().selectPrevious());
+		nextTextSourceButton.addActionListener(e -> CONTROLLER.getTextSourceCollection().selectNext());
 		addTextSourceButton.addActionListener(e -> {
 			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setCurrentDirectory(getController().getTextSourceCollection().getArticlesLocation());
+			fileChooser.setCurrentDirectory(CONTROLLER.getTextSourceCollection().getArticlesLocation());
 
 			if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-				Map<String, String> actionParameters = new HashMap<>();
-				actionParameters.put(KnowtatorCollectionActions.ADD, KnowtatorXMLTags.DOCUMENT);
-				KnowtatorCollectionActions.pickAction(actionParameters, this, null, fileChooser.getSelectedFile());
+				KnowtatorCollectionActions.pickAction(this, null, fileChooser.getSelectedFile(),
+						new ActionParameters(ADD, DOCUMENT));
 			}
 		});
 		removeTextSourceButton.addActionListener(e -> {
-			Map<String, String> actionParameters = new HashMap<>();
-			actionParameters.put(KnowtatorCollectionActions.REMOVE, KnowtatorXMLTags.DOCUMENT);
-			KnowtatorCollectionActions.pickAction(actionParameters, this, null, null);
+			KnowtatorCollectionActions.pickAction(actionParameters, this, null, null,
+					new ActionParameters(REMOVE, DOCUMENT));
 		});
 
 		textSourceButtons = new ArrayList<>();
@@ -346,37 +334,30 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private void makeAnnotationButtons() {
 		assignColorToClassButton.addActionListener(e -> {
 			try {
-				OWLActions.assignColorToClass(this, getController().getOWLModel().getSelectedOWLClass());
+				OWLActions.assignColorToClass(this, CONTROLLER.getOWLModel().getSelectedOWLClass());
 			} catch (NoSelectedOWLClassException ignored) {
 
 			}
 		});
 
 		annotationButtons = new ArrayList<>();
-		addAnnotationButton.addActionListener(e -> {
-			Map<String, String> actionParameters = new HashMap<>();
-			actionParameters.put(KnowtatorXMLTags.ANNOTATION, KnowtatorCollectionActions.ADD);
-			actionParameters.put(KnowtatorXMLTags.SPAN, KnowtatorCollectionActions.ADD);
-
-			KnowtatorCollectionActions.pickAction(actionParameters, this, null, null);
-		});
-		removeAnnotationButton.addActionListener(e -> {
-			Map<String, String> actionParameters = new HashMap<>();
-			actionParameters.put(KnowtatorXMLTags.ANNOTATION, KnowtatorCollectionActions.REMOVE);
-			actionParameters.put(KnowtatorXMLTags.SPAN, KnowtatorCollectionActions.REMOVE);
-
-			KnowtatorCollectionActions.pickAction(actionParameters, this, null, null);
-		});
+		addAnnotationButton.addActionListener(e -> KnowtatorCollectionActions.pickAction(this, null, null,
+				new ActionParameters(ADD, ANNOTATION),
+				new ActionParameters(ADD, SPAN)));
+		removeAnnotationButton.addActionListener(e -> KnowtatorCollectionActions.pickAction(this, null, null,
+				new ActionParameters(REMOVE, ANNOTATION),
+				new ActionParameters(REMOVE, SPAN)));
 		nextSpanButton.addActionListener(e -> {
+			CONTROLLER
 			try {
-				getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getNextSpan();
+				CONTROLLER.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getNextSpan();
 			} catch (NoSelectionException e1) {
 				e1.printStackTrace();
 			}
 		});
 		previousSpanButton.addActionListener(e -> {
 			try {
-				getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getPreviousSpan();
+				CONTROLLER.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getPreviousSpan();
 			} catch (NoSelectionException e1) {
 				e1.printStackTrace();
 			}
@@ -396,32 +377,32 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		spanSizeButtons = new HashMap<>();
 		spanSizeButtons.put(shrinkEndButton, e -> {
 			try {
-				SpanActions.ModifySpanAction action = new SpanActions.ModifySpanAction(getController(), SpanActions.END, SpanActions.SHRINK);
-				getController().registerAction(action);
+				SpanActions.ModifySpanAction action = new SpanActions.ModifySpanAction(CONTROLLER, SpanActions.END, SpanActions.SHRINK);
+				CONTROLLER.registerAction(action);
 			} catch (NoSelectionException e1) {
 				e1.printStackTrace();
 			}
 		});
 		spanSizeButtons.put(shrinkStartButton, e -> {
 			try {
-				SpanActions.ModifySpanAction action = new SpanActions.ModifySpanAction(getController(), SpanActions.START, SpanActions.SHRINK);
-				getController().registerAction(action);
+				SpanActions.ModifySpanAction action = new SpanActions.ModifySpanAction(CONTROLLER, SpanActions.START, SpanActions.SHRINK);
+				CONTROLLER.registerAction(action);
 			} catch (NoSelectionException e1) {
 				e1.printStackTrace();
 			}
 		});
 		spanSizeButtons.put(growEndButton, e -> {
 			try {
-				SpanActions.ModifySpanAction action = new SpanActions.ModifySpanAction(getController(), SpanActions.END, SpanActions.GROW);
-				getController().registerAction(action);
+				SpanActions.ModifySpanAction action = new SpanActions.ModifySpanAction(CONTROLLER, SpanActions.END, SpanActions.GROW);
+				CONTROLLER.registerAction(action);
 			} catch (NoSelectionException e1) {
 				e1.printStackTrace();
 			}
 		});
 		spanSizeButtons.put(growStartButton, e -> {
 			try {
-				SpanActions.ModifySpanAction action = new SpanActions.ModifySpanAction(getController(), SpanActions.START, SpanActions.GROW);
-				getController().registerAction(action);
+				SpanActions.ModifySpanAction action = new SpanActions.ModifySpanAction(CONTROLLER, SpanActions.START, SpanActions.GROW);
+				CONTROLLER.registerAction(action);
 			} catch (NoSelectionException e1) {
 				e1.printStackTrace();
 			}
@@ -438,7 +419,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	 * Makes the search buttons and filter checkboxes
 	 */
 	private void makeSearchButtons() {
-		findTextInOntologyButton.addActionListener(e -> getController().getOWLModel().searchForString(searchTextField.getText()));
+		findTextInOntologyButton.addActionListener(e -> CONTROLLER.getOWLModel().searchForString(searchTextField.getText()));
 		nextMatchButton.addActionListener(e -> getKnowtatorTextPane().searchForward());
 		previousMatchButton.addActionListener(e -> getKnowtatorTextPane().searchPrevious());
 
@@ -449,7 +430,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	 */
 	@Override
 	public void setupListeners() {
-		new TextBoundModelListener(controller) {
+		new TextBoundModelListener(CONTROLLER) {
 			@Override
 			public void respondToTextSourceCollectionEmptied() {
 				disableTextSourceButtons();
@@ -660,7 +641,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	 */
 	@Override
 	public void disposeView() {
-		controller.dispose();
+		CONTROLLER.dispose();
 
 		knowtatorComponents.forEach(KnowtatorComponent::dispose);
 	}
@@ -686,20 +667,20 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	}
 
 	public void loadProject(File file, KnowtatorCollectionListener<TextSource> listener) throws IOException {
-		controller.dispose();
-		controller.reset(getOWLWorkspace());
-		controller.setSaveLocation(file);
+		CONTROLLER.dispose();
+		CONTROLLER.reset(getOWLWorkspace());
+		CONTROLLER.setSaveLocation(file);
 		log.warn(String.format("Opening from %s", file.getAbsolutePath()));
 		if (listener != null) {
-			controller.getTextSourceCollection().addCollectionListener(listener);
+			CONTROLLER.getTextSourceCollection().addCollectionListener(listener);
 		}
-		controller.loadProject();
+		CONTROLLER.loadProject();
 		reset();
-		controller.getTextSourceCollection().setSelection(controller.getTextSourceCollection().first());
+		CONTROLLER.getTextSourceCollection().setSelection(CONTROLLER.getTextSourceCollection().first());
 		knowtatorTextPane.refreshHighlights();
 		addTextSourceButton.setEnabled(true);
 
-		KnowtatorView.PREFERENCES.put("Last Project", getController().getProjectLocation().getAbsolutePath());
+		KnowtatorView.PREFERENCES.put("Last Project", CONTROLLER.getProjectLocation().getAbsolutePath());
 
 		try {
 			KnowtatorView.PREFERENCES.flush();
