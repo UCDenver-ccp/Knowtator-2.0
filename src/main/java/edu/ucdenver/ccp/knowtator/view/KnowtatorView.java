@@ -28,8 +28,8 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.util.mxGraphTransferable;
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.FilterModel;
+import edu.ucdenver.ccp.knowtator.model.FilterType;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
@@ -85,7 +85,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private static final Logger log = Logger.getLogger(KnowtatorView.class);
 	public static final Preferences PREFERENCES = Preferences.userRoot().node("knowtator");
 
-	public static KnowtatorController CONTROLLER = new KnowtatorController();
+	public static KnowtatorModel MODEL = new KnowtatorModel();
 	private GraphViewDialog graphViewDialog;
 	private JComponent panel1;
 	private JTextField searchTextField;
@@ -134,7 +134,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 
 	/**
-	 * Creates all components and sets up its CONTROLLER
+	 * Creates all components and sets up its MODEL
 	 */
 	public KnowtatorView() {
 		$$$setupUI$$$();
@@ -157,10 +157,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	 * Sets OWL workspace for controllers OWL model in order to interface with Protege's OWL workspace
 	 */
 	private void setUpOWL() {
-		if (!CONTROLLER.getOWLModel().isWorkSpaceSet()) {
+		if (!MODEL.isWorkSpaceSet()) {
 			if (getOWLWorkspace() != null) {
-				CONTROLLER.getOWLModel().setOwlWorkSpace(getOWLWorkspace());
-				CONTROLLER.getOWLModel().addOWLModelManagerListener(annotationClassLabel);
+				MODEL.setOwlWorkSpace(getOWLWorkspace());
+				MODEL.addOWLModelManagerListener(annotationClassLabel);
 
 			}
 		}
@@ -266,13 +266,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	 */
 	private void makeUndoButtons() {
 		undoButton.addActionListener(e -> {
-			if (CONTROLLER.canUndo()) {
-				CONTROLLER.undo();
+			if (MODEL.canUndo()) {
+				MODEL.undo();
 			}
 		});
 		redoButton.addActionListener(e -> {
-			if (CONTROLLER.canRedo()) {
-				CONTROLLER.redo();
+			if (MODEL.canRedo()) {
+				MODEL.redo();
 			}
 		});
 	}
@@ -281,11 +281,11 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	 * Make filter check boxes
 	 */
 	private void makeFilterCheckBoxes() {
-		owlClassFilterCheckBox.setSelected(CONTROLLER.getFilterModel().isFilter(FilterModel.OWLCLASS));
-		profileFilterCheckBox.setSelected(CONTROLLER.getFilterModel().isFilter(FilterModel.PROFILE));
+		owlClassFilterCheckBox.setSelected(MODEL.isFilter(FilterType.OWLCLASS));
+		profileFilterCheckBox.setSelected(MODEL.isFilter(FilterType.PROFILE));
 
-		profileFilterCheckBox.addItemListener(e -> CONTROLLER.registerAction(new FilterAction(FilterModel.PROFILE, profileFilterCheckBox.isSelected())));
-		owlClassFilterCheckBox.addItemListener(e -> CONTROLLER.registerAction(new FilterAction(FilterModel.OWLCLASS, owlClassFilterCheckBox.isSelected())));
+		profileFilterCheckBox.addItemListener(e -> MODEL.registerAction(new FilterAction(FilterType.PROFILE, profileFilterCheckBox.isSelected())));
+		owlClassFilterCheckBox.addItemListener(e -> MODEL.registerAction(new FilterAction(FilterType.OWLCLASS, owlClassFilterCheckBox.isSelected())));
 	}
 
 	/**
@@ -306,11 +306,11 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		fontSizeSlider.setValue(knowtatorTextPane.getFont().getSize());
 		fontSizeSlider.addChangeListener(e -> knowtatorTextPane.setFontSize(fontSizeSlider.getValue()));
 		showGraphViewerButton.addActionListener(e -> graphViewDialog.setVisible(true));
-		previousTextSourceButton.addActionListener(e -> CONTROLLER.getTextSourceCollection().selectPrevious());
-		nextTextSourceButton.addActionListener(e -> CONTROLLER.getTextSourceCollection().selectNext());
+		previousTextSourceButton.addActionListener(e -> MODEL.selectPreviousTextSource());
+		nextTextSourceButton.addActionListener(e -> MODEL.selectNextTextSource());
 		addTextSourceButton.addActionListener(e -> {
 			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setCurrentDirectory(CONTROLLER.getTextSourceCollection().getArticlesLocation());
+			fileChooser.setCurrentDirectory(MODEL.getArticlesLocation());
 
 			if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 				pickAction(this, null, fileChooser.getSelectedFile(), new ActionParameters(ADD, DOCUMENT));
@@ -333,12 +333,12 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	 * Makes the annotation and span selection buttons
 	 */
 	private void makeAnnotationButtons() {
-		assignColorToClassButton.addActionListener(e -> CONTROLLER.getOWLModel().getSelectedOWLClass().ifPresent(owlClass -> assignColorToClass(this, owlClass)));
+		assignColorToClassButton.addActionListener(e -> MODEL.getSelectedOWLClass().ifPresent(owlClass -> assignColorToClass(this, owlClass)));
 
 		addAnnotationButton.addActionListener(e -> pickAction(this, null, null, new ActionParameters(ADD, ANNOTATION), new ActionParameters(ADD, SPAN)));
 		removeAnnotationButton.addActionListener(e -> pickAction(this, null, null, new ActionParameters(REMOVE, ANNOTATION), new ActionParameters(REMOVE, SPAN)));
-		nextSpanButton.addActionListener(e -> CONTROLLER.getTextSourceCollection().getSelection().ifPresent(textSource -> textSource.getConceptAnnotationCollection().getNextSpan()));
-		previousSpanButton.addActionListener(e -> CONTROLLER.getTextSourceCollection().getSelection().ifPresent(textSource -> textSource.getConceptAnnotationCollection().getPreviousSpan()));
+		nextSpanButton.addActionListener(e -> MODEL.getTextSource().ifPresent(textSource -> textSource.getConceptAnnotationCollection().getNextSpan()));
+		previousSpanButton.addActionListener(e -> MODEL.getTextSource().ifPresent(textSource -> textSource.getConceptAnnotationCollection().getPreviousSpan()));
 
 		annotationButtons = Arrays.asList(
 				addAnnotationButton,
@@ -354,23 +354,23 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private void makeSpanModificationButtons() {
 
 		spanSizeButtons = new HashMap<>();
-		spanSizeButtons.put(shrinkEndButton, e -> CONTROLLER.getTextSourceCollection().getSelection()
+		spanSizeButtons.put(shrinkEndButton, e -> MODEL.getTextSource()
 				.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
 						.ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection().getSelection()
-								.ifPresent(span -> CONTROLLER.registerAction(new SpanActions.ModifySpanAction(SpanActions.END, SpanActions.SHRINK, span))))));
-		spanSizeButtons.put(shrinkStartButton, e -> CONTROLLER.getTextSourceCollection().getSelection()
+								.ifPresent(span -> MODEL.registerAction(new SpanActions.ModifySpanAction(SpanActions.END, SpanActions.SHRINK, span))))));
+		spanSizeButtons.put(shrinkStartButton, e -> MODEL.getTextSource()
 				.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
 						.ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection().getSelection()
-								.ifPresent(span -> CONTROLLER.registerAction(new SpanActions.ModifySpanAction(SpanActions.START, SpanActions.SHRINK, span))))));
-		spanSizeButtons.put(growEndButton, e -> CONTROLLER.getTextSourceCollection().getSelection()
+								.ifPresent(span -> MODEL.registerAction(new SpanActions.ModifySpanAction(SpanActions.START, SpanActions.SHRINK, span))))));
+		spanSizeButtons.put(growEndButton, e -> MODEL.getTextSource()
 				.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
 						.ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection().getSelection()
-								.ifPresent(span -> CONTROLLER.registerAction(new SpanActions.ModifySpanAction(SpanActions.END, SpanActions.GROW, span))))));
+								.ifPresent(span -> MODEL.registerAction(new SpanActions.ModifySpanAction(SpanActions.END, SpanActions.GROW, span))))));
 		spanSizeButtons.put(growStartButton, e ->
-				CONTROLLER.getTextSourceCollection().getSelection()
+				MODEL.getTextSource()
 						.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
 								.ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection().getSelection()
-										.ifPresent(span -> CONTROLLER.registerAction(new SpanActions.ModifySpanAction(SpanActions.START, SpanActions.GROW, span))))));
+										.ifPresent(span -> MODEL.registerAction(new SpanActions.ModifySpanAction(SpanActions.START, SpanActions.GROW, span))))));
 
 		selectionSizeButtons = new HashMap<>();
 
@@ -384,7 +384,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	 * Makes the search buttons and filter checkboxes
 	 */
 	private void makeSearchButtons() {
-		findTextInOntologyButton.addActionListener(e -> CONTROLLER.getOWLModel().searchForString(searchTextField.getText()));
+		findTextInOntologyButton.addActionListener(e -> MODEL.searchForString(searchTextField.getText()));
 		nextMatchButton.addActionListener(e -> getKnowtatorTextPane().searchForward());
 		previousMatchButton.addActionListener(e -> getKnowtatorTextPane().searchPrevious());
 
@@ -395,7 +395,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	 */
 	@Override
 	public void setupListeners() {
-		new TextBoundModelListener(CONTROLLER) {
+		new TextBoundModelListener(MODEL) {
 			@Override
 			public void respondToTextSourceCollectionEmptied() {
 				disableTextSourceButtons();
@@ -606,7 +606,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	 */
 	@Override
 	public void disposeView() {
-		CONTROLLER.dispose();
+		MODEL.dispose();
 
 		knowtatorComponents.forEach(KnowtatorComponent::dispose);
 	}
@@ -632,20 +632,20 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	}
 
 	public void loadProject(File file, KnowtatorCollectionListener<TextSource> listener) throws IOException {
-		CONTROLLER.dispose();
-		CONTROLLER.reset(getOWLWorkspace());
-		CONTROLLER.setSaveLocation(file);
+		MODEL.dispose();
+		MODEL.reset(getOWLWorkspace());
+		MODEL.setSaveLocation(file);
 		log.warn(String.format("Opening from %s", file.getAbsolutePath()));
 		if (listener != null) {
-			CONTROLLER.getTextSourceCollection().addCollectionListener(listener);
+			MODEL.addTextSourceCollectionListener(listener);
 		}
-		CONTROLLER.loadProject();
+		MODEL.loadProject();
 		reset();
-		CONTROLLER.getTextSourceCollection().setSelection(CONTROLLER.getTextSourceCollection().first());
+		MODEL.selectFirstTextSource();
 		knowtatorTextPane.refreshHighlights();
 		addTextSourceButton.setEnabled(true);
 
-		KnowtatorView.PREFERENCES.put("Last Project", CONTROLLER.getProjectLocation().getAbsolutePath());
+		KnowtatorView.PREFERENCES.put("Last Project", MODEL.getProjectLocation().getAbsolutePath());
 
 		try {
 			KnowtatorView.PREFERENCES.flush();

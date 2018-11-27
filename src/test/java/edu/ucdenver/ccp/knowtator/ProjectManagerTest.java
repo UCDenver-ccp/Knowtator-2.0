@@ -24,11 +24,12 @@
 
 package edu.ucdenver.ccp.knowtator;
 
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import org.junit.jupiter.api.Test;
 
 public class ProjectManagerTest {
 
-    private static final KnowtatorController controller = TestingHelpers.getLoadedController();
+    private static final KnowtatorModel controller = TestingHelpers.getLoadedController();
 
     @Test
     public void loadProject() {

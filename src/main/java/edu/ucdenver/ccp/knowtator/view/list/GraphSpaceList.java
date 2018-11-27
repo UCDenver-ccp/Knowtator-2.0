@@ -40,7 +40,7 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
 
 	@Override
 	protected void react() {
-		KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+		KnowtatorView.MODEL.getTextSource()
 				.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
 						.ifPresent(this::setCollection));
 		setSelected();

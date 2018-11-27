@@ -36,7 +36,7 @@ public class SpanList extends KnowtatorList<Span> {
 
 	@Override
 	protected void react() {
-		KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+		KnowtatorView.MODEL.getTextSource()
 				.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
 						.ifPresent(conceptAnnotation -> setCollection(conceptAnnotation.getSpanCollection())));
 

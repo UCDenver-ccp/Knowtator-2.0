@@ -53,16 +53,16 @@ class ExportPane extends MenuPane {
 
 		exportToBratButton.addActionListener(e -> {
 			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setCurrentDirectory(KnowtatorView.CONTROLLER.getTextSourceCollection().getAnnotationsLocation());
+			fileChooser.setCurrentDirectory(KnowtatorView.MODEL.getAnnotationsLocation());
 			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-				KnowtatorView.CONTROLLER
-						.saveToFormat(BratStandoffUtil.class, KnowtatorView.CONTROLLER.getTextSourceCollection(), fileChooser.getSelectedFile());
+				KnowtatorView.MODEL
+						.saveToFormat(BratStandoffUtil.class, KnowtatorView.MODEL.getTextSources(), fileChooser.getSelectedFile());
 			}
 		});
-		exportToImagePNGButton.addActionListener(e -> KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+		exportToImagePNGButton.addActionListener(e -> KnowtatorView.MODEL.getTextSource()
 				.ifPresent(textSource -> {
-					JFileChooser fileChooser = new JFileChooser(KnowtatorView.CONTROLLER.getSaveLocation());
+					JFileChooser fileChooser = new JFileChooser(KnowtatorView.MODEL.getSaveLocation());
 					fileChooser.setFileFilter(new FileNameExtensionFilter("PNG", "png"));
 					fileChooser.setSelectedFile(
 							new File(textSource.getId() + "_annotations.png"));

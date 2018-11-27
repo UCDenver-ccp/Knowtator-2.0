@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator;
 
 import com.google.common.io.Files;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import org.apache.commons.io.FileUtils;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
@@ -51,8 +52,8 @@ public class TestingHelpers {
                         .getFile());
     }
 
-    public static KnowtatorController getLoadedController() {
-        KnowtatorController controller = new KnowtatorController();
+    public static KnowtatorModel getLoadedController() {
+        KnowtatorModel controller = new KnowtatorModel();
 
         try {
             File projectDirectory = getProjectFile(projectFileName).getParentFile();
@@ -77,12 +78,12 @@ public class TestingHelpers {
     public static final int defaultExpectedAnnotationNodes = 7;
     public static final int defaultExpectedTriples = 4;
 
-    public static void checkDefaultCollectionValues (KnowtatorController controller) {
+    public static void checkDefaultCollectionValues(KnowtatorModel controller) {
         TestingHelpers.countCollections(controller, defaultExpectedTextSources, defaultExpectedConceptAnnotations, defaultExpectedSpans, defaultExpectedGraphSpaces, defaultExpectedProfiles, defaultExpectedHighlighters, defaultExpectedAnnotationNodes, defaultExpectedTriples);
     }
 
     private static void countCollections(
-            KnowtatorController controller,
+            KnowtatorModel controller,
             int expectedTextSources,
             int expectedConceptAnnotations,
             int expectedSpans,
@@ -93,20 +94,20 @@ public class TestingHelpers {
             int expectedTriples
     ) {
 
-        int actualTextSources = controller.getTextSourceCollection().size();
-        int actualConceptAnnotations = controller.getTextSourceCollection().stream().mapToInt(
+        int actualTextSources = controller.getTextSources().size();
+        int actualConceptAnnotations = controller.getTextSources().stream().mapToInt(
                 textSource -> textSource.getConceptAnnotationCollection().size()).sum();
-        int actualSpans = controller.getTextSourceCollection().stream().mapToInt(
+        int actualSpans = controller.getTextSources().stream().mapToInt(
                 textSource -> textSource.getConceptAnnotationCollection().getSpans(null).size()).sum();
-        int actualGraphSpaces = controller.getTextSourceCollection().stream().mapToInt(
+        int actualGraphSpaces = controller.getTextSources().stream().mapToInt(
                 textSource -> textSource.getGraphSpaceCollection().size()).sum();
         int actualProfiles = controller.getProfileCollection().size();
         int actualHighlighters = controller.getProfileCollection().stream().mapToInt(profile -> profile.getColors().size()).sum();
-        int actualAnnotationNodes = controller.getTextSourceCollection().stream().mapToInt(
+        int actualAnnotationNodes = controller.getTextSources().stream().mapToInt(
                 textSource -> textSource.getGraphSpaceCollection().stream().mapToInt(
                         graphSpace1 -> graphSpace1.getChildVertices(graphSpace1.getDefaultParent()).length)
                         .sum()).sum();
-        int actualTriples = controller.getTextSourceCollection().stream().mapToInt(
+        int actualTriples = controller.getTextSources().stream().mapToInt(
                 textSource -> textSource.getGraphSpaceCollection().stream().mapToInt(
                         graphSpace1 -> graphSpace1.getChildEdges(graphSpace1.getDefaultParent()).length)
                         .sum()).sum();
@@ -121,7 +122,7 @@ public class TestingHelpers {
         assert actualTriples == expectedTriples : "There were " + actualTriples + " triples instead of " + expectedTriples;
     }
 
-    public static void testOWLAction(KnowtatorController controller,
+    public static void testOWLAction(KnowtatorModel controller,
                                      List<? extends OWLOntologyChange> changes,
                                      int expectedTextSources,
                                      int expectedConceptAnnotations,
@@ -132,7 +133,7 @@ public class TestingHelpers {
                                      int expectedAnnotationNodes,
                                      int expectedTriples) {
         TestingHelpers.checkDefaultCollectionValues(controller);
-        controller.getOWLModel().getOwlOntologyManager().get().applyChanges(changes);
+        controller.getOwlOntologyManager().get().applyChanges(changes);
         TestingHelpers.countCollections(controller,
                 expectedTextSources,
                 expectedConceptAnnotations,
@@ -144,7 +145,7 @@ public class TestingHelpers {
                 expectedTriples);
     }
 
-    public static void testKnowtatorAction(KnowtatorController controller,
+    public static void testKnowtatorAction(KnowtatorModel controller,
                                            AbstractKnowtatorAction action,
                                            int expectedTextSources,
                                            int expectedConceptAnnotations,

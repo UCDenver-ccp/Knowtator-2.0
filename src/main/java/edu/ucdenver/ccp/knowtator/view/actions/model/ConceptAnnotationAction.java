@@ -63,12 +63,12 @@ public class ConceptAnnotationAction extends AbstractKnowtatorCollectionAction<C
 	@Override
 	protected void prepareAdd() {
 
-		KnowtatorView.CONTROLLER.getProfileCollection().getSelection()
-				.ifPresent(annotator -> KnowtatorView.CONTROLLER.getOWLModel().getSelectedOWLClass()
+		KnowtatorView.MODEL.getProfileCollection().getSelection()
+				.ifPresent(annotator -> KnowtatorView.MODEL.getSelectedOWLClass()
 						.ifPresent(owlClass -> {
-							String owlClassID = KnowtatorView.CONTROLLER.getOWLModel().getOWLEntityRendering(owlClass).orElse(owlClass.toString());
-							ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(KnowtatorView.CONTROLLER, textSource, null, owlClass, owlClassID, null, annotator, "identity", "");
-							newConceptAnnotation.getSpanCollection().add(new Span(KnowtatorView.CONTROLLER, textSource, newConceptAnnotation, null, KnowtatorView.CONTROLLER.getSelectionModel().getStart(), KnowtatorView.CONTROLLER.getSelectionModel().getEnd()));
+							String owlClassID = KnowtatorView.MODEL.getOWLEntityRendering(owlClass).orElse(owlClass.toString());
+							ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(KnowtatorView.MODEL, textSource, null, owlClass, owlClassID, null, annotator, "identity", "");
+							newConceptAnnotation.getSpanCollection().add(new Span(KnowtatorView.MODEL, textSource, newConceptAnnotation, null, KnowtatorView.MODEL.getStart(), KnowtatorView.MODEL.getEnd()));
 							setObject(newConceptAnnotation);
 						}));
 

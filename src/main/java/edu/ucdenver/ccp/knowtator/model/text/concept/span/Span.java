@@ -24,11 +24,11 @@
 
 package edu.ucdenver.ccp.knowtator.model.text.concept.span;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.text.AbstractKnowtatorTextBoundDataObject;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
@@ -43,14 +43,14 @@ import java.util.*;
 
 public class Span extends AbstractKnowtatorTextBoundDataObject<Span> implements KnowtatorXMLIO, BratStandoffIO {
   @SuppressWarnings("unused")
-  private static Logger log = Logger.getLogger(KnowtatorController.class);
+  private static Logger log = Logger.getLogger(KnowtatorModel.class);
 
   private int start;
   private int end;
   private ConceptAnnotation conceptAnnotation;
 
   public Span(
-          KnowtatorController controller, TextSource textSource, ConceptAnnotation conceptAnnotation, String id, int start, int end) {
+		  KnowtatorModel controller, TextSource textSource, ConceptAnnotation conceptAnnotation, String id, int start, int end) {
     super(textSource, id);
     this.start = start;
     this.end = end;

@@ -29,7 +29,6 @@ import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
@@ -37,6 +36,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
@@ -65,13 +65,13 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(GraphSpace.class);
 
-	private final KnowtatorController controller;
+	private final KnowtatorModel controller;
 	private boolean areListenersSet;
 	private final TextSource textSource;
 	private String id;
 	private final List<DataObjectModificationListener> modificationListeners;
 
-	public GraphSpace(KnowtatorController controller, TextSource textSource, String id) {
+	public GraphSpace(KnowtatorModel controller, TextSource textSource, String id) {
 
 		this.controller = controller;
 		this.textSource = textSource;
@@ -81,8 +81,8 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 
 		controller.verifyId(id, this, false);
 		textSource.getConceptAnnotationCollection().addCollectionListener(this);
-		controller.getOWLModel().addOntologyChangeListener(this);
-		controller.getOWLModel().addOWLModelManagerListener(this);
+		controller.addOntologyChangeListener(this);
+		controller.addOWLModelManagerListener(this);
 
 		setCellsResizable(false);
 		setEdgeLabelsMovable(false);
@@ -455,8 +455,8 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 			}
 		});
 		removeCells(getChildCells(getDefaultParent()));
-		controller.getOWLModel().removeOntologyChangeListener(this);
-		controller.getOWLModel().removeOWLModelManagerListener(this);
+		controller.removeOntologyChangeListener(this);
+		controller.removeOWLModelManagerListener(this);
 	}
 
 	public boolean containsAnnotation(ConceptAnnotation conceptAnnotation) {

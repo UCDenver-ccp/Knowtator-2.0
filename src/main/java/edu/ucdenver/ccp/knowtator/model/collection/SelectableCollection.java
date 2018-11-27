@@ -31,28 +31,36 @@ import java.util.TreeSet;
 
 public abstract class SelectableCollection<K extends KnowtatorDataObjectInterface, L extends SelectableCollectionListener<K>> extends CyclableCollection<K, L> {
 
-    private K selection;
+	private Optional<K> selection;
 
     SelectableCollection(TreeSet<K> collection) {
         super(collection);
-        selection = null;
+	    selection = Optional.empty();
     }
 
     public Optional<K> getSelection() {
-        return Optional.ofNullable(selection);
+	    return selection;
     }
 
     public void selectNext() {
-        setSelection(getNext(selection));
+	    if (selection.isPresent()) {
+		    selection.ifPresent(selection -> setSelection(getNext(selection)));
+	    } else {
+		    setSelection(first());
+	    }
     }
 
     public void selectPrevious() {
-        setSelection(getPrevious(selection));
+	    if (selection.isPresent()) {
+		    selection.ifPresent(selection -> setSelection(getPrevious(selection)));
+	    } else {
+		    setSelection(first());
+	    }
     }
 
     public void setSelection(K newSelection) {
-        SelectionEvent<K> selectionEvent = new SelectionEvent<>(this.selection, newSelection);
-        this.selection = newSelection;
+	    SelectionEvent<K> selectionEvent = new SelectionEvent<>(this.selection, Optional.ofNullable(newSelection));
+	    this.selection = Optional.ofNullable(newSelection);
         collectionListeners.forEach(selectionListener -> selectionListener.selected(selectionEvent));
     }
 
@@ -65,8 +73,6 @@ public abstract class SelectableCollection<K extends KnowtatorDataObjectInterfac
     @Override
     public void remove(K item) {
         super.remove(item);
-        if (item == selection) {
-            setSelection(null);
-        }
+	    selection.filter(selection -> selection.equals(item)).ifPresent(selection -> setSelection(null));
     }
 }

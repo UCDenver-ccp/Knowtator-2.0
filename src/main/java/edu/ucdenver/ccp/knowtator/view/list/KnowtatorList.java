@@ -61,7 +61,7 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
 	@Override
 	public void setupListeners() {
 		//noinspection Duplicates
-		textBoundModelListener = new TextBoundModelListener(KnowtatorView.CONTROLLER) {
+		textBoundModelListener = new TextBoundModelListener(KnowtatorView.MODEL) {
 			@Override
 			public void respondToConceptAnnotationModification() {
 				react();
@@ -196,7 +196,7 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
 
 
 	void setSelected() {
-		if (KnowtatorView.CONTROLLER.isNotLoading()) {
+		if (KnowtatorView.MODEL.isNotLoading()) {
 			if (collection.getSelection().isPresent()) {
 				K k = collection.getSelection().get();
 				for (int i = 0; i < getModel().getSize(); i++) {

@@ -71,6 +71,8 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 		select(0, 0);
 		getCaret().setSelectionVisible(true);
 
+		addCaretListener(KnowtatorView.MODEL);
+
 		mouseListener = new MouseListener() {
 			int press_offset;
 
@@ -112,7 +114,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	@Override
 	public void setupListeners() {
 		super.setupListeners();
-		new TextBoundModelListener(KnowtatorView.CONTROLLER) {
+		new TextBoundModelListener(KnowtatorView.MODEL) {
 			@Override
 			public void respondToConceptAnnotationModification() {
 				refreshHighlights();
@@ -254,7 +256,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	 * Repaints the highlights
 	 */
 	public void refreshHighlights() {
-		if (KnowtatorView.CONTROLLER.isNotLoading()) {
+		if (KnowtatorView.MODEL.isNotLoading()) {
 			// Remove all previous highlights in case a spanOptional has been deleted
 			getHighlighter().removeAllHighlights();
 
@@ -307,8 +309,8 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 		getStyledDocument().setCharacterAttributes(0, getText().length(), regularSpan, false);
 
 		Set<OWLClass> descendants = new HashSet<>();
-		KnowtatorView.CONTROLLER.getOWLModel().getSelectedOWLClass().ifPresent(owlClass -> {
-			descendants.addAll(KnowtatorView.CONTROLLER.getOWLModel().getDescendants(owlClass));
+		KnowtatorView.MODEL.getSelectedOWLClass().ifPresent(owlClass -> {
+			descendants.addAll(KnowtatorView.MODEL.getDescendants(owlClass));
 			descendants.add(owlClass);
 		});
 		for (Span span : spans) {

@@ -24,6 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.model;
 
+import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
@@ -34,32 +35,32 @@ public class FilterAction extends AbstractKnowtatorAction {
 
 	private final boolean isFilter;
 	private final boolean previousIsFilter;
-	private final String filter;
+	private final FilterType filterType;
 
-	public FilterAction(String filter, boolean isFilter) {
-		super("Change filter");
-		this.filter = filter;
+	public FilterAction(FilterType filterType, boolean isFilter) {
+		super("Change filterType");
+		this.filterType = filterType;
 		this.isFilter = isFilter;
-		this.previousIsFilter = KnowtatorView.CONTROLLER.getFilterModel().isFilter(filter);
+		this.previousIsFilter = KnowtatorView.MODEL.isFilter(filterType);
 
 	}
 
 	@Override
 	public void execute() {
-		KnowtatorView.CONTROLLER.getFilterModel().setFilter(filter, isFilter);
+		KnowtatorView.MODEL.setFilter(filterType, isFilter);
 	}
 
 	@Override
 	public UndoableEdit getEdit() {
-		return new KnowtatorEdit("Change filter") {
+		return new KnowtatorEdit("Change filterType") {
 			@Override
 			public void undo() {
-				KnowtatorView.CONTROLLER.getFilterModel().setFilter(filter, previousIsFilter);
+				KnowtatorView.MODEL.setFilter(filterType, previousIsFilter);
 			}
 
 			@Override
 			public void redo() {
-				KnowtatorView.CONTROLLER.getFilterModel().setFilter(filter, isFilter);
+				KnowtatorView.MODEL.setFilter(filterType, isFilter);
 			}
 		};
 	}

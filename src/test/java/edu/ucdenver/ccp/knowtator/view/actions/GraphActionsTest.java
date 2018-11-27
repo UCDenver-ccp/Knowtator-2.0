@@ -24,8 +24,8 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
@@ -36,11 +36,11 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 public class GraphActionsTest {
 
-	private static final KnowtatorController controller = TestingHelpers.getLoadedController();
+	private static final KnowtatorModel controller = TestingHelpers.getLoadedController();
 
 	@Test
 	public void removeSelectedAnnotationNode() {
-		TextSource textSource = controller.getTextSourceCollection().getSelection().get();
+		TextSource textSource = controller.getTextSource().get();
 		textSource.getGraphSpaceCollection().selectNext();
 		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection().get();
 		Object cell = graphSpace.getModel().getChildAt(graphSpace.getDefaultParent(), 0);
@@ -58,7 +58,7 @@ public class GraphActionsTest {
 
 	@Test
 	public void removeSelectedTriple() {
-		TextSource textSource = controller.getTextSourceCollection().getSelection().get();
+		TextSource textSource = controller.getTextSource().get();
 		textSource.getGraphSpaceCollection().selectNext();
 		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection().get();
 		Object cell = graphSpace.getModel().getChildAt(graphSpace.getDefaultParent(), 2);
@@ -76,7 +76,7 @@ public class GraphActionsTest {
 
 	@Test
 	public void addAnnotationNode() {
-		TextSource textSource = controller.getTextSourceCollection().getSelection().get();
+		TextSource textSource = controller.getTextSource().get();
 		textSource.getGraphSpaceCollection().selectNext();
 		textSource.getConceptAnnotationCollection().selectNext();
 		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection().get();
@@ -94,13 +94,13 @@ public class GraphActionsTest {
 
 	@Test
 	public void addTriple() {
-		TextSource textSource = controller.getTextSourceCollection().getSelection().get();
+		TextSource textSource = controller.getTextSource().get();
 		textSource.getGraphSpaceCollection().selectNext();
 		textSource.getConceptAnnotationCollection().selectNext();
 		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection().get();
 		AnnotationNode source = (AnnotationNode) graphSpace.getChildVertices(graphSpace.getDefaultParent())[0];
 		AnnotationNode target = (AnnotationNode) graphSpace.getChildVertices(graphSpace.getDefaultParent())[1];
-		OWLObjectProperty property = controller.getOWLModel().getSelectedOWLObjectProperty().get();
+		OWLObjectProperty property = controller.getSelectedOWLObjectProperty().get();
 		TestingHelpers.testKnowtatorAction(controller, new GraphActions.AddTripleAction(
 						source,
 						target,
@@ -121,7 +121,7 @@ public class GraphActionsTest {
 	@Test
 	public void applyLayout() {
 		//TODO: This test only makes sure that the layout application doesn't change to graph space model. It needs to check the positions
-		TextSource textSource = controller.getTextSourceCollection().getSelection().get();
+		TextSource textSource = controller.getTextSource().get();
 		textSource.getGraphSpaceCollection().selectNext();
 		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection().get();
 		TestingHelpers.testKnowtatorAction(controller, new GraphActions.applyLayoutAction(null, graphSpace),

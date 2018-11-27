@@ -46,7 +46,7 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 	private final String profileId;
 
 	public ProfileAction(CollectionActionType actionType, String profileId) {
-		super(actionType, "Add profile", KnowtatorView.CONTROLLER.getProfileCollection());
+		super(actionType, "Add profile", KnowtatorView.MODEL.getProfileCollection());
 		this.profileId = profileId;
 	}
 
@@ -58,13 +58,13 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 
 	@Override
 	protected void prepareAdd() {
-		Profile profile = new Profile(KnowtatorView.CONTROLLER, profileId);
+		Profile profile = new Profile(KnowtatorView.MODEL, profileId);
 		setObject(profile);
 	}
 
 	@Override
 	protected void cleanUpRemove() throws ActionUnperformableException {
-		for (TextSource textSource : KnowtatorView.CONTROLLER.getTextSourceCollection()) {
+		for (TextSource textSource : KnowtatorView.MODEL.getTextSources()) {
 			// Cast to array to avoid concurrent modification exceptions
 			Object[] array = textSource.getConceptAnnotationCollection().getCollection().toArray();
 			for (Object o : array) {
@@ -90,7 +90,7 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 
 		if (!objectOptional.isPresent()) {
 			objectOptional =
-					KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+					KnowtatorView.MODEL.getTextSource()
 							.flatMap(textSource -> textSource.getConceptAnnotationCollection().getSelection()
 									.map(ConceptAnnotation::getOwlClass));
 		}
@@ -110,17 +110,17 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 			Color c = finalC[0];
 			if (c != null) {
 
-				KnowtatorView.CONTROLLER.getProfileCollection().getSelection()
+				KnowtatorView.MODEL.getProfileCollection().getSelection()
 						.ifPresent(profile -> profile.addColor(owlClass1, c));
 
 				if (owlClass1 instanceof OWLClass) {
 					if (JOptionPane.showConfirmDialog(view, "Assign color to descendants of " + owlClass1 + "?") == JOptionPane.OK_OPTION) {
-						owlClasses.addAll(KnowtatorView.CONTROLLER.getOWLModel().getDescendants((OWLClass) owlClass1));
+						owlClasses.addAll(KnowtatorView.MODEL.getDescendants((OWLClass) owlClass1));
 					}
 				}
 
-				KnowtatorView.CONTROLLER.getProfileCollection().getSelection()
-						.ifPresent(profile -> KnowtatorView.CONTROLLER.registerAction(new ColorChangeAction(profile, owlClasses, c)));
+				KnowtatorView.MODEL.getProfileCollection().getSelection()
+						.ifPresent(profile -> KnowtatorView.MODEL.registerAction(new ColorChangeAction(profile, owlClasses, c)));
 
 
 			}

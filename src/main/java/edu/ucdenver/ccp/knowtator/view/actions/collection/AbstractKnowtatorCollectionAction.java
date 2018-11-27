@@ -109,13 +109,13 @@ public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataO
 
 			switch (collectionType) {
 				case ANNOTATION:
-					KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+					KnowtatorView.MODEL.getTextSource()
 							.ifPresent(textSource -> actions.add(new ConceptAnnotationAction(
 									parameters.getActionType(),
 									textSource)));
 					break;
 				case SPAN:
-					KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+					KnowtatorView.MODEL.getTextSource()
 							.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
 									.ifPresent(conceptAnnotation -> actions.add(new SpanAction(actionType, conceptAnnotation))));
 					break;
@@ -145,7 +145,7 @@ public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataO
 				action = actions.get(response);
 			}
 
-			KnowtatorView.CONTROLLER.registerAction(action);
+			KnowtatorView.MODEL.registerAction(action);
 		}
 	}
 }

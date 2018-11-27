@@ -37,20 +37,20 @@ public class TextSourceAction extends AbstractKnowtatorCollectionAction<TextSour
 	private final File file;
 
 	public TextSourceAction(CollectionActionType actionType, File file) {
-		super(actionType, "text source", KnowtatorView.CONTROLLER.getTextSourceCollection());
+		super(actionType, "text source", KnowtatorView.MODEL.getTextSources());
 		this.file = file;
 	}
 
 	@Override
 	protected void prepareAdd() {
-		if (!file.getParentFile().equals(KnowtatorView.CONTROLLER.getTextSourceCollection().getArticlesLocation())) {
+		if (!file.getParentFile().equals(KnowtatorView.MODEL.getArticlesLocation())) {
 			try {
-				FileUtils.copyFile(file, new File(KnowtatorView.CONTROLLER.getTextSourceCollection().getArticlesLocation(), file.getName()));
+				FileUtils.copyFile(file, new File(KnowtatorView.MODEL.getArticlesLocation(), file.getName()));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		setObject(new TextSource(KnowtatorView.CONTROLLER, file, file.getName()));
+		setObject(new TextSource(KnowtatorView.MODEL, file, file.getName()));
 	}
 
 	@Override

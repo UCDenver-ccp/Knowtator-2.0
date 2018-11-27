@@ -24,11 +24,8 @@
 
 package edu.ucdenver.ccp.knowtator;
 
-import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.text.Fragment;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.commons.cli.*;
 
@@ -39,10 +36,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.TreeSet;
 
 
 /**
@@ -77,7 +71,7 @@ class KnowtatorStandalone extends JFrame {
 		setContentPane(view);
 
 		if (debug) {
-			KnowtatorView.CONTROLLER.setDebug();
+			KnowtatorView.MODEL.setDebug();
 			try {
 				// Use the last project opened
 				File projectFile = new File(KnowtatorView.PREFERENCES.get("Last Project", null));
@@ -133,59 +127,59 @@ class KnowtatorStandalone extends JFrame {
 		//        System.exit(0);
 	}
 
-	/**
-	 * Counts fragments
-	 *
-	 * @param cmd A command line object
-	 */
-	private static void fragmentCount(CommandLine cmd) {
-		KnowtatorController conceptsController = new KnowtatorController();
-		KnowtatorController fragmentsController = new KnowtatorController();
-
-		loadProjectFromCommandLine(
-				cmd,
-				conceptsController,
-				cmd.getOptionValue("project"),
-				cmd.getOptionValue("annotations"));
-		loadProjectFromCommandLine(
-				cmd,
-				fragmentsController,
-				cmd.getOptionValue("project"),
-				cmd.getOptionValue("fragments"));
-
-		List<Fragment> fragmentList = new ArrayList<>();
-
-		Iterator<TextSource> textSourceIterator1 =
-				conceptsController.getTextSourceCollection().iterator();
-		Iterator<TextSource> textSourceIterator2 =
-				fragmentsController.getTextSourceCollection().iterator();
-		while (textSourceIterator1.hasNext()) {
-			TextSource textSource1 = textSourceIterator1.next();
-			TextSource textSource2 = textSourceIterator2.next();
-
-			for (ConceptAnnotation fragmentConceptAnnotation : textSource2.getConceptAnnotationCollection()) {
-				Span fragmentSpan = fragmentConceptAnnotation.getSpanCollection().iterator().next();
-
-				Fragment fragment =
-						new Fragment(textSource2, fragmentConceptAnnotation.getId(), fragmentConceptAnnotation.getOwlClassID());
-
-				TreeSet<ConceptAnnotation> conceptAnnotationsInFragment =
-						textSource1
-								.getConceptAnnotationCollection()
-								.getAnnotations(fragmentSpan.getStart(), fragmentSpan.getStart());
-
-				for (ConceptAnnotation conceptAnnotation : conceptAnnotationsInFragment) {
-					fragment.add(conceptAnnotation.getOwlClassID());
-				}
-
-				fragmentList.add(fragment);
-			}
-
-			writeFragments(cmd.getOptionValue("fragments") + File.separator + textSource1.getId() + ".txt", fragmentList);
-		}
-
-
-	}
+//	/**
+//	 * Counts fragments
+//	 *
+//	 * @param cmd A command line object
+//	 */
+//	private static void fragmentCount(CommandLine cmd) {
+//		KnowtatorModel conceptsController = new KnowtatorModel();
+//		KnowtatorModel fragmentsController = new KnowtatorModel();
+//
+//		loadProjectFromCommandLine(
+//				cmd,
+//				conceptsController,
+//				cmd.getOptionValue("project"),
+//				cmd.getOptionValue("annotations"));
+//		loadProjectFromCommandLine(
+//				cmd,
+//				fragmentsController,
+//				cmd.getOptionValue("project"),
+//				cmd.getOptionValue("fragments"));
+//
+//		List<Fragment> fragmentList = new ArrayList<>();
+//
+//		Iterator<TextSource> textSourceIterator1 =
+//				conceptsController.getTextSourceCollection().iterator();
+//		Iterator<TextSource> textSourceIterator2 =
+//				fragmentsController.getTextSourceCollection().iterator();
+//		while (textSourceIterator1.hasNext()) {
+//			TextSource textSource1 = textSourceIterator1.next();
+//			TextSource textSource2 = textSourceIterator2.next();
+//
+//			for (ConceptAnnotation fragmentConceptAnnotation : textSource2.getConceptAnnotationCollection()) {
+//				Span fragmentSpan = fragmentConceptAnnotation.getSpanCollection().iterator().next();
+//
+//				Fragment fragment =
+//						new Fragment(textSource2, fragmentConceptAnnotation.getId(), fragmentConceptAnnotation.getOwlClassID());
+//
+//				TreeSet<ConceptAnnotation> conceptAnnotationsInFragment =
+//						textSource1
+//								.getConceptAnnotationCollection()
+//								.getAnnotations(fragmentSpan.getStart(), fragmentSpan.getStart());
+//
+//				for (ConceptAnnotation conceptAnnotation : conceptAnnotationsInFragment) {
+//					fragment.add(conceptAnnotation.getOwlClassID());
+//				}
+//
+//				fragmentList.add(fragment);
+//			}
+//
+//			writeFragments(cmd.getOptionValue("fragments") + File.separator + textSource1.getId() + ".txt", fragmentList);
+//		}
+//
+//
+//	}
 
 	/**
 	 * Handles output of fragments
@@ -230,7 +224,7 @@ class KnowtatorStandalone extends JFrame {
 	 */
 	private static void loadProjectFromCommandLine(
 			CommandLine cmd,
-			KnowtatorController controller,
+			KnowtatorModel controller,
 			String projectFileName,
 			String annotationsDirName) {
 		if (projectFileName == null) {
@@ -256,35 +250,35 @@ class KnowtatorStandalone extends JFrame {
 		}
 	}
 
-	/**
-	 * Converts between specified formats from the command line
-	 *
-	 * @param cmd A command line object
-	 */
-	private static void commandLineConversion(CommandLine cmd) {
-		KnowtatorController controller = new KnowtatorController();
-
-		String projectFileName = cmd.getOptionValue("project");
-
-//        String uimaOutputDirName = cmd.getOptionValue("uima");
-		String bratOutputDirName = cmd.getOptionValue("brat");
-		String knowtatorOutputDirName = cmd.getOptionValue("knowtator");
-
-		loadProjectFromCommandLine(
-				cmd, controller, projectFileName, cmd.getOptionValue("annotations"));
-
-		if (knowtatorOutputDirName != null) {
-			controller.save();
-		}
-
-//        if (uimaOutputDirName != null) {
-//            projectManager.saveToFormat(UIMAXMIUtil.class, new File(uimaOutputDirName));
-//        }
-
-		if (bratOutputDirName != null) {
-			controller.saveToFormat(BratStandoffUtil.class, controller.getTextSourceCollection(), new File(bratOutputDirName));
-		}
-	}
+//	/**
+//	 * Converts between specified formats from the command line
+//	 *
+//	 * @param cmd A command line object
+//	 */
+//	private static void commandLineConversion(CommandLine cmd) {
+//		KnowtatorModel controller = new KnowtatorModel();
+//
+//		String projectFileName = cmd.getOptionValue("project");
+//
+////        String uimaOutputDirName = cmd.getOptionValue("uima");
+//		String bratOutputDirName = cmd.getOptionValue("brat");
+//		String knowtatorOutputDirName = cmd.getOptionValue("knowtator");
+//
+//		loadProjectFromCommandLine(
+//				cmd, controller, projectFileName, cmd.getOptionValue("annotations"));
+//
+//		if (knowtatorOutputDirName != null) {
+//			controller.save();
+//		}
+//
+////        if (uimaOutputDirName != null) {
+////            projectManager.saveToFormat(UIMAXMIUtil.class, new File(uimaOutputDirName));
+////        }
+//
+//		if (bratOutputDirName != null) {
+//			controller.saveToFormat(BratStandoffUtil.class, controller.getTextSourceCollection(), new File(bratOutputDirName));
+//		}
+//	}
 
 	/**
 	 * Main method for starting either the command line or GUI modes. Arguments include
@@ -347,9 +341,9 @@ class KnowtatorStandalone extends JFrame {
 
 			} else if (cmd.getArgList().contains("c")) {
 
-				commandLineConversion(cmd);
+//				commandLineConversion(cmd);
 			} else if (cmd.getArgList().contains("f")) {
-				fragmentCount(cmd);
+//				fragmentCount(cmd);
 			} else if (cmd.getArgList().contains("d")) {
 				debug();
 			}

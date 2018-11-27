@@ -27,6 +27,7 @@ package edu.ucdenver.ccp.knowtator;
 import com.google.common.io.Files;
 import edu.ucdenver.ccp.knowtator.iaa.IAAException;
 import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,7 @@ class KnowtatorIAATest {
 
     @BeforeAll
     static void setUp() throws IAAException, IOException {
-        KnowtatorController controller = new KnowtatorController();
+        KnowtatorModel controller = new KnowtatorModel();
         String projectFileName = "iaa_test_project";
         File projectDirectory = TestingHelpers.getProjectFile(projectFileName).getParentFile();
         File tempProjectDir = Files.createTempDir();

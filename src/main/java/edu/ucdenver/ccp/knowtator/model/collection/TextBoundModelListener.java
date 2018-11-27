@@ -25,7 +25,7 @@
 package edu.ucdenver.ccp.knowtator.model.collection;
 
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.text.DataObjectModificationListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
@@ -44,10 +44,10 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 	private final DataObjectModificationListener<GraphSpace> graphSpaceModificationListener;
 	private final DataObjectModificationListener<ConceptAnnotation> conceptAnnotationModificationListener;
 	private final DataObjectModificationListener<Span> spanModificationListener;
-	private KnowtatorController controller;
+	private KnowtatorModel controller;
 
 
-	protected TextBoundModelListener(KnowtatorController controller) {
+	protected TextBoundModelListener(KnowtatorModel controller) {
 		this.controller = controller;
 
 
@@ -157,8 +157,8 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 	}
 
 	private void setupListeners() {
-		controller.getTextSourceCollection().addCollectionListener(this);
-		controller.getTextSourceCollection().getSelection().ifPresent(textSource -> {
+		controller.addTextSourceCollectionListener(this);
+		controller.getTextSource().ifPresent(textSource -> {
 			textSource.getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
 			textSource.getGraphSpaceCollection().addCollectionListener(graphSpaceCollectionListener);
 			textSource.getGraphSpaceCollection().getSelection().ifPresent(graphSpace -> graphSpace.addDataObjectModificationListener(graphSpaceModificationListener));
@@ -247,14 +247,14 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 	}
 
 	public void dispose() {
-		controller.getTextSourceCollection().removeCollectionListener(this);
+		controller.removeTextSourceCollectionListener(this);
 
 		removeListeners();
 	}
 
 	private void removeListeners() {
-		controller.getTextSourceCollection().removeCollectionListener(this);
-		controller.getTextSourceCollection().getSelection().ifPresent(textSource -> {
+		controller.removeTextSourceCollectionListener(this);
+		controller.getTextSource().ifPresent(textSource -> {
 			textSource.getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
 			textSource.getGraphSpaceCollection().removeCollectionListener(graphSpaceCollectionListener);
 			textSource.getGraphSpaceCollection().getSelection().ifPresent(graphSpace -> graphSpace.removeDataObjectModificationListener(graphSpaceModificationListener));

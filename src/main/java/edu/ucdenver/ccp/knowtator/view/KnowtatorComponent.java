@@ -24,16 +24,16 @@
 
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorObjectInterface;
-
 /**
  * All custom Knowtator view components should implement this.
  */
-public interface KnowtatorComponent extends KnowtatorObjectInterface {
+public interface KnowtatorComponent {
     /**
      * Restores the component to its initial state
      */
     void reset();
 
     void setupListeners();
+
+	void dispose();
 }

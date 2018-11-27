@@ -26,10 +26,10 @@ package edu.ucdenver.ccp.knowtator.model.text.graph;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.DataObjectModificationListener;
 import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundDataObjectInterface;
@@ -48,7 +48,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 	private final String quantifierValue;
 	private final Profile annotator;
 	private String bratID;
-	private final KnowtatorController controller;
+	private final KnowtatorModel controller;
 	private final Boolean isNegated;
 	private final TextSource textSource;
 	private OWLObjectProperty property;
@@ -69,7 +69,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 			String quantifierValue,
 			Boolean isNegated,
 			String motivation,
-			KnowtatorController controller, TextSource textSource, GraphSpace graphSpace) {
+			KnowtatorModel controller, TextSource textSource, GraphSpace graphSpace) {
 		super(null, new mxGeometry(), null);
 
 		this.propertyID = propertyID;
@@ -93,7 +93,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 		if (property.isPresent()) {
 			setProperty(property.get());
 		} else {
-			setProperty(controller.getOWLModel().getOWLObjectPropertyByID(propertyID).orElse(null));
+			setProperty(controller.getOWLObjectPropertyByID(propertyID).orElse(null));
 		}
 	}
 
@@ -136,7 +136,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 	}
 
 	private String getOwlPropertyRendering() {
-		return controller.getOWLModel().getOWLEntityRendering(property).orElse(propertyID);
+		return controller.getOWLEntityRendering(property).orElse(propertyID);
 	}
 
 	@Override

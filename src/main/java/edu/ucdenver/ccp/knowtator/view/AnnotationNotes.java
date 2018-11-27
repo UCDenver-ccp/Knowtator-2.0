@@ -91,7 +91,7 @@ public class AnnotationNotes extends JTextArea implements KnowtatorComponent {
 
 	@Override
 	public void setupListeners() {
-		new TextBoundModelListener(KnowtatorView.CONTROLLER) {
+		new TextBoundModelListener(KnowtatorView.MODEL) {
 			@Override
 			protected void respondToConceptAnnotationModification() {
 

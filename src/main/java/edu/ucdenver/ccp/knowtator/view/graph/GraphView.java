@@ -103,33 +103,33 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 		});
 
 		zoomSlider.addChangeListener(e -> graphComponent.zoomTo(zoomSlider.getValue() / 50.0, false));
-		renameButton.addActionListener(e -> KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+		renameButton.addActionListener(e -> KnowtatorView.MODEL.getTextSource()
 				.ifPresent(textSource -> textSource.getGraphSpaceCollection().getSelection()
 						.ifPresent(graphSpace -> getGraphNameInput(view, textSource, null)
 								.ifPresent(graphSpace::setId))));
-		addGraphSpaceButton.addActionListener(e -> KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection().ifPresent(this::makeGraph));
+		addGraphSpaceButton.addActionListener(e -> KnowtatorView.MODEL.getTextSource().ifPresent(this::makeGraph));
 		removeGraphSpaceButton.addActionListener(e -> {
 			if (JOptionPane.showConfirmDialog(view, "Are you sure you want to delete this graph?") == JOptionPane.YES_OPTION) {
-				KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
-						.ifPresent(textSource -> KnowtatorView.CONTROLLER.registerAction(new GraphSpaceAction(REMOVE, null, textSource)));
+				KnowtatorView.MODEL.getTextSource()
+						.ifPresent(textSource -> KnowtatorView.MODEL.registerAction(new GraphSpaceAction(REMOVE, null, textSource)));
 			}
 		});
-		previousGraphSpaceButton.addActionListener(e -> KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+		previousGraphSpaceButton.addActionListener(e -> KnowtatorView.MODEL.getTextSource()
 				.ifPresent(textSource -> textSource.getGraphSpaceCollection()
 						.selectPrevious()));
-		nextGraphSpaceButton.addActionListener(e -> KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+		nextGraphSpaceButton.addActionListener(e -> KnowtatorView.MODEL.getTextSource()
 				.ifPresent(textSource -> textSource.getGraphSpaceCollection()
 						.selectNext()));
-		removeCellButton.addActionListener(e -> KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+		removeCellButton.addActionListener(e -> KnowtatorView.MODEL.getTextSource()
 				.ifPresent(textSource -> textSource.getGraphSpaceCollection().getSelection()
-						.ifPresent(graphSpace -> KnowtatorView.CONTROLLER.registerAction(new GraphActions.removeCellsAction(graphSpace)))));
-		addAnnotationNodeButton.addActionListener(e -> KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+						.ifPresent(graphSpace -> KnowtatorView.MODEL.registerAction(new GraphActions.removeCellsAction(graphSpace)))));
+		addAnnotationNodeButton.addActionListener(e -> KnowtatorView.MODEL.getTextSource()
 				.ifPresent(textSource -> textSource.getGraphSpaceCollection().getSelection()
 						.ifPresent(graphSpace -> textSource.getConceptAnnotationCollection().getSelection()
-								.ifPresent(conceptAnnotation -> KnowtatorView.CONTROLLER.registerAction(new GraphActions.AddAnnotationNodeAction(view, graphSpace, conceptAnnotation))))));
-		applyLayoutButton.addActionListener(e -> KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+								.ifPresent(conceptAnnotation -> KnowtatorView.MODEL.registerAction(new GraphActions.AddAnnotationNodeAction(view, graphSpace, conceptAnnotation))))));
+		applyLayoutButton.addActionListener(e -> KnowtatorView.MODEL.getTextSource()
 				.ifPresent(textSource -> textSource.getGraphSpaceCollection().getSelection()
-						.ifPresent(graphSpace -> KnowtatorView.CONTROLLER.registerAction(new GraphActions.applyLayoutAction(view, graphSpace)))));
+						.ifPresent(graphSpace -> KnowtatorView.MODEL.registerAction(new GraphActions.applyLayoutAction(view, graphSpace)))));
 		graphSpaceButtons = Arrays.asList(
 				renameButton,
 				removeCellButton,
@@ -167,7 +167,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 		super.setVisible(visible);
 		if (visible) {
 			graphSpaceChooser.reset();
-			KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+			KnowtatorView.MODEL.getTextSource()
 					.ifPresent(textSource -> {
 						Optional<GraphSpace> graphSpaceOptional = textSource.getGraphSpaceCollection().getSelection();
 						if (graphSpaceOptional.isPresent()) {
@@ -187,7 +187,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 
 	private void makeGraph(TextSource textSource) {
 		getGraphNameInput(view, textSource, null)
-				.ifPresent(graphName -> KnowtatorView.CONTROLLER.registerAction(
+				.ifPresent(graphName -> KnowtatorView.MODEL.registerAction(
 						new GraphSpaceAction(ADD, graphName, textSource)));
 	}
 
@@ -266,14 +266,14 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 							.map(cell -> (mxCell) cell)
 							.filter(cell -> "".equals(cell.getValue()))
 							.forEach(edge -> {
-								KnowtatorView.CONTROLLER.getOWLModel().getSelectedOWLObjectProperty()
-										.ifPresent(property -> KnowtatorView.CONTROLLER.getOWLModel().getOWLEntityRendering(property)
+								KnowtatorView.MODEL.getSelectedOWLObjectProperty()
+										.ifPresent(property -> KnowtatorView.MODEL.getOWLEntityRendering(property)
 												.ifPresent(propertyID -> {
 													// For some reason the top object property doesn't play nice so don't allow it
 													if (!property.getIRI().getShortForm().equals("owl:topObjectProperty")) {
 														RelationOptionsDialog relationOptionsDialog = getRelationOptionsDialog(propertyID);
 														if (relationOptionsDialog.getResult() == RelationOptionsDialog.OK_OPTION) {
-															KnowtatorView.CONTROLLER.registerAction(
+															KnowtatorView.MODEL.registerAction(
 																	new GraphActions.AddTripleAction(
 																			(AnnotationNode) edge.getSource(),
 																			(AnnotationNode) edge.getTarget(),
@@ -317,7 +317,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 							graphSpace.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
 
 						} else if (cell instanceof RelationAnnotation) {
-							KnowtatorView.CONTROLLER.getOWLModel().setSelectedOWLEntity(((RelationAnnotation) cell).getProperty());
+							KnowtatorView.MODEL.setSelectedOWLEntity(((RelationAnnotation) cell).getProperty());
 						}
 					}
 					graphSpace.reDrawGraph();
@@ -345,7 +345,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 
 	@Override
 	public void setupListeners() {
-		new TextBoundModelListener(KnowtatorView.CONTROLLER) {
+		new TextBoundModelListener(KnowtatorView.MODEL) {
 			@Override
 			public void respondToConceptAnnotationModification() {
 

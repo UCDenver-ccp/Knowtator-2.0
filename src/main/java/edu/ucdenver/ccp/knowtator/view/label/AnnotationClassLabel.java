@@ -41,7 +41,7 @@ public class AnnotationClassLabel extends AbstractConceptAnnotationLabel impleme
 	public void displayConceptAnnotation(ConceptAnnotation conceptAnnotation) {
 		if (conceptAnnotation.getOwlClass().isPresent()) {
 			conceptAnnotation.getOwlClass()
-					.ifPresent(owlClass -> KnowtatorView.CONTROLLER.getOWLModel().getOWLEntityRendering(owlClass)
+					.ifPresent(owlClass -> KnowtatorView.MODEL.getOWLEntityRendering(owlClass)
 							.ifPresent(this::setText));
 
 		} else {
@@ -61,6 +61,6 @@ public class AnnotationClassLabel extends AbstractConceptAnnotationLabel impleme
 	@Override
 	public void dispose() {
 		super.dispose();
-		KnowtatorView.CONTROLLER.getOWLModel().removeOWLModelManagerListener(this);
+		KnowtatorView.MODEL.removeOWLModelManagerListener(this);
 	}
 }

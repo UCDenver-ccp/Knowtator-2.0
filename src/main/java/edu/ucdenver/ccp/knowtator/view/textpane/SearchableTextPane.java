@@ -164,7 +164,7 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 
 	@Override
 	public void setupListeners() {
-		new TextBoundModelListener(KnowtatorView.CONTROLLER) {
+		new TextBoundModelListener(KnowtatorView.MODEL) {
 			@Override
 			public void respondToConceptAnnotationModification() {
 

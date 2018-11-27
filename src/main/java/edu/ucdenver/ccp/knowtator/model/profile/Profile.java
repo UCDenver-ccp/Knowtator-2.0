@@ -24,13 +24,13 @@
 
 package edu.ucdenver.ccp.knowtator.model.profile;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.Savable;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -52,9 +52,9 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
 
 	private String id;
 	private final HashMap<Object, Color> colors; // <ClassName, Highlighter>
-	private final KnowtatorController controller;
+	private final KnowtatorModel controller;
 
-	public Profile(KnowtatorController controller, String id) {
+	public Profile(KnowtatorModel controller, String id) {
 		colors = new HashMap<>();
 		this.controller = controller;
 		controller.verifyId(id, this, false);
@@ -163,7 +163,7 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
 			Element e = dom.createElement(KnowtatorXMLTags.HIGHLIGHTER);
 			if (owlEntity instanceof OWLEntity) {
 
-				controller.getOWLModel().getOWLEntityRendering((OWLEntity) owlEntity)
+				controller.getOWLEntityRendering((OWLEntity) owlEntity)
 						.ifPresent(owlClassID -> e.setAttribute(KnowtatorXMLAttributes.CLASS_ID, owlClassID));
 
 			} else if (owlEntity instanceof String) {

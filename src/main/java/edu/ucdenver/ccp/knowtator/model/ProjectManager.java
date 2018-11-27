@@ -22,7 +22,7 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator;
+package edu.ucdenver.ccp.knowtator.model;
 
 import edu.ucdenver.ccp.knowtator.io.BasicIO;
 import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
@@ -30,10 +30,10 @@ import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.BaseKnowtatorManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
+import javax.swing.undo.UndoManager;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -47,7 +47,7 @@ import java.util.List;
  *
  * @author Harrison Pielke-Lombardo
  */
-public abstract class ProjectManager extends DebugManager implements Savable {
+public abstract class ProjectManager extends UndoManager implements BaseKnowtatorManager {
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(ProjectManager.class);
 
@@ -73,8 +73,8 @@ public abstract class ProjectManager extends DebugManager implements Savable {
     public void loadProject() {
         if (projectLocation.exists()) {
             makeProjectStructure();
-
             isLoading = true;
+            load();
             getManagers().forEach(BaseKnowtatorManager::load);
             isLoading = false;
             getManagers().forEach(BaseKnowtatorManager::finishLoad);

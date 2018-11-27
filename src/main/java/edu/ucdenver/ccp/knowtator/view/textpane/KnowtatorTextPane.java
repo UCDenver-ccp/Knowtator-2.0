@@ -132,9 +132,9 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 	@Override
 	public void setupListeners() {
 		super.setupListeners();
-		KnowtatorView.CONTROLLER.getProfileCollection().addColorListener(this);
-		KnowtatorView.CONTROLLER.getProfileCollection().addCollectionListener(this);
-		KnowtatorView.CONTROLLER.getFilterModel().addFilterModelListener(this);
+		KnowtatorView.MODEL.getProfileCollection().addColorListener(this);
+		KnowtatorView.MODEL.getProfileCollection().addCollectionListener(this);
+		KnowtatorView.MODEL.addFilterModelListener(this);
 	}
 
 
@@ -206,11 +206,11 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 		private JMenuItem reassignOWLClassCommand() {
 			JMenuItem menuItem = new JMenuItem("Reassign OWL class");
-			menuItem.addActionListener(e -> KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+			menuItem.addActionListener(e -> KnowtatorView.MODEL.getTextSource()
 					.ifPresent(textSource1 -> textSource1.getConceptAnnotationCollection().getSelection()
 							.ifPresent(conceptAnnotation -> {
 								try {
-									KnowtatorView.CONTROLLER.registerAction(new ReassignOWLClassAction(conceptAnnotation));
+									KnowtatorView.MODEL.registerAction(new ReassignOWLClassAction(conceptAnnotation));
 								} catch (ActionUnperformableException e1) {
 									e1.printStackTrace();
 								}

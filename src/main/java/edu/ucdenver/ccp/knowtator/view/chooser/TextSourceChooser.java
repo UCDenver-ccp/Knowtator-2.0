@@ -31,18 +31,18 @@ public class TextSourceChooser extends KnowtatorChooser<TextSource> {
 
 	public TextSourceChooser(KnowtatorView view) {
 		super();
-		setCollection(KnowtatorView.CONTROLLER.getTextSourceCollection());
+		setCollection(KnowtatorView.MODEL.getTextSources());
 	}
 
 	@Override
 	protected void react() {
-		setCollection(KnowtatorView.CONTROLLER.getTextSourceCollection());
+		setCollection(KnowtatorView.MODEL.getTextSources());
 		setSelected();
 	}
 
 	@Override
 	public void reset() {
 		super.reset();
-		setCollection(KnowtatorView.CONTROLLER.getTextSourceCollection());
+		setCollection(KnowtatorView.MODEL.getTextSources());
 	}
 }

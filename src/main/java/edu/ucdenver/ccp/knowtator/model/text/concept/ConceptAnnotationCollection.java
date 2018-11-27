@@ -24,12 +24,12 @@
 
 package edu.ucdenver.ccp.knowtator.model.text.concept;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
-import edu.ucdenver.ccp.knowtator.model.FilterModel;
 import edu.ucdenver.ccp.knowtator.model.FilterModelListener;
+import edu.ucdenver.ccp.knowtator.model.FilterType;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -61,18 +61,18 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(ConceptAnnotationCollection.class);
 
-	private final KnowtatorController controller;
+	private final KnowtatorModel controller;
 
 	private final TextSource textSource;
 
-	public ConceptAnnotationCollection(KnowtatorController controller, TextSource textSource) {
+	public ConceptAnnotationCollection(KnowtatorModel controller, TextSource textSource) {
 		super();
 		this.controller = controller;
 		this.textSource = textSource;
 
-		controller.getOWLModel().addOntologyChangeListener(this);
-		controller.getOWLModel().addOWLModelManagerListener(this);
-		controller.getFilterModel().addFilterModelListener(this);
+		controller.addOntologyChangeListener(this);
+		controller.addOWLModelManagerListener(this);
+		controller.addFilterModelListener(this);
 
 	}
 
@@ -118,15 +118,15 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
 	@Override
 	public Stream<ConceptAnnotation> stream() {
-		boolean filterByOWLClass = controller.getFilterModel().isFilter(FilterModel.OWLCLASS);
-		boolean filterByProfile = controller.getFilterModel().isFilter(FilterModel.PROFILE);
+		boolean filterByOWLClass = controller.isFilter(FilterType.OWLCLASS);
+		boolean filterByProfile = controller.isFilter(FilterType.PROFILE);
 		Optional<Profile> activeProfile = controller.getProfileCollection().getSelection();
 		Set<OWLClass> activeOWLClassDescendants = new HashSet<>();
 
 		if (filterByOWLClass) {
-			controller.getOWLModel().getSelectedOWLClass().ifPresent(owlClass -> {
+			controller.getSelectedOWLClass().ifPresent(owlClass -> {
 				activeOWLClassDescendants.add(owlClass);
-				activeOWLClassDescendants.addAll(controller.getOWLModel().getDescendants(owlClass));
+				activeOWLClassDescendants.addAll(controller.getDescendants(owlClass));
 			});
 		}
 		return super.stream()
@@ -231,28 +231,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
 	}
 
-	private void setOWLClassForAnnotations() {
-		Map<String, List<ConceptAnnotation>> unmatchedAnnotations = new HashMap<>();
-		for (ConceptAnnotation conceptAnnotation : this) {
-
-			Optional<OWLClass> owlClass = controller.getOWLModel().getOWLClassByID(conceptAnnotation.getOwlClassID());
-			if (owlClass.isPresent()) {
-				conceptAnnotation.setOwlClass(owlClass.get());
-			} else {
-				List<ConceptAnnotation> conceptAnnotationList = unmatchedAnnotations.computeIfAbsent(conceptAnnotation.getOwlClassID(), k -> new ArrayList<>());
-				conceptAnnotationList.add(conceptAnnotation);
-			}
-		}
-		if (!unmatchedAnnotations.isEmpty()) {
-			log.warn("The following classes could not be matched to annotations");
-			unmatchedAnnotations.forEach((concept, conceptAnnotationList) -> {
-				log.warn(String.format("Concept: %s", concept));
-				log.warn("Annotations:");
-				conceptAnnotationList.forEach(conceptAnnotation -> log.warn(String.format("\t%s", conceptAnnotation.getId())));
-			});
-		}
-	}
-
     /*
     WRITERS
      */
@@ -334,8 +312,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 			newConceptAnnotation.readFromKnowtatorXML(null, annotationElement);
 			add(newConceptAnnotation);
 		}
-
-		setOWLClassForAnnotations();
 	}
 
 	@Override
@@ -441,8 +417,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 					}
 				}
 		);
-
-		setOWLClassForAnnotations();
 	}
 
 	@Override
@@ -479,15 +453,13 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 		GraphSpace newGraphSpace = new GraphSpace(controller, textSource, "Brat Relation Graph");
 		textSource.getGraphSpaceCollection().add(newGraphSpace);
 		newGraphSpace.readFromBratStandoff(null, annotationCollection, null);
-
-		setOWLClassForAnnotations();
 	}
 
 
 	@Override
 	public void dispose() {
-		controller.getOWLModel().removeOntologyChangeListener(this);
-		controller.getOWLModel().removeOWLModelManagerListener(this);
+		controller.removeOntologyChangeListener(this);
+		controller.removeOWLModelManagerListener(this);
 		super.dispose();
 	}
 
@@ -552,7 +524,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 		getSelection()
 				.filter(conceptAnnotation -> filterValue)
 				.filter(conceptAnnotation -> conceptAnnotation.getOwlClass()
-						.map(owlClass -> controller.getOWLModel().getSelectedOWLClass()
+						.map(owlClass -> controller.getSelectedOWLClass()
 								.map(owlClass1 -> !owlClass1.equals(owlClass))
 								.orElse(false))
 						.orElse(false))
@@ -562,7 +534,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 	@Override
 	public void handleChange(OWLModelManagerChangeEvent event) {
 		if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
-			setOWLClassForAnnotations();
+			forEach(ConceptAnnotation::setOWLClass);
 		}
 	}
 }

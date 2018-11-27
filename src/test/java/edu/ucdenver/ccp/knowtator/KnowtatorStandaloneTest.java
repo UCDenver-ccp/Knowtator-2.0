@@ -24,6 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator;
 
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +40,7 @@ class KnowtatorStandaloneTest extends TestCase {
 
 
 	@SuppressWarnings("FieldCanBeLocal")
-	private KnowtatorController controller;
+	private KnowtatorModel controller;
 
 	private String[] projectFileNames = new String[]{"test_project", "old_project"};
 	private String[] articleFileNames = new String[]{"document1", "document2", "document3", "document1_old", "brat_test"};
@@ -98,7 +99,7 @@ class KnowtatorStandaloneTest extends TestCase {
 	}
 
 //    public void testExportToUIMAXMI() {
-//        controller = new KnowtatorController();
+//        controller = new KnowtatorModel();
 //
 //        int projectID = 0;
 ////        int articleID = 0;

@@ -24,13 +24,13 @@
 
 package edu.ucdenver.ccp.knowtator.model.text.graph;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.w3c.dom.Document;
@@ -44,10 +44,10 @@ import java.util.List;
 import java.util.Map;
 
 public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implements KnowtatorXMLIO, BratStandoffIO {
-    private final KnowtatorController controller;
+	private final KnowtatorModel controller;
     private final TextSource textSource;
 
-    public GraphSpaceCollection(KnowtatorController controller, TextSource textSource) {
+	public GraphSpaceCollection(KnowtatorModel controller, TextSource textSource) {
         super();
         this.controller = controller;
         this.textSource = textSource;

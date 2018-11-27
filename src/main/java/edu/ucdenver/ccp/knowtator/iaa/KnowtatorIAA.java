@@ -24,13 +24,13 @@
 
 package edu.ucdenver.ccp.knowtator.iaa;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.iaa.html.IAA2HTML;
 import edu.ucdenver.ccp.knowtator.iaa.html.SpanMatcherHTML;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.ClassAndSpanMatcher;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.ClassMatcher;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.SpanMatcher;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollection;
@@ -54,7 +54,7 @@ public class KnowtatorIAA {
 
     // Project project;
 
-    private final KnowtatorController controller;
+    private final KnowtatorModel controller;
 
     // KnowtatorProjectUtil kpu;
 
@@ -77,14 +77,14 @@ public class KnowtatorIAA {
             File outputDirectory,
             // KnowtatorFilter filter,
             // Project project,
-            KnowtatorController controller
+            KnowtatorModel controller
             // MentionUtil mentionUtil,
             // FilterUtil filterUtil
     ) throws IAAException {
 
         this.outputDirectory = outputDirectory;
         // this.filter = filter;
-        this.textSources = controller.getTextSourceCollection();
+        this.textSources = controller.getTextSources();
 
         this.controller = controller;
         annotationTexts = new HashMap<>();

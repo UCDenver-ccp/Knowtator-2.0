@@ -24,8 +24,8 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
@@ -36,7 +36,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 public class SpanActionsTest {
-    private static final KnowtatorController controller = TestingHelpers.getLoadedController();
+	private static final KnowtatorModel controller = TestingHelpers.getLoadedController();
     private static final int initialStart = 0;
     private static final int initialEnd = 4;
 
@@ -57,7 +57,7 @@ public class SpanActionsTest {
 
     @Test
     public void modifySpanAction() {
-	    TextSource textSource = controller.getTextSourceCollection().getSelection().get();
+	    TextSource textSource = controller.getTextSource().get();
         ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
         textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
         Span span = conceptAnnotation.getSpanCollection().first();

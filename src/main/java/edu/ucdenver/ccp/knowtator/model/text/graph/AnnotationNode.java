@@ -26,10 +26,10 @@ package edu.ucdenver.ccp.knowtator.model.text.graph;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.text.DataObjectModificationListener;
 import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -45,7 +45,7 @@ public class AnnotationNode extends mxCell implements KnowtatorTextBoundDataObje
 	private final ConceptAnnotation conceptAnnotation;
 	private final TextSource textSource;
 
-	AnnotationNode(KnowtatorController controller, String id, ConceptAnnotation conceptAnnotation, TextSource textSource, double x, double y) {
+	AnnotationNode(KnowtatorModel controller, String id, ConceptAnnotation conceptAnnotation, TextSource textSource, double x, double y) {
 		super(
 				conceptAnnotation.getSpannedText(),
 				new mxGeometry(x, y, 150, 150),

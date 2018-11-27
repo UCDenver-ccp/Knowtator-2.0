@@ -46,7 +46,7 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
 
     @Override
     public void setupListeners() {
-	    new TextBoundModelListener(KnowtatorView.CONTROLLER) {
+	    new TextBoundModelListener(KnowtatorView.MODEL) {
             @Override
             public void respondToConceptAnnotationModification() {
                 react();

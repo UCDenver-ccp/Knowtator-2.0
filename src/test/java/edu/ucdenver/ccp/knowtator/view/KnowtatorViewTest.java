@@ -24,8 +24,8 @@
 
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorCollectionActionsTest;
 import org.junit.jupiter.api.Test;
 
@@ -37,27 +37,27 @@ class KnowtatorViewTest {
 
 	@Test
 	void loadProject() throws IOException {
-		KnowtatorController controller = TestingHelpers.getLoadedController();
+		KnowtatorModel controller = TestingHelpers.getLoadedController();
 		TestingHelpers.checkDefaultCollectionValues(controller);
 		view.loadProject(controller.getProjectLocation(), null);
-		TestingHelpers.checkDefaultCollectionValues(KnowtatorView.CONTROLLER);
+		TestingHelpers.checkDefaultCollectionValues(KnowtatorView.MODEL);
 	}
 
 	@Test
 	void testActions() throws IOException {
-		KnowtatorController controller = TestingHelpers.getLoadedController();
+		KnowtatorModel controller = TestingHelpers.getLoadedController();
 		TestingHelpers.checkDefaultCollectionValues(controller);
-		KnowtatorView.CONTROLLER.setDebug();
+		KnowtatorView.MODEL.setDebug();
 		view.loadProject(controller.getProjectLocation(), null);
-		TestingHelpers.checkDefaultCollectionValues(KnowtatorView.CONTROLLER);
+		TestingHelpers.checkDefaultCollectionValues(KnowtatorView.MODEL);
 		KnowtatorCollectionActionsTest test = new KnowtatorCollectionActionsTest();
-		test.setController(KnowtatorView.CONTROLLER);
+		test.setController(KnowtatorView.MODEL);
 		test.removeConceptAnnotationAction();
 		test.removeGraphSpaceAction();
 		test.removeProfileAction();
 		test.removeSpanAction();
-		for (int i = 0; i < KnowtatorView.CONTROLLER.getTextSourceCollection().size(); i++) {
-			KnowtatorView.CONTROLLER.getTextSourceCollection().selectNext();
+		for (int i = 0; i < KnowtatorView.MODEL.getTextSources().size(); i++) {
+			KnowtatorView.MODEL.selectNextTextSource();
 			view.getKnowtatorTextPane().refreshHighlights();
 		}
 		int defaultExpectedHighlighters = TestingHelpers.defaultExpectedHighlighters;
@@ -78,7 +78,7 @@ class KnowtatorViewTest {
 		KnowtatorView view = new KnowtatorView();
 		assert !view.textSourceButtons.stream()
 				.map(Component::isEnabled).reduce(false, (a, b) -> a || b);
-		KnowtatorController controller = TestingHelpers.getLoadedController();
+		KnowtatorModel controller = TestingHelpers.getLoadedController();
 		view.loadProject(controller.getProjectLocation(), null);
 		assert view.textSourceButtons.stream()
 				.map(Component::isEnabled).reduce(true, (a, b) -> a && b);

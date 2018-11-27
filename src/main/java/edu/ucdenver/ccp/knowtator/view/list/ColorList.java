@@ -49,7 +49,7 @@ public class ColorList extends JList<OWLClass> implements KnowtatorCollectionLis
         setCellRenderer(new ColorListRenderer<>());
 	    lsl = e -> assignColorToClass(view, getSelectedValue());
 
-        KnowtatorView.CONTROLLER.getProfileCollection().getSelection()
+        KnowtatorView.MODEL.getProfileCollection().getSelection()
                 .ifPresent(this::setCollection);
     }
 
@@ -57,7 +57,7 @@ public class ColorList extends JList<OWLClass> implements KnowtatorCollectionLis
         dispose();
         profile.getColors().keySet().stream().filter(o -> o instanceof OWLClass)
                 .map(o -> (OWLClass) o)
-                .sorted(KnowtatorView.CONTROLLER.getOWLModel().getOWLObjectComparator())
+                .sorted(KnowtatorView.MODEL.getOWLObjectComparator())
                 .forEach(o -> ((DefaultListModel<OWLClass>) getModel()).addElement(o));
 //        profile.getColors().keySet().stream().filter(o -> !(o instanceof OWLObject))
 //                .sorted(Comparator.comparing(Object::toString))
@@ -67,17 +67,17 @@ public class ColorList extends JList<OWLClass> implements KnowtatorCollectionLis
 
     @Override
     public void selected(SelectionEvent<Profile> event) {
-        KnowtatorView.CONTROLLER.getProfileCollection().getSelection().ifPresent(this::setCollection);
+        KnowtatorView.MODEL.getProfileCollection().getSelection().ifPresent(this::setCollection);
     }
 
     @Override
     public void added() {
-        KnowtatorView.CONTROLLER.getProfileCollection().getSelection().ifPresent(this::setCollection);
+        KnowtatorView.MODEL.getProfileCollection().getSelection().ifPresent(this::setCollection);
     }
 
     @Override
     public void removed() {
-        KnowtatorView.CONTROLLER.getProfileCollection().getSelection().ifPresent(this::setCollection);
+        KnowtatorView.MODEL.getProfileCollection().getSelection().ifPresent(this::setCollection);
     }
 
     @Override
@@ -98,8 +98,8 @@ public class ColorList extends JList<OWLClass> implements KnowtatorCollectionLis
 
     @Override
     public void setupListeners() {
-        KnowtatorView.CONTROLLER.getProfileCollection().addCollectionListener(this);
-        KnowtatorView.CONTROLLER.getProfileCollection().addColorListener(this);
+        KnowtatorView.MODEL.getProfileCollection().addCollectionListener(this);
+        KnowtatorView.MODEL.getProfileCollection().addColorListener(this);
     }
 
     @Override
@@ -110,7 +110,7 @@ public class ColorList extends JList<OWLClass> implements KnowtatorCollectionLis
 
     @Override
     public void colorChanged() {
-        KnowtatorView.CONTROLLER.getProfileCollection().getSelection().ifPresent(this::setCollection);
+        KnowtatorView.MODEL.getProfileCollection().getSelection().ifPresent(this::setCollection);
     }
 
     class ColorListRenderer<o> extends JLabel implements ListCellRenderer<o> {
@@ -121,9 +121,9 @@ public class ColorList extends JList<OWLClass> implements KnowtatorCollectionLis
 
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            KnowtatorView.CONTROLLER.getProfileCollection().getSelection().ifPresent(profile -> setBackground(profile.getColors().get(value)));
+            KnowtatorView.MODEL.getProfileCollection().getSelection().ifPresent(profile -> setBackground(profile.getColors().get(value)));
             if (value instanceof OWLEntity) {
-                KnowtatorView.CONTROLLER.getOWLModel().getOWLEntityRendering((OWLEntity) value).ifPresent(this::setText);
+                KnowtatorView.MODEL.getOWLEntityRendering((OWLEntity) value).ifPresent(this::setText);
             } else {
                 setText(value.toString());
             }

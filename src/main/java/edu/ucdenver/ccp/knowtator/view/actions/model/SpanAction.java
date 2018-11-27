@@ -45,10 +45,10 @@ public class SpanAction extends AbstractKnowtatorCollectionAction<Span> {
 
 	@Override
 	protected void prepareAdd() {
-		int start = KnowtatorView.CONTROLLER.getSelectionModel().getStart();
-		int end = KnowtatorView.CONTROLLER.getSelectionModel().getEnd();
+		int start = KnowtatorView.MODEL.getStart();
+		int end = KnowtatorView.MODEL.getEnd();
 
-		Span newSpan = new Span(KnowtatorView.CONTROLLER, conceptAnnotation.getTextSource(), conceptAnnotation, null, start, end);
+		Span newSpan = new Span(KnowtatorView.MODEL, conceptAnnotation.getTextSource(), conceptAnnotation, null, start, end);
 		setObject(newSpan);
 	}
 
@@ -59,7 +59,7 @@ public class SpanAction extends AbstractKnowtatorCollectionAction<Span> {
 			setObject(null);
 			ConceptAnnotationAction action = new ConceptAnnotationAction(REMOVE, conceptAnnotation.getTextSource());
 			action.setObject(conceptAnnotation);
-			KnowtatorView.CONTROLLER.registerAction(action);
+			KnowtatorView.MODEL.registerAction(action);
 			edit.addKnowtatorEdit(action.getEdit());
 		} else {
 			super.prepareRemove();

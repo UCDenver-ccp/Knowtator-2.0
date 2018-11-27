@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator;
 
 import com.google.common.io.Files;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
@@ -40,7 +41,7 @@ class IOTests {
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(IOTests.class);
 
-	private KnowtatorController controller;
+	private KnowtatorModel controller;
 
 	private final String[] projectFileNames =
 			new String[]{"test_project", "old_project", "test_load_old_coreference", "CRAFT_assertions"};
@@ -67,7 +68,7 @@ class IOTests {
 
 	//    @Test
 	//    public void loadLargeOld() {
-	//        controller = new KnowtatorController();
+	//        controller = new KnowtatorModel();
 	//
 	//        int projectID = 3;
 	//        String projectFileName = projectFileNames[projectID];
@@ -85,7 +86,7 @@ class IOTests {
 
 		TextSource textSource =
 				controller
-						.getTextSourceCollection().stream()
+						.getTextSources().stream()
 						.filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID]))
 						.findAny()
 						.get();
@@ -125,7 +126,7 @@ class IOTests {
 
 		textSource =
 				controller
-						.getTextSourceCollection().stream()
+						.getTextSources().stream()
 						.filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID2]))
 						.findAny()
 						.get();
@@ -170,11 +171,11 @@ class IOTests {
 		String articleFileName = articleFileNames[articleID];
 		File articleFile = TestingHelpers.getArticleFile(projectFileName, articleFileName);
 
-		controller.getTextSourceCollection().addDocument(articleFile);
+		controller.getTextSources().addDocument(articleFile);
 
 		TextSource textSource =
 				controller
-						.getTextSourceCollection().stream()
+						.getTextSources().stream()
 						.filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID]))
 						.findAny()
 						.get();
@@ -189,7 +190,7 @@ class IOTests {
 
 	//  @Test
 	//  public void successfulMakeNew() {
-	//    controller = new KnowtatorController();
+	//    controller = new KnowtatorModel();
 	//
 	//    File newProject = Files.createTempDir();
 	//    controller.newProject(newProject);
@@ -210,7 +211,7 @@ class IOTests {
 
 		TextSource textSource =
 				controller
-						.getTextSourceCollection().stream()
+						.getTextSources().stream()
 						.filter(textSource1 -> textSource1.getId().equals(articleFileNames[articleID]))
 						.findAny()
 						.get();
@@ -257,7 +258,7 @@ class IOTests {
 
 	@Test
 	void successfulSave() {
-		controller = new KnowtatorController();
+		controller = new KnowtatorModel();
 
 		int projectID = 0;
 
@@ -285,7 +286,7 @@ class IOTests {
 
 //  @Test
 //  public void successfulExportToBrat() {
-//    controller = new KnowtatorController();
+//    controller = new KnowtatorModel();
 //
 //    int projectID = 0;
 //    int articleID = 4;
@@ -316,8 +317,8 @@ class IOTests {
 
 	//  @Test
 	//  public void compareProjects() {
-	//    KnowtatorController controller1 = new KnowtatorController();
-	//    KnowtatorController controller2 = new KnowtatorController();
+	//    KnowtatorModel controller1 = new KnowtatorModel();
+	//    KnowtatorModel controller2 = new KnowtatorModel();
 	//
 	//    controller1
 	//        .getProjectManager()

@@ -35,7 +35,7 @@ public class AnnotationList extends KnowtatorList<ConceptAnnotation> {
 
 	@Override
 	public void react() {
-		KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+		KnowtatorView.MODEL.getTextSource()
 				.ifPresent(textSource -> setCollection(textSource.getConceptAnnotationCollection()));
 		setSelected();
 	}

@@ -22,26 +22,34 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator;
+package edu.ucdenver.ccp.knowtator.model;
 
 import edu.ucdenver.ccp.knowtator.io.BasicIO;
 import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
-import edu.ucdenver.ccp.knowtator.model.*;
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileCollection;
 import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundDataObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollection;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLWorkspace;
 
 import javax.annotation.Nonnull;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 /**
  * The Knowtator class. Contains all of the model managers. It is used to interface between the view and the model. Also handles
@@ -49,54 +57,219 @@ import java.util.stream.Collectors;
  *
  * @author Harrison Pielke-Lombardo
  */
-public class KnowtatorController extends ProjectManager implements KnowtatorObjectInterface {
+public class KnowtatorModel extends OWLModel implements CaretListener {
 	@SuppressWarnings("unused")
-	private static final Logger log = Logger.getLogger(KnowtatorController.class);
-	private final List<BaseKnowtatorModel> models;
-	private final SelectionModel selectionModel;
-	private final FilterModel filterModel;
+	private static final Logger log = Logger.getLogger(KnowtatorModel.class);
+	private final List<BaseKnowtatorManager> models;
 	private final TextSourceCollection textSourceCollection;
 	private final ProfileCollection profileCollection;
-	private final OWLModel owlModel;
 	private final TreeMap<String, KnowtatorDataObjectInterface> idRegistry;
+	private final List<FilterModelListener> filterModelListeners;
+	private boolean isFilterByOWLClass;
+	private boolean isFilterByProfile;
 
 
 	/**
 	 * The constructor initializes all of the models and managers
 	 */
-	public KnowtatorController() {
+	public KnowtatorModel() {
 		super();
 
 		idRegistry = new TreeMap<>();
 
 		models = new ArrayList<>();
 		textSourceCollection = new TextSourceCollection(this);
-		owlModel = new OWLModel(this);
 		profileCollection = new ProfileCollection(this);
-		filterModel = new FilterModel();
-		selectionModel = new SelectionModel();
 
-		models.add(owlModel);
+		filterModelListeners = new ArrayList<>();
+		isFilterByOWLClass = false;
+		isFilterByProfile = false;
+		start = 0;
+		end = 0;
+
 		models.add(profileCollection);
 		models.add(textSourceCollection);
-		models.add(filterModel);
-		models.add(selectionModel);
+
+		setupListeners();
 	}
+
+	@Override
+	public void caretUpdate(CaretEvent e) {
+		setStart(Math.min(e.getDot(), e.getMark()));
+		setEnd(Math.max(e.getDot(), e.getMark()));
+	}
+
+	public int getStart() {
+		return start;
+	}
+
+	private void setStart(int start) {
+		this.start = start;
+	}
+
+	public int getEnd() {
+		return end;
+	}
+
+	private void setEnd(int end) {
+		this.end = end;
+	}
+
+	private int start;
+	private int end;
+
+	private void setupListeners() {
+
+		new TextBoundModelListener(this) {
+			@Override
+			public void respondToConceptAnnotationModification() {
+
+			}
+
+			@Override
+			public void respondToSpanModification() {
+
+			}
+
+			@Override
+			public void respondToGraphSpaceModification() {
+
+			}
+
+			@Override
+			public void respondToGraphSpaceCollectionFirstAdded() {
+
+			}
+
+			@Override
+			public void respondToGraphSpaceCollectionEmptied() {
+
+			}
+
+			@Override
+			public void respondToGraphSpaceRemoved() {
+
+			}
+
+			@Override
+			public void respondToGraphSpaceAdded() {
+
+			}
+
+			@Override
+			public void respondToGraphSpaceSelection(SelectionEvent<GraphSpace> event) {
+
+			}
+
+			@Override
+			public void respondToConceptAnnotationCollectionEmptied() {
+
+			}
+
+			@Override
+			public void respondToConceptAnnotationRemoved() {
+
+			}
+
+			@Override
+			public void respondToConceptAnnotationAdded() {
+
+			}
+
+			@Override
+			public void respondToConceptAnnotationCollectionFirstAdded() {
+
+			}
+
+			@Override
+			public void respondToSpanCollectionFirstAdded() {
+
+			}
+
+			@Override
+			public void respondToSpanCollectionEmptied() {
+
+			}
+
+			@Override
+			public void respondToSpanRemoved() {
+
+			}
+
+			@Override
+			public void respondToSpanAdded() {
+
+			}
+
+			@Override
+			public void respondToSpanSelection(SelectionEvent<Span> event) {
+
+			}
+
+			@Override
+			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
+				event.getNew()
+						.ifPresent(conceptAnnotation -> conceptAnnotation.getOwlClass()
+								.ifPresent(owlClass -> setSelectedOWLEntity(owlClass)));
+			}
+
+			@Override
+			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
+
+			}
+
+			@Override
+			public void respondToTextSourceAdded() {
+
+			}
+
+			@Override
+			public void respondToTextSourceRemoved() {
+
+			}
+
+			@Override
+			public void respondToTextSourceCollectionEmptied() {
+
+			}
+
+			@Override
+			public void respondToTextSourceCollectionFirstAdded() {
+
+			}
+		};
+	}
+
+	public void addFilterModelListener(FilterModelListener listener) {
+		filterModelListeners.add(listener);
+	}
+
+	public boolean isFilter(FilterType filter) {
+		switch (filter) {
+			case PROFILE:
+				return isFilterByProfile;
+			case OWLCLASS:
+				return isFilterByOWLClass;
+		}
+		return false;
+	}
+
 
 	/**
 	 * Load project from non-standard directory structure
-	 * @param profilesLocation Directory of profile files
-	 * @param ontologiesLocation Directory of ontology files
-	 * @param articlesLocation Directory of article files
+	 *
+	 * @param profilesLocation    Directory of profile files
+	 * @param ontologiesLocation  Directory of ontology files
+	 * @param articlesLocation    Directory of article files
 	 * @param annotationsLocation Directory of annotation files
-	 * @param projectLocation Output directory for project to save to
+	 * @param projectLocation     Output directory for project to save to
 	 */
-	void importProject(File profilesLocation, File ontologiesLocation, File articlesLocation, File annotationsLocation, File projectLocation) {
+	public void importProject(File profilesLocation, File ontologiesLocation, File articlesLocation, File annotationsLocation, File projectLocation) {
 		try {
 			setSaveLocation(projectLocation);
 			makeProjectStructure();
 			importToManager(profilesLocation, profileCollection, ".xml");
-			importToManager(ontologiesLocation, owlModel, ".obo");
+			importToManager(ontologiesLocation, this, ".obo");
 			importToManager(articlesLocation, textSourceCollection, ".txt");
 			importToManager(annotationsLocation, textSourceCollection, ".xml");
 
@@ -113,21 +286,14 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 	 * @param basicIO     The IO class to save
 	 * @param file        The file to save to
 	 * @param <I>         The IO class
-	 * @see edu.ucdenver.ccp.knowtator.ProjectManager
+	 * @see ProjectManager
 	 */
 	@Override
 	public <I extends BasicIO> void saveToFormat(Class<? extends BasicIOUtil<I>> ioUtilClass, I basicIO, File file) {
 		if (isNotLoading()) {
-			owlModel.save();
+			save();
 		}
 		super.saveToFormat(ioUtilClass, basicIO, file);
-	}
-
-	/**
-	 * @return The filter model
-	 */
-	public FilterModel getFilterModel() {
-		return filterModel;
 	}
 
 	/**
@@ -135,14 +301,7 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 	 */
 	@Override
 	List<BaseKnowtatorManager> getManagers() {
-		return models.stream().filter(model -> model instanceof BaseKnowtatorManager).map(model -> (BaseKnowtatorManager) model).collect(Collectors.toList());
-	}
-
-	/**
-	 * @return The OWL model
-	 */
-	public OWLModel getOWLModel() {
-		return owlModel;
+		return models;
 	}
 
 	/**
@@ -153,17 +312,10 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 	}
 
 	/**
-	 * @return The selection model
-	 */
-	public SelectionModel getSelectionModel() {
-		return selectionModel;
-	}
-
-	/**
 	 * @return The text source collection
 	 */
-	public TextSourceCollection getTextSourceCollection() {
-		return textSourceCollection;
+	public Optional<TextSource> getTextSource() {
+		return textSourceCollection.getSelection();
 	}
 
 	/**
@@ -217,8 +369,20 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 	 */
 	@Override
 	public void dispose() {
-		models.forEach(KnowtatorObjectInterface::dispose);
+		super.dispose();
+		models.forEach(BaseKnowtatorManager::dispose);
+		filterModelListeners.clear();
 		idRegistry.clear();
+	}
+
+	@Override
+	public void reset() {
+		setupListeners();
+	}
+
+	@Override
+	public void finishLoad() {
+
 	}
 
 	/**
@@ -227,8 +391,8 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 	 * @param owlWorkspace Protege's OWL workspace to be passed to the OWL model.
 	 */
 	public void reset(OWLWorkspace owlWorkspace) {
-		owlModel.setOwlWorkSpace(owlWorkspace);
-		models.forEach(BaseKnowtatorModel::reset);
+		setOwlWorkSpace(owlWorkspace);
+		models.forEach(BaseKnowtatorManager::reset);
 	}
 
 	/**
@@ -236,7 +400,7 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 	 */
 	@Override
 	public void save() {
-
+		super.save();
 	}
 
 	/**
@@ -244,7 +408,7 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 	 */
 	@Override
 	public void load() {
-
+		super.load();
 	}
 
 	/**
@@ -252,5 +416,50 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 	 */
 	public static void main(String[] args) {
 		log.warn("Knowtator");
+	}
+
+	public File getArticlesLocation() {
+		return textSourceCollection.getArticlesLocation();
+	}
+
+	public File getAnnotationsLocation() {
+		return textSourceCollection.getAnnotationsLocation();
+	}
+
+	public void addTextSourceCollectionListener(KnowtatorCollectionListener<TextSource> listener) {
+		textSourceCollection.addCollectionListener(listener);
+	}
+
+	public void removeTextSourceCollectionListener(KnowtatorCollectionListener<TextSource> listener) {
+		textSourceCollection.removeCollectionListener(listener);
+	}
+
+	public TextSourceCollection getTextSources() {
+		return textSourceCollection;
+	}
+
+	public void selectNextTextSource() {
+		textSourceCollection.selectNext();
+	}
+
+	public void selectPreviousTextSource() {
+		textSourceCollection.selectPrevious();
+	}
+
+	public void selectFirstTextSource() {
+		textSourceCollection.setSelection(textSourceCollection.first());
+	}
+
+	public void setFilter(FilterType filter, boolean isFilter) {
+		switch (filter) {
+			case PROFILE:
+				isFilterByProfile = isFilter;
+				filterModelListeners.forEach(listener -> listener.profileFilterChanged(isFilterByProfile));
+				break;
+			case OWLCLASS:
+				isFilterByOWLClass = isFilter;
+				filterModelListeners.forEach(l -> l.owlClassFilterChanged(isFilterByOWLClass));
+				break;
+		}
 	}
 }

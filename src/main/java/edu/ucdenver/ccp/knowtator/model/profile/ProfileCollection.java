@@ -24,12 +24,12 @@
 
 package edu.ucdenver.ccp.knowtator.model.profile;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.BaseKnowtatorManager;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -47,14 +47,14 @@ import java.util.Optional;
 public class ProfileCollection extends KnowtatorCollection<Profile> implements KnowtatorXMLIO, BaseKnowtatorManager {
 
 	@SuppressWarnings("unused")
-	private static final Logger log = Logger.getLogger(KnowtatorController.class);
+	private static final Logger log = Logger.getLogger(KnowtatorModel.class);
 
-	private final KnowtatorController controller;
+	private final KnowtatorModel controller;
 	private final List<ColorListener> colorListeners;
 	private File profilesLocation;
 	private final Profile defaultProfile;
 
-	public ProfileCollection(KnowtatorController controller) {
+	public ProfileCollection(KnowtatorModel controller) {
 		super();
 		defaultProfile = new Profile(controller, "Default");
 		add(defaultProfile);
@@ -142,7 +142,7 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 
 	@Override
 	public void setSaveLocation(File saveLocation) throws IOException {
-		profilesLocation = (new File(controller.getSaveLocation(), "Profiles"));
+		profilesLocation = (new File(saveLocation, "Profiles"));
 		Files.createDirectories(profilesLocation.toPath());
 	}
 

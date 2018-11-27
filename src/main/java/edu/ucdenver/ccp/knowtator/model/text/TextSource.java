@@ -24,8 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.model.text;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.Savable;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
@@ -33,6 +31,8 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.AbstractKnowtatorDataObject;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollection;
@@ -57,7 +57,7 @@ public class TextSource extends AbstractKnowtatorDataObject<TextSource> implemen
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(TextSource.class);
 
-    private final KnowtatorController controller;
+    private final KnowtatorModel controller;
     private final File saveFile;
     private final ConceptAnnotationCollection conceptAnnotationCollection;
     private File textFile;
@@ -65,10 +65,10 @@ public class TextSource extends AbstractKnowtatorDataObject<TextSource> implemen
     private final GraphSpaceCollection graphSpaceCollection;
     private boolean notSaving;
 
-    public TextSource(KnowtatorController controller, File saveFile, String textFileName) {
+    public TextSource(KnowtatorModel controller, File saveFile, String textFileName) {
         super(null);
         this.controller = controller;
-        this.saveFile = saveFile == null ? new File(controller.getTextSourceCollection().getAnnotationsLocation().getAbsolutePath(), textFileName.replace(".txt", "") + ".xml") : saveFile;
+        this.saveFile = saveFile == null ? new File(controller.getAnnotationsLocation().getAbsolutePath(), textFileName.replace(".txt", "") + ".xml") : saveFile;
         this.conceptAnnotationCollection = new ConceptAnnotationCollection(controller, this);
         this.graphSpaceCollection = new GraphSpaceCollection(controller, this);
         notSaving = true;
@@ -82,7 +82,7 @@ public class TextSource extends AbstractKnowtatorDataObject<TextSource> implemen
 
         textFile =
                 new File(
-                        controller.getTextSourceCollection().getArticlesLocation(),
+                        controller.getArticlesLocation(),
                         textFileName.endsWith(".txt") ? textFileName : textFileName + ".txt");
 
         if (!textFile.exists()) {
@@ -97,7 +97,7 @@ public class TextSource extends AbstractKnowtatorDataObject<TextSource> implemen
                                     Paths.get(file.toURI()),
                                     Paths.get(
                                             controller
-                                                    .getTextSourceCollection().getArticlesLocation()
+                                                    .getArticlesLocation()
                                                     .toURI()
                                                     .resolve(file.getName())))
                                     .toFile();
@@ -185,7 +185,7 @@ public class TextSource extends AbstractKnowtatorDataObject<TextSource> implemen
                     content = FileUtils.readFileToString(textFile, "UTF-8");
                     return content;
                 } catch (IOException e) {
-                    textFile = new File(controller.getTextSourceCollection().getArticlesLocation(), id + ".txt");
+                    textFile = new File(controller.getArticlesLocation(), id + ".txt");
                     while (!textFile.exists()) {
                         JFileChooser fileChooser = new JFileChooser();
                         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -205,11 +205,11 @@ public class TextSource extends AbstractKnowtatorDataObject<TextSource> implemen
 
     @Override
     public void save() {
-        if (controller.isNotLoading() && !controller.getOWLModel().renderChangeInProgress() && notSaving) {
+        if (controller.isNotLoading() && !controller.renderChangeInProgress() && notSaving) {
             notSaving = false;
-            controller.getOWLModel().setRenderRDFSLabel();
+            controller.setRenderRDFSLabel();
             controller.saveToFormat(KnowtatorXMLUtil.class, this, saveFile);
-            controller.getOWLModel().resetRenderRDFS();
+            controller.resetRenderRDFS();
             notSaving = true;
         }
     }
@@ -221,7 +221,7 @@ public class TextSource extends AbstractKnowtatorDataObject<TextSource> implemen
 
     @Override
     public File getSaveLocation() {
-        return new File(controller.getTextSourceCollection().getAnnotationsLocation().getAbsolutePath(), saveFile.getName());
+        return new File(controller.getAnnotationsLocation().getAbsolutePath(), saveFile.getName());
     }
 
     @Override

@@ -49,7 +49,7 @@ class ImportPane extends MenuPane {
 
         importButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
-	        fileChooser.setCurrentDirectory(KnowtatorView.CONTROLLER.getTextSourceCollection().getAnnotationsLocation());
+            fileChooser.setCurrentDirectory(KnowtatorView.MODEL.getAnnotationsLocation());
 
             FileFilter fileFilter =
                     new FileNameExtensionFilter("ConceptAnnotation File (XML, ann, a1)", "xml", "ann", "a1");
@@ -58,7 +58,7 @@ class ImportPane extends MenuPane {
 
             if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
                 parent.dispose();
-	            KnowtatorView.CONTROLLER.loadWithAppropriateFormat(KnowtatorView.CONTROLLER.getTextSourceCollection(), fileChooser.getSelectedFile());
+                KnowtatorView.MODEL.loadWithAppropriateFormat(KnowtatorView.MODEL.getTextSources(), fileChooser.getSelectedFile());
             }
         });
     }

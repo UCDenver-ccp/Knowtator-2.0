@@ -95,7 +95,7 @@ To change to a different active profile, simply select it in the profile list.
 
 To change the color associated with a concept, click on the concept in the color list.
 
-To view only annotation made by the active profile, in the tool bar above the text pane, select the "Profile" check box. This will filter out all annotation not made by the active profile.
+To view only annotation made by the active profile, in the tool bar above the text pane, select the "Profile" check box. This will filterType out all annotation not made by the active profile.
 
 ## Search
 

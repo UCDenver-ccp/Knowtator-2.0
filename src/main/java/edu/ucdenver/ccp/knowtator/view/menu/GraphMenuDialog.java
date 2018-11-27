@@ -71,11 +71,11 @@ public class GraphMenuDialog extends JDialog {
 		// call onCancel() on ESCAPE
 		contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-		exportToImagePNGButton.addActionListener(e -> KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+		exportToImagePNGButton.addActionListener(e -> KnowtatorView.MODEL.getTextSource()
 				.ifPresent(textSource -> textSource.getGraphSpaceCollection().getSelection()
 						.ifPresent(graphSpace -> {
 							JFileChooser fileChooser = new JFileChooser();
-							fileChooser.setCurrentDirectory(KnowtatorView.CONTROLLER.getSaveLocation());
+							fileChooser.setCurrentDirectory(KnowtatorView.MODEL.getSaveLocation());
 							FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
 							fileChooser.setFileFilter(fileFilter);
 							fileChooser.setSelectedFile(new File(textSource.getId() + "_" + graphSpace.getId() + ".png"));

@@ -24,33 +24,33 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.junit.jupiter.api.Test;
 
 class SelectableCollectionTest {
-	private final static KnowtatorController controller = TestingHelpers.getLoadedController();
+	private final static KnowtatorModel controller = TestingHelpers.getLoadedController();
 
 	@Test
 	void selectNext() {
-		TextSource textSource = controller.getTextSourceCollection().get("document1");
-		assert textSource.equals(controller.getTextSourceCollection().getSelection().get());
-		controller.getTextSourceCollection().selectNext();
-		controller.getTextSourceCollection().selectNext();
-		assert !textSource.equals(controller.getTextSourceCollection().getSelection().get());
-		controller.getTextSourceCollection().selectNext();
-		assert textSource.equals(controller.getTextSourceCollection().getSelection().get());
+		TextSource textSource = controller.getTextSources().get("document1");
+		assert textSource.equals(controller.getTextSource().get());
+		controller.selectNextTextSource();
+		controller.selectNextTextSource();
+		assert !textSource.equals(controller.getTextSource().get());
+		controller.selectNextTextSource();
+		assert textSource.equals(controller.getTextSource().get());
 	}
 
 	@Test
 	void selectPrevious() {
-		TextSource textSource = controller.getTextSourceCollection().get("document1");
-		assert textSource.equals(controller.getTextSourceCollection().getSelection().get());
-		controller.getTextSourceCollection().selectPrevious();
-		controller.getTextSourceCollection().selectPrevious();
-		assert !textSource.equals(controller.getTextSourceCollection().getSelection().get());
-		controller.getTextSourceCollection().selectPrevious();
-		assert textSource.equals(controller.getTextSourceCollection().getSelection().get());
+		TextSource textSource = controller.getTextSources().get("document1");
+		assert textSource.equals(controller.getTextSource().get());
+		controller.selectPreviousTextSource();
+		controller.selectPreviousTextSource();
+		assert !textSource.equals(controller.getTextSource().get());
+		controller.selectPreviousTextSource();
+		assert textSource.equals(controller.getTextSource().get());
 	}
 }

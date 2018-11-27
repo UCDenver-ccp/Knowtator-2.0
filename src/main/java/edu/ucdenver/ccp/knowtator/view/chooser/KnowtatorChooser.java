@@ -62,7 +62,7 @@ public abstract class KnowtatorChooser<K extends KnowtatorDataObjectInterface> e
 	@Override
 	public void setupListeners() {
 		//noinspection Duplicates
-		new TextBoundModelListener(KnowtatorView.CONTROLLER) {
+		new TextBoundModelListener(KnowtatorView.MODEL) {
 
 			@Override
 			public void respondToConceptAnnotationModification() {
@@ -198,7 +198,7 @@ public abstract class KnowtatorChooser<K extends KnowtatorDataObjectInterface> e
 	}
 
 	void setSelected() {
-		if (KnowtatorView.CONTROLLER.isNotLoading()) {
+		if (KnowtatorView.MODEL.isNotLoading()) {
 			removeActionListener(al);
 			collection.getSelection().ifPresent(this::setSelectedItem);
 			addActionListener(al);

@@ -36,7 +36,7 @@ public class ProfileList extends KnowtatorList<Profile> {
 
 	@Override
 	protected void react() {
-		setCollection(KnowtatorView.CONTROLLER.getProfileCollection());
+		setCollection(KnowtatorView.MODEL.getProfileCollection());
 		setSelected();
 	}
 

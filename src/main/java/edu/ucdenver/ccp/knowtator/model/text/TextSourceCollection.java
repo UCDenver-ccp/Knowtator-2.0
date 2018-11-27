@@ -24,11 +24,11 @@
 
 package edu.ucdenver.ccp.knowtator.model.text;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.BaseKnowtatorManager;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -47,12 +47,12 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 	@SuppressWarnings("unused")
 	private final Logger log = Logger.getLogger(TextSourceCollection.class);
 
-	private final KnowtatorController controller;
+	private final KnowtatorModel controller;
 	private File articlesLocation;
 	private File annotationsLocation;
 
 
-	public TextSourceCollection(KnowtatorController controller) {
+	public TextSourceCollection(KnowtatorModel controller) {
 		super();
 		this.controller = controller;
 
@@ -122,11 +122,11 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 	public void load() {
 		try {
 			log.warn("Loading annotations");
-			controller.getOWLModel().setRenderRDFSLabel();
+			controller.setRenderRDFSLabel();
 			KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();
 			Files.newDirectoryStream(Paths.get(annotationsLocation.toURI()), path -> path.toString().endsWith(".xml"))
 					.forEach(inputFile -> xmlUtil.read(this, inputFile.toFile()));
-			controller.getOWLModel().resetRenderRDFS();
+			controller.resetRenderRDFS();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -138,9 +138,9 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 //            JOptionPane.showMessageDialog(null, "Please select a document to annotate");
 //            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 //                File file = fileChooser.getSelectedFile();
-//                if (!file.getParentFile().equals(controller.getTextSourceCollection().getArticlesLocation())) {
+//                if (!file.getParentFile().equals(controller.getArticlesLocation())) {
 //                    try {
-//                        FileUtils.copyFile(file, new File(controller.getTextSourceCollection().getArticlesLocation(), file.getName()));
+//                        FileUtils.copyFile(file, new File(controller.getArticlesLocation(), file.getName()));
 //                    } catch (IOException e) {
 //                        e.printStackTrace();
 //                    }
@@ -152,9 +152,9 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 
 	@Override
 	public void save() {
-		controller.getOWLModel().setRenderRDFSLabel();
+		controller.setRenderRDFSLabel();
 		forEach(TextSource::save);
-		controller.getOWLModel().resetRenderRDFS();
+		controller.resetRenderRDFS();
 	}
 
 	public File getAnnotationsLocation() {

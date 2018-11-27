@@ -24,13 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.model;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.protege.editor.core.ui.util.AugmentedJTextField;
@@ -51,7 +44,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListener {
+public abstract class OWLModel extends ProjectManager implements Serializable {
 	@SuppressWarnings("unused")
 	private static final Logger log = LogManager.getLogger(OWLModel.class);
 
@@ -59,7 +52,6 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 	private Optional<OWLWorkspace> owlWorkSpace;
 	private File ontologiesLocation;
 	private List<IRI> annotationIRIs;
-	private final KnowtatorController controller;
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	private Optional<OWLClass> testClass;
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -67,13 +59,10 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	private Optional<OWLOntologyManager> owlOntologyManager;
 
-	public OWLModel(KnowtatorController controller) {
-		this.controller = controller;
-		controller.addDebugListener(this);
+	OWLModel() {
 		owlWorkSpace = Optional.empty();
 		owlOntologyManager = Optional.empty();
 		annotationIRIs = null;
-		setupListeners();
 	}
 
 	public Optional<OWLClass> getOWLClassByID(@Nonnull String classID) {
@@ -114,130 +103,10 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 		}
 	}
 
-	private void setupListeners() {
 
-		new TextBoundModelListener(controller) {
-			@Override
-			public void respondToConceptAnnotationModification() {
-
-			}
-
-			@Override
-			public void respondToSpanModification() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceModification() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceCollectionFirstAdded() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceCollectionEmptied() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceRemoved() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceAdded() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceSelection(SelectionEvent<GraphSpace> event) {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationCollectionEmptied() {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationRemoved() {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationAdded() {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationCollectionFirstAdded() {
-
-			}
-
-			@Override
-			public void respondToSpanCollectionFirstAdded() {
-
-			}
-
-			@Override
-			public void respondToSpanCollectionEmptied() {
-
-			}
-
-			@Override
-			public void respondToSpanRemoved() {
-
-			}
-
-			@Override
-			public void respondToSpanAdded() {
-
-			}
-
-			@Override
-			public void respondToSpanSelection(SelectionEvent<Span> event) {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
-				event.getNew()
-						.ifPresent(conceptAnnotation -> conceptAnnotation.getOwlClass()
-								.ifPresent(owlClass -> setSelectedOWLEntity(owlClass)));
-			}
-
-			@Override
-			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
-
-			}
-
-			@Override
-			public void respondToTextSourceAdded() {
-
-			}
-
-			@Override
-			public void respondToTextSourceRemoved() {
-
-			}
-
-			@Override
-			public void respondToTextSourceCollectionEmptied() {
-
-			}
-
-			@Override
-			public void respondToTextSourceCollectionFirstAdded() {
-
-			}
-		};
-	}
 
 	public Optional<OWLObjectProperty> getSelectedOWLObjectProperty() {
-		if (controller.isDebug()) {
+		if (testProperty.isPresent()) {
 			return testProperty;
 		} else {
 			return owlWorkSpace
@@ -247,7 +116,7 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 	}
 
 	public Optional<OWLClass> getSelectedOWLClass() {
-		if (controller.isDebug()) {
+		if (testClass.isPresent()) {
 			return testClass;
 		}
 		return owlWorkSpace
@@ -309,7 +178,6 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 		});
 	}
 
-	@Override
 	public void setDebug() {
 		owlOntologyManager = Optional.of(org.semanticweb.owlapi.apibinding.OWLManager.createOWLOntologyManager());
 
@@ -333,13 +201,9 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 
 	@Override
 	public void setSaveLocation(File newSaveLocation) throws IOException {
+		super.setSaveLocation(newSaveLocation);
 		this.ontologiesLocation = new File(newSaveLocation, "Ontologies");
 		Files.createDirectories(ontologiesLocation.toPath());
-	}
-
-	@Override
-	public void finishLoad() {
-
 	}
 
 
@@ -430,11 +294,6 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 
 	public boolean renderChangeInProgress() {
 		return annotationIRIs != null;
-	}
-
-	@Override
-	public void reset() {
-		setupListeners();
 	}
 
 	public Comparator<OWLObject> getOWLObjectComparator() {

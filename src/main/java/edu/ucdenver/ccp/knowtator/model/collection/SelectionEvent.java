@@ -26,8 +26,10 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 
+import java.util.Optional;
+
 public class SelectionEvent<K extends KnowtatorDataObjectInterface> extends ChangeEvent<K> {
-	SelectionEvent(K oldObject, K newObject) {
-        super(oldObject, newObject);
+	SelectionEvent(Optional<K> oldObject, Optional<K> newObject) {
+		super(oldObject.orElse(null), newObject.orElse(null));
     }
 }

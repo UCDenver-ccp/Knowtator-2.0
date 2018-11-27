@@ -70,7 +70,7 @@ public class ConsistencyPane extends MenuPane {
 
 	private void refresh() {
 		activeOWLClassDescendants = new HashSet<>();
-		OWLModel owlModel = KnowtatorView.CONTROLLER.getOWLModel();
+		OWLModel owlModel = KnowtatorView.MODEL;
 		owlModel.getSelectedOWLClass().ifPresent(owlClass -> {
 			activeOWLClassDescendants.add(owlClass);
 			if (includeDescendantsCheckBox.isSelected()) {
@@ -79,7 +79,7 @@ public class ConsistencyPane extends MenuPane {
 			owlModel.getOWLEntityRendering(owlClass).ifPresent(label -> owlClassLabel.setText(label));
 		});
 
-		KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+		KnowtatorView.MODEL.getTextSource()
 				.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
 						.ifPresent(conceptAnnotation -> spanLabel.setText(conceptAnnotation.getSpannedText())));
 		annotationsForClassList.react();
