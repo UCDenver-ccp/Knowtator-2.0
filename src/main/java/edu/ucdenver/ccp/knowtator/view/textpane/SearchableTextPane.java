@@ -24,7 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.view.textpane;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -32,6 +31,7 @@ import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -46,15 +46,12 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 	private Pattern pattern;
 	private Matcher matcher;
 	private final JTextField searchTextField;
-	private KnowtatorController controller;
 
 	/**
-	 * @param controller      A Knowtator controller
 	 * @param searchTextField A text field used to search the text pane
 	 */
-	SearchableTextPane(KnowtatorController controller, JTextField searchTextField) {
+	SearchableTextPane(JTextField searchTextField) {
 		super();
-		this.controller = controller;
 		this.searchTextField = searchTextField;
 		addCaretListener(e -> {
 			if (shouldUpdateSearchTextFieldCondition()) {
@@ -167,7 +164,7 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 
 	@Override
 	public void setupListeners() {
-		new TextBoundModelListener(controller) {
+		new TextBoundModelListener(KnowtatorView.CONTROLLER) {
 			@Override
 			public void respondToConceptAnnotationModification() {
 

@@ -24,7 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.view.textpane;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -33,6 +32,7 @@ import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorDefaultSettings;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.swing.*;
@@ -56,13 +56,11 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	private Optional<ConceptAnnotation> conceptAnnotationOptional;
 	Optional<TextSource> textSourceOptional;
 	private Optional<Span> spanOptional;
-	private final KnowtatorController controller;
 	private final DefaultHighlighter.DefaultHighlightPainter overlapHighlighter = new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
 	private final DefaultHighlighter.DefaultHighlightPainter selectionHighlighter = new RectanglePainter(Color.BLACK);
 
-	AnnotatableTextPane(KnowtatorController controller, JTextField searchTextField) {
-		super(controller, searchTextField);
-		this.controller = controller;
+	AnnotatableTextPane(JTextField searchTextField) {
+		super(searchTextField);
 		setEditable(false);
 		setSelectedTextColor(Color.red);
 		setFont(KnowtatorDefaultSettings.FONT);
@@ -114,7 +112,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	@Override
 	public void setupListeners() {
 		super.setupListeners();
-		new TextBoundModelListener(controller) {
+		new TextBoundModelListener(KnowtatorView.CONTROLLER) {
 			@Override
 			public void respondToConceptAnnotationModification() {
 				refreshHighlights();
@@ -256,7 +254,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	 * Repaints the highlights
 	 */
 	public void refreshHighlights() {
-		if (controller.isNotLoading()) {
+		if (KnowtatorView.CONTROLLER.isNotLoading()) {
 			// Remove all previous highlights in case a spanOptional has been deleted
 			getHighlighter().removeAllHighlights();
 
@@ -309,8 +307,8 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 		getStyledDocument().setCharacterAttributes(0, getText().length(), regularSpan, false);
 
 		Set<OWLClass> descendants = new HashSet<>();
-		controller.getOWLModel().getSelectedOWLClass().ifPresent(owlClass -> {
-			descendants.addAll(controller.getOWLModel().getDescendants(owlClass));
+		KnowtatorView.CONTROLLER.getOWLModel().getSelectedOWLClass().ifPresent(owlClass -> {
+			descendants.addAll(KnowtatorView.CONTROLLER.getOWLModel().getDescendants(owlClass));
 			descendants.add(owlClass);
 		});
 		for (Span span : spans) {

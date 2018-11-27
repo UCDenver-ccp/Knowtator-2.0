@@ -27,13 +27,13 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class SelectableCollectionTest {
+class SelectableCollectionTest {
 	private final static KnowtatorController controller = TestingHelpers.getLoadedController();
 
 	@Test
-	public void selectNext() {
+	void selectNext() {
 		TextSource textSource = controller.getTextSourceCollection().get("document1");
 		assert textSource.equals(controller.getTextSourceCollection().getSelection().get());
 		controller.getTextSourceCollection().selectNext();
@@ -44,7 +44,7 @@ public class SelectableCollectionTest {
 	}
 
 	@Test
-	public void selectPrevious() {
+	void selectPrevious() {
 		TextSource textSource = controller.getTextSourceCollection().get("document1");
 		assert textSource.equals(controller.getTextSourceCollection().getSelection().get());
 		controller.getTextSourceCollection().selectPrevious();

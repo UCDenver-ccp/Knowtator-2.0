@@ -22,7 +22,7 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.actions;
+package edu.ucdenver.ccp.knowtator.view.actions;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
@@ -30,7 +30,8 @@ import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
-import org.junit.Test;
+import edu.ucdenver.ccp.knowtator.view.actions.graph.GraphActions;
+import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 public class GraphActionsTest {
@@ -100,7 +101,7 @@ public class GraphActionsTest {
 		AnnotationNode source = (AnnotationNode) graphSpace.getChildVertices(graphSpace.getDefaultParent())[0];
 		AnnotationNode target = (AnnotationNode) graphSpace.getChildVertices(graphSpace.getDefaultParent())[1];
 		OWLObjectProperty property = controller.getOWLModel().getSelectedOWLObjectProperty().get();
-		TestingHelpers.testKnowtatorAction(controller, new GraphActions.AddTripleAction(controller,
+		TestingHelpers.testKnowtatorAction(controller, new GraphActions.AddTripleAction(
 						source,
 						target,
 						property, null,

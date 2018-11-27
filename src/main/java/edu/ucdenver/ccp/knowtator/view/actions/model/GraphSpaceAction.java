@@ -22,8 +22,37 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.actions;
+package edu.ucdenver.ccp.knowtator.view.actions.model;
 
-public enum CollectionActionType {
-	ADD, REMOVE
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction;
+import edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType;
+
+public class GraphSpaceAction extends AbstractKnowtatorCollectionAction<GraphSpace> {
+	private final String graphName;
+	private final TextSource textSource;
+
+	public GraphSpaceAction(CollectionActionType actionType, String graphName, TextSource textSource) {
+		super(actionType, "graph space", textSource.getGraphSpaceCollection());
+		this.graphName = graphName;
+		this.textSource = textSource;
+	}
+
+	@Override
+	protected void prepareAdd() {
+		GraphSpace newGraphSpace = new GraphSpace(KnowtatorView.CONTROLLER, textSource, graphName);
+		setObject(newGraphSpace);
+	}
+
+	@Override
+	protected void cleanUpRemove() {
+
+	}
+
+	@Override
+	protected void cleanUpAdd() {
+
+	}
 }

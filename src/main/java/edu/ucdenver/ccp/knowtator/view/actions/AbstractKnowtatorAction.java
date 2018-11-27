@@ -22,42 +22,25 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator;
+package edu.ucdenver.ccp.knowtator.view.actions;
 
-import org.junit.jupiter.api.Test;
+import javax.swing.undo.UndoableEdit;
 
-public class ProjectManagerTest {
+public abstract class AbstractKnowtatorAction {
 
-    private static final KnowtatorController controller = TestingHelpers.getLoadedController();
+    private final String presentationName;
 
-    @Test
-    public void loadProject() {
-        TestingHelpers.checkDefaultCollectionValues(controller);
-        controller.loadProject();
+    protected AbstractKnowtatorAction(String presentationName) {
 
+        this.presentationName = presentationName;
     }
 
-    @Test
-    public void newProject() {
+    public String getPresentationName() {
+        return presentationName;
     }
 
-    @Test
-    public void importToManager() {
-    }
+    public abstract void execute() throws ActionUnperformableException;
 
-    @Test
-    public void importProject() {
-    }
+    public abstract UndoableEdit getEdit();
 
-    @Test
-    public void makeProjectStructure() {
-    }
-
-    @Test
-    public void loadWithAppropriateFormat() {
-    }
-
-    @Test
-    public void saveToFormat() {
-    }
 }

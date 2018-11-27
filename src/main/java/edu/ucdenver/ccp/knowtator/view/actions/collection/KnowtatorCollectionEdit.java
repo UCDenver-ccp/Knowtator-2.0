@@ -22,10 +22,12 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.actions;
+package edu.ucdenver.ccp.knowtator.view.actions.collection;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
+import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
 
 import java.util.Optional;
 

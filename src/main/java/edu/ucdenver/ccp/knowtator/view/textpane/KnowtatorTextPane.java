@@ -24,10 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.view.textpane;
 
-import edu.ucdenver.ccp.knowtator.actions.ActionParameters;
-import edu.ucdenver.ccp.knowtator.actions.ActionUnperformableException;
-import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionActions;
-import edu.ucdenver.ccp.knowtator.actions.OWLActions;
 import edu.ucdenver.ccp.knowtator.model.FilterModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
@@ -37,6 +33,9 @@ import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
+import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
+import edu.ucdenver.ccp.knowtator.view.actions.model.ReassignOWLClassAction;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -46,10 +45,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static edu.ucdenver.ccp.knowtator.actions.CollectionActionType.ADD;
-import static edu.ucdenver.ccp.knowtator.actions.CollectionActionType.REMOVE;
-import static edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionType.ANNOTATION;
-import static edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionType.SPAN;
+import static edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction.pickAction;
+import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.ADD;
+import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.REMOVE;
+import static edu.ucdenver.ccp.knowtator.view.actions.collection.KnowtatorCollectionType.ANNOTATION;
+import static edu.ucdenver.ccp.knowtator.view.actions.collection.KnowtatorCollectionType.SPAN;
 
 /**
  * The text pane used for annotating and displaying concept annotations in Knowtator projects
@@ -72,7 +72,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 	 * @param caseSensitiveCheckBox     A check box specifying if the search should be case sensitive
 	 */
 	public KnowtatorTextPane(KnowtatorView view, JTextField searchTextField, JCheckBox onlyInAnnotationsCheckBox, JCheckBox regexCheckBox, JCheckBox caseSensitiveCheckBox) {
-		super(KnowtatorView.CONTROLLER, searchTextField);
+		super(searchTextField);
 		this.view = view;
 		this.onlyInAnnotationsCheckBox = onlyInAnnotationsCheckBox;
 		this.regexCheckBox = regexCheckBox;
@@ -210,7 +210,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 					.ifPresent(textSource1 -> textSource1.getConceptAnnotationCollection().getSelection()
 							.ifPresent(conceptAnnotation -> {
 								try {
-									KnowtatorView.CONTROLLER.registerAction(new OWLActions.ReassignOWLClassAction(KnowtatorView.CONTROLLER, conceptAnnotation));
+									KnowtatorView.CONTROLLER.registerAction(new ReassignOWLClassAction(conceptAnnotation));
 								} catch (ActionUnperformableException e1) {
 									e1.printStackTrace();
 								}
@@ -221,7 +221,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 		private JMenuItem addAnnotationCommand() {
 			JMenuItem menuItem = new JMenuItem("Add concept");
-			menuItem.addActionListener(e12 -> KnowtatorCollectionActions.pickAction(view, null, null,
+			menuItem.addActionListener(e12 -> pickAction(view, null, null,
 					new ActionParameters(ADD, ANNOTATION),
 					new ActionParameters(ADD, SPAN)));
 
@@ -230,7 +230,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 		private JMenuItem removeSpanFromAnnotationCommand(ConceptAnnotation conceptAnnotation) {
 			JMenuItem removeSpanFromSelectedAnnotation = new JMenuItem(String.format("Delete span from %s", conceptAnnotation.getOwlClass()));
-			removeSpanFromSelectedAnnotation.addActionListener(e5 -> KnowtatorCollectionActions.pickAction(view, null, null, new ActionParameters(REMOVE, SPAN)));
+			removeSpanFromSelectedAnnotation.addActionListener(e5 -> pickAction(view, null, null, new ActionParameters(REMOVE, SPAN)));
 
 			return removeSpanFromSelectedAnnotation;
 		}
@@ -244,7 +244,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 		private JMenuItem removeAnnotationCommand(ConceptAnnotation conceptAnnotation) {
 			JMenuItem removeAnnotationMenuItem = new JMenuItem("Delete " + conceptAnnotation.getOwlClass());
-			removeAnnotationMenuItem.addActionListener(e4 -> KnowtatorCollectionActions.pickAction(view, null, null, new ActionParameters(REMOVE, ANNOTATION)));
+			removeAnnotationMenuItem.addActionListener(e4 -> pickAction(view, null, null, new ActionParameters(REMOVE, ANNOTATION)));
 
 			return removeAnnotationMenuItem;
 		}

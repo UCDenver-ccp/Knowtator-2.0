@@ -22,14 +22,15 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.actions;
+package edu.ucdenver.ccp.knowtator.view.actions;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
-import org.junit.Test;
+import edu.ucdenver.ccp.knowtator.view.actions.model.SpanActions;
+import org.junit.jupiter.api.Test;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;

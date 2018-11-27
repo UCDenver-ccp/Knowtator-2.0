@@ -22,25 +22,8 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.actions;
+package edu.ucdenver.ccp.knowtator.view.actions.collection;
 
-import javax.swing.undo.UndoableEdit;
-
-public abstract class AbstractKnowtatorAction {
-
-    private final String presentationName;
-
-    AbstractKnowtatorAction(String presentationName) {
-
-        this.presentationName = presentationName;
-    }
-
-    String getPresentationName() {
-        return presentationName;
-    }
-
-    public abstract void execute() throws ActionUnperformableException;
-
-    public abstract UndoableEdit getEdit();
-
+public enum KnowtatorCollectionType {
+	ANNOTATION, SPAN, PROFILE, DOCUMENT
 }

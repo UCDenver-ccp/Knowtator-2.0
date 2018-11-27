@@ -22,10 +22,12 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.actions;
+package edu.ucdenver.ccp.knowtator.view.actions.model;
 
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
+import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
 import edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane;
 
 import javax.swing.undo.UndoableEdit;

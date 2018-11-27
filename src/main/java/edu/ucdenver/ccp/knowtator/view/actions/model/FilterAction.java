@@ -22,7 +22,45 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.actions;
+package edu.ucdenver.ccp.knowtator.view.actions.model;
 
-public class ActionUnperformableException extends Throwable {
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
+import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
+
+import javax.swing.undo.UndoableEdit;
+
+public class FilterAction extends AbstractKnowtatorAction {
+
+	private final boolean isFilter;
+	private final boolean previousIsFilter;
+	private final String filter;
+
+	public FilterAction(String filter, boolean isFilter) {
+		super("Change filter");
+		this.filter = filter;
+		this.isFilter = isFilter;
+		this.previousIsFilter = KnowtatorView.CONTROLLER.getFilterModel().isFilter(filter);
+
+	}
+
+	@Override
+	public void execute() {
+		KnowtatorView.CONTROLLER.getFilterModel().setFilter(filter, isFilter);
+	}
+
+	@Override
+	public UndoableEdit getEdit() {
+		return new KnowtatorEdit("Change filter") {
+			@Override
+			public void undo() {
+				KnowtatorView.CONTROLLER.getFilterModel().setFilter(filter, previousIsFilter);
+			}
+
+			@Override
+			public void redo() {
+				KnowtatorView.CONTROLLER.getFilterModel().setFilter(filter, isFilter);
+			}
+		};
+	}
 }

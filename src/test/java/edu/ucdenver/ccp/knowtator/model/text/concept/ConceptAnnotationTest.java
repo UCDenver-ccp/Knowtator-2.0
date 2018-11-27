@@ -27,7 +27,7 @@ package edu.ucdenver.ccp.knowtator.model.text.concept;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ConceptAnnotationTest {
 	private final static KnowtatorController controller = TestingHelpers.getLoadedController();

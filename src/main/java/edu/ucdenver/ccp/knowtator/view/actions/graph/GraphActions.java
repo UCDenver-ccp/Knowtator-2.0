@@ -22,16 +22,16 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.actions;
+package edu.ucdenver.ccp.knowtator.view.actions.graph;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.util.mxMorphing;
 import com.mxgraph.util.mxEvent;
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.swing.*;
@@ -116,7 +116,6 @@ public class GraphActions {
     }
 
     public static class AddTripleAction extends AbstractGraphAction {
-        private KnowtatorController controller;
         private final AnnotationNode source;
         private final AnnotationNode target;
         private OWLObjectProperty property;
@@ -126,14 +125,12 @@ public class GraphActions {
         private String propertyId;
         private String motivation;
 
-        public AddTripleAction(KnowtatorController controller,
-                               AnnotationNode source, AnnotationNode target,
+        public AddTripleAction(AnnotationNode source, AnnotationNode target,
                                OWLObjectProperty property, String propertyId,
                                String quantifier, String quantifierValue,
                                Boolean negation,
                                String motivation, GraphSpace graphSpace) {
             super("Add triple", graphSpace);
-            this.controller = controller;
             this.source = source;
             this.target = target;
             this.property = property;
@@ -149,7 +146,7 @@ public class GraphActions {
             graphSpace.addTriple(
                     source, target,
                     null,
-                    controller.getProfileCollection().getSelection().orElseThrow(ActionUnperformableException::new),
+                    KnowtatorView.CONTROLLER.getProfileCollection().getSelection().orElseThrow(ActionUnperformableException::new),
                     java.util.Optional.ofNullable(property), propertyId,
                     quantifier, quantifierValue,
                     negation,

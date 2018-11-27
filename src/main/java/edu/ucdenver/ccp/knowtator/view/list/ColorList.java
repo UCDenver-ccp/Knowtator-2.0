@@ -24,7 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
-import edu.ucdenver.ccp.knowtator.actions.OWLActions;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
@@ -38,6 +37,8 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
+import static edu.ucdenver.ccp.knowtator.view.actions.model.ProfileAction.assignColorToClass;
+
 public class ColorList extends JList<OWLClass> implements KnowtatorCollectionListener<Profile>, KnowtatorComponent, ColorListener {
 
     private final ListSelectionListener lsl;
@@ -46,7 +47,7 @@ public class ColorList extends JList<OWLClass> implements KnowtatorCollectionLis
         setModel(new DefaultListModel<>());
 
         setCellRenderer(new ColorListRenderer<>());
-        lsl = e -> OWLActions.assignColorToClass(view, getSelectedValue());
+	    lsl = e -> assignColorToClass(view, getSelectedValue());
 
         KnowtatorView.CONTROLLER.getProfileCollection().getSelection()
                 .ifPresent(this::setCollection);

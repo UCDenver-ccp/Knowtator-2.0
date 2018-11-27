@@ -22,8 +22,7 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.actions;
+package edu.ucdenver.ccp.knowtator.view.actions;
 
-public enum KnowtatorCollectionType {
-	ANNOTATION, SPAN, PROFILE, DOCUMENT
+public class ActionUnperformableException extends Throwable {
 }

@@ -181,6 +181,11 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 	}
 
 	@Override
+	public void setSelection(TextSource textSource) {
+		super.setSelection(textSource);
+	}
+
+	@Override
 	public File getSaveLocation() {
 		return annotationsLocation;
 

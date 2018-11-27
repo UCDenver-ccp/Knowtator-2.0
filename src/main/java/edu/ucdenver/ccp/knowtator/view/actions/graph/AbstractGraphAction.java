@@ -22,42 +22,49 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator;
+package edu.ucdenver.ccp.knowtator.view.actions.graph;
 
-import org.junit.jupiter.api.Test;
+import com.mxgraph.util.mxEvent;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
+import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
 
-public class ProjectManagerTest {
+import javax.swing.undo.UndoableEdit;
 
-    private static final KnowtatorController controller = TestingHelpers.getLoadedController();
+public abstract class AbstractGraphAction extends AbstractKnowtatorAction {
 
-    @Test
-    public void loadProject() {
-        TestingHelpers.checkDefaultCollectionValues(controller);
-        controller.loadProject();
+	final GraphSpace graphSpace;
+	private final KnowtatorEdit edit;
 
-    }
+	AbstractGraphAction(String presentationName, GraphSpace graphSpace) {
+		super(presentationName);
+		this.graphSpace = graphSpace;
+		edit = new KnowtatorEdit(getPresentationName()) {
 
-    @Test
-    public void newProject() {
-    }
+		};
+	}
 
-    @Test
-    public void importToManager() {
-    }
+	private void prepare() {
+		graphSpace.getModel().addListener(mxEvent.UNDO, edit);
+	}
 
-    @Test
-    public void importProject() {
-    }
+	protected abstract void perform() throws ActionUnperformableException;
 
-    @Test
-    public void makeProjectStructure() {
-    }
+	private void cleanUp() {
+		graphSpace.getModel().removeListener(edit, mxEvent.UNDO);
+	}
 
-    @Test
-    public void loadWithAppropriateFormat() {
-    }
+	@Override
+	public void execute() throws ActionUnperformableException {
+		prepare();
+		perform();
+		cleanUp();
+	}
 
-    @Test
-    public void saveToFormat() {
-    }
+	@Override
+	public UndoableEdit getEdit() {
+		return edit;
+	}
 }
+

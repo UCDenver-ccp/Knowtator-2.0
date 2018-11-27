@@ -22,7 +22,7 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.actions;
+package edu.ucdenver.ccp.knowtator.view.actions;
 
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource;
@@ -33,14 +33,14 @@ import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 
-class KnowtatorEdit extends AbstractUndoableEdit implements mxEventSource.mxIEventListener {
+public class KnowtatorEdit extends AbstractUndoableEdit implements mxEventSource.mxIEventListener {
 
     private final String presentationName;
     private final mxUndoManager mxUndoManager;
     private final UndoManager undoManager;
 
 
-    KnowtatorEdit(String presentationName) {
+	protected KnowtatorEdit(String presentationName) {
         this.presentationName = presentationName;
         mxUndoManager = new mxUndoManager();
         undoManager = new UndoManager();
@@ -82,7 +82,7 @@ class KnowtatorEdit extends AbstractUndoableEdit implements mxEventSource.mxIEve
         mxUndoManager.undoableEditHappened((mxUndoableEdit) edit.getProperty("edit"));
     }
 
-    void addKnowtatorEdit(UndoableEdit edit) {
+	public void addKnowtatorEdit(UndoableEdit edit) {
         undoManager.addEdit(edit);
     }
 }

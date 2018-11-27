@@ -26,7 +26,7 @@ package edu.ucdenver.ccp.knowtator.view;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
-import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionActionsTest;
+import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorCollectionActionsTest;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;

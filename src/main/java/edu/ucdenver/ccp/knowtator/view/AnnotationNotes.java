@@ -24,7 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -40,10 +39,8 @@ import java.awt.event.KeyListener;
 
 public class AnnotationNotes extends JTextArea implements KnowtatorComponent {
 	private ConceptAnnotation conceptAnnotation;
-	private final KnowtatorController controller;
 
 	AnnotationNotes() {
-		this.controller = KnowtatorView.CONTROLLER;
 		addKeyListener(new KeyListener() {
 			@Override
 			public void keyTyped(KeyEvent e) {
@@ -94,7 +91,7 @@ public class AnnotationNotes extends JTextArea implements KnowtatorComponent {
 
 	@Override
 	public void setupListeners() {
-		new TextBoundModelListener(controller) {
+		new TextBoundModelListener(KnowtatorView.CONTROLLER) {
 			@Override
 			protected void respondToConceptAnnotationModification() {
 

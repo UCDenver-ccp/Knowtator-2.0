@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator;
 
 import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +35,7 @@ import java.nio.file.Files;
  * Unit test for simple KnowatorStandalone.
  */
 @SuppressWarnings("unused")
-public class KnowtatorStandaloneTest extends TestCase {
+class KnowtatorStandaloneTest extends TestCase {
 
 
 	@SuppressWarnings("FieldCanBeLocal")
@@ -69,7 +70,8 @@ public class KnowtatorStandaloneTest extends TestCase {
 	/**
 	 * Rigorous Test :-)
 	 */
-	public void testApp() {
+	@Test
+	void testApp() {
 		String brat = null;
 		String uima = null;
 		String articles = null;

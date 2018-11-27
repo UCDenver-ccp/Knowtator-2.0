@@ -24,14 +24,14 @@
 
 package edu.ucdenver.ccp.knowtator;
 
-import edu.ucdenver.ccp.knowtator.actions.AbstractKnowtatorAction;
-import edu.ucdenver.ccp.knowtator.actions.ActionUnperformableException;
 import edu.ucdenver.ccp.knowtator.io.BasicIO;
 import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
 import edu.ucdenver.ccp.knowtator.model.*;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileCollection;
 import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollection;
+import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLWorkspace;
 

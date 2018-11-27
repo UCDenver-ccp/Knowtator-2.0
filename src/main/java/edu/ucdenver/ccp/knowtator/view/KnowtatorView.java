@@ -29,7 +29,6 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.actions.*;
 import edu.ucdenver.ccp.knowtator.model.FilterModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
@@ -38,6 +37,9 @@ import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
+import edu.ucdenver.ccp.knowtator.view.actions.model.FilterAction;
+import edu.ucdenver.ccp.knowtator.view.actions.model.SpanActions;
 import edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog;
 import edu.ucdenver.ccp.knowtator.view.label.AnnotationAnnotatorLabel;
@@ -67,9 +69,11 @@ import java.util.*;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import static edu.ucdenver.ccp.knowtator.actions.CollectionActionType.ADD;
-import static edu.ucdenver.ccp.knowtator.actions.CollectionActionType.REMOVE;
-import static edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionType.*;
+import static edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction.pickAction;
+import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.ADD;
+import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.REMOVE;
+import static edu.ucdenver.ccp.knowtator.view.actions.collection.KnowtatorCollectionType.*;
+import static edu.ucdenver.ccp.knowtator.view.actions.model.ProfileAction.assignColorToClass;
 
 /**
  * Main class for GUI
@@ -81,7 +85,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private static final Logger log = Logger.getLogger(KnowtatorView.class);
 	public static final Preferences PREFERENCES = Preferences.userRoot().node("knowtator");
 
-	public static final KnowtatorController CONTROLLER = new KnowtatorController();
+	public static KnowtatorController CONTROLLER = new KnowtatorController();
 	private GraphViewDialog graphViewDialog;
 	private JComponent panel1;
 	private JTextField searchTextField;
@@ -280,8 +284,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		owlClassFilterCheckBox.setSelected(CONTROLLER.getFilterModel().isFilter(FilterModel.OWLCLASS));
 		profileFilterCheckBox.setSelected(CONTROLLER.getFilterModel().isFilter(FilterModel.PROFILE));
 
-		profileFilterCheckBox.addItemListener(e -> CONTROLLER.registerAction(new FilterActions.FilterAction(CONTROLLER, FilterModel.PROFILE, profileFilterCheckBox.isSelected())));
-		owlClassFilterCheckBox.addItemListener(e -> CONTROLLER.registerAction(new FilterActions.FilterAction(CONTROLLER, FilterModel.OWLCLASS, owlClassFilterCheckBox.isSelected())));
+		profileFilterCheckBox.addItemListener(e -> CONTROLLER.registerAction(new FilterAction(FilterModel.PROFILE, profileFilterCheckBox.isSelected())));
+		owlClassFilterCheckBox.addItemListener(e -> CONTROLLER.registerAction(new FilterAction(FilterModel.OWLCLASS, owlClassFilterCheckBox.isSelected())));
 	}
 
 	/**
@@ -309,10 +313,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 			fileChooser.setCurrentDirectory(CONTROLLER.getTextSourceCollection().getArticlesLocation());
 
 			if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-				KnowtatorCollectionActions.pickAction(this, null, fileChooser.getSelectedFile(), new ActionParameters(ADD, DOCUMENT));
+				pickAction(this, null, fileChooser.getSelectedFile(), new ActionParameters(ADD, DOCUMENT));
 			}
 		});
-		removeTextSourceButton.addActionListener(e -> KnowtatorCollectionActions.pickAction(this, null, null, new ActionParameters(REMOVE, DOCUMENT)));
+		removeTextSourceButton.addActionListener(e -> pickAction(this, null, null, new ActionParameters(REMOVE, DOCUMENT)));
 
 		textSourceButtons = Arrays.asList(
 				fontSizeSlider,
@@ -329,10 +333,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	 * Makes the annotation and span selection buttons
 	 */
 	private void makeAnnotationButtons() {
-		assignColorToClassButton.addActionListener(e -> CONTROLLER.getOWLModel().getSelectedOWLClass().ifPresent(owlClass -> OWLActions.assignColorToClass(this, owlClass)));
+		assignColorToClassButton.addActionListener(e -> CONTROLLER.getOWLModel().getSelectedOWLClass().ifPresent(owlClass -> assignColorToClass(this, owlClass)));
 
-		addAnnotationButton.addActionListener(e -> KnowtatorCollectionActions.pickAction(this, null, null, new ActionParameters(ADD, ANNOTATION), new ActionParameters(ADD, SPAN)));
-		removeAnnotationButton.addActionListener(e -> KnowtatorCollectionActions.pickAction(this, null, null, new ActionParameters(REMOVE, ANNOTATION), new ActionParameters(REMOVE, SPAN)));
+		addAnnotationButton.addActionListener(e -> pickAction(this, null, null, new ActionParameters(ADD, ANNOTATION), new ActionParameters(ADD, SPAN)));
+		removeAnnotationButton.addActionListener(e -> pickAction(this, null, null, new ActionParameters(REMOVE, ANNOTATION), new ActionParameters(REMOVE, SPAN)));
 		nextSpanButton.addActionListener(e -> CONTROLLER.getTextSourceCollection().getSelection().ifPresent(textSource -> textSource.getConceptAnnotationCollection().getNextSpan()));
 		previousSpanButton.addActionListener(e -> CONTROLLER.getTextSourceCollection().getSelection().ifPresent(textSource -> textSource.getConceptAnnotationCollection().getPreviousSpan()));
 

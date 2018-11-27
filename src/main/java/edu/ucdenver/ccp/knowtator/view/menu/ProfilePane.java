@@ -26,9 +26,8 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import edu.ucdenver.ccp.knowtator.actions.ActionParameters;
-import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionActions;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
 import edu.ucdenver.ccp.knowtator.view.list.ColorList;
 import edu.ucdenver.ccp.knowtator.view.list.ProfileList;
 
@@ -36,9 +35,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ResourceBundle;
 
-import static edu.ucdenver.ccp.knowtator.actions.CollectionActionType.ADD;
-import static edu.ucdenver.ccp.knowtator.actions.CollectionActionType.REMOVE;
-import static edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionType.PROFILE;
+import static edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction.pickAction;
+import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.ADD;
+import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.REMOVE;
+import static edu.ucdenver.ccp.knowtator.view.actions.collection.KnowtatorCollectionType.PROFILE;
 
 /**
  * A pane for handling profile functions
@@ -58,11 +58,11 @@ class ProfilePane extends MenuPane {
         $$$setupUI$$$();
 
         addProfileButton.addActionListener(e -> {
-            KnowtatorCollectionActions.pickAction(view, profileNameField.getText(), null, new ActionParameters(ADD, PROFILE));
+            pickAction(view, profileNameField.getText(), null, new ActionParameters(ADD, PROFILE));
             profileNameField.setText("");
         });
         removeProfileButton.addActionListener(e -> {
-            KnowtatorCollectionActions.pickAction(view, profileNameField.getText(), null, new ActionParameters(REMOVE, PROFILE));
+            pickAction(view, profileNameField.getText(), null, new ActionParameters(REMOVE, PROFILE));
             profileNameField.setText("");
         });
     }

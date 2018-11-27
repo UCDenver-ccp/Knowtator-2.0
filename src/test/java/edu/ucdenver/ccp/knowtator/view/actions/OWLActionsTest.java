@@ -22,14 +22,16 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.actions;
+package edu.ucdenver.ccp.knowtator.view.actions;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import org.junit.Test;
+import edu.ucdenver.ccp.knowtator.view.actions.model.ColorChangeAction;
+import edu.ucdenver.ccp.knowtator.view.actions.model.ReassignOWLClassAction;
+import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import java.awt.*;
@@ -48,7 +50,7 @@ public class OWLActionsTest {
         OWLClass owlClass = controller.getOWLModel().getOWLClassByID("Pizza").get();
         assert controller.getTextSourceCollection().getSelection().get().getConceptAnnotationCollection().getSelection().get().getOwlClass().get() == owlClass;
 
-        controller.registerAction(new OWLActions.ReassignOWLClassAction(controller, conceptAnnotation));
+        controller.registerAction(new ReassignOWLClassAction(conceptAnnotation));
         assert conceptAnnotation.getOwlClass().equals(controller.getOWLModel().getSelectedOWLClass());
         controller.undo();
         assert conceptAnnotation.getOwlClass().get() == owlClass;
@@ -69,10 +71,10 @@ public class OWLActionsTest {
         Set<Object> owlClassSet = new HashSet<>();
         owlClassSet.add(controller.getOWLModel().getSelectedOWLClass().get());
 
-        controller.registerAction(new OWLActions.ReassignOWLClassAction(controller, conceptAnnotation));
+        controller.registerAction(new ReassignOWLClassAction(conceptAnnotation));
         assert profile.getColor(conceptAnnotation).equals(Color.CYAN);
 
-        controller.registerAction(new OWLActions.ColorChangeAction(profile, owlClassSet, Color.GREEN));
+        controller.registerAction(new ColorChangeAction(profile, owlClassSet, Color.GREEN));
         assert profile.getColor(conceptAnnotation).equals(Color.GREEN);
         controller.undo();
         assert profile.getColor(conceptAnnotation).equals(Color.CYAN);

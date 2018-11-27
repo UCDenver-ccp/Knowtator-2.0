@@ -32,8 +32,6 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
-import edu.ucdenver.ccp.knowtator.actions.GraphActions;
-import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionActions;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -44,6 +42,8 @@ import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.text.graph.RelationAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.actions.graph.GraphActions;
+import edu.ucdenver.ccp.knowtator.view.actions.model.GraphSpaceAction;
 import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
 import edu.ucdenver.ccp.knowtator.view.menu.GraphMenuDialog;
 import org.apache.log4j.Logger;
@@ -61,8 +61,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static edu.ucdenver.ccp.knowtator.actions.CollectionActionType.ADD;
-import static edu.ucdenver.ccp.knowtator.actions.CollectionActionType.REMOVE;
+import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.ADD;
+import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.REMOVE;
 
 public class GraphView extends JPanel implements KnowtatorComponent {
 	private final JDialog dialog;
@@ -111,7 +111,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 		removeGraphSpaceButton.addActionListener(e -> {
 			if (JOptionPane.showConfirmDialog(view, "Are you sure you want to delete this graph?") == JOptionPane.YES_OPTION) {
 				KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
-						.ifPresent(textSource -> KnowtatorView.CONTROLLER.registerAction(new KnowtatorCollectionActions.GraphSpaceAction(REMOVE, KnowtatorView.CONTROLLER, null, textSource)));
+						.ifPresent(textSource -> KnowtatorView.CONTROLLER.registerAction(new GraphSpaceAction(REMOVE, null, textSource)));
 			}
 		});
 		previousGraphSpaceButton.addActionListener(e -> KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
@@ -188,7 +188,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 	private void makeGraph(TextSource textSource) {
 		getGraphNameInput(view, textSource, null)
 				.ifPresent(graphName -> KnowtatorView.CONTROLLER.registerAction(
-						new KnowtatorCollectionActions.GraphSpaceAction(ADD, KnowtatorView.CONTROLLER, graphName, textSource)));
+						new GraphSpaceAction(ADD, graphName, textSource)));
 	}
 
 	private static Optional<String> getGraphNameInput(KnowtatorView view, TextSource textSource, JTextField field1) {
@@ -274,7 +274,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 														RelationOptionsDialog relationOptionsDialog = getRelationOptionsDialog(propertyID);
 														if (relationOptionsDialog.getResult() == RelationOptionsDialog.OK_OPTION) {
 															KnowtatorView.CONTROLLER.registerAction(
-																	new GraphActions.AddTripleAction(KnowtatorView.CONTROLLER,
+																	new GraphActions.AddTripleAction(
 																			(AnnotationNode) edge.getSource(),
 																			(AnnotationNode) edge.getTarget(),
 																			property, relationOptionsDialog.getPropertyID(),

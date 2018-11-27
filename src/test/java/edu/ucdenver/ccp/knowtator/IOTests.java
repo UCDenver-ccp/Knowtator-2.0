@@ -30,13 +30,13 @@ import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 
 @SuppressWarnings("ConstantConditions")
-public class IOTests {
+class IOTests {
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(IOTests.class);
 
@@ -77,7 +77,7 @@ public class IOTests {
 	//    }
 
 	@Test
-	public void successfulLoad() {
+	void successfulLoad() {
 		controller = TestingHelpers.getLoadedController();
 
 		int articleID = 0;
@@ -159,7 +159,7 @@ public class IOTests {
 	}
 
 	@Test
-	public void successfulAddDocument() {
+	void successfulAddDocument() {
 		controller = TestingHelpers.getLoadedController();
 
 		int projectID = 0;
@@ -203,7 +203,7 @@ public class IOTests {
 	//  }
 
 	@Test
-	public void successfulAddGraphSpace() {
+	void successfulAddGraphSpace() {
 		controller = TestingHelpers.getLoadedController();
 
 		int articleID = 0;
@@ -256,7 +256,7 @@ public class IOTests {
 	}
 
 	@Test
-	public void successfulSave() {
+	void successfulSave() {
 		controller = new KnowtatorController();
 
 		int projectID = 0;

@@ -25,7 +25,7 @@
 package edu.ucdenver.ccp.knowtator;
 
 import com.google.common.io.Files;
-import edu.ucdenver.ccp.knowtator.actions.AbstractKnowtatorAction;
+import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import org.apache.commons.io.FileUtils;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 

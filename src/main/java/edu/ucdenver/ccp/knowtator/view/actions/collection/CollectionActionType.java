@@ -22,46 +22,8 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.actions;
+package edu.ucdenver.ccp.knowtator.view.actions.collection;
 
-import com.mxgraph.util.mxEvent;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
-
-import javax.swing.undo.UndoableEdit;
-
-public abstract class AbstractGraphAction extends AbstractKnowtatorAction {
-
-	final GraphSpace graphSpace;
-	private final KnowtatorEdit edit;
-
-	AbstractGraphAction(String presentationName, GraphSpace graphSpace) {
-		super(presentationName);
-		this.graphSpace = graphSpace;
-		edit = new KnowtatorEdit(getPresentationName()) {
-
-		};
-	}
-
-	private void prepare() {
-		graphSpace.getModel().addListener(mxEvent.UNDO, edit);
-	}
-
-	protected abstract void perform() throws ActionUnperformableException;
-
-	private void cleanUp() {
-		graphSpace.getModel().removeListener(edit, mxEvent.UNDO);
-	}
-
-	@Override
-	public void execute() throws ActionUnperformableException {
-		prepare();
-		perform();
-		cleanUp();
-	}
-
-	@Override
-	public UndoableEdit getEdit() {
-		return edit;
-	}
+public enum CollectionActionType {
+	ADD, REMOVE
 }
-
