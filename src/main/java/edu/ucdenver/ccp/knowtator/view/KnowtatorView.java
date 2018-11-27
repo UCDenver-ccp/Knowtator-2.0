@@ -31,7 +31,6 @@ import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.actions.*;
 import edu.ucdenver.ccp.knowtator.model.FilterModel;
-import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
@@ -82,7 +81,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private static final Logger log = Logger.getLogger(KnowtatorView.class);
 	public static final Preferences PREFERENCES = Preferences.userRoot().node("knowtator");
 
-	private static final KnowtatorController CONTROLLER = new KnowtatorController();
+	public static final KnowtatorController CONTROLLER = new KnowtatorController();
 	private GraphViewDialog graphViewDialog;
 	private JComponent panel1;
 	private JTextField searchTextField;
@@ -195,7 +194,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		annotationAnnotatorLabel = new AnnotationAnnotatorLabel(this);
 		annotationClassLabel = new AnnotationClassLabel(this);
 		annotationIDLabel = new AnnotationIDLabel(this);
-		annotationNotes = new AnnotationNotes(this);
+		annotationNotes = new AnnotationNotes();
 
 		knowtatorComponents.addAll(Arrays.asList(annotationNotes,
 				spanList,
@@ -310,63 +309,39 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 			fileChooser.setCurrentDirectory(CONTROLLER.getTextSourceCollection().getArticlesLocation());
 
 			if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-				KnowtatorCollectionActions.pickAction(this, null, fileChooser.getSelectedFile(),
-						new ActionParameters(ADD, DOCUMENT));
+				KnowtatorCollectionActions.pickAction(this, null, fileChooser.getSelectedFile(), new ActionParameters(ADD, DOCUMENT));
 			}
 		});
-		removeTextSourceButton.addActionListener(e -> {
-			KnowtatorCollectionActions.pickAction(actionParameters, this, null, null,
-					new ActionParameters(REMOVE, DOCUMENT));
-		});
+		removeTextSourceButton.addActionListener(e -> KnowtatorCollectionActions.pickAction(this, null, null, new ActionParameters(REMOVE, DOCUMENT)));
 
-		textSourceButtons = new ArrayList<>();
-		textSourceButtons.add(fontSizeSlider);
-		textSourceButtons.add(showGraphViewerButton);
-		textSourceButtons.add(previousTextSourceButton);
-		textSourceButtons.add(nextTextSourceButton);
-		textSourceButtons.add(addTextSourceButton);
-		textSourceButtons.add(removeTextSourceButton);
+		textSourceButtons = Arrays.asList(
+				fontSizeSlider,
+				showGraphViewerButton,
+				previousTextSourceButton,
+				nextTextSourceButton,
+				addTextSourceButton,
+				removeTextSourceButton
+		);
+
 	}
 
 	/**
 	 * Makes the annotation and span selection buttons
 	 */
 	private void makeAnnotationButtons() {
-		assignColorToClassButton.addActionListener(e -> {
-			try {
-				OWLActions.assignColorToClass(this, CONTROLLER.getOWLModel().getSelectedOWLClass());
-			} catch (NoSelectedOWLClassException ignored) {
+		assignColorToClassButton.addActionListener(e -> CONTROLLER.getOWLModel().getSelectedOWLClass().ifPresent(owlClass -> OWLActions.assignColorToClass(this, owlClass)));
 
-			}
-		});
+		addAnnotationButton.addActionListener(e -> KnowtatorCollectionActions.pickAction(this, null, null, new ActionParameters(ADD, ANNOTATION), new ActionParameters(ADD, SPAN)));
+		removeAnnotationButton.addActionListener(e -> KnowtatorCollectionActions.pickAction(this, null, null, new ActionParameters(REMOVE, ANNOTATION), new ActionParameters(REMOVE, SPAN)));
+		nextSpanButton.addActionListener(e -> CONTROLLER.getTextSourceCollection().getSelection().ifPresent(textSource -> textSource.getConceptAnnotationCollection().getNextSpan()));
+		previousSpanButton.addActionListener(e -> CONTROLLER.getTextSourceCollection().getSelection().ifPresent(textSource -> textSource.getConceptAnnotationCollection().getPreviousSpan()));
 
-		annotationButtons = new ArrayList<>();
-		addAnnotationButton.addActionListener(e -> KnowtatorCollectionActions.pickAction(this, null, null,
-				new ActionParameters(ADD, ANNOTATION),
-				new ActionParameters(ADD, SPAN)));
-		removeAnnotationButton.addActionListener(e -> KnowtatorCollectionActions.pickAction(this, null, null,
-				new ActionParameters(REMOVE, ANNOTATION),
-				new ActionParameters(REMOVE, SPAN)));
-		nextSpanButton.addActionListener(e -> {
-			CONTROLLER
-			try {
-				CONTROLLER.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getNextSpan();
-			} catch (NoSelectionException e1) {
-				e1.printStackTrace();
-			}
-		});
-		previousSpanButton.addActionListener(e -> {
-			try {
-				CONTROLLER.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getPreviousSpan();
-			} catch (NoSelectionException e1) {
-				e1.printStackTrace();
-			}
-		});
-
-		annotationButtons.add(addAnnotationButton);
-		annotationButtons.add(removeAnnotationButton);
-		annotationButtons.add(nextSpanButton);
-		annotationButtons.add(previousSpanButton);
+		annotationButtons = Arrays.asList(
+				addAnnotationButton,
+				removeAnnotationButton,
+				nextSpanButton,
+				previousSpanButton
+		);
 	}
 
 	/**
@@ -375,40 +350,26 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private void makeSpanModificationButtons() {
 
 		spanSizeButtons = new HashMap<>();
-		spanSizeButtons.put(shrinkEndButton, e -> {
-			try {
-				SpanActions.ModifySpanAction action = new SpanActions.ModifySpanAction(CONTROLLER, SpanActions.END, SpanActions.SHRINK);
-				CONTROLLER.registerAction(action);
-			} catch (NoSelectionException e1) {
-				e1.printStackTrace();
-			}
-		});
-		spanSizeButtons.put(shrinkStartButton, e -> {
-			try {
-				SpanActions.ModifySpanAction action = new SpanActions.ModifySpanAction(CONTROLLER, SpanActions.START, SpanActions.SHRINK);
-				CONTROLLER.registerAction(action);
-			} catch (NoSelectionException e1) {
-				e1.printStackTrace();
-			}
-		});
-		spanSizeButtons.put(growEndButton, e -> {
-			try {
-				SpanActions.ModifySpanAction action = new SpanActions.ModifySpanAction(CONTROLLER, SpanActions.END, SpanActions.GROW);
-				CONTROLLER.registerAction(action);
-			} catch (NoSelectionException e1) {
-				e1.printStackTrace();
-			}
-		});
-		spanSizeButtons.put(growStartButton, e -> {
-			try {
-				SpanActions.ModifySpanAction action = new SpanActions.ModifySpanAction(CONTROLLER, SpanActions.START, SpanActions.GROW);
-				CONTROLLER.registerAction(action);
-			} catch (NoSelectionException e1) {
-				e1.printStackTrace();
-			}
-		});
+		spanSizeButtons.put(shrinkEndButton, e -> CONTROLLER.getTextSourceCollection().getSelection()
+				.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
+						.ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection().getSelection()
+								.ifPresent(span -> CONTROLLER.registerAction(new SpanActions.ModifySpanAction(SpanActions.END, SpanActions.SHRINK, span))))));
+		spanSizeButtons.put(shrinkStartButton, e -> CONTROLLER.getTextSourceCollection().getSelection()
+				.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
+						.ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection().getSelection()
+								.ifPresent(span -> CONTROLLER.registerAction(new SpanActions.ModifySpanAction(SpanActions.START, SpanActions.SHRINK, span))))));
+		spanSizeButtons.put(growEndButton, e -> CONTROLLER.getTextSourceCollection().getSelection()
+				.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
+						.ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection().getSelection()
+								.ifPresent(span -> CONTROLLER.registerAction(new SpanActions.ModifySpanAction(SpanActions.END, SpanActions.GROW, span))))));
+		spanSizeButtons.put(growStartButton, e ->
+				CONTROLLER.getTextSourceCollection().getSelection()
+						.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
+								.ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection().getSelection()
+										.ifPresent(span -> CONTROLLER.registerAction(new SpanActions.ModifySpanAction(SpanActions.START, SpanActions.GROW, span))))));
 
 		selectionSizeButtons = new HashMap<>();
+
 		selectionSizeButtons.put(shrinkEndButton, e -> SpanActions.modifySelection(this, SpanActions.END, SpanActions.SHRINK));
 		selectionSizeButtons.put(shrinkStartButton, e -> SpanActions.modifySelection(this, SpanActions.START, SpanActions.SHRINK));
 		selectionSizeButtons.put(growEndButton, e -> SpanActions.modifySelection(this, SpanActions.END, SpanActions.GROW));
@@ -446,7 +407,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 			@Override
 			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
 				enableTextSourceButtons();
-				if (event.getNew() == null) {
+				if (!event.getNew().isPresent()) {
 					removeAnnotationButton.setEnabled(false);
 				} else {
 					enableAnnotationButtons();
@@ -532,7 +493,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 			@Override
 			public void respondToSpanSelection(SelectionEvent<Span> event) {
-				if (event.getNew() == null) {
+				if (!event.getNew().isPresent()) {
 					disableSpanButtons();
 				} else {
 					enableSpanButtons();

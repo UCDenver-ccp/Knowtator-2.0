@@ -250,9 +250,7 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 
 			@Override
 			public void respondToSpanSelection(SelectionEvent<Span> event) {
-				if (event.getNew() != null) {
-					searchTextField.setText(event.getNew().getSpannedText());
-				}
+				event.getNew().ifPresent(span -> searchTextField.setText(span.getSpannedText()));
 			}
 
 			@Override
@@ -262,7 +260,8 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 
 			@Override
 			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
-				matcher = pattern.matcher(event.getNew().getContent());
+				event.getNew().ifPresent(textSource -> matcher = pattern.matcher(textSource.getContent()));
+
 			}
 
 			@Override

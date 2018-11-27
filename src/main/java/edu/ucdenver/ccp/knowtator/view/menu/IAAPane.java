@@ -52,7 +52,7 @@ class IAAPane extends MenuPane {
 
         buttonOK.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setCurrentDirectory(view.getController().getSaveLocation());
+	        fileChooser.setCurrentDirectory(KnowtatorView.CONTROLLER.getSaveLocation());
             fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             //
             // disable the "All files" option.
@@ -62,7 +62,7 @@ class IAAPane extends MenuPane {
                 File outputDirectory = fileChooser.getSelectedFile();
 
                 try {
-                    KnowtatorIAA knowtatorIAA = new KnowtatorIAA(outputDirectory, view.getController());
+	                KnowtatorIAA knowtatorIAA = new KnowtatorIAA(outputDirectory, KnowtatorView.CONTROLLER);
 
                     if (classCheckBox.isSelected()) {
                         knowtatorIAA.runClassIAA();

@@ -24,23 +24,19 @@
 
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 public class GraphSpaceChooser extends KnowtatorChooser<GraphSpace> {
 
 
-    public GraphSpaceChooser(KnowtatorView view) {
-        super(view);
-    }
+	public GraphSpaceChooser() {
+		super();
+	}
 
-    public void react() {
-        try {
-            setCollection(view.getController().getTextSourceCollection().getSelection().getGraphSpaceCollection());
-            setSelected();
-        } catch (NoSelectionException ignored) {
-
-        }
-    }
+	public void react() {
+		KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+				.ifPresent(textSource -> setCollection(textSource.getGraphSpaceCollection()));
+		setSelected();
+	}
 }

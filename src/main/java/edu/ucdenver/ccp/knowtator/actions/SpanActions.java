@@ -24,9 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.actions;
 
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane;
@@ -45,20 +42,18 @@ public class SpanActions {
         private final Span span;
         private final int startModification;
         private final int endModification;
-        private final TextSource textSource;
         private final String startOrEnd;
         private final String growOrShrink;
         private boolean spanStartChanged;
         private boolean spanEndChanged;
 
-        public ModifySpanAction(KnowtatorController controller, String startOrEnd, String growOrShrink) throws NoSelectionException {
+        public ModifySpanAction(String startOrEnd, String growOrShrink, Span span) {
             super("Modify span");
             this.startOrEnd = startOrEnd;
             this.growOrShrink = growOrShrink;
+            this.span = span;
             startModification = getStartModification(startOrEnd, growOrShrink);
             endModification = getEndModification(startOrEnd, growOrShrink);
-            textSource = controller.getTextSourceCollection().getSelection();
-            span = textSource.getConceptAnnotationCollection().getSelection().getSpanCollection().getSelection();
             spanStartChanged = false;
             spanEndChanged = false;
         }
@@ -67,7 +62,7 @@ public class SpanActions {
         public void execute() {
             int spanStart = span.getStart();
             int spanEnd = span.getEnd();
-            span.modify(Arrays.asList(startModification, endModification, textSource.getContent().length()));
+            span.modify(Arrays.asList(startModification, endModification));
             spanStartChanged = spanStart != span.getStart();
             spanEndChanged = spanEnd != span.getEnd();
         }
@@ -85,12 +80,12 @@ public class SpanActions {
                         case GROW:
                             startModification = spanStartChanged ? getStartModification(startOrEnd, SHRINK) : 0;
                             endModification = spanEndChanged ? getEndModification(startOrEnd, SHRINK) : 0;
-                            span.modify(Arrays.asList(startModification, endModification, textSource.getContent().length()));
+                            span.modify(Arrays.asList(startModification, endModification));
                             break;
                         case SHRINK:
                             startModification = spanStartChanged ? getStartModification(startOrEnd, GROW) : 0;
                             endModification = spanEndChanged ? getEndModification(startOrEnd, GROW) : 0;
-                            span.modify(Arrays.asList(startModification, endModification, textSource.getContent().length()));
+                            span.modify(Arrays.asList(startModification, endModification));
                             break;
                     }
                 }

@@ -47,7 +47,7 @@ class KnowtatorEdit extends AbstractUndoableEdit implements mxEventSource.mxIEve
     }
 
     @Override
-    public void undo(){
+    public void undo() {
         super.undo();
         while (undoManager.canUndo()) {
             undoManager.undo();
@@ -58,7 +58,7 @@ class KnowtatorEdit extends AbstractUndoableEdit implements mxEventSource.mxIEve
     }
 
     @Override
-    public void redo(){
+    public void redo() {
         super.redo();
         while (undoManager.canRedo()) {
             undoManager.redo();

@@ -29,7 +29,6 @@ import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.model.FilterModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -53,10 +52,12 @@ public class SpanCollection extends KnowtatorCollection<Span> implements BratSta
 	@Override
 	public Stream<Span> stream() {
 		boolean filterByProfile = controller.getFilterModel().isFilter(FilterModel.PROFILE);
-		Profile activeProfile = controller.getProfileCollection().getSelection();
 
-		return super.stream()
-				.filter(span -> !filterByProfile || span.getConceptAnnotation().getAnnotator().equals(activeProfile));
+
+		return controller.getProfileCollection().getSelection()
+				.map(profile -> super.stream()
+						.filter(span -> !filterByProfile || span.getConceptAnnotation().getAnnotator().equals(profile)))
+				.orElse(super.stream());
 	}
 
 	@Override

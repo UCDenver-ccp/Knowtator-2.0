@@ -44,184 +44,186 @@ import java.awt.*;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, KnowtatorXMLIO {
-  @SuppressWarnings("unused")
-  private static Logger log = LogManager.getLogger(Profile.class);
+	@SuppressWarnings("unused")
+	private static Logger log = LogManager.getLogger(Profile.class);
 
-  private String id;
-  private final HashMap<Object, Color> colors; // <ClassName, Highlighter>
-  private final KnowtatorController controller;
+	private String id;
+	private final HashMap<Object, Color> colors; // <ClassName, Highlighter>
+	private final KnowtatorController controller;
 
-  public Profile(KnowtatorController controller, String id) {
-    colors = new HashMap<>();
-    this.controller = controller;
-    controller.verifyId(id, this, false);
-  }
+	public Profile(KnowtatorController controller, String id) {
+		colors = new HashMap<>();
+		this.controller = controller;
+		controller.verifyId(id, this, false);
+	}
 
   /*
   COMPARRISON
    */
 
-  @Override
-  public int compareTo(Profile profile2) {
-    if (this == profile2) {
-      return 0;
-    }
-    if (profile2 == null) {
-      return 1;
-    }
-    return this.getId().toLowerCase().compareTo(profile2.getId().toLowerCase());
-  }
+	@Override
+	public int compareTo(Profile profile2) {
+		if (this == profile2) {
+			return 0;
+		}
+		if (profile2 == null) {
+			return 1;
+		}
+		return this.getId().toLowerCase().compareTo(profile2.getId().toLowerCase());
+	}
 
   /*
   GETTERS
    */
 
-  @Override
-  public String getId() {
-    return id;
-  }
+	@Override
+	public String getId() {
+		return id;
+	}
 
-  public Color getColor(ConceptAnnotation conceptAnnotation) {
-    OWLClass owlClass = conceptAnnotation.getOwlClass();
-    String owlClassID = conceptAnnotation.getOwlClassID();
+	public Color getColor(ConceptAnnotation conceptAnnotation) {
+		Optional<OWLClass> owlClass = conceptAnnotation.getOwlClass();
+		String owlClassID = conceptAnnotation.getOwlClassID();
 
-    Color color = colors.get(owlClass);
-    if (color != null) {
-      return color;
-    } else {
-      color = colors.get(owlClassID);
-      if (owlClass != null) {
-        if (color == null) {
-          color = Color.CYAN;
-        }
-        addColor(owlClass, color);
-        colors.remove(owlClassID);
-        save();
-        return color;
-      } else if (color == null) {
-        addColor(owlClassID, Color.CYAN);
-        save();
-        return Color.CYAN;
-      } else {
-        return color;
-      }
-    }
-  }
+		Optional<Color> color = Optional.empty();
+		if (owlClass.isPresent()) {
+			color = Optional.ofNullable(colors.get(owlClass.get()));
+		}
+		if (color.isPresent()) {
+			return color.get();
+		} else {
+			color = Optional.ofNullable(colors.get(owlClassID));
+			if (owlClass.isPresent()) {
+				if (!color.isPresent()) {
+					color = Optional.of(Color.CYAN);
+				}
+				addColor(owlClass.get(), color.get());
+				colors.remove(owlClassID);
+				save();
+				return color.get();
+			} else if (!color.isPresent()) {
+				addColor(owlClassID, Color.CYAN);
+				save();
+				return Color.CYAN;
+			} else {
+				return color.get();
+			}
+		}
+	}
 
   /*
   SETTERS
    */
 
-  @Override
-  public void setId(String id) {
-    this.id = id;
-  }
+	@Override
+	public void setId(String id) {
+		this.id = id;
+	}
 
-  @Override
-  public void dispose() {
-    colors.clear();
-  }
+	@Override
+	public void dispose() {
+		colors.clear();
+	}
 
   /*
   ADDERS
    */
 
-  public void addColor(Object key, Color c) {
-    colors.put(key, c);
-    controller.getProfileCollection().fireColorChanged();
-    save();
-  }
+	public void addColor(Object key, Color c) {
+		colors.put(key, c);
+		controller.getProfileCollection().fireColorChanged();
+		save();
+	}
 
 
-  /*
-  TRANSLATORS
-   */
-  public static String convertToHex(Color c) {
-    return String.format("#%06x", c.getRGB() & 0x00FFFFFF);
-  }
+	/*
+	TRANSLATORS
+	 */
+	public static String convertToHex(Color c) {
+		return String.format("#%06x", c.getRGB() & 0x00FFFFFF);
+	}
 
-  public String toString() {
-    return id;
-  }
+	public String toString() {
+		return id;
+	}
 
   /*
   WRITERS
    */
 
 
-  @Override
-  public void writeToKnowtatorXML(Document dom, Element root) {
-    Element profileElem = dom.createElement(KnowtatorXMLTags.PROFILE);
-    profileElem.setAttribute(KnowtatorXMLAttributes.ID, id);
-    colors.forEach(
-        (owlEntity, c) -> {
-          Element e = dom.createElement(KnowtatorXMLTags.HIGHLIGHTER);
-          if (owlEntity instanceof OWLEntity) {
-            e.setAttribute(
-                KnowtatorXMLAttributes.CLASS_ID,
-                controller
-                    .getOWLModel()
-                    .getOWLEntityRendering((OWLEntity) owlEntity));
-          } else if (owlEntity instanceof String) {
-            e.setAttribute(
-                    KnowtatorXMLAttributes.CLASS_ID, (String) owlEntity);
-          }
-          e.setAttribute(
-              KnowtatorXMLAttributes.COLOR, convertToHex(c));
-          profileElem.appendChild(e);
+	@Override
+	public void writeToKnowtatorXML(Document dom, Element root) {
+		Element profileElem = dom.createElement(KnowtatorXMLTags.PROFILE);
+		profileElem.setAttribute(KnowtatorXMLAttributes.ID, id);
+		colors.forEach((owlEntity, c) -> {
+			Element e = dom.createElement(KnowtatorXMLTags.HIGHLIGHTER);
+			if (owlEntity instanceof OWLEntity) {
 
-        });
-    root.appendChild(profileElem);
-  }
+				controller.getOWLModel().getOWLEntityRendering((OWLEntity) owlEntity)
+						.ifPresent(owlClassID -> e.setAttribute(KnowtatorXMLAttributes.CLASS_ID, owlClassID));
+
+			} else if (owlEntity instanceof String) {
+				e.setAttribute(KnowtatorXMLAttributes.CLASS_ID, (String) owlEntity);
+			}
+			e.setAttribute(
+					KnowtatorXMLAttributes.COLOR, convertToHex(c));
+			profileElem.appendChild(e);
+
+		});
+		root.appendChild(profileElem);
+	}
 
 
   /*
   READERS
    */
 
-  @Override
-  public void readFromKnowtatorXML(File file, Element parent) {
-    for (Node highlighterNode :
-        KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.HIGHLIGHTER))) {
-      Element highlighterElement = (Element) highlighterNode;
+	@Override
+	public void readFromKnowtatorXML(File file, Element parent) {
+		for (Node highlighterNode :
+				KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.HIGHLIGHTER))) {
+			Element highlighterElement = (Element) highlighterNode;
 
-      String classID = highlighterElement.getAttribute(KnowtatorXMLAttributes.CLASS_ID);
-      String color = highlighterElement.getAttribute(KnowtatorXMLAttributes.COLOR);
-      Color c = Color.decode(color);
-      c = new Color((float) c.getRed() / 255, (float) c.getGreen() / 255, (float) c.getBlue() / 255, 1f);
-      addColor(classID, c);
-    }
-  }
+			String classID = highlighterElement.getAttribute(KnowtatorXMLAttributes.CLASS_ID);
+			String color = highlighterElement.getAttribute(KnowtatorXMLAttributes.COLOR);
+			Color c = Color.decode(color);
+			c = new Color((float) c.getRed() / 255, (float) c.getGreen() / 255, (float) c.getBlue() / 255, 1f);
+			addColor(classID, c);
+		}
+	}
 
-  @Override
-  public void readFromOldKnowtatorXML(File file, Element parent) {}
+	@Override
+	public void readFromOldKnowtatorXML(File file, Element parent) {
+	}
 
 
-  @Override
-  public void save() {
-    if (controller.isNotLoading())
-      controller.saveToFormat(KnowtatorXMLUtil.class, this, getSaveLocation());
-  }
+	@Override
+	public void save() {
+		if (controller.isNotLoading())
+			controller.saveToFormat(KnowtatorXMLUtil.class, this, getSaveLocation());
+	}
 
-  @Override
-  public void load() {
+	@Override
+	public void load() {
 
-  }
+	}
 
-  @SuppressWarnings("WeakerAccess")
-  @Override
-  public File getSaveLocation() {
-    return new File(controller.getProfileCollection().getSaveLocation().getAbsolutePath(), id + ".xml");
-  }
+	@SuppressWarnings("WeakerAccess")
+	@Override
+	public File getSaveLocation() {
+		return new File(controller.getProfileCollection().getSaveLocation().getAbsolutePath(), id + ".xml");
+	}
 
-  @Override
-  public void setSaveLocation(File saveLocation) {
+	@Override
+	public void setSaveLocation(File saveLocation) {
 
-  }
+	}
 
-  public Map<Object, Color> getColors() {
-    return colors;
-  }
+	public Map<Object, Color> getColors() {
+		return colors;
+	}
 }

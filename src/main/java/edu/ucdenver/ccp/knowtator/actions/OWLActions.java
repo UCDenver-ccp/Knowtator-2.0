@@ -25,8 +25,6 @@
 package edu.ucdenver.ccp.knowtator.actions;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorColorPalette;
@@ -36,10 +34,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import javax.swing.*;
 import javax.swing.undo.UndoableEdit;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class OWLActions {
 	public static class ReassignOWLClassAction extends AbstractKnowtatorAction {
@@ -48,17 +43,13 @@ public class OWLActions {
 		private ConceptAnnotation conceptAnnotation;
 		private final OWLClass newOwlClass;
 
-		public ReassignOWLClassAction(KnowtatorController controller) throws NoSelectionException, ActionUnperformableException {
+		public ReassignOWLClassAction(KnowtatorController controller, ConceptAnnotation conceptAnnotation) throws ActionUnperformableException {
 			super("Reassign OWL class");
 
-			this.conceptAnnotation = controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection();
+			this.conceptAnnotation = conceptAnnotation;
 
-			oldOwlClass = conceptAnnotation.getOwlClass();
-			try {
-				this.newOwlClass = controller.getOWLModel().getSelectedOWLClass();
-			} catch (NoSelectedOWLClassException e) {
-				throw new ActionUnperformableException();
-			}
+			oldOwlClass = conceptAnnotation.getOwlClass().orElseThrow(ActionUnperformableException::new);
+			this.newOwlClass = controller.getOWLModel().getSelectedOWLClass().orElseThrow(ActionUnperformableException::new);
 		}
 
 		@Override
@@ -85,57 +76,48 @@ public class OWLActions {
 		}
 	}
 
-    public static void assignColorToClass(KnowtatorView view, Object owlClass) {
-        if (owlClass == null) {
-            try {
-                owlClass =
-                        view.getController()
-                                .getTextSourceCollection().getSelection()
-                                .getConceptAnnotationCollection()
-                                .getSelection()
-                                .getOwlClass();
-            } catch (NoSelectionException e) {
-                e.printStackTrace();
-            }
-        }
-        if (owlClass != null) {
-            Set<Object> owlClasses = new HashSet<>();
-            owlClasses.add(owlClass);
+	public static void assignColorToClass(KnowtatorView view, Object owlClass) {
+		Optional<Object> objectOptional = Optional.ofNullable(owlClass);
 
-            JColorChooser colorChooser = new KnowtatorColorPalette();
+		if (!objectOptional.isPresent()) {
+			objectOptional =
+					KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+							.flatMap(textSource -> textSource.getConceptAnnotationCollection().getSelection()
+									.map(ConceptAnnotation::getOwlClass));
+		}
+		objectOptional.ifPresent(owlClass1 -> {
+			Set<Object> owlClasses = new HashSet<>();
+			owlClasses.add(owlClass1);
 
-            final Color[] finalC = {null};
-            JDialog dialog = JColorChooser.createDialog(view, "Pick a color for " + owlClass, true, colorChooser,
-                    e -> finalC[0] = colorChooser.getColor(), null);
+			JColorChooser colorChooser = new KnowtatorColorPalette();
+
+			final Color[] finalC = {null};
+			JDialog dialog = JColorChooser.createDialog(view, "Pick a color for " + owlClass1, true, colorChooser,
+					e -> finalC[0] = colorChooser.getColor(), null);
 
 
-            dialog.setVisible(true);
+			dialog.setVisible(true);
 
-            Color c = finalC[0];
-            if (c != null) {
+			Color c = finalC[0];
+			if (c != null) {
 
-                view.getController().getProfileCollection().getSelection().addColor(owlClass, c);
+				KnowtatorView.CONTROLLER.getProfileCollection().getSelection()
+						.ifPresent(profile -> profile.addColor(owlClass1, c));
 
-                if (owlClass instanceof OWLClass) {
-                    if (JOptionPane.showConfirmDialog(
-                            view, "Assign color to descendants of " + owlClass + "?")
-                            == JOptionPane.OK_OPTION) {
+				if (owlClass1 instanceof OWLClass) {
+					if (JOptionPane.showConfirmDialog(view, "Assign color to descendants of " + owlClass1 + "?") == JOptionPane.OK_OPTION) {
+						owlClasses.addAll(KnowtatorView.CONTROLLER.getOWLModel().getDescendants((OWLClass) owlClass1));
+					}
+				}
 
-                        owlClasses.addAll(
-                                view.getController()
-                                        .getOWLModel()
-                                        .getDescendants((OWLClass) owlClass));
-                    }
-
-	                ColorChangeAction action = new ColorChangeAction(view.getController().getProfileCollection().getSelection(), owlClasses, c);
-                    view.getController().registerAction(action);
-                }
+				KnowtatorView.CONTROLLER.getProfileCollection().getSelection()
+						.ifPresent(profile -> KnowtatorView.CONTROLLER.registerAction(new ColorChangeAction(profile, owlClasses, c)));
 
 
-            }
-        }
+			}
 
-    }
+		});
+	}
 
 	static class ColorChangeAction extends AbstractKnowtatorAction {
 
@@ -153,7 +135,10 @@ public class OWLActions {
 			this.color = color;
 
 			oldColorAssignments = new HashMap<>();
-			owlClasses.forEach(owlClass -> profile.getColors().computeIfPresent(owlClass, oldColorAssignments::put));
+			owlClasses.forEach(owlClass -> {
+				Color oldColor = profile.getColors().get(owlClass);
+				if (oldColor != null) oldColorAssignments.put(owlClass, oldColor);
+			});
 
 			edit = new ColorChangeEdit(profile, oldColorAssignments, color);
 		}

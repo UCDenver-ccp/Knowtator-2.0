@@ -24,30 +24,25 @@
 
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 public class TextSourceChooser extends KnowtatorChooser<TextSource> {
 
-    public TextSourceChooser(KnowtatorView view) {
-        super(view);
-        setCollection(view.getController().getTextSourceCollection());
-    }
+	public TextSourceChooser(KnowtatorView view) {
+		super();
+		setCollection(KnowtatorView.CONTROLLER.getTextSourceCollection());
+	}
 
-    @Override
-    protected void react() {
-        try {
-            setCollection(view.getController().getTextSourceCollection());
-            setSelected();
-        } catch (NoSelectionException e) {
-            e.printStackTrace();
-        }
-    }
+	@Override
+	protected void react() {
+		setCollection(KnowtatorView.CONTROLLER.getTextSourceCollection());
+		setSelected();
+	}
 
-    @Override
-    public void reset() {
-        super.reset();
-        setCollection(view.getController().getTextSourceCollection());
-    }
+	@Override
+	public void reset() {
+		super.reset();
+		setCollection(KnowtatorView.CONTROLLER.getTextSourceCollection());
+	}
 }

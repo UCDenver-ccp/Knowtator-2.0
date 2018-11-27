@@ -52,7 +52,7 @@ public abstract class ListenableCollection<K extends KnowtatorDataObjectInterfac
 		}
 	}
 
-	void remove(K objectToRemove) throws CantRemoveException {
+	void remove(K objectToRemove) {
 		collection.remove(objectToRemove);
 
 		collectionListeners.forEach(CollectionListener::removed);

@@ -25,6 +25,6 @@
 
 <knowtator-project>
     <profile id="Default">
-        <highlighter class="&lt;http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza&gt;" color="#ff0000"/>
+        <highlighter class="Pizza" color="#ff0000"/>
     </profile>
 </knowtator-project>

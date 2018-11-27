@@ -60,12 +60,8 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 		graphSpaceCollectionListener = new KnowtatorCollectionListener<GraphSpace>() {
 			@Override
 			public void selected(SelectionEvent<GraphSpace> event) {
-				if (event.getOld() != null) {
-					event.getOld().removeDataObjectModificationListener(graphSpaceModificationListener);
-				}
-				if (event.getNew() != null) {
-					event.getNew().addDataObjectModificationListener(graphSpaceModificationListener);
-				}
+				event.getOld().ifPresent(graphSpace -> graphSpace.removeDataObjectModificationListener(graphSpaceModificationListener));
+				event.getNew().ifPresent(graphSpace -> graphSpace.addDataObjectModificationListener(graphSpaceModificationListener));
 
 				respondToGraphSpaceSelection(event);
 			}
@@ -95,14 +91,10 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 
 			@Override
 			public void selected(SelectionEvent<ConceptAnnotation> event) {
-				if (event.getOld() != null) {
-					event.getOld().getSpanCollection().removeCollectionListener(spanCollectionListener);
-					event.getOld().removeDataObjectModificationListener(conceptAnnotationModificationListener);
-				}
-				if (event.getNew() != null) {
-					event.getNew().getSpanCollection().addCollectionListener(spanCollectionListener);
-					event.getNew().addDataObjectModificationListener(conceptAnnotationModificationListener);
-				}
+				event.getOld().ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection().removeCollectionListener(spanCollectionListener));
+				event.getOld().ifPresent(conceptAnnotation -> conceptAnnotation.removeDataObjectModificationListener(conceptAnnotationModificationListener));
+				event.getNew().ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection().addCollectionListener(spanCollectionListener));
+				event.getNew().ifPresent(conceptAnnotation -> conceptAnnotation.addDataObjectModificationListener(conceptAnnotationModificationListener));
 
 				respondToConceptAnnotationSelection(event);
 			}
@@ -134,12 +126,8 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 
 			@Override
 			public void selected(SelectionEvent<Span> event) {
-				if (event.getOld() != null) {
-					event.getOld().removeDataObjectModificationListener(spanModificationListener);
-				}
-				if (event.getNew() != null) {
-					event.getNew().addDataObjectModificationListener(spanModificationListener);
-				}
+				event.getOld().ifPresent(span -> span.removeDataObjectModificationListener(spanModificationListener));
+				event.getNew().ifPresent(span -> span.addDataObjectModificationListener(spanModificationListener));
 
 				respondToSpanSelection(event);
 			}
@@ -164,18 +152,22 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 				respondToSpanCollectionFirstAdded();
 			}
 		};
+
+		setupListeners();
+	}
+
+	private void setupListeners() {
 		controller.getTextSourceCollection().addCollectionListener(this);
-		try {
-			TextSource textSource = controller.getTextSourceCollection().getSelection();
+		controller.getTextSourceCollection().getSelection().ifPresent(textSource -> {
 			textSource.getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
 			textSource.getGraphSpaceCollection().addCollectionListener(graphSpaceCollectionListener);
-			textSource.getGraphSpaceCollection().getSelection().addDataObjectModificationListener(graphSpaceModificationListener);
-			ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
-			conceptAnnotation.getSpanCollection().addCollectionListener(spanCollectionListener);
-			conceptAnnotation.addDataObjectModificationListener(conceptAnnotationModificationListener);
-			conceptAnnotation.getSpanCollection().getSelection().addDataObjectModificationListener(spanModificationListener);
-		} catch (NoSelectionException ignored) {
-		}
+			textSource.getGraphSpaceCollection().getSelection().ifPresent(graphSpace -> graphSpace.addDataObjectModificationListener(graphSpaceModificationListener));
+			textSource.getConceptAnnotationCollection().getSelection().ifPresent(conceptAnnotation -> {
+				conceptAnnotation.getSpanCollection().addCollectionListener(spanCollectionListener);
+				conceptAnnotation.addDataObjectModificationListener(conceptAnnotationModificationListener);
+				conceptAnnotation.getSpanCollection().getSelection().ifPresent(span -> span.addDataObjectModificationListener(spanModificationListener));
+			});
+		});
 	}
 
 	protected abstract void respondToConceptAnnotationModification();
@@ -226,14 +218,10 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 
 	@Override
 	public void selected(SelectionEvent<TextSource> event) {
-		if (event.getOld() != null) {
-			event.getOld().getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
-			event.getOld().getGraphSpaceCollection().removeCollectionListener(graphSpaceCollectionListener);
-		}
-		if (event.getNew() != null) {
-			event.getNew().getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener);
-			event.getNew().getGraphSpaceCollection().addCollectionListener(graphSpaceCollectionListener);
-		}
+		event.getOld().ifPresent(textSource -> textSource.getGraphSpaceCollection().removeCollectionListener(graphSpaceCollectionListener));
+		event.getOld().ifPresent(textSource -> textSource.getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener));
+		event.getNew().ifPresent(textSource -> textSource.getConceptAnnotationCollection().addCollectionListener(conceptAnnotationCollectionListener));
+		event.getNew().ifPresent(textSource -> textSource.getGraphSpaceCollection().addCollectionListener(graphSpaceCollectionListener));
 
 		respondToTextSourceSelection(event);
 	}
@@ -261,16 +249,20 @@ public abstract class TextBoundModelListener implements KnowtatorCollectionListe
 	public void dispose() {
 		controller.getTextSourceCollection().removeCollectionListener(this);
 
-		try {
-			TextSource textSource = controller.getTextSourceCollection().getSelection();
+		removeListeners();
+	}
+
+	private void removeListeners() {
+		controller.getTextSourceCollection().removeCollectionListener(this);
+		controller.getTextSourceCollection().getSelection().ifPresent(textSource -> {
 			textSource.getConceptAnnotationCollection().removeCollectionListener(conceptAnnotationCollectionListener);
 			textSource.getGraphSpaceCollection().removeCollectionListener(graphSpaceCollectionListener);
-			textSource.getGraphSpaceCollection().getSelection().removeDataObjectModificationListener(graphSpaceModificationListener);
-			ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
-			conceptAnnotation.getSpanCollection().removeCollectionListener(spanCollectionListener);
-			conceptAnnotation.removeDataObjectModificationListener(conceptAnnotationModificationListener);
-			conceptAnnotation.getSpanCollection().getSelection().removeDataObjectModificationListener(spanModificationListener);
-		} catch (NoSelectionException ignored) {
-		}
+			textSource.getGraphSpaceCollection().getSelection().ifPresent(graphSpace -> graphSpace.removeDataObjectModificationListener(graphSpaceModificationListener));
+			textSource.getConceptAnnotationCollection().getSelection().ifPresent(conceptAnnotation -> {
+				conceptAnnotation.getSpanCollection().removeCollectionListener(spanCollectionListener);
+				conceptAnnotation.removeDataObjectModificationListener(conceptAnnotationModificationListener);
+				conceptAnnotation.getSpanCollection().getSelection().ifPresent(span -> span.removeDataObjectModificationListener(spanModificationListener));
+			});
+		});
 	}
 }

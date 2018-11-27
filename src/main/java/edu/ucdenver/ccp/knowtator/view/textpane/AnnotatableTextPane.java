@@ -25,7 +25,6 @@
 package edu.ucdenver.ccp.knowtator.view.textpane;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -41,6 +40,8 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static java.lang.Math.max;
@@ -52,9 +53,9 @@ import static java.lang.Math.min;
 public abstract class AnnotatableTextPane extends SearchableTextPane implements KnowtatorComponent {
 
 	private final MouseListener mouseListener;
-	private ConceptAnnotation conceptAnnotation;
-	TextSource textSource;
-	private Span span;
+	private Optional<ConceptAnnotation> conceptAnnotationOptional;
+	Optional<TextSource> textSourceOptional;
+	private Optional<Span> spanOptional;
 	private final KnowtatorController controller;
 	private final DefaultHighlighter.DefaultHighlightPainter overlapHighlighter = new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
 	private final DefaultHighlighter.DefaultHighlightPainter selectionHighlighter = new RectanglePainter(Color.BLACK);
@@ -105,9 +106,9 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	@Override
 	public void reset() {
 		super.reset();
-		conceptAnnotation = null;
-		textSource = null;
-		span = null;
+		conceptAnnotationOptional = Optional.empty();
+		textSourceOptional = Optional.empty();
+		spanOptional = Optional.empty();
 	}
 
 	@Override
@@ -196,19 +197,19 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 
 			@Override
 			public void respondToSpanSelection(SelectionEvent<Span> event) {
-				span = event.getNew();
+				spanOptional = event.getNew();
 				refreshHighlights();
 			}
 
 			@Override
 			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
-				conceptAnnotation = event.getNew();
+				conceptAnnotationOptional = event.getNew();
 				refreshHighlights();
 			}
 
 			@Override
 			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
-				textSource = event.getNew();
+				textSourceOptional = event.getNew();
 				showTextSource();
 			}
 
@@ -240,8 +241,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	 * Sets the text to the text sources content
 	 */
 	private void showTextSource() {
-		String text = textSource.getContent();
-		setText(text);
+		textSourceOptional.ifPresent(textSource1 -> setText(textSource1.getContent()));
 		refreshHighlights();
 	}
 
@@ -257,7 +257,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	 */
 	public void refreshHighlights() {
 		if (controller.isNotLoading()) {
-			// Remove all previous highlights in case a span has been deleted
+			// Remove all previous highlights in case a spanOptional has been deleted
 			getHighlighter().removeAllHighlights();
 
 			// Always highlight the selected concept first so its color and border show up
@@ -265,27 +265,31 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 
 			// Highlight overlaps first, then spans. Overlaps must be highlighted first because the highlights are displayed
 			// in order of placement
-			Set<Span> spans = textSource.getConceptAnnotationCollection().getSpans(null).getCollection();
-			highlightOverlaps(spans);
-			highlightSpans(spans);
+			textSourceOptional.ifPresent(textSource -> {
+				Set<Span> spans = textSource.getConceptAnnotationCollection().getSpans(null).getCollection();
+				highlightOverlaps(spans);
+				highlightSpans(spans);
+			});
+
 
 			revalidate();
 			repaint();
 
-			Span span1 = span;
-			if (conceptAnnotation != null) {
-				span1 = span == null ? conceptAnnotation.getSpanCollection().first() : span1;
+			Optional<Span> span = spanOptional;
+			if (!span.isPresent()) {
+				span = conceptAnnotationOptional.map(conceptAnnotation -> conceptAnnotation.getSpanCollection().first());
 			}
-			Span finalSpan = span1;
+			Optional<Span> finalSpan = span;
 			SwingUtilities.invokeLater(
-					() -> {
-						if (finalSpan != null) {
-							try {
-								scrollRectToVisible(modelToView(finalSpan.getStart()));
-							} catch (BadLocationException | NullPointerException ignored) {
-							}
+					() -> finalSpan.ifPresent(span1 -> {
+						try {
+							scrollRectToVisible(modelToView(span1.getStart()));
+						} catch (BadLocationException e) {
+							e.printStackTrace();
+						} catch (NullPointerException ignored) {
+
 						}
-					}
+					})
 			);
 		}
 	}
@@ -304,19 +308,16 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 
 		getStyledDocument().setCharacterAttributes(0, getText().length(), regularSpan, false);
 
-		Set<OWLClass> descendants = null;
-		try {
-			OWLClass owlClass = controller.getOWLModel().getSelectedOWLClass();
-			descendants = controller.getOWLModel().getDescendants(owlClass);
+		Set<OWLClass> descendants = new HashSet<>();
+		controller.getOWLModel().getSelectedOWLClass().ifPresent(owlClass -> {
+			descendants.addAll(controller.getOWLModel().getDescendants(owlClass));
 			descendants.add(owlClass);
-		} catch (NoSelectedOWLClassException ignored) {
-
-		}
+		});
 		for (Span span : spans) {
 			//Underline spans for the same class
-			if (descendants != null && descendants.contains(span.getConceptAnnotation().getOwlClass())) {
-				getStyledDocument().setCharacterAttributes(span.getStart(), span.getSize(), underlinedSpan, false);
-			}
+			span.getConceptAnnotation().getOwlClass()
+					.filter(descendants::contains)
+					.ifPresent(owlClass -> getStyledDocument().setCharacterAttributes(span.getStart(), span.getSize(), underlinedSpan, false));
 			DefaultHighlighter.DefaultHighlightPainter spanHighlighter = new DefaultHighlighter.DefaultHighlightPainter(span.getConceptAnnotation().getColor());
 
 			highlightRegion(span.getStart(), span.getEnd(), spanHighlighter);
@@ -363,11 +364,8 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	 * Highlights the spans for the selected annotation
 	 */
 	private void highlightSelectedAnnotation() {
-		if (conceptAnnotation != null) {
-			for (Span span : conceptAnnotation.getSpanCollection()) {
-				highlightRegion(span.getStart(), span.getEnd(), selectionHighlighter);
-			}
-		}
+		conceptAnnotationOptional.ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection()
+				.forEach(span -> highlightRegion(span.getStart(), span.getEnd(), selectionHighlighter)));
 	}
 
 	/**
@@ -382,7 +380,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 			int start = Utilities.getWordStart(this, min(press_offset, release_offset));
 			int end = Utilities.getWordEnd(this, max(press_offset, release_offset));
 
-			//I don't want to deselect the annotation here because I may want to add a span to it
+			//I don't want to deselect the annotation here because I may want to add a spanOptional to it
 
 			requestFocusInWindow();
 			select(start, end);

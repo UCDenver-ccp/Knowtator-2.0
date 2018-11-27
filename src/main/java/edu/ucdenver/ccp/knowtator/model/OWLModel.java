@@ -24,7 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.model;
 
-import com.google.common.base.Optional;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
@@ -41,6 +40,7 @@ import org.protege.editor.owl.ui.renderer.OWLRendererPreferences;
 import org.protege.editor.owl.ui.search.SearchDialogPanel;
 import org.semanticweb.owlapi.model.*;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -55,60 +55,63 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 	@SuppressWarnings("unused")
 	private static final Logger log = LogManager.getLogger(OWLModel.class);
 
-	private OWLWorkspace owlWorkSpace;
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+	private Optional<OWLWorkspace> owlWorkSpace;
 	private File ontologiesLocation;
-	private List<IRI> iris;
+	private List<IRI> annotationIRIs;
 	private final KnowtatorController controller;
-	private OWLClass testClass;
-	@SuppressWarnings({"FieldCanBeLocal", "unused"})
-	private OWLObjectProperty testProperty;
-	private OWLOntologyManager owlOntologyManager;
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+	private Optional<OWLClass> testClass;
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+	private Optional<OWLObjectProperty> testProperty;
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+	private Optional<OWLOntologyManager> owlOntologyManager;
 
 	public OWLModel(KnowtatorController controller) {
 		this.controller = controller;
 		controller.addDebugListener(this);
-		iris = null;
+		owlWorkSpace = Optional.empty();
+		owlOntologyManager = Optional.empty();
+		annotationIRIs = null;
 		setupListeners();
 	}
 
-	public OWLClass getOWLClassByID(String classID) {
-		if (classID != null) {
-			try {
-				return getWorkSpace().getOWLModelManager().getOWLEntityFinder().getOWLClass(classID);
-			} catch (OWLWorkSpaceNotSetException e) {
-				try {
-					for (OWLOntology owlOntology : getOwlOntologyManager().getOntologies()) {
-						for (OWLClass owlClass : owlOntology.getClassesInSignature()) {
-							if (owlClass.getIRI().getShortForm().equals(classID)) {
-								return owlClass;
-							}
-						}
+	public Optional<OWLClass> getOWLClassByID(@Nonnull String classID) {
+		if (owlWorkSpace.isPresent()) {
+			return owlWorkSpace.map(owlWorkspace -> owlWorkspace.getOWLModelManager().getOWLEntityFinder().getOWLClass(classID));
+		} else {
+			if (owlOntologyManager.isPresent()) {
+				for (OWLOntology ontology : owlOntologyManager.get().getOntologies()) {
+					Optional<OWLClass> owlClassOptional = ontology.getClassesInSignature().stream()
+							.filter(owlClass -> owlClass.getIRI().getShortForm().equals(classID))
+							.findFirst();
+					if (owlClassOptional.isPresent()) {
+						return owlClassOptional;
 					}
-				} catch (OWLOntologyManagerNotSetException ignored) {
 				}
 			}
+			return Optional.empty();
 		}
-		return null;
+
 	}
 
-	public OWLObjectProperty getOWLObjectPropertyByID(String propertyID) {
-		if (propertyID != null) {
-			try {
-				return getWorkSpace().getOWLModelManager().getOWLEntityFinder().getOWLObjectProperty(propertyID);
-			} catch (OWLWorkSpaceNotSetException e) {
-				try {
-					for (OWLOntology owlOntology : getOwlOntologyManager().getOntologies()) {
-						for (OWLObjectProperty owlObjectProperty : owlOntology.getObjectPropertiesInSignature()) {
-							if (owlObjectProperty.getIRI().getShortForm().equals(propertyID)) {
-								return owlObjectProperty;
-							}
-						}
+	public Optional<OWLObjectProperty> getOWLObjectPropertyByID(@Nonnull String propertyID) {
+		if (owlWorkSpace.isPresent()) {
+			return owlWorkSpace.map(owlWorkSpace -> owlWorkSpace.getOWLModelManager().getOWLEntityFinder().getOWLObjectProperty(propertyID));
+		} else {
+
+			if (owlOntologyManager.isPresent()) {
+				for (OWLOntology ontology : owlOntologyManager.get().getOntologies()) {
+					Optional<OWLObjectProperty> owlObjectPropertyOptional = ontology.getObjectPropertiesInSignature().stream()
+							.filter(owlClass -> owlClass.getIRI().getShortForm().equals(propertyID))
+							.findFirst();
+					if (owlObjectPropertyOptional.isPresent()) {
+						return owlObjectPropertyOptional;
 					}
-				} catch (OWLOntologyManagerNotSetException ignored) {
 				}
 			}
+			return Optional.empty();
 		}
-		return null;
 	}
 
 	private void setupListeners() {
@@ -201,9 +204,9 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 
 			@Override
 			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
-				if (event.getNew() != null && event.getNew().getOwlClass() != null) {
-					setSelectedOWLEntity(event.getNew().getOwlClass());
-				}
+				event.getNew()
+						.ifPresent(conceptAnnotation -> conceptAnnotation.getOwlClass()
+								.ifPresent(owlClass -> setSelectedOWLEntity(owlClass)));
 			}
 
 			@Override
@@ -233,105 +236,68 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 		};
 	}
 
-	public OWLObjectProperty getSelectedOWLObjectProperty() throws NoSelectedOWLPropertyException {
+	public Optional<OWLObjectProperty> getSelectedOWLObjectProperty() {
 		if (controller.isDebug()) {
 			return testProperty;
 		} else {
-			try {
-				OWLEntity owlEntity = getWorkSpace().getOWLSelectionModel().getSelectedEntity();
-				if (owlEntity instanceof OWLObjectProperty) {
-					return (OWLObjectProperty) owlEntity;
-				} else {
-					throw new NoSelectedOWLPropertyException();
-				}
-			} catch (OWLWorkSpaceNotSetException e) {
-				throw new NoSelectedOWLPropertyException();
-			}
+			return owlWorkSpace
+					.filter(owlWorkspace -> owlWorkspace.getOWLSelectionModel().getSelectedEntity() instanceof OWLObjectProperty)
+					.map(owlWorkspace -> (OWLObjectProperty) owlWorkspace.getOWLSelectionModel().getSelectedEntity());
 		}
 	}
 
-	public OWLClass getSelectedOWLClass() throws NoSelectedOWLClassException {
+	public Optional<OWLClass> getSelectedOWLClass() {
 		if (controller.isDebug()) {
 			return testClass;
 		}
-		try {
-			OWLEntity owlEntity = getWorkSpace().getOWLSelectionModel().getSelectedEntity();
-			if (owlEntity instanceof OWLClass) {
-				return (OWLClass) owlEntity;
-			} else {
-				throw new NoSelectedOWLClassException();
-			}
-		} catch (OWLWorkSpaceNotSetException e) {
-			throw new NoSelectedOWLClassException();
-		}
-	}
-
-
-	public OWLOntologyManager getOwlOntologyManager() throws OWLOntologyManagerNotSetException {
-		if (owlOntologyManager == null) {
-			throw new OWLOntologyManagerNotSetException();
-		} else {
-			return owlOntologyManager;
-		}
+		return owlWorkSpace
+				.filter(owlWorkspace -> owlWorkspace.getOWLSelectionModel().getSelectedEntity() instanceof OWLClass)
+				.map(owlWorkspace -> (OWLClass) owlWorkspace.getOWLSelectionModel().getSelectedEntity());
 	}
 
 	public void setRenderRDFSLabel() {
-		try {
-			if (iris == null) {
-				IRI labelIRI = getWorkSpace().getOWLModelManager().getOWLDataFactory().getRDFSLabel().getIRI();
-				iris = OWLRendererPreferences.getInstance().getAnnotationIRIs();
+		if (annotationIRIs == null) {
+			owlWorkSpace.ifPresent(owlWorkspace -> {
+				IRI labelIRI = owlWorkspace.getOWLModelManager().getOWLDataFactory().getRDFSLabel().getIRI();
+				annotationIRIs = OWLRendererPreferences.getInstance().getAnnotationIRIs();
 				OWLRendererPreferences.getInstance().setAnnotations(Collections.singletonList(labelIRI));
 
-				getWorkSpace().getOWLModelManager().refreshRenderer();
-			}
-		} catch (OWLWorkSpaceNotSetException ignored) {
+				owlWorkspace.getOWLModelManager().refreshRenderer();
+			});
 
 		}
 	}
 
 	public void resetRenderRDFS() {
-		try {
-			if (iris != null) {
-				OWLRendererPreferences.getInstance().setAnnotations(iris);
-				getWorkSpace().getOWLModelManager().refreshRenderer();
-				iris = null;
-			}
-		} catch (OWLWorkSpaceNotSetException ignored) {
-
+		if (annotationIRIs != null) {
+			owlWorkSpace.ifPresent(owlWorkspace -> {
+				OWLRendererPreferences.getInstance().setAnnotations(annotationIRIs);
+				owlWorkspace.getOWLModelManager().refreshRenderer();
+				annotationIRIs = null;
+			});
 		}
 	}
 
 
 	public Set<OWLClass> getDescendants(OWLClass cls) {
-		try {
-			return getWorkSpace()
-					.getOWLModelManager()
-					.getOWLHierarchyManager()
-					.getOWLClassHierarchyProvider()
-					.getDescendants(cls);
-		} catch (OWLWorkSpaceNotSetException e) {
-			return new HashSet<>();
-		}
+		return owlWorkSpace.map(owlWorkspace -> owlWorkspace
+				.getOWLModelManager()
+				.getOWLHierarchyManager()
+				.getOWLClassHierarchyProvider()
+				.getDescendants(cls)).orElse(new HashSet<>());
 	}
 
-	public String getOWLEntityRendering(OWLEntity owlEntity) {
-		try {
-			if (owlEntity == null) {
-				return null;
-			}
-			return getWorkSpace().getOWLModelManager().getOWLEntityRenderer().render(owlEntity);
-		} catch (OWLWorkSpaceNotSetException e) {
-			return owlEntity.toString();
-		}
+	public Optional<String> getOWLEntityRendering(@Nonnull OWLEntity owlEntity) {
+		return owlWorkSpace.map(owlWorkspace -> owlWorkspace.getOWLModelManager().getOWLEntityRenderer().render(owlEntity));
 	}
 
 	public void setOwlWorkSpace(OWLWorkspace owlWorkSpace) {
-		this.owlWorkSpace = owlWorkSpace;
+		this.owlWorkSpace = Optional.ofNullable(owlWorkSpace);
 	}
 
 	public void searchForString(String stringToSearch) {
-		try {
-			JDialog dialog = SearchDialogPanel.createDialog(null, getWorkSpace().getOWLEditorKit());
+		owlWorkSpace.ifPresent(owlWorkspace -> {
+			JDialog dialog = SearchDialogPanel.createDialog(null, owlWorkspace.getOWLEditorKit());
 			Arrays.stream(dialog.getContentPane().getComponents()).forEach(component -> {
 				log.warn(component);
 				if (component instanceof AugmentedJTextField) {
@@ -340,27 +306,23 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 			});
 
 			dialog.setVisible(true);
-		} catch (OWLWorkSpaceNotSetException ignored) {
-
-		}
+		});
 	}
 
 	@Override
 	public void setDebug() {
-		owlOntologyManager = org.semanticweb.owlapi.apibinding.OWLManager.createOWLOntologyManager();
-		OWLDataFactory factory = owlOntologyManager.getOWLDataFactory();
+		owlOntologyManager = Optional.of(org.semanticweb.owlapi.apibinding.OWLManager.createOWLOntologyManager());
 
-		IRI iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream");
-		testClass = factory.getOWLClass(iri);
-
-		iri = IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#HasIngredient");
-		testProperty = factory.getOWLObjectProperty(iri);
+		testClass = owlOntologyManager.map(owlOntologyManager -> owlOntologyManager.getOWLDataFactory()
+				.getOWLClass(IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream")));
+		testProperty = owlOntologyManager.map(owlOntologyManager -> owlOntologyManager.getOWLDataFactory()
+				.getOWLObjectProperty(IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#HasIngredient")));
 	}
 
 
 	@Override
 	public void dispose() {
-		iris = null;
+		annotationIRIs = null;
 	}
 
 	@SuppressWarnings("WeakerAccess")
@@ -391,35 +353,39 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 				try {
 					for (Path path1 : Files.newDirectoryStream(Paths.get(file.toURI()), path -> path.toString().endsWith(".owl"))) {
 						String ontologyLocation = path1.toFile().toURI().toString();
-						try {
-							List<String> ontologies = getWorkSpace().getOWLModelManager().getActiveOntologies().stream().map(ontology -> {
-								OWLOntologyID ontID = ontology.getOntologyID();
-								//noinspection Guava
-								Optional<IRI> ontIRI = ontID.getOntologyIRI();
-								if (ontIRI.isPresent()) {
-									return ontIRI.get().toURI().toString();
-								} else {
-									return null;
+
+						if (owlWorkSpace.isPresent()) {
+							owlWorkSpace.ifPresent(owlWorkspace -> {
+								List<String> ontologies = owlWorkspace.getOWLModelManager().getActiveOntologies().stream().map(ontology -> {
+									OWLOntologyID ontID = ontology.getOntologyID();
+									//noinspection Guava
+									com.google.common.base.Optional<IRI> ontIRI = ontID.getOntologyIRI();
+									if (ontIRI.isPresent()) {
+										return ontIRI.get().toURI().toString();
+									} else {
+										return null;
+									}
+								}).collect(Collectors.toList());
+								if (!ontologies.contains(ontologyLocation)) {
+									log.warn("Loading ontology: " + ontologyLocation);
+									try {
+										OWLOntology newOntology =
+												owlWorkspace
+														.getOWLModelManager()
+														.getOWLOntologyManager()
+														.loadOntology((IRI.create(ontologyLocation)));
+										owlWorkspace.getOWLModelManager().setActiveOntology(newOntology);
+									} catch (OWLOntologyCreationException ignored) {
+									}
 								}
-							}).collect(Collectors.toList());
-							if (!ontologies.contains(ontologyLocation)) {
-								log.warn("Loading ontology: " + ontologyLocation);
+							});
+						} else {
+							owlOntologyManager.ifPresent(owlOntologyManager -> {
 								try {
-									OWLOntology newOntology =
-											getWorkSpace()
-													.getOWLModelManager()
-													.getOWLOntologyManager()
-													.loadOntology((IRI.create(ontologyLocation)));
-									getWorkSpace().getOWLModelManager().setActiveOntology(newOntology);
+									owlOntologyManager.loadOntology(IRI.create(ontologyLocation));
 								} catch (OWLOntologyCreationException ignored) {
 								}
-							}
-						} catch (OWLWorkSpaceNotSetException e) {
-							try {
-								getOwlOntologyManager().loadOntology(IRI.create(ontologyLocation));
-							} catch (OWLOntologyCreationException | OWLOntologyManagerNotSetException e1) {
-								log.warn("Could not load ontologies");
-							}
+							});
 						}
 					}
 				} catch (IOException e) {
@@ -431,76 +397,39 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 
 	@Override
 	public void save() {
-		try {
-			getWorkSpace().getOWLModelManager().save();
-		} catch (OWLWorkSpaceNotSetException | OWLOntologyStorageException ignored) {
-
-		}
+		owlWorkSpace.ifPresent(owlWorkSpace -> {
+			try {
+				owlWorkSpace.getOWLModelManager().save();
+			} catch (OWLOntologyStorageException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 
 	public void addOntologyChangeListener(OWLOntologyChangeListener listener) {
-		try {
-			getWorkSpace().getOWLModelManager().addOntologyChangeListener(listener);
-		} catch (OWLWorkSpaceNotSetException ignored) {
-
-		}
-		try {
-			getOwlOntologyManager().addOntologyChangeListener(listener);
-		} catch (OWLOntologyManagerNotSetException ignored) {
-
-		}
+		owlWorkSpace.ifPresent(owlWorkspace -> owlWorkspace.getOWLModelManager().addOntologyChangeListener(listener));
+		owlOntologyManager.ifPresent(owlOntologyManager -> owlOntologyManager.addOntologyChangeListener(listener));
 	}
 
 	public void removeOntologyChangeListener(OWLOntologyChangeListener listener) {
-		try {
-			getWorkSpace().getOWLModelManager().removeOntologyChangeListener(listener);
-		} catch (OWLWorkSpaceNotSetException ignored) {
-		}
-		try {
-			getOwlOntologyManager().addOntologyChangeListener(listener);
-		} catch (OWLOntologyManagerNotSetException ignored) {
-
-		}
+		owlWorkSpace.ifPresent(owlWorkspace -> owlWorkspace.getOWLModelManager().removeOntologyChangeListener(listener));
+		owlOntologyManager.ifPresent(owlOntologyManager -> owlOntologyManager.removeOntologyChangeListener(listener));
 	}
 
 	public void removeOWLModelManagerListener(OWLModelManagerListener listener) {
-		try {
-			getWorkSpace().getOWLModelManager().removeListener(listener);
-		} catch (OWLWorkSpaceNotSetException ignored) {
-
-		}
+		owlWorkSpace.ifPresent(owlWorkspace -> owlWorkspace.getOWLModelManager().removeListener(listener));
 	}
 
 	public void addOWLModelManagerListener(OWLModelManagerListener listener) {
-		try {
-			getWorkSpace().getOWLModelManager().addListener(listener);
-		} catch (OWLWorkSpaceNotSetException ignored) {
-
-		}
-	}
-
-	private OWLWorkspace getWorkSpace() throws OWLWorkSpaceNotSetException {
-		if (owlWorkSpace == null) {
-			throw new OWLWorkSpaceNotSetException();
-		} else {
-			return owlWorkSpace;
-		}
-	}
-
-	public boolean isWorkSpaceSet() {
-		return owlWorkSpace != null;
+		owlWorkSpace.ifPresent(owlWorkSpace -> owlWorkSpace.getOWLModelManager().addListener(listener));
 	}
 
 	public void setSelectedOWLEntity(OWLEntity owlEntity) {
-		try {
-			getWorkSpace().getOWLSelectionModel().setSelectedEntity(owlEntity);
-		} catch (OWLWorkSpaceNotSetException ignored) {
-
-		}
+		owlWorkSpace.ifPresent(owlWorkspace -> owlWorkspace.getOWLSelectionModel().setSelectedEntity(owlEntity));
 	}
 
 	public boolean renderChangeInProgress() {
-		return iris != null;
+		return annotationIRIs != null;
 	}
 
 	@Override
@@ -509,19 +438,17 @@ public class OWLModel implements Serializable, BaseKnowtatorManager, DebugListen
 	}
 
 	public Comparator<OWLObject> getOWLObjectComparator() {
-		try {
-			return getWorkSpace().getOWLModelManager().getOWLObjectComparator();
-		} catch (OWLWorkSpaceNotSetException e) {
-			return Comparator.comparing(Object::toString);
-		}
+		return owlWorkSpace.map(owlWorkspace -> owlWorkspace.getOWLModelManager().getOWLObjectComparator())
+				.orElse(Comparator.comparing(Object::toString));
 	}
 
-	private class OWLWorkSpaceNotSetException extends Exception {
+	public Optional<OWLOntologyManager> getOwlOntologyManager() {
+		return owlOntologyManager;
 	}
 
-	public class OWLOntologyManagerNotSetException extends Throwable {
+	public boolean isWorkSpaceSet() {
+		return owlWorkSpace.isPresent();
 	}
-
 }
 
 

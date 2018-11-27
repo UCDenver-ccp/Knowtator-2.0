@@ -28,10 +28,9 @@ import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.util.mxMorphing;
 import com.mxgraph.util.mxEvent;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
@@ -41,8 +40,8 @@ public class GraphActions {
     public static class removeCellsAction extends AbstractGraphAction {
         private final Object[] cellsToRemove;
 
-        public removeCellsAction(KnowtatorController controller) throws NoSelectionException {
-            super(controller, "Remove cells");
+        public removeCellsAction(GraphSpace graphSpace) {
+            super("Remove cells", graphSpace);
             cellsToRemove = graphSpace.getSelectionCells();
         }
 
@@ -54,15 +53,13 @@ public class GraphActions {
 
     public static class AddAnnotationNodeAction extends AbstractGraphAction {
 
-        private final TextSource textSource;
         private final ConceptAnnotation conceptAnnotation;
         private final KnowtatorView view;
 
-        public AddAnnotationNodeAction(KnowtatorView view, KnowtatorController controller) throws NoSelectionException {
-            super(controller, "Add annotation node");
+        public AddAnnotationNodeAction(KnowtatorView view, GraphSpace graphSpace, ConceptAnnotation conceptAnnotation) {
+            super("Add annotation node", graphSpace);
             this.view = view;
-            textSource = controller.getTextSourceCollection().getSelection();
-            conceptAnnotation = textSource.getConceptAnnotationCollection().getSelection();
+            this.conceptAnnotation = conceptAnnotation;
         }
 
         @Override
@@ -82,8 +79,8 @@ public class GraphActions {
     public static class applyLayoutAction extends AbstractGraphAction {
         private final KnowtatorView view;
 
-        public applyLayoutAction(KnowtatorView view, KnowtatorController controller) throws NoSelectionException {
-            super(controller, "Apply layout");
+        public applyLayoutAction(KnowtatorView view, GraphSpace graphSpace) {
+            super("Apply layout", graphSpace);
             this.view = view;
         }
 
@@ -125,36 +122,36 @@ public class GraphActions {
         private OWLObjectProperty property;
         private Boolean negation;
         private String quantifier;
-        private String guantifierValue;
+        private String quantifierValue;
         private String propertyId;
         private String motivation;
 
         public AddTripleAction(KnowtatorController controller,
                                AnnotationNode source, AnnotationNode target,
                                OWLObjectProperty property, String propertyId,
-                               String quantifier, String guantifierValue,
+                               String quantifier, String quantifierValue,
                                Boolean negation,
-                               String motivation) throws NoSelectionException {
-            super(controller, "Add triple");
+                               String motivation, GraphSpace graphSpace) {
+            super("Add triple", graphSpace);
             this.controller = controller;
             this.source = source;
             this.target = target;
             this.property = property;
             this.negation = negation;
             this.quantifier = quantifier;
-            this.guantifierValue = guantifierValue;
+            this.quantifierValue = quantifierValue;
             this.propertyId = propertyId;
             this.motivation = motivation;
         }
 
         @Override
-        public void perform() {
+        public void perform() throws ActionUnperformableException {
             graphSpace.addTriple(
                     source, target,
                     null,
-                    controller.getProfileCollection().getSelection(),
-                    property, propertyId,
-                    quantifier, guantifierValue,
+                    controller.getProfileCollection().getSelection().orElseThrow(ActionUnperformableException::new),
+                    java.util.Optional.ofNullable(property), propertyId,
+                    quantifier, quantifierValue,
                     negation,
                     motivation
             );

@@ -33,24 +33,24 @@ public class SelectableCollectionTest {
 	private final static KnowtatorController controller = TestingHelpers.getLoadedController();
 
 	@Test
-	public void selectNext() throws NoSelectionException {
+	public void selectNext() {
 		TextSource textSource = controller.getTextSourceCollection().get("document1");
-		assert textSource.equals(controller.getTextSourceCollection().getSelection());
+		assert textSource.equals(controller.getTextSourceCollection().getSelection().get());
 		controller.getTextSourceCollection().selectNext();
 		controller.getTextSourceCollection().selectNext();
-		assert !textSource.equals(controller.getTextSourceCollection().getSelection());
+		assert !textSource.equals(controller.getTextSourceCollection().getSelection().get());
 		controller.getTextSourceCollection().selectNext();
-		assert textSource.equals(controller.getTextSourceCollection().getSelection());
+		assert textSource.equals(controller.getTextSourceCollection().getSelection().get());
 	}
 
 	@Test
-	public void selectPrevious() throws NoSelectionException {
+	public void selectPrevious() {
 		TextSource textSource = controller.getTextSourceCollection().get("document1");
-		assert textSource.equals(controller.getTextSourceCollection().getSelection());
+		assert textSource.equals(controller.getTextSourceCollection().getSelection().get());
 		controller.getTextSourceCollection().selectPrevious();
 		controller.getTextSourceCollection().selectPrevious();
-		assert !textSource.equals(controller.getTextSourceCollection().getSelection());
+		assert !textSource.equals(controller.getTextSourceCollection().getSelection().get());
 		controller.getTextSourceCollection().selectPrevious();
-		assert textSource.equals(controller.getTextSourceCollection().getSelection());
+		assert textSource.equals(controller.getTextSourceCollection().getSelection().get());
 	}
 }

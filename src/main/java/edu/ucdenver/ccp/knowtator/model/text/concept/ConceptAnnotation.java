@@ -102,16 +102,13 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
         return annotator;
     }
 
-    public OWLClass getOwlClass() {
-        return owlClass;
+    public Optional<OWLClass> getOwlClass() {
+        return Optional.ofNullable(owlClass);
     }
 
     private String getOwlClassRendering() {
-        if (controller.getOWLModel().isWorkSpaceSet()) {
-            return controller.getOWLModel().getOWLEntityRendering(owlClass);
-        } else {
-            return owlClassID;
-        }
+        return controller.getOWLModel().getOWLEntityRendering(owlClass).orElse(owlClassID);
+
     }
 
     public SpanCollection getSpanCollection() {
@@ -163,10 +160,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
 
     public void setOwlClass(OWLClass owlClass) {
         this.owlClass = owlClass;
-        String owlClassID = controller.getOWLModel().getOWLEntityRendering(owlClass);
-        if (owlClassID != null) {
-            this.owlClassID = owlClassID;
-        }
+        controller.getOWLModel().getOWLEntityRendering(owlClass).ifPresent(owlClassID -> this.owlClassID = owlClassID);
         modify(null);
 
     }

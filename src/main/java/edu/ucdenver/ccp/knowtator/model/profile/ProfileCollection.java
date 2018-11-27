@@ -30,9 +30,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.BaseKnowtatorManager;
-import edu.ucdenver.ccp.knowtator.model.collection.CantRemoveException;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -44,134 +42,135 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ProfileCollection extends KnowtatorCollection<Profile> implements KnowtatorXMLIO, BaseKnowtatorManager {
 
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(KnowtatorController.class);
+	@SuppressWarnings("unused")
+	private static final Logger log = Logger.getLogger(KnowtatorController.class);
 
-    private final KnowtatorController controller;
-    private final List<ColorListener> colorListeners;
-    private File profilesLocation;
-    private final Profile defaultProfile;
+	private final KnowtatorController controller;
+	private final List<ColorListener> colorListeners;
+	private File profilesLocation;
+	private final Profile defaultProfile;
 
-    public ProfileCollection(KnowtatorController controller) {
-        super();
-        defaultProfile = new Profile(controller, "Default");
-        add(defaultProfile);
-        this.controller = controller;
-        colorListeners = new ArrayList<>();
-    }
+	public ProfileCollection(KnowtatorController controller) {
+		super();
+		defaultProfile = new Profile(controller, "Default");
+		add(defaultProfile);
+		this.controller = controller;
+		colorListeners = new ArrayList<>();
+	}
 
-    public Profile getDefaultProfile() {
-        return defaultProfile;
-    }
+	public Profile getDefaultProfile() {
+		return defaultProfile;
+	}
 
-    @Override
-    public void save() {
-        if (controller.isNotLoading()) {
-            forEach(Profile::save);
-        }
-    }
+	@Override
+	public void save() {
+		if (controller.isNotLoading()) {
+			forEach(Profile::save);
+		}
+	}
 
-    @Override
-    public Profile getSelection() {
-        //Profile should never be null
-        try {
-            return super.getSelection();
-        } catch (NoSelectionException e) {
-            setSelection(defaultProfile);
-            return defaultProfile;
-        }
-    }
+	@Override
+	public Optional<Profile> getSelection() {
+		//Profile should never be null
+		if (super.getSelection().isPresent()) {
+			return super.getSelection();
+		} else {
+			setSelection(defaultProfile);
+			return Optional.of(defaultProfile);
+		}
+	}
 
-    public void addColorListener(ColorListener listener) {
-        colorListeners.add(listener);
-    }
+	public void addColorListener(ColorListener listener) {
+		colorListeners.add(listener);
+	}
 
-    @Override
-    public void add(Profile profile) {
-        if (get(profile.getId()) == null) {
-            super.add(profile);
-        }
-    }
+	@Override
+	public void add(Profile profile) {
+		if (get(profile.getId()) == null) {
+			super.add(profile);
+		}
+	}
 
-    @Override
-    public void remove(Profile profile) throws CantRemoveException {
-        if (profile.equals(defaultProfile)) {
-            throw new CantRemoveException();
-        }
-        super.remove(profile);
-        selectNext();
-    }
+	@Override
+	public void remove(Profile profile) {
+		if (profile.equals(defaultProfile)) {
+			return;
+		}
+		super.remove(profile);
+		selectNext();
+	}
 
-    public void writeToKnowtatorXML(Document dom, Element root) {
-        forEach(profile -> profile.writeToKnowtatorXML(dom, root));
-    }
+	public void writeToKnowtatorXML(Document dom, Element root) {
+		forEach(profile -> profile.writeToKnowtatorXML(dom, root));
+	}
 
-    @Override
-    public void readFromKnowtatorXML(File file, Element parent) {
-        for (Node profileNode :
-                KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.PROFILE))) {
-            Element profileElement = (Element) profileNode;
-            String profileID = profileElement.getAttribute(KnowtatorXMLAttributes.ID);
+	@Override
+	public void readFromKnowtatorXML(File file, Element parent) {
+		for (Node profileNode :
+				KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.PROFILE))) {
+			Element profileElement = (Element) profileNode;
+			String profileID = profileElement.getAttribute(KnowtatorXMLAttributes.ID);
 
-            Profile newProfile = new Profile(controller, profileID);
-            add(newProfile);
-            get(profileID).readFromKnowtatorXML(null, profileElement);
-        }
-    }
+			Profile newProfile = new Profile(controller, profileID);
+			add(newProfile);
+			get(profileID).readFromKnowtatorXML(null, profileElement);
+		}
+	}
 
-    @Override
-    public void readFromOldKnowtatorXML(File file, Element parent) {
-    }
+	@Override
+	public void readFromOldKnowtatorXML(File file, Element parent) {
+	}
 
-    void fireColorChanged() {
-        colorListeners.forEach(ColorListener::colorChanged);
-    }
+	void fireColorChanged() {
+		colorListeners.forEach(ColorListener::colorChanged);
+	}
 
-    @Override
-    public void dispose() {
-        colorListeners.clear();
-        super.dispose();
-    }
+	@Override
+	public void dispose() {
+		colorListeners.clear();
+		super.dispose();
+	}
 
-    @Override
-    public File getSaveLocation() {
-        return profilesLocation;
-    }
+	@Override
+	public File getSaveLocation() {
+		return profilesLocation;
+	}
 
-    @Override
-    public void setSaveLocation(File saveLocation) throws IOException {
-        profilesLocation = (new File(controller.getSaveLocation(), "Profiles"));
-        Files.createDirectories(profilesLocation.toPath());
-    }
+	@Override
+	public void setSaveLocation(File saveLocation) throws IOException {
+		profilesLocation = (new File(controller.getSaveLocation(), "Profiles"));
+		Files.createDirectories(profilesLocation.toPath());
+	}
 
-    @Override
-    public void finishLoad() {
-        if (size() > 1) {
-            setSelection(first());
-        } else {
-            setSelection(getDefaultProfile());
-        }
-    }
+	@Override
+	public void finishLoad() {
+		if (size() > 1) {
+			setSelection(first());
+		} else {
+			setSelection(getDefaultProfile());
+		}
+	}
 
-    @Override
-    public void load() {
-        if (getSaveLocation() != null) {
-            try {
-                log.warn("Loading profiles");
-                KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();
-                Files.newDirectoryStream(Paths.get(profilesLocation.toURI()), path -> path.toString().endsWith(".xml"))
-                        .forEach(inputFile -> xmlUtil.read(this, inputFile.toFile()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+	@Override
+	public void load() {
+		if (getSaveLocation() != null) {
+			try {
+				log.warn("Loading profiles");
+				KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();
+				Files.newDirectoryStream(Paths.get(profilesLocation.toURI()), path -> path.toString().endsWith(".xml"))
+						.forEach(inputFile -> xmlUtil.read(this, inputFile.toFile()));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
-    @Override
-    public void reset() {
-        add(defaultProfile);
-    }
+	@Override
+	public void reset() {
+		add(defaultProfile);
+	}
 }

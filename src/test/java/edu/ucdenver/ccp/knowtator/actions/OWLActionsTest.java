@@ -26,8 +26,6 @@ package edu.ucdenver.ccp.knowtator.actions;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
-import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
@@ -42,18 +40,18 @@ public class OWLActionsTest {
     private static final KnowtatorController controller = TestingHelpers.getLoadedController();
 
     @Test
-    public void reassignOWLClassAction() throws ActionUnperformableException, NoSelectionException, NoSelectedOWLClassException {
-        TextSource textSource = controller.getTextSourceCollection().getSelection();
+    public void reassignOWLClassAction() throws ActionUnperformableException {
+        TextSource textSource = controller.getTextSourceCollection().getSelection().get();
         ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
         textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
 
-        OWLClass owlClass = controller.getOWLModel().getOWLClassByID("Pizza");
-        assert controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getOwlClass() == owlClass;
+        OWLClass owlClass = controller.getOWLModel().getOWLClassByID("Pizza").get();
+        assert controller.getTextSourceCollection().getSelection().get().getConceptAnnotationCollection().getSelection().get().getOwlClass().get() == owlClass;
 
-        controller.registerAction(new OWLActions.ReassignOWLClassAction(controller));
+        controller.registerAction(new OWLActions.ReassignOWLClassAction(controller, conceptAnnotation));
         assert conceptAnnotation.getOwlClass().equals(controller.getOWLModel().getSelectedOWLClass());
         controller.undo();
-        assert conceptAnnotation.getOwlClass() == owlClass;
+        assert conceptAnnotation.getOwlClass().get() == owlClass;
         controller.redo();
         assert conceptAnnotation.getOwlClass().equals(controller.getOWLModel().getSelectedOWLClass());
         controller.undo();
@@ -61,17 +59,17 @@ public class OWLActionsTest {
     }
 
     @Test
-    public void changeColorAction() throws NoSelectionException, ActionUnperformableException, NoSelectedOWLClassException {
-        TextSource textSource = controller.getTextSourceCollection().getSelection();
+    public void changeColorAction() throws ActionUnperformableException {
+        TextSource textSource = controller.getTextSourceCollection().getSelection().get();
         ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
         textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
-        Profile profile = controller.getProfileCollection().getSelection();
+        Profile profile = controller.getProfileCollection().getSelection().get();
         assert profile.getColor(conceptAnnotation).equals(Color.RED);
 
         Set<Object> owlClassSet = new HashSet<>();
-        owlClassSet.add(controller.getOWLModel().getSelectedOWLClass());
+        owlClassSet.add(controller.getOWLModel().getSelectedOWLClass().get());
 
-        controller.registerAction(new OWLActions.ReassignOWLClassAction(controller));
+        controller.registerAction(new OWLActions.ReassignOWLClassAction(controller, conceptAnnotation));
         assert profile.getColor(conceptAnnotation).equals(Color.CYAN);
 
         controller.registerAction(new OWLActions.ColorChangeAction(profile, owlClassSet, Color.GREEN));

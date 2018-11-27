@@ -26,7 +26,6 @@ package edu.ucdenver.ccp.knowtator.actions;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
@@ -56,20 +55,20 @@ public class SpanActionsTest {
     }
 
     @Test
-    public void modifySpanAction() throws NoSelectionException {
-        TextSource textSource = controller.getTextSourceCollection().getSelection();
+    public void modifySpanAction() {
+	    TextSource textSource = controller.getTextSourceCollection().getSelection().get();
         ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
         textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
         Span span = conceptAnnotation.getSpanCollection().first();
         conceptAnnotation.getSpanCollection().setSelection(span);
 
-        checkSpanModifications(new SpanActions.ModifySpanAction(controller, SpanActions.START, SpanActions.SHRINK),
+	    checkSpanModifications(new SpanActions.ModifySpanAction(SpanActions.START, SpanActions.SHRINK, span),
                 span, initialStart + 1, initialEnd);
-        checkSpanModifications(new SpanActions.ModifySpanAction(controller, SpanActions.START, SpanActions.GROW),
+	    checkSpanModifications(new SpanActions.ModifySpanAction(SpanActions.START, SpanActions.GROW, span),
                 span, max(initialStart - 1, 0), initialEnd);
-        checkSpanModifications(new SpanActions.ModifySpanAction(controller, SpanActions.END, SpanActions.SHRINK),
+	    checkSpanModifications(new SpanActions.ModifySpanAction(SpanActions.END, SpanActions.SHRINK, span),
                 span, initialStart, initialEnd - 1);
-        checkSpanModifications(new SpanActions.ModifySpanAction(controller, SpanActions.END, SpanActions.GROW),
+	    checkSpanModifications(new SpanActions.ModifySpanAction(SpanActions.END, SpanActions.GROW, span),
                 span, initialStart, min(initialEnd + 1, textSource.getContent().length()));
     }
 

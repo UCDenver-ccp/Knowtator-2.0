@@ -34,8 +34,6 @@ import edu.ucdenver.ccp.knowtator.view.list.ProfileList;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import static edu.ucdenver.ccp.knowtator.actions.CollectionActionType.ADD;
@@ -60,17 +58,11 @@ class ProfilePane extends MenuPane {
         $$$setupUI$$$();
 
         addProfileButton.addActionListener(e -> {
-            List<ActionParameters> actionParameters = new ArrayList<>();
-            actionParameters.add(new ActionParameters(ADD, PROFILE));
-
-            KnowtatorCollectionActions.pickAction(actionParameters, view, profileNameField.getText(), null);
+            KnowtatorCollectionActions.pickAction(view, profileNameField.getText(), null, new ActionParameters(ADD, PROFILE));
             profileNameField.setText("");
         });
         removeProfileButton.addActionListener(e -> {
-            List<ActionParameters> actionParameters = new ArrayList<>();
-            actionParameters.add(new ActionParameters(REMOVE, PROFILE));
-
-            KnowtatorCollectionActions.pickAction(actionParameters, view, profileNameField.getText(), null);
+            KnowtatorCollectionActions.pickAction(view, profileNameField.getText(), null, new ActionParameters(REMOVE, PROFILE));
             profileNameField.setText("");
         });
     }

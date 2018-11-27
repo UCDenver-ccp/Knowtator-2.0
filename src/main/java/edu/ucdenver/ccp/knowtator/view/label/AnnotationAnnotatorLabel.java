@@ -24,22 +24,18 @@
 
 package edu.ucdenver.ccp.knowtator.view.label;
 
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
-public class AnnotationAnnotatorLabel extends KnowtatorLabel implements KnowtatorComponent {
+public class AnnotationAnnotatorLabel extends AbstractConceptAnnotationLabel implements KnowtatorComponent {
 
     public AnnotationAnnotatorLabel(KnowtatorView view) {
     	super(view);
 	}
 
 	@Override
-	protected void react() {
-		try {
-			setText(view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getAnnotator().getId());
-		} catch (NoSelectionException e) {
-			setText("");
-		}
+	public void displayConceptAnnotation(ConceptAnnotation conceptAnnotation) {
+		setText(conceptAnnotation.getAnnotator().getId());
 	}
 }

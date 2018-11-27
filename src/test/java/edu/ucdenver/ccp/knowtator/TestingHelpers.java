@@ -26,7 +26,6 @@ package edu.ucdenver.ccp.knowtator;
 
 import com.google.common.io.Files;
 import edu.ucdenver.ccp.knowtator.actions.AbstractKnowtatorAction;
-import edu.ucdenver.ccp.knowtator.model.OWLModel;
 import org.apache.commons.io.FileUtils;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
@@ -131,9 +130,9 @@ public class TestingHelpers {
                                      int expectedProfiles,
                                      int expectedHighlighters,
                                      int expectedAnnotationNodes,
-                                     int expectedTriples) throws OWLModel.OWLOntologyManagerNotSetException {
+                                     int expectedTriples) {
         TestingHelpers.checkDefaultCollectionValues(controller);
-        controller.getOWLModel().getOwlOntologyManager().applyChanges(changes);
+        controller.getOWLModel().getOwlOntologyManager().get().applyChanges(changes);
         TestingHelpers.countCollections(controller,
                 expectedTextSources,
                 expectedConceptAnnotations,

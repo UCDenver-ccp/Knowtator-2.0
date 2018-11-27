@@ -42,8 +42,8 @@ public class AnnotationNotes extends JTextArea implements KnowtatorComponent {
 	private ConceptAnnotation conceptAnnotation;
 	private final KnowtatorController controller;
 
-	AnnotationNotes(KnowtatorView view) {
-		this.controller = view.getController();
+	AnnotationNotes() {
+		this.controller = KnowtatorView.CONTROLLER;
 		addKeyListener(new KeyListener() {
 			@Override
 			public void keyTyped(KeyEvent e) {
@@ -182,12 +182,12 @@ public class AnnotationNotes extends JTextArea implements KnowtatorComponent {
 
 			@Override
 			protected void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
-				if (event.getNew() == null) {
-					setEnabled(false);
-				} else {
+				if (event.getNew().isPresent()) {
 					setEnabled(true);
-					conceptAnnotation = event.getNew();
+					conceptAnnotation = event.getNew().get();
 					setText();
+				} else {
+					setEnabled(false);
 				}
 			}
 

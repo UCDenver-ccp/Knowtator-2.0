@@ -24,24 +24,22 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 public class SpanList extends KnowtatorList<Span> {
 
 
-    public SpanList(KnowtatorView view) {
-        super(view);
-    }
+	public SpanList(KnowtatorView view) {
+		super();
+	}
 
-    @Override
-    protected void react() {
-        try {
-            setCollection(view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getSpanCollection());
-            setSelected();
-        } catch (NoSelectionException ignored) {
+	@Override
+	protected void react() {
+		KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+				.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
+						.ifPresent(conceptAnnotation -> setCollection(conceptAnnotation.getSpanCollection())));
 
-        }
-    }
+		setSelected();
+	}
 }

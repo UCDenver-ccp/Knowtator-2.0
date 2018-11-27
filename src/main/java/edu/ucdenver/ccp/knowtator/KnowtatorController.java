@@ -35,6 +35,7 @@ import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollection;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLWorkspace;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -202,14 +203,12 @@ public class KnowtatorController extends ProjectManager implements KnowtatorObje
 	 *
 	 * @param action An executable and undoable action
 	 */
-	public void registerAction(AbstractKnowtatorAction action) {
-		if (action != null) {
-			try {
-				action.execute();
-				addEdit(action.getEdit());
-			} catch (ActionUnperformableException e) {
-				e.printStackTrace();
-			}
+	public void registerAction(@Nonnull AbstractKnowtatorAction action) {
+		try {
+			action.execute();
+			addEdit(action.getEdit());
+		} catch (ActionUnperformableException e) {
+			e.printStackTrace();
 		}
 	}
 

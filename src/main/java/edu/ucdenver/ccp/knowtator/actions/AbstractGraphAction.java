@@ -25,8 +25,6 @@
 package edu.ucdenver.ccp.knowtator.actions;
 
 import com.mxgraph.util.mxEvent;
-import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 
 import javax.swing.undo.UndoableEdit;
@@ -36,9 +34,9 @@ public abstract class AbstractGraphAction extends AbstractKnowtatorAction {
 	final GraphSpace graphSpace;
 	private final KnowtatorEdit edit;
 
-	AbstractGraphAction(KnowtatorController controller, String presentationName) throws NoSelectionException {
+	AbstractGraphAction(String presentationName, GraphSpace graphSpace) {
 		super(presentationName);
-		graphSpace = controller.getTextSourceCollection().getSelection().getGraphSpaceCollection().getSelection();
+		this.graphSpace = graphSpace;
 		edit = new KnowtatorEdit(getPresentationName()) {
 
 		};
@@ -48,14 +46,14 @@ public abstract class AbstractGraphAction extends AbstractKnowtatorAction {
 		graphSpace.getModel().addListener(mxEvent.UNDO, edit);
 	}
 
-	protected abstract void perform();
+	protected abstract void perform() throws ActionUnperformableException;
 
 	private void cleanUp() {
 		graphSpace.getModel().removeListener(edit, mxEvent.UNDO);
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws ActionUnperformableException {
 		prepare();
 		perform();
 		cleanUp();

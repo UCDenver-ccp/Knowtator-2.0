@@ -26,8 +26,6 @@ package edu.ucdenver.ccp.knowtator.actions;
 
 import com.mxgraph.util.mxEvent;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
-import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
@@ -35,7 +33,6 @@ import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.commons.io.FileUtils;
-import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.swing.*;
 import java.io.File;
@@ -57,22 +54,22 @@ public class KnowtatorCollectionActions {
 
 			switch (collectionType) {
 				case ANNOTATION:
-					view.getController().getTextSourceCollection().getSelection()
+					KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
 							.ifPresent(textSource -> actions.add(new ConceptAnnotationAction(
 									parameters.getActionType(),
-									view.getController(),
+									KnowtatorView.CONTROLLER,
 									textSource)));
 					break;
 				case SPAN:
-					view.getController().getTextSourceCollection().getSelection()
+					KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
 							.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
-									.ifPresent(conceptAnnotation -> actions.add(new SpanAction(actionType, view.getController(), conceptAnnotation))));
+									.ifPresent(conceptAnnotation -> actions.add(new SpanAction(actionType, KnowtatorView.CONTROLLER, conceptAnnotation))));
 					break;
 				case PROFILE:
-					actions.add(new ProfileAction(actionType, view.getController(), id));
+					actions.add(new ProfileAction(actionType, KnowtatorView.CONTROLLER, id));
 					break;
 				case DOCUMENT:
-					actions.add(new TextSourceAction(actionType, view.getController(), file));
+					actions.add(new TextSourceAction(actionType, KnowtatorView.CONTROLLER, file));
 			}
 
 
@@ -94,14 +91,13 @@ public class KnowtatorCollectionActions {
 				action = actions.get(response);
 			}
 
-			view.getController().registerAction(action);
+			KnowtatorView.CONTROLLER.registerAction(action);
 		}
 	}
 
 	public static class ConceptAnnotationAction extends AbstractKnowtatorCollectionAction<ConceptAnnotation> {
 
 		private final KnowtatorController controller;
-		private ConceptAnnotation newConceptAnnotation;
 		private TextSource textSource;
 
 		ConceptAnnotationAction(CollectionActionType actionType, KnowtatorController controller, TextSource textSource) {
@@ -129,19 +125,17 @@ public class KnowtatorCollectionActions {
 		}
 
 		@Override
-		void prepareAdd() throws ActionUnperformableException {
-			try {
-				OWLClass owlClass = controller.getOWLModel().getSelectedOWLClass();
-				Profile annotator = controller.getProfileCollection().getSelection();
-				String owlClassID = controller.getOWLModel().getOWLEntityRendering(owlClass);
+		void prepareAdd() {
 
+			controller.getProfileCollection().getSelection()
+					.ifPresent(annotator -> controller.getOWLModel().getSelectedOWLClass()
+							.ifPresent(owlClass -> {
+								String owlClassID = controller.getOWLModel().getOWLEntityRendering(owlClass).orElse(owlClass.toString());
+								ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, textSource, null, owlClass, owlClassID, null, annotator, "identity", "");
+								newConceptAnnotation.getSpanCollection().add(new Span(controller, textSource, newConceptAnnotation, null, controller.getSelectionModel().getStart(), controller.getSelectionModel().getEnd()));
+								setObject(newConceptAnnotation);
+							}));
 
-				newConceptAnnotation = new ConceptAnnotation(controller, textSource, null, owlClass, owlClassID, null, annotator, "identity", "");
-				newConceptAnnotation.getSpanCollection().add(new Span(controller, textSource, newConceptAnnotation, null, controller.getSelectionModel().getStart(), controller.getSelectionModel().getEnd()));
-				setObject(newConceptAnnotation);
-			} catch (NoSelectedOWLClassException e) {
-				throw new ActionUnperformableException();
-			}
 		}
 
 	}
@@ -171,7 +165,9 @@ public class KnowtatorCollectionActions {
 		void prepareRemove() throws ActionUnperformableException {
 			// If the concept annotation only has one, remove the annotation instead
 			if (conceptAnnotation.getSpanCollection().size() == 1) {
-				AbstractKnowtatorAction action = new ConceptAnnotationAction(REMOVE, controller, conceptAnnotation.getTextSource());
+				setObject(null);
+				ConceptAnnotationAction action = new ConceptAnnotationAction(REMOVE, controller, conceptAnnotation.getTextSource());
+				action.setObject(conceptAnnotation);
 				controller.registerAction(action);
 				edit.addKnowtatorEdit(action.getEdit());
 			} else {
@@ -180,8 +176,13 @@ public class KnowtatorCollectionActions {
 		}
 
 		@Override
+		void cleanUpRemove() {
+
+		}
+
+		@Override
 		public void execute() throws ActionUnperformableException {
-			if (this.actionType.equals(REMOVE) && conceptAnnotation.getSpanCollection().size() == 1) {
+			if (actionType == REMOVE && conceptAnnotation.getSpanCollection().size() == 1) {
 				try {
 					super.execute();
 				} catch (ActionUnperformableException ignored) {
@@ -190,11 +191,6 @@ public class KnowtatorCollectionActions {
 			} else {
 				super.execute();
 			}
-		}
-
-		@Override
-		void cleanUpRemove() {
-
 		}
 
 		@Override
@@ -233,9 +229,10 @@ public class KnowtatorCollectionActions {
 				Object[] array = textSource.getConceptAnnotationCollection().getCollection().toArray();
 				for (Object o : array) {
 					ConceptAnnotation conceptAnnotation = (ConceptAnnotation) o;
-					if (conceptAnnotation.getAnnotator().equals(object)) {
-						AbstractKnowtatorAction action = new ConceptAnnotationAction(REMOVE, controller, conceptAnnotation.getTextSource());
-						conceptAnnotation.getTextSource().getConceptAnnotationCollection().setSelection(conceptAnnotation);
+
+					if (object.map(object -> conceptAnnotation.getAnnotator().equals(object)).orElse(false)) {
+						ConceptAnnotationAction action = new ConceptAnnotationAction(REMOVE, controller, conceptAnnotation.getTextSource());
+						action.setObject(conceptAnnotation);
 						action.execute();
 						edit.addKnowtatorEdit(action.getEdit());
 					}
@@ -286,21 +283,19 @@ public class KnowtatorCollectionActions {
 	public static class GraphSpaceAction extends AbstractKnowtatorCollectionAction<GraphSpace> {
 		private final KnowtatorController controller;
 		private final String graphName;
+		private final TextSource textSource;
 
-		public GraphSpaceAction(CollectionActionType actionType, KnowtatorController controller, String graphName) throws NoSelectionException {
-			super(actionType, "graph space", controller.getTextSourceCollection().getSelection().getGraphSpaceCollection());
+		public GraphSpaceAction(CollectionActionType actionType, KnowtatorController controller, String graphName, TextSource textSource) {
+			super(actionType, "graph space", textSource.getGraphSpaceCollection());
 			this.controller = controller;
 			this.graphName = graphName;
+			this.textSource = textSource;
 		}
 
 		@Override
-		void prepareAdd() throws ActionUnperformableException {
-			try {
-				GraphSpace newGraphSpace = new GraphSpace(controller, controller.getTextSourceCollection().getSelection(), graphName);
-				setObject(newGraphSpace);
-			} catch (NoSelectionException e) {
-				throw new ActionUnperformableException();
-			}
+		void prepareAdd() {
+			GraphSpace newGraphSpace = new GraphSpace(controller, textSource, graphName);
+			setObject(newGraphSpace);
 		}
 
 		@Override

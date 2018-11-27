@@ -29,9 +29,7 @@ import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.BaseKnowtatorManager;
-import edu.ucdenver.ccp.knowtator.model.collection.CantRemoveException;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -189,13 +187,10 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 	}
 
 	@Override
-	public void remove(TextSource textSource) throws CantRemoveException {
-		try {
-			if (textSource == getSelection()) {
-				selectPrevious();
-			}
-		} catch (NoSelectionException ignored) {
-		}
+	public void remove(TextSource textSource) {
+		getSelection()
+				.filter(textSource1 -> textSource1.equals(textSource))
+				.ifPresent(textSource1 -> selectPrevious());
 		super.remove(textSource);
 	}
 

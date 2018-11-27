@@ -77,7 +77,7 @@ class KnowtatorStandalone extends JFrame {
 		setContentPane(view);
 
 		if (debug) {
-			view.getController().setDebug();
+			KnowtatorView.CONTROLLER.setDebug();
 			try {
 				// Use the last project opened
 				File projectFile = new File(KnowtatorView.PREFERENCES.get("Last Project", null));

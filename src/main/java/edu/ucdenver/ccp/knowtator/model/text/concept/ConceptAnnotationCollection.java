@@ -30,10 +30,7 @@ import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.FilterModel;
 import edu.ucdenver.ccp.knowtator.model.FilterModelListener;
-import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
-import edu.ucdenver.ccp.knowtator.model.collection.CantRemoveException;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
@@ -88,7 +85,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 	REMOVERS
 	 */
 	@Override
-	public void remove(ConceptAnnotation conceptAnnotationToRemove) throws CantRemoveException {
+	public void remove(ConceptAnnotation conceptAnnotationToRemove) {
 		for (GraphSpace graphSpace : textSource.getGraphSpaceCollection()) {
 			Object[] cells = graphSpace.getVerticesForAnnotation(conceptAnnotationToRemove).toArray();
 			graphSpace.removeCells(cells);
@@ -123,21 +120,18 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 	public Stream<ConceptAnnotation> stream() {
 		boolean filterByOWLClass = controller.getFilterModel().isFilter(FilterModel.OWLCLASS);
 		boolean filterByProfile = controller.getFilterModel().isFilter(FilterModel.PROFILE);
-		Profile activeProfile = controller.getProfileCollection().getSelection();
+		Optional<Profile> activeProfile = controller.getProfileCollection().getSelection();
 		Set<OWLClass> activeOWLClassDescendants = new HashSet<>();
 
 		if (filterByOWLClass) {
-			try {
-				OWLClass owlClass = controller.getOWLModel().getSelectedOWLClass();
+			controller.getOWLModel().getSelectedOWLClass().ifPresent(owlClass -> {
 				activeOWLClassDescendants.add(owlClass);
 				activeOWLClassDescendants.addAll(controller.getOWLModel().getDescendants(owlClass));
-			} catch (NoSelectedOWLClassException ignored) {
-
-			}
+			});
 		}
 		return super.stream()
-				.filter(conceptAnnotation -> !filterByOWLClass || activeOWLClassDescendants.contains(conceptAnnotation.getOwlClass()))
-				.filter(conceptAnnotation -> !filterByProfile || conceptAnnotation.getAnnotator().equals(activeProfile));
+				.filter(conceptAnnotation -> !filterByOWLClass || conceptAnnotation.getOwlClass().map(activeOWLClassDescendants::contains).orElse(false))
+				.filter(conceptAnnotation -> !filterByProfile || activeProfile.map(activeProfile1 -> conceptAnnotation.getAnnotator().equals(activeProfile1)).orElse(false));
 	}
 
 	@Override
@@ -174,17 +168,22 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 //                });
 //    }
 
-	public void getNextSpan() throws NoSelectionException {
-		Span nextSpan = getSpans(null).getNext(getSelection().getSpanCollection().getSelection());
-		setSelection(nextSpan.getConceptAnnotation());
-		nextSpan.getConceptAnnotation().getSpanCollection().setSelection(nextSpan);
+	public void getNextSpan() {
+		getSelection().ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection().getSelection()
+				.map(span -> getSpans(null).getNext(span))
+				.ifPresent(nextSpan -> {
+					setSelection(nextSpan.getConceptAnnotation());
+					nextSpan.getConceptAnnotation().getSpanCollection().setSelection(nextSpan);
+				}));
 	}
 
-	public void getPreviousSpan() throws NoSelectionException {
-		Span previousSpan = getSpans(null).getPrevious(getSelection().getSpanCollection().getSelection());
-		setSelection(previousSpan.getConceptAnnotation());
-		previousSpan.getConceptAnnotation().getSpanCollection().setSelection(previousSpan);
-
+	public void getPreviousSpan() {
+		getSelection().ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection().getSelection()
+				.map(span -> getSpans(null).getPrevious(span))
+				.ifPresent(nextSpan -> {
+					setSelection(nextSpan.getConceptAnnotation());
+					nextSpan.getConceptAnnotation().getSpanCollection().setSelection(nextSpan);
+				}));
 	}
 
     /*
@@ -193,16 +192,19 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
 	public void setSelectedAnnotation(Span newSpan) {
 
-		try {
-			if (newSpan == null) {
-				setSelection(null);
-			} else if (getSelection() != newSpan.getConceptAnnotation()) {
-				setSelection(newSpan.getConceptAnnotation());
-				newSpan.getConceptAnnotation().getSpanCollection().setSelection(newSpan);
-			}
-		} catch (NoSelectionException e) {
-			setSelection(newSpan.getConceptAnnotation());
-			newSpan.getConceptAnnotation().getSpanCollection().setSelection(newSpan);
+		Optional<Span> newSpanOptional = Optional.ofNullable(newSpan);
+		if (newSpanOptional.isPresent()) {
+			newSpanOptional.map(Span::getConceptAnnotation)
+					.filter(conceptAnnotation -> getSelection()
+							.map(conceptAnnotation1 -> !conceptAnnotation1.equals(conceptAnnotation))
+							.orElseGet(() -> {
+								setSelection(conceptAnnotation);
+								conceptAnnotation.getSpanCollection().setSelection(newSpan);
+								return false;
+							}))
+					.ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection().setSelection(newSpan));
+		} else {
+			setSelection(null);
 		}
 	}
 
@@ -212,26 +214,33 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
 	@Override
 	public void setSelection(ConceptAnnotation selection) {
-		try {
-			if (getSelection() != selection) {
-				getSelection().getSpanCollection().setSelection(null);
+		Optional<ConceptAnnotation> conceptAnnotationOptional = Optional.ofNullable(selection);
+		if (getSelection().isPresent()) {
+			getSelection()
+					.filter(conceptAnnotation -> conceptAnnotation != selection)
+					.ifPresent(conceptAnnotation -> {
+						conceptAnnotation.getSpanCollection().setSelection(null);
+						super.setSelection(selection);
+
+					});
+		} else {
+			if (conceptAnnotationOptional.isPresent()) {
 				super.setSelection(selection);
 			}
-		} catch (NoSelectionException e) {
-			super.setSelection(selection);
-
 		}
+
 	}
 
 	private void setOWLClassForAnnotations() {
 		Map<String, List<ConceptAnnotation>> unmatchedAnnotations = new HashMap<>();
 		for (ConceptAnnotation conceptAnnotation : this) {
-			OWLClass owlClass = controller.getOWLModel().getOWLClassByID(conceptAnnotation.getOwlClassID());
-			if (owlClass == null) {
+
+			Optional<OWLClass> owlClass = controller.getOWLModel().getOWLClassByID(conceptAnnotation.getOwlClassID());
+			if (owlClass.isPresent()) {
+				conceptAnnotation.setOwlClass(owlClass.get());
+			} else {
 				List<ConceptAnnotation> conceptAnnotationList = unmatchedAnnotations.computeIfAbsent(conceptAnnotation.getOwlClassID(), k -> new ArrayList<>());
 				conceptAnnotationList.add(conceptAnnotation);
-			} else {
-				conceptAnnotation.setOwlClass(owlClass);
 			}
 		}
 		if (!unmatchedAnnotations.isEmpty()) {
@@ -378,11 +387,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
 			// No need to keep annotations with no allSpanCollection
 			if (newConceptAnnotation.getSpanCollection().size() == 0) {
-				try {
-					remove(newConceptAnnotation);
-				} catch (CantRemoveException e) {
-					e.printStackTrace();
-				}
+				remove(newConceptAnnotation);
 			} else {
 				for (Node slotMentionNode :
 						KnowtatorXMLUtil.asList(
@@ -426,8 +431,8 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 								source,
 								target,
 								null,
-								controller.getProfileCollection().getSelection(),
-								null,
+								controller.getProfileCollection().getDefaultProfile(),
+								Optional.empty(),
 								propertyID,
 								"",
 								"",
@@ -509,10 +514,9 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 							annotationsToChangeOrRemove.clear();
 						} else if (axChg instanceof RemoveAxiom) {
 							axiom.accept(removedCollector);
-							forEach(conceptAnnotation -> {
-								if (conceptAnnotation.getOwlClass().equals(axiom.getEntity()))
-									annotationsToChangeOrRemove.add(conceptAnnotation);
-							});
+							forEach(conceptAnnotation -> conceptAnnotation.getOwlClass()
+									.filter(owlClass -> owlClass.equals(axiom.getEntity()))
+									.ifPresent(owlClass -> annotationsToChangeOrRemove.add(conceptAnnotation)));
 						}
 					}
 
@@ -528,34 +532,31 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 		}
 
 		annotationsToChangeOrRemove.forEach(conceptAnnotationToRemove -> {
-			try {
-				log.warn(String.format("Removing annotation %s", conceptAnnotationToRemove));
-				remove(conceptAnnotationToRemove);
-			} catch (CantRemoveException e) {
-				e.printStackTrace();
-			}
+			log.warn(String.format("Removing annotation %s", conceptAnnotationToRemove));
+			remove(conceptAnnotationToRemove);
 		});
 
 	}
 
 	@Override
 	public void profileFilterChanged(boolean filterValue) {
-		try {
-			if (filterValue && getSelection().getAnnotator() != controller.getProfileCollection().getSelection()) {
-				setSelection(null);
-			}
-		} catch (NoSelectionException ignored) {
-		}
+		getSelection()
+				.filter(conceptAnnotation -> filterValue)
+				.filter(conceptAnnotation -> controller.getProfileCollection().getSelection()
+						.map(profile -> !conceptAnnotation.getAnnotator().equals(profile)).orElse(false))
+				.ifPresent(conceptAnnotation -> setSelection(null));
 	}
 
 	@Override
 	public void owlClassFilterChanged(boolean filterValue) {
-		try {
-			if (filterValue && getSelection().getOwlClass() != controller.getOWLModel().getSelectedOWLClass()) {
-				setSelection(null);
-			}
-		} catch (NoSelectionException | NoSelectedOWLClassException ignored) {
-		}
+		getSelection()
+				.filter(conceptAnnotation -> filterValue)
+				.filter(conceptAnnotation -> conceptAnnotation.getOwlClass()
+						.map(owlClass -> controller.getOWLModel().getSelectedOWLClass()
+								.map(owlClass1 -> !owlClass1.equals(owlClass))
+								.orElse(false))
+						.orElse(false))
+				.ifPresent(conceptAnnotation -> setSelection(null));
 	}
 
 	@Override

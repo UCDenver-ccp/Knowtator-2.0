@@ -24,10 +24,12 @@
 
 package edu.ucdenver.ccp.knowtator.view.textpane;
 
-import edu.ucdenver.ccp.knowtator.actions.*;
+import edu.ucdenver.ccp.knowtator.actions.ActionParameters;
+import edu.ucdenver.ccp.knowtator.actions.ActionUnperformableException;
+import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionActions;
+import edu.ucdenver.ccp.knowtator.actions.OWLActions;
 import edu.ucdenver.ccp.knowtator.model.FilterModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
@@ -40,9 +42,6 @@ import org.apache.log4j.Logger;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -73,7 +72,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 	 * @param caseSensitiveCheckBox     A check box specifying if the search should be case sensitive
 	 */
 	public KnowtatorTextPane(KnowtatorView view, JTextField searchTextField, JCheckBox onlyInAnnotationsCheckBox, JCheckBox regexCheckBox, JCheckBox caseSensitiveCheckBox) {
-		super(view.getController(), searchTextField);
+		super(KnowtatorView.CONTROLLER, searchTextField);
 		this.view = view;
 		this.onlyInAnnotationsCheckBox = onlyInAnnotationsCheckBox;
 		this.regexCheckBox = regexCheckBox;
@@ -99,26 +98,28 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 	protected void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
 		AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e);
+		textSourceOptional.ifPresent(textSource -> {
 
-		Set<Span> spansContainingLocation = textSource.getConceptAnnotationCollection().getSpans(press_offset).getCollection();
+			Set<Span> spansContainingLocation = textSource.getConceptAnnotationCollection().getSpans(press_offset).getCollection();
 
-		if (SwingUtilities.isRightMouseButton(e)) {
-			if (spansContainingLocation.size() == 1) {
-				Span span = spansContainingLocation.iterator().next();
-				textSource.getConceptAnnotationCollection().setSelectedAnnotation(span);
+			if (SwingUtilities.isRightMouseButton(e)) {
+				if (spansContainingLocation.size() == 1) {
+					Span span = spansContainingLocation.iterator().next();
+					textSource.getConceptAnnotationCollection().setSelectedAnnotation(span);
+				}
+				popupMenu.showPopUpMenu(release_offset);
+			} else if (press_offset == release_offset) {
+				if (spansContainingLocation.size() == 1) {
+					Span span = spansContainingLocation.iterator().next();
+					textSource.getConceptAnnotationCollection().setSelectedAnnotation(span);
+				} else if (spansContainingLocation.size() > 1) {
+					popupMenu.chooseAnnotation(spansContainingLocation);
+				}
+
+			} else {
+				setSelectionAtWordLimits(press_offset, release_offset);
 			}
-			popupMenu.showPopUpMenu(release_offset);
-		} else if (press_offset == release_offset) {
-			if (spansContainingLocation.size() == 1) {
-				Span span = spansContainingLocation.iterator().next();
-				textSource.getConceptAnnotationCollection().setSelectedAnnotation(span);
-			} else if (spansContainingLocation.size() > 1) {
-				popupMenu.chooseAnnotation(spansContainingLocation);
-			}
-
-		} else {
-			setSelectionAtWordLimits(press_offset, release_offset);
-		}
+		});
 
 	}
 
@@ -131,9 +132,9 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 	@Override
 	public void setupListeners() {
 		super.setupListeners();
-		view.getController().getProfileCollection().addColorListener(this);
-		view.getController().getProfileCollection().addCollectionListener(this);
-		view.getController().getFilterModel().addFilterModelListener(this);
+		KnowtatorView.CONTROLLER.getProfileCollection().addColorListener(this);
+		KnowtatorView.CONTROLLER.getProfileCollection().addCollectionListener(this);
+		KnowtatorView.CONTROLLER.getFilterModel().addFilterModelListener(this);
 	}
 
 
@@ -144,7 +145,8 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 	@Override
 	protected boolean keepSearchingCondition(Matcher matcher) {
-		return (!onlyInAnnotationsCheckBox.isSelected() || !(textSource.getConceptAnnotationCollection().getSpans(matcher.start()).size() == 0));
+		return textSourceOptional.map(textSource -> (!onlyInAnnotationsCheckBox.isSelected() || !(textSource.getConceptAnnotationCollection().getSpans(matcher.start()).size() == 0)))
+				.orElse(false);
 	}
 
 	@Override
@@ -204,47 +206,45 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 		private JMenuItem reassignOWLClassCommand() {
 			JMenuItem menuItem = new JMenuItem("Reassign OWL class");
-			menuItem.addActionListener(e -> {
-				try {
-					AbstractKnowtatorAction action = new OWLActions.ReassignOWLClassAction(view.getController());
-					view.getController().registerAction(action);
-				} catch (NoSelectionException | ActionUnperformableException e1) {
-					e1.printStackTrace();
-				}
-			});
+			menuItem.addActionListener(e -> KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+					.ifPresent(textSource1 -> textSource1.getConceptAnnotationCollection().getSelection()
+							.ifPresent(conceptAnnotation -> {
+								try {
+									KnowtatorView.CONTROLLER.registerAction(new OWLActions.ReassignOWLClassAction(KnowtatorView.CONTROLLER, conceptAnnotation));
+								} catch (ActionUnperformableException e1) {
+									e1.printStackTrace();
+								}
+							})));
 
 			return menuItem;
 		}
 
 		private JMenuItem addAnnotationCommand() {
 			JMenuItem menuItem = new JMenuItem("Add concept");
-			menuItem.addActionListener(e12 -> {
-				List<ActionParameters> actionParameters = new ArrayList<>();
-				actionParameters.add(new ActionParameters(ADD, ANNOTATION));
-				actionParameters.add(new ActionParameters(ADD, SPAN));
-				KnowtatorCollectionActions.pickAction(actionParameters, view, null, null);
-			});
+			menuItem.addActionListener(e12 -> KnowtatorCollectionActions.pickAction(view, null, null,
+					new ActionParameters(ADD, ANNOTATION),
+					new ActionParameters(ADD, SPAN)));
 
 			return menuItem;
 		}
 
 		private JMenuItem removeSpanFromAnnotationCommand(ConceptAnnotation conceptAnnotation) {
 			JMenuItem removeSpanFromSelectedAnnotation = new JMenuItem(String.format("Delete span from %s", conceptAnnotation.getOwlClass()));
-			removeSpanFromSelectedAnnotation.addActionListener(e5 -> KnowtatorCollectionActions.pickAction(Collections.singletonList(new ActionParameters(REMOVE, SPAN)), view, null, null));
+			removeSpanFromSelectedAnnotation.addActionListener(e5 -> KnowtatorCollectionActions.pickAction(view, null, null, new ActionParameters(REMOVE, SPAN)));
 
 			return removeSpanFromSelectedAnnotation;
 		}
 
 		private JMenuItem selectAnnotationCommand(Span span) {
 			JMenuItem selectAnnotationMenuItem = new JMenuItem("Select " + span.getConceptAnnotation().getOwlClassID());
-			selectAnnotationMenuItem.addActionListener(e3 -> textSource.getConceptAnnotationCollection().setSelectedAnnotation(span));
+			selectAnnotationMenuItem.addActionListener(e3 -> textSourceOptional.ifPresent(textSource -> textSource.getConceptAnnotationCollection().setSelectedAnnotation(span)));
 
 			return selectAnnotationMenuItem;
 		}
 
 		private JMenuItem removeAnnotationCommand(ConceptAnnotation conceptAnnotation) {
 			JMenuItem removeAnnotationMenuItem = new JMenuItem("Delete " + conceptAnnotation.getOwlClass());
-			removeAnnotationMenuItem.addActionListener(e4 -> KnowtatorCollectionActions.pickAction(Collections.singletonList(new ActionParameters(REMOVE, ANNOTATION)), view, null, null));
+			removeAnnotationMenuItem.addActionListener(e4 -> KnowtatorCollectionActions.pickAction(view, null, null, new ActionParameters(REMOVE, ANNOTATION)));
 
 			return removeAnnotationMenuItem;
 		}
@@ -263,10 +263,10 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 				show(e.getComponent(), e.getX(), e.getY());
 			} else {
-				textSource.getConceptAnnotationCollection().getSelection()
+				textSourceOptional.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
 						.ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection().getSelection()
 								.filter(span -> span.getStart() <= release_offset && release_offset <= span.getEnd())
-								.ifPresent(span -> clickedInsideSpan(conceptAnnotation)));
+								.ifPresent(span -> clickedInsideSpan(conceptAnnotation))));
 			}
 		}
 

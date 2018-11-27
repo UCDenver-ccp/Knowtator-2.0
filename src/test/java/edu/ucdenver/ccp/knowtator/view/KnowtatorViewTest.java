@@ -27,7 +27,6 @@ package edu.ucdenver.ccp.knowtator.view;
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.actions.KnowtatorCollectionActionsTest;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -41,27 +40,27 @@ class KnowtatorViewTest {
 		KnowtatorController controller = TestingHelpers.getLoadedController();
 		TestingHelpers.checkDefaultCollectionValues(controller);
 		view.loadProject(controller.getProjectLocation(), null);
-		TestingHelpers.checkDefaultCollectionValues(view.getController());
+		TestingHelpers.checkDefaultCollectionValues(KnowtatorView.CONTROLLER);
 	}
 
 	@Test
-	void testActions() throws NoSelectionException, IOException {
+	void testActions() throws IOException {
 		KnowtatorController controller = TestingHelpers.getLoadedController();
 		TestingHelpers.checkDefaultCollectionValues(controller);
-		view.getController().setDebug();
+		KnowtatorView.CONTROLLER.setDebug();
 		view.loadProject(controller.getProjectLocation(), null);
-		TestingHelpers.checkDefaultCollectionValues(view.getController());
+		TestingHelpers.checkDefaultCollectionValues(KnowtatorView.CONTROLLER);
 		KnowtatorCollectionActionsTest test = new KnowtatorCollectionActionsTest();
-		test.setController(view.getController());
+		test.setController(KnowtatorView.CONTROLLER);
 		test.removeConceptAnnotationAction();
 		test.removeGraphSpaceAction();
 		test.removeProfileAction();
 		test.removeSpanAction();
-		for (int i = 0; i < view.getController().getTextSourceCollection().size(); i++) {
-			view.getController().getTextSourceCollection().selectNext();
+		for (int i = 0; i < KnowtatorView.CONTROLLER.getTextSourceCollection().size(); i++) {
+			KnowtatorView.CONTROLLER.getTextSourceCollection().selectNext();
 			view.getKnowtatorTextPane().refreshHighlights();
 		}
-		int defaultExpectedHighlighers = TestingHelpers.defaultExpectedHighlighters;
+		int defaultExpectedHighlighters = TestingHelpers.defaultExpectedHighlighters;
 		TestingHelpers.defaultExpectedHighlighters = TestingHelpers.defaultExpectedHighlighters + 2;
 		test.removeTextSourceAction();
 		test.addConceptAnnotationAction();
@@ -70,7 +69,7 @@ class KnowtatorViewTest {
 		test.addSpanAction();
 		test.addTextSourceAction();
 		view.loadProject(controller.getProjectLocation(), null);
-		TestingHelpers.defaultExpectedHighlighters = defaultExpectedHighlighers;
+		TestingHelpers.defaultExpectedHighlighters = defaultExpectedHighlighters;
 
 	}
 

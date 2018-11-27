@@ -24,53 +24,43 @@
 
 package edu.ucdenver.ccp.knowtator.view.label;
 
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.protege.editor.owl.model.event.EventType;
 import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
 
-public class AnnotationClassLabel extends KnowtatorLabel implements OWLModelManagerListener {
+public class AnnotationClassLabel extends AbstractConceptAnnotationLabel implements OWLModelManagerListener {
 
 
-    public AnnotationClassLabel(KnowtatorView view) {
-        super(view);
-    }
+	public AnnotationClassLabel(KnowtatorView view) {
+		super(view);
+	}
 
-    @Override
-    protected void react() {
-        try {
-            displayAnnotation(view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection());
-        } catch (NoSelectionException e) {
-            setText("");
-        }
-    }
+	@Override
+	public void displayConceptAnnotation(ConceptAnnotation conceptAnnotation) {
+		if (conceptAnnotation.getOwlClass().isPresent()) {
+			conceptAnnotation.getOwlClass()
+					.ifPresent(owlClass -> KnowtatorView.CONTROLLER.getOWLModel().getOWLEntityRendering(owlClass)
+							.ifPresent(this::setText));
 
+		} else {
+			setText(String.format("ID: %s Label: %s",
+					conceptAnnotation.getOwlClassID(),
+					conceptAnnotation.getOwlClassLabel()));
+		}
+	}
 
-    private void displayAnnotation(ConceptAnnotation conceptAnnotation) {
-        String owlClassRendering = view.getController().getOWLModel().getOWLEntityRendering(conceptAnnotation.getOwlClass());
-        setText(owlClassRendering == null ?
-                String.format("ID: %s Label: %s",
-                        conceptAnnotation.getOwlClassID(),
-                        conceptAnnotation.getOwlClassLabel()) :
-                owlClassRendering);
-    }
+	@Override
+	public void handleChange(OWLModelManagerChangeEvent event) {
+		if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
+			react();
+		}
+	}
 
-    @Override
-    public void handleChange(OWLModelManagerChangeEvent event) {
-        if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
-            try {
-                displayAnnotation(view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection());
-            } catch (NoSelectionException e) {
-                setText("");
-            }
-        }
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        view.getController().getOWLModel().removeOWLModelManagerListener(this);
-    }
+	@Override
+	public void dispose() {
+		super.dispose();
+		KnowtatorView.CONTROLLER.getOWLModel().removeOWLModelManagerListener(this);
+	}
 }

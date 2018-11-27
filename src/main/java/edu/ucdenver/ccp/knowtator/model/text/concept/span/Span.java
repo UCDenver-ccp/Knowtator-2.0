@@ -183,7 +183,7 @@ public class Span extends AbstractKnowtatorTextBoundDataObject<Span> implements 
   public void modify(List<Integer> parameters) {
     int startModification = parameters.get(0);
     int endModification = parameters.get(1);
-    int limit = parameters.get(2);
+    int limit = textSource.getContent().length();
 
     start += startModification;
     if (end < start) {

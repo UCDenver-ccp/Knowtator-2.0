@@ -27,10 +27,8 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLClassException;
 import edu.ucdenver.ccp.knowtator.model.OWLModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.list.AnnotationList;
@@ -71,22 +69,19 @@ public class ConsistencyPane extends MenuPane {
 	}
 
 	private void refresh() {
-		try {
-			activeOWLClassDescendants = new HashSet<>();
-			OWLModel owlModel = view.getController().getOWLModel();
-			OWLClass owlClass = owlModel.getSelectedOWLClass();
+		activeOWLClassDescendants = new HashSet<>();
+		OWLModel owlModel = KnowtatorView.CONTROLLER.getOWLModel();
+		owlModel.getSelectedOWLClass().ifPresent(owlClass -> {
 			activeOWLClassDescendants.add(owlClass);
 			if (includeDescendantsCheckBox.isSelected()) {
 				activeOWLClassDescendants.addAll(owlModel.getDescendants(owlClass));
 			}
-			owlClassLabel.setText(owlModel.getOWLEntityRendering(owlClass));
-		} catch (NoSelectedOWLClassException e) {
-			e.printStackTrace();
-		}
-		try {
-			spanLabel.setText(view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection().getSpannedText());
-		} catch (NoSelectionException ignored) {
-		}
+			owlModel.getOWLEntityRendering(owlClass).ifPresent(label -> owlClassLabel.setText(label));
+		});
+
+		KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+				.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
+						.ifPresent(conceptAnnotation -> spanLabel.setText(conceptAnnotation.getSpannedText())));
 		annotationsForClassList.react();
 		annotationsForSpannedTextList.react();
 	}
@@ -270,7 +265,9 @@ public class ConsistencyPane extends MenuPane {
 				} else {
 					setEnabled(true);
 					collection.stream()
-							.filter(conceptAnnotation -> consistencyPane.activeOWLClassDescendants.contains(conceptAnnotation.getOwlClass()))
+							.filter(conceptAnnotation -> conceptAnnotation.getOwlClass()
+									.map(owlClass -> consistencyPane.activeOWLClassDescendants.contains(owlClass))
+									.orElse(false))
 							.forEach(k -> ((DefaultListModel<ConceptAnnotation>) getModel()).addElement(k));
 				}
 			}

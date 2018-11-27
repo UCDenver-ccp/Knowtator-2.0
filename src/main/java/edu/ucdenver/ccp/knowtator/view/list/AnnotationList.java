@@ -24,23 +24,19 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 public class AnnotationList extends KnowtatorList<ConceptAnnotation> {
 	protected AnnotationList(KnowtatorView view) {
-		super(view);
+		super();
 		setupListeners();
 	}
 
 	@Override
 	public void react() {
-		try {
-			setCollection(view.getController().getTextSourceCollection().getSelection().getConceptAnnotationCollection());
-			setSelected();
-		} catch (NoSelectionException ignored) {
-
-		}
+		KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection()
+				.ifPresent(textSource -> setCollection(textSource.getConceptAnnotationCollection()));
+		setSelected();
 	}
 }

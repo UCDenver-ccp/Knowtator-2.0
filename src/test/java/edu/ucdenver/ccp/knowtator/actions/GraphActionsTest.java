@@ -26,9 +26,8 @@ package edu.ucdenver.ccp.knowtator.actions;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
-import edu.ucdenver.ccp.knowtator.model.NoSelectedOWLPropertyException;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import org.junit.Test;
@@ -39,13 +38,13 @@ public class GraphActionsTest {
 	private static final KnowtatorController controller = TestingHelpers.getLoadedController();
 
 	@Test
-	public void removeSelectedAnnotationNode() throws NoSelectionException {
-		TextSource textSource = controller.getTextSourceCollection().getSelection();
+	public void removeSelectedAnnotationNode() {
+		TextSource textSource = controller.getTextSourceCollection().getSelection().get();
 		textSource.getGraphSpaceCollection().selectNext();
-		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection();
+		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection().get();
 		Object cell = graphSpace.getModel().getChildAt(graphSpace.getDefaultParent(), 0);
 		graphSpace.setSelectionCell(cell);
-		TestingHelpers.testKnowtatorAction(controller, new GraphActions.removeCellsAction(controller),
+		TestingHelpers.testKnowtatorAction(controller, new GraphActions.removeCellsAction(graphSpace),
 				TestingHelpers.defaultExpectedTextSources,
 				TestingHelpers.defaultExpectedConceptAnnotations,
 				TestingHelpers.defaultExpectedSpans,
@@ -57,13 +56,13 @@ public class GraphActionsTest {
 	}
 
 	@Test
-	public void removeSelectedTriple() throws NoSelectionException {
-		TextSource textSource = controller.getTextSourceCollection().getSelection();
+	public void removeSelectedTriple() {
+		TextSource textSource = controller.getTextSourceCollection().getSelection().get();
 		textSource.getGraphSpaceCollection().selectNext();
-		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection();
+		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection().get();
 		Object cell = graphSpace.getModel().getChildAt(graphSpace.getDefaultParent(), 2);
 		graphSpace.setSelectionCell(cell);
-		TestingHelpers.testKnowtatorAction(controller, new GraphActions.removeCellsAction(controller),
+		TestingHelpers.testKnowtatorAction(controller, new GraphActions.removeCellsAction(graphSpace),
 				TestingHelpers.defaultExpectedTextSources,
 				TestingHelpers.defaultExpectedConceptAnnotations,
 				TestingHelpers.defaultExpectedSpans,
@@ -75,11 +74,13 @@ public class GraphActionsTest {
 	}
 
 	@Test
-	public void addAnnotationNode() throws NoSelectionException {
-		TextSource textSource = controller.getTextSourceCollection().getSelection();
+	public void addAnnotationNode() {
+		TextSource textSource = controller.getTextSourceCollection().getSelection().get();
 		textSource.getGraphSpaceCollection().selectNext();
 		textSource.getConceptAnnotationCollection().selectNext();
-		TestingHelpers.testKnowtatorAction(controller, new GraphActions.AddAnnotationNodeAction(null, controller),
+		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection().get();
+		ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().getSelection().get();
+		TestingHelpers.testKnowtatorAction(controller, new GraphActions.AddAnnotationNodeAction(null, graphSpace, conceptAnnotation),
 				TestingHelpers.defaultExpectedTextSources,
 				TestingHelpers.defaultExpectedConceptAnnotations,
 				TestingHelpers.defaultExpectedSpans,
@@ -91,20 +92,21 @@ public class GraphActionsTest {
 	}
 
 	@Test
-	public void addTriple() throws NoSelectionException, NoSelectedOWLPropertyException {
-		TextSource textSource = controller.getTextSourceCollection().getSelection();
+	public void addTriple() {
+		TextSource textSource = controller.getTextSourceCollection().getSelection().get();
 		textSource.getGraphSpaceCollection().selectNext();
 		textSource.getConceptAnnotationCollection().selectNext();
-		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection();
+		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection().get();
 		AnnotationNode source = (AnnotationNode) graphSpace.getChildVertices(graphSpace.getDefaultParent())[0];
 		AnnotationNode target = (AnnotationNode) graphSpace.getChildVertices(graphSpace.getDefaultParent())[1];
-		OWLObjectProperty property = controller.getOWLModel().getSelectedOWLObjectProperty();
+		OWLObjectProperty property = controller.getOWLModel().getSelectedOWLObjectProperty().get();
 		TestingHelpers.testKnowtatorAction(controller, new GraphActions.AddTripleAction(controller,
 						source,
 						target,
 						property, null,
 						"some", null,
-						false, ""),
+						false, "",
+						graphSpace),
 				TestingHelpers.defaultExpectedTextSources,
 				TestingHelpers.defaultExpectedConceptAnnotations,
 				TestingHelpers.defaultExpectedSpans,
@@ -116,11 +118,12 @@ public class GraphActionsTest {
 	}
 
 	@Test
-	public void applyLayout() throws NoSelectionException {
+	public void applyLayout() {
 		//TODO: This test only makes sure that the layout application doesn't change to graph space model. It needs to check the positions
-		TextSource textSource = controller.getTextSourceCollection().getSelection();
+		TextSource textSource = controller.getTextSourceCollection().getSelection().get();
 		textSource.getGraphSpaceCollection().selectNext();
-		TestingHelpers.testKnowtatorAction(controller, new GraphActions.applyLayoutAction(null, controller),
+		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection().get();
+		TestingHelpers.testKnowtatorAction(controller, new GraphActions.applyLayoutAction(null, graphSpace),
 				TestingHelpers.defaultExpectedTextSources,
 				TestingHelpers.defaultExpectedConceptAnnotations,
 				TestingHelpers.defaultExpectedSpans,

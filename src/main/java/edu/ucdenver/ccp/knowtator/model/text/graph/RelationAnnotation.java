@@ -41,6 +41,7 @@ import org.w3c.dom.Element;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, KnowtatorTextBoundDataObjectInterface {
 	private final String quantifier;
@@ -61,7 +62,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 			String id,
 			mxCell source,
 			mxCell target,
-			OWLObjectProperty property,
+			Optional<OWLObjectProperty> property,
 			String propertyID,
 			Profile annotator,
 			String quantifier,
@@ -71,7 +72,6 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 			KnowtatorController controller, TextSource textSource, GraphSpace graphSpace) {
 		super(null, new mxGeometry(), null);
 
-		this.property = property;
 		this.propertyID = propertyID;
 		this.isNegated = isNegated;
 		this.motivation = motivation;
@@ -90,10 +90,10 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 		setTarget(target);
 		setValue(property);
 
-		if (property == null) {
-			setProperty(controller.getOWLModel().getOWLObjectPropertyByID(propertyID));
+		if (property.isPresent()) {
+			setProperty(property.get());
 		} else {
-			setProperty(property);
+			setProperty(controller.getOWLModel().getOWLObjectPropertyByID(propertyID).orElse(null));
 		}
 	}
 
@@ -136,11 +136,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 	}
 
 	private String getOwlPropertyRendering() {
-		if (controller.getOWLModel().isWorkSpaceSet()) {
-			return controller.getOWLModel().getOWLEntityRendering(property);
-		} else {
-			return propertyID;
-		}
+		return controller.getOWLModel().getOWLEntityRendering(property).orElse(propertyID);
 	}
 
 	@Override

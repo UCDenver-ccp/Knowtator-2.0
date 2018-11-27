@@ -22,33 +22,36 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.list;
+package edu.ucdenver.ccp.knowtator.view.label;
 
-import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
-public class ProfileList extends KnowtatorList<Profile> {
-	public ProfileList(KnowtatorView view) {
-		super();
+import java.util.Optional;
 
-		react();
+public abstract class AbstractConceptAnnotationLabel extends KnowtatorLabel {
+
+	AbstractConceptAnnotationLabel(KnowtatorView view) {
+		super(view);
 	}
 
 	@Override
-	protected void react() {
-		setCollection(KnowtatorView.CONTROLLER.getProfileCollection());
-		setSelected();
+	public void react() {
+		Optional<TextSource> textSourceOptional = KnowtatorView.CONTROLLER.getTextSourceCollection().getSelection();
+		if (textSourceOptional.isPresent()) {
+			textSourceOptional.ifPresent(textSource -> {
+				Optional<ConceptAnnotation> conceptAnnotationOptional = textSource.getConceptAnnotationCollection().getSelection();
+				if (conceptAnnotationOptional.isPresent()) {
+					conceptAnnotationOptional.ifPresent(this::displayConceptAnnotation);
+				} else {
+					setText("");
+				}
+			});
+		} else {
+			setText("");
+		}
 	}
 
-
-	// I am overriding here because the base method adds this as a collection listener to its collection,
-	// but that generates a concurrent modification exception during "added" events
-//    @Override
-//    protected void setCollection(KnowtatorCollection<Profile> collection) {
-//        dispose();
-//        this.collection = collection;
-//        collection.forEach(k -> ((DefaultListModel<Profile>) getModel()).addElement(k));
-//    }
-
-
+	public abstract void displayConceptAnnotation(ConceptAnnotation conceptAnnotation);
 }

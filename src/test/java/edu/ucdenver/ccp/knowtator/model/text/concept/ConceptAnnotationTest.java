@@ -26,7 +26,6 @@ package edu.ucdenver.ccp.knowtator.model.text.concept;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.junit.Test;
 
@@ -34,22 +33,22 @@ public class ConceptAnnotationTest {
 	private final static KnowtatorController controller = TestingHelpers.getLoadedController();
 
 	@Test
-	public void getSize() throws NoSelectionException {
-		TextSource textSource = controller.getTextSourceCollection().getSelection();
+	public void getSize() {
+		TextSource textSource = controller.getTextSourceCollection().getSelection().get();
 		ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
 		assert conceptAnnotation.getSize() == 4;
 	}
 
 	@Test
-	public void getSpannedText() throws NoSelectionException {
-		TextSource textSource = controller.getTextSourceCollection().getSelection();
+	public void getSpannedText() {
+		TextSource textSource = controller.getTextSourceCollection().getSelection().get();
 		ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
 		assert conceptAnnotation.getSpannedText().equals("This");
 	}
 
 	@Test
-	public void contains() throws NoSelectionException {
-		TextSource textSource = controller.getTextSourceCollection().getSelection();
+	public void contains() {
+		TextSource textSource = controller.getTextSourceCollection().getSelection().get();
 		ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
 		assert conceptAnnotation.contains(0);
 		assert conceptAnnotation.contains(2);

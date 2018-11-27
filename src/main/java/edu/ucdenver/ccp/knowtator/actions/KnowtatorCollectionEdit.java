@@ -25,16 +25,17 @@
 package edu.ucdenver.ccp.knowtator.actions;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
-import edu.ucdenver.ccp.knowtator.model.collection.CantRemoveException;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
+
+import java.util.Optional;
 
 public class KnowtatorCollectionEdit<K extends KnowtatorDataObjectInterface> extends KnowtatorEdit {
 
     private final CollectionActionType actionType;
     private final KnowtatorCollection<K> collection;
-    private K object;
+    private Optional<K> object;
 
-    KnowtatorCollectionEdit(CollectionActionType actionType, KnowtatorCollection<K> collection, K object, String presentationName) {
+    KnowtatorCollectionEdit(CollectionActionType actionType, KnowtatorCollection<K> collection, Optional<K> object, String presentationName) {
         super(presentationName);
         this.actionType = actionType;
         this.collection = collection;
@@ -47,14 +48,16 @@ public class KnowtatorCollectionEdit<K extends KnowtatorDataObjectInterface> ext
         switch (actionType) {
             case ADD:
                 try {
-                    collection.remove(object);
-                } catch (CantRemoveException e) {
-                    e.printStackTrace();
+                    collection.remove(object.orElseThrow(ActionUnperformableException::new));
+                } catch (ActionUnperformableException ignored) {
+
                 }
                 break;
             case REMOVE:
-                if (object != null) {
-                    collection.add(object);
+                try {
+                    collection.add(object.orElseThrow(ActionUnperformableException::new));
+                } catch (ActionUnperformableException ignored) {
+
                 }
                 break;
         }
@@ -65,22 +68,23 @@ public class KnowtatorCollectionEdit<K extends KnowtatorDataObjectInterface> ext
         super.redo();
         switch (actionType) {
             case ADD:
-                collection.add(object);
+                try {
+                    collection.add(object.orElseThrow(ActionUnperformableException::new));
+                } catch (ActionUnperformableException ignored) {
+                }
                 break;
             case REMOVE:
-                if (object != null) {
                     try {
-                        collection.remove(object);
-                    } catch (CantRemoveException e) {
-                        e.printStackTrace();
+                        collection.remove(object.orElseThrow(ActionUnperformableException::new));
+                    } catch (ActionUnperformableException ignored) {
+
                     }
-                }
                 break;
         }
     }
 
 
-    public void setObject(K object) {
+    public void setObject(Optional<K> object) {
         this.object = object;
     }
 }

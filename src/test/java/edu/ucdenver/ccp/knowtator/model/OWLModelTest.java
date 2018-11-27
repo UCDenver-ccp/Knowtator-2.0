@@ -26,7 +26,6 @@ package edu.ucdenver.ccp.knowtator.model;
 
 import edu.ucdenver.ccp.knowtator.KnowtatorController;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.text.graph.RelationAnnotation;
@@ -55,12 +54,8 @@ class OWLModelTest {
 
 		controller = TestingHelpers.getLoadedController();
 		OWLReasonerFactory reasonerFactory = new ReasonerFactory();
-		try {
-			owlOntologyManager = controller.getOWLModel().getOwlOntologyManager();
-			dataFactory = owlOntologyManager.getOWLDataFactory();
-		} catch (OWLModel.OWLOntologyManagerNotSetException e) {
-			e.printStackTrace();
-		}
+		owlOntologyManager = controller.getOWLModel().getOwlOntologyManager().get();
+		dataFactory = owlOntologyManager.getOWLDataFactory();
 
 		ontology = owlOntologyManager.getOntology(IRI.create("http://www.co-ode.org/ontologies/pizza"));
 		reasoner = reasonerFactory.createReasoner(Objects.requireNonNull(ontology));
@@ -69,7 +64,7 @@ class OWLModelTest {
 	@Test
 	void addOWLClass() {
 		OWLClass class1 = dataFactory.getOWLClass(IRI.create("X"));
-		OWLClass class2 = controller.getOWLModel().getOWLClassByID("IceCream");
+		OWLClass class2 = controller.getOWLModel().getOWLClassByID("IceCream").get();
 		OWLAxiom axiom = dataFactory.getOWLSubClassOfAxiom(class1, class2);
 
 		owlOntologyManager.addAxiom(ontology, axiom);
@@ -79,9 +74,9 @@ class OWLModelTest {
 	}
 
 	@Test
-	void changeOWLClassIRI() throws NoSelectionException, OWLModel.OWLOntologyManagerNotSetException {
+	void changeOWLClassIRI() {
 		OWLEntityRenamer renamer = new OWLEntityRenamer(owlOntologyManager, Collections.singleton(ontology));
-		OWLClass class2 = controller.getOWLModel().getOWLClassByID("Pizza");
+		OWLClass class2 = controller.getOWLModel().getOWLClassByID("Pizza").get();
 		assert ontology.containsClassInSignature(class2.getIRI());
 
 		Map<OWLEntity, IRI> entityToIRIMap = new HashMap<>();
@@ -98,17 +93,17 @@ class OWLModelTest {
 				TestingHelpers.defaultExpectedAnnotationNodes,
 				TestingHelpers.defaultExpectedTriples);
 
-		ConceptAnnotation conceptAnnotation = controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection();
+		ConceptAnnotation conceptAnnotation = controller.getTextSourceCollection().getSelection().get().getConceptAnnotationCollection().getSelection().get();
 
 		assert !ontology.containsClassInSignature(class2.getIRI());
-		assert ontology.containsClassInSignature(conceptAnnotation.getOwlClass().getIRI());
+		assert ontology.containsClassInSignature(conceptAnnotation.getOwlClass().get().getIRI());
 		assert conceptAnnotation.getOwlClass().equals(controller.getOWLModel().getOWLClassByID("BetterPizza"));
 	}
 
 	@Test
-	void changeOWLObjectPropertyIRI() throws OWLModel.OWLOntologyManagerNotSetException, NoSelectionException {
+	void changeOWLObjectPropertyIRI() {
 		OWLEntityRenamer renamer = new OWLEntityRenamer(owlOntologyManager, Collections.singleton(ontology));
-		OWLObjectProperty property = controller.getOWLModel().getOWLObjectPropertyByID("hasBase");
+		OWLObjectProperty property = controller.getOWLModel().getOWLObjectPropertyByID("hasBase").get();
 		assert ontology.containsObjectPropertyInSignature(property.getIRI());
 
 		Map<OWLEntity, IRI> entityToIRIMap = new HashMap<>();
@@ -125,17 +120,17 @@ class OWLModelTest {
 				TestingHelpers.defaultExpectedAnnotationNodes,
 				TestingHelpers.defaultExpectedTriples);
 
-		GraphSpace graphSpace = controller.getTextSourceCollection().getSelection().getGraphSpaceCollection().getSelection();
+		GraphSpace graphSpace = controller.getTextSourceCollection().getSelection().get().getGraphSpaceCollection().getSelection().get();
 		RelationAnnotation relationAnnotation = (RelationAnnotation) graphSpace.getChildEdges(graphSpace.getDefaultParent())[0];
 
 		assert !ontology.containsObjectPropertyInSignature(property.getIRI());
 		assert ontology.containsObjectPropertyInSignature(relationAnnotation.getProperty().getIRI());
-		assert relationAnnotation.getProperty().equals(controller.getOWLModel().getOWLObjectPropertyByID("betterHasBass"));
+		assert relationAnnotation.getProperty().equals(controller.getOWLModel().getOWLObjectPropertyByID("betterHasBass").get());
 	}
 
 	@Test
-	void removeOWLClass() throws OWLModel.OWLOntologyManagerNotSetException {
-		OWLClass class2 = controller.getOWLModel().getOWLClassByID("Pizza");
+	void removeOWLClass() {
+		OWLClass class2 = controller.getOWLModel().getOWLClassByID("Pizza").get();
 		assert ontology.containsClassInSignature(class2.getIRI());
 		OWLEntityRemover remover = new OWLEntityRemover(Collections.singleton(ontology));
 		class2.accept(remover);
@@ -153,8 +148,8 @@ class OWLModelTest {
 	}
 
 	@Test
-	void removeObjectProperty() throws OWLModel.OWLOntologyManagerNotSetException {
-		OWLObjectProperty owlObjectProperty = controller.getOWLModel().getOWLObjectPropertyByID("hasBase");
+	void removeObjectProperty() {
+		OWLObjectProperty owlObjectProperty = controller.getOWLModel().getOWLObjectPropertyByID("hasBase").get();
 		assert ontology.containsObjectPropertyInSignature(owlObjectProperty.getIRI());
 		OWLEntityRemover remover = new OWLEntityRemover(Collections.singleton(ontology));
 		owlObjectProperty.accept(remover);
@@ -172,10 +167,10 @@ class OWLModelTest {
 	}
 
 	@Test
-	void moveOWLClass() throws OWLModel.OWLOntologyManagerNotSetException, NoSelectionException {
-		OWLClass class1 = controller.getOWLModel().getOWLClassByID("Food");
-		OWLClass class2 = controller.getOWLModel().getOWLClassByID("Pizza");
-		OWLClass class3 = controller.getOWLModel().getOWLClassByID("Thing");
+	void moveOWLClass() {
+		OWLClass class1 = controller.getOWLModel().getOWLClassByID("Food").get();
+		OWLClass class2 = controller.getOWLModel().getOWLClassByID("Pizza").get();
+		OWLClass class3 = controller.getOWLModel().getOWLClassByID("Thing").get();
 
 		assert isSubClass(class1, class2);
 
@@ -201,8 +196,8 @@ class OWLModelTest {
 		assert !isSubClass(class1, class2);
 		assert isSubClass(class3, class2);
 
-		ConceptAnnotation conceptAnnotation = controller.getTextSourceCollection().getSelection().getConceptAnnotationCollection().getSelection();
-		assert conceptAnnotation.getOwlClass().equals(class2);
+		ConceptAnnotation conceptAnnotation = controller.getTextSourceCollection().getSelection().get().getConceptAnnotationCollection().getSelection().get();
+		assert conceptAnnotation.getOwlClass().get().equals(class2);
 	}
 
 	boolean isSubClass(OWLClass potentialSuperClass, OWLClass owlClass) {
@@ -222,10 +217,10 @@ class OWLModelTest {
 
 
 	@Test
-	void moveOWLObjectProperty() throws OWLModel.OWLOntologyManagerNotSetException, NoSelectionException {
-		OWLObjectProperty property1 = controller.getOWLModel().getOWLObjectPropertyByID("hasIngredient");
-		OWLObjectProperty property2 = controller.getOWLModel().getOWLObjectPropertyByID("hasBase");
-		OWLObjectProperty property3 = controller.getOWLModel().getOWLObjectPropertyByID("isIngredientOf");
+	void moveOWLObjectProperty() {
+		OWLObjectProperty property1 = controller.getOWLModel().getOWLObjectPropertyByID("hasIngredient").get();
+		OWLObjectProperty property2 = controller.getOWLModel().getOWLObjectPropertyByID("hasBase").get();
+		OWLObjectProperty property3 = controller.getOWLModel().getOWLObjectPropertyByID("isIngredientOf").get();
 
 		assert isSubObjectProperty(property1, property2);
 
@@ -251,7 +246,7 @@ class OWLModelTest {
 		assert isSubObjectProperty(property1, property2);
 		assert isSubObjectProperty(property3, property2);
 
-		GraphSpace graphSpace = controller.getTextSourceCollection().getSelection().getGraphSpaceCollection().getSelection();
+		GraphSpace graphSpace = controller.getTextSourceCollection().getSelection().get().getGraphSpaceCollection().getSelection().get();
 		RelationAnnotation relationAnnotation = (RelationAnnotation) graphSpace.getChildEdges(graphSpace.getDefaultParent())[0];
 		assert relationAnnotation.getProperty().equals(property2);
 	}

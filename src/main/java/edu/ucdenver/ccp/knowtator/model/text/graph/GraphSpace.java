@@ -136,7 +136,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 			AnnotationNode target,
 			String id,
 			Profile annotator,
-			OWLObjectProperty property,
+			Optional<OWLObjectProperty> property,
 			String propertyID,
 			String quantifier,
 			String quantifierValue,
@@ -250,7 +250,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 						target,
 						id,
 						annotator,
-						null,
+						Optional.empty(),
 						propertyID,
 						quantifier,
 						quantifierValue,
@@ -300,7 +300,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 							List<Object> objectAnnotationVertices = getVerticesForAnnotation(objectConceptAnnotation);
 							AnnotationNode target = makeOrGetAnnotationNode(subjectConceptAnnotation, objectAnnotationVertices);
 
-							addTriple(source, target, id, annotator, null, propertyID, "", null, false, "");
+							addTriple(source, target, id, annotator, Optional.empty(), propertyID, "", null, false, "");
 						});
 	}
 
@@ -427,10 +427,10 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 
 	@Override
 	public void selected(SelectionEvent<ConceptAnnotation> event) {
-		if (event.getNew() == null) {
-			setSelectionCells(new Object[0]);
+		if (event.getNew().isPresent()) {
+			event.getNew().ifPresent(conceptAnnotation -> setSelectionCells(getVerticesForAnnotation(conceptAnnotation)));
 		} else {
-			setSelectionCells(getVerticesForAnnotation(event.getNew()));
+			setSelectionCells(new Object[0]);
 		}
 	}
 

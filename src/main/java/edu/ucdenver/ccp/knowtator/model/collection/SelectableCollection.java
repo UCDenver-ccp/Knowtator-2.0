@@ -63,7 +63,7 @@ public abstract class SelectableCollection<K extends KnowtatorDataObjectInterfac
     }
 
     @Override
-    public void remove(K item) throws CantRemoveException {
+    public void remove(K item) {
         super.remove(item);
         if (item == selection) {
             setSelection(null);

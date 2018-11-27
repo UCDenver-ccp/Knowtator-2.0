@@ -25,11 +25,10 @@
 package edu.ucdenver.ccp.knowtator.actions;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
-import edu.ucdenver.ccp.knowtator.model.collection.CantRemoveException;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 
 import javax.swing.undo.UndoableEdit;
+import java.util.Optional;
 
 public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataObjectInterface> extends AbstractKnowtatorAction {
 
@@ -37,13 +36,14 @@ public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataO
 	final CollectionActionType actionType;
 	final KnowtatorCollectionEdit<K> edit;
 	final KnowtatorCollection<K> collection;
-	K object;
+	Optional<K> object;
 
 	AbstractKnowtatorCollectionAction(CollectionActionType actionType, String presentationName, KnowtatorCollection<K> collection) {
 		super(String.format("%s %s", actionType, presentationName));
 		this.collection = collection;
 		this.actionType = actionType;
 		this.edit = new KnowtatorCollectionEdit<>(actionType, collection, object, getPresentationName());
+		object = Optional.empty();
 	}
 
 
@@ -52,24 +52,12 @@ public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataO
 		switch (actionType) {
 			case ADD:
 				prepareAdd();
-				if (object != null) {
-					collection.add(object);
-				} else {
-					throw new ActionUnperformableException();
-				}
+				collection.add(object.orElseThrow(ActionUnperformableException::new));
 				cleanUpAdd();
 				break;
 			case REMOVE:
 				prepareRemove();
-				if (object != null) {
-					try {
-						collection.remove(object);
-					} catch (CantRemoveException e) {
-						throw new ActionUnperformableException();
-					}
-				} else {
-					throw new ActionUnperformableException();
-				}
+				collection.remove(object.orElseThrow(ActionUnperformableException::new));
 				cleanUpRemove();
 				break;
 		}
@@ -77,10 +65,8 @@ public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataO
 	}
 
 	void prepareRemove() throws ActionUnperformableException {
-		try {
-			setObject(collection.getSelection());
-		} catch (NoSelectionException e) {
-			throw new ActionUnperformableException();
+		if (!object.isPresent()) {
+			collection.getSelection().ifPresent(this::setObject);
 		}
 	}
 
@@ -98,7 +84,7 @@ public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataO
 	}
 
 	void setObject(K object) {
-		this.object = object;
-		edit.setObject(object);
+		this.object = Optional.ofNullable(object);
+		edit.setObject(this.object);
 	}
 }

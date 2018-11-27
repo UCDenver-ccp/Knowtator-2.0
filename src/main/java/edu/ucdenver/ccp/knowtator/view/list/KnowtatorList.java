@@ -26,7 +26,6 @@ package edu.ucdenver.ccp.knowtator.view.list;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -41,13 +40,11 @@ import javax.swing.event.ListSelectionListener;
 
 public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> extends JList<K> implements KnowtatorComponent {
 
-	final KnowtatorView view;
 	protected KnowtatorCollection<K> collection;
 	private ListSelectionListener al;
 	private TextBoundModelListener textBoundModelListener;
 
-	KnowtatorList(KnowtatorView view) {
-		this.view = view;
+	KnowtatorList() {
 		setModel(new DefaultListModel<>());
 
 		al = e -> {
@@ -64,7 +61,7 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
 	@Override
 	public void setupListeners() {
 		//noinspection Duplicates
-		textBoundModelListener = new TextBoundModelListener(view.getController()) {
+		textBoundModelListener = new TextBoundModelListener(KnowtatorView.CONTROLLER) {
 			@Override
 			public void respondToConceptAnnotationModification() {
 				react();
@@ -198,20 +195,22 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
 	}
 
 
-	void setSelected() throws NoSelectionException {
-		if (view.getController().isNotLoading()) {
-			for (int i = 0; i < getModel().getSize(); i++) {
-				K element = getModel().getElementAt(i);
-				if (element == collection.getSelection()) {
-					removeListSelectionListener(al);
-					setSelectedIndex(i);
-					ensureIndexIsVisible(i);
-					addListSelectionListener(al);
-					return;
+	void setSelected() {
+		if (KnowtatorView.CONTROLLER.isNotLoading()) {
+			if (collection.getSelection().isPresent()) {
+				K k = collection.getSelection().get();
+				for (int i = 0; i < getModel().getSize(); i++) {
+					K element = getModel().getElementAt(i);
+					if (element == k) {
+						removeListSelectionListener(al);
+						setSelectedIndex(i);
+						ensureIndexIsVisible(i);
+						addListSelectionListener(al);
+						return;
+					}
 				}
 			}
 		}
-
 	}
 
 	@Override

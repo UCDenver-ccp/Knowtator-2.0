@@ -26,7 +26,6 @@ package edu.ucdenver.ccp.knowtator.view.chooser;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.collection.NoSelectionException;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -43,11 +42,8 @@ public abstract class KnowtatorChooser<K extends KnowtatorDataObjectInterface> e
 
 	private final ActionListener al;
 	private KnowtatorCollection<K> collection;
-	final KnowtatorView view;
 
-	KnowtatorChooser(KnowtatorView view) {
-		this.view = view;
-
+	KnowtatorChooser() {
 		al = e -> {
 			JComboBox comboBox = (JComboBox) e.getSource();
 			if (comboBox.getSelectedItem() != null) {
@@ -66,7 +62,7 @@ public abstract class KnowtatorChooser<K extends KnowtatorDataObjectInterface> e
 	@Override
 	public void setupListeners() {
 		//noinspection Duplicates
-		new TextBoundModelListener(view.getController()) {
+		new TextBoundModelListener(KnowtatorView.CONTROLLER) {
 
 			@Override
 			public void respondToConceptAnnotationModification() {
@@ -201,10 +197,10 @@ public abstract class KnowtatorChooser<K extends KnowtatorDataObjectInterface> e
 		}
 	}
 
-	void setSelected() throws NoSelectionException {
-		if (view.getController().isNotLoading()) {
+	void setSelected() {
+		if (KnowtatorView.CONTROLLER.isNotLoading()) {
 			removeActionListener(al);
-			setSelectedItem(collection.getSelection());
+			collection.getSelection().ifPresent(this::setSelectedItem);
 			addActionListener(al);
 		}
 	}
