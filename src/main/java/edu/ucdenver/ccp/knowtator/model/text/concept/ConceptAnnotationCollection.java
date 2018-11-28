@@ -261,6 +261,11 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
 	@Override
 	public void readFromKnowtatorXML(File file, Element parent) {
+
+		HashSet<String> classIDs = KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.ANNOTATION)).stream().map(node -> (Element) node).map(annotationElement -> ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0)).getAttribute(KnowtatorXMLAttributes.ID)).collect(Collectors.toCollection(HashSet::new));
+
+		Map<String, OWLClass> owlClassMap = controller.getOWLClassesByIDs(classIDs);
+
 		KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.ANNOTATION)).stream().map(node -> (Element) node)
 				.map(annotationElement -> {
 					String annotationID = annotationElement.getAttribute(KnowtatorXMLAttributes.ID);
@@ -272,7 +277,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
 					Profile profile = controller.getProfileCollection().get(profileID).orElse(controller.getProfileCollection().getDefaultProfile());
 
-					Optional<OWLClass> owlClass = controller.getOWLClassByID(owlClassID);
+					Optional<OWLClass> owlClass = Optional.ofNullable(owlClassMap.get(owlClassID));
 					if (owlClass.isPresent()) {
 						ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, textSource, annotationID, owlClass.get(), owlClassID, profile, type, motivation);
 						newConceptAnnotation.readFromKnowtatorXML(null, annotationElement);

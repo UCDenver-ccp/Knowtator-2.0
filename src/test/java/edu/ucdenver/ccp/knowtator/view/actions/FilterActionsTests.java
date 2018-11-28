@@ -70,7 +70,7 @@ public class FilterActionsTests {
 		TextSource textSource = controller.getTextSource().get();
 		ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
 		textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
-		controller.registerAction(new ReassignOWLClassAction(conceptAnnotation));
+		controller.registerAction(new ReassignOWLClassAction(conceptAnnotation, controller.getSelectedOWLClass().get()));
 
 		TestingHelpers.testKnowtatorAction(controller, new FilterAction(OWLCLASS, true),
 				TestingHelpers.defaultExpectedTextSources,

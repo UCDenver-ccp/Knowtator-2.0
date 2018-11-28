@@ -50,7 +50,7 @@ public class ColorChangeAction extends AbstractKnowtatorAction {
 
 		oldColorAssignments = new HashMap<>();
 		owlClasses.forEach(owlClass -> {
-			Color oldColor = profile.getColors().get(owlClass);
+			Color oldColor = profile.getColor(owlClass);
 			if (oldColor != null) oldColorAssignments.put(owlClass, oldColor);
 		});
 	}

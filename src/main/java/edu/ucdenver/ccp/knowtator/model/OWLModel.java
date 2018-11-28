@@ -80,7 +80,11 @@ public abstract class OWLModel extends UndoManager implements Serializable, Base
 			if (owlOntologyManager.isPresent()) {
 				for (OWLOntology ontology : owlOntologyManager.get().getOntologies()) {
 					Optional<OWLClass> owlClassOptional = ontology.getClassesInSignature().stream()
-							.filter(owlClass -> owlClass.getIRI().getShortForm().equals(classID))
+							.filter(owlClass -> owlClass.getIRI().getShortForm().equals(classID) ||
+									ontology.getAnnotationAssertionAxioms(owlClass.getIRI()).stream()
+											.anyMatch(owlAnnotationAssertionAxiom -> owlAnnotationAssertionAxiom
+													.getValue().asLiteral().transform(OWLLiteral::getLiteral)
+													.transform(label -> label.equals(classID)).or(false)))
 							.findFirst();
 					if (owlClassOptional.isPresent()) {
 						return owlClassOptional;
@@ -90,6 +94,32 @@ public abstract class OWLModel extends UndoManager implements Serializable, Base
 			return Optional.empty();
 		}
 
+	}
+
+	public Map<String, OWLClass> getOWLClassesByIDs(Set<String> classIDs) {
+		Map<String, OWLClass> owlClassList = new HashMap<>();
+
+		if (owlWorkSpace.isPresent()) {
+			classIDs.forEach(classID -> owlWorkSpace.map(owlWorkspace -> owlWorkspace.getOWLModelManager().getOWLEntityFinder().getOWLClass(classID)).ifPresent(owlClass -> owlClassList.put(classID, owlClass)));
+		} else {
+
+			if (owlOntologyManager.isPresent()) {
+				for (OWLOntology ontology : owlOntologyManager.get().getOntologies()) {
+					for (OWLClass owlClass : ontology.getClassesInSignature()) {
+						Set<OWLAnnotationAssertionAxiom> anntotationAssertionAxioms = ontology.getAnnotationAssertionAxioms(owlClass.getIRI());
+						List<String> labels = anntotationAssertionAxioms.stream()
+								.map(anntotationAssertionAxiom -> anntotationAssertionAxiom.getValue().asLiteral().transform(OWLLiteral::getLiteral))
+								.filter(com.google.common.base.Optional::isPresent).map(com.google.common.base.Optional::get).collect(Collectors.toList());
+						for (String classID : classIDs) {
+							if (owlClass.getIRI().getShortForm().equals(classID) || labels.stream().anyMatch(classID::equals)) {
+								owlClassList.put(classID, owlClass);
+							}
+						}
+					}
+				}
+			}
+		}
+		return owlClassList;
 	}
 
 	public Optional<OWLObjectProperty> getOWLObjectPropertyByID(@Nonnull String propertyID) {
@@ -110,7 +140,6 @@ public abstract class OWLModel extends UndoManager implements Serializable, Base
 			return Optional.empty();
 		}
 	}
-
 
 
 	public Optional<OWLObjectProperty> getSelectedOWLObjectProperty() {

@@ -31,7 +31,6 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorDefaultSettings;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -44,7 +43,6 @@ import java.awt.*;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, KnowtatorXMLIO {
 	@SuppressWarnings("unused")
@@ -84,9 +82,7 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
 		return id;
 	}
 
-	public Color getColor(ConceptAnnotation conceptAnnotation) {
-		OWLClass owlClass = conceptAnnotation.getOwlClass();
-
+	public Color getColor(OWLClass owlClass) {
 		return colors.getOrDefault(owlClass, KnowtatorDefaultSettings.COLORS.get(0));
 	}
 
@@ -153,6 +149,7 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
 
 	@Override
 	public void readFromKnowtatorXML(File file, Element parent) {
+		Map<String, Color> colorMap = new HashMap<>();
 		for (Node highlighterNode :
 				KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.HIGHLIGHTER))) {
 			Element highlighterElement = (Element) highlighterNode;
@@ -160,10 +157,12 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
 			String classID = highlighterElement.getAttribute(KnowtatorXMLAttributes.CLASS_ID);
 			Color c = Color.decode(highlighterElement.getAttribute(KnowtatorXMLAttributes.COLOR));
 
-			Optional<OWLClass> owlClassOptional = controller.getOWLClassByID(classID);
+
 			Color color = new Color((float) c.getRed() / 255, (float) c.getGreen() / 255, (float) c.getBlue() / 255, 1f);
-			owlClassOptional.ifPresent(owlClass -> addColor(owlClass, color));
+			colorMap.put(classID, color);
 		}
+		controller.getOWLClassesByIDs(colorMap.keySet())
+				.forEach((classID, owlClass) -> addColor(owlClass, colorMap.get(classID)));
 	}
 
 	@Override

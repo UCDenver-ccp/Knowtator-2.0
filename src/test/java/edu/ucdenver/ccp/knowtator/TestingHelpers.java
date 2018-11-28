@@ -37,6 +37,15 @@ import java.util.List;
 public class TestingHelpers {
 
     public static final String projectFileName = "test_project";
+	public static final int defaultExpectedTextSources = 3;
+	public static final int defaultExpectedConceptAnnotations = 6;
+	public static final int defaultExpectedSpans = 7;
+	public static final int defaultExpectedGraphSpaces = 3;
+	public static final int defaultExpectedProfiles = 2;
+	public static int defaultExpectedHighlighters = 3;
+	public static final int defaultExpectedAnnotationNodes = 7;
+	public static final int defaultExpectedTriples = 4;
+
 
     static File getProjectFile(String projectName) {
         return new File(
@@ -68,15 +77,6 @@ public class TestingHelpers {
 
         return controller;
     }
-
-    public static final int defaultExpectedTextSources = 3;
-    public static final int defaultExpectedConceptAnnotations = 6;
-    public static final int defaultExpectedSpans = 7;
-    public static final int defaultExpectedGraphSpaces = 3;
-    public static final int defaultExpectedProfiles = 2;
-    public static int defaultExpectedHighlighters = 5;
-    public static final int defaultExpectedAnnotationNodes = 7;
-    public static final int defaultExpectedTriples = 4;
 
     public static void checkDefaultCollectionValues(KnowtatorModel controller) {
         TestingHelpers.countCollections(controller, defaultExpectedTextSources, defaultExpectedConceptAnnotations, defaultExpectedSpans, defaultExpectedGraphSpaces, defaultExpectedProfiles, defaultExpectedHighlighters, defaultExpectedAnnotationNodes, defaultExpectedTriples);

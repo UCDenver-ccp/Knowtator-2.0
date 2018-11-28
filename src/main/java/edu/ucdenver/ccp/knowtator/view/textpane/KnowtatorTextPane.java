@@ -33,7 +33,6 @@ import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
 import edu.ucdenver.ccp.knowtator.view.actions.model.ReassignOWLClassAction;
 import org.apache.log4j.Logger;
@@ -209,11 +208,9 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 			menuItem.addActionListener(e -> KnowtatorView.MODEL.getTextSource()
 					.ifPresent(textSource1 -> textSource1.getConceptAnnotationCollection().getSelection()
 							.ifPresent(conceptAnnotation -> {
-								try {
-									KnowtatorView.MODEL.registerAction(new ReassignOWLClassAction(conceptAnnotation));
-								} catch (ActionUnperformableException e1) {
-									e1.printStackTrace();
-								}
+								KnowtatorView.MODEL.getSelectedOWLClass()
+										.ifPresent(owlClass -> KnowtatorView.MODEL
+												.registerAction(new ReassignOWLClassAction(conceptAnnotation, owlClass)));
 							})));
 
 			return menuItem;

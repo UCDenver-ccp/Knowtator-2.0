@@ -25,9 +25,7 @@
 package edu.ucdenver.ccp.knowtator.view.actions.model;
 
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
-import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
 import org.semanticweb.owlapi.model.OWLClass;
 
@@ -39,13 +37,13 @@ public class ReassignOWLClassAction extends AbstractKnowtatorAction {
 	private ConceptAnnotation conceptAnnotation;
 	private final OWLClass newOwlClass;
 
-	public ReassignOWLClassAction(ConceptAnnotation conceptAnnotation) throws ActionUnperformableException {
+	public ReassignOWLClassAction(ConceptAnnotation conceptAnnotation, OWLClass owlClass) {
 		super("Reassign OWL class");
 
 		this.conceptAnnotation = conceptAnnotation;
 
 		oldOwlClass = conceptAnnotation.getOwlClass();
-		this.newOwlClass = KnowtatorView.MODEL.getSelectedOWLClass().orElseThrow(ActionUnperformableException::new);
+		this.newOwlClass = owlClass;
 	}
 
 	@Override
