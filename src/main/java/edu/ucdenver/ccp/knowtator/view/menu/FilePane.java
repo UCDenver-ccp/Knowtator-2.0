@@ -37,12 +37,13 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-class OpenPane extends MenuPane {
+class FilePane extends MenuPane {
 
 	private final JDialog parent;
 	private final KnowtatorView view;
@@ -50,12 +51,39 @@ class OpenPane extends MenuPane {
 	private JPanel contentPane;
 	private JButton openButton;
 	private JProgressBar progressBar1;
+	private JButton newButton;
 
-	OpenPane(JDialog parent, KnowtatorView view) {
+	FilePane(JDialog parent, KnowtatorView view) {
 		super("File");
 		openButton.addActionListener(e -> open());
+		newButton.addActionListener(e -> executeNew());
 		this.parent = parent;
 		this.view = view;
+	}
+
+	private void executeNew() {
+
+		String projectName = JOptionPane.showInputDialog(parent, "Enter a name for the project");
+
+		if (!projectName.equals("")) {
+			JFileChooser fileChooser = new JFileChooser();
+			fileChooser.setDialogTitle("Select project root");
+			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+			fileChooser.addActionListener(e -> {
+				if (e.getActionCommand().equals(JFileChooser.APPROVE_SELECTION)) {
+
+					File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
+					try {
+						view.loadProject(projectDirectory, null);
+						parent.dispose();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+
+				}
+			});
+		}
 	}
 
 	private void open() {

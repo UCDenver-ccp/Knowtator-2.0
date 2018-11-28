@@ -105,8 +105,7 @@ public class MenuDialog extends JDialog {
 
 	private void createUIComponents() {
 		menuOptionsList = new JList<>(new MenuPane[]{
-				new OpenPane(this, view),
-				new NewPane(this, view),
+				new FilePane(this, view),
 				new ImportPane(this, view),
 				new ExportPane(view),
 				new ProfilePane(view),
