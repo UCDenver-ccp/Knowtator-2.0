@@ -55,7 +55,7 @@
     </classMention>
 
     <complexSlotMention id="slot_mention_0">
-        <mentionSlot id="Coreferring strings"/>
+        <mentionSlot id="hasIngredient"/>
         <complexSlotMentionValue value="mention_1"/>
         <complexSlotMentionValue value="mention_2"/>
     </complexSlotMention>

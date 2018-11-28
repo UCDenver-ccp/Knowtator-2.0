@@ -354,22 +354,18 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 		textSource.getGraphSpaceCollection().add(oldKnowtatorGraphSpace);
 
 		annotationToSlotMap.forEach((annotation, slot) -> {
-					List<Object> vertices = oldKnowtatorGraphSpace.getVerticesForAnnotation(annotation);
+			String propertyID = ((Element) slot.getElementsByTagName(OldKnowtatorXMLTags.MENTION_SLOT).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID);
 
+					List<Object> vertices = oldKnowtatorGraphSpace.getVerticesForAnnotation(annotation);
 					AnnotationNode source = oldKnowtatorGraphSpace.makeOrGetAnnotationNode(annotation, vertices);
 
-					String propertyID =
-							((Element) slot.getElementsByTagName(OldKnowtatorXMLTags.MENTION_SLOT).item(0))
-									.getAttribute(OldKnowtatorXMLAttributes.ID);
-					for (Node slotMentionValueNode :
-							OldKnowtatorUtil.asList(
-									slot.getElementsByTagName(OldKnowtatorXMLTags.COMPLEX_SLOT_MENTION_VALUE))) {
+			for (Node slotMentionValueNode : OldKnowtatorUtil.asList(slot.getElementsByTagName(OldKnowtatorXMLTags.COMPLEX_SLOT_MENTION_VALUE))) {
 						Element slotMentionValueElement = (Element) slotMentionValueNode;
 						String value = slotMentionValueElement.getAttribute(OldKnowtatorXMLAttributes.VALUE);
 						get(value).map(conceptAnnotation -> {
 							List<Object> vertices1 = oldKnowtatorGraphSpace.getVerticesForAnnotation(conceptAnnotation);
 							return oldKnowtatorGraphSpace.makeOrGetAnnotationNode(conceptAnnotation, vertices1);
-						}).ifPresent(target -> oldKnowtatorGraphSpace.addTriple(source, target, null, controller.getProfileCollection().getDefaultProfile(), Optional.empty(), propertyID, "", "", false, ""));
+						}).ifPresent(target -> controller.getOWLObjectPropertyByID(propertyID).ifPresent(property -> oldKnowtatorGraphSpace.addTriple(source, target, null, controller.getProfileCollection().getDefaultProfile(), property, propertyID, "", "", false, "")));
 
 					}
 				}

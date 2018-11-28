@@ -136,7 +136,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 			AnnotationNode target,
 			String id,
 			Profile annotator,
-			Optional<OWLObjectProperty> property,
+			OWLObjectProperty property,
 			String propertyID,
 			String quantifier,
 			String quantifierValue,
@@ -239,18 +239,19 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 					(AnnotationNode) ((mxGraphModel) getModel()).getCells().get(subjectID);
 			AnnotationNode target = (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(objectID);
 
+
 			if (target != null && source != null) {
-				addTriple(
+				controller.getOWLObjectPropertyByID(propertyID).ifPresent(owlObjectProperty -> addTriple(
 						source,
 						target,
 						id,
 						annotator,
-						Optional.empty(),
+						owlObjectProperty,
 						propertyID,
 						quantifier,
 						quantifierValue,
 						propertyIsNegated.equals(KnowtatorXMLAttributes.IS_NEGATED_TRUE),
-						motivation);
+						motivation));
 			}
 		}
 
@@ -289,7 +290,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 							List<Object> objectAnnotationVertices = getVerticesForAnnotation(objectConceptAnnotation);
 							AnnotationNode target = makeOrGetAnnotationNode(objectConceptAnnotation, objectAnnotationVertices);
 
-							addTriple(source, target, id, annotator, Optional.empty(), propertyID, "", null, false, "");
+							controller.getOWLObjectPropertyByID(propertyID).ifPresent(owlObjectProperty -> addTriple(source, target, id, annotator, owlObjectProperty, propertyID, "", null, false, ""));
 						});
 					});
 

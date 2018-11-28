@@ -147,7 +147,7 @@ public class GraphActions {
                     source, target,
                     null,
                     KnowtatorView.MODEL.getProfileCollection().getSelection().orElseThrow(ActionUnperformableException::new),
-                    java.util.Optional.ofNullable(property), propertyId,
+                    property, propertyId,
                     quantifier, quantifierValue,
                     negation,
                     motivation

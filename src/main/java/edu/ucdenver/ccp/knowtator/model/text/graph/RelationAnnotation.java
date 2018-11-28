@@ -41,7 +41,6 @@ import org.w3c.dom.Element;
 
 import java.io.File;
 import java.util.List;
-import java.util.Optional;
 
 public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, KnowtatorTextBoundDataObjectInterface {
 	private final String quantifier;
@@ -62,7 +61,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 			String id,
 			mxCell source,
 			mxCell target,
-			Optional<OWLObjectProperty> property,
+			OWLObjectProperty property,
 			String propertyID,
 			Profile annotator,
 			String quantifier,
@@ -88,13 +87,13 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 		setEdge(true);
 		setSource(source);
 		setTarget(target);
-		setValue(property);
+		setProperty(property);
 
-		if (property.isPresent()) {
-			setProperty(property.get());
-		} else {
-			setProperty(controller.getOWLObjectPropertyByID(propertyID).orElse(null));
-		}
+//		if (property.isPresent()) {
+//			setProperty(property.get());
+//		} else {
+//			setProperty(controller.getOWLObjectPropertyByID(propertyID).orElse(null));
+//		}
 	}
 
     /*
