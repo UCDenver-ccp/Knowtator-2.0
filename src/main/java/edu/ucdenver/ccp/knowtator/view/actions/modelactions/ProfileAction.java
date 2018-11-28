@@ -102,7 +102,7 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 			JColorChooser colorChooser = new KnowtatorColorPalette();
 
 			final Optional[] finalC = new Optional[]{Optional.empty()};
-			JDialog dialog = JColorChooser.createDialog(view, "Pick a color for " + _owlClass, true, colorChooser,
+			JDialog dialog = JColorChooser.createDialog(view, String.format("Pick a color for %s", _owlClass), true, colorChooser,
 					e -> finalC[0] = Optional.ofNullable(colorChooser.getColor()), null);
 
 
@@ -116,7 +116,7 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 				KnowtatorView.MODEL.getSelectedProfile()
 						.ifPresent(profile -> profile.addColor(_owlClass, color));
 
-				if (JOptionPane.showConfirmDialog(view, "Assign color to descendants of " + _owlClass + "?") == JOptionPane.OK_OPTION) {
+				if (JOptionPane.showConfirmDialog(view, String.format("Assign color to descendants of %s?", _owlClass)) == JOptionPane.OK_OPTION) {
 					owlClasses.addAll(KnowtatorView.MODEL.getOWLCLassDescendants(_owlClass));
 				}
 

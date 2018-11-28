@@ -224,12 +224,13 @@ public class KnowtatorIAA {
 	//		}
 	//	}
 
+	@SuppressWarnings("Duplicates")
 	public void runClassIAA() throws IAAException {
 		try {
 			ClassMatcher classMatcher = new ClassMatcher();
 			IAA classIAA = new IAA(setNames);
 
-			runIAAwithMatcher(classMatcher, classIAA);
+			runIAAWithMatcher(classMatcher, classIAA);
 
 			IAA2HTML.printIAA(
 					classIAA,
@@ -238,19 +239,14 @@ public class KnowtatorIAA {
 					textSources.size(),
 					annotationTexts,
 					annotationTextNames);
-			html.println(
-					"<li><a href=\""
-							+ classMatcher.getName()
-							+ ".html\">"
-							+ classMatcher.getName()
-							+ "</a></li>");
+			html.printf("<li><a href=\"%s.html\">%s</a></li>%n", classMatcher.getName(), classMatcher.getName());
 			closeHTML();
 		} catch (Exception e) {
 			throw new IAAException(e);
 		}
 	}
 
-	private void runIAAwithMatcher(Matcher matcher, IAA iaa) throws IAAException {
+	private void runIAAWithMatcher(Matcher matcher, IAA iaa) throws IAAException {
 		for (ConceptAnnotationCollection conceptAnnotationCollection : textSourceAnnotationsMap.values()) {
 			Set<ConceptAnnotation> conceptAnnotations = conceptAnnotationCollection.getCollection();
 			iaa.setConceptAnnotations(conceptAnnotations);
@@ -264,7 +260,7 @@ public class KnowtatorIAA {
 			SpanMatcher spanMatcher = new SpanMatcher();
 			IAA spanIAA = new IAA(setNames);
 
-			runIAAwithMatcher(spanMatcher, spanIAA);
+			runIAAWithMatcher(spanMatcher, spanIAA);
 			SpanMatcherHTML.printIAA(
 					spanIAA,
 					spanMatcher,
@@ -272,24 +268,20 @@ public class KnowtatorIAA {
 					textSources.size(),
 					annotationTexts,
 					annotationTextNames);
-			html.println(
-					"<li><a href=\""
-							+ spanMatcher.getName()
-							+ ".html\">"
-							+ spanMatcher.getName()
-							+ "</a></li>");
+			html.printf("<li><a href=\"%s.html\">%s</a></li>%n", spanMatcher.getName(), spanMatcher.getName());
 			closeHTML();
 		} catch (Exception e) {
 			throw new IAAException(e);
 		}
 	}
 
+	@SuppressWarnings("Duplicates")
 	public void runClassAndSpanIAA() throws IAAException {
 		try {
 			ClassAndSpanMatcher classAndSpanMatcher = new ClassAndSpanMatcher();
 			IAA classAndSpanIAA = new IAA(setNames);
 
-			runIAAwithMatcher(classAndSpanMatcher, classAndSpanIAA);
+			runIAAWithMatcher(classAndSpanMatcher, classAndSpanIAA);
 			IAA2HTML.printIAA(
 					classAndSpanIAA,
 					classAndSpanMatcher,
@@ -297,12 +289,7 @@ public class KnowtatorIAA {
 					textSources.size(),
 					annotationTexts,
 					annotationTextNames);
-			html.println(
-					"<li><a href=\""
-							+ classAndSpanMatcher.getName()
-							+ ".html\">"
-							+ classAndSpanMatcher.getName()
-							+ "</a></li>");
+			html.printf("<li><a href=\"%s.html\">%s</a></li>%n", classAndSpanMatcher.getName(), classAndSpanMatcher.getName());
 			closeHTML();
 		} catch (Exception e) {
 			throw new IAAException(e);

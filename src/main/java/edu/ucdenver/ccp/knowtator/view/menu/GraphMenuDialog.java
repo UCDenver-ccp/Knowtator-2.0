@@ -78,7 +78,7 @@ public class GraphMenuDialog extends JDialog {
 							fileChooser.setCurrentDirectory(KnowtatorView.MODEL.getSaveLocation());
 							FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
 							fileChooser.setFileFilter(fileFilter);
-							fileChooser.setSelectedFile(new File(textSource.getId() + "_" + graphSpace.getId() + ".png"));
+							fileChooser.setSelectedFile(new File(String.format("%s_%s.png", textSource.getId(), graphSpace.getId())));
 							if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
 								BufferedImage image =
 										mxCellRenderer.createBufferedImage(graphSpace, null, 1, Color.WHITE, true, null);

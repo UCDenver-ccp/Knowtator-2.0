@@ -68,7 +68,7 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 
 	public TextSource(KnowtatorModel controller, File saveFile, String textFileName) {
 		this.controller = controller;
-		this.saveFile = saveFile == null ? new File(controller.getAnnotationsLocation().getAbsolutePath(), textFileName.replace(".txt", "") + ".xml") : saveFile;
+		this.saveFile = saveFile == null ? new File(controller.getAnnotationsLocation().getAbsolutePath(), String.format("%s.xml", textFileName.replace(".txt", ""))) : saveFile;
 		this.conceptAnnotationCollection = new ConceptAnnotationCollection(controller, this);
 		this.graphSpaceCollection = new GraphSpaceCollection(controller, this);
 		notSaving = true;
@@ -83,7 +83,7 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 		textFile =
 				new File(
 						controller.getArticlesLocation(),
-						textFileName.endsWith(".txt") ? textFileName : textFileName + ".txt");
+						textFileName.endsWith(".txt") ? textFileName : String.format("%s.txt", textFileName));
 
 		if (!textFile.exists()) {
 			JFileChooser fileChooser = new JFileChooser();
@@ -105,23 +105,6 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 					e.printStackTrace();
 				}
 			}
-		}
-	}
-
-	@Override
-	public int compareTo(TextSource textSource2) {
-		if (this == textSource2) {
-			return 0;
-		}
-		if (textSource2 == null) {
-			return 1;
-		}
-
-		int result = ModelObject.extractInt(this.getId()) - ModelObject.extractInt(textSource2.getId());
-		if (result == 0) {
-			return id.toLowerCase().compareTo(textSource2.getId().toLowerCase());
-		} else {
-			return result;
 		}
 	}
 
@@ -211,7 +194,7 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 					content = FileUtils.readFileToString(textFile, "UTF-8");
 					return content;
 				} catch (IOException e) {
-					textFile = new File(controller.getArticlesLocation(), id + ".txt");
+					textFile = new File(controller.getArticlesLocation(), String.format("%s.txt", id));
 					while (!textFile.exists()) {
 						JFileChooser fileChooser = new JFileChooser();
 						if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {

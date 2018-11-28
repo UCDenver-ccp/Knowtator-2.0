@@ -22,13 +22,9 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.collection.event;
+package edu.ucdenver.ccp.knowtator.model.collection.listener;
 
 import edu.ucdenver.ccp.knowtator.model.ModelObject;
 
-class AddEvent<K extends ModelObject> {
-
-    AddEvent() {
-    }
-
+public interface KnowtatorCollectionListener<K extends ModelObject> extends SelectableCollectionListener<K> {
 }

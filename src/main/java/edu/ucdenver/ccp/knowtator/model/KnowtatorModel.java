@@ -57,7 +57,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 /**
- * The Knowtator class. Contains all of the modelactions managers. It is used to interface between the view and the modelactions. Also handles
+ * The Knowtator class. Contains all of the model managers. It is used to interface between the view and the model. Also handles
  * loading and saving of the project.
  *
  * @author Harrison Pielke-Lombardo
@@ -319,7 +319,7 @@ public class KnowtatorModel extends OWLModel implements CaretListener {
 	}
 
 	/**
-	 * This method ensures that all objects in the modelactions will have a unique ID. If an object if provided with priority,
+	 * This method ensures that all objects in the model will have a unique ID. If an object if provided with priority,
 	 * its id will be kept and any other object already verified will have its ID changed. IDs are changed to the form
 	 * textSourceID-int where textSourceID is the ID of the object's encompassing text source and int is the next
 	 * number not used in any other IDs in the same encompassing text source.
@@ -338,7 +338,7 @@ public class KnowtatorModel extends OWLModel implements CaretListener {
 
 			while (verifiedId == null || idRegistry.keySet().contains(verifiedId)) {
 				if (obj instanceof TextBoundModelObject) {
-					verifiedId = (((TextBoundModelObject) obj).getTextSource().getId()) + "-" + i;
+					verifiedId = String.format("%s-%d", ((TextBoundModelObject) obj).getTextSource().getId(), i);
 				} else {
 					verifiedId = Integer.toString(i);
 				}
@@ -365,7 +365,7 @@ public class KnowtatorModel extends OWLModel implements CaretListener {
 	}
 
 	/**
-	 * Disposes the modelactions. Clears the id registry.
+	 * Disposes the model. Clears the id registry.
 	 */
 	@Override
 	public void dispose() {
@@ -388,9 +388,9 @@ public class KnowtatorModel extends OWLModel implements CaretListener {
 	}
 
 	/**
-	 * Resets the modelactions to its initial condition.
+	 * Resets the model to its initial condition.
 	 *
-	 * @param owlWorkspace Protege's OWL workspace to be passed to the OWL modelactions.
+	 * @param owlWorkspace Protege's OWL workspace to be passed to the OWL model.
 	 */
 	public void reset(OWLWorkspace owlWorkspace) {
 		setOwlWorkSpace(owlWorkspace);
@@ -605,9 +605,9 @@ public class KnowtatorModel extends OWLModel implements CaretListener {
 
 			if (FileUtils.listFiles(projectLocation, new String[]{"knowtator"}, false).size() == 0)
 				Files.createFile(
-						new File(projectLocation, projectLocation.getName() + ".knowtator").toPath());
+						new File(projectLocation, String.format("%s.knowtator", projectLocation.getName())).toPath());
 		} catch (IOException e) {
-			System.err.println("Cannot create directories - " + e);
+			System.err.printf("Cannot create directories - %s%n", e);
 		}
 	}
 

@@ -24,9 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection.listener;
 
-import edu.ucdenver.ccp.knowtator.model.ModelObject;
-
-public interface CollectionListener<K extends ModelObject> {
+public interface CollectionListener {
 	void added();
 
 	void removed();

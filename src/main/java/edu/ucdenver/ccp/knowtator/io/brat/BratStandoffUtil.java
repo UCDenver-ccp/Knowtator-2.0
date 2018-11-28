@@ -99,7 +99,7 @@ public class BratStandoffUtil implements BasicIOUtil<BratStandoffIO> {
         annotationConfig.put(StandoffTags.annotationsEntities, new HashMap<>());
         annotationConfig.put(StandoffTags.annotationsAttributes, new HashMap<>());
 
-        File outputFile = new File(file.getParentFile(), file.getName() + ".ann");
+        File outputFile = new File(file.getParentFile(), String.format("%s.ann", file.getName()));
         writeToOutputFile(savable, outputFile, visualConfig, annotationConfig);
 
         writeVisualConfiguration(file, visualConfig);
@@ -111,7 +111,7 @@ public class BratStandoffUtil implements BasicIOUtil<BratStandoffIO> {
 
             BufferedWriter annotationConfigWriter =
                     new BufferedWriter(
-                            new FileWriter(file.getAbsolutePath() + File.separator + "concept.conf"));
+                            new FileWriter(String.format("%s%sconcept.conf", file.getAbsolutePath(), File.separator)));
 
             annotationConfig.forEach(
                     (key, map) -> {
@@ -142,7 +142,7 @@ public class BratStandoffUtil implements BasicIOUtil<BratStandoffIO> {
         try {
             BufferedWriter visualConfigWriter =
                     new BufferedWriter(
-                            new FileWriter(file.getAbsolutePath() + File.separator + "visual.conf"));
+                            new FileWriter(String.format("%s%svisual.conf", file.getAbsolutePath(), File.separator)));
             visualConfig.forEach(
                     (key, map) -> {
                         try {
@@ -179,7 +179,7 @@ public class BratStandoffUtil implements BasicIOUtil<BratStandoffIO> {
 
     private void writeToOutputFile(BratStandoffIO textSource, File file, Map<String, Map<String, String>> annotationConfig, Map<String, Map<String, String>> visualConfig) {
         try {
-            log.info("Writing to " + file.getAbsolutePath());
+            log.info(String.format("Writing to %s", file.getAbsolutePath()));
             BufferedWriter bw =
                     new BufferedWriter(
                             new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));

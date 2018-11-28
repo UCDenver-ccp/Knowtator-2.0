@@ -32,7 +32,7 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import javax.swing.*;
 
 public class RelationList extends KnowtatorList<RelationAnnotation> {
-	boolean shouldReact;
+	private boolean shouldReact;
 
 	protected RelationList() {
 		super();

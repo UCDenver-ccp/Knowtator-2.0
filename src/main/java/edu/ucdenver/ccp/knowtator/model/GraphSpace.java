@@ -87,27 +87,6 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		areListenersSet = false;
 	}
 
-	/*
-  COMPARISON
-   */
-
-	@Override
-	public int compareTo(GraphSpace graphSpace2) {
-		if (this == graphSpace2) {
-			return 0;
-		}
-		if (graphSpace2 == null) {
-			return 1;
-		}
-
-		int result = ModelObject.extractInt(this.getId()) - ModelObject.extractInt(graphSpace2.getId());
-		if (result == 0) {
-			return this.getId().compareTo(graphSpace2.getId());
-		} else {
-			return result;
-		}
-	}
-
   /*
   ADDERS
    */
@@ -507,6 +486,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		return areListenersSet;
 	}
 
+	@SuppressWarnings("Duplicates")
 	@Override
 	public void ontologiesChanged(@Nonnull List<? extends OWLOntologyChange> changes) {
 		Set<OWLEntity> possiblyAddedEntities = new HashSet<>();

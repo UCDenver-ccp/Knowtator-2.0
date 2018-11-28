@@ -34,11 +34,11 @@ public class ActionParameters {
 		this.collectionType = collectionType;
 	}
 
-	public CollectionActionType getActionType() {
+	CollectionActionType getActionType() {
 		return actionType;
 	}
 
-	public KnowtatorCollectionType getCollectionType() {
+	KnowtatorCollectionType getCollectionType() {
 		return collectionType;
 	}
 }

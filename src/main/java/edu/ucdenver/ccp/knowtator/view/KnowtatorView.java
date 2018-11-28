@@ -140,7 +140,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		// It is kind of a hacky fix, but it works for now.
 		log.warn("Don't worry about the following exception. Just forcing loading of a class needed by mxGraph");
 		try {
-			mxGraphTransferable.dataFlavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + "; class=com.mxgraph.swing.util.mxGraphTransferable", null, mxGraphTransferable.class.getClassLoader());
+			mxGraphTransferable.dataFlavor = new DataFlavor(String.format("%s; class=com.mxgraph.swing.util.mxGraphTransferable", DataFlavor.javaJVMLocalObjectMimeType), null, mxGraphTransferable.class.getClassLoader());
 		} catch (ClassNotFoundException ignored) {
 
 		}
@@ -186,7 +186,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 		knowtatorTextPane = new KnowtatorTextPane(this, searchTextField, onlyAnnotationsCheckBox, regexCheckBox, caseSensitiveCheckBox);
 		graphViewDialog = new GraphViewDialog(this);
-		textSourceChooser = new TextSourceChooser(this);
+		textSourceChooser = new TextSourceChooser();
 
 		spanList = new SpanList();
 		graphSpaceList = new GraphSpaceList();

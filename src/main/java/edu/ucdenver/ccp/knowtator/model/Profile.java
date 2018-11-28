@@ -196,7 +196,7 @@ public class Profile implements ModelObject<Profile>, Savable, KnowtatorXMLIO {
 	@SuppressWarnings("WeakerAccess")
 	@Override
 	public File getSaveLocation() {
-		return new File(controller.getSaveLocation().getAbsolutePath(), id + ".xml");
+		return new File(controller.getSaveLocation().getAbsolutePath(), String.format("%s.xml", id));
 	}
 
 	@Override

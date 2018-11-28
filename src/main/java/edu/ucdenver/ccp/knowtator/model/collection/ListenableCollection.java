@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Stream;
 
-public abstract class ListenableCollection<K extends ModelObject, C extends Collection<K>, L extends CollectionListener<K>> implements Iterable<K> {
+public abstract class ListenableCollection<K extends ModelObject, C extends Collection<K>, L extends CollectionListener> implements Iterable<K> {
 	final C collection;
 	final List<L> collectionListeners;
 

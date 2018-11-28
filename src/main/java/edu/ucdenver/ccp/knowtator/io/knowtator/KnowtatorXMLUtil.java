@@ -51,7 +51,7 @@ public final class KnowtatorXMLUtil extends OldKnowtatorUtil implements BasicIOU
   @Override
   public void read(KnowtatorXMLIO reader, File file) {
     try {
-      log.info("Reading from " + file);
+      log.info(String.format("Reading from %s", file));
 
       /*
       doc parses the XML into a graph
@@ -91,7 +91,7 @@ public final class KnowtatorXMLUtil extends OldKnowtatorUtil implements BasicIOU
     Document dom;
 
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-    log.info("Writing to " + file.getAbsolutePath());
+    log.info(String.format("Writing to %s", file.getAbsolutePath()));
     try {
 
       DocumentBuilder db = dbf.newDocumentBuilder();

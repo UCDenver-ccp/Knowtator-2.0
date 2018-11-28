@@ -113,14 +113,14 @@ public class TestingHelpers {
                         graphSpace1 -> graphSpace1.getChildEdges(graphSpace1.getDefaultParent()).length)
                         .sum()).sum();
 
-        assert actualTextSources == expectedTextSources : "There were " + actualTextSources + " text sources instead of " + expectedTextSources;
-        assert actualConceptAnnotations == expectedConceptAnnotations : "There were " + actualConceptAnnotations + " concept annotations instead of " + expectedConceptAnnotations;
-        assert actualSpans == expectedSpans : "There were " + actualSpans + " spans instead of " + expectedSpans;
-        assert actualProfiles == expectedProfiles : "There were " + actualProfiles + " profiles instead of " + expectedProfiles;
-        assert actualHighlighters == expectedHighlighters : "There were " + actualHighlighters + " highlighters instead of " + expectedHighlighters;
-        assert actualGraphSpaces == expectedGraphSpaces : "There were " + actualGraphSpaces + " graph spaces instead of " + expectedGraphSpaces;
-        assert actualAnnotationNodes == expectedAnnotationNodes : "There were " + actualAnnotationNodes + " vertices instead of " + expectedAnnotationNodes;
-        assert actualTriples == expectedTriples : "There were " + actualTriples + " triples instead of " + expectedTriples;
+        assert actualTextSources == expectedTextSources : String.format("There were %d text sources instead of %d", actualTextSources, expectedTextSources);
+        assert actualConceptAnnotations == expectedConceptAnnotations : String.format("There were %d concept annotations instead of %d", actualConceptAnnotations, expectedConceptAnnotations);
+        assert actualSpans == expectedSpans : String.format("There were %d spans instead of %d", actualSpans, expectedSpans);
+        assert actualProfiles == expectedProfiles : String.format("There were %d profiles instead of %d", actualProfiles, expectedProfiles);
+        assert actualHighlighters == expectedHighlighters : String.format("There were %d highlighters instead of %d", actualHighlighters, expectedHighlighters);
+        assert actualGraphSpaces == expectedGraphSpaces : String.format("There were %d graph spaces instead of %d", actualGraphSpaces, expectedGraphSpaces);
+        assert actualAnnotationNodes == expectedAnnotationNodes : String.format("There were %d vertices instead of %d", actualAnnotationNodes, expectedAnnotationNodes);
+        assert actualTriples == expectedTriples : String.format("There were %d triples instead of %d", actualTriples, expectedTriples);
     }
 
     public static void testOWLAction(KnowtatorModel controller,

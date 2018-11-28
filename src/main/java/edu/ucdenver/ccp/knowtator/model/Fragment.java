@@ -31,10 +31,8 @@ public class Fragment implements ModelObject<Fragment> {
 	private final String type;
 	private final Map<String, Integer> conceptCountMap;
 	private String id;
-	private final TextSource textSource;
 
-	public Fragment(TextSource textSource, String id, String type) {
-		this.textSource = textSource;
+	public Fragment(String id, String type) {
 		this.id = id;
 		this.type = type;
 

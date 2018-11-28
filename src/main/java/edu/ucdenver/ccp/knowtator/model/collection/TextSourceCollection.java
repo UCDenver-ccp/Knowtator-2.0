@@ -113,12 +113,6 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 	public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) {
 	}
 
-	public void addDocument(File file) {
-
-		TextSource newTextSource = new TextSource(controller, null, file.getName());
-		add(newTextSource);
-	}
-
 	@Override
 	public void load() {
 		try {

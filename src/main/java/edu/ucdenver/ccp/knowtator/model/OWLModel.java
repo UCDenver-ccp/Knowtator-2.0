@@ -261,7 +261,7 @@ public abstract class OWLModel extends UndoManager implements Serializable, Base
 									}
 								}).collect(Collectors.toList());
 								if (!ontologies.contains(ontologyLocation)) {
-									log.info("Loading ontology: " + ontologyLocation);
+									log.info(String.format("Loading ontology: %s", ontologyLocation));
 									try {
 										OWLOntology newOntology =
 												owlWorkspace
@@ -323,7 +323,7 @@ public abstract class OWLModel extends UndoManager implements Serializable, Base
 		owlWorkSpace.ifPresent(owlWorkspace -> owlWorkspace.getOWLSelectionModel().setSelectedEntity(owlEntity));
 	}
 
-	public boolean renderChangeInProgress() {
+	boolean renderChangeInProgress() {
 		return annotationIRIs != null;
 	}
 

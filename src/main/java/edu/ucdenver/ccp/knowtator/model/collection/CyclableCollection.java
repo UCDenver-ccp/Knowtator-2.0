@@ -29,7 +29,7 @@ import edu.ucdenver.ccp.knowtator.model.collection.listener.CollectionListener;
 
 import java.util.TreeSet;
 
-public abstract class CyclableCollection<K extends ModelObject, L extends CollectionListener<K>> extends ListenableCollection<K, TreeSet<K>, L> {
+public abstract class CyclableCollection<K extends ModelObject, L extends CollectionListener> extends ListenableCollection<K, TreeSet<K>, L> {
 
   CyclableCollection(TreeSet<K> collection) {
     super(collection);

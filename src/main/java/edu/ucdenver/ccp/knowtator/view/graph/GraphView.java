@@ -226,7 +226,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 				"Graph Title", field1,
 		};
 		field1.addAncestorListener(new GraphView.RequestFocusListener());
-		field1.setText("Graph Space " + textSource.getNumberOfGraphSpaces());
+		field1.setText(String.format("Graph Space %d", textSource.getNumberOfGraphSpaces()));
 		int option =
 				JOptionPane.showConfirmDialog(
 						view,
@@ -369,7 +369,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
 				event.getNew()
 						.filter(textSource -> isVisible())
-						.ifPresent(textSouce -> textSouce.getSelectedGraphSpace()
+						.ifPresent(textSource -> textSource.getSelectedGraphSpace()
 								.ifPresent(GraphView.this::showGraph));
 			}
 

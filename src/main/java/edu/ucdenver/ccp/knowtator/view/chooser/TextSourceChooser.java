@@ -29,7 +29,7 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 public class TextSourceChooser extends KnowtatorChooser<TextSource> {
 
-	public TextSourceChooser(KnowtatorView view) {
+	public TextSourceChooser() {
 		super();
 		setCollection(KnowtatorView.MODEL.getTextSources());
 	}

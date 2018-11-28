@@ -51,8 +51,8 @@ public class IAA2HTML {
 
 		String fileName = matcher.getName();
 
-		PrintStream tabular = new PrintStream(new File(directory, fileName + ".dat"));
-		PrintStream html = new PrintStream(new File(directory, fileName + ".html"));
+		PrintStream tabular = new PrintStream(new File(directory, String.format("%s.dat", fileName)));
+		PrintStream html = new PrintStream(new File(directory, String.format("%s.html", fileName)));
 
 		initHTML(html, matcher.getName(), null, null, matcher.getDescription());
 
@@ -60,11 +60,7 @@ public class IAA2HTML {
 		html.println("<p>");
 		printTitleRowForAllwayIAA(html, matcher);
 
-		tabular.println(
-				"This file is provided to facilitate cut-n-paste into a spreadsheet.\n"
-						+ "If you cannot directly copy the data below into a spreadsheet without it all going into a single cell,\n"
-						+ "then try copying to a text editor firstConceptAnnotation and then copy it from there.  There is typically a 'paste special'\n"
-						+ "option under the Edit menu that will allow you to paste the copied data as text.  This will also work.\n\n\n");
+		tabular.printf("This file is provided to facilitate cut-n-paste into a spreadsheet.\nIf you cannot directly copy the data below into a spreadsheet without it all going into a single cell,\nthen try copying to a text editor firstConceptAnnotation and then copy it from there.  There is typically a 'paste special'\noption under the Edit menu that will allow you to paste the copied data as text.  This will also work.\n\n\n%n");
 
 		if (matcher.returnsTrivials())
 			tabular.println(
@@ -111,64 +107,11 @@ public class IAA2HTML {
 						/ ((double) totalNontrivialAllwayMatches + (double) totalNontrivialAllwayNonmatches);
 
 		if (matcher.returnsTrivials()) {
-			html.println(
-					"<tr><td><b>All classes</b></td>"
-							+ "<td>"
-							+ percentageFormat.format(iaaScore)
-							+ "</td>"
-							+ "<td>"
-							+ percentageFormat.format(stingyIAAScore)
-							+ "</td>"
-							+ "<td>"
-							+ percentageFormat.format(respectableIAAScore)
-							+ "</td>"
-							+ "<td>"
-							+ percentageFormat.format(nontrivialIAAScore)
-							+ "</td>"
-							+ "<td>"
-							+ totalAllwayMatches
-							+ "</td>"
-							+ "<td>"
-							+ totalTrivialAllwayMatches
-							+ "</td>"
-							+ "<td>"
-							+ totalNontrivialAllwayMatches
-							+ "</td>"
-							+ "<td>"
-							+ totalAllwayNonmatches
-							+ "</td>"
-							+ "<td>"
-							+ totalTrivialAllwayNonmatches
-							+ "</td>"
-							+ "<td>"
-							+ totalNontrivialAllwayNonmatches
-							+ "</td></tr>");
-			tabular.println(
-					"All classes\t"
-							+ totalAllwayMatches
-							+ "\t"
-							+ totalTrivialAllwayMatches
-							+ "\t"
-							+ totalNontrivialAllwayMatches
-							+ "\t"
-							+ totalAllwayNonmatches
-							+ "\t"
-							+ totalTrivialAllwayNonmatches
-							+ "\t"
-							+ totalNontrivialAllwayNonmatches);
+			html.printf("<tr><td><b>All classes</b></td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td></tr>%n", percentageFormat.format(iaaScore), percentageFormat.format(stingyIAAScore), percentageFormat.format(respectableIAAScore), percentageFormat.format(nontrivialIAAScore), totalAllwayMatches, totalTrivialAllwayMatches, totalNontrivialAllwayMatches, totalAllwayNonmatches, totalTrivialAllwayNonmatches, totalNontrivialAllwayNonmatches);
+			tabular.printf("All classes\t%d\t%d\t%d\t%d\t%d\t%d%n", totalAllwayMatches, totalTrivialAllwayMatches, totalNontrivialAllwayMatches, totalAllwayNonmatches, totalTrivialAllwayNonmatches, totalNontrivialAllwayNonmatches);
 		} else {
-			html.println(
-					"<tr><td><b>All classes</b></td>"
-							+ "<td>"
-							+ percentageFormat.format(iaaScore)
-							+ "</td>"
-							+ "<td>"
-							+ totalAllwayMatches
-							+ "</td>"
-							+ "<td>"
-							+ totalAllwayNonmatches
-							+ "</td></tr>");
-			tabular.println("All classes\t" + totalAllwayMatches + "\t" + totalAllwayNonmatches);
+			html.printf("<tr><td><b>All classes</b></td><td>%s</td><td>%d</td><td>%d</td></tr>%n", percentageFormat.format(iaaScore), totalAllwayMatches, totalAllwayNonmatches);
+			tabular.printf("All classes\t%d\t%d%n", totalAllwayMatches, totalAllwayNonmatches);
 		}
 
 		Map<String, Set<ConceptAnnotation>> sortedAllwayMatches = sortByType(classes, allwayMatchesSingleSet);
@@ -205,69 +148,11 @@ public class IAA2HTML {
 							/ ((double) classNontrivialMatches + (double) classNontrivialNonmatches);
 
 			if (matcher.returnsTrivials()) {
-				html.println(
-						"<tr><td>"
-								+ type
-								+ "</td>"
-								+ "<td>"
-								+ percentageFormat.format(iaaScore)
-								+ "</td>"
-								+ "<td>"
-								+ percentageFormat.format(stingyIAAScore)
-								+ "</td>"
-								+ "<td>"
-								+ percentageFormat.format(respectableIAAScore)
-								+ "</td>"
-								+ "<td>"
-								+ percentageFormat.format(nontrivialIAAScore)
-								+ "</td>"
-								+ "<td>"
-								+ classMatches
-								+ "</td>"
-								+ "<td>"
-								+ classTrivialMatches
-								+ "</td>"
-								+ "<td>"
-								+ classNontrivialMatches
-								+ "</td>"
-								+ "<td>"
-								+ classNonmatches
-								+ "</td>"
-								+ "<td>"
-								+ classTrivialNonmatches
-								+ "</td>"
-								+ "<td>"
-								+ classNontrivialNonmatches
-								+ "</td></tr>");
-				tabular.println(
-						type
-								+ "\t"
-								+ classMatches
-								+ "\t"
-								+ classTrivialMatches
-								+ "\t"
-								+ classNontrivialMatches
-								+ "\t"
-								+ classNonmatches
-								+ "\t"
-								+ classTrivialNonmatches
-								+ "\t"
-								+ classNontrivialNonmatches);
+				html.printf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td></tr>%n", type, percentageFormat.format(iaaScore), percentageFormat.format(stingyIAAScore), percentageFormat.format(respectableIAAScore), percentageFormat.format(nontrivialIAAScore), classMatches, classTrivialMatches, classNontrivialMatches, classNonmatches, classTrivialNonmatches, classNontrivialNonmatches);
+				tabular.printf("%s\t%d\t%d\t%d\t%d\t%d\t%d%n", type, classMatches, classTrivialMatches, classNontrivialMatches, classNonmatches, classTrivialNonmatches, classNontrivialNonmatches);
 			} else {
-				html.println(
-						"<tr><td>"
-								+ type
-								+ "</td>"
-								+ "<td>"
-								+ percentageFormat.format(iaaScore)
-								+ "</td>"
-								+ "<td>"
-								+ classMatches
-								+ "</td>"
-								+ "<td>"
-								+ classNonmatches
-								+ "</td></tr>");
-				tabular.println(type + "\t" + classMatches + "\t" + classNonmatches);
+				html.printf("<tr><td>%s</td><td>%s</td><td>%d</td><td>%d</td></tr>%n", type, percentageFormat.format(iaaScore), classMatches, classNonmatches);
+				tabular.printf("%s\t%d\t%d%n", type, classMatches, classNonmatches);
 			}
 		}
 		html.println("</table>");
@@ -334,16 +219,16 @@ public class IAA2HTML {
 		Map<ConceptAnnotation, Set<ConceptAnnotation>> matchSets = iaa.getAllwayMatchSets();
 
 		for (String set : sets) {
-			String matchesFileName = fileName + ".matches." + set + ".html";
-			html.println("<li><a href=\"" + matchesFileName + "\">matches for " + set + "</a></li>");
+			String matchesFileName = String.format("%s.matches.%s.html", fileName, set);
+			html.printf("<li><a href=\"%s\">matches for %s</a></li>%n", matchesFileName, set);
 			PrintStream matchesStream = new PrintStream(new File(directory, matchesFileName));
 			Set<ConceptAnnotation> matches = allwayMatches.get(set);
 			Map<String, Set<ConceptAnnotation>> sortedMatches = sortByType(classes, matches);
 
 			initHTML(
 					matchesStream,
-					"Matches for " + set,
-					fileName + ".html",
+					String.format("Matches for %s", set),
+					String.format("%s.html", fileName),
 					fileName,
 					"Each concept that was considered a match is shown in the text that it was found in.  The matching annotations from the other concept sets are also shown.");
 			printInstances(
@@ -357,21 +242,16 @@ public class IAA2HTML {
 			matchesStream.close();
 
 			if (matcher.returnsTrivials()) {
-				String trivialMatchesFileName = fileName + ".trivial.matches." + set + ".html";
-				html.println(
-						"<li><a href=\""
-								+ trivialMatchesFileName
-								+ "\">trivial matches for "
-								+ set
-								+ "</a></li>");
+				String trivialMatchesFileName = String.format("%s.trivial.matches.%s.html", fileName, set);
+				html.printf("<li><a href=\"%s\">trivial matches for %s</a></li>%n", trivialMatchesFileName, set);
 				PrintStream trivialMatchesStream =
 						new PrintStream(new File(directory, trivialMatchesFileName));
 				Set<ConceptAnnotation> trivialMatches = trivialAllwayMatches.get(set);
 				Map<String, Set<ConceptAnnotation>> sortedTrivialMatches = sortByType(classes, trivialMatches);
 				initHTML(
 						trivialMatchesStream,
-						"Trivial matches for " + set,
-						fileName + ".html",
+						String.format("Trivial matches for %s", set),
+						String.format("%s.html", fileName),
 						fileName,
 						"Each concept that was considered a trival match is shown in the text that it was found in.  The matching annotations from the other concept sets are also shown.");
 				printInstances(
@@ -384,13 +264,8 @@ public class IAA2HTML {
 				trivialMatchesStream.flush();
 				trivialMatchesStream.close();
 
-				String nontrivialMatchesFileName = fileName + ".nontrivial.matches." + set + ".html";
-				html.println(
-						"<li><a href=\""
-								+ nontrivialMatchesFileName
-								+ "\">non-trivial matches for "
-								+ set
-								+ "</a></li>");
+				String nontrivialMatchesFileName = String.format("%s.nontrivial.matches.%s.html", fileName, set);
+				html.printf("<li><a href=\"%s\">non-trivial matches for %s</a></li>%n", nontrivialMatchesFileName, set);
 				PrintStream nontrivialMatchesStream =
 						new PrintStream(new File(directory, nontrivialMatchesFileName));
 				Set<ConceptAnnotation> nontrivialMatches = nontrivialAllwayMatches.get(set);
@@ -398,8 +273,8 @@ public class IAA2HTML {
 						sortByType(classes, nontrivialMatches);
 				initHTML(
 						nontrivialMatchesStream,
-						"non-trivial non-matches for " + set,
-						fileName + ".html",
+						String.format("non-trivial non-matches for %s", set),
+						String.format("%s.html", fileName),
 						fileName,
 						"Each concept that was considered a non-trival match is shown in the text that it was found in.  The matching from the other concept sets are also shown.");
 				printInstances(
@@ -435,8 +310,8 @@ public class IAA2HTML {
 		html.println("<ul>");
 
 		for (String set : sets) {
-			String errorsFileName = fileName + ".nonmatches." + set + ".html";
-			html.println("<li><a href=\"" + errorsFileName + "\">non-matches for " + set + "</a></li>");
+			String errorsFileName = String.format("%s.nonmatches.%s.html", fileName, set);
+			html.printf("<li><a href=\"%s\">non-matches for %s</a></li>%n", errorsFileName, set);
 			PrintStream errors = new PrintStream(new File(directory, errorsFileName));
 			Set<ConceptAnnotation> nonmatches = allwayNonmatches.get(set);
 			Map<String, Set<ConceptAnnotation>> sortedNonmatches = sortByType(classes, nonmatches);
@@ -448,8 +323,8 @@ public class IAA2HTML {
 
 			initHTML(
 					errors,
-					"Non-matches for " + set,
-					fileName + ".html",
+					String.format("Non-matches for %s", set),
+					String.format("%s.html", fileName),
 					fileName,
 					"Each concept that was considered a non-match is shown in the text that it was found in.  Overlapping annotations from the other concept sets are also shown.");
 			printInstances(
@@ -463,21 +338,16 @@ public class IAA2HTML {
 			errors.close();
 
 			if (matcher.returnsTrivials()) {
-				String trivialNonMatchesFileName = fileName + ".trivial.nonmatches." + set + ".html";
-				html.println(
-						"<li><a href=\""
-								+ trivialNonMatchesFileName
-								+ "\">trivial non-matches for "
-								+ set
-								+ "</a></li>");
+				String trivialNonMatchesFileName = String.format("%s.trivial.nonmatches.%s.html", fileName, set);
+				html.printf("<li><a href=\"%s\">trivial non-matches for %s</a></li>%n", trivialNonMatchesFileName, set);
 				PrintStream trivialErrors = new PrintStream(new File(directory, trivialNonMatchesFileName));
 				Set<ConceptAnnotation> trivialNonmatches = trivialAllwayNonmatches.get(set);
 				Map<String, Set<ConceptAnnotation>> sortedTrivialNonmatches =
 						sortByType(classes, trivialNonmatches);
 				initHTML(
 						trivialErrors,
-						"Trivial non-matches for " + set,
-						fileName + ".html",
+						String.format("Trivial non-matches for %s", set),
+						String.format("%s.html", fileName),
 						fileName,
 						"Each concept that was considered a trival non-match is shown in the text that it was found in.  Overlapping annotations from the other concept sets are also shown.");
 				printInstances(
@@ -490,13 +360,8 @@ public class IAA2HTML {
 				trivialErrors.flush();
 				trivialErrors.close();
 
-				String nontrivialNonMatchesFileName = fileName + ".nontrivial.nonmatches." + set + ".html";
-				html.println(
-						"<li><a href=\""
-								+ nontrivialNonMatchesFileName
-								+ "\">non-trivial non-matches for "
-								+ set
-								+ "</a></li>");
+				String nontrivialNonMatchesFileName = String.format("%s.nontrivial.nonmatches.%s.html", fileName, set);
+				html.printf("<li><a href=\"%s\">non-trivial non-matches for %s</a></li>%n", nontrivialNonMatchesFileName, set);
 				PrintStream nontrivialErrors =
 						new PrintStream(new File(directory, nontrivialNonMatchesFileName));
 				Set<ConceptAnnotation> nontrivialNonmatches = nontrivialAllwayNonmatches.get(set);
@@ -504,8 +369,8 @@ public class IAA2HTML {
 						sortByType(classes, nontrivialNonmatches);
 				initHTML(
 						nontrivialErrors,
-						"non-trivial non-matches for " + set,
-						fileName + ".html",
+						String.format("non-trivial non-matches for %s", set),
+						String.format("%s.html", fileName),
 						fileName,
 						"Each concept that was considered a non-trival non-match is shown in the text that it was found in.  Overlapping annotations from the other concept sets are also shown.");
 				printInstances(
@@ -549,7 +414,7 @@ public class IAA2HTML {
 			Map<ConceptAnnotation, String> annotationTextNames,
 			Map<ConceptAnnotation, Set<ConceptAnnotation>> comparisonAnnotations) {
 		for (String type : sortedTypes) {
-			out.println("<h2>" + type + "</h2>");
+			out.printf("<h2>%s</h2>%n", type);
 			Set<ConceptAnnotation> typeConceptAnnotations = sortedAnnotations.get(type);
 			for (ConceptAnnotation conceptAnnotation : typeConceptAnnotations) {
 				writeAnnotationTextSourceHTML(
@@ -583,10 +448,10 @@ public class IAA2HTML {
 	private static void initHTML(
 			PrintStream html, String title, String link, String linkLabel, String description) {
 		html.println("<html>");
-		html.println("<head><title>" + title + "</title></head>");
+		html.printf("<head><title>%s</title></head>%n", title);
 		html.println("<body>");
-		if (link != null) html.println("<a href=\"" + link + "\">" + linkLabel + "</a>");
-		html.println("<h1>" + title + "</h1>");
+		if (link != null) html.printf("<a href=\"%s\">%s</a>%n", link, linkLabel);
+		html.printf("<h1>%s</h1>%n", title);
 		html.println(description);
 		html.println("<hr>");
 	}
@@ -667,14 +532,12 @@ public class IAA2HTML {
 
 	private static void printIntro(
 			PrintStream html, IAA iaa, int numberOfDocs, String fileName, Matcher matcher) {
-		html.println(
-				"<p>For more detailed documentation on IAA please see the <a href=\"http://knowtator.sourceforge.net//iaa.shtml\">"
-						+ "IAA documentation</a>.");
+		html.printf("<p>For more detailed documentation on IAA please see the <a href=\"http://knowtator.sourceforge.net//iaa.shtml\">IAA documentation</a>.%n");
 
 		html.println("<p>");
-		html.println("<h2>" + iaa.getSetNames().size() + "-way IAA Results</h2>");
-		html.println("IAA calculated on " + numberOfDocs + " documents.");
-		html.println("<p><a href=\"" + fileName + ".dat\">tabular data</a>");
+		html.printf("<h2>%d-way IAA Results</h2>%n", iaa.getSetNames().size());
+		html.printf("IAA calculated on %d documents.%n", numberOfDocs);
+		html.printf("<p><a href=\"%s.dat\">tabular data</a>%n", fileName);
 		html.println("<p>all annotations = matches + non-matches");
 		html.println("<br> IAA = matches / all annotations");
 		if (matcher.returnsTrivials()) {
@@ -687,36 +550,23 @@ public class IAA2HTML {
 	}
 
 	private static void printTitleRowForAllwayIAA(PrintStream html, Matcher matcher) {
-		html.println("<table border=1><tr><td><b>Type</b></td>" + "<td><b>IAA</b></td>");
+		html.printf("<table border=1><tr><td><b>Type</b></td><td><b>IAA</b></td>%n");
 		if (matcher.returnsTrivials()) {
-			html.println(
-					"<td><b>stingy IAA</b></td>"
-							+ "<td><b>respectable IAA</b></td>"
-							+ "<td><b>non-trivial IAA</b></td>");
+			html.printf("<td><b>stingy IAA</b></td><td><b>respectable IAA</b></td><td><b>non-trivial IAA</b></td>%n");
 		}
 		html.println("<td><b>matches</b></td>");
 		if (matcher.returnsTrivials()) {
-			html.println("<td><b>trivial matches</b></td>" + "<td><b>non-trivial matches</b></td>");
+			html.printf("<td><b>trivial matches</b></td><td><b>non-trivial matches</b></td>%n");
 		}
 		html.println("<td><b>non-matches</b></td>");
 		if (matcher.returnsTrivials()) {
-			html.println(
-					"<td><b>trivial non-matches</b></td>" + "<td><b>non-trivial non-matches</b></td>");
+			html.printf("<td><b>trivial non-matches</b></td><td><b>non-trivial non-matches</b></td>%n");
 		}
 		html.println("</tr>");
 	}
 
 	static String initHTML(String title, String description) {
-		return "<html>\n"
-				+ "<head><title>"
-				+ title
-				+ "</title></head>\n"
-				+ "<body>\n"
-				+ "<h1>"
-				+ title
-				+ "</h1>\n"
-				+ description
-				+ " For more detailed documentation on IAA please see the <a href=\"http://knowtator.sourceforge.net//iaa.shtml\">IAA documentation</a>.\n";
+		return String.format("<html>\n<head><title>%s</title></head>\n<body>\n<h1>%s</h1>\n%s For more detailed documentation on IAA please see the <a href=\"http://knowtator.sourceforge.net//iaa.shtml\">IAA documentation</a>.\n", title, title, description);
 	}
 
 	static void printMatchData(
@@ -739,15 +589,15 @@ public class IAA2HTML {
 		Collections.sort(sortedTypes);
 
 		for (String set : sets) {
-			String matchesFileName = fileName + ".matches." + set + ".html";
-			html.println("<li><a href=\"" + matchesFileName + "\">matches for " + set + "</a></li>");
+			String matchesFileName = String.format("%s.matches.%s.html", fileName, set);
+			html.printf("<li><a href=\"%s\">matches for %s</a></li>%n", matchesFileName, set);
 			PrintStream matchesStream = new PrintStream(new File(directory, matchesFileName));
 			Set<ConceptAnnotation> matches = allwayMatches.get(set);
 			Map<String, Set<ConceptAnnotation>> sortedMatches = IAA2HTML.sortByType(classes, matches);
 
 			matchesStream.println(
 					initHTML(
-							"Matches for " + set,
+							String.format("Matches for %s", set),
 							"Each concept that was considered a match is shown in the text that it was found in.  The matching annotations from the other concept sets are also shown."));
 			IAA2HTML.printInstances(
 					matchesStream,
@@ -780,8 +630,8 @@ public class IAA2HTML {
 		Collections.sort(sortedTypes);
 
 		for (String set : sets) {
-			String errorsFileName = fileName + ".nonmatches." + set + ".html";
-			html.println("<li><a href=\"" + errorsFileName + "\">non-matches for " + set + "</a></li>");
+			String errorsFileName = String.format("%s.nonmatches.%s.html", fileName, set);
+			html.printf("<li><a href=\"%s\">non-matches for %s</a></li>%n", errorsFileName, set);
 			PrintStream errors = new PrintStream(new File(directory, errorsFileName));
 			Set<ConceptAnnotation> nonmatches = allwayNonmatches.get(set);
 			Map<String, Set<ConceptAnnotation>> sortedNonmatches = IAA2HTML.sortByType(classes, nonmatches);
@@ -793,7 +643,7 @@ public class IAA2HTML {
 
 			errors.println(
 					initHTML(
-							"Non-matches for " + set,
+							String.format("Non-matches for %s", set),
 							"Each concept that was considered a non-match is shown in the text that it was found in.  Overlapping annotations from the other concept sets are also shown."));
 			IAA2HTML.printInstances(
 					errors,
@@ -815,15 +665,7 @@ public class IAA2HTML {
 			Map<String, Map<String, Set<ConceptAnnotation>>> pairwiseNonmatches,
 			NumberFormat percentageFormat) {
 		html.println("<h2>Pair-wise agreement</h2>");
-		html.println(
-				"<table border=1><tr><td><b>Gold standard set</b></td>"
-						+ "<td><b>compared set</b></td>"
-						+ "<td><b>true positives</b></td>"
-						+ "<td><b>false positives</b></td>"
-						+ "<td><b>false negatives</b></td>"
-						+ "<td><b>precision</b></td>"
-						+ "<td><b>recall</b></td>"
-						+ "<td><b>F-score</b></td></tr>");
+		html.printf("<table border=1><tr><td><b>Gold standard set</b></td><td><b>compared set</b></td><td><b>true positives</b></td><td><b>false positives</b></td><td><b>false negatives</b></td><td><b>precision</b></td><td><b>recall</b></td><td><b>F-score</b></td></tr>%n");
 
 		for (String setName : sets) {
 			for (String setName2 : sets) {
@@ -840,31 +682,7 @@ public class IAA2HTML {
 									/ ((double) truePositives.size() + (double) falseNegatives.size());
 					double f_score = ((double) 2 * precision * recall) / (recall + precision);
 
-					html.println(
-							"<tr><td>"
-									+ setName
-									+ "</td>"
-									+ "<td>"
-									+ setName2
-									+ "</td>"
-									+ "<td>"
-									+ truePositives.size()
-									+ "</td>"
-									+ "<td>"
-									+ falsePositives.size()
-									+ "</td>"
-									+ "<td>"
-									+ falseNegatives.size()
-									+ "</td>"
-									+ "<td>"
-									+ percentageFormat.format(precision)
-									+ "</td>"
-									+ "<td>"
-									+ percentageFormat.format(recall)
-									+ "</td>"
-									+ "<td>"
-									+ percentageFormat.format(f_score)
-									+ "</td></tr>");
+					html.printf("<tr><td>%s</td><td>%s</td><td>%d</td><td>%d</td><td>%d</td><td>%s</td><td>%s</td><td>%s</td></tr>%n", setName, setName2, truePositives.size(), falsePositives.size(), falseNegatives.size(), percentageFormat.format(precision), percentageFormat.format(recall), percentageFormat.format(f_score));
 				}
 			}
 		}

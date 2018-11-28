@@ -43,4 +43,21 @@ public interface ModelObject<K extends ModelObject> extends Comparable<K> {
 	void modify();
 
 	void removeDataObjectModificationListener(ModelObjectListener listener);
+
+	@Override
+	default int compareTo(K o) {
+		if (this == o) {
+			return 0;
+		}
+		if (o == null) {
+			return 1;
+		}
+
+		int result = extractInt(this.getId()) - extractInt(o.getId());
+		if (result == 0) {
+			return this.getId().compareTo(o.getId());
+		} else {
+			return result;
+		}
+	}
 }

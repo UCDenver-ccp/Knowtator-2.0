@@ -261,6 +261,7 @@ public class KnowtatorColorPalette extends JColorChooser {
 
 		}
 
+		@SuppressWarnings("Duplicates")
 		public void paintComponent(Graphics g) {
 			g.setColor(getBackground());
 			g.fillRect(0, 0, getWidth(), getHeight());
@@ -310,9 +311,10 @@ public class KnowtatorColorPalette extends JColorChooser {
 
 		public String getToolTipText(MouseEvent e) {
 			Color color = getColorForLocation(e.getX(), e.getY());
-			return color.getRed() + ", " + color.getGreen() + ", " + color.getBlue();
+			return String.format("%d, %d, %d", color.getRed(), color.getGreen(), color.getBlue());
 		}
 
+		@SuppressWarnings("Duplicates")
 		void setSelectedColorFromLocation(int x, int y) {
 			if (!this.getComponentOrientation().isLeftToRight()) {
 				selCol = numSwatches.width - x / (swatchSize.width + gap.width) - 1;
@@ -323,6 +325,7 @@ public class KnowtatorColorPalette extends JColorChooser {
 			repaint();
 		}
 
+		@SuppressWarnings("Duplicates")
 		Color getColorForLocation(int x, int y) {
 			int column;
 			if (!this.getComponentOrientation().isLeftToRight()) {
@@ -415,7 +418,6 @@ public class KnowtatorColorPalette extends JColorChooser {
 
 		private void paintText(Graphics g) {
 			g.setFont(getFont());
-			JComponent host = getColorChooser();
 			FontMetrics fm = g.getFontMetrics();
 
 			int ascent = fm.getAscent();

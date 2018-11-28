@@ -24,19 +24,14 @@
 
 package edu.ucdenver.ccp.knowtator;
 
-import edu.ucdenver.ccp.knowtator.model.Fragment;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.commons.cli.*;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
 
 
 /**
@@ -51,7 +46,7 @@ import java.util.List;
  * Swing application:
  * Knowtator can be run on its own as a Swing application. This is useful for viewing annotations without setting
  * up and running Protege. This is also a useful way to debug some aspects of the GUI. In standalone mode,
- * annotations cannot be created because there is no OWL modelactions to use.
+ * annotations cannot be created because there is no OWL model to use.
  *
  * @author Harrison Pielke-Lombardo
  */
@@ -180,75 +175,75 @@ class KnowtatorStandalone extends JFrame {
 //
 //
 //	}
+//
+//	/**
+//	 * Handles output of fragments
+//	 *
+//	 * @param outputFileName Name of the file to output to
+//	 * @param fragmentList   List of fragments
+//	 */
+//	private static void writeFragments(String outputFileName, List<Fragment> fragmentList) {
+//		File outputFile = new File(outputFileName);
+//
+//		try {
+//			BufferedWriter bw = new BufferedWriter(new PrintWriter(outputFile));
+//
+//			for (Fragment fragment : fragmentList) {
+//				try {
+//					bw.write(String.format("%s\t%s\n", fragment.getId(), fragment.getType()));
+//					fragment.getConceptCountMap().forEach((concept, count) -> {
+//						try {
+//							bw.write(String.format("\t%s\t%d\n", concept, count));
+//						} catch (IOException e) {
+//							e.printStackTrace();
+//						}
+//					});
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//
+//			bw.close();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
-	/**
-	 * Handles output of fragments
-	 *
-	 * @param outputFileName Name of the file to output to
-	 * @param fragmentList   List of fragments
-	 */
-	private static void writeFragments(String outputFileName, List<Fragment> fragmentList) {
-		File outputFile = new File(outputFileName);
-
-		try {
-			BufferedWriter bw = new BufferedWriter(new PrintWriter(outputFile));
-
-			for (Fragment fragment : fragmentList) {
-				try {
-					bw.write(String.format("%s\t%s\n", fragment.getId(), fragment.getType()));
-					fragment.getConceptCountMap().forEach((concept, count) -> {
-						try {
-							bw.write(String.format("\t%s\t%d\n", concept, count));
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					});
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-
-			bw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Loads a Knowtator project
-	 *
-	 * @param cmd                A command line object
-	 * @param controller         A controller to load the project into
-	 * @param projectFileName    Location of the project
-	 * @param annotationsDirName Name of the directory containing annotation files
-	 */
-	private static void loadProjectFromCommandLine(
-			CommandLine cmd,
-			KnowtatorModel controller,
-			String projectFileName,
-			String annotationsDirName) {
-		if (projectFileName == null) {
-			String ontologiesDirName = cmd.getOptionValue("ontologies");
-			String articlesDirName = cmd.getOptionValue("articles");
-			String knowtatorOutputDirName = cmd.getOptionValue("knowtator");
-			String profilesDirName = cmd.getOptionValue("profiles");
-
-			controller.importProject(
-					profilesDirName == null ? null : new File(profilesDirName),
-					ontologiesDirName == null ? null : new File(ontologiesDirName),
-					articlesDirName == null ? null : new File(articlesDirName),
-					annotationsDirName == null ? null : new File(annotationsDirName),
-					new File(knowtatorOutputDirName));
-
-		} else {
-			try {
-				controller.setSaveLocation(new File(projectFileName));
-				controller.loadProject();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+//	/**
+//	 * Loads a Knowtator project
+//	 *
+//	 * @param cmd                A command line object
+//	 * @param controller         A controller to load the project into
+//	 * @param projectFileName    Location of the project
+//	 * @param annotationsDirName Name of the directory containing annotation files
+//	 */
+//	private static void loadProjectFromCommandLine(
+//			CommandLine cmd,
+//			KnowtatorModel controller,
+//			String projectFileName,
+//			String annotationsDirName) {
+//		if (projectFileName == null) {
+//			String ontologiesDirName = cmd.getOptionValue("ontologies");
+//			String articlesDirName = cmd.getOptionValue("articles");
+//			String knowtatorOutputDirName = cmd.getOptionValue("knowtator");
+//			String profilesDirName = cmd.getOptionValue("profiles");
+//
+//			controller.importProject(
+//					profilesDirName == null ? null : new File(profilesDirName),
+//					ontologiesDirName == null ? null : new File(ontologiesDirName),
+//					articlesDirName == null ? null : new File(articlesDirName),
+//					annotationsDirName == null ? null : new File(annotationsDirName),
+//					new File(knowtatorOutputDirName));
+//
+//		} else {
+//			try {
+//				controller.setSaveLocation(new File(projectFileName));
+//				controller.loadProject();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 
 //	/**
 //	 * Converts between specified formats from the command line
@@ -316,8 +311,7 @@ class KnowtatorStandalone extends JFrame {
 		// Conversion
 		options.addOption("c", "convert", false, "Convert formats");
 		// Input options
-		options.addOption("p", "project", true, "Either a project file with extension "
-				+ "\".knowtator\" that indicates a directory containing a Knowtator project or the directory itself.");
+		options.addOption("p", "project", true, "Either a project file with extension \".knowtator\" that indicates a directory containing a Knowtator project or the directory itself.");
 		options.addOption("a", "annotations", true, "A directory containing annotations to be loaded");
 		options.addOption("t", "articles", true, "A directory containing text articles to be loaded");
 		options.addOption("o", "ontologies", true, "A directory containing ontologies to load");
@@ -339,12 +333,14 @@ class KnowtatorStandalone extends JFrame {
 
 				createGUI();
 
-			} else if (cmd.getArgList().contains("c")) {
-
+			}
+//			else if (cmd.getArgList().contains("c")) {
+//
 //				commandLineConversion(cmd);
-			} else if (cmd.getArgList().contains("f")) {
+//			} else if (cmd.getArgList().contains("f")) {
 //				fragmentCount(cmd);
-			} else if (cmd.getArgList().contains("d")) {
+//			}
+			else if (cmd.getArgList().contains("d")) {
 				debug();
 			}
 

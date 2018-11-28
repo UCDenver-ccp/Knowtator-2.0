@@ -200,6 +200,7 @@ public class IAA {
 		return shortestConceptAnnotation;
 	}
 
+	@SuppressWarnings("Duplicates")
 	private void reset() {
 		allwayMatches = new HashMap<>();
 		trivialAllwayMatches = new HashMap<>();
@@ -207,16 +208,13 @@ public class IAA {
 		allwayNonmatches = new HashMap<>();
 		trivialAllwayNonmatches = new HashMap<>();
 		nontrivialAllwayNonmatches = new HashMap<>();
-
 		allwayMatchSets = new HashMap<>();
-
 		pairwiseMatches = new HashMap<>();
 		trivialPairwiseMatches = new HashMap<>();
 		nontrivialPairwiseMatches = new HashMap<>();
 		pairwiseNonmatches = new HashMap<>();
 		trivialPairwiseNonmatches = new HashMap<>();
 		nontrivialPairwiseNonmatches = new HashMap<>();
-
 		pairwiseMatchPairs = new HashMap<>();
 
 		for (String setName : setNames) {
@@ -328,18 +326,10 @@ public class IAA {
 						allwayMatchSets.put(match, allMatches);
 					}
 					if (matchResult.getResult() == MatchResult.NONTRIVIAL_MATCH) {
-						nontrivialAllwayMatches.get(setName).add(conceptAnnotation);
-						for (ConceptAnnotation match : matches) {
-							String matchedSet = match.getAnnotator().getId();
-							nontrivialAllwayMatches.get(matchedSet).add(match);
-						}
+						addMatch(conceptAnnotation, setName, matches, nontrivialAllwayMatches);
 
 					} else if (matchResult.getResult() == MatchResult.TRIVIAL_MATCH) {
-						trivialAllwayMatches.get(setName).add(conceptAnnotation);
-						for (ConceptAnnotation match : matches) {
-							String matchedSet = match.getAnnotator().getId();
-							trivialAllwayMatches.get(matchedSet).add(match);
-						}
+						addMatch(conceptAnnotation, setName, matches, trivialAllwayMatches);
 					} else {
 						// needs to either be an error - or we need a lot more
 						// descriptive information that a user can report back
@@ -362,6 +352,14 @@ public class IAA {
 					}
 				}
 			}
+		}
+	}
+
+	private void addMatch(ConceptAnnotation conceptAnnotation, String setName, Set<ConceptAnnotation> matches, Map<String, Set<ConceptAnnotation>> nontrivialAllwayMatches) {
+		nontrivialAllwayMatches.get(setName).add(conceptAnnotation);
+		for (ConceptAnnotation match : matches) {
+			String matchedSet = match.getAnnotator().getId();
+			nontrivialAllwayMatches.get(matchedSet).add(match);
 		}
 	}
 

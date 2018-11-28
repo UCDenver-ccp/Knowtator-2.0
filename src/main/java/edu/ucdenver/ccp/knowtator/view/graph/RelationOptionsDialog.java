@@ -100,7 +100,7 @@ class RelationOptionsDialog extends JDialog {
             // Only allow typing of numeric values.
             // Add a zero in case the user is typing a float
             public void keyTyped(KeyEvent e) {
-                if (!NumberUtils.isNumber(quantifierValueTextField.getText() + e.getKeyChar() + "0")) {
+                if (!NumberUtils.isNumber(String.format("%s%s0", quantifierValueTextField.getText(), e.getKeyChar()))) {
                     e.consume();  // ignore event
                 }
             }
@@ -118,7 +118,7 @@ class RelationOptionsDialog extends JDialog {
 
         // Correct for missing 0 if a decimal point is present
         if (quantifierValueTextField.getText().endsWith(".")) {
-            quantifierValueTextField.setText(quantifierValueTextField.getText() + "0");
+            quantifierValueTextField.setText(String.format("%s0", quantifierValueTextField.getText()));
         }
 
         // Don't allow non-numeric values of exactly, min, or max are selected

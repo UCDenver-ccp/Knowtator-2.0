@@ -59,14 +59,11 @@ public class Span implements TextBoundModelObject<Span>, KnowtatorXMLIO, BratSta
 
     if (start > end) {
       throw new IndexOutOfBoundsException(
-          "Span is invalid because the start of the Span is greater than the end of it: start="
-              + start
-              + " end="
-              + end);
+              String.format("Span is invalid because the start of the Span is greater than the end of it: start=%d end=%d", start, end));
     }
     if (start < 0) {
       throw new IndexOutOfBoundsException(
-          "Span is invalid because the start of the Span is less than zero: start=" + start);
+              String.format("Span is invalid because the start of the Span is less than zero: start=%d", start));
     }
   }
 
@@ -76,14 +73,11 @@ public class Span implements TextBoundModelObject<Span>, KnowtatorXMLIO, BratSta
     this.modificationListeners = new ArrayList<>();
     if (start > end) {
       throw new IndexOutOfBoundsException(
-          "Span is invalid because the start of the Span is greater than the end of it: start="
-              + start
-              + " end="
-              + end);
+              String.format("Span is invalid because the start of the Span is greater than the end of it: start=%d end=%d", start, end));
     }
     if (start < 0) {
       throw new IndexOutOfBoundsException(
-          "Span is invalid because the start of the Span is less than zero: start=" + start);
+              String.format("Span is invalid because the start of the Span is less than zero: start=%d", start));
     }
   }
 

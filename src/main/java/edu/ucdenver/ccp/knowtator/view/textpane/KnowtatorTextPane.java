@@ -233,14 +233,14 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 		}
 
 		private JMenuItem selectAnnotationCommand(Span span) {
-			JMenuItem selectAnnotationMenuItem = new JMenuItem("Select " + KnowtatorView.MODEL.getOWLEntityRendering(span.getConceptAnnotation().getOwlClass()));
+			JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s", KnowtatorView.MODEL.getOWLEntityRendering(span.getConceptAnnotation().getOwlClass())));
 			selectAnnotationMenuItem.addActionListener(e3 -> KnowtatorView.MODEL.getSelectedTextSource().ifPresent(textSource -> textSource.setSelectedAnnotation(span)));
 
 			return selectAnnotationMenuItem;
 		}
 
 		private JMenuItem removeAnnotationCommand(ConceptAnnotation conceptAnnotation) {
-			JMenuItem removeAnnotationMenuItem = new JMenuItem("Delete " + conceptAnnotation.getOwlClass());
+			JMenuItem removeAnnotationMenuItem = new JMenuItem(String.format("Delete %s", conceptAnnotation.getOwlClass()));
 			removeAnnotationMenuItem.addActionListener(e4 -> pickAction(view, null, null, new ActionParameters(REMOVE, ANNOTATION)));
 
 			return removeAnnotationMenuItem;

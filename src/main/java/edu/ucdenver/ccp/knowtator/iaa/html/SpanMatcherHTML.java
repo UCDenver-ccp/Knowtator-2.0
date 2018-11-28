@@ -49,18 +49,12 @@ public class SpanMatcherHTML {
 
 		String fileName = matcher.getName();
 
-		PrintStream html = new PrintStream(new File(directory, fileName + ".html"));
+		PrintStream html = new PrintStream(new File(directory, String.format("%s.html", fileName)));
 
 		html.println(IAA2HTML.initHTML(matcher.getName(), matcher.getDescription()));
-		html.println("<h2>" + iaa.getSetNames().size() + "-way IAA Results</h2>");
+		html.printf("<h2>%d-way IAA Results</h2>%n", iaa.getSetNames().size());
 
-		html.println(
-				"<table border=1><tr>"
-						+ "<td><b>Type</b></td>"
-						+ "<td><b>IAA</b></td>"
-						+ "<td><b>matches</b></td>"
-						+ "<td><b>non-matches</b></td>"
-						+ "<td><b>confused class assignments</tr>");
+		html.printf("<table border=1><tr><td><b>Type</b></td><td><b>IAA</b></td><td><b>matches</b></td><td><b>non-matches</b></td><td><b>confused class assignments</tr>%n");
 
 		Set<String> classes = iaa.getAnnotationClasses();
 		Set<String> sets = iaa.getSetNames();
@@ -82,17 +76,7 @@ public class SpanMatcherHTML {
 				(double) totalAllwayMatches
 						/ ((double) totalAllwayMatches + (double) totalAllwayNonmatches);
 
-		html.println(
-				"<tr><td><b>All classes</b></td>"
-						+ "<td>"
-						+ percentageFormat.format(iaaScore)
-						+ "</td>"
-						+ "<td>"
-						+ totalAllwayMatches
-						+ "</td>"
-						+ "<td>"
-						+ totalAllwayNonmatches
-						+ "</td></tr>");
+		html.printf("<tr><td><b>All classes</b></td><td>%s</td><td>%d</td><td>%d</td></tr>%n", percentageFormat.format(iaaScore), totalAllwayMatches, totalAllwayNonmatches);
 
 		Map<String, Set<ConceptAnnotation>> sortedAllwayMatches =
 				IAA2HTML.sortByType(classes, allwayMatchesSingleSet);
@@ -108,29 +92,17 @@ public class SpanMatcherHTML {
 
 			iaaScore = (double) classMatches / ((double) classMatches + (double) classNonmatches);
 
-			html.println(
-					"<tr><td>"
-							+ type
-							+ "</td>"
-							+ "<td>"
-							+ percentageFormat.format(iaaScore)
-							+ "</td>"
-							+ "<td>"
-							+ classMatches
-							+ "</td>"
-							+ "<td>"
-							+ classNonmatches
-							+ "</td>");
+			html.printf("<tr><td>%s</td><td>%s</td><td>%d</td><td>%d</td>%n", type, percentageFormat.format(iaaScore), classMatches, classNonmatches);
 			Map<String, int[]> confusionCounts = errorMatrix(sortedAllwayMatches.get(type), matchSets);
 			html.println("<td>");
 			for (String confusedClass : confusionCounts.keySet()) {
-				html.println("  " + confusedClass + "=" + confusionCounts.get(confusedClass)[0]);
+				html.printf("  %s=%d%n", confusedClass, confusionCounts.get(confusedClass)[0]);
 			}
 			html.println("</td>");
 		}
 		html.println("</table>");
 
-		html.println("<br>IAA calculated on " + numberOfDocs + " documents.");
+		html.printf("<br>IAA calculated on %d documents.%n", numberOfDocs);
 		html.println("<br>all annotations = matches + non-matches");
 		html.println("<br>IAA = matches / all annotations");
 

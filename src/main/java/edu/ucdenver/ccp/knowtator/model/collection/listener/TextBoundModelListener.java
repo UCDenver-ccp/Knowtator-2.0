@@ -29,7 +29,7 @@ import edu.ucdenver.ccp.knowtator.model.*;
 import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
 
 /**
- * Provides methods to respond to changes in modelactions selection events
+ * Provides methods to respond to changes in model selection events
  *
  * @author Harrison
  */

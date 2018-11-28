@@ -65,7 +65,7 @@ class ExportPane extends MenuPane {
 					JFileChooser fileChooser = new JFileChooser(KnowtatorView.MODEL.getSaveLocation());
 					fileChooser.setFileFilter(new FileNameExtensionFilter("PNG", "png"));
 					fileChooser.setSelectedFile(
-							new File(textSource.getId() + "_annotations.png"));
+							new File(String.format("%s_annotations.png", textSource.getId())));
 					if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
 						textSource.setSelection(null);
 						BufferedImage image = view.getKnowtatorTextPane().getScreenShot();

@@ -27,6 +27,6 @@ package edu.ucdenver.ccp.knowtator.model.collection.listener;
 import edu.ucdenver.ccp.knowtator.model.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
 
-public interface SelectableCollectionListener<K extends ModelObject> extends CollectionListener<K> {
+public interface SelectableCollectionListener<K extends ModelObject> extends CollectionListener {
     void selected(SelectionEvent<K> event);
 }
