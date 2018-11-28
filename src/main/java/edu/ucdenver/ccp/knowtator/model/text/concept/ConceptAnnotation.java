@@ -105,11 +105,6 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
         return owlClass;
     }
 
-    public String getOwlClassRendering() {
-        return controller.getOWLEntityRendering(owlClass);
-
-    }
-
     public SpanCollection getSpanCollection() {
         return spanCollection;
     }
@@ -174,15 +169,14 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
 
     @Override
     public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
-        String renderedOwlClassID = getOwlClassRendering();
-        renderedOwlClassID = renderedOwlClassID.replace(":", "_").replace(" ", "_");
+
+	    String renderedOwlClassID = controller.getOWLEntityRendering(owlClass).replace(":", "_").replace(" ", "_");
         annotationConfig.get(StandoffTags.annotationsEntities).put(renderedOwlClassID, "");
 
         writer.append(String.format("%s\t%s ", getBratID(), renderedOwlClassID));
 
-        String finalRenderedOwlClassID = renderedOwlClassID;
-        visualConfig.get("labels").put(finalRenderedOwlClassID, getOWLClassLabel());
-        visualConfig.get("drawing").put(finalRenderedOwlClassID, String.format("bgColor:%s", Profile.convertToHex(controller.getProfileCollection().getDefaultProfile().getColor(owlClass))));
+	    visualConfig.get("labels").put(renderedOwlClassID, getOWLClassLabel());
+	    visualConfig.get("drawing").put(renderedOwlClassID, String.format("bgColor:%s", Profile.convertToHex(controller.getProfileCollection().getDefaultProfile().getColor(owlClass))));
 
         spanCollection.writeToBratStandoff(writer, annotationConfig, visualConfig);
     }
@@ -197,7 +191,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
 
         Element classElement = dom.createElement(KnowtatorXMLTags.CLASS);
 
-        classElement.setAttribute(KnowtatorXMLAttributes.ID, getOwlClassRendering());
+	    classElement.setAttribute(KnowtatorXMLAttributes.ID, controller.getOWLEntityRendering(owlClass));
         classElement.setAttribute(KnowtatorXMLAttributes.LABEL, getOWLClassLabel());
         annotationElem.appendChild(classElement);
 
@@ -210,7 +204,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
         return owlClass.getAnnotationPropertiesInSignature().stream()
                 .filter(OWLAnnotationProperty::isLabel)
                 .findFirst()
-                .map(OWLObject::toString).orElse(getOwlClassRendering());
+		        .map(OWLObject::toString).orElse(controller.getOWLEntityRendering(owlClass));
     }
 
     /*

@@ -233,7 +233,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 		}
 
 		private JMenuItem selectAnnotationCommand(Span span) {
-			JMenuItem selectAnnotationMenuItem = new JMenuItem("Select " + span.getConceptAnnotation().getOwlClassRendering());
+			JMenuItem selectAnnotationMenuItem = new JMenuItem("Select " + KnowtatorView.MODEL.getOWLEntityRendering(span.getConceptAnnotation().getOwlClass()));
 			selectAnnotationMenuItem.addActionListener(e3 -> textSourceOptional.ifPresent(textSource -> textSource.getConceptAnnotationCollection().setSelectedAnnotation(span)));
 
 			return selectAnnotationMenuItem;
