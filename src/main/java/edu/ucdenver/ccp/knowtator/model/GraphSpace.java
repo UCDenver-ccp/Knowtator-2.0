@@ -565,4 +565,8 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 			});
 		}
 	}
+
+	public List<RelationAnnotation> getRelationAnnotations() {
+		return Arrays.stream(getChildEdges(getDefaultParent())).filter(o -> o instanceof RelationAnnotation).map(o -> (RelationAnnotation) o).collect(Collectors.toList());
+	}
 }

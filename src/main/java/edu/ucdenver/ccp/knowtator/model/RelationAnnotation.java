@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
 
 import java.io.File;
 
-public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBoundModelObject {
+public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBoundModelObject<RelationAnnotation> {
 	private final String quantifier;
 	private final String quantifierValue;
 	private final Profile annotator;
@@ -48,13 +48,21 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 	private final String propertyID;
 	private final GraphSpace graphSpace;
 	private final String motivation;
+
+	private AnnotationNode sourceAnnotationNode;
+	private AnnotationNode targetAnnotationNode;
+
 	@SuppressWarnings("unused")
 	private final Logger log = Logger.getLogger(RelationAnnotation.class);
 
+	public GraphSpace getGraphSpace() {
+		return graphSpace;
+	}
+
 	RelationAnnotation(
 			String id,
-			mxCell source,
-			mxCell target,
+			AnnotationNode source,
+			AnnotationNode target,
 			OWLObjectProperty property,
 			String propertyID,
 			Profile annotator,
@@ -80,7 +88,9 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 		getGeometry().setRelative(true);
 		setEdge(true);
 		setSource(source);
+		this.sourceAnnotationNode = source;
 		setTarget(target);
+		this.targetAnnotationNode = target;
 		setProperty(property);
 
 //		if (property.isPresent()) {
@@ -112,6 +122,11 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 	@Override
 	public void removeDataObjectModificationListener(ModelObjectListener listener) {
 
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Subject: %s; OWLObjectProperty: %s Target: %s", sourceAnnotationNode.getConceptAnnotation(), getOwlPropertyRendering(), targetAnnotationNode.getConceptAnnotation());
 	}
 
 	@Override
@@ -202,8 +217,8 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 	}
 
 	@Override
-	public int compareTo(Object o) {
-		return 0;
+	public int compareTo(RelationAnnotation o) {
+		return id.compareTo(o.getId());
 	}
 
 	public OWLObjectProperty getProperty() {

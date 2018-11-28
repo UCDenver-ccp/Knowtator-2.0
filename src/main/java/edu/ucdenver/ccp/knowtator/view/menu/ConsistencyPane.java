@@ -29,10 +29,13 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.OWLModel;
+import edu.ucdenver.ccp.knowtator.model.RelationAnnotation;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.list.AnnotationList;
+import edu.ucdenver.ccp.knowtator.view.list.RelationList;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,18 +49,20 @@ class ConsistencyPane extends MenuPane {
 	private AnnotationList annotationsForSpannedTextList;
 	private JPanel contentPane;
 	private JPanel panel1;
-	private JCheckBox includeDescendantsCheckBox;
+	private JCheckBox includeClassDescendantsCheckBox;
 	private JButton refreshButton;
 
 	private JCheckBox exactMatchCheckBox;
-	private final KnowtatorView view;
+	private JCheckBox includePropertyDescendantsCheckBox;
+	private RelationList relationsForPropertyList;
+	private JLabel owlPropertyLabel;
 	private HashSet<OWLClass> activeOWLClassDescendants;
+	private HashSet<OWLObjectProperty> activeOWLPropertyDescendants;
 
-	ConsistencyPane(KnowtatorView view) {
+	ConsistencyPane() {
 		super("Consistency");
-		this.view = view;
 		$$$setupUI$$$();
-		includeDescendantsCheckBox.addActionListener(e -> refresh());
+		includeClassDescendantsCheckBox.addActionListener(e -> refresh());
 		exactMatchCheckBox.addActionListener(e -> refresh());
 		refreshButton.addActionListener(e -> refresh());
 		activeOWLClassDescendants = new HashSet<>();
@@ -69,14 +74,24 @@ class ConsistencyPane extends MenuPane {
 	}
 
 	private void refresh() {
-		activeOWLClassDescendants = new HashSet<>();
 		OWLModel owlModel = KnowtatorView.MODEL;
+
+		activeOWLClassDescendants = new HashSet<>();
 		owlModel.getSelectedOWLClass().ifPresent(owlClass -> {
 			activeOWLClassDescendants.add(owlClass);
-			if (includeDescendantsCheckBox.isSelected()) {
-				activeOWLClassDescendants.addAll(owlModel.getDescendants(owlClass));
+			if (includeClassDescendantsCheckBox.isSelected()) {
+				activeOWLClassDescendants.addAll(owlModel.getOWLCLassDescendants(owlClass));
 			}
 			owlClassLabel.setText(owlModel.getOWLEntityRendering(owlClass));
+		});
+
+		activeOWLPropertyDescendants = new HashSet<>();
+		owlModel.getSelectedOWLObjectProperty().ifPresent(owlObjectProperty -> {
+			activeOWLPropertyDescendants.add(owlObjectProperty);
+			if (includePropertyDescendantsCheckBox.isSelected()) {
+				activeOWLPropertyDescendants.addAll(owlModel.getOWLObjectPropertyDescendants(owlObjectProperty));
+			}
+			owlPropertyLabel.setText(owlModel.getOWLEntityRendering(owlObjectProperty));
 		});
 
 		KnowtatorView.MODEL.getSelectedTextSource()
@@ -84,6 +99,7 @@ class ConsistencyPane extends MenuPane {
 						.ifPresent(conceptAnnotation -> spanLabel.setText(conceptAnnotation.getSpannedText())));
 		annotationsForClassList.react();
 		annotationsForSpannedTextList.react();
+		relationsForPropertyList.react();
 	}
 
 	@Override
@@ -109,65 +125,93 @@ class ConsistencyPane extends MenuPane {
 		panel1 = new JPanel();
 		panel1.setLayout(new BorderLayout(0, 0));
 		contentPane = new JPanel();
-		contentPane.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+		contentPane.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
 		Font contentPaneFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, contentPane.getFont());
 		if (contentPaneFont != null) contentPane.setFont(contentPaneFont);
 		panel1.add(contentPane, BorderLayout.CENTER);
-		final JSplitPane splitPane1 = new JSplitPane();
-		contentPane.add(splitPane1, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
 		final JPanel panel2 = new JPanel();
-		panel2.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
-		Font panel2Font = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, panel2.getFont());
-		if (panel2Font != null) panel2.setFont(panel2Font);
-		splitPane1.setRightComponent(panel2);
+		panel2.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+		contentPane.add(panel2, new GridConstraints(0, 0, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+		final JSplitPane splitPane1 = new JSplitPane();
+		panel2.add(splitPane1, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
+		final JPanel panel3 = new JPanel();
+		panel3.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
+		Font panel3Font = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, panel3.getFont());
+		if (panel3Font != null) panel3.setFont(panel3Font);
+		splitPane1.setRightComponent(panel3);
 		final Spacer spacer1 = new Spacer();
-		panel2.add(spacer1, new GridConstraints(2, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		panel3.add(spacer1, new GridConstraints(2, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
 		final JLabel label1 = new JLabel();
 		Font label1Font = this.$$$getFont$$$("Verdana", Font.BOLD, 12, label1.getFont());
 		if (label1Font != null) label1.setFont(label1Font);
 		this.$$$loadLabelText$$$(label1, ResourceBundle.getBundle("log4j").getString("annotations.containing.text"));
-		panel2.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		panel3.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		spanLabel = new JLabel();
 		Font spanLabelFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, spanLabel.getFont());
 		if (spanLabelFont != null) spanLabel.setFont(spanLabelFont);
 		spanLabel.setText("");
-		panel2.add(spanLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		panel3.add(spanLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final JScrollPane scrollPane1 = new JScrollPane();
-		panel2.add(scrollPane1, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		panel3.add(scrollPane1, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
 		scrollPane1.setViewportView(annotationsForSpannedTextList);
 		exactMatchCheckBox = new JCheckBox();
 		Font exactMatchCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, exactMatchCheckBox.getFont());
 		if (exactMatchCheckBoxFont != null) exactMatchCheckBox.setFont(exactMatchCheckBoxFont);
 		this.$$$loadButtonText$$$(exactMatchCheckBox, ResourceBundle.getBundle("log4j").getString("exact.match"));
-		panel2.add(exactMatchCheckBox, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		final JPanel panel3 = new JPanel();
-		panel3.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
-		splitPane1.setLeftComponent(panel3);
+		panel3.add(exactMatchCheckBox, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		final JPanel panel4 = new JPanel();
+		panel4.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
+		splitPane1.setLeftComponent(panel4);
 		final JLabel label2 = new JLabel();
 		Font label2Font = this.$$$getFont$$$("Verdana", Font.BOLD, 12, label2.getFont());
 		if (label2Font != null) label2.setFont(label2Font);
 		this.$$$loadLabelText$$$(label2, ResourceBundle.getBundle("log4j").getString("annotations.for.owl.class"));
-		panel3.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		panel4.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		owlClassLabel = new JLabel();
 		owlClassLabel.setText("");
-		panel3.add(owlClassLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		includeDescendantsCheckBox = new JCheckBox();
-		Font includeDescendantsCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, includeDescendantsCheckBox.getFont());
-		if (includeDescendantsCheckBoxFont != null) includeDescendantsCheckBox.setFont(includeDescendantsCheckBoxFont);
-		this.$$$loadButtonText$$$(includeDescendantsCheckBox, ResourceBundle.getBundle("log4j").getString("include.descendants"));
-		panel3.add(includeDescendantsCheckBox, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		panel4.add(owlClassLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		includeClassDescendantsCheckBox = new JCheckBox();
+		Font includeClassDescendantsCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, includeClassDescendantsCheckBox.getFont());
+		if (includeClassDescendantsCheckBoxFont != null)
+			includeClassDescendantsCheckBox.setFont(includeClassDescendantsCheckBoxFont);
+		this.$$$loadButtonText$$$(includeClassDescendantsCheckBox, ResourceBundle.getBundle("log4j").getString("include.descendants"));
+		panel4.add(includeClassDescendantsCheckBox, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final JScrollPane scrollPane2 = new JScrollPane();
-		panel3.add(scrollPane2, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		panel4.add(scrollPane2, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
 		scrollPane2.setViewportView(annotationsForClassList);
 		final Spacer spacer2 = new Spacer();
-		panel3.add(spacer2, new GridConstraints(2, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		panel4.add(spacer2, new GridConstraints(2, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
 		refreshButton = new JButton();
 		Font refreshButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, refreshButton.getFont());
 		if (refreshButtonFont != null) refreshButton.setFont(refreshButtonFont);
 		this.$$$loadButtonText$$$(refreshButton, ResourceBundle.getBundle("log4j").getString("refresh"));
-		contentPane.add(refreshButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		panel2.add(refreshButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final Spacer spacer3 = new Spacer();
-		contentPane.add(spacer3, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		panel2.add(spacer3, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		final JPanel panel5 = new JPanel();
+		panel5.setLayout(new GridLayoutManager(2, 4, new Insets(0, 0, 0, 0), -1, -1));
+		contentPane.add(panel5, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+		final Spacer spacer4 = new Spacer();
+		panel5.add(spacer4, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		final JLabel label3 = new JLabel();
+		Font label3Font = this.$$$getFont$$$("Verdana", Font.BOLD, 12, label3.getFont());
+		if (label3Font != null) label3.setFont(label3Font);
+		this.$$$loadLabelText$$$(label3, ResourceBundle.getBundle("log4j").getString("relation.annotations.for.owl.objectproperty"));
+		panel5.add(label3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		owlPropertyLabel = new JLabel();
+		Font owlPropertyLabelFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, owlPropertyLabel.getFont());
+		if (owlPropertyLabelFont != null) owlPropertyLabel.setFont(owlPropertyLabelFont);
+		owlPropertyLabel.setText("");
+		panel5.add(owlPropertyLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		includePropertyDescendantsCheckBox = new JCheckBox();
+		Font includePropertyDescendantsCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, includePropertyDescendantsCheckBox.getFont());
+		if (includePropertyDescendantsCheckBoxFont != null)
+			includePropertyDescendantsCheckBox.setFont(includePropertyDescendantsCheckBoxFont);
+		this.$$$loadButtonText$$$(includePropertyDescendantsCheckBox, ResourceBundle.getBundle("log4j").getString("include.descendants1"));
+		panel5.add(includePropertyDescendantsCheckBox, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		final JScrollPane scrollPane3 = new JScrollPane();
+		panel5.add(scrollPane3, new GridConstraints(1, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		scrollPane3.setViewportView(relationsForPropertyList);
 		label1.setLabelFor(scrollPane1);
 		label2.setLabelFor(scrollPane2);
 	}
@@ -254,7 +298,7 @@ class ConsistencyPane extends MenuPane {
 
 	private void createUIComponents() {
 		ConsistencyPane consistencyPane = this;
-		annotationsForClassList = new AnnotationList(view) {
+		annotationsForClassList = new AnnotationList() {
 			@Override
 			public void setCollection(KnowtatorCollection<ConceptAnnotation> collection) {
 				//clear collection
@@ -270,7 +314,7 @@ class ConsistencyPane extends MenuPane {
 				}
 			}
 		};
-		annotationsForSpannedTextList = new AnnotationList(view) {
+		annotationsForSpannedTextList = new AnnotationList() {
 			@Override
 			public void setCollection(KnowtatorCollection<ConceptAnnotation> collection) {
 				//clear collection
@@ -283,6 +327,23 @@ class ConsistencyPane extends MenuPane {
 					collection.stream()
 							.filter(conceptAnnotation -> exactMatchCheckBox.isSelected() ? conceptAnnotation.getSpannedText().equals(spanLabel.getText()) : spanLabel.getText().contains(conceptAnnotation.getSpannedText()))
 							.forEach(k -> ((DefaultListModel<ConceptAnnotation>) getModel()).addElement(k));
+				}
+			}
+		};
+
+		relationsForPropertyList = new RelationList() {
+			@Override
+			public void setCollection(KnowtatorCollection<RelationAnnotation> collection) {
+				//clear collection
+				((DefaultListModel) getModel()).clear();
+				this.collection = collection;
+				if (collection.size() == 0) {
+					setEnabled(false);
+				} else {
+					setEnabled(true);
+					collection.stream()
+							.filter(relationAnnotation -> consistencyPane.activeOWLPropertyDescendants.contains(relationAnnotation.getProperty()))
+							.forEach(k -> ((DefaultListModel<RelationAnnotation>) getModel()).addElement(k));
 				}
 			}
 		};

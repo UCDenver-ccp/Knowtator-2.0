@@ -360,4 +360,8 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 	public int getNumberOfConceptAnnotations() {
 		return conceptAnnotationCollection.size();
 	}
+
+	public void setSelectedGraphSpace(GraphSpace graphSpace) {
+		graphSpaceCollection.setSelection(graphSpace);
+	}
 }

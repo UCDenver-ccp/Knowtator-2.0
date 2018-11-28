@@ -37,7 +37,7 @@ import javax.swing.event.ListSelectionListener;
 public abstract class KnowtatorList<K extends ModelObject> extends JList<K> implements KnowtatorComponent {
 
 	protected KnowtatorCollection<K> collection;
-	private final ListSelectionListener al;
+	ListSelectionListener al;
 	private TextBoundModelListener textBoundModelListener;
 
 	KnowtatorList() {

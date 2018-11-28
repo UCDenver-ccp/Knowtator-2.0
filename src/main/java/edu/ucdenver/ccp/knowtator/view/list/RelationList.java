@@ -24,19 +24,49 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
-import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.RelationAnnotation;
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
-public class AnnotationList extends KnowtatorList<ConceptAnnotation> {
-	protected AnnotationList() {
+import javax.swing.*;
+
+public class RelationList extends KnowtatorList<RelationAnnotation> {
+	boolean shouldReact;
+
+	protected RelationList() {
 		super();
+
+		shouldReact = true;
+
 		setupListeners();
+		al = e -> {
+			JList jList = (JList) e.getSource();
+			if (jList.getSelectedValue() != null) {
+				shouldReact = false;
+				RelationAnnotation relationAnnotation = (RelationAnnotation) jList.getSelectedValue();
+				collection.setSelection(relationAnnotation);
+				relationAnnotation.getTextSource().setSelectedGraphSpace(relationAnnotation.getGraphSpace());
+				relationAnnotation.getGraphSpace().setSelectionCell(relationAnnotation);
+				shouldReact = true;
+			}
+
+		};
 	}
 
 	@Override
 	public void react() {
-		KnowtatorView.MODEL.getSelectedTextSource()
-				.ifPresent(textSource -> setCollection(textSource.getConceptAnnotationCollection()));
-		setSelected();
+		if (shouldReact) {
+			KnowtatorView.MODEL.getSelectedTextSource()
+					.ifPresent(textSource -> {
+						KnowtatorCollection<RelationAnnotation> relationAnnotations = new KnowtatorCollection<RelationAnnotation>() {
+
+						};
+						textSource.getGraphSpaceCollection().stream()
+								.map(GraphSpace::getRelationAnnotations).forEach(relationAnnotations1 -> relationAnnotations1.forEach(relationAnnotations::add));
+						super.setCollection(relationAnnotations);
+					});
+			setSelected();
+		}
 	}
 }

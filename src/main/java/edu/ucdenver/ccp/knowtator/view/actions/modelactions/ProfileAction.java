@@ -117,7 +117,7 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 						.ifPresent(profile -> profile.addColor(_owlClass, color));
 
 				if (JOptionPane.showConfirmDialog(view, "Assign color to descendants of " + _owlClass + "?") == JOptionPane.OK_OPTION) {
-					owlClasses.addAll(KnowtatorView.MODEL.getDescendants(_owlClass));
+					owlClasses.addAll(KnowtatorView.MODEL.getOWLCLassDescendants(_owlClass));
 				}
 
 				KnowtatorView.MODEL.getSelectedProfile()

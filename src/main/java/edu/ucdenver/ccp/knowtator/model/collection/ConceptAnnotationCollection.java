@@ -99,7 +99,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 		if (filterByOWLClass) {
 			controller.getSelectedOWLClass().ifPresent(owlClass -> {
 				activeOWLClassDescendants.add(owlClass);
-				activeOWLClassDescendants.addAll(controller.getDescendants(owlClass));
+				activeOWLClassDescendants.addAll(controller.getOWLCLassDescendants(owlClass));
 			});
 		}
 		return super.stream()

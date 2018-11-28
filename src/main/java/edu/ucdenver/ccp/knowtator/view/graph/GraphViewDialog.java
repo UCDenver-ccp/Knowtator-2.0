@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.view.graph;
 
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.menu.MenuDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,7 +70,7 @@ public class GraphViewDialog extends JDialog implements KnowtatorComponent {
 
                     @Override
                     public void windowLostFocus(WindowEvent e) {
-                        if (e.getOppositeWindow() == null || (e.getOppositeWindow() != SwingUtilities.getWindowAncestor(view)  && e.getOppositeWindow().getOwner() != graphViewDialog)) {
+                        if (e.getOppositeWindow() == null || (e.getOppositeWindow() != SwingUtilities.getWindowAncestor(view) && e.getOppositeWindow().getOwner() != graphViewDialog && !(e.getOppositeWindow() instanceof MenuDialog))) {
                             setAlwaysOnTop(false);
                             toBack();
                         }

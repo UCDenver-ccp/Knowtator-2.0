@@ -304,7 +304,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 
 		Set<OWLClass> descendants = new HashSet<>();
 		KnowtatorView.MODEL.getSelectedOWLClass().ifPresent(owlClass -> {
-			descendants.addAll(KnowtatorView.MODEL.getDescendants(owlClass));
+			descendants.addAll(KnowtatorView.MODEL.getOWLCLassDescendants(owlClass));
 			descendants.add(owlClass);
 		});
 		for (Span span : spans) {
