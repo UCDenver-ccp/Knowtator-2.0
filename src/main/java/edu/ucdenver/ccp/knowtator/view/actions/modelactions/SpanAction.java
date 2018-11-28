@@ -24,8 +24,8 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
+import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction;
@@ -48,7 +48,7 @@ public class SpanAction extends AbstractKnowtatorCollectionAction<Span> {
 		int start = KnowtatorView.MODEL.getStart();
 		int end = KnowtatorView.MODEL.getEnd();
 
-		Span newSpan = new Span(KnowtatorView.MODEL, conceptAnnotation.getTextSource(), conceptAnnotation, null, start, end);
+		Span newSpan = new Span(KnowtatorView.MODEL, conceptAnnotation, null, start, end);
 		setObject(newSpan);
 	}
 

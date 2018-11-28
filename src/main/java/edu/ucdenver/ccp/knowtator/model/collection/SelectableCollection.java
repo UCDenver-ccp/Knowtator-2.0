@@ -24,43 +24,44 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.ModelObject;
+import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.listener.SelectableCollectionListener;
 
 import java.util.Optional;
 import java.util.TreeSet;
 
-public abstract class SelectableCollection<K extends KnowtatorDataObjectInterface, L extends SelectableCollectionListener<K>> extends CyclableCollection<K, L> {
+public abstract class SelectableCollection<K extends ModelObject, L extends SelectableCollectionListener<K>> extends CyclableCollection<K, L> {
 
-	private Optional<K> selection;
-
+	private K selection;
     SelectableCollection(TreeSet<K> collection) {
         super(collection);
-	    selection = Optional.empty();
+	    selection = null;
     }
 
     public Optional<K> getSelection() {
-	    return selection;
+	    return Optional.ofNullable(selection);
     }
 
     public void selectNext() {
-	    if (selection.isPresent()) {
-		    selection.ifPresent(selection -> setSelection(getNext(selection)));
+	    if (getSelection().isPresent()) {
+		    getSelection().ifPresent(selection -> setSelection(getNext(selection)));
 	    } else {
 		    setSelection(first());
 	    }
     }
 
     public void selectPrevious() {
-	    if (selection.isPresent()) {
-		    selection.ifPresent(selection -> setSelection(getPrevious(selection)));
+	    if (getSelection().isPresent()) {
+		    getSelection().ifPresent(selection -> setSelection(getPrevious(selection)));
 	    } else {
 		    setSelection(first());
 	    }
     }
 
     public void setSelection(K newSelection) {
-	    SelectionEvent<K> selectionEvent = new SelectionEvent<>(this.selection, Optional.ofNullable(newSelection));
-	    this.selection = Optional.ofNullable(newSelection);
+	    SelectionEvent<K> selectionEvent = new SelectionEvent<>(selection, newSelection);
+	    this.selection = newSelection;
         collectionListeners.forEach(selectionListener -> selectionListener.selected(selectionEvent));
     }
 
@@ -73,6 +74,6 @@ public abstract class SelectableCollection<K extends KnowtatorDataObjectInterfac
     @Override
     public void remove(K item) {
         super.remove(item);
-	    selection.filter(selection -> selection.equals(item)).ifPresent(selection -> setSelection(null));
+	    this.getSelection().filter(selection -> selection.equals(item)).ifPresent(selection -> setSelection(null));
     }
 }

@@ -24,17 +24,18 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.ModelObject;
+import edu.ucdenver.ccp.knowtator.model.collection.listener.CollectionListener;
 
 import java.util.TreeSet;
 
-public abstract class CyclableCollection<K extends KnowtatorDataObjectInterface, L extends CollectionListener<K>> extends ListenableCollection<K, TreeSet<K>, L> {
+public abstract class CyclableCollection<K extends ModelObject, L extends CollectionListener<K>> extends ListenableCollection<K, TreeSet<K>, L> {
 
   CyclableCollection(TreeSet<K> collection) {
     super(collection);
   }
 
-  public K getPrevious(K current) {
+	K getPrevious(K current) {
 
     K previous;
     try {
@@ -49,7 +50,7 @@ public abstract class CyclableCollection<K extends KnowtatorDataObjectInterface,
     return previous;
   }
 
-  public K getNext(K current) {
+	K getNext(K current) {
     K next;
     try {
       next =

@@ -25,17 +25,17 @@
 package edu.ucdenver.ccp.knowtator.view.actions;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
+import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
+import edu.ucdenver.ccp.knowtator.model.Span;
+import edu.ucdenver.ccp.knowtator.model.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.SpanActions;
 import org.junit.jupiter.api.Test;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public class SpanActionsTests {
+class SpanActionsTests {
 	private static final KnowtatorModel controller = TestingHelpers.getLoadedController();
     private static final int initialStart = 0;
     private static final int initialEnd = 4;
@@ -56,7 +56,7 @@ public class SpanActionsTests {
     }
 
     @Test
-    public void modifySpanActionTest() {
+    void modifySpanActionTest() {
 	    TextSource textSource = controller.getSelectedTextSource().get();
 	    ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
 	    textSource.setSelection(conceptAnnotation);

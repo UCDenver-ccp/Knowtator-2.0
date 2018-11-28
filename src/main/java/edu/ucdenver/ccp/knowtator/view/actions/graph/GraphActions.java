@@ -27,9 +27,9 @@ package edu.ucdenver.ccp.knowtator.view.actions.graph;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.util.mxMorphing;
 import com.mxgraph.util.mxEvent;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.AnnotationNode;
+import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
@@ -118,12 +118,12 @@ public class GraphActions {
     public static class AddTripleAction extends AbstractGraphAction {
         private final AnnotationNode source;
         private final AnnotationNode target;
-        private OWLObjectProperty property;
-        private Boolean negation;
-        private String quantifier;
-        private String quantifierValue;
-        private String propertyId;
-        private String motivation;
+	    private final OWLObjectProperty property;
+	    private final Boolean negation;
+	    private final String quantifier;
+	    private final String quantifierValue;
+	    private final String propertyId;
+	    private final String motivation;
 
         public AddTripleAction(AnnotationNode source, AnnotationNode target,
                                OWLObjectProperty property, String propertyId,

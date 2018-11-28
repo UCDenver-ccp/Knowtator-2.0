@@ -26,8 +26,8 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 
 import javax.swing.*;
 
-public abstract class MenuPane {
-	private String name;
+abstract class MenuPane {
+	private final String name;
 
 	MenuPane(String name) {
 		this.name = name;

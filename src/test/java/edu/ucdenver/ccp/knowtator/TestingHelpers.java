@@ -26,7 +26,7 @@ package edu.ucdenver.ccp.knowtator;
 
 import com.google.common.io.Files;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import org.apache.commons.io.FileUtils;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
@@ -43,7 +43,7 @@ public class TestingHelpers {
 	public static final int defaultExpectedSpans = 7;
 	public static final int defaultExpectedGraphSpaces = 3;
 	public static final int defaultExpectedProfiles = 2;
-	public static int defaultExpectedHighlighters = 3;
+    public static final int defaultExpectedHighlighters = 3;
 	public static final int defaultExpectedAnnotationNodes = 7;
 	public static final int defaultExpectedTriples = 4;
 
@@ -97,7 +97,7 @@ public class TestingHelpers {
 
         int actualTextSources = controller.getNumberOfTextSources();
         int actualConceptAnnotations = controller.getTextSources().stream().mapToInt(
-                TextSource::getNumberOfGraphSpaces).sum();
+                TextSource::getNumberOfConceptAnnotations).sum();
         int actualSpans = controller.getTextSources().stream().mapToInt(
                 textSource -> textSource.getSpans(null).size()).sum();
         int actualGraphSpaces = controller.getTextSources().stream().mapToInt(

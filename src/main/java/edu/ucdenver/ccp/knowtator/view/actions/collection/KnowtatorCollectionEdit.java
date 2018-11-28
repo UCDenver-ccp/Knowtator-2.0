@@ -24,20 +24,20 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.collection;
 
-import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
 
 import java.util.Optional;
 
-public class KnowtatorCollectionEdit<K extends KnowtatorDataObjectInterface> extends KnowtatorEdit {
+public class KnowtatorCollectionEdit<K extends ModelObject> extends KnowtatorEdit {
 
     private final CollectionActionType actionType;
     private final KnowtatorCollection<K> collection;
-    private Optional<K> object;
+	private K object;
 
-    KnowtatorCollectionEdit(CollectionActionType actionType, KnowtatorCollection<K> collection, Optional<K> object, String presentationName) {
+	KnowtatorCollectionEdit(CollectionActionType actionType, KnowtatorCollection<K> collection, K object, String presentationName) {
         super(presentationName);
         this.actionType = actionType;
         this.collection = collection;
@@ -50,14 +50,14 @@ public class KnowtatorCollectionEdit<K extends KnowtatorDataObjectInterface> ext
         switch (actionType) {
             case ADD:
                 try {
-                    collection.remove(object.orElseThrow(ActionUnperformableException::new));
+	                collection.remove(getObject().orElseThrow(ActionUnperformableException::new));
                 } catch (ActionUnperformableException ignored) {
 
                 }
                 break;
             case REMOVE:
                 try {
-                    collection.add(object.orElseThrow(ActionUnperformableException::new));
+	                collection.add(getObject().orElseThrow(ActionUnperformableException::new));
                 } catch (ActionUnperformableException ignored) {
 
                 }
@@ -71,13 +71,13 @@ public class KnowtatorCollectionEdit<K extends KnowtatorDataObjectInterface> ext
         switch (actionType) {
             case ADD:
                 try {
-                    collection.add(object.orElseThrow(ActionUnperformableException::new));
+	                collection.add(getObject().orElseThrow(ActionUnperformableException::new));
                 } catch (ActionUnperformableException ignored) {
                 }
                 break;
             case REMOVE:
                     try {
-                        collection.remove(object.orElseThrow(ActionUnperformableException::new));
+	                    collection.remove(getObject().orElseThrow(ActionUnperformableException::new));
                     } catch (ActionUnperformableException ignored) {
 
                     }
@@ -85,8 +85,12 @@ public class KnowtatorCollectionEdit<K extends KnowtatorDataObjectInterface> ext
         }
     }
 
+	private Optional<K> getObject() {
+		return Optional.ofNullable(object);
+	}
 
-    public void setObject(Optional<K> object) {
+
+	public void setObject(K object) {
         this.object = object;
     }
 }

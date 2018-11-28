@@ -35,11 +35,9 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 
-public class KnowtatorIAATests {
+class KnowtatorIAATests {
 
     private static KnowtatorIAA knowtatorIAA;
-    private static File outputDir;
-    private static File goldStandardDir;
 
     @BeforeAll
     static void makeProjectTest() throws IAAException, IOException {
@@ -52,8 +50,8 @@ public class KnowtatorIAATests {
         controller.setDebug();
         controller.loadProject();
 
-        goldStandardDir = new File(controller.getProjectLocation(), "iaa");
-        outputDir = new File(controller.getProjectLocation(), "iaa_results");
+//        File goldStandardDir = new File(controller.getProjectLocation(), "iaa");
+        File outputDir = new File(controller.getProjectLocation(), "iaa_results");
         //noinspection ResultOfMethodCallIgnored
         outputDir.mkdir();
         knowtatorIAA = new KnowtatorIAA(outputDir, controller);
@@ -61,7 +59,7 @@ public class KnowtatorIAATests {
     }
 
     @Test
-    void runClassIAATest() throws IAAException, IOException {
+    void runClassIAATest() throws IAAException {
         knowtatorIAA.runClassIAA();
 //TODO: Rerun test data because concept annotations no longer store owl class label
 
@@ -69,13 +67,13 @@ public class KnowtatorIAATests {
     }
 
     @Test
-    void runSpanIAATest() throws IAAException, IOException {
+    void runSpanIAATest() throws IAAException {
         knowtatorIAA.runSpanIAA();
 //        assert FileUtils.contentEqualsIgnoreEOL(new File(outputDir, "Span matcher.dat"), new File(goldStandardDir, "Span matcher.dat"), "utf-8");
     }
 
     @Test
-    void runClassAndSpanIAATest() throws IAAException, IOException {
+    void runClassAndSpanIAATest() throws IAAException {
         knowtatorIAA.runClassAndSpanIAA();
 
 //        assert FileUtils.contentEqualsIgnoreEOL(new File(outputDir, "Class and span matcher.dat"), new File(goldStandardDir, "Class and span matcher.dat"), "utf-8");

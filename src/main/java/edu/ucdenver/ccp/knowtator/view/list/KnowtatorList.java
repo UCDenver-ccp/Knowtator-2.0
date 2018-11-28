@@ -24,24 +24,20 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
-import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.*;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.listener.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 
-public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> extends JList<K> implements KnowtatorComponent {
+public abstract class KnowtatorList<K extends ModelObject> extends JList<K> implements KnowtatorComponent {
 
 	protected KnowtatorCollection<K> collection;
-	private ListSelectionListener al;
+	private final ListSelectionListener al;
 	private TextBoundModelListener textBoundModelListener;
 
 	KnowtatorList() {
@@ -182,7 +178,7 @@ public abstract class KnowtatorList<K extends KnowtatorDataObjectInterface> exte
 
 	protected abstract void react();
 
-	public void setCollection(KnowtatorCollection<K> collection) {
+	protected void setCollection(KnowtatorCollection<K> collection) {
 		//clear collection
 		((DefaultListModel) getModel()).clear();
 		this.collection = collection;

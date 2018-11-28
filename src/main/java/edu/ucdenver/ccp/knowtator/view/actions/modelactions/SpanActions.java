@@ -24,14 +24,13 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
-import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
+import edu.ucdenver.ccp.knowtator.model.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
 import edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane;
 
 import javax.swing.undo.UndoableEdit;
-import java.util.Arrays;
 
 public class SpanActions {
     public final static String GROW = "grow";
@@ -64,7 +63,7 @@ public class SpanActions {
         public void execute() {
             int spanStart = span.getStart();
             int spanEnd = span.getEnd();
-            span.modify(Arrays.asList(startModification, endModification));
+	        span.modify(startModification, endModification);
             spanStartChanged = spanStart != span.getStart();
             spanEndChanged = spanEnd != span.getEnd();
         }
@@ -82,12 +81,12 @@ public class SpanActions {
                         case GROW:
                             startModification = spanStartChanged ? getStartModification(startOrEnd, SHRINK) : 0;
                             endModification = spanEndChanged ? getEndModification(startOrEnd, SHRINK) : 0;
-                            span.modify(Arrays.asList(startModification, endModification));
+	                        span.modify(startModification, endModification);
                             break;
                         case SHRINK:
                             startModification = spanStartChanged ? getStartModification(startOrEnd, GROW) : 0;
                             endModification = spanEndChanged ? getEndModification(startOrEnd, GROW) : 0;
-                            span.modify(Arrays.asList(startModification, endModification));
+	                        span.modify(startModification, endModification);
                             break;
                     }
                 }

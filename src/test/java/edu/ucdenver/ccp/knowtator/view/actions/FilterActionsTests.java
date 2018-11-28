@@ -25,9 +25,9 @@
 package edu.ucdenver.ccp.knowtator.view.actions;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
+import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.FilterAction;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ReassignOWLClassAction;
@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 import static edu.ucdenver.ccp.knowtator.model.FilterType.OWLCLASS;
 import static edu.ucdenver.ccp.knowtator.model.FilterType.PROFILE;
 
-public class FilterActionsTests {
+class FilterActionsTests {
 	private static final KnowtatorModel controller = TestingHelpers.getLoadedController();
 
 	@BeforeAll
@@ -46,7 +46,7 @@ public class FilterActionsTests {
 	}
 
 	@Test
-	public void filterActionTest() throws ActionUnperformableException {
+	void filterActionTest() {
 		TestingHelpers.checkDefaultCollectionValues(controller);
 		TestingHelpers.testKnowtatorAction(controller, new FilterAction(PROFILE, true),
 				TestingHelpers.defaultExpectedTextSources,

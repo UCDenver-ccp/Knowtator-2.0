@@ -25,9 +25,6 @@
 package edu.ucdenver.ccp.knowtator.model;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.text.graph.RelationAnnotation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.HermiT.ReasonerFactory;
@@ -40,7 +37,7 @@ import org.semanticweb.owlapi.util.OWLEntityRenamer;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class OWLModelTests {
+class OWLModelTests {
 
 	private static KnowtatorModel controller;
 	private static OWLOntologyManager owlOntologyManager;
@@ -49,7 +46,7 @@ public class OWLModelTests {
 	private static OWLReasoner reasoner;
 
 	@BeforeEach
-	public void setup() {
+	void setup() {
 
 		controller = TestingHelpers.getLoadedController();
 		OWLReasonerFactory reasonerFactory = new ReasonerFactory();
@@ -61,7 +58,7 @@ public class OWLModelTests {
 	}
 
 	@Test
-	public void addOWLClassTest() {
+	void addOWLClassTest() {
 		OWLClass class1 = dataFactory.getOWLClass(IRI.create("X"));
 		OWLClass class2 = controller.getOWLClassByID("IceCream").get();
 		OWLAxiom axiom = dataFactory.getOWLSubClassOfAxiom(class1, class2);
@@ -73,7 +70,7 @@ public class OWLModelTests {
 	}
 
 	@Test
-	public void changeOWLClassIRITest() {
+	void changeOWLClassIRITest() {
 		OWLEntityRenamer renamer = new OWLEntityRenamer(owlOntologyManager, Collections.singleton(ontology));
 		OWLClass class2 = controller.getOWLClassByID("Pizza").get();
 		assert ontology.containsClassInSignature(class2.getIRI());
@@ -100,7 +97,7 @@ public class OWLModelTests {
 	}
 
 	@Test
-	public void changeOWLObjectPropertyIRITest() {
+	void changeOWLObjectPropertyIRITest() {
 		OWLEntityRenamer renamer = new OWLEntityRenamer(owlOntologyManager, Collections.singleton(ontology));
 		OWLObjectProperty property = controller.getOWLObjectPropertyByID("hasBase").get();
 		assert ontology.containsObjectPropertyInSignature(property.getIRI());
@@ -128,7 +125,7 @@ public class OWLModelTests {
 	}
 
 	@Test
-	public void removeOWLClassTest() {
+	void removeOWLClassTest() {
 		OWLClass class2 = controller.getOWLClassByID("Pizza").get();
 		assert ontology.containsClassInSignature(class2.getIRI());
 		OWLEntityRemover remover = new OWLEntityRemover(Collections.singleton(ontology));
@@ -147,7 +144,7 @@ public class OWLModelTests {
 	}
 
 	@Test
-	public void removeObjectPropertyTest() {
+	void removeObjectPropertyTest() {
 		OWLObjectProperty owlObjectProperty = controller.getOWLObjectPropertyByID("hasBase").get();
 		assert ontology.containsObjectPropertyInSignature(owlObjectProperty.getIRI());
 		OWLEntityRemover remover = new OWLEntityRemover(Collections.singleton(ontology));
@@ -166,7 +163,7 @@ public class OWLModelTests {
 	}
 
 	@Test
-	public void moveOWLClassTest() {
+	void moveOWLClassTest() {
 		OWLClass class1 = controller.getOWLClassByID("Food").get();
 		OWLClass class2 = controller.getOWLClassByID("Pizza").get();
 		OWLClass class3 = controller.getOWLClassByID("Thing").get();
@@ -199,13 +196,13 @@ public class OWLModelTests {
 		assert conceptAnnotation.getOwlClass().equals(class2);
 	}
 
-	public boolean isSubClassTest(OWLClass potentialSuperClass, OWLClass owlClass) {
+	boolean isSubClassTest(OWLClass potentialSuperClass, OWLClass owlClass) {
 		reasoner.flush();
 		Set<OWLClass> subclasses = reasoner.getSubClasses(potentialSuperClass, false).getFlattened();
 		return subclasses.contains(owlClass);
 	}
 
-	public boolean isSubObjectPropertyTest(OWLObjectProperty potentialSuperObjectProperty, OWLObjectProperty objectProperty) {
+	boolean isSubObjectPropertyTest(OWLObjectProperty potentialSuperObjectProperty, OWLObjectProperty objectProperty) {
 		reasoner.flush();
 		List<OWLObjectProperty> subclasses = reasoner.getSubObjectProperties(potentialSuperObjectProperty, true).getFlattened().stream()
 				.filter(owlObjectPropertyExpression -> !owlObjectPropertyExpression.isAnonymous())
@@ -216,7 +213,7 @@ public class OWLModelTests {
 
 
 	@Test
-	public void moveOWLObjectPropertyTest() {
+	void moveOWLObjectPropertyTest() {
 		OWLObjectProperty property1 = controller.getOWLObjectPropertyByID("hasIngredient").get();
 		OWLObjectProperty property2 = controller.getOWLObjectPropertyByID("hasBase").get();
 		OWLObjectProperty property3 = controller.getOWLObjectPropertyByID("isIngredientOf").get();
@@ -251,12 +248,12 @@ public class OWLModelTests {
 	}
 
 	@Test
-	public void moveSuperClassTest() {
+	void moveSuperClassTest() {
 
 	}
 
 	@Test
-	public void moveSuperObjectPropertyTest() {
+	void moveSuperObjectPropertyTest() {
 
 	}
 

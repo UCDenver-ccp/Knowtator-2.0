@@ -25,7 +25,7 @@
 package edu.ucdenver.ccp.knowtator.iaa.matcher;
 
 import edu.ucdenver.ccp.knowtator.iaa.IAA;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
 
 import java.util.HashSet;
 import java.util.Set;

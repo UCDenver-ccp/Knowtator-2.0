@@ -24,13 +24,14 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.ModelObject;
+import edu.ucdenver.ccp.knowtator.model.collection.listener.CollectionListener;
 
 import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Stream;
 
-public abstract class ListenableCollection<K extends KnowtatorDataObjectInterface, C extends Collection<K>, L extends CollectionListener<K>> implements Iterable<K> {
+public abstract class ListenableCollection<K extends ModelObject, C extends Collection<K>, L extends CollectionListener<K>> implements Iterable<K> {
 	final C collection;
 	final List<L> collectionListeners;
 
@@ -105,7 +106,7 @@ public abstract class ListenableCollection<K extends KnowtatorDataObjectInterfac
 
 	public void dispose() {
 		collectionListeners.clear();
-		forEach(KnowtatorDataObjectInterface::dispose);
+		forEach(ModelObject::dispose);
 		collection.clear();
 	}
 

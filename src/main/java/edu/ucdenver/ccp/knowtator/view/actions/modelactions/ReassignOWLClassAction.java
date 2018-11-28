@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -34,7 +34,7 @@ import javax.swing.undo.UndoableEdit;
 public class ReassignOWLClassAction extends AbstractKnowtatorAction {
 
 	private final OWLClass oldOwlClass;
-	private ConceptAnnotation conceptAnnotation;
+	private final ConceptAnnotation conceptAnnotation;
 	private final OWLClass newOwlClass;
 
 	public ReassignOWLClassAction(ConceptAnnotation conceptAnnotation, OWLClass owlClass) {

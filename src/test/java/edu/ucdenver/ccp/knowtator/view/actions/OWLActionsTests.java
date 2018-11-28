@@ -25,10 +25,10 @@
 package edu.ucdenver.ccp.knowtator.view.actions;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
+import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.Profile;
+import edu.ucdenver.ccp.knowtator.model.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorDefaultSettings;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ColorChangeAction;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ReassignOWLClassAction;
@@ -39,11 +39,11 @@ import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
-public class OWLActionsTests {
+class OWLActionsTests {
     private static final KnowtatorModel controller = TestingHelpers.getLoadedController();
 
     @Test
-    public void reassignOWLClassActionTest() {
+    void reassignOWLClassActionTest() {
         TextSource textSource = controller.getSelectedTextSource().get();
         ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
         textSource.setSelection(conceptAnnotation);
@@ -62,7 +62,7 @@ public class OWLActionsTests {
     }
 
     @Test
-    public void changeColorActionTest() {
+    void changeColorActionTest() {
         TextSource textSource = controller.getSelectedTextSource().get();
         ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
         textSource.setSelection(conceptAnnotation);

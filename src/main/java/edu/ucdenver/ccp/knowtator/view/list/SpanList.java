@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
-import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
+import edu.ucdenver.ccp.knowtator.model.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 public class SpanList extends KnowtatorList<Span> {

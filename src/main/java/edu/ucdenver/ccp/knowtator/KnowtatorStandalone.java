@@ -24,8 +24,8 @@
 
 package edu.ucdenver.ccp.knowtator;
 
+import edu.ucdenver.ccp.knowtator.model.Fragment;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.text.Fragment;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.apache.commons.cli.*;
 
@@ -57,7 +57,7 @@ import java.util.List;
  */
 class KnowtatorStandalone extends JFrame {
 
-	private KnowtatorView view;
+	private final KnowtatorView view;
 
 	/**
 	 * The constructor for Knowtator standalone's GUI. Debug mode can be entered here which will generate some

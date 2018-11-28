@@ -24,21 +24,17 @@
 
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
-import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.*;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.listener.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
 
-public abstract class KnowtatorChooser<K extends KnowtatorDataObjectInterface> extends JComboBox<K> implements KnowtatorComponent {
+public abstract class KnowtatorChooser<K extends ModelObject> extends JComboBox<K> implements KnowtatorComponent {
 
 	private final ActionListener al;
 	private KnowtatorCollection<K> collection;

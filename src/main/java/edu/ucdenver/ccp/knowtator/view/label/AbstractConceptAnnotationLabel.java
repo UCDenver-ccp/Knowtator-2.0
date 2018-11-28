@@ -24,8 +24,8 @@
 
 package edu.ucdenver.ccp.knowtator.view.label;
 
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import java.util.Optional;
@@ -37,7 +37,7 @@ public abstract class AbstractConceptAnnotationLabel extends KnowtatorLabel {
 	}
 
 	@Override
-	public void react() {
+	protected void react() {
 		Optional<TextSource> textSourceOptional = KnowtatorView.MODEL.getSelectedTextSource();
 		if (textSourceOptional.isPresent()) {
 			textSourceOptional.ifPresent(textSource -> {
@@ -53,5 +53,5 @@ public abstract class AbstractConceptAnnotationLabel extends KnowtatorLabel {
 		}
 	}
 
-	public abstract void displayConceptAnnotation(ConceptAnnotation conceptAnnotation);
+	protected abstract void displayConceptAnnotation(ConceptAnnotation conceptAnnotation);
 }

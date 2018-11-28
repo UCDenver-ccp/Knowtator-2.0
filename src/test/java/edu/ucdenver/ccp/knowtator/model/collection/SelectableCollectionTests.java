@@ -26,10 +26,10 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.TextSource;
 import org.junit.jupiter.api.Test;
 
-public class SelectableCollectionTests {
+class SelectableCollectionTests {
 	private final static KnowtatorModel controller = TestingHelpers.getLoadedController();
 
 	@Test

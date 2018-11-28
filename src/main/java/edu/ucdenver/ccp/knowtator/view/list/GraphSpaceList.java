@@ -24,16 +24,16 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
+import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.ListenableCollection;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollection;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import java.util.stream.Collector;
 
 public class GraphSpaceList extends KnowtatorList<GraphSpace> {
-	public GraphSpaceList(KnowtatorView view) {
+	public GraphSpaceList() {
 		super();
 
 	}
@@ -52,7 +52,7 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
 		} else {
 			setCollection(conceptAnnotation.getTextSource().getGraphSpaceCollection()
 					.stream().filter(graphSpace -> graphSpace.containsAnnotation(conceptAnnotation)).collect(Collector.of(
-							() -> new GraphSpaceCollection(conceptAnnotation.getController(), conceptAnnotation.getTextSource()),
+							() -> new GraphSpaceCollection(null, conceptAnnotation.getTextSource()),
 							ListenableCollection::add,
 							(graphSpace1, graphSpace2) -> graphSpace1)));
 

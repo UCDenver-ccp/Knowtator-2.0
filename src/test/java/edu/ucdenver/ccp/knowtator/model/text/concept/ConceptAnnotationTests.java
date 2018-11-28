@@ -25,29 +25,30 @@
 package edu.ucdenver.ccp.knowtator.model.text.concept;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
+import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.TextSource;
 import org.junit.jupiter.api.Test;
 
-public class ConceptAnnotationTests {
+class ConceptAnnotationTests {
 	private final static KnowtatorModel controller = TestingHelpers.getLoadedController();
 
 	@Test
-	public void getSizeTest() {
+	void getSizeTest() {
 		TextSource textSource = controller.getSelectedTextSource().get();
 		ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
 		assert conceptAnnotation.getSize() == 4;
 	}
 
 	@Test
-	public void getSpannedTextTest() {
+	void getSpannedTextTest() {
 		TextSource textSource = controller.getSelectedTextSource().get();
 		ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
 		assert conceptAnnotation.getSpannedText().equals("This");
 	}
 
 	@Test
-	public void containsTest() {
+	void containsTest() {
 		TextSource textSource = controller.getSelectedTextSource().get();
 		ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
 		assert conceptAnnotation.contains(0);

@@ -27,9 +27,9 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.OWLModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.list.AnnotationList;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -39,7 +39,7 @@ import java.awt.*;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 
-public class ConsistencyPane extends MenuPane {
+class ConsistencyPane extends MenuPane {
 	private JLabel owlClassLabel;
 	private JLabel spanLabel;
 	private AnnotationList annotationsForClassList;
@@ -50,7 +50,7 @@ public class ConsistencyPane extends MenuPane {
 	private JButton refreshButton;
 
 	private JCheckBox exactMatchCheckBox;
-	private KnowtatorView view;
+	private final KnowtatorView view;
 	private HashSet<OWLClass> activeOWLClassDescendants;
 
 	ConsistencyPane(KnowtatorView view) {

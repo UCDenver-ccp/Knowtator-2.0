@@ -28,15 +28,10 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.util.mxGraphTransferable;
-import edu.ucdenver.ccp.knowtator.model.FilterType;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.*;
+import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.listener.TextBoundModelListener;
+import edu.ucdenver.ccp.knowtator.model.collection.listener.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.FilterAction;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.SpanActions;
@@ -194,7 +189,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		textSourceChooser = new TextSourceChooser(this);
 
 		spanList = new SpanList();
-		graphSpaceList = new GraphSpaceList(this);
+		graphSpaceList = new GraphSpaceList();
 		annotationAnnotatorLabel = new AnnotationAnnotatorLabel(this);
 		annotationClassLabel = new AnnotationClassLabel(this);
 		annotationIDLabel = new AnnotationIDLabel(this);
@@ -338,7 +333,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		addAnnotationButton.addActionListener(e -> pickAction(this, null, null, new ActionParameters(ADD, ANNOTATION), new ActionParameters(ADD, SPAN)));
 		removeAnnotationButton.addActionListener(e -> pickAction(this, null, null, new ActionParameters(REMOVE, ANNOTATION), new ActionParameters(REMOVE, SPAN)));
 		nextSpanButton.addActionListener(e -> MODEL.getSelectedTextSource().ifPresent(TextSource::selectNextSpan));
-		previousSpanButton.addActionListener(e -> MODEL.getSelectedTextSource().ifPresent(textSource -> textSource.selectPreviousSpan()));
+		previousSpanButton.addActionListener(e -> MODEL.getSelectedTextSource().ifPresent(TextSource::selectPreviousSpan));
 
 		annotationButtons = Arrays.asList(
 				addAnnotationButton,

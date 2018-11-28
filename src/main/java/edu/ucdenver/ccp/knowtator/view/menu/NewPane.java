@@ -39,7 +39,7 @@ import java.util.ResourceBundle;
  * A pane for handling new project creation
  */
 class NewPane extends MenuPane {
-    private JDialog parent;
+	private final JDialog parent;
     private final KnowtatorView view;
     private JTextField textField1;
     private JPanel fileChooserPane;

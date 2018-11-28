@@ -25,21 +25,17 @@
 package edu.ucdenver.ccp.knowtator.view.actions;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.*;
 import edu.ucdenver.ccp.knowtator.view.actions.graph.GraphActions;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
-public class GraphActionsTests {
+class GraphActionsTests {
 
 	private static final KnowtatorModel controller = TestingHelpers.getLoadedController();
 
 	@Test
-	public void removeSelectedAnnotationNodeTest() {
+	void removeSelectedAnnotationNodeTest() {
 		TextSource textSource = controller.getSelectedTextSource().get();
 		textSource.selectNextGraphSpace();
 		GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
@@ -57,7 +53,7 @@ public class GraphActionsTests {
 	}
 
 	@Test
-	public void removeSelectedTripleTest() {
+	void removeSelectedTripleTest() {
 		TextSource textSource = controller.getSelectedTextSource().get();
 		textSource.selectNextGraphSpace();
 		GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
@@ -75,7 +71,7 @@ public class GraphActionsTests {
 	}
 
 	@Test
-	public void addAnnotationNodeTest() {
+	void addAnnotationNodeTest() {
 		TextSource textSource = controller.getSelectedTextSource().get();
 		textSource.selectNextGraphSpace();
 		textSource.selectNextGraphSpace();
@@ -93,7 +89,7 @@ public class GraphActionsTests {
 	}
 
 	@Test
-	public void addTripleTest() {
+	void addTripleTest() {
 		TextSource textSource = controller.getSelectedTextSource().get();
 		textSource.selectNextGraphSpace();
 		textSource.selectNextGraphSpace();
@@ -119,7 +115,7 @@ public class GraphActionsTests {
 	}
 
 	@Test
-	public void applyLayoutTest() {
+	void applyLayoutTest() {
 		//TODO: This test only makes sure that the layout application doesn't change to graph space modelactions. It needs to check the positions
 		TextSource textSource = controller.getSelectedTextSource().get();
 		textSource.selectNextGraphSpace();

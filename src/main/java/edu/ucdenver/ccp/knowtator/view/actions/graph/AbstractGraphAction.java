@@ -25,7 +25,7 @@
 package edu.ucdenver.ccp.knowtator.view.actions.graph;
 
 import com.mxgraph.util.mxEvent;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;

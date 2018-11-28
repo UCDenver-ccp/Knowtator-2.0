@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 import java.awt.*;
 import java.io.IOException;
 
-public class KnowtatorViewTests {
+class KnowtatorViewTests {
 	private static final KnowtatorView view = new KnowtatorView();
 
 	@Test

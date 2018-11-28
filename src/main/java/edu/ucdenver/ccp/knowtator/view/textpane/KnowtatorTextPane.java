@@ -24,13 +24,13 @@
 
 package edu.ucdenver.ccp.knowtator.view.textpane;
 
-import edu.ucdenver.ccp.knowtator.model.FilterModelListener;
-import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
-import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
-import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.model.profile.ProfileCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
+import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.ModelListener;
+import edu.ucdenver.ccp.knowtator.model.Profile;
+import edu.ucdenver.ccp.knowtator.model.Span;
+import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.listener.ColorListener;
+import edu.ucdenver.ccp.knowtator.model.collection.listener.ProfileCollectionListener;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
@@ -53,7 +53,7 @@ import static edu.ucdenver.ccp.knowtator.view.actions.collection.KnowtatorCollec
 /**
  * The text pane used for annotating and displaying concept annotations in Knowtator projects
  */
-public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListener, KnowtatorComponent, FilterModelListener, ProfileCollectionListener {
+public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListener, KnowtatorComponent, ModelListener, ProfileCollectionListener {
 
 	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger(KnowtatorTextPane.class);
@@ -97,7 +97,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 	protected void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
 		AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e);
-		textSourceOptional.ifPresent(textSource -> {
+		KnowtatorView.MODEL.getSelectedTextSource().ifPresent(textSource -> {
 
 			Set<Span> spansContainingLocation = textSource.getSpans(press_offset).getCollection();
 
@@ -144,7 +144,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 	@Override
 	protected boolean keepSearchingCondition(Matcher matcher) {
-		return textSourceOptional.map(textSource -> (!onlyInAnnotationsCheckBox.isSelected() || !(textSource.getSpans(matcher.start()).size() == 0)))
+		return KnowtatorView.MODEL.getSelectedTextSource().map(textSource -> (!onlyInAnnotationsCheckBox.isSelected() || !(textSource.getSpans(matcher.start()).size() == 0)))
 				.orElse(false);
 	}
 
@@ -234,7 +234,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 		private JMenuItem selectAnnotationCommand(Span span) {
 			JMenuItem selectAnnotationMenuItem = new JMenuItem("Select " + KnowtatorView.MODEL.getOWLEntityRendering(span.getConceptAnnotation().getOwlClass()));
-			selectAnnotationMenuItem.addActionListener(e3 -> textSourceOptional.ifPresent(textSource -> textSource.setSelectedAnnotation(span)));
+			selectAnnotationMenuItem.addActionListener(e3 -> KnowtatorView.MODEL.getSelectedTextSource().ifPresent(textSource -> textSource.setSelectedAnnotation(span)));
 
 			return selectAnnotationMenuItem;
 		}
@@ -260,7 +260,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 				show(e.getComponent(), e.getX(), e.getY());
 			} else {
-				textSourceOptional.ifPresent(textSource -> textSource.getSelectedAnnotation()
+				KnowtatorView.MODEL.getSelectedTextSource().ifPresent(textSource -> textSource.getSelectedAnnotation()
 						.ifPresent(conceptAnnotation -> conceptAnnotation.getSelection()
 								.filter(span -> span.getStart() <= release_offset && release_offset <= span.getEnd())
 								.ifPresent(span -> clickedInsideSpan(conceptAnnotation))));

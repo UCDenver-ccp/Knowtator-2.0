@@ -24,9 +24,9 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
-import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.Profile;
+import edu.ucdenver.ccp.knowtator.model.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorColorPalette;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
@@ -70,11 +70,13 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 			for (Object o : array) {
 				ConceptAnnotation conceptAnnotation = (ConceptAnnotation) o;
 
-				if (object.map(object -> conceptAnnotation.getAnnotator().equals(object)).orElse(false)) {
-					ConceptAnnotationAction action = new ConceptAnnotationAction(REMOVE, conceptAnnotation.getTextSource());
+				if (conceptAnnotation.getAnnotator().equals(object)) {
+
+					ConceptAnnotationAction action = new ConceptAnnotationAction(REMOVE, textSource);
 					action.setObject(conceptAnnotation);
 					action.execute();
 					edit.addKnowtatorEdit(action.getEdit());
+
 				}
 			}
 		}
@@ -91,7 +93,7 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 		if (!objectOptional.isPresent()) {
 			objectOptional = KnowtatorView.MODEL.getSelectedTextSource()
 					.flatMap(textSource -> textSource.getSelectedAnnotation()
-									.map(ConceptAnnotation::getOwlClass));
+							.map(ConceptAnnotation::getOwlClass));
 		}
 		objectOptional.ifPresent(_owlClass -> {
 			Set<OWLClass> owlClasses = new HashSet<>();

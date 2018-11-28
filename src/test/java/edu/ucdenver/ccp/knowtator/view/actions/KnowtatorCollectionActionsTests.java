@@ -25,9 +25,9 @@
 package edu.ucdenver.ccp.knowtator.view.actions;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
+import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -140,7 +140,8 @@ public class KnowtatorCollectionActionsTests {
                 TestingHelpers.defaultExpectedTriples - 1);
 
         // Next test remove span if there are multiple spans. This should only remove the span.
-        textSource.selectNextGraphSpace();
+        conceptAnnotation.setSelection(conceptAnnotation.first());
+        textSource.selectNextSpan();
         conceptAnnotation = textSource.getSelectedAnnotation().get();
         conceptAnnotation.setSelection(conceptAnnotation.first());
         TestingHelpers.testKnowtatorAction(controller,

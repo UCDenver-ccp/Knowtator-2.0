@@ -31,7 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-public class KnowtatorStandaloneTests {
+class KnowtatorStandaloneTests {
 
 
 	@SuppressWarnings("FieldCanBeLocal")
@@ -47,7 +47,7 @@ public class KnowtatorStandaloneTests {
 	};
 //    private String[] profileFileNames = new String[]{"profile1", "profile2"};
 
-	private File getProjectFile(String projectName) {
+	File getProjectFile(String projectName) {
 		return new File(getClass().getResource(String.format(
 				"/%s/%s.knowtator",
 				projectName,
@@ -55,7 +55,7 @@ public class KnowtatorStandaloneTests {
 		).getFile());
 	}
 
-	private File getArticleFile(String projectName, String articleName) {
+	File getArticleFile(String projectName, String articleName) {
 		return new File(getClass().getResource(String.format(
 				"/%s/Articles/%s.txt",
 				projectName,
@@ -67,7 +67,7 @@ public class KnowtatorStandaloneTests {
 	 * Rigorous Test :-)
 	 */
 	@Test
-	public void conversionTest() {
+	void conversionTest() {
 		String brat = null;
 		String uima = null;
 		String articles = null;

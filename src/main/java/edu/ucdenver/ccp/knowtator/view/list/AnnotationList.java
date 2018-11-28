@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
-import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 public class AnnotationList extends KnowtatorList<ConceptAnnotation> {

@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.collection;
 
-import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
+import edu.ucdenver.ccp.knowtator.model.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
@@ -42,20 +42,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataObjectInterface> extends AbstractKnowtatorAction {
+public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject> extends AbstractKnowtatorAction {
 
 
 	protected final CollectionActionType actionType;
 	protected final KnowtatorCollectionEdit<K> edit;
 	protected final KnowtatorCollection<K> collection;
-	protected Optional<K> object;
+	protected K object;
 
-	public AbstractKnowtatorCollectionAction(CollectionActionType actionType, String presentationName, KnowtatorCollection<K> collection) {
+	protected AbstractKnowtatorCollectionAction(CollectionActionType actionType, String presentationName, KnowtatorCollection<K> collection) {
 		super(String.format("%s %s", actionType, presentationName));
 		this.collection = collection;
 		this.actionType = actionType;
-		this.edit = new KnowtatorCollectionEdit<>(actionType, collection, object, getPresentationName());
-		object = Optional.empty();
+		object = null;
+		this.edit = new KnowtatorCollectionEdit<>(actionType, collection, null, getPresentationName());
 	}
 
 
@@ -64,20 +64,24 @@ public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataO
 		switch (actionType) {
 			case ADD:
 				prepareAdd();
-				collection.add(object.orElseThrow(ActionUnperformableException::new));
+				collection.add(getObject().orElseThrow(ActionUnperformableException::new));
 				cleanUpAdd();
 				break;
 			case REMOVE:
 				prepareRemove();
-				collection.remove(object.orElseThrow(ActionUnperformableException::new));
+				collection.remove(getObject().orElseThrow(ActionUnperformableException::new));
 				cleanUpRemove();
 				break;
 		}
 
 	}
 
+	private Optional<K> getObject() {
+		return Optional.ofNullable(object);
+	}
+
 	public void prepareRemove() throws ActionUnperformableException {
-		if (!object.isPresent()) {
+		if (!getObject().isPresent()) {
 			collection.getSelection().ifPresent(this::setObject);
 		}
 	}
@@ -96,7 +100,7 @@ public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataO
 	}
 
 	public void setObject(K object) {
-		this.object = Optional.ofNullable(object);
+		this.object = object;
 		edit.setObject(this.object);
 	}
 

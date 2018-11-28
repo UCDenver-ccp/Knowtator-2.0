@@ -27,38 +27,38 @@ package edu.ucdenver.ccp.knowtator;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import org.junit.jupiter.api.Test;
 
-public class ProjectManagerTests {
+class ProjectManagerTests {
 
     private static final KnowtatorModel controller = TestingHelpers.getLoadedController();
 
     @Test
-    public void loadProjectTest() {
+    void loadProjectTest() {
         TestingHelpers.checkDefaultCollectionValues(controller);
         controller.loadProject();
 
     }
 
     @Test
-    public void newProjectTest() {
+    void newProjectTest() {
     }
 
     @Test
-    public void importToManagerTest() {
+    void importToManagerTest() {
     }
 
     @Test
-    public void importProjectTest() {
+    void importProjectTest() {
     }
 
     @Test
-    public void makeProjectStructureTest() {
+    void makeProjectStructureTest() {
     }
 
     @Test
-    public void loadWithAppropriateFormatTest() {
+    void loadWithAppropriateFormatTest() {
     }
 
     @Test
-    public void saveToFormatTest() {
+    void saveToFormatTest() {
     }
 }

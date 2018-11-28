@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 public class GraphSpaceChooser extends KnowtatorChooser<GraphSpace> {
