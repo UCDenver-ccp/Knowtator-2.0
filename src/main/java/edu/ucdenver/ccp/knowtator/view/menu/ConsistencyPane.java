@@ -76,7 +76,7 @@ public class ConsistencyPane extends MenuPane {
 			if (includeDescendantsCheckBox.isSelected()) {
 				activeOWLClassDescendants.addAll(owlModel.getDescendants(owlClass));
 			}
-			owlModel.getOWLEntityRendering(owlClass).ifPresent(label -> owlClassLabel.setText(label));
+			owlClassLabel.setText(owlModel.getOWLEntityRendering(owlClass));
 		});
 
 		KnowtatorView.MODEL.getTextSource()

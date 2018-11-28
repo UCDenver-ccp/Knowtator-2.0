@@ -49,7 +49,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -124,12 +123,12 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 		return stream().iterator();
 	}
 
-	public TreeSet<ConceptAnnotation> getAnnotations(int start, int end) {
-		Supplier<TreeSet<ConceptAnnotation>> supplier = TreeSet::new;
-		return stream()
-				.filter(annotation -> (annotation.contains(start) && annotation.contains(end)))
-				.collect(Collectors.toCollection(supplier));
-	}
+//	public TreeSet<ConceptAnnotation> getAnnotations(int start, int end) {
+//		Supplier<TreeSet<ConceptAnnotation>> supplier = TreeSet::new;
+//		return stream()
+//				.filter(annotation -> (annotation.contains(start) && annotation.contains(end)))
+//				.collect(Collectors.toCollection(supplier));
+//	}
 
 //    public void findOverlaps() {
 //        List<Span> overlappingSpans = new ArrayList<>();
@@ -279,7 +278,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
 					Optional<OWLClass> owlClass = Optional.ofNullable(owlClassMap.get(owlClassID));
 					if (owlClass.isPresent()) {
-						ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, textSource, annotationID, owlClass.get(), owlClassID, profile, type, motivation);
+						ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, textSource, annotationID, owlClass.get(), profile, type, motivation);
 						newConceptAnnotation.readFromKnowtatorXML(null, annotationElement);
 						if (newConceptAnnotation.getSpanCollection().size() == 0) {
 							return Optional.empty();
@@ -323,7 +322,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
 					Optional<OWLClass> owlClass = controller.getOWLClassByID(owlClassID);
 					if (owlClass.isPresent()) {
-						ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, textSource, annotationID, owlClass.get(), owlClassID, profile, "identity", "");
+						ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, textSource, annotationID, owlClass.get(), profile, "identity", "");
 						if (containsID(annotationID)) controller.verifyId(null, newConceptAnnotation, false);
 						newConceptAnnotation.readFromOldKnowtatorXML(null, annotationElement);
 
@@ -389,7 +388,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 						annotation -> {
 							String owlClassID = annotation[1].split(StandoffTags.textBoundAnnotationTripleDelimiter)[0];
 							controller.getOWLClassByID(owlClassID).ifPresent(owlClass -> {
-								ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, textSource, annotation[0], owlClass, owlClassID, profile, "identity", "");
+								ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, textSource, annotation[0], owlClass, profile, "identity", "");
 								add(newConceptAnnotation);
 								Map<Character, List<String[]>> map = new HashMap<>();
 								List<String[]> list = new ArrayList<>();
@@ -400,13 +399,14 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
 						});
 
+
 		annotationCollection
 				.get(StandoffTags.NORMALIZATION)
 				.forEach(normalization -> {
-					String[] splitNormalization = normalization[1].split(StandoffTags.relationTripleDelimiter);
-					get(splitNormalization[1]).ifPresent(conceptAnnotation -> conceptAnnotation.setOWLClassID(splitNormalization[2]));
-
-						});
+//					String[] splitNormalization = normalization[1].split(StandoffTags.relationTripleDelimiter);
+//					String annotationID = splitNormalization[1];
+//					String owlClassID = splitNormalization[2];
+				});
 
 		GraphSpace newGraphSpace = new GraphSpace(controller, textSource, "Brat Relation Graph");
 		textSource.getGraphSpaceCollection().add(newGraphSpace);

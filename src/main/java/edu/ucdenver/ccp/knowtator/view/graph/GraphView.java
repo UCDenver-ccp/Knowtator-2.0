@@ -267,25 +267,24 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 							.filter(cell -> "".equals(cell.getValue()))
 							.forEach(edge -> {
 								KnowtatorView.MODEL.getSelectedOWLObjectProperty()
-										.ifPresent(property -> KnowtatorView.MODEL.getOWLEntityRendering(property)
-												.ifPresent(propertyID -> {
-													// For some reason the top object property doesn't play nice so don't allow it
-													if (!property.getIRI().getShortForm().equals("owl:topObjectProperty")) {
-														RelationOptionsDialog relationOptionsDialog = getRelationOptionsDialog(propertyID);
-														if (relationOptionsDialog.getResult() == RelationOptionsDialog.OK_OPTION) {
-															KnowtatorView.MODEL.registerAction(
-																	new GraphActions.AddTripleAction(
-																			(AnnotationNode) edge.getSource(),
-																			(AnnotationNode) edge.getTarget(),
-																			property, relationOptionsDialog.getPropertyID(),
-																			relationOptionsDialog.getQuantifier(), relationOptionsDialog.getQuantifierValue(),
-																			relationOptionsDialog.getNegation(),
-																			relationOptionsDialog.getMotivation(),
-																			graphSpace));
-														}
+										.ifPresent(property -> {
+											// For some reason the top object property doesn't play nice so don't allow it
+											if (!property.getIRI().getShortForm().equals("owl:topObjectProperty")) {
+												RelationOptionsDialog relationOptionsDialog = getRelationOptionsDialog(KnowtatorView.MODEL.getOWLEntityRendering(property));
+												if (relationOptionsDialog.getResult() == RelationOptionsDialog.OK_OPTION) {
+													KnowtatorView.MODEL.registerAction(
+															new GraphActions.AddTripleAction(
+																	(AnnotationNode) edge.getSource(),
+																	(AnnotationNode) edge.getTarget(),
+																	property, relationOptionsDialog.getPropertyID(),
+																	relationOptionsDialog.getQuantifier(), relationOptionsDialog.getQuantifierValue(),
+																	relationOptionsDialog.getNegation(),
+																	relationOptionsDialog.getMotivation(),
+																	graphSpace));
+												}
 
-													}
-												}));
+											}
+										});
 								graphSpace.getModel().remove(edge);
 							});
 

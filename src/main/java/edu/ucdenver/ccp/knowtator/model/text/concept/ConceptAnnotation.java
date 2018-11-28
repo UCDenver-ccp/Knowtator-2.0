@@ -58,7 +58,6 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
     private final Set<ConceptAnnotation> overlappingConceptAnnotations;
     private final Profile annotator;
     private String bratID;
-    private String owlClassID;
     private final KnowtatorModel controller;
     private final SpanCollection spanCollection;
     private String motivation;
@@ -68,7 +67,6 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
             TextSource textSource,
             String annotationID,
             @Nonnull OWLClass owlClass,
-            String owlClassID,
             Profile annotator,
             String annotation_type,
             String motivation) {
@@ -79,7 +77,6 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
         this.textSource = textSource;
         this.annotator = annotator;
         this.controller = controller;
-        this.owlClassID = owlClassID;
         this.annotation_type = annotation_type;
         this.motivation = motivation;
         this.owlClass = owlClass;
@@ -100,10 +97,6 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
   GETTERS
    */
 
-    public String getOwlClassID() {
-        return owlClassID;
-    }
-
     public Profile getAnnotator() {
         return annotator;
     }
@@ -112,8 +105,8 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
         return owlClass;
     }
 
-    private String getOwlClassRendering() {
-        return controller.getOWLEntityRendering(owlClass).orElse(owlClassID);
+    public String getOwlClassRendering() {
+        return controller.getOWLEntityRendering(owlClass);
 
     }
 
@@ -165,19 +158,13 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
 
 
     public void setOwlClass(OWLClass owlClass) {
-
         this.owlClass = owlClass;
-        controller.getOWLEntityRendering(owlClass).ifPresent(owlClassID -> this.owlClassID = owlClassID);
         modify(null);
 
     }
 
     void setBratID(String bratID) {
         this.bratID = bratID;
-    }
-
-    void setOWLClassID(String owlClassID) {
-        this.owlClassID = owlClassID;
     }
 
 
@@ -223,7 +210,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
         return owlClass.getAnnotationPropertiesInSignature().stream()
                 .filter(OWLAnnotationProperty::isLabel)
                 .findFirst()
-                .map(OWLObject::toString).orElse(owlClassID);
+                .map(OWLObject::toString).orElse(getOwlClassRendering());
     }
 
     /*

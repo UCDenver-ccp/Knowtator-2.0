@@ -55,8 +55,7 @@ public class ColorList extends JList<OWLClass> implements KnowtatorCollectionLis
 
     private void setCollection(Profile profile) {
         dispose();
-        profile.getColors().keySet().stream().filter(o -> o instanceof OWLClass)
-                .map(o -> (OWLClass) o)
+        profile.getColors().keySet().stream()
                 .sorted(KnowtatorView.MODEL.getOWLObjectComparator())
                 .forEach(o -> ((DefaultListModel<OWLClass>) getModel()).addElement(o));
 //        profile.getColors().keySet().stream().filter(o -> !(o instanceof OWLObject))
@@ -121,11 +120,9 @@ public class ColorList extends JList<OWLClass> implements KnowtatorCollectionLis
 
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            KnowtatorView.MODEL.getProfileCollection().getSelection().ifPresent(profile -> setBackground(profile.getColors().get(value)));
-            if (value instanceof OWLEntity) {
-                KnowtatorView.MODEL.getOWLEntityRendering((OWLEntity) value).ifPresent(this::setText);
-            } else {
-                setText(value.toString());
+            if (value instanceof OWLClass) {
+                KnowtatorView.MODEL.getProfileCollection().getSelection().ifPresent(profile -> setBackground(profile.getColors().get(value)));
+                setText(KnowtatorView.MODEL.getOWLEntityRendering((OWLEntity) value));
             }
             return this;
         }

@@ -136,7 +136,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 	}
 
 	private String getOwlPropertyRendering() {
-		return controller.getOWLEntityRendering(property).orElse(propertyID);
+		return controller.getOWLEntityRendering(property);
 	}
 
 	@Override

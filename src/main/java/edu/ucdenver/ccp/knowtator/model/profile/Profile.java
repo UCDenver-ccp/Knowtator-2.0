@@ -132,8 +132,8 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
 		profileElem.setAttribute(KnowtatorXMLAttributes.ID, id);
 		colors.forEach((owlEntity, c) -> {
 			Element e = dom.createElement(KnowtatorXMLTags.HIGHLIGHTER);
-			controller.getOWLEntityRendering(owlEntity)
-					.ifPresent(owlClassID -> e.setAttribute(KnowtatorXMLAttributes.CLASS_ID, owlClassID));
+
+			e.setAttribute(KnowtatorXMLAttributes.CLASS_ID, controller.getOWLEntityRendering(owlEntity));
 
 			e.setAttribute(KnowtatorXMLAttributes.COLOR, convertToHex(c));
 			profileElem.appendChild(e);

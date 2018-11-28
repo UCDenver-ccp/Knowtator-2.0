@@ -193,8 +193,8 @@ public abstract class OWLModel extends UndoManager implements Serializable, Base
 				.getDescendants(cls)).orElse(new HashSet<>());
 	}
 
-	public Optional<String> getOWLEntityRendering(@Nonnull OWLEntity owlEntity) {
-		return owlWorkSpace.map(owlWorkspace -> owlWorkspace.getOWLModelManager().getOWLEntityRenderer().render(owlEntity));
+	public String getOWLEntityRendering(@Nonnull OWLEntity owlEntity) {
+		return owlWorkSpace.map(owlWorkspace -> owlWorkspace.getOWLModelManager().getOWLEntityRenderer().render(owlEntity)).orElse(owlEntity.getIRI().getShortForm());
 	}
 
 	public void setOwlWorkSpace(OWLWorkspace owlWorkSpace) {
