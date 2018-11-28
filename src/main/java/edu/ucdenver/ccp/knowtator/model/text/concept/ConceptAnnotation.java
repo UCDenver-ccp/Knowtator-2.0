@@ -34,11 +34,14 @@ import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.SpanCollection;
 import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +50,7 @@ import java.util.List;
 import java.util.*;
 
 public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<ConceptAnnotation> implements KnowtatorXMLIO, BratStandoffIO {
+    @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(ConceptAnnotation.class);
     private OWLClass owlClass;
     private final String annotation_type;
@@ -55,17 +59,16 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
     private final Profile annotator;
     private String bratID;
     private String owlClassID;
-    private final String owlClassLabel;
     private final KnowtatorModel controller;
     private final SpanCollection spanCollection;
     private String motivation;
 
     public ConceptAnnotation(
             KnowtatorModel controller,
-            TextSource textSource, String annotationID,
-            OWLClass owlClass,
+            TextSource textSource,
+            String annotationID,
+            @Nonnull OWLClass owlClass,
             String owlClassID,
-            String owlClassLabel,
             Profile annotator,
             String annotation_type,
             String motivation) {
@@ -77,9 +80,9 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
         this.annotator = annotator;
         this.controller = controller;
         this.owlClassID = owlClassID;
-        this.owlClassLabel = owlClassLabel;
         this.annotation_type = annotation_type;
         this.motivation = motivation;
+        this.owlClass = owlClass;
 
 
         spanCollection = new SpanCollection(controller);
@@ -88,20 +91,8 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
         controller.verifyId(annotationID, this, false);
 
         overlappingConceptAnnotations = new HashSet<>();
-        if (owlClass == null) setOWLClass();
-        getColor();
     }
 
-    void setOWLClass() {
-        if (owlClass == null) {
-            Optional<OWLClass> owlClass1 = controller.getOWLClassByID(owlClassID);
-            if (owlClass1.isPresent()) {
-                setOwlClass(owlClass1.get());
-            } else {
-                log.warn(String.format("OWL Class: %s not found for concept: %s", owlClassID, id));
-            }
-        }
-    }
 
   /*
   GETTERS
@@ -111,16 +102,12 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
         return owlClassID;
     }
 
-    public String getOwlClassLabel() {
-        return owlClassLabel;
-    }
-
     public Profile getAnnotator() {
         return annotator;
     }
 
-    public Optional<OWLClass> getOwlClass() {
-        return Optional.ofNullable(owlClass);
+    public OWLClass getOwlClass() {
+        return owlClass;
     }
 
     private String getOwlClassRendering() {
@@ -165,7 +152,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
         return bratID;
     }
 
-    public Optional<Color> getColor() {
+    public Color getColor() {
         return annotator.getColor(this);
     }
 
@@ -204,14 +191,9 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
 
         writer.append(String.format("%s\t%s ", getBratID(), renderedOwlClassID));
 
-
-        if (getOwlClassLabel() != null) {
-            visualConfig.get("labels").put(renderedOwlClassID, getOwlClassLabel());
-            String finalRenderedOwlClassID = renderedOwlClassID;
-            controller.getProfileCollection().getDefaultProfile().getColor(this).ifPresent(color -> visualConfig.get("drawing").put(finalRenderedOwlClassID, String.format("bgColor:%s", Profile.convertToHex(color))));
-
-        }
-
+        String finalRenderedOwlClassID = renderedOwlClassID;
+        visualConfig.get("labels").put(finalRenderedOwlClassID, getOWLClassLabel());
+        visualConfig.get("drawing").put(finalRenderedOwlClassID, String.format("bgColor:%s", Profile.convertToHex(controller.getProfileCollection().getDefaultProfile().getColor(this))));
 
         spanCollection.writeToBratStandoff(writer, annotationConfig, visualConfig);
     }
@@ -227,16 +209,19 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
         Element classElement = dom.createElement(KnowtatorXMLTags.CLASS);
 
         classElement.setAttribute(KnowtatorXMLAttributes.ID, getOwlClassRendering());
-
-        if (owlClassLabel != null) {
-            classElement.setAttribute(KnowtatorXMLAttributes.LABEL, getOwlClassLabel());
-        }
-
+        classElement.setAttribute(KnowtatorXMLAttributes.LABEL, getOWLClassLabel());
         annotationElem.appendChild(classElement);
 
         spanCollection.writeToKnowtatorXML(dom, annotationElem);
 
         textSourceElement.appendChild(annotationElem);
+    }
+
+    public String getOWLClassLabel() {
+        return owlClass.getAnnotationPropertiesInSignature().stream()
+                .filter(OWLAnnotationProperty::isLabel)
+                .findFirst()
+                .map(OWLObject::toString).orElse(owlClassID);
     }
 
     /*

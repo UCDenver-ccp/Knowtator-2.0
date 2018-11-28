@@ -49,14 +49,14 @@ public class OWLActionsTests {
         textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
 
         OWLClass owlClass = controller.getOWLClassByID("Pizza").get();
-        assert controller.getTextSource().get().getConceptAnnotationCollection().getSelection().get().getOwlClass().get() == owlClass;
+        assert controller.getTextSource().get().getConceptAnnotationCollection().getSelection().get().getOwlClass() == owlClass;
 
         controller.registerAction(new ReassignOWLClassAction(conceptAnnotation));
-        assert conceptAnnotation.getOwlClass().equals(controller.getSelectedOWLClass());
+        assert conceptAnnotation.getOwlClass().equals(controller.getSelectedOWLClass().get());
         controller.undo();
-        assert conceptAnnotation.getOwlClass().get() == owlClass;
+        assert conceptAnnotation.getOwlClass() == owlClass;
         controller.redo();
-        assert conceptAnnotation.getOwlClass().equals(controller.getSelectedOWLClass());
+        assert conceptAnnotation.getOwlClass().equals(controller.getSelectedOWLClass().get());
         controller.undo();
         //TODO: Add more to this test to see if descendants are reassigned too. Probably will need to edit OWLModel's debug to make some descendants
     }
@@ -67,20 +67,20 @@ public class OWLActionsTests {
         ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
         textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
         Profile profile = controller.getProfileCollection().getSelection().get();
-        assert profile.getColor(conceptAnnotation).get().equals(Color.RED);
+        assert profile.getColor(conceptAnnotation).equals(Color.RED);
 
         Set<OWLClass> owlClassSet = new HashSet<>();
         owlClassSet.add(controller.getSelectedOWLClass().get());
 
         controller.registerAction(new ReassignOWLClassAction(conceptAnnotation));
-        assert profile.getColor(conceptAnnotation).get().equals(KnowtatorDefaultSettings.COLORS.get(0));
+        assert profile.getColor(conceptAnnotation).equals(KnowtatorDefaultSettings.COLORS.get(0));
 
         controller.registerAction(new ColorChangeAction(profile, owlClassSet, Color.GREEN));
-        assert profile.getColor(conceptAnnotation).get().equals(Color.GREEN);
+        assert profile.getColor(conceptAnnotation).equals(Color.GREEN);
         controller.undo();
-        assert profile.getColor(conceptAnnotation).get().equals(KnowtatorDefaultSettings.COLORS.get(0));
+        assert profile.getColor(conceptAnnotation).equals(KnowtatorDefaultSettings.COLORS.get(0));
         controller.redo();
-        assert profile.getColor(conceptAnnotation).get().equals(Color.GREEN);
+        assert profile.getColor(conceptAnnotation).equals(Color.GREEN);
         controller.undo();
 
     }

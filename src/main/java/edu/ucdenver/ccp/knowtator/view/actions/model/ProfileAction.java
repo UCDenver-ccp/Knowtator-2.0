@@ -52,7 +52,7 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 
 	@Override
 	public void prepareRemove() {
-		setObject(collection.get(profileId));
+		collection.get(profileId).ifPresent(this::setObject);
 
 	}
 
@@ -91,7 +91,7 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 		if (!objectOptional.isPresent()) {
 			objectOptional = KnowtatorView.MODEL.getTextSource()
 							.flatMap(textSource -> textSource.getConceptAnnotationCollection().getSelection()
-									.flatMap(ConceptAnnotation::getOwlClass));
+									.map(ConceptAnnotation::getOwlClass));
 		}
 		objectOptional.ifPresent(_owlClass -> {
 			Set<OWLClass> owlClasses = new HashSet<>();

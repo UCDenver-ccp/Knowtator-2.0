@@ -34,7 +34,7 @@ public class SelectableCollectionTests {
 
 	@Test
 	void selectNextTest() {
-		TextSource textSource = controller.getTextSources().get("document1");
+		TextSource textSource = controller.getTextSources().get("document1").get();
 		assert textSource.equals(controller.getTextSource().get());
 		controller.selectNextTextSource();
 		controller.selectNextTextSource();
@@ -45,7 +45,7 @@ public class SelectableCollectionTests {
 
 	@Test
 	void selectPreviousTest() {
-		TextSource textSource = controller.getTextSources().get("document1");
+		TextSource textSource = controller.getTextSources().get("document1").get();
 		assert textSource.equals(controller.getTextSource().get());
 		controller.selectPreviousTextSource();
 		controller.selectPreviousTextSource();

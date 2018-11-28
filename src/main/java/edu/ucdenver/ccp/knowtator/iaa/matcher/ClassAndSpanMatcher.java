@@ -52,7 +52,7 @@ public class ClassAndSpanMatcher implements Matcher {
 	 */
 	private static Set<ConceptAnnotation> matches(
 			ConceptAnnotation conceptAnnotation, String compareSetName, IAA iaa, Set<ConceptAnnotation> excludeConceptAnnotations) {
-		String type = conceptAnnotation.getOwlClassLabel();
+		String type = conceptAnnotation.getOWLClassLabel();
 		Set<ConceptAnnotation> candidateConceptAnnotations =
 				new HashSet<>(iaa.getExactlyOverlappingAnnotations(conceptAnnotation, compareSetName));
 		candidateConceptAnnotations.removeAll(excludeConceptAnnotations);
@@ -61,7 +61,7 @@ public class ClassAndSpanMatcher implements Matcher {
 		Set<ConceptAnnotation> returnValues = new HashSet<>();
 		for (ConceptAnnotation candidateConceptAnnotation : candidateConceptAnnotations) {
 			if (!excludeConceptAnnotations.contains(candidateConceptAnnotation)
-					&& candidateConceptAnnotation.getOwlClassLabel().equals(type)) {
+					&& candidateConceptAnnotation.getOWLClassLabel().equals(type)) {
 				returnValues.add(candidateConceptAnnotation);
 				return returnValues;
 			}

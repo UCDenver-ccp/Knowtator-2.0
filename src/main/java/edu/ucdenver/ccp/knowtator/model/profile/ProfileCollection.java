@@ -90,7 +90,7 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 
 	@Override
 	public void add(Profile profile) {
-		if (get(profile.getId()) == null) {
+		if (!get(profile.getId()).isPresent()) {
 			super.add(profile);
 		}
 	}
@@ -117,7 +117,7 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 
 			Profile newProfile = new Profile(controller, profileID);
 			add(newProfile);
-			get(profileID).readFromKnowtatorXML(null, profileElement);
+			get(profileID).ifPresent(profile -> profile.readFromKnowtatorXML(null, profileElement));
 		}
 	}
 

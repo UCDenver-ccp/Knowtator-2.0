@@ -599,7 +599,7 @@ public class IAA2HTML {
 			sortedAnnotations.put(type, new HashSet<>());
 		}
 		for (ConceptAnnotation conceptAnnotation : conceptAnnotations) {
-			String type = conceptAnnotation.getOwlClassLabel();
+			String type = conceptAnnotation.getOWLClassLabel();
 			sortedAnnotations.get(type).add(conceptAnnotation);
 		}
 		return sortedAnnotations;

@@ -95,8 +95,8 @@ public class OWLModelTests {
 		ConceptAnnotation conceptAnnotation = controller.getTextSource().get().getConceptAnnotationCollection().getSelection().get();
 
 		assert !ontology.containsClassInSignature(class2.getIRI());
-		assert ontology.containsClassInSignature(conceptAnnotation.getOwlClass().get().getIRI());
-		assert conceptAnnotation.getOwlClass().equals(controller.getOWLClassByID("BetterPizza"));
+		assert ontology.containsClassInSignature(conceptAnnotation.getOwlClass().getIRI());
+		assert conceptAnnotation.getOwlClass().equals(controller.getOWLClassByID("BetterPizza").get());
 	}
 
 	@Test
@@ -196,7 +196,7 @@ public class OWLModelTests {
 		assert isSubClassTest(class3, class2);
 
 		ConceptAnnotation conceptAnnotation = controller.getTextSource().get().getConceptAnnotationCollection().getSelection().get();
-		assert conceptAnnotation.getOwlClass().get().equals(class2);
+		assert conceptAnnotation.getOwlClass().equals(class2);
 	}
 
 	public boolean isSubClassTest(OWLClass potentialSuperClass, OWLClass owlClass) {

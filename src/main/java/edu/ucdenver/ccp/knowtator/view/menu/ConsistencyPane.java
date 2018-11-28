@@ -265,9 +265,7 @@ public class ConsistencyPane extends MenuPane {
 				} else {
 					setEnabled(true);
 					collection.stream()
-							.filter(conceptAnnotation -> conceptAnnotation.getOwlClass()
-									.map(owlClass -> consistencyPane.activeOWLClassDescendants.contains(owlClass))
-									.orElse(false))
+							.filter(conceptAnnotation -> consistencyPane.activeOWLClassDescendants.contains(conceptAnnotation.getOwlClass()))
 							.forEach(k -> ((DefaultListModel<ConceptAnnotation>) getModel()).addElement(k));
 				}
 			}

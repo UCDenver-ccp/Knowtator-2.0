@@ -209,8 +209,8 @@ public class KnowtatorModel extends ProjectManager implements CaretListener {
 			@Override
 			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
 				event.getNew()
-						.ifPresent(conceptAnnotation -> conceptAnnotation.getOwlClass()
-								.ifPresent(owlClass -> setSelectedOWLEntity(owlClass)));
+						.map(ConceptAnnotation::getOwlClass)
+						.ifPresent(owlClass -> setSelectedOWLEntity(owlClass));
 			}
 
 			@Override

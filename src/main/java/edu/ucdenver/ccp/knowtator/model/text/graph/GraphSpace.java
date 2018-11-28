@@ -210,18 +210,13 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 			String x_string = graphVertexElem.getAttribute(KnowtatorXMLAttributes.X_LOCATION);
 			String y_string = graphVertexElem.getAttribute(KnowtatorXMLAttributes.Y_LOCATION);
 
-			double x = 20;
-			double y = 20;
-			if (!x_string.equals("")) {
-				x = Double.parseDouble(x_string);
-			}
-			if (!y_string.equals("")) {
-				y = Double.parseDouble(y_string);
-			}
+			double x = x_string.equals("") ? 20 : Double.parseDouble(x_string);
+			double y = y_string.equals("") ? 20 : Double.parseDouble(y_string);
 
-			ConceptAnnotation conceptAnnotation = this.textSource.getConceptAnnotationCollection().get(annotationID);
-			AnnotationNode newVertex = new AnnotationNode(controller, id, conceptAnnotation, textSource, x, y);
-			addCellToGraph(newVertex);
+			this.textSource.getConceptAnnotationCollection().get(annotationID).ifPresent(conceptAnnotation -> {
+				AnnotationNode newVertex = new AnnotationNode(controller, id, conceptAnnotation, textSource, x, y);
+				addCellToGraph(newVertex);
+			});
 		}
 
 		for (Node tripleNode :
@@ -277,31 +272,29 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 			File file, Map<Character, List<String[]>> annotationMap, String content) {
 		annotationMap
 				.get(StandoffTags.RELATION)
-				.forEach(
-						annotation -> {
-							String id = annotation[0];
+				.forEach(annotation -> {
+					String id = annotation[0];
+					String[] relationTriple = annotation[1].split(StandoffTags.relationTripleDelimiter);
+					String propertyID = relationTriple[0];
+					String subjectAnnotationID = relationTriple[1].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
+					String objectAnnotationID = relationTriple[2].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
 
-							String[] relationTriple = annotation[1].split(StandoffTags.relationTripleDelimiter);
-							String propertyID = relationTriple[0];
-							String subjectAnnotationID =
-									relationTriple[1].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
-							String objectAnnotationID =
-									relationTriple[2].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
+					Profile annotator = controller.getProfileCollection().getDefaultProfile();
 
-							Profile annotator = controller.getProfileCollection().getDefaultProfile();
+					textSource.getConceptAnnotationCollection().get(subjectAnnotationID).ifPresent(subjectConceptAnnotation -> {
+						List<Object> subjectAnnotationVertices = getVerticesForAnnotation(subjectConceptAnnotation);
+						AnnotationNode source = makeOrGetAnnotationNode(subjectConceptAnnotation, subjectAnnotationVertices);
 
-							ConceptAnnotation subjectConceptAnnotation =
-									textSource.getConceptAnnotationCollection().get(subjectAnnotationID);
-							List<Object> subjectAnnotationVertices = getVerticesForAnnotation(subjectConceptAnnotation);
-							AnnotationNode source = makeOrGetAnnotationNode(subjectConceptAnnotation, subjectAnnotationVertices);
-
-							ConceptAnnotation objectConceptAnnotation =
-									textSource.getConceptAnnotationCollection().get(objectAnnotationID);
+						textSource.getConceptAnnotationCollection().get(objectAnnotationID).ifPresent(objectConceptAnnotation -> {
 							List<Object> objectAnnotationVertices = getVerticesForAnnotation(objectConceptAnnotation);
-							AnnotationNode target = makeOrGetAnnotationNode(subjectConceptAnnotation, objectAnnotationVertices);
+							AnnotationNode target = makeOrGetAnnotationNode(objectConceptAnnotation, objectAnnotationVertices);
 
 							addTriple(source, target, id, annotator, Optional.empty(), propertyID, "", null, false, "");
 						});
+					});
+
+
+				});
 	}
 
 	public AnnotationNode makeAnnotationNode(ConceptAnnotation conceptAnnotation) {
@@ -409,13 +402,13 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		g.setHeight(g.getHeight() + 200);
 		g.setWidth(g.getWidth() + 200);
 
-		vertex.getConceptAnnotation().getColor().ifPresent(c -> {
-			String colorString = Integer.toHexString(c.getRGB()).substring(2);
-			String shape = mxConstants.SHAPE_RECTANGLE;
 
-			setCellStyles(mxConstants.STYLE_SHAPE, shape, new Object[]{vertex});
-			setCellStyles(mxConstants.STYLE_FILLCOLOR, colorString, new Object[]{vertex});
-		});
+		String colorString = Integer.toHexString(vertex.getConceptAnnotation().getColor().getRGB()).substring(2);
+		String shape = mxConstants.SHAPE_RECTANGLE;
+
+		setCellStyles(mxConstants.STYLE_SHAPE, shape, new Object[]{vertex});
+		setCellStyles(mxConstants.STYLE_FILLCOLOR, colorString, new Object[]{vertex});
+
 	}
 
   /*

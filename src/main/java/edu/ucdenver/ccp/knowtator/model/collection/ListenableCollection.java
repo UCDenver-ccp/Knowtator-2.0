@@ -27,10 +27,7 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 public abstract class ListenableCollection<K extends KnowtatorDataObjectInterface, C extends Collection<K>, L extends CollectionListener<K>> implements Iterable<K> {
@@ -60,13 +57,13 @@ public abstract class ListenableCollection<K extends KnowtatorDataObjectInterfac
 		}
 	}
 
-	public K get(String id) {
+	public Optional<K> get(String id) {
 		for (K obj : collection) {
 			if (obj.getId().equals(id)) {
-				return obj;
+				return Optional.of(obj);
 			}
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	@SuppressWarnings("unused")

@@ -84,19 +84,10 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
 		return id;
 	}
 
-	public Optional<Color> getColor(ConceptAnnotation conceptAnnotation) {
-		Optional<OWLClass> owlClassOptional = conceptAnnotation.getOwlClass();
+	public Color getColor(ConceptAnnotation conceptAnnotation) {
+		OWLClass owlClass = conceptAnnotation.getOwlClass();
 
-		Optional<Color> color = Optional.empty();
-		if (owlClassOptional.isPresent()) {
-			color = Optional.ofNullable(colors.get(owlClassOptional.get()));
-			if (!color.isPresent()) {
-				color = Optional.of(KnowtatorDefaultSettings.COLORS.get(0));
-				addColor(owlClassOptional.get(), color.get());
-			}
-		}
-
-		return color;
+		return colors.getOrDefault(owlClass, KnowtatorDefaultSettings.COLORS.get(0));
 	}
 
   /*

@@ -84,7 +84,7 @@ public class KnowtatorCollectionActionsTests {
                 TestingHelpers.defaultExpectedSpans + 1,
                 TestingHelpers.defaultExpectedGraphSpaces,
                 TestingHelpers.defaultExpectedProfiles,
-                TestingHelpers.defaultExpectedHighlighters,
+                TestingHelpers.defaultExpectedHighlighters + 1,
                 TestingHelpers.defaultExpectedAnnotationNodes,
                 TestingHelpers.defaultExpectedTriples);
     }

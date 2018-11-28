@@ -60,7 +60,7 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 
 	@Override
 	public void add(TextSource textSource) {
-		if (get(textSource.getId()) == null) {
+		if (!get(textSource.getId()).isPresent()) {
 			if (textSource.getTextFile().exists()) {
 				super.add(textSource);
 			}
@@ -95,7 +95,8 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 		String textSourceId = parent.getAttribute(OldKnowtatorXMLAttributes.TEXT_SOURCE).replace(".txt", "");
 		TextSource newTextSource = new TextSource(controller, file, textSourceId);
 		add(newTextSource);
-		get(newTextSource.getId()).readFromOldKnowtatorXML(null, parent);
+		get(newTextSource.getId())
+				.ifPresent(textSource -> textSource.readFromOldKnowtatorXML(null, parent));
 	}
 
 	@Override

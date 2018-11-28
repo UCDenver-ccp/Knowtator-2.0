@@ -226,8 +226,8 @@ public class IOTests {
 		GraphSpace graphSpace = new GraphSpace(controller, textSource, "graph_0");
 		textSource.getGraphSpaceCollection().add(graphSpace);
 
-		AnnotationNode v1 = graphSpace.makeOrGetAnnotationNode(textSource.getConceptAnnotationCollection().get("mention_0"), null);
-		AnnotationNode v2 = graphSpace.makeOrGetAnnotationNode(textSource.getConceptAnnotationCollection().get("mention_1"), null);
+		AnnotationNode v1 = graphSpace.makeOrGetAnnotationNode(textSource.getConceptAnnotationCollection().get("mention_0").get(), null);
+		AnnotationNode v2 = graphSpace.makeOrGetAnnotationNode(textSource.getConceptAnnotationCollection().get("mention_1").get(), null);
 		graphSpace.addTriple(
 				v1,
 				v2,

@@ -44,7 +44,7 @@ public class ReassignOWLClassAction extends AbstractKnowtatorAction {
 
 		this.conceptAnnotation = conceptAnnotation;
 
-		oldOwlClass = conceptAnnotation.getOwlClass().orElseThrow(ActionUnperformableException::new);
+		oldOwlClass = conceptAnnotation.getOwlClass();
 		this.newOwlClass = KnowtatorView.MODEL.getSelectedOWLClass().orElseThrow(ActionUnperformableException::new);
 	}
 

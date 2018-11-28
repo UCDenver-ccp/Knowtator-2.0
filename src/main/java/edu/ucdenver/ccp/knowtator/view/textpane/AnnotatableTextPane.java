@@ -331,10 +331,10 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 		});
 		for (Span span : spans) {
 			//Underline spans for the same class
-			span.getConceptAnnotation().getOwlClass()
-					.filter(descendants::contains)
-					.ifPresent(owlClass -> getStyledDocument().setCharacterAttributes(span.getStart(), span.getSize(), underlinedSpan, false));
-			DefaultHighlighter.DefaultHighlightPainter spanHighlighter = new DefaultHighlighter.DefaultHighlightPainter(span.getConceptAnnotation().getColor().orElse(KnowtatorDefaultSettings.COLORS.get(0)));
+			if (descendants.contains(span.getConceptAnnotation().getOwlClass())) {
+				getStyledDocument().setCharacterAttributes(span.getStart(), span.getSize(), underlinedSpan, false);
+			}
+			DefaultHighlighter.DefaultHighlightPainter spanHighlighter = new DefaultHighlighter.DefaultHighlightPainter(span.getConceptAnnotation().getColor());
 
 			highlightRegion(span.getStart(), span.getEnd(), spanHighlighter);
 		}
