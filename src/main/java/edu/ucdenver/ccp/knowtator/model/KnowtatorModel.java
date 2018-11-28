@@ -210,6 +210,7 @@ public class KnowtatorModel extends OWLModel implements CaretListener {
 			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
 				event.getNew()
 						.map(ConceptAnnotation::getOwlClass)
+						.filter(owlClass -> isNotLoading())
 						.ifPresent(owlClass -> setSelectedOWLEntity(owlClass));
 			}
 
@@ -394,6 +395,7 @@ public class KnowtatorModel extends OWLModel implements CaretListener {
 	 */
 	public void reset(OWLWorkspace owlWorkspace) {
 		setOwlWorkSpace(owlWorkspace);
+		reset();
 		profileCollection.reset();
 		textSourceCollection.reset();
 	}

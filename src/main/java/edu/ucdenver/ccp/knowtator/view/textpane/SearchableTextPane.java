@@ -90,28 +90,30 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 	 * Searches from the end of the selection forward, wrapping at the end
 	 */
 	public void searchForward() {
-		matcher.reset();
-		int matchStart = -1;
-		int matchEnd = 0;
-		int startBound = getSelectionEnd();
-		while (matcher.find()) {
-			if (matcher.start() > startBound && keepSearchingCondition(matcher)) {
-				matchStart = matcher.start();
-				matchEnd = matcher.end();
-				break;
-			}
-		}
-		if (matcher.hitEnd()) {
+		if (matcher != null) {
 			matcher.reset();
-			//noinspection ResultOfMethodCallIgnored
-			matcher.find();
-			if (keepSearchingCondition(matcher)) {
-				matchStart = matcher.start();
-				matchEnd = matcher.end();
+			int matchStart = -1;
+			int matchEnd = 0;
+			int startBound = getSelectionEnd();
+			while (matcher.find()) {
+				if (matcher.start() > startBound && keepSearchingCondition(matcher)) {
+					matchStart = matcher.start();
+					matchEnd = matcher.end();
+					break;
+				}
 			}
+			if (matcher.hitEnd()) {
+				matcher.reset();
+				//noinspection ResultOfMethodCallIgnored
+				matcher.find();
+				if (keepSearchingCondition(matcher)) {
+					matchStart = matcher.start();
+					matchEnd = matcher.end();
+				}
+			}
+			requestFocusInWindow();
+			select(matchStart, matchEnd);
 		}
-		requestFocusInWindow();
-		select(matchStart, matchEnd);
 	}
 
 	/**
@@ -124,22 +126,24 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 	 * Searches the text pane backward from the selection start, wrapping at the beginning
 	 */
 	public void searchPrevious() {
-		matcher.reset();
-		int matchStart = -1;
-		int matchEnd = 0;
-		int endBound = getSelectionStart();
-		while (matcher.find()) {
-			if (matcher.start() < endBound || matcher.hitEnd() && keepSearchingCondition(matcher)) {
-				matchStart = matcher.start();
-				matchEnd = matcher.end();
-			} else if (matchStart == -1) {
-				endBound = getText().length();
-			} else {
-				break;
+		if (matcher != null) {
+			matcher.reset();
+			int matchStart = -1;
+			int matchEnd = 0;
+			int endBound = getSelectionStart();
+			while (matcher.find()) {
+				if (matcher.start() < endBound || matcher.hitEnd() && keepSearchingCondition(matcher)) {
+					matchStart = matcher.start();
+					matchEnd = matcher.end();
+				} else if (matchStart == -1) {
+					endBound = getText().length();
+				} else {
+					break;
+				}
 			}
+			requestFocusInWindow();
+			select(matchStart, matchEnd);
 		}
-		requestFocusInWindow();
-		select(matchStart, matchEnd);
 	}
 
 	/**
