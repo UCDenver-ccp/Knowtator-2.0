@@ -635,7 +635,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		MODEL.dispose();
 		MODEL.reset(getOWLWorkspace());
 		MODEL.setSaveLocation(file);
-		log.warn(String.format("Opening from %s", file.getAbsolutePath()));
+		log.info(String.format("Opening from %s", file.getAbsolutePath()));
 		if (listener != null) {
 			MODEL.addTextSourceCollectionListener(listener);
 		}

@@ -351,20 +351,6 @@ public class IOTests {
 	//          assert ConceptAnnotation.compare(annotation1, annotation2) == 0;
 	//
 	//        } catch (AssertionError e) {
-	//          log.warn("ConceptAnnotation 1:");
-	//          log.warn("\tID: " + annotation1.getId());
-	//          log.warn("\tSpans: ");
-	//          for (Span span : annotation1.getSpanCollection()) {
-	//            log.warn("\t\t" + span.toString());
-	//          }
-	//
-	//          log.warn("ConceptAnnotation 2:");
-	//          log.warn("\tID: " + annotation2.getId());
-	//          log.warn("\tSpans: ");
-	//          for (Span span : annotation2.getSpanCollection()) {
-	//            log.warn("\t\t" + span.toString());
-	//          }
-	//
 	//          e.printStackTrace();
 	//        }
 	//      }

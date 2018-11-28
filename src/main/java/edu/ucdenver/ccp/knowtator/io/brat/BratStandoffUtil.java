@@ -179,7 +179,7 @@ public class BratStandoffUtil implements BasicIOUtil<BratStandoffIO> {
 
     private void writeToOutputFile(BratStandoffIO textSource, File file, Map<String, Map<String, String>> annotationConfig, Map<String, Map<String, String>> visualConfig) {
         try {
-            log.warn("Writing to " + file.getAbsolutePath());
+            log.info("Writing to " + file.getAbsolutePath());
             BufferedWriter bw =
                     new BufferedWriter(
                             new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));

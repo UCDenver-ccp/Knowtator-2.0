@@ -35,6 +35,7 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
+import javax.swing.undo.UndoManager;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -44,13 +45,13 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public abstract class OWLModel extends ProjectManager implements Serializable {
+public abstract class OWLModel extends UndoManager implements Serializable, BaseKnowtatorManager {
 	@SuppressWarnings("unused")
 	private static final Logger log = LogManager.getLogger(OWLModel.class);
 
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	private Optional<OWLWorkspace> owlWorkSpace;
-	private File ontologiesLocation;
+
 	private List<IRI> annotationIRIs;
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	private Optional<OWLClass> testClass;
@@ -58,6 +59,11 @@ public abstract class OWLModel extends ProjectManager implements Serializable {
 	private Optional<OWLObjectProperty> testProperty;
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	private Optional<OWLOntologyManager> owlOntologyManager;
+	File ontologiesLocation;
+
+	public File getOntologiesLocation() {
+		return ontologiesLocation;
+	}
 
 	OWLModel() {
 		owlWorkSpace = Optional.empty();
@@ -170,7 +176,6 @@ public abstract class OWLModel extends ProjectManager implements Serializable {
 		owlWorkSpace.ifPresent(owlWorkspace -> {
 			JDialog dialog = SearchDialogPanel.createDialog(null, owlWorkspace.getOWLEditorKit());
 			Arrays.stream(dialog.getContentPane().getComponents()).forEach(component -> {
-				log.warn(component);
 				if (component instanceof AugmentedJTextField) {
 					((AugmentedJTextField) component).setText(stringToSearch);
 				}
@@ -195,26 +200,12 @@ public abstract class OWLModel extends ProjectManager implements Serializable {
 		annotationIRIs = null;
 	}
 
-	@SuppressWarnings("WeakerAccess")
-	@Override
-	public File getSaveLocation() {
-		return ontologiesLocation;
-	}
-
-	@Override
-	public void setSaveLocation(File newSaveLocation) throws IOException {
-		super.setSaveLocation(newSaveLocation);
-		this.ontologiesLocation = new File(projectLocation, "Ontologies");
-		Files.createDirectories(ontologiesLocation.toPath());
-	}
-
-
 	@Override
 	public void load() {
-		if (getSaveLocation() != null) {
-			log.warn("Loading ontologies");
+		if (ontologiesLocation != null) {
+			log.info("Loading ontologies");
 
-			File file = getSaveLocation();
+			File file = ontologiesLocation;
 			if (file.isDirectory()) {
 				try {
 					for (Path path1 : Files.newDirectoryStream(Paths.get(file.toURI()), path -> path.toString().endsWith(".owl"))) {
@@ -233,7 +224,7 @@ public abstract class OWLModel extends ProjectManager implements Serializable {
 									}
 								}).collect(Collectors.toList());
 								if (!ontologies.contains(ontologyLocation)) {
-									log.warn("Loading ontology: " + ontologyLocation);
+									log.info("Loading ontology: " + ontologyLocation);
 									try {
 										OWLOntology newOntology =
 												owlWorkspace

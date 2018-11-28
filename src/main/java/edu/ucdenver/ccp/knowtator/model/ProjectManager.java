@@ -33,7 +33,6 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
-import javax.swing.undo.UndoManager;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -47,11 +46,12 @@ import java.util.List;
  *
  * @author Harrison Pielke-Lombardo
  */
-public abstract class ProjectManager extends UndoManager implements BaseKnowtatorManager {
+public abstract class ProjectManager extends OWLModel {
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(ProjectManager.class);
 
-    File projectLocation;
+    private File projectLocation;
+
 
     public boolean isNotLoading() {
         return !isLoading;
@@ -75,7 +75,9 @@ public abstract class ProjectManager extends UndoManager implements BaseKnowtato
             makeProjectStructure();
             isLoading = true;
             load();
+            setRenderRDFSLabel();
             getManagers().forEach(BaseKnowtatorManager::load);
+            resetRenderRDFS();
             isLoading = false;
             getManagers().forEach(BaseKnowtatorManager::finishLoad);
         }
@@ -103,6 +105,8 @@ public abstract class ProjectManager extends UndoManager implements BaseKnowtato
         if (saveLocation.exists() && saveLocation.isDirectory() && Files.list(saveLocation.toPath()).anyMatch(path -> path.toString().endsWith(".knowtator"))) {
             this.projectLocation = saveLocation;
             Files.createDirectories(projectLocation.toPath());
+            this.ontologiesLocation = new File(projectLocation, "Ontologies");
+            Files.createDirectories(ontologiesLocation.toPath());
         }
     }
 

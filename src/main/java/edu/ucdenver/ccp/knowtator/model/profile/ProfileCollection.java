@@ -159,7 +159,7 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 	public void load() {
 		if (getSaveLocation() != null) {
 			try {
-				log.warn("Loading profiles");
+				log.info("Loading profiles");
 				KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();
 				Files.newDirectoryStream(Paths.get(profilesLocation.toURI()), path -> path.toString().endsWith(".xml"))
 						.forEach(inputFile -> xmlUtil.read(this, inputFile.toFile()));

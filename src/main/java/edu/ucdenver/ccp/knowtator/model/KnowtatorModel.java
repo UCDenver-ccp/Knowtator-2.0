@@ -57,7 +57,7 @@ import java.util.TreeMap;
  *
  * @author Harrison Pielke-Lombardo
  */
-public class KnowtatorModel extends OWLModel implements CaretListener {
+public class KnowtatorModel extends ProjectManager implements CaretListener {
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(KnowtatorModel.class);
 	private final List<BaseKnowtatorManager> models;
@@ -415,7 +415,7 @@ public class KnowtatorModel extends OWLModel implements CaretListener {
 	 * @param args Unused
 	 */
 	public static void main(String[] args) {
-		log.warn("Knowtator");
+		log.info("Knowtator");
 	}
 
 	public File getArticlesLocation() {

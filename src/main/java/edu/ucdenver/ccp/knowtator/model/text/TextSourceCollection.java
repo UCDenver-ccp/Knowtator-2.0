@@ -121,12 +121,11 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 	@Override
 	public void load() {
 		try {
-			log.warn("Loading annotations");
-			controller.setRenderRDFSLabel();
+			log.info("Loading annotations");
 			KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();
 			Files.newDirectoryStream(Paths.get(annotationsLocation.toURI()), path -> path.toString().endsWith(".xml"))
 					.forEach(inputFile -> xmlUtil.read(this, inputFile.toFile()));
-			controller.resetRenderRDFS();
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

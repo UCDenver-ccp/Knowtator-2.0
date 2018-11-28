@@ -61,7 +61,7 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
 	}
 
   /*
-  COMPARRISON
+  COMPARISON
    */
 
 	@Override
@@ -93,7 +93,6 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
 			if (!color.isPresent()) {
 				color = Optional.of(KnowtatorDefaultSettings.COLORS.get(0));
 				addColor(owlClassOptional.get(), color.get());
-				save();
 			}
 		}
 
@@ -121,7 +120,6 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
 	public void addColor(OWLClass owlClass, Color c) {
 		colors.put(owlClass, c);
 		controller.getProfileCollection().fireColorChanged();
-		save();
 	}
 
 
