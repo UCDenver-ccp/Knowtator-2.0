@@ -29,6 +29,7 @@ import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorDefaultSettings;
 import edu.ucdenver.ccp.knowtator.view.actions.model.ColorChangeAction;
 import edu.ucdenver.ccp.knowtator.view.actions.model.ReassignOWLClassAction;
 import org.junit.jupiter.api.Test;
@@ -38,11 +39,11 @@ import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
-public class OWLActionsTest {
+public class OWLActionsTests {
     private static final KnowtatorModel controller = TestingHelpers.getLoadedController();
 
     @Test
-    public void reassignOWLClassAction() throws ActionUnperformableException {
+    public void reassignOWLClassActionTest() throws ActionUnperformableException {
         TextSource textSource = controller.getTextSource().get();
         ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
         textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
@@ -61,25 +62,25 @@ public class OWLActionsTest {
     }
 
     @Test
-    public void changeColorAction() throws ActionUnperformableException {
+    public void changeColorActionTest() throws ActionUnperformableException {
         TextSource textSource = controller.getTextSource().get();
         ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
         textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
         Profile profile = controller.getProfileCollection().getSelection().get();
-        assert profile.getColor(conceptAnnotation).equals(Color.RED);
+        assert profile.getColor(conceptAnnotation).get().equals(Color.RED);
 
-        Set<Object> owlClassSet = new HashSet<>();
+        Set<OWLClass> owlClassSet = new HashSet<>();
         owlClassSet.add(controller.getSelectedOWLClass().get());
 
         controller.registerAction(new ReassignOWLClassAction(conceptAnnotation));
-        assert profile.getColor(conceptAnnotation).equals(Color.CYAN);
+        assert profile.getColor(conceptAnnotation).get().equals(KnowtatorDefaultSettings.COLORS.get(0));
 
         controller.registerAction(new ColorChangeAction(profile, owlClassSet, Color.GREEN));
-        assert profile.getColor(conceptAnnotation).equals(Color.GREEN);
+        assert profile.getColor(conceptAnnotation).get().equals(Color.GREEN);
         controller.undo();
-        assert profile.getColor(conceptAnnotation).equals(Color.CYAN);
+        assert profile.getColor(conceptAnnotation).get().equals(KnowtatorDefaultSettings.COLORS.get(0));
         controller.redo();
-        assert profile.getColor(conceptAnnotation).equals(Color.GREEN);
+        assert profile.getColor(conceptAnnotation).get().equals(Color.GREEN);
         controller.undo();
 
     }

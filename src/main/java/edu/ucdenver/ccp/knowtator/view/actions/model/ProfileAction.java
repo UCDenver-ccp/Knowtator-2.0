@@ -85,42 +85,41 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 
 	}
 
-	public static void assignColorToClass(KnowtatorView view, Object owlClass) {
-		Optional<Object> objectOptional = Optional.ofNullable(owlClass);
+	public static void assignColorToClass(KnowtatorView view, OWLClass owlClass) {
+		Optional<OWLClass> objectOptional = Optional.ofNullable(owlClass);
 
 		if (!objectOptional.isPresent()) {
-			objectOptional =
-					KnowtatorView.MODEL.getTextSource()
+			objectOptional = KnowtatorView.MODEL.getTextSource()
 							.flatMap(textSource -> textSource.getConceptAnnotationCollection().getSelection()
-									.map(ConceptAnnotation::getOwlClass));
+									.flatMap(ConceptAnnotation::getOwlClass));
 		}
-		objectOptional.ifPresent(owlClass1 -> {
-			Set<Object> owlClasses = new HashSet<>();
-			owlClasses.add(owlClass1);
+		objectOptional.ifPresent(_owlClass -> {
+			Set<OWLClass> owlClasses = new HashSet<>();
+			owlClasses.add(_owlClass);
 
 			JColorChooser colorChooser = new KnowtatorColorPalette();
 
-			final Color[] finalC = {null};
-			JDialog dialog = JColorChooser.createDialog(view, "Pick a color for " + owlClass1, true, colorChooser,
-					e -> finalC[0] = colorChooser.getColor(), null);
+			final Optional[] finalC = new Optional[]{Optional.empty()};
+			JDialog dialog = JColorChooser.createDialog(view, "Pick a color for " + _owlClass, true, colorChooser,
+					e -> finalC[0] = Optional.ofNullable(colorChooser.getColor()), null);
 
 
 			dialog.setVisible(true);
 
-			Color c = finalC[0];
-			if (c != null) {
+			Optional c = finalC[0];
+			if (c.isPresent() && c.get() instanceof Color) {
+				Color color = (Color) c.get();
+
 
 				KnowtatorView.MODEL.getProfileCollection().getSelection()
-						.ifPresent(profile -> profile.addColor(owlClass1, c));
+						.ifPresent(profile -> profile.addColor(_owlClass, color));
 
-				if (owlClass1 instanceof OWLClass) {
-					if (JOptionPane.showConfirmDialog(view, "Assign color to descendants of " + owlClass1 + "?") == JOptionPane.OK_OPTION) {
-						owlClasses.addAll(KnowtatorView.MODEL.getDescendants((OWLClass) owlClass1));
-					}
+				if (JOptionPane.showConfirmDialog(view, "Assign color to descendants of " + _owlClass + "?") == JOptionPane.OK_OPTION) {
+					owlClasses.addAll(KnowtatorView.MODEL.getDescendants(_owlClass));
 				}
 
 				KnowtatorView.MODEL.getProfileCollection().getSelection()
-						.ifPresent(profile -> KnowtatorView.MODEL.registerAction(new ColorChangeAction(profile, owlClasses, c)));
+						.ifPresent(profile -> KnowtatorView.MODEL.registerAction(new ColorChangeAction(profile, owlClasses, color)));
 
 
 			}

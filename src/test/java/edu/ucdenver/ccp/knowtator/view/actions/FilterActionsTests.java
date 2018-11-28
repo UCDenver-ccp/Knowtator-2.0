@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 import static edu.ucdenver.ccp.knowtator.model.FilterType.OWLCLASS;
 import static edu.ucdenver.ccp.knowtator.model.FilterType.PROFILE;
 
-class FilterActionsTest {
+public class FilterActionsTests {
 	private static final KnowtatorModel controller = TestingHelpers.getLoadedController();
 
 	@BeforeAll
@@ -46,7 +46,7 @@ class FilterActionsTest {
 	}
 
 	@Test
-	void filterAction() throws ActionUnperformableException {
+	public void filterActionTest() throws ActionUnperformableException {
 		TestingHelpers.checkDefaultCollectionValues(controller);
 		TestingHelpers.testKnowtatorAction(controller, new FilterAction(PROFILE, true),
 				TestingHelpers.defaultExpectedTextSources,

@@ -25,18 +25,13 @@
 package edu.ucdenver.ccp.knowtator;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-/**
- * Unit test for simple KnowatorStandalone.
- */
-@SuppressWarnings("unused")
-class KnowtatorStandaloneTest extends TestCase {
+public class KnowtatorStandaloneTests {
 
 
 	@SuppressWarnings("FieldCanBeLocal")
@@ -72,7 +67,7 @@ class KnowtatorStandaloneTest extends TestCase {
 	 * Rigorous Test :-)
 	 */
 	@Test
-	void testApp() {
+	public void conversionTest() {
 		String brat = null;
 		String uima = null;
 		String articles = null;
@@ -109,9 +104,9 @@ class KnowtatorStandaloneTest extends TestCase {
 //
 //        File outputDir = new File("E:/Documents/Test/");
 //
-//        controller.loadProject(projectFile);
+//        controller.loadProjectTest(projectFile);
 //
 ////        TextSource textSource = controller.getTextSourceCollection().getTextSourceCollection().get(article);
-//        controller.saveToFormat(UIMAXMIUtil.class, null, outputDir);
+//        controller.saveToFormatTest(UIMAXMIUtil.class, null, outputDir);
 //    }
 }

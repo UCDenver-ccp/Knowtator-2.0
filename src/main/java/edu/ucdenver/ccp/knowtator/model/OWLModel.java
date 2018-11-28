@@ -62,6 +62,8 @@ public abstract class OWLModel extends ProjectManager implements Serializable {
 	OWLModel() {
 		owlWorkSpace = Optional.empty();
 		owlOntologyManager = Optional.empty();
+		testClass = Optional.empty();
+		testProperty = Optional.empty();
 		annotationIRIs = null;
 	}
 
@@ -202,7 +204,7 @@ public abstract class OWLModel extends ProjectManager implements Serializable {
 	@Override
 	public void setSaveLocation(File newSaveLocation) throws IOException {
 		super.setSaveLocation(newSaveLocation);
-		this.ontologiesLocation = new File(newSaveLocation, "Ontologies");
+		this.ontologiesLocation = new File(projectLocation, "Ontologies");
 		Files.createDirectories(ontologiesLocation.toPath());
 	}
 
@@ -244,6 +246,7 @@ public abstract class OWLModel extends ProjectManager implements Serializable {
 								}
 							});
 						} else {
+
 							owlOntologyManager.ifPresent(owlOntologyManager -> {
 								try {
 									owlOntologyManager.loadOntology(IRI.create(ontologyLocation));

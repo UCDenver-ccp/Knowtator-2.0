@@ -35,14 +35,14 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 
-class KnowtatorIAATest {
+public class KnowtatorIAATests {
 
     private static KnowtatorIAA knowtatorIAA;
     private static File outputDir;
     private static File goldStandardDir;
 
     @BeforeAll
-    static void setUp() throws IAAException, IOException {
+    static void makeProjectTest() throws IAAException, IOException {
         KnowtatorModel controller = new KnowtatorModel();
         String projectFileName = "iaa_test_project";
         File projectDirectory = TestingHelpers.getProjectFile(projectFileName).getParentFile();
@@ -61,20 +61,20 @@ class KnowtatorIAATest {
     }
 
     @Test
-    void runClassIAA() throws IAAException, IOException {
+    void runClassIAATest() throws IAAException, IOException {
         knowtatorIAA.runClassIAA();
 
         assert FileUtils.contentEqualsIgnoreEOL(new File(outputDir, "Class matcher.dat"), new File(goldStandardDir, "Class matcher.dat"), "utf-8");
     }
 
     @Test
-    void runSpanIAA() throws IAAException, IOException {
+    void runSpanIAATest() throws IAAException, IOException {
         knowtatorIAA.runSpanIAA();
         assert FileUtils.contentEqualsIgnoreEOL(new File(outputDir, "Span matcher.dat"), new File(goldStandardDir, "Span matcher.dat"), "utf-8");
     }
 
     @Test
-    void runClassAndSpanIAA() throws IAAException, IOException {
+    void runClassAndSpanIAATest() throws IAAException, IOException {
         knowtatorIAA.runClassAndSpanIAA();
 
         assert FileUtils.contentEqualsIgnoreEOL(new File(outputDir, "Class and span matcher.dat"), new File(goldStandardDir, "Class and span matcher.dat"), "utf-8");

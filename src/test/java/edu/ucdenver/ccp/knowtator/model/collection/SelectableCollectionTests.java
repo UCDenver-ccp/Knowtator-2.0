@@ -22,43 +22,35 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator;
+package edu.ucdenver.ccp.knowtator.model.collection;
 
+import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.junit.jupiter.api.Test;
 
-public class ProjectManagerTest {
+public class SelectableCollectionTests {
+	private final static KnowtatorModel controller = TestingHelpers.getLoadedController();
 
-    private static final KnowtatorModel controller = TestingHelpers.getLoadedController();
+	@Test
+	void selectNextTest() {
+		TextSource textSource = controller.getTextSources().get("document1");
+		assert textSource.equals(controller.getTextSource().get());
+		controller.selectNextTextSource();
+		controller.selectNextTextSource();
+		assert !textSource.equals(controller.getTextSource().get());
+		controller.selectNextTextSource();
+		assert textSource.equals(controller.getTextSource().get());
+	}
 
-    @Test
-    public void loadProject() {
-        TestingHelpers.checkDefaultCollectionValues(controller);
-        controller.loadProject();
-
-    }
-
-    @Test
-    public void newProject() {
-    }
-
-    @Test
-    public void importToManager() {
-    }
-
-    @Test
-    public void importProject() {
-    }
-
-    @Test
-    public void makeProjectStructure() {
-    }
-
-    @Test
-    public void loadWithAppropriateFormat() {
-    }
-
-    @Test
-    public void saveToFormat() {
-    }
+	@Test
+	void selectPreviousTest() {
+		TextSource textSource = controller.getTextSources().get("document1");
+		assert textSource.equals(controller.getTextSource().get());
+		controller.selectPreviousTextSource();
+		controller.selectPreviousTextSource();
+		assert !textSource.equals(controller.getTextSource().get());
+		controller.selectPreviousTextSource();
+		assert textSource.equals(controller.getTextSource().get());
+	}
 }

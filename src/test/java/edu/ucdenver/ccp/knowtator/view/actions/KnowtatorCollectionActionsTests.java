@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Test;
 import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.ADD;
 import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.REMOVE;
 
-public class KnowtatorCollectionActionsTest {
+public class KnowtatorCollectionActionsTests {
 
 
     private KnowtatorModel controller;
@@ -48,7 +48,7 @@ public class KnowtatorCollectionActionsTest {
     }
 
     @Test
-    public void addTextSourceAction() {
+    public void addTextSourceActionTest() {
         TestingHelpers.testKnowtatorAction(controller,
                 new TextSourceAction(ADD, TestingHelpers.getArticleFile(TestingHelpers.projectFileName, "document4")),
                 TestingHelpers.defaultExpectedTextSources + 1,
@@ -62,7 +62,7 @@ public class KnowtatorCollectionActionsTest {
     }
 
     @Test
-    public void removeTextSourceAction() {
+    public void removeTextSourceActionTest() {
         TestingHelpers.testKnowtatorAction(controller,
                 new TextSourceAction(REMOVE, null),
                 TestingHelpers.defaultExpectedTextSources - 1,
@@ -76,7 +76,7 @@ public class KnowtatorCollectionActionsTest {
     }
 
     @Test
-    public void addConceptAnnotationAction() {
+    public void addConceptAnnotationActionTest() {
         TestingHelpers.testKnowtatorAction(controller,
                 new ConceptAnnotationAction(ADD, controller.getTextSource().get()),
                 TestingHelpers.defaultExpectedTextSources,
@@ -90,7 +90,7 @@ public class KnowtatorCollectionActionsTest {
     }
 
     @Test
-    public void removeConceptAnnotationAction() {
+    public void removeConceptAnnotationActionTest() {
         TextSource textSource = controller.getTextSource().get();
         textSource.getConceptAnnotationCollection().setSelection(textSource.getConceptAnnotationCollection().first());
         TestingHelpers.testKnowtatorAction(controller,
@@ -106,7 +106,7 @@ public class KnowtatorCollectionActionsTest {
     }
 
     @Test
-    public void addSpanAction() {
+    public void addSpanActionTest() {
         TextSource textSource = controller.getTextSource().get();
         textSource.getConceptAnnotationCollection().setSelection(textSource.getConceptAnnotationCollection().first());
         TestingHelpers.testKnowtatorAction(controller,
@@ -122,7 +122,7 @@ public class KnowtatorCollectionActionsTest {
     }
 
     @Test
-    public void removeSpanAction() {
+    public void removeSpanActionTest() {
         TextSource textSource = controller.getTextSource().get();
         // First test remove span if there is only one in the collection. This should be equivalent to just removing the annotation
         ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
@@ -156,7 +156,7 @@ public class KnowtatorCollectionActionsTest {
     }
 
     @Test
-    public void addProfileAction() {
+    public void addProfileActionTest() {
         TestingHelpers.testKnowtatorAction(controller,
                 new ProfileAction(ADD, "I'm new here"),
                 TestingHelpers.defaultExpectedTextSources,
@@ -170,7 +170,7 @@ public class KnowtatorCollectionActionsTest {
     }
 
     @Test
-    public void removeProfileAction() {
+    public void removeProfileActionTest() {
         TestingHelpers.testKnowtatorAction(controller,
                 new ProfileAction(REMOVE, "profile1"),
                 TestingHelpers.defaultExpectedTextSources,
@@ -178,22 +178,22 @@ public class KnowtatorCollectionActionsTest {
                 TestingHelpers.defaultExpectedSpans - 3,
                 TestingHelpers.defaultExpectedGraphSpaces,
                 TestingHelpers.defaultExpectedProfiles - 1,
-                TestingHelpers.defaultExpectedHighlighters - 2,
+                TestingHelpers.defaultExpectedHighlighters - 3,
                 TestingHelpers.defaultExpectedAnnotationNodes - 2,
                 TestingHelpers.defaultExpectedTriples - 2);
 
-//        assertThrows(ActionUnperformableException.class, this::removeDefaultProfileAction);
+//        assertThrows(ActionUnperformableException.class, this::removeDefaultProfileActionTest);
     }
 
     @SuppressWarnings("unused")
-    void removeDefaultProfileAction() throws ActionUnperformableException {
+    void removeDefaultProfileActionTest() throws ActionUnperformableException {
         // It should not be possible to remove the default profile
         new ProfileAction(REMOVE, "Default").execute();
 
     }
 
     @Test
-    public void addGraphSpaceAction() {
+    public void addGraphSpaceActionTest() {
         TestingHelpers.testKnowtatorAction(controller,
                 new GraphSpaceAction(ADD, "new_graph_space", controller.getTextSource().get()),
                 TestingHelpers.defaultExpectedTextSources,
@@ -207,7 +207,7 @@ public class KnowtatorCollectionActionsTest {
     }
 
     @Test
-    public void removeGraphSpaceAction() {
+    public void removeGraphSpaceActionTest() {
         TextSource textSource = controller.getTextSource().get();
         textSource.getGraphSpaceCollection().selectNext();
         TestingHelpers.testKnowtatorAction(controller,

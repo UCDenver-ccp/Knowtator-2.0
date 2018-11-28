@@ -25,7 +25,8 @@
 package edu.ucdenver.ccp.knowtator.io.knowtator;
 
 import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -45,12 +46,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public final class KnowtatorXMLUtil extends OldKnowtatorUtil implements BasicIOUtil<KnowtatorXMLIO> {
-  private static final Logger log = Logger.getLogger(KnowtatorXMLUtil.class);
+  private static final Logger log = LoggerFactory.getLogger(KnowtatorXMLUtil.class);
 
   @Override
   public void read(KnowtatorXMLIO reader, File file) {
     try {
-      log.warn("Reading from " + file);
+      log.info("Reading from " + file);
 
       /*
       doc parses the XML into a graph
@@ -90,7 +91,7 @@ public final class KnowtatorXMLUtil extends OldKnowtatorUtil implements BasicIOU
     Document dom;
 
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-    log.warn("Writing to " + file.getAbsolutePath());
+    log.info("Writing to " + file.getAbsolutePath());
     try {
 
       DocumentBuilder db = dbf.newDocumentBuilder();

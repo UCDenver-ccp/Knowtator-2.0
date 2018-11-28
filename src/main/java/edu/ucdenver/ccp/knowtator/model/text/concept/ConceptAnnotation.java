@@ -89,6 +89,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
 
         overlappingConceptAnnotations = new HashSet<>();
         if (owlClass == null) setOWLClass();
+        getColor();
     }
 
     void setOWLClass() {
@@ -164,7 +165,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
         return bratID;
     }
 
-    public Color getColor() {
+    public Optional<Color> getColor() {
         return annotator.getColor(this);
     }
 
@@ -206,7 +207,8 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
 
         if (getOwlClassLabel() != null) {
             visualConfig.get("labels").put(renderedOwlClassID, getOwlClassLabel());
-            visualConfig.get("drawing").put(renderedOwlClassID, String.format("bgColor:%s", Profile.convertToHex(controller.getProfileCollection().getDefaultProfile().getColor(this))));
+            String finalRenderedOwlClassID = renderedOwlClassID;
+            controller.getProfileCollection().getDefaultProfile().getColor(this).ifPresent(color -> visualConfig.get("drawing").put(finalRenderedOwlClassID, String.format("bgColor:%s", Profile.convertToHex(color))));
 
         }
 

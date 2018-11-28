@@ -34,12 +34,12 @@ import edu.ucdenver.ccp.knowtator.view.actions.graph.GraphActions;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
-public class GraphActionsTest {
+public class GraphActionsTests {
 
 	private static final KnowtatorModel controller = TestingHelpers.getLoadedController();
 
 	@Test
-	public void removeSelectedAnnotationNode() {
+	public void removeSelectedAnnotationNodeTest() {
 		TextSource textSource = controller.getTextSource().get();
 		textSource.getGraphSpaceCollection().selectNext();
 		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection().get();
@@ -57,7 +57,7 @@ public class GraphActionsTest {
 	}
 
 	@Test
-	public void removeSelectedTriple() {
+	public void removeSelectedTripleTest() {
 		TextSource textSource = controller.getTextSource().get();
 		textSource.getGraphSpaceCollection().selectNext();
 		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection().get();
@@ -75,7 +75,7 @@ public class GraphActionsTest {
 	}
 
 	@Test
-	public void addAnnotationNode() {
+	public void addAnnotationNodeTest() {
 		TextSource textSource = controller.getTextSource().get();
 		textSource.getGraphSpaceCollection().selectNext();
 		textSource.getConceptAnnotationCollection().selectNext();
@@ -93,7 +93,7 @@ public class GraphActionsTest {
 	}
 
 	@Test
-	public void addTriple() {
+	public void addTripleTest() {
 		TextSource textSource = controller.getTextSource().get();
 		textSource.getGraphSpaceCollection().selectNext();
 		textSource.getConceptAnnotationCollection().selectNext();
@@ -119,7 +119,7 @@ public class GraphActionsTest {
 	}
 
 	@Test
-	public void applyLayout() {
+	public void applyLayoutTest() {
 		//TODO: This test only makes sure that the layout application doesn't change to graph space model. It needs to check the positions
 		TextSource textSource = controller.getTextSource().get();
 		textSource.getGraphSpaceCollection().selectNext();

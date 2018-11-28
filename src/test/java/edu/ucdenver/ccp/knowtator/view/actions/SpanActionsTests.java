@@ -35,12 +35,12 @@ import org.junit.jupiter.api.Test;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public class SpanActionsTest {
+public class SpanActionsTests {
 	private static final KnowtatorModel controller = TestingHelpers.getLoadedController();
     private static final int initialStart = 0;
     private static final int initialEnd = 4;
 
-    private static void checkSpanModifications(AbstractKnowtatorAction action, Span span, int expectedStart, int expectedEnd) {
+	private static void checkSpanModificationsTest(AbstractKnowtatorAction action, Span span, int expectedStart, int expectedEnd) {
         assert span.getStart() == initialStart;
         assert span.getEnd() == initialEnd;
         controller.registerAction(action);
@@ -56,20 +56,20 @@ public class SpanActionsTest {
     }
 
     @Test
-    public void modifySpanAction() {
+    public void modifySpanActionTest() {
 	    TextSource textSource = controller.getTextSource().get();
         ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
         textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
         Span span = conceptAnnotation.getSpanCollection().first();
         conceptAnnotation.getSpanCollection().setSelection(span);
 
-	    checkSpanModifications(new SpanActions.ModifySpanAction(SpanActions.START, SpanActions.SHRINK, span),
+	    checkSpanModificationsTest(new SpanActions.ModifySpanAction(SpanActions.START, SpanActions.SHRINK, span),
                 span, initialStart + 1, initialEnd);
-	    checkSpanModifications(new SpanActions.ModifySpanAction(SpanActions.START, SpanActions.GROW, span),
+	    checkSpanModificationsTest(new SpanActions.ModifySpanAction(SpanActions.START, SpanActions.GROW, span),
                 span, max(initialStart - 1, 0), initialEnd);
-	    checkSpanModifications(new SpanActions.ModifySpanAction(SpanActions.END, SpanActions.SHRINK, span),
+	    checkSpanModificationsTest(new SpanActions.ModifySpanAction(SpanActions.END, SpanActions.SHRINK, span),
                 span, initialStart, initialEnd - 1);
-	    checkSpanModifications(new SpanActions.ModifySpanAction(SpanActions.END, SpanActions.GROW, span),
+	    checkSpanModificationsTest(new SpanActions.ModifySpanAction(SpanActions.END, SpanActions.GROW, span),
                 span, initialStart, min(initialEnd + 1, textSource.getContent().length()));
     }
 

@@ -32,10 +32,10 @@ import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorDefaultSettings;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -51,7 +51,7 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
 	private static Logger log = LogManager.getLogger(Profile.class);
 
 	private String id;
-	private final HashMap<Object, Color> colors; // <ClassName, Highlighter>
+	private final HashMap<OWLClass, Color> colors; // <ClassName, Highlighter>
 	private final KnowtatorModel controller;
 
 	public Profile(KnowtatorModel controller, String id) {
@@ -84,34 +84,20 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
 		return id;
 	}
 
-	public Color getColor(ConceptAnnotation conceptAnnotation) {
-		Optional<OWLClass> owlClass = conceptAnnotation.getOwlClass();
-		String owlClassID = conceptAnnotation.getOwlClassID();
+	public Optional<Color> getColor(ConceptAnnotation conceptAnnotation) {
+		Optional<OWLClass> owlClassOptional = conceptAnnotation.getOwlClass();
 
 		Optional<Color> color = Optional.empty();
-		if (owlClass.isPresent()) {
-			color = Optional.ofNullable(colors.get(owlClass.get()));
-		}
-		if (color.isPresent()) {
-			return color.get();
-		} else {
-			color = Optional.ofNullable(colors.get(owlClassID));
-			if (owlClass.isPresent()) {
-				if (!color.isPresent()) {
-					color = Optional.of(Color.CYAN);
-				}
-				addColor(owlClass.get(), color.get());
-				colors.remove(owlClassID);
+		if (owlClassOptional.isPresent()) {
+			color = Optional.ofNullable(colors.get(owlClassOptional.get()));
+			if (!color.isPresent()) {
+				color = Optional.of(KnowtatorDefaultSettings.COLORS.get(0));
+				addColor(owlClassOptional.get(), color.get());
 				save();
-				return color.get();
-			} else if (!color.isPresent()) {
-				addColor(owlClassID, Color.CYAN);
-				save();
-				return Color.CYAN;
-			} else {
-				return color.get();
 			}
 		}
+
+		return color;
 	}
 
   /*
@@ -132,8 +118,8 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
   ADDERS
    */
 
-	public void addColor(Object key, Color c) {
-		colors.put(key, c);
+	public void addColor(OWLClass owlClass, Color c) {
+		colors.put(owlClass, c);
 		controller.getProfileCollection().fireColorChanged();
 		save();
 	}
@@ -161,16 +147,10 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
 		profileElem.setAttribute(KnowtatorXMLAttributes.ID, id);
 		colors.forEach((owlEntity, c) -> {
 			Element e = dom.createElement(KnowtatorXMLTags.HIGHLIGHTER);
-			if (owlEntity instanceof OWLEntity) {
+			controller.getOWLEntityRendering(owlEntity)
+					.ifPresent(owlClassID -> e.setAttribute(KnowtatorXMLAttributes.CLASS_ID, owlClassID));
 
-				controller.getOWLEntityRendering((OWLEntity) owlEntity)
-						.ifPresent(owlClassID -> e.setAttribute(KnowtatorXMLAttributes.CLASS_ID, owlClassID));
-
-			} else if (owlEntity instanceof String) {
-				e.setAttribute(KnowtatorXMLAttributes.CLASS_ID, (String) owlEntity);
-			}
-			e.setAttribute(
-					KnowtatorXMLAttributes.COLOR, convertToHex(c));
+			e.setAttribute(KnowtatorXMLAttributes.COLOR, convertToHex(c));
 			profileElem.appendChild(e);
 
 		});
@@ -189,10 +169,11 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
 			Element highlighterElement = (Element) highlighterNode;
 
 			String classID = highlighterElement.getAttribute(KnowtatorXMLAttributes.CLASS_ID);
-			String color = highlighterElement.getAttribute(KnowtatorXMLAttributes.COLOR);
-			Color c = Color.decode(color);
-			c = new Color((float) c.getRed() / 255, (float) c.getGreen() / 255, (float) c.getBlue() / 255, 1f);
-			addColor(classID, c);
+			Color c = Color.decode(highlighterElement.getAttribute(KnowtatorXMLAttributes.COLOR));
+
+			Optional<OWLClass> owlClassOptional = controller.getOWLClassByID(classID);
+			Color color = new Color((float) c.getRed() / 255, (float) c.getGreen() / 255, (float) c.getBlue() / 255, 1f);
+			owlClassOptional.ifPresent(owlClass -> addColor(owlClass, color));
 		}
 	}
 
@@ -223,7 +204,7 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
 
 	}
 
-	public Map<Object, Color> getColors() {
+	public Map<OWLClass, Color> getColors() {
 		return colors;
 	}
 }

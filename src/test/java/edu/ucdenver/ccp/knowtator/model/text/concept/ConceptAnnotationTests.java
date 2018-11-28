@@ -22,35 +22,40 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.collection;
+package edu.ucdenver.ccp.knowtator.model.text.concept;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.junit.jupiter.api.Test;
 
-class SelectableCollectionTest {
+public class ConceptAnnotationTests {
 	private final static KnowtatorModel controller = TestingHelpers.getLoadedController();
 
 	@Test
-	void selectNext() {
-		TextSource textSource = controller.getTextSources().get("document1");
-		assert textSource.equals(controller.getTextSource().get());
-		controller.selectNextTextSource();
-		controller.selectNextTextSource();
-		assert !textSource.equals(controller.getTextSource().get());
-		controller.selectNextTextSource();
-		assert textSource.equals(controller.getTextSource().get());
+	public void getSizeTest() {
+		TextSource textSource = controller.getTextSource().get();
+		ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
+		assert conceptAnnotation.getSize() == 4;
 	}
 
 	@Test
-	void selectPrevious() {
-		TextSource textSource = controller.getTextSources().get("document1");
-		assert textSource.equals(controller.getTextSource().get());
-		controller.selectPreviousTextSource();
-		controller.selectPreviousTextSource();
-		assert !textSource.equals(controller.getTextSource().get());
-		controller.selectPreviousTextSource();
-		assert textSource.equals(controller.getTextSource().get());
+	public void getSpannedTextTest() {
+		TextSource textSource = controller.getTextSource().get();
+		ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
+		assert conceptAnnotation.getSpannedText().equals("This");
+	}
+
+	@Test
+	public void containsTest() {
+		TextSource textSource = controller.getTextSource().get();
+		ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
+		assert conceptAnnotation.contains(0);
+		assert conceptAnnotation.contains(2);
+		assert conceptAnnotation.contains(3);
+		assert !conceptAnnotation.contains(4);
+		assert !conceptAnnotation.contains(5);
+		assert !conceptAnnotation.contains(100);
+		assert !conceptAnnotation.contains(-1);
 	}
 }

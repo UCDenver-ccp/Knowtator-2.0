@@ -37,7 +37,7 @@ import java.io.File;
 import java.io.IOException;
 
 @SuppressWarnings("ConstantConditions")
-class IOTests {
+public class IOTests {
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(IOTests.class);
 
@@ -74,11 +74,11 @@ class IOTests {
 	//        String projectFileName = projectFileNames[projectID];
 	//        File projectFile = getProjectFile(projectFileName);
 	//
-	//        controller.loadProject(projectFile);
+	//        controller.loadProjectTest(projectFile);
 	//    }
 
 	@Test
-	void successfulLoad() {
+	public void successfulLoadTest() {
 		controller = TestingHelpers.getLoadedController();
 
 		int articleID = 0;
@@ -160,7 +160,7 @@ class IOTests {
 	}
 
 	@Test
-	void successfulAddDocument() {
+	public void successfulAddDocumentTest() {
 		controller = TestingHelpers.getLoadedController();
 
 		int projectID = 0;
@@ -192,19 +192,19 @@ class IOTests {
 	//  public void successfulMakeNew() {
 	//    controller = new KnowtatorModel();
 	//
-	//    File newProject = Files.createTempDir();
-	//    controller.newProject(newProject);
+	//    File newProjectTest = Files.createTempDir();
+	//    controller.newProjectTest(newProjectTest);
 	//
-	//    assert new File(newProject, "Articles").exists();
-	//    assert new File(newProject, "Annotations").exists();
-	//    assert new File(newProject, "Ontologies").exists();
-	//    assert new File(newProject, "Profiles").exists();
+	//    assert new File(newProjectTest, "Articles").exists();
+	//    assert new File(newProjectTest, "Annotations").exists();
+	//    assert new File(newProjectTest, "Ontologies").exists();
+	//    assert new File(newProjectTest, "Profiles").exists();
 	//
-	//    newProject.deleteOnExit();
+	//    newProjectTest.deleteOnExit();
 	//  }
 
 	@Test
-	void successfulAddGraphSpace() {
+	public void successfulAddGraphSpaceTest() {
 		controller = TestingHelpers.getLoadedController();
 
 		int articleID = 0;
@@ -257,7 +257,7 @@ class IOTests {
 	}
 
 	@Test
-	void successfulSave() {
+	public void successfulSaveTest() {
 		controller = new KnowtatorModel();
 
 		int projectID = 0;
@@ -279,7 +279,7 @@ class IOTests {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		successfulLoad();
+		successfulLoadTest();
 
 		projectDirectory.deleteOnExit();
 	}
@@ -298,11 +298,11 @@ class IOTests {
 //
 //    File outputFile = new File("E:/Documents/Test/brat_test.ann");
 //
-//    controller.loadProject(projectFile);
+//    controller.loadProjectTest(projectFile);
 //    controller.loadFromFormat(BratStandoffUtil.class, bratAnnotationFile);
 //    controller
 //        .getProjectManager()
-//        .saveToFormat(
+//        .saveToFormatTest(
 //            BratStandoffUtil.class,
 //            controller
 //                .getTextSourceCollection()
@@ -322,10 +322,10 @@ class IOTests {
 	//
 	//    controller1
 	//        .getProjectManager()
-	//        .loadProject(new File("E:/Documents/Test/CRAFT_Test/CRAFT_Test.knowtator"));
+	//        .loadProjectTest(new File("E:/Documents/Test/CRAFT_Test/CRAFT_Test.knowtator"));
 	//    controller2
 	//        .getProjectManager()
-	//        .loadProject(
+	//        .loadProjectTest(
 	//            new File(
 	//
 	// "E:/Documents/Test/CRAFT_Test_CodePointCorrected/CRAFT_Test_CodePointCorrected.knowtator"));

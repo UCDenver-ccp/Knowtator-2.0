@@ -204,12 +204,28 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 			@Override
 			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
 				conceptAnnotationOptional = event.getNew();
+				if (conceptAnnotationOptional.isPresent()) {
+					spanOptional = conceptAnnotationOptional.get().getSpanCollection().getSelection();
+				} else {
+					spanOptional = Optional.empty();
+				}
 				refreshHighlights();
 			}
 
 			@Override
 			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
 				textSourceOptional = event.getNew();
+				if (textSourceOptional.isPresent()) {
+					conceptAnnotationOptional = textSourceOptional.get().getConceptAnnotationCollection().getSelection();
+					if (conceptAnnotationOptional.isPresent()) {
+						spanOptional = conceptAnnotationOptional.get().getSpanCollection().getSelection();
+					} else {
+						spanOptional = Optional.empty();
+					}
+				} else {
+					conceptAnnotationOptional = Optional.empty();
+				}
+				event.getNew().ifPresent(textSource -> conceptAnnotationOptional = textSource.getConceptAnnotationCollection().getSelection());
 				showTextSource();
 			}
 
@@ -318,7 +334,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 			span.getConceptAnnotation().getOwlClass()
 					.filter(descendants::contains)
 					.ifPresent(owlClass -> getStyledDocument().setCharacterAttributes(span.getStart(), span.getSize(), underlinedSpan, false));
-			DefaultHighlighter.DefaultHighlightPainter spanHighlighter = new DefaultHighlighter.DefaultHighlightPainter(span.getConceptAnnotation().getColor());
+			DefaultHighlighter.DefaultHighlightPainter spanHighlighter = new DefaultHighlighter.DefaultHighlightPainter(span.getConceptAnnotation().getColor().orElse(KnowtatorDefaultSettings.COLORS.get(0)));
 
 			highlightRegion(span.getStart(), span.getEnd(), spanHighlighter);
 		}

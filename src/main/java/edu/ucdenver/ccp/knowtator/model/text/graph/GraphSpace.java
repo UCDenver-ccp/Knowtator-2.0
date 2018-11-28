@@ -409,11 +409,13 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		g.setHeight(g.getHeight() + 200);
 		g.setWidth(g.getWidth() + 200);
 
-		String color = Integer.toHexString(vertex.getConceptAnnotation().getColor().getRGB()).substring(2);
-		String shape = mxConstants.SHAPE_RECTANGLE;
+		vertex.getConceptAnnotation().getColor().ifPresent(c -> {
+			String colorString = Integer.toHexString(c.getRGB()).substring(2);
+			String shape = mxConstants.SHAPE_RECTANGLE;
 
-		setCellStyles(mxConstants.STYLE_SHAPE, shape, new Object[]{vertex});
-		setCellStyles(mxConstants.STYLE_FILLCOLOR, color, new Object[]{vertex});
+			setCellStyles(mxConstants.STYLE_SHAPE, shape, new Object[]{vertex});
+			setCellStyles(mxConstants.STYLE_FILLCOLOR, colorString, new Object[]{vertex});
+		});
 	}
 
   /*

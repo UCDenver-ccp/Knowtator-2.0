@@ -194,15 +194,9 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
 		Optional<Span> newSpanOptional = Optional.ofNullable(newSpan);
 		if (newSpanOptional.isPresent()) {
-			newSpanOptional.map(Span::getConceptAnnotation)
-					.filter(conceptAnnotation -> getSelection()
-							.map(conceptAnnotation1 -> !conceptAnnotation1.equals(conceptAnnotation))
-							.orElseGet(() -> {
-								setSelection(conceptAnnotation);
-								conceptAnnotation.getSpanCollection().setSelection(newSpan);
-								return false;
-							}))
-					.ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection().setSelection(newSpan));
+			setSelection(newSpan.getConceptAnnotation());
+			newSpan.getConceptAnnotation().getSpanCollection().setSelection(newSpan);
+
 		} else {
 			setSelection(null);
 		}

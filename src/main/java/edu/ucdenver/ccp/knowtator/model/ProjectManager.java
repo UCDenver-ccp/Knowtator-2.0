@@ -51,7 +51,7 @@ public abstract class ProjectManager extends UndoManager implements BaseKnowtato
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(ProjectManager.class);
 
-    private File projectLocation;
+    File projectLocation;
 
     public boolean isNotLoading() {
         return !isLoading;

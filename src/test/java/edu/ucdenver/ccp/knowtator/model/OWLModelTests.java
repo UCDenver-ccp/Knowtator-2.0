@@ -40,7 +40,7 @@ import org.semanticweb.owlapi.util.OWLEntityRenamer;
 import java.util.*;
 import java.util.stream.Collectors;
 
-class OWLModelTest {
+public class OWLModelTests {
 
 	private static KnowtatorModel controller;
 	private static OWLOntologyManager owlOntologyManager;
@@ -49,7 +49,7 @@ class OWLModelTest {
 	private static OWLReasoner reasoner;
 
 	@BeforeEach
-	void setup() {
+	public void setup() {
 
 		controller = TestingHelpers.getLoadedController();
 		OWLReasonerFactory reasonerFactory = new ReasonerFactory();
@@ -61,7 +61,7 @@ class OWLModelTest {
 	}
 
 	@Test
-	void addOWLClass() {
+	public void addOWLClassTest() {
 		OWLClass class1 = dataFactory.getOWLClass(IRI.create("X"));
 		OWLClass class2 = controller.getOWLClassByID("IceCream").get();
 		OWLAxiom axiom = dataFactory.getOWLSubClassOfAxiom(class1, class2);
@@ -73,7 +73,7 @@ class OWLModelTest {
 	}
 
 	@Test
-	void changeOWLClassIRI() {
+	public void changeOWLClassIRITest() {
 		OWLEntityRenamer renamer = new OWLEntityRenamer(owlOntologyManager, Collections.singleton(ontology));
 		OWLClass class2 = controller.getOWLClassByID("Pizza").get();
 		assert ontology.containsClassInSignature(class2.getIRI());
@@ -100,7 +100,7 @@ class OWLModelTest {
 	}
 
 	@Test
-	void changeOWLObjectPropertyIRI() {
+	public void changeOWLObjectPropertyIRITest() {
 		OWLEntityRenamer renamer = new OWLEntityRenamer(owlOntologyManager, Collections.singleton(ontology));
 		OWLObjectProperty property = controller.getOWLObjectPropertyByID("hasBase").get();
 		assert ontology.containsObjectPropertyInSignature(property.getIRI());
@@ -128,7 +128,7 @@ class OWLModelTest {
 	}
 
 	@Test
-	void removeOWLClass() {
+	public void removeOWLClassTest() {
 		OWLClass class2 = controller.getOWLClassByID("Pizza").get();
 		assert ontology.containsClassInSignature(class2.getIRI());
 		OWLEntityRemover remover = new OWLEntityRemover(Collections.singleton(ontology));
@@ -147,7 +147,7 @@ class OWLModelTest {
 	}
 
 	@Test
-	void removeObjectProperty() {
+	public void removeObjectPropertyTest() {
 		OWLObjectProperty owlObjectProperty = controller.getOWLObjectPropertyByID("hasBase").get();
 		assert ontology.containsObjectPropertyInSignature(owlObjectProperty.getIRI());
 		OWLEntityRemover remover = new OWLEntityRemover(Collections.singleton(ontology));
@@ -166,12 +166,12 @@ class OWLModelTest {
 	}
 
 	@Test
-	void moveOWLClass() {
+	public void moveOWLClassTest() {
 		OWLClass class1 = controller.getOWLClassByID("Food").get();
 		OWLClass class2 = controller.getOWLClassByID("Pizza").get();
 		OWLClass class3 = controller.getOWLClassByID("Thing").get();
 
-		assert isSubClass(class1, class2);
+		assert isSubClassTest(class1, class2);
 
 		Set<OWLSubClassOfAxiom> subclassAxioms = ontology.getSubClassAxiomsForSubClass(class2);
 		OWLAxiom axiom2 = dataFactory.getOWLSubClassOfAxiom(class2, class3);
@@ -192,20 +192,20 @@ class OWLModelTest {
 				TestingHelpers.defaultExpectedTriples);
 
 
-		assert !isSubClass(class1, class2);
-		assert isSubClass(class3, class2);
+		assert !isSubClassTest(class1, class2);
+		assert isSubClassTest(class3, class2);
 
 		ConceptAnnotation conceptAnnotation = controller.getTextSource().get().getConceptAnnotationCollection().getSelection().get();
 		assert conceptAnnotation.getOwlClass().get().equals(class2);
 	}
 
-	boolean isSubClass(OWLClass potentialSuperClass, OWLClass owlClass) {
+	public boolean isSubClassTest(OWLClass potentialSuperClass, OWLClass owlClass) {
 		reasoner.flush();
 		Set<OWLClass> subclasses = reasoner.getSubClasses(potentialSuperClass, false).getFlattened();
 		return subclasses.contains(owlClass);
 	}
 
-	boolean isSubObjectProperty(OWLObjectProperty potentialSuperObjectProperty, OWLObjectProperty objectProperty) {
+	public boolean isSubObjectPropertyTest(OWLObjectProperty potentialSuperObjectProperty, OWLObjectProperty objectProperty) {
 		reasoner.flush();
 		List<OWLObjectProperty> subclasses = reasoner.getSubObjectProperties(potentialSuperObjectProperty, true).getFlattened().stream()
 				.filter(owlObjectPropertyExpression -> !owlObjectPropertyExpression.isAnonymous())
@@ -216,12 +216,12 @@ class OWLModelTest {
 
 
 	@Test
-	void moveOWLObjectProperty() {
+	public void moveOWLObjectPropertyTest() {
 		OWLObjectProperty property1 = controller.getOWLObjectPropertyByID("hasIngredient").get();
 		OWLObjectProperty property2 = controller.getOWLObjectPropertyByID("hasBase").get();
 		OWLObjectProperty property3 = controller.getOWLObjectPropertyByID("isIngredientOf").get();
 
-		assert isSubObjectProperty(property1, property2);
+		assert isSubObjectPropertyTest(property1, property2);
 
 		Set<OWLSubObjectPropertyOfAxiom> subclassAxioms = ontology.getObjectSubPropertyAxiomsForSubProperty(property2);
 		OWLAxiom axiom2 = dataFactory.getOWLSubObjectPropertyOfAxiom(property2, property3);
@@ -242,8 +242,8 @@ class OWLModelTest {
 				TestingHelpers.defaultExpectedTriples);
 
 
-		assert isSubObjectProperty(property1, property2);
-		assert isSubObjectProperty(property3, property2);
+		assert isSubObjectPropertyTest(property1, property2);
+		assert isSubObjectPropertyTest(property3, property2);
 
 		GraphSpace graphSpace = controller.getTextSource().get().getGraphSpaceCollection().getSelection().get();
 		RelationAnnotation relationAnnotation = (RelationAnnotation) graphSpace.getChildEdges(graphSpace.getDefaultParent())[0];
@@ -251,12 +251,12 @@ class OWLModelTest {
 	}
 
 	@Test
-	void moveSuperClass() {
+	public void moveSuperClassTest() {
 
 	}
 
 	@Test
-	void moveSuperObjectProperty() {
+	public void moveSuperObjectPropertyTest() {
 
 	}
 

@@ -22,40 +22,43 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.text.concept;
+package edu.ucdenver.ccp.knowtator;
 
-import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import org.junit.jupiter.api.Test;
 
-public class ConceptAnnotationTest {
-	private final static KnowtatorModel controller = TestingHelpers.getLoadedController();
+public class ProjectManagerTests {
 
-	@Test
-	public void getSize() {
-		TextSource textSource = controller.getTextSource().get();
-		ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
-		assert conceptAnnotation.getSize() == 4;
-	}
+    private static final KnowtatorModel controller = TestingHelpers.getLoadedController();
 
-	@Test
-	public void getSpannedText() {
-		TextSource textSource = controller.getTextSource().get();
-		ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
-		assert conceptAnnotation.getSpannedText().equals("This");
-	}
+    @Test
+    public void loadProjectTest() {
+        TestingHelpers.checkDefaultCollectionValues(controller);
+        controller.loadProject();
 
-	@Test
-	public void contains() {
-		TextSource textSource = controller.getTextSource().get();
-		ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
-		assert conceptAnnotation.contains(0);
-		assert conceptAnnotation.contains(2);
-		assert conceptAnnotation.contains(3);
-		assert !conceptAnnotation.contains(4);
-		assert !conceptAnnotation.contains(5);
-		assert !conceptAnnotation.contains(100);
-		assert !conceptAnnotation.contains(-1);
-	}
+    }
+
+    @Test
+    public void newProjectTest() {
+    }
+
+    @Test
+    public void importToManagerTest() {
+    }
+
+    @Test
+    public void importProjectTest() {
+    }
+
+    @Test
+    public void makeProjectStructureTest() {
+    }
+
+    @Test
+    public void loadWithAppropriateFormatTest() {
+    }
+
+    @Test
+    public void saveToFormatTest() {
+    }
 }
