@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator;
 
 import com.google.common.io.Files;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import org.apache.commons.io.FileUtils;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
@@ -94,14 +95,14 @@ public class TestingHelpers {
             int expectedTriples
     ) {
 
-        int actualTextSources = controller.getTextSources().size();
+        int actualTextSources = controller.getNumberOfTextSources();
         int actualConceptAnnotations = controller.getTextSources().stream().mapToInt(
-                textSource -> textSource.getConceptAnnotationCollection().size()).sum();
+                TextSource::getNumberOfGraphSpaces).sum();
         int actualSpans = controller.getTextSources().stream().mapToInt(
-                textSource -> textSource.getConceptAnnotationCollection().getSpans(null).size()).sum();
+                textSource -> textSource.getSpans(null).size()).sum();
         int actualGraphSpaces = controller.getTextSources().stream().mapToInt(
-                textSource -> textSource.getGraphSpaceCollection().size()).sum();
-        int actualProfiles = controller.getProfileCollection().size();
+                TextSource::getNumberOfGraphSpaces).sum();
+        int actualProfiles = controller.getNumberOfProfiles();
         int actualHighlighters = controller.getProfileCollection().stream().mapToInt(profile -> profile.getColors().size()).sum();
         int actualAnnotationNodes = controller.getTextSources().stream().mapToInt(
                 textSource -> textSource.getGraphSpaceCollection().stream().mapToInt(

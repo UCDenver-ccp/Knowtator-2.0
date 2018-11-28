@@ -90,7 +90,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, Knowta
 		setProperty(property);
 
 //		if (property.isPresent()) {
-//			setProperty(property.get());
+//			setProperty(property.getAnnotation());
 //		} else {
 //			setProperty(controller.getOWLObjectPropertyByID(propertyID).orElse(null));
 //		}

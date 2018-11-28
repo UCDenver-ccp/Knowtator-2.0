@@ -63,7 +63,7 @@ public class IAA2HTML {
 		tabular.println(
 				"This file is provided to facilitate cut-n-paste into a spreadsheet.\n"
 						+ "If you cannot directly copy the data below into a spreadsheet without it all going into a single cell,\n"
-						+ "then try copying to a text editor first and then copy it from there.  There is typically a 'paste special'\n"
+						+ "then try copying to a text editor firstConceptAnnotation and then copy it from there.  There is typically a 'paste special'\n"
 						+ "option under the Edit menu that will allow you to paste the copied data as text.  This will also work.\n\n\n");
 
 		if (matcher.returnsTrivials())
@@ -612,7 +612,7 @@ public class IAA2HTML {
 			html.append("Text source docID = ").append(annotationTextName).append("<p>");
 
 		if (annotationText != null) {
-			TreeSet<Span> spans = conceptAnnotation.getSpanCollection().getCollection();
+			TreeSet<Span> spans = conceptAnnotation.getCollection();
 			List<Span> modifiedSpans = new ArrayList<>(spans);
 
 			annotationText = shortenText(annotationText, modifiedSpans);
@@ -876,14 +876,14 @@ public class IAA2HTML {
 // for(String type : sortedTypes)
 // {
 // errors.println("<h2>"+type+"</h2>");
-// Set<concept> typeNonmatches = sortedNonmatches.get(type);
+// Set<concept> typeNonmatches = sortedNonmatches.getAnnotation(type);
 // for(concept concept : typeNonmatches)
 // {
 // String docID = concept.getId();
 // writeAnnotationTextSourceHTML(errors, concept,
-// annotationTexts.get(concept), annotationTextNames.get(concept));
+// annotationTexts.getAnnotation(concept), annotationTextNames.getAnnotation(concept));
 // errors.println("<ul><li>");
-// printAnnotationHTML(errors, concept, annotationTexts.get(concept));
+// printAnnotationHTML(errors, concept, annotationTexts.getAnnotation(concept));
 //
 // Set<concept> candidateAnnotations =
 // spanIndex.getOverlappingConceptAnnotations(concept);
@@ -897,7 +897,7 @@ public class IAA2HTML {
 // {
 // errors.println("<li>");
 // printAnnotationHTML(errors, candidateAnnotation,
-// annotationTexts.get(candidateAnnotation));
+// annotationTexts.getAnnotation(candidateAnnotation));
 // }
 // }
 // }
@@ -912,7 +912,7 @@ public class IAA2HTML {
 // );
 // PrintStream matchesStream = new PrintStream(new File(directory,
 // matchesFileName));
-// Set<concept> matches = allwayMatches.get(set);
+// Set<concept> matches = allwayMatches.getAnnotation(set);
 // Map<String, Set<concept>> sortedMatches = sortByType(classes, matches);
 // Map<concept, Set<concept>> matchSets = new HashMap<concept,
 // Set<concept>>();
@@ -982,59 +982,59 @@ public class IAA2HTML {
 // trivialMatchesStream.println("<h2>"+type+"</h2>");
 // nontrivialMatchesStream.println("<h2>"+type+"</h2>");
 //
-// Set<concept> typeTrivialMatches = sortedAllwayTrivialMatches.get(type);
+// Set<concept> typeTrivialMatches = sortedAllwayTrivialMatches.getAnnotation(type);
 // Set<concept> typeNontrivialMatches =
-// sortedAllwayNontrivialMatches.get(type);
-// Set<concept> typeMatches = sortedAllwayMatches.get(type);
+// sortedAllwayNontrivialMatches.getAnnotation(type);
+// Set<concept> typeMatches = sortedAllwayMatches.getAnnotation(type);
 //
 // for(concept concept : typeMatches)
 // {
 // if(printedAnnotations.contains(concept)) continue;
-// Set<concept> matchSet = matchSets.get(concept);
+// Set<concept> matchSet = matchSets.getAnnotation(concept);
 //
 // writeAnnotationTextSourceHTML(matchesStream, concept,
-// annotationTexts.get(concept), annotationTextNames.get(concept));
+// annotationTexts.getAnnotation(concept), annotationTextNames.getAnnotation(concept));
 // matchesStream.println("<p>");
 // printAnnotationHTML(matchesStream, concept,
-// annotationTexts.get(concept));
+// annotationTexts.getAnnotation(concept));
 // if(typeTrivialMatches.contains(concept) && matcher.returnsTrivials())
 // {
 // writeAnnotationTextSourceHTML(trivialMatchesStream, concept,
-// annotationTexts.get(concept), annotationTextNames.get(concept));
+// annotationTexts.getAnnotation(concept), annotationTextNames.getAnnotation(concept));
 // trivialMatchesStream.println("<p>");
 // printAnnotationHTML(trivialMatchesStream, concept,
-// annotationTexts.get(concept));
+// annotationTexts.getAnnotation(concept));
 // }
 // else if(typeNontrivialMatches.contains(concept) &&
 // matcher.returnsTrivials())
 // {
 // writeAnnotationTextSourceHTML(nontrivialMatchesStream, concept,
-// annotationTexts.get(concept), annotationTextNames.get(concept));
+// annotationTexts.getAnnotation(concept), annotationTextNames.getAnnotation(concept));
 // nontrivialMatchesStream.println("<p>");
 // printAnnotationHTML(nontrivialMatchesStream, concept,
-// annotationTexts.get(concept));
+// annotationTexts.getAnnotation(concept));
 // }
 //
-// printedAnnotations.add(concept);
+// printedAnnotations.addProfile(concept);
 // for(concept matchedAnnotation : matchSet)
 // {
 // if(!matchedAnnotation.equalStartAndEnd(concept))
 // {
 // printAnnotationHTML(matchesStream, matchedAnnotation,
-// annotationTexts.get(matchedAnnotation));
+// annotationTexts.getAnnotation(matchedAnnotation));
 // if(typeTrivialMatches.contains(matchedAnnotation) &&
 // matcher.returnsTrivials())
 // {
 // printAnnotationHTML(trivialMatchesStream, matchedAnnotation,
-// annotationTexts.get(matchedAnnotation));
+// annotationTexts.getAnnotation(matchedAnnotation));
 // }
 // else if(typeNontrivialMatches.contains(matchedAnnotation) &&
 // matcher.returnsTrivials())
 // {
 // printAnnotationHTML(nontrivialMatchesStream, matchedAnnotation,
-// annotationTexts.get(matchedAnnotation));
+// annotationTexts.getAnnotation(matchedAnnotation));
 // }
-// printedAnnotations.add(matchedAnnotation);
+// printedAnnotations.addProfile(matchedAnnotation);
 // }
 // }
 // }

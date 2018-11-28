@@ -29,7 +29,8 @@ import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.model.text.AbstractKnowtatorTextBoundDataObject;
+import edu.ucdenver.ccp.knowtator.model.text.DataObjectModificationListener;
+import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.SpanCollection;
@@ -49,18 +50,21 @@ import java.io.Writer;
 import java.util.List;
 import java.util.*;
 
-public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<ConceptAnnotation> implements KnowtatorXMLIO, BratStandoffIO {
+public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO, BratStandoffIO, KnowtatorTextBoundDataObjectInterface<ConceptAnnotation> {
     @SuppressWarnings("unused")
     private static final Logger log = Logger.getLogger(ConceptAnnotation.class);
+    private final TextSource textSource;
     private OWLClass owlClass;
     private final String annotation_type;
 
+    private final List<DataObjectModificationListener> modificationListeners;
     private final Set<ConceptAnnotation> overlappingConceptAnnotations;
     private final Profile annotator;
     private String bratID;
     private final KnowtatorModel controller;
     private final SpanCollection spanCollection;
     private String motivation;
+    private String id;
 
     public ConceptAnnotation(
             KnowtatorModel controller,
@@ -72,15 +76,16 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
             String motivation) {
 
 
-        super(textSource, null);
+        super(controller);
 
-        this.textSource = textSource;
         this.annotator = annotator;
         this.controller = controller;
         this.annotation_type = annotation_type;
         this.motivation = motivation;
         this.owlClass = owlClass;
+        this.textSource = textSource;
 
+        this.modificationListeners = new ArrayList<>();
 
         spanCollection = new SpanCollection(controller);
         //noinspection unchecked
@@ -90,6 +95,26 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
         overlappingConceptAnnotations = new HashSet<>();
 
         getColor();
+    }
+
+    @Override
+    public TextSource getTextSource() {
+        return textSource;
+    }
+
+    @Override
+    public void addDataObjectModificationListener(DataObjectModificationListener listener) {
+        modificationListeners.add(listener);
+    }
+
+    @Override
+    public void removeDataObjectModificationListener(DataObjectModificationListener listener) {
+        modificationListeners.remove(listener);
+    }
+
+    @Override
+    public void modify(List<Integer> parameters) {
+        modificationListeners.forEach(DataObjectModificationListener::modification);
     }
 
 
@@ -105,13 +130,9 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
         return owlClass;
     }
 
-    public SpanCollection getSpanCollection() {
-        return spanCollection;
-    }
-
     /**
-     * @return the size of the Span associated with the concept. If the concept has more than
-     * one Span, then the sum of the size of the spanCollection is returned.
+     * @return the getNumberOfGraphSpaces of the Span associated with the concept. If the concept has more than
+     * one Span, then the sum of the getNumberOfGraphSpaces of the spanCollection is returned.
      */
     public int getSize() {
         int size = 0;
@@ -176,7 +197,7 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
         writer.append(String.format("%s\t%s ", getBratID(), renderedOwlClassID));
 
 	    visualConfig.get("labels").put(renderedOwlClassID, getOWLClassLabel());
-	    visualConfig.get("drawing").put(renderedOwlClassID, String.format("bgColor:%s", Profile.convertToHex(controller.getProfileCollection().getDefaultProfile().getColor(owlClass))));
+        visualConfig.get("drawing").put(renderedOwlClassID, String.format("bgColor:%s", Profile.convertToHex(annotator.getColor(owlClass))));
 
         spanCollection.writeToBratStandoff(writer, annotationConfig, visualConfig);
     }
@@ -313,8 +334,8 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
 
     @Override
     public int compareTo(ConceptAnnotation conceptAnnotation2) {
-        Iterator<Span> spanIterator1 = getSpanCollection().iterator();
-        Iterator<Span> spanIterator2 = conceptAnnotation2.getSpanCollection().iterator();
+        Iterator<Span> spanIterator1 = iterator();
+        Iterator<Span> spanIterator2 = conceptAnnotation2.iterator();
         int result = 0;
         while (result == 0 && spanIterator1.hasNext() && spanIterator2.hasNext()) {
             Span span1 = spanIterator1.next();
@@ -343,6 +364,16 @@ public class ConceptAnnotation extends AbstractKnowtatorTextBoundDataObject<Conc
             }
         }
         return false;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override

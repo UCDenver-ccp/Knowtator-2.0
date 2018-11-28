@@ -24,6 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.textpane;
 
+import edu.ucdenver.ccp.knowtator.model.collection.CyclableCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -205,7 +206,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
 				conceptAnnotationOptional = event.getNew();
 				if (conceptAnnotationOptional.isPresent()) {
-					spanOptional = conceptAnnotationOptional.get().getSpanCollection().getSelection();
+					spanOptional = conceptAnnotationOptional.get().getSelection();
 				} else {
 					spanOptional = Optional.empty();
 				}
@@ -216,16 +217,16 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
 				textSourceOptional = event.getNew();
 				if (textSourceOptional.isPresent()) {
-					conceptAnnotationOptional = textSourceOptional.get().getConceptAnnotationCollection().getSelection();
+					conceptAnnotationOptional = textSourceOptional.get().getSelectedAnnotation();
 					if (conceptAnnotationOptional.isPresent()) {
-						spanOptional = conceptAnnotationOptional.get().getSpanCollection().getSelection();
+						spanOptional = conceptAnnotationOptional.get().getSelection();
 					} else {
 						spanOptional = Optional.empty();
 					}
 				} else {
 					conceptAnnotationOptional = Optional.empty();
 				}
-				event.getNew().ifPresent(textSource -> conceptAnnotationOptional = textSource.getConceptAnnotationCollection().getSelection());
+				event.getNew().ifPresent(textSource -> conceptAnnotationOptional = textSource.getSelectedAnnotation());
 				showTextSource();
 			}
 
@@ -276,13 +277,13 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 			// Remove all previous highlights in case a spanOptional has been deleted
 			getHighlighter().removeAllHighlights();
 
-			// Always highlight the selected concept first so its color and border show up
+			// Always highlight the selected concept firstConceptAnnotation so its color and border show up
 			highlightSelectedAnnotation();
 
-			// Highlight overlaps first, then spans. Overlaps must be highlighted first because the highlights are displayed
+			// Highlight overlaps firstConceptAnnotation, then spans. Overlaps must be highlighted firstConceptAnnotation because the highlights are displayed
 			// in order of placement
 			textSourceOptional.ifPresent(textSource -> {
-				Set<Span> spans = textSource.getConceptAnnotationCollection().getSpans(null).getCollection();
+				Set<Span> spans = textSource.getSpans(null).getCollection();
 				highlightOverlaps(spans);
 				highlightSpans(spans);
 			});
@@ -293,7 +294,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 
 			Optional<Span> span = spanOptional;
 			if (!span.isPresent()) {
-				span = conceptAnnotationOptional.map(conceptAnnotation -> conceptAnnotation.getSpanCollection().first());
+				span = conceptAnnotationOptional.map(CyclableCollection::first);
 			}
 			Optional<Span> finalSpan = span;
 			SwingUtilities.invokeLater(
@@ -380,7 +381,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	 * Highlights the spans for the selected annotation
 	 */
 	private void highlightSelectedAnnotation() {
-		conceptAnnotationOptional.ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection()
+		conceptAnnotationOptional.ifPresent(conceptAnnotation -> conceptAnnotation
 				.forEach(span -> highlightRegion(span.getStart(), span.getEnd(), selectionHighlighter)));
 	}
 
@@ -396,7 +397,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 			int start = Utilities.getWordStart(this, min(press_offset, release_offset));
 			int end = Utilities.getWordEnd(this, max(press_offset, release_offset));
 
-			//I don't want to deselect the annotation here because I may want to add a spanOptional to it
+			//I don't want to deselect the annotation here because I may want to addProfile a spanOptional to it
 
 			requestFocusInWindow();
 			select(start, end);
@@ -407,7 +408,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	}
 
 	/**
-	 * @param size Value to set font size to
+	 * @param size Value to set font getNumberOfGraphSpaces to
 	 */
 	public void setFontSize(int size) {
 		Font font = getFont();
@@ -436,8 +437,8 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 		 * Paints a portion of a highlight.
 		 *
 		 * @param g      the graphics context
-		 * @param offs0  the starting model offset >= 0
-		 * @param offs1  the ending model offset >= offs1
+		 * @param offs0  the starting modelactions offset >= 0
+		 * @param offs1  the ending modelactions offset >= offs1
 		 * @param bounds the bounding box of the view, which is not necessarily the region to paint.
 		 * @param c      the editor
 		 * @param view   View painting for

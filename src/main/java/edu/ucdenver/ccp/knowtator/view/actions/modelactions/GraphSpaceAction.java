@@ -22,33 +22,37 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.list;
+package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
-import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction;
+import edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType;
 
-public class ProfileList extends KnowtatorList<Profile> {
-	public ProfileList() {
-		super();
+public class GraphSpaceAction extends AbstractKnowtatorCollectionAction<GraphSpace> {
+	private final String graphName;
+	private final TextSource textSource;
 
-		react();
+	public GraphSpaceAction(CollectionActionType actionType, String graphName, TextSource textSource) {
+		super(actionType, "graph space", textSource.getGraphSpaceCollection());
+		this.graphName = graphName;
+		this.textSource = textSource;
 	}
 
 	@Override
-	protected void react() {
-		setCollection(KnowtatorView.MODEL.getProfileCollection());
-		setSelected();
+	protected void prepareAdd() {
+		GraphSpace newGraphSpace = new GraphSpace(KnowtatorView.MODEL, textSource, graphName);
+		setObject(newGraphSpace);
 	}
 
+	@Override
+	protected void cleanUpRemove() {
 
-	// I am overriding here because the base method adds this as a collection listener to its collection,
-	// but that generates a concurrent modification exception during "added" events
-//    @Override
-//    protected void setCollection(KnowtatorCollection<Profile> collection) {
-//        dispose();
-//        this.collection = collection;
-//        collection.forEach(k -> ((DefaultListModel<Profile>) getModel()).addElement(k));
-//    }
+	}
 
+	@Override
+	protected void cleanUpAdd() {
 
+	}
 }

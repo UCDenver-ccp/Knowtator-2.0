@@ -87,8 +87,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 	 */
 	public SpanCollection getSpans(Integer loc) {
 		SpanCollection allSpans = new SpanCollection(controller);
-		stream().map(conceptAnnotation -> conceptAnnotation
-				.getSpanCollection().stream()
+		stream().map(conceptAnnotation -> conceptAnnotation.stream()
 				.filter(span -> loc == null || span.contains(loc)).iterator())
 				.forEach(spanIterator -> {
 					while (spanIterator.hasNext()) {
@@ -103,7 +102,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 	public Stream<ConceptAnnotation> stream() {
 		boolean filterByOWLClass = controller.isFilter(FilterType.OWLCLASS);
 		boolean filterByProfile = controller.isFilter(FilterType.PROFILE);
-		Optional<Profile> activeProfile = controller.getProfileCollection().getSelection();
+		Optional<Profile> activeProfile = controller.getSelectedProfile();
 		Set<OWLClass> activeOWLClassDescendants = new HashSet<>();
 
 		if (filterByOWLClass) {
@@ -141,30 +140,30 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 //                                    span.getConceptAnnotation().addOverlappingAnnotation(span1.getConceptAnnotation());
 //                                    span1.getConceptAnnotation().addOverlappingAnnotation(span.getConceptAnnotation());
 //                                } else {
-//                                    toRemove.add(span1);
+//                                    toRemove.addProfile(span1);
 //                                }
 //                            });
 //                    overlappingSpans.removeAll(toRemove);
 //
-//                    overlappingSpans.add(span);
+//                    overlappingSpans.addProfile(span);
 //                });
 //    }
 
-	public void getNextSpan() {
-		getSelection().ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection().getSelection()
+	public void selectNextSpan() {
+		getSelection().ifPresent(conceptAnnotation -> conceptAnnotation.getSelection()
 				.map(span -> getSpans(null).getNext(span))
 				.ifPresent(nextSpan -> {
 					setSelection(nextSpan.getConceptAnnotation());
-					nextSpan.getConceptAnnotation().getSpanCollection().setSelection(nextSpan);
+					nextSpan.getConceptAnnotation().setSelection(nextSpan);
 				}));
 	}
 
-	public void getPreviousSpan() {
-		getSelection().ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection().getSelection()
+	public void selectPreviousSpan() {
+		getSelection().ifPresent(conceptAnnotation -> conceptAnnotation.getSelection()
 				.map(span -> getSpans(null).getPrevious(span))
 				.ifPresent(nextSpan -> {
 					setSelection(nextSpan.getConceptAnnotation());
-					nextSpan.getConceptAnnotation().getSpanCollection().setSelection(nextSpan);
+					nextSpan.getConceptAnnotation().setSelection(nextSpan);
 				}));
 	}
 
@@ -173,7 +172,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 		Optional<Span> newSpanOptional = Optional.ofNullable(newSpan);
 		if (newSpanOptional.isPresent()) {
 			setSelection(newSpan.getConceptAnnotation());
-			newSpan.getConceptAnnotation().getSpanCollection().setSelection(newSpan);
+			newSpan.getConceptAnnotation().setSelection(newSpan);
 
 		} else {
 			setSelection(null);
@@ -191,7 +190,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 			getSelection()
 					.filter(conceptAnnotation -> conceptAnnotation != selection)
 					.ifPresent(conceptAnnotation -> {
-						conceptAnnotation.getSpanCollection().setSelection(null);
+						conceptAnnotation.setSelection(null);
 						super.setSelection(selection);
 
 					});
@@ -274,13 +273,13 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 //					String owlClassLabel = ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0)).getAttribute(KnowtatorXMLAttributes.LABEL);
 					String motivation = annotationElement.getAttribute(KnowtatorXMLAttributes.MOTIVATION);
 
-					Profile profile = controller.getProfileCollection().get(profileID).orElse(controller.getProfileCollection().getDefaultProfile());
+					Profile profile = controller.getProfile(profileID).orElse(controller.getDefaultProfile());
 
 					Optional<OWLClass> owlClass = Optional.ofNullable(owlClassMap.get(owlClassID));
 					if (owlClass.isPresent()) {
 						ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(controller, textSource, annotationID, owlClass.get(), profile, type, motivation);
 						newConceptAnnotation.readFromKnowtatorXML(null, annotationElement);
-						if (newConceptAnnotation.getSpanCollection().size() == 0) {
+						if (newConceptAnnotation.size() == 0) {
 							return Optional.empty();
 						} else {
 							return Optional.of(newConceptAnnotation);
@@ -310,15 +309,15 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 					String profileID = null;
 					try {
 						profileID = annotationElement.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATOR).item(0).getTextContent();
-						controller.getProfileCollection().add(new Profile(controller, profileID));
+						controller.addProfile(new Profile(controller, profileID));
 					} catch (NullPointerException npe) {
 						try {
 							profileID = annotationElement.getAttribute(OldKnowtatorXMLAttributes.ANNOTATOR);
-							controller.getProfileCollection().add(new Profile(controller, profileID));
+							controller.addProfile(new Profile(controller, profileID));
 						} catch (NullPointerException ignored) {
 						}
 					}
-					Profile profile = controller.getProfileCollection().get(profileID).orElse(controller.getProfileCollection().getDefaultProfile());
+					Profile profile = controller.getProfile(profileID).orElse(controller.getDefaultProfile());
 
 					Optional<OWLClass> owlClass = controller.getOWLClassByID(owlClassID);
 					if (owlClass.isPresent()) {
@@ -327,7 +326,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 						newConceptAnnotation.readFromOldKnowtatorXML(null, annotationElement);
 
 						// No need to keep annotations with no allSpanCollection
-						if (newConceptAnnotation.getSpanCollection().size() == 0) {
+						if (newConceptAnnotation.size() == 0) {
 							return Optional.empty();
 						} else {
 							KnowtatorXMLUtil.asList(classElement.getElementsByTagName(OldKnowtatorXMLTags.HAS_SLOT_MENTION)).stream()
@@ -351,7 +350,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
 
 		GraphSpace oldKnowtatorGraphSpace = new GraphSpace(controller, textSource, "Old Knowtator Relations");
-		textSource.getGraphSpaceCollection().add(oldKnowtatorGraphSpace);
+		textSource.add(oldKnowtatorGraphSpace);
 
 		annotationToSlotMap.forEach((annotation, slot) -> {
 			String propertyID = ((Element) slot.getElementsByTagName(OldKnowtatorXMLTags.MENTION_SLOT).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID);
@@ -365,7 +364,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 						get(value).map(conceptAnnotation -> {
 							List<Object> vertices1 = oldKnowtatorGraphSpace.getVerticesForAnnotation(conceptAnnotation);
 							return oldKnowtatorGraphSpace.makeOrGetAnnotationNode(conceptAnnotation, vertices1);
-						}).ifPresent(target -> controller.getOWLObjectPropertyByID(propertyID).ifPresent(property -> oldKnowtatorGraphSpace.addTriple(source, target, null, controller.getProfileCollection().getDefaultProfile(), property, propertyID, "", "", false, "")));
+						}).ifPresent(target -> controller.getOWLObjectPropertyByID(propertyID).ifPresent(property -> oldKnowtatorGraphSpace.addTriple(source, target, null, controller.getDefaultProfile(), property, propertyID, "", "", false, "")));
 
 					}
 				}
@@ -376,7 +375,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 	public void readFromBratStandoff(
 			File file, Map<Character, List<String[]>> annotationCollection, String content) {
 
-		Profile profile = controller.getProfileCollection().getDefaultProfile();
+		Profile profile = controller.getDefaultProfile();
 
 		annotationCollection
 				.get(StandoffTags.TEXTBOUNDANNOTATION)
@@ -405,7 +404,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 				});
 
 		GraphSpace newGraphSpace = new GraphSpace(controller, textSource, "Brat Relation Graph");
-		textSource.getGraphSpaceCollection().add(newGraphSpace);
+		textSource.add(newGraphSpace);
 		newGraphSpace.readFromBratStandoff(null, annotationCollection, null);
 	}
 
@@ -470,7 +469,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 	public void profileFilterChanged(boolean filterValue) {
 		getSelection()
 				.filter(conceptAnnotation -> filterValue)
-				.filter(conceptAnnotation -> controller.getProfileCollection().getSelection()
+				.filter(conceptAnnotation -> controller.getSelectedProfile()
 						.map(profile -> !conceptAnnotation.getAnnotator().equals(profile)).orElse(false))
 				.ifPresent(conceptAnnotation -> setSelection(null));
 	}

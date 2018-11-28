@@ -96,7 +96,7 @@
 //				concept, compareSetName));
 //		exactlyOverlappingAnnotations.retainAll(candidateAnnotations);
 //		exactlyOverlappingAnnotations.clear(excludeAnnotations);
-//		if (exactlyOverlappingAnnotations.size() > 0) {
+//		if (exactlyOverlappingAnnotations.getNumberOfGraphSpaces() > 0) {
 //			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 //			return exactlyOverlappingAnnotations.iterator().next();
 //		}
@@ -105,9 +105,9 @@
 //				compareSetName));
 //		overlappingAnnotations.retainAll(candidateAnnotations);
 //		overlappingAnnotations.clear(excludeAnnotations);
-//		if (overlappingAnnotations.size() > 0) {
+//		if (overlappingAnnotations.getNumberOfGraphSpaces() > 0) {
 //			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
-//			if (overlappingAnnotations.size() == 1)
+//			if (overlappingAnnotations.getNumberOfGraphSpaces() == 1)
 //				return overlappingAnnotations.iterator().next();
 //			return concept.getShortestAnnotation(overlappingAnnotations);
 //		}

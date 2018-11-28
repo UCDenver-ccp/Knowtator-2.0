@@ -27,9 +27,9 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
@@ -87,7 +87,7 @@ public class OpenPane extends MenuPane {
 				@Override
 				protected Object doInBackground() throws Exception {
 					final int[] progress = {0};
-					view.loadProject(file.getParentFile(), new KnowtatorCollectionListener<TextSource>() {
+					view.loadProject(file.getParentFile(), new TextSourceCollectionListener() {
 						@Override
 						public void selected(SelectionEvent<TextSource> event) {
 

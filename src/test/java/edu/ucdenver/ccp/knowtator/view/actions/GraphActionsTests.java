@@ -40,9 +40,9 @@ public class GraphActionsTests {
 
 	@Test
 	public void removeSelectedAnnotationNodeTest() {
-		TextSource textSource = controller.getTextSource().get();
-		textSource.getGraphSpaceCollection().selectNext();
-		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection().get();
+		TextSource textSource = controller.getSelectedTextSource().get();
+		textSource.selectNextGraphSpace();
+		GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
 		Object cell = graphSpace.getModel().getChildAt(graphSpace.getDefaultParent(), 0);
 		graphSpace.setSelectionCell(cell);
 		TestingHelpers.testKnowtatorAction(controller, new GraphActions.removeCellsAction(graphSpace),
@@ -58,9 +58,9 @@ public class GraphActionsTests {
 
 	@Test
 	public void removeSelectedTripleTest() {
-		TextSource textSource = controller.getTextSource().get();
-		textSource.getGraphSpaceCollection().selectNext();
-		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection().get();
+		TextSource textSource = controller.getSelectedTextSource().get();
+		textSource.selectNextGraphSpace();
+		GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
 		Object cell = graphSpace.getModel().getChildAt(graphSpace.getDefaultParent(), 2);
 		graphSpace.setSelectionCell(cell);
 		TestingHelpers.testKnowtatorAction(controller, new GraphActions.removeCellsAction(graphSpace),
@@ -76,11 +76,11 @@ public class GraphActionsTests {
 
 	@Test
 	public void addAnnotationNodeTest() {
-		TextSource textSource = controller.getTextSource().get();
-		textSource.getGraphSpaceCollection().selectNext();
-		textSource.getConceptAnnotationCollection().selectNext();
-		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection().get();
-		ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().getSelection().get();
+		TextSource textSource = controller.getSelectedTextSource().get();
+		textSource.selectNextGraphSpace();
+		textSource.selectNextGraphSpace();
+		GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
+		ConceptAnnotation conceptAnnotation = textSource.getSelectedAnnotation().get();
 		TestingHelpers.testKnowtatorAction(controller, new GraphActions.AddAnnotationNodeAction(null, graphSpace, conceptAnnotation),
 				TestingHelpers.defaultExpectedTextSources,
 				TestingHelpers.defaultExpectedConceptAnnotations,
@@ -94,10 +94,10 @@ public class GraphActionsTests {
 
 	@Test
 	public void addTripleTest() {
-		TextSource textSource = controller.getTextSource().get();
-		textSource.getGraphSpaceCollection().selectNext();
-		textSource.getConceptAnnotationCollection().selectNext();
-		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection().get();
+		TextSource textSource = controller.getSelectedTextSource().get();
+		textSource.selectNextGraphSpace();
+		textSource.selectNextGraphSpace();
+		GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
 		AnnotationNode source = (AnnotationNode) graphSpace.getChildVertices(graphSpace.getDefaultParent())[0];
 		AnnotationNode target = (AnnotationNode) graphSpace.getChildVertices(graphSpace.getDefaultParent())[1];
 		OWLObjectProperty property = controller.getSelectedOWLObjectProperty().get();
@@ -120,10 +120,10 @@ public class GraphActionsTests {
 
 	@Test
 	public void applyLayoutTest() {
-		//TODO: This test only makes sure that the layout application doesn't change to graph space model. It needs to check the positions
-		TextSource textSource = controller.getTextSource().get();
-		textSource.getGraphSpaceCollection().selectNext();
-		GraphSpace graphSpace = textSource.getGraphSpaceCollection().getSelection().get();
+		//TODO: This test only makes sure that the layout application doesn't change to graph space modelactions. It needs to check the positions
+		TextSource textSource = controller.getSelectedTextSource().get();
+		textSource.selectNextGraphSpace();
+		GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
 		TestingHelpers.testKnowtatorAction(controller, new GraphActions.applyLayoutAction(null, graphSpace),
 				TestingHelpers.defaultExpectedTextSources,
 				TestingHelpers.defaultExpectedConceptAnnotations,

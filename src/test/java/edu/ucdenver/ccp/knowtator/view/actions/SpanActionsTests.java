@@ -29,7 +29,7 @@ import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
-import edu.ucdenver.ccp.knowtator.view.actions.model.SpanActions;
+import edu.ucdenver.ccp.knowtator.view.actions.modelactions.SpanActions;
 import org.junit.jupiter.api.Test;
 
 import static java.lang.Math.max;
@@ -57,11 +57,11 @@ public class SpanActionsTests {
 
     @Test
     public void modifySpanActionTest() {
-	    TextSource textSource = controller.getTextSource().get();
-        ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
-        textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
-        Span span = conceptAnnotation.getSpanCollection().first();
-        conceptAnnotation.getSpanCollection().setSelection(span);
+	    TextSource textSource = controller.getSelectedTextSource().get();
+	    ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
+	    textSource.setSelection(conceptAnnotation);
+	    Span span = conceptAnnotation.first();
+	    conceptAnnotation.setSelection(span);
 
 	    checkSpanModificationsTest(new SpanActions.ModifySpanAction(SpanActions.START, SpanActions.SHRINK, span),
                 span, initialStart + 1, initialEnd);

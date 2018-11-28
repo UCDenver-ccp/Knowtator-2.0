@@ -55,7 +55,7 @@ public class SpanCollection extends KnowtatorCollection<Span> implements BratSta
 		boolean filterByProfile = controller.isFilter(PROFILE);
 
 
-		return controller.getProfileCollection().getSelection()
+		return controller.getSelectedProfile()
 				.map(profile -> super.stream()
 						.filter(span -> !filterByProfile || span.getConceptAnnotation().getAnnotator().equals(profile)))
 				.orElse(super.stream());

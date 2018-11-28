@@ -84,7 +84,7 @@ public class GraphViewDialog extends JDialog implements KnowtatorComponent {
     }
 
     private void onCancel() {
-        // add your code here if necessary
+	    // addProfile your code here if necessary
         dispose();
     }
 

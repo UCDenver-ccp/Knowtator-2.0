@@ -34,7 +34,7 @@ public class OldKnowtatorUtil extends XMLUtil {
 
 	public static HashMap<String, Element> getClassIDsFromXml(Element textSourceElement) {
     /*
-    Next parse classes and add the annotations
+    Next parse classes and addProfile the annotations
      */
 		HashMap<String, Element> mentionTracker = new HashMap<>();
 

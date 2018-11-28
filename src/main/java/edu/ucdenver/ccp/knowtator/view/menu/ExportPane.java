@@ -60,14 +60,14 @@ class ExportPane extends MenuPane {
 						.saveToFormat(BratStandoffUtil.class, KnowtatorView.MODEL.getTextSources(), fileChooser.getSelectedFile());
 			}
 		});
-		exportToImagePNGButton.addActionListener(e -> KnowtatorView.MODEL.getTextSource()
+		exportToImagePNGButton.addActionListener(e -> KnowtatorView.MODEL.getSelectedTextSource()
 				.ifPresent(textSource -> {
 					JFileChooser fileChooser = new JFileChooser(KnowtatorView.MODEL.getSaveLocation());
 					fileChooser.setFileFilter(new FileNameExtensionFilter("PNG", "png"));
 					fileChooser.setSelectedFile(
 							new File(textSource.getId() + "_annotations.png"));
 					if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
-						textSource.getConceptAnnotationCollection().setSelection(null);
+						textSource.setSelection(null);
 						BufferedImage image = view.getKnowtatorTextPane().getScreenShot();
 						try {
 							ImageIO.write(image, "png", fileChooser.getSelectedFile());

@@ -48,7 +48,7 @@ public class AnnotationSpanIndex {
 		this.windowSize = windowSize;
 		window2AnnotationsMap = new HashMap<>();
 		for (ConceptAnnotation conceptAnnotation : conceptAnnotations) {
-			for (Span span : conceptAnnotation.getSpanCollection()) {
+			for (Span span : conceptAnnotation) {
 				int startKey = span.getStart() / windowSize;
 				int endKey = span.getEnd() / windowSize;
 				for (int key = startKey; key <= endKey; key++) {
@@ -60,10 +60,10 @@ public class AnnotationSpanIndex {
 		// for(Integer window : window2AnnotationsMap.keySet())
 		// {
 		// Set<concept> windowAnnotations =
-		// window2AnnotationsMap.get(window);
+		// window2AnnotationsMap.getAnnotation(window);
 		// for(concept windowAnnotation : windowAnnotations)
 		// {
-		// Collection<Span> spans = windowAnnotation.getSpanCollection();
+		// Collection<Span> spans = windowAnnotation;
 		// }
 		// }
 	}
@@ -77,7 +77,7 @@ public class AnnotationSpanIndex {
 
 	private Set<ConceptAnnotation> getNearbyAnnotations(ConceptAnnotation conceptAnnotation) {
 		HashSet<Integer> windows = new HashSet<>();
-		for (Span span : conceptAnnotation.getSpanCollection()) {
+		for (Span span : conceptAnnotation) {
 			windows.add(span.getStart() / windowSize);
 			windows.add(span.getEnd() / windowSize);
 		}

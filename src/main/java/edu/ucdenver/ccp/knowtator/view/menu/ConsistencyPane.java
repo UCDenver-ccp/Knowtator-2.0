@@ -79,8 +79,8 @@ public class ConsistencyPane extends MenuPane {
 			owlClassLabel.setText(owlModel.getOWLEntityRendering(owlClass));
 		});
 
-		KnowtatorView.MODEL.getTextSource()
-				.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
+		KnowtatorView.MODEL.getSelectedTextSource()
+				.ifPresent(textSource -> textSource.getSelectedAnnotation()
 						.ifPresent(conceptAnnotation -> spanLabel.setText(conceptAnnotation.getSpannedText())));
 		annotationsForClassList.react();
 		annotationsForSpannedTextList.react();

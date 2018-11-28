@@ -26,13 +26,16 @@ package edu.ucdenver.ccp.knowtator.model;
 
 import edu.ucdenver.ccp.knowtator.io.BasicIO;
 import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.TextBoundModelListener;
+import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
+import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.profile.ProfileCollection;
+import edu.ucdenver.ccp.knowtator.model.profile.ProfileCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollection;
+import edu.ucdenver.ccp.knowtator.model.text.TextSourceCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
@@ -52,7 +55,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 /**
- * The Knowtator class. Contains all of the model managers. It is used to interface between the view and the model. Also handles
+ * The Knowtator class. Contains all of the modelactions managers. It is used to interface between the view and the modelactions. Also handles
  * loading and saving of the project.
  *
  * @author Harrison Pielke-Lombardo
@@ -280,7 +283,7 @@ public class KnowtatorModel extends ProjectManager implements CaretListener {
 	}
 
 	/**
-	 * Saves the project. Overridden here because the OWL model needs to be saved as well.
+	 * Saves the project. Overridden here because the OWL modelactions needs to be saved as well.
 	 *
 	 * @param ioUtilClass The IOUtil to use to save the IO class. This specifies the output format
 	 * @param basicIO     The IO class to save
@@ -314,12 +317,12 @@ public class KnowtatorModel extends ProjectManager implements CaretListener {
 	/**
 	 * @return The text source collection
 	 */
-	public Optional<TextSource> getTextSource() {
+	public Optional<TextSource> getSelectedTextSource() {
 		return textSourceCollection.getSelection();
 	}
 
 	/**
-	 * This method ensures that all objects in the model will have a unique ID. If an object if provided with priority,
+	 * This method ensures that all objects in the modelactions will have a unique ID. If an object if provided with priority,
 	 * its id will be kept and any other object already verified will have its ID changed. IDs are changed to the form
 	 * textSourceID-int where textSourceID is the ID of the object's encompassing text source and int is the next
 	 * number not used in any other IDs in the same encompassing text source.
@@ -365,7 +368,7 @@ public class KnowtatorModel extends ProjectManager implements CaretListener {
 	}
 
 	/**
-	 * Disposes the model. Clears the id registry.
+	 * Disposes the modelactions. Clears the id registry.
 	 */
 	@Override
 	public void dispose() {
@@ -386,9 +389,9 @@ public class KnowtatorModel extends ProjectManager implements CaretListener {
 	}
 
 	/**
-	 * Resets the model to its initial condition.
+	 * Resets the modelactions to its initial condition.
 	 *
-	 * @param owlWorkspace Protege's OWL workspace to be passed to the OWL model.
+	 * @param owlWorkspace Protege's OWL workspace to be passed to the OWL modelactions.
 	 */
 	public void reset(OWLWorkspace owlWorkspace) {
 		setOwlWorkSpace(owlWorkspace);
@@ -426,11 +429,11 @@ public class KnowtatorModel extends ProjectManager implements CaretListener {
 		return textSourceCollection.getAnnotationsLocation();
 	}
 
-	public void addTextSourceCollectionListener(KnowtatorCollectionListener<TextSource> listener) {
+	public void addTextSourceCollectionListener(TextSourceCollectionListener listener) {
 		textSourceCollection.addCollectionListener(listener);
 	}
 
-	public void removeTextSourceCollectionListener(KnowtatorCollectionListener<TextSource> listener) {
+	public void removeTextSourceCollectionListener(TextSourceCollectionListener listener) {
 		textSourceCollection.removeCollectionListener(listener);
 	}
 
@@ -461,5 +464,37 @@ public class KnowtatorModel extends ProjectManager implements CaretListener {
 				filterModelListeners.forEach(l -> l.owlClassFilterChanged(isFilterByOWLClass));
 				break;
 		}
+	}
+
+	public int getNumberOfTextSources() {
+		return textSourceCollection.size();
+	}
+
+	public int getNumberOfProfiles() {
+		return profileCollection.size();
+	}
+
+	public Optional<Profile> getSelectedProfile() {
+		return profileCollection.getSelection();
+	}
+
+	public Optional<Profile> getProfile(String profileID) {
+		return profileCollection.get(profileID);
+	}
+
+	public Profile getDefaultProfile() {
+		return profileCollection.getDefaultProfile();
+	}
+
+	public void addProfile(Profile profile) {
+		profileCollection.add(profile);
+	}
+
+	public void addProfileCollectionListener(ProfileCollectionListener listener) {
+		profileCollection.addCollectionListener(listener);
+	}
+
+	public void addColorListener(ColorListener listener) {
+		profileCollection.addColorListener(listener);
 	}
 }

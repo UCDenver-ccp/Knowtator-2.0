@@ -37,13 +37,13 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.DataObjectModificationListener;
 import edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundDataObjectInterface;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollectionListener;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.event.EventType;
 import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
@@ -61,7 +61,7 @@ import java.io.Writer;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLOntologyChangeListener, KnowtatorTextBoundDataObjectInterface<GraphSpace>, KnowtatorXMLIO, BratStandoffIO, KnowtatorCollectionListener<ConceptAnnotation> {
+public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLOntologyChangeListener, KnowtatorTextBoundDataObjectInterface<GraphSpace>, KnowtatorXMLIO, BratStandoffIO, ConceptAnnotationCollectionListener {
 	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(GraphSpace.class);
 
@@ -80,7 +80,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 
 
 		controller.verifyId(id, this, false);
-		textSource.getConceptAnnotationCollection().addCollectionListener(this);
+		textSource.addCollectionListener(this);
 		controller.addOntologyChangeListener(this);
 		controller.addOWLModelManagerListener(this);
 
@@ -213,7 +213,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 			double x = x_string.equals("") ? 20 : Double.parseDouble(x_string);
 			double y = y_string.equals("") ? 20 : Double.parseDouble(y_string);
 
-			this.textSource.getConceptAnnotationCollection().get(annotationID).ifPresent(conceptAnnotation -> {
+			this.textSource.getAnnotation(annotationID).ifPresent(conceptAnnotation -> {
 				AnnotationNode newVertex = new AnnotationNode(controller, id, conceptAnnotation, textSource, x, y);
 				addCellToGraph(newVertex);
 			});
@@ -233,8 +233,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 			String propertyIsNegated = tripleElem.getAttribute(KnowtatorXMLAttributes.IS_NEGATED);
 			String motivation = tripleElem.getAttribute(KnowtatorXMLAttributes.MOTIVATION);
 
-			Profile annotator = new Profile(controller, annotatorID);
-			controller.getProfileCollection().add(annotator);
+			Profile annotator = controller.getProfile(annotatorID).orElse(controller.getDefaultProfile());
 			AnnotationNode source =
 					(AnnotationNode) ((mxGraphModel) getModel()).getCells().get(subjectID);
 			AnnotationNode target = (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(objectID);
@@ -280,13 +279,13 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 					String subjectAnnotationID = relationTriple[1].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
 					String objectAnnotationID = relationTriple[2].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
 
-					Profile annotator = controller.getProfileCollection().getDefaultProfile();
+					Profile annotator = controller.getDefaultProfile();
 
-					textSource.getConceptAnnotationCollection().get(subjectAnnotationID).ifPresent(subjectConceptAnnotation -> {
+					textSource.getAnnotation(subjectAnnotationID).ifPresent(subjectConceptAnnotation -> {
 						List<Object> subjectAnnotationVertices = getVerticesForAnnotation(subjectConceptAnnotation);
 						AnnotationNode source = makeOrGetAnnotationNode(subjectConceptAnnotation, subjectAnnotationVertices);
 
-						textSource.getConceptAnnotationCollection().get(objectAnnotationID).ifPresent(objectConceptAnnotation -> {
+						textSource.getAnnotation(objectAnnotationID).ifPresent(objectConceptAnnotation -> {
 							List<Object> objectAnnotationVertices = getVerticesForAnnotation(objectConceptAnnotation);
 							AnnotationNode target = makeOrGetAnnotationNode(objectConceptAnnotation, objectAnnotationVertices);
 

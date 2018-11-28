@@ -40,7 +40,7 @@
 //		percentageFormat.setMinimumFractionDigits(2);
 //
 //		html.println(IAA2HTML.initHTML(matcher.getId(), matcher.getDescription()));
-//		html.println("<h2>" + iaa.getSetNames().size() + "-way IAA Results</h2>");
+//		html.println("<h2>" + iaa.getSetNames().getNumberOfGraphSpaces() + "-way IAA Results</h2>");
 //
 //		html.println("<p>");
 //		html.println("<table border=1>\n");
@@ -54,8 +54,8 @@
 //		Set<concept> allwayMatchesSingleSet = IAA2HTML.getSingleSet(allwayMatches);
 //		Set<concept> allwayNonmatchesSingleSet = IAA2HTML.getSingleSet(allwayNonmatches);
 //
-//		int totalAllwayMatches = allwayMatchesSingleSet.size();
-//		int totalAllwayNonmatches = allwayNonmatchesSingleSet.size();
+//		int totalAllwayMatches = allwayMatchesSingleSet.getNumberOfGraphSpaces();
+//		int totalAllwayNonmatches = allwayNonmatchesSingleSet.getNumberOfGraphSpaces();
 //
 //		double iaaScore = (double) totalAllwayMatches / ((double) totalAllwayMatches + (double)
 // totalAllwayNonmatches);

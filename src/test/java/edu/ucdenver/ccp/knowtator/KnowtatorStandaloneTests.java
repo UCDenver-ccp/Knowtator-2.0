@@ -106,7 +106,7 @@ public class KnowtatorStandaloneTests {
 //
 //        controller.loadProjectTest(projectFile);
 //
-////        TextSource textSource = controller.getTextSourceCollection().getTextSourceCollection().get(article);
+////        TextSource textSource = controller.getTextSourceCollection().getTextSourceCollection().getAnnotation(article);
 //        controller.saveToFormatTest(UIMAXMIUtil.class, null, outputDir);
 //    }
 }

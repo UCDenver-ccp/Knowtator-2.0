@@ -22,11 +22,9 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.actions.model;
+package edu.ucdenver.ccp.knowtator.model.profile;
 
-public class FilterActions {
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
 
-
-
-
+public interface ProfileCollectionListener extends KnowtatorCollectionListener<Profile> {
 }

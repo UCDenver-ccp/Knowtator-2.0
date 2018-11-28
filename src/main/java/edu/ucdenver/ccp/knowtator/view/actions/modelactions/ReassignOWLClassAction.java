@@ -22,7 +22,7 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.actions.model;
+package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;

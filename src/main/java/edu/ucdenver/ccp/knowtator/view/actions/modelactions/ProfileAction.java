@@ -22,7 +22,7 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.actions.model;
+package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
@@ -89,8 +89,8 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 		Optional<OWLClass> objectOptional = Optional.ofNullable(owlClass);
 
 		if (!objectOptional.isPresent()) {
-			objectOptional = KnowtatorView.MODEL.getTextSource()
-							.flatMap(textSource -> textSource.getConceptAnnotationCollection().getSelection()
+			objectOptional = KnowtatorView.MODEL.getSelectedTextSource()
+					.flatMap(textSource -> textSource.getSelectedAnnotation()
 									.map(ConceptAnnotation::getOwlClass));
 		}
 		objectOptional.ifPresent(_owlClass -> {
@@ -111,14 +111,14 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 				Color color = (Color) c.get();
 
 
-				KnowtatorView.MODEL.getProfileCollection().getSelection()
+				KnowtatorView.MODEL.getSelectedProfile()
 						.ifPresent(profile -> profile.addColor(_owlClass, color));
 
 				if (JOptionPane.showConfirmDialog(view, "Assign color to descendants of " + _owlClass + "?") == JOptionPane.OK_OPTION) {
 					owlClasses.addAll(KnowtatorView.MODEL.getDescendants(_owlClass));
 				}
 
-				KnowtatorView.MODEL.getProfileCollection().getSelection()
+				KnowtatorView.MODEL.getSelectedProfile()
 						.ifPresent(profile -> KnowtatorView.MODEL.registerAction(new ColorChangeAction(profile, owlClasses, color)));
 
 

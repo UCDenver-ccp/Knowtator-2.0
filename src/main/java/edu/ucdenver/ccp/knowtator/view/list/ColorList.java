@@ -24,10 +24,10 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import edu.ucdenver.ccp.knowtator.model.profile.ProfileCollectionListener;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -37,9 +37,9 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
-import static edu.ucdenver.ccp.knowtator.view.actions.model.ProfileAction.assignColorToClass;
+import static edu.ucdenver.ccp.knowtator.view.actions.modelactions.ProfileAction.assignColorToClass;
 
-public class ColorList extends JList<OWLClass> implements KnowtatorCollectionListener<Profile>, KnowtatorComponent, ColorListener {
+public class ColorList extends JList<OWLClass> implements ProfileCollectionListener, KnowtatorComponent, ColorListener {
 
     private final ListSelectionListener lsl;
 
@@ -49,7 +49,7 @@ public class ColorList extends JList<OWLClass> implements KnowtatorCollectionLis
         setCellRenderer(new ColorListRenderer<>());
 	    lsl = e -> assignColorToClass(view, getSelectedValue());
 
-        KnowtatorView.MODEL.getProfileCollection().getSelection()
+        KnowtatorView.MODEL.getSelectedProfile()
                 .ifPresent(this::setCollection);
     }
 
@@ -66,17 +66,17 @@ public class ColorList extends JList<OWLClass> implements KnowtatorCollectionLis
 
     @Override
     public void selected(SelectionEvent<Profile> event) {
-        KnowtatorView.MODEL.getProfileCollection().getSelection().ifPresent(this::setCollection);
+        KnowtatorView.MODEL.getSelectedProfile().ifPresent(this::setCollection);
     }
 
     @Override
     public void added() {
-        KnowtatorView.MODEL.getProfileCollection().getSelection().ifPresent(this::setCollection);
+        KnowtatorView.MODEL.getSelectedProfile().ifPresent(this::setCollection);
     }
 
     @Override
     public void removed() {
-        KnowtatorView.MODEL.getProfileCollection().getSelection().ifPresent(this::setCollection);
+        KnowtatorView.MODEL.getSelectedProfile().ifPresent(this::setCollection);
     }
 
     @Override
@@ -97,8 +97,8 @@ public class ColorList extends JList<OWLClass> implements KnowtatorCollectionLis
 
     @Override
     public void setupListeners() {
-        KnowtatorView.MODEL.getProfileCollection().addCollectionListener(this);
-        KnowtatorView.MODEL.getProfileCollection().addColorListener(this);
+        KnowtatorView.MODEL.addProfileCollectionListener(this);
+        KnowtatorView.MODEL.addColorListener(this);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class ColorList extends JList<OWLClass> implements KnowtatorCollectionLis
 
     @Override
     public void colorChanged() {
-        KnowtatorView.MODEL.getProfileCollection().getSelection().ifPresent(this::setCollection);
+        KnowtatorView.MODEL.getSelectedProfile().ifPresent(this::setCollection);
     }
 
     class ColorListRenderer<o> extends JLabel implements ListCellRenderer<o> {
@@ -121,7 +121,7 @@ public class ColorList extends JList<OWLClass> implements KnowtatorCollectionLis
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             if (value instanceof OWLClass) {
-                KnowtatorView.MODEL.getProfileCollection().getSelection().ifPresent(profile -> setBackground(profile.getColors().get(value)));
+                KnowtatorView.MODEL.getSelectedProfile().ifPresent(profile -> setBackground(profile.getColors().get(value)));
                 setText(KnowtatorView.MODEL.getOWLEntityRendering((OWLEntity) value));
             }
             return this;

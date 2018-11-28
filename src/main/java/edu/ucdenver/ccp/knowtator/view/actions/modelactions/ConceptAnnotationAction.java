@@ -22,8 +22,10 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.actions.model;
+package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
+import com.mxgraph.util.mxEvent;
+import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
@@ -31,61 +33,43 @@ import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType;
 
-import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.REMOVE;
+public class ConceptAnnotationAction extends AbstractKnowtatorCollectionAction<ConceptAnnotation> {
 
-public class SpanAction extends AbstractKnowtatorCollectionAction<Span> {
+	private TextSource textSource;
 
-	private final ConceptAnnotation conceptAnnotation;
-
-	public SpanAction(CollectionActionType actionName, ConceptAnnotation conceptAnnotation) {
-		super(actionName, "span", conceptAnnotation.getSpanCollection());
-		this.conceptAnnotation = conceptAnnotation;
-
-	}
-
-	@Override
-	protected void prepareAdd() {
-		int start = KnowtatorView.MODEL.getStart();
-		int end = KnowtatorView.MODEL.getEnd();
-
-		Span newSpan = new Span(KnowtatorView.MODEL, conceptAnnotation.getTextSource(), conceptAnnotation, null, start, end);
-		setObject(newSpan);
-	}
-
-	@Override
-	public void prepareRemove() throws ActionUnperformableException {
-		// If the concept annotation only has one, remove the annotation instead
-		if (conceptAnnotation.getSpanCollection().size() == 1) {
-			setObject(null);
-			ConceptAnnotationAction action = new ConceptAnnotationAction(REMOVE, conceptAnnotation.getTextSource());
-			action.setObject(conceptAnnotation);
-			KnowtatorView.MODEL.registerAction(action);
-			edit.addKnowtatorEdit(action.getEdit());
-		} else {
-			super.prepareRemove();
-		}
-	}
-
-	@Override
-	protected void cleanUpRemove() {
-
-	}
-
-	@Override
-	public void execute() throws ActionUnperformableException {
-		if (actionType == REMOVE && conceptAnnotation.getSpanCollection().size() == 1) {
-			try {
-				super.execute();
-			} catch (ActionUnperformableException ignored) {
-
-			}
-		} else {
-			super.execute();
-		}
+	public ConceptAnnotationAction(CollectionActionType actionType, TextSource textSource) {
+		super(actionType, "concept annotation", textSource.getConceptAnnotationCollection());
+		this.textSource = textSource;
 	}
 
 	@Override
 	public void cleanUpAdd() {
+	}
+
+	@Override
+	public void cleanUpRemove() {
+		textSource.getGraphSpaceCollection().forEach(graphSpace -> graphSpace.getModel().removeListener(edit, mxEvent.UNDO));
+	}
+
+
+	@Override
+	public void prepareRemove() throws ActionUnperformableException {
+		super.prepareRemove();
+		edit.setObject(object);
+//			edit = new KnowtatorCollectionEdit<>(REMOVE, collection, object, getPresentationName(), edit.isSignificant());
+		textSource.getGraphSpaceCollection().forEach(graphSpace -> graphSpace.getModel().addListener(mxEvent.UNDO, edit));
+	}
+
+	@Override
+	protected void prepareAdd() {
+
+		KnowtatorView.MODEL.getSelectedProfile()
+				.ifPresent(annotator -> KnowtatorView.MODEL.getSelectedOWLClass()
+						.ifPresent(owlClass -> {
+							ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(KnowtatorView.MODEL, textSource, null, owlClass, annotator, "identity", "");
+							newConceptAnnotation.add(new Span(KnowtatorView.MODEL, textSource, newConceptAnnotation, null, KnowtatorView.MODEL.getStart(), KnowtatorView.MODEL.getEnd()));
+							setObject(newConceptAnnotation);
+						}));
 
 	}
 

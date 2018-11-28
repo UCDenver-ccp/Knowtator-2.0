@@ -120,7 +120,7 @@ public class IAA {
 	@SuppressWarnings("JavaDoc")
 	static boolean spansMatch(ConceptAnnotation conceptAnnotation1, ConceptAnnotation conceptAnnotation2) {
 		return Span.spansMatch(
-				conceptAnnotation1.getSpanCollection().getCollection(), conceptAnnotation2.getSpanCollection().getCollection());
+				conceptAnnotation1.getCollection(), conceptAnnotation2.getCollection());
 	}
 
 	@SuppressWarnings("unused")
@@ -133,7 +133,7 @@ public class IAA {
 
 	static boolean spansOverlap(ConceptAnnotation conceptAnnotation1, ConceptAnnotation conceptAnnotation2) {
 		return Span.intersects(
-				conceptAnnotation1.getSpanCollection().getCollection(), conceptAnnotation2.getSpanCollection().getCollection());
+				conceptAnnotation1.getCollection(), conceptAnnotation2.getCollection());
 	}
 
 	//	/**
@@ -158,7 +158,7 @@ public class IAA {
 	 */
 	public static String getCoveredText(
 			ConceptAnnotation conceptAnnotation, String annotationText, String spanSeparator) {
-		TreeSet<Span> spans = conceptAnnotation.getSpanCollection().getCollection();
+		TreeSet<Span> spans = conceptAnnotation.getCollection();
 		if (spans == null || spans.size() == 0) return "";
 		else if (spans.size() == 1) {
 			return Span.substring(annotationText, spans.first());
@@ -175,12 +175,12 @@ public class IAA {
 
 	/**
 	 * This method returns the shortest concept - that is the concept whose Span is the
-	 * shortest. If an concept has more than one Span, then its size is the sum of the size of each
+	 * shortest. If an concept has more than one Span, then its getNumberOfGraphSpaces is the sum of the getNumberOfGraphSpaces of each
 	 * of its spans.
 	 *
 	 * @param conceptAnnotations
-	 * @return will only return one concept. In the case of a tie, will return the first concept
-	 * with the smallest size encountered during iteration. Returns null if conceptAnnotations is null or
+	 * @return will only return one concept. In the case of a tie, will return the firstConceptAnnotation concept
+	 * with the smallest getNumberOfGraphSpaces encountered during iteration. Returns null if conceptAnnotations is null or
 	 * empty.
 	 */
 	@SuppressWarnings("JavaDoc")
@@ -249,8 +249,8 @@ public class IAA {
 
 	//	public Set<concept> getAnnotationsOfClass(String className, String compareSetName) {
 	//		if (class2AnnotationsMap.containsKey(compareSetName)
-	//				&& class2AnnotationsMap.get(compareSetName).containsKey(className)) {
-	//			return class2AnnotationsMap.get(compareSetName).get(className);
+	//				&& class2AnnotationsMap.getAnnotation(compareSetName).containsKey(className)) {
+	//			return class2AnnotationsMap.getAnnotation(compareSetName).getAnnotation(className);
 	//		} else
 	//			return Collections.emptySet();
 	//	}

@@ -29,8 +29,8 @@ import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.actions.model.FilterAction;
-import edu.ucdenver.ccp.knowtator.view.actions.model.ReassignOWLClassAction;
+import edu.ucdenver.ccp.knowtator.view.actions.modelactions.FilterAction;
+import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ReassignOWLClassAction;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -67,9 +67,9 @@ public class FilterActionsTests {
 				TestingHelpers.defaultExpectedAnnotationNodes,
 				TestingHelpers.defaultExpectedTriples);
 
-		TextSource textSource = controller.getTextSource().get();
-		ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
-		textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
+		TextSource textSource = controller.getSelectedTextSource().get();
+		ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
+		textSource.setSelection(conceptAnnotation);
 		controller.registerAction(new ReassignOWLClassAction(conceptAnnotation, controller.getSelectedOWLClass().get()));
 
 		TestingHelpers.testKnowtatorAction(controller, new FilterAction(OWLCLASS, true),

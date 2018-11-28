@@ -47,7 +47,7 @@
 //
 //		Set<concept> classMatches = ClassMatcher.matches(concept, compareSetName, iaa,
 // excludeAnnotations);
-//		if (classMatches.size() > 0) {
+//		if (classMatches.getNumberOfGraphSpaces() > 0) {
 //			concept match = concept.getShortestAnnotation(classMatches);
 //			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 //			return match;
@@ -55,7 +55,7 @@
 //
 //		Set<concept> overlappingAnnotations = iaa.getOverlappingConceptAnnotations(concept,
 // compareSetName);
-//		if (overlappingAnnotations.size() > 0) {
+//		if (overlappingAnnotations.getNumberOfGraphSpaces() > 0) {
 //			concept match = concept.getShortestAnnotation(overlappingAnnotations);
 //			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
 //			return match;

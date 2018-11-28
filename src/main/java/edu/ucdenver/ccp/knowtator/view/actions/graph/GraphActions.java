@@ -146,7 +146,7 @@ public class GraphActions {
             graphSpace.addTriple(
                     source, target,
                     null,
-                    KnowtatorView.MODEL.getProfileCollection().getSelection().orElseThrow(ActionUnperformableException::new),
+                    KnowtatorView.MODEL.getSelectedProfile().orElseThrow(ActionUnperformableException::new),
                     property, propertyId,
                     quantifier, quantifierValue,
                     negation,

@@ -79,7 +79,7 @@
 //	 *            NONTRIVIAL_NONMATCH
 //	 *            <li>TRIVIAL_NONMATCH if there is no match or non-trivial
 //	 *            non-match found.
-//	 * @return will return the first nontrivial match that it finds preferring
+//	 * @return will return the firstConceptAnnotation nontrivial match that it finds preferring
 //	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher#match(concept, String, Set,
 //	 *      IAA, MatchResult)
 //	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
@@ -100,8 +100,8 @@
 //		exactlyOverlappingAnnotations.clear(classAndSpanMatches);
 //		exactlyOverlappingAnnotations.clear(excludeAnnotations);
 //
-//		List<concept> candidateAnnotations = new ArrayList<>(classAndSpanMatches.size()
-//				+ exactlyOverlappingAnnotations.size());
+//		List<concept> candidateAnnotations = new ArrayList<>(classAndSpanMatches.getNumberOfGraphSpaces()
+//				+ exactlyOverlappingAnnotations.getNumberOfGraphSpaces());
 //		candidateAnnotations.addAll(classAndSpanMatches);
 //		candidateAnnotations.addAll(exactlyOverlappingAnnotations);
 //

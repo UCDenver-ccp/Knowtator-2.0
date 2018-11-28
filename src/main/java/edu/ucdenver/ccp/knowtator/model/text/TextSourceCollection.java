@@ -131,7 +131,7 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 			e.printStackTrace();
 		}
 
-//        if (size() == 0) {
+//        if (getNumberOfGraphSpaces() == 0) {
 //            JFileChooser fileChooser = new JFileChooser();
 //            fileChooser.setCurrentDirectory(getArticlesLocation());
 //
@@ -145,7 +145,7 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 //                        e.printStackTrace();
 //                    }
 //                }
-//                add(new TextSource(controller, null, file.getName()));
+//                addProfile(new TextSource(controller, null, file.getName()));
 //            }
 //        }
 	}

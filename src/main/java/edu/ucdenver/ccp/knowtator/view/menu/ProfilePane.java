@@ -68,7 +68,7 @@ class ProfilePane extends MenuPane {
     }
 
     private void createUIComponents() {
-        profileList = new ProfileList(view);
+        profileList = new ProfileList();
         colorList = new ColorList(view);
     }
 

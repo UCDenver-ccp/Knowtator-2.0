@@ -38,10 +38,10 @@ public abstract class AbstractConceptAnnotationLabel extends KnowtatorLabel {
 
 	@Override
 	public void react() {
-		Optional<TextSource> textSourceOptional = KnowtatorView.MODEL.getTextSource();
+		Optional<TextSource> textSourceOptional = KnowtatorView.MODEL.getSelectedTextSource();
 		if (textSourceOptional.isPresent()) {
 			textSourceOptional.ifPresent(textSource -> {
-				Optional<ConceptAnnotation> conceptAnnotationOptional = textSource.getConceptAnnotationCollection().getSelection();
+				Optional<ConceptAnnotation> conceptAnnotationOptional = textSource.getSelectedAnnotation();
 				if (conceptAnnotationOptional.isPresent()) {
 					conceptAnnotationOptional.ifPresent(this::displayConceptAnnotation);
 				} else {

@@ -51,7 +51,7 @@ import java.util.List;
  * Swing application:
  * Knowtator can be run on its own as a Swing application. This is useful for viewing annotations without setting
  * up and running Protege. This is also a useful way to debug some aspects of the GUI. In standalone mode,
- * annotations cannot be created because there is no OWL model to use.
+ * annotations cannot be created because there is no OWL modelactions to use.
  *
  * @author Harrison Pielke-Lombardo
  */
@@ -157,22 +157,22 @@ class KnowtatorStandalone extends JFrame {
 //			TextSource textSource1 = textSourceIterator1.next();
 //			TextSource textSource2 = textSourceIterator2.next();
 //
-//			for (ConceptAnnotation fragmentConceptAnnotation : textSource2.getConceptAnnotationCollection()) {
-//				Span fragmentSpan = fragmentConceptAnnotation.getSpanCollection().iterator().next();
+//			for (ConceptAnnotation fragmentConceptAnnotation : textSource2) {
+//				Span fragmentSpan = fragmentConceptAnnotation.iterator().next();
 //
 //				Fragment fragment =
 //						new Fragment(textSource2, fragmentConceptAnnotation.getId(), fragmentConceptAnnotation.getOwlClassID());
 //
 //				TreeSet<ConceptAnnotation> conceptAnnotationsInFragment =
 //						textSource1
-//								.getConceptAnnotationCollection()
+//
 //								.getAnnotations(fragmentSpan.getStart(), fragmentSpan.getStart());
 //
 //				for (ConceptAnnotation conceptAnnotation : conceptAnnotationsInFragment) {
-//					fragment.add(conceptAnnotation.getOwlClassID());
+//					fragment.addProfile(conceptAnnotation.getOwlClassID());
 //				}
 //
-//				fragmentList.add(fragment);
+//				fragmentList.addProfile(fragment);
 //			}
 //
 //			writeFragments(cmd.getOptionValue("fragments") + File.separator + textSource1.getId() + ".txt", fragmentList);

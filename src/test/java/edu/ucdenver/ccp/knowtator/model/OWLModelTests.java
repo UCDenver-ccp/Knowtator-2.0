@@ -92,7 +92,7 @@ public class OWLModelTests {
 				TestingHelpers.defaultExpectedAnnotationNodes,
 				TestingHelpers.defaultExpectedTriples);
 
-		ConceptAnnotation conceptAnnotation = controller.getTextSource().get().getConceptAnnotationCollection().getSelection().get();
+		ConceptAnnotation conceptAnnotation = controller.getSelectedTextSource().get().getSelectedAnnotation().get();
 
 		assert !ontology.containsClassInSignature(class2.getIRI());
 		assert ontology.containsClassInSignature(conceptAnnotation.getOwlClass().getIRI());
@@ -119,7 +119,7 @@ public class OWLModelTests {
 				TestingHelpers.defaultExpectedAnnotationNodes,
 				TestingHelpers.defaultExpectedTriples);
 
-		GraphSpace graphSpace = controller.getTextSource().get().getGraphSpaceCollection().getSelection().get();
+		GraphSpace graphSpace = controller.getSelectedTextSource().get().getSelectedGraphSpace().get();
 		RelationAnnotation relationAnnotation = (RelationAnnotation) graphSpace.getChildEdges(graphSpace.getDefaultParent())[0];
 
 		assert !ontology.containsObjectPropertyInSignature(property.getIRI());
@@ -195,7 +195,7 @@ public class OWLModelTests {
 		assert !isSubClassTest(class1, class2);
 		assert isSubClassTest(class3, class2);
 
-		ConceptAnnotation conceptAnnotation = controller.getTextSource().get().getConceptAnnotationCollection().getSelection().get();
+		ConceptAnnotation conceptAnnotation = controller.getSelectedTextSource().get().getSelectedAnnotation().get();
 		assert conceptAnnotation.getOwlClass().equals(class2);
 	}
 
@@ -245,7 +245,7 @@ public class OWLModelTests {
 		assert isSubObjectPropertyTest(property1, property2);
 		assert isSubObjectPropertyTest(property3, property2);
 
-		GraphSpace graphSpace = controller.getTextSource().get().getGraphSpaceCollection().getSelection().get();
+		GraphSpace graphSpace = controller.getSelectedTextSource().get().getSelectedGraphSpace().get();
 		RelationAnnotation relationAnnotation = (RelationAnnotation) graphSpace.getChildEdges(graphSpace.getDefaultParent())[0];
 		assert relationAnnotation.getProperty().equals(property2);
 	}

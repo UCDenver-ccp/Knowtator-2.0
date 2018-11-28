@@ -30,15 +30,15 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 public class SpanList extends KnowtatorList<Span> {
 
 
-	public SpanList(KnowtatorView view) {
+	public SpanList() {
 		super();
 	}
 
 	@Override
 	protected void react() {
-		KnowtatorView.MODEL.getTextSource()
-				.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
-						.ifPresent(conceptAnnotation -> setCollection(conceptAnnotation.getSpanCollection())));
+		KnowtatorView.MODEL.getSelectedTextSource()
+				.ifPresent(textSource -> textSource.getSelectedAnnotation()
+						.ifPresent(this::setCollection));
 
 		setSelected();
 	}

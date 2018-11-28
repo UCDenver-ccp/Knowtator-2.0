@@ -30,8 +30,8 @@ import edu.ucdenver.ccp.knowtator.model.profile.Profile;
 import edu.ucdenver.ccp.knowtator.model.text.TextSource;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorDefaultSettings;
-import edu.ucdenver.ccp.knowtator.view.actions.model.ColorChangeAction;
-import edu.ucdenver.ccp.knowtator.view.actions.model.ReassignOWLClassAction;
+import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ColorChangeAction;
+import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ReassignOWLClassAction;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.OWLClass;
 
@@ -44,12 +44,12 @@ public class OWLActionsTests {
 
     @Test
     public void reassignOWLClassActionTest() {
-        TextSource textSource = controller.getTextSource().get();
-        ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
-        textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
+        TextSource textSource = controller.getSelectedTextSource().get();
+        ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
+        textSource.setSelection(conceptAnnotation);
 
         OWLClass owlClass = controller.getOWLClassByID("Pizza").get();
-        assert controller.getTextSource().get().getConceptAnnotationCollection().getSelection().get().getOwlClass() == owlClass;
+        assert controller.getSelectedTextSource().get().getSelectedAnnotation().get().getOwlClass() == owlClass;
 
         controller.registerAction(new ReassignOWLClassAction(conceptAnnotation, controller.getSelectedOWLClass().get()));
         assert conceptAnnotation.getOwlClass().equals(controller.getSelectedOWLClass().get());
@@ -63,10 +63,10 @@ public class OWLActionsTests {
 
     @Test
     public void changeColorActionTest() {
-        TextSource textSource = controller.getTextSource().get();
-        ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotationCollection().first();
-        textSource.getConceptAnnotationCollection().setSelection(conceptAnnotation);
-        Profile profile = controller.getProfileCollection().getSelection().get();
+        TextSource textSource = controller.getSelectedTextSource().get();
+        ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
+        textSource.setSelection(conceptAnnotation);
+        Profile profile = controller.getSelectedProfile().get();
         assert profile.getColor(conceptAnnotation.getOwlClass()).equals(Color.RED);
 
         Set<OWLClass> owlClassSet = new HashSet<>();

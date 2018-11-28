@@ -25,16 +25,16 @@
 package edu.ucdenver.ccp.knowtator.view.textpane;
 
 import edu.ucdenver.ccp.knowtator.model.FilterModelListener;
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.profile.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.profile.Profile;
+import edu.ucdenver.ccp.knowtator.model.profile.ProfileCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
-import edu.ucdenver.ccp.knowtator.view.actions.model.ReassignOWLClassAction;
+import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ReassignOWLClassAction;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -53,7 +53,7 @@ import static edu.ucdenver.ccp.knowtator.view.actions.collection.KnowtatorCollec
 /**
  * The text pane used for annotating and displaying concept annotations in Knowtator projects
  */
-public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListener, KnowtatorComponent, FilterModelListener, KnowtatorCollectionListener<Profile> {
+public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListener, KnowtatorComponent, FilterModelListener, ProfileCollectionListener {
 
 	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger(KnowtatorTextPane.class);
@@ -99,18 +99,18 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 		AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e);
 		textSourceOptional.ifPresent(textSource -> {
 
-			Set<Span> spansContainingLocation = textSource.getConceptAnnotationCollection().getSpans(press_offset).getCollection();
+			Set<Span> spansContainingLocation = textSource.getSpans(press_offset).getCollection();
 
 			if (SwingUtilities.isRightMouseButton(e)) {
 				if (spansContainingLocation.size() == 1) {
 					Span span = spansContainingLocation.iterator().next();
-					textSource.getConceptAnnotationCollection().setSelectedAnnotation(span);
+					textSource.setSelectedAnnotation(span);
 				}
 				popupMenu.showPopUpMenu(release_offset);
 			} else if (press_offset == release_offset) {
 				if (spansContainingLocation.size() == 1) {
 					Span span = spansContainingLocation.iterator().next();
-					textSource.getConceptAnnotationCollection().setSelectedAnnotation(span);
+					textSource.setSelectedAnnotation(span);
 				} else if (spansContainingLocation.size() > 1) {
 					popupMenu.chooseAnnotation(spansContainingLocation);
 				}
@@ -131,8 +131,8 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 	@Override
 	public void setupListeners() {
 		super.setupListeners();
-		KnowtatorView.MODEL.getProfileCollection().addColorListener(this);
-		KnowtatorView.MODEL.getProfileCollection().addCollectionListener(this);
+		KnowtatorView.MODEL.addColorListener(this);
+		KnowtatorView.MODEL.addProfileCollectionListener(this);
 		KnowtatorView.MODEL.addFilterModelListener(this);
 	}
 
@@ -144,7 +144,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 	@Override
 	protected boolean keepSearchingCondition(Matcher matcher) {
-		return textSourceOptional.map(textSource -> (!onlyInAnnotationsCheckBox.isSelected() || !(textSource.getConceptAnnotationCollection().getSpans(matcher.start()).size() == 0)))
+		return textSourceOptional.map(textSource -> (!onlyInAnnotationsCheckBox.isSelected() || !(textSource.getSpans(matcher.start()).size() == 0)))
 				.orElse(false);
 	}
 
@@ -205,8 +205,8 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 		private JMenuItem reassignOWLClassCommand() {
 			JMenuItem menuItem = new JMenuItem("Reassign OWL class");
-			menuItem.addActionListener(e -> KnowtatorView.MODEL.getTextSource()
-					.ifPresent(textSource1 -> textSource1.getConceptAnnotationCollection().getSelection()
+			menuItem.addActionListener(e -> KnowtatorView.MODEL.getSelectedTextSource()
+					.ifPresent(textSource1 -> textSource1.getSelectedAnnotation()
 							.ifPresent(conceptAnnotation -> {
 								KnowtatorView.MODEL.getSelectedOWLClass()
 										.ifPresent(owlClass -> KnowtatorView.MODEL
@@ -234,7 +234,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 		private JMenuItem selectAnnotationCommand(Span span) {
 			JMenuItem selectAnnotationMenuItem = new JMenuItem("Select " + KnowtatorView.MODEL.getOWLEntityRendering(span.getConceptAnnotation().getOwlClass()));
-			selectAnnotationMenuItem.addActionListener(e3 -> textSourceOptional.ifPresent(textSource -> textSource.getConceptAnnotationCollection().setSelectedAnnotation(span)));
+			selectAnnotationMenuItem.addActionListener(e3 -> textSourceOptional.ifPresent(textSource -> textSource.setSelectedAnnotation(span)));
 
 			return selectAnnotationMenuItem;
 		}
@@ -260,8 +260,8 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 				show(e.getComponent(), e.getX(), e.getY());
 			} else {
-				textSourceOptional.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
-						.ifPresent(conceptAnnotation -> conceptAnnotation.getSpanCollection().getSelection()
+				textSourceOptional.ifPresent(textSource -> textSource.getSelectedAnnotation()
+						.ifPresent(conceptAnnotation -> conceptAnnotation.getSelection()
 								.filter(span -> span.getStart() <= release_offset && release_offset <= span.getEnd())
 								.ifPresent(span -> clickedInsideSpan(conceptAnnotation))));
 			}
@@ -269,7 +269,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 
 		private void clickedInsideSpan(ConceptAnnotation conceptAnnotation) {
 			add(removeAnnotationCommand(conceptAnnotation));
-			if (conceptAnnotation.getSpanCollection().size() > 1) {
+			if (conceptAnnotation.size() > 1) {
 				add(removeSpanFromAnnotationCommand(conceptAnnotation));
 			}
 			add(reassignOWLClassCommand());

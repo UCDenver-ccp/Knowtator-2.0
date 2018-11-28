@@ -35,8 +35,14 @@ import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectionEvent;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollection;
+import edu.ucdenver.ccp.knowtator.model.text.concept.ConceptAnnotationCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.text.concept.span.Span;
+import edu.ucdenver.ccp.knowtator.model.text.concept.span.SpanCollection;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollection;
+import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpaceCollectionListener;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.LogManager;
@@ -52,8 +58,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-public class TextSource extends AbstractKnowtatorDataObject<TextSource> implements BratStandoffIO, Savable, KnowtatorXMLIO, KnowtatorCollectionListener, DataObjectModificationListener {
+public class TextSource extends AbstractKnowtatorDataObject<TextSource> implements KnowtatorDataObjectInterface<TextSource>, BratStandoffIO, Savable, KnowtatorXMLIO, KnowtatorCollectionListener, DataObjectModificationListener {
     @SuppressWarnings("unused")
     private static Logger log = LogManager.getLogger(TextSource.class);
 
@@ -124,7 +131,7 @@ public class TextSource extends AbstractKnowtatorDataObject<TextSource> implemen
         }
     }
 
-    public File getTextFile() {
+    File getTextFile() {
         return textFile;
     }
 
@@ -257,5 +264,77 @@ public class TextSource extends AbstractKnowtatorDataObject<TextSource> implemen
     @Override
     public void modification() {
         save();
+    }
+
+    public Optional<ConceptAnnotation> getSelectedAnnotation() {
+        return conceptAnnotationCollection.getSelection();
+    }
+
+    public SpanCollection getSpans(Integer loc) {
+        return conceptAnnotationCollection.getSpans(loc);
+    }
+
+    public void selectNextSpan() {
+        conceptAnnotationCollection.selectNextSpan();
+    }
+
+    public void selectPreviousSpan() {
+        conceptAnnotationCollection.selectPreviousSpan();
+    }
+
+    public void setSelectedAnnotation(Span span) {
+        conceptAnnotationCollection.setSelectedAnnotation(span);
+    }
+
+    public void addCollectionListener(ConceptAnnotationCollectionListener listener) {
+        conceptAnnotationCollection.addCollectionListener(listener);
+    }
+
+    public void removeCollectionListener(ConceptAnnotationCollectionListener listener) {
+        conceptAnnotationCollection.removeCollectionListener(listener);
+    }
+
+    public Optional<ConceptAnnotation> getAnnotation(String annotationID) {
+        return conceptAnnotationCollection.get(annotationID);
+    }
+
+    public void setSelection(ConceptAnnotation conceptAnnotation) {
+        conceptAnnotationCollection.setSelection(conceptAnnotation);
+    }
+
+    public void addCollectionListener(GraphSpaceCollectionListener listener) {
+        graphSpaceCollection.addCollectionListener(listener);
+    }
+
+    public void add(GraphSpace graphSpace) {
+        graphSpaceCollection.add(graphSpace);
+    }
+
+    public void selectPreviousGraphSpace() {
+        graphSpaceCollection.selectPrevious();
+    }
+
+    public void selectNextGraphSpace() {
+        graphSpaceCollection.selectNext();
+    }
+
+    public Optional<GraphSpace> getSelectedGraphSpace() {
+        return graphSpaceCollection.getSelection();
+    }
+
+    public boolean containsID(String id) {
+        return graphSpaceCollection.containsID(id);
+    }
+
+    public void removeCollectionListener(GraphSpaceCollectionListener listener) {
+        graphSpaceCollection.removeCollectionListener(listener);
+    }
+
+    public ConceptAnnotation firstConceptAnnotation() {
+        return conceptAnnotationCollection.first();
+    }
+
+    public int getNumberOfGraphSpaces() {
+        return graphSpaceCollection.size();
     }
 }

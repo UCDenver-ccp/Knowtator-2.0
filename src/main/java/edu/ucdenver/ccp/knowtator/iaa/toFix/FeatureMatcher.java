@@ -56,7 +56,7 @@
 //	}
 //
 //	public void addComparedSimpleFeatures(String simpleFeatureName) {
-//		comparedSimpleFeatures.add(simpleFeatureName);
+//		comparedSimpleFeatures.addProfile(simpleFeatureName);
 //	}
 //
 //	public void addComparedComplexFeature(String complexFeatureName, ComplexFeatureMatchCriteria
@@ -149,13 +149,13 @@
 //				candidateAnnotations.addAll(exactlyOverlappingAnnotations);
 //				candidateAnnotations.addAll(overlappingAnnotations);
 //				candidateAnnotations.addAll(classAnnotations);
-//				candidateAnnotations.addAll(iaa.getAnnotationSets().get(compareSetName));
+//				candidateAnnotations.addAll(iaa.getAnnotationSets().getAnnotation(compareSetName));
 //			}
 //		}
 //
 //		candidateAnnotations.clear(excludeAnnotations);
 //
-//		if (candidateAnnotations.size() == 0) {
+//		if (candidateAnnotations.getNumberOfGraphSpaces() == 0) {
 //			matchResult.setResult(MatchResult.TRIVIAL_NONMATCH);
 //			return null;
 //		}
@@ -168,7 +168,7 @@
 //
 //		for (concept candidateAnnotation : candidateAnnotations) {
 //			int result;
-//			if (comparedSimpleFeatures.size() > 0)
+//			if (comparedSimpleFeatures.getNumberOfGraphSpaces() > 0)
 //				result = concept.compareSimpleFeatures(concept, candidateAnnotation,
 // comparedSimpleFeatures);
 //			else
@@ -178,7 +178,7 @@
 //				continue;
 //
 //			for (String complexFeatureName : comparedComplexFeatures.keySet()) {
-//				ComplexFeatureMatchCriteria matchCriteria = comparedComplexFeatures.get(complexFeatureName);
+//				ComplexFeatureMatchCriteria matchCriteria = comparedComplexFeatures.getAnnotation(complexFeatureName);
 //
 //				int complexResult = concept.compareComplexFeature(concept, candidateAnnotation,
 //						complexFeatureName, matchCriteria.matchSpans, matchCriteria.matchClasses,
@@ -200,22 +200,22 @@
 //			if (result == MatchResult.NONTRIVIAL_NONMATCH) {
 //				nontrivialNonmatch = true;
 //			} else if (result == MatchResult.TRIVIAL_MATCH) {
-//				trivialMatches.add(candidateAnnotation);
+//				trivialMatches.addProfile(candidateAnnotation);
 //			} else if (result == MatchResult.NONTRIVIAL_MATCH) {
-//				nontrivialMatches.add(candidateAnnotation);
+//				nontrivialMatches.addProfile(candidateAnnotation);
 //			}
 //		}
 //
-//		if (nontrivialMatches.size() > 0) {
+//		if (nontrivialMatches.getNumberOfGraphSpaces() > 0) {
 //			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
-//			if (nontrivialMatches.size() == 1)
+//			if (nontrivialMatches.getNumberOfGraphSpaces() == 1)
 //				return nontrivialMatches.iterator().next();
 //			else
 //				return concept.getShortestAnnotation(nontrivialMatches);
 //		}
-//		if (trivialMatches.size() > 0) {
+//		if (trivialMatches.getNumberOfGraphSpaces() > 0) {
 //			matchResult.setResult(MatchResult.TRIVIAL_MATCH);
-//			if (trivialMatches.size() == 1)
+//			if (trivialMatches.getNumberOfGraphSpaces() == 1)
 //				return trivialMatches.iterator().next();
 //			else
 //				return concept.getShortestAnnotation(trivialMatches);

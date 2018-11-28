@@ -22,44 +22,46 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.actions.model;
+package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
+import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction;
-import edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType;
-import org.apache.commons.io.FileUtils;
+import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
+import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
 
-import java.io.File;
-import java.io.IOException;
+import javax.swing.undo.UndoableEdit;
 
-public class TextSourceAction extends AbstractKnowtatorCollectionAction<TextSource> {
-	private final File file;
+public class FilterAction extends AbstractKnowtatorAction {
 
-	public TextSourceAction(CollectionActionType actionType, File file) {
-		super(actionType, "text source", KnowtatorView.MODEL.getTextSources());
-		this.file = file;
+	private final boolean isFilter;
+	private final boolean previousIsFilter;
+	private final FilterType filterType;
+
+	public FilterAction(FilterType filterType, boolean isFilter) {
+		super("Change filterType");
+		this.filterType = filterType;
+		this.isFilter = isFilter;
+		this.previousIsFilter = KnowtatorView.MODEL.isFilter(filterType);
+
 	}
 
 	@Override
-	protected void prepareAdd() {
-		if (!file.getParentFile().equals(KnowtatorView.MODEL.getArticlesLocation())) {
-			try {
-				FileUtils.copyFile(file, new File(KnowtatorView.MODEL.getArticlesLocation(), file.getName()));
-			} catch (IOException e) {
-				e.printStackTrace();
+	public void execute() {
+		KnowtatorView.MODEL.setFilter(filterType, isFilter);
+	}
+
+	@Override
+	public UndoableEdit getEdit() {
+		return new KnowtatorEdit("Change filterType") {
+			@Override
+			public void undo() {
+				KnowtatorView.MODEL.setFilter(filterType, previousIsFilter);
 			}
-		}
-		setObject(new TextSource(KnowtatorView.MODEL, file, file.getName()));
-	}
 
-	@Override
-	protected void cleanUpRemove() {
-
-	}
-
-	@Override
-	protected void cleanUpAdd() {
-
+			@Override
+			public void redo() {
+				KnowtatorView.MODEL.setFilter(filterType, isFilter);
+			}
+		};
 	}
 }

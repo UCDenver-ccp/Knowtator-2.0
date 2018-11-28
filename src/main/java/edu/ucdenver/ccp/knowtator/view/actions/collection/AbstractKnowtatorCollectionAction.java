@@ -29,10 +29,10 @@ import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
-import edu.ucdenver.ccp.knowtator.view.actions.model.ConceptAnnotationAction;
-import edu.ucdenver.ccp.knowtator.view.actions.model.ProfileAction;
-import edu.ucdenver.ccp.knowtator.view.actions.model.SpanAction;
-import edu.ucdenver.ccp.knowtator.view.actions.model.TextSourceAction;
+import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ConceptAnnotationAction;
+import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ProfileAction;
+import edu.ucdenver.ccp.knowtator.view.actions.modelactions.SpanAction;
+import edu.ucdenver.ccp.knowtator.view.actions.modelactions.TextSourceAction;
 
 import javax.swing.*;
 import javax.swing.undo.UndoableEdit;
@@ -109,14 +109,14 @@ public abstract class AbstractKnowtatorCollectionAction<K extends KnowtatorDataO
 
 			switch (collectionType) {
 				case ANNOTATION:
-					KnowtatorView.MODEL.getTextSource()
+					KnowtatorView.MODEL.getSelectedTextSource()
 							.ifPresent(textSource -> actions.add(new ConceptAnnotationAction(
 									parameters.getActionType(),
 									textSource)));
 					break;
 				case SPAN:
-					KnowtatorView.MODEL.getTextSource()
-							.ifPresent(textSource -> textSource.getConceptAnnotationCollection().getSelection()
+					KnowtatorView.MODEL.getSelectedTextSource()
+							.ifPresent(textSource -> textSource.getSelectedAnnotation()
 									.ifPresent(conceptAnnotation -> actions.add(new SpanAction(actionType, conceptAnnotation))));
 					break;
 				case PROFILE:

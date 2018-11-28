@@ -66,7 +66,7 @@
 //	 *            NONTRIVIAL_NONMATCH
 //	 *            <li>TRIVIAL_NONMATCH if there is no match or non-trivial
 //	 *            non-match found.
-//	 * @return will return the first nontrivial match that it finds preferring
+//	 * @return will return the firstConceptAnnotation nontrivial match that it finds preferring
 //	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher#match(concept, String, Set,
 //	 *      IAA, MatchResult)
 //	 * @see edu.ucdenver.ccp.knowtator.iaa.matcher.MatchResult#NONTRIVIAL_MATCH
@@ -107,9 +107,9 @@
 //			if (!excludeAnnotations.contains(candidateAnnotation)) {
 //				int result = concept.compareSimpleFeatures(concept, candidateAnnotation);
 //				if (result == MatchResult.NONTRIVIAL_MATCH) {
-//					nontrivialMatches.add(candidateAnnotation);
+//					nontrivialMatches.addProfile(candidateAnnotation);
 //				} else if (result == MatchResult.TRIVIAL_MATCH) {
-//					trivialMatches.add(candidateAnnotation);
+//					trivialMatches.addProfile(candidateAnnotation);
 //				}
 //				if (result == MatchResult.NONTRIVIAL_NONMATCH) {
 //					nontrivialNonmatch = true;
@@ -117,17 +117,17 @@
 //			}
 //		}
 //
-//		if (nontrivialMatches.size() > 0) {
+//		if (nontrivialMatches.getNumberOfGraphSpaces() > 0) {
 //			matchResult.setResult(MatchResult.NONTRIVIAL_MATCH);
-//			if (nontrivialMatches.size() == 1) {
+//			if (nontrivialMatches.getNumberOfGraphSpaces() == 1) {
 //				return nontrivialMatches.iterator().next();
 //			} else {
 //				return concept.getShortestAnnotation(nontrivialMatches);
 //			}
 //		}
-//		if (trivialMatches.size() > 0) {
+//		if (trivialMatches.getNumberOfGraphSpaces() > 0) {
 //			matchResult.setResult(MatchResult.TRIVIAL_MATCH);
-//			if (trivialMatches.size() == 1) {
+//			if (trivialMatches.getNumberOfGraphSpaces() == 1) {
 //				return trivialMatches.iterator().next();
 //			} else {
 //				return concept.getShortestAnnotation(trivialMatches);

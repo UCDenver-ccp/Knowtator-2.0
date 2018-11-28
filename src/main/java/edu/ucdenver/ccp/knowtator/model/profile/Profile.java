@@ -184,7 +184,7 @@ public class Profile implements KnowtatorDataObjectInterface<Profile>, Savable, 
 	@SuppressWarnings("WeakerAccess")
 	@Override
 	public File getSaveLocation() {
-		return new File(controller.getProfileCollection().getSaveLocation().getAbsolutePath(), id + ".xml");
+		return new File(controller.getSaveLocation().getAbsolutePath(), id + ".xml");
 	}
 
 	@Override

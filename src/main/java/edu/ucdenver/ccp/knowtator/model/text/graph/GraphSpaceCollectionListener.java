@@ -22,33 +22,9 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.list;
+package edu.ucdenver.ccp.knowtator.model.text.graph;
 
-import edu.ucdenver.ccp.knowtator.model.profile.Profile;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollectionListener;
 
-public class ProfileList extends KnowtatorList<Profile> {
-	public ProfileList() {
-		super();
-
-		react();
-	}
-
-	@Override
-	protected void react() {
-		setCollection(KnowtatorView.MODEL.getProfileCollection());
-		setSelected();
-	}
-
-
-	// I am overriding here because the base method adds this as a collection listener to its collection,
-	// but that generates a concurrent modification exception during "added" events
-//    @Override
-//    protected void setCollection(KnowtatorCollection<Profile> collection) {
-//        dispose();
-//        this.collection = collection;
-//        collection.forEach(k -> ((DefaultListModel<Profile>) getModel()).addElement(k));
-//    }
-
-
+public interface GraphSpaceCollectionListener extends KnowtatorCollectionListener<GraphSpace> {
 }
