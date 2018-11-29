@@ -27,9 +27,9 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import edu.ucdenver.ccp.knowtator.model.TextSource;
 import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.listener.TextSourceCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;

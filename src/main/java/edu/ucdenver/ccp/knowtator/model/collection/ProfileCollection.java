@@ -29,9 +29,10 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.BaseKnowtatorManager;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.Profile;
 import edu.ucdenver.ccp.knowtator.model.collection.listener.ColorListener;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -40,7 +41,6 @@ import org.w3c.dom.Node;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,16 +50,15 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(KnowtatorModel.class);
 
-	private final KnowtatorModel controller;
+	private final BaseModel model;
 	private final List<ColorListener> colorListeners;
-	private File profilesLocation;
 	private final Profile defaultProfile;
 
-	public ProfileCollection(KnowtatorModel controller) {
+	public ProfileCollection(BaseModel model) {
 		super();
-		defaultProfile = new Profile(controller, "Default");
+		defaultProfile = new Profile(model, "Default");
 		add(defaultProfile);
-		this.controller = controller;
+		this.model = model;
 		colorListeners = new ArrayList<>();
 	}
 
@@ -69,9 +68,9 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 
 	@Override
 	public void save() {
-		if (controller.isNotLoading()) {
-			forEach(Profile::save);
-		}
+//		if (model.isNotLoading()) {
+		forEach(Profile::save);
+//		}
 	}
 
 	@Override
@@ -116,7 +115,7 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 			Element profileElement = (Element) profileNode;
 			String profileID = profileElement.getAttribute(KnowtatorXMLAttributes.ID);
 
-			Profile newProfile = new Profile(controller, profileID);
+			Profile newProfile = new Profile(model, profileID);
 			add(newProfile);
 			get(profileID).ifPresent(profile -> profile.readFromKnowtatorXML(null, profileElement));
 		}
@@ -136,42 +135,23 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 		super.dispose();
 	}
 
-	@Override
-	public File getSaveLocation() {
-		return profilesLocation;
-	}
+//	@Override
+//	public File getSaveLocation() {
+//		return profilesLocation;
+//	}
+//
+//	@Override
+//	public void setSaveLocation(File saveLocation) throws IOException {
+//		profilesLocation = (new File(saveLocation, "Profiles"));
+//		Files.createDirectories(profilesLocation.toPath());
+//	}
 
 	@Override
-	public void setSaveLocation(File saveLocation) throws IOException {
-		profilesLocation = (new File(saveLocation, "Profiles"));
-		Files.createDirectories(profilesLocation.toPath());
-	}
-
-	@Override
-	public void finishLoad() {
-		if (size() > 1) {
-			setSelection(first());
-		} else {
-			setSelection(getDefaultProfile());
-		}
-	}
-
-	@Override
-	public void load() {
-		if (getSaveLocation() != null) {
-			try {
-				log.info("Loading profiles");
-				KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();
-				Files.newDirectoryStream(Paths.get(profilesLocation.toURI()), path -> path.toString().endsWith(".xml"))
-						.forEach(inputFile -> xmlUtil.read(this, inputFile.toFile()));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@Override
-	public void reset() {
-		add(defaultProfile);
+	public void load() throws IOException {
+		log.info("Loading profiles");
+		KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();
+		Files.list(model.getProfilesLocation().toPath())
+				.filter(path -> path.toString().endsWith(".xml"))
+				.forEach(inputFile -> xmlUtil.read(this, inputFile.toFile()));
 	}
 }

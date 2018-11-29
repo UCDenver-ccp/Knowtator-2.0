@@ -24,8 +24,8 @@
 
 package edu.ucdenver.ccp.knowtator.view.label;
 
-import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import java.util.Optional;

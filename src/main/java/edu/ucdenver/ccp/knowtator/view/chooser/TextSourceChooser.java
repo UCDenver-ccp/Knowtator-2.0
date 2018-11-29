@@ -24,14 +24,13 @@
 
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
-import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 public class TextSourceChooser extends KnowtatorChooser<TextSource> {
 
 	public TextSourceChooser() {
 		super();
-		setCollection(KnowtatorView.MODEL.getTextSources());
 	}
 
 	@Override

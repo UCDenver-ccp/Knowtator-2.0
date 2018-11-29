@@ -22,9 +22,72 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model;
+package edu.ucdenver.ccp.knowtator.model.object;
 
-public interface TextBoundModelObject<K extends TextBoundModelObject> extends ModelObject<K> {
-	TextSource getTextSource();
+import java.util.HashMap;
+import java.util.Map;
 
+public class Fragment implements ModelObject<Fragment> {
+	private final String type;
+	private final Map<String, Integer> conceptCountMap;
+	private String id;
+
+	public Fragment(String id, String type) {
+		this.id = id;
+		this.type = type;
+
+		conceptCountMap = new HashMap<>();
+	}
+
+	public void add(String concept) {
+		if (conceptCountMap.containsKey(concept)) {
+			conceptCountMap.put(concept, conceptCountMap.get(concept) + 1);
+		}
+		else {
+			conceptCountMap.put(concept, 1);
+		}
+	}
+
+	@Override
+	public String getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	@Override
+	public void dispose() {
+
+	}
+
+	@Override
+	public void addDataObjectModificationListener(ModelObjectListener listener) {
+
+	}
+
+	@Override
+	public void modify() {
+
+	}
+
+	@Override
+	public void removeDataObjectModificationListener(ModelObjectListener listener) {
+
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public Map<String, Integer> getConceptCountMap() {
+		return conceptCountMap;
+	}
+
+	@Override
+	public int compareTo(Fragment o) {
+		return 0;
+	}
 }

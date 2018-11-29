@@ -22,12 +22,14 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model;
+package edu.ucdenver.ccp.knowtator.model.object;
 
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -48,14 +50,15 @@ public class Span implements TextBoundModelObject<Span>, KnowtatorXMLIO, BratSta
   private final List<ModelObjectListener> modificationListeners;
   private String id;
 
-  public Span(@Nonnull KnowtatorModel controller, @Nonnull ConceptAnnotation conceptAnnotation, String id, int start, int end) {
+  public Span(@Nonnull BaseModel model, @Nonnull ConceptAnnotation conceptAnnotation, String id, int start, int end) {
+
     this.id = id;
     this.start = start;
     this.end = end;
     this.conceptAnnotation = conceptAnnotation;
     this.modificationListeners = new ArrayList<>();
 
-    controller.verifyId(id, this, false);
+    model.verifyId(id, this, false);
 
     if (start > end) {
       throw new IndexOutOfBoundsException(

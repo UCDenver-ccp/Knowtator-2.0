@@ -24,10 +24,10 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
-import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.ListenableCollection;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import java.util.stream.Collector;

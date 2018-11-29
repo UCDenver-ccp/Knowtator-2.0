@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection.listener;
 
-import edu.ucdenver.ccp.knowtator.model.Span;
+import edu.ucdenver.ccp.knowtator.model.object.Span;
 
 interface SpanCollectionListener extends KnowtatorCollectionListener<Span> {
 }

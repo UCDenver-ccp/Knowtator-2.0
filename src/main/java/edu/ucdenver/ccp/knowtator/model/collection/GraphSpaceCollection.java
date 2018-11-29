@@ -29,10 +29,10 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.ModelObject;
-import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -44,12 +44,12 @@ import java.util.List;
 import java.util.Map;
 
 public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implements KnowtatorXMLIO, BratStandoffIO {
-	private final KnowtatorModel controller;
+	private final BaseModel model;
     private final TextSource textSource;
 
-	public GraphSpaceCollection(KnowtatorModel controller, TextSource textSource) {
+	public GraphSpaceCollection(BaseModel model, TextSource textSource) {
         super();
-        this.controller = controller;
+		this.model = model;
         this.textSource = textSource;
     }
 
@@ -95,7 +95,7 @@ public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implem
 
             String id = graphSpaceElem.getAttribute(KnowtatorXMLAttributes.ID);
 
-            GraphSpace graphSpace = new GraphSpace(controller, textSource, id);
+	        GraphSpace graphSpace = new GraphSpace(model, textSource, id);
             add(graphSpace);
 
             graphSpace.readFromKnowtatorXML(null, graphSpaceElem);

@@ -22,7 +22,7 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model;
+package edu.ucdenver.ccp.knowtator.model.object;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
@@ -35,6 +35,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.listener.ConceptAnnotationCollectionListener;
 import org.apache.log4j.Logger;
@@ -58,24 +59,24 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(GraphSpace.class);
 
-	private final KnowtatorModel controller;
+	private final BaseModel baseModel;
 	private boolean areListenersSet;
 	private final TextSource textSource;
 	private String id;
 	private final List<ModelObjectListener> modificationListeners;
 
-	public GraphSpace(KnowtatorModel controller, @Nonnull TextSource textSource, String id) {
+	public GraphSpace(BaseModel baseModel, @Nonnull TextSource textSource, String id) {
 
-		this.controller = controller;
+		this.baseModel = baseModel;
 		this.textSource = textSource;
 		this.id = id;
 		modificationListeners = new ArrayList<>();
 
 
-		controller.verifyId(id, this, false);
+		baseModel.verifyId(id, this, false);
 		textSource.addCollectionListener(this);
-		controller.addOntologyChangeListener(this);
-		controller.addOWLModelManagerListener(this);
+		baseModel.addOntologyChangeListener(this);
+		baseModel.addOWLModelManagerListener(this);
 
 		setCellsResizable(false);
 		setEdgeLabelsMovable(false);
@@ -126,7 +127,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		RelationAnnotation newRelationAnnotation;
 		newRelationAnnotation =
 				new RelationAnnotation(
-						id,
+						baseModel, textSource, this, id,
 						source,
 						target,
 						property,
@@ -135,10 +136,8 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 						quantifier,
 						quantifierValue,
 						isNegated,
-						motivation,
-						controller,
-						textSource,
-						this);
+						motivation
+				);
 
 		setCellStyles(mxConstants.STYLE_STARTARROW, "dash", new Object[]{newRelationAnnotation});
 		setCellStyles(mxConstants.STYLE_STARTSIZE, "12", new Object[]{newRelationAnnotation});
@@ -186,7 +185,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 			double y = y_string.equals("") ? 20 : Double.parseDouble(y_string);
 
 			this.textSource.getAnnotation(annotationID).ifPresent(conceptAnnotation -> {
-				AnnotationNode newVertex = new AnnotationNode(controller, id, conceptAnnotation, textSource, x, y);
+				AnnotationNode newVertex = new AnnotationNode(baseModel, id, conceptAnnotation, textSource, x, y);
 				addCellToGraph(newVertex);
 			});
 		}
@@ -205,14 +204,14 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 			String propertyIsNegated = tripleElem.getAttribute(KnowtatorXMLAttributes.IS_NEGATED);
 			String motivation = tripleElem.getAttribute(KnowtatorXMLAttributes.MOTIVATION);
 
-			Profile annotator = controller.getProfile(annotatorID).orElse(controller.getDefaultProfile());
+			Profile annotator = baseModel.getProfile(annotatorID).orElse(baseModel.getDefaultProfile());
 			AnnotationNode source =
 					(AnnotationNode) ((mxGraphModel) getModel()).getCells().get(subjectID);
 			AnnotationNode target = (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(objectID);
 
 
 			if (target != null && source != null) {
-				controller.getOWLObjectPropertyByID(propertyID).ifPresent(owlObjectProperty -> addTriple(
+				baseModel.getOWLObjectPropertyByID(propertyID).ifPresent(owlObjectProperty -> addTriple(
 						source,
 						target,
 						id,
@@ -251,7 +250,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 					String subjectAnnotationID = relationTriple[1].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
 					String objectAnnotationID = relationTriple[2].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
 
-					Profile annotator = controller.getDefaultProfile();
+					Profile annotator = baseModel.getDefaultProfile();
 
 					textSource.getAnnotation(subjectAnnotationID).ifPresent(subjectConceptAnnotation -> {
 						List<Object> subjectAnnotationVertices = getVerticesForAnnotation(subjectConceptAnnotation);
@@ -261,7 +260,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 							List<Object> objectAnnotationVertices = getVerticesForAnnotation(objectConceptAnnotation);
 							AnnotationNode target = makeOrGetAnnotationNode(objectConceptAnnotation, objectAnnotationVertices);
 
-							controller.getOWLObjectPropertyByID(propertyID).ifPresent(owlObjectProperty -> addTriple(source, target, id, annotator, owlObjectProperty, propertyID, "", null, false, ""));
+							baseModel.getOWLObjectPropertyByID(propertyID).ifPresent(owlObjectProperty -> addTriple(source, target, id, annotator, owlObjectProperty, propertyID, "", null, false, ""));
 						});
 					});
 
@@ -271,7 +270,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 
 	public AnnotationNode makeAnnotationNode(ConceptAnnotation conceptAnnotation) {
 		String nodeId = textSource.getGraphSpaceCollection().verifyID(null, "node");
-		AnnotationNode newVertex = new AnnotationNode(controller, nodeId, conceptAnnotation, textSource, 20, 20);
+		AnnotationNode newVertex = new AnnotationNode(baseModel, nodeId, conceptAnnotation, textSource, 20, 20);
 		addCellToGraph(newVertex);
 		return (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(nodeId);
 	}
@@ -324,30 +323,32 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 	UPDATE
 	 */
 	public void reDrawGraph() {
-		getModel().beginUpdate();
-		try {
-			Arrays.stream(getChildVertices(getDefaultParent()))
-					.forEach(
-							vertex -> {
-								if (vertex instanceof AnnotationNode) {
-									setVertexStyle((AnnotationNode) vertex);
-								}
-								updateCellSize(vertex);
+		if (baseModel.isNotLoading()) {
+			getModel().beginUpdate();
+			try {
+				Arrays.stream(getChildVertices(getDefaultParent()))
+						.forEach(
+								vertex -> {
+									if (vertex instanceof AnnotationNode) {
+										setVertexStyle((AnnotationNode) vertex);
+									}
+									updateCellSize(vertex);
 
-								getView().validateCell(vertex);
-							});
-			Arrays.stream(getChildEdges(getDefaultParent()))
-					.forEach(
-							edge -> {
-								updateCellSize(edge);
-								//                if (edge instanceof RelationAnnotation) {
-								//                    ((RelationAnnotation) edge).setValue(((RelationAnnotation) edge).getValue());
-								//                }
-								getView().validateCell(edge);
-							});
-		} finally {
-			getModel().endUpdate();
-			refresh();
+									getView().validateCell(vertex);
+								});
+				Arrays.stream(getChildEdges(getDefaultParent()))
+						.forEach(
+								edge -> {
+									updateCellSize(edge);
+									//                if (edge instanceof RelationAnnotation) {
+									//                    ((RelationAnnotation) edge).setValue(((RelationAnnotation) edge).getValue());
+									//                }
+									getView().validateCell(edge);
+								});
+			} finally {
+				getModel().endUpdate();
+				refresh();
+			}
 		}
 	}
 
@@ -422,8 +423,8 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 			}
 		});
 		removeCells(getChildCells(getDefaultParent()));
-		controller.removeOntologyChangeListener(this);
-		controller.removeOWLModelManagerListener(this);
+		baseModel.removeOntologyChangeListener(this);
+		baseModel.removeOWLModelManagerListener(this);
 	}
 
 	public boolean containsAnnotation(ConceptAnnotation conceptAnnotation) {

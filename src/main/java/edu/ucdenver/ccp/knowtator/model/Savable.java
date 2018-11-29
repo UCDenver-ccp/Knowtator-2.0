@@ -24,7 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.model;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -43,17 +42,17 @@ public interface Savable extends Serializable {
     /**
      * Implementations should use this method to load new data.
      */
-    void load();
+    void load() throws IOException;
 
-    /**
-     * @return The directory or file to save data to
-     */
-    File getSaveLocation();
-
-    /**
-     * Set the file or directory to save to
-     * @param saveLocation File or directory to save to
-     * @throws IOException Thrown if the file or directory does not exist
-     */
-    void setSaveLocation(File saveLocation) throws IOException;
+//    /**
+//     * @return The directory or file to save data to
+//     */
+//    File getSaveLocation();
+//
+//    /**
+//     * Set the file or directory to save to
+//     * @param saveLocation File or directory to save to
+//     * @throws IOException Thrown if the file or directory does not exist
+//     */
+//    void setSaveLocation(File saveLocation) throws IOException;
 }

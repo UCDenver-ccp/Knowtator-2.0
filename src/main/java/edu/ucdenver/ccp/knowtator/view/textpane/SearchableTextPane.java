@@ -24,12 +24,12 @@
 
 package edu.ucdenver.ccp.knowtator.view.textpane;
 
-import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.Span;
-import edu.ucdenver.ccp.knowtator.model.TextSource;
 import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.listener.TextBoundModelListener;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.object.Span;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
@@ -61,6 +61,7 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 
 
 		pattern = Pattern.compile("");
+		matcher = pattern.matcher("");
 		searchTextField.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {

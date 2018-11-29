@@ -24,6 +24,10 @@
 
 package edu.ucdenver.ccp.knowtator.model;
 
+import com.mxgraph.view.mxGraph;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.RelationAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.protege.editor.core.ui.util.AugmentedJTextField;
@@ -31,45 +35,34 @@ import org.protege.editor.owl.model.OWLWorkspace;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
 import org.protege.editor.owl.ui.renderer.OWLRendererPreferences;
 import org.protege.editor.owl.ui.search.SearchDialogPanel;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
-import javax.swing.undo.UndoManager;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public abstract class OWLModel extends UndoManager implements Serializable, BaseKnowtatorManager {
+public abstract class OWLModel extends BaseModel implements Serializable {
 	@SuppressWarnings("unused")
 	private static final Logger log = LogManager.getLogger(OWLModel.class);
+	private OWLOntologyManager owlOntologyManager;
 
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	private Optional<OWLWorkspace> owlWorkSpace;
 
 	private List<IRI> annotationIRIs;
-	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-	private Optional<OWLClass> testClass;
-	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-	private Optional<OWLObjectProperty> testProperty;
-	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-	private Optional<OWLOntologyManager> owlOntologyManager;
-	File ontologiesLocation;
 
-	public File getOntologiesLocation() {
-		return ontologiesLocation;
-	}
-
-	OWLModel() {
-		owlWorkSpace = Optional.empty();
-		owlOntologyManager = Optional.empty();
-		testClass = Optional.empty();
-		testProperty = Optional.empty();
+	OWLModel(File projectLocation, OWLWorkspace owlWorkspace) throws IOException {
+		super(projectLocation);
+		if (owlWorkspace == null) {
+			this.owlOntologyManager = OWLManager.createOWLOntologyManager();
+		}
+		owlWorkSpace = Optional.ofNullable(owlWorkspace);
 		annotationIRIs = null;
 	}
 
@@ -77,18 +70,16 @@ public abstract class OWLModel extends UndoManager implements Serializable, Base
 		if (owlWorkSpace.isPresent()) {
 			return owlWorkSpace.map(owlWorkspace -> owlWorkspace.getOWLModelManager().getOWLEntityFinder().getOWLClass(classID));
 		} else {
-			if (owlOntologyManager.isPresent()) {
-				for (OWLOntology ontology : owlOntologyManager.get().getOntologies()) {
-					Optional<OWLClass> owlClassOptional = ontology.getClassesInSignature().stream()
-							.filter(owlClass -> owlClass.getIRI().getShortForm().equals(classID) ||
-									ontology.getAnnotationAssertionAxioms(owlClass.getIRI()).stream()
-											.anyMatch(owlAnnotationAssertionAxiom -> owlAnnotationAssertionAxiom
-													.getValue().asLiteral().transform(OWLLiteral::getLiteral)
-													.transform(label -> label.equals(classID)).or(false)))
-							.findFirst();
-					if (owlClassOptional.isPresent()) {
-						return owlClassOptional;
-					}
+			for (OWLOntology ontology : owlOntologyManager.getOntologies()) {
+				Optional<OWLClass> owlClassOptional = ontology.getClassesInSignature().stream()
+						.filter(owlClass -> owlClass.getIRI().getShortForm().equals(classID) ||
+								ontology.getAnnotationAssertionAxioms(owlClass.getIRI()).stream()
+										.anyMatch(owlAnnotationAssertionAxiom -> owlAnnotationAssertionAxiom
+												.getValue().asLiteral().transform(OWLLiteral::getLiteral)
+												.transform(label -> label.equals(classID)).or(false)))
+						.findFirst();
+				if (owlClassOptional.isPresent()) {
+					return owlClassOptional;
 				}
 			}
 			return Optional.empty();
@@ -102,18 +93,15 @@ public abstract class OWLModel extends UndoManager implements Serializable, Base
 		if (owlWorkSpace.isPresent()) {
 			classIDs.forEach(classID -> owlWorkSpace.map(owlWorkspace -> owlWorkspace.getOWLModelManager().getOWLEntityFinder().getOWLClass(classID)).ifPresent(owlClass -> owlClassList.put(classID, owlClass)));
 		} else {
-
-			if (owlOntologyManager.isPresent()) {
-				for (OWLOntology ontology : owlOntologyManager.get().getOntologies()) {
-					for (OWLClass owlClass : ontology.getClassesInSignature()) {
-						Set<OWLAnnotationAssertionAxiom> anntotationAssertionAxioms = ontology.getAnnotationAssertionAxioms(owlClass.getIRI());
-						List<String> labels = anntotationAssertionAxioms.stream()
-								.map(anntotationAssertionAxiom -> anntotationAssertionAxiom.getValue().asLiteral().transform(OWLLiteral::getLiteral))
-								.filter(com.google.common.base.Optional::isPresent).map(com.google.common.base.Optional::get).collect(Collectors.toList());
-						for (String classID : classIDs) {
-							if (owlClass.getIRI().getShortForm().equals(classID) || labels.stream().anyMatch(classID::equals)) {
-								owlClassList.put(classID, owlClass);
-							}
+			for (OWLOntology ontology : owlOntologyManager.getOntologies()) {
+				for (OWLClass owlClass : ontology.getClassesInSignature()) {
+					Set<OWLAnnotationAssertionAxiom> anntotationAssertionAxioms = ontology.getAnnotationAssertionAxioms(owlClass.getIRI());
+					List<String> labels = anntotationAssertionAxioms.stream()
+							.map(anntotationAssertionAxiom -> anntotationAssertionAxiom.getValue().asLiteral().transform(OWLLiteral::getLiteral))
+							.filter(com.google.common.base.Optional::isPresent).map(com.google.common.base.Optional::get).collect(Collectors.toList());
+					for (String classID : classIDs) {
+						if (owlClass.getIRI().getShortForm().equals(classID) || labels.stream().anyMatch(classID::equals)) {
+							owlClassList.put(classID, owlClass);
 						}
 					}
 				}
@@ -126,15 +114,12 @@ public abstract class OWLModel extends UndoManager implements Serializable, Base
 		if (owlWorkSpace.isPresent()) {
 			return owlWorkSpace.map(owlWorkSpace -> owlWorkSpace.getOWLModelManager().getOWLEntityFinder().getOWLObjectProperty(propertyID));
 		} else {
-
-			if (owlOntologyManager.isPresent()) {
-				for (OWLOntology ontology : owlOntologyManager.get().getOntologies()) {
-					Optional<OWLObjectProperty> owlObjectPropertyOptional = ontology.getObjectPropertiesInSignature().stream()
-							.filter(owlClass -> owlClass.getIRI().getShortForm().equals(propertyID))
-							.findFirst();
-					if (owlObjectPropertyOptional.isPresent()) {
-						return owlObjectPropertyOptional;
-					}
+			for (OWLOntology ontology : owlOntologyManager.getOntologies()) {
+				Optional<OWLObjectProperty> owlObjectPropertyOptional = ontology.getObjectPropertiesInSignature().stream()
+						.filter(owlClass -> owlClass.getIRI().getShortForm().equals(propertyID))
+						.findFirst();
+				if (owlObjectPropertyOptional.isPresent()) {
+					return owlObjectPropertyOptional;
 				}
 			}
 			return Optional.empty();
@@ -143,22 +128,30 @@ public abstract class OWLModel extends UndoManager implements Serializable, Base
 
 
 	public Optional<OWLObjectProperty> getSelectedOWLObjectProperty() {
-		if (testProperty.isPresent()) {
-			return testProperty;
-		} else {
+		if (owlWorkSpace.isPresent()) {
 			return owlWorkSpace
 					.filter(owlWorkspace -> owlWorkspace.getOWLSelectionModel().getSelectedEntity() instanceof OWLObjectProperty)
 					.map(owlWorkspace -> (OWLObjectProperty) owlWorkspace.getOWLSelectionModel().getSelectedEntity());
+		} else {
+			return getSelectedTextSource()
+					.flatMap(TextSource::getSelectedGraphSpace)
+					.map(mxGraph::getSelectionCell)
+					.filter(o -> o instanceof RelationAnnotation)
+					.map(o -> (RelationAnnotation) o)
+					.map(RelationAnnotation::getProperty);
 		}
 	}
 
 	public Optional<OWLClass> getSelectedOWLClass() {
-		if (testClass.isPresent()) {
-			return testClass;
+		if (owlWorkSpace.isPresent()) {
+			return owlWorkSpace
+					.filter(owlWorkspace -> owlWorkspace.getOWLSelectionModel().getSelectedEntity() instanceof OWLClass)
+					.map(owlWorkspace -> (OWLClass) owlWorkspace.getOWLSelectionModel().getSelectedEntity());
+		} else {
+			return getSelectedTextSource()
+					.flatMap(TextSource::getSelectedAnnotation)
+					.map(ConceptAnnotation::getOwlClass);
 		}
-		return owlWorkSpace
-				.filter(owlWorkspace -> owlWorkspace.getOWLSelectionModel().getSelectedEntity() instanceof OWLClass)
-				.map(owlWorkspace -> (OWLClass) owlWorkspace.getOWLSelectionModel().getSelectedEntity());
 	}
 
 	public void setRenderRDFSLabel() {
@@ -222,72 +215,48 @@ public abstract class OWLModel extends UndoManager implements Serializable, Base
 		});
 	}
 
-	public void setDebug() {
-		owlOntologyManager = Optional.of(org.semanticweb.owlapi.apibinding.OWLManager.createOWLOntologyManager());
-
-		testClass = owlOntologyManager.map(owlOntologyManager -> owlOntologyManager.getOWLDataFactory()
-				.getOWLClass(IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream")));
-		testProperty = owlOntologyManager.map(owlOntologyManager -> owlOntologyManager.getOWLDataFactory()
-				.getOWLObjectProperty(IRI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#HasIngredient")));
-	}
-
-
-	@Override
-	public void dispose() {
-		annotationIRIs = null;
-	}
-
 	@Override
 	public void load() {
-		if (ontologiesLocation != null) {
-			log.info("Loading ontologies");
-
-			File file = ontologiesLocation;
-			if (file.isDirectory()) {
-				try {
-					for (Path path1 : Files.newDirectoryStream(Paths.get(file.toURI()), path -> path.toString().endsWith(".owl"))) {
-						String ontologyLocation = path1.toFile().toURI().toString();
-
+		log.info("Loading ontologies");
+		try {
+			Files.list(ontologiesLocation.toPath())
+					.filter(path -> path.toString().endsWith(".owl"))
+					.map(path -> path.toFile().toURI().toString())
+					.forEach(ontologyLocation -> {
 						if (owlWorkSpace.isPresent()) {
-							owlWorkSpace.ifPresent(owlWorkspace -> {
-								List<String> ontologies = owlWorkspace.getOWLModelManager().getActiveOntologies().stream().map(ontology -> {
-									OWLOntologyID ontID = ontology.getOntologyID();
-									//noinspection Guava
-									com.google.common.base.Optional<IRI> ontIRI = ontID.getOntologyIRI();
-									if (ontIRI.isPresent()) {
-										return ontIRI.get().toURI().toString();
-									} else {
-										return null;
-									}
-								}).collect(Collectors.toList());
-								if (!ontologies.contains(ontologyLocation)) {
-									log.info(String.format("Loading ontology: %s", ontologyLocation));
-									try {
-										OWLOntology newOntology =
-												owlWorkspace
-														.getOWLModelManager()
-														.getOWLOntologyManager()
-														.loadOntology((IRI.create(ontologyLocation)));
-										owlWorkspace.getOWLModelManager().setActiveOntology(newOntology);
-									} catch (OWLOntologyCreationException ignored) {
-									}
-								}
-							});
+							loadWhenProtegeIsPresent(ontologyLocation);
 						} else {
-
-							owlOntologyManager.ifPresent(owlOntologyManager -> {
-								try {
-									owlOntologyManager.loadOntology(IRI.create(ontologyLocation));
-								} catch (OWLOntologyCreationException ignored) {
-								}
-							});
+							try {
+								owlOntologyManager.loadOntology(IRI.create(ontologyLocation));
+							} catch (OWLOntologyCreationException ignored) {
+							}
 						}
-					}
-				} catch (IOException e) {
-					log.warn("Could not load ontologies");
+
+					});
+			super.load();
+		} catch (IOException e) {
+			log.warn("Could not load ontologies");
+		}
+	}
+
+	private void loadWhenProtegeIsPresent(String ontologyLocation) {
+		owlWorkSpace.ifPresent(owlWorkspace -> {
+			boolean alreadyLoaded = owlWorkspace.getOWLModelManager().getActiveOntologies().stream()
+					.map(ontology -> ontology.getOntologyID().getOntologyIRI())
+					.filter(com.google.common.base.Optional::isPresent)
+					.map(com.google.common.base.Optional::get)
+					.map(iri -> iri.toURI().toString())
+					.allMatch(ontology -> ontology.equals(ontologyLocation));
+
+			if (!alreadyLoaded) {
+				log.info(String.format("Loading ontology: %s", ontologyLocation));
+				try {
+					OWLOntology newOntology = owlWorkspace.getOWLModelManager().getOWLOntologyManager().loadOntology((IRI.create(ontologyLocation)));
+					owlWorkspace.getOWLModelManager().setActiveOntology(newOntology);
+				} catch (OWLOntologyCreationException ignored) {
 				}
 			}
-		}
+		});
 	}
 
 	@Override
@@ -302,13 +271,19 @@ public abstract class OWLModel extends UndoManager implements Serializable, Base
 	}
 
 	public void addOntologyChangeListener(OWLOntologyChangeListener listener) {
-		owlWorkSpace.ifPresent(owlWorkspace -> owlWorkspace.getOWLModelManager().addOntologyChangeListener(listener));
-		owlOntologyManager.ifPresent(owlOntologyManager -> owlOntologyManager.addOntologyChangeListener(listener));
+		if (owlWorkSpace.isPresent()) {
+			owlWorkSpace.get().getOWLModelManager().addOntologyChangeListener(listener);
+		} else {
+			owlOntologyManager.addOntologyChangeListener(listener);
+		}
 	}
 
 	public void removeOntologyChangeListener(OWLOntologyChangeListener listener) {
-		owlWorkSpace.ifPresent(owlWorkspace -> owlWorkspace.getOWLModelManager().removeOntologyChangeListener(listener));
-		owlOntologyManager.ifPresent(owlOntologyManager -> owlOntologyManager.removeOntologyChangeListener(listener));
+		if (owlWorkSpace.isPresent()) {
+			owlWorkSpace.get().getOWLModelManager().removeOntologyChangeListener(listener);
+		} else {
+			owlOntologyManager.removeOntologyChangeListener(listener);
+		}
 	}
 
 	public void removeOWLModelManagerListener(OWLModelManagerListener listener) {
@@ -332,7 +307,7 @@ public abstract class OWLModel extends UndoManager implements Serializable, Base
 				.orElse(Comparator.comparing(Object::toString));
 	}
 
-	public Optional<OWLOntologyManager> getOwlOntologyManager() {
+	public OWLOntologyManager getOwlOntologyManager() {
 		return owlOntologyManager;
 	}
 

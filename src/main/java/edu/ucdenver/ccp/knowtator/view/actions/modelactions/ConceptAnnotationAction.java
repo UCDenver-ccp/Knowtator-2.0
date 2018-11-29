@@ -25,9 +25,9 @@
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
 import com.mxgraph.util.mxEvent;
-import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.Span;
-import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.Span;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction;
@@ -67,7 +67,7 @@ public class ConceptAnnotationAction extends AbstractKnowtatorCollectionAction<C
 				.ifPresent(annotator -> KnowtatorView.MODEL.getSelectedOWLClass()
 						.ifPresent(owlClass -> {
 							ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(KnowtatorView.MODEL, textSource, null, owlClass, annotator, "identity", "");
-							newConceptAnnotation.add(new Span(KnowtatorView.MODEL, newConceptAnnotation, null, KnowtatorView.MODEL.getStart(), KnowtatorView.MODEL.getEnd()));
+							newConceptAnnotation.add(new Span(KnowtatorView.MODEL, newConceptAnnotation, null, KnowtatorView.MODEL.getSelection().getStart(), KnowtatorView.MODEL.getSelection().getEnd()));
 							setObject(newConceptAnnotation);
 						}));
 

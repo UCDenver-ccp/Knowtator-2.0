@@ -25,20 +25,30 @@
 package edu.ucdenver.ccp.knowtator.view.actions;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
-import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.FilterAction;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ReassignOWLClassAction;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static edu.ucdenver.ccp.knowtator.model.FilterType.OWLCLASS;
 import static edu.ucdenver.ccp.knowtator.model.FilterType.PROFILE;
 
 class FilterActionsTests {
-	private static final KnowtatorModel controller = TestingHelpers.getLoadedController();
+	private static KnowtatorModel controller;
+
+	static {
+		try {
+			controller = TestingHelpers.getLoadedController();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@BeforeAll
 	static void setup() {
@@ -75,7 +85,7 @@ class FilterActionsTests {
 		TestingHelpers.testKnowtatorAction(controller, new FilterAction(OWLCLASS, true),
 				TestingHelpers.defaultExpectedTextSources,
 				TestingHelpers.defaultExpectedConceptAnnotations,
-				TestingHelpers.defaultExpectedSpans - 4,
+				TestingHelpers.defaultExpectedSpans - 5,
 				TestingHelpers.defaultExpectedGraphSpaces,
 				TestingHelpers.defaultExpectedProfiles,
 				TestingHelpers.defaultExpectedHighlighters,

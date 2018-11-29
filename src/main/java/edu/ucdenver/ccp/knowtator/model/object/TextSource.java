@@ -22,13 +22,15 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model;
+package edu.ucdenver.ccp.knowtator.model.object;
 
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
@@ -57,32 +59,30 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 	@SuppressWarnings("unused")
 	private static Logger log = LogManager.getLogger(TextSource.class);
 
-	private final KnowtatorModel controller;
+	private final BaseModel model;
 	private final File saveFile;
 	private final ConceptAnnotationCollection conceptAnnotationCollection;
 	private File textFile;
 	private String content;
 	private final GraphSpaceCollection graphSpaceCollection;
-	private boolean notSaving;
 	private String id;
 
-	public TextSource(KnowtatorModel controller, File saveFile, String textFileName) {
-		this.controller = controller;
-		this.saveFile = saveFile == null ? new File(controller.getAnnotationsLocation().getAbsolutePath(), String.format("%s.xml", textFileName.replace(".txt", ""))) : saveFile;
-		this.conceptAnnotationCollection = new ConceptAnnotationCollection(controller, this);
-		this.graphSpaceCollection = new GraphSpaceCollection(controller, this);
-		notSaving = true;
+	public TextSource(BaseModel model, File saveFile, String textFileName) {
+		this.model = model;
+		this.saveFile = saveFile == null ? new File(model.getAnnotationsLocation().getAbsolutePath(), String.format("%s.xml", textFileName.replace(".txt", ""))) : saveFile;
+		this.conceptAnnotationCollection = new ConceptAnnotationCollection(model, this);
+		this.graphSpaceCollection = new GraphSpaceCollection(model, this);
 
 		//noinspection unchecked
 		conceptAnnotationCollection.addCollectionListener(this);
 		//noinspection unchecked
 		graphSpaceCollection.addCollectionListener(this);
 
-		controller.verifyId(FilenameUtils.getBaseName(textFileName), this, true);
+		model.verifyId(FilenameUtils.getBaseName(textFileName), this, true);
 
 		textFile =
 				new File(
-						controller.getArticlesLocation(),
+						model.getArticlesLocation(),
 						textFileName.endsWith(".txt") ? textFileName : String.format("%s.txt", textFileName));
 
 		if (!textFile.exists()) {
@@ -96,7 +96,7 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 							Files.copy(
 									Paths.get(file.toURI()),
 									Paths.get(
-											controller
+											model
 													.getArticlesLocation()
 													.toURI()
 													.resolve(file.getName())))
@@ -194,7 +194,7 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 					content = FileUtils.readFileToString(textFile, "UTF-8");
 					return content;
 				} catch (IOException e) {
-					textFile = new File(controller.getArticlesLocation(), String.format("%s.txt", id));
+					textFile = new File(model.getArticlesLocation(), String.format("%s.txt", id));
 					while (!textFile.exists()) {
 						JFileChooser fileChooser = new JFileChooser();
 						if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -214,13 +214,7 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 
 	@Override
 	public void save() {
-		if (controller.isNotLoading() && !controller.renderChangeInProgress() && notSaving) {
-			notSaving = false;
-			controller.setRenderRDFSLabel();
-			controller.saveToFormat(KnowtatorXMLUtil.class, this, saveFile);
-			controller.resetRenderRDFS();
-			notSaving = true;
-		}
+		model.saveToFormat(KnowtatorXMLUtil.class, this, getSaveLocation());
 	}
 
 	@Override
@@ -228,14 +222,8 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 
 	}
 
-	@Override
 	public File getSaveLocation() {
-		return new File(controller.getAnnotationsLocation().getAbsolutePath(), saveFile.getName());
-	}
-
-	@Override
-	public void setSaveLocation(File saveLocation) {
-
+		return new File(model.getAnnotationsLocation().getAbsolutePath(), saveFile.getName());
 	}
 
 	@Override

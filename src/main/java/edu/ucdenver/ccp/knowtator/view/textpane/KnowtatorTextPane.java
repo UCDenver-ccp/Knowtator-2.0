@@ -24,13 +24,13 @@
 
 package edu.ucdenver.ccp.knowtator.view.textpane;
 
-import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
-import edu.ucdenver.ccp.knowtator.model.Profile;
-import edu.ucdenver.ccp.knowtator.model.Span;
 import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.listener.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.collection.listener.ProfileCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
+import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
@@ -133,7 +133,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 		super.setupListeners();
 		KnowtatorView.MODEL.addColorListener(this);
 		KnowtatorView.MODEL.addProfileCollectionListener(this);
-		KnowtatorView.MODEL.addFilterModelListener(this);
+		KnowtatorView.MODEL.addModelListener(this);
 	}
 
 

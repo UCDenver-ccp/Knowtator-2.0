@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection.listener;
 
-import edu.ucdenver.ccp.knowtator.model.Profile;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
 
 public interface ProfileCollectionListener extends KnowtatorCollectionListener<Profile> {
 }

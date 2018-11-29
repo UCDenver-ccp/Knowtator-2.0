@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
-import edu.ucdenver.ccp.knowtator.model.Span;
+import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;

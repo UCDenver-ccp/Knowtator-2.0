@@ -22,8 +22,9 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model;
+package edu.ucdenver.ccp.knowtator.model.object;
 
-public interface ModelObjectListener {
-	void modification();
+public interface TextBoundModelObject<K extends TextBoundModelObject> extends ModelObject<K> {
+	TextSource getTextSource();
+
 }

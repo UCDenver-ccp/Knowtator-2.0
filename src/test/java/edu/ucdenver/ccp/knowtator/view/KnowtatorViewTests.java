@@ -47,7 +47,6 @@ class KnowtatorViewTests {
 	void testActionsTest() throws IOException {
 		KnowtatorModel controller = TestingHelpers.getLoadedController();
 		TestingHelpers.checkDefaultCollectionValues(controller);
-		KnowtatorView.MODEL.setDebug();
 		view.loadProject(controller.getProjectLocation(), null);
 		TestingHelpers.checkDefaultCollectionValues(KnowtatorView.MODEL);
 		KnowtatorCollectionActionsTests test = new KnowtatorCollectionActionsTests();
@@ -77,6 +76,7 @@ class KnowtatorViewTests {
 				.map(Component::isEnabled).reduce(false, (a, b) -> a || b);
 		KnowtatorModel controller = TestingHelpers.getLoadedController();
 		view.loadProject(controller.getProjectLocation(), null);
+		KnowtatorView.MODEL.selectFirstTextSource();
 		assert view.textSourceButtons.stream()
 				.map(Component::isEnabled).reduce(true, (a, b) -> a && b);
 	}

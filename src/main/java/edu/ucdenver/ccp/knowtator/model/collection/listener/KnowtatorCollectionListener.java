@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection.listener;
 
-import edu.ucdenver.ccp.knowtator.model.ModelObject;
+import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 
 public interface KnowtatorCollectionListener<K extends ModelObject> extends SelectableCollectionListener<K> {
 }

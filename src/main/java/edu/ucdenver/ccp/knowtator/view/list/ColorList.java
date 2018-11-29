@@ -24,10 +24,10 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
-import edu.ucdenver.ccp.knowtator.model.Profile;
 import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.listener.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.collection.listener.ProfileCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.semanticweb.owlapi.model.OWLClass;

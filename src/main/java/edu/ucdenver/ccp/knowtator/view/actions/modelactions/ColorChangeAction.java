@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
-import edu.ucdenver.ccp.knowtator.model.Profile;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
 import org.semanticweb.owlapi.model.OWLClass;

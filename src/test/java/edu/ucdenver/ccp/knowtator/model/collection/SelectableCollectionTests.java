@@ -26,11 +26,21 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 class SelectableCollectionTests {
-	private final static KnowtatorModel controller = TestingHelpers.getLoadedController();
+	private static KnowtatorModel controller;
+
+	static {
+		try {
+			controller = TestingHelpers.getLoadedController();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Test
 	void selectNextTest() {

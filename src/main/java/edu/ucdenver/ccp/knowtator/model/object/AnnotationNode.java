@@ -22,13 +22,14 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model;
+package edu.ucdenver.ccp.knowtator.model.object;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -39,7 +40,7 @@ public class AnnotationNode extends mxCell implements TextBoundModelObject, Know
 	private final ConceptAnnotation conceptAnnotation;
 	private final TextSource textSource;
 
-	AnnotationNode(KnowtatorModel controller, String id, ConceptAnnotation conceptAnnotation, TextSource textSource, double x, double y) {
+	AnnotationNode(BaseModel model, String id, ConceptAnnotation conceptAnnotation, TextSource textSource, double x, double y) {
 		super(
 				conceptAnnotation.getSpannedText(),
 				new mxGeometry(x, y, 150, 150),
@@ -47,7 +48,7 @@ public class AnnotationNode extends mxCell implements TextBoundModelObject, Know
 		this.textSource = textSource;
 		this.conceptAnnotation = conceptAnnotation;
 
-		controller.verifyId(id, this, false);
+		model.verifyId(id, this, false);
 
 		setVertex(true);
 		setConnectable(true);

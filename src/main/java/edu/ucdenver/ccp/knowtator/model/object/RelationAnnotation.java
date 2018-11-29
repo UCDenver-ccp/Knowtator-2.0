@@ -22,13 +22,14 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model;
+package edu.ucdenver.ccp.knowtator.model.object;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.w3c.dom.Document;
@@ -41,7 +42,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 	private final String quantifierValue;
 	private final Profile annotator;
 	private String bratID;
-	private final KnowtatorModel controller;
+	private final BaseModel model;
 	private final Boolean isNegated;
 	private final TextSource textSource;
 	private OWLObjectProperty property;
@@ -60,7 +61,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 	}
 
 	RelationAnnotation(
-			String id,
+			BaseModel model, TextSource textSource, GraphSpace graphSpace, String id,
 			AnnotationNode source,
 			AnnotationNode target,
 			OWLObjectProperty property,
@@ -69,21 +70,20 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 			String quantifier,
 			String quantifierValue,
 			Boolean isNegated,
-			String motivation,
-			KnowtatorModel controller, TextSource textSource, GraphSpace graphSpace) {
+			String motivation) {
 		super(null, new mxGeometry(), null);
 
 		this.propertyID = propertyID;
 		this.isNegated = isNegated;
 		this.motivation = motivation;
 		this.textSource = textSource;
-		this.controller = controller;
+		this.model = model;
 		this.annotator = annotator;
 		this.quantifier = quantifier;
 		this.quantifierValue = quantifierValue;
 		this.graphSpace = graphSpace;
 
-		controller.verifyId(id, this, false);
+		model.verifyId(id, this, false);
 
 		getGeometry().setRelative(true);
 		setEdge(true);
@@ -96,7 +96,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 //		if (property.isPresent()) {
 //			setProperty(property.getAnnotation());
 //		} else {
-//			setProperty(controller.getOWLObjectPropertyByID(propertyID).orElse(null));
+//			setProperty(model.getOWLObjectPropertyByID(propertyID).orElse(null));
 //		}
 	}
 
@@ -144,7 +144,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 	}
 
 	private String getOwlPropertyRendering() {
-		return controller.getOWLEntityRendering(property);
+		return model.getOWLEntityRendering(property);
 	}
 
 	@Override
@@ -158,10 +158,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 
 
 			super.setValue(value);
-			if (graphSpace != null && controller.isNotLoading()) {
-				graphSpace.reDrawGraph();
-			}
-//            textSource.save();
+			graphSpace.reDrawGraph();
 		}
 	}
 

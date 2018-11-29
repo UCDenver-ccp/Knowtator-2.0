@@ -25,14 +25,28 @@
 package edu.ucdenver.ccp.knowtator.view.actions;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
-import edu.ucdenver.ccp.knowtator.model.*;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.graph.GraphActions;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
+import java.io.IOException;
+
 class GraphActionsTests {
 
-	private static final KnowtatorModel controller = TestingHelpers.getLoadedController();
+	private static KnowtatorModel controller;
+
+	static {
+		try {
+			controller = TestingHelpers.getLoadedController();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Test
 	void removeSelectedAnnotationNodeTest() {
@@ -96,7 +110,7 @@ class GraphActionsTests {
 		GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
 		AnnotationNode source = (AnnotationNode) graphSpace.getChildVertices(graphSpace.getDefaultParent())[0];
 		AnnotationNode target = (AnnotationNode) graphSpace.getChildVertices(graphSpace.getDefaultParent())[1];
-		OWLObjectProperty property = controller.getSelectedOWLObjectProperty().get();
+		OWLObjectProperty property = controller.getOWLObjectPropertyByID("hasBase").get();
 		TestingHelpers.testKnowtatorAction(controller, new GraphActions.AddTripleAction(
 						source,
 						target,

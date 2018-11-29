@@ -25,19 +25,30 @@
 package edu.ucdenver.ccp.knowtator.view.actions;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
-import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.Span;
-import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.Span;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.SpanActions;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 class SpanActionsTests {
-	private static final KnowtatorModel controller = TestingHelpers.getLoadedController();
-    private static final int initialStart = 0;
+	private static KnowtatorModel controller;
+
+	static {
+		try {
+			controller = TestingHelpers.getLoadedController();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static final int initialStart = 0;
     private static final int initialEnd = 4;
 
 	private static void checkSpanModificationsTest(AbstractKnowtatorAction action, Span span, int expectedStart, int expectedEnd) {

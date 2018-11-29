@@ -26,7 +26,7 @@ package edu.ucdenver.ccp.knowtator;
 
 import com.google.common.io.Files;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import org.apache.commons.io.FileUtils;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
@@ -62,19 +62,14 @@ public class TestingHelpers {
                         .getFile());
     }
 
-    public static KnowtatorModel getLoadedController() {
-        KnowtatorModel controller = new KnowtatorModel();
+    public static KnowtatorModel getLoadedController() throws IOException {
 
-        try {
-            File projectDirectory = getProjectFile(projectFileName).getParentFile();
+        File projectDirectory = getProjectFile(projectFileName).getParentFile();
             File tempProjectDir = Files.createTempDir();
             FileUtils.copyDirectory(projectDirectory, tempProjectDir);
-            controller.setSaveLocation(tempProjectDir);
-            controller.setDebug();
-            controller.loadProject();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        KnowtatorModel controller = new KnowtatorModel(tempProjectDir, null);
+        controller.load();
+
 
         return controller;
     }
@@ -134,7 +129,7 @@ public class TestingHelpers {
                                      int expectedAnnotationNodes,
                                      int expectedTriples) {
         TestingHelpers.checkDefaultCollectionValues(controller);
-        controller.getOwlOntologyManager().get().applyChanges(changes);
+        controller.getOwlOntologyManager().applyChanges(changes);
         TestingHelpers.countCollections(controller,
                 expectedTextSources,
                 expectedConceptAnnotations,

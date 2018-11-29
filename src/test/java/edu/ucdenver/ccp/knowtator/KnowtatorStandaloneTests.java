@@ -94,7 +94,7 @@ class KnowtatorStandaloneTests {
 	}
 
 //    public void testExportToUIMAXMI() {
-//        controller = new KnowtatorModel();
+//        model = new KnowtatorModel();
 //
 //        int projectID = 0;
 ////        int articleID = 0;
@@ -104,9 +104,9 @@ class KnowtatorStandaloneTests {
 //
 //        File outputDir = new File("E:/Documents/Test/");
 //
-//        controller.loadProjectTest(projectFile);
+//        model.loadProjectTest(projectFile);
 //
-////        TextSource textSource = controller.getTextSourceCollection().getTextSourceCollection().getAnnotation(article);
-//        controller.saveToFormatTest(UIMAXMIUtil.class, null, outputDir);
+////        TextSource textSource = model.getTextSourceCollection().getTextSourceCollection().getAnnotation(article);
+//        model.saveToFormatTest(UIMAXMIUtil.class, null, outputDir);
 //    }
 }

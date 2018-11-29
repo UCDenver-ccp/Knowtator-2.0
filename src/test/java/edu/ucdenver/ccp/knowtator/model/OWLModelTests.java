@@ -25,6 +25,9 @@
 package edu.ucdenver.ccp.knowtator.model;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.object.RelationAnnotation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.HermiT.ReasonerFactory;
@@ -34,6 +37,7 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.util.OWLEntityRemover;
 import org.semanticweb.owlapi.util.OWLEntityRenamer;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,11 +50,11 @@ class OWLModelTests {
 	private static OWLReasoner reasoner;
 
 	@BeforeEach
-	void setup() {
+	void setup() throws IOException {
 
 		controller = TestingHelpers.getLoadedController();
 		OWLReasonerFactory reasonerFactory = new ReasonerFactory();
-		owlOntologyManager = controller.getOwlOntologyManager().get();
+		owlOntologyManager = controller.getOwlOntologyManager();
 		dataFactory = owlOntologyManager.getOWLDataFactory();
 
 		ontology = owlOntologyManager.getOntology(IRI.create("http://www.co-ode.org/ontologies/pizza"));

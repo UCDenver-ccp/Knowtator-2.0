@@ -22,42 +22,8 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model;
+package edu.ucdenver.ccp.knowtator.model.object;
 
-public interface ModelObject<K extends ModelObject> extends Comparable<K> {
-
-	String getId();
-
-	void setId(String id);
-
-	static int extractInt(String s) {
-		String num = s.replaceAll("\\D", "");
-		// return 0 if no digits found
-		return num.isEmpty() ? 0 : Integer.parseInt(num);
-	}
-
-	void dispose();
-
-	void addDataObjectModificationListener(ModelObjectListener listener);
-
-	void modify();
-
-	void removeDataObjectModificationListener(ModelObjectListener listener);
-
-	@Override
-	default int compareTo(K o) {
-		if (this == o) {
-			return 0;
-		}
-		if (o == null) {
-			return 1;
-		}
-
-		int result = extractInt(this.getId()) - extractInt(o.getId());
-		if (result == 0) {
-			return this.getId().compareTo(o.getId());
-		} else {
-			return result;
-		}
-	}
+public interface ModelObjectListener {
+	void modification();
 }

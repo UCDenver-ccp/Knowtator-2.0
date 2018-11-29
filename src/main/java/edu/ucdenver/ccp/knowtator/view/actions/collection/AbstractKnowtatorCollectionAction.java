@@ -24,8 +24,8 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.collection;
 
-import edu.ucdenver.ccp.knowtator.model.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
+import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;

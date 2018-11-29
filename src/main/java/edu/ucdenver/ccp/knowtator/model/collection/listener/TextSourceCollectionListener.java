@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection.listener;
 
-import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 
 public interface TextSourceCollectionListener extends KnowtatorCollectionListener<TextSource> {
 }

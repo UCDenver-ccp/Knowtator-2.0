@@ -22,19 +22,42 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model;
+package edu.ucdenver.ccp.knowtator.model.object;
 
-import org.apache.log4j.Logger;
+public interface ModelObject<K extends ModelObject> extends Comparable<K> {
 
+	String getId();
 
-/**
- * This class defines the methods for loading and saving the project
- *
- * @author Harrison Pielke-Lombardo
- */
-abstract class ProjectManager extends OWLModel {
-    @SuppressWarnings("unused")
-    private static final Logger log = Logger.getLogger(ProjectManager.class);
+	void setId(String id);
 
+	static int extractInt(String s) {
+		String num = s.replaceAll("\\D", "");
+		// return 0 if no digits found
+		return num.isEmpty() ? 0 : Integer.parseInt(num);
+	}
 
+	void dispose();
+
+	void addDataObjectModificationListener(ModelObjectListener listener);
+
+	void modify();
+
+	void removeDataObjectModificationListener(ModelObjectListener listener);
+
+	@Override
+	default int compareTo(K o) {
+		if (this == o) {
+			return 0;
+		}
+		if (o == null) {
+			return 1;
+		}
+
+		int result = extractInt(this.getId()) - extractInt(o.getId());
+		if (result == 0) {
+			return this.getId().compareTo(o.getId());
+		} else {
+			return result;
+		}
+	}
 }

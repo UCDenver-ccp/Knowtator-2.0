@@ -25,13 +25,23 @@
 package edu.ucdenver.ccp.knowtator.model.text.concept;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
-import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 class ConceptAnnotationTests {
-	private final static KnowtatorModel controller = TestingHelpers.getLoadedController();
+	private static KnowtatorModel controller;
+
+	static {
+		try {
+			controller = TestingHelpers.getLoadedController();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Test
 	void getSizeTest() {

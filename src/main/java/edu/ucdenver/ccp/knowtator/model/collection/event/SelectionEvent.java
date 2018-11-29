@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection.event;
 
-import edu.ucdenver.ccp.knowtator.model.ModelObject;
+import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 
 public class SelectionEvent<K extends ModelObject> extends ChangeEvent<K> {
 	public SelectionEvent(K oldObject, K newObject) {

@@ -25,10 +25,10 @@
 package edu.ucdenver.ccp.knowtator.view.actions;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
-import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.Profile;
-import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorDefaultSettings;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ColorChangeAction;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ReassignOWLClassAction;
@@ -36,11 +36,20 @@ import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 class OWLActionsTests {
-    private static final KnowtatorModel controller = TestingHelpers.getLoadedController();
+    private static KnowtatorModel controller;
+
+    static {
+        try {
+            controller = TestingHelpers.getLoadedController();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
     void reassignOWLClassActionTest() {
@@ -69,6 +78,7 @@ class OWLActionsTests {
         Profile profile = controller.getSelectedProfile().get();
         assert profile.getColor(conceptAnnotation.getOwlClass()).equals(Color.RED);
 
+        controller.getSelectedTextSource().get().selectNextSpan();
         Set<OWLClass> owlClassSet = new HashSet<>();
         owlClassSet.add(controller.getSelectedOWLClass().get());
 

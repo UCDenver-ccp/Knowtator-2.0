@@ -25,8 +25,9 @@
 package edu.ucdenver.ccp.knowtator.model.collection.listener;
 
 
-import edu.ucdenver.ccp.knowtator.model.*;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
+import edu.ucdenver.ccp.knowtator.model.object.*;
 
 /**
  * Provides methods to respond to changes in model selection events
@@ -40,10 +41,10 @@ public abstract class TextBoundModelListener implements TextSourceCollectionList
 	private final ModelObjectListener graphSpaceModificationListener;
 	private final ModelObjectListener conceptAnnotationModificationListener;
 	private final ModelObjectListener spanModificationListener;
-	private final KnowtatorModel controller;
+	private final BaseModel controller;
 
 
-	protected TextBoundModelListener(KnowtatorModel controller) {
+	protected TextBoundModelListener(BaseModel controller) {
 		this.controller = controller;
 
 

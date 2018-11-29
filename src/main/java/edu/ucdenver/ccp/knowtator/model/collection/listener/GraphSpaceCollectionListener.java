@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection.listener;
 
-import edu.ucdenver.ccp.knowtator.model.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 
 public interface GraphSpaceCollectionListener extends KnowtatorCollectionListener<GraphSpace> {
 }

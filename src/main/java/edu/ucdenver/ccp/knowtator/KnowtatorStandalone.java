@@ -66,7 +66,6 @@ class KnowtatorStandalone extends JFrame {
 		setContentPane(view);
 
 		if (debug) {
-			KnowtatorView.MODEL.setDebug();
 			try {
 				// Use the last project opened
 				File projectFile = new File(KnowtatorView.PREFERENCES.get("Last Project", null));
@@ -213,13 +212,13 @@ class KnowtatorStandalone extends JFrame {
 //	 * Loads a Knowtator project
 //	 *
 //	 * @param cmd                A command line object
-//	 * @param controller         A controller to load the project into
+//	 * @param model         A model to load the project into
 //	 * @param projectFileName    Location of the project
 //	 * @param annotationsDirName Name of the directory containing annotation files
 //	 */
 //	private static void loadProjectFromCommandLine(
 //			CommandLine cmd,
-//			KnowtatorModel controller,
+//			KnowtatorModel model,
 //			String projectFileName,
 //			String annotationsDirName) {
 //		if (projectFileName == null) {
@@ -228,7 +227,7 @@ class KnowtatorStandalone extends JFrame {
 //			String knowtatorOutputDirName = cmd.getOptionValue("knowtator");
 //			String profilesDirName = cmd.getOptionValue("profiles");
 //
-//			controller.importProject(
+//			model.importProject(
 //					profilesDirName == null ? null : new File(profilesDirName),
 //					ontologiesDirName == null ? null : new File(ontologiesDirName),
 //					articlesDirName == null ? null : new File(articlesDirName),
@@ -237,8 +236,8 @@ class KnowtatorStandalone extends JFrame {
 //
 //		} else {
 //			try {
-//				controller.setSaveLocation(new File(projectFileName));
-//				controller.loadProject();
+//				model.setSaveLocation(new File(projectFileName));
+//				model.loadProject();
 //			} catch (IOException e) {
 //				e.printStackTrace();
 //			}
@@ -251,7 +250,7 @@ class KnowtatorStandalone extends JFrame {
 //	 * @param cmd A command line object
 //	 */
 //	private static void commandLineConversion(CommandLine cmd) {
-//		KnowtatorModel controller = new KnowtatorModel();
+//		KnowtatorModel model = new KnowtatorModel();
 //
 //		String projectFileName = cmd.getOptionValue("project");
 //
@@ -260,10 +259,10 @@ class KnowtatorStandalone extends JFrame {
 //		String knowtatorOutputDirName = cmd.getOptionValue("knowtator");
 //
 //		loadProjectFromCommandLine(
-//				cmd, controller, projectFileName, cmd.getOptionValue("annotations"));
+//				cmd, model, projectFileName, cmd.getOptionValue("annotations"));
 //
 //		if (knowtatorOutputDirName != null) {
-//			controller.save();
+//			model.save();
 //		}
 //
 ////        if (uimaOutputDirName != null) {
@@ -271,7 +270,7 @@ class KnowtatorStandalone extends JFrame {
 ////        }
 //
 //		if (bratOutputDirName != null) {
-//			controller.saveToFormat(BratStandoffUtil.class, controller.getTextSourceCollection(), new File(bratOutputDirName));
+//			model.saveToFormat(BratStandoffUtil.class, model.getTextSourceCollection(), new File(bratOutputDirName));
 //		}
 //	}
 

@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
-import edu.ucdenver.ccp.knowtator.model.Profile;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 public class ProfileList extends KnowtatorList<Profile> {

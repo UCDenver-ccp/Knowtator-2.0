@@ -41,16 +41,14 @@ class KnowtatorIAATests {
 
     @BeforeAll
     static void makeProjectTest() throws IAAException, IOException {
-        KnowtatorModel controller = new KnowtatorModel();
         String projectFileName = "iaa_test_project";
         File projectDirectory = TestingHelpers.getProjectFile(projectFileName).getParentFile();
         File tempProjectDir = Files.createTempDir();
         FileUtils.copyDirectory(projectDirectory, tempProjectDir);
-        controller.setSaveLocation(tempProjectDir);
-        controller.setDebug();
-        controller.loadProject();
+	    KnowtatorModel controller = new KnowtatorModel(tempProjectDir, null);
+	    controller.load();
 
-//        File goldStandardDir = new File(controller.getProjectLocation(), "iaa");
+//        File goldStandardDir = new File(model.getProjectLocation(), "iaa");
         File outputDir = new File(controller.getProjectLocation(), "iaa_results");
         //noinspection ResultOfMethodCallIgnored
         outputDir.mkdir();

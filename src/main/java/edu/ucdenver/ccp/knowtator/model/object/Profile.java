@@ -22,12 +22,14 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model;
+package edu.ucdenver.ccp.knowtator.model.object;
 
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorDefaultSettings;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -47,12 +49,12 @@ public class Profile implements ModelObject<Profile>, Savable, KnowtatorXMLIO {
 
 	private String id;
 	private final HashMap<OWLClass, Color> colors; // <ClassName, Highlighter>
-	private final KnowtatorModel controller;
+	private final BaseModel model;
 
-	public Profile(KnowtatorModel controller, String id) {
+	public Profile(BaseModel model, String id) {
 		colors = new HashMap<>();
-		this.controller = controller;
-		controller.verifyId(id, this, false);
+		this.model = model;
+		model.verifyId(id, this, false);
 	}
 
   /*
@@ -118,7 +120,7 @@ public class Profile implements ModelObject<Profile>, Savable, KnowtatorXMLIO {
 
 	public void addColor(OWLClass owlClass, Color c) {
 		colors.put(owlClass, c);
-		controller.getProfileCollection().fireColorChanged();
+		model.getProfileCollection().fireColorChanged();
 	}
 
 
@@ -145,7 +147,7 @@ public class Profile implements ModelObject<Profile>, Savable, KnowtatorXMLIO {
 		colors.forEach((owlEntity, c) -> {
 			Element e = dom.createElement(KnowtatorXMLTags.HIGHLIGHTER);
 
-			e.setAttribute(KnowtatorXMLAttributes.CLASS_ID, controller.getOWLEntityRendering(owlEntity));
+			e.setAttribute(KnowtatorXMLAttributes.CLASS_ID, model.getOWLEntityRendering(owlEntity));
 
 			e.setAttribute(KnowtatorXMLAttributes.COLOR, convertToHex(c));
 			profileElem.appendChild(e);
@@ -173,7 +175,7 @@ public class Profile implements ModelObject<Profile>, Savable, KnowtatorXMLIO {
 			Color color = new Color((float) c.getRed() / 255, (float) c.getGreen() / 255, (float) c.getBlue() / 255, 1f);
 			colorMap.put(classID, color);
 		}
-		controller.getOWLClassesByIDs(colorMap.keySet())
+		model.getOWLClassesByIDs(colorMap.keySet())
 				.forEach((classID, owlClass) -> addColor(owlClass, colorMap.get(classID)));
 	}
 
@@ -184,8 +186,7 @@ public class Profile implements ModelObject<Profile>, Savable, KnowtatorXMLIO {
 
 	@Override
 	public void save() {
-		if (controller.isNotLoading())
-			controller.saveToFormat(KnowtatorXMLUtil.class, this, getSaveLocation());
+		model.saveToFormat(KnowtatorXMLUtil.class, this, getSaveLocation());
 	}
 
 	@Override
@@ -193,15 +194,8 @@ public class Profile implements ModelObject<Profile>, Savable, KnowtatorXMLIO {
 
 	}
 
-	@SuppressWarnings("WeakerAccess")
-	@Override
 	public File getSaveLocation() {
-		return new File(controller.getSaveLocation().getAbsolutePath(), String.format("%s.xml", id));
-	}
-
-	@Override
-	public void setSaveLocation(File saveLocation) {
-
+		return new File(model.getSaveLocation().getAbsolutePath(), String.format("%s.xml", id));
 	}
 
 	public Map<OWLClass, Color> getColors() {

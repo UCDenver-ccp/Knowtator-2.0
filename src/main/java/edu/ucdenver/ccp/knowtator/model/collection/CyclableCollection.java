@@ -24,8 +24,8 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.model.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.collection.listener.CollectionListener;
+import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 
 import java.util.TreeSet;
 

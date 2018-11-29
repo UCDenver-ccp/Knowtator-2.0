@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection.listener;
 
-import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 
 public interface ConceptAnnotationCollectionListener extends KnowtatorCollectionListener<ConceptAnnotation> {
 }

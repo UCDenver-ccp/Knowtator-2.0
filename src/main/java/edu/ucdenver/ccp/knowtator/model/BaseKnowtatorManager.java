@@ -25,9 +25,5 @@
 package edu.ucdenver.ccp.knowtator.model;
 
 public interface BaseKnowtatorManager extends Savable {
-	void reset();
-
-	void finishLoad();
-
 	void dispose();
 }

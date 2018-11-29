@@ -26,8 +26,8 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
-import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.Span;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.object.Span;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -44,18 +44,18 @@ import static edu.ucdenver.ccp.knowtator.model.FilterType.PROFILE;
 
 public class SpanCollection extends KnowtatorCollection<Span> implements BratStandoffIO, KnowtatorXMLIO {
 
-	protected final KnowtatorModel controller;
+	protected final BaseModel model;
 
-	public SpanCollection(KnowtatorModel controller) {
-		this.controller = controller;
+	public SpanCollection(BaseModel model) {
+		this.model = model;
 	}
 
 	@Override
 	public Stream<Span> stream() {
-		boolean filterByProfile = controller.isFilter(PROFILE);
+		boolean filterByProfile = model.isFilter(PROFILE);
 
 
-		return controller.getSelectedProfile()
+		return model.getSelectedProfile()
 				.map(profile -> super.stream()
 						.filter(span -> !filterByProfile || span.getConceptAnnotation().getAnnotator().equals(profile)))
 				.orElse(super.stream());

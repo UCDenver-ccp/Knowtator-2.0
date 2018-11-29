@@ -28,10 +28,15 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.util.mxGraphTransferable;
-import edu.ucdenver.ccp.knowtator.model.*;
+import edu.ucdenver.ccp.knowtator.model.FilterType;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.listener.TextBoundModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.listener.TextSourceCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.object.Span;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.FilterAction;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.SpanActions;
@@ -80,7 +85,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private static final Logger log = Logger.getLogger(KnowtatorView.class);
 	public static final Preferences PREFERENCES = Preferences.userRoot().node("knowtator");
 
-	public static KnowtatorModel MODEL = new KnowtatorModel();
+	public static KnowtatorModel MODEL;
 	private GraphViewDialog graphViewDialog;
 	private JComponent panel1;
 	private JTextField searchTextField;
@@ -144,8 +149,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		} catch (ClassNotFoundException ignored) {
 
 		}
-
-		setUpOWL();
 	}
 
 	/**
@@ -276,8 +279,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	 * Make filter check boxes
 	 */
 	private void makeFilterCheckBoxes() {
-		owlClassFilterCheckBox.setSelected(MODEL.isFilter(FilterType.OWLCLASS));
-		profileFilterCheckBox.setSelected(MODEL.isFilter(FilterType.PROFILE));
+		owlClassFilterCheckBox.setSelected(false);
+		profileFilterCheckBox.setSelected(false);
 
 		profileFilterCheckBox.addItemListener(e -> MODEL.registerAction(new FilterAction(FilterType.PROFILE, profileFilterCheckBox.isSelected())));
 		owlClassFilterCheckBox.addItemListener(e -> MODEL.registerAction(new FilterAction(FilterType.OWLCLASS, owlClassFilterCheckBox.isSelected())));
@@ -602,7 +605,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	@Override
 	public void disposeView() {
 		MODEL.dispose();
-
 		knowtatorComponents.forEach(KnowtatorComponent::dispose);
 	}
 
@@ -627,16 +629,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	}
 
 	public void loadProject(File file, TextSourceCollectionListener listener) throws IOException {
-		MODEL.dispose();
-		MODEL.reset(getOWLWorkspace());
-		MODEL.setSaveLocation(file);
+		if (getOWLWorkspace() != null) {
+			MODEL = new KnowtatorModel(file, getOWLWorkspace());
+		} else {
+			MODEL = new KnowtatorModel(file, null);
+		}
 		log.info(String.format("Opening from %s", file.getAbsolutePath()));
 		if (listener != null) {
 			MODEL.addTextSourceCollectionListener(listener);
 		}
-		MODEL.loadProject();
+		MODEL.load();
 		reset();
-		MODEL.selectFirstTextSource();
 		knowtatorTextPane.refreshHighlights();
 		addTextSourceButton.setEnabled(true);
 

@@ -25,13 +25,15 @@
 package edu.ucdenver.ccp.knowtator.view.actions;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
-import edu.ucdenver.ccp.knowtator.model.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.TextSource;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 
 import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.ADD;
 import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.REMOVE;
@@ -42,7 +44,7 @@ public class KnowtatorCollectionActionsTests {
     private KnowtatorModel controller;
 
     @BeforeEach
-    void setup() {
+    void setup() throws IOException {
         controller = TestingHelpers.getLoadedController();
         KnowtatorView.MODEL = controller;
     }

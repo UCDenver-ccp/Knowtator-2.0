@@ -27,14 +27,24 @@ package edu.ucdenver.ccp.knowtator;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 class ProjectManagerTests {
 
-    private static final KnowtatorModel controller = TestingHelpers.getLoadedController();
+	private static KnowtatorModel controller;
+
+	static {
+		try {
+			controller = TestingHelpers.getLoadedController();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
     @Test
     void loadProjectTest() {
         TestingHelpers.checkDefaultCollectionValues(controller);
-        controller.loadProject();
+	    controller.load();
 
     }
 
