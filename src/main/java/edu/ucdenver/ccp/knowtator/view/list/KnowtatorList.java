@@ -34,6 +34,8 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.MouseInputAdapter;
+import java.awt.event.MouseEvent;
 
 public abstract class KnowtatorList<K extends ModelObject> extends JList<K> implements KnowtatorComponent, ModelListener {
 
@@ -51,6 +53,19 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K> impl
 		};
 
 		addListSelectionListener(al);
+
+		KnowtatorList list = this;
+		addMouseListener(new MouseInputAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1) {
+					if (list.getSelectedIndex() != -1) {
+						int index = list.locationToIndex(e.getPoint());
+						setSelectedIndex(index);
+					}
+				}
+			}
+		});
 
 	}
 

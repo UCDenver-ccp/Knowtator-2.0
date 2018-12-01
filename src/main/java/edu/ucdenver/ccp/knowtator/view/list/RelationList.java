@@ -58,7 +58,7 @@ public class RelationList extends KnowtatorList<RelationAnnotation> {
 		if (shouldReact) {
 			KnowtatorView.MODEL.getSelectedTextSource()
 					.ifPresent(textSource -> {
-						KnowtatorCollection<RelationAnnotation> relationAnnotations = new KnowtatorCollection<RelationAnnotation>(KnowtatorView.MODEL) {
+						KnowtatorCollection<RelationAnnotation> relationAnnotations = new KnowtatorCollection<RelationAnnotation>(null) {
 
 						};
 						textSource.getGraphSpaceCollection().stream()

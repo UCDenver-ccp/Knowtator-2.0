@@ -42,73 +42,71 @@ import static edu.ucdenver.ccp.knowtator.view.actions.modelactions.ProfileAction
 
 public class ColorList extends JList<OWLClass> implements KnowtatorComponent, ModelListener {
 
-    private final ListSelectionListener lsl;
+	private final ListSelectionListener lsl;
 
-    public ColorList(KnowtatorView view) {
-        setModel(new DefaultListModel<>());
+	public ColorList(KnowtatorView view) {
+		setModel(new DefaultListModel<>());
 
-        setCellRenderer(new ColorListRenderer<>());
-	    lsl = e -> assignColorToClass(view, getSelectedValue());
-    }
+		setCellRenderer(new ColorListRenderer<>());
+		lsl = e -> assignColorToClass(view, getSelectedValue());
+	}
 
-    private void setCollection() {
-        removeListSelectionListener(lsl);
-        setModel(new DefaultListModel<>());
-        KnowtatorView.MODEL.getSelectedProfile()
-                .ifPresent(profile -> profile.getColors().keySet().stream()
-                .sorted(KnowtatorView.MODEL.getOWLObjectComparator())
-                        .forEach(o -> ((DefaultListModel<OWLClass>) getModel()).addElement(o)));
-//        profile.getColors().keySet().stream().filter(o -> !(o instanceof OWLObject))
-//                .sorted(Comparator.comparing(Object::toString))
-//                .forEach(o -> ((DefaultListModel<OWLObject>) getModel()).addElement(o));
-        addListSelectionListener(lsl);
-    }
+	private void setCollection() {
+		removeListSelectionListener(lsl);
+		setModel(new DefaultListModel<>());
+		KnowtatorView.MODEL.getSelectedProfile()
+				.ifPresent(profile -> profile.getColors().keySet().stream()
+						.sorted(KnowtatorView.MODEL.getOWLObjectComparator())
+						.forEach(o -> ((DefaultListModel<OWLClass>) getModel()).addElement(o)));
 
-    @Override
-    public void reset() {
+		addListSelectionListener(lsl);
+	}
 
-        KnowtatorView.MODEL.addModelListener(this);
-        setCollection();
-    }
+	@Override
+	public void reset() {
 
-    @Override
-    public void dispose() {
+		KnowtatorView.MODEL.addModelListener(this);
+		setCollection();
+	}
 
-        setModel(new DefaultListModel<>());
-        KnowtatorView.MODEL.removeModelListener(this);
-    }
+	@Override
+	public void dispose() {
 
-    @Override
-    public void filterChangedEvent(FilterType filterType, boolean filterValue) {
+		setModel(new DefaultListModel<>());
+		KnowtatorView.MODEL.removeModelListener(this);
+	}
 
-    }
+	@Override
+	public void filterChangedEvent(FilterType filterType, boolean filterValue) {
+
+	}
 
 
-    @Override
-    public void modelChangeEvent(ChangeEvent<ModelObject> event) {
-        event.getNew()
-                .filter(modelObject -> modelObject instanceof Profile)
-                .ifPresent(modelObject -> setCollection());
-    }
+	@Override
+	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
+		event.getNew()
+				.filter(modelObject -> modelObject instanceof Profile)
+				.ifPresent(modelObject -> setCollection());
+	}
 
-    @Override
-    public void colorChangedEvent() {
-        setCollection();
-    }
+	@Override
+	public void colorChangedEvent() {
+		setCollection();
+	}
 
-    class ColorListRenderer<o> extends JLabel implements ListCellRenderer<o> {
+	class ColorListRenderer<o> extends JLabel implements ListCellRenderer<o> {
 
-        ColorListRenderer() {
-            setOpaque(true);
-        }
+		ColorListRenderer() {
+			setOpaque(true);
+		}
 
-        @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            if (value instanceof OWLClass) {
-                KnowtatorView.MODEL.getSelectedProfile().ifPresent(profile -> setBackground(profile.getColors().get(value)));
-                setText(KnowtatorView.MODEL.getOWLEntityRendering((OWLEntity) value));
-            }
-            return this;
-        }
-    }
+		@Override
+		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+			if (value instanceof OWLClass) {
+				KnowtatorView.MODEL.getSelectedProfile().ifPresent(profile -> setBackground(profile.getColors().get(value)));
+				setText(KnowtatorView.MODEL.getOWLEntityRendering((OWLEntity) value));
+			}
+			return this;
+		}
+	}
 }

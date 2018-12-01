@@ -41,7 +41,7 @@ public class ProfileList extends KnowtatorList<Profile> {
 	@Override
 	public void reset() {
 		super.reset();
-		setCollection(KnowtatorView.MODEL.getProfileCollection());
+		react();
 	}
 
 

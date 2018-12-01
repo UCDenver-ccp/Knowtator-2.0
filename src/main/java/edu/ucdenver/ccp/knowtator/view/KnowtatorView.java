@@ -32,10 +32,7 @@ import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
-import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
-import edu.ucdenver.ccp.knowtator.model.object.Span;
-import edu.ucdenver.ccp.knowtator.model.object.TextSource;
+import edu.ucdenver.ccp.knowtator.model.object.*;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.FilterAction;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.SpanActions;
@@ -841,6 +838,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	@Override
 	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
 		event.getNew().ifPresent(o -> {
+			if (MODEL.getNumberOfTextSources() == 0) {
+				disableTextSourceButtons();
+				addTextSourceButton.setEnabled(true);
+			} else {
+				enableTextSourceButtons();
+				addAnnotationButton.setEnabled(true);
+			}
 			if (o instanceof ConceptAnnotation) {
 				MODEL.getSelectedTextSource().ifPresent(textSource -> {
 					if (textSource.getNumberOfConceptAnnotations() == 0) {
@@ -854,14 +858,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 						}
 					}
 				});
-			} else if (o instanceof TextSource) {
-				if (MODEL.getNumberOfTextSources() == 0) {
-					disableTextSourceButtons();
-					addTextSourceButton.setEnabled(true);
-				} else {
-					enableTextSourceButtons();
-					addAnnotationButton.setEnabled(true);
-				}
 			} else if (o instanceof Span) {
 				MODEL.getSelectedTextSource()
 						.ifPresent(textSource -> textSource.getSelectedAnnotation()
@@ -873,6 +869,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 											}
 										}
 								));
+			} else if (o instanceof GraphSpace) {
+				graphViewDialog.setVisible(true);
 			}
 		});
 
