@@ -81,7 +81,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 	 * @param loc Location filter
 	 */
 	public SpanCollection getSpans(Integer loc) {
-		SpanCollection allSpans = new SpanCollection(model);
+		SpanCollection allSpans = new SpanCollection(null);
 		stream().map(conceptAnnotation -> conceptAnnotation.stream()
 				.filter(span -> loc == null || span.contains(loc)).iterator())
 				.forEach(spanIterator -> {

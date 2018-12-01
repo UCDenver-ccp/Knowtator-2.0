@@ -334,7 +334,7 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="b018" class="edu.ucdenver.ccp.knowtator.model.KnowtatorTextPane" binding="knowtatorTextPane" custom-create="true">
+                  <component id="b018" class="edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane" binding="knowtatorTextPane" custom-create="true">
                     <constraints/>
                     <properties>
                       <editable value="false"/>

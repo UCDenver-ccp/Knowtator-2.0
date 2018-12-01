@@ -28,9 +28,9 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.BaseKnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -42,7 +42,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Optional;
 
-public class ProfileCollection extends KnowtatorCollection<Profile> implements KnowtatorXMLIO, BaseKnowtatorManager {
+public class ProfileCollection extends KnowtatorCollection<Profile> implements KnowtatorXMLIO, Savable {
 
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(KnowtatorModel.class);

@@ -27,8 +27,8 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
-import edu.ucdenver.ccp.knowtator.model.BaseKnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -42,7 +42,7 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
-public class TextSourceCollection extends KnowtatorCollection<TextSource> implements BratStandoffIO, KnowtatorXMLIO, BaseKnowtatorManager {
+public class TextSourceCollection extends KnowtatorCollection<TextSource> implements BratStandoffIO, KnowtatorXMLIO, Savable {
 	@SuppressWarnings("unused")
 	private final Logger log = Logger.getLogger(TextSourceCollection.class);
 

@@ -219,7 +219,8 @@ public class Span implements TextBoundModelObject<Span>, KnowtatorXMLIO, BratSta
    */
 
   public String toString() {
-    return String.format("%s Start: %d, End: %d", getSpannedText(), start, end);
+
+	  return String.format("%s (%d : %d)", getSpannedText(), start, end);
   }
 
   /*

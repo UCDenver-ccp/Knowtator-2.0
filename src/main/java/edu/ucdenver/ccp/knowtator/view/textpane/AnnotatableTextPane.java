@@ -22,8 +22,10 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model;
+package edu.ucdenver.ccp.knowtator.view.textpane;
 
+import edu.ucdenver.ccp.knowtator.model.FilterType;
+import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.CyclableCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectableCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
@@ -40,6 +42,7 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -290,7 +293,9 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 			removeMouseListener(mouseListener);
 		} else {
 			setEnabled(true);
-			addMouseListener(mouseListener);
+			if (!Arrays.asList(getMouseListeners()).contains(mouseListener)) {
+				addMouseListener(mouseListener);
+			}
 			showTextSource();
 		}
 		refreshHighlights();

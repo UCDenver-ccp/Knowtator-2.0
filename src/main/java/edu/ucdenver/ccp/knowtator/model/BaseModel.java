@@ -357,7 +357,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 	}
 
 	public boolean isNotLoading() {
-		return loading;
+		return !loading;
 	}
 
 	public void setFilter(FilterType filterType, boolean isFilter) {
