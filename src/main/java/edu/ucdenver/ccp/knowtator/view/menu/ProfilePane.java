@@ -53,7 +53,7 @@ class ProfilePane extends MenuPane {
     private final KnowtatorView view;
 
     ProfilePane(KnowtatorView view) {
-        super("Profile");
+	    super(view, "Profile");
         this.view = view;
         $$$setupUI$$$();
 
@@ -68,7 +68,7 @@ class ProfilePane extends MenuPane {
     }
 
     private void createUIComponents() {
-        profileList = new ProfileList();
+	    profileList = new ProfileList(view);
         colorList = new ColorList(view);
     }
 

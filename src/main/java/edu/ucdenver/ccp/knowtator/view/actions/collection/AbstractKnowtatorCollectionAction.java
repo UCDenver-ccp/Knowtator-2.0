@@ -24,6 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.collection;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
@@ -50,8 +51,8 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject> e
 	protected final KnowtatorCollection<K> collection;
 	protected K object;
 
-	protected AbstractKnowtatorCollectionAction(CollectionActionType actionType, String presentationName, KnowtatorCollection<K> collection) {
-		super(String.format("%s %s", actionType, presentationName));
+	protected AbstractKnowtatorCollectionAction(BaseModel model, CollectionActionType actionType, String presentationName, KnowtatorCollection<K> collection) {
+		super(model, String.format("%s %s", actionType, presentationName));
 		this.collection = collection;
 		this.actionType = actionType;
 		object = null;
@@ -105,51 +106,53 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject> e
 	}
 
 	public static void pickAction(KnowtatorView view, String id, File file, ActionParameters... actionParametersList) {
-		List<AbstractKnowtatorCollectionAction> actions = new ArrayList<>();
+		view.getModel().ifPresent(model -> {
+			List<AbstractKnowtatorCollectionAction> actions = new ArrayList<>();
 
-		Arrays.asList(actionParametersList).forEach(parameters -> {
-			KnowtatorCollectionType collectionType = parameters.getCollectionType();
-			CollectionActionType actionType = parameters.getActionType();
+			Arrays.asList(actionParametersList).forEach(parameters -> {
+				KnowtatorCollectionType collectionType = parameters.getCollectionType();
+				CollectionActionType actionType = parameters.getActionType();
 
-			switch (collectionType) {
-				case ANNOTATION:
-					KnowtatorView.MODEL.getSelectedTextSource()
-							.ifPresent(textSource -> actions.add(new ConceptAnnotationAction(
-									parameters.getActionType(),
-									textSource)));
-					break;
-				case SPAN:
-					KnowtatorView.MODEL.getSelectedTextSource()
-							.ifPresent(textSource -> textSource.getSelectedAnnotation()
-									.ifPresent(conceptAnnotation -> actions.add(new SpanAction(actionType, conceptAnnotation))));
-					break;
-				case PROFILE:
-					actions.add(new ProfileAction(actionType, id));
-					break;
-				case DOCUMENT:
-					actions.add(new TextSourceAction(actionType, file));
+				switch (collectionType) {
+					case ANNOTATION:
+						model.getSelectedTextSource()
+								.ifPresent(textSource -> actions.add(new ConceptAnnotationAction(
+										model, parameters.getActionType(),
+										textSource)));
+						break;
+					case SPAN:
+						model.getSelectedTextSource()
+								.ifPresent(textSource -> textSource.getSelectedAnnotation()
+										.ifPresent(conceptAnnotation -> actions.add(new SpanAction(model, actionType, conceptAnnotation))));
+						break;
+					case PROFILE:
+						actions.add(new ProfileAction(model, actionType, id));
+						break;
+					case DOCUMENT:
+						actions.add(new TextSourceAction(model, actionType, file));
+				}
+
+
+			});
+
+			if (!actions.isEmpty()) {
+				AbstractKnowtatorAction action;
+				if (actions.size() == 1) {
+					action = actions.get(0);
+				} else {
+					int response = JOptionPane.showOptionDialog(view,
+							"Choose an option",
+							"New Concept Annotation or Span",
+							JOptionPane.DEFAULT_OPTION,
+							JOptionPane.PLAIN_MESSAGE,
+							null,
+							actions.stream().map(AbstractKnowtatorAction::getPresentationName).toArray(),
+							2);
+					action = actions.get(response);
+				}
+
+				model.registerAction(action);
 			}
-
-
 		});
-
-		if (!actions.isEmpty()) {
-			AbstractKnowtatorAction action;
-			if (actions.size() == 1) {
-				action = actions.get(0);
-			} else {
-				int response = JOptionPane.showOptionDialog(view,
-						"Choose an option",
-						"New Concept Annotation or Span",
-						JOptionPane.DEFAULT_OPTION,
-						JOptionPane.PLAIN_MESSAGE,
-						null,
-						actions.stream().map(AbstractKnowtatorAction::getPresentationName).toArray(),
-						2);
-				action = actions.get(response);
-			}
-
-			KnowtatorView.MODEL.registerAction(action);
-		}
 	}
 }

@@ -28,7 +28,6 @@ import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.FilterAction;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ReassignOWLClassAction;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,25 +39,25 @@ import static edu.ucdenver.ccp.knowtator.model.FilterType.OWLCLASS;
 import static edu.ucdenver.ccp.knowtator.model.FilterType.PROFILE;
 
 class FilterActionsTests {
-	private static KnowtatorModel controller;
+	private static KnowtatorModel model;
 
 	static {
+
+	}
+
+	@BeforeAll
+	static void setup() {
 		try {
-			controller = TestingHelpers.getLoadedController();
+			model = TestingHelpers.getLoadedController();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	@BeforeAll
-	static void setup() {
-		KnowtatorView.MODEL = controller;
-	}
-
 	@Test
 	void filterActionTest() {
-		TestingHelpers.checkDefaultCollectionValues(controller);
-		TestingHelpers.testKnowtatorAction(controller, new FilterAction(PROFILE, true),
+		TestingHelpers.checkDefaultCollectionValues(model);
+		TestingHelpers.testKnowtatorAction(model, new FilterAction(model, PROFILE, true),
 				TestingHelpers.defaultExpectedTextSources,
 				TestingHelpers.defaultExpectedConceptAnnotations,
 				TestingHelpers.defaultExpectedSpans - 3,
@@ -67,7 +66,7 @@ class FilterActionsTests {
 				TestingHelpers.defaultExpectedHighlighters,
 				TestingHelpers.defaultExpectedAnnotationNodes,
 				TestingHelpers.defaultExpectedTriples);
-		TestingHelpers.testKnowtatorAction(controller, new FilterAction(PROFILE, false),
+		TestingHelpers.testKnowtatorAction(model, new FilterAction(model, PROFILE, false),
 				TestingHelpers.defaultExpectedTextSources,
 				TestingHelpers.defaultExpectedConceptAnnotations,
 				TestingHelpers.defaultExpectedSpans,
@@ -77,12 +76,12 @@ class FilterActionsTests {
 				TestingHelpers.defaultExpectedAnnotationNodes,
 				TestingHelpers.defaultExpectedTriples);
 
-		TextSource textSource = controller.getSelectedTextSource().get();
+		TextSource textSource = model.getSelectedTextSource().get();
 		ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
 		textSource.setSelection(conceptAnnotation);
-		controller.registerAction(new ReassignOWLClassAction(conceptAnnotation, controller.getSelectedOWLClass().get()));
+		model.registerAction(new ReassignOWLClassAction(model, conceptAnnotation, model.getSelectedOWLClass().get()));
 
-		TestingHelpers.testKnowtatorAction(controller, new FilterAction(OWLCLASS, true),
+		TestingHelpers.testKnowtatorAction(model, new FilterAction(model, OWLCLASS, true),
 				TestingHelpers.defaultExpectedTextSources,
 				TestingHelpers.defaultExpectedConceptAnnotations,
 				TestingHelpers.defaultExpectedSpans - 5,
@@ -91,7 +90,7 @@ class FilterActionsTests {
 				TestingHelpers.defaultExpectedHighlighters,
 				TestingHelpers.defaultExpectedAnnotationNodes,
 				TestingHelpers.defaultExpectedTriples);
-		TestingHelpers.testKnowtatorAction(controller, new FilterAction(OWLCLASS, false),
+		TestingHelpers.testKnowtatorAction(model, new FilterAction(model, OWLCLASS, false),
 				TestingHelpers.defaultExpectedTextSources,
 				TestingHelpers.defaultExpectedConceptAnnotations,
 				TestingHelpers.defaultExpectedSpans,

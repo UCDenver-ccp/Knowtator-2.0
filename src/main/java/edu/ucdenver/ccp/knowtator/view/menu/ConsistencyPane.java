@@ -27,7 +27,6 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import edu.ucdenver.ccp.knowtator.model.OWLModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.RelationAnnotation;
@@ -59,8 +58,8 @@ class ConsistencyPane extends MenuPane {
 	private HashSet<OWLClass> activeOWLClassDescendants;
 	private HashSet<OWLObjectProperty> activeOWLPropertyDescendants;
 
-	ConsistencyPane() {
-		super("Consistency");
+	ConsistencyPane(KnowtatorView view) {
+		super(view, "Consistency");
 		$$$setupUI$$$();
 		includeClassDescendantsCheckBox.addActionListener(e -> refresh());
 		exactMatchCheckBox.addActionListener(e -> refresh());
@@ -78,32 +77,34 @@ class ConsistencyPane extends MenuPane {
 	}
 
 	private void refresh() {
-		OWLModel owlModel = KnowtatorView.MODEL;
+		view.getModel().ifPresent(model -> {
+			activeOWLClassDescendants = new HashSet<>();
+			model.getSelectedOWLClass().ifPresent(owlClass -> {
+				activeOWLClassDescendants.add(owlClass);
+				if (includeClassDescendantsCheckBox.isSelected()) {
+					activeOWLClassDescendants.addAll(model.getOWLCLassDescendants(owlClass));
+				}
+				owlClassLabel.setText(model.getOWLEntityRendering(owlClass));
+			});
 
-		activeOWLClassDescendants = new HashSet<>();
-		owlModel.getSelectedOWLClass().ifPresent(owlClass -> {
-			activeOWLClassDescendants.add(owlClass);
-			if (includeClassDescendantsCheckBox.isSelected()) {
-				activeOWLClassDescendants.addAll(owlModel.getOWLCLassDescendants(owlClass));
-			}
-			owlClassLabel.setText(owlModel.getOWLEntityRendering(owlClass));
+			activeOWLPropertyDescendants = new HashSet<>();
+			model.getSelectedOWLObjectProperty().ifPresent(owlObjectProperty -> {
+				activeOWLPropertyDescendants.add(owlObjectProperty);
+				if (includePropertyDescendantsCheckBox.isSelected()) {
+					activeOWLPropertyDescendants.addAll(model.getOWLObjectPropertyDescendants(owlObjectProperty));
+				}
+				owlPropertyLabel.setText(model.getOWLEntityRendering(owlObjectProperty));
+			});
+
+			model.getSelectedTextSource()
+					.ifPresent(textSource -> textSource.getSelectedAnnotation()
+							.ifPresent(conceptAnnotation -> spanLabel.setText(conceptAnnotation.getSpannedText())));
+			annotationsForClassList.react();
+			annotationsForSpannedTextList.react();
+			relationsForPropertyList.react();
 		});
 
-		activeOWLPropertyDescendants = new HashSet<>();
-		owlModel.getSelectedOWLObjectProperty().ifPresent(owlObjectProperty -> {
-			activeOWLPropertyDescendants.add(owlObjectProperty);
-			if (includePropertyDescendantsCheckBox.isSelected()) {
-				activeOWLPropertyDescendants.addAll(owlModel.getOWLObjectPropertyDescendants(owlObjectProperty));
-			}
-			owlPropertyLabel.setText(owlModel.getOWLEntityRendering(owlObjectProperty));
-		});
 
-		KnowtatorView.MODEL.getSelectedTextSource()
-				.ifPresent(textSource -> textSource.getSelectedAnnotation()
-						.ifPresent(conceptAnnotation -> spanLabel.setText(conceptAnnotation.getSpannedText())));
-		annotationsForClassList.react();
-		annotationsForSpannedTextList.react();
-		relationsForPropertyList.react();
 	}
 
 	@Override
@@ -310,7 +311,7 @@ class ConsistencyPane extends MenuPane {
 
 	private void createUIComponents() {
 		ConsistencyPane consistencyPane = this;
-		annotationsForClassList = new AnnotationList() {
+		annotationsForClassList = new AnnotationList(view) {
 			@Override
 			public void setCollection(KnowtatorCollection<ConceptAnnotation> collection) {
 				//clear collection
@@ -326,7 +327,7 @@ class ConsistencyPane extends MenuPane {
 				}
 			}
 		};
-		annotationsForSpannedTextList = new AnnotationList() {
+		annotationsForSpannedTextList = new AnnotationList(view) {
 			@Override
 			public void setCollection(KnowtatorCollection<ConceptAnnotation> collection) {
 				//clear collection
@@ -343,7 +344,7 @@ class ConsistencyPane extends MenuPane {
 			}
 		};
 
-		relationsForPropertyList = new RelationList() {
+		relationsForPropertyList = new RelationList(view) {
 			@Override
 			public void setCollection(KnowtatorCollection<RelationAnnotation> collection) {
 				//clear collection

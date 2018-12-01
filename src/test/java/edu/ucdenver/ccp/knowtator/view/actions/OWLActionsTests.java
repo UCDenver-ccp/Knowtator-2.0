@@ -41,11 +41,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 class OWLActionsTests {
-    private static KnowtatorModel controller;
+    private static KnowtatorModel model;
 
     static {
         try {
-            controller = TestingHelpers.getLoadedController();
+            model = TestingHelpers.getLoadedController();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -53,45 +53,45 @@ class OWLActionsTests {
 
     @Test
     void reassignOWLClassActionTest() {
-        TextSource textSource = controller.getSelectedTextSource().get();
+        TextSource textSource = model.getSelectedTextSource().get();
         ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
         textSource.setSelection(conceptAnnotation);
 
-        OWLClass owlClass = controller.getOWLClassByID("Pizza").get();
-        assert controller.getSelectedTextSource().get().getSelectedAnnotation().get().getOwlClass() == owlClass;
+        OWLClass owlClass = model.getOWLClassByID("Pizza").get();
+        assert model.getSelectedTextSource().get().getSelectedAnnotation().get().getOwlClass() == owlClass;
 
-        controller.registerAction(new ReassignOWLClassAction(conceptAnnotation, controller.getSelectedOWLClass().get()));
-        assert conceptAnnotation.getOwlClass().equals(controller.getSelectedOWLClass().get());
-        controller.undo();
+        model.registerAction(new ReassignOWLClassAction(model, conceptAnnotation, model.getSelectedOWLClass().get()));
+        assert conceptAnnotation.getOwlClass().equals(model.getSelectedOWLClass().get());
+        model.undo();
         assert conceptAnnotation.getOwlClass() == owlClass;
-        controller.redo();
-        assert conceptAnnotation.getOwlClass().equals(controller.getSelectedOWLClass().get());
-        controller.undo();
+        model.redo();
+        assert conceptAnnotation.getOwlClass().equals(model.getSelectedOWLClass().get());
+        model.undo();
         //TODO: Add more to this test to see if descendants are reassigned too. Probably will need to edit OWLModel's debug to make some descendants
     }
 
     @Test
     void changeColorActionTest() {
-        TextSource textSource = controller.getSelectedTextSource().get();
+        TextSource textSource = model.getSelectedTextSource().get();
         ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
         textSource.setSelection(conceptAnnotation);
-        Profile profile = controller.getSelectedProfile().get();
+        Profile profile = model.getSelectedProfile().get();
         assert profile.getColor(conceptAnnotation.getOwlClass()).equals(Color.RED);
 
-        controller.getSelectedTextSource().get().selectNextSpan();
+        model.getSelectedTextSource().get().selectNextSpan();
         Set<OWLClass> owlClassSet = new HashSet<>();
-        owlClassSet.add(controller.getSelectedOWLClass().get());
+        owlClassSet.add(model.getSelectedOWLClass().get());
 
-        controller.registerAction(new ReassignOWLClassAction(conceptAnnotation, controller.getSelectedOWLClass().get()));
+        model.registerAction(new ReassignOWLClassAction(model, conceptAnnotation, model.getSelectedOWLClass().get()));
         assert conceptAnnotation.getColor().equals(KnowtatorDefaultSettings.COLORS.get(0));
 
-        controller.registerAction(new ColorChangeAction(profile, owlClassSet, Color.GREEN));
+        model.registerAction(new ColorChangeAction(model, profile, owlClassSet, Color.GREEN));
         assert conceptAnnotation.getColor().equals(Color.GREEN);
-        controller.undo();
+        model.undo();
         assert conceptAnnotation.getColor().equals(KnowtatorDefaultSettings.COLORS.get(0));
-        controller.redo();
+        model.redo();
         assert profile.getColor(conceptAnnotation.getOwlClass()).equals(Color.GREEN);
-        controller.undo();
+        model.undo();
 
     }
 }

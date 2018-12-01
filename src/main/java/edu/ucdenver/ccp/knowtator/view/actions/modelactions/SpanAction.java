@@ -24,9 +24,9 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType;
@@ -37,15 +37,15 @@ public class SpanAction extends AbstractKnowtatorCollectionAction<Span> {
 
 	private final ConceptAnnotation conceptAnnotation;
 
-	public SpanAction(CollectionActionType actionName, ConceptAnnotation conceptAnnotation) {
-		super(actionName, "span", conceptAnnotation);
+	public SpanAction(BaseModel model, CollectionActionType actionName, ConceptAnnotation conceptAnnotation) {
+		super(model, actionName, "span", conceptAnnotation);
 		this.conceptAnnotation = conceptAnnotation;
 
 	}
 
 	@Override
 	protected void prepareAdd() {
-		Span newSpan = new Span(KnowtatorView.MODEL, conceptAnnotation, null, KnowtatorView.MODEL.getSelection().getStart(), KnowtatorView.MODEL.getSelection().getEnd());
+		Span newSpan = new Span(model, conceptAnnotation, null, model.getSelection().getStart(), model.getSelection().getEnd());
 		setObject(newSpan);
 	}
 
@@ -54,9 +54,9 @@ public class SpanAction extends AbstractKnowtatorCollectionAction<Span> {
 		// If the concept annotation only has one, remove the annotation instead
 		if (conceptAnnotation.size() == 1) {
 			setObject(null);
-			ConceptAnnotationAction action = new ConceptAnnotationAction(REMOVE, conceptAnnotation.getTextSource());
+			ConceptAnnotationAction action = new ConceptAnnotationAction(model, REMOVE, conceptAnnotation.getTextSource());
 			action.setObject(conceptAnnotation);
-			KnowtatorView.MODEL.registerAction(action);
+			model.registerAction(action);
 			edit.addKnowtatorEdit(action.getEdit());
 		} else {
 			super.prepareRemove();

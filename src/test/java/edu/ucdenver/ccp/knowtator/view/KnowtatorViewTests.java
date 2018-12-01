@@ -27,20 +27,26 @@ package edu.ucdenver.ccp.knowtator.view;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorCollectionActionsTests;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 import java.io.IOException;
 
 class KnowtatorViewTests {
-	private static final KnowtatorView view = new KnowtatorView();
+	private static KnowtatorView view;
+
+	@BeforeAll
+	static void setUp() {
+		view = new KnowtatorView();
+	}
 
 	@Test
 	void loadProjectTest() throws IOException {
 		KnowtatorModel controller = TestingHelpers.getLoadedController();
 		TestingHelpers.checkDefaultCollectionValues(controller);
 		view.loadProject(controller.getProjectLocation(), null);
-		TestingHelpers.checkDefaultCollectionValues(KnowtatorView.MODEL);
+		TestingHelpers.checkDefaultCollectionValues(view.getModel().get());
 	}
 
 	@Test
@@ -48,15 +54,15 @@ class KnowtatorViewTests {
 		KnowtatorModel controller = TestingHelpers.getLoadedController();
 		TestingHelpers.checkDefaultCollectionValues(controller);
 		view.loadProject(controller.getProjectLocation(), null);
-		TestingHelpers.checkDefaultCollectionValues(KnowtatorView.MODEL);
+		TestingHelpers.checkDefaultCollectionValues(view.getModel().get());
 		KnowtatorCollectionActionsTests test = new KnowtatorCollectionActionsTests();
-		test.setController(KnowtatorView.MODEL);
+		test.setModel(view.getModel().get());
 		test.removeConceptAnnotationActionTest();
 		test.removeGraphSpaceActionTest();
 		test.removeProfileActionTest();
 		test.removeSpanActionTest();
-		for (int i = 0; i < KnowtatorView.MODEL.getTextSources().size(); i++) {
-			KnowtatorView.MODEL.selectNextTextSource();
+		for (int i = 0; i < view.getModel().get().getTextSources().size(); i++) {
+			view.getModel().get().selectNextTextSource();
 			view.getKnowtatorTextPane().refreshHighlights();
 		}
 		test.removeTextSourceActionTest();
@@ -72,12 +78,12 @@ class KnowtatorViewTests {
 	@Test
 	void textSourceButtonActivationTest() throws IOException {
 		KnowtatorView view = new KnowtatorView();
-		assert !view.textSourceButtons.stream()
+		assert !view.getTextSourceButtons().stream()
 				.map(Component::isEnabled).reduce(false, (a, b) -> a || b);
 		KnowtatorModel controller = TestingHelpers.getLoadedController();
 		view.loadProject(controller.getProjectLocation(), null);
-		KnowtatorView.MODEL.selectFirstTextSource();
-		assert view.textSourceButtons.stream()
+		view.getModel().get().selectFirstTextSource();
+		assert view.getTextSourceButtons().stream()
 				.map(Component::isEnabled).reduce(true, (a, b) -> a && b);
 	}
 }

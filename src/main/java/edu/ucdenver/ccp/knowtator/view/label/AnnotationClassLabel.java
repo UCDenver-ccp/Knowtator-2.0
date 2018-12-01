@@ -39,7 +39,7 @@ public class AnnotationClassLabel extends AbstractConceptAnnotationLabel impleme
 
 	@Override
 	public void displayConceptAnnotation(ConceptAnnotation conceptAnnotation) {
-		setText(KnowtatorView.MODEL.getOWLEntityRendering(conceptAnnotation.getOwlClass()));
+		view.getModel().ifPresent(model -> setText(model.getOWLEntityRendering(conceptAnnotation.getOwlClass())));
 	}
 
 	@Override
@@ -52,6 +52,6 @@ public class AnnotationClassLabel extends AbstractConceptAnnotationLabel impleme
 	@Override
 	public void dispose() {
 		super.dispose();
-		KnowtatorView.MODEL.removeOWLModelManagerListener(this);
+		view.getModel().ifPresent(model -> model.removeOWLModelManagerListener(this));
 	}
 }

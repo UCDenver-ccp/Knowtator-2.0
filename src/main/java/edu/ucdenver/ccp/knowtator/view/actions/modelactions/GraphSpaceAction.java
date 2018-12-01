@@ -24,9 +24,9 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType;
 
@@ -34,15 +34,15 @@ public class GraphSpaceAction extends AbstractKnowtatorCollectionAction<GraphSpa
 	private final String graphName;
 	private final TextSource textSource;
 
-	public GraphSpaceAction(CollectionActionType actionType, String graphName, TextSource textSource) {
-		super(actionType, "graph space", textSource.getGraphSpaceCollection());
+	public GraphSpaceAction(BaseModel model, CollectionActionType actionType, String graphName, TextSource textSource) {
+		super(model, actionType, "graph space", textSource.getGraphSpaceCollection());
 		this.graphName = graphName;
 		this.textSource = textSource;
 	}
 
 	@Override
 	protected void prepareAdd() {
-		GraphSpace newGraphSpace = new GraphSpace(KnowtatorView.MODEL, textSource, graphName);
+		GraphSpace newGraphSpace = new GraphSpace(model, textSource, graphName);
 		setObject(newGraphSpace);
 	}
 

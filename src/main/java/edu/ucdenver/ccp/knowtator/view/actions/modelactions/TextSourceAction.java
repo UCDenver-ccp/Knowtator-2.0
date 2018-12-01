@@ -24,8 +24,8 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType;
 import org.apache.commons.io.FileUtils;
@@ -36,21 +36,21 @@ import java.io.IOException;
 public class TextSourceAction extends AbstractKnowtatorCollectionAction<TextSource> {
 	private final File file;
 
-	public TextSourceAction(CollectionActionType actionType, File file) {
-		super(actionType, "text source", KnowtatorView.MODEL.getTextSources());
+	public TextSourceAction(BaseModel model, CollectionActionType actionType, File file) {
+		super(model, actionType, "text source", model.getTextSources());
 		this.file = file;
 	}
 
 	@Override
 	protected void prepareAdd() {
-		if (!file.getParentFile().equals(KnowtatorView.MODEL.getArticlesLocation())) {
+		if (!file.getParentFile().equals(model.getArticlesLocation())) {
 			try {
-				FileUtils.copyFile(file, new File(KnowtatorView.MODEL.getArticlesLocation(), file.getName()));
+				FileUtils.copyFile(file, new File(model.getArticlesLocation(), file.getName()));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		setObject(new TextSource(KnowtatorView.MODEL, file, file.getName()));
+		setObject(new TextSource(model, file, file.getName()));
 	}
 
 	@Override

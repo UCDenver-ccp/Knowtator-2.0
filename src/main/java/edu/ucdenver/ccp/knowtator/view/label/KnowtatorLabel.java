@@ -46,12 +46,14 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
 
     @Override
     public void reset() {
-        KnowtatorView.MODEL.addModelListener(this);
+	    view.getModel().ifPresent(model -> model.addModelListener(this));
     }
 
     @Override
     public void dispose() {
-        KnowtatorView.MODEL.removeModelListener(this);
+
+	    view.getModel().ifPresent(model -> model.removeModelListener(this));
+
     }
 
     @Override

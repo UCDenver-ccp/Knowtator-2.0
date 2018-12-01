@@ -25,10 +25,10 @@
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
 import com.mxgraph.util.mxEvent;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType;
@@ -37,8 +37,8 @@ public class ConceptAnnotationAction extends AbstractKnowtatorCollectionAction<C
 
 	private final TextSource textSource;
 
-	public ConceptAnnotationAction(CollectionActionType actionType, TextSource textSource) {
-		super(actionType, "concept annotation", textSource.getConceptAnnotationCollection());
+	public ConceptAnnotationAction(BaseModel model, CollectionActionType actionType, TextSource textSource) {
+		super(model, actionType, "concept annotation", textSource.getConceptAnnotationCollection());
 		this.textSource = textSource;
 	}
 
@@ -63,11 +63,11 @@ public class ConceptAnnotationAction extends AbstractKnowtatorCollectionAction<C
 	@Override
 	protected void prepareAdd() {
 
-		KnowtatorView.MODEL.getSelectedProfile()
-				.ifPresent(annotator -> KnowtatorView.MODEL.getSelectedOWLClass()
+		model.getSelectedProfile()
+				.ifPresent(annotator -> model.getSelectedOWLClass()
 						.ifPresent(owlClass -> {
-							ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(KnowtatorView.MODEL, textSource, null, owlClass, annotator, "identity", "");
-							newConceptAnnotation.add(new Span(KnowtatorView.MODEL, newConceptAnnotation, null, KnowtatorView.MODEL.getSelection().getStart(), KnowtatorView.MODEL.getSelection().getEnd()));
+							ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(model, textSource, null, owlClass, annotator, "identity", "");
+							newConceptAnnotation.add(new Span(model, newConceptAnnotation, null, model.getSelection().getStart(), model.getSelection().getEnd()));
 							setObject(newConceptAnnotation);
 						}));
 

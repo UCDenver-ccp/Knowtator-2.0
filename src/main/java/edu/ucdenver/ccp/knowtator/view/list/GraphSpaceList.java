@@ -33,16 +33,16 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.util.stream.Collector;
 
 public class GraphSpaceList extends KnowtatorList<GraphSpace> {
-	public GraphSpaceList() {
-		super();
+	public GraphSpaceList(KnowtatorView view) {
+		super(view);
 
 	}
 
 	@Override
 	protected void react() {
-		KnowtatorView.MODEL.getSelectedTextSource()
+		view.getModel().ifPresent(model -> model.getSelectedTextSource()
 				.ifPresent(textSource -> textSource.getSelectedAnnotation()
-						.ifPresent(this::setCollection));
+						.ifPresent(this::setCollection)));
 		setSelected();
 	}
 

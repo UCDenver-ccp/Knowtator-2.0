@@ -38,19 +38,22 @@ public abstract class AbstractConceptAnnotationLabel extends KnowtatorLabel {
 
 	@Override
 	protected void react() {
-		Optional<TextSource> textSourceOptional = KnowtatorView.MODEL.getSelectedTextSource();
-		if (textSourceOptional.isPresent()) {
-			textSourceOptional.ifPresent(textSource -> {
-				Optional<ConceptAnnotation> conceptAnnotationOptional = textSource.getSelectedAnnotation();
-				if (conceptAnnotationOptional.isPresent()) {
-					conceptAnnotationOptional.ifPresent(this::displayConceptAnnotation);
-				} else {
-					setText("");
-				}
-			});
-		} else {
-			setText("");
-		}
+		view.getModel().ifPresent(model -> {
+			Optional<TextSource> textSourceOptional = model.getSelectedTextSource();
+			if (textSourceOptional.isPresent()) {
+				textSourceOptional.ifPresent(textSource -> {
+					Optional<ConceptAnnotation> conceptAnnotationOptional = textSource.getSelectedAnnotation();
+					if (conceptAnnotationOptional.isPresent()) {
+						conceptAnnotationOptional.ifPresent(this::displayConceptAnnotation);
+					} else {
+						setText("");
+					}
+				});
+			} else {
+				setText("");
+			}
+		});
+
 	}
 
 	protected abstract void displayConceptAnnotation(ConceptAnnotation conceptAnnotation);

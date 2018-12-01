@@ -24,6 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
@@ -38,8 +39,10 @@ import java.awt.event.KeyListener;
 
 public class AnnotationNotes extends JTextArea implements KnowtatorComponent, ModelListener {
 	private ConceptAnnotation conceptAnnotation;
+	private KnowtatorView view;
 
-	AnnotationNotes() {
+	AnnotationNotes(KnowtatorView view) {
+		this.view = view;
 		addKeyListener(new KeyListener() {
 			@Override
 			public void keyTyped(KeyEvent e) {
@@ -81,13 +84,13 @@ public class AnnotationNotes extends JTextArea implements KnowtatorComponent, Mo
 
 	@Override
 	public void reset() {
-		KnowtatorView.MODEL.addModelListener(this);
+		view.getModel().ifPresent(model -> model.addModelListener(this));
 	}
 
 
 	@Override
 	public void dispose() {
-		KnowtatorView.MODEL.removeModelListener(this);
+		view.getModel().ifPresent(model -> model.removeModelListener(this));
 	}
 
 	@Override
@@ -101,16 +104,18 @@ public class AnnotationNotes extends JTextArea implements KnowtatorComponent, Mo
 	}
 
 	public void react() {
-		KnowtatorView.MODEL.getSelectedTextSource().ifPresent(textSource -> {
-			if (textSource.getSelectedAnnotation().isPresent()) {
-				conceptAnnotation = textSource.getSelectedAnnotation().get();
-				setEnabled(true);
-				setText(conceptAnnotation.getMotivation());
-			} else {
-				setEnabled(false);
-				setText("");
-			}
-		});
+		view.getModel()
+				.flatMap(BaseModel::getSelectedTextSource)
+				.ifPresent(textSource -> {
+					if (textSource.getSelectedAnnotation().isPresent()) {
+						conceptAnnotation = textSource.getSelectedAnnotation().get();
+						setEnabled(true);
+						setText(conceptAnnotation.getMotivation());
+					} else {
+						setEnabled(false);
+						setText("");
+					}
+				});
 	}
 
 

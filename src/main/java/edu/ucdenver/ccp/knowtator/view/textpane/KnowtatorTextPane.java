@@ -24,6 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.textpane;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
@@ -67,7 +68,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements KnowtatorC
 	 * @param caseSensitiveCheckBox     A check box specifying if the search should be case sensitive
 	 */
 	public KnowtatorTextPane(KnowtatorView view, JTextField searchTextField, JCheckBox onlyInAnnotationsCheckBox, JCheckBox regexCheckBox, JCheckBox caseSensitiveCheckBox) {
-		super(searchTextField);
+		super(view, searchTextField);
 		this.view = view;
 		this.onlyInAnnotationsCheckBox = onlyInAnnotationsCheckBox;
 		this.regexCheckBox = regexCheckBox;
@@ -93,7 +94,9 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements KnowtatorC
 
 	protected void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
 		AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e);
-		KnowtatorView.MODEL.getSelectedTextSource().ifPresent(textSource -> {
+		view.getModel()
+				.flatMap(BaseModel::getSelectedTextSource)
+				.ifPresent(textSource -> {
 
 			Set<Span> spansContainingLocation = textSource.getSpans(press_offset).getCollection();
 
@@ -125,7 +128,11 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements KnowtatorC
 
 	@Override
 	protected boolean keepSearchingCondition(Matcher matcher) {
-		return KnowtatorView.MODEL.getSelectedTextSource().map(textSource -> (!onlyInAnnotationsCheckBox.isSelected() || !(textSource.getSpans(matcher.start()).size() == 0)))
+		return view.getModel()
+				.flatMap(BaseModel::getSelectedTextSource)
+				.map(textSource ->
+						(!onlyInAnnotationsCheckBox.isSelected() ||
+								!(textSource.getSpans(matcher.start()).size() == 0)))
 				.orElse(false);
 	}
 
@@ -143,13 +150,16 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements KnowtatorC
 
 		private JMenuItem reassignOWLClassCommand() {
 			JMenuItem menuItem = new JMenuItem("Reassign OWL class");
-			menuItem.addActionListener(e -> KnowtatorView.MODEL.getSelectedTextSource()
-					.ifPresent(textSource1 -> textSource1.getSelectedAnnotation()
-							.ifPresent(conceptAnnotation -> {
-								KnowtatorView.MODEL.getSelectedOWLClass()
-										.ifPresent(owlClass -> KnowtatorView.MODEL
-												.registerAction(new ReassignOWLClassAction(conceptAnnotation, owlClass)));
-							})));
+			menuItem.addActionListener(e ->
+					view.getModel()
+							.ifPresent(model -> model.getSelectedTextSource()
+									.ifPresent(textSource1 -> textSource1.getSelectedAnnotation()
+											.ifPresent(conceptAnnotation -> {
+												model.getSelectedOWLClass()
+														.ifPresent(owlClass ->
+																model.registerAction(new ReassignOWLClassAction(model, conceptAnnotation, owlClass)));
+											}))));
+
 
 			return menuItem;
 		}
@@ -171,10 +181,12 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements KnowtatorC
 		}
 
 		private JMenuItem selectAnnotationCommand(Span span) {
-			JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s", KnowtatorView.MODEL.getOWLEntityRendering(span.getConceptAnnotation().getOwlClass())));
-			selectAnnotationMenuItem.addActionListener(e3 -> KnowtatorView.MODEL.getSelectedTextSource().ifPresent(textSource -> textSource.setSelectedAnnotation(span)));
+			return view.getModel().map(model -> {
+				JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s", model.getOWLEntityRendering(span.getConceptAnnotation().getOwlClass())));
+				selectAnnotationMenuItem.addActionListener(e3 -> model.getSelectedTextSource().ifPresent(textSource -> textSource.setSelectedAnnotation(span)));
+				return selectAnnotationMenuItem;
+			}).orElse(null);
 
-			return selectAnnotationMenuItem;
 		}
 
 		private JMenuItem removeAnnotationCommand(ConceptAnnotation conceptAnnotation) {
@@ -198,7 +210,8 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements KnowtatorC
 
 				show(e.getComponent(), e.getX(), e.getY());
 			} else {
-				KnowtatorView.MODEL.getSelectedTextSource().ifPresent(textSource -> textSource.getSelectedAnnotation()
+				view.getModel().flatMap(BaseModel::getSelectedTextSource)
+						.ifPresent(textSource -> textSource.getSelectedAnnotation()
 						.ifPresent(conceptAnnotation -> conceptAnnotation.getSelection()
 								.filter(span -> span.getStart() <= release_offset && release_offset <= span.getEnd())
 								.ifPresent(span -> clickedInsideSpan(conceptAnnotation))));

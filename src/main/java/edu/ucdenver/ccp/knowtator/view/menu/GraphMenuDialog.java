@@ -71,25 +71,27 @@ public class GraphMenuDialog extends JDialog {
 		// call onCancel() on ESCAPE
 		contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-		exportToImagePNGButton.addActionListener(e -> KnowtatorView.MODEL.getSelectedTextSource()
-				.ifPresent(textSource -> textSource.getSelectedGraphSpace()
-						.ifPresent(graphSpace -> {
-							JFileChooser fileChooser = new JFileChooser();
-							fileChooser.setCurrentDirectory(KnowtatorView.MODEL.getSaveLocation());
-							FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
-							fileChooser.setFileFilter(fileFilter);
-							fileChooser.setSelectedFile(new File(String.format("%s_%s.png", textSource.getId(), graphSpace.getId())));
-							if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
-								BufferedImage image =
-										mxCellRenderer.createBufferedImage(graphSpace, null, 1, Color.WHITE, true, null);
-								try {
-									ImageIO.write(
-											image, "PNG", new File(fileChooser.getSelectedFile().getAbsolutePath()));
-								} catch (IOException e1) {
-									e1.printStackTrace();
-								}
-							}
-						})));
+		exportToImagePNGButton.addActionListener(e ->
+				view.getModel().ifPresent(model -> model.getSelectedTextSource()
+						.ifPresent(textSource -> textSource.getSelectedGraphSpace()
+								.ifPresent(graphSpace -> {
+									JFileChooser fileChooser = new JFileChooser();
+									fileChooser.setCurrentDirectory(model.getSaveLocation());
+									FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
+									fileChooser.setFileFilter(fileFilter);
+									fileChooser.setSelectedFile(new File(String.format("%s_%s.png", textSource.getId(), graphSpace.getId())));
+									if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
+										BufferedImage image =
+												mxCellRenderer.createBufferedImage(graphSpace, null, 1, Color.WHITE, true, null);
+										try {
+											ImageIO.write(
+													image, "PNG", new File(fileChooser.getSelectedFile().getAbsolutePath()));
+										} catch (IOException e1) {
+											e1.printStackTrace();
+										}
+									}
+								}))));
+
 	}
 
 	private void onOK() {

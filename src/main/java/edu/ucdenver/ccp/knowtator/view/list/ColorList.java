@@ -43,10 +43,11 @@ import static edu.ucdenver.ccp.knowtator.view.actions.modelactions.ProfileAction
 public class ColorList extends JList<OWLClass> implements KnowtatorComponent, ModelListener {
 
 	private final ListSelectionListener lsl;
+	private final KnowtatorView view;
 
 	public ColorList(KnowtatorView view) {
 		setModel(new DefaultListModel<>());
-
+		this.view = view;
 		setCellRenderer(new ColorListRenderer<>());
 		lsl = e -> assignColorToClass(view, getSelectedValue());
 	}
@@ -54,26 +55,24 @@ public class ColorList extends JList<OWLClass> implements KnowtatorComponent, Mo
 	private void setCollection() {
 		removeListSelectionListener(lsl);
 		setModel(new DefaultListModel<>());
-		KnowtatorView.MODEL.getSelectedProfile()
+		view.getModel().ifPresent(model -> model.getSelectedProfile()
 				.ifPresent(profile -> profile.getColors().keySet().stream()
-						.sorted(KnowtatorView.MODEL.getOWLObjectComparator())
-						.forEach(o -> ((DefaultListModel<OWLClass>) getModel()).addElement(o)));
+						.sorted(model.getOWLObjectComparator())
+						.forEach(o -> ((DefaultListModel<OWLClass>) getModel()).addElement(o))));
 
 		addListSelectionListener(lsl);
 	}
 
 	@Override
 	public void reset() {
-
-		KnowtatorView.MODEL.addModelListener(this);
+		view.getModel().ifPresent(model -> model.addModelListener(this));
 		setCollection();
 	}
 
 	@Override
 	public void dispose() {
-
+		view.getModel().ifPresent(model -> model.removeModelListener(this));
 		setModel(new DefaultListModel<>());
-		KnowtatorView.MODEL.removeModelListener(this);
 	}
 
 	@Override
@@ -102,10 +101,12 @@ public class ColorList extends JList<OWLClass> implements KnowtatorComponent, Mo
 
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-			if (value instanceof OWLClass) {
-				KnowtatorView.MODEL.getSelectedProfile().ifPresent(profile -> setBackground(profile.getColors().get(value)));
-				setText(KnowtatorView.MODEL.getOWLEntityRendering((OWLEntity) value));
-			}
+			view.getModel()
+					.filter(model -> value instanceof OWLClass)
+					.ifPresent(model -> {
+						model.getSelectedProfile().ifPresent(profile -> setBackground(profile.getColors().get(value)));
+						setText(model.getOWLEntityRendering((OWLEntity) value));
+					});
 			return this;
 		}
 	}

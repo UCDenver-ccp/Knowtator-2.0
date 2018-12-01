@@ -24,6 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.textpane;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.CyclableCollection;
@@ -59,8 +60,8 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	private final DefaultHighlighter.DefaultHighlightPainter overlapHighlighter = new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
 	private final DefaultHighlighter.DefaultHighlightPainter selectionHighlighter = new RectanglePainter(Color.BLACK);
 
-	AnnotatableTextPane(JTextField searchTextField) {
-		super(searchTextField);
+	AnnotatableTextPane(KnowtatorView view, JTextField searchTextField) {
+		super(view, searchTextField);
 		setEditable(false);
 		setSelectedTextColor(Color.red);
 		setFont(KnowtatorDefaultSettings.FONT);
@@ -71,7 +72,6 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 		select(0, 0);
 		getCaret().setSelectionVisible(true);
 
-		addCaretListener(KnowtatorView.MODEL);
 
 		mouseListener = new MouseListener() {
 			int press_offset;
@@ -107,7 +107,9 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	 * Sets the text to the text sources content
 	 */
 	public void showTextSource() {
-		KnowtatorView.MODEL.getSelectedTextSource().ifPresent(textSource1 -> setText(textSource1.getContent()));
+		view.getModel()
+				.flatMap(BaseModel::getSelectedTextSource)
+				.ifPresent(textSource -> setText(textSource.getContent()));
 		refreshHighlights();
 	}
 
@@ -122,43 +124,46 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	 * Repaints the highlights
 	 */
 	public void refreshHighlights() {
-		if (KnowtatorView.MODEL.isNotLoading()) {
-			// Remove all previous highlights in case a spanOptional has been deleted
-			getHighlighter().removeAllHighlights();
+		view.getModel()
+				.filter(BaseModel::isNotLoading)
+				.ifPresent(model -> {
+					// Remove all previous highlights in case a spanOptional has been deleted
+					getHighlighter().removeAllHighlights();
 
-			// Always highlight the selected concept firstConceptAnnotation so its color and border show up
-			highlightSelectedAnnotation();
+					// Always highlight the selected concept firstConceptAnnotation so its color and border show up
+					highlightSelectedAnnotation();
 
-			// Highlight overlaps firstConceptAnnotation, then spans. Overlaps must be highlighted firstConceptAnnotation because the highlights are displayed
-			// in order of placement
-			KnowtatorView.MODEL.getSelectedTextSource().ifPresent(textSource -> {
-				Set<Span> spans = textSource.getSpans(null).getCollection();
-				highlightOverlaps(spans);
-				highlightSpans(spans);
-			});
-
-
-			revalidate();
-			repaint();
+					// Highlight overlaps firstConceptAnnotation, then spans. Overlaps must be highlighted firstConceptAnnotation because the highlights are displayed
+					// in order of placement
+					model.getSelectedTextSource().ifPresent(textSource -> {
+						Set<Span> spans = textSource.getSpans(null).getCollection();
+						highlightOverlaps(spans);
+						highlightSpans(spans);
+					});
 
 
-			Optional<Span> span = Optional.empty();
-			if (!KnowtatorView.MODEL.getSelectedTextSource().flatMap(TextSource::getSelectedAnnotation).flatMap(SelectableCollection::getSelection).isPresent()) {
-				span = KnowtatorView.MODEL.getSelectedTextSource().flatMap(TextSource::getSelectedAnnotation).map(CyclableCollection::first);
-			}
-			Optional<Span> finalSpan = span;
-			SwingUtilities.invokeLater(
-					() -> finalSpan.ifPresent(span1 -> {
-						try {
-							scrollRectToVisible(modelToView(span1.getStart()));
-						} catch (BadLocationException e) {
-							e.printStackTrace();
-						} catch (NullPointerException ignored) {
+					revalidate();
+					repaint();
 
-						}
-					})
-			);
-		}
+
+					Optional<Span> span = Optional.empty();
+					if (!model.getSelectedTextSource().flatMap(TextSource::getSelectedAnnotation).flatMap(SelectableCollection::getSelection).isPresent()) {
+						span = model.getSelectedTextSource().flatMap(TextSource::getSelectedAnnotation).map(CyclableCollection::first);
+					}
+					Optional<Span> finalSpan = span;
+					SwingUtilities.invokeLater(
+							() -> finalSpan.ifPresent(span1 -> {
+								try {
+									scrollRectToVisible(modelToView(span1.getStart()));
+								} catch (BadLocationException e) {
+									e.printStackTrace();
+								} catch (NullPointerException ignored) {
+
+								}
+							})
+					);
+
+				});
 	}
 
 	/**
@@ -176,10 +181,12 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 		getStyledDocument().setCharacterAttributes(0, getText().length(), regularSpan, false);
 
 		Set<OWLClass> descendants = new HashSet<>();
-		KnowtatorView.MODEL.getSelectedOWLClass().ifPresent(owlClass -> {
-			descendants.addAll(KnowtatorView.MODEL.getOWLCLassDescendants(owlClass));
-			descendants.add(owlClass);
-		});
+		view.getModel()
+				.ifPresent(model -> model.getSelectedOWLClass().ifPresent(owlClass -> {
+					descendants.addAll(model.getOWLCLassDescendants(owlClass));
+					descendants.add(owlClass);
+				}));
+
 		for (Span span : spans) {
 			//Underline spans for the same class
 			if (descendants.contains(span.getConceptAnnotation().getOwlClass())) {
@@ -231,8 +238,16 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	 * Highlights the spans for the selected annotation
 	 */
 	private void highlightSelectedAnnotation() {
-		KnowtatorView.MODEL.getSelectedTextSource().flatMap(TextSource::getSelectedAnnotation).ifPresent(conceptAnnotation -> conceptAnnotation
-				.forEach(span -> highlightRegion(span.getStart(), span.getEnd(), selectionHighlighter)));
+		view.getModel()
+				.flatMap(BaseModel::getSelectedTextSource)
+				.flatMap(TextSource::getSelectedAnnotation)
+				.ifPresent(conceptAnnotation ->
+						conceptAnnotation
+								.forEach(span ->
+										highlightRegion(
+												span.getStart(),
+												span.getEnd(),
+												selectionHighlighter)));
 	}
 
 	/**
@@ -288,7 +303,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 
 	@Override
 	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
-		if (KnowtatorView.MODEL.getNumberOfTextSources() == 0) {
+		if (event.getModel().getNumberOfTextSources() == 0) {
 			setEnabled(false);
 			removeMouseListener(mouseListener);
 		} else {
@@ -303,12 +318,14 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 
 	@Override
 	public void reset() {
-		KnowtatorView.MODEL.addModelListener(this);
+
+		view.getModel().ifPresent(this::addCaretListener);
+		view.getModel().ifPresent(model -> model.addModelListener(this));
 	}
 
 	@Override
 	public void dispose() {
-		KnowtatorView.MODEL.removeModelListener(this);
+		view.getModel().ifPresent(model -> model.removeModelListener(this));
 	}
 
 	class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {

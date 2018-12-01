@@ -24,13 +24,17 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
+
 import javax.swing.undo.UndoableEdit;
 
 public abstract class AbstractKnowtatorAction {
 
+    protected BaseModel model;
     private final String presentationName;
 
-    protected AbstractKnowtatorAction(String presentationName) {
+    protected AbstractKnowtatorAction(BaseModel model, String presentationName) {
+        this.model = model;
 
         this.presentationName = presentationName;
     }

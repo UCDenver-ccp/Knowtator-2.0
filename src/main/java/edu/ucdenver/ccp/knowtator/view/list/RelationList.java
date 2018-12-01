@@ -34,8 +34,8 @@ import javax.swing.*;
 public class RelationList extends KnowtatorList<RelationAnnotation> {
 	private boolean shouldReact;
 
-	protected RelationList() {
-		super();
+	protected RelationList(KnowtatorView view) {
+		super(view);
 
 		shouldReact = true;
 
@@ -55,18 +55,21 @@ public class RelationList extends KnowtatorList<RelationAnnotation> {
 
 	@Override
 	public void react() {
-		if (shouldReact) {
-			KnowtatorView.MODEL.getSelectedTextSource()
-					.ifPresent(textSource -> {
-						KnowtatorCollection<RelationAnnotation> relationAnnotations = new KnowtatorCollection<RelationAnnotation>(null) {
+		view.getModel()
+				.filter(model -> shouldReact)
+				.ifPresent(model -> {
+					model.getSelectedTextSource()
+							.ifPresent(textSource -> {
+								KnowtatorCollection<RelationAnnotation> relationAnnotations = new KnowtatorCollection<RelationAnnotation>(null) {
 
-						};
-						textSource.getGraphSpaceCollection().stream()
-								.map(GraphSpace::getRelationAnnotations).forEach(relationAnnotations1 -> relationAnnotations1.forEach(relationAnnotations::add));
-						super.setCollection(relationAnnotations);
-					});
-			setSelected();
-		}
+								};
+								textSource.getGraphSpaceCollection().stream()
+										.map(GraphSpace::getRelationAnnotations).forEach(relationAnnotations1 -> relationAnnotations1.forEach(relationAnnotations::add));
+								super.setCollection(relationAnnotations);
+							});
+					setSelected();
+
+				});
 	}
 
 	@Override

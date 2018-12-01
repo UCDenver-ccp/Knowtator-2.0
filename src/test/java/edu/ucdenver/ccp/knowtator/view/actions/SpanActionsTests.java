@@ -30,6 +30,7 @@ import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.SpanActions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -38,11 +39,12 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 class SpanActionsTests {
-	private static KnowtatorModel controller;
+	private static KnowtatorModel model;
 
-	static {
+	@BeforeAll
+	static void setUp() {
 		try {
-			controller = TestingHelpers.getLoadedController();
+			model = TestingHelpers.getLoadedController();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -54,33 +56,33 @@ class SpanActionsTests {
 	private static void checkSpanModificationsTest(AbstractKnowtatorAction action, Span span, int expectedStart, int expectedEnd) {
         assert span.getStart() == initialStart;
         assert span.getEnd() == initialEnd;
-        controller.registerAction(action);
+		model.registerAction(action);
         assert span.getStart() == expectedStart;
         assert span.getEnd() == expectedEnd;
-        controller.undo();
+		model.undo();
         assert span.getStart() == initialStart;
         assert span.getEnd() == initialEnd;
-        controller.redo();
+		model.redo();
         assert span.getStart() == expectedStart;
         assert span.getEnd() == expectedEnd;
-        controller.undo();
+		model.undo();
     }
 
     @Test
     void modifySpanActionTest() {
-	    TextSource textSource = controller.getSelectedTextSource().get();
+	    TextSource textSource = model.getSelectedTextSource().get();
 	    ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
 	    textSource.setSelection(conceptAnnotation);
 	    Span span = conceptAnnotation.first();
 	    conceptAnnotation.setSelection(span);
 
-	    checkSpanModificationsTest(new SpanActions.ModifySpanAction(SpanActions.START, SpanActions.SHRINK, span),
+	    checkSpanModificationsTest(new SpanActions.ModifySpanAction(model, SpanActions.START, SpanActions.SHRINK, span),
                 span, initialStart + 1, initialEnd);
-	    checkSpanModificationsTest(new SpanActions.ModifySpanAction(SpanActions.START, SpanActions.GROW, span),
+	    checkSpanModificationsTest(new SpanActions.ModifySpanAction(model, SpanActions.START, SpanActions.GROW, span),
                 span, max(initialStart - 1, 0), initialEnd);
-	    checkSpanModificationsTest(new SpanActions.ModifySpanAction(SpanActions.END, SpanActions.SHRINK, span),
+	    checkSpanModificationsTest(new SpanActions.ModifySpanAction(model, SpanActions.END, SpanActions.SHRINK, span),
                 span, initialStart, initialEnd - 1);
-	    checkSpanModificationsTest(new SpanActions.ModifySpanAction(SpanActions.END, SpanActions.GROW, span),
+	    checkSpanModificationsTest(new SpanActions.ModifySpanAction(model, SpanActions.END, SpanActions.GROW, span),
                 span, initialStart, min(initialEnd + 1, textSource.getContent().length()));
     }
 

@@ -47,40 +47,44 @@ class IAAPane extends MenuPane {
     private JCheckBox classAndSpanCheckBox;
 
     IAAPane(KnowtatorView view) {
-        super("IAA");
+	    super(view, "IAA");
         $$$setupUI$$$();
 
-        buttonOK.addActionListener(e -> {
-            JFileChooser fileChooser = new JFileChooser();
-	        fileChooser.setCurrentDirectory(KnowtatorView.MODEL.getSaveLocation());
-            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            //
-            // disable the "All files" option.
-            //
-            fileChooser.setAcceptAllFileFilterUsed(false);
-            if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
-                File outputDirectory = fileChooser.getSelectedFile();
+	    buttonOK.addActionListener(e -> {
+		    JFileChooser fileChooser = new JFileChooser();
 
-                try {
-	                KnowtatorIAA knowtatorIAA = new KnowtatorIAA(outputDirectory, KnowtatorView.MODEL);
+		    view.getModel().ifPresent(model -> {
+			    fileChooser.setCurrentDirectory(model.getSaveLocation());
+			    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			    //
+			    // disable the "All files" option.
+			    //
+			    fileChooser.setAcceptAllFileFilterUsed(false);
+			    if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
+				    File outputDirectory = fileChooser.getSelectedFile();
 
-                    if (classCheckBox.isSelected()) {
-                        knowtatorIAA.runClassIAA();
-                    }
-                    if (spanCheckBox.isSelected()) {
-                        knowtatorIAA.runSpanIAA();
-                    }
-                    if (classAndSpanCheckBox.isSelected()) {
-                        knowtatorIAA.runClassAndSpanIAA();
-                    }
+				    try {
+					    KnowtatorIAA knowtatorIAA = new KnowtatorIAA(outputDirectory, model);
 
-                    knowtatorIAA.closeHTML();
-                } catch (IAAException e1) {
-                    e1.printStackTrace();
-                }
+					    if (classCheckBox.isSelected()) {
+						    knowtatorIAA.runClassIAA();
+					    }
+					    if (spanCheckBox.isSelected()) {
+						    knowtatorIAA.runSpanIAA();
+					    }
+					    if (classAndSpanCheckBox.isSelected()) {
+						    knowtatorIAA.runClassAndSpanIAA();
+					    }
 
-            }
-        });
+					    knowtatorIAA.closeHTML();
+				    } catch (IAAException e1) {
+					    e1.printStackTrace();
+				    }
+
+			    }
+		    });
+
+	    });
 
     }
 

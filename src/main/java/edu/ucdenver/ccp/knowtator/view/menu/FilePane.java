@@ -57,7 +57,7 @@ class FilePane extends MenuPane {
 	private JButton newButton;
 
 	FilePane(JDialog parent, KnowtatorView view) {
-		super("File");
+		super(view, "File");
 		openButton.addActionListener(e -> open());
 		newButton.addActionListener(e -> executeNew());
 		this.parent = parent;

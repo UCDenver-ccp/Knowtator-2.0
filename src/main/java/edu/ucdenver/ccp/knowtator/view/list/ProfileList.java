@@ -28,13 +28,13 @@ import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 public class ProfileList extends KnowtatorList<Profile> {
-	public ProfileList() {
-		super();
+	public ProfileList(KnowtatorView view) {
+		super(view);
 	}
 
 	@Override
 	protected void react() {
-		setCollection(KnowtatorView.MODEL.getProfileCollection());
+		view.getModel().ifPresent(model -> setCollection(model.getProfileCollection()));
 		setSelected();
 	}
 

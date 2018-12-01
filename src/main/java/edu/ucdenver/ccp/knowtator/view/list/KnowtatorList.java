@@ -24,6 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
@@ -41,8 +42,10 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K> impl
 
 	protected KnowtatorCollection<K> collection;
 	ListSelectionListener al;
+	KnowtatorView view;
 
-	KnowtatorList() {
+	KnowtatorList(KnowtatorView view) {
+		this.view = view;
 		setModel(new DefaultListModel<>());
 
 		al = e -> {
@@ -85,33 +88,35 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K> impl
 
 
 	void setSelected() {
-		if (KnowtatorView.MODEL.isNotLoading()) {
-			if (collection.getSelection().isPresent()) {
-				K k = collection.getSelection().get();
-				for (int i = 0; i < getModel().getSize(); i++) {
-					K element = getModel().getElementAt(i);
-					if (element == k) {
-						removeListSelectionListener(al);
-						setSelectedIndex(i);
-						ensureIndexIsVisible(i);
-						addListSelectionListener(al);
-						return;
+		view.getModel()
+				.filter(BaseModel::isNotLoading)
+				.filter(model -> collection.getSelection().isPresent())
+				.map(model -> collection.getSelection().get())
+				.ifPresent(k -> {
+					for (int i = 0; i < getModel().getSize(); i++) {
+						K element = getModel().getElementAt(i);
+						if (element == k) {
+							removeListSelectionListener(al);
+							setSelectedIndex(i);
+							ensureIndexIsVisible(i);
+							addListSelectionListener(al);
+							return;
+						}
 					}
-				}
-			}
-		}
+
+				});
 	}
 
 	@Override
 	public void reset() {
 		dispose();
-		KnowtatorView.MODEL.addModelListener(this);
+		view.getModel().ifPresent(model -> model.addModelListener(this));
 	}
 
 	@Override
 	public void dispose() {
 		((DefaultListModel) getModel()).clear();
-		KnowtatorView.MODEL.removeModelListener(this);
+		view.getModel().ifPresent(model -> model.removeModelListener(this));
 	}
 
 	@Override

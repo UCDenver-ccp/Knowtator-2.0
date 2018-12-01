@@ -48,34 +48,38 @@ class ExportPane extends MenuPane {
 	private JButton exportToImagePNGButton;
 
 	ExportPane(KnowtatorView view) {
-		super("Export");
+		super(view, "Export");
 		$$$setupUI$$$();
 
-		exportToBratButton.addActionListener(e -> {
+		exportToBratButton.addActionListener(e -> view.getModel().ifPresent(model -> {
+
 			JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setCurrentDirectory(KnowtatorView.MODEL.getAnnotationsLocation());
+			fileChooser.setCurrentDirectory(model.getAnnotationsLocation());
 			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-				KnowtatorView.MODEL
-						.saveToFormat(BratStandoffUtil.class, KnowtatorView.MODEL.getTextSources(), fileChooser.getSelectedFile());
+				model
+						.saveToFormat(BratStandoffUtil.class, model.getTextSources(), fileChooser.getSelectedFile());
 			}
-		});
-		exportToImagePNGButton.addActionListener(e -> KnowtatorView.MODEL.getSelectedTextSource()
-				.ifPresent(textSource -> {
-					JFileChooser fileChooser = new JFileChooser(KnowtatorView.MODEL.getSaveLocation());
-					fileChooser.setFileFilter(new FileNameExtensionFilter("PNG", "png"));
-					fileChooser.setSelectedFile(
-							new File(String.format("%s_annotations.png", textSource.getId())));
-					if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
-						textSource.setSelection(null);
-						BufferedImage image = view.getKnowtatorTextPane().getScreenShot();
-						try {
-							ImageIO.write(image, "png", fileChooser.getSelectedFile());
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-					}
-				}));
+		}));
+		exportToImagePNGButton.addActionListener(e ->
+				view.getModel()
+						.ifPresent(model -> model.getSelectedTextSource()
+								.ifPresent(textSource -> {
+									JFileChooser fileChooser = new JFileChooser(model.getSaveLocation());
+									fileChooser.setFileFilter(new FileNameExtensionFilter("PNG", "png"));
+									fileChooser.setSelectedFile(
+											new File(String.format("%s_annotations.png", textSource.getId())));
+									if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
+										textSource.setSelection(null);
+										BufferedImage image = view.getKnowtatorTextPane().getScreenShot();
+										try {
+											ImageIO.write(image, "png", fileChooser.getSelectedFile());
+										} catch (IOException e1) {
+											e1.printStackTrace();
+										}
+									}
+								})));
+
 	}
 
 	@Override

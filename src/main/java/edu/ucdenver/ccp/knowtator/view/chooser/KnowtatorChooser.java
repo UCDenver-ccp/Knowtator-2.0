@@ -24,6 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
@@ -39,8 +40,10 @@ public abstract class KnowtatorChooser<K extends ModelObject> extends JComboBox<
 
 	private final ActionListener al;
 	private KnowtatorCollection<K> collection;
+	final KnowtatorView view;
 
-	KnowtatorChooser() {
+	KnowtatorChooser(KnowtatorView view) {
+		this.view = view;
 		al = e -> {
 			JComboBox comboBox = (JComboBox) e.getSource();
 			if (comboBox.getSelectedItem() != null) {
@@ -53,7 +56,7 @@ public abstract class KnowtatorChooser<K extends ModelObject> extends JComboBox<
 
 	@Override
 	public void reset() {
-		KnowtatorView.MODEL.addModelListener(this);
+		view.getModel().ifPresent(model -> model.addModelListener(this));
 	}
 
 	protected abstract void react();
@@ -73,18 +76,21 @@ public abstract class KnowtatorChooser<K extends ModelObject> extends JComboBox<
 	}
 
 	void setSelected() {
-		if (KnowtatorView.MODEL.isNotLoading()) {
-			removeActionListener(al);
-			collection.getSelection().ifPresent(this::setSelectedItem);
-			addActionListener(al);
-		}
+		view.getModel()
+				.filter(BaseModel::isNotLoading)
+				.ifPresent(model -> {
+					removeActionListener(al);
+					collection.getSelection().ifPresent(this::setSelectedItem);
+					addActionListener(al);
+
+				});
 	}
 
 	@Override
 	public void dispose() {
 		removeAllItems();
 		setSelectedItem(null);
-		KnowtatorView.MODEL.removeModelListener(this);
+		view.getModel().ifPresent(model -> model.removeModelListener(this));
 	}
 
 	@Override

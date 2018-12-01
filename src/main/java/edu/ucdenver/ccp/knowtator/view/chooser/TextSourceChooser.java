@@ -29,19 +29,19 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 public class TextSourceChooser extends KnowtatorChooser<TextSource> {
 
-	public TextSourceChooser() {
-		super();
+	public TextSourceChooser(KnowtatorView view) {
+		super(view);
 	}
 
 	@Override
 	protected void react() {
-		setCollection(KnowtatorView.MODEL.getTextSources());
+		view.getModel().ifPresent(model -> setCollection(model.getTextSources()));
 		setSelected();
 	}
 
 	@Override
 	public void reset() {
 		super.reset();
-		setCollection(KnowtatorView.MODEL.getTextSources());
+		view.getModel().ifPresent(model -> setCollection(model.getTextSources()));
 	}
 }

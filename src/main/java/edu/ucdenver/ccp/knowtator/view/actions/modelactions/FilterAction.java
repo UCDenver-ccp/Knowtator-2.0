@@ -24,8 +24,8 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.FilterType;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
 
@@ -37,17 +37,17 @@ public class FilterAction extends AbstractKnowtatorAction {
 	private final boolean previousIsFilter;
 	private final FilterType filterType;
 
-	public FilterAction(FilterType filterType, boolean isFilter) {
-		super("Change filterType");
+	public FilterAction(BaseModel model, FilterType filterType, boolean isFilter) {
+		super(model, "Change filterType");
 		this.filterType = filterType;
 		this.isFilter = isFilter;
-		this.previousIsFilter = KnowtatorView.MODEL.isFilter(filterType);
+		this.previousIsFilter = model.isFilter(filterType);
 
 	}
 
 	@Override
 	public void execute() {
-		KnowtatorView.MODEL.setFilter(filterType, isFilter);
+		model.setFilter(filterType, isFilter);
 	}
 
 	@Override
@@ -55,12 +55,12 @@ public class FilterAction extends AbstractKnowtatorAction {
 		return new KnowtatorEdit("Change filterType") {
 			@Override
 			public void undo() {
-				KnowtatorView.MODEL.setFilter(filterType, previousIsFilter);
+				model.setFilter(filterType, previousIsFilter);
 			}
 
 			@Override
 			public void redo() {
-				KnowtatorView.MODEL.setFilter(filterType, isFilter);
+				model.setFilter(filterType, isFilter);
 			}
 		};
 	}

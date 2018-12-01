@@ -28,14 +28,14 @@ import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 public class AnnotationList extends KnowtatorList<ConceptAnnotation> {
-	protected AnnotationList() {
-		super();
+	protected AnnotationList(KnowtatorView view) {
+		super(view);
 	}
 
 	@Override
 	public void react() {
-		KnowtatorView.MODEL.getSelectedTextSource()
-				.ifPresent(textSource -> setCollection(textSource.getConceptAnnotationCollection()));
+		view.getModel().ifPresent(model -> model.getSelectedTextSource()
+				.ifPresent(textSource -> setCollection(textSource.getConceptAnnotationCollection())));
 		setSelected();
 	}
 

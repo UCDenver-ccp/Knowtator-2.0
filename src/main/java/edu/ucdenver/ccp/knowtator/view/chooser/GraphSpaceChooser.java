@@ -30,13 +30,13 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 public class GraphSpaceChooser extends KnowtatorChooser<GraphSpace> {
 
 
-	public GraphSpaceChooser() {
-		super();
+	public GraphSpaceChooser(KnowtatorView view) {
+		super(view);
 	}
 
 	public void react() {
-		KnowtatorView.MODEL.getSelectedTextSource()
-				.ifPresent(textSource -> setCollection(textSource.getGraphSpaceCollection()));
+		view.getModel().ifPresent(model -> model.getSelectedTextSource()
+				.ifPresent(textSource -> setCollection(textSource.getGraphSpaceCollection())));
 		setSelected();
 	}
 }

@@ -61,7 +61,7 @@ public abstract class SelectableCollection<K extends ModelObject> extends Cyclab
     }
 
     public void setSelection(K newSelection) {
-	    SelectionEvent<ModelObject> selectionEvent = new SelectionEvent<>(selection, newSelection);
+	    SelectionEvent<ModelObject> selectionEvent = new SelectionEvent<>(model, selection, newSelection);
 	    this.selection = newSelection;
 	    if (model != null) {
 		    model.fireModelEvent(selectionEvent);

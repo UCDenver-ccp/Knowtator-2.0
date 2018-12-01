@@ -24,6 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.textpane;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
@@ -44,13 +45,16 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 	private Pattern pattern;
 	private Matcher matcher;
 	private final JTextField searchTextField;
+	KnowtatorView view;
 
 	/**
+	 * @param view  The view
 	 * @param searchTextField A text field used to search the text pane
 	 */
-	SearchableTextPane(JTextField searchTextField) {
+	SearchableTextPane(KnowtatorView view, JTextField searchTextField) {
 		super();
 		this.searchTextField = searchTextField;
+		this.view = view;
 		addCaretListener(e -> {
 			if (shouldUpdateSearchTextFieldCondition()) {
 				searchTextField.setText(this.getSelectedText());
@@ -162,7 +166,7 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 
 	@Override
 	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
-		KnowtatorView.MODEL.getSelectedTextSource()
+		view.getModel().flatMap(BaseModel::getSelectedTextSource)
 				.ifPresent(textSource -> textSource.getSelectedAnnotation()
 						.ifPresent(conceptAnnotation -> conceptAnnotation
 								.getSelection().ifPresent(span -> searchTextField

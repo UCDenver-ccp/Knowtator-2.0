@@ -151,7 +151,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 						target,
 						property,
 						propertyID,
-						annotator,
+						Optional.ofNullable(annotator).orElse(baseModel.getDefaultProfile()),
 						quantifier,
 						quantifierValue,
 						isNegated,
