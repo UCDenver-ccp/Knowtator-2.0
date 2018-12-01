@@ -39,7 +39,6 @@ public class RelationList extends KnowtatorList<RelationAnnotation> {
 
 		shouldReact = true;
 
-		setupListeners();
 		al = e -> {
 			JList jList = (JList) e.getSource();
 			if (jList.getSelectedValue() != null) {
@@ -59,7 +58,7 @@ public class RelationList extends KnowtatorList<RelationAnnotation> {
 		if (shouldReact) {
 			KnowtatorView.MODEL.getSelectedTextSource()
 					.ifPresent(textSource -> {
-						KnowtatorCollection<RelationAnnotation> relationAnnotations = new KnowtatorCollection<RelationAnnotation>() {
+						KnowtatorCollection<RelationAnnotation> relationAnnotations = new KnowtatorCollection<RelationAnnotation>(KnowtatorView.MODEL) {
 
 						};
 						textSource.getGraphSpaceCollection().stream()

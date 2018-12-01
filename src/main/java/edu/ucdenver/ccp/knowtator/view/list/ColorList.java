@@ -24,9 +24,10 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
-import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.listener.ColorListener;
-import edu.ucdenver.ccp.knowtator.model.collection.listener.ProfileCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.FilterType;
+import edu.ucdenver.ccp.knowtator.model.ModelListener;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
@@ -39,7 +40,7 @@ import java.awt.*;
 
 import static edu.ucdenver.ccp.knowtator.view.actions.modelactions.ProfileAction.assignColorToClass;
 
-public class ColorList extends JList<OWLClass> implements ProfileCollectionListener, KnowtatorComponent, ColorListener {
+public class ColorList extends JList<OWLClass> implements KnowtatorComponent, ModelListener {
 
     private final ListSelectionListener lsl;
 
@@ -48,16 +49,14 @@ public class ColorList extends JList<OWLClass> implements ProfileCollectionListe
 
         setCellRenderer(new ColorListRenderer<>());
 	    lsl = e -> assignColorToClass(view, getSelectedValue());
-
-        KnowtatorView.MODEL.getSelectedProfile()
-                .ifPresent(this::setCollection);
     }
 
-    private void setCollection(Profile profile) {
+    private void setCollection() {
         dispose();
-        profile.getColors().keySet().stream()
+        KnowtatorView.MODEL.getSelectedProfile()
+                .ifPresent(profile -> profile.getColors().keySet().stream()
                 .sorted(KnowtatorView.MODEL.getOWLObjectComparator())
-                .forEach(o -> ((DefaultListModel<OWLClass>) getModel()).addElement(o));
+                        .forEach(o -> ((DefaultListModel<OWLClass>) getModel()).addElement(o)));
 //        profile.getColors().keySet().stream().filter(o -> !(o instanceof OWLObject))
 //                .sorted(Comparator.comparing(Object::toString))
 //                .forEach(o -> ((DefaultListModel<OWLObject>) getModel()).addElement(o));
@@ -65,51 +64,34 @@ public class ColorList extends JList<OWLClass> implements ProfileCollectionListe
     }
 
     @Override
-    public void selected(SelectionEvent<Profile> event) {
-        KnowtatorView.MODEL.getSelectedProfile().ifPresent(this::setCollection);
-    }
-
-    @Override
-    public void added() {
-        KnowtatorView.MODEL.getSelectedProfile().ifPresent(this::setCollection);
-    }
-
-    @Override
-    public void removed() {
-        KnowtatorView.MODEL.getSelectedProfile().ifPresent(this::setCollection);
-    }
-
-    @Override
-    public void emptied() {
-
-    }
-
-    @Override
-    public void firstAdded() {
-
-    }
-
-    @Override
     public void reset() {
         addListSelectionListener(lsl);
-        setupListeners();
-    }
-
-    @Override
-    public void setupListeners() {
-        KnowtatorView.MODEL.addProfileCollectionListener(this);
-        KnowtatorView.MODEL.addColorListener(this);
+        KnowtatorView.MODEL.addModelListener(this);
     }
 
     @Override
     public void dispose() {
         removeListSelectionListener(lsl);
         setModel(new DefaultListModel<>());
+        KnowtatorView.MODEL.removeModelListener(this);
     }
 
     @Override
-    public void colorChanged() {
-        KnowtatorView.MODEL.getSelectedProfile().ifPresent(this::setCollection);
+    public void filterChangedEvent(FilterType filterType, boolean filterValue) {
+
+    }
+
+
+    @Override
+    public void modelChangeEvent(ChangeEvent<ModelObject> event) {
+        event.getNew()
+                .filter(modelObject -> modelObject instanceof Profile)
+                .ifPresent(modelObject -> setCollection());
+    }
+
+    @Override
+    public void colorChangedEvent() {
+        setCollection();
     }
 
     class ColorListRenderer<o> extends JLabel implements ListCellRenderer<o> {

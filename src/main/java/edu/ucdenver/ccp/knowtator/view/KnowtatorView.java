@@ -30,11 +30,11 @@ import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.listener.TextBoundModelListener;
-import edu.ucdenver.ccp.knowtator.model.collection.listener.TextSourceCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorTextPane;
+import edu.ucdenver.ccp.knowtator.model.ModelListener;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
@@ -48,7 +48,6 @@ import edu.ucdenver.ccp.knowtator.view.label.AnnotationIDLabel;
 import edu.ucdenver.ccp.knowtator.view.list.GraphSpaceList;
 import edu.ucdenver.ccp.knowtator.view.list.SpanList;
 import edu.ucdenver.ccp.knowtator.view.menu.MenuDialog;
-import edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -80,7 +79,7 @@ import static edu.ucdenver.ccp.knowtator.view.actions.modelactions.ProfileAction
  *
  * @author Harrison Pielke-Lombardo
  */
-public class KnowtatorView extends AbstractOWLClassViewComponent implements DropTargetListener, KnowtatorComponent {
+public class KnowtatorView extends AbstractOWLClassViewComponent implements DropTargetListener, KnowtatorComponent, ModelListener {
 
 	private static final Logger log = Logger.getLogger(KnowtatorView.class);
 	public static final Preferences PREFERENCES = Preferences.userRoot().node("knowtator");
@@ -388,142 +387,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 	}
 
-	/**
-	 * Sets up listeners to detect changes when text sources or concept annotations or spans change
-	 */
-	@Override
-	public void setupListeners() {
-		new TextBoundModelListener(MODEL) {
-			@Override
-			public void respondToTextSourceCollectionEmptied() {
-				disableTextSourceButtons();
-				addTextSourceButton.setEnabled(true);
-			}
-
-			@Override
-			public void respondToTextSourceCollectionFirstAdded() {
-				enableTextSourceButtons();
-				addAnnotationButton.setEnabled(true);
-			}
-
-			@Override
-			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
-				enableTextSourceButtons();
-				if (!event.getNew().isPresent()) {
-					removeAnnotationButton.setEnabled(false);
-				} else {
-					enableAnnotationButtons();
-				}
-			}
-
-			@Override
-			public void respondToConceptAnnotationCollectionEmptied() {
-				disableAnnotationButtons();
-				addAnnotationButton.setEnabled(true);
-			}
-
-			@Override
-			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
-				enableTextSourceButtons();
-			}
-
-			@Override
-			public void respondToTextSourceAdded() {
-				enableTextSourceButtons();
-			}
-
-			@Override
-			public void respondToTextSourceRemoved() {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationModification() {
-
-			}
-
-			@Override
-			public void respondToSpanModification() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceModification() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceCollectionFirstAdded() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceCollectionEmptied() {
-
-			}
-
-
-			@Override
-			public void respondToGraphSpaceRemoved() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceAdded() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceSelection(SelectionEvent<GraphSpace> event) {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationRemoved() {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationAdded() {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationCollectionFirstAdded() {
-				enableAnnotationButtons();
-			}
-
-			@Override
-			public void respondToSpanSelection(SelectionEvent<Span> event) {
-				if (!event.getNew().isPresent()) {
-					disableSpanButtons();
-				} else {
-					enableSpanButtons();
-				}
-			}
-
-			@Override
-			public void respondToSpanCollectionEmptied() {
-				disableSpanButtons();
-			}
-
-			@Override
-			public void respondToSpanRemoved() {
-
-			}
-
-			@Override
-			public void respondToSpanAdded() {
-
-			}
-
-			@Override
-			public void respondToSpanCollectionFirstAdded() {
-				enableSpanButtons();
-			}
-		};
-	}
-
 	@Override
 	protected OWLClass updateView(OWLClass selectedClass) {
 		setUpOWL();
@@ -532,8 +395,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 	@Override
 	public void reset() {
-		setupListeners();
 		knowtatorComponents.forEach(KnowtatorComponent::reset);
+		KnowtatorView.MODEL.addModelListener(this);
 	}
 
 	/**
@@ -628,19 +491,25 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	public void dragOver(DropTargetDragEvent e) {
 	}
 
-	public void loadProject(File file, TextSourceCollectionListener listener) throws IOException {
+	public void loadProject(File file, ModelListener progressListener) throws IOException {
+		if (MODEL != null) {
+			MODEL.dispose();
+		}
 		if (getOWLWorkspace() != null) {
 			MODEL = new KnowtatorModel(file, getOWLWorkspace());
 		} else {
 			MODEL = new KnowtatorModel(file, null);
 		}
 		log.info(String.format("Opening from %s", file.getAbsolutePath()));
-		if (listener != null) {
-			MODEL.addTextSourceCollectionListener(listener);
+		if (progressListener != null) {
+			MODEL.addModelListener(progressListener);
 		}
 		MODEL.load();
+		if (progressListener != null) {
+			MODEL.removeModelListener(progressListener);
+		}
 		reset();
-		knowtatorTextPane.refreshHighlights();
+		knowtatorTextPane.showTextSource();
 		addTextSourceButton.setEnabled(true);
 
 		KnowtatorView.PREFERENCES.put("Last Project", MODEL.getProjectLocation().getAbsolutePath());
@@ -963,4 +832,55 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 			component.setDisplayedMnemonicIndex(mnemonicIndex);
 		}
 	}
+
+	@Override
+	public void filterChangedEvent(FilterType filterType, boolean filterValue) {
+
+	}
+
+	@Override
+	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
+		event.getNew().ifPresent(o -> {
+			if (o instanceof ConceptAnnotation) {
+				MODEL.getSelectedTextSource().ifPresent(textSource -> {
+					if (textSource.getNumberOfConceptAnnotations() == 0) {
+						disableAnnotationButtons();
+						addAnnotationButton.setEnabled(true);
+					} else {
+						if (!event.getNew().isPresent()) {
+							removeAnnotationButton.setEnabled(false);
+						} else {
+							enableAnnotationButtons();
+						}
+					}
+				});
+			} else if (o instanceof TextSource) {
+				if (MODEL.getNumberOfTextSources() == 0) {
+					disableTextSourceButtons();
+					addTextSourceButton.setEnabled(true);
+				} else {
+					enableTextSourceButtons();
+					addAnnotationButton.setEnabled(true);
+				}
+			} else if (o instanceof Span) {
+				MODEL.getSelectedTextSource()
+						.ifPresent(textSource -> textSource.getSelectedAnnotation()
+								.ifPresent(conceptAnnotation -> {
+											if (conceptAnnotation.getNumberOfSpans() == 0) {
+												disableSpanButtons();
+											} else {
+												enableSpanButtons();
+											}
+										}
+								));
+			}
+		});
+
+	}
+
+	@Override
+	public void colorChangedEvent() {
+
+	}
+
 }

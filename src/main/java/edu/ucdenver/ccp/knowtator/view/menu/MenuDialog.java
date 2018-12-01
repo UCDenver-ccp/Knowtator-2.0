@@ -85,13 +85,16 @@ public class MenuDialog extends JDialog {
 			MenuPane pane = menuOptionsList.getModel().getElementAt(i);
 			menuDisplayPane.add(pane.getContentPane(), pane.toString());
 		}
+		menuOptionsList.setSelectedIndex(0);
+		MenuPane lastDisplayed = menuOptionsList.getSelectedValue();
 		menuOptionsList.addListSelectionListener(e -> {
 			CardLayout cl = (CardLayout) menuDisplayPane.getLayout();
 			cl.show(menuDisplayPane, menuOptionsList.getSelectedValue().toString());
+			lastDisplayed.dispose();
 			menuOptionsList.getSelectedValue().show();
 		});
 
-		menuOptionsList.setSelectedIndex(0);
+
 	}
 
 	@Override

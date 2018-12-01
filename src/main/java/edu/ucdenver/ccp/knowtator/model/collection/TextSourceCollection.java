@@ -50,7 +50,7 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 
 
 	public TextSourceCollection(BaseModel model) {
-		super();
+		super(model);
 		this.model = model;
 
 	}

@@ -24,15 +24,16 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.model.collection.listener.CollectionListener;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 
 import java.util.TreeSet;
 
-public abstract class CyclableCollection<K extends ModelObject, L extends CollectionListener> extends ListenableCollection<K, TreeSet<K>, L> {
+public abstract class CyclableCollection<K extends ModelObject> extends ListenableCollection<K, TreeSet<K>> {
 
-  CyclableCollection(TreeSet<K> collection) {
-    super(collection);
+  CyclableCollection(BaseModel model, TreeSet<K> collection) {
+    super(model, collection);
+
   }
 
 	K getPrevious(K current) {

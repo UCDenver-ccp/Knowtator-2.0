@@ -48,20 +48,10 @@ public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implem
     private final TextSource textSource;
 
 	public GraphSpaceCollection(BaseModel model, TextSource textSource) {
-        super();
+		super(model);
 		this.model = model;
         this.textSource = textSource;
     }
-
-  /*
-  GETTERS
-   */
-
-
-
-  /*
-  SETTERS
-   */
 
     @Override
     public void setSelection(GraphSpace graphSpace) {
@@ -70,23 +60,11 @@ public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implem
         }
     }
 
-  /*
-  ADDERS
-   */
-
-
-    /*
-    WRITERS
-     */
     @Override
     public void writeToKnowtatorXML(Document dom, Element parent) {
         forEach(graphSpace -> graphSpace.writeToKnowtatorXML(dom, parent));
     }
 
-
-    /*
-    READERS
-     */
     @Override
     public void readFromKnowtatorXML(File file, Element parent) {
         for (Node graphSpaceNode :

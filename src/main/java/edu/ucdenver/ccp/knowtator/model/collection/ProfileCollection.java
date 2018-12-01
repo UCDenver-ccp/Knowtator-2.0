@@ -31,7 +31,6 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.BaseKnowtatorManager;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.collection.listener.ColorListener;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -41,8 +40,6 @@ import org.w3c.dom.Node;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public class ProfileCollection extends KnowtatorCollection<Profile> implements KnowtatorXMLIO, BaseKnowtatorManager {
@@ -51,15 +48,13 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 	private static final Logger log = Logger.getLogger(KnowtatorModel.class);
 
 	private final BaseModel model;
-	private final List<ColorListener> colorListeners;
 	private final Profile defaultProfile;
 
 	public ProfileCollection(BaseModel model) {
-		super();
+		super(model);
 		defaultProfile = new Profile(model, "Default");
 		add(defaultProfile);
 		this.model = model;
-		colorListeners = new ArrayList<>();
 	}
 
 	public Profile getDefaultProfile() {
@@ -82,10 +77,6 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 			setSelection(defaultProfile);
 			return Optional.of(defaultProfile);
 		}
-	}
-
-	public void addColorListener(ColorListener listener) {
-		colorListeners.add(listener);
 	}
 
 	@Override
@@ -125,13 +116,8 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 	public void readFromOldKnowtatorXML(File file, Element parent) {
 	}
 
-	public void fireColorChanged() {
-		colorListeners.forEach(ColorListener::colorChanged);
-	}
-
 	@Override
 	public void dispose() {
-		colorListeners.clear();
 		super.dispose();
 	}
 

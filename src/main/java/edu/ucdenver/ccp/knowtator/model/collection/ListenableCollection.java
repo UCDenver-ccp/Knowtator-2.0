@@ -24,37 +24,38 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.model.collection.listener.CollectionListener;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Optional;
 import java.util.stream.Stream;
 
-public abstract class ListenableCollection<K extends ModelObject, C extends Collection<K>, L extends CollectionListener> implements Iterable<K> {
+public abstract class ListenableCollection<K extends ModelObject, C extends Collection<K>> implements Iterable<K> {
+	BaseModel model;
 	final C collection;
-	final List<L> collectionListeners;
 
-	ListenableCollection(C collection) {
+
+	ListenableCollection(BaseModel model, C collection) {
+		this.model = model;
 		this.collection = collection;
-		collectionListeners = new ArrayList<>();
 	}
 
 	public void add(K objectToAdd) {
 		collection.add(objectToAdd);
 
-		collectionListeners.forEach(CollectionListener::added);
-		if (collection.size() == 1) {
-			collectionListeners.forEach(CollectionListener::firstAdded);
+		if (model != null) {
+			model.fireModelEvent(new ChangeEvent<>(null, objectToAdd));
 		}
 	}
 
 	void remove(K objectToRemove) {
 		collection.remove(objectToRemove);
-
-		collectionListeners.forEach(CollectionListener::removed);
-		if (collection.size() == 0) {
-			collectionListeners.forEach(CollectionListener::emptied);
+		if (model != null) {
+			model.fireModelEvent(new ChangeEvent<>(null, objectToRemove));
 		}
 	}
 
@@ -81,15 +82,6 @@ public abstract class ListenableCollection<K extends ModelObject, C extends Coll
 		return false;
 	}
 
-	public void addCollectionListener(L listener) {
-		if (!collectionListeners.contains(listener)) collectionListeners.add(listener);
-	}
-
-	@SuppressWarnings("WeakerAccess")
-	public void removeCollectionListener(L listener) {
-		collectionListeners.remove(listener);
-	}
-
 	@Override
 	@Nonnull
 	public Iterator<K> iterator() {
@@ -105,7 +97,6 @@ public abstract class ListenableCollection<K extends ModelObject, C extends Coll
 	}
 
 	public void dispose() {
-		collectionListeners.clear();
 		forEach(ModelObject::dispose);
 		collection.clear();
 	}

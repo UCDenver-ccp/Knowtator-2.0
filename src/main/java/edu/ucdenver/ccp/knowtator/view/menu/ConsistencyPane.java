@@ -70,6 +70,10 @@ class ConsistencyPane extends MenuPane {
 
 	@Override
 	public void show() {
+		annotationsForClassList.reset();
+		annotationsForSpannedTextList.reset();
+		relationsForPropertyList.reset();
+
 		refresh();
 	}
 
@@ -108,9 +112,17 @@ class ConsistencyPane extends MenuPane {
 	}
 
 	@Override
-	void dispose() {
+	public void reset() {
+		annotationsForSpannedTextList.reset();
+		annotationsForSpannedTextList.reset();
+		relationsForPropertyList.reset();
+	}
+
+	@Override
+	public void dispose() {
 		annotationsForClassList.dispose();
 		annotationsForSpannedTextList.dispose();
+		relationsForPropertyList.dispose();
 	}
 
 	/**

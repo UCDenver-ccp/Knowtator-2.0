@@ -30,8 +30,6 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 public class ProfileList extends KnowtatorList<Profile> {
 	public ProfileList() {
 		super();
-
-		react();
 	}
 
 	@Override

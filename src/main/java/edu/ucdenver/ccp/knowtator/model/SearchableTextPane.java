@@ -22,13 +22,10 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.textpane;
+package edu.ucdenver.ccp.knowtator.model;
 
-import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.listener.TextBoundModelListener;
-import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.object.Span;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
@@ -42,7 +39,7 @@ import java.util.regex.Pattern;
 /**
  * A text pane that has search functionality
  */
-public abstract class SearchableTextPane extends JTextPane implements KnowtatorComponent {
+public abstract class SearchableTextPane extends JTextPane implements KnowtatorComponent, ModelListener {
 	private Pattern pattern;
 	private Matcher matcher;
 	private final JTextField searchTextField;
@@ -163,133 +160,16 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 
 
 	@Override
-	public void dispose() {
-
-	}
-
-	@Override
-	public void setupListeners() {
-		new TextBoundModelListener(KnowtatorView.MODEL) {
-			@Override
-			public void respondToConceptAnnotationModification() {
-
+	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
+		KnowtatorView.MODEL.getSelectedTextSource()
+				.ifPresent(textSource -> textSource.getSelectedAnnotation()
+						.ifPresent(conceptAnnotation -> conceptAnnotation
+								.getSelection().ifPresent(span -> searchTextField
+										.setText(span.getSpannedText()))));
+		event.getNew().ifPresent(modelObject -> {
+			if (modelObject instanceof TextSource) {
+				matcher = pattern.matcher(((TextSource) modelObject).getContent());
 			}
-
-			@Override
-			public void respondToSpanModification() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceModification() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceCollectionFirstAdded() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceCollectionEmptied() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceRemoved() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceAdded() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceSelection(SelectionEvent<GraphSpace> event) {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationCollectionEmptied() {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationRemoved() {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationAdded() {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationCollectionFirstAdded() {
-
-			}
-
-			@Override
-			public void respondToSpanCollectionFirstAdded() {
-
-			}
-
-			@Override
-			public void respondToSpanCollectionEmptied() {
-
-			}
-
-			@Override
-			public void respondToSpanRemoved() {
-
-			}
-
-			@Override
-			public void respondToSpanAdded() {
-
-			}
-
-			@Override
-			public void respondToSpanSelection(SelectionEvent<Span> event) {
-				event.getNew().ifPresent(span -> searchTextField.setText(span.getSpannedText()));
-			}
-
-			@Override
-			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
-
-			}
-
-			@Override
-			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
-				event.getNew().ifPresent(textSource -> matcher = pattern.matcher(textSource.getContent()));
-
-			}
-
-			@Override
-			public void respondToTextSourceAdded() {
-
-			}
-
-			@Override
-			public void respondToTextSourceRemoved() {
-
-			}
-
-			@Override
-			public void respondToTextSourceCollectionEmptied() {
-
-			}
-
-			@Override
-			public void respondToTextSourceCollectionFirstAdded() {
-
-			}
-		};
-	}
-
-	@Override
-	public void reset() {
-		setupListeners();
+		});
 	}
 }

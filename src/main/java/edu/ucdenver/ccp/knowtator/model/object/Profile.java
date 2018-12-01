@@ -120,7 +120,7 @@ public class Profile implements ModelObject<Profile>, Savable, KnowtatorXMLIO {
 
 	public void addColor(OWLClass owlClass, Color c) {
 		colors.put(owlClass, c);
-		model.getProfileCollection().fireColorChanged();
+		model.fireColorChanged();
 	}
 
 

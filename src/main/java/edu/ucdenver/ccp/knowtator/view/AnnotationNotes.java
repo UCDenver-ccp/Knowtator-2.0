@@ -24,12 +24,11 @@
 
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.listener.TextBoundModelListener;
+import edu.ucdenver.ccp.knowtator.model.FilterType;
+import edu.ucdenver.ccp.knowtator.model.ModelListener;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.object.Span;
-import edu.ucdenver.ccp.knowtator.model.object.TextSource;
+import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -37,7 +36,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class AnnotationNotes extends JTextArea implements KnowtatorComponent {
+public class AnnotationNotes extends JTextArea implements KnowtatorComponent, ModelListener {
 	private ConceptAnnotation conceptAnnotation;
 
 	AnnotationNotes() {
@@ -80,143 +79,43 @@ public class AnnotationNotes extends JTextArea implements KnowtatorComponent {
 
 	}
 
-	private void setText() {
-		super.setText(conceptAnnotation.getMotivation());
-	}
-
 	@Override
 	public void reset() {
-		setupListeners();
+		KnowtatorView.MODEL.addModelListener(this);
 	}
 
-	@Override
-	public void setupListeners() {
-		new TextBoundModelListener(KnowtatorView.MODEL) {
-			@Override
-			protected void respondToConceptAnnotationModification() {
-
-			}
-
-			@Override
-			protected void respondToSpanModification() {
-
-			}
-
-			@Override
-			protected void respondToGraphSpaceModification() {
-
-			}
-
-			@Override
-			protected void respondToGraphSpaceCollectionFirstAdded() {
-
-			}
-
-			@Override
-			protected void respondToGraphSpaceCollectionEmptied() {
-
-			}
-
-			@Override
-			protected void respondToGraphSpaceRemoved() {
-
-			}
-
-			@Override
-			protected void respondToGraphSpaceAdded() {
-
-			}
-
-			@Override
-			protected void respondToGraphSpaceSelection(SelectionEvent<GraphSpace> event) {
-
-			}
-
-			@Override
-			protected void respondToConceptAnnotationCollectionEmptied() {
-
-			}
-
-			@Override
-			protected void respondToConceptAnnotationRemoved() {
-
-			}
-
-			@Override
-			protected void respondToConceptAnnotationAdded() {
-
-			}
-
-			@Override
-			protected void respondToConceptAnnotationCollectionFirstAdded() {
-
-			}
-
-			@Override
-			protected void respondToSpanCollectionFirstAdded() {
-
-			}
-
-			@Override
-			protected void respondToSpanCollectionEmptied() {
-
-			}
-
-			@Override
-			protected void respondToSpanRemoved() {
-
-			}
-
-			@Override
-			protected void respondToSpanAdded() {
-
-			}
-
-			@Override
-			protected void respondToSpanSelection(SelectionEvent<Span> event) {
-
-			}
-
-			@Override
-			protected void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
-				if (event.getNew().isPresent()) {
-					setEnabled(true);
-					conceptAnnotation = event.getNew().get();
-					setText();
-				} else {
-					setEnabled(false);
-				}
-			}
-
-			@Override
-			protected void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
-
-			}
-
-			@Override
-			protected void respondToTextSourceAdded() {
-
-			}
-
-			@Override
-			protected void respondToTextSourceRemoved() {
-
-			}
-
-			@Override
-			protected void respondToTextSourceCollectionEmptied() {
-
-			}
-
-			@Override
-			protected void respondToTextSourceCollectionFirstAdded() {
-
-			}
-		};
-	}
 
 	@Override
 	public void dispose() {
+		KnowtatorView.MODEL.removeModelListener(this);
+	}
+
+	@Override
+	public void filterChangedEvent(FilterType filterType, boolean filterValue) {
+
+	}
+
+	@Override
+	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
+		react();
+	}
+
+	public void react() {
+		KnowtatorView.MODEL.getSelectedTextSource().ifPresent(textSource -> {
+			if (textSource.getSelectedAnnotation().isPresent()) {
+				conceptAnnotation = textSource.getSelectedAnnotation().get();
+				setEnabled(true);
+				setText(conceptAnnotation.getMotivation());
+			} else {
+				setEnabled(false);
+				setText("");
+			}
+		});
+	}
+
+
+	@Override
+	public void colorChangedEvent() {
 
 	}
 }

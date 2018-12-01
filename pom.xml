@@ -180,7 +180,6 @@
                         <Embed-Dependency>jgraphx, commons-cli, commons-lang3</Embed-Dependency>
                         <Include-Resource>README.md,
                             plugin.xml,
-                            installation_image.PNG,
                             {maven-resources}
                             <!--{maven-dependencies},-->
                             <!--${project.build.directory}/jdom-1.0-fixed.jar-->

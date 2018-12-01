@@ -27,8 +27,11 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.listener.TextSourceCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.FilterType;
+import edu.ucdenver.ccp.knowtator.model.ModelListener;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
@@ -104,8 +107,9 @@ class FilePane extends MenuPane {
 		if (fileChooser.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
 			File annotationsDir = new File(file.getParentFile(), "Annotations");
+			File profilesDir = new File(file.getParentFile(), "Profiles");
 			if (annotationsDir.isDirectory()) {
-				progressBar1.setMaximum(Objects.requireNonNull(annotationsDir.listFiles()).length);
+				progressBar1.setMaximum(Objects.requireNonNull(annotationsDir.listFiles()).length + Objects.requireNonNull(profilesDir.listFiles()).length);
 			}
 			progressBar1.setValue(0);
 			progressBar1.setStringPainted(true);
@@ -115,30 +119,21 @@ class FilePane extends MenuPane {
 				@Override
 				protected Object doInBackground() throws Exception {
 					final int[] progress = {0};
-					view.loadProject(file.getParentFile(), new TextSourceCollectionListener() {
-						@Override
-						public void selected(SelectionEvent<TextSource> event) {
+					view.loadProject(file.getParentFile(), new ModelListener() {
 
+						@Override
+						public void filterChangedEvent(FilterType filterType, boolean filterValue) {
 						}
 
 						@Override
-						public void added() {
-							setProgress(progress[0]++);
+						public void modelChangeEvent(ChangeEvent<ModelObject> event) {
+							event.getNew()
+									.filter(modelObject -> modelObject instanceof TextSource || modelObject instanceof Profile)
+									.ifPresent(textSource -> setProgress(progress[0]++));
 						}
 
 						@Override
-						public void removed() {
-
-						}
-
-						@Override
-						public void emptied() {
-
-						}
-
-						@Override
-						public void firstAdded() {
-
+						public void colorChangedEvent() {
 						}
 					});
 					return null;
@@ -175,11 +170,6 @@ class FilePane extends MenuPane {
 	@Override
 	public JPanel getContentPane() {
 		return contentPane;
-	}
-
-	@Override
-	void dispose() {
-
 	}
 
 
@@ -253,4 +243,13 @@ class FilePane extends MenuPane {
 		return panel1;
 	}
 
+	@Override
+	public void reset() {
+
+	}
+
+	@Override
+	public void dispose() {
+
+	}
 }

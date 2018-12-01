@@ -22,14 +22,12 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.textpane;
+package edu.ucdenver.ccp.knowtator.model;
 
 import edu.ucdenver.ccp.knowtator.model.collection.CyclableCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectableCollection;
-import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.listener.TextBoundModelListener;
-import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
@@ -52,7 +50,7 @@ import static java.lang.Math.min;
 /**
  * A text pane that can be annotated
  */
-public abstract class AnnotatableTextPane extends SearchableTextPane implements KnowtatorComponent {
+public abstract class AnnotatableTextPane extends SearchableTextPane implements KnowtatorComponent, ModelListener {
 
 	private final MouseListener mouseListener;
 	private final DefaultHighlighter.DefaultHighlightPainter overlapHighlighter = new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
@@ -102,138 +100,10 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 		addMouseListener(mouseListener);
 	}
 
-	@Override
-	public void reset() {
-		super.reset();
-	}
-
-	@Override
-	public void setupListeners() {
-		super.setupListeners();
-		new TextBoundModelListener(KnowtatorView.MODEL) {
-			@Override
-			public void respondToConceptAnnotationModification() {
-				refreshHighlights();
-			}
-
-			@Override
-			public void respondToSpanModification() {
-				refreshHighlights();
-			}
-
-			@Override
-			public void respondToGraphSpaceModification() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceCollectionFirstAdded() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceCollectionEmptied() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceRemoved() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceAdded() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceSelection(SelectionEvent<GraphSpace> event) {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationCollectionEmptied() {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationRemoved() {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationAdded() {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationCollectionFirstAdded() {
-
-			}
-
-			@Override
-			public void respondToSpanCollectionFirstAdded() {
-				refreshHighlights();
-			}
-
-			@Override
-			public void respondToSpanCollectionEmptied() {
-				refreshHighlights();
-			}
-
-			@Override
-			public void respondToSpanRemoved() {
-				refreshHighlights();
-			}
-
-			@Override
-			public void respondToSpanAdded() {
-				refreshHighlights();
-			}
-
-			@Override
-			public void respondToSpanSelection(SelectionEvent<Span> event) {
-				refreshHighlights();
-			}
-
-			@Override
-			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
-				refreshHighlights();
-			}
-
-			@Override
-			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
-				showTextSource();
-			}
-
-			@Override
-			public void respondToTextSourceAdded() {
-
-			}
-
-			@Override
-			public void respondToTextSourceRemoved() {
-
-			}
-
-			@Override
-			public void respondToTextSourceCollectionEmptied() {
-				setEnabled(false);
-				removeMouseListener(mouseListener);
-			}
-
-			@Override
-			public void respondToTextSourceCollectionFirstAdded() {
-				setEnabled(true);
-				addMouseListener(mouseListener);
-			}
-		};
-	}
-
 	/**
 	 * Sets the text to the text sources content
 	 */
-	private void showTextSource() {
+	public void showTextSource() {
 		KnowtatorView.MODEL.getSelectedTextSource().ifPresent(textSource1 -> setText(textSource1.getContent()));
 		refreshHighlights();
 	}
@@ -403,6 +273,39 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 		select(getSelectionStart() + startModification, getSelectionEnd() + endModification);
 	}
 
+	@Override
+	public void colorChangedEvent() {
+		refreshHighlights();
+	}
+
+	@Override
+	public void filterChangedEvent(FilterType filterType, boolean filterValue) {
+		refreshHighlights();
+	}
+
+	@Override
+	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
+		if (KnowtatorView.MODEL.getNumberOfTextSources() == 0) {
+			setEnabled(false);
+			removeMouseListener(mouseListener);
+		} else {
+			setEnabled(true);
+			addMouseListener(mouseListener);
+			showTextSource();
+		}
+		refreshHighlights();
+	}
+
+	@Override
+	public void reset() {
+		KnowtatorView.MODEL.addModelListener(this);
+	}
+
+	@Override
+	public void dispose() {
+		KnowtatorView.MODEL.removeModelListener(this);
+	}
+
 	class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {
 
 		@SuppressWarnings("SameParameterValue")
@@ -414,8 +317,8 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 		 * Paints a portion of a highlight.
 		 *
 		 * @param g      the graphics context
-		 * @param offs0  the starting modelactions offset >= 0
-		 * @param offs1  the ending modelactions offset >= offs1
+		 * @param offs0  the starting model offset >= 0
+		 * @param offs1  the ending model offset >= offs1
 		 * @param bounds the bounding box of the view, which is not necessarily the region to paint.
 		 * @param c      the editor
 		 * @param view   View painting for

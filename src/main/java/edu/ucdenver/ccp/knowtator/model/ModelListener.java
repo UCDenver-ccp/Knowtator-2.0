@@ -24,7 +24,13 @@
 
 package edu.ucdenver.ccp.knowtator.model;
 
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
+
 public interface ModelListener {
-    void profileFilterChanged(boolean filterValue);
-    void owlClassFilterChanged(boolean filterVale);
+    void filterChangedEvent(FilterType filterType, boolean filterValue);
+
+    void colorChangedEvent();
+
+    void modelChangeEvent(ChangeEvent<ModelObject> event);
 }

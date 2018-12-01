@@ -22,9 +22,8 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.collection.listener;
+package edu.ucdenver.ccp.knowtator.model;
 
-import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
+public interface KnowtatorModelListener {
 
-public interface KnowtatorCollectionListener<K extends ModelObject> extends SelectableCollectionListener<K> {
 }

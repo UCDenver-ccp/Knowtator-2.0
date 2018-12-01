@@ -127,7 +127,7 @@ Thank you to Philip Ogren, the author of the original Knowtator.
 
 [knowtator link]:https://github.com/UCDenver-ccp/Knowtator-2.0/releases/latest
 [protege link]:http://protege.stanford.edu/products.php#desktop-protege
-[installation image]:installation_image.PNG
+[installation image]:doc/installation_image.PNG
 [ontology example]:http://purl.obolibrary.org/obo/go/go-basic.obo
 [mac osx plugin installation comment thread]:http://protege-project.136.n4.nabble.com/Installing-Plugins-on-Protege-5-MacOSX-td4665874.html
 [sample files location]:https://github.com/tuh8888/Knowtator-2.0/tree/master/src/test/resources

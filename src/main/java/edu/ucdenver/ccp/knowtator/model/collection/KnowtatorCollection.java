@@ -24,13 +24,13 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.model.collection.listener.KnowtatorCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 
 import java.util.TreeSet;
 
-public abstract class KnowtatorCollection<K extends ModelObject> extends SelectableCollection<K, KnowtatorCollectionListener<K>> {
-	protected KnowtatorCollection() {
-	    super(new TreeSet<>());
+public abstract class KnowtatorCollection<K extends ModelObject> extends SelectableCollection<K> {
+	protected KnowtatorCollection(BaseModel model) {
+		super(model, new TreeSet<>());
     }
 }

@@ -31,7 +31,7 @@ public class ChangeEvent<O> {
 	private final O oldObject;
 	private final O newObject;
 
-	ChangeEvent(O oldObject, O newObject) {
+	public ChangeEvent(O oldObject, O newObject) {
 
 		this.oldObject = oldObject;
 		this.newObject = newObject;

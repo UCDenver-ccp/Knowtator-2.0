@@ -33,7 +33,5 @@ public interface KnowtatorComponent {
      */
     void reset();
 
-    void setupListeners();
-
 	void dispose();
 }

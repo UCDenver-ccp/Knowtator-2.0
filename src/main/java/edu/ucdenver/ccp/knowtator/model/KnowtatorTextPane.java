@@ -22,14 +22,9 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.textpane;
+package edu.ucdenver.ccp.knowtator.model;
 
-import edu.ucdenver.ccp.knowtator.model.ModelListener;
-import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.listener.ColorListener;
-import edu.ucdenver.ccp.knowtator.model.collection.listener.ProfileCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
@@ -53,7 +48,7 @@ import static edu.ucdenver.ccp.knowtator.view.actions.collection.KnowtatorCollec
 /**
  * The text pane used for annotating and displaying concept annotations in Knowtator projects
  */
-public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListener, KnowtatorComponent, ModelListener, ProfileCollectionListener {
+public class KnowtatorTextPane extends AnnotatableTextPane implements KnowtatorComponent, ModelListener {
 
 	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger(KnowtatorTextPane.class);
@@ -123,21 +118,6 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 	}
 
 	@Override
-	public void reset() {
-		super.reset();
-		setupListeners();
-	}
-
-	@Override
-	public void setupListeners() {
-		super.setupListeners();
-		KnowtatorView.MODEL.addColorListener(this);
-		KnowtatorView.MODEL.addProfileCollectionListener(this);
-		KnowtatorView.MODEL.addModelListener(this);
-	}
-
-
-	@Override
 	protected boolean shouldUpdateSearchTextFieldCondition() {
 		return !regexCheckBox.isSelected();
 	}
@@ -151,49 +131,6 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements ColorListe
 	@Override
 	protected int getPatternFlags() {
 		return (regexCheckBox.isSelected() ? 0 : Pattern.LITERAL) | (caseSensitiveCheckBox.isSelected() ? 0 : Pattern.CASE_INSENSITIVE);
-	}
-
-	@Override
-	public void dispose() {
-
-	}
-
-	@Override
-	public void colorChanged() {
-		refreshHighlights();
-	}
-
-	@Override
-	public void profileFilterChanged(boolean filterValue) {
-		refreshHighlights();
-	}
-
-	@Override
-	public void owlClassFilterChanged(boolean filterVale) {
-		refreshHighlights();
-	}
-
-	@Override
-	public void selected(SelectionEvent<Profile> event) {
-		refreshHighlights();
-	}
-
-	@Override
-	public void added() {
-	}
-
-	@Override
-	public void removed() {
-	}
-
-	@Override
-	public void emptied() {
-
-	}
-
-	@Override
-	public void firstAdded() {
-
 	}
 
 	class AnnotationPopupMenu extends JPopupMenu {

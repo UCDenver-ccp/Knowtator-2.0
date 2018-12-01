@@ -28,6 +28,7 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
@@ -36,8 +37,9 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
-import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.listener.ConceptAnnotationCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.FilterType;
+import edu.ucdenver.ccp.knowtator.model.ModelListener;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.event.EventType;
 import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
@@ -55,7 +57,7 @@ import java.io.Writer;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLOntologyChangeListener, TextBoundModelObject<GraphSpace>, KnowtatorXMLIO, BratStandoffIO, ConceptAnnotationCollectionListener {
+public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLOntologyChangeListener, TextBoundModelObject<GraphSpace>, KnowtatorXMLIO, BratStandoffIO, ModelListener {
 	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(GraphSpace.class);
 
@@ -74,7 +76,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 
 
 		baseModel.verifyId(id, this, false);
-		textSource.addCollectionListener(this);
+		baseModel.addModelListener(this);
 		baseModel.addOntologyChangeListener(this);
 		baseModel.addOWLModelManagerListener(this);
 
@@ -86,6 +88,23 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		setCellsBendable(false);
 		setResetEdgesOnMove(true);
 		areListenersSet = false;
+
+		getSelectionModel().addListener(mxEvent.CHANGE, (sender, evt) -> {
+			Collection selectedCells = (Collection) evt.getProperty("removed");
+//			Collection deselectedCells = (Collection) evt.getProperty("added");
+			if (selectedCells != null && selectedCells.size() > 0) {
+				for (Object cell : selectedCells) {
+					if (cell instanceof AnnotationNode) {
+						ConceptAnnotation conceptAnnotation = ((AnnotationNode) cell).getConceptAnnotation();
+						getTextSource().setSelection(conceptAnnotation);
+
+					} else if (cell instanceof RelationAnnotation) {
+						baseModel.setSelectedOWLEntity(((RelationAnnotation) cell).getProperty());
+					}
+				}
+
+			}
+		});
 	}
 
   /*
@@ -394,9 +413,22 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 	}
 
 	@Override
-	public void selected(SelectionEvent<ConceptAnnotation> event) {
+	public void filterChangedEvent(FilterType filterType, boolean filterValue) {
+
+	}
+
+	@Override
+	public void colorChangedEvent() {
+
+	}
+
+	@Override
+	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
 		if (event.getNew().isPresent()) {
-			event.getNew().ifPresent(conceptAnnotation -> setSelectionCells(getVerticesForAnnotation(conceptAnnotation)));
+			event.getNew()
+					.filter(modelObject -> modelObject instanceof ConceptAnnotation)
+					.map(modelObject -> (ConceptAnnotation) modelObject)
+					.ifPresent(conceptAnnotation -> setSelectionCells(getVerticesForAnnotation(conceptAnnotation)));
 		} else {
 			setSelectionCells(new Object[0]);
 		}
@@ -459,25 +491,6 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		modificationListeners.remove(listener);
 	}
 
-	@Override
-	public void added() {
-
-	}
-
-	@Override
-	public void removed() {
-
-	}
-
-	@Override
-	public void emptied() {
-
-	}
-
-	@Override
-	public void firstAdded() {
-
-	}
 
 	public void setListenersSet() {
 		areListenersSet = true;

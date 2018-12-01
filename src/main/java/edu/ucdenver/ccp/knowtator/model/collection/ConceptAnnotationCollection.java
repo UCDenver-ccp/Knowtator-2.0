@@ -30,6 +30,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.*;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
@@ -56,7 +57,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 	private final TextSource textSource;
 
 	public ConceptAnnotationCollection(BaseModel model, TextSource textSource) {
-		super();
+		super(model);
 		this.model = model;
 		this.textSource = textSource;
 
@@ -193,7 +194,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 				super.setSelection(selection);
 			}
 		}
-
+		getSelection().ifPresent(conceptAnnotation -> model.setSelectedOWLEntity(conceptAnnotation.getOwlClass()));
 	}
 
     /*
@@ -347,12 +348,12 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 		textSource.add(oldKnowtatorGraphSpace);
 
 		annotationToSlotMap.forEach((annotation, slot) -> {
-			String propertyID = ((Element) slot.getElementsByTagName(OldKnowtatorXMLTags.MENTION_SLOT).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID);
+					String propertyID = ((Element) slot.getElementsByTagName(OldKnowtatorXMLTags.MENTION_SLOT).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID);
 
 					List<Object> vertices = oldKnowtatorGraphSpace.getVerticesForAnnotation(annotation);
 					AnnotationNode source = oldKnowtatorGraphSpace.makeOrGetAnnotationNode(annotation, vertices);
 
-			for (Node slotMentionValueNode : OldKnowtatorUtil.asList(slot.getElementsByTagName(OldKnowtatorXMLTags.COMPLEX_SLOT_MENTION_VALUE))) {
+					for (Node slotMentionValueNode : OldKnowtatorUtil.asList(slot.getElementsByTagName(OldKnowtatorXMLTags.COMPLEX_SLOT_MENTION_VALUE))) {
 						Element slotMentionValueElement = (Element) slotMentionValueNode;
 						String value = slotMentionValueElement.getAttribute(OldKnowtatorXMLAttributes.VALUE);
 						get(value).map(conceptAnnotation -> {
@@ -465,21 +466,31 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 	}
 
 	@Override
-	public void profileFilterChanged(boolean filterValue) {
-		getSelection()
-				.filter(conceptAnnotation -> filterValue)
-				.filter(conceptAnnotation -> model.getSelectedProfile()
-						.map(profile -> !conceptAnnotation.getAnnotator().equals(profile)).orElse(false))
-				.ifPresent(conceptAnnotation -> setSelection(null));
+	public void filterChangedEvent(FilterType filterType, boolean filterValue) {
+		if (filterType == FilterType.PROFILE) {
+			getSelection()
+					.filter(conceptAnnotation -> filterValue)
+					.filter(conceptAnnotation -> model.getSelectedProfile()
+							.map(profile -> !conceptAnnotation.getAnnotator().equals(profile)).orElse(false))
+					.ifPresent(conceptAnnotation -> setSelection(null));
+		}
+		if (filterType == FilterType.OWLCLASS) {
+			getSelection()
+					.filter(conceptAnnotation -> filterValue)
+					.filter(conceptAnnotation -> model.getSelectedOWLClass()
+							.map(owlClass1 -> !owlClass1.equals(conceptAnnotation.getOwlClass()))
+							.orElse(false))
+					.ifPresent(conceptAnnotation -> setSelection(null));
+		}
 	}
 
 	@Override
-	public void owlClassFilterChanged(boolean filterValue) {
-		getSelection()
-				.filter(conceptAnnotation -> filterValue)
-				.filter(conceptAnnotation -> model.getSelectedOWLClass()
-						.map(owlClass1 -> !owlClass1.equals(conceptAnnotation.getOwlClass()))
-						.orElse(false))
-				.ifPresent(conceptAnnotation -> setSelection(null));
+	public void colorChangedEvent() {
+
+	}
+
+	@Override
+	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
+
 	}
 }

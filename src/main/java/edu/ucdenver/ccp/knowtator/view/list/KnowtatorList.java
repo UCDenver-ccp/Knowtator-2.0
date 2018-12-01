@@ -24,21 +24,21 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
+import edu.ucdenver.ccp.knowtator.model.FilterType;
+import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.listener.TextBoundModelListener;
-import edu.ucdenver.ccp.knowtator.model.object.*;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 
-public abstract class KnowtatorList<K extends ModelObject> extends JList<K> implements KnowtatorComponent {
+public abstract class KnowtatorList<K extends ModelObject> extends JList<K> implements KnowtatorComponent, ModelListener {
 
 	protected KnowtatorCollection<K> collection;
 	ListSelectionListener al;
-	private TextBoundModelListener textBoundModelListener;
 
 	KnowtatorList() {
 		setModel(new DefaultListModel<>());
@@ -51,128 +51,6 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K> impl
 		};
 
 		addListSelectionListener(al);
-
-	}
-
-	@Override
-	public void setupListeners() {
-		//noinspection Duplicates
-		textBoundModelListener = new TextBoundModelListener(KnowtatorView.MODEL) {
-			@Override
-			public void respondToConceptAnnotationModification() {
-				react();
-			}
-
-			@Override
-			public void respondToSpanModification() {
-				react();
-			}
-
-			@Override
-			public void respondToGraphSpaceModification() {
-				react();
-			}
-
-			@Override
-			public void respondToGraphSpaceCollectionFirstAdded() {
-				react();
-			}
-
-			@Override
-			public void respondToGraphSpaceCollectionEmptied() {
-				react();
-			}
-
-			@Override
-			public void respondToGraphSpaceRemoved() {
-				react();
-			}
-
-			@Override
-			public void respondToGraphSpaceAdded() {
-				react();
-			}
-
-			@Override
-			public void respondToGraphSpaceSelection(SelectionEvent<GraphSpace> event) {
-				react();
-			}
-
-			@Override
-			public void respondToConceptAnnotationCollectionEmptied() {
-				react();
-			}
-
-			@Override
-			public void respondToConceptAnnotationRemoved() {
-				react();
-			}
-
-			@Override
-			public void respondToConceptAnnotationAdded() {
-				react();
-			}
-
-			@Override
-			public void respondToConceptAnnotationCollectionFirstAdded() {
-				react();
-			}
-
-			@Override
-			public void respondToSpanCollectionFirstAdded() {
-				react();
-			}
-
-			@Override
-			public void respondToSpanCollectionEmptied() {
-				react();
-			}
-
-			@Override
-			public void respondToSpanRemoved() {
-				react();
-			}
-
-			@Override
-			public void respondToSpanAdded() {
-				react();
-			}
-
-			@Override
-			public void respondToSpanSelection(SelectionEvent<Span> event) {
-				react();
-			}
-
-			@Override
-			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
-				react();
-			}
-
-			@Override
-			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
-				react();
-			}
-
-			@Override
-			public void respondToTextSourceAdded() {
-				react();
-			}
-
-			@Override
-			public void respondToTextSourceRemoved() {
-				react();
-			}
-
-			@Override
-			public void respondToTextSourceCollectionEmptied() {
-				react();
-			}
-
-			@Override
-			public void respondToTextSourceCollectionFirstAdded() {
-				react();
-			}
-		};
 
 	}
 
@@ -212,12 +90,28 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K> impl
 	@Override
 	public void reset() {
 		dispose();
-		setupListeners();
+		KnowtatorView.MODEL.addModelListener(this);
 	}
 
 	@Override
 	public void dispose() {
 		((DefaultListModel) getModel()).clear();
-		if (textBoundModelListener != null) textBoundModelListener.dispose();
+		KnowtatorView.MODEL.removeModelListener(this);
+	}
+
+	@Override
+	public void filterChangedEvent(FilterType filterType, boolean filterValue) {
+		react();
+	}
+
+
+	@Override
+	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
+		react();
+	}
+
+	@Override
+	public void colorChangedEvent() {
+		react();
 	}
 }

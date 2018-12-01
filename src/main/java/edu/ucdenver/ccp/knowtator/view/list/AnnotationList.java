@@ -30,7 +30,6 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 public class AnnotationList extends KnowtatorList<ConceptAnnotation> {
 	protected AnnotationList() {
 		super();
-		setupListeners();
 	}
 
 	@Override

@@ -47,6 +47,7 @@ public class SpanCollection extends KnowtatorCollection<Span> implements BratSta
 	protected final BaseModel model;
 
 	public SpanCollection(BaseModel model) {
+		super(model);
 		this.model = model;
 	}
 

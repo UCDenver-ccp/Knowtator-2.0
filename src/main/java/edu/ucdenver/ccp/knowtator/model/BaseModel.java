@@ -32,11 +32,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
-import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.listener.ColorListener;
-import edu.ucdenver.ccp.knowtator.model.collection.listener.ProfileCollectionListener;
-import edu.ucdenver.ccp.knowtator.model.collection.listener.TextBoundModelListener;
-import edu.ucdenver.ccp.knowtator.model.collection.listener.TextSourceCollectionListener;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.*;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
@@ -64,7 +60,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 	private final File profilesLocation;
 	final File ontologiesLocation;
 
-	private final List<ModelListener> modelListeners;
+	private final Set<ModelListener> modelListeners;
 	private final Map<FilterType, Boolean> filters;
 	private Selection selection;
 
@@ -76,6 +72,14 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 
 	public BaseModel(File projectLocation) throws IOException {
 		idRegistry = new TreeMap<>();
+
+		modelListeners = new HashSet<>();
+		filters = new HashMap<>();
+		filters.put(FilterType.PROFILE, false);
+		filters.put(FilterType.OWLCLASS, false);
+		loading = false;
+
+		selection = new Selection(0, 0);
 
 		if (projectLocation.isFile()) {
 			if (projectLocation.getName().endsWith(".knowtator")) {
@@ -108,13 +112,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 		textSources = new TextSourceCollection(this);
 		profiles = new ProfileCollection(this);
 
-		modelListeners = new ArrayList<>();
-		filters = new HashMap<>();
-		filters.put(FilterType.PROFILE, false);
-		filters.put(FilterType.OWLCLASS, false);
-		loading = false;
 
-		selection = new Selection(0, 0);
 	}
 
 	@Override
@@ -174,154 +172,10 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 
 	protected abstract void setRenderRDFSLabel();
 
-	public void addTextSourceCollectionListener(TextSourceCollectionListener listener) {
-		textSources.addCollectionListener(listener);
-	}
-
-	public void removeTextSourceCollectionListener(TextSourceCollectionListener listener) {
-		textSources.removeCollectionListener(listener);
-	}
-
-	public void addProfileCollectionListener(ProfileCollectionListener listener) {
-		profiles.addCollectionListener(listener);
-	}
-
-	public void addColorListener(ColorListener listener) {
-		profiles.addColorListener(listener);
-	}
-
-
-	private void setupListeners() {
-
-		new TextBoundModelListener(this) {
-			@Override
-			public void respondToConceptAnnotationModification() {
-
-			}
-
-			@Override
-			public void respondToSpanModification() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceModification() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceCollectionFirstAdded() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceCollectionEmptied() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceRemoved() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceAdded() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceSelection(SelectionEvent<GraphSpace> event) {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationCollectionEmptied() {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationRemoved() {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationAdded() {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationCollectionFirstAdded() {
-
-			}
-
-			@Override
-			public void respondToSpanCollectionFirstAdded() {
-
-			}
-
-			@Override
-			public void respondToSpanCollectionEmptied() {
-
-			}
-
-			@Override
-			public void respondToSpanRemoved() {
-
-			}
-
-			@Override
-			public void respondToSpanAdded() {
-
-			}
-
-			@Override
-			public void respondToSpanSelection(SelectionEvent<Span> event) {
-
-			}
-
-			@Override
-			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
-				event.getNew()
-						.map(ConceptAnnotation::getOwlClass)
-						.filter(owlClass -> !loading)
-						.ifPresent(owlClass -> setSelectedOWLEntity(owlClass));
-			}
-
-			@Override
-			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
-
-			}
-
-			@Override
-			public void respondToTextSourceAdded() {
-
-			}
-
-			@Override
-			public void respondToTextSourceRemoved() {
-
-			}
-
-			@Override
-			public void respondToTextSourceCollectionEmptied() {
-
-			}
-
-			@Override
-			public void respondToTextSourceCollectionFirstAdded() {
-
-			}
-		};
-	}
-
-	protected abstract void setSelectedOWLEntity(OWLEntity owlEntity);
+	public abstract void setSelectedOWLEntity(OWLEntity owlEntity);
 
 	public File getAnnotationsLocation() {
 		return annotationsLocation;
-	}
-
-	public void addModelListener(ModelListener listener) {
-		modelListeners.add(listener);
 	}
 
 	public boolean isFilter(FilterType filterType) {
@@ -508,5 +362,46 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 
 	public void setFilter(FilterType filterType, boolean isFilter) {
 		filters.put(filterType, isFilter);
+	}
+
+	public void addModelListener(ModelListener listener) {
+		modelListeners.add(listener);
+	}
+
+	public void removeModelListener(ModelListener listener) {
+		modelListeners.remove(listener);
+	}
+
+	public void fireColorChanged() {
+		modelListeners.forEach(ModelListener::colorChangedEvent);
+	}
+
+	public void fireModelEvent(ChangeEvent<ModelObject> event) {
+		event.getNew()
+				.filter(modelObject -> modelObject instanceof TextSource)
+				.map(modelObject -> (TextSource) modelObject)
+				.map(textSource -> {
+					addModelListener(textSource.getConceptAnnotationCollection());
+					return textSource;
+				})
+				.ifPresent(this::addModelListener);
+		event.getNew()
+				.filter(modelObject -> modelObject instanceof TextSource)
+				.map(modelObject -> (TextSource) modelObject)
+				.map(textSource -> {
+					removeModelListener(textSource.getConceptAnnotationCollection());
+					return textSource;
+				})
+				.ifPresent(this::removeModelListener);
+		event.getNew()
+				.filter(modelObject -> modelObject instanceof GraphSpace)
+				.map(modelObject -> (GraphSpace) modelObject)
+				.ifPresent(this::addModelListener);
+		event.getNew()
+				.filter(modelObject -> modelObject instanceof GraphSpace)
+				.map(modelObject -> (GraphSpace) modelObject)
+				.ifPresent(this::removeModelListener);
+
+		modelListeners.forEach(modelListener -> modelListener.modelChangeEvent(event));
 	}
 }

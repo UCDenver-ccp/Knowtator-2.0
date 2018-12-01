@@ -79,8 +79,6 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 
 		this.modificationListeners = new ArrayList<>();
 
-		//noinspection unchecked
-		addCollectionListener(textSource);
 		model.verifyId(annotationID, this, false);
 
 		overlappingConceptAnnotations = new HashSet<>();
@@ -372,5 +370,9 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 
 	public void setMotivation(String motivation) {
 		this.motivation = motivation;
+	}
+
+	public int getNumberOfSpans() {
+		return size();
 	}
 }

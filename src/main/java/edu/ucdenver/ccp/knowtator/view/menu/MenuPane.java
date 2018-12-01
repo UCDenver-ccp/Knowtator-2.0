@@ -24,9 +24,11 @@
 
 package edu.ucdenver.ccp.knowtator.view.menu;
 
+import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
+
 import javax.swing.*;
 
-abstract class MenuPane {
+abstract class MenuPane implements KnowtatorComponent {
 	private final String name;
 
 	MenuPane(String name) {
@@ -40,6 +42,4 @@ abstract class MenuPane {
 	public String toString() {
 		return name;
 	}
-
-	abstract void dispose();
 }

@@ -89,7 +89,12 @@ class ExportPane extends MenuPane {
 	}
 
 	@Override
-	void dispose() {
+	public void reset() {
+
+	}
+
+	@Override
+	public void dispose() {
 
 	}
 

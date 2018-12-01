@@ -32,9 +32,13 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
-import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.listener.TextBoundModelListener;
-import edu.ucdenver.ccp.knowtator.model.object.*;
+import edu.ucdenver.ccp.knowtator.model.FilterType;
+import edu.ucdenver.ccp.knowtator.model.ModelListener;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
+import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.graph.GraphActions;
@@ -59,7 +63,7 @@ import java.util.Optional;
 import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.ADD;
 import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.REMOVE;
 
-public class GraphView extends JPanel implements KnowtatorComponent {
+public class GraphView extends JPanel implements KnowtatorComponent, ModelListener {
 	private final JDialog dialog;
 	private final KnowtatorView view;
 	private JButton removeCellButton;
@@ -141,7 +145,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 
 		graphComponent.setName(graphSpace.getId());
 
-		setupListeners(graphSpace);
+		setupListenersForGraphSpace(graphSpace);
 
 		graphSpace.reDrawGraph();
 		graphComponent.refresh();
@@ -247,7 +251,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 		return Optional.empty();
 	}
 
-	private void setupListeners(GraphSpace graphSpace) {
+	private void setupListenersForGraphSpace(GraphSpace graphSpace) {
 		// Handle drag and drop
 		// Adds the current selected object property as the edge value
 		if (!graphSpace.areListenersSet()) {
@@ -298,22 +302,17 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 							graphSpace.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "0", new Object[]{cell});
 						}
 					}
-					graphSpace.reDrawGraph();
 				}
 
 				if (selectedCells != null && selectedCells.size() > 0) {
 					for (Object cell : selectedCells) {
 						if (cell instanceof AnnotationNode) {
-							ConceptAnnotation conceptAnnotation = ((AnnotationNode) cell).getConceptAnnotation();
-							graphSpace.getTextSource().setSelection(conceptAnnotation);
 							graphSpace.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
-
-						} else if (cell instanceof RelationAnnotation) {
-							KnowtatorView.MODEL.setSelectedOWLEntity(((RelationAnnotation) cell).getProperty());
 						}
 					}
-					graphSpace.reDrawGraph();
 				}
+
+				graphSpace.reDrawGraph();
 			});
 			graphSpace.setListenersSet();
 		}
@@ -332,105 +331,6 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 	@Override
 	public void reset() {
 		graphSpaceChooser.reset();
-		setupListeners();
-	}
-
-	@Override
-	public void setupListeners() {
-		new TextBoundModelListener(KnowtatorView.MODEL) {
-			@Override
-			public void respondToConceptAnnotationModification() {
-
-			}
-
-			@Override
-			public void respondToSpanModification() {
-
-			}
-
-			@Override
-			public void respondToGraphSpaceModification() {
-
-			}
-
-			public void respondToGraphSpaceCollectionFirstAdded() {
-				if (isVisible()) {
-					graphSpaceButtons.forEach(c -> c.setEnabled(true));
-				}
-			}
-
-			public void respondToGraphSpaceCollectionEmptied() {
-				if (isVisible()) {
-					graphSpaceButtons.forEach(c -> c.setEnabled(false));
-					addGraphSpaceButton.setEnabled(true);
-				}
-			}
-
-			public void respondToTextSourceSelection(SelectionEvent<TextSource> event) {
-				event.getNew()
-						.filter(textSource -> isVisible())
-						.ifPresent(textSource -> textSource.getSelectedGraphSpace()
-								.ifPresent(GraphView.this::showGraph));
-			}
-
-			public void respondToGraphSpaceSelection(SelectionEvent<GraphSpace> event) {
-				event.getNew()
-						.filter(graphSpace -> isVisible())
-						.filter(graphSpace -> graphSpace != graphComponent.getGraph())
-						.ifPresent(GraphView.this::showGraph);
-			}
-
-			public void respondToGraphSpaceRemoved() {
-			}
-
-			public void respondToGraphSpaceAdded() {
-			}
-
-			public void respondToConceptAnnotationCollectionEmptied() {
-			}
-
-			public void respondToConceptAnnotationRemoved() {
-			}
-
-			public void respondToConceptAnnotationAdded() {
-			}
-
-			public void respondToConceptAnnotationCollectionFirstAdded() {
-			}
-
-			public void respondToSpanCollectionFirstAdded() {
-
-			}
-
-			public void respondToSpanCollectionEmptied() {
-			}
-
-			public void respondToSpanRemoved() {
-			}
-
-			public void respondToSpanAdded() {
-			}
-
-			public void respondToSpanSelection(SelectionEvent<Span> event) {
-			}
-
-			public void respondToConceptAnnotationSelection(SelectionEvent<ConceptAnnotation> event) {
-			}
-
-			public void respondToTextSourceAdded() {
-
-			}
-
-			public void respondToTextSourceRemoved() {
-			}
-
-			public void respondToTextSourceCollectionEmptied() {
-			}
-
-			public void respondToTextSourceCollectionFirstAdded() {
-			}
-		};
-
 	}
 
 	@Override
@@ -525,6 +425,41 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 		return panel1;
 	}
 
+	@Override
+	public void filterChangedEvent(FilterType filterType, boolean filterValue) {
+
+	}
+
+
+	@Override
+	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
+		if (isVisible()) {
+			KnowtatorView.MODEL.getSelectedTextSource().ifPresent(textSource -> {
+				if (textSource.getNumberOfGraphSpaces() == 0) {
+					graphSpaceButtons.forEach(c -> c.setEnabled(false));
+					addGraphSpaceButton.setEnabled(true);
+				} else {
+					graphSpaceButtons.forEach(c -> c.setEnabled(true));
+				}
+			});
+			event.getNew()
+					.filter(modelObject -> modelObject instanceof GraphSpace)
+					.map(modelObject -> (GraphSpace) modelObject)
+					.filter(graphSpace -> graphSpace != graphComponent.getGraph())
+					.ifPresent(GraphView.this::showGraph);
+			event.getNew()
+					.filter(modelObject -> modelObject instanceof TextSource)
+					.map(modelObject -> (TextSource) modelObject)
+					.filter(textSource -> isVisible())
+					.ifPresent(textSource -> textSource.getSelectedGraphSpace()
+							.ifPresent(GraphView.this::showGraph));
+		}
+	}
+
+	@Override
+	public void colorChangedEvent() {
+	}
+
 	/**
 	 * Taken from https://tips4java.wordpress.com/2010/03/14/dialog-focus/
 	 */
@@ -543,7 +478,7 @@ public class GraphView extends JPanel implements KnowtatorComponent {
 		 *  Constructor that controls whether this listen can be used once or
 		 *  multiple times.
 		 *
-		 *  @param removeCollectionListener when true this listener is only invoked once
+		 *  @param removeListener when true this listener is only invoked once
 		 *                        otherwise it can be invoked multiple times.
 		 */
 		@SuppressWarnings("SameParameterValue")

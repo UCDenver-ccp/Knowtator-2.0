@@ -45,7 +45,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public abstract class OWLModel extends BaseModel implements Serializable {
 	@SuppressWarnings("unused")
@@ -89,26 +88,25 @@ public abstract class OWLModel extends BaseModel implements Serializable {
 
 	public Map<String, OWLClass> getOWLClassesByIDs(Set<String> classIDs) {
 		Map<String, OWLClass> owlClassList = new HashMap<>();
-
-		if (owlWorkSpace.isPresent()) {
-			classIDs.forEach(classID -> owlWorkSpace.map(owlWorkspace -> owlWorkspace.getOWLModelManager().getOWLEntityFinder().getOWLClass(classID)).ifPresent(owlClass -> owlClassList.put(classID, owlClass)));
-		} else {
-			for (OWLOntology ontology : owlOntologyManager.getOntologies()) {
-				for (OWLClass owlClass : ontology.getClassesInSignature()) {
-					Set<OWLAnnotationAssertionAxiom> anntotationAssertionAxioms = ontology.getAnnotationAssertionAxioms(owlClass.getIRI());
-					List<String> labels = anntotationAssertionAxioms.stream()
-							.map(anntotationAssertionAxiom -> anntotationAssertionAxiom.getValue().asLiteral().transform(OWLLiteral::getLiteral))
-							.filter(com.google.common.base.Optional::isPresent).map(com.google.common.base.Optional::get).collect(Collectors.toList());
-					for (String classID : classIDs) {
-						if (owlClass.getIRI().getShortForm().equals(classID) || labels.stream().anyMatch(classID::equals)) {
-							owlClassList.put(classID, owlClass);
-						}
-					}
-				}
-			}
-		}
+		classIDs.forEach(classID -> getOWLClassByID(classID)
+				.ifPresent(owlClass -> owlClassList.put(classID, owlClass)));
 		return owlClassList;
 	}
+
+//	private Optional<OWLClass> getOWLClassByIDNoProtege(String classID) {
+//		for (OWLOntology ontology : owlOntologyManager.getOntologies()) {
+//			for (OWLClass owlClass : ontology.getClassesInSignature()) {
+//				Set<OWLAnnotationAssertionAxiom> anntotationAssertionAxioms = ontology.getAnnotationAssertionAxioms(owlClass.getIRI());
+//				List<String> labels = anntotationAssertionAxioms.stream()
+//						.map(anntotationAssertionAxiom -> anntotationAssertionAxiom.getValue().asLiteral().transform(OWLLiteral::getLiteral))
+//						.filter(com.google.common.base.Optional::isPresent).map(com.google.common.base.Optional::get).collect(Collectors.toList());
+//				if (owlClass.getIRI().getShortForm().equals(classID) || labels.stream().anyMatch(classID::equals)) {
+//					return Optional.of(owlClass);
+//				}
+//			}
+//		}
+//		return Optional.empty();
+//	}
 
 	public Optional<OWLObjectProperty> getOWLObjectPropertyByID(@Nonnull String propertyID) {
 		if (owlWorkSpace.isPresent()) {
@@ -155,7 +153,7 @@ public abstract class OWLModel extends BaseModel implements Serializable {
 	}
 
 	public void setRenderRDFSLabel() {
-		if (annotationIRIs == null) {
+		if (!renderChangeInProgress()) {
 			owlWorkSpace.ifPresent(owlWorkspace -> {
 				IRI labelIRI = owlWorkspace.getOWLModelManager().getOWLDataFactory().getRDFSLabel().getIRI();
 				annotationIRIs = OWLRendererPreferences.getInstance().getAnnotationIRIs();
@@ -168,7 +166,7 @@ public abstract class OWLModel extends BaseModel implements Serializable {
 	}
 
 	public void resetRenderRDFS() {
-		if (annotationIRIs != null) {
+		if (renderChangeInProgress()) {
 			owlWorkSpace.ifPresent(owlWorkspace -> {
 				OWLRendererPreferences.getInstance().setAnnotations(annotationIRIs);
 				owlWorkspace.getOWLModelManager().refreshRenderer();
@@ -295,10 +293,12 @@ public abstract class OWLModel extends BaseModel implements Serializable {
 	}
 
 	public void setSelectedOWLEntity(OWLEntity owlEntity) {
-		owlWorkSpace.ifPresent(owlWorkspace -> owlWorkspace.getOWLSelectionModel().setSelectedEntity(owlEntity));
+		if (isNotLoading()) {
+			owlWorkSpace.ifPresent(owlWorkspace -> owlWorkspace.getOWLSelectionModel().setSelectedEntity(owlEntity));
+		}
 	}
 
-	boolean renderChangeInProgress() {
+	private boolean renderChangeInProgress() {
 		return annotationIRIs != null;
 	}
 

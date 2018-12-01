@@ -24,18 +24,19 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.listener.SelectableCollectionListener;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 
 import java.util.Optional;
 import java.util.TreeSet;
 
-public abstract class SelectableCollection<K extends ModelObject, L extends SelectableCollectionListener<K>> extends CyclableCollection<K, L> {
+public abstract class SelectableCollection<K extends ModelObject> extends CyclableCollection<K> {
 
 	private K selection;
-    SelectableCollection(TreeSet<K> collection) {
-        super(collection);
+
+	SelectableCollection(BaseModel model, TreeSet<K> collection) {
+		super(model, collection);
 	    selection = null;
     }
 
@@ -60,9 +61,11 @@ public abstract class SelectableCollection<K extends ModelObject, L extends Sele
     }
 
     public void setSelection(K newSelection) {
-	    SelectionEvent<K> selectionEvent = new SelectionEvent<>(selection, newSelection);
+	    SelectionEvent<ModelObject> selectionEvent = new SelectionEvent<>(selection, newSelection);
 	    this.selection = newSelection;
-        collectionListeners.forEach(selectionListener -> selectionListener.selected(selectionEvent));
+	    if (model != null) {
+		    model.fireModelEvent(selectionEvent);
+	    }
     }
 
     @Override
