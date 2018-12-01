@@ -38,6 +38,12 @@ public class ProfileList extends KnowtatorList<Profile> {
 		setSelected();
 	}
 
+	@Override
+	public void reset() {
+		super.reset();
+		setCollection(KnowtatorView.MODEL.getProfileCollection());
+	}
+
 
 	// I am overriding here because the base method adds this as a collection listener to its collection,
 	// but that generates a concurrent modification exception during "added" events

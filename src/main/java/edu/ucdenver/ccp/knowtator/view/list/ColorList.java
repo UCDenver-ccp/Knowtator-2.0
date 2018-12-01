@@ -52,7 +52,8 @@ public class ColorList extends JList<OWLClass> implements KnowtatorComponent, Mo
     }
 
     private void setCollection() {
-        dispose();
+        removeListSelectionListener(lsl);
+        setModel(new DefaultListModel<>());
         KnowtatorView.MODEL.getSelectedProfile()
                 .ifPresent(profile -> profile.getColors().keySet().stream()
                 .sorted(KnowtatorView.MODEL.getOWLObjectComparator())
@@ -60,18 +61,19 @@ public class ColorList extends JList<OWLClass> implements KnowtatorComponent, Mo
 //        profile.getColors().keySet().stream().filter(o -> !(o instanceof OWLObject))
 //                .sorted(Comparator.comparing(Object::toString))
 //                .forEach(o -> ((DefaultListModel<OWLObject>) getModel()).addElement(o));
-        reset();
+        addListSelectionListener(lsl);
     }
 
     @Override
     public void reset() {
-        addListSelectionListener(lsl);
+
         KnowtatorView.MODEL.addModelListener(this);
+        setCollection();
     }
 
     @Override
     public void dispose() {
-        removeListSelectionListener(lsl);
+
         setModel(new DefaultListModel<>());
         KnowtatorView.MODEL.removeModelListener(this);
     }

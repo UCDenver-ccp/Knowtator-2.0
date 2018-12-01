@@ -60,4 +60,10 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
 		}
 
 	}
+
+	@Override
+	public void reset() {
+		super.reset();
+		react();
+	}
 }

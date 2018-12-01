@@ -42,4 +42,10 @@ public class SpanList extends KnowtatorList<Span> {
 
 		setSelected();
 	}
+
+	@Override
+	public void reset() {
+		super.reset();
+		react();
+	}
 }

@@ -68,4 +68,10 @@ public class RelationList extends KnowtatorList<RelationAnnotation> {
 			setSelected();
 		}
 	}
+
+	@Override
+	public void reset() {
+		super.reset();
+		react();
+	}
 }

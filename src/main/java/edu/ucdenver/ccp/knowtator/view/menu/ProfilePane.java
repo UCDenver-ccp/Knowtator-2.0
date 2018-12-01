@@ -75,7 +75,8 @@ class ProfilePane extends MenuPane {
 
     @Override
     public void show() {
-
+        profileList.reset();
+        colorList.reset();
     }
 
     @Override
@@ -86,11 +87,13 @@ class ProfilePane extends MenuPane {
     @Override
     public void reset() {
         profileList.reset();
+        colorList.reset();
     }
 
     @Override
     public void dispose() {
         profileList.dispose();
+        colorList.dispose();
     }
 
 

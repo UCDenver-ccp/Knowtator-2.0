@@ -38,4 +38,10 @@ public class AnnotationList extends KnowtatorList<ConceptAnnotation> {
 				.ifPresent(textSource -> setCollection(textSource.getConceptAnnotationCollection()));
 		setSelected();
 	}
+
+	@Override
+	public void reset() {
+		super.reset();
+		react();
+	}
 }
