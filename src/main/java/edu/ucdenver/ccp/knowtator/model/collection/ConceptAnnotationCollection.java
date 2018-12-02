@@ -464,22 +464,18 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 	}
 
 	@Override
-	public void filterChangedEvent(FilterType filterType, boolean filterValue) {
-		if (filterType == FilterType.PROFILE) {
-			getSelection()
-					.filter(conceptAnnotation -> filterValue)
-					.filter(conceptAnnotation -> model.getSelectedProfile()
-							.map(profile -> !conceptAnnotation.getAnnotator().equals(profile)).orElse(false))
-					.ifPresent(conceptAnnotation -> setSelection(null));
-		}
-		if (filterType == FilterType.OWLCLASS) {
-			getSelection()
-					.filter(conceptAnnotation -> filterValue)
-					.filter(conceptAnnotation -> model.getSelectedOWLClass()
-							.map(owlClass1 -> !owlClass1.equals(conceptAnnotation.getOwlClass()))
-							.orElse(false))
-					.ifPresent(conceptAnnotation -> setSelection(null));
-		}
+	public void filterChangedEvent() {
+		getSelection()
+				.filter(conceptAnnotation -> model.isFilter(FilterType.PROFILE))
+				.filter(conceptAnnotation -> model.getSelectedProfile()
+						.map(profile -> !conceptAnnotation.getAnnotator().equals(profile)).orElse(false))
+				.ifPresent(conceptAnnotation -> setSelection(null));
+		getSelection()
+				.filter(conceptAnnotation -> model.isFilter(FilterType.OWLCLASS))
+				.filter(conceptAnnotation -> model.getSelectedOWLClass()
+						.map(owlClass1 -> !owlClass1.equals(conceptAnnotation.getOwlClass()))
+						.orElse(false))
+				.ifPresent(conceptAnnotation -> setSelection(null));
 	}
 
 	@Override

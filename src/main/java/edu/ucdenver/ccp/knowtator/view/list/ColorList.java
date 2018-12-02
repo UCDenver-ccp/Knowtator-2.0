@@ -24,7 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
-import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
@@ -76,7 +75,7 @@ public class ColorList extends JList<OWLClass> implements KnowtatorComponent, Mo
 	}
 
 	@Override
-	public void filterChangedEvent(FilterType filterType, boolean filterValue) {
+	public void filterChangedEvent() {
 
 	}
 

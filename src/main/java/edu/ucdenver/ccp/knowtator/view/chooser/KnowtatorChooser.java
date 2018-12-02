@@ -25,7 +25,6 @@
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
-import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
@@ -99,7 +98,7 @@ public abstract class KnowtatorChooser<K extends ModelObject> extends JComboBox<
 	}
 
 	@Override
-	public void filterChangedEvent(FilterType filterType, boolean filterValue) {
+	public void filterChangedEvent() {
 		react();
 	}
 

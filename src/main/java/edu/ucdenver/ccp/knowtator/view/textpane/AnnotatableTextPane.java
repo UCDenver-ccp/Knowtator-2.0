@@ -25,7 +25,6 @@
 package edu.ucdenver.ccp.knowtator.view.textpane;
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
-import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.CyclableCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectableCollection;
@@ -297,7 +296,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	}
 
 	@Override
-	public void filterChangedEvent(FilterType filterType, boolean filterValue) {
+	public void filterChangedEvent() {
 		refreshHighlights();
 	}
 

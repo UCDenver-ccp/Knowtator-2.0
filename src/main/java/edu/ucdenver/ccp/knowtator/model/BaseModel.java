@@ -365,6 +365,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 
 	public void setFilter(FilterType filterType, boolean isFilter) {
 		filters.put(filterType, isFilter);
+		modelListeners.forEach(ModelListener::filterChangedEvent);
 	}
 
 	public void addModelListener(ModelListener listener) {

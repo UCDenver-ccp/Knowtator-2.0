@@ -510,6 +510,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 			model.removeModelListener(progressListener);
 		}
 		reset();
+		model.selectFirstTextSource();
 		knowtatorTextPane.showTextSource();
 		addTextSourceButton.setEnabled(true);
 
@@ -835,7 +836,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	}
 
 	@Override
-	public void filterChangedEvent(FilterType filterType, boolean filterValue) {
+	public void filterChangedEvent() {
 
 	}
 
@@ -885,7 +886,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 	}
 
-	public List<JComponent> getTextSourceButtons() {
+	List<JComponent> getTextSourceButtons() {
 		return textSourceButtons;
 	}
 }

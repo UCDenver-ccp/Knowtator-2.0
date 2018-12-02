@@ -33,7 +33,6 @@ import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
-import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
@@ -459,7 +458,7 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 	}
 
 	@Override
-	public void filterChangedEvent(FilterType filterType, boolean filterValue) {
+	public void filterChangedEvent() {
 
 	}
 

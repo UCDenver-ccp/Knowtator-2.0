@@ -24,7 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.view.label;
 
-import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
@@ -57,7 +56,7 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
     }
 
     @Override
-    public void filterChangedEvent(FilterType filterType, boolean filterValue) {
+    public void filterChangedEvent() {
         react();
     }
 

@@ -28,7 +28,7 @@ import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 
 public interface ModelListener {
-    void filterChangedEvent(FilterType filterType, boolean filterValue);
+	void filterChangedEvent();
 
     void colorChangedEvent();
 

@@ -27,7 +27,6 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
@@ -122,7 +121,7 @@ class FilePane extends MenuPane {
 					view.loadProject(file.getParentFile(), new ModelListener() {
 
 						@Override
-						public void filterChangedEvent(FilterType filterType, boolean filterValue) {
+						public void filterChangedEvent() {
 						}
 
 						@Override

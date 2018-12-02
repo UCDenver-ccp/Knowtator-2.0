@@ -30,6 +30,8 @@ import edu.ucdenver.ccp.knowtator.model.object.RelationAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
+import javax.swing.event.MouseInputAdapter;
+import java.awt.event.MouseEvent;
 
 public class RelationList extends KnowtatorList<RelationAnnotation> {
 	private boolean shouldReact;
@@ -39,11 +41,11 @@ public class RelationList extends KnowtatorList<RelationAnnotation> {
 
 		shouldReact = true;
 
+		KnowtatorList<RelationAnnotation> list = this;
 		al = e -> {
-			JList jList = (JList) e.getSource();
-			if (jList.getSelectedValue() != null) {
+			if (list.getSelectedValue() != null) {
 				shouldReact = false;
-				RelationAnnotation relationAnnotation = (RelationAnnotation) jList.getSelectedValue();
+				RelationAnnotation relationAnnotation = list.getSelectedValue();
 				collection.setSelection(relationAnnotation);
 				relationAnnotation.getTextSource().setSelectedGraphSpace(relationAnnotation.getGraphSpace());
 				relationAnnotation.getGraphSpace().setSelectionCell(relationAnnotation);
@@ -51,6 +53,23 @@ public class RelationList extends KnowtatorList<RelationAnnotation> {
 			}
 
 		};
+
+
+		addMouseListener(new MouseInputAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1) {
+					if (list.getSelectedIndex() != -1) {
+						shouldReact = false;
+						RelationAnnotation relationAnnotation = list.getSelectedValue();
+						collection.setSelection(relationAnnotation);
+						relationAnnotation.getTextSource().setSelectedGraphSpace(relationAnnotation.getGraphSpace());
+						relationAnnotation.getGraphSpace().setSelectionCell(relationAnnotation);
+						shouldReact = true;
+					}
+				}
+			}
+		});
 	}
 
 	@Override
