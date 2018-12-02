@@ -72,7 +72,7 @@ class SpanActionsTests {
     void modifySpanActionTest() {
 	    TextSource textSource = model.getSelectedTextSource().get();
 	    ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
-	    textSource.setSelection(conceptAnnotation);
+	    textSource.setSelectedConceptAnnotation(conceptAnnotation);
 	    Span span = conceptAnnotation.first();
 	    conceptAnnotation.setSelection(span);
 

@@ -33,7 +33,10 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
-import edu.ucdenver.ccp.knowtator.model.object.*;
+import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
+import edu.ucdenver.ccp.knowtator.model.object.TextBoundModelObject;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
@@ -377,31 +380,6 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 	}
 
 	public void fireModelEvent(ChangeEvent<ModelObject> event) {
-		event.getNew()
-				.filter(modelObject -> modelObject instanceof TextSource)
-				.map(modelObject -> (TextSource) modelObject)
-				.map(textSource -> {
-					addModelListener(textSource.getConceptAnnotationCollection());
-					return textSource;
-				})
-				.ifPresent(this::addModelListener);
-		event.getNew()
-				.filter(modelObject -> modelObject instanceof TextSource)
-				.map(modelObject -> (TextSource) modelObject)
-				.map(textSource -> {
-					removeModelListener(textSource.getConceptAnnotationCollection());
-					return textSource;
-				})
-				.ifPresent(this::removeModelListener);
-		event.getNew()
-				.filter(modelObject -> modelObject instanceof GraphSpace)
-				.map(modelObject -> (GraphSpace) modelObject)
-				.ifPresent(this::addModelListener);
-		event.getNew()
-				.filter(modelObject -> modelObject instanceof GraphSpace)
-				.map(modelObject -> (GraphSpace) modelObject)
-				.ifPresent(this::removeModelListener);
-
 		modelListeners.forEach(modelListener -> modelListener.modelChangeEvent(event));
 	}
 }

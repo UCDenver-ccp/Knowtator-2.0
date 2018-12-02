@@ -37,6 +37,7 @@ import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.LogManager;
@@ -107,7 +108,7 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 		return textFile;
 	}
 
-	public ConceptAnnotationCollection getConceptAnnotationCollection() {
+	public ConceptAnnotationCollection getConceptAnnotations() {
 		return conceptAnnotationCollection;
 	}
 
@@ -149,8 +150,10 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 
 	@Override
 	public void readFromKnowtatorXML(File file, Element parent) {
+		model.removeModelListener(this);
 		conceptAnnotationCollection.readFromKnowtatorXML(null, parent);
 		graphSpaceCollection.readFromKnowtatorXML(null, parent);
+		model.addModelListener(this);
 	}
 
 	@Override
@@ -203,7 +206,7 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 		}
 	}
 
-	public GraphSpaceCollection getGraphSpaceCollection() {
+	public GraphSpaceCollection getGraphSpaces() {
 		return graphSpaceCollection;
 	}
 
@@ -234,18 +237,16 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 	@Override
 	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
 		event.getNew()
-				.filter(modelObject -> modelObject instanceof ConceptAnnotation ||
-						modelObject instanceof Span
-						|| modelObject instanceof RelationAnnotation
-						|| modelObject instanceof AnnotationNode
-						|| modelObject instanceof GraphSpace)
+				.filter(modelObject -> !(event instanceof SelectionEvent))
+				.filter(modelObject -> modelObject instanceof TextBoundModelObject)
+				.map(modelObject -> (TextBoundModelObject) modelObject)
+				.filter(textBoundModelObject -> textBoundModelObject.getTextSource().equals(this))
 				.ifPresent(modelObject -> save());
 		event.getOld()
-				.filter(modelObject -> modelObject instanceof ConceptAnnotation ||
-						modelObject instanceof Span
-						|| modelObject instanceof RelationAnnotation
-						|| modelObject instanceof AnnotationNode
-						|| modelObject instanceof GraphSpace)
+				.filter(modelObject -> !(event instanceof SelectionEvent))
+				.filter(modelObject -> modelObject instanceof TextBoundModelObject)
+				.map(modelObject -> (TextBoundModelObject) modelObject)
+				.filter(textBoundModelObject -> textBoundModelObject.getTextSource().equals(this))
 				.ifPresent(modelObject -> save());
 	}
 
@@ -273,7 +274,7 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 		return conceptAnnotationCollection.get(annotationID);
 	}
 
-	public void setSelection(ConceptAnnotation conceptAnnotation) {
+	public void setSelectedConceptAnnotation(ConceptAnnotation conceptAnnotation) {
 		conceptAnnotationCollection.setSelection(conceptAnnotation);
 	}
 

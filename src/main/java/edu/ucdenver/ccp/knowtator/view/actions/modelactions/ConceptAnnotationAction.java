@@ -38,7 +38,7 @@ public class ConceptAnnotationAction extends AbstractKnowtatorCollectionAction<C
 	private final TextSource textSource;
 
 	public ConceptAnnotationAction(BaseModel model, CollectionActionType actionType, TextSource textSource) {
-		super(model, actionType, "concept annotation", textSource.getConceptAnnotationCollection());
+		super(model, actionType, "concept annotation", textSource.getConceptAnnotations());
 		this.textSource = textSource;
 	}
 
@@ -48,7 +48,7 @@ public class ConceptAnnotationAction extends AbstractKnowtatorCollectionAction<C
 
 	@Override
 	public void cleanUpRemove() {
-		textSource.getGraphSpaceCollection().forEach(graphSpace -> graphSpace.getModel().removeListener(edit, mxEvent.UNDO));
+		textSource.getGraphSpaces().forEach(graphSpace -> graphSpace.getModel().removeListener(edit, mxEvent.UNDO));
 	}
 
 
@@ -57,7 +57,7 @@ public class ConceptAnnotationAction extends AbstractKnowtatorCollectionAction<C
 		super.prepareRemove();
 		edit.setObject(object);
 //			edit = new KnowtatorCollectionEdit<>(REMOVE, collection, object, getPresentationName(), edit.isSignificant());
-		textSource.getGraphSpaceCollection().forEach(graphSpace -> graphSpace.getModel().addListener(mxEvent.UNDO, edit));
+		textSource.getGraphSpaces().forEach(graphSpace -> graphSpace.getModel().addListener(mxEvent.UNDO, edit));
 	}
 
 	@Override

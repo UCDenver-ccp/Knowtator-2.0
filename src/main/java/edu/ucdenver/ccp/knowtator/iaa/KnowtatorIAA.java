@@ -125,7 +125,7 @@ public class KnowtatorIAA {
 	private void initTextSourceAnnotations() {
 		textSourceAnnotationsMap = new HashMap<>();
 		for (TextSource textSource : textSources) {
-			textSourceAnnotationsMap.put(textSource, textSource.getConceptAnnotationCollection());
+			textSourceAnnotationsMap.put(textSource, textSource.getConceptAnnotations());
 		}
 	}
 

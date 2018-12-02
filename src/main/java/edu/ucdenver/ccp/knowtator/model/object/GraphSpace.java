@@ -96,7 +96,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 				for (Object cell : selectedCells) {
 					if (cell instanceof AnnotationNode) {
 						ConceptAnnotation conceptAnnotation = ((AnnotationNode) cell).getConceptAnnotation();
-						getTextSource().setSelection(conceptAnnotation);
+						getTextSource().setSelectedConceptAnnotation(conceptAnnotation);
 
 					} else if (cell instanceof RelationAnnotation) {
 						baseModel.setSelectedOWLEntity(((RelationAnnotation) cell).getProperty());
@@ -134,7 +134,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 			String quantifierValue,
 			Boolean isNegated,
 			String motivation) {
-		id = textSource.getGraphSpaceCollection().verifyID(id, "edge");
+		id = textSource.getGraphSpaces().verifyID(id, "edge");
 
 		if (!(quantifier.equals("only")
 				|| quantifier.equals("exactly")
@@ -247,7 +247,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		for (Object cell : getChildVertices(getDefaultParent())) {
 			((mxGraphModel) getModel()).getCells().remove(((AnnotationNode) cell).getId(), cell);
 			String nodeId =
-					textSource.getGraphSpaceCollection().verifyID(((AnnotationNode) cell).getId(), "node");
+					textSource.getGraphSpaces().verifyID(((AnnotationNode) cell).getId(), "node");
 			((AnnotationNode) cell).setId(nodeId);
 			((mxGraphModel) getModel()).getCells().put(nodeId, cell);
 		}
@@ -288,7 +288,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 	}
 
 	public AnnotationNode makeAnnotationNode(ConceptAnnotation conceptAnnotation) {
-		String nodeId = textSource.getGraphSpaceCollection().verifyID(null, "node");
+		String nodeId = textSource.getGraphSpaces().verifyID(null, "node");
 		AnnotationNode newVertex = new AnnotationNode(baseModel, nodeId, conceptAnnotation, textSource, 20, 20);
 		addCellToGraph(newVertex);
 		return (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(nodeId);

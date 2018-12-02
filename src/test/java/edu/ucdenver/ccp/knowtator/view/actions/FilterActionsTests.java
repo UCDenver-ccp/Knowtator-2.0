@@ -78,7 +78,7 @@ class FilterActionsTests {
 
 		TextSource textSource = model.getSelectedTextSource().get();
 		ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
-		textSource.setSelection(conceptAnnotation);
+		textSource.setSelectedConceptAnnotation(conceptAnnotation);
 		model.registerAction(new ReassignOWLClassAction(model, conceptAnnotation, model.getSelectedOWLClass().get()));
 
 		TestingHelpers.testKnowtatorAction(model, new FilterAction(model, OWLCLASS, true),

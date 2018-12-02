@@ -36,7 +36,7 @@ public class GraphSpaceChooser extends KnowtatorChooser<GraphSpace> {
 
 	public void react() {
 		view.getModel().ifPresent(model -> model.getSelectedTextSource()
-				.ifPresent(textSource -> setCollection(textSource.getGraphSpaceCollection())));
+				.ifPresent(textSource -> setCollection(textSource.getGraphSpaces())));
 		setSelected();
 	}
 }

@@ -57,7 +57,7 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K> impl
 
 		addListSelectionListener(al);
 
-		KnowtatorList list = this;
+		KnowtatorList<K> list = this;
 		addMouseListener(new MouseInputAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -65,6 +65,7 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K> impl
 					if (list.getSelectedIndex() != -1) {
 						int index = list.locationToIndex(e.getPoint());
 						setSelectedIndex(index);
+						collection.setSelection(list.getSelectedValue());
 					}
 				}
 			}

@@ -120,6 +120,7 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 
 	}
 
+	//TODO: Remove this, it's unused
 	@Override
 	public void save() {
 //		model.setRenderRDFSLabel();

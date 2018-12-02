@@ -35,7 +35,7 @@ public class GraphSpaceAction extends AbstractKnowtatorCollectionAction<GraphSpa
 	private final TextSource textSource;
 
 	public GraphSpaceAction(BaseModel model, CollectionActionType actionType, String graphName, TextSource textSource) {
-		super(model, actionType, "graph space", textSource.getGraphSpaceCollection());
+		super(model, actionType, "graph space", textSource.getGraphSpaces());
 		this.graphName = graphName;
 		this.textSource = textSource;
 	}

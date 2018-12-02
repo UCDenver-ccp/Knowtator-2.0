@@ -67,7 +67,7 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 	protected void cleanUpRemove() throws ActionUnperformableException {
 		for (TextSource textSource : model.getTextSources()) {
 			// Cast to array to avoid concurrent modification exceptions
-			Object[] array = textSource.getConceptAnnotationCollection().getCollection().toArray();
+			Object[] array = textSource.getConceptAnnotations().getCollection().toArray();
 			for (Object o : array) {
 				ConceptAnnotation conceptAnnotation = (ConceptAnnotation) o;
 

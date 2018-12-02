@@ -55,7 +55,7 @@ class OWLActionsTests {
     void reassignOWLClassActionTest() {
         TextSource textSource = model.getSelectedTextSource().get();
         ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
-        textSource.setSelection(conceptAnnotation);
+        textSource.setSelectedConceptAnnotation(conceptAnnotation);
 
         OWLClass owlClass = model.getOWLClassByID("Pizza").get();
         assert model.getSelectedTextSource().get().getSelectedAnnotation().get().getOwlClass() == owlClass;
@@ -74,7 +74,7 @@ class OWLActionsTests {
     void changeColorActionTest() {
         TextSource textSource = model.getSelectedTextSource().get();
         ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
-        textSource.setSelection(conceptAnnotation);
+        textSource.setSelectedConceptAnnotation(conceptAnnotation);
         Profile profile = model.getSelectedProfile().get();
         assert profile.getColor(conceptAnnotation.getOwlClass()).equals(Color.RED);
 

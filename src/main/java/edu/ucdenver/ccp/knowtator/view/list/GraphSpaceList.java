@@ -24,17 +24,37 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.ListenableCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
+import javax.swing.*;
+import javax.swing.event.MouseInputAdapter;
+import java.awt.event.MouseEvent;
 import java.util.stream.Collector;
 
 public class GraphSpaceList extends KnowtatorList<GraphSpace> {
 	public GraphSpaceList(KnowtatorView view) {
 		super(view);
+
+		KnowtatorList<GraphSpace> list = this;
+		addMouseListener(new MouseInputAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1) {
+					if (list.getSelectedIndex() != -1) {
+						int index = list.locationToIndex(e.getPoint());
+						setSelectedIndex(index);
+						view.getModel()
+								.flatMap(BaseModel::getSelectedTextSource)
+								.ifPresent(textSource -> textSource.setSelectedGraphSpace(list.getSelectedValue()));
+					}
+				}
+			}
+		});
 
 	}
 
@@ -50,7 +70,7 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
 		if (conceptAnnotation == null) {
 			dispose();
 		} else {
-			setCollection(conceptAnnotation.getTextSource().getGraphSpaceCollection()
+			setCollection(conceptAnnotation.getTextSource().getGraphSpaces()
 					.stream().filter(graphSpace -> graphSpace.containsAnnotation(conceptAnnotation)).collect(Collector.of(
 							() -> new GraphSpaceCollection(null, conceptAnnotation.getTextSource()),
 							ListenableCollection::add,

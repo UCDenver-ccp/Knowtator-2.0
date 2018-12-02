@@ -63,7 +63,7 @@ public class RelationList extends KnowtatorList<RelationAnnotation> {
 								KnowtatorCollection<RelationAnnotation> relationAnnotations = new KnowtatorCollection<RelationAnnotation>(null) {
 
 								};
-								textSource.getGraphSpaceCollection().stream()
+								textSource.getGraphSpaces().stream()
 										.map(GraphSpace::getRelationAnnotations).forEach(relationAnnotations1 -> relationAnnotations1.forEach(relationAnnotations::add));
 								super.setCollection(relationAnnotations);
 							});

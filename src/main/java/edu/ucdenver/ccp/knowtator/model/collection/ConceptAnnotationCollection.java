@@ -62,14 +62,12 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 		this.textSource = textSource;
 
 		model.addOntologyChangeListener(this);
-//		model.addOWLModelManagerListener(this);
 		model.addModelListener(this);
-
 	}
 
 	@Override
 	public void remove(ConceptAnnotation conceptAnnotationToRemove) {
-		for (GraphSpace graphSpace : textSource.getGraphSpaceCollection()) {
+		for (GraphSpace graphSpace : textSource.getGraphSpaces()) {
 			Object[] cells = graphSpace.getVerticesForAnnotation(conceptAnnotationToRemove).toArray();
 			graphSpace.removeCells(cells);
 

@@ -100,11 +100,11 @@ public class TestingHelpers {
         int actualProfiles = controller.getNumberOfProfiles();
         int actualHighlighters = controller.getProfileCollection().stream().mapToInt(profile -> profile.getColors().size()).sum();
         int actualAnnotationNodes = controller.getTextSources().stream().mapToInt(
-                textSource -> textSource.getGraphSpaceCollection().stream().mapToInt(
+		        textSource -> textSource.getGraphSpaces().stream().mapToInt(
                         graphSpace1 -> graphSpace1.getChildVertices(graphSpace1.getDefaultParent()).length)
                         .sum()).sum();
         int actualTriples = controller.getTextSources().stream().mapToInt(
-                textSource -> textSource.getGraphSpaceCollection().stream().mapToInt(
+		        textSource -> textSource.getGraphSpaces().stream().mapToInt(
                         graphSpace1 -> graphSpace1.getChildEdges(graphSpace1.getDefaultParent()).length)
                         .sum()).sum();
 
