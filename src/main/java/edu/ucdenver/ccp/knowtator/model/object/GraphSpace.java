@@ -176,7 +176,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 				((ModelObject) o).dispose();
 			}
 		});
-		baseModel.fireModelEvent(new ChangeEvent<>(baseModel, null, this));
+		if (cells.length != 0) baseModel.fireModelEvent(new ChangeEvent<>(baseModel, null, this));
 		return cells;
 	}
 

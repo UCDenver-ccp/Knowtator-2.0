@@ -70,5 +70,4 @@ public class ConceptAnnotationAction extends AbstractKnowtatorCollectionAction<C
 							setObject(newConceptAnnotation);
 						}));
 	}
-
 }
