@@ -62,7 +62,6 @@ public class ConceptAnnotationAction extends AbstractKnowtatorCollectionAction<C
 
 	@Override
 	protected void prepareAdd() {
-
 		model.getSelectedProfile()
 				.ifPresent(annotator -> model.getSelectedOWLClass()
 						.ifPresent(owlClass -> {
@@ -70,7 +69,6 @@ public class ConceptAnnotationAction extends AbstractKnowtatorCollectionAction<C
 							newConceptAnnotation.add(new Span(model, newConceptAnnotation, null, model.getSelection().getStart(), model.getSelection().getEnd()));
 							setObject(newConceptAnnotation);
 						}));
-
 	}
 
 }
