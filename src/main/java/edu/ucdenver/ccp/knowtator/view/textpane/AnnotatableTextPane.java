@@ -146,8 +146,13 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 
 
 					Optional<Span> span = Optional.empty();
-					if (!model.getSelectedTextSource().flatMap(TextSource::getSelectedAnnotation).flatMap(SelectableCollection::getSelection).isPresent()) {
-						span = model.getSelectedTextSource().flatMap(TextSource::getSelectedAnnotation).map(CyclableCollection::first);
+					if (!model.getSelectedTextSource()
+							.flatMap(TextSource::getSelectedAnnotation)
+							.flatMap(SelectableCollection::getSelection)
+							.isPresent()) {
+						span = model.getSelectedTextSource()
+								.flatMap(TextSource::getSelectedAnnotation)
+								.flatMap(CyclableCollection::first);
 					}
 					Optional<Span> finalSpan = span;
 					SwingUtilities.invokeLater(

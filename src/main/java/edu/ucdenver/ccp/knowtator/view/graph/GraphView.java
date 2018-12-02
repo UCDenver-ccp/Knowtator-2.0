@@ -35,10 +35,7 @@ import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
-import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
-import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
-import edu.ucdenver.ccp.knowtator.model.object.TextSource;
+import edu.ucdenver.ccp.knowtator.model.object.*;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.graph.GraphActions;
@@ -47,6 +44,7 @@ import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
 import edu.ucdenver.ccp.knowtator.view.menu.GraphMenuDialog;
 import org.apache.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
@@ -175,7 +173,7 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 
 		setupListenersForGraphSpace(graphSpace);
 
-		graphSpace.reDrawGraph();
+		reDrawGraph(graphSpace);
 		graphComponent.refresh();
 	}
 
@@ -317,13 +315,13 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 								graphSpace.getModel().remove(edge);
 							});
 
-					graphSpace.reDrawGraph();
+					reDrawGraph(graphSpace);
 				}
 			});
 
-			graphSpace.addListener(mxEvent.MOVE_CELLS, (sender, evt) -> graphSpace.reDrawGraph());
+			graphSpace.addListener(mxEvent.MOVE_CELLS, (sender, evt) -> reDrawGraph(graphSpace));
 
-			graphSpace.addListener(mxEvent.REMOVE_CELLS, (sender, evt) -> graphSpace.reDrawGraph());
+			graphSpace.addListener(mxEvent.REMOVE_CELLS, (sender, evt) -> reDrawGraph(graphSpace));
 
 			graphSpace.getSelectionModel().addListener(mxEvent.CHANGE, (sender, evt) -> {
 				Collection selectedCells = (Collection) evt.getProperty("removed");
@@ -344,7 +342,7 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 					}
 				}
 
-				graphSpace.reDrawGraph();
+				reDrawGraph(graphSpace);
 			});
 			graphSpace.setListenersSet();
 		}
@@ -487,7 +485,49 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 							.filter(textSource -> isVisible())
 							.ifPresent(textSource -> textSource.getSelectedGraphSpace()
 									.ifPresent(GraphView.this::showGraph));
+					event.getNew()
+							.filter(modelObject -> modelObject instanceof AnnotationNode)
+							.map(modelObject -> (AnnotationNode) modelObject)
+							.ifPresent(annotationNode -> this.showGraph(annotationNode.getGraphSpace()));
+					event.getNew()
+							.filter(modelObject -> modelObject instanceof RelationAnnotation)
+							.map(modelObject -> (RelationAnnotation) modelObject)
+							.ifPresent(relationAnnotation -> this.showGraph(relationAnnotation.getGraphSpace()));
 				});
+	}
+
+	private void reDrawGraph(@Nonnull GraphSpace graphSpace) {
+		view.getModel()
+				.filter(model -> view.isVisible())
+				.filter(BaseModel::isNotLoading)
+				.ifPresent(model -> {
+					graphSpace.getModel().beginUpdate();
+					try {
+						Arrays.stream(graphSpace.getChildVertices(graphSpace.getDefaultParent()))
+								.forEach(
+										vertex -> {
+											if (vertex instanceof AnnotationNode) {
+												graphSpace.setVertexStyle((AnnotationNode) vertex);
+											}
+											graphSpace.updateCellSize(vertex);
+
+											graphSpace.getView().validateCell(vertex);
+										});
+						Arrays.stream(graphSpace.getChildEdges(graphSpace.getDefaultParent()))
+								.forEach(
+										edge -> {
+											graphSpace.updateCellSize(edge);
+											//                if (edge instanceof RelationAnnotation) {
+											//                    ((RelationAnnotation) edge).setValue(((RelationAnnotation) edge).getValue());
+											//                }
+											graphSpace.getView().validateCell(edge);
+										});
+					} finally {
+						graphSpace.getModel().endUpdate();
+						graphSpace.refresh();
+					}
+				});
+
 	}
 
 	@Override

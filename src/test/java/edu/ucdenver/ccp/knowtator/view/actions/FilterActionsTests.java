@@ -77,7 +77,7 @@ class FilterActionsTests {
 				TestingHelpers.defaultExpectedTriples);
 
 		TextSource textSource = model.getSelectedTextSource().get();
-		ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
+		ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
 		textSource.setSelectedConceptAnnotation(conceptAnnotation);
 		model.registerAction(new ReassignOWLClassAction(model, conceptAnnotation, model.getSelectedOWLClass().get()));
 

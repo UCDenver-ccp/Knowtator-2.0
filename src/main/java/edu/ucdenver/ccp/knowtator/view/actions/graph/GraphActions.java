@@ -147,7 +147,7 @@ public class GraphActions {
 					source, target,
 					null,
 					null,
-					property, propertyId,
+					property,
 					quantifier, quantifierValue,
 					negation,
 					motivation

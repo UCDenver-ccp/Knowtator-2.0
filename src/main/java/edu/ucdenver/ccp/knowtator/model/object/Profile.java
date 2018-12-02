@@ -99,22 +99,7 @@ public class Profile implements ModelObject<Profile>, Savable, KnowtatorXMLIO {
 		colors.clear();
 	}
 
-	@Override
-	public void addDataObjectModificationListener(ModelObjectListener listener) {
-
-	}
-
-	@Override
-	public void modify() {
-
-	}
-
-	@Override
-	public void removeDataObjectModificationListener(ModelObjectListener listener) {
-
-	}
-
-  /*
+	/*
   ADDERS
    */
 

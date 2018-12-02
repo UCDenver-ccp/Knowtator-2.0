@@ -29,6 +29,7 @@ import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -52,7 +53,6 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 	private OWLClass owlClass;
 	private final String annotation_type;
 
-	private final List<ModelObjectListener> modificationListeners;
 	private final Set<ConceptAnnotation> overlappingConceptAnnotations;
 	private final Profile annotator;
 	private String bratID;
@@ -77,8 +77,6 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 		this.owlClass = owlClass;
 		this.textSource = textSource;
 
-		this.modificationListeners = new ArrayList<>();
-
 		model.verifyId(annotationID, this, false);
 
 		overlappingConceptAnnotations = new HashSet<>();
@@ -89,22 +87,6 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 	public TextSource getTextSource() {
 		return textSource;
 	}
-
-	@Override
-	public void addDataObjectModificationListener(ModelObjectListener listener) {
-		modificationListeners.add(listener);
-	}
-
-	@Override
-	public void removeDataObjectModificationListener(ModelObjectListener listener) {
-		modificationListeners.remove(listener);
-	}
-
-	@Override
-	public void modify() {
-		modificationListeners.forEach(ModelObjectListener::modification);
-	}
-
 
   /*
   GETTERS
@@ -162,7 +144,7 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 
 	public void setOwlClass(OWLClass owlClass) {
 		this.owlClass = owlClass;
-		modify();
+		model.fireModelEvent(new ChangeEvent<>(model, null, this));
 
 	}
 

@@ -48,7 +48,7 @@ public abstract class SelectableCollection<K extends ModelObject> extends Cyclab
 	    if (getSelection().isPresent()) {
 		    getSelection().ifPresent(selection -> setSelection(getNext(selection)));
 	    } else {
-		    setSelection(first());
+		    first().ifPresent(this::setSelection);
 	    }
     }
 
@@ -56,7 +56,7 @@ public abstract class SelectableCollection<K extends ModelObject> extends Cyclab
 	    if (getSelection().isPresent()) {
 		    getSelection().ifPresent(selection -> setSelection(getPrevious(selection)));
 	    } else {
-		    setSelection(first());
+		    first().ifPresent(this::setSelection);
 	    }
     }
 

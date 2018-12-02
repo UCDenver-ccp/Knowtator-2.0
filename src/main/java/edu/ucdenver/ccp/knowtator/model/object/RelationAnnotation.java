@@ -30,6 +30,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.w3c.dom.Document;
@@ -46,7 +47,6 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 	private final Boolean isNegated;
 	private final TextSource textSource;
 	private OWLObjectProperty property;
-	private final String propertyID;
 	private final GraphSpace graphSpace;
 	private final String motivation;
 
@@ -65,7 +65,6 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 			AnnotationNode source,
 			AnnotationNode target,
 			OWLObjectProperty property,
-			String propertyID,
 			Profile annotator,
 			String quantifier,
 			String quantifierValue,
@@ -73,7 +72,6 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 			String motivation) {
 		super(null, new mxGeometry(), null);
 
-		this.propertyID = propertyID;
 		this.isNegated = isNegated;
 		this.motivation = motivation;
 		this.textSource = textSource;
@@ -93,16 +91,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 		this.targetAnnotationNode = target;
 		setProperty(property);
 
-//		if (property.isPresent()) {
-//			setProperty(property.getAnnotation());
-//		} else {
-//			setProperty(model.getOWLObjectPropertyByID(propertyID).orElse(null));
-//		}
 	}
-
-    /*
-    GETTERS
-     */
 
 	@SuppressWarnings("unused")
 	String getBratID() {
@@ -115,28 +104,9 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 	}
 
 	@Override
-	public void addDataObjectModificationListener(ModelObjectListener listener) {
-
-	}
-
-	@Override
-	public void removeDataObjectModificationListener(ModelObjectListener listener) {
-
-	}
-
-	@Override
 	public String toString() {
 		return String.format("Subject: %s; OWLObjectProperty: %s Target: %s", sourceAnnotationNode.getConceptAnnotation(), getOwlPropertyRendering(), targetAnnotationNode.getConceptAnnotation());
 	}
-
-	@Override
-	public void modify() {
-
-	}
-
-    /*
-    SETTERS
-     */
 
 	@SuppressWarnings("unused")
 	void setBratID(String bratID) {
@@ -147,29 +117,15 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 		return model.getOWLEntityRendering(property);
 	}
 
-	@Override
-	public void setValue(Object value) {
-		if (value != null) {
-			value = String.format("%s%s\n%s %s",
-					isNegated ? "not " : "",
-					getOwlPropertyRendering(),
-					quantifier,
-					quantifierValue);
-
-
-			super.setValue(value);
-			graphSpace.reDrawGraph();
-		}
-	}
-
 	void setProperty(OWLObjectProperty owlObjectProperty) {
 		property = owlObjectProperty;
-		setValue(property == null ? propertyID : property);
+		setValue(String.format("%s%s\n%s %s",
+				isNegated ? "not " : "",
+				getOwlPropertyRendering(),
+				quantifier,
+				quantifierValue));
+		model.fireModelEvent(new ChangeEvent<>(model, null, this));
 	}
-
-    /*
-    WRITERS
-     */
 
 	public void writeToKnowtatorXML(Document dom, Element graphElem) {
 		Element tripleElem = dom.createElement(KnowtatorXMLTags.TRIPLE);
@@ -194,12 +150,6 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 		graphElem.appendChild(tripleElem);
 	}
 
-
-
-    /*
-    READERS
-     */
-
 	@Override
 	public void readFromKnowtatorXML(File file, Element parent) {
 	}
@@ -207,7 +157,6 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 	@Override
 	public void readFromOldKnowtatorXML(File file, Element parent) {
 	}
-
 
 	@Override
 	public void dispose() {

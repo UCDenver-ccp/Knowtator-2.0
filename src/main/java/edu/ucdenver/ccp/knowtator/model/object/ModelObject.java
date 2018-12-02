@@ -38,12 +38,6 @@ public interface ModelObject<K extends ModelObject> extends Comparable<K> {
 
 	void dispose();
 
-	void addDataObjectModificationListener(ModelObjectListener listener);
-
-	void modify();
-
-	void removeDataObjectModificationListener(ModelObjectListener listener);
-
 	@Override
 	default int compareTo(K o) {
 		if (this == o) {

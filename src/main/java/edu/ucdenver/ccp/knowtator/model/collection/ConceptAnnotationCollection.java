@@ -357,7 +357,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 						get(value).map(conceptAnnotation -> {
 							List<Object> vertices1 = oldKnowtatorGraphSpace.getVerticesForAnnotation(conceptAnnotation);
 							return oldKnowtatorGraphSpace.makeOrGetAnnotationNode(conceptAnnotation, vertices1);
-						}).ifPresent(target -> model.getOWLObjectPropertyByID(propertyID).ifPresent(property -> oldKnowtatorGraphSpace.addTriple(source, target, null, model.getDefaultProfile(), property, propertyID, "", "", false, "")));
+						}).ifPresent(target -> model.getOWLObjectPropertyByID(propertyID).ifPresent(property -> oldKnowtatorGraphSpace.addTriple(source, target, null, model.getDefaultProfile(), property, "", "", false, "")));
 
 					}
 				}

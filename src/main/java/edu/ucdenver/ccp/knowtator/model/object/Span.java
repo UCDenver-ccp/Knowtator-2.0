@@ -47,7 +47,6 @@ public class Span implements TextBoundModelObject<Span>, KnowtatorXMLIO, BratSta
   private int start;
   private int end;
   private ConceptAnnotation conceptAnnotation;
-  private final List<ModelObjectListener> modificationListeners;
   private String id;
 
   public Span(@Nonnull BaseModel model, @Nonnull ConceptAnnotation conceptAnnotation, String id, int start, int end) {
@@ -56,7 +55,6 @@ public class Span implements TextBoundModelObject<Span>, KnowtatorXMLIO, BratSta
     this.start = start;
     this.end = end;
     this.conceptAnnotation = conceptAnnotation;
-    this.modificationListeners = new ArrayList<>();
 
     model.verifyId(id, this, false);
 
@@ -73,7 +71,6 @@ public class Span implements TextBoundModelObject<Span>, KnowtatorXMLIO, BratSta
   public Span(int start, int end) {
     this.start = start;
     this.end = end;
-    this.modificationListeners = new ArrayList<>();
     if (start > end) {
       throw new IndexOutOfBoundsException(
               String.format("Span is invalid because the start of the Span is greater than the end of it: start=%d end=%d", start, end));
@@ -89,20 +86,7 @@ public class Span implements TextBoundModelObject<Span>, KnowtatorXMLIO, BratSta
     return conceptAnnotation.getTextSource();
   }
 
-  public void addDataObjectModificationListener(ModelObjectListener listener) {
-    modificationListeners.add(listener);
-  }
-
-  @Override
-  public void modify() {
-
-  }
-
-  public void removeDataObjectModificationListener(ModelObjectListener listener) {
-    modificationListeners.remove(listener);
-  }
-
-  /*
+	/*
   COMPARISON
    */
 
@@ -210,8 +194,6 @@ public class Span implements TextBoundModelObject<Span>, KnowtatorXMLIO, BratSta
     if (end > limit) {
       end = limit;
     }
-
-    modificationListeners.forEach(ModelObjectListener::modification);
   }
 
   /*

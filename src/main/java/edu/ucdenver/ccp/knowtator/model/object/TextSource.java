@@ -128,21 +128,6 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 	}
 
 	@Override
-	public void addDataObjectModificationListener(ModelObjectListener listener) {
-
-	}
-
-	@Override
-	public void modify() {
-
-	}
-
-	@Override
-	public void removeDataObjectModificationListener(ModelObjectListener listener) {
-
-	}
-
-	@Override
 	public String toString() {
 		return id;
 	}
@@ -297,7 +282,7 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 		return graphSpaceCollection.containsID(id);
 	}
 
-	public ConceptAnnotation firstConceptAnnotation() {
+	public Optional<ConceptAnnotation> firstConceptAnnotation() {
 		return conceptAnnotationCollection.first();
 	}
 

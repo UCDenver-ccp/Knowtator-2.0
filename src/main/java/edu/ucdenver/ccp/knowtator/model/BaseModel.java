@@ -161,7 +161,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 	}
 
 	public void selectFirstTextSource() {
-		textSources.setSelection(textSources.first());
+		textSources.first().ifPresent(textSources::setSelection);
 	}
 
 	public int getNumberOfTextSources() {
@@ -335,8 +335,8 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 			loading = true;
 			profiles.load();
 			textSources.load();
-			profiles.setSelection(profiles.first());
-			textSources.setSelection(textSources.first());
+			profiles.first().ifPresent(profiles::setSelection);
+			textSources.first().ifPresent(textSources::setSelection);
 		} finally {
 			loading = false;
 		}

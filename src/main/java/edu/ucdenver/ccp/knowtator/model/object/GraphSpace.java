@@ -64,14 +64,12 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 	private boolean areListenersSet;
 	private final TextSource textSource;
 	private String id;
-	private final List<ModelObjectListener> modificationListeners;
 
 	public GraphSpace(BaseModel baseModel, @Nonnull TextSource textSource, String id) {
 
 		this.baseModel = baseModel;
 		this.textSource = textSource;
 		this.id = id;
-		modificationListeners = new ArrayList<>();
 
 
 		baseModel.verifyId(id, this, false);
@@ -114,7 +112,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		getModel().beginUpdate();
 		try {
 			addCell(cell);
-			modify();
+			baseModel.fireModelEvent(new ChangeEvent<>(baseModel, null, this));
 		} finally {
 			//      reDrawGraph();
 			getModel().endUpdate();
@@ -128,7 +126,6 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 			String id,
 			Profile annotator,
 			OWLObjectProperty property,
-			String propertyID,
 			String quantifier,
 			String quantifierValue,
 			Boolean isNegated,
@@ -149,7 +146,6 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 						source,
 						target,
 						property,
-						propertyID,
 						Optional.ofNullable(annotator).orElse(baseModel.getDefaultProfile()),
 						quantifier,
 						quantifierValue,
@@ -180,7 +176,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 				((ModelObject) o).dispose();
 			}
 		});
-		modify();
+		baseModel.fireModelEvent(new ChangeEvent<>(baseModel, null, this));
 		return cells;
 	}
 
@@ -203,7 +199,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 			double y = y_string.equals("") ? 20 : Double.parseDouble(y_string);
 
 			this.textSource.getAnnotation(annotationID).ifPresent(conceptAnnotation -> {
-				AnnotationNode newVertex = new AnnotationNode(baseModel, id, conceptAnnotation, textSource, x, y);
+				AnnotationNode newVertex = new AnnotationNode(baseModel, id, conceptAnnotation, textSource, x, y, this);
 				addCellToGraph(newVertex);
 			});
 		}
@@ -235,7 +231,6 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 						id,
 						annotator,
 						owlObjectProperty,
-						propertyID,
 						quantifier,
 						quantifierValue,
 						propertyIsNegated.equals(KnowtatorXMLAttributes.IS_NEGATED_TRUE),
@@ -278,7 +273,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 							List<Object> objectAnnotationVertices = getVerticesForAnnotation(objectConceptAnnotation);
 							AnnotationNode target = makeOrGetAnnotationNode(objectConceptAnnotation, objectAnnotationVertices);
 
-							baseModel.getOWLObjectPropertyByID(propertyID).ifPresent(owlObjectProperty -> addTriple(source, target, id, annotator, owlObjectProperty, propertyID, "", null, false, ""));
+							baseModel.getOWLObjectPropertyByID(propertyID).ifPresent(owlObjectProperty -> addTriple(source, target, id, annotator, owlObjectProperty, "", null, false, ""));
 						});
 					});
 
@@ -288,7 +283,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 
 	public AnnotationNode makeAnnotationNode(ConceptAnnotation conceptAnnotation) {
 		String nodeId = textSource.getGraphSpaces().verifyID(null, "node");
-		AnnotationNode newVertex = new AnnotationNode(baseModel, nodeId, conceptAnnotation, textSource, 20, 20);
+		AnnotationNode newVertex = new AnnotationNode(baseModel, nodeId, conceptAnnotation, textSource, 20, 20, this);
 		addCellToGraph(newVertex);
 		return (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(nodeId);
 	}
@@ -337,39 +332,6 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		textSourceElement.appendChild(graphElem);
 	}
 
-	/*
-	UPDATE
-	 */
-	public void reDrawGraph() {
-		if (baseModel.isNotLoading()) {
-			getModel().beginUpdate();
-			try {
-				Arrays.stream(getChildVertices(getDefaultParent()))
-						.forEach(
-								vertex -> {
-									if (vertex instanceof AnnotationNode) {
-										setVertexStyle((AnnotationNode) vertex);
-									}
-									updateCellSize(vertex);
-
-									getView().validateCell(vertex);
-								});
-				Arrays.stream(getChildEdges(getDefaultParent()))
-						.forEach(
-								edge -> {
-									updateCellSize(edge);
-									//                if (edge instanceof RelationAnnotation) {
-									//                    ((RelationAnnotation) edge).setValue(((RelationAnnotation) edge).getValue());
-									//                }
-									getView().validateCell(edge);
-								});
-			} finally {
-				getModel().endUpdate();
-				refresh();
-			}
-		}
-	}
-
 
 	/*
 	GETTERS
@@ -388,7 +350,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
   SETTERS
    */
 
-	private void setVertexStyle(AnnotationNode vertex) {
+	public void setVertexStyle(AnnotationNode vertex) {
 		mxGeometry g = vertex.getGeometry();
 		g.setHeight(g.getHeight() + 200);
 		g.setWidth(g.getWidth() + 200);
@@ -473,21 +435,6 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 	@Override
 	public TextSource getTextSource() {
 		return textSource;
-	}
-
-	@Override
-	public void addDataObjectModificationListener(ModelObjectListener listener) {
-		modificationListeners.add(listener);
-	}
-
-	@Override
-	public void modify() {
-		modificationListeners.forEach(ModelObjectListener::modification);
-	}
-
-	@Override
-	public void removeDataObjectModificationListener(ModelObjectListener listener) {
-		modificationListeners.remove(listener);
 	}
 
 

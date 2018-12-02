@@ -63,21 +63,6 @@ public class Fragment implements ModelObject<Fragment> {
 
 	}
 
-	@Override
-	public void addDataObjectModificationListener(ModelObjectListener listener) {
-
-	}
-
-	@Override
-	public void modify() {
-
-	}
-
-	@Override
-	public void removeDataObjectModificationListener(ModelObjectListener listener) {
-
-	}
-
 	public String getType() {
 		return type;
 	}

@@ -39,14 +39,16 @@ public class AnnotationNode extends mxCell implements TextBoundModelObject, Know
 
 	private final ConceptAnnotation conceptAnnotation;
 	private final TextSource textSource;
+	private GraphSpace graphSpace;
 
-	AnnotationNode(BaseModel model, String id, ConceptAnnotation conceptAnnotation, TextSource textSource, double x, double y) {
+	AnnotationNode(BaseModel model, String id, ConceptAnnotation conceptAnnotation, TextSource textSource, double x, double y, GraphSpace graphSpace) {
 		super(
 				conceptAnnotation.getSpannedText(),
 				new mxGeometry(x, y, 150, 150),
 				"fontSize=16;fontColor=black;strokeColor=black");
 		this.textSource = textSource;
 		this.conceptAnnotation = conceptAnnotation;
+		this.graphSpace = graphSpace;
 
 		model.verifyId(id, this, false);
 
@@ -94,26 +96,15 @@ public class AnnotationNode extends mxCell implements TextBoundModelObject, Know
 	}
 
 	@Override
-	public void addDataObjectModificationListener(ModelObjectListener listener) {
-
-	}
-
-	@Override
-	public void removeDataObjectModificationListener(ModelObjectListener listener) {
-
-	}
-
-	@Override
-	public void modify() {
-
-	}
-
-	@Override
 	public void dispose() {
 	}
 
 	@Override
 	public int compareTo(Object o) {
 		return 0;
+	}
+
+	public GraphSpace getGraphSpace() {
+		return graphSpace;
 	}
 }

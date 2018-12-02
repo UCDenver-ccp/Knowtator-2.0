@@ -71,9 +71,9 @@ class SpanActionsTests {
     @Test
     void modifySpanActionTest() {
 	    TextSource textSource = model.getSelectedTextSource().get();
-	    ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
+	    ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
 	    textSource.setSelectedConceptAnnotation(conceptAnnotation);
-	    Span span = conceptAnnotation.first();
+	    Span span = conceptAnnotation.first().get();
 	    conceptAnnotation.setSelection(span);
 
 	    checkSpanModificationsTest(new SpanActions.ModifySpanAction(model, SpanActions.START, SpanActions.SHRINK, span),

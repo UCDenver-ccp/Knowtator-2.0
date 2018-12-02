@@ -27,6 +27,8 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.TreeSet;
 
 public abstract class CyclableCollection<K extends ModelObject> extends ListenableCollection<K, TreeSet<K>> {
@@ -64,7 +66,11 @@ public abstract class CyclableCollection<K extends ModelObject> extends Listenab
     return next;
   }
 
-  public K first() {
-    return collection.first();
+  public Optional<K> first() {
+    try {
+      return Optional.ofNullable(collection.first());
+    } catch (NoSuchElementException e) {
+      return Optional.empty();
+    }
   }
 }

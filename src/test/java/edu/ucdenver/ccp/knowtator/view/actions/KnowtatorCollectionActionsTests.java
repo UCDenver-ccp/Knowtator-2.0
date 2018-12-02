@@ -92,7 +92,7 @@ public class KnowtatorCollectionActionsTests {
     @Test
     public void removeConceptAnnotationActionTest() {
 	    TextSource textSource = model.getSelectedTextSource().get();
-	    textSource.setSelectedConceptAnnotation(textSource.firstConceptAnnotation());
+	    textSource.setSelectedConceptAnnotation(textSource.firstConceptAnnotation().get());
 	    TestingHelpers.testKnowtatorAction(model,
 			    new ConceptAnnotationAction(model, REMOVE, model.getSelectedTextSource().get()),
                 TestingHelpers.defaultExpectedTextSources,
@@ -108,7 +108,7 @@ public class KnowtatorCollectionActionsTests {
     @Test
     public void addSpanActionTest() {
 	    TextSource textSource = model.getSelectedTextSource().get();
-	    textSource.setSelectedConceptAnnotation(textSource.firstConceptAnnotation());
+	    textSource.setSelectedConceptAnnotation(textSource.firstConceptAnnotation().get());
 	    TestingHelpers.testKnowtatorAction(model,
 			    new SpanAction(model, ADD, model.getSelectedTextSource().get().getSelectedAnnotation().get()),
                 TestingHelpers.defaultExpectedTextSources,
@@ -125,9 +125,9 @@ public class KnowtatorCollectionActionsTests {
     public void removeSpanActionTest() {
 	    TextSource textSource = model.getSelectedTextSource().get();
         // First test remove span if there is only one in the collection. This should be equivalent to just removing the annotation
-        ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation();
+	    ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
 	    textSource.setSelectedConceptAnnotation(conceptAnnotation);
-        conceptAnnotation.setSelection(conceptAnnotation.first());
+	    conceptAnnotation.setSelection(conceptAnnotation.first().get());
 	    TestingHelpers.testKnowtatorAction(model,
 			    new SpanAction(model, REMOVE, model.getSelectedTextSource().get().getSelectedAnnotation().get()),
                 TestingHelpers.defaultExpectedTextSources,
@@ -140,10 +140,10 @@ public class KnowtatorCollectionActionsTests {
                 TestingHelpers.defaultExpectedTriples - 1);
 
         // Next test remove span if there are multiple spans. This should only remove the span.
-        conceptAnnotation.setSelection(conceptAnnotation.first());
+	    conceptAnnotation.setSelection(conceptAnnotation.first().get());
         textSource.selectNextSpan();
         conceptAnnotation = textSource.getSelectedAnnotation().get();
-        conceptAnnotation.setSelection(conceptAnnotation.first());
+	    conceptAnnotation.setSelection(conceptAnnotation.first().get());
 	    TestingHelpers.testKnowtatorAction(model,
 			    new SpanAction(model, REMOVE, model.getSelectedTextSource().get().getSelectedAnnotation().get()),
                 TestingHelpers.defaultExpectedTextSources,
