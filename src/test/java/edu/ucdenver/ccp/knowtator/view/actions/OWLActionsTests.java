@@ -78,7 +78,7 @@ class OWLActionsTests {
         Profile profile = model.getSelectedProfile().get();
         assert profile.getColor(conceptAnnotation.getOwlClass()).equals(Color.RED);
 
-        model.getSelectedTextSource().get().selectNextSpan();
+        model.getSelectedTextSource().get().selectNextConceptAnnotation();
         Set<OWLClass> owlClassSet = new HashSet<>();
         owlClassSet.add(model.getSelectedOWLClass().get());
 

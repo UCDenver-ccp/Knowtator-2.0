@@ -178,20 +178,8 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
 	@Override
 	public void setSelection(ConceptAnnotation selection) {
-		Optional<ConceptAnnotation> conceptAnnotationOptional = Optional.ofNullable(selection);
-		if (getSelection().isPresent()) {
-			getSelection()
-					.filter(conceptAnnotation -> conceptAnnotation != selection)
-					.ifPresent(conceptAnnotation -> {
-						conceptAnnotation.setSelection(null);
-						super.setSelection(selection);
-
-					});
-		} else {
-			if (conceptAnnotationOptional.isPresent()) {
-				super.setSelection(selection);
-			}
-		}
+		super.setSelection(selection);
+		getSelection().ifPresent(conceptAnnotation -> conceptAnnotation.setSelection(null));
 		getSelection().ifPresent(conceptAnnotation -> model.setSelectedOWLEntity(conceptAnnotation.getOwlClass()));
 	}
 

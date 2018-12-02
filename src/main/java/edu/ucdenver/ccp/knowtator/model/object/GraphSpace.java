@@ -61,7 +61,6 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 	private Logger log = Logger.getLogger(GraphSpace.class);
 
 	private final BaseModel baseModel;
-	private boolean areListenersSet;
 	private final TextSource textSource;
 	private String id;
 
@@ -84,7 +83,6 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		setConnectableEdges(false);
 		setCellsBendable(false);
 		setResetEdgesOnMove(true);
-		areListenersSet = false;
 
 		getSelectionModel().addListener(mxEvent.CHANGE, (sender, evt) -> {
 			Collection selectedCells = (Collection) evt.getProperty("removed");
@@ -93,7 +91,9 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 				for (Object cell : selectedCells) {
 					if (cell instanceof AnnotationNode) {
 						ConceptAnnotation conceptAnnotation = ((AnnotationNode) cell).getConceptAnnotation();
-						getTextSource().setSelectedConceptAnnotation(conceptAnnotation);
+						getTextSource().getSelectedAnnotation()
+								.filter(conceptAnnotation1 -> !conceptAnnotation.equals(conceptAnnotation1))
+								.ifPresent(conceptAnnotation1 -> getTextSource().setSelectedConceptAnnotation(conceptAnnotation));
 
 					} else if (cell instanceof RelationAnnotation) {
 						baseModel.setSelectedOWLEntity(((RelationAnnotation) cell).getProperty());
@@ -338,10 +338,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 	 */
 	public List<Object> getVerticesForAnnotation(ConceptAnnotation conceptAnnotation) {
 		return Arrays.stream(getChildVertices(getDefaultParent()))
-				.filter(
-						o ->
-								o instanceof AnnotationNode
-										&& conceptAnnotation.equals(((AnnotationNode) o).getConceptAnnotation()))
+				.filter(o -> o instanceof AnnotationNode && conceptAnnotation.equals(((AnnotationNode) o).getConceptAnnotation()))
 				.collect(Collectors.toList());
 	}
 
@@ -385,14 +382,18 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 
 	@Override
 	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
-		if (event.getNew().isPresent()) {
-			event.getNew()
-					.filter(modelObject -> modelObject instanceof ConceptAnnotation)
-					.map(modelObject -> (ConceptAnnotation) modelObject)
-					.ifPresent(conceptAnnotation -> setSelectionCells(getVerticesForAnnotation(conceptAnnotation)));
-		} else {
-			setSelectionCells(new Object[0]);
-		}
+		baseModel.getSelectedTextSource().ifPresent(textSource1 -> textSource1.getSelectedGraphSpace()
+				.ifPresent(graphSpace -> {
+					if (graphSpace.equals(this)) {
+						if (event.getNew().isPresent()) {
+							event.getNew()
+									.filter(modelObject -> modelObject instanceof ConceptAnnotation)
+									.map(modelObject -> (ConceptAnnotation) modelObject)
+									.ifPresent(conceptAnnotation -> setSelectionCells(getVerticesForAnnotation(conceptAnnotation)));
+						}
+					}
+				}));
+
 	}
 
 	@Override
@@ -435,15 +436,6 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 	@Override
 	public TextSource getTextSource() {
 		return textSource;
-	}
-
-
-	public void setListenersSet() {
-		areListenersSet = true;
-	}
-
-	public boolean areListenersSet() {
-		return areListenersSet;
 	}
 
 	@SuppressWarnings("Duplicates")

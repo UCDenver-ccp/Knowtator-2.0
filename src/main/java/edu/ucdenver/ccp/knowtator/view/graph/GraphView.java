@@ -27,10 +27,9 @@ package edu.ucdenver.ccp.knowtator.view.graph;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
+import com.mxgraph.util.mxEventSource;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
@@ -54,7 +53,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +62,7 @@ import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActio
 public class GraphView extends JPanel implements KnowtatorComponent, ModelListener {
 	private final JDialog dialog;
 	private final KnowtatorView view;
+	private final AddRelationListener addRelationListener;
 	private JButton removeCellButton;
 	private JButton addAnnotationNodeButton;
 	private JButton applyLayoutButton;
@@ -80,6 +79,13 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 	private List<JComponent> graphSpaceButtons;
 	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(GraphView.class);
+	private mxEventSource.mxIEventListener removeCellsListener;
+	private mxEventSource.mxIEventListener moveCellsListener = (sender, evt) -> {
+		if (sender instanceof GraphSpace) {
+			reDrawGraph((GraphSpace) sender);
+		}
+	};
+	private ChangeSelectionListener changeSelectionListener = new ChangeSelectionListener(this);
 
 
 	GraphView(JDialog dialog, KnowtatorView view) {
@@ -88,6 +94,13 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 		setVisible(false);
 		$$$setupUI$$$();
 		makeButtons();
+
+		addRelationListener = new AddRelationListener(view, this);
+		removeCellsListener = (sender, evt) -> {
+			if (sender instanceof GraphSpace) {
+				reDrawGraph((GraphSpace) sender);
+			}
+		};
 
 	}
 
@@ -103,8 +116,8 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 		renameButton.addActionListener(e -> view.getModel().flatMap(BaseModel::getSelectedTextSource)
 				.ifPresent(textSource ->
 						textSource.getSelectedGraphSpace()
-						.ifPresent(graphSpace -> getGraphNameInput(view, textSource, null)
-								.ifPresent(graphSpace::setId))));
+								.ifPresent(graphSpace -> getGraphNameInput(view, textSource, null)
+										.ifPresent(graphSpace::setId))));
 		addGraphSpaceButton.addActionListener(e ->
 				view.getModel()
 						.flatMap(BaseModel::getSelectedTextSource)
@@ -167,11 +180,18 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 	}
 
 	private void showGraph(GraphSpace graphSpace) {
-		graphComponent.setGraph(graphSpace);
+		graphSpace.removeListener(addRelationListener);
+		graphSpace.removeListener(moveCellsListener);
+		graphSpace.removeListener(removeCellsListener);
+		graphSpace.getSelectionModel().removeListener(changeSelectionListener);
 
+		graphComponent.setGraph(graphSpace);
 		graphComponent.setName(graphSpace.getId());
 
-		setupListenersForGraphSpace(graphSpace);
+		graphSpace.addListener(mxEvent.ADD_CELLS, addRelationListener);
+		graphSpace.addListener(mxEvent.MOVE_CELLS, moveCellsListener);
+		graphSpace.addListener(mxEvent.REMOVE_CELLS, removeCellsListener);
+		graphSpace.getSelectionModel().addListener(mxEvent.CHANGE, changeSelectionListener);
 
 		reDrawGraph(graphSpace);
 		graphComponent.refresh();
@@ -280,75 +300,7 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 		return Optional.empty();
 	}
 
-	private void setupListenersForGraphSpace(GraphSpace graphSpace) {
-		// Handle drag and drop
-		// Adds the current selected object property as the edge value
-		if (!graphSpace.areListenersSet()) {
-			graphSpace.addListener(mxEvent.ADD_CELLS, (sender, evt) -> {
-				Object[] cells = (Object[]) evt.getProperty("cells");
-				if (cells != null && cells.length > 0) {
-					Arrays.stream(cells)
-							.filter(cell -> graphSpace.getModel().isEdge(cell))
-							.map(cell -> (mxCell) cell)
-							.filter(cell -> "".equals(cell.getValue()))
-							.forEach(edge -> {
-								view.getModel().ifPresent(model ->
-										model.getSelectedOWLObjectProperty()
-												.filter(owlObjectProperty -> !owlObjectProperty.getIRI().getShortForm().equals("owl:topObjectProperty"))
-												.ifPresent(owlObjectProperty -> {
-													// For some reason the top object property doesn't play nice so don't allow it
-													RelationOptionsDialog relationOptionsDialog = getRelationOptionsDialog(model.getOWLEntityRendering(owlObjectProperty));
-													if (relationOptionsDialog.getResult() == RelationOptionsDialog.OK_OPTION) {
-														model.registerAction(
-																new GraphActions.AddTripleAction(
-																		model,
-																		(AnnotationNode) edge.getSource(),
-																		(AnnotationNode) edge.getTarget(),
-																		owlObjectProperty, relationOptionsDialog.getPropertyID(),
-																		relationOptionsDialog.getQuantifier(), relationOptionsDialog.getQuantifierValue(),
-																		relationOptionsDialog.getNegation(),
-																		relationOptionsDialog.getMotivation(),
-																		graphSpace));
-													}
-												}));
-
-								graphSpace.getModel().remove(edge);
-							});
-
-					reDrawGraph(graphSpace);
-				}
-			});
-
-			graphSpace.addListener(mxEvent.MOVE_CELLS, (sender, evt) -> reDrawGraph(graphSpace));
-
-			graphSpace.addListener(mxEvent.REMOVE_CELLS, (sender, evt) -> reDrawGraph(graphSpace));
-
-			graphSpace.getSelectionModel().addListener(mxEvent.CHANGE, (sender, evt) -> {
-				Collection selectedCells = (Collection) evt.getProperty("removed");
-				Collection deselectedCells = (Collection) evt.getProperty("added");
-				if (deselectedCells != null && deselectedCells.size() > 0) {
-					for (Object cell : deselectedCells) {
-						if (cell instanceof AnnotationNode) {
-							graphSpace.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "0", new Object[]{cell});
-						}
-					}
-				}
-
-				if (selectedCells != null && selectedCells.size() > 0) {
-					for (Object cell : selectedCells) {
-						if (cell instanceof AnnotationNode) {
-							graphSpace.setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
-						}
-					}
-				}
-
-				reDrawGraph(graphSpace);
-			});
-			graphSpace.setListenersSet();
-		}
-	}
-
-	private RelationOptionsDialog getRelationOptionsDialog(String propertyID) {
+	RelationOptionsDialog getRelationOptionsDialog(String propertyID) {
 		RelationOptionsDialog relationOptionsDialog = new RelationOptionsDialog(dialog, propertyID);
 		relationOptionsDialog.pack();
 		relationOptionsDialog.setAlwaysOnTop(true);
@@ -496,7 +448,7 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 				});
 	}
 
-	private void reDrawGraph(@Nonnull GraphSpace graphSpace) {
+	void reDrawGraph(@Nonnull GraphSpace graphSpace) {
 		view.getModel()
 				.filter(model -> view.isVisible())
 				.filter(BaseModel::isNotLoading)

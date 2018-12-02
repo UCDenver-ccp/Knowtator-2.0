@@ -107,13 +107,16 @@ class FilePane extends MenuPane {
 			File file = fileChooser.getSelectedFile();
 			File annotationsDir = new File(file.getParentFile(), "Annotations");
 			File profilesDir = new File(file.getParentFile(), "Profiles");
+			int maxVal = 1;
 			if (annotationsDir.isDirectory()) {
-				progressBar1.setMaximum(Objects.requireNonNull(annotationsDir.listFiles()).length + Objects.requireNonNull(profilesDir.listFiles()).length);
+				maxVal = Objects.requireNonNull(annotationsDir.listFiles()).length + Objects.requireNonNull(profilesDir.listFiles()).length;
+				progressBar1.setMaximum(maxVal);
 			}
 			progressBar1.setValue(0);
 			progressBar1.setStringPainted(true);
 			contentPane.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
+			int finalMaxVal = maxVal;
 			SwingWorker swingWorker = new SwingWorker() {
 				@Override
 				protected Object doInBackground() throws Exception {
@@ -128,7 +131,7 @@ class FilePane extends MenuPane {
 						public void modelChangeEvent(ChangeEvent<ModelObject> event) {
 							event.getNew()
 									.filter(modelObject -> modelObject instanceof TextSource || modelObject instanceof Profile)
-									.ifPresent(textSource -> setProgress(progress[0]++));
+									.ifPresent(textSource -> setProgress(progress[0]++ / finalMaxVal * 100));
 						}
 
 						@Override

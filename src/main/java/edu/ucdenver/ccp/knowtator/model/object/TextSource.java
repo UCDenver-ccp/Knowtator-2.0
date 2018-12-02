@@ -297,4 +297,8 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 	public void setSelectedGraphSpace(GraphSpace graphSpace) {
 		graphSpaceCollection.setSelection(graphSpace);
 	}
+
+	public void selectNextConceptAnnotation() {
+		conceptAnnotationCollection.selectNext();
+	}
 }
