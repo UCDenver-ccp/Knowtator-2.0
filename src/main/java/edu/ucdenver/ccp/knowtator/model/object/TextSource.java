@@ -250,10 +250,6 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 		conceptAnnotationCollection.selectPreviousSpan();
 	}
 
-	public void setSelectedAnnotation(Span span) {
-		conceptAnnotationCollection.setSelectedAnnotation(span);
-	}
-
 	Optional<ConceptAnnotation> getAnnotation(String annotationID) {
 		return conceptAnnotationCollection.get(annotationID);
 	}

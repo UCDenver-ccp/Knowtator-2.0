@@ -160,26 +160,13 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 				}));
 	}
 
-	public void setSelectedAnnotation(Span newSpan) {
-
-		Optional<Span> newSpanOptional = Optional.ofNullable(newSpan);
-		if (newSpanOptional.isPresent()) {
-			setSelection(newSpan.getConceptAnnotation());
-			newSpan.getConceptAnnotation().setSelection(newSpan);
-
-		} else {
-			setSelection(null);
-		}
-	}
-
-    /*
+	/*
     SETUP
      */
 
 	@Override
 	public void setSelection(ConceptAnnotation selection) {
 		super.setSelection(selection);
-		getSelection().ifPresent(conceptAnnotation -> conceptAnnotation.setSelection(null));
 		getSelection().ifPresent(conceptAnnotation -> model.setSelectedOWLEntity(conceptAnnotation.getOwlClass()));
 	}
 

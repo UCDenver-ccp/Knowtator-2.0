@@ -103,13 +103,15 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements KnowtatorC
 			if (SwingUtilities.isRightMouseButton(e)) {
 				if (spansContainingLocation.size() == 1) {
 					Span span = spansContainingLocation.iterator().next();
-					textSource.setSelectedAnnotation(span);
+					textSource.setSelectedConceptAnnotation(span.getConceptAnnotation());
+					span.getConceptAnnotation().setSelection(span);
 				}
 				popupMenu.showPopUpMenu(release_offset);
 			} else if (press_offset == release_offset) {
 				if (spansContainingLocation.size() == 1) {
 					Span span = spansContainingLocation.iterator().next();
-					textSource.setSelectedAnnotation(span);
+					textSource.setSelectedConceptAnnotation(span.getConceptAnnotation());
+					span.getConceptAnnotation().setSelection(span);
 				} else if (spansContainingLocation.size() > 1) {
 					popupMenu.chooseAnnotation(spansContainingLocation);
 				}
@@ -183,7 +185,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements KnowtatorC
 		private JMenuItem selectAnnotationCommand(Span span) {
 			return view.getModel().map(model -> {
 				JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s", model.getOWLEntityRendering(span.getConceptAnnotation().getOwlClass())));
-				selectAnnotationMenuItem.addActionListener(e3 -> model.getSelectedTextSource().ifPresent(textSource -> textSource.setSelectedAnnotation(span)));
+				selectAnnotationMenuItem.addActionListener(e3 -> model.getSelectedTextSource().ifPresent(textSource -> span.getConceptAnnotation().setSelection(span)));
 				return selectAnnotationMenuItem;
 			}).orElse(null);
 
