@@ -74,18 +74,16 @@ public class RelationList extends KnowtatorList<RelationAnnotation> {
 
 	@Override
 	public void react() {
+		KnowtatorCollection<RelationAnnotation> relationAnnotations = new KnowtatorCollection<RelationAnnotation>(null) {
+		};
 		view.getModel()
 				.filter(model -> shouldReact)
 				.ifPresent(model -> {
 					model.getTextSources()
-							.stream().forEach(textSource -> {
-								KnowtatorCollection<RelationAnnotation> relationAnnotations = new KnowtatorCollection<RelationAnnotation>(null) {
-
-								};
-								textSource.getGraphSpaces().stream()
-										.map(GraphSpace::getRelationAnnotations).forEach(relationAnnotations1 -> relationAnnotations1.forEach(relationAnnotations::add));
-								setCollection(relationAnnotations);
-							});
+							.stream().forEach(textSource ->
+							textSource.getGraphSpaces().stream()
+									.map(GraphSpace::getRelationAnnotations).forEach(relationAnnotations1 -> relationAnnotations1.forEach(relationAnnotations::add)));
+					setCollection(relationAnnotations);
 					setSelected();
 
 				});
