@@ -145,7 +145,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 					repaint();
 
 
-					Optional<Span> span = Optional.empty();
+					Optional<Span> span;
 					if (!model.getSelectedTextSource()
 							.flatMap(TextSource::getSelectedAnnotation)
 							.flatMap(SelectableCollection::getSelection)
@@ -246,6 +246,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	 * Highlights the spans for the selected annotation
 	 */
 	private void highlightSelectedAnnotation() {
+		//TODO: Selected span highlights weirdly (with black bars in the middle) when grown
 		view.getModel()
 				.flatMap(BaseModel::getSelectedTextSource)
 				.flatMap(TextSource::getSelectedAnnotation)

@@ -145,6 +145,7 @@ class FilePane extends MenuPane {
 				String name = evt.getPropertyName();
 				if (name.equals("progress")) {
 					int progress = (int) evt.getNewValue();
+					//TODO: Value not reflecting actual progress
 					progressBar1.setValue(progress);
 					contentPane.repaint();
 				} else if (name.equals("state")) {

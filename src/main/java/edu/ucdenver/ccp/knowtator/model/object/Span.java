@@ -30,6 +30,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -47,9 +48,11 @@ public class Span implements TextBoundModelObject<Span>, KnowtatorXMLIO, BratSta
   private int start;
   private int end;
   private ConceptAnnotation conceptAnnotation;
+  private BaseModel model;
   private String id;
 
   public Span(@Nonnull BaseModel model, @Nonnull ConceptAnnotation conceptAnnotation, String id, int start, int end) {
+    this.model = model;
 
     this.id = id;
     this.start = start;
@@ -194,6 +197,8 @@ public class Span implements TextBoundModelObject<Span>, KnowtatorXMLIO, BratSta
     if (end > limit) {
       end = limit;
     }
+
+    model.fireModelEvent(new ChangeEvent<>(model, null, this));
   }
 
   /*
