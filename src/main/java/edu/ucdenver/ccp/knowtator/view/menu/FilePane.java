@@ -123,16 +123,11 @@ class FilePane extends MenuPane {
 				}
 			});
 			swingWorker.execute();
-
-
 		}
 	}
 
-
 	@Override
 	public void show() {
-
-
 	}
 
 	@Override

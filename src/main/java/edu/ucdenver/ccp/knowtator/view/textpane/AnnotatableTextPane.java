@@ -191,17 +191,19 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	 */
 	private void highlightOverlaps(Set<Span> spans) {
 		Iterator<Span> spanIterator = spans.iterator();
-		Span lastSpan = spanIterator.next();
-		for (; spanIterator.hasNext(); ) {
-			Span span = spanIterator.next();
-			if (span.intersects(lastSpan)) {
-				highlightRegion(
-						span.getStart(),
-						min(lastSpan.getEnd(), span.getEnd()),
-						overlapHighlighter);
-			}
-			if (span.getEnd() > lastSpan.getEnd()) {
-				lastSpan = span;
+		if (spanIterator.hasNext()) {
+			Span lastSpan = spanIterator.next();
+			for (; spanIterator.hasNext(); ) {
+				Span span = spanIterator.next();
+				if (span.intersects(lastSpan)) {
+					highlightRegion(
+							span.getStart(),
+							min(lastSpan.getEnd(), span.getEnd()),
+							overlapHighlighter);
+				}
+				if (span.getEnd() > lastSpan.getEnd()) {
+					lastSpan = span;
+				}
 			}
 		}
 	}
