@@ -69,11 +69,11 @@ class ReviewPane extends MenuPane {
 
 	@Override
 	public void show() {
+		refresh();
 		annotationsForClassList.reset();
 		annotationsForSpannedTextList.reset();
 		relationsForPropertyList.reset();
 
-		refresh();
 	}
 
 	private void refresh() {
