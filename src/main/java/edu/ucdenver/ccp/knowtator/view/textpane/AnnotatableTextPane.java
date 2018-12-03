@@ -44,6 +44,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 
@@ -189,16 +190,17 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	 * @param spans A set of spans to highlight
 	 */
 	private void highlightOverlaps(Set<Span> spans) {
-		Span lastSpan = null;
-
-		for (Span span : spans) {
-			if (lastSpan != null) {
-				if (span.intersects(lastSpan)) {
-					highlightRegion(span.getStart(), min(lastSpan.getEnd(), span.getEnd()), overlapHighlighter);
-				}
+		Iterator<Span> spanIterator = spans.iterator();
+		Span lastSpan = spanIterator.next();
+		for (; spanIterator.hasNext(); ) {
+			Span span = spanIterator.next();
+			if (span.intersects(lastSpan)) {
+				highlightRegion(
+						span.getStart(),
+						min(lastSpan.getEnd(), span.getEnd()),
+						overlapHighlighter);
 			}
-
-			if (lastSpan == null || span.getEnd() > lastSpan.getEnd()) {
+			if (span.getEnd() > lastSpan.getEnd()) {
 				lastSpan = span;
 			}
 		}
