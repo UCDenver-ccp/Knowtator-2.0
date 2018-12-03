@@ -77,8 +77,8 @@ public class RelationList extends KnowtatorList<RelationAnnotation> {
 		view.getModel()
 				.filter(model -> shouldReact)
 				.ifPresent(model -> {
-					model.getSelectedTextSource()
-							.ifPresent(textSource -> {
+					model.getTextSources()
+							.stream().forEach(textSource -> {
 								KnowtatorCollection<RelationAnnotation> relationAnnotations = new KnowtatorCollection<RelationAnnotation>(null) {
 
 								};
