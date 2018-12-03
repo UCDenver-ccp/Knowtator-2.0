@@ -360,8 +360,6 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 			g.drawRect(r.x, r.y, r.width - 1, r.height - 1);
 			((Graphics2D) g).setStroke(new BasicStroke());
 
-			log.warn(r);
-
 			// Return the drawing area
 
 			return r;

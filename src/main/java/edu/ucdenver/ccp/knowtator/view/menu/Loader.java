@@ -39,13 +39,11 @@ public class Loader extends SwingWorker implements ModelListener {
 
 	private final KnowtatorView view;
 	private final File file;
-	private int progress;
 	private float maxVal;
 
 	Loader(KnowtatorView view, File file) {
 		this.view = view;
 		this.file = file;
-		progress = 0;
 		File annotationsDir = new File(file.getParentFile(), "Annotations");
 		File profilesDir = new File(file.getParentFile(), "Profiles");
 		maxVal = 1;
@@ -68,10 +66,10 @@ public class Loader extends SwingWorker implements ModelListener {
 	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
 		event.getNew()
 				.filter(modelObject -> modelObject instanceof TextSource || modelObject instanceof Profile)
-				.ifPresent(textSource -> {
-					Float x = ++progress / maxVal * 100;
-					setProgress(x.intValue());
-				});
+				.ifPresent(textSource -> view.getModel().ifPresent(model -> {
+					Float x = (model.getNumberOfTextSources() + model.getNumberOfProfiles()) / maxVal * 100;
+					setProgress(Math.min(100, x.intValue()));
+				}));
 	}
 
 	@Override
