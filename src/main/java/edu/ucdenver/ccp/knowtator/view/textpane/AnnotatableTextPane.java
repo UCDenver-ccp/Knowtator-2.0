@@ -153,6 +153,10 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 						span = model.getSelectedTextSource()
 								.flatMap(TextSource::getSelectedAnnotation)
 								.flatMap(CyclableCollection::first);
+					} else {
+						span = model.getSelectedTextSource()
+								.flatMap(TextSource::getSelectedAnnotation)
+								.flatMap(SelectableCollection::getSelection);
 					}
 					Optional<Span> finalSpan = span;
 					SwingUtilities.invokeLater(
