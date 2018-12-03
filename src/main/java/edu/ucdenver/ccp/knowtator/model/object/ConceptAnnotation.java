@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO, BratStandoffIO, TextBoundModelObject<ConceptAnnotation> {
 	@SuppressWarnings("unused")
@@ -113,14 +114,7 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 	}
 
 	public String getSpannedText() {
-		StringBuilder sb = new StringBuilder();
-		forEach(
-				span -> {
-					sb.append(String.format("%s", span.getSpannedText()));
-					sb.append("\n");
-				});
-		sb.delete(sb.length() - 1, sb.length());
-		return sb.toString();
+		return stream().map(Span::getSpannedText).collect(Collectors.joining(" "));
 	}
 
 	@SuppressWarnings("unused")
@@ -279,7 +273,7 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 	@Override
 	public String toString() {
 		return String.format(
-				"%s (%s)", getSpannedText(), model.getOWLEntityRendering(owlClass));
+				"%s (%s)", stream().map(Span::toString).collect(Collectors.joining(" ")), model.getOWLEntityRendering(owlClass));
 	}
 
 
