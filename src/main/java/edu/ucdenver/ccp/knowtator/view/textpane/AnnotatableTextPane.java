@@ -319,9 +319,14 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 			if (!Arrays.asList(getMouseListeners()).contains(mouseListener)) {
 				addMouseListener(mouseListener);
 			}
-			showTextSource();
+			if (event.getNew()
+					.filter(modelObject -> modelObject instanceof TextSource).isPresent()) {
+				showTextSource();
+			} else {
+				refreshHighlights();
+			}
+
 		}
-		refreshHighlights();
 	}
 
 	@Override

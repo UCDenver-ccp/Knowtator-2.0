@@ -460,6 +460,10 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
 	@Override
 	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
-
+		event.getNew()
+				.filter(modelObject -> modelObject instanceof Span)
+				.map(modelObject -> (Span) modelObject)
+				.filter(span -> span.getTextSource().equals(textSource))
+				.ifPresent(span -> setSelection(span.getConceptAnnotation()));
 	}
 }

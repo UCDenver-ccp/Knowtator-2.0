@@ -103,14 +103,12 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements KnowtatorC
 			if (SwingUtilities.isRightMouseButton(e)) {
 				if (spansContainingLocation.size() == 1) {
 					Span span = spansContainingLocation.iterator().next();
-					textSource.setSelectedConceptAnnotation(span.getConceptAnnotation());
 					span.getConceptAnnotation().setSelection(span);
 				}
 				popupMenu.showPopUpMenu(release_offset);
 			} else if (press_offset == release_offset) {
 				if (spansContainingLocation.size() == 1) {
 					Span span = spansContainingLocation.iterator().next();
-					textSource.setSelectedConceptAnnotation(span.getConceptAnnotation());
 					span.getConceptAnnotation().setSelection(span);
 				} else if (spansContainingLocation.size() > 1) {
 					popupMenu.chooseAnnotation(spansContainingLocation);
