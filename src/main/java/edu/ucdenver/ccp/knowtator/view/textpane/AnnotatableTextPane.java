@@ -290,6 +290,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 
 	@Override
 	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
+		super.modelChangeEvent(event);
 		if (event.getModel().getNumberOfTextSources() == 0) {
 			setEnabled(false);
 			removeMouseListener(mouseListener);
