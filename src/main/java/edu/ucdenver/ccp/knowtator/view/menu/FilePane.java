@@ -36,7 +36,6 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -84,17 +83,20 @@ class FilePane extends MenuPane {
 	}
 
 	private void open() {
-		String lastProjectFileName = KnowtatorView.PREFERENCES.get("Last Project", null);
+		Optional<String> lastProjectFileNameOptional = Optional.ofNullable(KnowtatorView.PREFERENCES.get("Last Project", null));
 
 		JFileChooser fileChooser = new JFileChooser();
-		if (lastProjectFileName != null) {
+		lastProjectFileNameOptional.ifPresent(lastProjectFileName -> {
 			File lastProjectFile = new File(lastProjectFileName);
 			if (lastProjectFile.exists()) {
 				fileChooser.setCurrentDirectory(lastProjectFile);
-				Optional<File> f = Arrays.stream(Objects.requireNonNull(lastProjectFile.listFiles())).filter(file -> file.getName().endsWith(".knowtator")).findAny();
-				f.ifPresent(fileChooser::setSelectedFile);
+				Optional<File[]> filesOptional = Optional.ofNullable(lastProjectFile.listFiles());
+				filesOptional.ifPresent(files -> {
+					Optional<File> f = Arrays.stream(files).filter(file -> file.getName().endsWith(".knowtator")).findAny();
+					f.ifPresent(fileChooser::setSelectedFile);
+				});
 			}
-		}
+		});
 		FileFilter fileFilter = new FileNameExtensionFilter("Knowtator", "knowtator");
 		fileChooser.setFileFilter(fileFilter);
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
