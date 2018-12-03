@@ -93,21 +93,6 @@ public abstract class OWLModel extends BaseModel implements Serializable {
 		return owlClassList;
 	}
 
-//	private Optional<OWLClass> getOWLClassByIDNoProtege(String classID) {
-//		for (OWLOntology ontology : owlOntologyManager.getOntologies()) {
-//			for (OWLClass owlClass : ontology.getClassesInSignature()) {
-//				Set<OWLAnnotationAssertionAxiom> anntotationAssertionAxioms = ontology.getAnnotationAssertionAxioms(owlClass.getIRI());
-//				List<String> labels = anntotationAssertionAxioms.stream()
-//						.map(anntotationAssertionAxiom -> anntotationAssertionAxiom.getValue().asLiteral().transform(OWLLiteral::getLiteral))
-//						.filter(com.google.common.base.Optional::isPresent).map(com.google.common.base.Optional::get).collect(Collectors.toList());
-//				if (owlClass.getIRI().getShortForm().equals(classID) || labels.stream().anyMatch(classID::equals)) {
-//					return Optional.of(owlClass);
-//				}
-//			}
-//		}
-//		return Optional.empty();
-//	}
-
 	public Optional<OWLObjectProperty> getOWLObjectPropertyByID(@Nonnull String propertyID) {
 		if (owlWorkSpace.isPresent()) {
 			return owlWorkSpace.map(owlWorkSpace -> owlWorkSpace.getOWLModelManager().getOWLEntityFinder().getOWLObjectProperty(propertyID));
@@ -194,10 +179,6 @@ public abstract class OWLModel extends BaseModel implements Serializable {
 
 	public String getOWLEntityRendering(@Nonnull OWLEntity owlEntity) {
 		return owlWorkSpace.map(owlWorkspace -> owlWorkspace.getOWLModelManager().getOWLEntityRenderer().render(owlEntity)).orElse(owlEntity.getIRI().getShortForm());
-	}
-
-	public void setOwlWorkSpace(OWLWorkspace owlWorkSpace) {
-		this.owlWorkSpace = Optional.ofNullable(owlWorkSpace);
 	}
 
 	public void searchForString(String stringToSearch) {
@@ -311,9 +292,6 @@ public abstract class OWLModel extends BaseModel implements Serializable {
 		return owlOntologyManager;
 	}
 
-	public boolean isWorkSpaceSet() {
-		return owlWorkSpace.isPresent();
-	}
 }
 
 
