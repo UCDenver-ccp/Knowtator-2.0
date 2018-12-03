@@ -35,7 +35,8 @@ import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorDefaultSettings;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import org.semanticweb.owlapi.model.OWLClass;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -43,7 +44,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -57,7 +57,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 
 	private final MouseListener mouseListener;
 	private final DefaultHighlighter.DefaultHighlightPainter overlapHighlighter = new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
-	private final DefaultHighlighter.DefaultHighlightPainter selectionHighlighter = new RectanglePainter(Color.BLACK);
+	private Logger log = LogManager.getLogger(AnnotatableTextPane.class.getName());
 
 	AnnotatableTextPane(KnowtatorView view, JTextField searchTextField) {
 		super(view, searchTextField);
@@ -70,7 +70,6 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 		requestFocusInWindow();
 		select(0, 0);
 		getCaret().setSelectionVisible(true);
-
 
 		mouseListener = new MouseListener() {
 			int press_offset;
@@ -140,10 +139,8 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 						highlightSpans(spans);
 					});
 
-
 					revalidate();
 					repaint();
-
 
 					Optional<Span> span;
 					if (!model.getSelectedTextSource()
@@ -180,30 +177,10 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	 * @param spans A set of spans to highlight
 	 */
 	private void highlightSpans(Set<Span> spans) {
-		SimpleAttributeSet underlinedSpan = new SimpleAttributeSet();
-		StyleConstants.setUnderline(underlinedSpan, true);
-
-		SimpleAttributeSet regularSpan = new SimpleAttributeSet();
-		StyleConstants.setUnderline(regularSpan, false);
-
-		getStyledDocument().setCharacterAttributes(0, getText().length(), regularSpan, false);
-
-		Set<OWLClass> descendants = new HashSet<>();
-		view.getModel()
-				.ifPresent(model -> model.getSelectedOWLClass().ifPresent(owlClass -> {
-					descendants.addAll(model.getOWLCLassDescendants(owlClass));
-					descendants.add(owlClass);
-				}));
-
-		for (Span span : spans) {
-			//Underline spans for the same class
-			if (descendants.contains(span.getConceptAnnotation().getOwlClass())) {
-				getStyledDocument().setCharacterAttributes(span.getStart(), span.getSize(), underlinedSpan, false);
-			}
-			DefaultHighlighter.DefaultHighlightPainter spanHighlighter = new DefaultHighlighter.DefaultHighlightPainter(span.getConceptAnnotation().getColor());
-
-			highlightRegion(span.getStart(), span.getEnd(), spanHighlighter);
-		}
+		spans.forEach(span -> highlightRegion(
+				span.getStart(),
+				span.getEnd(),
+				new DefaultHighlighter.DefaultHighlightPainter(span.getConceptAnnotation().getColor())));
 	}
 
 	/**
@@ -246,7 +223,6 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	 * Highlights the spans for the selected annotation
 	 */
 	private void highlightSelectedAnnotation() {
-		//TODO: Selected span highlights weirdly (with black bars in the middle) when grown
 		view.getModel()
 				.flatMap(BaseModel::getSelectedTextSource)
 				.flatMap(TextSource::getSelectedAnnotation)
@@ -256,7 +232,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 										highlightRegion(
 												span.getStart(),
 												span.getEnd(),
-												selectionHighlighter)));
+												new RectanglePainter(Color.BLACK))));
 	}
 
 	/**
@@ -342,7 +318,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 		view.getModel().ifPresent(model -> model.removeModelListener(this));
 	}
 
-	class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {
+	public class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {
 
 		@SuppressWarnings("SameParameterValue")
 		RectanglePainter(Color color) {
@@ -378,6 +354,8 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 			//		g.fillRect(r.x, r.y, r.width, r.height);
 			g.drawRect(r.x, r.y, r.width - 1, r.height - 1);
 			((Graphics2D) g).setStroke(new BasicStroke());
+
+			log.warn(r);
 
 			// Return the drawing area
 
