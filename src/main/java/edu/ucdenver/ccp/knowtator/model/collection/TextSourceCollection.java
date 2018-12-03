@@ -28,7 +28,6 @@ import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
-import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -42,7 +41,7 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
-public class TextSourceCollection extends KnowtatorCollection<TextSource> implements BratStandoffIO, KnowtatorXMLIO, Savable {
+public class TextSourceCollection extends KnowtatorCollection<TextSource> implements BratStandoffIO, KnowtatorXMLIO {
 	@SuppressWarnings("unused")
 	private final Logger log = Logger.getLogger(TextSourceCollection.class);
 
@@ -63,7 +62,6 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 			}
 		}
 	}
-
 
 	@Override
 	public void writeToKnowtatorXML(Document dom, Element parent) {
@@ -110,7 +108,6 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 	public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) {
 	}
 
-	@Override
 	public void load() throws IOException {
 		log.info("Loading annotations");
 		KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();
@@ -120,32 +117,10 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 
 	}
 
-	//TODO: Remove this, it's unused
-	@Override
-	public void save() {
-//		model.setRenderRDFSLabel();
-		forEach(TextSource::save);
-//		model.resetRenderRDFS();
-	}
-
-//	@Override
-//	public void setSaveLocation(File newSaveLocation) throws IOException {
-//		articlesLocation = new File(newSaveLocation, "Articles");
-//		Files.createDirectories(articlesLocation.toPath());
-//		annotationsLocation = new File(newSaveLocation, "Annotations");
-//		Files.createDirectories(annotationsLocation.toPath());
-//	}
-
 	@Override
 	public void setSelection(TextSource textSource) {
 		super.setSelection(textSource);
 	}
-
-//	@Override
-//	public File getSaveLocation() {
-//		return annotationsLocation;
-//
-//	}
 
 	@Override
 	public void remove(TextSource textSource) {

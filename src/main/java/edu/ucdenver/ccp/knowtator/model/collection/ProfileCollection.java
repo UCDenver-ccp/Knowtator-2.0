@@ -30,7 +30,6 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -42,7 +41,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Optional;
 
-public class ProfileCollection extends KnowtatorCollection<Profile> implements KnowtatorXMLIO, Savable {
+public class ProfileCollection extends KnowtatorCollection<Profile> implements KnowtatorXMLIO {
 
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(KnowtatorModel.class);
@@ -59,13 +58,6 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 
 	public Profile getDefaultProfile() {
 		return defaultProfile;
-	}
-
-	@Override
-	public void save() {
-//		if (model.isNotLoading()) {
-		forEach(Profile::save);
-//		}
 	}
 
 	@Override
@@ -121,18 +113,6 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 		super.dispose();
 	}
 
-//	@Override
-//	public File getSaveLocation() {
-//		return profilesLocation;
-//	}
-//
-//	@Override
-//	public void setSaveLocation(File saveLocation) throws IOException {
-//		profilesLocation = (new File(saveLocation, "Profiles"));
-//		Files.createDirectories(profilesLocation.toPath());
-//	}
-
-	@Override
 	public void load() throws IOException {
 		log.info("Loading profiles");
 		KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();

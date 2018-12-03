@@ -199,12 +199,7 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 		model.saveToFormat(KnowtatorXMLUtil.class, this, getSaveLocation());
 	}
 
-	@Override
-	public void load() {
-
-	}
-
-	public File getSaveLocation() {
+	private File getSaveLocation() {
 		return new File(model.getAnnotationsLocation().getAbsolutePath(), saveFile.getName());
 	}
 

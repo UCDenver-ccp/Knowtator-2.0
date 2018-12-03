@@ -329,7 +329,6 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 		}
 	}
 
-	@Override
 	public void load() throws IOException {
 		try {
 			loading = true;

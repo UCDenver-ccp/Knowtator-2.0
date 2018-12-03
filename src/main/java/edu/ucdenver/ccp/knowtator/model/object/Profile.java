@@ -174,12 +174,7 @@ public class Profile implements ModelObject<Profile>, Savable, KnowtatorXMLIO {
 		model.saveToFormat(KnowtatorXMLUtil.class, this, getSaveLocation());
 	}
 
-	@Override
-	public void load() {
-
-	}
-
-	public File getSaveLocation() {
+	private File getSaveLocation() {
 		return new File(model.getSaveLocation().getAbsolutePath(), String.format("%s.xml", id));
 	}
 
