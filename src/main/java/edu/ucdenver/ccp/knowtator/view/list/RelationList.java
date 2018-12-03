@@ -54,7 +54,6 @@ public class RelationList extends KnowtatorList<RelationAnnotation> {
 
 		};
 
-
 		addMouseListener(new MouseInputAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
