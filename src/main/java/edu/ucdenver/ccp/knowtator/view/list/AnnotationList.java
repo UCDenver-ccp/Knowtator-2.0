@@ -28,14 +28,49 @@ import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
+import javax.swing.*;
+import javax.swing.event.MouseInputAdapter;
+import java.awt.event.MouseEvent;
+
 public class AnnotationList extends KnowtatorList<ConceptAnnotation> {
+	private boolean shouldReact;
+
 	protected AnnotationList(KnowtatorView view) {
 		super(view);
+
+		KnowtatorList<ConceptAnnotation> list = this;
+		al = e -> {
+			if (list.getSelectedValue() != null) {
+				shouldReact = false;
+				ConceptAnnotation relationAnnotation = list.getSelectedValue();
+				collection.setSelection(relationAnnotation);
+				relationAnnotation.getTextSource().setSelectedConceptAnnotation(relationAnnotation);
+				shouldReact = true;
+			}
+
+		};
+
+		addMouseListener(new MouseInputAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1) {
+					if (list.getSelectedIndex() != -1) {
+						shouldReact = false;
+						ConceptAnnotation relationAnnotation = list.getSelectedValue();
+						collection.setSelection(relationAnnotation);
+						relationAnnotation.getTextSource().setSelectedConceptAnnotation(relationAnnotation);
+						shouldReact = true;
+					}
+				}
+			}
+		});
 	}
 
 	@Override
 	public void react() {
-		view.getModel().ifPresent(model -> {
+		view.getModel()
+				.filter(model -> shouldReact)
+				.ifPresent(model -> {
 			KnowtatorCollection<ConceptAnnotation> conceptAnnotations = new KnowtatorCollection<ConceptAnnotation>(null) {};
 
 			model.getTextSources().forEach(textSource ->
