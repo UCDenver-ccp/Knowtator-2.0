@@ -43,7 +43,7 @@ public class AnnotationNode extends mxCell implements TextBoundModelObject, Know
 
 	AnnotationNode(BaseModel model, String id, ConceptAnnotation conceptAnnotation, TextSource textSource, double x, double y, GraphSpace graphSpace) {
 		super(
-				conceptAnnotation.getSpannedText(),
+				conceptAnnotation.toString(),
 				new mxGeometry(x, y, 150, 150),
 				"fontSize=16;fontColor=black;strokeColor=black");
 		this.textSource = textSource;
