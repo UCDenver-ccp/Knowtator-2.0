@@ -87,6 +87,7 @@ class ConsistencyPane extends MenuPane {
 				owlClassLabel.setText(model.getOWLEntityRendering(owlClass));
 			});
 
+			//TODO: This doesn't seem to be filtering properly
 			activeOWLPropertyDescendants = new HashSet<>();
 			model.getSelectedOWLObjectProperty().ifPresent(owlObjectProperty -> {
 				activeOWLPropertyDescendants.add(owlObjectProperty);

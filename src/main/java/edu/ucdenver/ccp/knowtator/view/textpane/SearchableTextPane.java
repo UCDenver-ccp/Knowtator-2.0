@@ -166,6 +166,7 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 
 	@Override
 	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
+		//TODO: This doesn't appear to get called on span selection
 		view.getModel().flatMap(BaseModel::getSelectedTextSource)
 				.ifPresent(textSource -> textSource.getSelectedAnnotation()
 						.ifPresent(conceptAnnotation -> conceptAnnotation

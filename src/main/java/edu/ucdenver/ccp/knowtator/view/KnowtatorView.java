@@ -370,6 +370,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 						.ifPresent(model1 -> model1.getSelectedTextSource()
 								.ifPresent(textSource -> textSource.getSelectedAnnotation()
 										.ifPresent(conceptAnnotation -> conceptAnnotation.getSelection()
+												//TODO Modify span doesn't fire event to cause highlight refresh or save
 												.ifPresent(span -> model1.registerAction(new SpanActions.ModifySpanAction(model1, SpanActions.START, SpanActions.SHRINK, span)))))));
 		spanSizeButtons.put(growEndButton, e ->
 				getModel()
