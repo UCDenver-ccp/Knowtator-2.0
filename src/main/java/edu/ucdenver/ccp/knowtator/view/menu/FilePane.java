@@ -27,11 +27,6 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import edu.ucdenver.ccp.knowtator.model.ModelListener;
-import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
-import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
-import edu.ucdenver.ccp.knowtator.model.object.Profile;
-import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
@@ -105,47 +100,17 @@ class FilePane extends MenuPane {
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		if (fileChooser.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
-			File annotationsDir = new File(file.getParentFile(), "Annotations");
-			File profilesDir = new File(file.getParentFile(), "Profiles");
-			int maxVal = 1;
-			if (annotationsDir.isDirectory()) {
-				maxVal = Objects.requireNonNull(annotationsDir.listFiles()).length + Objects.requireNonNull(profilesDir.listFiles()).length;
-				progressBar1.setMaximum(maxVal);
-			}
+
+			progressBar1.setMaximum(100);
 			progressBar1.setValue(0);
 			progressBar1.setStringPainted(true);
 			contentPane.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-			int finalMaxVal = maxVal;
-			SwingWorker swingWorker = new SwingWorker() {
-				@Override
-				protected Object doInBackground() throws Exception {
-					final int[] progress = {0};
-					view.loadProject(file.getParentFile(), new ModelListener() {
-
-						@Override
-						public void filterChangedEvent() {
-						}
-
-						@Override
-						public void modelChangeEvent(ChangeEvent<ModelObject> event) {
-							event.getNew()
-									.filter(modelObject -> modelObject instanceof TextSource || modelObject instanceof Profile)
-									.ifPresent(textSource -> setProgress(progress[0]++ / finalMaxVal * 100));
-						}
-
-						@Override
-						public void colorChangedEvent() {
-						}
-					});
-					return null;
-				}
-			};
+			SwingWorker swingWorker = new Loader(view, file);
 			swingWorker.addPropertyChangeListener(evt -> {
 				String name = evt.getPropertyName();
 				if (name.equals("progress")) {
 					int progress = (int) evt.getNewValue();
-					//TODO: Value not reflecting actual progress
 					progressBar1.setValue(progress);
 					contentPane.repaint();
 				} else if (name.equals("state")) {
