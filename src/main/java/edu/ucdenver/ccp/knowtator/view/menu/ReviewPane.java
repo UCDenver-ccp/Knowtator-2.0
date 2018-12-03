@@ -41,7 +41,7 @@ import java.awt.*;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 
-class ConsistencyPane extends MenuPane {
+class ReviewPane extends MenuPane {
 	private JLabel owlClassLabel;
 	private JLabel spanLabel;
 	private AnnotationList annotationsForClassList;
@@ -58,8 +58,8 @@ class ConsistencyPane extends MenuPane {
 	private HashSet<OWLClass> activeOWLClassDescendants;
 	private HashSet<OWLObjectProperty> activeOWLPropertyDescendants;
 
-	ConsistencyPane(KnowtatorView view) {
-		super(view, "Consistency");
+	ReviewPane(KnowtatorView view) {
+		super(view, "Review");
 		$$$setupUI$$$();
 		includeClassDescendantsCheckBox.addActionListener(e -> refresh());
 		exactMatchCheckBox.addActionListener(e -> refresh());
@@ -87,7 +87,6 @@ class ConsistencyPane extends MenuPane {
 				owlClassLabel.setText(model.getOWLEntityRendering(owlClass));
 			});
 
-			//TODO: This doesn't seem to be filtering properly
 			activeOWLPropertyDescendants = new HashSet<>();
 			model.getSelectedOWLObjectProperty().ifPresent(owlObjectProperty -> {
 				activeOWLPropertyDescendants.add(owlObjectProperty);
@@ -311,7 +310,7 @@ class ConsistencyPane extends MenuPane {
 	}
 
 	private void createUIComponents() {
-		ConsistencyPane consistencyPane = this;
+		ReviewPane reviewPane = this;
 		annotationsForClassList = new AnnotationList(view) {
 			@Override
 			public void setCollection(KnowtatorCollection<ConceptAnnotation> collection) {
@@ -323,7 +322,7 @@ class ConsistencyPane extends MenuPane {
 				} else {
 					setEnabled(true);
 					collection.stream()
-							.filter(conceptAnnotation -> consistencyPane.activeOWLClassDescendants.contains(conceptAnnotation.getOwlClass()))
+							.filter(conceptAnnotation -> reviewPane.activeOWLClassDescendants.contains(conceptAnnotation.getOwlClass()))
 							.forEach(k -> ((DefaultListModel<ConceptAnnotation>) getModel()).addElement(k));
 				}
 			}
@@ -356,7 +355,7 @@ class ConsistencyPane extends MenuPane {
 				} else {
 					setEnabled(true);
 					collection.stream()
-							.filter(relationAnnotation -> consistencyPane.activeOWLPropertyDescendants.contains(relationAnnotation.getProperty()))
+							.filter(relationAnnotation -> reviewPane.activeOWLPropertyDescendants.contains(relationAnnotation.getProperty()))
 							.forEach(k -> ((DefaultListModel<RelationAnnotation>) getModel()).addElement(k));
 				}
 			}

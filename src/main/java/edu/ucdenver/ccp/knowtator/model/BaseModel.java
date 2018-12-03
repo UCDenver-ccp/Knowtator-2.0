@@ -40,10 +40,7 @@ import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
+import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
 import javax.swing.event.CaretEvent;
@@ -382,4 +379,6 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 	public void fireModelEvent(ChangeEvent<ModelObject> event) {
 		modelListeners.forEach(modelListener -> modelListener.modelChangeEvent(event));
 	}
+
+	public abstract Comparator<OWLObject> getOWLObjectComparator();
 }

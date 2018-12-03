@@ -279,7 +279,7 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 	@Override
 	public String toString() {
 		return String.format(
-				"%s OWL Class: %s", getSpannedText(), model.getOWLEntityRendering(owlClass));
+				"%s (%s)", getSpannedText(), model.getOWLEntityRendering(owlClass));
 	}
 
 

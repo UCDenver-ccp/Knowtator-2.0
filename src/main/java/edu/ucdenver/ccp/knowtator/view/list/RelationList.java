@@ -84,7 +84,7 @@ public class RelationList extends KnowtatorList<RelationAnnotation> {
 								};
 								textSource.getGraphSpaces().stream()
 										.map(GraphSpace::getRelationAnnotations).forEach(relationAnnotations1 -> relationAnnotations1.forEach(relationAnnotations::add));
-								super.setCollection(relationAnnotations);
+								setCollection(relationAnnotations);
 							});
 					setSelected();
 

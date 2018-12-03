@@ -113,7 +113,7 @@ public class MenuDialog extends JDialog {
 				new ExportPane(view),
 				new ProfilePane(view),
 				new IAAPane(view),
-				new ConsistencyPane(view)});
+				new ReviewPane(view)});
 	}
 
 	/**

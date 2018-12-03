@@ -105,7 +105,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 
 	@Override
 	public String toString() {
-		return String.format("Subject: %s; OWLObjectProperty: %s Target: %s", sourceAnnotationNode.getConceptAnnotation(), getOwlPropertyRendering(), targetAnnotationNode.getConceptAnnotation());
+		return String.format("%s - %s - %s", sourceAnnotationNode.getConceptAnnotation(), getOwlPropertyRendering(), targetAnnotationNode.getConceptAnnotation());
 	}
 
 	@SuppressWarnings("unused")
@@ -164,7 +164,25 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 
 	@Override
 	public int compareTo(RelationAnnotation o) {
-		return id.compareTo(o.getId());
+		int val = model.getOWLObjectComparator().compare(property, o.getProperty());
+		if (val == 0) {
+			val = sourceAnnotationNode.compareTo(o.getSourceAnnotationNode());
+			if (val == 0) {
+				val = targetAnnotationNode.compareTo(o.getTargetAnnotationNode());
+				if (val == 0) {
+					val = id.compareTo(o.getId());
+				}
+			}
+		}
+		return val;
+	}
+
+	private AnnotationNode getTargetAnnotationNode() {
+		return targetAnnotationNode;
+	}
+
+	private AnnotationNode getSourceAnnotationNode() {
+		return sourceAnnotationNode;
 	}
 
 	public OWLObjectProperty getProperty() {
