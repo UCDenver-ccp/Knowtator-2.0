@@ -29,7 +29,11 @@ public interface TextBoundModelObject<K extends TextBoundModelObject> extends Mo
 
 	@Override
 	default int compareTo(K object) {
-		return getTextSource().compareTo(object.getTextSource());
+		int result = ModelObject.super.compareTo(object);
+		if (result == 0) {
+			result = getTextSource().compareTo(object.getTextSource());
+		}
+		return result;
 	}
 
 }
