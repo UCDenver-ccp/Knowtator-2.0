@@ -151,7 +151,11 @@ class RelationOptionsDialog extends JDialog {
     }
 
     String getQuantifierValue() {
-        return NumberUtils.createNumber(quantifierValueTextField.getText()).toString();
+        try {
+            return NumberUtils.createNumber(quantifierValueTextField.getText()).toString();
+        } catch (NumberFormatException e){
+            return quantifierValueTextField.getText();
+        }
     }
 
     String getPropertyID() {
