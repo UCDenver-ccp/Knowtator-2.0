@@ -22,14 +22,37 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.object;
+package edu.ucdenver.ccp.knowtator.view.list;
 
-public interface TextBoundModelObject<K extends TextBoundModelObject> extends ModelObject<K> {
-	TextSource getTextSource();
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import org.semanticweb.owlapi.model.OWLClass;
+
+import javax.swing.*;
+import java.util.Set;
+
+public class AnnotationListForOWLClass extends AnnotationList {
+	private Set<OWLClass> activeOWLClassDescendants;
+
+	public AnnotationListForOWLClass(KnowtatorView view, Set<OWLClass> activeOWLClassDescendants) {
+		super(view);
+		this.activeOWLClassDescendants = activeOWLClassDescendants;
+	}
 
 	@Override
-	default int compareTo(K object) {
-		return getTextSource().compareTo(object.getTextSource());
+	public void setCollection(KnowtatorCollection<ConceptAnnotation> collection) {
+		//clear collection
+		((DefaultListModel) getModel()).clear();
+		this.collection = collection;
+		if (collection.size() == 0) {
+			setEnabled(false);
+		} else {
+			setEnabled(true);
+			collection.stream()
+					.filter(conceptAnnotation -> activeOWLClassDescendants.contains(conceptAnnotation.getOwlClass()))
+					.forEach(k -> ((DefaultListModel<ConceptAnnotation>) getModel()).addElement(k));
+		}
 	}
 
 }

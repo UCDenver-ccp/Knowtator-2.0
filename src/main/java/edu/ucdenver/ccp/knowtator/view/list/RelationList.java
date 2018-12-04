@@ -42,6 +42,8 @@ public class RelationList extends KnowtatorList<RelationAnnotation> {
 		shouldReact = true;
 
 		KnowtatorList<RelationAnnotation> list = this;
+
+		removeListSelectionListener(al);
 		al = e -> {
 			if (list.getSelectedValue() != null) {
 				shouldReact = false;
@@ -51,8 +53,8 @@ public class RelationList extends KnowtatorList<RelationAnnotation> {
 				relationAnnotation.getGraphSpace().setSelectionCell(relationAnnotation);
 				shouldReact = true;
 			}
-
 		};
+		addListSelectionListener(al);
 
 		addMouseListener(new MouseInputAdapter() {
 			@Override

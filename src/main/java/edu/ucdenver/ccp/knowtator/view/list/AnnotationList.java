@@ -35,11 +35,12 @@ import java.awt.event.MouseEvent;
 public class AnnotationList extends KnowtatorList<ConceptAnnotation> {
 	private boolean shouldReact;
 
-	protected AnnotationList(KnowtatorView view) {
+	AnnotationList(KnowtatorView view) {
 		super(view);
 
 		shouldReact = true;
 
+		removeListSelectionListener(al);
 		KnowtatorList<ConceptAnnotation> list = this;
 		al = e -> {
 			if (list.getSelectedValue() != null) {
@@ -51,6 +52,7 @@ public class AnnotationList extends KnowtatorList<ConceptAnnotation> {
 			}
 
 		};
+		addListSelectionListener(al);
 
 		addMouseListener(new MouseInputAdapter() {
 			@Override
