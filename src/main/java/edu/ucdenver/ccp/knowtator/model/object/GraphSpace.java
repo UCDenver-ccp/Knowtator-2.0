@@ -104,6 +104,24 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		});
 	}
 
+	@Override
+	public int compareTo(GraphSpace o) {
+		if (this == o) {
+			return 0;
+		}
+		if (o == null) {
+			return 1;
+		}
+
+		int result = ModelObject.extractInt(this.getId()) - ModelObject.extractInt(o.getId());
+		if (result == 0) {
+			return this.getId().compareTo(o.getId());
+		} else {
+			return result;
+		}
+
+	}
+
   /*
   ADDERS
    */

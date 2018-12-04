@@ -22,40 +22,37 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.model.object;
+package edu.ucdenver.ccp.knowtator.view.list;
 
-public interface ModelObject<K extends ModelObject> extends Comparable<K> {
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import org.semanticweb.owlapi.model.OWLClass;
 
-	String getId();
+import javax.swing.*;
+import java.util.Set;
 
-	void setId(String id);
+public class AnnotationListForOWLClass extends AnnotationList {
+	private Set<OWLClass> activeOWLClassDescendants;
 
-	static int extractInt(String s) {
-		String num = s.replaceAll("\\D", "");
-		// return 0 if no digits found
-		try {
-			return num.isEmpty() ? 0 : Integer.parseInt(num);
-		} catch (NumberFormatException e) {
-			return 0;
-		}
+	public AnnotationListForOWLClass(KnowtatorView view, Set<OWLClass> activeOWLClassDescendants) {
+		super(view);
+		this.activeOWLClassDescendants = activeOWLClassDescendants;
 	}
-
-	void dispose();
 
 	@Override
-	default int compareTo(K o) {
-		if (this == o) {
-			return 0;
-		}
-		if (o == null) {
-			return 1;
-		}
-
-		int result = extractInt(this.getId()) - extractInt(o.getId());
-		if (result == 0) {
-			return this.getId().compareTo(o.getId());
+	public void setCollection(KnowtatorCollection<ConceptAnnotation> collection) {
+		//clear collection
+		((DefaultListModel) getModel()).clear();
+		this.collection = collection;
+		if (collection.size() == 0) {
+			setEnabled(false);
 		} else {
-			return result;
+			setEnabled(true);
+			collection.stream()
+					.filter(conceptAnnotation -> activeOWLClassDescendants.contains(conceptAnnotation.getOwlClass()))
+					.forEach(k -> ((DefaultListModel<ConceptAnnotation>) getModel()).addElement(k));
 		}
 	}
+
 }

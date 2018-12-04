@@ -133,17 +133,22 @@ public class Span implements TextBoundModelObject<Span>, KnowtatorXMLIO, BratSta
 
   @Override
   public int compareTo(Span span2) {
-    if (span2 == null) {
-      return 1;
+    int result = TextBoundModelObject.super.compareTo(span2);
+    if (result == 0) {
+      if (span2 == null) {
+        result = 1;
+      }
+      if (result == 0) {
+        result = getStart().compareTo(span2.getStart());
+        if (result == 0) {
+          result = getEnd().compareTo(span2.getEnd());
+        }
+        if (result == 0) {
+          result = id.compareTo(span2.getId());
+        }
+      }
     }
-    int compare = getStart().compareTo(span2.getStart());
-    if (compare == 0) {
-      compare = getEnd().compareTo(span2.getEnd());
-    }
-    if (compare == 0) {
-      compare = id.compareTo(span2.getId());
-    }
-    return compare;
+    return result;
   }
 
   private boolean equalStartAndEnd(Object object) {

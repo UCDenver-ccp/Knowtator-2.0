@@ -24,19 +24,67 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
+import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
+import javax.swing.*;
+import javax.swing.event.MouseInputAdapter;
+import java.awt.event.MouseEvent;
+
 public class AnnotationList extends KnowtatorList<ConceptAnnotation> {
-	protected AnnotationList(KnowtatorView view) {
+	private boolean shouldReact;
+
+	AnnotationList(KnowtatorView view) {
 		super(view);
+
+		shouldReact = true;
+
+		removeListSelectionListener(al);
+		KnowtatorList<ConceptAnnotation> list = this;
+		al = e -> {
+			if (list.getSelectedValue() != null) {
+				shouldReact = false;
+				ConceptAnnotation relationAnnotation = list.getSelectedValue();
+				collection.setSelection(relationAnnotation);
+				relationAnnotation.getTextSource().setSelectedConceptAnnotation(relationAnnotation);
+				shouldReact = true;
+			}
+
+		};
+		addListSelectionListener(al);
+
+		addMouseListener(new MouseInputAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1) {
+					if (list.getSelectedIndex() != -1) {
+						shouldReact = false;
+						ConceptAnnotation relationAnnotation = list.getSelectedValue();
+						collection.setSelection(relationAnnotation);
+						relationAnnotation.getTextSource().setSelectedConceptAnnotation(relationAnnotation);
+						shouldReact = true;
+					}
+				}
+			}
+		});
 	}
 
 	@Override
 	public void react() {
-		view.getModel().ifPresent(model -> model.getSelectedTextSource()
-				.ifPresent(textSource -> setCollection(textSource.getConceptAnnotations())));
-		setSelected();
+		view.getModel()
+				.filter(model -> shouldReact)
+				.ifPresent(model -> {
+					KnowtatorCollection<ConceptAnnotation> conceptAnnotations = new KnowtatorCollection<ConceptAnnotation>(null) {
+					};
+
+					model.getTextSources().forEach(textSource ->
+							textSource.getConceptAnnotations()
+									.forEach(conceptAnnotations::add));
+					setCollection(conceptAnnotations);
+					setSelected();
+
+				});
 	}
 
 	@Override

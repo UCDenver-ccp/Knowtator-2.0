@@ -36,6 +36,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Optional;
 
 public abstract class KnowtatorList<K extends ModelObject> extends JList<K> implements KnowtatorComponent, ModelListener {
 
@@ -90,21 +91,23 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K> impl
 	void setSelected() {
 		view.getModel()
 				.filter(BaseModel::isNotLoading)
-				.filter(model -> collection.getSelection().isPresent())
-				.map(model -> collection.getSelection().get())
-				.ifPresent(k -> {
-					for (int i = 0; i < getModel().getSize(); i++) {
-						K element = getModel().getElementAt(i);
-						if (element == k) {
-							removeListSelectionListener(al);
-							setSelectedIndex(i);
-							ensureIndexIsVisible(i);
-							addListSelectionListener(al);
-							return;
-						}
-					}
+				.ifPresent(model -> Optional.ofNullable(collection)
+						.filter(collection -> collection.getSelection().isPresent())
+						.map(collection -> collection.getSelection().get())
+						.ifPresent(k -> {
+							for (int i = 0; i < getModel().getSize(); i++) {
+								K element = getModel().getElementAt(i);
+								if (element == k) {
+									removeListSelectionListener(al);
+									setSelectedIndex(i);
+									ensureIndexIsVisible(i);
+									addListSelectionListener(al);
+									return;
+								}
+							}
 
-				});
+						}));
+
 	}
 
 	@Override

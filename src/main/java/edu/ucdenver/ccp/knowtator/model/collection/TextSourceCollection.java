@@ -28,6 +28,10 @@ import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.ModelListener;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
+import edu.ucdenver.ccp.knowtator.model.object.TextBoundModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -41,7 +45,7 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
-public class TextSourceCollection extends KnowtatorCollection<TextSource> implements BratStandoffIO, KnowtatorXMLIO {
+public class TextSourceCollection extends KnowtatorCollection<TextSource> implements BratStandoffIO, KnowtatorXMLIO, ModelListener {
 	@SuppressWarnings("unused")
 	private final Logger log = Logger.getLogger(TextSourceCollection.class);
 
@@ -51,6 +55,7 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 	public TextSourceCollection(BaseModel model) {
 		super(model);
 		this.model = model;
+		model.addModelListener(this);
 
 	}
 
@@ -128,5 +133,22 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 				.filter(textSource1 -> textSource1.equals(textSource))
 				.ifPresent(textSource1 -> selectPrevious());
 		super.remove(textSource);
+	}
+
+	@Override
+	public void filterChangedEvent() {
+
+	}
+
+	@Override
+	public void colorChangedEvent() {
+
+	}
+
+	@Override
+	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
+		event.getNew()
+		.filter(modelObject -> modelObject instanceof TextBoundModelObject)
+		.ifPresent(modelObject -> setSelection(((TextBoundModelObject) modelObject).getTextSource()));
 	}
 }
