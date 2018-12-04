@@ -108,6 +108,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	public void showTextSource() {
 		view.getModel()
 				.flatMap(BaseModel::getSelectedTextSource)
+				.filter(textSource -> !textSource.getContent().equals(getText()))
 				.ifPresent(textSource -> setText(textSource.getContent()));
 		refreshHighlights();
 	}
@@ -122,7 +123,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	/**
 	 * Repaints the highlights
 	 */
-	public void refreshHighlights() {
+	private void refreshHighlights() {
 		view.getModel()
 				.filter(BaseModel::isNotLoading)
 				.ifPresent(model -> {
@@ -282,12 +283,12 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 
 	@Override
 	public void colorChangedEvent() {
-		refreshHighlights();
+		showTextSource();
 	}
 
 	@Override
 	public void filterChangedEvent() {
-		refreshHighlights();
+		showTextSource();
 	}
 
 	@Override
@@ -305,7 +306,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 					.filter(modelObject -> modelObject instanceof TextSource).isPresent()) {
 				showTextSource();
 			} else {
-				refreshHighlights();
+				showTextSource();
 			}
 
 		}
