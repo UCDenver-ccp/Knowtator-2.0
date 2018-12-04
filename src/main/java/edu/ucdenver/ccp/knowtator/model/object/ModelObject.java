@@ -33,7 +33,11 @@ public interface ModelObject<K extends ModelObject> extends Comparable<K> {
 	static int extractInt(String s) {
 		String num = s.replaceAll("\\D", "");
 		// return 0 if no digits found
-		return num.isEmpty() ? 0 : Integer.parseInt(num);
+		try {
+			return num.isEmpty() ? 0 : Integer.parseInt(num);
+		} catch (NumberFormatException e) {
+			return 0;
+		}
 	}
 
 	void dispose();
