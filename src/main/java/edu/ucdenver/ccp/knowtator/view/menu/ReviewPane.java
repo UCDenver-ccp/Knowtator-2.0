@@ -43,7 +43,6 @@ import java.util.ResourceBundle;
 
 class ReviewPane extends MenuPane {
 	private JLabel owlClassLabel;
-	private JLabel spanLabel;
 	private AnnotationList annotationsForClassList;
 	private AnnotationList annotationsForSpannedTextList;
 	private JPanel contentPane;
@@ -55,6 +54,7 @@ class ReviewPane extends MenuPane {
 	private JCheckBox includePropertyDescendantsCheckBox;
 	private RelationList relationsForPropertyList;
 	private JLabel owlPropertyLabel;
+	private JTextField annotationsContainingTextTextField;
 	private HashSet<OWLClass> activeOWLClassDescendants;
 	private HashSet<OWLObjectProperty> activeOWLPropertyDescendants;
 
@@ -65,6 +65,7 @@ class ReviewPane extends MenuPane {
 		exactMatchCheckBox.addActionListener(e -> refresh());
 		refreshButton.addActionListener(e -> refresh());
 		activeOWLClassDescendants = new HashSet<>();
+
 	}
 
 	@Override
@@ -96,9 +97,6 @@ class ReviewPane extends MenuPane {
 				owlPropertyLabel.setText(model.getOWLEntityRendering(owlObjectProperty));
 			});
 
-			model.getSelectedTextSource()
-					.ifPresent(textSource -> textSource.getSelectedAnnotation()
-							.ifPresent(conceptAnnotation -> spanLabel.setText(conceptAnnotation.getSpannedText())));
 			annotationsForClassList.react();
 			annotationsForSpannedTextList.react();
 			relationsForPropertyList.react();
@@ -159,11 +157,6 @@ class ReviewPane extends MenuPane {
 		if (label1Font != null) label1.setFont(label1Font);
 		this.$$$loadLabelText$$$(label1, ResourceBundle.getBundle("log4j").getString("annotations.containing.text"));
 		panel3.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		spanLabel = new JLabel();
-		Font spanLabelFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, spanLabel.getFont());
-		if (spanLabelFont != null) spanLabel.setFont(spanLabelFont);
-		spanLabel.setText("");
-		panel3.add(spanLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final JScrollPane scrollPane1 = new JScrollPane();
 		panel3.add(scrollPane1, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
 		scrollPane1.setViewportView(annotationsForSpannedTextList);
@@ -172,6 +165,8 @@ class ReviewPane extends MenuPane {
 		if (exactMatchCheckBoxFont != null) exactMatchCheckBox.setFont(exactMatchCheckBoxFont);
 		this.$$$loadButtonText$$$(exactMatchCheckBox, ResourceBundle.getBundle("log4j").getString("exact.match"));
 		panel3.add(exactMatchCheckBox, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		annotationsContainingTextTextField = new JTextField();
+		panel3.add(annotationsContainingTextTextField, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
 		final JPanel panel4 = new JPanel();
 		panel4.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
 		splitPane1.setLeftComponent(panel4);
@@ -338,7 +333,9 @@ class ReviewPane extends MenuPane {
 				} else {
 					setEnabled(true);
 					collection.stream()
-							.filter(conceptAnnotation -> exactMatchCheckBox.isSelected() ? conceptAnnotation.getSpannedText().equals(spanLabel.getText()) : spanLabel.getText().contains(conceptAnnotation.getSpannedText()))
+							.filter(conceptAnnotation -> exactMatchCheckBox.isSelected() ?
+									conceptAnnotation.getSpannedText().equals(annotationsContainingTextTextField.getText()) :
+									annotationsContainingTextTextField.getText().contains(conceptAnnotation.getSpannedText()))
 							.forEach(k -> ((DefaultListModel<ConceptAnnotation>) getModel()).addElement(k));
 				}
 			}
@@ -361,4 +358,5 @@ class ReviewPane extends MenuPane {
 			}
 		};
 	}
+
 }

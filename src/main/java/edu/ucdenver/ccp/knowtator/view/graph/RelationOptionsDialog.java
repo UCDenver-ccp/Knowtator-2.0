@@ -153,7 +153,7 @@ class RelationOptionsDialog extends JDialog {
     String getQuantifierValue() {
         try {
             return NumberUtils.createNumber(quantifierValueTextField.getText()).toString();
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return quantifierValueTextField.getText();
         }
     }
@@ -325,4 +325,5 @@ class RelationOptionsDialog extends JDialog {
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
     }
+
 }

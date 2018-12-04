@@ -57,15 +57,6 @@
                           <text resource-bundle="log4j" key="annotations.containing.text"/>
                         </properties>
                       </component>
-                      <component id="c784b" class="javax.swing.JLabel" binding="spanLabel">
-                        <constraints>
-                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <font name="Verdana" size="12" style="0"/>
-                          <text value=""/>
-                        </properties>
-                      </component>
                       <scrollpane id="7e92c">
                         <constraints>
                           <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -87,6 +78,14 @@
                           <font name="Verdana" size="12" style="0"/>
                           <text resource-bundle="log4j" key="exact.match"/>
                         </properties>
+                      </component>
+                      <component id="85c74" class="javax.swing.JTextField" binding="annotationsContainingTextTextField">
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                            <preferred-size width="150" height="-1"/>
+                          </grid>
+                        </constraints>
+                        <properties/>
                       </component>
                     </children>
                   </grid>
@@ -222,4 +221,7 @@
       </grid>
     </children>
   </grid>
+  <inspectionSuppressions>
+    <suppress inspection="NoLabelFor" id="85c74"/>
+  </inspectionSuppressions>
 </form>
