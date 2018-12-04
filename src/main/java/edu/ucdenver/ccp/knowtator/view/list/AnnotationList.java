@@ -38,6 +38,8 @@ public class AnnotationList extends KnowtatorList<ConceptAnnotation> {
 	protected AnnotationList(KnowtatorView view) {
 		super(view);
 
+		shouldReact = true;
+
 		KnowtatorList<ConceptAnnotation> list = this;
 		al = e -> {
 			if (list.getSelectedValue() != null) {
@@ -71,15 +73,16 @@ public class AnnotationList extends KnowtatorList<ConceptAnnotation> {
 		view.getModel()
 				.filter(model -> shouldReact)
 				.ifPresent(model -> {
-			KnowtatorCollection<ConceptAnnotation> conceptAnnotations = new KnowtatorCollection<ConceptAnnotation>(null) {};
+					KnowtatorCollection<ConceptAnnotation> conceptAnnotations = new KnowtatorCollection<ConceptAnnotation>(null) {
+					};
 
-			model.getTextSources().forEach(textSource ->
-					textSource.getConceptAnnotations()
-							.forEach(conceptAnnotations::add));
-			setCollection(conceptAnnotations);
+					model.getTextSources().forEach(textSource ->
+							textSource.getConceptAnnotations()
+									.forEach(conceptAnnotations::add));
+					setCollection(conceptAnnotations);
+					setSelected();
 
-		});
-		setSelected();
+				});
 	}
 
 	@Override

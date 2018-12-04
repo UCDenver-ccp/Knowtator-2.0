@@ -164,13 +164,16 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 
 	@Override
 	public int compareTo(RelationAnnotation o) {
-		int val = model.getOWLObjectComparator().compare(property, o.getProperty());
+		int val = TextBoundModelObject.super.compareTo(o);
 		if (val == 0) {
-			val = sourceAnnotationNode.compareTo(o.getSourceAnnotationNode());
+			val = model.getOWLObjectComparator().compare(property, o.getProperty());
 			if (val == 0) {
-				val = targetAnnotationNode.compareTo(o.getTargetAnnotationNode());
+				val = sourceAnnotationNode.compareTo(o.getSourceAnnotationNode());
 				if (val == 0) {
-					val = id.compareTo(o.getId());
+					val = targetAnnotationNode.compareTo(o.getTargetAnnotationNode());
+					if (val == 0) {
+						val = id.compareTo(o.getId());
+					}
 				}
 			}
 		}

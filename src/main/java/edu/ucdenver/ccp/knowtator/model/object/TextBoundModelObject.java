@@ -27,4 +27,9 @@ package edu.ucdenver.ccp.knowtator.model.object;
 public interface TextBoundModelObject<K extends TextBoundModelObject> extends ModelObject<K> {
 	TextSource getTextSource();
 
+	@Override
+	default int compareTo(K object) {
+		return getTextSource().compareTo(object.getTextSource());
+	}
+
 }

@@ -293,9 +293,9 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 
 	@Override
 	public int compareTo(ConceptAnnotation conceptAnnotation2) {
+		int result = TextBoundModelObject.super.compareTo(conceptAnnotation2);
 		Iterator<Span> spanIterator1 = iterator();
 		Iterator<Span> spanIterator2 = conceptAnnotation2.iterator();
-		int result = 0;
 		while (result == 0 && spanIterator1.hasNext() && spanIterator2.hasNext()) {
 			Span span1 = spanIterator1.next();
 			Span span2 = spanIterator2.next();
