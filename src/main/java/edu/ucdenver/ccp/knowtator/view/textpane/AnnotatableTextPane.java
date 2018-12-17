@@ -164,7 +164,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 									scrollRectToVisible(modelToView(span1.getStart()));
 								} catch (BadLocationException e) {
 									e.printStackTrace();
-								} catch (NullPointerException ignored) {
+								} catch ( NullPointerException | ArrayIndexOutOfBoundsException ignored) {
 
 								}
 							})
