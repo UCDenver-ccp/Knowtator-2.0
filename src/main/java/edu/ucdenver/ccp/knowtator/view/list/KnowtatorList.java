@@ -50,7 +50,7 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K> impl
 			public void mouseClicked(MouseEvent e) {
 				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1) {
 					if (list.getSelectedIndex() != -1) {
-						react();
+						reactToClick();
 					}
 				}
 			}
@@ -62,7 +62,7 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K> impl
 		return (DefaultListModel<K>) getModel();
 	}
 
-	protected abstract void react();
+	protected abstract void reactToClick();
 	protected abstract Optional<K> getSelectedFromModel();
 
 	private void setSelected() {
@@ -86,8 +86,8 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K> impl
 	public void reset() {
 		dispose();
 		view.getModel().ifPresent(model -> model.addModelListener(this));
-		setSelected();
 		addElementsFromModel();
+		setSelected();
 	}
 
 	@Override
@@ -96,25 +96,25 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K> impl
 		view.getModel().ifPresent(model -> model.removeModelListener(this));
 	}
 
+	public void reactToModelEvent() {
+		((DefaultListModel) getModel()).clear();
+		addElementsFromModel();
+		setSelected();
+	}
+
 	@Override
 	public void filterChangedEvent() {
-		((DefaultListModel) getModel()).clear();
-		setSelected();
-		addElementsFromModel();
+reactToModelEvent();
 	}
 
 
 	@Override
 	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
-		((DefaultListModel) getModel()).clear();
-		setSelected();
-		addElementsFromModel();
+		reactToModelEvent();
 	}
 
 	@Override
 	public void colorChangedEvent() {
-		((DefaultListModel) getModel()).clear();
-		setSelected();
-		addElementsFromModel();
+		reactToModelEvent();
 	}
 }

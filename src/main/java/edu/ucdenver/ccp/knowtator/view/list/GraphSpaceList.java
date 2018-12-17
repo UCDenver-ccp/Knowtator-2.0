@@ -38,7 +38,7 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
 	}
 
 	@Override
-	protected void react() {
+	protected void reactToClick() {
 		Optional<GraphSpace> graphSpaceOptional = Optional.ofNullable(getSelectedValue());
 		graphSpaceOptional.ifPresent(graphSpace -> view.getModel()
 				.flatMap(BaseModel::getSelectedTextSource)

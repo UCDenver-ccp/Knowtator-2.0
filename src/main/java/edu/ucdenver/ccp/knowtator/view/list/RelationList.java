@@ -66,7 +66,7 @@ public class RelationList extends KnowtatorList<RelationAnnotation> {
 	}
 
 	@Override
-	public void react() {
+	public void reactToClick() {
 		Optional<RelationAnnotation> relationAnnotationOptional = Optional.ofNullable(getSelectedValue());
 
 		relationAnnotationOptional.ifPresent(relationAnnotation -> {
@@ -74,5 +74,10 @@ public class RelationList extends KnowtatorList<RelationAnnotation> {
 			relationAnnotation.getTextSource().setSelectedGraphSpace(relationAnnotation.getGraphSpace());
 			relationAnnotation.getGraphSpace().setSelectionCell(relationAnnotation);
 		});
+	}
+
+	@Override
+	public void reactToModelEvent() {
+
 	}
 }

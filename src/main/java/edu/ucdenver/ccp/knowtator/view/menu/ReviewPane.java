@@ -116,9 +116,9 @@ public class ReviewPane extends MenuPane {
 				owlPropertyLabel.setText(model.getOWLEntityRendering(owlObjectProperty));
 			});
 
-			annotationsForClassList.react();
-			annotationsForSpannedTextList.react();
-			relationsForPropertyList.react();
+			annotationsForClassList.reset();
+			annotationsForSpannedTextList.reset();
+			relationsForPropertyList.reset();
 		});
 
 

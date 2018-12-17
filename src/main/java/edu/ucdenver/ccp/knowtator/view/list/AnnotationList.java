@@ -38,13 +38,22 @@ public class AnnotationList extends KnowtatorList<ConceptAnnotation> {
 	}
 
 	@Override
-	public void react() {
+	public void reactToClick() {
 		Optional<ConceptAnnotation> conceptAnnotationOptional = Optional.ofNullable(getSelectedValue());
 		conceptAnnotationOptional.ifPresent(conceptAnnotation -> {
-			view.getModel().ifPresent(model -> model.getTextSources()
-					.setSelection(conceptAnnotation.getTextSource()));
+			view.getModel().ifPresent(model -> {
+				if (!model.getSelectedTextSource().map(textSource -> textSource.equals(conceptAnnotation.getTextSource())).orElse(false)) {
+					model.getTextSources()
+							.setSelection(conceptAnnotation.getTextSource());
+				}
+			});
 			conceptAnnotation.getTextSource().setSelectedConceptAnnotation(conceptAnnotation);
 		});
+	}
+
+	@Override
+	public void reactToModelEvent() {
+
 	}
 
 	@Override

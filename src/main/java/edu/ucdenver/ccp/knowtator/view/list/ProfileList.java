@@ -37,7 +37,7 @@ public class ProfileList extends KnowtatorList<Profile> {
 	}
 
 	@Override
-	protected void react() {
+	protected void reactToClick() {
 		Optional<Profile> profileOptional = Optional.ofNullable(getSelectedValue());
 		profileOptional.ifPresent(profile -> view.getModel()
 				.ifPresent(model -> model.getProfiles()
