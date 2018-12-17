@@ -98,6 +98,7 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K> impl
 
 	@Override
 	public void filterChangedEvent() {
+		((DefaultListModel) getModel()).clear();
 		setSelected();
 		addElementsFromModel();
 	}
@@ -105,12 +106,14 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K> impl
 
 	@Override
 	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
+		((DefaultListModel) getModel()).clear();
 		setSelected();
 		addElementsFromModel();
 	}
 
 	@Override
 	public void colorChangedEvent() {
+		((DefaultListModel) getModel()).clear();
 		setSelected();
 		addElementsFromModel();
 	}
