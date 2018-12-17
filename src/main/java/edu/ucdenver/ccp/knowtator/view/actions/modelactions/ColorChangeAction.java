@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
@@ -43,7 +43,7 @@ public class ColorChangeAction extends AbstractKnowtatorAction {
 	private final Set<OWLClass> owlClasses;
 	private final Color color;
 
-	public ColorChangeAction(BaseModel model, Profile profile, Set<OWLClass> owlClasses, Color color) {
+	public ColorChangeAction(KnowtatorModel model, Profile profile, Set<OWLClass> owlClasses, Color color) {
 		super(model, "Change color");
 		this.profile = profile;
 		this.owlClasses = owlClasses;

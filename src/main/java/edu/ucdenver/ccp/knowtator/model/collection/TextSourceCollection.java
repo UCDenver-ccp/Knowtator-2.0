@@ -27,7 +27,7 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
@@ -49,10 +49,10 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 	@SuppressWarnings("unused")
 	private final Logger log = Logger.getLogger(TextSourceCollection.class);
 
-	private final BaseModel model;
+	private final KnowtatorModel model;
 
 
-	public TextSourceCollection(BaseModel model) {
+	public TextSourceCollection(KnowtatorModel model) {
 		super(model);
 		this.model = model;
 		model.addModelListener(this);

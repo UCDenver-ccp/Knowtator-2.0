@@ -24,8 +24,8 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.FilterType;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
 
@@ -37,7 +37,7 @@ public class FilterAction extends AbstractKnowtatorAction {
 	private final boolean previousIsFilter;
 	private final FilterType filterType;
 
-	public FilterAction(BaseModel model, FilterType filterType, boolean isFilter) {
+	public FilterAction(KnowtatorModel model, FilterType filterType, boolean isFilter) {
 		super(model, "Change filterType");
 		this.filterType = filterType;
 		this.isFilter = isFilter;

@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
@@ -49,7 +49,7 @@ public class SpanActions {
         private boolean spanStartChanged;
         private boolean spanEndChanged;
 
-        public ModifySpanAction(BaseModel model, String startOrEnd, String growOrShrink, Span span) {
+        public ModifySpanAction(KnowtatorModel model, String startOrEnd, String growOrShrink, Span span) {
             super(model, "Modify span");
             this.startOrEnd = startOrEnd;
             this.growOrShrink = growOrShrink;

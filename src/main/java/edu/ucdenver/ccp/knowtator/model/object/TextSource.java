@@ -30,6 +30,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
@@ -66,7 +67,7 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 	private final GraphSpaceCollection graphSpaceCollection;
 	private String id;
 
-	public TextSource(BaseModel model, File saveFile, String textFileName) {
+	public TextSource(KnowtatorModel model, File saveFile, String textFileName) {
 		this.model = model;
 		this.saveFile = saveFile == null ? new File(model.getAnnotationsLocation().getAbsolutePath(), String.format("%s.xml", textFileName.replace(".txt", ""))) : saveFile;
 		this.conceptAnnotationCollection = new ConceptAnnotationCollection(model, this);

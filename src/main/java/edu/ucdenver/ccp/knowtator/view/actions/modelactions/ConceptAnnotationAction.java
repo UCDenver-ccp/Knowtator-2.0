@@ -25,7 +25,7 @@
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
 import com.mxgraph.util.mxEvent;
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
@@ -37,7 +37,7 @@ public class ConceptAnnotationAction extends AbstractKnowtatorCollectionAction<C
 
 	private final TextSource textSource;
 
-	public ConceptAnnotationAction(BaseModel model, CollectionActionType actionType, TextSource textSource) {
+	public ConceptAnnotationAction(KnowtatorModel model, CollectionActionType actionType, TextSource textSource) {
 		super(model, actionType, "concept annotation", textSource.getConceptAnnotations());
 		this.textSource = textSource;
 	}

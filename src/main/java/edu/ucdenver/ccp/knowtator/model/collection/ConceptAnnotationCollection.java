@@ -27,8 +27,8 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.FilterType;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.*;
@@ -52,11 +52,11 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(ConceptAnnotationCollection.class);
 
-	private final BaseModel model;
+	private final KnowtatorModel model;
 
 	private final TextSource textSource;
 
-	public ConceptAnnotationCollection(BaseModel model, TextSource textSource) {
+	public ConceptAnnotationCollection(KnowtatorModel model, TextSource textSource) {
 		super(model);
 		this.model = model;
 		this.textSource = textSource;

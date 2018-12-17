@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
@@ -46,7 +46,7 @@ import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActio
 public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 	private final String profileId;
 
-	public ProfileAction(BaseModel model, CollectionActionType actionType, String profileId) {
+	public ProfileAction(KnowtatorModel model, CollectionActionType actionType, String profileId) {
 		super(model, actionType, "Add profile", model.getProfileCollection());
 		this.profileId = profileId;
 	}

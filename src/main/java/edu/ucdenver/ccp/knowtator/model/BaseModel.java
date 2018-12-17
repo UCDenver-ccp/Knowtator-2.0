@@ -64,8 +64,8 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 	private final Map<FilterType, Boolean> filters;
 	private Selection selection;
 
-	private final TextSourceCollection textSources;
-	private final ProfileCollection profiles;
+	TextSourceCollection textSources;
+	ProfileCollection profiles;
 
 	private final Map<String, ModelObject> idRegistry;
 	private boolean loading;
@@ -108,11 +108,6 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 		} else {
 			throw new IOException();
 		}
-
-		textSources = new TextSourceCollection(this);
-		profiles = new ProfileCollection(this);
-
-
 	}
 
 	@Override

@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.collection;
 
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
@@ -51,7 +51,7 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject> e
 	protected final KnowtatorCollection<K> collection;
 	protected K object;
 
-	protected AbstractKnowtatorCollectionAction(BaseModel model, CollectionActionType actionType, String presentationName, KnowtatorCollection<K> collection) {
+	protected AbstractKnowtatorCollectionAction(KnowtatorModel model, CollectionActionType actionType, String presentationName, KnowtatorCollection<K> collection) {
 		super(model, String.format("%s %s", actionType, presentationName));
 		this.collection = collection;
 		this.actionType = actionType;
