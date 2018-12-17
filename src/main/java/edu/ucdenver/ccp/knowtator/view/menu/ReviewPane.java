@@ -73,14 +73,32 @@ public class ReviewPane extends MenuPane {
 		exactMatchCheckBox.addActionListener(e -> refresh());
 		refreshButton.addActionListener(e -> refresh());
 
-		nextAnnotationForOWLClassButton.addActionListener(e -> annotationsForClassList.setSelectedIndex(Math.min(annotationsForClassList.getSelectedIndex() + 1, annotationsForClassList.getModel().getSize() - 1)));
-		previousAnnotationForOWLClassButton.addActionListener(e -> annotationsForClassList.setSelectedIndex(Math.max(annotationsForClassList.getSelectedIndex() - 1, 0)));
+		nextAnnotationForOWLClassButton.addActionListener(e -> {
+			annotationsForClassList.setSelectedIndex(Math.min(annotationsForClassList.getSelectedIndex() + 1, annotationsForClassList.getModel().getSize() - 1));
+			annotationsForClassList.reactToClick();
+		});
+		previousAnnotationForOWLClassButton.addActionListener(e -> {
+			annotationsForClassList.setSelectedIndex(Math.max(annotationsForClassList.getSelectedIndex() - 1, 0));
+			annotationsForClassList.reactToClick();
+		});
 
-		nextAnnotationForTextButton.addActionListener(e -> annotationsForSpannedTextList.setSelectedIndex(Math.min(annotationsForSpannedTextList.getSelectedIndex() + 1, annotationsForSpannedTextList.getModel().getSize() - 1)));
-		previousAnnotationForTextButton.addActionListener(e -> annotationsForSpannedTextList.setSelectedIndex(Math.max(annotationsForSpannedTextList.getSelectedIndex() - 1, 0)));
+		nextAnnotationForTextButton.addActionListener(e -> {
+			annotationsForSpannedTextList.setSelectedIndex(Math.min(annotationsForSpannedTextList.getSelectedIndex() + 1, annotationsForSpannedTextList.getModel().getSize() - 1));
+			annotationsForSpannedTextList.reactToClick();
+		});
+		previousAnnotationForTextButton.addActionListener(e -> {
+			annotationsForSpannedTextList.setSelectedIndex(Math.max(annotationsForSpannedTextList.getSelectedIndex() - 1, 0));
+			annotationsForSpannedTextList.reactToClick();
+		});
 
-		nextRelationForPropertyButton.addActionListener(e -> relationsForPropertyList.setSelectedIndex(Math.min(relationsForPropertyList.getSelectedIndex() + 1, relationsForPropertyList.getModel().getSize() - 1)));
-		previousRelationForPropertyButton.addActionListener(e -> relationsForPropertyList.setSelectedIndex(Math.max(relationsForPropertyList.getSelectedIndex() - 1, 0)));
+		nextRelationForPropertyButton.addActionListener(e -> {
+			relationsForPropertyList.setSelectedIndex(Math.min(relationsForPropertyList.getSelectedIndex() + 1, relationsForPropertyList.getModel().getSize() - 1));
+			relationsForPropertyList.reactToClick();
+		});
+		previousRelationForPropertyButton.addActionListener(e -> {
+			relationsForPropertyList.setSelectedIndex(Math.max(relationsForPropertyList.getSelectedIndex() - 1, 0));
+			relationsForPropertyList.reactToClick();
+		});
 
 	}
 
