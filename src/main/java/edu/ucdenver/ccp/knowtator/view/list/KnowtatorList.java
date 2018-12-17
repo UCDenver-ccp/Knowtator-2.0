@@ -98,17 +98,20 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K> impl
 
 	@Override
 	public void filterChangedEvent() {
-		react();
+		setSelected();
+		addElementsFromModel();
 	}
 
 
 	@Override
 	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
-		react();
+		setSelected();
+		addElementsFromModel();
 	}
 
 	@Override
 	public void colorChangedEvent() {
-		react();
+		setSelected();
+		addElementsFromModel();
 	}
 }
