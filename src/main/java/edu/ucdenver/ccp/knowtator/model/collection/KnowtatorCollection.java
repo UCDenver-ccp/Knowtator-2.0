@@ -29,8 +29,8 @@ import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 
 import java.util.TreeSet;
 
-public abstract class KnowtatorCollection<K extends ModelObject> extends SelectableCollection<K> {
-	protected KnowtatorCollection(BaseModel model) {
+public class KnowtatorCollection<K extends ModelObject> extends SelectableCollection<K> {
+	public KnowtatorCollection(BaseModel model) {
 		super(model, new TreeSet<>());
     }
 }

@@ -114,7 +114,7 @@ public abstract class OWLModel extends BaseModel implements Serializable {
 	}
 
 	private Optional<String> getAnnotationLiteral(OWLAnnotationAssertionAxiom owlAnnotationAssertionAxiom) {
-		return Optional.of(owlAnnotationAssertionAxiom.getValue().asLiteral().transform(OWLLiteral::getLiteral).get());
+		return Optional.ofNullable(owlAnnotationAssertionAxiom.getValue().asLiteral().transform(OWLLiteral::getLiteral).orNull());
 	}
 
 	public Optional<OWLObjectProperty> getOWLObjectPropertyByID(@Nonnull String propertyID) {

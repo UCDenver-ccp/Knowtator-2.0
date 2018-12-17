@@ -98,7 +98,7 @@ public class TestingHelpers {
         int actualGraphSpaces = controller.getTextSources().stream().mapToInt(
                 TextSource::getNumberOfGraphSpaces).sum();
         int actualProfiles = controller.getNumberOfProfiles();
-        int actualHighlighters = controller.getProfileCollection().stream().mapToInt(profile -> profile.getColors().size()).sum();
+        int actualHighlighters = controller.getProfiles().stream().mapToInt(profile -> profile.getColors().size()).sum();
         int actualAnnotationNodes = controller.getTextSources().stream().mapToInt(
 		        textSource -> textSource.getGraphSpaces().stream().mapToInt(
                         graphSpace1 -> graphSpace1.getChildVertices(graphSpace1.getDefaultParent()).length)

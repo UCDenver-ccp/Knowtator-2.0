@@ -24,75 +24,55 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
+import com.mxgraph.view.mxGraph;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.RelationAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 
-import javax.swing.*;
-import javax.swing.event.MouseInputAdapter;
-import java.awt.event.MouseEvent;
+import java.util.Optional;
+import java.util.Set;
 
 public class RelationList extends KnowtatorList<RelationAnnotation> {
-	private boolean shouldReact;
+	private final Set<OWLObjectProperty> activeOWLPropertyDescendants;
 
-	protected RelationList(KnowtatorView view) {
+	public RelationList(KnowtatorView view, Set<OWLObjectProperty> activeOWLPropertyDescendants) {
 		super(view);
 
-		shouldReact = true;
+		this.activeOWLPropertyDescendants = activeOWLPropertyDescendants;
+	}
 
-		KnowtatorList<RelationAnnotation> list = this;
+	@Override
+	protected Optional<RelationAnnotation> getSelectedFromModel() {
+		return view.getModel()
+				.filter(BaseModel::isNotLoading)
+				.flatMap(BaseModel::getSelectedTextSource)
+				.flatMap(TextSource::getSelectedGraphSpace)
+				.map(mxGraph::getSelectionCell)
+				.filter(cell -> cell instanceof RelationAnnotation)
+				.map(cell -> (RelationAnnotation) cell);
+	}
 
-		removeListSelectionListener(al);
-		al = e -> {
-			if (list.getSelectedValue() != null) {
-				shouldReact = false;
-				RelationAnnotation relationAnnotation = list.getSelectedValue();
-				collection.setSelection(relationAnnotation);
-				relationAnnotation.getTextSource().setSelectedGraphSpace(relationAnnotation.getGraphSpace());
-				relationAnnotation.getGraphSpace().setSelectionCell(relationAnnotation);
-				shouldReact = true;
-			}
-		};
-		addListSelectionListener(al);
-
-		addMouseListener(new MouseInputAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1) {
-					if (list.getSelectedIndex() != -1) {
-						shouldReact = false;
-						RelationAnnotation relationAnnotation = list.getSelectedValue();
-						collection.setSelection(relationAnnotation);
-						relationAnnotation.getTextSource().setSelectedGraphSpace(relationAnnotation.getGraphSpace());
-						relationAnnotation.getGraphSpace().setSelectionCell(relationAnnotation);
-						shouldReact = true;
-					}
-				}
-			}
-		});
+	@Override
+	public void addElementsFromModel() {
+		view.getModel()
+				.ifPresent(model -> model.getTextSources()
+						.forEach(textSource -> textSource.getGraphSpaces()
+								.forEach(graphSpace -> graphSpace.getRelationAnnotations().stream()
+										.filter(relationAnnotation -> activeOWLPropertyDescendants.contains(relationAnnotation.getProperty()))
+										.forEach(relationAnnotation -> getDefaultListModel()
+												.addElement(relationAnnotation)))));
 	}
 
 	@Override
 	public void react() {
-		KnowtatorCollection<RelationAnnotation> relationAnnotations = new KnowtatorCollection<RelationAnnotation>(null) {
-		};
-		view.getModel()
-				.filter(model -> shouldReact)
-				.ifPresent(model -> {
-					model.getTextSources()
-							.stream().forEach(textSource ->
-							textSource.getGraphSpaces().stream()
-									.map(GraphSpace::getRelationAnnotations).forEach(relationAnnotations1 -> relationAnnotations1.forEach(relationAnnotations::add)));
-					setCollection(relationAnnotations);
-					setSelected();
+		Optional<RelationAnnotation> relationAnnotationOptional = Optional.ofNullable(getSelectedValue());
 
-				});
-	}
-
-	@Override
-	public void reset() {
-		super.reset();
-		react();
+		relationAnnotationOptional.ifPresent(relationAnnotation -> {
+			view.getModel().ifPresent(model -> model.getTextSources().setSelection(relationAnnotation.getTextSource()));
+			relationAnnotation.getTextSource().setSelectedGraphSpace(relationAnnotation.getGraphSpace());
+			relationAnnotation.getGraphSpace().setSelectionCell(relationAnnotation);
+		});
 	}
 }

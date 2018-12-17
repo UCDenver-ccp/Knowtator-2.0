@@ -27,8 +27,6 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.object.RelationAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.list.AnnotationList;
 import edu.ucdenver.ccp.knowtator.view.list.AnnotationListForOWLClass;
@@ -364,26 +362,9 @@ public class ReviewPane extends MenuPane {
 		annotationsContainingTextTextField = new JTextField();
 		exactMatchCheckBox = new JCheckBox();
 
-		ReviewPane reviewPane = this;
 		annotationsForClassList = new AnnotationListForOWLClass(view, activeOWLClassDescendants);
 		annotationsForSpannedTextList = new AnnotationListForSpannedText(view, exactMatchCheckBox, annotationsContainingTextTextField);
-
-		relationsForPropertyList = new RelationList(view) {
-			@Override
-			public void setCollection(KnowtatorCollection<RelationAnnotation> collection) {
-				//clear collection
-				((DefaultListModel) getModel()).clear();
-				this.collection = collection;
-				if (collection.size() == 0) {
-					setEnabled(false);
-				} else {
-					setEnabled(true);
-					collection.stream()
-							.filter(relationAnnotation -> reviewPane.activeOWLPropertyDescendants.contains(relationAnnotation.getProperty()))
-							.forEach(k -> ((DefaultListModel<RelationAnnotation>) getModel()).addElement(k));
-				}
-			}
-		};
+		relationsForPropertyList = new RelationList(view, activeOWLPropertyDescendants);
 	}
 
 }

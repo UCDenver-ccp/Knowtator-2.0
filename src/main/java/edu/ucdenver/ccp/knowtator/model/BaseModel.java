@@ -242,7 +242,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 		}
 	}
 
-	public ProfileCollection getProfileCollection() {
+	public ProfileCollection getProfiles() {
 		return profiles;
 	}
 

@@ -24,8 +24,13 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+
+import java.util.Optional;
 
 public class SpanList extends KnowtatorList<Span> {
 
@@ -36,17 +41,30 @@ public class SpanList extends KnowtatorList<Span> {
 
 	@Override
 	protected void react() {
-		view.getModel().ifPresent(model ->
-				model.getSelectedTextSource()
-				.ifPresent(textSource -> textSource.getSelectedAnnotation()
-						.ifPresent(this::setCollection)));
+		Optional<Span> spanOptional = Optional.ofNullable(getSelectedValue());
+		spanOptional.ifPresent(span -> {
+			view.getModel().ifPresent(model -> model.getTextSources().setSelection(span.getTextSource()));
+			span.getTextSource().setSelectedConceptAnnotation(span.getConceptAnnotation());
+			span.getConceptAnnotation().setSelection(span);
+		});
 
-		setSelected();
 	}
 
 	@Override
-	public void reset() {
-		super.reset();
-		react();
+	protected void addElementsFromModel() {
+		view.getModel().flatMap(BaseModel::getSelectedTextSource)
+				.flatMap(TextSource::getSelectedAnnotation)
+				.ifPresent(conceptAnnotation -> conceptAnnotation
+						.forEach(span -> getDefaultListModel()
+								.addElement(span)));
+	}
+
+
+
+	@Override
+	protected Optional<Span> getSelectedFromModel() {
+		return view.getModel().flatMap(BaseModel::getSelectedTextSource)
+				.flatMap(TextSource::getSelectedAnnotation)
+				.flatMap(ConceptAnnotation::getSelection);
 	}
 }

@@ -47,7 +47,7 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 	private final String profileId;
 
 	public ProfileAction(KnowtatorModel model, CollectionActionType actionType, String profileId) {
-		super(model, actionType, "Add profile", model.getProfileCollection());
+		super(model, actionType, "Add profile", model.getProfiles());
 		this.profileId = profileId;
 	}
 

@@ -24,25 +24,37 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
+import java.util.Optional;
+
 public class ProfileList extends KnowtatorList<Profile> {
+
 	public ProfileList(KnowtatorView view) {
 		super(view);
 	}
 
 	@Override
 	protected void react() {
-		view.getModel().ifPresent(model -> setCollection(model.getProfileCollection()));
-		setSelected();
+		Optional<Profile> profileOptional = Optional.ofNullable(getSelectedValue());
+		profileOptional.ifPresent(profile -> view.getModel()
+				.ifPresent(model -> model.getProfiles()
+						.setSelection(profile)));
 	}
 
 	@Override
-	public void reset() {
-		super.reset();
-		react();
+	protected void addElementsFromModel() {
+		view.getModel().ifPresent(model -> model.getProfiles()
+				.forEach(profile -> getDefaultListModel().addElement(profile)));
 	}
+
+	@Override
+	protected Optional<Profile> getSelectedFromModel() {
+		return view.getModel().flatMap(BaseModel::getSelectedProfile);
+	}
+
 
 
 	// I am overriding here because the base method adds this as a collection listener to its collection,

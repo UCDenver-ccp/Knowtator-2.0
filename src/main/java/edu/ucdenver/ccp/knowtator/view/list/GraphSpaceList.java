@@ -25,65 +25,37 @@
 package edu.ucdenver.ccp.knowtator.view.list;
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
-import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
-import edu.ucdenver.ccp.knowtator.model.collection.ListenableCollection;
-import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
-import javax.swing.*;
-import javax.swing.event.MouseInputAdapter;
-import java.awt.event.MouseEvent;
-import java.util.stream.Collector;
+import java.util.Optional;
 
 public class GraphSpaceList extends KnowtatorList<GraphSpace> {
 	public GraphSpaceList(KnowtatorView view) {
 		super(view);
 
-		KnowtatorList<GraphSpace> list = this;
-		addMouseListener(new MouseInputAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1) {
-					if (list.getSelectedIndex() != -1) {
-						int index = list.locationToIndex(e.getPoint());
-						setSelectedIndex(index);
-						view.getModel()
-								.flatMap(BaseModel::getSelectedTextSource)
-								.ifPresent(textSource -> textSource.setSelectedGraphSpace(list.getSelectedValue()));
-					}
-				}
-			}
-		});
-
 	}
 
 	@Override
 	protected void react() {
-		view.getModel().ifPresent(model -> model.getSelectedTextSource()
-				.ifPresent(textSource -> textSource.getSelectedAnnotation()
-						.ifPresent(this::setCollection)));
-		setSelected();
-	}
-
-	private void setCollection(ConceptAnnotation conceptAnnotation) {
-		if (conceptAnnotation == null) {
-			dispose();
-		} else {
-			setCollection(conceptAnnotation.getTextSource().getGraphSpaces()
-					.stream().filter(graphSpace -> graphSpace.containsAnnotation(conceptAnnotation)).collect(Collector.of(
-							() -> new GraphSpaceCollection(null, conceptAnnotation.getTextSource()),
-							ListenableCollection::add,
-							(graphSpace1, graphSpace2) -> graphSpace1)));
-
-			setSelected();
-		}
-
+		Optional<GraphSpace> graphSpaceOptional = Optional.ofNullable(getSelectedValue());
+		graphSpaceOptional.ifPresent(graphSpace -> view.getModel()
+				.flatMap(BaseModel::getSelectedTextSource)
+				.ifPresent(textSource -> textSource.setSelectedGraphSpace(graphSpace)));
 	}
 
 	@Override
-	public void reset() {
-		super.reset();
-		react();
+	protected Optional<GraphSpace> getSelectedFromModel() {
+		return view.getModel().flatMap(BaseModel::getSelectedTextSource)
+				.flatMap(TextSource::getSelectedGraphSpace);
+	}
+
+	@Override
+	protected void addElementsFromModel() {
+		view.getModel().flatMap(BaseModel::getSelectedTextSource)
+				.ifPresent(textSource -> textSource.getGraphSpaces().stream()
+				.filter(graphSpace -> textSource.getSelectedAnnotation().map(graphSpace::containsAnnotation).orElse(false))
+				.forEach(graphSpace -> getDefaultListModel().addElement(graphSpace)));
 	}
 }

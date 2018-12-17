@@ -24,48 +24,33 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Optional;
 
 public abstract class KnowtatorList<K extends ModelObject> extends JList<K> implements KnowtatorComponent, ModelListener {
 
-	protected KnowtatorCollection<K> collection;
-	ListSelectionListener al;
 	KnowtatorView view;
 
 	KnowtatorList(KnowtatorView view) {
 		this.view = view;
 		setModel(new DefaultListModel<>());
 
-		al = e -> {
-			JList jList = (JList) e.getSource();
-			if (jList.getSelectedValue() != null) {
-				collection.setSelection(this.getSelectedValue());
-			}
-		};
-
-		addListSelectionListener(al);
-
 		KnowtatorList<K> list = this;
+
 		addMouseListener(new MouseInputAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1) {
 					if (list.getSelectedIndex() != -1) {
-						int index = list.locationToIndex(e.getPoint());
-						setSelectedIndex(index);
-						collection.setSelection(list.getSelectedValue());
+						react();
 					}
 				}
 			}
@@ -73,47 +58,36 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K> impl
 
 	}
 
+	DefaultListModel<K> getDefaultListModel() {
+		return (DefaultListModel<K>) getModel();
+	}
+
 	protected abstract void react();
+	protected abstract Optional<K> getSelectedFromModel();
 
-	protected void setCollection(KnowtatorCollection<K> collection) {
-		//clear collection
-		((DefaultListModel) getModel()).clear();
-		this.collection = collection;
-		if (collection.size() == 0) {
-			setEnabled(false);
-		} else {
-			setEnabled(true);
-			collection.forEach(k -> ((DefaultListModel<K>) getModel()).addElement(k));
-		}
-	}
-
-
-	void setSelected() {
-		view.getModel()
-				.filter(BaseModel::isNotLoading)
-				.ifPresent(model -> Optional.ofNullable(collection)
-						.filter(collection -> collection.getSelection().isPresent())
-						.map(collection -> collection.getSelection().get())
-						.ifPresent(k -> {
-							for (int i = 0; i < getModel().getSize(); i++) {
-								K element = getModel().getElementAt(i);
-								if (element == k) {
-									removeListSelectionListener(al);
-									setSelectedIndex(i);
-									ensureIndexIsVisible(i);
-									addListSelectionListener(al);
-									return;
-								}
-							}
-
-						}));
+	private void setSelected() {
+		getSelectedFromModel()
+				.ifPresent(cell -> {
+					for (int i = 0; i < getModel().getSize(); i++) {
+						K element = getModel().getElementAt(i);
+						if (element == cell) {
+							setSelectedIndex(i);
+							ensureIndexIsVisible(i);
+							return;
+						}
+					}
+				});
 
 	}
+
+	abstract void addElementsFromModel();
 
 	@Override
 	public void reset() {
 		dispose();
 		view.getModel().ifPresent(model -> model.addModelListener(this));
+		setSelected();
+		addElementsFromModel();
 	}
 
 	@Override

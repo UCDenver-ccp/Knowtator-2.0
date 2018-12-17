@@ -24,12 +24,9 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.semanticweb.owlapi.model.OWLClass;
 
-import javax.swing.*;
 import java.util.Set;
 
 public class AnnotationListForOWLClass extends AnnotationList {
@@ -41,18 +38,11 @@ public class AnnotationListForOWLClass extends AnnotationList {
 	}
 
 	@Override
-	public void setCollection(KnowtatorCollection<ConceptAnnotation> collection) {
-		//clear collection
-		((DefaultListModel) getModel()).clear();
-		this.collection = collection;
-		if (collection.size() == 0) {
-			setEnabled(false);
-		} else {
-			setEnabled(true);
-			collection.stream()
-					.filter(conceptAnnotation -> activeOWLClassDescendants.contains(conceptAnnotation.getOwlClass()))
-					.forEach(k -> ((DefaultListModel<ConceptAnnotation>) getModel()).addElement(k));
-		}
+	void addElementsFromModel() {
+		view.getModel().ifPresent(model -> model.getTextSources()
+				.forEach(textSource -> textSource.getConceptAnnotations().stream()
+						.filter(conceptAnnotation -> activeOWLClassDescendants.contains(conceptAnnotation.getOwlClass()))
+						.forEach(conceptAnnotation -> getDefaultListModel().addElement(conceptAnnotation))));
 	}
 
 }
