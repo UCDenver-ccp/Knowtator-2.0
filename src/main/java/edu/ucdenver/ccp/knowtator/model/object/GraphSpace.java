@@ -434,7 +434,11 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 				((AnnotationNode) cell).dispose();
 			}
 		});
-		removeCells(getChildCells(getDefaultParent()));
+		Arrays.asList(getChildCells(getDefaultParent())).forEach(o -> {
+			if (o instanceof RelationAnnotation || o instanceof AnnotationNode) {
+				((ModelObject) o).dispose();
+			}
+		});
 		baseModel.removeOntologyChangeListener(this);
 		baseModel.removeOWLModelManagerListener(this);
 	}
