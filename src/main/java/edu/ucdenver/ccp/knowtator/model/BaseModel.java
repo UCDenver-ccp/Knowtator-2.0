@@ -324,11 +324,13 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 	public void load() throws IOException {
 		try {
 			loading = true;
+			setRenderRDFSLabel();
 			profiles.load();
 			textSources.load();
 			profiles.first().ifPresent(profiles::setSelection);
 			textSources.first().ifPresent(textSources::setSelection);
 		} finally {
+			resetRenderRDFS();
 			loading = false;
 		}
 	}
