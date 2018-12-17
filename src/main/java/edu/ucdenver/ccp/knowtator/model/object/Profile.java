@@ -160,8 +160,8 @@ public class Profile implements ModelObject<Profile>, Savable, KnowtatorXMLIO {
 			Color color = new Color((float) c.getRed() / 255, (float) c.getGreen() / 255, (float) c.getBlue() / 255, 1f);
 			colorMap.put(classID, color);
 		}
-		model.getOWLClassesByIDs(colorMap.keySet())
-				.forEach((classID, owlClass) -> addColor(owlClass, colorMap.get(classID)));
+		model.getOWLClassesByIDs(colorMap.keySet()).entrySet().parallelStream()
+				.forEach(entry -> addColor(entry.getValue(), colorMap.get(entry.getKey())));
 	}
 
 	@Override

@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class OWLModel extends BaseModel implements Serializable {
 	@SuppressWarnings("unused")
@@ -73,9 +74,8 @@ public abstract class OWLModel extends BaseModel implements Serializable {
 				Optional<OWLClass> owlClassOptional = ontology.getClassesInSignature().stream()
 						.filter(owlClass -> owlClass.getIRI().getShortForm().equals(classID) ||
 								ontology.getAnnotationAssertionAxioms(owlClass.getIRI()).stream()
-										.anyMatch(owlAnnotationAssertionAxiom -> owlAnnotationAssertionAxiom
-												.getValue().asLiteral().transform(OWLLiteral::getLiteral)
-												.transform(label -> label.equals(classID)).or(false)))
+										.anyMatch(owlAnnotationAssertionAxiom -> getAnnotationLiteral(owlAnnotationAssertionAxiom)
+												.map(label -> label.equals(classID)).orElse(false)))
 						.findFirst();
 				if (owlClassOptional.isPresent()) {
 					return owlClassOptional;
@@ -86,11 +86,35 @@ public abstract class OWLModel extends BaseModel implements Serializable {
 
 	}
 
+	private List<String> getAnnotationLiterals(OWLOntology ontology, OWLClass owlClass) {
+		return ontology.getAnnotationAssertionAxioms(owlClass.getIRI()).stream()
+				.map(this::getAnnotationLiteral)
+				.filter(Optional::isPresent)
+				.map(Optional::get).collect(Collectors.toList());
+	}
+
 	public Map<String, OWLClass> getOWLClassesByIDs(Set<String> classIDs) {
 		Map<String, OWLClass> owlClassList = new HashMap<>();
-		classIDs.forEach(classID -> getOWLClassByID(classID)
-				.ifPresent(owlClass -> owlClassList.put(classID, owlClass)));
+		if (owlWorkSpace.isPresent()) {
+			classIDs.forEach(classID -> getOWLClassByID(classID)
+					.ifPresent(owlClass -> owlClassList.put(classID, owlClass)));
+		} else {
+			owlOntologyManager.getOntologies()
+					.forEach(ontology -> ontology.getClassesInSignature().parallelStream()
+							.forEach(owlClass -> {
+								for (String id : classIDs) {
+									if (id.equals(owlClass.getIRI().getShortForm()) || getAnnotationLiterals(ontology, owlClass).contains(id)) {
+										owlClassList.put(id, owlClass);
+										break;
+									}
+								}
+							}));
+		}
 		return owlClassList;
+	}
+
+	private Optional<String> getAnnotationLiteral(OWLAnnotationAssertionAxiom owlAnnotationAssertionAxiom) {
+		return Optional.of(owlAnnotationAssertionAxiom.getValue().asLiteral().transform(OWLLiteral::getLiteral).get());
 	}
 
 	public Optional<OWLObjectProperty> getOWLObjectPropertyByID(@Nonnull String propertyID) {
