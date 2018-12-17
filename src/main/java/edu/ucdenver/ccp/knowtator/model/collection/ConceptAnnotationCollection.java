@@ -67,11 +67,8 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
 	@Override
 	public void remove(ConceptAnnotation conceptAnnotationToRemove) {
-		for (GraphSpace graphSpace : textSource.getGraphSpaces()) {
-			Object[] cells = graphSpace.getVerticesForAnnotation(conceptAnnotationToRemove).toArray();
-			graphSpace.removeCells(cells);
-
-		}
+		textSource.getGraphSpaces().forEach(graphSpace ->
+				graphSpace.removeCells(graphSpace.getAnnotationNodes(conceptAnnotationToRemove).toArray()));
 		super.remove(conceptAnnotationToRemove);
 	}
 
@@ -167,6 +164,19 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 	@Override
 	public void setSelection(ConceptAnnotation selection) {
 		super.setSelection(selection);
+
+		getSelection().ifPresent(conceptAnnotation -> {
+			if (!textSource.getSelectedGraphSpace().isPresent()) {
+				textSource.getGraphSpaces().stream()
+						.filter(graphSpace -> graphSpace.containsAnnotation(conceptAnnotation))
+						.findFirst().ifPresent(textSource::setSelectedGraphSpace);
+			}
+			textSource.getSelectedGraphSpace()
+					.ifPresent(graphSpace ->
+							graphSpace.setSelectionCells(graphSpace
+									.getAnnotationNodes(conceptAnnotation).toArray()));
+		});
+
 		getSelection().ifPresent(conceptAnnotation -> model.setSelectedOWLEntity(conceptAnnotation.getOwlClass()));
 	}
 
@@ -323,16 +333,14 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 		annotationToSlotMap.forEach((annotation, slot) -> {
 					String propertyID = ((Element) slot.getElementsByTagName(OldKnowtatorXMLTags.MENTION_SLOT).item(0)).getAttribute(OldKnowtatorXMLAttributes.ID);
 
-					List<Object> vertices = oldKnowtatorGraphSpace.getVerticesForAnnotation(annotation);
-					AnnotationNode source = oldKnowtatorGraphSpace.makeOrGetAnnotationNode(annotation, vertices);
+					AnnotationNode source = oldKnowtatorGraphSpace.getAnnotationNodeForConceptAnnotation(annotation);
 
 					for (Node slotMentionValueNode : OldKnowtatorUtil.asList(slot.getElementsByTagName(OldKnowtatorXMLTags.COMPLEX_SLOT_MENTION_VALUE))) {
 						Element slotMentionValueElement = (Element) slotMentionValueNode;
 						String value = slotMentionValueElement.getAttribute(OldKnowtatorXMLAttributes.VALUE);
-						get(value).map(conceptAnnotation -> {
-							List<Object> vertices1 = oldKnowtatorGraphSpace.getVerticesForAnnotation(conceptAnnotation);
-							return oldKnowtatorGraphSpace.makeOrGetAnnotationNode(conceptAnnotation, vertices1);
-						}).ifPresent(target -> model.getOWLObjectPropertyByID(propertyID).ifPresent(property -> oldKnowtatorGraphSpace.addTriple(source, target, null, model.getDefaultProfile(), property, "", "", false, "")));
+						get(value).map(oldKnowtatorGraphSpace::getAnnotationNodeForConceptAnnotation)
+								.ifPresent(target -> model.getOWLObjectPropertyByID(propertyID)
+										.ifPresent(property -> oldKnowtatorGraphSpace.addTriple(source, target, null, model.getDefaultProfile(), property, "", "", false, "")));
 
 					}
 				}

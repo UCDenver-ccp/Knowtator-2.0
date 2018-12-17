@@ -37,7 +37,6 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
-import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.event.EventType;
@@ -56,7 +55,7 @@ import java.io.Writer;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLOntologyChangeListener, TextBoundModelObject<GraphSpace>, KnowtatorXMLIO, BratStandoffIO, ModelListener {
+public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLOntologyChangeListener, TextBoundModelObject<GraphSpace>, KnowtatorXMLIO, BratStandoffIO {
 	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(GraphSpace.class);
 
@@ -72,7 +71,6 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 
 
 		baseModel.verifyId(id, this, false);
-		baseModel.addModelListener(this);
 		baseModel.addOntologyChangeListener(this);
 		baseModel.addOWLModelManagerListener(this);
 
@@ -284,12 +282,10 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 					Profile annotator = baseModel.getDefaultProfile();
 
 					textSource.getAnnotation(subjectAnnotationID).ifPresent(subjectConceptAnnotation -> {
-						List<Object> subjectAnnotationVertices = getVerticesForAnnotation(subjectConceptAnnotation);
-						AnnotationNode source = makeOrGetAnnotationNode(subjectConceptAnnotation, subjectAnnotationVertices);
+						AnnotationNode source = getAnnotationNodeForConceptAnnotation(subjectConceptAnnotation);
 
 						textSource.getAnnotation(objectAnnotationID).ifPresent(objectConceptAnnotation -> {
-							List<Object> objectAnnotationVertices = getVerticesForAnnotation(objectConceptAnnotation);
-							AnnotationNode target = makeOrGetAnnotationNode(objectConceptAnnotation, objectAnnotationVertices);
+							AnnotationNode target = getAnnotationNodeForConceptAnnotation(objectConceptAnnotation);
 
 							baseModel.getOWLObjectPropertyByID(propertyID).ifPresent(owlObjectProperty -> addTriple(source, target, id, annotator, owlObjectProperty, "", null, false, ""));
 						});
@@ -299,21 +295,22 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 				});
 	}
 
+	public AnnotationNode getAnnotationNodeForConceptAnnotation(ConceptAnnotation conceptAnnotation) {
+		List<AnnotationNode> nodes = getAnnotationNodes(conceptAnnotation);
+		AnnotationNode source;
+		if (nodes.isEmpty()) {
+			source = makeAnnotationNode(conceptAnnotation);
+		} else {
+			source = nodes.get(0);
+		}
+		return source;
+	}
+
 	public AnnotationNode makeAnnotationNode(ConceptAnnotation conceptAnnotation) {
 		String nodeId = textSource.getGraphSpaces().verifyID(null, "node");
 		AnnotationNode newVertex = new AnnotationNode(baseModel, nodeId, conceptAnnotation, textSource, 20, 20, this);
 		addCellToGraph(newVertex);
 		return (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(nodeId);
-	}
-
-	public AnnotationNode makeOrGetAnnotationNode(ConceptAnnotation conceptAnnotation, List<Object> vertices) {
-		AnnotationNode source;
-		if (vertices == null || vertices.isEmpty()) {
-			source = makeAnnotationNode(conceptAnnotation);
-		} else {
-			source = (AnnotationNode) vertices.get(0);
-		}
-		return source;
 	}
 
   /*
@@ -351,16 +348,6 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 	}
 
 
-	/*
-	GETTERS
-	 */
-	public List<Object> getVerticesForAnnotation(ConceptAnnotation conceptAnnotation) {
-		return Arrays.stream(getChildVertices(getDefaultParent()))
-				.filter(o -> o instanceof AnnotationNode && conceptAnnotation.equals(((AnnotationNode) o).getConceptAnnotation()))
-				.collect(Collectors.toList());
-	}
-
-
     /*
   SETTERS
    */
@@ -386,32 +373,6 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 	@Override
 	public String toString() {
 		return id;
-	}
-
-	@Override
-	public void filterChangedEvent() {
-
-	}
-
-	@Override
-	public void colorChangedEvent() {
-
-	}
-
-	@Override
-	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
-		baseModel.getSelectedTextSource().ifPresent(textSource1 -> textSource1.getSelectedGraphSpace()
-				.ifPresent(graphSpace -> {
-					if (graphSpace.equals(this)) {
-						if (event.getNew().isPresent()) {
-							event.getNew()
-									.filter(modelObject -> modelObject instanceof ConceptAnnotation)
-									.map(modelObject -> (ConceptAnnotation) modelObject)
-									.ifPresent(conceptAnnotation -> setSelectionCells(getVerticesForAnnotation(conceptAnnotation)));
-						}
-					}
-				}));
-
 	}
 
 	@Override
@@ -522,5 +483,13 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 
 	public List<RelationAnnotation> getRelationAnnotations() {
 		return Arrays.stream(getChildEdges(getDefaultParent())).filter(o -> o instanceof RelationAnnotation).map(o -> (RelationAnnotation) o).collect(Collectors.toList());
+	}
+
+	public List<AnnotationNode> getAnnotationNodes(ConceptAnnotation conceptAnnotation) {
+		return Arrays.stream(getChildVertices(getDefaultParent()))
+				.filter(cell -> cell instanceof AnnotationNode)
+				.map(cell -> (AnnotationNode) cell)
+				.filter(annotationNode -> annotationNode.getConceptAnnotation().equals(conceptAnnotation))
+				.collect(Collectors.toList());
 	}
 }
