@@ -59,9 +59,8 @@ public abstract class OWLModel extends BaseModel implements Serializable {
 
 	OWLModel(File projectLocation, OWLWorkspace owlWorkspace) throws IOException {
 		super(projectLocation);
-		if (owlWorkspace == null) {
-			this.owlOntologyManager = OWLManager.createOWLOntologyManager();
-		}
+		this.owlOntologyManager = OWLManager.createOWLOntologyManager();
+
 		owlWorkSpace = Optional.ofNullable(owlWorkspace);
 		annotationIRIs = null;
 	}

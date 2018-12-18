@@ -33,10 +33,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -46,14 +43,10 @@ public class BratStandoffUtil implements BasicIOUtil<BratStandoffIO> {
     private static Map<Character, List<String[]>> collectAnnotations(Stream<String> standoffStream) {
         Map<Character, List<String[]>> annotationCollector = createAnnotationCollector();
 
-        standoffStream.forEach(
-                line -> {
-                    if (!line.trim().isEmpty()) {
-                        String[] entries = line.split(StandoffTags.columnDelimiter);
-                        char annotationType = entries[0].charAt(0);
-                        annotationCollector.get(annotationType).add(entries);
-                    }
-                });
+        standoffStream
+                .filter(line -> !line.trim().isEmpty())
+                .map(line -> line.split(StandoffTags.columnDelimiter))
+                .forEach(entries -> annotationCollector.get(entries[0].charAt(0)).add(entries));
 
         return annotationCollector;
     }

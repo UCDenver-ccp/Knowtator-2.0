@@ -7,7 +7,7 @@
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="4b0c9" binding="panel2" layout-manager="BorderLayout" hgap="0" vgap="0">
+      <grid id="4b0c9" binding="mainPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints>
           <card name="Main"/>
         </constraints>
@@ -960,7 +960,7 @@
           </tabbedpane>
         </children>
       </grid>
-      <grid id="39898" layout-manager="GridLayoutManager" row-count="5" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="39898" binding="filePanel" layout-manager="GridLayoutManager" row-count="5" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <card name="File"/>
@@ -987,7 +987,9 @@
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="6" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <stringPainted value="true"/>
+            </properties>
           </component>
           <scrollpane id="4b06">
             <constraints>
@@ -1031,11 +1033,12 @@
               <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
           </hspacer>
-          <hspacer id="935cd">
+          <component id="7b39" class="javax.swing.JFileChooser" binding="fileChooser">
             <constraints>
-              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
-          </hspacer>
+            <properties/>
+          </component>
         </children>
       </grid>
     </children>

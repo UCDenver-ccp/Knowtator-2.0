@@ -32,6 +32,7 @@ import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.util.Objects;
 
@@ -39,21 +40,45 @@ public class Loader extends SwingWorker implements ModelListener {
 
 	private final KnowtatorView view;
 	private final File file;
+	private final JProgressBar progressBar1;
+	private final JComponent panel1;
 	private float maxVal;
 
-	public Loader(KnowtatorView view, File file) {
+	public Loader(KnowtatorView view, File file, JProgressBar progressBar1, JTabbedPane tabbedPane1, JComponent panel1) {
 		this.view = view;
 		this.file = file;
+		this.progressBar1 = progressBar1;
+		this.panel1 = panel1;
 		File annotationsDir = new File(file.getParentFile(), "Annotations");
 		File profilesDir = new File(file.getParentFile(), "Profiles");
 		maxVal = 1;
 		if (annotationsDir.isDirectory() && profilesDir.isDirectory()) {
 			maxVal = Objects.requireNonNull(annotationsDir.listFiles()).length + Objects.requireNonNull(profilesDir.listFiles()).length;
 		}
+
+		addPropertyChangeListener(evt -> {
+			String name = evt.getPropertyName();
+			if (name.equals("progress")) {
+				int progress = (int) evt.getNewValue();
+				progressBar1.setValue(progress);
+				tabbedPane1.repaint();
+			} else if (name.equals("state")) {
+				SwingWorker.StateValue state = (SwingWorker.StateValue) evt.getNewValue();
+				if (state == SwingWorker.StateValue.DONE) {
+					view.setCursor(null);
+					CardLayout cl = (CardLayout) this.panel1.getLayout();
+					cl.show(this.panel1, "Main");
+					tabbedPane1.setSelectedIndex(1);
+					progressBar1.setValue(0);
+				}
+			}
+		});
 	}
 
 	@Override
 	protected Object doInBackground() throws Exception {
+		progressBar1.setValue(0);
+		view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		view.loadProject(file.getParentFile(), this);
 		return null;
 	}
