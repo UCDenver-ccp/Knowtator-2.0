@@ -473,11 +473,14 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 	@Override
 	public void handleChange(OWLModelManagerChangeEvent event) {
 		if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
-			Arrays.asList(getChildEdges(getDefaultParent())).forEach(o -> {
+			Arrays.asList(getChildCells(getDefaultParent())).forEach(o -> {
 				if (o instanceof RelationAnnotation) {
 					((RelationAnnotation) o).setLabel();
+				} else if (o instanceof AnnotationNode) {
+					((AnnotationNode) o).setValue(((AnnotationNode) o).getConceptAnnotation().toMultilineString());
 				}
 			});
+			refresh();
 		}
 	}
 
