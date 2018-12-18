@@ -28,6 +28,7 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxCellRenderer;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventSource;
 import com.mxgraph.view.mxGraph;
@@ -40,18 +41,23 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.graph.GraphActions;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.GraphSpaceAction;
 import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
-import edu.ucdenver.ccp.knowtator.view.menu.GraphMenuDialog;
 import org.apache.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -60,6 +66,9 @@ import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActio
 import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.REMOVE;
 
 public class GraphView extends JPanel implements KnowtatorComponent, ModelListener {
+	@SuppressWarnings("unused")
+	private Logger log = Logger.getLogger(GraphView.class);
+
 	private final JDialog dialog;
 	private final KnowtatorView view;
 	private final AddRelationListener addRelationListener;
@@ -76,9 +85,8 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 	private JSlider zoomSlider;
 	private JButton graphMenuButton;
 	private JButton renameButton;
+	private JButton exportToImagePNGButton;
 	private List<JComponent> graphSpaceButtons;
-	@SuppressWarnings("unused")
-	private Logger log = Logger.getLogger(GraphView.class);
 	private mxEventSource.mxIEventListener removeCellsListener;
 	private mxEventSource.mxIEventListener moveCellsListener = (sender, evt) -> {
 		if (sender instanceof GraphSpace) {
@@ -106,11 +114,26 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 
 	private void makeButtons() {
 
-		graphMenuButton.addActionListener(e -> {
-			GraphMenuDialog graphMenuDialog = new GraphMenuDialog(view);
-			graphMenuDialog.pack();
-			graphMenuDialog.setVisible(true);
-		});
+		exportToImagePNGButton.addActionListener(e ->
+				view.getModel().ifPresent(model -> model.getSelectedTextSource()
+						.ifPresent(textSource -> textSource.getSelectedGraphSpace()
+								.ifPresent(graphSpace -> {
+									JFileChooser fileChooser = new JFileChooser();
+									fileChooser.setCurrentDirectory(model.getSaveLocation());
+									FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
+									fileChooser.setFileFilter(fileFilter);
+									fileChooser.setSelectedFile(new File(String.format("%s_%s.png", textSource.getId(), graphSpace.getId())));
+									if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
+										BufferedImage image =
+												mxCellRenderer.createBufferedImage(graphSpace, null, 1, Color.WHITE, true, null);
+										try {
+											ImageIO.write(
+													image, "PNG", new File(fileChooser.getSelectedFile().getAbsolutePath()));
+										} catch (IOException e1) {
+											e1.printStackTrace();
+										}
+									}
+								}))));
 
 		zoomSlider.addChangeListener(e -> graphComponent.zoomTo(zoomSlider.getValue() / 50.0, false));
 		renameButton.addActionListener(e -> view.getModel().flatMap(BaseModel::getSelectedTextSource)
@@ -340,15 +363,11 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 		panel1.setAlignmentY(0.0f);
 		panel1.setMinimumSize(new Dimension(400, 400));
 		final JPanel panel2 = new JPanel();
-		panel2.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+		panel2.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
 		panel1.add(panel2, BorderLayout.NORTH);
-		graphMenuButton = new JButton();
-		graphMenuButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-menu-24.png")));
-		graphMenuButton.setText("");
-		panel2.add(graphMenuButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final JToolBar toolBar1 = new JToolBar();
 		toolBar1.setFloatable(false);
-		panel2.add(toolBar1, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
+		panel2.add(toolBar1, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
 		addAnnotationNodeButton = new JButton();
 		addAnnotationNodeButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-plus-24.png")));
 		addAnnotationNodeButton.setText("");
@@ -362,8 +381,6 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 		applyLayoutButton = new JButton();
 		applyLayoutButton.setText("Apply Layout");
 		toolBar1.add(applyLayoutButton);
-		final Spacer spacer1 = new Spacer();
-		panel2.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
 		final JPanel panel3 = new JPanel();
 		panel3.setLayout(new BorderLayout(0, 0));
 		panel1.add(panel3, BorderLayout.CENTER);
@@ -373,35 +390,44 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 		final JPanel panel4 = new JPanel();
 		panel4.setLayout(new GridLayoutManager(2, 6, new Insets(0, 0, 0, 0), -1, -1));
 		panel1.add(panel4, BorderLayout.SOUTH);
-		previousGraphSpaceButton = new JButton();
-		previousGraphSpaceButton.setText("Previous");
-		panel4.add(previousGraphSpaceButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		graphSpaceChooser.setMaximumSize(new Dimension(200, 32767));
 		graphSpaceChooser.setMinimumSize(new Dimension(80, 30));
-		panel4.add(graphSpaceChooser, new GridConstraints(0, 1, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+		panel4.add(graphSpaceChooser, new GridConstraints(0, 2, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
 		addGraphSpaceButton = new JButton();
 		addGraphSpaceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-plus-24.png")));
 		addGraphSpaceButton.setText("");
-		panel4.add(addGraphSpaceButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		panel4.add(addGraphSpaceButton, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		removeGraphSpaceButton = new JButton();
 		removeGraphSpaceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-delete-24.png")));
 		removeGraphSpaceButton.setText("");
-		panel4.add(removeGraphSpaceButton, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		panel4.add(removeGraphSpaceButton, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		zoomSlider = new JSlider();
 		zoomSlider.setMaximum(100);
-		panel4.add(zoomSlider, new GridConstraints(1, 3, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(194, 16), null, 0, false));
-		final Spacer spacer2 = new Spacer();
-		panel4.add(spacer2, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-		renameButton = new JButton();
-		renameButton.setText("Rename");
-		panel4.add(renameButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		panel4.add(zoomSlider, new GridConstraints(1, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(194, 16), null, 0, false));
+		final Spacer spacer1 = new Spacer();
+		panel4.add(spacer1, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		final JPanel panel5 = new JPanel();
+		panel5.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+		panel4.add(panel5, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+		previousGraphSpaceButton = new JButton();
+		previousGraphSpaceButton.setText("Previous");
+		panel5.add(previousGraphSpaceButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		nextGraphSpaceButton = new JButton();
 		nextGraphSpaceButton.setText("Next");
-		panel4.add(nextGraphSpaceButton, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		panel5.add(nextGraphSpaceButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		final JPanel panel6 = new JPanel();
+		panel6.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+		panel4.add(panel6, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+		renameButton = new JButton();
+		renameButton.setText("Rename");
+		panel6.add(renameButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		exportToImagePNGButton = new JButton();
+		exportToImagePNGButton.setText("Export to Image (PNG)");
+		panel6.add(exportToImagePNGButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 	}
 
 	/**
-	 *
+	 * @noinspection ALL
 	 */
 	public JComponent $$$getRootComponent$$$() {
 		return panel1;
