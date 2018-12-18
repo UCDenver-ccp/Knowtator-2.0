@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
 
 import java.io.File;
 
-public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBoundModelObject<RelationAnnotation> {
+public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, GraphBoundModelObject<RelationAnnotation> {
 	private final String quantifier;
 	private final String quantifierValue;
 	private final Profile annotator;
@@ -168,7 +168,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 
 	@Override
 	public int compareTo(RelationAnnotation o) {
-		int val = TextBoundModelObject.super.compareTo(o);
+		int val = GraphBoundModelObject.super.compareTo(o);
 		if (val == 0) {
 			val = model.getOWLObjectComparator().compare(property, o.getProperty());
 			if (val == 0) {

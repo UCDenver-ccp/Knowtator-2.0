@@ -41,7 +41,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
-public class Span implements TextBoundModelObject<Span>, KnowtatorXMLIO, BratStandoffIO {
+public class Span implements ConceptAnnotationBoundModelObject<Span>, KnowtatorXMLIO, BratStandoffIO {
   @SuppressWarnings("unused")
   private static final Logger log = Logger.getLogger(KnowtatorModel.class);
 
@@ -133,7 +133,7 @@ public class Span implements TextBoundModelObject<Span>, KnowtatorXMLIO, BratSta
 
   @Override
   public int compareTo(Span span2) {
-    int result = TextBoundModelObject.super.compareTo(span2);
+    int result = ConceptAnnotationBoundModelObject.super.compareTo(span2);
     if (result == 0) {
       if (span2 == null) {
         result = 1;

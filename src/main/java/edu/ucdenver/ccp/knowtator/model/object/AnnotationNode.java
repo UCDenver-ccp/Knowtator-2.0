@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
 
 import java.io.File;
 
-public class AnnotationNode extends mxCell implements TextBoundModelObject, KnowtatorXMLIO {
+public class AnnotationNode extends mxCell implements ConceptAnnotationBoundModelObject<AnnotationNode>, GraphBoundModelObject<AnnotationNode>, KnowtatorXMLIO {
 
 	private final ConceptAnnotation conceptAnnotation;
 	private final TextSource textSource;
@@ -86,6 +86,7 @@ public class AnnotationNode extends mxCell implements TextBoundModelObject, Know
 	GETTERS
 	 */
 
+	@Override
 	public ConceptAnnotation getConceptAnnotation() {
 		return conceptAnnotation;
 	}
@@ -100,10 +101,11 @@ public class AnnotationNode extends mxCell implements TextBoundModelObject, Know
 	}
 
 	@Override
-	public int compareTo(Object o) {
+	public int compareTo(AnnotationNode o) {
 		return 0;
 	}
 
+	@Override
 	public GraphSpace getGraphSpace() {
 		return graphSpace;
 	}
