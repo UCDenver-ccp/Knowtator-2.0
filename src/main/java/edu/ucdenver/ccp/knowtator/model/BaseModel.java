@@ -64,8 +64,8 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 	private final Map<FilterType, Boolean> filters;
 	private Selection selection;
 
-	private final TextSourceCollection textSources;
-	private final ProfileCollection profiles;
+	TextSourceCollection textSources;
+	ProfileCollection profiles;
 
 	private final Map<String, ModelObject> idRegistry;
 	private boolean loading;
@@ -108,11 +108,6 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 		} else {
 			throw new IOException();
 		}
-
-		textSources = new TextSourceCollection(this);
-		profiles = new ProfileCollection(this);
-
-
 	}
 
 	@Override
@@ -247,7 +242,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 		}
 	}
 
-	public ProfileCollection getProfileCollection() {
+	public ProfileCollection getProfiles() {
 		return profiles;
 	}
 
@@ -329,11 +324,13 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 	public void load() throws IOException {
 		try {
 			loading = true;
+			setRenderRDFSLabel();
 			profiles.load();
 			textSources.load();
 			profiles.first().ifPresent(profiles::setSelection);
 			textSources.first().ifPresent(textSources::setSelection);
 		} finally {
+			resetRenderRDFS();
 			loading = false;
 		}
 	}

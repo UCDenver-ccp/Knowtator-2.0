@@ -98,7 +98,7 @@ public class KnowtatorIAA {
 	private void initSetNames() {
 		setNames =
 				controller
-						.getProfileCollection()
+						.getProfiles()
 						.stream()
 						.map(Profile::getId)
 						.collect(Collectors.toSet());

@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
@@ -37,7 +37,7 @@ public class SpanAction extends AbstractKnowtatorCollectionAction<Span> {
 
 	private final ConceptAnnotation conceptAnnotation;
 
-	public SpanAction(BaseModel model, CollectionActionType actionName, ConceptAnnotation conceptAnnotation) {
+	public SpanAction(KnowtatorModel model, CollectionActionType actionName, ConceptAnnotation conceptAnnotation) {
 		super(model, actionName, "span", conceptAnnotation);
 		this.conceptAnnotation = conceptAnnotation;
 

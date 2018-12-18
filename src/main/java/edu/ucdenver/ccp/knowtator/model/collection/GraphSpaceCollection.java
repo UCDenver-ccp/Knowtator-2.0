@@ -29,7 +29,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
@@ -44,10 +44,10 @@ import java.util.List;
 import java.util.Map;
 
 public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implements KnowtatorXMLIO, BratStandoffIO {
-	private final BaseModel model;
+	private final KnowtatorModel model;
     private final TextSource textSource;
 
-	public GraphSpaceCollection(BaseModel model, TextSource textSource) {
+	public GraphSpaceCollection(KnowtatorModel model, TextSource textSource) {
 		super(model);
 		this.model = model;
         this.textSource = textSource;

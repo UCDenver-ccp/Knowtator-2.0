@@ -24,8 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
@@ -42,19 +40,11 @@ public class AnnotationListForSpannedText extends AnnotationList {
 	}
 
 	@Override
-	public void setCollection(KnowtatorCollection<ConceptAnnotation> collection) {
-		//clear collection
-		((DefaultListModel) getModel()).clear();
-		this.collection = collection;
-		if (collection.size() == 0) {
-			setEnabled(false);
-		} else {
-			setEnabled(true);
-			collection.stream()
-					.filter(conceptAnnotation -> exactMatchCheckBox.isSelected() ?
-							conceptAnnotation.getSpannedText().equals(annotationsContainingTextTextField.getText()) :
-							annotationsContainingTextTextField.getText().contains(conceptAnnotation.getSpannedText()))
-					.forEach(k -> ((DefaultListModel<ConceptAnnotation>) getModel()).addElement(k));
-		}
+	void addElementsFromModel() {
+		view.getModel().ifPresent(model -> model.getTextSources()
+				.forEach(textSource -> textSource.getConceptAnnotations().stream()
+						.filter(conceptAnnotation -> (exactMatchCheckBox.isSelected() &&  conceptAnnotation.getSpannedText().equals(annotationsContainingTextTextField.getText()))
+						|| (!exactMatchCheckBox.isSelected() && conceptAnnotation.getSpannedText().contains(annotationsContainingTextTextField.getText())))
+						.forEach(conceptAnnotation -> getDefaultListModel().addElement(conceptAnnotation))));
 	}
 }

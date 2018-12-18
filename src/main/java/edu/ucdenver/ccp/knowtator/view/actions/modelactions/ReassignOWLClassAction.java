@@ -24,7 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
@@ -38,7 +38,7 @@ public class ReassignOWLClassAction extends AbstractKnowtatorAction {
 	private final ConceptAnnotation conceptAnnotation;
 	private final OWLClass newOwlClass;
 
-	public ReassignOWLClassAction(BaseModel model, ConceptAnnotation conceptAnnotation, OWLClass owlClass) {
+	public ReassignOWLClassAction(KnowtatorModel model, ConceptAnnotation conceptAnnotation, OWLClass owlClass) {
 		super(model, "Reassign OWL class");
 
 		this.conceptAnnotation = conceptAnnotation;

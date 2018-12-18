@@ -25,7 +25,7 @@
 package edu.ucdenver.ccp.knowtator.view.actions.graph;
 
 import com.mxgraph.util.mxEvent;
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
@@ -38,7 +38,7 @@ public abstract class AbstractGraphAction extends AbstractKnowtatorAction {
 	final GraphSpace graphSpace;
 	private final KnowtatorEdit edit;
 
-	AbstractGraphAction(BaseModel model, String presentationName, GraphSpace graphSpace) {
+	AbstractGraphAction(KnowtatorModel model, String presentationName, GraphSpace graphSpace) {
 		super(model, presentationName);
 		this.graphSpace = graphSpace;
 		edit = new KnowtatorEdit(getPresentationName()) {

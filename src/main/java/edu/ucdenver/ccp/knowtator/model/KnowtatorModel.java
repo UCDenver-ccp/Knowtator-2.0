@@ -24,6 +24,8 @@
 
 package edu.ucdenver.ccp.knowtator.model;
 
+import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLWorkspace;
 
@@ -46,6 +48,8 @@ public class KnowtatorModel extends OWLModel {
 	 */
 	public KnowtatorModel(File projectLocation, OWLWorkspace owlWorkspace) throws IOException {
 		super(projectLocation, owlWorkspace);
+		textSources = new TextSourceCollection(this);
+		profiles = new ProfileCollection(this);
 	}
 
 	/**

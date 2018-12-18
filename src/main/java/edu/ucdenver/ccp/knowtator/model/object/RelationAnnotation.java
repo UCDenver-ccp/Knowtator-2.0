@@ -29,7 +29,7 @@ import com.mxgraph.model.mxGeometry;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
@@ -43,7 +43,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 	private final String quantifierValue;
 	private final Profile annotator;
 	private String bratID;
-	private final BaseModel model;
+	private final KnowtatorModel model;
 	private final Boolean isNegated;
 	private final TextSource textSource;
 	private OWLObjectProperty property;
@@ -61,7 +61,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 	}
 
 	RelationAnnotation(
-			BaseModel model, TextSource textSource, GraphSpace graphSpace, String id,
+			KnowtatorModel model, TextSource textSource, GraphSpace graphSpace, String id,
 			AnnotationNode source,
 			AnnotationNode target,
 			OWLObjectProperty property,
@@ -119,12 +119,16 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 
 	void setProperty(OWLObjectProperty owlObjectProperty) {
 		property = owlObjectProperty;
+		setLabel();
+		model.fireModelEvent(new ChangeEvent<>(model, null, this));
+	}
+
+	void setLabel() {
 		setValue(String.format("%s%s\n%s %s",
 				isNegated ? "not " : "",
 				getOwlPropertyRendering(),
 				quantifier,
 				quantifierValue));
-		model.fireModelEvent(new ChangeEvent<>(model, null, this));
 	}
 
 	public void writeToKnowtatorXML(Document dom, Element graphElem) {
@@ -168,8 +172,10 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, TextBo
 		if (val == 0) {
 			val = model.getOWLObjectComparator().compare(property, o.getProperty());
 			if (val == 0) {
+				//noinspection unchecked
 				val = sourceAnnotationNode.compareTo(o.getSourceAnnotationNode());
 				if (val == 0) {
+					//noinspection unchecked
 					val = targetAnnotationNode.compareTo(o.getTargetAnnotationNode());
 					if (val == 0) {
 						val = id.compareTo(o.getId());

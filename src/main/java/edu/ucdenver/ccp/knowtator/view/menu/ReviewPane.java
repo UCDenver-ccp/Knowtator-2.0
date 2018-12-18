@@ -27,8 +27,6 @@ package edu.ucdenver.ccp.knowtator.view.menu;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
-import edu.ucdenver.ccp.knowtator.model.object.RelationAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.list.AnnotationList;
 import edu.ucdenver.ccp.knowtator.view.list.AnnotationListForOWLClass;
@@ -75,14 +73,32 @@ public class ReviewPane extends MenuPane {
 		exactMatchCheckBox.addActionListener(e -> refresh());
 		refreshButton.addActionListener(e -> refresh());
 
-		nextAnnotationForOWLClassButton.addActionListener(e -> annotationsForClassList.setSelectedIndex(Math.min(annotationsForClassList.getSelectedIndex() + 1, annotationsForClassList.getModel().getSize() - 1)));
-		previousAnnotationForOWLClassButton.addActionListener(e -> annotationsForClassList.setSelectedIndex(Math.max(annotationsForClassList.getSelectedIndex() - 1, 0)));
+		nextAnnotationForOWLClassButton.addActionListener(e -> {
+			annotationsForClassList.setSelectedIndex(Math.min(annotationsForClassList.getSelectedIndex() + 1, annotationsForClassList.getModel().getSize() - 1));
+			annotationsForClassList.reactToClick();
+		});
+		previousAnnotationForOWLClassButton.addActionListener(e -> {
+			annotationsForClassList.setSelectedIndex(Math.max(annotationsForClassList.getSelectedIndex() - 1, 0));
+			annotationsForClassList.reactToClick();
+		});
 
-		nextAnnotationForTextButton.addActionListener(e -> annotationsForSpannedTextList.setSelectedIndex(Math.min(annotationsForSpannedTextList.getSelectedIndex() + 1, annotationsForSpannedTextList.getModel().getSize() - 1)));
-		previousAnnotationForTextButton.addActionListener(e -> annotationsForSpannedTextList.setSelectedIndex(Math.max(annotationsForSpannedTextList.getSelectedIndex() - 1, 0)));
+		nextAnnotationForTextButton.addActionListener(e -> {
+			annotationsForSpannedTextList.setSelectedIndex(Math.min(annotationsForSpannedTextList.getSelectedIndex() + 1, annotationsForSpannedTextList.getModel().getSize() - 1));
+			annotationsForSpannedTextList.reactToClick();
+		});
+		previousAnnotationForTextButton.addActionListener(e -> {
+			annotationsForSpannedTextList.setSelectedIndex(Math.max(annotationsForSpannedTextList.getSelectedIndex() - 1, 0));
+			annotationsForSpannedTextList.reactToClick();
+		});
 
-		nextRelationForPropertyButton.addActionListener(e -> relationsForPropertyList.setSelectedIndex(Math.min(relationsForPropertyList.getSelectedIndex() + 1, relationsForPropertyList.getModel().getSize() - 1)));
-		previousRelationForPropertyButton.addActionListener(e -> relationsForPropertyList.setSelectedIndex(Math.max(relationsForPropertyList.getSelectedIndex() - 1, 0)));
+		nextRelationForPropertyButton.addActionListener(e -> {
+			relationsForPropertyList.setSelectedIndex(Math.min(relationsForPropertyList.getSelectedIndex() + 1, relationsForPropertyList.getModel().getSize() - 1));
+			relationsForPropertyList.reactToClick();
+		});
+		previousRelationForPropertyButton.addActionListener(e -> {
+			relationsForPropertyList.setSelectedIndex(Math.max(relationsForPropertyList.getSelectedIndex() - 1, 0));
+			relationsForPropertyList.reactToClick();
+		});
 
 	}
 
@@ -118,9 +134,9 @@ public class ReviewPane extends MenuPane {
 				owlPropertyLabel.setText(model.getOWLEntityRendering(owlObjectProperty));
 			});
 
-			annotationsForClassList.react();
-			annotationsForSpannedTextList.react();
-			relationsForPropertyList.react();
+			annotationsForClassList.reset();
+			annotationsForSpannedTextList.reset();
+			relationsForPropertyList.reset();
 		});
 
 
@@ -364,26 +380,9 @@ public class ReviewPane extends MenuPane {
 		annotationsContainingTextTextField = new JTextField();
 		exactMatchCheckBox = new JCheckBox();
 
-		ReviewPane reviewPane = this;
 		annotationsForClassList = new AnnotationListForOWLClass(view, activeOWLClassDescendants);
 		annotationsForSpannedTextList = new AnnotationListForSpannedText(view, exactMatchCheckBox, annotationsContainingTextTextField);
-
-		relationsForPropertyList = new RelationList(view) {
-			@Override
-			public void setCollection(KnowtatorCollection<RelationAnnotation> collection) {
-				//clear collection
-				((DefaultListModel) getModel()).clear();
-				this.collection = collection;
-				if (collection.size() == 0) {
-					setEnabled(false);
-				} else {
-					setEnabled(true);
-					collection.stream()
-							.filter(relationAnnotation -> reviewPane.activeOWLPropertyDescendants.contains(relationAnnotation.getProperty()))
-							.forEach(k -> ((DefaultListModel<RelationAnnotation>) getModel()).addElement(k));
-				}
-			}
-		};
+		relationsForPropertyList = new RelationList(view, activeOWLPropertyDescendants);
 	}
 
 }

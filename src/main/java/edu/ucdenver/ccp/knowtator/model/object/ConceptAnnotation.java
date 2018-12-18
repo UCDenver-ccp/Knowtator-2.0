@@ -351,4 +351,10 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 	public int getNumberOfSpans() {
 		return size();
 	}
+
+	String toMultilineString() {
+		return String.format(
+				"%s\n(%s)", stream().map(Span::toString).collect(Collectors.joining("\n")),
+				model.getOWLEntityRendering(owlClass));
+	}
 }

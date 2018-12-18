@@ -28,7 +28,6 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import org.apache.log4j.Logger;
@@ -46,10 +45,10 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(KnowtatorModel.class);
 
-	private final BaseModel model;
+	private final KnowtatorModel model;
 	private final Profile defaultProfile;
 
-	public ProfileCollection(BaseModel model) {
+	public ProfileCollection(KnowtatorModel model) {
 		super(model);
 		defaultProfile = new Profile(model, "Default");
 		add(defaultProfile);

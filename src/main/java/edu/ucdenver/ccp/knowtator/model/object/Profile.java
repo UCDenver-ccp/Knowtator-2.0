@@ -28,7 +28,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorDefaultSettings;
 import org.apache.log4j.LogManager;
@@ -49,9 +49,9 @@ public class Profile implements ModelObject<Profile>, Savable, KnowtatorXMLIO {
 
 	private String id;
 	private final HashMap<OWLClass, Color> colors; // <ClassName, Highlighter>
-	private final BaseModel model;
+	private final KnowtatorModel model;
 
-	public Profile(BaseModel model, String id) {
+	public Profile(KnowtatorModel model, String id) {
 		colors = new HashMap<>();
 		this.model = model;
 		model.verifyId(id, this, false);
@@ -160,8 +160,8 @@ public class Profile implements ModelObject<Profile>, Savable, KnowtatorXMLIO {
 			Color color = new Color((float) c.getRed() / 255, (float) c.getGreen() / 255, (float) c.getBlue() / 255, 1f);
 			colorMap.put(classID, color);
 		}
-		model.getOWLClassesByIDs(colorMap.keySet())
-				.forEach((classID, owlClass) -> addColor(owlClass, colorMap.get(classID)));
+		model.getOWLClassesByIDs(colorMap.keySet()).entrySet().parallelStream()
+				.forEach(entry -> addColor(entry.getValue(), colorMap.get(entry.getKey())));
 	}
 
 	@Override

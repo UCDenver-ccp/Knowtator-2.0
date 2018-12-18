@@ -24,72 +24,48 @@
 
 package edu.ucdenver.ccp.knowtator.view.list;
 
-import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
-import javax.swing.*;
-import javax.swing.event.MouseInputAdapter;
-import java.awt.event.MouseEvent;
+import java.util.Optional;
 
 public class AnnotationList extends KnowtatorList<ConceptAnnotation> {
-	private boolean shouldReact;
 
 	AnnotationList(KnowtatorView view) {
 		super(view);
+	}
 
-		shouldReact = true;
-
-		removeListSelectionListener(al);
-		KnowtatorList<ConceptAnnotation> list = this;
-		al = e -> {
-			if (list.getSelectedValue() != null) {
-				shouldReact = false;
-				ConceptAnnotation relationAnnotation = list.getSelectedValue();
-				collection.setSelection(relationAnnotation);
-				relationAnnotation.getTextSource().setSelectedConceptAnnotation(relationAnnotation);
-				shouldReact = true;
-			}
-
-		};
-		addListSelectionListener(al);
-
-		addMouseListener(new MouseInputAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1) {
-					if (list.getSelectedIndex() != -1) {
-						shouldReact = false;
-						ConceptAnnotation relationAnnotation = list.getSelectedValue();
-						collection.setSelection(relationAnnotation);
-						relationAnnotation.getTextSource().setSelectedConceptAnnotation(relationAnnotation);
-						shouldReact = true;
-					}
+	@Override
+	public void reactToClick() {
+		Optional<ConceptAnnotation> conceptAnnotationOptional = Optional.ofNullable(getSelectedValue());
+		conceptAnnotationOptional.ifPresent(conceptAnnotation -> {
+			view.getModel().ifPresent(model -> {
+				if (!model.getSelectedTextSource().map(textSource -> textSource.equals(conceptAnnotation.getTextSource())).orElse(false)) {
+					model.getTextSources()
+							.setSelection(conceptAnnotation.getTextSource());
 				}
-			}
+			});
+			conceptAnnotation.getTextSource().setSelectedConceptAnnotation(conceptAnnotation);
 		});
 	}
 
 	@Override
-	public void react() {
-		view.getModel()
-				.filter(model -> shouldReact)
-				.ifPresent(model -> {
-					KnowtatorCollection<ConceptAnnotation> conceptAnnotations = new KnowtatorCollection<ConceptAnnotation>(null) {
-					};
+	public void reactToModelEvent() {
 
-					model.getTextSources().forEach(textSource ->
-							textSource.getConceptAnnotations()
-									.forEach(conceptAnnotations::add));
-					setCollection(conceptAnnotations);
-					setSelected();
-
-				});
 	}
 
 	@Override
-	public void reset() {
-		super.reset();
-		react();
+	protected Optional<ConceptAnnotation> getSelectedFromModel() {
+		return view.getModel().flatMap(BaseModel::getSelectedTextSource)
+				.flatMap(TextSource::getSelectedAnnotation);
+	}
+
+	@Override
+	void addElementsFromModel() {
+		view.getModel().ifPresent(model -> model.getTextSources()
+				.forEach(textSource -> textSource.getConceptAnnotations()
+						.forEach(conceptAnnotation -> getDefaultListModel().addElement(conceptAnnotation))));
 	}
 }
