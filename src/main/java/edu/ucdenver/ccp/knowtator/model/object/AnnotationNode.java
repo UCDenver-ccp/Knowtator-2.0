@@ -39,7 +39,7 @@ public class AnnotationNode extends mxCell implements ConceptAnnotationBoundMode
 
 	private final ConceptAnnotation conceptAnnotation;
 	private final TextSource textSource;
-	private GraphSpace graphSpace;
+	private final GraphSpace graphSpace;
 
 	AnnotationNode(BaseModel model, String id, ConceptAnnotation conceptAnnotation, TextSource textSource, double x, double y, GraphSpace graphSpace) {
 		super(

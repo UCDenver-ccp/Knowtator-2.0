@@ -122,11 +122,10 @@ public class GraphActions {
 		private final Boolean negation;
 		private final String quantifier;
 		private final String quantifierValue;
-		private final String propertyId;
 		private final String motivation;
 
 		public AddTripleAction(KnowtatorModel model, AnnotationNode source, AnnotationNode target,
-		                       OWLObjectProperty property, String propertyId,
+		                       OWLObjectProperty property,
 		                       String quantifier, String quantifierValue,
 		                       Boolean negation,
 		                       String motivation, GraphSpace graphSpace) {
@@ -137,7 +136,6 @@ public class GraphActions {
 			this.negation = negation;
 			this.quantifier = quantifier;
 			this.quantifierValue = quantifierValue;
-			this.propertyId = propertyId;
 			this.motivation = motivation;
 		}
 

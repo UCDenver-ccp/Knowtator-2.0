@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("EmptyMethod")
 class OWLModelTests {
 
 	private static KnowtatorModel controller;

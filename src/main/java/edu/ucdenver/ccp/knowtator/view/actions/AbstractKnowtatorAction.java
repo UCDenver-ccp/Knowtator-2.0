@@ -30,7 +30,7 @@ import javax.swing.undo.UndoableEdit;
 
 public abstract class AbstractKnowtatorAction {
 
-    protected KnowtatorModel model;
+    protected final KnowtatorModel model;
     private final String presentationName;
 
     protected AbstractKnowtatorAction(KnowtatorModel model, String presentationName) {

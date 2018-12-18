@@ -47,7 +47,7 @@ class IAAPane extends MenuPane {
     private JCheckBox classAndSpanCheckBox;
 
     IAAPane(KnowtatorView view) {
-	    super(view, "IAA");
+	    super("IAA");
         $$$setupUI$$$();
 
 	    buttonOK.addActionListener(e -> {
@@ -85,11 +85,6 @@ class IAAPane extends MenuPane {
 		    });
 
 	    });
-
-    }
-
-    @Override
-    public void show() {
 
     }
 

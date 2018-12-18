@@ -41,7 +41,7 @@ import java.io.IOException;
 public class KnowtatorModel extends OWLModel {
 
 
-	private static Logger log = Logger.getLogger(KnowtatorModel.class);
+	private static final Logger log = Logger.getLogger(KnowtatorModel.class);
 
 	/**
 	 * The constructor initializes all of the models and managers

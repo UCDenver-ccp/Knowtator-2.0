@@ -107,11 +107,6 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 	public void readFromOldKnowtatorXML(File file, Element parent) {
 	}
 
-	@Override
-	public void dispose() {
-		super.dispose();
-	}
-
 	public void load() throws IOException {
 		log.info("Loading profiles");
 		KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();

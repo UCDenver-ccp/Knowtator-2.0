@@ -50,8 +50,8 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, GraphB
 	private final GraphSpace graphSpace;
 	private final String motivation;
 
-	private AnnotationNode sourceAnnotationNode;
-	private AnnotationNode targetAnnotationNode;
+	private final AnnotationNode sourceAnnotationNode;
+	private final AnnotationNode targetAnnotationNode;
 
 	@SuppressWarnings("unused")
 	private final Logger log = Logger.getLogger(RelationAnnotation.class);

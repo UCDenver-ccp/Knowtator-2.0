@@ -25,20 +25,15 @@
 package edu.ucdenver.ccp.knowtator.view.menu;
 
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
 
 abstract class MenuPane implements KnowtatorComponent {
-	KnowtatorView view;
 	private final String name;
 
-	MenuPane(KnowtatorView view, String name) {
-		this.view = view;
+	MenuPane(String name) {
 		this.name = name;
 	}
-
-	abstract void show();
 
 	abstract JPanel getContentPane();
 

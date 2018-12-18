@@ -39,8 +39,7 @@ import edu.ucdenver.ccp.knowtator.model.object.TextBoundModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
-import org.protege.editor.owl.model.event.OWLModelManagerListener;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.swing.event.CaretEvent;
@@ -70,7 +69,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 	private final Map<String, ModelObject> idRegistry;
 	private boolean loading;
 
-	public BaseModel(File projectLocation) throws IOException {
+	BaseModel(File projectLocation) throws IOException {
 		idRegistry = new TreeMap<>();
 
 		modelListeners = new HashSet<>();
@@ -167,8 +166,6 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 
 	protected abstract void setRenderRDFSLabel();
 
-	public abstract void setSelectedOWLEntity(OWLEntity owlEntity);
-
 	public File getAnnotationsLocation() {
 		return annotationsLocation;
 	}
@@ -180,12 +177,6 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 	public Optional<Profile> getSelectedProfile() {
 		return profiles.getSelection();
 	}
-
-	public abstract Optional<OWLClass> getSelectedOWLClass();
-
-	public abstract Collection<? extends OWLClass> getOWLCLassDescendants(OWLClass owlClass);
-
-	public abstract Map<String, OWLClass> getOWLClassesByIDs(Set<String> classIDs);
 
 	public Optional<Profile> getProfile(String profileID) {
 		return profiles.get(profileID);
@@ -254,18 +245,6 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 		profiles.add(profile);
 	}
 
-	public abstract Optional<OWLClass> getOWLClassByID(String classID);
-
-	public abstract void addOntologyChangeListener(OWLOntologyChangeListener listener);
-
-	public abstract void addOWLModelManagerListener(OWLModelManagerListener listener);
-
-	public abstract Optional<OWLObjectProperty> getOWLObjectPropertyByID(String propertyID);
-
-	public abstract void removeOntologyChangeListener(OWLOntologyChangeListener listener);
-
-	public abstract void removeOWLModelManagerListener(OWLModelManagerListener listener);
-
 	public File getArticlesLocation() {
 		return articlesLocation;
 	}
@@ -321,7 +300,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 		}
 	}
 
-	public void load() throws IOException {
+	void load() throws IOException {
 		try {
 			loading = true;
 			setRenderRDFSLabel();
@@ -377,5 +356,4 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 		modelListeners.forEach(modelListener -> modelListener.modelChangeEvent(event));
 	}
 
-	public abstract Comparator<OWLObject> getOWLObjectComparator();
 }

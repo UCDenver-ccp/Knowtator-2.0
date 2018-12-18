@@ -116,7 +116,7 @@ class GraphActionsTests {
 		TestingHelpers.testKnowtatorAction(model, new GraphActions.AddTripleAction(model,
 						source,
 						target,
-						property, null,
+						property,
 						"some", null,
 						false, "",
 						graphSpace),
@@ -132,7 +132,7 @@ class GraphActionsTests {
 
 	@Test
 	void applyLayoutTest() {
-		//TODO: This test only makes sure that the layout application doesn't change to graph space modelactions. It needs to check the positions
+		//TODO: This test only makes sure that the layout application doesn't change to graph space model. It needs to check the positions
 		TextSource textSource = model.getSelectedTextSource().get();
 		textSource.selectNextGraphSpace();
 		GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();

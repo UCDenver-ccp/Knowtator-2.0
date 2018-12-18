@@ -65,7 +65,7 @@ class RelationOptionsDialog extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
         previewTextArea.setText(propertyID);
-        previewTextArea.setEditable(propertyID == null);
+        previewTextArea.setEditable(false);
 
         result = 0;
 
@@ -160,9 +160,6 @@ class RelationOptionsDialog extends JDialog {
 
     String getPropertyID() {
         return previewTextArea.getText();
-    }
-
-    private void createUIComponents() {
     }
 
     String getMotivation() {

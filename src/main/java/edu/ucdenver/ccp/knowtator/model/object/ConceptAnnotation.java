@@ -335,11 +335,6 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 		this.id = id;
 	}
 
-	@Override
-	public void dispose() {
-		super.dispose();
-	}
-
 	public String getMotivation() {
 		return motivation;
 	}

@@ -28,7 +28,6 @@ import com.mxgraph.util.mxEvent;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
-import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
 
 import javax.swing.undo.UndoableEdit;
@@ -50,14 +49,14 @@ public abstract class AbstractGraphAction extends AbstractKnowtatorAction {
 		graphSpace.getModel().addListener(mxEvent.UNDO, edit);
 	}
 
-	protected abstract void perform() throws ActionUnperformableException;
+	protected abstract void perform();
 
 	private void cleanUp() {
 		graphSpace.getModel().removeListener(edit, mxEvent.UNDO);
 	}
 
 	@Override
-	public void execute() throws ActionUnperformableException {
+	public void execute() {
 		prepare();
 		perform();
 		cleanUp();

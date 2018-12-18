@@ -37,7 +37,7 @@ import java.util.Optional;
 
 public abstract class KnowtatorList<K extends ModelObject> extends JList<K> implements KnowtatorComponent, ModelListener {
 
-	KnowtatorView view;
+	final KnowtatorView view;
 
 	KnowtatorList(KnowtatorView view) {
 		this.view = view;
@@ -62,7 +62,7 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K> impl
 		return (DefaultListModel<K>) getModel();
 	}
 
-	protected abstract void reactToClick();
+	public abstract void reactToClick();
 	protected abstract Optional<K> getSelectedFromModel();
 
 	private void setSelected() {
@@ -96,7 +96,7 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K> impl
 		view.getModel().ifPresent(model -> model.removeModelListener(this));
 	}
 
-	public void reactToModelEvent() {
+	void reactToModelEvent() {
 		((DefaultListModel) getModel()).clear();
 		addElementsFromModel();
 		setSelected();

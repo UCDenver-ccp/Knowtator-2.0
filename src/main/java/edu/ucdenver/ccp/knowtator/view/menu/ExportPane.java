@@ -48,7 +48,7 @@ class ExportPane extends MenuPane {
 	private JButton exportToImagePNGButton;
 
 	ExportPane(KnowtatorView view) {
-		super(view, "Export");
+		super("Export");
 		$$$setupUI$$$();
 
 		exportToBratButton.addActionListener(e -> view.getModel().ifPresent(model -> {
@@ -79,11 +79,6 @@ class ExportPane extends MenuPane {
 										}
 									}
 								})));
-
-	}
-
-	@Override
-	public void show() {
 
 	}
 

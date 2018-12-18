@@ -41,7 +41,7 @@ public class Loader extends SwingWorker implements ModelListener {
 	private final File file;
 	private float maxVal;
 
-	Loader(KnowtatorView view, File file) {
+	public Loader(KnowtatorView view, File file) {
 		this.view = view;
 		this.file = file;
 		File annotationsDir = new File(file.getParentFile(), "Annotations");

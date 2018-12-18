@@ -30,8 +30,8 @@ import javax.swing.*;
 
 public class AnnotationListForSpannedText extends AnnotationList {
 
-	private JCheckBox exactMatchCheckBox;
-	private JTextField annotationsContainingTextTextField;
+	private final JCheckBox exactMatchCheckBox;
+	private final JTextField annotationsContainingTextTextField;
 
 	public AnnotationListForSpannedText(KnowtatorView view, JCheckBox exactMatchCheckBox, JTextField annotationsContainingTextTextField) {
 		super(view);

@@ -56,7 +56,7 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject> e
 		this.collection = collection;
 		this.actionType = actionType;
 		object = null;
-		this.edit = new KnowtatorCollectionEdit<>(actionType, collection, null, getPresentationName());
+		this.edit = new KnowtatorCollectionEdit<>(actionType, collection, getPresentationName());
 	}
 
 
@@ -87,7 +87,7 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject> e
 		}
 	}
 
-	protected abstract void prepareAdd() throws ActionUnperformableException;
+	protected abstract void prepareAdd();
 
 	protected abstract void cleanUpRemove() throws ActionUnperformableException;
 

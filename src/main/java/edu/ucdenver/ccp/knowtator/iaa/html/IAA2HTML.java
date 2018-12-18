@@ -36,6 +36,7 @@ import java.io.PrintStream;
 import java.text.NumberFormat;
 import java.util.*;
 
+@SuppressWarnings("Duplicates")
 public class IAA2HTML {
 
 	public static void printIAA(

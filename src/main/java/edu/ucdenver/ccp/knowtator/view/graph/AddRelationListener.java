@@ -34,10 +34,10 @@ import edu.ucdenver.ccp.knowtator.view.actions.graph.GraphActions;
 
 import java.util.Arrays;
 
-public class AddRelationListener implements mxEventSource.mxIEventListener {
+class AddRelationListener implements mxEventSource.mxIEventListener {
 
 	private final KnowtatorView view;
-	private GraphView graphView;
+	private final GraphView graphView;
 
 	AddRelationListener(KnowtatorView view, GraphView graphView) {
 		this.view = view;
@@ -67,7 +67,7 @@ public class AddRelationListener implements mxEventSource.mxIEventListener {
 																	model,
 																	(AnnotationNode) edge.getSource(),
 																	(AnnotationNode) edge.getTarget(),
-																	owlObjectProperty, relationOptionsDialog.getPropertyID(),
+																	owlObjectProperty,
 																	relationOptionsDialog.getQuantifier(), relationOptionsDialog.getQuantifierValue(),
 																	relationOptionsDialog.getNegation(),
 																	relationOptionsDialog.getMotivation(),

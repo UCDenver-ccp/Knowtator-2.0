@@ -44,7 +44,7 @@ class ImportPane extends MenuPane {
 	private JButton importButton;
 
 	ImportPane(JDialog parent, KnowtatorView view) {
-		super(view, "Import");
+		super("Import");
 		$$$setupUI$$$();
 
 		importButton.addActionListener(e -> {
@@ -64,11 +64,6 @@ class ImportPane extends MenuPane {
 				}
 			});
 		});
-
-	}
-
-	@Override
-	public void show() {
 
 	}
 

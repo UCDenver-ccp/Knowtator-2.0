@@ -30,7 +30,6 @@ import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorCollectionActionsTests;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
 import java.io.IOException;
 
 class KnowtatorViewTests {
@@ -75,15 +74,15 @@ class KnowtatorViewTests {
 
 	}
 
-	@Test
-	void textSourceButtonActivationTest() throws IOException {
-		KnowtatorView view = new KnowtatorView();
-		assert !view.getTextSourceButtons().stream()
-				.map(Component::isEnabled).reduce(false, (a, b) -> a || b);
-		KnowtatorModel controller = TestingHelpers.getLoadedController();
-		view.loadProject(controller.getProjectLocation(), null);
-		view.getModel().get().selectFirstTextSource();
-		assert view.getTextSourceButtons().stream()
-				.map(Component::isEnabled).reduce(true, (a, b) -> a && b);
-	}
+//	@Test
+//	void textSourceButtonActivationTest() throws IOException {
+//		KnowtatorView view = new KnowtatorView();
+//		assert !view.getTextSourceButtons().stream()
+//				.map(Component::isEnabled).reduce(false, (a, b) -> a || b);
+//		KnowtatorModel controller = TestingHelpers.getLoadedController();
+//		view.loadProject(controller.getProjectLocation(), null);
+//		view.getModel().get().selectFirstTextSource();
+//		assert view.getTextSourceButtons().stream()
+//				.map(Component::isEnabled).reduce(true, (a, b) -> a && b);
+//	}
 }

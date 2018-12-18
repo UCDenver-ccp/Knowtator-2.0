@@ -109,10 +109,6 @@
             <version>1.4</version>
         </dependency>
 
-
-        <!-- For now, I have to not include this since it is difficult to bundle properly. -->
-        <!-- Compiler complains about missing dependencies, include it, then rebuild, then uninclude it -->
-        <!-- Can be finicky, but don't try to bundle it. It is unncecessary once sources are generated -->
         <dependency>
             <groupId>com.intellij</groupId>
             <artifactId>forms_rt</artifactId>
@@ -134,8 +130,6 @@
 
 
     <build>
-        <!--<directory>${env.PROTEGE_HOME}/plugins/</directory>-->
-
         <testSourceDirectory>src/test/java</testSourceDirectory>
 
         <resources>
@@ -176,13 +170,10 @@
                         <Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
                         <Bundle-Vendor>The Protege Development Team</Bundle-Vendor>
                         <Import-Package>*</Import-Package>
-                        <!--<Embed-Dependency>jgraphx, forms_rt, forms, asm-commons, xmlparser</Embed-Dependency>-->
                         <Embed-Dependency>jgraphx, commons-cli, commons-lang3</Embed-Dependency>
                         <Include-Resource>README.md,
                             plugin.xml,
                             {maven-resources}
-                            <!--{maven-dependencies},-->
-                            <!--${project.build.directory}/jdom-1.0-fixed.jar-->
                         </Include-Resource>
                         <Private-Package>skeleton</Private-Package>
                     </instructions>

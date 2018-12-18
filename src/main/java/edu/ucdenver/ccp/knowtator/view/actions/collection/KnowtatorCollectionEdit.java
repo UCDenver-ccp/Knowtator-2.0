@@ -37,11 +37,11 @@ public class KnowtatorCollectionEdit<K extends ModelObject> extends KnowtatorEdi
     private final KnowtatorCollection<K> collection;
 	private K object;
 
-	KnowtatorCollectionEdit(CollectionActionType actionType, KnowtatorCollection<K> collection, K object, String presentationName) {
+	KnowtatorCollectionEdit(CollectionActionType actionType, KnowtatorCollection<K> collection, String presentationName) {
         super(presentationName);
         this.actionType = actionType;
         this.collection = collection;
-        this.object = object;
+        this.object = null;
     }
 
     @Override

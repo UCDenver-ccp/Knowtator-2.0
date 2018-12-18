@@ -32,7 +32,7 @@ public class ChangeEvent<O> {
 
 	private final O oldObject;
 	private final O newObject;
-	private BaseModel model;
+	private final BaseModel model;
 
 	public ChangeEvent(BaseModel model, O oldObject, O newObject) {
 		this.model = model;

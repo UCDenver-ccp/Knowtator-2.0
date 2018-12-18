@@ -24,6 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.model.object;
 
-public interface ConceptAnnotationBoundModelObject<K extends ConceptAnnotationBoundModelObject> extends TextBoundModelObject<K> {
+interface ConceptAnnotationBoundModelObject<K extends ConceptAnnotationBoundModelObject> extends TextBoundModelObject<K> {
 	ConceptAnnotation getConceptAnnotation();
 }

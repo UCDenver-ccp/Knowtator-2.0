@@ -45,7 +45,7 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 	private Pattern pattern;
 	private Matcher matcher;
 	private final JTextField searchTextField;
-	KnowtatorView view;
+	final KnowtatorView view;
 
 	/**
 	 * @param view  The view

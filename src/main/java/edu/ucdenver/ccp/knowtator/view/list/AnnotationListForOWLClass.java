@@ -27,14 +27,20 @@ package edu.ucdenver.ccp.knowtator.view.list;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.semanticweb.owlapi.model.OWLClass;
 
+import javax.swing.*;
+import java.util.HashSet;
 import java.util.Set;
 
 public class AnnotationListForOWLClass extends AnnotationList {
-	private Set<OWLClass> activeOWLClassDescendants;
+	private final JCheckBox includeClassDescendantsCheckBox;
+	private final JLabel owlClassLabel;
+	private final Set<OWLClass> activeOWLClassDescendants;
 
-	public AnnotationListForOWLClass(KnowtatorView view, Set<OWLClass> activeOWLClassDescendants) {
+	public AnnotationListForOWLClass(KnowtatorView view, JCheckBox includeClassDescendantsCheckBox, JLabel owlClassLabel) {
 		super(view);
-		this.activeOWLClassDescendants = activeOWLClassDescendants;
+		this.includeClassDescendantsCheckBox = includeClassDescendantsCheckBox;
+		this.owlClassLabel = owlClassLabel;
+		this.activeOWLClassDescendants = new HashSet<>();
 	}
 
 	@Override
@@ -43,6 +49,21 @@ public class AnnotationListForOWLClass extends AnnotationList {
 				.forEach(textSource -> textSource.getConceptAnnotations().stream()
 						.filter(conceptAnnotation -> activeOWLClassDescendants.contains(conceptAnnotation.getOwlClass()))
 						.forEach(conceptAnnotation -> getDefaultListModel().addElement(conceptAnnotation))));
+	}
+
+	@Override
+	public void reset() {
+		activeOWLClassDescendants.clear();
+		view.getModel().ifPresent(model -> model.getSelectedOWLClass()
+				.ifPresent(owlClass -> {
+					activeOWLClassDescendants.add(owlClass);
+					if (includeClassDescendantsCheckBox.isSelected()) {
+						activeOWLClassDescendants.addAll(model.getOWLCLassDescendants(owlClass));
+					}
+					owlClassLabel.setText(model.getOWLEntityRendering(owlClass));
+				}));
+
+		super.reset();
 	}
 
 }

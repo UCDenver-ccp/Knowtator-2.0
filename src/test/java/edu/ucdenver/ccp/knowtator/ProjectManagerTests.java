@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+@SuppressWarnings("EmptyMethod")
 class ProjectManagerTests {
 
 	private static KnowtatorModel controller;
@@ -45,7 +46,6 @@ class ProjectManagerTests {
     void loadProjectTest() {
         TestingHelpers.checkDefaultCollectionValues(controller);
 	    controller.load();
-
     }
 
     @Test
@@ -60,6 +60,7 @@ class ProjectManagerTests {
     void importProjectTest() {
     }
 
+    @SuppressWarnings("EmptyMethod")
     @Test
     void makeProjectStructureTest() {
     }

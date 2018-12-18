@@ -55,10 +55,11 @@ import static java.lang.Math.min;
  * A text pane that can be annotated
  */
 public abstract class AnnotatableTextPane extends SearchableTextPane implements KnowtatorComponent, ModelListener {
+	@SuppressWarnings("unused")
+	private Logger log = LogManager.getLogger(AnnotatableTextPane.class.getName());
 
 	private final MouseListener mouseListener;
 	private final DefaultHighlighter.DefaultHighlightPainter overlapHighlighter = new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
-	private Logger log = LogManager.getLogger(AnnotatableTextPane.class.getName());
 
 	AnnotatableTextPane(KnowtatorView view, JTextField searchTextField) {
 		super(view, searchTextField);
@@ -324,7 +325,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 		view.getModel().ifPresent(model -> model.removeModelListener(this));
 	}
 
-	public class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {
+	class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {
 
 		@SuppressWarnings("SameParameterValue")
 		RectanglePainter(Color color) {

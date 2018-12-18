@@ -32,7 +32,7 @@ import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 
 import java.util.Collection;
 
-public class ChangeSelectionListener implements mxEventSource.mxIEventListener {
+class ChangeSelectionListener implements mxEventSource.mxIEventListener {
 	private final GraphView graphView;
 
 	ChangeSelectionListener(GraphView graphView) {

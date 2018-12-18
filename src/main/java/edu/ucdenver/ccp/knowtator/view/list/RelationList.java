@@ -31,16 +31,22 @@ import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
+import javax.swing.*;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 public class RelationList extends KnowtatorList<RelationAnnotation> {
 	private final Set<OWLObjectProperty> activeOWLPropertyDescendants;
+	private final JCheckBox includePropertyDescendantsCheckBox;
+	private final JLabel owlPropertyLabel;
 
-	public RelationList(KnowtatorView view, Set<OWLObjectProperty> activeOWLPropertyDescendants) {
+	public RelationList(KnowtatorView view, JCheckBox includePropertyDescendantsCheckBox, JLabel owlPropertyLabel) {
 		super(view);
 
-		this.activeOWLPropertyDescendants = activeOWLPropertyDescendants;
+		this.activeOWLPropertyDescendants = new HashSet<>();
+		this.includePropertyDescendantsCheckBox = includePropertyDescendantsCheckBox;
+		this.owlPropertyLabel = owlPropertyLabel;
 	}
 
 	@Override
@@ -79,5 +85,20 @@ public class RelationList extends KnowtatorList<RelationAnnotation> {
 	@Override
 	public void reactToModelEvent() {
 
+	}
+
+	@Override
+	public void reset() {
+		activeOWLPropertyDescendants.clear();
+
+		view.getModel().ifPresent(model -> model.getSelectedOWLObjectProperty()
+				.ifPresent(owlObjectProperty -> {
+					activeOWLPropertyDescendants.add(owlObjectProperty);
+					if (includePropertyDescendantsCheckBox.isSelected()) {
+						activeOWLPropertyDescendants.addAll(model.getOWLObjectPropertyDescendants(owlObjectProperty));
+					}
+					owlPropertyLabel.setText(model.getOWLEntityRendering(owlObjectProperty));
+				}));
+		super.reset();
 	}
 }

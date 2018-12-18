@@ -24,6 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.model.object;
 
-public interface GraphBoundModelObject<K extends GraphBoundModelObject> extends TextBoundModelObject<K> {
+interface GraphBoundModelObject<K extends GraphBoundModelObject> extends TextBoundModelObject<K> {
 	GraphSpace getGraphSpace();
 }

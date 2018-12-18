@@ -38,7 +38,7 @@ import java.awt.event.KeyListener;
 
 public class AnnotationNotes extends JTextArea implements KnowtatorComponent, ModelListener {
 	private ConceptAnnotation conceptAnnotation;
-	private KnowtatorView view;
+	private final KnowtatorView view;
 
 	AnnotationNotes(KnowtatorView view) {
 		this.view = view;
@@ -102,7 +102,7 @@ public class AnnotationNotes extends JTextArea implements KnowtatorComponent, Mo
 		react();
 	}
 
-	public void react() {
+	private void react() {
 		view.getModel()
 				.flatMap(BaseModel::getSelectedTextSource)
 				.ifPresent(textSource -> {

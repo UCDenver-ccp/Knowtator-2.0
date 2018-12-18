@@ -48,7 +48,7 @@ public class MenuDialog extends JDialog {
 	private JSplitPane splitPane;
 	private final KnowtatorView view;
 
-	public MenuDialog(Window parent, KnowtatorView view) {
+	private MenuDialog(Window parent, KnowtatorView view) {
 		super(parent);
 		this.view = view;
 		$$$setupUI$$$();
@@ -91,7 +91,6 @@ public class MenuDialog extends JDialog {
 			CardLayout cl = (CardLayout) menuDisplayPane.getLayout();
 			cl.show(menuDisplayPane, menuOptionsList.getSelectedValue().toString());
 			lastDisplayed.dispose();
-			menuOptionsList.getSelectedValue().show();
 		});
 
 
@@ -108,12 +107,11 @@ public class MenuDialog extends JDialog {
 
 	private void createUIComponents() {
 		menuOptionsList = new JList<>(new MenuPane[]{
-				new FilePane(this, view),
+
 				new ImportPane(this, view),
 				new ExportPane(view),
-				new ProfilePane(view),
-				new IAAPane(view),
-				new ReviewPane(view)});
+				new IAAPane(view)
+		});
 	}
 
 	/**

@@ -119,9 +119,6 @@
       <item class="javax.swing.JScrollBar" icon="/com/intellij/uiDesigner/icons/scrollbar.png" removable="false" auto-create-binding="true" can-attach-label="false">
         <default-constraints vsize-policy="6" hsize-policy="0" anchor="0" fill="2" />
       </item>
-      <item class="edu.ucdenver.ccp.knowtator.view.text.concept.InfoPane" icon="" removable="true" auto-create-binding="false" can-attach-label="false">
-        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
-      </item>
       <item class="edu.ucdenver.ccp.knowtator.view.KnowtatorView" icon="" removable="true" auto-create-binding="false" can-attach-label="false">
         <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
       </item>
@@ -140,7 +137,16 @@
       <item class="edu.ucdenver.ccp.knowtator.view.text.TextView" icon="" removable="true" auto-create-binding="false" can-attach-label="false">
         <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
       </item>
-      <item class="edu.ucdenver.ccp.knowtator.view.text.AnnotationPane" icon="" removable="true" auto-create-binding="false" can-attach-label="false">
+      <item class="edu.ucdenver.ccp.knowtator.view.menu.ConceptAnnotationReviewPane" icon="" removable="true" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
+      </item>
+      <item class="edu.ucdenver.ccp.knowtator.view.menu.RelationAnnotationReviewPane" icon="" removable="true" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
+      </item>
+      <item class="edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane" icon="/com/intellij/uiDesigner/icons/textPane.png" removable="true" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
+      </item>
+      <item class="edu.ucdenver.ccp.knowtator.view.menu.ConceptAnnotationPane" icon="" removable="true" auto-create-binding="false" can-attach-label="false">
         <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="0" />
       </item>
     </group>

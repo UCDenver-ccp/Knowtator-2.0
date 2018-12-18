@@ -40,7 +40,7 @@ public class SpanList extends KnowtatorList<Span> {
 	}
 
 	@Override
-	protected void reactToClick() {
+	public void reactToClick() {
 		Optional<Span> spanOptional = Optional.ofNullable(getSelectedValue());
 		spanOptional.ifPresent(span -> {
 			view.getModel().ifPresent(model -> model.getTextSources().setSelection(span.getTextSource()));

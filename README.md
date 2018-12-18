@@ -77,7 +77,7 @@ Add as a View to a Protege tab by going to Window -> Views -> Miscellaneous View
 ## Concept Annotation
 
 
-Protege is first and foremost, an ontology editor. This plugin is intended to make use of Protege's built-in OWL-API to annotate text with OWL entities. To do so, simply select a term from the Class Hierarchy (Window -> Views -> Class views -> Class hierarchy), highlight a span of text in a document, and click the ![][plus] button and select "Add new conecpt". 
+Protege is first and foremost, an ontology editor. This plugin is intended to make use of Protege's built-in OWL-API to annotate text with OWL entities. To do so, simply select a term from the Class Hierarchy (Window -> Views -> Class views -> Class hierarchy), highlight a span of text in a document, and click the ![][plus] button and select "Add new concept". 
 
 To remove the selected icon, click the ![][remove] button.
 
@@ -116,7 +116,7 @@ To calculate IAA, click ![][menu] the "IAA". Select the types of IAA you wish to
 
 In addition to concept annotation in text, Knowtator has also been updated to support relation annotation. Relation annotations are made by connecting two concept annotations with an OWL object property. Just like the RDF triple subject-predicate-object model, relation annotations assert a relationship between two entities. These relationships form a directed graph.
 
-To begin making relation annotations, open the graph viewer by clicking ![][graph viewer]. The graph viewer is used to create graph spaces and display relations. Selecting a concept annotation in the text pane, and then clicking the ![][plus] in the graph viewer will bring that concept annotation into the current graph space. It will display as a rectangle witht the color of the concept annotation and contain each of the concept annotation's the text spans. Once two or more concept annotations are in the graph space, select an object property (Window -> Views -> Object property views -> Object property hierarchy), then hover your mouse over a concept annotation node until it becomes a pointer finger. Click and drag the arrow to another concept annotation node. A window will appear allowing you to choose a quantifier or negate the relation.
+To begin making relation annotations, open the graph viewer by clicking ![][graph viewer]. The graph viewer is used to create graph spaces and display relations. Selecting a concept annotation in the text pane, and then clicking the ![][plus] in the graph viewer will bring that concept annotation into the current graph space. It will display as a rectangle with the color of the concept annotation and contain each of the concept annotation's the text spans. Once two or more concept annotations are in the graph space, select an object property (Window -> Views -> Object property views -> Object property hierarchy), then hover your mouse over a concept annotation node until it becomes a pointer finger. Click and drag the arrow to another concept annotation node. A window will appear allowing you to choose a quantifier or negate the relation.
 
 
 ## Acknowledgements

@@ -35,7 +35,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public abstract class ListenableCollection<K extends ModelObject, C extends Collection<K>> implements Iterable<K> {
-	BaseModel model;
+	final BaseModel model;
 	final C collection;
 
 
@@ -44,7 +44,7 @@ public abstract class ListenableCollection<K extends ModelObject, C extends Coll
 		this.collection = collection;
 	}
 
-	public void add(K objectToAdd) {
+	void add(K objectToAdd) {
 		collection.add(objectToAdd);
 
 		if (model != null) {
