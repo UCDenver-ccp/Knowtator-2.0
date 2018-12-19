@@ -53,7 +53,7 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 
 	@Override
 	public void prepareRemove() {
-		collection.get(profileId).ifPresent(this::setObject);
+		collection.getSelection().ifPresent(this::setObject);
 
 	}
 

@@ -38,6 +38,7 @@ public class ProfileList extends KnowtatorList<Profile> {
 
 	@Override
 	public void reactToClick() {
+		//TODO: Something is going wrong when double clicking a profile with no colors. java.lang.ArrayIndexOutOfBoundsException: null
 		Optional<Profile> profileOptional = Optional.ofNullable(getSelectedValue());
 		profileOptional.ifPresent(profile -> view.getModel()
 				.ifPresent(model -> model.getProfiles()

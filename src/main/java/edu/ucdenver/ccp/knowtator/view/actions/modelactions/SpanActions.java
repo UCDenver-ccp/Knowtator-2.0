@@ -119,7 +119,7 @@ public class SpanActions {
     public static void modifySelection(KnowtatorView view, String startOrEnd, String growOrShrink) {
         int startModification = getStartModification(startOrEnd, growOrShrink);
         int endModification = getEndModification(startOrEnd, growOrShrink);
-        KnowtatorTextPane textPane = view.getKnowtatorTextPane();
+        KnowtatorTextPane textPane = view.getTextPane();
         textPane.modifySelection(startModification, endModification);
     }
 }

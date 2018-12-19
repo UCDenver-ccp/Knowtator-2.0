@@ -1,195 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="edu.ucdenver.ccp.knowtator.view.KnowtatorView">
-  <grid id="53e4c" binding="panel1" layout-manager="CardLayout" hgap="0" vgap="0" show="4b0c9">
+  <grid id="d76cc" binding="rootPane" custom-create="true" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="20" y="20" width="1187" height="607"/>
+      <xy x="20" y="20" width="1187" height="788"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="4b0c9" binding="mainPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
-        <constraints>
-          <card name="Main"/>
-        </constraints>
+      <grid id="53e4c" binding="cardPanel" layout-manager="CardLayout" hgap="0" vgap="0" show="4b0c9">
+        <constraints border-constraint="Center"/>
         <properties/>
         <border type="none"/>
         <children>
-          <splitpane id="47207">
-            <constraints border-constraint="Center"/>
+          <grid id="4b0c9" binding="mainPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <card name="Main"/>
+            </constraints>
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="bb03c" layout-manager="BorderLayout" hgap="0" vgap="0">
-                <constraints>
-                  <splitpane position="right"/>
-                </constraints>
+              <splitpane id="47207" binding="body">
+                <constraints border-constraint="Center"/>
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <grid id="c253e" layout-manager="GridLayoutManager" row-count="9" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                    <margin top="0" left="0" bottom="0" right="0"/>
-                    <constraints border-constraint="Center"/>
-                    <properties>
-                      <maximumSize width="200" height="2147483647"/>
-                      <minimumSize width="200" height="158"/>
-                    </properties>
+                  <grid id="bb03c" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints>
+                      <splitpane position="right"/>
+                    </constraints>
+                    <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="2f2ba" class="javax.swing.JLabel">
-                        <constraints>
-                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <font name="Verdana" size="12" style="1"/>
-                          <text value="ID"/>
-                        </properties>
-                      </component>
-                      <component id="46426" class="javax.swing.JLabel">
-                        <constraints>
-                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <font name="Verdana" size="12" style="1"/>
-                          <text value="Annotator"/>
-                        </properties>
-                      </component>
-                      <component id="7f9bc" class="javax.swing.JLabel">
-                        <constraints>
-                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <font name="Verdana" size="12" style="1"/>
-                          <text value="Class"/>
-                        </properties>
-                      </component>
-                      <component id="f918b" class="javax.swing.JLabel">
-                        <constraints>
-                          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <font name="Verdana" size="18" style="1"/>
-                          <labelFor value="fcd1b"/>
-                          <text value="Graph Spaces"/>
-                        </properties>
-                      </component>
-                      <scrollpane id="65a14">
-                        <constraints>
-                          <grid row="8" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties/>
-                        <border type="none"/>
-                        <children>
-                          <component id="6bfe9" class="edu.ucdenver.ccp.knowtator.view.list.GraphSpaceList" binding="graphSpaceList" custom-create="true">
-                            <constraints/>
-                            <properties>
-                              <font name="Verdana" size="10" style="0"/>
-                            </properties>
-                          </component>
-                        </children>
-                      </scrollpane>
-                      <component id="93daf" class="edu.ucdenver.ccp.knowtator.view.label.AnnotationIDLabel" binding="annotationIDLabel" custom-create="true">
-                        <constraints>
-                          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <font name="Verdana" size="10" style="0"/>
-                          <text value=""/>
-                        </properties>
-                      </component>
-                      <component id="f53ad" class="edu.ucdenver.ccp.knowtator.view.label.AnnotationAnnotatorLabel" binding="annotationAnnotatorLabel" custom-create="true">
-                        <constraints>
-                          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <font name="Verdana" size="10" style="0"/>
-                        </properties>
-                      </component>
-                      <component id="c8d8a" class="edu.ucdenver.ccp.knowtator.view.label.AnnotationClassLabel" binding="annotationClassLabel" custom-create="true">
-                        <constraints>
-                          <grid row="3" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <font name="Verdana" size="10" style="0"/>
-                          <text value=""/>
-                        </properties>
-                      </component>
-                      <component id="fc7fe" class="javax.swing.JLabel">
-                        <constraints>
-                          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <font name="Verdana" size="12" style="1"/>
-                          <text value="Notes"/>
-                        </properties>
-                      </component>
-                      <scrollpane id="abd72">
-                        <constraints>
-                          <grid row="4" column="1" row-span="2" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties/>
-                        <border type="none"/>
-                        <children>
-                          <component id="e6510" class="edu.ucdenver.ccp.knowtator.view.AnnotationNotes" binding="annotationNotes" custom-create="true">
-                            <constraints/>
-                            <properties/>
-                          </component>
-                        </children>
-                      </scrollpane>
-                      <vspacer id="2c13d">
-                        <constraints>
-                          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                      </vspacer>
-                      <hspacer id="91e5e">
-                        <constraints>
-                          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                      </hspacer>
-                      <grid id="c9d64" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                      <grid id="c253e" binding="infoPane" layout-manager="GridLayoutManager" row-count="11" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                         <margin top="0" left="0" bottom="0" right="0"/>
-                        <constraints>
-                          <grid row="6" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties/>
-                        <border type="none"/>
+                        <constraints border-constraint="Center"/>
+                        <properties>
+                          <maximumSize width="200" height="2147483647"/>
+                          <minimumSize width="200" height="158"/>
+                        </properties>
+                        <border type="none" title="Info">
+                          <font name="Verdana" size="18"/>
+                        </border>
                         <children>
-                          <component id="68d4d" class="javax.swing.JLabel">
-                            <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <font name="Verdana" size="18" style="1"/>
-                              <labelFor value="280d3"/>
-                              <text value="Spans"/>
-                            </properties>
-                          </component>
-                          <scrollpane id="bcf75">
-                            <constraints>
-                              <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties/>
-                            <border type="none"/>
-                            <children>
-                              <component id="434b8" class="edu.ucdenver.ccp.knowtator.view.list.SpanList" binding="spanList" custom-create="true">
-                                <constraints/>
-                                <properties>
-                                  <font name="Verdana" size="10" style="0"/>
-                                </properties>
-                              </component>
-                            </children>
-                          </scrollpane>
-                          <grid id="b3985" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                          <grid id="c9d64" binding="spanPane" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                             <margin top="0" left="0" bottom="0" right="0"/>
                             <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <grid row="8" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties/>
-                            <border type="none"/>
+                            <border type="none" title="Spans">
+                              <font name="Verdana" size="14"/>
+                            </border>
                             <children>
-                              <grid id="3504e" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                              <scrollpane id="bcf75">
+                                <constraints>
+                                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties/>
+                                <border type="none"/>
+                                <children>
+                                  <component id="434b8" class="edu.ucdenver.ccp.knowtator.view.list.SpanList" binding="spanList" custom-create="true">
+                                    <constraints/>
+                                    <properties>
+                                      <font name="Verdana" size="10" style="0"/>
+                                    </properties>
+                                  </component>
+                                </children>
+                              </scrollpane>
+                              <grid id="e9543" layout-manager="GridLayoutManager" row-count="1" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                                 <margin top="0" left="0" bottom="0" right="0"/>
                                 <constraints>
-                                  <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                                 </constraints>
                                 <properties/>
                                 <border type="none"/>
@@ -200,8 +81,7 @@
                                     </constraints>
                                     <properties>
                                       <font name="Verdana" size="10" style="0"/>
-                                      <icon value="icon/icons8-exit-32 (reversed).png"/>
-                                      <text value=""/>
+                                      <text value="Grow Start"/>
                                     </properties>
                                   </component>
                                   <component id="30b5b" class="javax.swing.JButton" binding="shrinkStartButton">
@@ -210,8 +90,7 @@
                                     </constraints>
                                     <properties>
                                       <font name="Verdana" size="10" style="0"/>
-                                      <icon value="icon/icons8-enter-32.png"/>
-                                      <text value=""/>
+                                      <text value="Shrink Start"/>
                                     </properties>
                                   </component>
                                   <component id="d63b8" class="javax.swing.JButton" binding="shrinkEndButton">
@@ -220,40 +99,305 @@
                                     </constraints>
                                     <properties>
                                       <font name="Verdana" size="10" style="0"/>
-                                      <icon value="icon/icons8-enter-32 (reversed).png"/>
-                                      <text value=""/>
+                                      <text value="Shrink End"/>
+                                    </properties>
+                                  </component>
+                                  <component id="2f979" class="javax.swing.JButton" binding="growEndButton">
+                                    <constraints>
+                                      <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties>
+                                      <font name="Verdana" size="10" style="0"/>
+                                      <text value="Grow End"/>
+                                    </properties>
+                                  </component>
+                                  <hspacer id="85fa6">
+                                    <constraints>
+                                      <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                  </hspacer>
+                                </children>
+                              </grid>
+                            </children>
+                          </grid>
+                          <grid id="e72fc" binding="graphSpacePane" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                            <margin top="0" left="0" bottom="0" right="0"/>
+                            <constraints>
+                              <grid row="9" column="0" row-span="2" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties/>
+                            <border type="none" title="Graph Spaces">
+                              <font name="Verdana" size="14"/>
+                            </border>
+                            <children>
+                              <scrollpane id="65a14">
+                                <constraints>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties/>
+                                <border type="none"/>
+                                <children>
+                                  <component id="6bfe9" class="edu.ucdenver.ccp.knowtator.view.list.GraphSpaceList" binding="graphSpaceList" custom-create="true">
+                                    <constraints/>
+                                    <properties>
+                                      <font name="Verdana" size="10" style="0"/>
                                     </properties>
                                   </component>
                                 </children>
-                              </grid>
-                              <component id="2f979" class="javax.swing.JButton" binding="growEndButton">
+                              </scrollpane>
+                            </children>
+                          </grid>
+                          <scrollpane id="abd72">
+                            <constraints>
+                              <grid row="3" column="0" row-span="5" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties/>
+                            <border type="none" title="Notes">
+                              <font name="Verdana"/>
+                            </border>
+                            <children>
+                              <component id="e6510" class="edu.ucdenver.ccp.knowtator.view.AnnotationNotes" binding="annotationNotes" custom-create="true">
+                                <constraints/>
+                                <properties/>
+                              </component>
+                            </children>
+                          </scrollpane>
+                          <grid id="355b4" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                            <margin top="0" left="0" bottom="0" right="0"/>
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties/>
+                            <border type="none" title="ID" title-justification="1">
+                              <font name="Verdana"/>
+                            </border>
+                            <children>
+                              <component id="93daf" class="edu.ucdenver.ccp.knowtator.view.label.AnnotationIDLabel" binding="annotationIDLabel" custom-create="true">
                                 <constraints>
-                                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                                 </constraints>
                                 <properties>
                                   <font name="Verdana" size="10" style="0"/>
-                                  <icon value="icon/icons8-exit-32.png"/>
                                   <text value=""/>
                                 </properties>
                               </component>
-                              <hspacer id="b03d3">
-                                <constraints>
-                                  <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                                </constraints>
-                              </hspacer>
                             </children>
                           </grid>
+                          <grid id="fd063" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                            <margin top="0" left="0" bottom="0" right="0"/>
+                            <constraints>
+                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties/>
+                            <border type="none" title="Annotator">
+                              <font name="Verdana"/>
+                            </border>
+                            <children>
+                              <component id="f53ad" class="edu.ucdenver.ccp.knowtator.view.label.AnnotationAnnotatorLabel" binding="annotationAnnotatorLabel" custom-create="true">
+                                <constraints>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties>
+                                  <font name="Verdana" size="10" style="0"/>
+                                </properties>
+                              </component>
+                            </children>
+                          </grid>
+                          <grid id="93a71" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                            <margin top="0" left="0" bottom="0" right="0"/>
+                            <constraints>
+                              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties/>
+                            <border type="none" title="OWL CLass">
+                              <font name="Verdana"/>
+                            </border>
+                            <children>
+                              <component id="c8d8a" class="edu.ucdenver.ccp.knowtator.view.label.AnnotationClassLabel" binding="annotationClassLabel" custom-create="true">
+                                <constraints>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties>
+                                  <font name="Verdana" size="10" style="0"/>
+                                  <text value=""/>
+                                </properties>
+                              </component>
+                            </children>
+                          </grid>
+                          <vspacer id="589f3">
+                            <constraints>
+                              <grid row="3" column="1" row-span="5" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                          </vspacer>
                         </children>
                       </grid>
-                      <grid id="b34af" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    </children>
+                  </grid>
+                  <scrollpane id="61fc5">
+                    <constraints>
+                      <splitpane position="left"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="80f37" class="edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane" binding="textPane" custom-create="true">
+                        <constraints/>
+                        <properties>
+                          <minimumSize width="200" height="22"/>
+                          <preferredSize width="500" height="500"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </scrollpane>
+                </children>
+              </splitpane>
+              <tabbedpane id="bdb0d" binding="header">
+                <constraints border-constraint="North"/>
+                <properties>
+                  <font name="Verdana" size="14" style="0"/>
+                  <preferredSize width="788" height="200"/>
+                  <tabLayoutPolicy value="0"/>
+                  <tabPlacement value="1"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <grid id="42301" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <tabbedpane title="File"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <hspacer id="32237">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                      </hspacer>
+                    </children>
+                  </grid>
+                  <grid id="5cc01" layout-manager="GridLayoutManager" row-count="2" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <tabbedpane title="Home"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <hspacer id="c4e90">
+                        <constraints>
+                          <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                      </hspacer>
+                      <grid id="d64de" binding="undoPane" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                         <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties/>
                         <border type="none"/>
                         <children>
-                          <grid id="6bec2" layout-manager="GridLayoutManager" row-count="1" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                          <component id="9c597" class="javax.swing.JButton" binding="undoButton" default-binding="true">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <icon value="icon/icons8-undo-32.png"/>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                          <component id="4baaa" class="javax.swing.JButton" binding="redoButton" default-binding="true">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <icon value="icon/icons8-redo-32.png"/>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="a822d" binding="externalButtonsPane" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
+                        <constraints>
+                          <grid row="0" column="0" row-span="2" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="3fc82" class="javax.swing.JButton" binding="assignColorToClassButton">
+                            <constraints>
+                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <icon value="icon/icons8-color-dropper-filled-50 (Custom).png"/>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                          <component id="8c691" class="javax.swing.JButton" binding="showGraphViewerButton">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <font name="Verdana" size="10" style="0"/>
+                              <icon value="icon/icons8-tree-structure-32.png"/>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <vspacer id="d4dfb">
+                        <constraints>
+                          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                      </vspacer>
+                      <grid id="5136" binding="filterPane" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
+                        <constraints>
+                          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="a3ff0" class="javax.swing.JCheckBox" binding="owlClassFilterCheckBox">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <font name="Verdana" size="10" style="0"/>
+                              <text value="OWL Class"/>
+                            </properties>
+                          </component>
+                          <component id="f1049" class="javax.swing.JCheckBox" binding="profileFilterCheckBox">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <font name="Verdana" size="10" style="0"/>
+                              <text value="Profile"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="e833" binding="textSourcePane" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
+                        <constraints>
+                          <grid row="0" column="2" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none" title="Document" title-justification="2">
+                          <font name="Verdana" size="14"/>
+                        </border>
+                        <children>
+                          <component id="dbec8" class="edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser" binding="textSourceChooser" custom-create="true">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <preferredSize width="150" height="24"/>
+                            </properties>
+                          </component>
+                          <grid id="a39ac" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                             <margin top="0" left="0" bottom="0" right="0"/>
                             <constraints>
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -261,53 +405,205 @@
                             <properties/>
                             <border type="none"/>
                             <children>
-                              <component id="6fc0e" class="javax.swing.JButton" binding="addAnnotationButton">
+                              <component id="fc89" class="javax.swing.JButton" binding="previousTextSourceButton">
                                 <constraints>
                                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                </constraints>
-                                <properties>
-                                  <font name="Verdana" size="10" style="0"/>
-                                  <horizontalTextPosition value="0"/>
-                                  <icon value="icon/icons8-plus-24.png"/>
-                                  <text value=""/>
-                                  <verticalAlignment value="0"/>
-                                  <verticalTextPosition value="3"/>
-                                </properties>
-                              </component>
-                              <component id="e9c93" class="javax.swing.JButton" binding="removeAnnotationButton">
-                                <constraints>
-                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                </constraints>
-                                <properties>
-                                  <font name="Verdana" size="10" style="0"/>
-                                  <horizontalTextPosition value="0"/>
-                                  <icon value="icon/icons8-delete-24.png"/>
-                                  <text value=""/>
-                                  <verticalTextPosition value="3"/>
-                                </properties>
-                              </component>
-                              <component id="3b76c" class="javax.swing.JButton" binding="previousSpanButton">
-                                <constraints>
-                                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                                 </constraints>
                                 <properties>
                                   <icon value="icon/icons8-advance-24 (reversed).png"/>
                                   <text value=""/>
                                 </properties>
                               </component>
-                              <component id="2ad30" class="javax.swing.JButton" binding="nextSpanButton">
+                              <component id="f8593" class="javax.swing.JButton" binding="nextTextSourceButton">
                                 <constraints>
-                                  <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                                 </constraints>
                                 <properties>
-                                  <horizontalAlignment value="0"/>
                                   <icon value="icon/icons8-advance-24.png"/>
                                   <text value=""/>
                                 </properties>
                               </component>
-                              <hspacer id="fc4bd">
+                              <component id="88617" class="javax.swing.JButton" binding="addTextSourceButton">
                                 <constraints>
-                                  <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties>
+                                  <icon value="icon/icons8-plus-24.png"/>
+                                  <text value=""/>
+                                </properties>
+                              </component>
+                              <component id="6673c" class="javax.swing.JButton" binding="removeTextSourceButton">
+                                <constraints>
+                                  <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties>
+                                  <icon value="icon/icons8-delete-24.png"/>
+                                  <text value=""/>
+                                </properties>
+                              </component>
+                            </children>
+                          </grid>
+                          <component id="f15a2" class="javax.swing.JSlider" binding="fontSizeSlider">
+                            <constraints>
+                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <inverted value="false"/>
+                              <majorTickSpacing value="8"/>
+                              <maximum value="28"/>
+                              <minimum value="8"/>
+                              <minorTickSpacing value="1"/>
+                              <snapToTicks value="true"/>
+                              <value value="16"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="b34af" binding="annotationPaneButtons" layout-manager="GridLayoutManager" row-count="1" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
+                        <constraints>
+                          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none" title="Annotation" title-justification="2">
+                          <font name="Verdana" size="14"/>
+                        </border>
+                        <children>
+                          <component id="6fc0e" class="javax.swing.JButton" binding="addAnnotationButton">
+                            <constraints>
+                              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <font name="Verdana" size="10" style="0"/>
+                              <horizontalTextPosition value="0"/>
+                              <icon value="icon/icons8-plus-24.png"/>
+                              <text value=""/>
+                              <verticalAlignment value="0"/>
+                              <verticalTextPosition value="3"/>
+                            </properties>
+                          </component>
+                          <component id="e9c93" class="javax.swing.JButton" binding="removeAnnotationButton">
+                            <constraints>
+                              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <font name="Verdana" size="10" style="0"/>
+                              <horizontalTextPosition value="0"/>
+                              <icon value="icon/icons8-delete-24.png"/>
+                              <text value=""/>
+                              <verticalTextPosition value="3"/>
+                            </properties>
+                          </component>
+                          <hspacer id="fc4bd">
+                            <constraints>
+                              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                          </hspacer>
+                          <component id="3b76c" class="javax.swing.JButton" binding="previousSpanButton">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <icon value="icon/icons8-advance-24 (reversed).png"/>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                          <component id="2ad30" class="javax.swing.JButton" binding="nextSpanButton">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <horizontalAlignment value="0"/>
+                              <icon value="icon/icons8-advance-24.png"/>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                    </children>
+                  </grid>
+                  <grid id="8ec4a" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <tabbedpane title="Profile"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <scrollpane id="35ce2">
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none" title="Colors" title-justification="2">
+                          <font name="Verdana" size="14"/>
+                        </border>
+                        <children>
+                          <component id="83849" class="edu.ucdenver.ccp.knowtator.view.list.ColorList" binding="colorList" custom-create="true">
+                            <constraints/>
+                            <properties>
+                              <font name="Verdana" size="10" style="0"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </scrollpane>
+                      <grid id="7ed8" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none" title="Profiles" title-justification="2">
+                          <font name="Verdana" size="14"/>
+                        </border>
+                        <children>
+                          <scrollpane id="85c4">
+                            <constraints>
+                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties/>
+                            <border type="none"/>
+                            <children>
+                              <component id="a5d14" class="edu.ucdenver.ccp.knowtator.view.list.ProfileList" binding="profileList" custom-create="true">
+                                <constraints/>
+                                <properties>
+                                  <font name="Verdana" size="12" style="0"/>
+                                </properties>
+                              </component>
+                            </children>
+                          </scrollpane>
+                          <grid id="83e1f" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                            <margin top="0" left="0" bottom="0" right="0"/>
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties/>
+                            <border type="none"/>
+                            <children>
+                              <component id="919c1" class="javax.swing.JButton" binding="addProfileButton" default-binding="true">
+                                <constraints>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties>
+                                  <font name="Verdana" size="10" style="0"/>
+                                  <icon value="icon/icons8-plus-24.png"/>
+                                  <text value=""/>
+                                </properties>
+                              </component>
+                              <component id="bde5c" class="javax.swing.JButton" binding="removeProfileButton" default-binding="true">
+                                <constraints>
+                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties>
+                                  <enabled value="true"/>
+                                  <font name="Verdana" size="10" style="0"/>
+                                  <icon value="icon/icons8-delete-24.png"/>
+                                  <text value=""/>
+                                </properties>
+                              </component>
+                              <hspacer id="c4721">
+                                <constraints>
+                                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                                 </constraints>
                               </hspacer>
                             </children>
@@ -316,331 +612,10 @@
                       </grid>
                     </children>
                   </grid>
-                </children>
-              </grid>
-              <scrollpane id="61fc5">
-                <constraints>
-                  <splitpane position="left"/>
-                </constraints>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <component id="80f37" class="edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane" binding="knowtatorTextPane" custom-create="true">
-                    <constraints/>
-                    <properties>
-                      <minimumSize width="200" height="22"/>
-                      <preferredSize width="500" height="500"/>
-                    </properties>
-                  </component>
-                </children>
-              </scrollpane>
-            </children>
-          </splitpane>
-          <tabbedpane id="bdb0d" binding="tabbedPane1" default-binding="true">
-            <constraints border-constraint="North"/>
-            <properties>
-              <font name="Verdana" size="14" style="0"/>
-              <preferredSize width="788" height="200"/>
-              <tabLayoutPolicy value="0"/>
-              <tabPlacement value="1"/>
-            </properties>
-            <border type="none"/>
-            <children>
-              <grid id="42301" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="0" left="0" bottom="0" right="0"/>
-                <constraints>
-                  <tabbedpane title="File"/>
-                </constraints>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <hspacer id="32237">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                  </hspacer>
-                </children>
-              </grid>
-              <grid id="5cc01" layout-manager="GridLayoutManager" row-count="2" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="0" left="0" bottom="0" right="0"/>
-                <constraints>
-                  <tabbedpane title="Home"/>
-                </constraints>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <grid id="95773" layout-manager="BorderLayout" hgap="0" vgap="0">
-                    <constraints>
-                      <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties/>
-                    <border type="none"/>
-                    <children>
-                      <component id="fc89" class="javax.swing.JButton" binding="previousTextSourceButton">
-                        <constraints border-constraint="West"/>
-                        <properties>
-                          <icon value="icon/icons8-advance-24 (reversed).png"/>
-                          <text value=""/>
-                        </properties>
-                      </component>
-                      <component id="dbec8" class="edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser" binding="textSourceChooser" custom-create="true">
-                        <constraints border-constraint="Center"/>
-                        <properties>
-                          <preferredSize width="150" height="24"/>
-                        </properties>
-                      </component>
-                      <component id="f8593" class="javax.swing.JButton" binding="nextTextSourceButton">
-                        <constraints border-constraint="East"/>
-                        <properties>
-                          <icon value="icon/icons8-advance-24.png"/>
-                          <text value=""/>
-                        </properties>
-                      </component>
-                      <grid id="f3200" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="0" left="0" bottom="0" right="0"/>
-                        <constraints border-constraint="South"/>
-                        <properties/>
-                        <border type="none"/>
-                        <children>
-                          <component id="88617" class="javax.swing.JButton" binding="addTextSourceButton">
-                            <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <icon value="icon/icons8-plus-24.png"/>
-                              <text value=""/>
-                            </properties>
-                          </component>
-                          <component id="6673c" class="javax.swing.JButton" binding="removeTextSourceButton">
-                            <constraints>
-                              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <icon value="icon/icons8-delete-24.png"/>
-                              <text value=""/>
-                            </properties>
-                          </component>
-                          <hspacer id="fa5c9">
-                            <constraints>
-                              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                          </hspacer>
-                          <hspacer id="c9041">
-                            <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                          </hspacer>
-                        </children>
-                      </grid>
-                    </children>
-                  </grid>
-                  <hspacer id="c4e90">
-                    <constraints>
-                      <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                  </hspacer>
-                  <component id="f15a2" class="javax.swing.JSlider" binding="fontSizeSlider">
-                    <constraints>
-                      <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <inverted value="false"/>
-                      <majorTickSpacing value="8"/>
-                      <maximum value="28"/>
-                      <minimum value="8"/>
-                      <minorTickSpacing value="1"/>
-                      <snapToTicks value="true"/>
-                      <value value="16"/>
-                    </properties>
-                  </component>
-                  <grid id="d64de" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                  <grid id="f5d1c" layout-manager="GridLayoutManager" row-count="3" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="0" left="0" bottom="0" right="0"/>
                     <constraints>
-                      <grid row="0" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties/>
-                    <border type="none"/>
-                    <children>
-                      <component id="9c597" class="javax.swing.JButton" binding="undoButton" default-binding="true">
-                        <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <text value="Undo"/>
-                        </properties>
-                      </component>
-                      <component id="4baaa" class="javax.swing.JButton" binding="redoButton" default-binding="true">
-                        <constraints>
-                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <text value="Redo"/>
-                        </properties>
-                      </component>
-                    </children>
-                  </grid>
-                  <grid id="5136" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                    <margin top="0" left="0" bottom="0" right="0"/>
-                    <constraints>
-                      <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties/>
-                    <border type="none"/>
-                    <children>
-                      <component id="f1049" class="javax.swing.JCheckBox" binding="profileFilterCheckBox">
-                        <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <font name="Verdana" size="10" style="0"/>
-                          <text value="Profile"/>
-                        </properties>
-                      </component>
-                      <component id="a3ff0" class="javax.swing.JCheckBox" binding="owlClassFilterCheckBox">
-                        <constraints>
-                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <font name="Verdana" size="10" style="0"/>
-                          <text value="OWL Class"/>
-                        </properties>
-                      </component>
-                    </children>
-                  </grid>
-                  <grid id="a822d" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                    <margin top="0" left="0" bottom="0" right="0"/>
-                    <constraints>
-                      <grid row="0" column="0" row-span="2" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties/>
-                    <border type="none"/>
-                    <children>
-                      <component id="3fc82" class="javax.swing.JButton" binding="assignColorToClassButton">
-                        <constraints>
-                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <icon value="icon/icons8-color-dropper-filled-50 (Custom).png"/>
-                          <text value=""/>
-                        </properties>
-                      </component>
-                      <component id="8c691" class="javax.swing.JButton" binding="showGraphViewerButton">
-                        <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <font name="Verdana" size="10" style="0"/>
-                          <icon value="icon/icons8-tree-structure-32.png"/>
-                          <text value=""/>
-                        </properties>
-                      </component>
-                    </children>
-                  </grid>
-                </children>
-              </grid>
-              <grid id="8ec4a" layout-manager="GridLayoutManager" row-count="3" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="0" left="0" bottom="0" right="0"/>
-                <constraints>
-                  <tabbedpane title="Profile"/>
-                </constraints>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <component id="bde5c" class="javax.swing.JButton" binding="removeProfileButton" default-binding="true">
-                    <constraints>
-                      <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <enabled value="true"/>
-                      <font name="Verdana" size="10" style="0"/>
-                      <icon value="icon/icons8-delete-24.png"/>
-                      <text resource-bundle="ui" key="remove.profile"/>
-                    </properties>
-                  </component>
-                  <scrollpane id="85c4">
-                    <constraints>
-                      <grid row="1" column="2" row-span="2" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties/>
-                    <border type="none"/>
-                    <children>
-                      <component id="a5d14" class="edu.ucdenver.ccp.knowtator.view.list.ProfileList" binding="profileList" custom-create="true">
-                        <constraints/>
-                        <properties>
-                          <font name="Verdana" size="12" style="0"/>
-                        </properties>
-                      </component>
-                    </children>
-                  </scrollpane>
-                  <component id="390a" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <font name="Verdana" size="12" style="1"/>
-                      <labelFor value="13483"/>
-                      <text resource-bundle="ui" key="profiles"/>
-                    </properties>
-                  </component>
-                  <component id="ff064" class="javax.swing.JTextField" binding="profileNameField">
-                    <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                        <preferred-size width="148" height="24"/>
-                      </grid>
-                    </constraints>
-                    <properties>
-                      <font name="Verdana" size="10" style="0"/>
-                    </properties>
-                  </component>
-                  <component id="919c1" class="javax.swing.JButton" binding="addProfileButton" default-binding="true">
-                    <constraints>
-                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <font name="Verdana" size="10" style="0"/>
-                      <icon value="icon/icons8-plus-24.png"/>
-                      <text value=""/>
-                    </properties>
-                  </component>
-                  <scrollpane id="35ce2">
-                    <constraints>
-                      <grid row="1" column="3" row-span="2" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties/>
-                    <border type="none"/>
-                    <children>
-                      <component id="83849" class="edu.ucdenver.ccp.knowtator.view.list.ColorList" binding="colorList" custom-create="true">
-                        <constraints/>
-                        <properties>
-                          <font name="Verdana" size="10" style="0"/>
-                        </properties>
-                      </component>
-                    </children>
-                  </scrollpane>
-                  <component id="cfee2" class="javax.swing.JLabel">
-                    <constraints>
-                      <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <font name="Verdana" size="12" style="1"/>
-                      <labelFor value="8672c"/>
-                      <text resource-bundle="ui" key="colors1"/>
-                    </properties>
-                  </component>
-                </children>
-              </grid>
-              <grid id="f5d1c" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="0" left="0" bottom="0" right="0"/>
-                <constraints>
-                  <tabbedpane title="Search"/>
-                </constraints>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <grid id="887bf" binding="contentPane" layout-manager="GridLayoutManager" row-count="3" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                    <margin top="0" left="0" bottom="0" right="0"/>
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <tabbedpane title="Search"/>
                     </constraints>
                     <properties/>
                     <border type="none"/>
@@ -670,7 +645,8 @@
                             </constraints>
                             <properties>
                               <font name="Verdana" size="10" style="0"/>
-                              <text value="Next"/>
+                              <icon value="icon/icons8-advance-24.png"/>
+                              <text value=""/>
                             </properties>
                           </component>
                           <component id="75a85" class="javax.swing.JButton" binding="previousMatchButton">
@@ -679,7 +655,8 @@
                             </constraints>
                             <properties>
                               <font name="Verdana" size="10" style="0"/>
-                              <text value="Previous"/>
+                              <icon value="icon/icons8-advance-24 (reversed).png"/>
+                              <text value=""/>
                             </properties>
                           </component>
                         </children>
@@ -725,320 +702,321 @@
                           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                         </constraints>
                       </vspacer>
+                      <hspacer id="c8295">
+                        <constraints>
+                          <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                      </hspacer>
                     </children>
                   </grid>
-                </children>
-              </grid>
-              <grid id="c71ba" layout-manager="GridLayoutManager" row-count="4" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="0" left="0" bottom="0" right="0"/>
-                <constraints>
-                  <tabbedpane title="Review"/>
-                </constraints>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <tabbedpane id="5cbad" binding="reviewTabbedPane">
+                  <grid id="c71ba" layout-manager="GridLayoutManager" row-count="2" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
                     <constraints>
-                      <grid row="1" column="0" row-span="3" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                        <preferred-size width="200" height="200"/>
-                      </grid>
+                      <tabbedpane title="Review"/>
                     </constraints>
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <grid id="45ad2" layout-manager="GridLayoutManager" row-count="2" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="0" left="0" bottom="0" right="0"/>
+                      <tabbedpane id="5cbad" binding="reviewTabbedPane">
                         <constraints>
-                          <tabbedpane title="Text"/>
+                          <grid row="1" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                            <preferred-size width="200" height="200"/>
+                          </grid>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <font name="Verdana" size="14"/>
+                          <tabPlacement value="2"/>
+                        </properties>
                         <border type="none"/>
                         <children>
-                          <component id="1acd9" class="javax.swing.JLabel">
-                            <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <font name="Verdana" size="12" style="1"/>
-                              <labelFor value="7e92c"/>
-                              <text resource-bundle="log4j" key="annotations.containing.text"/>
-                            </properties>
-                          </component>
-                          <scrollpane id="f3132">
-                            <constraints>
-                              <grid row="1" column="0" row-span="1" col-span="4" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties/>
-                            <border type="none"/>
-                            <children>
-                              <component id="f1806" class="edu.ucdenver.ccp.knowtator.view.list.AnnotationList" binding="annotationsForSpannedTextList" custom-create="true" default-binding="true">
-                                <constraints/>
-                                <properties/>
-                              </component>
-                            </children>
-                          </scrollpane>
-                          <component id="6ab79" class="javax.swing.JTextField" binding="annotationsContainingTextTextField" custom-create="true">
-                            <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                                <preferred-size width="150" height="-1"/>
-                              </grid>
-                            </constraints>
-                            <properties/>
-                          </component>
-                          <hspacer id="85f2c">
-                            <constraints>
-                              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                          </hspacer>
-                          <component id="1d6f3" class="javax.swing.JCheckBox" binding="exactMatchCheckBox" custom-create="true" default-binding="true">
-                            <constraints>
-                              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <font name="Verdana" size="12" style="0"/>
-                              <text resource-bundle="log4j" key="exact.match"/>
-                            </properties>
-                          </component>
-                        </children>
-                      </grid>
-                      <grid id="58174" layout-manager="GridLayoutManager" row-count="2" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="0" left="0" bottom="0" right="0"/>
-                        <constraints>
-                          <tabbedpane title="Concept"/>
-                        </constraints>
-                        <properties/>
-                        <border type="none"/>
-                        <children>
-                          <component id="aa632" class="javax.swing.JLabel">
-                            <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <font name="Verdana" size="12" style="1"/>
-                              <labelFor value="dc6b5"/>
-                              <text resource-bundle="log4j" key="annotations.for.owl.class"/>
-                            </properties>
-                          </component>
-                          <component id="3ec6d" class="javax.swing.JLabel" binding="owlClassLabel" custom-create="true">
-                            <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <text value=""/>
-                            </properties>
-                          </component>
-                          <scrollpane id="fe7cb">
-                            <constraints>
-                              <grid row="1" column="0" row-span="1" col-span="4" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties/>
-                            <border type="none"/>
-                            <children>
-                              <component id="f95e4" class="edu.ucdenver.ccp.knowtator.view.list.AnnotationList" binding="annotationsForClassList" custom-create="true">
-                                <constraints/>
-                                <properties/>
-                              </component>
-                            </children>
-                          </scrollpane>
-                          <hspacer id="b342">
-                            <constraints>
-                              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                          </hspacer>
-                          <component id="cd58c" class="javax.swing.JCheckBox" binding="includeClassDescendantsCheckBox" custom-create="true">
-                            <constraints>
-                              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <font name="Verdana" size="12" style="0"/>
-                              <text resource-bundle="log4j" key="include.descendants"/>
-                            </properties>
-                          </component>
-                        </children>
-                      </grid>
-                      <grid id="242ee" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="0" left="0" bottom="0" right="0"/>
-                        <constraints>
-                          <tabbedpane title="Relation"/>
-                        </constraints>
-                        <properties/>
-                        <border type="none"/>
-                        <children>
-                          <grid id="48611" layout-manager="GridLayoutManager" row-count="2" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                          <grid id="45ad2" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                             <margin top="0" left="0" bottom="0" right="0"/>
                             <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <tabbedpane title="Text"/>
                             </constraints>
                             <properties/>
                             <border type="none"/>
                             <children>
-                              <hspacer id="462c2">
+                              <scrollpane id="f3132">
                                 <constraints>
-                                  <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                                </constraints>
-                              </hspacer>
-                              <component id="d37b8" class="javax.swing.JLabel">
-                                <constraints>
-                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                </constraints>
-                                <properties>
-                                  <font name="Verdana" size="12" style="1"/>
-                                  <text resource-bundle="log4j" key="relation.annotations.for.owl.objectproperty"/>
-                                </properties>
-                              </component>
-                              <component id="f5908" class="javax.swing.JLabel" binding="owlPropertyLabel" custom-create="true">
-                                <constraints>
-                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                </constraints>
-                                <properties>
-                                  <font name="Verdana" size="10" style="0"/>
-                                  <text value=""/>
-                                </properties>
-                              </component>
-                              <scrollpane id="487a7">
-                                <constraints>
-                                  <grid row="1" column="0" row-span="1" col-span="4" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                  <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                                 </constraints>
                                 <properties/>
                                 <border type="none"/>
                                 <children>
-                                  <component id="4fbad" class="edu.ucdenver.ccp.knowtator.view.list.RelationList" binding="relationsForPropertyList" custom-create="true">
+                                  <component id="f1806" class="edu.ucdenver.ccp.knowtator.view.list.AnnotationList" binding="annotationsForSpannedTextList" custom-create="true" default-binding="true">
                                     <constraints/>
                                     <properties/>
                                   </component>
                                 </children>
                               </scrollpane>
-                              <component id="52218" class="javax.swing.JCheckBox" binding="includePropertyDescendantsCheckBox" custom-create="true">
+                              <component id="1d6f3" class="javax.swing.JCheckBox" binding="exactMatchCheckBox" custom-create="true" default-binding="true">
                                 <constraints>
-                                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                                 </constraints>
                                 <properties>
                                   <font name="Verdana" size="12" style="0"/>
-                                  <text resource-bundle="log4j" key="include.descendants1"/>
+                                  <text resource-bundle="log4j" key="exact.match"/>
                                 </properties>
                               </component>
+                              <grid id="54a6" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                                <margin top="0" left="0" bottom="0" right="0"/>
+                                <constraints>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties/>
+                                <border type="none" title="Text">
+                                  <font name="Verdana"/>
+                                </border>
+                                <children>
+                                  <component id="6ab79" class="javax.swing.JTextField" binding="annotationsContainingTextTextField" custom-create="true">
+                                    <constraints>
+                                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                                        <preferred-size width="150" height="-1"/>
+                                      </grid>
+                                    </constraints>
+                                    <properties/>
+                                  </component>
+                                </children>
+                              </grid>
+                            </children>
+                          </grid>
+                          <grid id="58174" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                            <margin top="0" left="0" bottom="0" right="0"/>
+                            <constraints>
+                              <tabbedpane title="Concept"/>
+                            </constraints>
+                            <properties/>
+                            <border type="none"/>
+                            <children>
+                              <scrollpane id="fe7cb">
+                                <constraints>
+                                  <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties/>
+                                <border type="none"/>
+                                <children>
+                                  <component id="f95e4" class="edu.ucdenver.ccp.knowtator.view.list.AnnotationList" binding="annotationsForClassList" custom-create="true">
+                                    <constraints/>
+                                    <properties/>
+                                  </component>
+                                </children>
+                              </scrollpane>
+                              <component id="cd58c" class="javax.swing.JCheckBox" binding="includeClassDescendantsCheckBox" custom-create="true">
+                                <constraints>
+                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties>
+                                  <font name="Verdana" size="12" style="0"/>
+                                  <text resource-bundle="log4j" key="include.descendants"/>
+                                </properties>
+                              </component>
+                              <grid id="c9efe" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                                <margin top="0" left="0" bottom="0" right="0"/>
+                                <constraints>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties/>
+                                <border type="none" title="OWL Class">
+                                  <font name="Verdana"/>
+                                </border>
+                                <children>
+                                  <component id="3ec6d" class="javax.swing.JLabel" binding="owlClassLabel" custom-create="true">
+                                    <constraints>
+                                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties>
+                                      <text value=""/>
+                                    </properties>
+                                  </component>
+                                </children>
+                              </grid>
+                            </children>
+                          </grid>
+                          <grid id="242ee" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                            <margin top="0" left="0" bottom="0" right="0"/>
+                            <constraints>
+                              <tabbedpane title="Relation"/>
+                            </constraints>
+                            <properties/>
+                            <border type="none"/>
+                            <children>
+                              <grid id="48611" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                                <margin top="0" left="0" bottom="0" right="0"/>
+                                <constraints>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties/>
+                                <border type="none"/>
+                                <children>
+                                  <scrollpane id="487a7">
+                                    <constraints>
+                                      <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties/>
+                                    <border type="none"/>
+                                    <children>
+                                      <component id="4fbad" class="edu.ucdenver.ccp.knowtator.view.list.RelationList" binding="relationsForPropertyList" custom-create="true">
+                                        <constraints/>
+                                        <properties/>
+                                      </component>
+                                    </children>
+                                  </scrollpane>
+                                  <component id="52218" class="javax.swing.JCheckBox" binding="includePropertyDescendantsCheckBox" custom-create="true">
+                                    <constraints>
+                                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties>
+                                      <font name="Verdana" size="12" style="0"/>
+                                      <text resource-bundle="log4j" key="include.descendants1"/>
+                                    </properties>
+                                  </component>
+                                  <grid id="d3403" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                                    <margin top="0" left="0" bottom="0" right="0"/>
+                                    <constraints>
+                                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties/>
+                                    <border type="none" title="OWL Object Property">
+                                      <font name="Verdana"/>
+                                    </border>
+                                    <children>
+                                      <component id="f5908" class="javax.swing.JLabel" binding="owlPropertyLabel" custom-create="true">
+                                        <constraints>
+                                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                        </constraints>
+                                        <properties>
+                                          <font name="Verdana" size="10" style="0"/>
+                                          <text value=""/>
+                                        </properties>
+                                      </component>
+                                    </children>
+                                  </grid>
+                                </children>
+                              </grid>
                             </children>
                           </grid>
                         </children>
-                      </grid>
+                      </tabbedpane>
+                      <component id="e4695" class="javax.swing.JButton" binding="refreshReviewPaneButton">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <icon value="icon/icons8-synchronize-32.png"/>
+                          <text value=""/>
+                        </properties>
+                      </component>
+                      <component id="f709" class="javax.swing.JButton" binding="nextReviewObjectButton">
+                        <constraints>
+                          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <icon value="icon/icons8-advance-24.png"/>
+                          <text value=""/>
+                        </properties>
+                      </component>
+                      <component id="4143" class="javax.swing.JButton" binding="previousReviewObjectButton">
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <icon value="icon/icons8-advance-24 (reversed).png"/>
+                          <text value=""/>
+                        </properties>
+                      </component>
+                      <hspacer id="65cb3">
+                        <constraints>
+                          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                      </hspacer>
                     </children>
-                  </tabbedpane>
-                  <component id="e4695" class="javax.swing.JButton" binding="refreshReviewPaneButton">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <text value="Refresh"/>
-                    </properties>
-                  </component>
-                  <component id="f709" class="javax.swing.JButton" binding="nextReviewObjectButton">
-                    <constraints>
-                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <icon value="icon/icons8-advance-24.png"/>
-                      <text value=""/>
-                    </properties>
-                  </component>
-                  <component id="4143" class="javax.swing.JButton" binding="previousReviewObjectButton">
-                    <constraints>
-                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <icon value="icon/icons8-advance-24 (reversed).png"/>
-                      <text value=""/>
-                    </properties>
-                  </component>
-                  <hspacer id="65cb3">
-                    <constraints>
-                      <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                  </hspacer>
+                  </grid>
                 </children>
-              </grid>
+              </tabbedpane>
             </children>
-          </tabbedpane>
-        </children>
-      </grid>
-      <grid id="39898" binding="filePanel" layout-manager="GridLayoutManager" row-count="5" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
-        <constraints>
-          <card name="File"/>
-        </constraints>
-        <properties/>
-        <border type="none"/>
-        <children>
-          <vspacer id="b0c95">
+          </grid>
+          <grid id="39898" binding="filePanel" layout-manager="GridLayoutManager" row-count="5" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </vspacer>
-          <hspacer id="52eb4">
-            <constraints>
-              <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </hspacer>
-          <vspacer id="f01c8">
-            <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </vspacer>
-          <component id="5363c" class="javax.swing.JProgressBar" binding="progressBar1" default-binding="true">
-            <constraints>
-              <grid row="2" column="0" row-span="1" col-span="6" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <stringPainted value="true"/>
-            </properties>
-          </component>
-          <scrollpane id="4b06">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <card name="File"/>
             </constraints>
             <properties/>
             <border type="none"/>
             <children>
-              <component id="787d7" class="javax.swing.JList" binding="fileList">
-                <constraints/>
+              <vspacer id="b0c95">
+                <constraints>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </vspacer>
+              <hspacer id="52eb4">
+                <constraints>
+                  <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </hspacer>
+              <vspacer id="f01c8">
+                <constraints>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </vspacer>
+              <component id="5363c" class="javax.swing.JProgressBar" binding="progressBar">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="6" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
                 <properties>
-                  <font name="Verdana" size="14" style="1"/>
-                  <model>
-                    <item value="Open"/>
-                    <item value="New"/>
-                  </model>
+                  <stringPainted value="true"/>
                 </properties>
               </component>
+              <scrollpane id="4b06">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="787d7" class="javax.swing.JList" binding="fileList">
+                    <constraints/>
+                    <properties>
+                      <font name="Verdana" size="14" style="1"/>
+                      <model>
+                        <item value="Open"/>
+                        <item value="New"/>
+                      </model>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
+              <hspacer id="be983">
+                <constraints>
+                  <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </hspacer>
+              <component id="35629" class="javax.swing.JButton" binding="backButton" default-binding="true">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Back"/>
+                </properties>
+              </component>
+              <hspacer id="5b28d">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="5" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </hspacer>
+              <hspacer id="418e1">
+                <constraints>
+                  <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </hspacer>
+              <component id="7b39" class="javax.swing.JFileChooser" binding="fileChooser">
+                <constraints>
+                  <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+              </component>
             </children>
-          </scrollpane>
-          <hspacer id="be983">
-            <constraints>
-              <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </hspacer>
-          <component id="35629" class="javax.swing.JButton" binding="backButton" default-binding="true">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Back"/>
-            </properties>
-          </component>
-          <hspacer id="5b28d">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="5" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </hspacer>
-          <hspacer id="418e1">
-            <constraints>
-              <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </hspacer>
-          <component id="7b39" class="javax.swing.JFileChooser" binding="fileChooser">
-            <constraints>
-              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-          </component>
+          </grid>
         </children>
       </grid>
     </children>

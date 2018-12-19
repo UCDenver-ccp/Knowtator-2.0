@@ -101,18 +101,13 @@ public class BratStandoffUtil implements BasicIOUtil<BratStandoffIO> {
 
     private void writeAnnotationsConfiguration(File file, Map<String, Map<String, String>> annotationConfig) {
         try {
+            BufferedWriter annotationConfigWriter = new BufferedWriter(new FileWriter(String.format("%s%sconcept.conf", file.getAbsolutePath(), File.separator)));
 
-            BufferedWriter annotationConfigWriter =
-                    new BufferedWriter(
-                            new FileWriter(String.format("%s%sconcept.conf", file.getAbsolutePath(), File.separator)));
-
-            annotationConfig.forEach(
-                    (key, map) -> {
+            annotationConfig.forEach((key, map) -> {
                         try {
                             annotationConfigWriter.append(String.format("[%s]\n", key));
                             if (key.equals(StandoffTags.annotationsEntities)) {
-                                map.forEach(
-                                        (classID, value) -> {
+                                map.forEach((classID, value) -> {
                                             try {
                                                 annotationConfigWriter.append(classID).append("\n");
                                             } catch (IOException e) {

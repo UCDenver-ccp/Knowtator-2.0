@@ -52,7 +52,6 @@
 
     <properties>
         <jdk.version>1.8</jdk.version>
-        <kotlin.version>1.3.11</kotlin.version>
     </properties>
 
     <dependencies>
@@ -149,11 +148,12 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
+                        <Export-Package>edu.ucdenver.ccp.knowtator</Export-Package>
                         <Bundle-Name>Knowtator Plugin</Bundle-Name>
                         <Bundle-Category>protege</Bundle-Category>
                         <Bundle-Description>A plugin for annotating text</Bundle-Description>
                         <Bundle-Activator>org.protege.editor.owl.ProtegeOWL</Bundle-Activator>
-                        <Bundle-ClassPath>.,{maven-dependencies},jdom-1.0-fixed.jar</Bundle-ClassPath>
+                        <Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
                         <Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
                         <Bundle-Vendor>The Protege Development Team</Bundle-Vendor>
                         <Import-Package>*</Import-Package>
@@ -162,7 +162,7 @@
                             plugin.xml,
                             {maven-resources}
                         </Include-Resource>
-                        <Private-Package>skeleton</Private-Package>
+                        <!--<Private-Package>skeleton</Private-Package>-->
                     </instructions>
                 </configuration>
                 <executions>
@@ -225,30 +225,6 @@
                         <version>5.1.0</version>
                     </dependency>
                 </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>kotlin-maven-plugin</artifactId>
-                <version>${kotlin.version}</version>
-                <executions>
-                    <execution>
-                        <id>compile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>test-compile</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>test-compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <jvmTarget>1.8</jvmTarget>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

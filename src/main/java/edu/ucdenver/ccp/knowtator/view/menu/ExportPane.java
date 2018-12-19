@@ -71,7 +71,7 @@ class ExportPane extends MenuPane {
 											new File(String.format("%s_annotations.png", textSource.getId())));
 									if (fileChooser.showSaveDialog(view) == JFileChooser.APPROVE_OPTION) {
 										textSource.setSelectedConceptAnnotation(null);
-										BufferedImage image = view.getKnowtatorTextPane().getScreenShot();
+										BufferedImage image = view.getTextPane().getScreenShot();
 										try {
 											ImageIO.write(image, "png", fileChooser.getSelectedFile());
 										} catch (IOException e1) {

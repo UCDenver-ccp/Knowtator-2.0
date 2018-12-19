@@ -63,7 +63,7 @@ class KnowtatorStandalone extends JFrame {
 	private KnowtatorStandalone(boolean debug) {
 		view = new KnowtatorView();
 
-		setContentPane(view.$$$getRootComponent$$$());
+		setContentPane(view);
 
 		if (debug) {
 			try {

@@ -62,7 +62,7 @@ class KnowtatorViewTests {
 		test.removeSpanActionTest();
 		for (int i = 0; i < view.getModel().get().getTextSources().size(); i++) {
 			view.getModel().get().selectNextTextSource();
-			view.getKnowtatorTextPane().showTextSource();
+			view.getTextPane().showTextSource();
 		}
 		test.removeTextSourceActionTest();
 		test.addConceptAnnotationActionTest();
