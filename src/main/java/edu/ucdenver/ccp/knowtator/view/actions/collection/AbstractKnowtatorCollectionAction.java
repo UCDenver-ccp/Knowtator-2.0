@@ -61,13 +61,27 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject> e
 	public void execute() throws ActionUnperformableException {
 		switch (actionType) {
 			case ADD:
+				int size = collection.size();
 				prepareAdd();
 				collection.add(getObject().orElseThrow(() -> new ActionUnperformableException(getMessage())));
 				cleanUpAdd();
+				if (size + 1 != collection.size()) {
+					setMessage("Object not added to collection");
+					throw new ActionUnperformableException(getMessage());
+				}
 				break;
 			case REMOVE:
+				size = collection.size();
+				if (size == 0) {
+					setMessage("Collection is empty");
+					throw new ActionUnperformableException(getMessage());
+				}
 				prepareRemove();
 				collection.remove(getObject().orElseThrow(() -> new ActionUnperformableException(getMessage())));
+				if (size - 1 != collection.size()) {
+					setMessage("Object not removed from collection");
+					throw new ActionUnperformableException(getMessage());
+				}
 				cleanUpRemove();
 				break;
 		}
@@ -102,13 +116,27 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject> e
 		switch (actionType) {
 			case ADD:
 				try {
+					int size = collection.size();
 					collection.add(getObject().orElseThrow(() -> new ActionUnperformableException(getMessage())));
+					if (size + 1 != collection.size()) {
+						setMessage("Object not added to collection");
+						throw new ActionUnperformableException(getMessage());
+					}
 				} catch (ActionUnperformableException ignored) {
 				}
 				break;
 			case REMOVE:
 				try {
+					int size = collection.size();
+					if (size == 0) {
+						setMessage("Collection is empty");
+						throw new ActionUnperformableException(getMessage());
+					}
 					collection.remove(getObject().orElseThrow(() -> new ActionUnperformableException(getMessage())));
+					if (size - 1 != collection.size()) {
+						setMessage("Object not removed from collection");
+						throw new ActionUnperformableException(getMessage());
+					}
 				} catch (ActionUnperformableException ignored) {
 
 				}

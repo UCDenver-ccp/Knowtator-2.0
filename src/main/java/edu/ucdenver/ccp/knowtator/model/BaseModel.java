@@ -66,6 +66,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 	TextSourceCollection textSources;
 	ProfileCollection profiles;
 
+	//TODO: Make sure idregistry reflects contents of model
 	private final Map<String, ModelObject> idRegistry;
 	private boolean loading;
 

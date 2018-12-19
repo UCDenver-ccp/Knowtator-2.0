@@ -52,12 +52,6 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 	}
 
 	@Override
-	public void prepareRemove() {
-		collection.getSelection().ifPresent(this::setObject);
-
-	}
-
-	@Override
 	protected void prepareAdd() {
 		Profile profile = new Profile(model, profileId);
 		setObject(profile);

@@ -36,6 +36,7 @@ import java.io.IOException;
 
 import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.ADD;
 import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.REMOVE;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class KnowtatorCollectionActionsTests {
 
@@ -184,13 +185,14 @@ public class KnowtatorCollectionActionsTests {
                 TestingHelpers.defaultExpectedAnnotationNodes - 2,
                 TestingHelpers.defaultExpectedTriples - 2);
 
-//        assertThrows(ActionUnperformableException.class, this::removeDefaultProfileActionTest);
+        assertThrows(ActionUnperformableException.class, this::removeDefaultProfileActionTest);
     }
 
     @SuppressWarnings("unused")
     void removeDefaultProfileActionTest() throws ActionUnperformableException {
         // It should not be possible to remove the default profile
-	    new ProfileAction(model, REMOVE, "Default").execute();
+	    model.getProfiles().setSelection(model.getDefaultProfile());
+	    new ProfileAction(model, REMOVE, null).execute();
 
     }
 
