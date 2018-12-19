@@ -35,6 +35,7 @@ import edu.ucdenver.ccp.knowtator.view.actions.graph.GraphActions;
 
 import javax.swing.*;
 import java.util.Arrays;
+import java.util.Optional;
 
 class AddRelationListener implements mxEventSource.mxIEventListener {
 
@@ -48,45 +49,42 @@ class AddRelationListener implements mxEventSource.mxIEventListener {
 
 	@Override
 	public void invoke(Object sender, mxEventObject evt) {
-		if (sender instanceof GraphSpace) {
-			GraphSpace graphSpace = (GraphSpace) sender;
-			Object[] cells = (Object[]) evt.getProperty("cells");
-			if (cells != null && cells.length > 0) {
-				Arrays.stream(cells)
+		GraphSpace graphSpace = (GraphSpace) sender;
+
+		Optional.of(evt)
+				.map(evt1 -> (Object[]) evt.getProperty("cells"))
+				.filter(cells -> cells.length > 0)
+				.ifPresent(cells -> Arrays.stream(cells)
 						.filter(cell -> graphSpace.getModel().isEdge(cell))
 						.map(cell -> (mxCell) cell)
 						.filter(cell -> "".equals(cell.getValue()))
-						.forEach(edge -> {
-							view.getModel().ifPresent(model ->
-									model.getSelectedOWLObjectProperty()
-											.filter(owlObjectProperty -> !owlObjectProperty.getIRI().getShortForm().equals("owl:topObjectProperty"))
-											.ifPresent(owlObjectProperty -> {
-												// For some reason the top object property doesn't play nice so don't allow it
-												RelationOptionsDialog relationOptionsDialog = graphView.getRelationOptionsDialog(model.getOWLEntityRendering(owlObjectProperty));
-												if (relationOptionsDialog.getResult() == RelationOptionsDialog.OK_OPTION) {
-													try {
-														model.registerAction(
-																new GraphActions.AddTripleAction(
-																		model,
-																		(AnnotationNode) edge.getSource(),
-																		(AnnotationNode) edge.getTarget(),
-																		owlObjectProperty,
-																		relationOptionsDialog.getQuantifier(), relationOptionsDialog.getQuantifierValue(),
-																		relationOptionsDialog.getNegation(),
-																		relationOptionsDialog.getMotivation(),
-																		graphSpace));
-													} catch (ActionUnperformableException e) {
-														JOptionPane.showMessageDialog(view, e.getMessage());
-													}
-												}
-											}));
+						.forEach(edge -> processEdge(edge, graphSpace)));
+		graphView.reDrawGraph(graphSpace);
 
-							graphSpace.getModel().remove(edge);
-						});
+	}
 
-				graphView.reDrawGraph(graphSpace);
-			}
-		}
+	private void processEdge(mxCell edge, GraphSpace graphSpace) {
+		view.getModel().ifPresent(model ->
+				model.getSelectedOWLObjectProperty()
+						.filter(owlObjectProperty -> !owlObjectProperty.getIRI().getShortForm().equals("owl:topObjectProperty"))  // For some reason the top object property doesn't play nice so don't allow it
+						.ifPresent(owlObjectProperty -> {
 
+							RelationOptionsDialog relationOptionsDialog = graphView.getRelationOptionsDialog(model.getOWLEntityRendering(owlObjectProperty));
+							if (relationOptionsDialog.getResult() == RelationOptionsDialog.OK_OPTION) {
+								try {
+									AnnotationNode source = (AnnotationNode) edge.getSource();
+									AnnotationNode target = (AnnotationNode) edge.getTarget();
+									String quantifier = relationOptionsDialog.getQuantifier();
+									String motivation = relationOptionsDialog.getMotivation();
+									Boolean negation = relationOptionsDialog.getNegation();
+									String quantifierValue = relationOptionsDialog.getQuantifierValue();
+									model.registerAction(new GraphActions.AddTripleAction(model, source, target, owlObjectProperty, quantifier, quantifierValue, negation, motivation, graphSpace));
+								} catch (ActionUnperformableException e) {
+									JOptionPane.showMessageDialog(view, e.getMessage());
+								}
+							}
+						}));
+
+		graphSpace.getModel().remove(edge);
 	}
 }
