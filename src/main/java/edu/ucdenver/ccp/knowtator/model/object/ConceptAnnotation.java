@@ -27,7 +27,7 @@ package edu.ucdenver.ccp.knowtator.model.object;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.*;
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import org.apache.log4j.Logger;
@@ -61,16 +61,13 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 	private String id;
 
 	public ConceptAnnotation(
-			@Nonnull BaseModel model,
 			@Nonnull TextSource textSource,
 			String annotationID,
 			@Nonnull OWLClass owlClass,
 			@Nonnull Profile annotator,
 			String annotation_type,
 			String motivation) {
-
-
-		super(model);
+		super(textSource.getKnowtatorModel());
 
 		this.annotator = annotator;
 		this.annotation_type = annotation_type;
@@ -207,7 +204,7 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 				spanEnd = Integer.parseInt(spanElement.getAttribute(KnowtatorXMLAttributes.SPAN_END));
 				spanId = spanElement.getAttribute(KnowtatorXMLAttributes.ID);
 
-				Span span = new Span(model, this, spanId, spanStart, spanEnd);
+				Span span = new Span(this, spanId, spanStart, spanEnd);
 				add(span);
 			}
 		}
@@ -220,7 +217,7 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 				Element spanElement = (Element) spanNode;
 				int spanStart = Integer.parseInt(spanElement.getAttribute(OldKnowtatorXMLAttributes.SPAN_START));
 				int spanEnd = Integer.parseInt(spanElement.getAttribute(OldKnowtatorXMLAttributes.SPAN_END));
-				Span span = new Span(model, this, null, spanStart, spanEnd);
+				Span span = new Span(this, null, spanStart, spanEnd);
 				add(span);
 			}
 		}
@@ -239,7 +236,7 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 		for (int i = 2; i < triple.length; i++) {
 			int spanEnd = Integer.parseInt(triple[i].split(StandoffTags.spanDelimiter)[0]);
 
-			Span span = new Span(model, this, null, spanStart, spanEnd);
+			Span span = new Span(this, null, spanStart, spanEnd);
 			add(span);
 
 			if (i != triple.length - 1) {
@@ -333,6 +330,11 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 	@Override
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	@Override
+	public KnowtatorModel getKnowtatorModel() {
+		return model;
 	}
 
 	public String getMotivation() {

@@ -24,6 +24,8 @@
 
 package edu.ucdenver.ccp.knowtator.model.object;
 
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+
 public interface ModelObject<K extends ModelObject> extends Comparable<K> {
 
 	String getId();
@@ -41,6 +43,7 @@ public interface ModelObject<K extends ModelObject> extends Comparable<K> {
 	}
 
 	void dispose();
+	KnowtatorModel getKnowtatorModel();
 
 	@Override
 	default int compareTo(K o) {

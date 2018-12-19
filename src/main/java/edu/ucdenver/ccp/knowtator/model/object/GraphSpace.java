@@ -63,9 +63,9 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 	private final TextSource textSource;
 	private String id;
 
-	public GraphSpace(KnowtatorModel knowtatorModel, @Nonnull TextSource textSource, String id) {
+	public GraphSpace(@Nonnull TextSource textSource, String id) {
 
-		this.knowtatorModel = knowtatorModel;
+		this.knowtatorModel = textSource.getKnowtatorModel();
 		this.textSource = textSource;
 		this.id = id;
 
@@ -155,19 +155,8 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 			quantifier = "some";
 		}
 
-		RelationAnnotation newRelationAnnotation;
-		newRelationAnnotation =
-				new RelationAnnotation(
-						knowtatorModel, textSource, this, id,
-						source,
-						target,
-						property,
-						Optional.ofNullable(annotator).orElse(knowtatorModel.getDefaultProfile()),
-						quantifier,
-						quantifierValue,
-						isNegated,
-						motivation
-				);
+		annotator = Optional.ofNullable(annotator).orElse(knowtatorModel.getDefaultProfile());
+		RelationAnnotation newRelationAnnotation = new RelationAnnotation(this, id, source, target, property, annotator, quantifier, quantifierValue, isNegated, motivation);
 
 		setCellStyles(mxConstants.STYLE_STARTARROW, "dash", new Object[]{newRelationAnnotation});
 		setCellStyles(mxConstants.STYLE_STARTSIZE, "12", new Object[]{newRelationAnnotation});
@@ -215,7 +204,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 			double y = y_string.equals("") ? 20 : Double.parseDouble(y_string);
 
 			this.textSource.getAnnotation(annotationID).ifPresent(conceptAnnotation -> {
-				AnnotationNode newVertex = new AnnotationNode(knowtatorModel, id, conceptAnnotation, textSource, x, y, this);
+				AnnotationNode newVertex = new AnnotationNode(id, conceptAnnotation, x, y, this);
 				addCellToGraph(newVertex);
 			});
 		}
@@ -306,9 +295,10 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		return source;
 	}
 
+
 	public AnnotationNode makeAnnotationNode(ConceptAnnotation conceptAnnotation) {
 		String nodeId = textSource.getGraphSpaces().verifyID(null, "node");
-		AnnotationNode newVertex = new AnnotationNode(knowtatorModel, nodeId, conceptAnnotation, textSource, 20, 20, this);
+		AnnotationNode newVertex = new AnnotationNode(nodeId, conceptAnnotation, 20, 20, this);
 		addCellToGraph(newVertex);
 		return (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(nodeId);
 	}
@@ -402,6 +392,11 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		});
 		knowtatorModel.removeOntologyChangeListener(this);
 		knowtatorModel.removeOWLModelManagerListener(this);
+	}
+
+	@Override
+	public KnowtatorModel getKnowtatorModel() {
+		return knowtatorModel;
 	}
 
 	public boolean containsAnnotation(ConceptAnnotation conceptAnnotation) {

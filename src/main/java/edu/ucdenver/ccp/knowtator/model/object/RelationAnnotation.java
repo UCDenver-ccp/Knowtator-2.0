@@ -60,22 +60,13 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, GraphB
 		return graphSpace;
 	}
 
-	RelationAnnotation(
-			KnowtatorModel model, TextSource textSource, GraphSpace graphSpace, String id,
-			AnnotationNode source,
-			AnnotationNode target,
-			OWLObjectProperty property,
-			Profile annotator,
-			String quantifier,
-			String quantifierValue,
-			Boolean isNegated,
-			String motivation) {
+	RelationAnnotation(GraphSpace graphSpace, String id, AnnotationNode source, AnnotationNode target, OWLObjectProperty property, Profile annotator, String quantifier, String quantifierValue, Boolean isNegated, String motivation) {
 		super(null, new mxGeometry(), null);
 
 		this.isNegated = isNegated;
 		this.motivation = motivation;
-		this.textSource = textSource;
-		this.model = model;
+		this.textSource = graphSpace.getTextSource();
+		this.model = graphSpace.getKnowtatorModel();
 		this.annotator = annotator;
 		this.quantifier = quantifier;
 		this.quantifierValue = quantifierValue;
@@ -164,6 +155,11 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, GraphB
 
 	@Override
 	public void dispose() {
+	}
+
+	@Override
+	public KnowtatorModel getKnowtatorModel() {
+		return model;
 	}
 
 	@Override

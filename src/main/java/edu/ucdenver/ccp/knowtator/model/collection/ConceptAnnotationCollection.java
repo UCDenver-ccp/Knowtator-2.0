@@ -255,7 +255,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
 					Optional<OWLClass> owlClass = Optional.ofNullable(owlClassMap.get(owlClassID));
 					if (owlClass.isPresent()) {
-						ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(model, textSource, annotationID, owlClass.get(), profile, type, motivation);
+						ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(textSource, annotationID, owlClass.get(), profile, type, motivation);
 						newConceptAnnotation.readFromKnowtatorXML(null, annotationElement);
 						if (newConceptAnnotation.size() == 0) {
 							return Optional.empty();
@@ -299,7 +299,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
 					Optional<OWLClass> owlClass = model.getOWLClassByID(owlClassID);
 					if (owlClass.isPresent()) {
-						ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(model, textSource, annotationID, owlClass.get(), profile, "identity", "");
+						ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(textSource, annotationID, owlClass.get(), profile, "identity", "");
 						if (containsID(annotationID)) model.verifyId(null, newConceptAnnotation, false);
 						newConceptAnnotation.readFromOldKnowtatorXML(null, annotationElement);
 
@@ -327,7 +327,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 				}).forEach(conceptAnnotationOptional -> conceptAnnotationOptional.map(o -> (ConceptAnnotation) o).ifPresent(this::add));
 
 
-		GraphSpace oldKnowtatorGraphSpace = new GraphSpace(model, textSource, "Old Knowtator Relations");
+		GraphSpace oldKnowtatorGraphSpace = new GraphSpace(textSource, "Old Knowtator Relations");
 		textSource.add(oldKnowtatorGraphSpace);
 
 		annotationToSlotMap.forEach((annotation, slot) -> {
@@ -364,7 +364,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 						annotation -> {
 							String owlClassID = annotation[1].split(StandoffTags.textBoundAnnotationTripleDelimiter)[0];
 							model.getOWLClassByID(owlClassID).ifPresent(owlClass -> {
-								ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(model, textSource, annotation[0], owlClass, profile, "identity", "");
+								ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(textSource, annotation[0], owlClass, profile, "identity", "");
 								add(newConceptAnnotation);
 								Map<Character, List<String[]>> map = new HashMap<>();
 								List<String[]> list = new ArrayList<>();
@@ -384,7 +384,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 //					String owlClassID = splitNormalization[2];
 				});
 
-		GraphSpace newGraphSpace = new GraphSpace(model, textSource, "Brat Relation Graph");
+		GraphSpace newGraphSpace = new GraphSpace(textSource, "Brat Relation Graph");
 		textSource.add(newGraphSpace);
 		newGraphSpace.readFromBratStandoff(null, annotationCollection, null);
 	}
@@ -393,7 +393,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 	@Override
 	public void dispose() {
 		model.removeOntologyChangeListener(this);
-//		model.removeOWLModelManagerListener(this);
 		super.dispose();
 	}
 

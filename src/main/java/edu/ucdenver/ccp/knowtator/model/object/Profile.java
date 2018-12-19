@@ -99,6 +99,11 @@ public class Profile implements ModelObject<Profile>, Savable, KnowtatorXMLIO {
 		colors.clear();
 	}
 
+	@Override
+	public KnowtatorModel getKnowtatorModel() {
+		return model;
+	}
+
 	/*
   ADDERS
    */

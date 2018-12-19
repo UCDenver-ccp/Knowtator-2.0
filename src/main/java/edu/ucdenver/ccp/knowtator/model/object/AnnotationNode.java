@@ -29,7 +29,7 @@ import com.mxgraph.model.mxGeometry;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -40,16 +40,17 @@ public class AnnotationNode extends mxCell implements ConceptAnnotationBoundMode
 	private final ConceptAnnotation conceptAnnotation;
 	private final TextSource textSource;
 	private final GraphSpace graphSpace;
+	private final KnowtatorModel model;
 
-	AnnotationNode(BaseModel model, String id, ConceptAnnotation conceptAnnotation, TextSource textSource, double x, double y, GraphSpace graphSpace) {
+	AnnotationNode(String id, ConceptAnnotation conceptAnnotation, double x, double y, GraphSpace graphSpace) {
 		super(
 				conceptAnnotation.toMultilineString(),
 				new mxGeometry(x, y, 150, 150),
 				"fontSize=16;fontColor=black;strokeColor=black");
-		this.textSource = textSource;
+		this.textSource = conceptAnnotation.getTextSource();
 		this.conceptAnnotation = conceptAnnotation;
 		this.graphSpace = graphSpace;
-
+		this.model = conceptAnnotation.getKnowtatorModel();
 		model.verifyId(id, this, false);
 
 		setVertex(true);
@@ -98,6 +99,11 @@ public class AnnotationNode extends mxCell implements ConceptAnnotationBoundMode
 
 	@Override
 	public void dispose() {
+	}
+
+	@Override
+	public KnowtatorModel getKnowtatorModel() {
+		return model;
 	}
 
 	@Override

@@ -82,7 +82,7 @@ class KnowtatorViewTests {
 //				.map(Component::isEnabled).reduce(false, (a, b) -> a || b);
 //		KnowtatorModel controller = TestingHelpers.getLoadedController();
 //		view.loadProject(controller.getProjectLocation(), null);
-//		view.getModel().get().selectFirstTextSource();
+//		view.getKnowtatorModel().get().selectFirstTextSource();
 //		assert view.getTextSourceButtons().stream()
 //				.map(Component::isEnabled).reduce(true, (a, b) -> a && b);
 //	}

@@ -45,7 +45,7 @@ public class SpanAction extends AbstractKnowtatorCollectionAction<Span> {
 
 	@Override
 	protected void prepareAdd() {
-		Span newSpan = new Span(model, conceptAnnotation, null, model.getSelection().getStart(), model.getSelection().getEnd());
+		Span newSpan = new Span(conceptAnnotation, null, model.getSelection().getStart(), model.getSelection().getEnd());
 		setObject(newSpan);
 	}
 

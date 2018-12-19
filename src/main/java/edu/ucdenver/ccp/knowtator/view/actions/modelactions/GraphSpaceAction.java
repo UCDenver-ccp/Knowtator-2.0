@@ -42,7 +42,7 @@ public class GraphSpaceAction extends AbstractKnowtatorCollectionAction<GraphSpa
 
 	@Override
 	protected void prepareAdd() {
-		GraphSpace newGraphSpace = new GraphSpace(model, textSource, graphName);
+		GraphSpace newGraphSpace = new GraphSpace(textSource, graphName);
 		setObject(newGraphSpace);
 	}
 

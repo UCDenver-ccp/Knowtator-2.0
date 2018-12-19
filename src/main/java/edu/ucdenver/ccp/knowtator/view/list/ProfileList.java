@@ -64,7 +64,7 @@ public class ProfileList extends KnowtatorList<Profile> {
 //    protected void setCollection(KnowtatorCollection<Profile> collection) {
 //        dispose();
 //        this.collection = collection;
-//        collection.forEach(k -> ((DefaultListModel<Profile>) getModel()).addElement(k));
+//        collection.forEach(k -> ((DefaultListModel<Profile>) getKnowtatorModel()).addElement(k));
 //    }
 
 

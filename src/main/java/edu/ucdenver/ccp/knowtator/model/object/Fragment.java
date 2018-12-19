@@ -24,17 +24,22 @@
 
 package edu.ucdenver.ccp.knowtator.model.object;
 
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public class Fragment implements ModelObject<Fragment> {
 	private final String type;
 	private final Map<String, Integer> conceptCountMap;
 	private String id;
+	private KnowtatorModel model;
 
-	public Fragment(String id, String type) {
+	public Fragment(String id, String type, KnowtatorModel model) {
 		this.id = id;
 		this.type = type;
+		this.model = model;
 
 		conceptCountMap = new HashMap<>();
 	}
@@ -63,10 +68,16 @@ public class Fragment implements ModelObject<Fragment> {
 
 	}
 
+	@Override
+	public KnowtatorModel getKnowtatorModel() {
+		return model;
+	}
+
 	public String getType() {
 		return type;
 	}
 
+	@SuppressWarnings("unused")
 	public Map<String, Integer> getConceptCountMap() {
 		return conceptCountMap;
 	}

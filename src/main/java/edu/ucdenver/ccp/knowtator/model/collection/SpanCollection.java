@@ -26,7 +26,7 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -44,9 +44,9 @@ import static edu.ucdenver.ccp.knowtator.model.FilterType.PROFILE;
 
 public class SpanCollection extends KnowtatorCollection<Span> implements BratStandoffIO, KnowtatorXMLIO {
 
-	protected final BaseModel model;
+	protected final KnowtatorModel model;
 
-	public SpanCollection(BaseModel model) {
+	public SpanCollection(KnowtatorModel model) {
 		super(model);
 		this.model = model;
 	}

@@ -29,7 +29,6 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.Savable;
@@ -59,7 +58,7 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 	@SuppressWarnings("unused")
 	private static Logger log = LogManager.getLogger(TextSource.class);
 
-	private final BaseModel model;
+	private final KnowtatorModel model;
 	private final File saveFile;
 	private final ConceptAnnotationCollection conceptAnnotationCollection;
 	private File textFile;
@@ -126,6 +125,11 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 	public void dispose() {
 		conceptAnnotationCollection.dispose();
 		graphSpaceCollection.dispose();
+	}
+
+	@Override
+	public KnowtatorModel getKnowtatorModel() {
+		return model;
 	}
 
 	@Override

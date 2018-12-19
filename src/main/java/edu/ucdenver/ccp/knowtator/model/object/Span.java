@@ -28,7 +28,6 @@ import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import org.apache.log4j.Logger;
@@ -48,11 +47,11 @@ public class Span implements ConceptAnnotationBoundModelObject<Span>, KnowtatorX
   private int start;
   private int end;
   private ConceptAnnotation conceptAnnotation;
-  private BaseModel model;
+  private KnowtatorModel model;
   private String id;
 
-  public Span(@Nonnull BaseModel model, @Nonnull ConceptAnnotation conceptAnnotation, String id, int start, int end) {
-    this.model = model;
+  public Span(@Nonnull ConceptAnnotation conceptAnnotation, String id, int start, int end) {
+    this.model = conceptAnnotation.getKnowtatorModel();
 
     this.id = id;
     this.start = start;
@@ -313,5 +312,10 @@ public class Span implements ConceptAnnotationBoundModelObject<Span>, KnowtatorX
   @Override
   public void dispose() {
 
+  }
+
+  @Override
+  public KnowtatorModel getKnowtatorModel() {
+    return model;
   }
 }

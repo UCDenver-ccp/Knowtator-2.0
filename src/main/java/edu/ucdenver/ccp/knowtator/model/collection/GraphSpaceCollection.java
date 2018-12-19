@@ -44,12 +44,10 @@ import java.util.List;
 import java.util.Map;
 
 public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implements KnowtatorXMLIO, BratStandoffIO {
-	private final KnowtatorModel model;
     private final TextSource textSource;
 
 	public GraphSpaceCollection(KnowtatorModel model, TextSource textSource) {
 		super(model);
-		this.model = model;
         this.textSource = textSource;
     }
 
@@ -73,7 +71,7 @@ public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implem
 
             String id = graphSpaceElem.getAttribute(KnowtatorXMLAttributes.ID);
 
-	        GraphSpace graphSpace = new GraphSpace(model, textSource, id);
+	        GraphSpace graphSpace = new GraphSpace(textSource, id);
             add(graphSpace);
 
             graphSpace.readFromKnowtatorXML(null, graphSpaceElem);
