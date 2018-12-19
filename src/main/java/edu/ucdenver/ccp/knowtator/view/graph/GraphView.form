@@ -11,49 +11,169 @@
     </properties>
     <border type="none"/>
     <children>
-      <grid id="a1899" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="a1899" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints border-constraint="North"/>
         <properties/>
         <border type="none"/>
         <children>
-          <toolbar id="8a375">
+          <grid id="e3ee8" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="-1" height="20"/>
-              </grid>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
-            <properties>
-              <floatable value="false"/>
-            </properties>
-            <border type="none"/>
+            <properties/>
+            <border type="none" title="Graph Spaces">
+              <font name="Verdana" size="14"/>
+            </border>
+            <children>
+              <grid id="d1456" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="f406a" class="javax.swing.JButton" binding="previousGraphSpaceButton">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <icon value="icon/icons8-advance-24 (reversed).png"/>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="ba6ac" class="javax.swing.JButton" binding="nextGraphSpaceButton">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <icon value="icon/icons8-advance-24.png"/>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="ba18c" class="edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser" binding="graphSpaceChooser" custom-create="true">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <maximumSize width="200" height="32767"/>
+                      <minimumSize width="80" height="30"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="9328" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="433a7" class="javax.swing.JButton" binding="exportToImagePNGButton" default-binding="true">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <icon value="icon/icons8-unsplash-32.png"/>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="1cdc1" class="javax.swing.JSlider" binding="zoomSlider">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="194" height="16"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <maximum value="100"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="2471" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="d9447" class="javax.swing.JButton" binding="addGraphSpaceButton">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <icon value="icon/icons8-plus-24.png"/>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="5a939" class="javax.swing.JButton" binding="removeGraphSpaceButton">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <icon value="icon/icons8-delete-24.png"/>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="ab7b" class="javax.swing.JButton" binding="renameButton" default-binding="true">
+                    <constraints>
+                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Rename"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </grid>
+          <hspacer id="1f5d8">
+            <constraints>
+              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </hspacer>
+          <grid id="3905a" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none" title="Nodes and Edges">
+              <font name="Verdana" size="14"/>
+            </border>
             <children>
               <component id="e420f" class="javax.swing.JButton" binding="addAnnotationNodeButton">
-                <constraints/>
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
                 <properties>
                   <icon value="icon/icons8-plus-24.png"/>
                   <text value=""/>
                 </properties>
               </component>
               <component id="62b2d" class="javax.swing.JButton" binding="removeCellButton">
-                <constraints/>
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
                 <properties>
                   <icon value="icon/icons8-delete-24.png"/>
                   <text value=""/>
                 </properties>
               </component>
-              <component id="5c189" class="javax.swing.JToolBar$Separator">
-                <constraints/>
-                <properties/>
-              </component>
               <component id="10dd0" class="javax.swing.JButton" binding="applyLayoutButton">
-                <constraints/>
+                <constraints>
+                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
                 <properties>
                   <text value="Apply Layout"/>
                 </properties>
               </component>
             </children>
-          </toolbar>
+          </grid>
         </children>
       </grid>
       <grid id="d3ffc" layout-manager="BorderLayout" hgap="0" vgap="0">
@@ -70,118 +190,6 @@
             <border type="none"/>
             <children/>
           </scrollpane>
-        </children>
-      </grid>
-      <grid id="f97e8" layout-manager="GridLayoutManager" row-count="2" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
-        <constraints border-constraint="South"/>
-        <properties/>
-        <border type="none"/>
-        <children>
-          <component id="ea143" class="edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser" binding="graphSpaceChooser" custom-create="true">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <maximumSize width="200" height="32767"/>
-              <minimumSize width="80" height="30"/>
-            </properties>
-          </component>
-          <component id="c7cbc" class="javax.swing.JSlider" binding="zoomSlider">
-            <constraints>
-              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="194" height="16"/>
-              </grid>
-            </constraints>
-            <properties>
-              <maximum value="100"/>
-            </properties>
-          </component>
-          <hspacer id="aeff">
-            <constraints>
-              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </hspacer>
-          <grid id="ef10c" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-            <margin top="0" left="0" bottom="0" right="0"/>
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <component id="5e3e7" class="javax.swing.JButton" binding="previousGraphSpaceButton">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Previous"/>
-                </properties>
-              </component>
-              <component id="11d2a" class="javax.swing.JButton" binding="nextGraphSpaceButton">
-                <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Next"/>
-                </properties>
-              </component>
-            </children>
-          </grid>
-          <grid id="8d9b7" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-            <margin top="0" left="0" bottom="0" right="0"/>
-            <constraints>
-              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <component id="283cc" class="javax.swing.JButton" binding="renameButton" default-binding="true">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Rename"/>
-                </properties>
-              </component>
-              <component id="26803" class="javax.swing.JButton" binding="exportToImagePNGButton" default-binding="true">
-                <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Export to Image (PNG)"/>
-                </properties>
-              </component>
-            </children>
-          </grid>
-          <grid id="95069" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-            <margin top="0" left="0" bottom="0" right="0"/>
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <component id="8fa36" class="javax.swing.JButton" binding="addGraphSpaceButton">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <icon value="icon/icons8-plus-24.png"/>
-                  <text value=""/>
-                </properties>
-              </component>
-              <component id="ca300" class="javax.swing.JButton" binding="removeGraphSpaceButton">
-                <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <icon value="icon/icons8-delete-24.png"/>
-                  <text value=""/>
-                </properties>
-              </component>
-            </children>
-          </grid>
         </children>
       </grid>
     </children>
