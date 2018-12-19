@@ -341,10 +341,8 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 
 	public void setMotivation(String motivation) {
 		this.motivation = motivation;
-	}
-
-	public int getNumberOfSpans() {
-		return size();
+		//TODO: Potentially could make typing very slow
+		model.fireModelEvent(new ChangeEvent<>(model, null, this));
 	}
 
 	String toMultilineString() {
