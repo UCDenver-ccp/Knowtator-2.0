@@ -57,7 +57,7 @@ class RelationOptionsDialog extends JDialog {
     private static final String MIN = "min";
 
     private int result;
-
+    //TODO: Move to graph space info pane
     RelationOptionsDialog(Window parent, String propertyID) {
         super(parent);
         $$$setupUI$$$();

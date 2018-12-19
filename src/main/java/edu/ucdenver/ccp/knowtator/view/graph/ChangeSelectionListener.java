@@ -24,11 +24,9 @@
 
 package edu.ucdenver.ccp.knowtator.view.graph;
 
-import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource;
 import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
-import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 
 import java.util.Collection;
 
@@ -46,7 +44,7 @@ class ChangeSelectionListener implements mxEventSource.mxIEventListener {
 		if (deselectedCells != null && deselectedCells.size() > 0) {
 			for (Object cell : deselectedCells) {
 				if (cell instanceof AnnotationNode) {
-					graphView.getGraphComponent().getGraph().setCellStyles(mxConstants.STYLE_STROKEWIDTH, "0", new Object[]{cell});
+					((AnnotationNode) cell).setStyle("defaultVertex");
 				}
 			}
 		}
@@ -54,11 +52,11 @@ class ChangeSelectionListener implements mxEventSource.mxIEventListener {
 		if (selectedCells != null && selectedCells.size() > 0) {
 			for (Object cell : selectedCells) {
 				if (cell instanceof AnnotationNode) {
-					graphView.getGraphComponent().getGraph().setCellStyles(mxConstants.STYLE_STROKEWIDTH, "4", new Object[]{cell});
+					((AnnotationNode) cell).setStyle("selected");
 				}
 			}
 		}
 
-		graphView.reDrawGraph((GraphSpace) graphView.getGraphComponent().getGraph());
+		graphView.reDrawGraph(graphView.getGraphComponent().getGraph());
 	}
 }

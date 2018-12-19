@@ -25,11 +25,12 @@
 package edu.ucdenver.ccp.knowtator.model.object;
 
 import com.mxgraph.model.mxCell;
-import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
+import com.mxgraph.view.mxPerimeter;
+import com.mxgraph.view.mxStylesheet;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
 import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
@@ -69,7 +70,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		this.textSource = textSource;
 		this.id = id;
 
-
+		//TODO: Make annotation nodes reflext changes in annotations
 		knowtatorModel.verifyId(id, this, false);
 		knowtatorModel.addOntologyChangeListener(this);
 		knowtatorModel.addOWLModelManagerListener(this);
@@ -81,6 +82,43 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		setConnectableEdges(false);
 		setCellsBendable(false);
 		setResetEdgesOnMove(true);
+
+		mxStylesheet stylesheet = new mxStylesheet();
+
+		Map<String, Object> edgeStyles = new HashMap<>();
+
+		edgeStyles.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_CONNECTOR);
+		edgeStyles.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
+		edgeStyles.put(mxConstants.STYLE_STROKECOLOR, "#6482B9");
+		edgeStyles.put(mxConstants.STYLE_FONTCOLOR, "#446299");
+		edgeStyles.put(mxConstants.STYLE_STARTARROW, mxConstants.STYLE_DASHED);
+		edgeStyles.put(mxConstants.STYLE_STARTSIZE, "12");
+		edgeStyles.put(mxConstants.STYLE_ENDARROW, mxConstants.ARROW_BLOCK);
+		edgeStyles.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_TOP);
+		edgeStyles.put(mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_TOP);
+		edgeStyles.put(mxConstants.STYLE_FONTSIZE, "16");
+
+		stylesheet.setDefaultEdgeStyle(edgeStyles);
+
+
+		Map<String, Object> vertexStyles = new HashMap<>();
+		vertexStyles.put(mxConstants.STYLE_FONTSIZE, 16);
+		vertexStyles.put(mxConstants.STYLE_FONTCOLOR, "black");
+		vertexStyles.put(mxConstants.STYLE_STROKECOLOR, "black");
+		vertexStyles.put(mxConstants.STYLE_PERIMETER, mxPerimeter.RectanglePerimeter);
+		vertexStyles.put(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
+		vertexStyles.put(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
+		vertexStyles.put(mxConstants.STYLE_FILLCOLOR, "#C3D9FF");
+		vertexStyles.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_RECTANGLE);
+		vertexStyles.put(mxConstants.STYLE_STROKEWIDTH, "0");
+		stylesheet.setDefaultVertexStyle(vertexStyles);
+
+		Map<String, Object> selectedVertexStyles = new HashMap<>(vertexStyles);
+		selectedVertexStyles.put(mxConstants.STYLE_STROKEWIDTH, "4");
+		stylesheet.putCellStyle("selected", selectedVertexStyles);
+
+		setStylesheet(stylesheet);
+
 
 		getSelectionModel().addListener(mxEvent.CHANGE, (sender, evt) -> {
 			Collection selectedCells = (Collection) evt.getProperty("removed");
@@ -136,34 +174,15 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		//    reDrawGraph();
 	}
 
-	public void addTriple(
-			AnnotationNode source,
-			AnnotationNode target,
-			String id,
-			Profile annotator,
-			OWLObjectProperty property,
-			String quantifier,
-			String quantifierValue,
-			Boolean isNegated,
-			String motivation) {
+	public void addTriple(AnnotationNode source, AnnotationNode target, String id, Profile annotator, OWLObjectProperty property, String quantifier, String quantifierValue, Boolean isNegated, String motivation) {
 		id = textSource.getGraphSpaces().verifyID(id, "edge");
 
-		if (!(quantifier.equals("only")
-				|| quantifier.equals("exactly")
-				|| quantifier.equals("min")
-				|| quantifier.equals("max"))) {
+		if (!RelationAnnotation.QUANTIFIERS.contains(quantifier)) {
 			quantifier = "some";
 		}
 
 		annotator = Optional.ofNullable(annotator).orElse(knowtatorModel.getDefaultProfile());
 		RelationAnnotation newRelationAnnotation = new RelationAnnotation(this, id, source, target, property, annotator, quantifier, quantifierValue, isNegated, motivation);
-
-		setCellStyles(mxConstants.STYLE_STARTARROW, "dash", new Object[]{newRelationAnnotation});
-		setCellStyles(mxConstants.STYLE_STARTSIZE, "12", new Object[]{newRelationAnnotation});
-		setCellStyles(mxConstants.STYLE_ENDARROW, "block", new Object[]{newRelationAnnotation});
-		setCellStyles(mxConstants.STYLE_VERTICAL_ALIGN, "top", new Object[]{newRelationAnnotation});
-		setCellStyles(mxConstants.STYLE_VERTICAL_LABEL_POSITION, "top", new Object[]{newRelationAnnotation});
-		setCellStyles(mxConstants.STYLE_FONTSIZE, "16", new Object[]{newRelationAnnotation});
 
 		addCellToGraph(newRelationAnnotation);
 	}
@@ -230,16 +249,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 
 
 			if (target != null && source != null) {
-				knowtatorModel.getOWLObjectPropertyByID(propertyID).ifPresent(owlObjectProperty -> addTriple(
-						source,
-						target,
-						id,
-						annotator,
-						owlObjectProperty,
-						quantifier,
-						quantifierValue,
-						propertyIsNegated.equals(KnowtatorXMLAttributes.IS_NEGATED_TRUE),
-						motivation));
+				knowtatorModel.getOWLObjectPropertyByID(propertyID).ifPresent(owlObjectProperty -> addTriple(source, target, id, annotator, owlObjectProperty, quantifier, quantifierValue, propertyIsNegated.equals(KnowtatorXMLAttributes.IS_NEGATED_TRUE), motivation));
 			}
 		}
 
@@ -337,24 +347,6 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		textSourceElement.appendChild(graphElem);
 	}
 
-
-    /*
-  SETTERS
-   */
-
-	public void setVertexStyle(AnnotationNode vertex) {
-		mxGeometry g = vertex.getGeometry();
-		g.setHeight(g.getHeight() + 200);
-		g.setWidth(g.getWidth() + 200);
-
-
-		String colorString = Integer.toHexString(vertex.getConceptAnnotation().getColor().getRGB()).substring(2);
-		String shape = mxConstants.SHAPE_RECTANGLE;
-
-		setCellStyles(mxConstants.STYLE_SHAPE, shape, new Object[]{vertex});
-		setCellStyles(mxConstants.STYLE_FILLCOLOR, colorString, new Object[]{vertex});
-
-	}
 
   /*
   TRANSLATORS

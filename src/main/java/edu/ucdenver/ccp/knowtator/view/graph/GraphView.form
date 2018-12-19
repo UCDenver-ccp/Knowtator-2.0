@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="edu.ucdenver.ccp.knowtator.view.graph.GraphView">
-  <grid id="27dc6" binding="panel1" layout-manager="BorderLayout" hgap="0" vgap="0">
+  <grid id="27dc6" binding="rootPane" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
       <xy x="8" y="7" width="967" height="489"/>
     </constraints>
@@ -11,7 +11,7 @@
     </properties>
     <border type="none"/>
     <children>
-      <grid id="a1899" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="a1899" binding="header" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints border-constraint="North"/>
         <properties/>
@@ -176,12 +176,12 @@
           </hspacer>
         </children>
       </grid>
-      <splitpane id="3722d">
+      <splitpane id="3722d" binding="body">
         <constraints border-constraint="Center"/>
         <properties/>
         <border type="none"/>
         <children>
-          <grid id="d3ffc" layout-manager="BorderLayout" hgap="0" vgap="0">
+          <grid id="d3ffc" binding="graphPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
               <splitpane position="left"/>
             </constraints>
@@ -201,14 +201,14 @@
               </scrollpane>
             </children>
           </grid>
-          <grid id="d70cc" layout-manager="CardLayout" hgap="0" vgap="0">
+          <grid id="d70cc" binding="graphInfoPanel" layout-manager="CardLayout" hgap="0" vgap="0">
             <constraints>
               <splitpane position="right"/>
             </constraints>
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="b04ff" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="b04ff" binding="nodeCard" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
                   <card name="Annotation Node Card"/>
@@ -222,8 +222,20 @@
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties/>
-                    <border type="none" title="Node ID"/>
-                    <children/>
+                    <border type="none" title="Node ID">
+                      <font name="Verdana" size="16"/>
+                    </border>
+                    <children>
+                      <component id="641f4" class="javax.swing.JLabel" binding="nodeIDLabel">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <font name="Verdana"/>
+                          <text value=""/>
+                        </properties>
+                      </component>
+                    </children>
                   </grid>
                   <grid id="949f0" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="0" left="0" bottom="0" right="0"/>
@@ -231,8 +243,20 @@
                       <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties/>
-                    <border type="none" title="Concept Annotation"/>
-                    <children/>
+                    <border type="none" title="Concept Annotation">
+                      <font name="Verdana" size="16"/>
+                    </border>
+                    <children>
+                      <component id="ed341" class="javax.swing.JLabel" binding="conceptAnnotationLabel">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <font name="Verdana"/>
+                          <text value=""/>
+                        </properties>
+                      </component>
+                    </children>
                   </grid>
                   <vspacer id="358ae">
                     <constraints>
@@ -241,7 +265,7 @@
                   </vspacer>
                 </children>
               </grid>
-              <grid id="b6fe4" layout-manager="GridLayoutManager" row-count="6" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="b6fe4" binding="relationCard" layout-manager="GridLayoutManager" row-count="6" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
                   <card name="Relation Annotation Card"/>
@@ -318,7 +342,7 @@
                           <font name="Verdana"/>
                           <model>
                             <item value="some"/>
-                            <item value="all"/>
+                            <item value="only"/>
                             <item value="min"/>
                             <item value="max"/>
                             <item value="exactly"/>

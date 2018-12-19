@@ -37,8 +37,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, GraphBoundModelObject<RelationAnnotation> {
+	static final List<String> QUANTIFIERS = Arrays.asList("some", "only", "max", "min", "exactly");
 	private final String quantifier;
 	private final String quantifierValue;
 	private final Profile annotator;
@@ -81,7 +84,6 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, GraphB
 		setTarget(target);
 		this.targetAnnotationNode = target;
 		setProperty(property);
-
 	}
 
 	@SuppressWarnings("unused")

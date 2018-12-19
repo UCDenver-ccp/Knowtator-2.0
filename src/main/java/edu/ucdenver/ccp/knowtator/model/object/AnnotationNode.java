@@ -43,10 +43,7 @@ public class AnnotationNode extends mxCell implements ConceptAnnotationBoundMode
 	private final KnowtatorModel model;
 
 	AnnotationNode(String id, ConceptAnnotation conceptAnnotation, double x, double y, GraphSpace graphSpace) {
-		super(
-				conceptAnnotation.toMultilineString(),
-				new mxGeometry(x, y, 150, 150),
-				"fontSize=16;fontColor=black;strokeColor=black");
+		super(conceptAnnotation.toMultilineString(), new mxGeometry(x, y, 150, 150), "defaultVertex");
 		this.textSource = conceptAnnotation.getTextSource();
 		this.conceptAnnotation = conceptAnnotation;
 		this.graphSpace = graphSpace;
