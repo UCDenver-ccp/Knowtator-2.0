@@ -28,6 +28,9 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.util.mxGraphTransferable;
+import edu.ucdenver.ccp.knowtator.iaa.IAAException;
+import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
+import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.model.*;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
@@ -43,12 +46,12 @@ import edu.ucdenver.ccp.knowtator.view.label.AnnotationAnnotatorLabel;
 import edu.ucdenver.ccp.knowtator.view.label.AnnotationClassLabel;
 import edu.ucdenver.ccp.knowtator.view.label.AnnotationIDLabel;
 import edu.ucdenver.ccp.knowtator.view.list.*;
-import edu.ucdenver.ccp.knowtator.view.menu.Loader;
 import edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
 import org.semanticweb.owlapi.model.OWLClass;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.AncestorEvent;
@@ -62,6 +65,7 @@ import java.awt.dnd.*;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -157,6 +161,12 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private JPanel externalButtonsPane;
 	private JComponent rootPane;
 	private JPanel textSourcePane;
+	private JPanel iaaPane;
+	private JButton runIAAButton;
+	private JCheckBox iaaSpanCheckBox;
+	private JCheckBox iaaClassAndSpanCheckBox;
+	private JCheckBox iaaClassCheckBox;
+	private JButton captureImageButton;
 
 	private final List<KnowtatorComponent> knowtatorComponents;
 	private HashMap<JButton, ActionListener> spanSizeButtons;
@@ -300,6 +310,24 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	 * Makes the buttons in the main display pane
 	 */
 	private void makeButtons() {
+		captureImageButton.addActionListener(e -> getModel()
+				.ifPresent(model -> model.getSelectedTextSource()
+						.ifPresent(textSource -> {
+							JFileChooser fileChooser = new JFileChooser(model.getSaveLocation());
+							fileChooser.setFileFilter(new FileNameExtensionFilter("PNG", "png"));
+							fileChooser.setSelectedFile(new File(String.format("%s_annotations.png", textSource.getId())));
+							if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+								textSource.setSelectedConceptAnnotation(null);
+								BufferedImage image = textPane.getScreenShot();
+								try {
+									ImageIO.write(image, "png", fileChooser.getSelectedFile());
+								} catch (IOException e1) {
+									e1.printStackTrace();
+								}
+							}
+						})));
+
+
 		backButton.addActionListener(e -> {
 			if (model.isNotLoading()) {
 				CardLayout cl = (CardLayout) cardPanel.getLayout();
@@ -421,8 +449,51 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 					fileChooser.setFileFilter(null);
 					fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 					break;
+				case "Import":
+					fileFilter = new FileNameExtensionFilter(
+							"ConceptAnnotation File (XML, ann, a1)",
+							"xml", "ann", "a1");
+					fileChooser.setFileFilter(fileFilter);
+					fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+					break;
+				case "Export":
+					fileChooser.setFileFilter(null);
+					fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+					break;
 			}
 		});
+
+		runIAAButton.addActionListener(e -> getModel().ifPresent(model -> {
+			JFileChooser fileChooser = new JFileChooser();
+			fileChooser.setCurrentDirectory(model.getSaveLocation());
+			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			//
+			// disable the "All files" option.
+			//
+			fileChooser.setAcceptAllFileFilterUsed(false);
+			if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+				File outputDirectory = fileChooser.getSelectedFile();
+
+				try {
+					KnowtatorIAA knowtatorIAA = new KnowtatorIAA(outputDirectory, model);
+
+					if (iaaClassCheckBox.isSelected()) {
+						knowtatorIAA.runClassIAA();
+					}
+					if (iaaSpanCheckBox.isSelected()) {
+						knowtatorIAA.runSpanIAA();
+					}
+					if (iaaClassAndSpanCheckBox.isSelected()) {
+						knowtatorIAA.runClassAndSpanIAA();
+					}
+
+					knowtatorIAA.closeHTML();
+				} catch (IAAException e1) {
+					e1.printStackTrace();
+				}
+
+			}
+		}));
 	}
 
 	private void open() {
@@ -443,6 +514,12 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 									cardPanel)
 									.execute();
 						});
+				break;
+			case "Import":
+				getModel().ifPresent(model1 -> model1.loadWithAppropriateFormat(model1.getTextSources(), fileChooser.getSelectedFile()));
+				break;
+			case "Export":
+				model.saveToFormat(BratStandoffUtil.class, model.getTextSources(), fileChooser.getSelectedFile());
 				break;
 		}
 
@@ -858,7 +935,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		nextSpanButton.setText("");
 		annotationPaneButtons.add(nextSpanButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
 		final JPanel panel9 = new JPanel();
-		panel9.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+		panel9.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
 		header.addTab("Profile", panel9);
 		final JScrollPane scrollPane5 = new JScrollPane();
 		panel9.add(scrollPane5, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
@@ -893,6 +970,32 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		panel11.add(removeProfileButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final Spacer spacer7 = new Spacer();
 		panel11.add(spacer7, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		iaaPane = new JPanel();
+		iaaPane.setLayout(new GridLayoutManager(4, 1, new Insets(10, 10, 10, 10), -1, -1));
+		panel9.add(iaaPane, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+		iaaPane.setBorder(BorderFactory.createTitledBorder(null, "IAA", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, iaaPane.getFont())));
+		runIAAButton = new JButton();
+		Font runIAAButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, runIAAButton.getFont());
+		if (runIAAButtonFont != null) runIAAButton.setFont(runIAAButtonFont);
+		this.$$$loadButtonText$$$(runIAAButton, ResourceBundle.getBundle("log4j").getString("run.iaa"));
+		iaaPane.add(runIAAButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		iaaSpanCheckBox = new JCheckBox();
+		Font iaaSpanCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, iaaSpanCheckBox.getFont());
+		if (iaaSpanCheckBoxFont != null) iaaSpanCheckBox.setFont(iaaSpanCheckBoxFont);
+		this.$$$loadButtonText$$$(iaaSpanCheckBox, ResourceBundle.getBundle("ui").getString("span1"));
+		iaaPane.add(iaaSpanCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		iaaClassAndSpanCheckBox = new JCheckBox();
+		Font iaaClassAndSpanCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, iaaClassAndSpanCheckBox.getFont());
+		if (iaaClassAndSpanCheckBoxFont != null) iaaClassAndSpanCheckBox.setFont(iaaClassAndSpanCheckBoxFont);
+		this.$$$loadButtonText$$$(iaaClassAndSpanCheckBox, ResourceBundle.getBundle("ui").getString("class.and.span"));
+		iaaPane.add(iaaClassAndSpanCheckBox, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		iaaClassCheckBox = new JCheckBox();
+		Font iaaClassCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, iaaClassCheckBox.getFont());
+		if (iaaClassCheckBoxFont != null) iaaClassCheckBox.setFont(iaaClassCheckBoxFont);
+		this.$$$loadButtonText$$$(iaaClassCheckBox, ResourceBundle.getBundle("log4j").getString("class1"));
+		iaaPane.add(iaaClassCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		final Spacer spacer8 = new Spacer();
+		panel9.add(spacer8, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
 		final JPanel panel12 = new JPanel();
 		panel12.setLayout(new GridLayoutManager(3, 5, new Insets(0, 0, 0, 0), -1, -1));
 		header.addTab("Search", panel12);
@@ -931,10 +1034,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		if (caseSensitiveCheckBoxFont != null) caseSensitiveCheckBox.setFont(caseSensitiveCheckBoxFont);
 		caseSensitiveCheckBox.setText("Case Sensitive");
 		panel12.add(caseSensitiveCheckBox, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		final Spacer spacer8 = new Spacer();
-		panel12.add(spacer8, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
 		final Spacer spacer9 = new Spacer();
-		panel12.add(spacer9, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		panel12.add(spacer9, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		final Spacer spacer10 = new Spacer();
+		panel12.add(spacer10, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
 		final JPanel panel14 = new JPanel();
 		panel14.setLayout(new GridLayoutManager(2, 4, new Insets(0, 0, 0, 0), -1, -1));
 		header.addTab("Review", panel14);
@@ -1006,17 +1109,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		previousReviewObjectButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-advance-24 (reversed).png")));
 		previousReviewObjectButton.setText("");
 		panel14.add(previousReviewObjectButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		final Spacer spacer10 = new Spacer();
-		panel14.add(spacer10, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		final Spacer spacer11 = new Spacer();
+		panel14.add(spacer11, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
 		filePanel = new JPanel();
 		filePanel.setLayout(new GridLayoutManager(5, 6, new Insets(0, 0, 0, 0), -1, -1));
 		cardPanel.add(filePanel, "File");
-		final Spacer spacer11 = new Spacer();
-		filePanel.add(spacer11, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
 		final Spacer spacer12 = new Spacer();
-		filePanel.add(spacer12, new GridConstraints(1, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		filePanel.add(spacer12, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
 		final Spacer spacer13 = new Spacer();
-		filePanel.add(spacer13, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		filePanel.add(spacer13, new GridConstraints(1, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		final Spacer spacer14 = new Spacer();
+		filePanel.add(spacer14, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
 		progressBar = new JProgressBar();
 		progressBar.setStringPainted(true);
 		filePanel.add(progressBar, new GridConstraints(2, 0, 1, 6, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -1030,15 +1133,15 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		defaultListModel1.addElement("New");
 		fileList.setModel(defaultListModel1);
 		scrollPane10.setViewportView(fileList);
-		final Spacer spacer14 = new Spacer();
-		filePanel.add(spacer14, new GridConstraints(1, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		final Spacer spacer15 = new Spacer();
+		filePanel.add(spacer15, new GridConstraints(1, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
 		backButton = new JButton();
 		backButton.setText("Back");
 		filePanel.add(backButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		final Spacer spacer15 = new Spacer();
-		filePanel.add(spacer15, new GridConstraints(0, 1, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
 		final Spacer spacer16 = new Spacer();
-		filePanel.add(spacer16, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		filePanel.add(spacer16, new GridConstraints(0, 1, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		final Spacer spacer17 = new Spacer();
+		filePanel.add(spacer17, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
 		fileChooser = new JFileChooser();
 		filePanel.add(fileChooser, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
 	}

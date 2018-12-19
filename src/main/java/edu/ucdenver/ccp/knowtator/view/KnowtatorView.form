@@ -319,7 +319,7 @@
                           </component>
                         </children>
                       </grid>
-                      <grid id="a822d" binding="externalButtonsPane" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                      <grid id="a822d" binding="externalButtonsPane" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                         <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
                           <grid row="0" column="0" row-span="2" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -343,6 +343,15 @@
                             <properties>
                               <font name="Verdana" size="10" style="0"/>
                               <icon value="icon/icons8-tree-structure-32.png"/>
+                              <text value=""/>
+                            </properties>
+                          </component>
+                          <component id="af9bf" class="javax.swing.JButton" binding="captureImageButton">
+                            <constraints>
+                              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <icon value="icon/icons8-unsplash-32.png"/>
                               <text value=""/>
                             </properties>
                           </component>
@@ -524,7 +533,7 @@
                       </grid>
                     </children>
                   </grid>
-                  <grid id="8ec4a" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                  <grid id="8ec4a" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="0" left="0" bottom="0" right="0"/>
                     <constraints>
                       <tabbedpane title="Profile"/>
@@ -612,6 +621,59 @@
                           </grid>
                         </children>
                       </grid>
+                      <grid id="7942d" binding="iaaPane" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="10" left="10" bottom="10" right="10"/>
+                        <constraints>
+                          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none" title="IAA">
+                          <font name="Verdana" size="14"/>
+                        </border>
+                        <children>
+                          <component id="21ed9" class="javax.swing.JButton" binding="runIAAButton">
+                            <constraints>
+                              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <font name="Verdana" size="10" style="0"/>
+                              <text resource-bundle="log4j" key="run.iaa"/>
+                            </properties>
+                          </component>
+                          <component id="d356b" class="javax.swing.JCheckBox" binding="iaaSpanCheckBox" default-binding="true">
+                            <constraints>
+                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <font name="Verdana" size="10" style="0"/>
+                              <text resource-bundle="ui" key="span1"/>
+                            </properties>
+                          </component>
+                          <component id="6aa9e" class="javax.swing.JCheckBox" binding="iaaClassAndSpanCheckBox" default-binding="true">
+                            <constraints>
+                              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <font name="Verdana" size="10" style="0"/>
+                              <text resource-bundle="ui" key="class.and.span"/>
+                            </properties>
+                          </component>
+                          <component id="a3b17" class="javax.swing.JCheckBox" binding="iaaClassCheckBox" default-binding="true">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <font name="Verdana" size="10" style="0"/>
+                              <text resource-bundle="log4j" key="class1"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <hspacer id="22f65">
+                        <constraints>
+                          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                      </hspacer>
                     </children>
                   </grid>
                   <grid id="f5d1c" layout-manager="GridLayoutManager" row-count="3" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -973,6 +1035,8 @@
                       <model>
                         <item value="Open"/>
                         <item value="New"/>
+                        <item value="Import"/>
+                        <item value="Export"/>
                       </model>
                     </properties>
                   </component>

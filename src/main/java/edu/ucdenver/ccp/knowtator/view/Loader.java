@@ -22,14 +22,13 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.menu;
+package edu.ucdenver.ccp.knowtator.view;
 
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +43,7 @@ public class Loader extends SwingWorker implements ModelListener {
 	private final JComponent panel1;
 	private float maxVal;
 
-	public Loader(KnowtatorView view, File file, JProgressBar progressBar1, JTabbedPane tabbedPane1, JComponent panel1) {
+	Loader(KnowtatorView view, File file, JProgressBar progressBar1, JTabbedPane tabbedPane1, JComponent panel1) {
 		this.view = view;
 		this.file = file;
 		this.progressBar1 = progressBar1;
