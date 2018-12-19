@@ -30,6 +30,7 @@ import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ReassignOWLClassAction;
 import org.apache.log4j.Logger;
@@ -115,6 +116,8 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements KnowtatorC
 				}
 
 			} else {
+				//TODO: I may want to make this set the selected span to null instead
+				textSource.setSelectedConceptAnnotation(null);
 				setSelectionAtWordLimits(press_offset, release_offset);
 			}
 		});
@@ -157,7 +160,13 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements KnowtatorC
 											.ifPresent(conceptAnnotation -> {
 												model.getSelectedOWLClass()
 														.ifPresent(owlClass ->
-																model.registerAction(new ReassignOWLClassAction(model, conceptAnnotation, owlClass)));
+														{
+															try {
+																model.registerAction(new ReassignOWLClassAction(model, conceptAnnotation, owlClass));
+															} catch (ActionUnperformableException e1) {
+																JOptionPane.showMessageDialog(view, e1.getMessage());
+															}
+														});
 											}))));
 
 

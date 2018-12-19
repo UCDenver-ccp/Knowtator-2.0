@@ -25,4 +25,7 @@
 package edu.ucdenver.ccp.knowtator.view.actions;
 
 public class ActionUnperformableException extends Throwable {
+	public ActionUnperformableException(String message) {
+		super(message);
+	}
 }

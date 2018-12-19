@@ -27,10 +27,8 @@ package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
-import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
 import org.semanticweb.owlapi.model.OWLClass;
 
-import javax.swing.undo.UndoableEdit;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,23 +61,17 @@ public class ColorChangeAction extends AbstractKnowtatorAction {
 	}
 
 	@Override
-	public UndoableEdit getEdit() {
-		return new KnowtatorEdit("Set color for OWL class") {
+	public void undo() {
 
-			@Override
-			public void undo() {
+		super.undo();
+		oldColorAssignments.forEach(profile::addColor);
+		profile.save();
+	}
 
-				super.undo();
-				oldColorAssignments.forEach(profile::addColor);
-				profile.save();
-			}
-
-			@Override
-			public void redo() {
-				super.redo();
-				oldColorAssignments.keySet().forEach(owlClass -> profile.addColor(owlClass, color));
-				profile.save();
-			}
-		};
+	@Override
+	public void redo() {
+		super.redo();
+		oldColorAssignments.keySet().forEach(owlClass -> profile.addColor(owlClass, color));
+		profile.save();
 	}
 }

@@ -33,6 +33,7 @@ import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.FilterAction;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.SpanActions;
@@ -364,13 +365,25 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		profileFilterCheckBox.addItemListener(e ->
 				getModel()
 						.ifPresent(knowtatorModel ->
+						{
+							try {
 								knowtatorModel.registerAction(
-										new FilterAction(knowtatorModel, FilterType.PROFILE, profileFilterCheckBox.isSelected()))));
+										new FilterAction(knowtatorModel, FilterType.PROFILE, profileFilterCheckBox.isSelected()));
+							} catch (ActionUnperformableException e1) {
+								JOptionPane.showMessageDialog(this, e1.getMessage());
+							}
+						}));
 		owlClassFilterCheckBox.addItemListener(e ->
 				getModel()
 						.ifPresent(knowtatorModel ->
+						{
+							try {
 								knowtatorModel.registerAction(
-										new FilterAction(knowtatorModel, FilterType.OWLCLASS, owlClassFilterCheckBox.isSelected()))));
+										new FilterAction(knowtatorModel, FilterType.OWLCLASS, owlClassFilterCheckBox.isSelected()));
+							} catch (ActionUnperformableException e1) {
+								JOptionPane.showMessageDialog(this, e1.getMessage());
+							}
+						}));
 
 
 		Optional.ofNullable(KnowtatorView.PREFERENCES.get("Last Project", null))
@@ -437,24 +450,48 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 				.ifPresent(model1 -> model1.getSelectedTextSource()
 						.ifPresent(textSource -> textSource.getSelectedAnnotation()
 								.ifPresent(conceptAnnotation -> conceptAnnotation.getSelection()
-										.ifPresent(span -> model1.registerAction(
-												new SpanActions.ModifySpanAction(model1, SpanActions.END, SpanActions.SHRINK, span)))))));
+										.ifPresent(span -> {
+											try {
+												model1.registerAction(
+														new SpanActions.ModifySpanAction(model1, SpanActions.END, SpanActions.SHRINK, span));
+											} catch (ActionUnperformableException e1) {
+												JOptionPane.showMessageDialog(this, e1.getMessage());
+											}
+										})))));
 
 		spanSizeButtons.put(shrinkStartButton, e -> getModel()
 				.ifPresent(model1 -> model1.getSelectedTextSource()
 						.ifPresent(textSource -> textSource.getSelectedAnnotation()
 								.ifPresent(conceptAnnotation -> conceptAnnotation.getSelection()
-										.ifPresent(span -> model1.registerAction(new SpanActions.ModifySpanAction(model1, SpanActions.START, SpanActions.SHRINK, span)))))));
+										.ifPresent(span -> {
+											try {
+												model1.registerAction(new SpanActions.ModifySpanAction(model1, SpanActions.START, SpanActions.SHRINK, span));
+											} catch (ActionUnperformableException e1) {
+												JOptionPane.showMessageDialog(this, e1.getMessage());
+											}
+										})))));
 		spanSizeButtons.put(growEndButton, e -> getModel()
 				.ifPresent(model1 -> model1.getSelectedTextSource()
 						.ifPresent(textSource -> textSource.getSelectedAnnotation()
 								.ifPresent(conceptAnnotation -> conceptAnnotation.getSelection()
-										.ifPresent(span -> model1.registerAction(new SpanActions.ModifySpanAction(model1, SpanActions.END, SpanActions.GROW, span)))))));
+										.ifPresent(span -> {
+											try {
+												model1.registerAction(new SpanActions.ModifySpanAction(model1, SpanActions.END, SpanActions.GROW, span));
+											} catch (ActionUnperformableException e1) {
+												JOptionPane.showMessageDialog(this, e1.getMessage());
+											}
+										})))));
 		spanSizeButtons.put(growStartButton, e -> getModel()
 				.ifPresent(model1 -> model1.getSelectedTextSource()
 						.ifPresent(textSource -> textSource.getSelectedAnnotation()
 								.ifPresent(conceptAnnotation -> conceptAnnotation.getSelection()
-										.ifPresent(span -> model1.registerAction(new SpanActions.ModifySpanAction(model1, SpanActions.START, SpanActions.GROW, span)))))));
+										.ifPresent(span -> {
+											try {
+												model1.registerAction(new SpanActions.ModifySpanAction(model1, SpanActions.START, SpanActions.GROW, span));
+											} catch (ActionUnperformableException e1) {
+												JOptionPane.showMessageDialog(this, e1.getMessage());
+											}
+										})))));
 
 		selectionSizeButtons.put(shrinkEndButton, e -> SpanActions.modifySelection(this, SpanActions.END, SpanActions.SHRINK));
 		selectionSizeButtons.put(shrinkStartButton, e -> SpanActions.modifySelection(this, SpanActions.START, SpanActions.SHRINK));
@@ -463,28 +500,31 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	}
 
 	private void makeReviewPane() {
-		refreshReviewPaneButton.addActionListener(e -> getModel().ifPresent(model -> Arrays.stream(((JPanel) reviewTabbedPane.getSelectedComponent()).getComponents())
-				.filter(component -> component instanceof KnowtatorList)
-				.findFirst()
-				.map(component -> (KnowtatorList) component)
-				.ifPresent(KnowtatorList::reset)));
+		//TODO The Knowtator list doesn't seem to be being found so none of these methods are working
+		refreshReviewPaneButton.addActionListener(e -> getKnowtatorList()
+				.ifPresent(KnowtatorList::reset));
 
-		nextReviewObjectButton.addActionListener(e -> Arrays.stream(((JPanel) reviewTabbedPane.getSelectedComponent()).getComponents())
-				.filter(component -> component instanceof KnowtatorList)
-				.findFirst()
-				.map(component -> (KnowtatorList) component)
+		nextReviewObjectButton.addActionListener(e -> getKnowtatorList()
 				.ifPresent(knowtatorList -> {
 					knowtatorList.setSelectedIndex(Math.min(knowtatorList.getSelectedIndex() + 1, knowtatorList.getModel().getSize() - 1));
+					knowtatorList.ensureIndexIsVisible(knowtatorList.getSelectedIndex());
 					knowtatorList.reactToClick();
 				}));
-		previousReviewObjectButton.addActionListener(e -> Arrays.stream(((JPanel) reviewTabbedPane.getSelectedComponent()).getComponents())
-				.filter(component -> component instanceof KnowtatorList)
-				.findFirst()
-				.map(component -> (KnowtatorList) component)
+		previousReviewObjectButton.addActionListener(e -> getKnowtatorList()
 				.ifPresent(knowtatorList -> {
 					knowtatorList.setSelectedIndex(Math.max(knowtatorList.getSelectedIndex() - 1, 0));
+					knowtatorList.ensureIndexIsVisible(knowtatorList.getSelectedIndex());
 					knowtatorList.reactToClick();
 				}));
+	}
+
+	private Optional<KnowtatorList> getKnowtatorList() {
+		return Arrays.stream(((JPanel) reviewTabbedPane.getSelectedComponent()).getComponents())
+				.filter(component -> component instanceof JScrollPane)
+				.findFirst()
+				.map(component -> (JScrollPane) component)
+				.map(jScrollPane -> jScrollPane.getViewport().getComponent(0))
+				.map(component -> (KnowtatorList) component);
 	}
 
 	@Override
@@ -924,27 +964,24 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		owlClassLabel.setText("");
 		panel18.add(owlClassLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final JPanel panel19 = new JPanel();
-		panel19.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+		panel19.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
 		reviewTabbedPane.addTab("Relation", panel19);
-		final JPanel panel20 = new JPanel();
-		panel20.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
-		panel19.add(panel20, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
 		final JScrollPane scrollPane9 = new JScrollPane();
-		panel20.add(scrollPane9, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		panel19.add(scrollPane9, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
 		scrollPane9.setViewportView(relationsForPropertyList);
 		Font includePropertyDescendantsCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, includePropertyDescendantsCheckBox.getFont());
 		if (includePropertyDescendantsCheckBoxFont != null)
 			includePropertyDescendantsCheckBox.setFont(includePropertyDescendantsCheckBoxFont);
 		this.$$$loadButtonText$$$(includePropertyDescendantsCheckBox, ResourceBundle.getBundle("log4j").getString("include.descendants1"));
-		panel20.add(includePropertyDescendantsCheckBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		final JPanel panel21 = new JPanel();
-		panel21.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-		panel20.add(panel21, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-		panel21.setBorder(BorderFactory.createTitledBorder(null, "OWL Object Property", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, -1, panel21.getFont())));
+		panel19.add(includePropertyDescendantsCheckBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		final JPanel panel20 = new JPanel();
+		panel20.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+		panel19.add(panel20, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+		panel20.setBorder(BorderFactory.createTitledBorder(null, "OWL Object Property", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, -1, panel20.getFont())));
 		Font owlPropertyLabelFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, owlPropertyLabel.getFont());
 		if (owlPropertyLabelFont != null) owlPropertyLabel.setFont(owlPropertyLabelFont);
 		owlPropertyLabel.setText("");
-		panel21.add(owlPropertyLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		panel20.add(owlPropertyLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		refreshReviewPaneButton = new JButton();
 		refreshReviewPaneButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-synchronize-32.png")));
 		refreshReviewPaneButton.setText("");
@@ -1061,12 +1098,18 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		}));
 
 		getModel().ifPresent(model1 -> {
-			Optional optional = model1.getSelectedTextSource().map(TextSource::getSelectedAnnotation);
+			Optional optional = model1.getSelectedTextSource()
+					.flatMap(TextSource::getSelectedAnnotation);
 			if (optional.isPresent()) {
+				spanSizeButtons.keySet()
+						.forEach(jButton -> Arrays.stream(jButton.getActionListeners())
+								.forEach(jButton::removeActionListener));
 				spanSizeButtons.forEach(AbstractButton::addActionListener);
-				selectionSizeButtons.forEach(AbstractButton::removeActionListener);
+
 			} else {
-				spanSizeButtons.forEach(AbstractButton::removeActionListener);
+				spanSizeButtons.keySet()
+						.forEach(jButton -> Arrays.stream(jButton.getActionListeners())
+								.forEach(jButton::removeActionListener));
 				selectionSizeButtons.forEach(AbstractButton::addActionListener);
 			}
 		});

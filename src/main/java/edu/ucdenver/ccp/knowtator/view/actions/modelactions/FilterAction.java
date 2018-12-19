@@ -27,9 +27,6 @@ package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
-import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
-
-import javax.swing.undo.UndoableEdit;
 
 public class FilterAction extends AbstractKnowtatorAction {
 
@@ -50,18 +47,14 @@ public class FilterAction extends AbstractKnowtatorAction {
 		model.setFilter(filterType, isFilter);
 	}
 
-	@Override
-	public UndoableEdit getEdit() {
-		return new KnowtatorEdit("Change filterType") {
-			@Override
-			public void undo() {
-				model.setFilter(filterType, previousIsFilter);
-			}
 
-			@Override
-			public void redo() {
-				model.setFilter(filterType, isFilter);
-			}
-		};
+	@Override
+	public void undo() {
+		model.setFilter(filterType, previousIsFilter);
+	}
+
+	@Override
+	public void redo() {
+		model.setFilter(filterType, isFilter);
 	}
 }

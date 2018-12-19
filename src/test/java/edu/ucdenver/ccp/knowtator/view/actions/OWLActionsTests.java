@@ -52,7 +52,7 @@ class OWLActionsTests {
     }
 
     @Test
-    void reassignOWLClassActionTest() {
+    void reassignOWLClassActionTest() throws ActionUnperformableException {
         TextSource textSource = model.getSelectedTextSource().get();
         ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
         textSource.setSelectedConceptAnnotation(conceptAnnotation);
@@ -71,7 +71,7 @@ class OWLActionsTests {
     }
 
     @Test
-    void changeColorActionTest() {
+    void changeColorActionTest() throws ActionUnperformableException {
         TextSource textSource = model.getSelectedTextSource().get();
         ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
         textSource.setSelectedConceptAnnotation(conceptAnnotation);

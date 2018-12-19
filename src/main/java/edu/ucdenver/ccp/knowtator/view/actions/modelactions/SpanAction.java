@@ -57,7 +57,7 @@ public class SpanAction extends AbstractKnowtatorCollectionAction<Span> {
 			ConceptAnnotationAction action = new ConceptAnnotationAction(model, REMOVE, conceptAnnotation.getTextSource());
 			action.setObject(conceptAnnotation);
 			model.registerAction(action);
-			edit.addKnowtatorEdit(action.getEdit());
+			addKnowtatorEdit(action);
 		} else {
 			super.prepareRemove();
 		}

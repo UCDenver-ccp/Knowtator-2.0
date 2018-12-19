@@ -55,7 +55,7 @@ class FilterActionsTests {
 	}
 
 	@Test
-	void filterActionTest() {
+	void filterActionTest() throws ActionUnperformableException {
 		TestingHelpers.checkDefaultCollectionValues(model);
 		TestingHelpers.testKnowtatorAction(model, new FilterAction(model, PROFILE, true),
 				TestingHelpers.defaultExpectedTextSources,

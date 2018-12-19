@@ -27,11 +27,15 @@ package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 import com.mxgraph.util.mxEvent;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType;
+import org.semanticweb.owlapi.model.OWLClass;
+
+import java.util.Optional;
 
 public class ConceptAnnotationAction extends AbstractKnowtatorCollectionAction<ConceptAnnotation> {
 
@@ -48,26 +52,31 @@ public class ConceptAnnotationAction extends AbstractKnowtatorCollectionAction<C
 
 	@Override
 	public void cleanUpRemove() {
-		textSource.getGraphSpaces().forEach(graphSpace -> graphSpace.getModel().removeListener(edit, mxEvent.UNDO));
+		textSource.getGraphSpaces().forEach(graphSpace -> graphSpace.getModel().removeListener(this, mxEvent.UNDO));
 	}
 
 
 	@Override
 	public void prepareRemove() throws ActionUnperformableException {
 		super.prepareRemove();
-		edit.setObject(object);
-//			edit = new KnowtatorCollectionEdit<>(REMOVE, collection, object, getPresentationName(), edit.isSignificant());
-		textSource.getGraphSpaces().forEach(graphSpace -> graphSpace.getModel().addListener(mxEvent.UNDO, edit));
+		textSource.getGraphSpaces().forEach(graphSpace -> graphSpace.getModel().addListener(mxEvent.UNDO, this));
 	}
 
 	@Override
 	protected void prepareAdd() {
-		model.getSelectedProfile()
-				.ifPresent(annotator -> model.getSelectedOWLClass()
-						.ifPresent(owlClass -> {
-							ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(model, textSource, null, owlClass, annotator, "identity", "");
-							newConceptAnnotation.add(new Span(model, newConceptAnnotation, null, model.getSelection().getStart(), model.getSelection().getEnd()));
-							setObject(newConceptAnnotation);
-						}));
+		Optional<Profile> profileOptional = model.getSelectedProfile();
+		if (profileOptional.isPresent()) {
+			Optional<OWLClass> owlClassOptional = model.getSelectedOWLClass();
+			if (owlClassOptional.isPresent()) {
+				ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(model, textSource, null, owlClassOptional.get(), profileOptional.get(), "identity", "");
+				newConceptAnnotation.add(new Span(model, newConceptAnnotation, null, model.getSelection().getStart(), model.getSelection().getEnd()));
+				setObject(newConceptAnnotation);
+			} else {
+				setMessage("No OWL Class selected. ");
+			}
+		} else {
+			setMessage("No profile selected. ");
+		}
 	}
 }
+

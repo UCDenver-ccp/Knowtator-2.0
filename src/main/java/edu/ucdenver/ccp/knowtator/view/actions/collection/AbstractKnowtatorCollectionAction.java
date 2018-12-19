@@ -36,7 +36,6 @@ import edu.ucdenver.ccp.knowtator.view.actions.modelactions.SpanAction;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.TextSourceAction;
 
 import javax.swing.*;
-import javax.swing.undo.UndoableEdit;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +46,6 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject> e
 
 
 	protected final CollectionActionType actionType;
-	protected final KnowtatorCollectionEdit<K> edit;
 	protected final KnowtatorCollection<K> collection;
 	protected K object;
 
@@ -56,7 +54,6 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject> e
 		this.collection = collection;
 		this.actionType = actionType;
 		object = null;
-		this.edit = new KnowtatorCollectionEdit<>(actionType, collection, getPresentationName());
 	}
 
 
@@ -65,16 +62,58 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject> e
 		switch (actionType) {
 			case ADD:
 				prepareAdd();
-				collection.add(getObject().orElseThrow(ActionUnperformableException::new));
+				collection.add(getObject().orElseThrow(() -> new ActionUnperformableException(getMessage())));
 				cleanUpAdd();
 				break;
 			case REMOVE:
 				prepareRemove();
-				collection.remove(getObject().orElseThrow(ActionUnperformableException::new));
+				collection.remove(getObject().orElseThrow(() -> new ActionUnperformableException(getMessage())));
 				cleanUpRemove();
 				break;
 		}
 
+	}
+
+
+	@Override
+	public void undo() {
+		super.undo();
+		switch (actionType) {
+			case ADD:
+				try {
+					collection.remove(getObject().orElseThrow(() -> new ActionUnperformableException(getMessage())));
+				} catch (ActionUnperformableException ignored) {
+
+				}
+				break;
+			case REMOVE:
+				try {
+					collection.add(getObject().orElseThrow(() -> new ActionUnperformableException(getMessage())));
+				} catch (ActionUnperformableException ignored) {
+
+				}
+				break;
+		}
+	}
+
+	@Override
+	public void redo() {
+		super.redo();
+		switch (actionType) {
+			case ADD:
+				try {
+					collection.add(getObject().orElseThrow(() -> new ActionUnperformableException(getMessage())));
+				} catch (ActionUnperformableException ignored) {
+				}
+				break;
+			case REMOVE:
+				try {
+					collection.remove(getObject().orElseThrow(() -> new ActionUnperformableException(getMessage())));
+				} catch (ActionUnperformableException ignored) {
+
+				}
+				break;
+		}
 	}
 
 	private Optional<K> getObject() {
@@ -95,14 +134,8 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject> e
 	protected abstract void cleanUpAdd();
 
 
-	@Override
-	public UndoableEdit getEdit() {
-		return edit;
-	}
-
 	public void setObject(K object) {
 		this.object = object;
-		edit.setObject(this.object);
 	}
 
 	public static void pickAction(KnowtatorView view, String id, File file, ActionParameters... actionParametersList) {
@@ -151,7 +184,11 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject> e
 					action = actions.get(response);
 				}
 
-				model.registerAction(action);
+				try {
+					model.registerAction(action);
+				} catch (ActionUnperformableException e) {
+					JOptionPane.showMessageDialog(view, e.getMessage());
+				}
 			}
 		});
 	}

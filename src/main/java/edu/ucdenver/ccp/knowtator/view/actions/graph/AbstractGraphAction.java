@@ -28,31 +28,25 @@ import com.mxgraph.util.mxEvent;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
-import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
-
-import javax.swing.undo.UndoableEdit;
 
 public abstract class AbstractGraphAction extends AbstractKnowtatorAction {
 
 	final GraphSpace graphSpace;
-	private final KnowtatorEdit edit;
+
 
 	AbstractGraphAction(KnowtatorModel model, String presentationName, GraphSpace graphSpace) {
 		super(model, presentationName);
 		this.graphSpace = graphSpace;
-		edit = new KnowtatorEdit(getPresentationName()) {
-
-		};
 	}
 
 	private void prepare() {
-		graphSpace.getModel().addListener(mxEvent.UNDO, edit);
+		graphSpace.getModel().addListener(mxEvent.UNDO, this);
 	}
 
 	protected abstract void perform();
 
 	private void cleanUp() {
-		graphSpace.getModel().removeListener(edit, mxEvent.UNDO);
+		graphSpace.getModel().removeListener(this, mxEvent.UNDO);
 	}
 
 	@Override
@@ -60,11 +54,6 @@ public abstract class AbstractGraphAction extends AbstractKnowtatorAction {
 		prepare();
 		perform();
 		cleanUp();
-	}
-
-	@Override
-	public UndoableEdit getEdit() {
-		return edit;
 	}
 }
 

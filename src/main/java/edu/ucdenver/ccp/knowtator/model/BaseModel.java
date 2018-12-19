@@ -224,13 +224,9 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 	 *
 	 * @param action An executable and undoable action
 	 */
-	public void registerAction(@Nonnull AbstractKnowtatorAction action) {
-		try {
-			action.execute();
-			addEdit(action.getEdit());
-		} catch (ActionUnperformableException e) {
-			e.printStackTrace();
-		}
+	public void registerAction(@Nonnull AbstractKnowtatorAction action) throws ActionUnperformableException {
+		action.execute();
+		addEdit(action);
 	}
 
 	public ProfileCollection getProfiles() {

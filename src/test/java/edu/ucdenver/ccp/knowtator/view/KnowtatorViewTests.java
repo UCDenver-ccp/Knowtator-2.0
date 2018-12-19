@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.view;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorCollectionActionsTests;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -49,7 +50,7 @@ class KnowtatorViewTests {
 	}
 
 	@Test
-	void testActionsTest() throws IOException {
+	void testActionsTest() throws IOException, ActionUnperformableException {
 		KnowtatorModel controller = TestingHelpers.getLoadedController();
 		TestingHelpers.checkDefaultCollectionValues(controller);
 		view.loadProject(controller.getProjectLocation(), null);

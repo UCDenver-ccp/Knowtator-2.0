@@ -28,98 +28,79 @@ import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
-import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorEdit;
 import edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane;
 
-import javax.swing.undo.UndoableEdit;
-
 public class SpanActions {
-    public final static String GROW = "grow";
-    public final static String SHRINK = "shrink";
-    public final static String START = "start";
-    public final static String END = "end";
+	public final static String GROW = "grow";
+	public final static String SHRINK = "shrink";
+	public final static String START = "start";
+	public final static String END = "end";
 
-    public static class ModifySpanAction extends AbstractKnowtatorAction {
+	public static class ModifySpanAction extends AbstractKnowtatorAction {
 
-        private final Span span;
-        private final int startModification;
-        private final int endModification;
-        private final String startOrEnd;
-        private final String growOrShrink;
-        private boolean spanStartChanged;
-        private boolean spanEndChanged;
+		private final Span span;
+		private final String startOrEnd;
+		private final String growOrShrink;
+		private boolean spanStartChanged;
+		private boolean spanEndChanged;
 
-        public ModifySpanAction(KnowtatorModel model, String startOrEnd, String growOrShrink, Span span) {
-            super(model, "Modify span");
-            this.startOrEnd = startOrEnd;
-            this.growOrShrink = growOrShrink;
-            this.span = span;
-            startModification = getStartModification(startOrEnd, growOrShrink);
-            endModification = getEndModification(startOrEnd, growOrShrink);
-            spanStartChanged = false;
-            spanEndChanged = false;
-        }
+		public ModifySpanAction(KnowtatorModel model, String startOrEnd, String growOrShrink, Span span) {
+			super(model, "Modify span");
+			this.startOrEnd = startOrEnd;
+			this.growOrShrink = growOrShrink;
+			this.span = span;
 
-        @Override
-        public void execute() {
-            int spanStart = span.getStart();
-            int spanEnd = span.getEnd();
-	        span.modify(startModification, endModification);
-            spanStartChanged = spanStart != span.getStart();
-            spanEndChanged = spanEnd != span.getEnd();
-        }
+			spanStartChanged = false;
+			spanEndChanged = false;
+		}
 
-        @Override
-        public UndoableEdit getEdit() {
-            return new KnowtatorEdit(getPresentationName()) {
-                private int startModification;
-                private int endModification;
+		@Override
+		public void execute() {
+			int spanStart = span.getStart();
+			int spanEnd = span.getEnd();
+			int startModification = getStartModification(startOrEnd, growOrShrink);
+			int endModification = getEndModification(startOrEnd, growOrShrink);
+			span.modify(startModification, endModification);
+			spanStartChanged = spanStart != span.getStart();
+			spanEndChanged = spanEnd != span.getEnd();
+		}
 
-                @Override
-                public void undo() {
-                    super.undo();
-                    switch (growOrShrink) {
-                        case GROW:
-                            startModification = spanStartChanged ? getStartModification(startOrEnd, SHRINK) : 0;
-                            endModification = spanEndChanged ? getEndModification(startOrEnd, SHRINK) : 0;
-	                        span.modify(startModification, endModification);
-                            break;
-                        case SHRINK:
-                            startModification = spanStartChanged ? getStartModification(startOrEnd, GROW) : 0;
-                            endModification = spanEndChanged ? getEndModification(startOrEnd, GROW) : 0;
-	                        span.modify(startModification, endModification);
-                            break;
-                    }
-                }
+		@Override
+		public void undo() {
+			super.undo();
+			int startModification;
+			int endModification;
+			startModification = spanStartChanged ? (-1) * getStartModification(startOrEnd, growOrShrink) : 0;
+			endModification = spanEndChanged ? (-1) * getEndModification(startOrEnd, growOrShrink) : 0;
+			span.modify(startModification, endModification);
+		}
 
-                @Override
-                public void redo() {
-                    super.redo();
-                    execute();
-                }
-            };
-        }
-    }
+		@Override
+		public void redo() {
+			super.redo();
+			execute();
+		}
+	}
 
-    private static int getEndModification(String startOrEnd, String growOrShrink) {
-        return startOrEnd.equals(END) ?
-                growOrShrink.equals(GROW) ?
-                        +1 : growOrShrink.equals(SHRINK) ?
-                        -1 : 0 : 0;
-    }
+	private static int getEndModification(String startOrEnd, String growOrShrink) {
+		return startOrEnd.equals(END) ?
+				growOrShrink.equals(GROW) ?
+						+1 : growOrShrink.equals(SHRINK) ?
+						-1 : 0 : 0;
+	}
 
-    private static int getStartModification(String startOrEnd, String growOrShrink) {
-        return startOrEnd.equals(START) ?
-                growOrShrink.equals(GROW) ?
-                        -1 : growOrShrink.equals(SHRINK) ?
-                        +1 : 0 : 0;
-    }
+	private static int getStartModification(String startOrEnd, String growOrShrink) {
+		return startOrEnd.equals(START) ?
+				growOrShrink.equals(GROW) ?
+						-1 : growOrShrink.equals(SHRINK) ?
+						+1 : 0 : 0;
+	}
 
 
-    public static void modifySelection(KnowtatorView view, String startOrEnd, String growOrShrink) {
-        int startModification = getStartModification(startOrEnd, growOrShrink);
-        int endModification = getEndModification(startOrEnd, growOrShrink);
-        KnowtatorTextPane textPane = view.getTextPane();
-        textPane.modifySelection(startModification, endModification);
-    }
+	public static void modifySelection(KnowtatorView view, String startOrEnd, String growOrShrink) {
+		int startModification = getStartModification(startOrEnd, growOrShrink);
+		int endModification = getEndModification(startOrEnd, growOrShrink);
+		KnowtatorTextPane textPane = view.getTextPane();
+		textPane.modifySelection(startModification, endModification);
+	}
 }

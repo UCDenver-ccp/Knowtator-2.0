@@ -38,6 +38,7 @@ import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.*;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import edu.ucdenver.ccp.knowtator.view.actions.graph.GraphActions;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.GraphSpaceAction;
 import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
@@ -150,8 +151,14 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 						.ifPresent(model ->
 								model.getSelectedTextSource()
 										.ifPresent(textSource ->
+										{
+											try {
 												model.registerAction(
-														new GraphSpaceAction(model, REMOVE, null, textSource))));
+														new GraphSpaceAction(model, REMOVE, null, textSource));
+											} catch (ActionUnperformableException e1) {
+												JOptionPane.showMessageDialog(view, e1.getMessage());
+											}
+										}));
 
 			}
 		});
@@ -168,8 +175,14 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 								.ifPresent(textSource ->
 										textSource.getSelectedGraphSpace()
 												.ifPresent(graphSpace ->
+												{
+													try {
 														model.registerAction(
-																new GraphActions.removeCellsAction(model, graphSpace))))));
+																new GraphActions.removeCellsAction(model, graphSpace));
+													} catch (ActionUnperformableException e1) {
+														JOptionPane.showMessageDialog(view, e1.getMessage());
+													}
+												}))));
 
 		addAnnotationNodeButton.addActionListener(e ->
 				view.getModel().ifPresent(model ->
@@ -178,16 +191,28 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 										.ifPresent(graphSpace ->
 												textSource.getSelectedAnnotation()
 														.ifPresent(conceptAnnotation ->
+														{
+															try {
 																model.registerAction(
-																		new GraphActions.AddAnnotationNodeAction(view, model, graphSpace, conceptAnnotation)))))));
+																		new GraphActions.AddAnnotationNodeAction(view, model, graphSpace, conceptAnnotation));
+															} catch (ActionUnperformableException e1) {
+																JOptionPane.showMessageDialog(view, e1.getMessage());
+															}
+														})))));
 
 		applyLayoutButton.addActionListener(e ->
 				view.getModel().ifPresent(model ->
 						model.getSelectedTextSource()
 								.ifPresent(textSource ->
 										textSource.getSelectedGraphSpace()
-												.ifPresent(graphSpace -> model.registerAction(
-														new GraphActions.applyLayoutAction(view, model, graphSpace))))));
+												.ifPresent(graphSpace -> {
+													try {
+														model.registerAction(
+																new GraphActions.applyLayoutAction(view, model, graphSpace));
+													} catch (ActionUnperformableException e1) {
+														JOptionPane.showMessageDialog(view, e1.getMessage());
+													}
+												}))));
 		graphSpaceButtons = Arrays.asList(
 				renameButton,
 				removeCellButton,
@@ -254,8 +279,14 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 	private void makeGraph(TextSource textSource) {
 		view.getModel().ifPresent(model ->
 				getGraphNameInput(view, textSource, null)
-						.ifPresent(graphName -> model.registerAction(
-								new GraphSpaceAction(model, ADD, graphName, textSource))));
+						.ifPresent(graphName -> {
+							try {
+								model.registerAction(
+										new GraphSpaceAction(model, ADD, graphName, textSource));
+							} catch (ActionUnperformableException e) {
+								JOptionPane.showMessageDialog(view, e.getMessage());
+							}
+						}));
 
 	}
 

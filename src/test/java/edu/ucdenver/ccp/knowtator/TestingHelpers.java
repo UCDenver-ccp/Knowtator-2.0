@@ -28,6 +28,7 @@ import com.google.common.io.Files;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import org.apache.commons.io.FileUtils;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
@@ -150,7 +151,7 @@ public class TestingHelpers {
                                            int expectedProfiles,
                                            int expectedHighlighters,
                                            int expectedAnnotationNodes,
-                                           int expectedTriples) {
+                                           int expectedTriples) throws ActionUnperformableException {
         TestingHelpers.checkDefaultCollectionValues(controller);
         controller.registerAction(action);
         TestingHelpers.countCollections(controller,

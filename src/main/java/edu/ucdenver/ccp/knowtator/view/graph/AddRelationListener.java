@@ -30,8 +30,10 @@ import com.mxgraph.util.mxEventSource;
 import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
 import edu.ucdenver.ccp.knowtator.view.actions.graph.GraphActions;
 
+import javax.swing.*;
 import java.util.Arrays;
 
 class AddRelationListener implements mxEventSource.mxIEventListener {
@@ -62,16 +64,20 @@ class AddRelationListener implements mxEventSource.mxIEventListener {
 												// For some reason the top object property doesn't play nice so don't allow it
 												RelationOptionsDialog relationOptionsDialog = graphView.getRelationOptionsDialog(model.getOWLEntityRendering(owlObjectProperty));
 												if (relationOptionsDialog.getResult() == RelationOptionsDialog.OK_OPTION) {
-													model.registerAction(
-															new GraphActions.AddTripleAction(
-																	model,
-																	(AnnotationNode) edge.getSource(),
-																	(AnnotationNode) edge.getTarget(),
-																	owlObjectProperty,
-																	relationOptionsDialog.getQuantifier(), relationOptionsDialog.getQuantifierValue(),
-																	relationOptionsDialog.getNegation(),
-																	relationOptionsDialog.getMotivation(),
-																	graphSpace));
+													try {
+														model.registerAction(
+																new GraphActions.AddTripleAction(
+																		model,
+																		(AnnotationNode) edge.getSource(),
+																		(AnnotationNode) edge.getTarget(),
+																		owlObjectProperty,
+																		relationOptionsDialog.getQuantifier(), relationOptionsDialog.getQuantifierValue(),
+																		relationOptionsDialog.getNegation(),
+																		relationOptionsDialog.getMotivation(),
+																		graphSpace));
+													} catch (ActionUnperformableException e) {
+														JOptionPane.showMessageDialog(view, e.getMessage());
+													}
 												}
 											}));
 

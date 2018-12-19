@@ -76,7 +76,7 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 					ConceptAnnotationAction action = new ConceptAnnotationAction(model, REMOVE, textSource);
 					action.setObject(conceptAnnotation);
 					action.execute();
-					edit.addKnowtatorEdit(action.getEdit());
+					addKnowtatorEdit(action);
 
 				}
 			}
@@ -123,7 +123,13 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
 					}
 
 					model1.getSelectedProfile()
-							.ifPresent(profile -> model1.registerAction(new ColorChangeAction(model1, profile, owlClasses, color)));
+							.ifPresent(profile -> {
+								try {
+									model1.registerAction(new ColorChangeAction(model1, profile, owlClasses, color));
+								} catch (ActionUnperformableException e) {
+									JOptionPane.showMessageDialog(view, e.getMessage());
+								}
+							});
 
 
 				}
