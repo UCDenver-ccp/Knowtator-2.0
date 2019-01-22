@@ -160,7 +160,7 @@ public abstract class OWLModel extends BaseModel implements Serializable {
 		}
 	}
 
-	public void setRenderRDFSLabel() {
+	void setRenderRDFSLabel() {
 		if (!renderChangeInProgress()) {
 			owlWorkSpace.ifPresent(owlWorkspace -> {
 				IRI labelIRI = owlWorkspace.getOWLModelManager().getOWLDataFactory().getRDFSLabel().getIRI();
@@ -173,7 +173,7 @@ public abstract class OWLModel extends BaseModel implements Serializable {
 		}
 	}
 
-	public void resetRenderRDFS() {
+	void resetRenderRDFS() {
 		if (renderChangeInProgress()) {
 			owlWorkSpace.ifPresent(owlWorkspace -> {
 				OWLRendererPreferences.getInstance().setAnnotations(annotationIRIs);
@@ -217,7 +217,6 @@ public abstract class OWLModel extends BaseModel implements Serializable {
 		});
 	}
 
-	@Override
 	public void load() {
 		log.info("Loading ontologies");
 		try {
@@ -235,7 +234,6 @@ public abstract class OWLModel extends BaseModel implements Serializable {
 						}
 
 					});
-			super.load();
 		} catch (IOException e) {
 			log.warn("Could not load ontologies");
 		}

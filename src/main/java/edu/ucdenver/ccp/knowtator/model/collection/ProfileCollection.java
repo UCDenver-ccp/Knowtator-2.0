@@ -24,35 +24,20 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
-import org.apache.log4j.Logger;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Optional;
 
-public class ProfileCollection extends KnowtatorCollection<Profile> implements KnowtatorXMLIO {
+public class ProfileCollection extends KnowtatorCollection<Profile> {
 
-	@SuppressWarnings("unused")
-	private static final Logger log = Logger.getLogger(KnowtatorModel.class);
 
-	private final KnowtatorModel model;
 	private final Profile defaultProfile;
 
 	public ProfileCollection(KnowtatorModel model) {
 		super(model);
 		defaultProfile = new Profile(model, "Default");
 		add(defaultProfile);
-		this.model = model;
 	}
 
 	public Profile getDefaultProfile() {
@@ -84,34 +69,5 @@ public class ProfileCollection extends KnowtatorCollection<Profile> implements K
 		}
 		super.remove(profile);
 		selectNext();
-	}
-
-	public void writeToKnowtatorXML(Document dom, Element root) {
-		forEach(profile -> profile.writeToKnowtatorXML(dom, root));
-	}
-
-	@Override
-	public void readFromKnowtatorXML(File file, Element parent) {
-		for (Node profileNode :
-				KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.PROFILE))) {
-			Element profileElement = (Element) profileNode;
-			String profileID = profileElement.getAttribute(KnowtatorXMLAttributes.ID);
-
-			Profile newProfile = new Profile(model, profileID);
-			add(newProfile);
-			get(profileID).ifPresent(profile -> profile.readFromKnowtatorXML(null, profileElement));
-		}
-	}
-
-	@Override
-	public void readFromOldKnowtatorXML(File file, Element parent) {
-	}
-
-	public void load() throws IOException {
-		log.info("Loading profiles");
-		KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();
-		Files.list(model.getProfilesLocation().toPath())
-				.filter(path -> path.toString().endsWith(".xml"))
-				.forEach(inputFile -> xmlUtil.read(this, inputFile.toFile()));
 	}
 }

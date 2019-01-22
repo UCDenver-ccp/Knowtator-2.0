@@ -24,23 +24,16 @@
 
 package edu.ucdenver.ccp.knowtator.model.object;
 
-import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import org.apache.log4j.Logger;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import javax.annotation.Nonnull;
-import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.TreeSet;
 
-public class Span implements ConceptAnnotationBoundModelObject<Span>, KnowtatorXMLIO, BratStandoffIO {
+public class Span implements ConceptAnnotationBoundModelObject<Span> {
   @SuppressWarnings("unused")
   private static final Logger log = Logger.getLogger(KnowtatorModel.class);
 
@@ -250,54 +243,6 @@ public class Span implements ConceptAnnotationBoundModelObject<Span>, KnowtatorX
 //  public int getStartCodePoint() { return Character.codePointCount(textSource.getContent(), 0, start); }
 //
 //  public int getEndCodePoint() { return Character.codePointCount(textSource.getContent(), 0, end); }
-
-  /*
-  SETTERS
-   */
-
-  /*
-  READERS
-   */
-
-  @Override
-  public void readFromKnowtatorXML(File file, Element parent) {}
-
-  @Override
-  public void readFromOldKnowtatorXML(File file, Element parent) {}
-
-
-  /*
-  WRITERS
-   */
-
-  @Override
-  public void writeToKnowtatorXML(Document dom, Element annotationElem) {
-    Element spanElement = dom.createElement(KnowtatorXMLTags.SPAN);
-    spanElement.setAttribute(KnowtatorXMLAttributes.SPAN_START, String.valueOf(getStart()));
-    spanElement.setAttribute(KnowtatorXMLAttributes.SPAN_END, String.valueOf(getEnd()));
-    spanElement.setAttribute(KnowtatorXMLAttributes.ID, id);
-    spanElement.setTextContent(getSpannedText());
-    annotationElem.appendChild(spanElement);
-  }
-
-  @Override
-  public void readFromBratStandoff(File file, Map<Character, List<String[]>> annotationMap, String content) {
-
-  }
-
-  @Override
-  public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
-    String[] spanLines = getSpannedText().split("\n");
-    int spanStart = getStart();
-    for (int j = 0; j < spanLines.length; j++) {
-      writer.append(String.format("%d %d", spanStart, spanStart + spanLines[j].length()));
-      if (j != spanLines.length -1) {
-        writer.append(";");
-      }
-      spanStart += spanLines[j].length() + 1;
-    }
-
-  }
 
   @Override
   public String getId() {

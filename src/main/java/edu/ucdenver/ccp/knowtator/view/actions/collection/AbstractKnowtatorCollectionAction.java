@@ -46,7 +46,7 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject> e
 
 
 	protected final CollectionActionType actionType;
-	protected final KnowtatorCollection<K> collection;
+	private final KnowtatorCollection<K> collection;
 	protected K object;
 
 	protected AbstractKnowtatorCollectionAction(KnowtatorModel model, CollectionActionType actionType, String presentationName, KnowtatorCollection<K> collection) {

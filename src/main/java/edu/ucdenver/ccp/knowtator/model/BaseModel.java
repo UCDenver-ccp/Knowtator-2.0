@@ -24,12 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.model;
 
-import edu.ucdenver.ccp.knowtator.io.BasicIO;
-import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
-import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
-import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
@@ -39,7 +33,6 @@ import edu.ucdenver.ccp.knowtator.model.object.TextBoundModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import javax.swing.event.CaretEvent;
@@ -47,12 +40,13 @@ import javax.swing.event.CaretListener;
 import javax.swing.undo.UndoManager;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
 public abstract class BaseModel extends UndoManager implements CaretListener, Savable {
+
+
 	private final File projectLocation;
 	private final File annotationsLocation;
 	private final File articlesLocation;
@@ -68,7 +62,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 
 	//TODO: Make sure idregistry reflects contents of model
 	private final Map<String, ModelObject> idRegistry;
-	private boolean loading;
+	boolean loading;
 
 	BaseModel(File projectLocation) throws IOException {
 		idRegistry = new TreeMap<>();
@@ -117,32 +111,28 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 		selection = new Selection(start, end);
 	}
 
-	/**
-	 * Saves the project. Overridden here because the OWL model needs to be saved as well.
-	 *
-	 * @param ioUtilClass The IOUtil to use to save the IO class. This specifies the output format
-	 * @param basicIO     The IO class to save
-	 * @param file        The file to save to
-	 * @param <I>         The IO class
-	 */
-	public <I extends BasicIO> void saveToFormat(Class<? extends BasicIOUtil<I>> ioUtilClass, I basicIO, File file) {
-		if (!loading) {
-			try {
-				setRenderRDFSLabel();
-				BasicIOUtil<I> util = ioUtilClass.getDeclaredConstructor().newInstance();
-				util.write(basicIO, file);
-			} catch (InstantiationException
-					| IllegalAccessException
-					| InvocationTargetException
-					| NoSuchMethodException e) {
-				e.printStackTrace();
-			} finally {
-				resetRenderRDFS();
-			}
-		}
-	}
-
-	protected abstract void resetRenderRDFS();
+//	/**
+//	 * Saves the project. Overridden here because the OWL model needs to be saved as well.
+//	 *
+//	 * @param ioUtilClass The IOUtil to use to save the IO class. This specifies the output format
+//	 * @param file        The file to save to
+//	 */
+//	public void saveToFormat(Class<? extends BasicXMLUtil> ioUtilClass, File file) {
+//		if (!loading) {
+//			try {
+//				setRenderRDFSLabel();
+//				BasicXMLUtil util = ioUtilClass.getDeclaredConstructor().newInstance();
+//				util.write(file);
+//			} catch (InstantiationException
+//					| IllegalAccessException
+//					| InvocationTargetException
+//					| NoSuchMethodException e) {
+//				e.printStackTrace();
+//			} finally {
+//				resetRenderRDFS();
+//			}
+//		}
+//	}
 
 	public void selectNextTextSource() {
 		textSources.selectNext();
@@ -164,9 +154,6 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 		return profiles.size();
 	}
 
-
-	protected abstract void setRenderRDFSLabel();
-
 	public File getAnnotationsLocation() {
 		return annotationsLocation;
 	}
@@ -186,8 +173,6 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 	public Profile getDefaultProfile() {
 		return profiles.getDefaultProfile();
 	}
-
-	public abstract String getOWLEntityRendering(OWLEntity owlEntity);
 
 	/**
 	 * This method ensures that all objects in the model will have a unique ID. If an object if provided with priority,
@@ -250,66 +235,31 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 		return textSources.getSelection();
 	}
 
-	public File getProfilesLocation() {
+	File getProfilesLocation() {
 		return profilesLocation;
 	}
 
-	/**
-	 * Loads data into the IO class using the IOUtil. The IOUtil specifies the input format.
-	 *
-	 * @param ioClass The IOUtil to use to load the IO class. This specifies the input format
-	 * @param basicIO The IO class to load
-	 * @param file    The file to load from
-	 * @param <I>     the IO class
-	 */
-	private <I extends BasicIO> void loadFromFormat(Class<? extends BasicIOUtil<I>> ioClass, I basicIO, File file) {
-		try {
-			BasicIOUtil<I> util = ioClass.getDeclaredConstructor().newInstance();
-			util.read(basicIO, file);
-		} catch (InstantiationException
-				| IllegalAccessException
-				| InvocationTargetException
-				| NoSuchMethodException e) {
-			e.printStackTrace();
-		}
-	}
+//	/**
+//	 * Loads data into the IO class using the IOUtil. The IOUtil specifies the input format.
+//	 *
+//	 * @param ioClass The IOUtil to use to load the IO class. This specifies the input format
+//	 * @param basicIO The IO class to load
+//	 * @param file    The file to load from
+//	 * @param <I>     the IO class
+//	 */
+//	private <I extends BasicIO> void loadFromFormat(Class<? extends BasicXMLUtil> ioClass, I basicIO, File file) {
+//		try {
+//			BasicXMLUtil util = ioClass.getDeclaredConstructor().newInstance();
+//			util.getRootElement(basicIO, file);
+//		} catch (InstantiationException
+//				| IllegalAccessException
+//				| InvocationTargetException
+//				| NoSuchMethodException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
-	/**
-	 * Takes a class capable of IO and a file, and loads it with the appropriate IOUtil for that extension
-	 *
-	 * @param basicIO A class capable of IO
-	 * @param file    The file to load
-	 */
-	public void loadWithAppropriateFormat(BasicIO basicIO, File file) {
-		String[] splitOnDots = file.getName().split("\\.");
-		String extension = splitOnDots[splitOnDots.length - 1];
 
-		switch (extension) {
-			case "xml":
-				loadFromFormat(KnowtatorXMLUtil.class, (KnowtatorXMLIO) basicIO, file);
-				break;
-			case "ann":
-				loadFromFormat(BratStandoffUtil.class, (BratStandoffIO) basicIO, file);
-				break;
-			case "a1":
-				loadFromFormat(BratStandoffUtil.class, (BratStandoffIO) basicIO, file);
-				break;
-		}
-	}
-
-	void load() throws IOException {
-		try {
-			loading = true;
-			setRenderRDFSLabel();
-			profiles.load();
-			textSources.load();
-			profiles.first().ifPresent(profiles::setSelection);
-			textSources.first().ifPresent(textSources::setSelection);
-		} finally {
-			resetRenderRDFS();
-			loading = false;
-		}
-	}
 
 	public void dispose() {
 		profiles.dispose();

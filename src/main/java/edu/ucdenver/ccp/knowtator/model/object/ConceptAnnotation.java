@@ -24,9 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.model.object;
 
-import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
-import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
-import edu.ucdenver.ccp.knowtator.io.knowtator.*;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
@@ -34,25 +31,20 @@ import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLObject;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.List;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO, BratStandoffIO, TextBoundModelObject<ConceptAnnotation> {
+public class ConceptAnnotation extends SpanCollection implements TextBoundModelObject<ConceptAnnotation> {
 	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(ConceptAnnotation.class);
 	private final TextSource textSource;
 	private OWLClass owlClass;
-	private final String annotation_type;
+	private final String annotationType;
 
 	private final Set<ConceptAnnotation> overlappingConceptAnnotations;
 	private final Profile annotator;
@@ -65,12 +57,12 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 			String annotationID,
 			@Nonnull OWLClass owlClass,
 			@Nonnull Profile annotator,
-			String annotation_type,
+			String annotationType,
 			String motivation) {
 		super(textSource.getKnowtatorModel());
 
 		this.annotator = annotator;
-		this.annotation_type = annotation_type;
+		this.annotationType = annotationType;
 		this.motivation = motivation;
 		this.owlClass = owlClass;
 		this.textSource = textSource;
@@ -119,7 +111,7 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 		return overlappingConceptAnnotations;
 	}
 
-	private String getBratID() {
+	public String getBratID() {
 		return bratID;
 	}
 
@@ -144,43 +136,6 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 	}
 
 
-  /*
-  WRITERS
-   */
-
-	@Override
-	public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
-
-		String renderedOwlClassID = model.getOWLEntityRendering(owlClass).replace(":", "_").replace(" ", "_");
-		annotationConfig.get(StandoffTags.annotationsEntities).put(renderedOwlClassID, "");
-
-		writer.append(String.format("%s\t%s ", getBratID(), renderedOwlClassID));
-
-		visualConfig.get("labels").put(renderedOwlClassID, getOWLClassLabel());
-		visualConfig.get("drawing").put(renderedOwlClassID, String.format("bgColor:%s", Profile.convertToHex(annotator.getColor(owlClass))));
-
-		super.writeToBratStandoff(writer, annotationConfig, visualConfig);
-	}
-
-	@Override
-	public void writeToKnowtatorXML(Document dom, Element textSourceElement) {
-		Element annotationElem = dom.createElement(KnowtatorXMLTags.ANNOTATION);
-		annotationElem.setAttribute(KnowtatorXMLAttributes.ID, id);
-		annotationElem.setAttribute(KnowtatorXMLAttributes.ANNOTATOR, annotator.getId());
-		annotationElem.setAttribute(KnowtatorXMLAttributes.TYPE, annotation_type);
-		annotationElem.setAttribute(KnowtatorXMLAttributes.MOTIVATION, motivation);
-
-		Element classElement = dom.createElement(KnowtatorXMLTags.CLASS);
-
-		classElement.setAttribute(KnowtatorXMLAttributes.ID, model.getOWLEntityRendering(owlClass));
-		classElement.setAttribute(KnowtatorXMLAttributes.LABEL, getOWLClassLabel());
-		annotationElem.appendChild(classElement);
-
-		super.writeToKnowtatorXML(dom, annotationElem);
-
-		textSourceElement.appendChild(annotationElem);
-	}
-
 	public String getOWLClassLabel() {
 		return owlClass.getAnnotationPropertiesInSignature().stream()
 				.filter(OWLAnnotationProperty::isLabel)
@@ -188,66 +143,6 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 				.map(OWLObject::toString).orElse(model.getOWLEntityRendering(owlClass));
 	}
 
-	/*
-	READERS
-	 */
-	@Override
-	public void readFromKnowtatorXML(File file, Element parent) {
-		Element spanElement;
-		String spanId;
-		int spanStart;
-		int spanEnd;
-		for (Node spanNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.SPAN))) {
-			if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
-				spanElement = (Element) spanNode;
-				spanStart = Integer.parseInt(spanElement.getAttribute(KnowtatorXMLAttributes.SPAN_START));
-				spanEnd = Integer.parseInt(spanElement.getAttribute(KnowtatorXMLAttributes.SPAN_END));
-				spanId = spanElement.getAttribute(KnowtatorXMLAttributes.ID);
-
-				Span span = new Span(this, spanId, spanStart, spanEnd);
-				add(span);
-			}
-		}
-	}
-
-	@Override
-	public void readFromOldKnowtatorXML(File file, Element parent) {
-		for (Node spanNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(OldKnowtatorXMLTags.SPAN))) {
-			if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
-				Element spanElement = (Element) spanNode;
-				int spanStart = Integer.parseInt(spanElement.getAttribute(OldKnowtatorXMLAttributes.SPAN_START));
-				int spanEnd = Integer.parseInt(spanElement.getAttribute(OldKnowtatorXMLAttributes.SPAN_END));
-				Span span = new Span(this, null, spanStart, spanEnd);
-				add(span);
-			}
-		}
-
-	}
-
-	@Override
-	public void readFromBratStandoff(
-			File file, Map<Character, List<String[]>> annotationMap, String content) {
-		String[] triple =
-				annotationMap
-						.get(StandoffTags.TEXTBOUNDANNOTATION)
-						.get(0)[1]
-						.split(StandoffTags.textBoundAnnotationTripleDelimiter);
-		int spanStart = Integer.parseInt(triple[1]);
-		for (int i = 2; i < triple.length; i++) {
-			int spanEnd = Integer.parseInt(triple[i].split(StandoffTags.spanDelimiter)[0]);
-
-			Span span = new Span(this, null, spanStart, spanEnd);
-			add(span);
-
-			if (i != triple.length - 1) {
-				spanStart = Integer.parseInt(triple[i].split(StandoffTags.spanDelimiter)[1]);
-			}
-		}
-	}
-
-  /*
-  TRANSLATORS
-   */
 
 	/**
 	 * this needs to be moved out of this class
@@ -274,19 +169,10 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 	}
 
 
-  /*
-  ADDERS
-   */
-
-
 	@SuppressWarnings("unused")
 	void addOverlappingAnnotation(ConceptAnnotation conceptAnnotation) {
 		overlappingConceptAnnotations.add(conceptAnnotation);
 	}
-
-  /*
-  REMOVERS
-   */
 
 	@Override
 	public int compareTo(ConceptAnnotation conceptAnnotation2) {
@@ -351,5 +237,9 @@ public class ConceptAnnotation extends SpanCollection implements KnowtatorXMLIO,
 		return String.format(
 				"%s\n(%s)", stream().map(Span::toString).collect(Collectors.joining("\n")),
 				model.getOWLEntityRendering(owlClass));
+	}
+
+	public String getAnnotationType() {
+		return annotationType;
 	}
 }

@@ -24,6 +24,9 @@
 
 package edu.ucdenver.ccp.knowtator.model;
 
+import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
+import edu.ucdenver.ccp.knowtator.io.knowtator.OldKnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import org.apache.log4j.Logger;
@@ -31,6 +34,8 @@ import org.protege.editor.owl.model.OWLWorkspace;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * The Knowtator class. Contains all of the model managers. It is used to interface between the view and the model. Also handles
@@ -52,12 +57,89 @@ public class KnowtatorModel extends OWLModel {
 		profiles = new ProfileCollection(this);
 	}
 
+	@Override
+	public void load() {
+		super.load();
+		try {
+			loading = true;
+			setRenderRDFSLabel();
+			log.info("Loading profiles");
+			KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();
+			OldKnowtatorXMLUtil oldXmlUtil = new OldKnowtatorXMLUtil();
+			Files.list(getProfilesLocation().toPath())
+					.filter(path -> path.toString().endsWith(".xml"))
+					.map(Path::toFile)
+					.forEach(file -> xmlUtil.readToProfileCollection(this, file));
+
+			log.info("Loading annotations");
+			Files.list(getAnnotationsLocation().toPath())
+					.filter(path -> path.toString().endsWith(".xml"))
+					.map(Path::toFile)
+					.peek(file -> xmlUtil.readToTextSourceCollection(this, file))
+					.forEach(file -> oldXmlUtil.readToTextSourceCollection(this, file));
+
+			profiles.first().ifPresent(profiles::setSelection);
+			textSources.first().ifPresent(textSources::setSelection);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			resetRenderRDFS();
+			loading = false;
+		}
+	}
+
+	/**
+	 * Takes a class capable of IO and a file, and loads it with the appropriate IOUtil for that extension
+	 *
+	 * @param file The file to load
+	 */
+	public void loadWithAppropriateFormat(File file) {
+		String[] splitOnDots = file.getName().split("\\.");
+		String extension = splitOnDots[splitOnDots.length - 1];
+
+		switch (extension) {
+			case "xml":
+				KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();
+				xmlUtil.readToTextSourceCollection(this, file);
+				break;
+			case "ann":
+				BratStandoffUtil standoffUtil = new BratStandoffUtil();
+				standoffUtil.readToTextSourceCollection(this, file);
+				break;
+			case "a1":
+				standoffUtil = new BratStandoffUtil();
+				standoffUtil.readToTextSourceCollection(this, file);
+				break;
+		}
+	}
+
 	/**
 	 * @param args Unused
 	 */
 	public static void main(String[] args) {
 		log.info("Knowtator");
 	}
+
+//	public void writeWithAppropriateFormat(File file) {
+//		String[] splitOnDots = file.getName().split("\\.");
+//		String extension = splitOnDots[splitOnDots.length - 1];
+//
+//		switch (extension) {
+//			case "xml":
+//				KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();
+//				xmlUtil.writeFromTextSourceCollection(getTextSources(), file);
+//				break;
+//			case "ann":
+//				BratStandoffUtil standoffUtil = new BratStandoffUtil();
+//				standoffUtil.writeFromTextSourceCollection(this, file);
+//				break;
+//			case "a1":
+//				standoffUtil = new BratStandoffUtil();
+//				standoffUtil.write();
+//				standoffUtil.readToTextSourceCollection(this, file);
+//				break;
+//		}
+//	}
 
 
 //	/**

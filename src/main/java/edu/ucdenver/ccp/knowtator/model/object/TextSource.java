@@ -24,10 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.model.object;
 
-import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
@@ -41,20 +37,15 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Savable, KnowtatorXMLIO, ModelListener {
+public class TextSource implements ModelObject<TextSource>, Savable, ModelListener {
 	@SuppressWarnings("unused")
 	private static Logger log = LogManager.getLogger(TextSource.class);
 
@@ -70,7 +61,7 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 		this.model = model;
 		this.saveFile = saveFile == null ? new File(model.getAnnotationsLocation().getAbsolutePath(), String.format("%s.xml", textFileName.replace(".txt", ""))) : saveFile;
 		this.conceptAnnotationCollection = new ConceptAnnotationCollection(model, this);
-		this.graphSpaceCollection = new GraphSpaceCollection(model, this);
+		this.graphSpaceCollection = new GraphSpaceCollection(model);
 		model.addModelListener(this);
 
 		model.verifyId(FilenameUtils.getBaseName(textFileName), this, true);
@@ -137,42 +128,6 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 		return id;
 	}
 
-	@Override
-	public void readFromKnowtatorXML(File file, Element parent) {
-		model.removeModelListener(this);
-		conceptAnnotationCollection.readFromKnowtatorXML(null, parent);
-		graphSpaceCollection.readFromKnowtatorXML(null, parent);
-		model.addModelListener(this);
-	}
-
-	@Override
-	public void writeToKnowtatorXML(Document dom, Element parent) {
-		Element textSourceElement = dom.createElement(KnowtatorXMLTags.DOCUMENT);
-		parent.appendChild(textSourceElement);
-		textSourceElement.setAttribute(KnowtatorXMLAttributes.ID, id);
-		textSourceElement.setAttribute(KnowtatorXMLAttributes.FILE, textFile.getName());
-		conceptAnnotationCollection.writeToKnowtatorXML(dom, textSourceElement);
-		graphSpaceCollection.writeToKnowtatorXML(dom, textSourceElement);
-	}
-
-	@Override
-	public void readFromOldKnowtatorXML(File file, Element parent) {
-		conceptAnnotationCollection.readFromOldKnowtatorXML(null, parent);
-		graphSpaceCollection.readFromOldKnowtatorXML(null, parent);
-	}
-
-	@Override
-	public void readFromBratStandoff(
-			File file, Map<Character, List<String[]>> annotationMap, String content) {
-		conceptAnnotationCollection.readFromBratStandoff(null, annotationMap, getContent());
-		graphSpaceCollection.readFromBratStandoff(null, annotationMap, getContent());
-	}
-
-	@Override
-	public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
-		conceptAnnotationCollection.writeToBratStandoff(writer, annotationsConfig, visualConfig);
-		graphSpaceCollection.writeToBratStandoff(writer, annotationsConfig, visualConfig);
-	}
 
 	public String getContent() {
 		if (content == null) {
@@ -201,10 +156,11 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 
 	@Override
 	public void save() {
-		model.saveToFormat(KnowtatorXMLUtil.class, this, getSaveLocation());
+		KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();
+		xmlUtil.writeFromTextSource(this);
 	}
 
-	private File getSaveLocation() {
+	public File getSaveLocation() {
 		return new File(model.getAnnotationsLocation().getAbsolutePath(), saveFile.getName());
 	}
 
@@ -250,7 +206,7 @@ public class TextSource implements ModelObject<TextSource>, BratStandoffIO, Sava
 		conceptAnnotationCollection.selectPreviousSpan();
 	}
 
-	Optional<ConceptAnnotation> getAnnotation(String annotationID) {
+	public Optional<ConceptAnnotation> getAnnotation(String annotationID) {
 		return conceptAnnotationCollection.get(annotationID);
 	}
 

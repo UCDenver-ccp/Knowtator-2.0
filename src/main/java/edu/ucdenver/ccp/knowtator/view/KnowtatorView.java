@@ -30,7 +30,6 @@ import com.intellij.uiDesigner.core.Spacer;
 import com.mxgraph.swing.util.mxGraphTransferable;
 import edu.ucdenver.ccp.knowtator.iaa.IAAException;
 import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
-import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.model.*;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
@@ -168,8 +167,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private JButton captureImageButton;
 
 	private final List<KnowtatorComponent> knowtatorComponents;
-	private HashMap<JButton, ActionListener> spanSizeButtons;
-	private HashMap<JButton, ActionListener> selectionSizeButtons;
+	private final HashMap<JButton, ActionListener> spanSizeButtons;
+	private final HashMap<JButton, ActionListener> selectionSizeButtons;
 
 
 	/**
@@ -516,10 +515,11 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 						});
 				break;
 			case "Import":
-				getModel().ifPresent(model1 -> model1.loadWithAppropriateFormat(model1.getTextSources(), fileChooser.getSelectedFile()));
+				getModel().ifPresent(model -> model.loadWithAppropriateFormat(fileChooser.getSelectedFile()));
 				break;
 			case "Export":
-				model.saveToFormat(BratStandoffUtil.class, model.getTextSources(), fileChooser.getSelectedFile());
+				// TODO
+//				getModel().ifPresent(model -> model.writeWithAppropriateFormat(fileChooser.getSelectedFile()));
 				break;
 		}
 

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="EntryPointsManager">
     <pattern value="edu.ucdenver.ccp.knowtator.model.text.KnowtatorTextBoundDataObjectInterface" method="addDataObjectModificationListener" />
+    <pattern value="edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotationBoundModelObject" method="getConceptAnnotation" />
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="Osmorc" url="file://$PROJECT_DIR$" />

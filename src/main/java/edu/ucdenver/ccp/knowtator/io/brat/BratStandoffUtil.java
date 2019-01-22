@@ -24,8 +24,9 @@
 
 package edu.ucdenver.ccp.knowtator.io.brat;
 
-import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
-import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
+import edu.ucdenver.ccp.knowtator.model.object.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
@@ -37,7 +38,7 @@ import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class BratStandoffUtil implements BasicIOUtil<BratStandoffIO> {
+public class BratStandoffUtil {
     private static final Logger log = Logger.getLogger(BratStandoffUtil.class);
 
     private static Map<Character, List<String[]>> collectAnnotations(Stream<String> standoffStream) {
@@ -60,27 +61,7 @@ public class BratStandoffUtil implements BasicIOUtil<BratStandoffIO> {
         return annotationCollector;
     }
 
-    @Override
-    public void read(BratStandoffIO textSourceManager, File file) {
-        try {
-            if (textSourceManager instanceof TextSourceCollection) {
-                Stream<String> standoffStream = Files.lines(Paths.get(file.toURI()));
-
-                Map<Character, List<String[]>> annotationMap = collectAnnotations(standoffStream);
-
-                annotationMap
-                        .get(StandoffTags.DOCID)
-                        .add(new String[]{FilenameUtils.getBaseName(file.getName())});
-
-                textSourceManager.readFromBratStandoff(file, annotationMap, null);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void write(BratStandoffIO savable, File file) {
+    public void write(TextSource textSource, File file) {
         Map<String, Map<String, String>> visualConfig = new HashMap<>();
 
         visualConfig.put(StandoffTags.visualLabels, new HashMap<>());
@@ -93,7 +74,7 @@ public class BratStandoffUtil implements BasicIOUtil<BratStandoffIO> {
         annotationConfig.put(StandoffTags.annotationsAttributes, new HashMap<>());
 
         File outputFile = new File(file.getParentFile(), String.format("%s.ann", file.getName()));
-        writeToOutputFile(savable, outputFile, visualConfig, annotationConfig);
+        writeToOutputFile(textSource, outputFile, visualConfig, annotationConfig);
 
         writeVisualConfiguration(file, visualConfig);
         writeAnnotationsConfiguration(file, annotationConfig);
@@ -165,17 +146,205 @@ public class BratStandoffUtil implements BasicIOUtil<BratStandoffIO> {
         }
     }
 
-    private void writeToOutputFile(BratStandoffIO textSource, File file, Map<String, Map<String, String>> annotationConfig, Map<String, Map<String, String>> visualConfig) {
+    private void writeToOutputFile(TextSource textSource, File file, Map<String, Map<String, String>> annotationConfig, Map<String, Map<String, String>> visualConfig) {
         try {
             log.info(String.format("Writing to %s", file.getAbsolutePath()));
             BufferedWriter bw =
                     new BufferedWriter(
                             new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
-            textSource.writeToBratStandoff(bw, annotationConfig, visualConfig);
+            writeFromTextSource(textSource, bw, annotationConfig, visualConfig);
+
             bw.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+	public void readToTextSourceCollection(KnowtatorModel model, File file) {
+		try {
+			Stream<String> standoffStream = Files.lines(Paths.get(file.toURI()));
+
+			Map<Character, List<String[]>> annotationMap = collectAnnotations(standoffStream);
+
+			annotationMap
+					.get(StandoffTags.DOCID)
+					.add(new String[]{FilenameUtils.getBaseName(file.getName())});
+
+			String textSourceId = annotationMap.get(StandoffTags.DOCID).get(0)[0];
+
+			TextSource newTextSource = new TextSource(model, file, textSourceId);
+			model.getTextSources().add(newTextSource);
+			readToTextSource(newTextSource, annotationMap);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void readToTextSource(TextSource textSource, Map<Character, List<String[]>> annotationMap) {
+    	readToConceptAnnotationCollection(textSource.getKnowtatorModel(), textSource, textSource.getConceptAnnotations(), annotationMap);
+//		readToGraphSpaceCollection(textSource, textSource.getGraphSpaces(), annotationMap);
+	}
+
+	private void readToConceptAnnotationCollection(KnowtatorModel model, TextSource textSource, ConceptAnnotationCollection conceptAnnotationCollection, Map<Character, List<String[]>> annotationMap) {
+		Profile profile = model.getDefaultProfile();
+
+		annotationMap
+				.get(StandoffTags.TEXTBOUNDANNOTATION)
+				.forEach(
+						annotation -> {
+							String owlClassID = annotation[1].split(StandoffTags.textBoundAnnotationTripleDelimiter)[0];
+							model.getOWLClassByID(owlClassID).ifPresent(owlClass -> {
+								ConceptAnnotation newConceptAnnotation = new ConceptAnnotation(textSource, annotation[0], owlClass, profile, "identity", "");
+								conceptAnnotationCollection.add(newConceptAnnotation);
+								Map<Character, List<String[]>> map = new HashMap<>();
+								List<String[]> list = new ArrayList<>();
+								list.add(annotation);
+								map.put(StandoffTags.TEXTBOUNDANNOTATION, list);
+								readToConceptAnnotation(newConceptAnnotation, map);
+							});
+
+						});
+
+
+		annotationMap
+				.get(StandoffTags.NORMALIZATION)
+				.forEach(normalization -> {
+//					String[] splitNormalization = normalization[1].split(StandoffTags.relationTripleDelimiter);
+//					String annotationID = splitNormalization[1];
+//					String owlClassID = splitNormalization[2];
+				});
+
+		GraphSpace newGraphSpace = new GraphSpace(textSource, "Brat Relation Graph");
+		textSource.add(newGraphSpace);
+		readToGraphSpace(newGraphSpace, annotationMap);
+	}
+
+	private void readToConceptAnnotation(ConceptAnnotation conceptAnnotation, Map<Character, List<String[]>> annotationMap) {
+		String[] triple =
+				annotationMap
+						.get(StandoffTags.TEXTBOUNDANNOTATION)
+						.get(0)[1]
+						.split(StandoffTags.textBoundAnnotationTripleDelimiter);
+		int spanStart = Integer.parseInt(triple[1]);
+		for (int i = 2; i < triple.length; i++) {
+			int spanEnd = Integer.parseInt(triple[i].split(StandoffTags.spanDelimiter)[0]);
+
+			Span span = new Span(conceptAnnotation, null, spanStart, spanEnd);
+			conceptAnnotation.add(span);
+
+			if (i != triple.length - 1) {
+				spanStart = Integer.parseInt(triple[i].split(StandoffTags.spanDelimiter)[1]);
+			}
+		}
+
+	}
+
+	private void readToGraphSpace(GraphSpace graphSpace, Map<Character, List<String[]>> annotationMap) {
+		annotationMap
+				.get(StandoffTags.RELATION)
+				.forEach(annotation -> {
+					String id = annotation[0];
+					String[] relationTriple = annotation[1].split(StandoffTags.relationTripleDelimiter);
+					String propertyID = relationTriple[0];
+					String subjectAnnotationID = relationTriple[1].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
+					String objectAnnotationID = relationTriple[2].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
+
+					Profile annotator = graphSpace.getKnowtatorModel().getDefaultProfile();
+
+					graphSpace.getTextSource().getAnnotation(subjectAnnotationID).ifPresent(subjectConceptAnnotation -> {
+						AnnotationNode source = graphSpace.getAnnotationNodeForConceptAnnotation(subjectConceptAnnotation);
+
+						graphSpace.getTextSource().getAnnotation(objectAnnotationID).ifPresent(objectConceptAnnotation -> {
+							AnnotationNode target = graphSpace.getAnnotationNodeForConceptAnnotation(objectConceptAnnotation);
+
+							graphSpace.getKnowtatorModel().getOWLObjectPropertyByID(propertyID).ifPresent(owlObjectProperty -> graphSpace.addTriple(source, target, id, annotator, owlObjectProperty, "", null, false, ""));
+						});
+					});
+				});
+
+	}
+
+	private void writeFromTextSource(TextSource textSource, Writer writer, Map<String, Map<String, String>> annotationConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
+		writeFromConceptAnnotationCollection(textSource.getConceptAnnotations(), writer, annotationConfig, visualConfig);
+//		writeFromGraphSpaceCollection(textSource.getGraphSpaces(), writer, annotationConfig, visualConfig);
+	}
+
+	private void writeFromConceptAnnotationCollection(ConceptAnnotationCollection conceptAnnotationCollection, Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
+		Iterator<ConceptAnnotation> annotationIterator = conceptAnnotationCollection.iterator();
+		for (int i = 0; i < conceptAnnotationCollection.size(); i++) {
+			ConceptAnnotation conceptAnnotation = annotationIterator.next();
+			conceptAnnotation.setBratID(String.format("T%d", i));
+			writeFromConceptAnnotation(conceptAnnotation, writer, annotationsConfig, visualConfig);
+		}
+
+		// Not adding relations due to complexity of relation types in Brat Standoff
+    /*int lastNumTriples = 0;
+    for (GraphSpace graphSpace : graphSpaceCollection) {
+      Object[] edges = graphSpace.getChildEdges(graphSpace.getDefaultParent());
+      int bound = edges.length;
+      for (int i = 0; i < bound; i++) {
+        Object edge = edges[i];
+        RelationAnnotation triple = (RelationAnnotation) edge;
+        triple.setBratID(String.format("R%d", lastNumTriples + i));
+        String propertyID;
+        try {
+          propertyID =
+              model.getOWLAPIDataExtractor().getOWLEntityRendering(triple.getProperty());
+        } catch (OWLEntityNullException | OWLWorkSpaceNotSetException e) {
+          propertyID = triple.getValue().toString();
+        }
+        writer.append(
+            String.format(
+                "%s\t%s Arg1:%s Arg2:%s\n",
+                triple.getBratID(),
+                propertyID,
+                ((AnnotationNode) triple.getSource()).getConceptAnnotation().getBratID(),
+                ((AnnotationNode) triple.getTarget()).getConceptAnnotation().getBratID()));
+      }
+    }*/
+
+	}
+
+	private void writeFromConceptAnnotation(ConceptAnnotation conceptAnnotation, Writer writer, Map<String, Map<String, String>> annotationsConfig, Map<String, Map<String, String>> visualConfig) throws IOException {
+		String renderedOwlClassID = conceptAnnotation.getKnowtatorModel().getOWLEntityRendering(conceptAnnotation.getOwlClass()).replace(":", "_").replace(" ", "_");
+		annotationsConfig.get(StandoffTags.annotationsEntities).put(renderedOwlClassID, "");
+
+		writer.append(String.format("%s\t%s ", conceptAnnotation.getBratID(), renderedOwlClassID));
+
+		visualConfig.get("labels").put(renderedOwlClassID, conceptAnnotation.getOWLClassLabel());
+		visualConfig.get("drawing").put(renderedOwlClassID, String.format("bgColor:%s", Profile.convertToHex(conceptAnnotation.getColor())));
+
+		Iterator<Span> spanIterator = conceptAnnotation.iterator();
+		StringBuilder spannedText = new StringBuilder();
+		for (int i = 0; i < conceptAnnotation.size(); i++) {
+			Span span = spanIterator.next();
+			writeFromSpan(span, writer);
+			String[] spanLines = span.getSpannedText().split("\n");
+			for (int j = 0; j < spanLines.length; j++) {
+				spannedText.append(spanLines[j]);
+				if (j != spanLines.length - 1) {
+					spannedText.append(" ");
+				}
+			}
+			if (i != conceptAnnotation.size() - 1) {
+				writer.append(";");
+				spannedText.append(" ");
+			}
+		}
+		writer.append(String.format("\t%s\n", spannedText.toString()));
+	}
+
+	private void writeFromSpan(Span span, Writer writer) throws IOException {
+		String[] spanLines = span.getSpannedText().split("\n");
+		int spanStart = span.getStart();
+		for (int j = 0; j < spanLines.length; j++) {
+			writer.append(String.format("%d %d", spanStart, spanStart + spanLines[j].length()));
+			if (j != spanLines.length -1) {
+				writer.append(";");
+			}
+			spanStart += spanLines[j].length() + 1;
+		}
+
+	}
 }

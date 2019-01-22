@@ -34,7 +34,7 @@ public class Fragment implements ModelObject<Fragment> {
 	private final String type;
 	private final Map<String, Integer> conceptCountMap;
 	private String id;
-	private KnowtatorModel model;
+	private final KnowtatorModel model;
 
 	public Fragment(String id, String type, KnowtatorModel model) {
 		this.id = id;

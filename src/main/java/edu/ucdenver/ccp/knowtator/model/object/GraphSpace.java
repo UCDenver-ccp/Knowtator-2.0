@@ -31,12 +31,6 @@ import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxPerimeter;
 import com.mxgraph.view.mxStylesheet;
-import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
-import edu.ucdenver.ccp.knowtator.io.brat.StandoffTags;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import org.apache.log4j.Logger;
@@ -45,18 +39,12 @@ import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLEntityCollector;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import javax.annotation.Nonnull;
-import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLOntologyChangeListener, TextBoundModelObject<GraphSpace>, KnowtatorXMLIO, BratStandoffIO {
+public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLOntologyChangeListener, TextBoundModelObject<GraphSpace> {
 	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(GraphSpace.class);
 
@@ -70,7 +58,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		this.textSource = textSource;
 		this.id = id;
 
-		//TODO: Make annotation nodes reflext changes in annotations
+		//TODO: Make annotation nodes reflect changes in annotations
 		knowtatorModel.verifyId(id, this, false);
 		knowtatorModel.addOntologyChangeListener(this);
 		knowtatorModel.addOWLModelManagerListener(this);
@@ -162,7 +150,7 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
   ADDERS
    */
 
-	private void addCellToGraph(mxCell cell) {
+	public void addCellToGraph(mxCell cell) {
 		getModel().beginUpdate();
 		try {
 			addCell(cell);
@@ -204,96 +192,6 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		return cells;
 	}
 
-  /*
-  READERS
-   */
-
-	@Override
-	public void readFromKnowtatorXML(File file, Element parent) {
-		for (Node graphVertexNode :
-				KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.VERTEX))) {
-			Element graphVertexElem = (Element) graphVertexNode;
-
-			String id = graphVertexElem.getAttribute(KnowtatorXMLAttributes.ID);
-			String annotationID = graphVertexElem.getAttribute(KnowtatorXMLTags.ANNOTATION);
-			String x_string = graphVertexElem.getAttribute(KnowtatorXMLAttributes.X_LOCATION);
-			String y_string = graphVertexElem.getAttribute(KnowtatorXMLAttributes.Y_LOCATION);
-
-			double x = x_string.equals("") ? 20 : Double.parseDouble(x_string);
-			double y = y_string.equals("") ? 20 : Double.parseDouble(y_string);
-
-			this.textSource.getAnnotation(annotationID).ifPresent(conceptAnnotation -> {
-				AnnotationNode newVertex = new AnnotationNode(id, conceptAnnotation, x, y, this);
-				addCellToGraph(newVertex);
-			});
-		}
-
-		for (Node tripleNode :
-				KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.TRIPLE))) {
-			Element tripleElem = (Element) tripleNode;
-
-			String id = tripleElem.getAttribute(KnowtatorXMLAttributes.ID);
-			String annotatorID = tripleElem.getAttribute(KnowtatorXMLAttributes.ANNOTATOR);
-			String subjectID = tripleElem.getAttribute(KnowtatorXMLAttributes.TRIPLE_SUBJECT);
-			String objectID = tripleElem.getAttribute(KnowtatorXMLAttributes.TRIPLE_OBJECT);
-			String propertyID = tripleElem.getAttribute(KnowtatorXMLAttributes.TRIPLE_PROPERTY);
-			String quantifier = tripleElem.getAttribute(KnowtatorXMLAttributes.TRIPLE_QUANTIFIER);
-			String quantifierValue = tripleElem.getAttribute(KnowtatorXMLAttributes.TRIPLE_VALUE);
-			String propertyIsNegated = tripleElem.getAttribute(KnowtatorXMLAttributes.IS_NEGATED);
-			String motivation = tripleElem.getAttribute(KnowtatorXMLAttributes.MOTIVATION);
-
-			Profile annotator = knowtatorModel.getProfile(annotatorID).orElse(knowtatorModel.getDefaultProfile());
-			AnnotationNode source =
-					(AnnotationNode) ((mxGraphModel) getModel()).getCells().get(subjectID);
-			AnnotationNode target = (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(objectID);
-
-
-			if (target != null && source != null) {
-				knowtatorModel.getOWLObjectPropertyByID(propertyID).ifPresent(owlObjectProperty -> addTriple(source, target, id, annotator, owlObjectProperty, quantifier, quantifierValue, propertyIsNegated.equals(KnowtatorXMLAttributes.IS_NEGATED_TRUE), motivation));
-			}
-		}
-
-		for (Object cell : getChildVertices(getDefaultParent())) {
-			((mxGraphModel) getModel()).getCells().remove(((AnnotationNode) cell).getId(), cell);
-			String nodeId =
-					textSource.getGraphSpaces().verifyID(((AnnotationNode) cell).getId(), "node");
-			((AnnotationNode) cell).setId(nodeId);
-			((mxGraphModel) getModel()).getCells().put(nodeId, cell);
-		}
-	}
-
-	@Override
-	public void readFromOldKnowtatorXML(File file, Element parent) {
-	}
-
-	@Override
-	public void readFromBratStandoff(
-			File file, Map<Character, List<String[]>> annotationMap, String content) {
-		annotationMap
-				.get(StandoffTags.RELATION)
-				.forEach(annotation -> {
-					String id = annotation[0];
-					String[] relationTriple = annotation[1].split(StandoffTags.relationTripleDelimiter);
-					String propertyID = relationTriple[0];
-					String subjectAnnotationID = relationTriple[1].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
-					String objectAnnotationID = relationTriple[2].split(StandoffTags.relationTripleRoleIDDelimiter)[1];
-
-					Profile annotator = knowtatorModel.getDefaultProfile();
-
-					textSource.getAnnotation(subjectAnnotationID).ifPresent(subjectConceptAnnotation -> {
-						AnnotationNode source = getAnnotationNodeForConceptAnnotation(subjectConceptAnnotation);
-
-						textSource.getAnnotation(objectAnnotationID).ifPresent(objectConceptAnnotation -> {
-							AnnotationNode target = getAnnotationNodeForConceptAnnotation(objectConceptAnnotation);
-
-							knowtatorModel.getOWLObjectPropertyByID(propertyID).ifPresent(owlObjectProperty -> addTriple(source, target, id, annotator, owlObjectProperty, "", null, false, ""));
-						});
-					});
-
-
-				});
-	}
-
 	public AnnotationNode getAnnotationNodeForConceptAnnotation(ConceptAnnotation conceptAnnotation) {
 		List<AnnotationNode> nodes = getAnnotationNodes(conceptAnnotation);
 		AnnotationNode source;
@@ -312,45 +210,6 @@ public class GraphSpace extends mxGraph implements OWLModelManagerListener, OWLO
 		addCellToGraph(newVertex);
 		return (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(nodeId);
 	}
-
-  /*
-  WRITERS
-   */
-
-	@SuppressWarnings("RedundantThrows")
-	@Override
-	public void writeToBratStandoff(
-			Writer writer,
-			Map<String, Map<String, String>> annotationsConfig,
-			Map<String, Map<String, String>> visualConfig)
-			throws IOException {
-	}
-
-	@Override
-	public void writeToKnowtatorXML(Document dom, Element textSourceElement) {
-		Element graphElem = dom.createElement(KnowtatorXMLTags.GRAPH_SPACE);
-		graphElem.setAttribute(KnowtatorXMLAttributes.ID, id);
-		Arrays.stream(getChildVertices(getDefaultParent()))
-				.forEach(
-						vertex -> {
-							if (vertex instanceof AnnotationNode) {
-								((AnnotationNode) vertex).writeToKnowtatorXML(dom, graphElem);
-							}
-						});
-		Arrays.stream(getChildEdges(getDefaultParent()))
-				.forEach(
-						edge -> {
-							if (edge instanceof RelationAnnotation) {
-								((RelationAnnotation) edge).writeToKnowtatorXML(dom, graphElem);
-							}
-						});
-		textSourceElement.appendChild(graphElem);
-	}
-
-
-  /*
-  TRANSLATORS
-   */
 
 	@Override
 	public String toString() {

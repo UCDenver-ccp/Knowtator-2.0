@@ -26,23 +26,16 @@ package edu.ucdenver.ccp.knowtator.model.object;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
-import java.io.File;
-
-public class AnnotationNode extends mxCell implements ConceptAnnotationBoundModelObject<AnnotationNode>, GraphBoundModelObject<AnnotationNode>, KnowtatorXMLIO {
+public class AnnotationNode extends mxCell implements ConceptAnnotationBoundModelObject<AnnotationNode>, GraphBoundModelObject<AnnotationNode> {
 
 	private final ConceptAnnotation conceptAnnotation;
 	private final TextSource textSource;
 	private final GraphSpace graphSpace;
 	private final KnowtatorModel model;
 
-	AnnotationNode(String id, ConceptAnnotation conceptAnnotation, double x, double y, GraphSpace graphSpace) {
+	public AnnotationNode(String id, ConceptAnnotation conceptAnnotation, double x, double y, GraphSpace graphSpace) {
 		super(conceptAnnotation.toMultilineString(), new mxGeometry(x, y, 150, 150), "defaultVertex");
 		this.textSource = conceptAnnotation.getTextSource();
 		this.conceptAnnotation = conceptAnnotation;
@@ -53,36 +46,6 @@ public class AnnotationNode extends mxCell implements ConceptAnnotationBoundMode
 		setVertex(true);
 		setConnectable(true);
 	}
-
-	/*
-	WRITERS
-	 */
-
-	@Override
-	public void writeToKnowtatorXML(Document dom, Element parent) {
-		Element vertexElem = dom.createElement(KnowtatorXMLTags.VERTEX);
-		vertexElem.setAttribute(KnowtatorXMLAttributes.ID, getId());
-		vertexElem.setAttribute(KnowtatorXMLTags.ANNOTATION, conceptAnnotation.getId());
-		vertexElem.setAttribute(KnowtatorXMLAttributes.X_LOCATION, String.valueOf(getGeometry().getX()));
-		vertexElem.setAttribute(KnowtatorXMLAttributes.Y_LOCATION, String.valueOf(getGeometry().getY()));
-		parent.appendChild(vertexElem);
-	}
-
-	/*
-	READERS
-	 */
-
-	@Override
-	public void readFromKnowtatorXML(File file, Element parent) {
-	}
-
-	@Override
-	public void readFromOldKnowtatorXML(File file, Element parent) {
-	}
-
-	/*
-	GETTERS
-	 */
 
 	@Override
 	public ConceptAnnotation getConceptAnnotation() {

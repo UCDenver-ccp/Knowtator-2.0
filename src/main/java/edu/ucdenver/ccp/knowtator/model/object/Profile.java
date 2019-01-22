@@ -24,9 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.model.object;
 
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.Savable;
@@ -34,16 +31,13 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorDefaultSettings;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import java.awt.*;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Profile implements ModelObject<Profile>, Savable, KnowtatorXMLIO {
+public class Profile implements ModelObject<Profile>, Savable {
 	@SuppressWarnings("unused")
 	private static Logger log = LogManager.getLogger(Profile.class);
 
@@ -117,7 +111,7 @@ public class Profile implements ModelObject<Profile>, Savable, KnowtatorXMLIO {
 	/*
 	TRANSLATORS
 	 */
-	static String convertToHex(Color c) {
+	public static String convertToHex(Color c) {
 		return String.format("#%06x", c.getRGB() & 0x00FFFFFF);
 	}
 
@@ -125,61 +119,14 @@ public class Profile implements ModelObject<Profile>, Savable, KnowtatorXMLIO {
 		return id;
 	}
 
-  /*
-  WRITERS
-   */
-
-
-	@Override
-	public void writeToKnowtatorXML(Document dom, Element root) {
-		Element profileElem = dom.createElement(KnowtatorXMLTags.PROFILE);
-		profileElem.setAttribute(KnowtatorXMLAttributes.ID, id);
-		colors.forEach((owlEntity, c) -> {
-			Element e = dom.createElement(KnowtatorXMLTags.HIGHLIGHTER);
-
-			e.setAttribute(KnowtatorXMLAttributes.CLASS_ID, model.getOWLEntityRendering(owlEntity));
-
-			e.setAttribute(KnowtatorXMLAttributes.COLOR, convertToHex(c));
-			profileElem.appendChild(e);
-
-		});
-		root.appendChild(profileElem);
-	}
-
-
-  /*
-  READERS
-   */
-
-	@Override
-	public void readFromKnowtatorXML(File file, Element parent) {
-		Map<String, Color> colorMap = new HashMap<>();
-		for (Node highlighterNode :
-				KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.HIGHLIGHTER))) {
-			Element highlighterElement = (Element) highlighterNode;
-
-			String classID = highlighterElement.getAttribute(KnowtatorXMLAttributes.CLASS_ID);
-			Color c = Color.decode(highlighterElement.getAttribute(KnowtatorXMLAttributes.COLOR));
-
-
-			Color color = new Color((float) c.getRed() / 255, (float) c.getGreen() / 255, (float) c.getBlue() / 255, 1f);
-			colorMap.put(classID, color);
-		}
-		model.getOWLClassesByIDs(colorMap.keySet()).entrySet().parallelStream()
-				.forEach(entry -> addColor(entry.getValue(), colorMap.get(entry.getKey())));
-	}
-
-	@Override
-	public void readFromOldKnowtatorXML(File file, Element parent) {
-	}
-
 
 	@Override
 	public void save() {
-		model.saveToFormat(KnowtatorXMLUtil.class, this, getSaveLocation());
+		KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();
+		xmlUtil.writeFromProfile(this);
 	}
 
-	private File getSaveLocation() {
+	public File getSaveLocation() {
 		return new File(model.getSaveLocation().getAbsolutePath(), String.format("%s.xml", id));
 	}
 

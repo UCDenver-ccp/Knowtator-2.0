@@ -24,31 +24,17 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection;
 
-import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffIO;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
-import edu.ucdenver.ccp.knowtator.model.object.TextSource;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
-import java.io.File;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implements KnowtatorXMLIO, BratStandoffIO {
-    private final TextSource textSource;
+public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> {
 
-	public GraphSpaceCollection(KnowtatorModel model, TextSource textSource) {
+    public GraphSpaceCollection(KnowtatorModel model) {
 		super(model);
-        this.textSource = textSource;
     }
 
     @Override
@@ -57,31 +43,6 @@ public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implem
             super.setSelection(graphSpace);
         }
     }
-
-    @Override
-    public void writeToKnowtatorXML(Document dom, Element parent) {
-        forEach(graphSpace -> graphSpace.writeToKnowtatorXML(dom, parent));
-    }
-
-    @Override
-    public void readFromKnowtatorXML(File file, Element parent) {
-        for (Node graphSpaceNode :
-                KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.GRAPH_SPACE))) {
-            Element graphSpaceElem = (Element) graphSpaceNode;
-
-            String id = graphSpaceElem.getAttribute(KnowtatorXMLAttributes.ID);
-
-	        GraphSpace graphSpace = new GraphSpace(textSource, id);
-            add(graphSpace);
-
-            graphSpace.readFromKnowtatorXML(null, graphSpaceElem);
-        }
-    }
-
-    @Override
-    public void readFromOldKnowtatorXML(File file, Element parent) {
-    }
-
 
 	public String verifyID(String id, String idPrefix) {
         if (id == null) {
@@ -101,15 +62,4 @@ public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> implem
 
         return id;
     }
-
-    @Override
-    public void readFromBratStandoff(File file, Map<Character, List<String[]>> annotationMap, String content) {
-
-    }
-
-    @Override
-    public void writeToBratStandoff(Writer writer, Map<String, Map<String, String>> annotationConfig, Map<String, Map<String, String>> visualConfig) {
-
-    }
-
 }

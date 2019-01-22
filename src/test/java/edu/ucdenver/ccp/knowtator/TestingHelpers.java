@@ -64,15 +64,13 @@ public class TestingHelpers {
     }
 
     public static KnowtatorModel getLoadedModel() throws IOException {
-
         File projectDirectory = getProjectFile(projectFileName).getParentFile();
             File tempProjectDir = Files.createTempDir();
             FileUtils.copyDirectory(projectDirectory, tempProjectDir);
-        KnowtatorModel controller = new KnowtatorModel(tempProjectDir, null);
-        controller.load();
+        KnowtatorModel model = new KnowtatorModel(tempProjectDir, null);
+        model.load();
 
-
-        return controller;
+        return model;
     }
 
     public static void checkDefaultCollectionValues(KnowtatorModel controller) {

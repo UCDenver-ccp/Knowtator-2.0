@@ -26,21 +26,15 @@ package edu.ucdenver.ccp.knowtator.model.object;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLAttributes;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLIO;
-import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLTags;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, GraphBoundModelObject<RelationAnnotation> {
+public class RelationAnnotation extends mxCell implements GraphBoundModelObject<RelationAnnotation> {
 	static final List<String> QUANTIFIERS = Arrays.asList("some", "only", "max", "min", "exactly");
 	private final String quantifier;
 	private final String quantifierValue;
@@ -106,7 +100,7 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, GraphB
 		this.bratID = bratID;
 	}
 
-	private String getOwlPropertyRendering() {
+	public String getOwlPropertyRendering() {
 		return model.getOWLEntityRendering(property);
 	}
 
@@ -122,37 +116,6 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, GraphB
 				getOwlPropertyRendering(),
 				quantifier,
 				quantifierValue));
-	}
-
-	public void writeToKnowtatorXML(Document dom, Element graphElem) {
-		Element tripleElem = dom.createElement(KnowtatorXMLTags.TRIPLE);
-		tripleElem.setAttribute(KnowtatorXMLAttributes.ID, id);
-		try {
-			tripleElem.setAttribute(KnowtatorXMLAttributes.ANNOTATOR, annotator.getId());
-			tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_SUBJECT, getSource().getId());
-			tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_OBJECT, getTarget().getId());
-		} catch (NullPointerException ignore) {
-
-		}
-
-		String propertyID = getOwlPropertyRendering();
-
-		tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_PROPERTY, propertyID);
-
-		tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_QUANTIFIER, quantifier);
-		tripleElem.setAttribute(KnowtatorXMLAttributes.TRIPLE_VALUE, quantifierValue);
-		tripleElem.setAttribute(KnowtatorXMLAttributes.IS_NEGATED, isNegated ? KnowtatorXMLAttributes.IS_NEGATED_TRUE : KnowtatorXMLAttributes.IS_NEGATED_FALSE);
-		tripleElem.setAttribute(KnowtatorXMLAttributes.MOTIVATION, motivation);
-
-		graphElem.appendChild(tripleElem);
-	}
-
-	@Override
-	public void readFromKnowtatorXML(File file, Element parent) {
-	}
-
-	@Override
-	public void readFromOldKnowtatorXML(File file, Element parent) {
 	}
 
 	@Override
@@ -194,5 +157,25 @@ public class RelationAnnotation extends mxCell implements KnowtatorXMLIO, GraphB
 
 	public OWLObjectProperty getProperty() {
 		return property;
+	}
+
+	public Profile getAnnotator() {
+		return annotator;
+	}
+
+	public String getQuantifier() {
+		return quantifier;
+	}
+
+	public String getQuantifierValue() {
+		return quantifierValue;
+	}
+
+	public boolean getIsNegated() {
+		return isNegated;
+	}
+
+	public String getMotivation() {
+		return motivation;
 	}
 }

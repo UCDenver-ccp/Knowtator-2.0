@@ -32,11 +32,11 @@ import java.io.IOException;
 @SuppressWarnings("EmptyMethod")
 class ProjectManagerTests {
 
-	private static KnowtatorModel controller;
+	private static KnowtatorModel model;
 
 	static {
 		try {
-			controller = TestingHelpers.getLoadedModel();
+			model = TestingHelpers.getLoadedModel();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -44,8 +44,8 @@ class ProjectManagerTests {
 
     @Test
     void loadProjectTest() {
-        TestingHelpers.checkDefaultCollectionValues(controller);
-	    controller.load();
+        TestingHelpers.checkDefaultCollectionValues(model);
+	    model.load();
     }
 
     @Test

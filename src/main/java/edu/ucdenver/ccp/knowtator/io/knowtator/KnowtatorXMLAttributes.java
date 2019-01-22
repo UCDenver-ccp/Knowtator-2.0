@@ -24,30 +24,30 @@
 
 package edu.ucdenver.ccp.knowtator.io.knowtator;
 
-public class KnowtatorXMLAttributes {
+class KnowtatorXMLAttributes {
 	public static final String ID = "id";
 
-	public static final String ANNOTATOR = "annotator"; // also in OLD
-	public static final String TYPE = "type";
-	public static final String SPAN_START = "start";
-	public static final String SPAN_END = "end";
-	public static final String MOTIVATION = "motivation";
+	static final String ANNOTATOR = "annotator"; // also in OLD
+	static final String TYPE = "type";
+	static final String SPAN_START = "start";
+	static final String SPAN_END = "end";
+	static final String MOTIVATION = "motivation";
 
 	// Graph data
-	public static final String TRIPLE_SUBJECT = "subject";
-	public static final String TRIPLE_OBJECT = "object";
-	public static final String TRIPLE_PROPERTY = "property";
-	public static final String TRIPLE_QUANTIFIER = "quantifier";
-	public static final String TRIPLE_VALUE = "value";
-	public static final String IS_NEGATED = "polarity";
-	public static final String IS_NEGATED_FALSE = "positive";
-	public static final String IS_NEGATED_TRUE = "negative";
-	public static final String X_LOCATION = "x";
-	public static final String Y_LOCATION = "y";
+	static final String TRIPLE_SUBJECT = "subject";
+	static final String TRIPLE_OBJECT = "object";
+	static final String TRIPLE_PROPERTY = "property";
+	static final String TRIPLE_QUANTIFIER = "quantifier";
+	static final String TRIPLE_VALUE = "value";
+	static final String IS_NEGATED = "polarity";
+	static final String IS_NEGATED_FALSE = "positive";
+	static final String IS_NEGATED_TRUE = "negative";
+	static final String X_LOCATION = "x";
+	static final String Y_LOCATION = "y";
 
 	// Used for saving profile settings
-	public static final String COLOR = "color";
-	public static final String CLASS_ID = "class";
-	public static final String FILE = "text-file";
-	public static final String LABEL = "label";
+	static final String COLOR = "color";
+	static final String CLASS_ID = "class";
+	static final String FILE = "text-file";
+	static final String LABEL = "label";
 }
