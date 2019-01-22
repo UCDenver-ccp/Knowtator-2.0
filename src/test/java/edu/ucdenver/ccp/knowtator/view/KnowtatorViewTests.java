@@ -43,15 +43,26 @@ class KnowtatorViewTests {
 
 	@Test
 	void loadProjectTest() throws IOException {
-		KnowtatorModel controller = TestingHelpers.getLoadedController();
-		TestingHelpers.checkDefaultCollectionValues(controller);
-		view.loadProject(controller.getProjectLocation(), null);
+		KnowtatorModel model = TestingHelpers.getLoadedModel();
+		TestingHelpers.checkDefaultCollectionValues(model);
+		view.loadProject(model.getProjectLocation(), null);
 		TestingHelpers.checkDefaultCollectionValues(view.getModel().get());
 	}
 
 	@Test
+	void closeAppTest() throws IOException {
+		KnowtatorModel model = TestingHelpers.getLoadedModel();
+		view.loadProject(model.getProjectLocation(), null);
+		TestingHelpers.checkDefaultCollectionValues(view.getModel().get());
+		view.disposeView();
+		KnowtatorView view2 = new KnowtatorView();
+		view2.loadProject(model.getProjectLocation(), null);
+		TestingHelpers.checkDefaultCollectionValues(view2.getModel().get());
+	}
+
+	@Test
 	void testActionsTest() throws IOException, ActionUnperformableException {
-		KnowtatorModel controller = TestingHelpers.getLoadedController();
+		KnowtatorModel controller = TestingHelpers.getLoadedModel();
 		TestingHelpers.checkDefaultCollectionValues(controller);
 		view.loadProject(controller.getProjectLocation(), null);
 		TestingHelpers.checkDefaultCollectionValues(view.getModel().get());
@@ -80,7 +91,7 @@ class KnowtatorViewTests {
 //		KnowtatorView view = new KnowtatorView();
 //		assert !view.getTextSourceButtons().stream()
 //				.map(Component::isEnabled).reduce(false, (a, b) -> a || b);
-//		KnowtatorModel controller = TestingHelpers.getLoadedController();
+//		KnowtatorModel controller = TestingHelpers.getLoadedModel();
 //		view.loadProject(controller.getProjectLocation(), null);
 //		view.getKnowtatorModel().get().selectFirstTextSource();
 //		assert view.getTextSourceButtons().stream()

@@ -53,7 +53,7 @@ class OWLModelTests {
 	@BeforeEach
 	void setup() throws IOException {
 
-		controller = TestingHelpers.getLoadedController();
+		controller = TestingHelpers.getLoadedModel();
 		OWLReasonerFactory reasonerFactory = new ReasonerFactory();
 		owlOntologyManager = controller.getOwlOntologyManager();
 		dataFactory = owlOntologyManager.getOWLDataFactory();

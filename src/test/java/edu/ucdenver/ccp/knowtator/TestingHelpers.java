@@ -63,7 +63,7 @@ public class TestingHelpers {
                         .getFile());
     }
 
-    public static KnowtatorModel getLoadedController() throws IOException {
+    public static KnowtatorModel getLoadedModel() throws IOException {
 
         File projectDirectory = getProjectFile(projectFileName).getParentFile();
             File tempProjectDir = Files.createTempDir();

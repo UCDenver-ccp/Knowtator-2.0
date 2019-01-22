@@ -45,7 +45,7 @@ public class KnowtatorCollectionActionsTests {
 
     @BeforeEach
     void setup() throws IOException {
-	    model = TestingHelpers.getLoadedController();
+	    model = TestingHelpers.getLoadedModel();
     }
 
     @Test

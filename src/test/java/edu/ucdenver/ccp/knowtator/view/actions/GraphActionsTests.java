@@ -44,7 +44,7 @@ class GraphActionsTests {
 	@BeforeAll
 	static void setUp() {
 		try {
-			model = TestingHelpers.getLoadedController();
+			model = TestingHelpers.getLoadedModel();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

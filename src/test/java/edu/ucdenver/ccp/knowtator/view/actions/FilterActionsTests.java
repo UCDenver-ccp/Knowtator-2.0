@@ -48,7 +48,7 @@ class FilterActionsTests {
 	@BeforeAll
 	static void setup() {
 		try {
-			model = TestingHelpers.getLoadedController();
+			model = TestingHelpers.getLoadedModel();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

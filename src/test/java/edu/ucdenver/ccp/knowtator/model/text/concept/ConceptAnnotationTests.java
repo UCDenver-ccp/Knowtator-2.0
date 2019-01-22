@@ -37,7 +37,7 @@ class ConceptAnnotationTests {
 
 	static {
 		try {
-			controller = TestingHelpers.getLoadedController();
+			controller = TestingHelpers.getLoadedModel();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
