@@ -165,6 +165,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private JCheckBox iaaClassAndSpanCheckBox;
 	private JCheckBox iaaClassCheckBox;
 	private JButton captureImageButton;
+	private JCheckBox oneClickGraphsCheckBox;
 
 	private final List<KnowtatorComponent> knowtatorComponents;
 	private final HashMap<JButton, ActionListener> spanSizeButtons;
@@ -943,6 +944,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		removeAnnotationButton.setText("");
 		removeAnnotationButton.setVerticalTextPosition(3);
 		panel11.add(removeAnnotationButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+		oneClickGraphsCheckBox = new JCheckBox();
+		oneClickGraphsCheckBox.setText("One Click Graphs");
+		panel7.add(oneClickGraphsCheckBox, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final JPanel panel12 = new JPanel();
 		panel12.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
 		header.addTab("Profile", panel12);
@@ -1245,5 +1249,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	@Override
 	public void colorChangedEvent() {
 
+	}
+
+	public boolean getIsOneClickGraphs() {
+		return oneClickGraphsCheckBox.isSelected();
 	}
 }

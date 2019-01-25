@@ -381,6 +381,7 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 
 	@Override
 	public void reset() {
+		view.getModel().ifPresent(model -> model.addModelListener(this));
 		graphSpaceChooser.reset();
 	}
 
@@ -628,7 +629,6 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 					event.getNew()
 							.filter(modelObject -> modelObject instanceof TextSource)
 							.map(modelObject -> (TextSource) modelObject)
-							.filter(textSource -> isVisible())
 							.ifPresent(textSource -> textSource.getSelectedGraphSpace()
 									.ifPresent(GraphView.this::showGraph));
 					event.getNew()
@@ -639,7 +639,28 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 							.filter(modelObject -> modelObject instanceof RelationAnnotation)
 							.map(modelObject -> (RelationAnnotation) modelObject)
 							.ifPresent(relationAnnotation -> this.showGraph(relationAnnotation.getGraphSpace()));
+
 				});
+		if (view.getIsOneClickGraphs()) {
+			event.getNew()
+					.filter(modelObject -> modelObject instanceof ConceptAnnotation)
+					.map(modelObject -> (ConceptAnnotation) modelObject)
+					.ifPresent(conceptAnnotation -> {
+						if (conceptAnnotation.getTextSource().getGraphSpaces().getSelection().map(graphSpace -> graphSpace.containsAnnotation(conceptAnnotation)).orElse(false)) {
+							conceptAnnotation.getTextSource().getGraphSpaces().getSelection().ifPresent(graphSpace -> {
+								dialog.setVisible(true);
+								showGraph(graphSpace);
+							});
+						} else {
+							conceptAnnotation.getTextSource().getGraphSpaces()
+									.stream().filter(graphSpace -> graphSpace.containsAnnotation(conceptAnnotation))
+									.findFirst().ifPresent(graphSpace -> {
+								dialog.setVisible(true);
+								conceptAnnotation.getTextSource().setSelectedGraphSpace(graphSpace);
+							});
+						}
+					});
+		}
 	}
 
 	void reDrawGraph(@Nonnull mxGraph graphSpace) {
