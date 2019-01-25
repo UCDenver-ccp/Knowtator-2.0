@@ -28,18 +28,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
-
     <groupId>edu.ucdenver.ccp</groupId>
     <artifactId>knowtator</artifactId>
     <version>2.1.6</version>
     <name>Knowtator</name>
-    <description>A plug-in for the Protege Desktop ontology editor for editing in-text annotations</description>
+    <description>A plug-in for the Protege 5.0+ Desktop ontology editor for editing in-text concept annotations and assertion annotations</description>
     <url>https://github.com/UCDenver-ccp/Knowtator-2.0</url>
+    <packaging>bundle</packaging>
 
     <developers>
         <developer>
@@ -48,14 +43,23 @@
         </developer>
     </developers>
 
-    <packaging>bundle</packaging>
-
     <properties>
         <jdk.version>1.8</jdk.version>
     </properties>
 
-    <dependencies>
+    <scm>
+        <connection>scm:git:git@github.com:UCDenver-ccp/Knowtator-2.0.git</connection>
+        <developerConnection>scm:git:git@github.com:UCDenver-ccp/Knowtator-2.0.git</developerConnection>
+        <url>https://github.com/UCDenver-ccp/Knowtator-2.0</url>
+        <tag>v2.1.6</tag>
+    </scm>
 
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/UCDenver-ccp/Knowtator-2.0/issues</url>
+    </issueManagement>
+
+    <dependencies>
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-osgidistribution</artifactId>
@@ -130,7 +134,6 @@
 
 
     <build>
-
         <resources>
             <resource>
                 <!-- Use resource filtering to replace references to the artifactId in the plugin.xml test_project -->
@@ -140,7 +143,6 @@
         </resources>
 
         <plugins>
-
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -158,11 +160,7 @@
                         <Bundle-Vendor>The Protege Development Team</Bundle-Vendor>
                         <Import-Package>*</Import-Package>
                         <Embed-Dependency>jgraphx, commons-cli, commons-lang3</Embed-Dependency>
-                        <Include-Resource>README.md,
-                            plugin.xml,
-                            {maven-resources}
-                        </Include-Resource>
-                        <!--<Private-Package>skeleton</Private-Package>-->
+                        <Include-Resource>README.md, plugin.xml, {maven-resources}</Include-Resource>
                     </instructions>
                 </configuration>
                 <executions>
@@ -200,15 +198,15 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <artifactId>maven-eclipse-plugin</artifactId>
-                <version>2.9</version>
-                <configuration>
-                    <downloadSources>true</downloadSources>
-                    <downloadJavadocs>false</downloadJavadocs>
-                    <pde>true</pde>
-                </configuration>
-            </plugin>
+            <!--<plugin>-->
+                <!--<artifactId>maven-eclipse-plugin</artifactId>-->
+                <!--<version>2.9</version>-->
+                <!--<configuration>-->
+                    <!--<downloadSources>true</downloadSources>-->
+                    <!--<downloadJavadocs>false</downloadJavadocs>-->
+                    <!--<pde>true</pde>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -255,8 +253,6 @@
                     </excludes>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
-
 </project>
