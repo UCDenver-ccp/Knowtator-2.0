@@ -2,12 +2,12 @@
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="Osmorc" name="OSGi">
-      <configuration manifestGenerationMode="OsmorcControlled" manifestLocation="" jarfileLocation="knowtator-2.1.6.jar" outputPathType="CompilerOutputPath" bndFileLocation="" bundlorFileLocation="" bundleActivator="org.protege.editor.owl.ProtegeOWL" bundleSymbolicName="knowtator;singleton:=true" bundleVersion="2.1.6" ignoreFilePattern="" useProjectDefaultManifestFileLocation="true" alwaysRebuildBundleJAR="false" doNotSynchronizeWithMaven="false">
+      <configuration manifestGenerationMode="OsmorcControlled" manifestLocation="" jarfileLocation="knowtator-2.1.6.jar" outputPathType="CompilerOutputPath" bndFileLocation="" bundlorFileLocation="" bundleActivator="org.protege.editor.owl.ProtegeOWL" bundleSymbolicName="edu.ucdenver.ccp.knowtator;singleton:=true" bundleVersion="2.1.6" ignoreFilePattern="" useProjectDefaultManifestFileLocation="true" alwaysRebuildBundleJAR="false" doNotSynchronizeWithMaven="false">
         <additionalProperties>
           <property key="Bundle-Description" value="A plugin for annotating text" />
           <property key="Export-Package" value="edu.ucdenver.ccp.knowtator" />
-          <property key="Update-Url" value="https://github.com/UCDenver-ccp/Knowtator-2.0/blob/master/update.properties" />
-          <property key="Bundle-Name" value="Knowtator Plugin" />
+          <property key="Update-Url" value="https://raw.githubusercontent.com/UCDenver-ccp/Knowtator-2.0/development/update.properties" />
+          <property key="Bundle-Name" value="Knowtator" />
           <property key="Bundle-Category" value="protege" />
           <property key="Bundle-ClassPath" value=".,jgraphx-3.9.8.1.jar,commons-cli-1.4.jar,commons-lang3-3.1.jar" />
           <property key="Bundle-Vendor" value="The Protege Development Team" />

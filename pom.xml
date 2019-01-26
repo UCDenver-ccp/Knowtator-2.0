@@ -151,13 +151,13 @@
                 <configuration>
                     <instructions>
                         <Export-Package>edu.ucdenver.ccp.knowtator</Export-Package>
-                        <Update-Url>https://github.com/UCDenver-ccp/Knowtator-2.0/blob/master/update.properties</Update-Url>
-                        <Bundle-Name>Knowtator Plugin</Bundle-Name>
+                        <Update-Url>https://raw.githubusercontent.com/UCDenver-ccp/Knowtator-2.0/development/update.properties</Update-Url>
+                        <Bundle-Name>Knowtator</Bundle-Name>
                         <Bundle-Category>protege</Bundle-Category>
                         <Bundle-Description>A plugin for annotating text</Bundle-Description>
                         <Bundle-Activator>org.protege.editor.owl.ProtegeOWL</Bundle-Activator>
                         <Bundle-ClassPath>.,{maven-dependencies}</Bundle-ClassPath>
-                        <Bundle-SymbolicName>${project.artifactId};singleton:=true</Bundle-SymbolicName>
+                        <Bundle-SymbolicName>edu.ucdenver.ccp.knowtator;singleton:=true</Bundle-SymbolicName>
                         <Bundle-Vendor>The Protege Development Team</Bundle-Vendor>
                         <Import-Package>*</Import-Package>
                         <Embed-Dependency>jgraphx, commons-cli, commons-lang3</Embed-Dependency>
