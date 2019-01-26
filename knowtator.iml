@@ -6,6 +6,7 @@
         <additionalProperties>
           <property key="Bundle-Description" value="A plugin for annotating text" />
           <property key="Export-Package" value="edu.ucdenver.ccp.knowtator" />
+          <property key="Update-Url" value="https://github.com/UCDenver-ccp/Knowtator-2.0/blob/master/update.properties" />
           <property key="Bundle-Name" value="Knowtator Plugin" />
           <property key="Bundle-Category" value="protege" />
           <property key="Bundle-ClassPath" value=".,jgraphx-3.9.8.1.jar,commons-cli-1.4.jar,commons-lang3-3.1.jar" />

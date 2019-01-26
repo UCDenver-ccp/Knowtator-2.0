@@ -151,6 +151,7 @@
                 <configuration>
                     <instructions>
                         <Export-Package>edu.ucdenver.ccp.knowtator</Export-Package>
+                        <Update-Url>https://github.com/UCDenver-ccp/Knowtator-2.0/blob/master/update.properties</Update-Url>
                         <Bundle-Name>Knowtator Plugin</Bundle-Name>
                         <Bundle-Category>protege</Bundle-Category>
                         <Bundle-Description>A plugin for annotating text</Bundle-Description>
