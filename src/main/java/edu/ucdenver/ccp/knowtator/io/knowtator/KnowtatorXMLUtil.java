@@ -53,6 +53,7 @@ public final class KnowtatorXMLUtil extends XMLUtil {
 			Document doc = docOptional.get();
 			List<Node> knowtatorNodes = asList(doc.getElementsByTagName(KnowtatorXMLTags.KNOWTATOR_PROJECT));
 			if (knowtatorNodes.size() > 0) {
+				log.info(String.format("Reading from %s", file));
 				return Optional.ofNullable((Element) knowtatorNodes.get(0));
 			}
 		}

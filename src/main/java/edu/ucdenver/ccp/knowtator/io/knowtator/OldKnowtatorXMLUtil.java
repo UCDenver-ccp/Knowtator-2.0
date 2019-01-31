@@ -91,6 +91,7 @@ public class OldKnowtatorXMLUtil extends XMLUtil {
 			Document doc = docOptional.get();
 			List<Node> annotationNodes = asList(doc.getElementsByTagName(OldKnowtatorXMLTags.ANNOTATIONS));
 			if (annotationNodes.size() > 0) {
+				log.info(String.format("Reading from %s", file));
 				return Optional.ofNullable(doc.getDocumentElement());
 			}
 		}

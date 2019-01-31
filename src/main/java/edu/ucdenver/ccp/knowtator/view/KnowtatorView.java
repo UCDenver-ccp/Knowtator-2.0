@@ -1086,6 +1086,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		reviewTabbedPane.addTab("Text", panel19);
 		final JScrollPane scrollPane7 = new JScrollPane();
 		panel19.add(scrollPane7, new GridConstraints(1, 0, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		Font conceptAnnotationsForTextTableFont = this.$$$getFont$$$("Verdana", -1, 12, conceptAnnotationsForTextTable.getFont());
+		if (conceptAnnotationsForTextTableFont != null)
+			conceptAnnotationsForTextTable.setFont(conceptAnnotationsForTextTableFont);
 		scrollPane7.setViewportView(conceptAnnotationsForTextTable);
 		Font exactMatchCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, exactMatchCheckBox.getFont());
 		if (exactMatchCheckBoxFont != null) exactMatchCheckBox.setFont(exactMatchCheckBoxFont);
@@ -1118,6 +1121,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		reviewTabbedPane.addTab("Concept", panel22);
 		final JScrollPane scrollPane8 = new JScrollPane();
 		panel22.add(scrollPane8, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		Font annotationsForClassTableFont = this.$$$getFont$$$("Verdana", -1, 12, annotationsForClassTable.getFont());
+		if (annotationsForClassTableFont != null) annotationsForClassTable.setFont(annotationsForClassTableFont);
 		scrollPane8.setViewportView(annotationsForClassTable);
 		Font includeClassDescendantsCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, includeClassDescendantsCheckBox.getFont());
 		if (includeClassDescendantsCheckBoxFont != null)
