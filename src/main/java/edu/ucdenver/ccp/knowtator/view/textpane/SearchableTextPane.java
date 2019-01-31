@@ -115,9 +115,13 @@ public abstract class SearchableTextPane extends JTextPane implements KnowtatorC
 				}
 			}
 			requestFocusInWindow();
+			view.getModel().ifPresent(model -> model.getSelectedTextSource().ifPresent(textSource -> textSource.setSelectedConceptAnnotation(null)));
 			select(matchStart, matchEnd);
+			refreshHighlights();
 		}
 	}
+
+	protected abstract void refreshHighlights();
 
 	/**
 	 * @param matcher A matcher

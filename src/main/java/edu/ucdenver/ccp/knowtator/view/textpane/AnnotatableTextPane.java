@@ -90,7 +90,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				super.mouseDragged(e);
-					refreshHighlights();
+				refreshHighlights();
 			}
 
 			@Override
@@ -189,17 +189,18 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 	/**
 	 * Repaints the highlights
 	 */
-	private void refreshHighlights() {
-		getHighlighter().removeAllHighlights();
-		if (view.getModel().flatMap(BaseModel::getSelectedTextSource).flatMap(TextSource::getSelectedAnnotation).isPresent()) {
-			highlightSelectedAnnotation();
-		} else {
-			highlightRegion(getSelectionStart(), getSelectionEnd(), new RectanglePainter(Color.BLACK));
-		}
-
+	@Override
+	protected void refreshHighlights() {
 		view.getModel()
 				.filter(BaseModel::isNotLoading)
 				.ifPresent(model -> {
+					getHighlighter().removeAllHighlights();
+					if (view.getModel().flatMap(BaseModel::getSelectedTextSource).flatMap(TextSource::getSelectedAnnotation).isPresent()) {
+						highlightSelectedAnnotation();
+					} else {
+						highlightRegion(getSelectionStart(), getSelectionEnd(), new RectanglePainter(Color.BLACK));
+					}
+
 					// Highlight overlaps firstConceptAnnotation, then spans. Overlaps must be highlighted firstConceptAnnotation because the highlights are displayed
 					// in order of placement
 					model.getSelectedTextSource().ifPresent(textSource -> {
@@ -362,12 +363,8 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 		super.modelChangeEvent(event);
 		if (event.getModel().getNumberOfTextSources() == 0) {
 			setEnabled(false);
-//			removeMouseListener(mouseListener);
 		} else {
 			setEnabled(true);
-//			if (!Arrays.asList(getMouseListeners()).contains(mouseListener)) {
-//				addMouseListener(mouseListener);
-//			}
 			if (event.getNew()
 					.filter(modelObject -> modelObject instanceof TextSource).isPresent()) {
 				showTextSource();
@@ -463,6 +460,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 			return null;
 		}
 	}
+
 	class AnnotationPopupMenu extends JPopupMenu {
 		private final MouseEvent e;
 
@@ -478,8 +476,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 									.ifPresent(textSource1 -> textSource1.getSelectedAnnotation()
 											.ifPresent(conceptAnnotation -> {
 												model.getSelectedOWLClass()
-														.ifPresent(owlClass ->
-														{
+														.ifPresent(owlClass -> {
 															try {
 																model.registerAction(new ReassignOWLClassAction(model, conceptAnnotation, owlClass));
 															} catch (ActionUnperformableException e1) {
