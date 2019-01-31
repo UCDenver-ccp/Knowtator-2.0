@@ -26,27 +26,14 @@ package edu.ucdenver.ccp.knowtator.view.textpane;
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
-import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
-import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
-import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ReassignOWLClassAction;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction.pickAction;
-import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.ADD;
-import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.REMOVE;
-import static edu.ucdenver.ccp.knowtator.view.actions.collection.KnowtatorCollectionType.ANNOTATION;
-import static edu.ucdenver.ccp.knowtator.view.actions.collection.KnowtatorCollectionType.SPAN;
 
 /**
  * The text pane used for annotating and displaying concept annotations in Knowtator projects
@@ -93,37 +80,6 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements KnowtatorC
 	}
 
 
-	protected void handleMouseRelease(MouseEvent e, int press_offset, int release_offset) {
-		AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e);
-		view.getModel()
-				.flatMap(BaseModel::getSelectedTextSource)
-				.ifPresent(textSource -> {
-
-			Set<Span> spansContainingLocation = textSource.getSpans(press_offset).getCollection();
-
-			if (SwingUtilities.isRightMouseButton(e)) {
-				if (spansContainingLocation.size() == 1) {
-					Span span = spansContainingLocation.iterator().next();
-					span.getConceptAnnotation().setSelection(span);
-				}
-				popupMenu.showPopUpMenu(release_offset);
-			} else if (press_offset == release_offset) {
-				if (spansContainingLocation.size() == 1) {
-					Span span = spansContainingLocation.iterator().next();
-					span.getConceptAnnotation().setSelection(span);
-				} else if (spansContainingLocation.size() > 1) {
-					popupMenu.chooseAnnotation(spansContainingLocation);
-				}
-
-			} else {
-				//TODO: I may want to make this set the selected span to null instead
-				textSource.setSelectedConceptAnnotation(null);
-				setSelectionAtWordLimits(press_offset, release_offset);
-			}
-		});
-
-	}
-
 	@Override
 	protected boolean shouldUpdateSearchTextFieldCondition() {
 		return !regexCheckBox.isSelected();
@@ -143,101 +99,4 @@ public class KnowtatorTextPane extends AnnotatableTextPane implements KnowtatorC
 	protected int getPatternFlags() {
 		return (regexCheckBox.isSelected() ? 0 : Pattern.LITERAL) | (caseSensitiveCheckBox.isSelected() ? 0 : Pattern.CASE_INSENSITIVE);
 	}
-
-	class AnnotationPopupMenu extends JPopupMenu {
-		private final MouseEvent e;
-
-		AnnotationPopupMenu(MouseEvent e) {
-			this.e = e;
-		}
-
-		private JMenuItem reassignOWLClassCommand() {
-			JMenuItem menuItem = new JMenuItem("Reassign OWL class");
-			menuItem.addActionListener(e ->
-					view.getModel()
-							.ifPresent(model -> model.getSelectedTextSource()
-									.ifPresent(textSource1 -> textSource1.getSelectedAnnotation()
-											.ifPresent(conceptAnnotation -> {
-												model.getSelectedOWLClass()
-														.ifPresent(owlClass ->
-														{
-															try {
-																model.registerAction(new ReassignOWLClassAction(model, conceptAnnotation, owlClass));
-															} catch (ActionUnperformableException e1) {
-																JOptionPane.showMessageDialog(view, e1.getMessage());
-															}
-														});
-											}))));
-
-
-			return menuItem;
-		}
-
-		private JMenuItem addAnnotationCommand() {
-			JMenuItem menuItem = new JMenuItem("Add concept");
-			menuItem.addActionListener(e12 -> pickAction(view, null, null,
-					new ActionParameters(ADD, ANNOTATION),
-					new ActionParameters(ADD, SPAN)));
-
-			return menuItem;
-		}
-
-		private JMenuItem removeSpanFromAnnotationCommand(ConceptAnnotation conceptAnnotation) {
-			JMenuItem removeSpanFromSelectedAnnotation = new JMenuItem(String.format("Delete span from %s", conceptAnnotation.getOwlClass()));
-			removeSpanFromSelectedAnnotation.addActionListener(e5 -> pickAction(view, null, null, new ActionParameters(REMOVE, SPAN)));
-
-			return removeSpanFromSelectedAnnotation;
-		}
-
-		private JMenuItem selectAnnotationCommand(Span span) {
-			return view.getModel().map(model -> {
-				JMenuItem selectAnnotationMenuItem = new JMenuItem(String.format("Select %s", model.getOWLEntityRendering(span.getConceptAnnotation().getOwlClass())));
-				selectAnnotationMenuItem.addActionListener(e3 -> model.getSelectedTextSource().ifPresent(textSource -> span.getConceptAnnotation().setSelection(span)));
-				return selectAnnotationMenuItem;
-			}).orElse(null);
-
-		}
-
-		private JMenuItem removeAnnotationCommand(ConceptAnnotation conceptAnnotation) {
-			JMenuItem removeAnnotationMenuItem = new JMenuItem(String.format("Delete %s", conceptAnnotation.getOwlClass()));
-			removeAnnotationMenuItem.addActionListener(e4 -> pickAction(view, null, null, new ActionParameters(REMOVE, ANNOTATION)));
-
-			return removeAnnotationMenuItem;
-		}
-
-		void chooseAnnotation(Set<Span> spansContainingLocation) {
-			// Menu items to select and remove annotations
-			spansContainingLocation.forEach(span -> add(selectAnnotationCommand(span)));
-
-			show(e.getComponent(), e.getX(), e.getY());
-		}
-
-		void showPopUpMenu(int release_offset) {
-			if (getSelectionStart() <= release_offset && release_offset <= getSelectionEnd() && getSelectionStart() != getSelectionEnd()) {
-				select(getSelectionStart(), getSelectionEnd());
-				add(addAnnotationCommand());
-
-				show(e.getComponent(), e.getX(), e.getY());
-			} else {
-				view.getModel().flatMap(BaseModel::getSelectedTextSource)
-						.ifPresent(textSource -> textSource.getSelectedAnnotation()
-						.ifPresent(conceptAnnotation -> conceptAnnotation.getSelection()
-								.filter(span -> span.getStart() <= release_offset && release_offset <= span.getEnd())
-								.ifPresent(span -> clickedInsideSpan(conceptAnnotation))));
-			}
-		}
-
-		private void clickedInsideSpan(ConceptAnnotation conceptAnnotation) {
-			add(removeAnnotationCommand(conceptAnnotation));
-			if (conceptAnnotation.size() > 1) {
-				add(removeSpanFromAnnotationCommand(conceptAnnotation));
-			}
-			add(reassignOWLClassCommand());
-			show(e.getComponent(), e.getX(), e.getY());
-		}
-
-
-	}
-
-
 }

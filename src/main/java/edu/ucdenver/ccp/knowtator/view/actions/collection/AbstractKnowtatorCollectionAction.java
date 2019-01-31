@@ -197,11 +197,9 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject> e
 			});
 
 			if (!actions.isEmpty()) {
-				AbstractKnowtatorAction action;
-				if (actions.size() == 1) {
-					action = actions.get(0);
-				} else {
-					int response = JOptionPane.showOptionDialog(view,
+				int response = 0;
+				if (actions.size() != 1) {
+					response = JOptionPane.showOptionDialog(view,
 							"Choose an option",
 							"New Concept Annotation or Span",
 							JOptionPane.DEFAULT_OPTION,
@@ -209,13 +207,14 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject> e
 							null,
 							actions.stream().map(AbstractKnowtatorAction::getPresentationName).toArray(),
 							2);
-					action = actions.get(response);
 				}
 
-				try {
-					model.registerAction(action);
-				} catch (ActionUnperformableException e) {
-					JOptionPane.showMessageDialog(view, e.getMessage());
+					if (response != JOptionPane.CLOSED_OPTION) {
+						try {
+							model.registerAction(actions.get(response));
+						} catch (ActionUnperformableException e) {
+							JOptionPane.showMessageDialog(view, e.getMessage());
+						}
 				}
 			}
 		});
