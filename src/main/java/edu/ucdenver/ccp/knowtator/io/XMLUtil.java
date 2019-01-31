@@ -68,6 +68,7 @@ public class XMLUtil {
 	}
 
 	protected static Optional<Document> startRead(File file) {
+//		TODO: Why is it reading twice?
 		log.info(String.format("Reading from %s", file));
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();

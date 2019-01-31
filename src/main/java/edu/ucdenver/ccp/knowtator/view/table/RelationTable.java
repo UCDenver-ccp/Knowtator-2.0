@@ -80,7 +80,7 @@ public class RelationTable extends KnowtatorTable<RelationAnnotation> {
 		((DefaultTableModel) getModel()).addRow(new Object[]{
 				((AnnotationNode) modelObject.getSource()).getConceptAnnotation(),
 				((AnnotationNode) modelObject.getSource()).getConceptAnnotation().getOwlClassRendering(),
-				modelObject.getOwlPropertyRendering(),
+				modelObject,
 				((AnnotationNode) modelObject.getTarget()).getConceptAnnotation(),
 				((AnnotationNode) modelObject.getTarget()).getConceptAnnotation().getOwlClassRendering(),
 				modelObject.getTextSource()
