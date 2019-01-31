@@ -22,7 +22,7 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.list;
+package edu.ucdenver.ccp.knowtator.view.table;
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
@@ -31,15 +31,15 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import java.util.Optional;
 
-public class AnnotationList extends KnowtatorList<ConceptAnnotation> {
+public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
 
-	AnnotationList(KnowtatorView view) {
+	AnnotationTable(KnowtatorView view) {
 		super(view);
 	}
 
 	@Override
 	public void reactToClick() {
-		Optional<ConceptAnnotation> conceptAnnotationOptional = Optional.ofNullable(getSelectedValue());
+		Optional<ConceptAnnotation> conceptAnnotationOptional = getSelectedValue();
 		conceptAnnotationOptional.ifPresent(conceptAnnotation -> {
 			view.getModel().ifPresent(model -> {
 				if (!model.getSelectedTextSource().map(textSource -> textSource.equals(conceptAnnotation.getTextSource())).orElse(false)) {
@@ -57,15 +57,16 @@ public class AnnotationList extends KnowtatorList<ConceptAnnotation> {
 	}
 
 	@Override
-	protected Optional<ConceptAnnotation> getSelectedFromModel() {
+	protected Optional<Object> getSelectedFromModel() {
 		return view.getModel().flatMap(BaseModel::getSelectedTextSource)
-				.flatMap(TextSource::getSelectedAnnotation);
+				.flatMap(TextSource::getSelectedAnnotation)
+				.map(conceptAnnotation -> conceptAnnotation);
 	}
 
 	@Override
-	void addElementsFromModel() {
+	public void addElementsFromModel() {
 		view.getModel().ifPresent(model -> model.getTextSources()
 				.forEach(textSource -> textSource.getConceptAnnotations()
-						.forEach(conceptAnnotation -> getDefaultListModel().addElement(conceptAnnotation))));
+						.forEach(this::addValue)));
 	}
 }

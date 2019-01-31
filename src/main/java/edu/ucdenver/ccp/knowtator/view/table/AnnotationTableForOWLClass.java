@@ -22,7 +22,7 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.list;
+package edu.ucdenver.ccp.knowtator.view.table;
 
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -31,12 +31,12 @@ import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AnnotationListForOWLClass extends AnnotationList {
+public class AnnotationTableForOWLClass extends AnnotationTable {
 	private final JCheckBox includeClassDescendantsCheckBox;
 	private final JLabel owlClassLabel;
 	private final Set<OWLClass> activeOWLClassDescendants;
 
-	public AnnotationListForOWLClass(KnowtatorView view, JCheckBox includeClassDescendantsCheckBox, JLabel owlClassLabel) {
+	public AnnotationTableForOWLClass(KnowtatorView view, JCheckBox includeClassDescendantsCheckBox, JLabel owlClassLabel) {
 		super(view);
 		this.includeClassDescendantsCheckBox = includeClassDescendantsCheckBox;
 		this.owlClassLabel = owlClassLabel;
@@ -44,11 +44,11 @@ public class AnnotationListForOWLClass extends AnnotationList {
 	}
 
 	@Override
-	void addElementsFromModel() {
+	public void addElementsFromModel() {
 		view.getModel().ifPresent(model -> model.getTextSources()
 				.forEach(textSource -> textSource.getConceptAnnotations().stream()
 						.filter(conceptAnnotation -> activeOWLClassDescendants.contains(conceptAnnotation.getOwlClass()))
-						.forEach(conceptAnnotation -> getDefaultListModel().addElement(conceptAnnotation))));
+						.forEach(this::addValue)));
 	}
 
 	@Override

@@ -831,7 +831,7 @@
                                 <properties/>
                                 <border type="none"/>
                                 <children>
-                                  <component id="f1806" class="edu.ucdenver.ccp.knowtator.view.list.AnnotationList" binding="annotationsForSpannedTextList" custom-create="true" default-binding="true">
+                                  <component id="61926" class="edu.ucdenver.ccp.knowtator.view.table.AnnotationTableForSpannedText" binding="conceptAnnotationsForTextTable" custom-create="true">
                                     <constraints/>
                                     <properties/>
                                   </component>
@@ -883,7 +883,7 @@
                                 <properties/>
                                 <border type="none"/>
                                 <children>
-                                  <component id="f95e4" class="edu.ucdenver.ccp.knowtator.view.list.AnnotationList" binding="annotationsForClassList" custom-create="true">
+                                  <component id="f95e4" class="edu.ucdenver.ccp.knowtator.view.table.AnnotationTable" binding="annotationsForClassTable" custom-create="true">
                                     <constraints/>
                                     <properties/>
                                   </component>
@@ -935,7 +935,7 @@
                                 <properties/>
                                 <border type="none"/>
                                 <children>
-                                  <component id="4fbad" class="edu.ucdenver.ccp.knowtator.view.list.RelationList" binding="relationsForPropertyList" custom-create="true">
+                                  <component id="4fbad" class="edu.ucdenver.ccp.knowtator.view.table.RelationTable" binding="relationsForPropertyList" custom-create="true">
                                     <constraints/>
                                     <properties/>
                                   </component>

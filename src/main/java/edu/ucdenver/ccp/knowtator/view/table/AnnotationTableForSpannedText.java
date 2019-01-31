@@ -22,29 +22,29 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.list;
+package edu.ucdenver.ccp.knowtator.view.table;
 
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 import javax.swing.*;
 
-public class AnnotationListForSpannedText extends AnnotationList {
+public class AnnotationTableForSpannedText extends AnnotationTable {
 
 	private final JCheckBox exactMatchCheckBox;
 	private final JTextField annotationsContainingTextTextField;
 
-	public AnnotationListForSpannedText(KnowtatorView view, JCheckBox exactMatchCheckBox, JTextField annotationsContainingTextTextField) {
+	public AnnotationTableForSpannedText(KnowtatorView view, JCheckBox exactMatchCheckBox, JTextField annotationsContainingTextTextField) {
 		super(view);
 		this.exactMatchCheckBox = exactMatchCheckBox;
 		this.annotationsContainingTextTextField = annotationsContainingTextTextField;
 	}
 
 	@Override
-	void addElementsFromModel() {
+	public void addElementsFromModel() {
 		view.getModel().ifPresent(model -> model.getTextSources()
 				.forEach(textSource -> textSource.getConceptAnnotations().stream()
 						.filter(conceptAnnotation -> (exactMatchCheckBox.isSelected() &&  conceptAnnotation.getSpannedText().equals(annotationsContainingTextTextField.getText()))
 						|| (!exactMatchCheckBox.isSelected() && conceptAnnotation.getSpannedText().contains(annotationsContainingTextTextField.getText())))
-						.forEach(conceptAnnotation -> getDefaultListModel().addElement(conceptAnnotation))));
+						.forEach(this::addValue)));
 	}
 }

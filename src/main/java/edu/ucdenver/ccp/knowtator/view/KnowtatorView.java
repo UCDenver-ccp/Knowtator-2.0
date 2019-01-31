@@ -45,6 +45,10 @@ import edu.ucdenver.ccp.knowtator.view.label.AnnotationAnnotatorLabel;
 import edu.ucdenver.ccp.knowtator.view.label.AnnotationClassLabel;
 import edu.ucdenver.ccp.knowtator.view.label.AnnotationIDLabel;
 import edu.ucdenver.ccp.knowtator.view.list.*;
+import edu.ucdenver.ccp.knowtator.view.table.AnnotationTable;
+import edu.ucdenver.ccp.knowtator.view.table.AnnotationTableForOWLClass;
+import edu.ucdenver.ccp.knowtator.view.table.AnnotationTableForSpannedText;
+import edu.ucdenver.ccp.knowtator.view.table.RelationTable;
 import edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
@@ -126,14 +130,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private ProfileList profileList;
 	private JButton addProfileButton;
 	private ColorList colorList;
-	private AnnotationList annotationsForSpannedTextList;
 	private JTextField annotationsContainingTextTextField;
 	private JCheckBox exactMatchCheckBox;
 	private JLabel owlClassLabel;
-	private AnnotationList annotationsForClassList;
+	private AnnotationTable annotationsForClassTable;
 	private JCheckBox includeClassDescendantsCheckBox;
 	private JLabel owlPropertyLabel;
-	private RelationList relationsForPropertyList;
+	private RelationTable relationsForPropertyList;
 	private JButton previousReviewObjectButton;
 	private JButton nextReviewObjectButton;
 	private JCheckBox includePropertyDescendantsCheckBox;
@@ -166,6 +169,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private JCheckBox iaaClassCheckBox;
 	private JButton captureImageButton;
 	private JCheckBox oneClickGraphsCheckBox;
+	private AnnotationTable conceptAnnotationsForTextTable;
 
 	private final List<KnowtatorComponent> knowtatorComponents;
 	private final HashMap<JButton, ActionListener> spanSizeButtons;
@@ -250,9 +254,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 		annotationsContainingTextTextField = new JTextField();
 
-		annotationsForClassList = new AnnotationListForOWLClass(this, includeClassDescendantsCheckBox, owlClassLabel);
-		annotationsForSpannedTextList = new AnnotationListForSpannedText(this, exactMatchCheckBox, annotationsContainingTextTextField);
-		relationsForPropertyList = new RelationList(this, includePropertyDescendantsCheckBox, owlPropertyLabel);
+		annotationsForClassTable = new AnnotationTableForOWLClass(this, includeClassDescendantsCheckBox, owlClassLabel);
+		conceptAnnotationsForTextTable = new AnnotationTableForSpannedText(this, exactMatchCheckBox, annotationsContainingTextTextField);
+		relationsForPropertyList = new RelationTable(this, includePropertyDescendantsCheckBox, owlPropertyLabel);
 
 		knowtatorComponents.addAll(Arrays.asList(
 				profileList,
@@ -266,10 +270,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 				spanList,
 				graphSpaceList,
 				textSourceChooser,
-				annotationsForSpannedTextList,
-				annotationsForClassList,
+				conceptAnnotationsForTextTable,
+				annotationsForClassTable,
 				relationsForPropertyList));
-
 
 		// The following methods keep the graph view dialog on top only when the view is active.
 		KnowtatorView view = this;
@@ -1064,7 +1067,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		reviewTabbedPane.addTab("Text", panel18);
 		final JScrollPane scrollPane7 = new JScrollPane();
 		panel18.add(scrollPane7, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-		scrollPane7.setViewportView(annotationsForSpannedTextList);
+		scrollPane7.setViewportView(conceptAnnotationsForTextTable);
 		Font exactMatchCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, exactMatchCheckBox.getFont());
 		if (exactMatchCheckBoxFont != null) exactMatchCheckBox.setFont(exactMatchCheckBoxFont);
 		this.$$$loadButtonText$$$(exactMatchCheckBox, ResourceBundle.getBundle("log4j").getString("exact.match"));
@@ -1079,7 +1082,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		reviewTabbedPane.addTab("Concept", panel20);
 		final JScrollPane scrollPane8 = new JScrollPane();
 		panel20.add(scrollPane8, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-		scrollPane8.setViewportView(annotationsForClassList);
+		scrollPane8.setViewportView(annotationsForClassTable);
 		Font includeClassDescendantsCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, includeClassDescendantsCheckBox.getFont());
 		if (includeClassDescendantsCheckBoxFont != null)
 			includeClassDescendantsCheckBox.setFont(includeClassDescendantsCheckBoxFont);

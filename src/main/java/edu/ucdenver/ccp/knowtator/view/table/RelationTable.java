@@ -22,13 +22,14 @@
  *  SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.list;
+package edu.ucdenver.ccp.knowtator.view.table;
 
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.RelationAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.table.KnowtatorTable;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.swing.*;
@@ -36,12 +37,12 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-public class RelationList extends KnowtatorList<RelationAnnotation> {
+public class RelationTable extends KnowtatorTable<RelationAnnotation> {
 	private final Set<OWLObjectProperty> activeOWLPropertyDescendants;
 	private final JCheckBox includePropertyDescendantsCheckBox;
 	private final JLabel owlPropertyLabel;
 
-	public RelationList(KnowtatorView view, JCheckBox includePropertyDescendantsCheckBox, JLabel owlPropertyLabel) {
+	public RelationTable(KnowtatorView view, JCheckBox includePropertyDescendantsCheckBox, JLabel owlPropertyLabel) {
 		super(view);
 
 		this.activeOWLPropertyDescendants = new HashSet<>();
@@ -50,14 +51,13 @@ public class RelationList extends KnowtatorList<RelationAnnotation> {
 	}
 
 	@Override
-	protected Optional<RelationAnnotation> getSelectedFromModel() {
+	protected Optional<Object> getSelectedFromModel() {
 		return view.getModel()
 				.filter(BaseModel::isNotLoading)
 				.flatMap(BaseModel::getSelectedTextSource)
 				.flatMap(TextSource::getSelectedGraphSpace)
 				.map(mxGraph::getSelectionCell)
-				.filter(cell -> cell instanceof RelationAnnotation)
-				.map(cell -> (RelationAnnotation) cell);
+				.filter(cell -> cell instanceof RelationAnnotation);
 	}
 
 	@Override
@@ -67,13 +67,12 @@ public class RelationList extends KnowtatorList<RelationAnnotation> {
 						.forEach(textSource -> textSource.getGraphSpaces()
 								.forEach(graphSpace -> graphSpace.getRelationAnnotations().stream()
 										.filter(relationAnnotation -> activeOWLPropertyDescendants.contains(relationAnnotation.getProperty()))
-										.forEach(relationAnnotation -> getDefaultListModel()
-												.addElement(relationAnnotation)))));
+										.forEach(this::addValue))));
 	}
 
 	@Override
 	public void reactToClick() {
-		Optional<RelationAnnotation> relationAnnotationOptional = Optional.ofNullable(getSelectedValue());
+		Optional<RelationAnnotation> relationAnnotationOptional = getSelectedValue();
 
 		relationAnnotationOptional.ifPresent(relationAnnotation -> {
 			view.getModel().ifPresent(model -> model.getTextSources().setSelection(relationAnnotation.getTextSource()));
