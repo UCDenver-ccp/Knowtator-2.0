@@ -173,6 +173,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private JButton previousRelationReviewButton;
 	private JButton nextRelationReviewButton;
 	private JButton refreshRelationReviewButton;
+	private JCheckBox snapToWordsCheckBox;
 
 	private final List<KnowtatorComponent> knowtatorComponents;
 	private final HashMap<JButton, ActionListener> spanSizeButtons;
@@ -1311,7 +1312,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		});
 	}
 
-
 	@Override
 	public void colorChangedEvent() {
 
@@ -1319,5 +1319,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 	public boolean getIsOneClickGraphs() {
 		return oneClickGraphsCheckBox.isSelected();
+	}
+
+	public boolean isSnapToWords() {
+		return snapToWordsCheckBox.isSelected();
 	}
 }

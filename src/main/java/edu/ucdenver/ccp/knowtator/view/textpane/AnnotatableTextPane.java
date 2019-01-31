@@ -90,12 +90,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				super.mouseDragged(e);
-//				try {
-//					getHighlighter().changeHighlight(tag, press_offset, viewToModel(e.getPoint()));
 					refreshHighlights();
-//				} catch (BadLocationException e1) {
-//					e1.printStackTrace();
-//				}
 			}
 
 			@Override
@@ -182,7 +177,9 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 						}
 
 					} else {
-						setSelectionAtWordLimits(press_offset, release_offset);
+						if (view.isSnapToWords()) {
+							setSelectionAtWordLimits(press_offset, release_offset);
+						}
 						refreshHighlights();
 					}
 				});
@@ -203,11 +200,6 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 		view.getModel()
 				.filter(BaseModel::isNotLoading)
 				.ifPresent(model -> {
-
-
-					// Always highlight the selected concept firstConceptAnnotation so its color and border show up
-//					highlightSelectedAnnotation();
-
 					// Highlight overlaps firstConceptAnnotation, then spans. Overlaps must be highlighted firstConceptAnnotation because the highlights are displayed
 					// in order of placement
 					model.getSelectedTextSource().ifPresent(textSource -> {
@@ -244,7 +236,6 @@ public abstract class AnnotatableTextPane extends SearchableTextPane implements 
 								}
 							})
 					);
-
 				});
 	}
 
