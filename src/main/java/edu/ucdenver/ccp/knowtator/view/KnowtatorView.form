@@ -841,7 +841,9 @@
                                     <children>
                                       <component id="61926" class="edu.ucdenver.ccp.knowtator.view.table.AnnotationTableForSpannedText" binding="conceptAnnotationsForTextTable" custom-create="true">
                                         <constraints/>
-                                        <properties/>
+                                        <properties>
+                                          <font name="Verdana" size="12"/>
+                                        </properties>
                                       </component>
                                     </children>
                                   </scrollpane>
@@ -941,7 +943,9 @@
                                     <children>
                                       <component id="f95e4" class="edu.ucdenver.ccp.knowtator.view.table.AnnotationTable" binding="annotationsForClassTable" custom-create="true">
                                         <constraints/>
-                                        <properties/>
+                                        <properties>
+                                          <font name="Verdana" size="12"/>
+                                        </properties>
                                       </component>
                                     </children>
                                   </scrollpane>
