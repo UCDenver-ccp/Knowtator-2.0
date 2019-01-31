@@ -92,7 +92,7 @@ public class RelationAnnotation extends mxCell implements GraphBoundModelObject<
 
 	@Override
 	public String toString() {
-		return String.format("%s - %s - %s", sourceAnnotationNode.getConceptAnnotation(), getOwlPropertyRendering(), targetAnnotationNode.getConceptAnnotation());
+		return String.format("%s", getOwlPropertyRendering());
 	}
 
 	@SuppressWarnings("unused")

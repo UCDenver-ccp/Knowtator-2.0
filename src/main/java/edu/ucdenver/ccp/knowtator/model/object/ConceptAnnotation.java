@@ -165,7 +165,7 @@ public class ConceptAnnotation extends SpanCollection implements TextBoundModelO
 	@Override
 	public String toString() {
 		return String.format(
-				"%s (%s)", stream().map(Span::toString).collect(Collectors.joining(" ")), model.getOWLEntityRendering(owlClass));
+				"%s", stream().map(Span::toString).collect(Collectors.joining(" ")));
 	}
 
 
@@ -241,5 +241,9 @@ public class ConceptAnnotation extends SpanCollection implements TextBoundModelO
 
 	public String getAnnotationType() {
 		return annotationType;
+	}
+
+	public String getOwlClassRendering() {
+		return model.getOWLEntityRendering(owlClass);
 	}
 }

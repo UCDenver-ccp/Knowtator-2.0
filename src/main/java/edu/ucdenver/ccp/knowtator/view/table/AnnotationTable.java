@@ -29,12 +29,18 @@ import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
+import javax.swing.table.DefaultTableModel;
 import java.util.Optional;
 
 public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
 
 	AnnotationTable(KnowtatorView view) {
 		super(view);
+		setModel(new DefaultTableModel(new Object[][]{}, new String[]{
+				"Spanned Text",
+				"OWL Entity",
+				"Text Source"
+		}));
 	}
 
 	@Override
@@ -61,6 +67,21 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
 		return view.getModel().flatMap(BaseModel::getSelectedTextSource)
 				.flatMap(TextSource::getSelectedAnnotation)
 				.map(conceptAnnotation -> conceptAnnotation);
+	}
+
+	@Override
+	Optional<ConceptAnnotation> getSelectedValue() {
+		return Optional.ofNullable((ConceptAnnotation) getValueAt(getSelectedRow(), 0));
+
+	}
+
+	@Override
+	void addValue(ConceptAnnotation modelObject) {
+		((DefaultTableModel) getModel()).addRow(new Object[]{
+				modelObject,
+				modelObject.getOwlClassRendering(),
+				modelObject.getTextSource()
+		});
 	}
 
 	@Override

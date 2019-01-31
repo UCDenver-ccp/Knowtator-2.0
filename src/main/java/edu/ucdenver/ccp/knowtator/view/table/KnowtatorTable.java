@@ -33,6 +33,7 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Optional;
 
@@ -41,7 +42,8 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable imple
 
 	KnowtatorTable(KnowtatorView view) {
 		this.view = view;
-		setModel(new DefaultTableModel(0, 1));
+		getTableHeader().setFont(new Font(getFont().getName(), Font.BOLD, 16));
+		setAutoCreateRowSorter(true);
 
 		KnowtatorTable<M> table = this;
 
@@ -60,13 +62,9 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable imple
 
 	public abstract void reactToClick();
 	protected abstract Optional<Object> getSelectedFromModel();
-	Optional<M> getSelectedValue() {
-		return Optional.ofNullable((M) getValueAt(getSelectedRow(), 0));
-	}
+	abstract Optional<M> getSelectedValue();
 
-	void addValue(M modelObject) {
-		((DefaultTableModel) getModel()).addRow(new Object[]{modelObject});
-	}
+	abstract void addValue(M modelObject);
 
 	private void setSelected() {
 		getSelectedFromModel()

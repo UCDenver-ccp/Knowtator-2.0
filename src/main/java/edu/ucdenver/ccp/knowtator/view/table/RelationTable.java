@@ -26,13 +26,14 @@ package edu.ucdenver.ccp.knowtator.view.table;
 
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.object.RelationAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.table.KnowtatorTable;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -44,6 +45,14 @@ public class RelationTable extends KnowtatorTable<RelationAnnotation> {
 
 	public RelationTable(KnowtatorView view, JCheckBox includePropertyDescendantsCheckBox, JLabel owlPropertyLabel) {
 		super(view);
+		setModel(new DefaultTableModel(new Object[][]{}, new String[]{
+				"Subject Text",
+				"Subject OWL Class",
+				"Property",
+				"Object Text",
+				"Object OWL Class",
+				"Text Source"
+		}));
 
 		this.activeOWLPropertyDescendants = new HashSet<>();
 		this.includePropertyDescendantsCheckBox = includePropertyDescendantsCheckBox;
@@ -58,6 +67,24 @@ public class RelationTable extends KnowtatorTable<RelationAnnotation> {
 				.flatMap(TextSource::getSelectedGraphSpace)
 				.map(mxGraph::getSelectionCell)
 				.filter(cell -> cell instanceof RelationAnnotation);
+	}
+
+	@Override
+	Optional<RelationAnnotation> getSelectedValue() {
+		return Optional.ofNullable((RelationAnnotation) getValueAt(getSelectedRow(), 2));
+
+	}
+
+	@Override
+	void addValue(RelationAnnotation modelObject) {
+		((DefaultTableModel) getModel()).addRow(new Object[]{
+				((AnnotationNode) modelObject.getSource()).getConceptAnnotation(),
+				((AnnotationNode) modelObject.getSource()).getConceptAnnotation().getOwlClassRendering(),
+				modelObject.getOwlPropertyRendering(),
+				((AnnotationNode) modelObject.getTarget()).getConceptAnnotation(),
+				((AnnotationNode) modelObject.getTarget()).getConceptAnnotation().getOwlClassRendering(),
+				modelObject.getTextSource()
+		});
 	}
 
 	@Override

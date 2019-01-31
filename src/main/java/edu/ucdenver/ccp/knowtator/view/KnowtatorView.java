@@ -45,10 +45,7 @@ import edu.ucdenver.ccp.knowtator.view.label.AnnotationAnnotatorLabel;
 import edu.ucdenver.ccp.knowtator.view.label.AnnotationClassLabel;
 import edu.ucdenver.ccp.knowtator.view.label.AnnotationIDLabel;
 import edu.ucdenver.ccp.knowtator.view.list.*;
-import edu.ucdenver.ccp.knowtator.view.table.AnnotationTable;
-import edu.ucdenver.ccp.knowtator.view.table.AnnotationTableForOWLClass;
-import edu.ucdenver.ccp.knowtator.view.table.AnnotationTableForSpannedText;
-import edu.ucdenver.ccp.knowtator.view.table.RelationTable;
+import edu.ucdenver.ccp.knowtator.view.table.*;
 import edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
@@ -137,8 +134,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private JCheckBox includeClassDescendantsCheckBox;
 	private JLabel owlPropertyLabel;
 	private RelationTable relationsForPropertyList;
-	private JButton previousReviewObjectButton;
-	private JButton nextReviewObjectButton;
+	private JButton previousTextReviewButton;
+	private JButton nextTextReviewButton;
 	private JCheckBox includePropertyDescendantsCheckBox;
 	private JTextField searchTextField;
 	private JButton nextMatchButton;
@@ -148,7 +145,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private JCheckBox regexCheckBox;
 	private JCheckBox caseSensitiveCheckBox;
 	private JTabbedPane reviewTabbedPane;
-	private JButton refreshReviewPaneButton;
+	private JButton refreshTextReviewButton;
 	private JPanel mainPanel;
 	private JButton backButton;
 	private JPanel filePanel;
@@ -170,6 +167,12 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 	private JButton captureImageButton;
 	private JCheckBox oneClickGraphsCheckBox;
 	private AnnotationTable conceptAnnotationsForTextTable;
+	private JButton refreshConceptReviewButton;
+	private JButton nextConceptReviewButton;
+	private JButton previousConceptReviewButton;
+	private JButton previousRelationReviewButton;
+	private JButton nextRelationReviewButton;
+	private JButton refreshRelationReviewButton;
 
 	private final List<KnowtatorComponent> knowtatorComponents;
 	private final HashMap<JButton, ActionListener> spanSizeButtons;
@@ -592,30 +595,43 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 	private void makeReviewPane() {
 		//TODO The Knowtator list doesn't seem to be being found so none of these methods are working
-		refreshReviewPaneButton.addActionListener(e -> getKnowtatorList()
-				.ifPresent(KnowtatorList::reset));
+		ActionListener refreshTableAction = e -> getKnowtatorTable()
+				.ifPresent(KnowtatorTable::reset);
+		ActionListener nextTableAction = e -> getKnowtatorTable()
+				.ifPresent(knowtatorTable -> {
+					int nextRowIndex = Math.min(knowtatorTable.getSelectedRow() + 1, knowtatorTable.getRowCount() - 1);
+					knowtatorTable.setRowSelectionInterval(nextRowIndex, nextRowIndex);
+					knowtatorTable.scrollRectToVisible(knowtatorTable.getCellRect(nextRowIndex, 0, true));
+					knowtatorTable.reactToClick();
+				});
+		ActionListener previousTableAction = e -> getKnowtatorTable()
+				.ifPresent(knowtatorTable -> {
+					int previousRowIndex = Math.max(knowtatorTable.getSelectedRow() - 1, 0);
+					knowtatorTable.setRowSelectionInterval(previousRowIndex, previousRowIndex);
+					knowtatorTable.scrollRectToVisible(knowtatorTable.getCellRect(previousRowIndex, 0, true));
+					knowtatorTable.reactToClick();
+				});
 
-		nextReviewObjectButton.addActionListener(e -> getKnowtatorList()
-				.ifPresent(knowtatorList -> {
-					knowtatorList.setSelectedIndex(Math.min(knowtatorList.getSelectedIndex() + 1, knowtatorList.getModel().getSize() - 1));
-					knowtatorList.ensureIndexIsVisible(knowtatorList.getSelectedIndex());
-					knowtatorList.reactToClick();
-				}));
-		previousReviewObjectButton.addActionListener(e -> getKnowtatorList()
-				.ifPresent(knowtatorList -> {
-					knowtatorList.setSelectedIndex(Math.max(knowtatorList.getSelectedIndex() - 1, 0));
-					knowtatorList.ensureIndexIsVisible(knowtatorList.getSelectedIndex());
-					knowtatorList.reactToClick();
-				}));
+		refreshTextReviewButton.addActionListener(refreshTableAction);
+		refreshConceptReviewButton.addActionListener(refreshTableAction);
+		refreshRelationReviewButton.addActionListener(refreshTableAction);
+
+		nextTextReviewButton.addActionListener(nextTableAction);
+		nextConceptReviewButton.addActionListener(nextTableAction);
+		nextRelationReviewButton.addActionListener(nextTableAction);
+
+		previousTextReviewButton.addActionListener(previousTableAction);
+		previousConceptReviewButton.addActionListener(previousTableAction);
+		previousRelationReviewButton.addActionListener(previousTableAction);
 	}
 
-	private Optional<KnowtatorList> getKnowtatorList() {
+	private Optional<KnowtatorTable> getKnowtatorTable() {
 		return Arrays.stream(((JPanel) reviewTabbedPane.getSelectedComponent()).getComponents())
 				.filter(component -> component instanceof JScrollPane)
 				.findFirst()
 				.map(component -> (JScrollPane) component)
 				.map(jScrollPane -> jScrollPane.getViewport().getComponent(0))
-				.map(component -> (KnowtatorList) component);
+				.map(component -> (KnowtatorTable) component);
 	}
 
 	@Override
@@ -1055,87 +1071,129 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		final Spacer spacer9 = new Spacer();
 		panel15.add(spacer9, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
 		final JPanel panel17 = new JPanel();
-		panel17.setLayout(new GridLayoutManager(2, 4, new Insets(0, 0, 0, 0), -1, -1));
+		panel17.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
 		header.addTab("Review", panel17);
+		final JPanel panel18 = new JPanel();
+		panel18.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+		panel17.add(panel18, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
 		reviewTabbedPane = new JTabbedPane();
 		Font reviewTabbedPaneFont = this.$$$getFont$$$("Verdana", -1, 14, reviewTabbedPane.getFont());
 		if (reviewTabbedPaneFont != null) reviewTabbedPane.setFont(reviewTabbedPaneFont);
 		reviewTabbedPane.setTabPlacement(2);
-		panel17.add(reviewTabbedPane, new GridConstraints(1, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
-		final JPanel panel18 = new JPanel();
-		panel18.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
-		reviewTabbedPane.addTab("Text", panel18);
+		panel18.add(reviewTabbedPane, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
+		final JPanel panel19 = new JPanel();
+		panel19.setLayout(new GridLayoutManager(2, 5, new Insets(0, 0, 0, 0), -1, -1));
+		reviewTabbedPane.addTab("Text", panel19);
 		final JScrollPane scrollPane7 = new JScrollPane();
-		panel18.add(scrollPane7, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		panel19.add(scrollPane7, new GridConstraints(1, 0, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
 		scrollPane7.setViewportView(conceptAnnotationsForTextTable);
 		Font exactMatchCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, exactMatchCheckBox.getFont());
 		if (exactMatchCheckBoxFont != null) exactMatchCheckBox.setFont(exactMatchCheckBoxFont);
 		this.$$$loadButtonText$$$(exactMatchCheckBox, ResourceBundle.getBundle("log4j").getString("exact.match"));
-		panel18.add(exactMatchCheckBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		final JPanel panel19 = new JPanel();
-		panel19.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-		panel18.add(panel19, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-		panel19.setBorder(BorderFactory.createTitledBorder(null, "Text", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel19.getFont())));
-		panel19.add(annotationsContainingTextTextField, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+		panel19.add(exactMatchCheckBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
 		final JPanel panel20 = new JPanel();
-		panel20.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
-		reviewTabbedPane.addTab("Concept", panel20);
+		panel20.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+		panel19.add(panel20, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+		panel20.setBorder(BorderFactory.createTitledBorder(null, "Text", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel20.getFont())));
+		panel20.add(annotationsContainingTextTextField, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+		final JPanel panel21 = new JPanel();
+		panel21.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
+		panel19.add(panel21, new GridConstraints(0, 2, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+		previousTextReviewButton = new JButton();
+		previousTextReviewButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-advance-24 (reversed).png")));
+		previousTextReviewButton.setText("");
+		panel21.add(previousTextReviewButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, -1), null, 0, false));
+		nextTextReviewButton = new JButton();
+		nextTextReviewButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-advance-24.png")));
+		nextTextReviewButton.setText("");
+		panel21.add(nextTextReviewButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, -1), null, 0, false));
+		refreshTextReviewButton = new JButton();
+		refreshTextReviewButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-synchronize-32.png")));
+		refreshTextReviewButton.setText("");
+		panel21.add(refreshTextReviewButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(200, -1), null, 0, false));
+		final Spacer spacer10 = new Spacer();
+		panel21.add(spacer10, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		final JPanel panel22 = new JPanel();
+		panel22.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
+		reviewTabbedPane.addTab("Concept", panel22);
 		final JScrollPane scrollPane8 = new JScrollPane();
-		panel20.add(scrollPane8, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		panel22.add(scrollPane8, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
 		scrollPane8.setViewportView(annotationsForClassTable);
 		Font includeClassDescendantsCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, includeClassDescendantsCheckBox.getFont());
 		if (includeClassDescendantsCheckBoxFont != null)
 			includeClassDescendantsCheckBox.setFont(includeClassDescendantsCheckBoxFont);
 		this.$$$loadButtonText$$$(includeClassDescendantsCheckBox, ResourceBundle.getBundle("log4j").getString("include.descendants"));
-		panel20.add(includeClassDescendantsCheckBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		final JPanel panel21 = new JPanel();
-		panel21.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-		panel20.add(panel21, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-		panel21.setBorder(BorderFactory.createTitledBorder(null, "OWL Class", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel21.getFont())));
+		panel22.add(includeClassDescendantsCheckBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		final JPanel panel23 = new JPanel();
+		panel23.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+		panel22.add(panel23, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+		panel23.setBorder(BorderFactory.createTitledBorder(null, "OWL Class", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel23.getFont())));
 		owlClassLabel.setText("");
-		panel21.add(owlClassLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		final JPanel panel22 = new JPanel();
-		panel22.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
-		reviewTabbedPane.addTab("Relation", panel22);
+		panel23.add(owlClassLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		final JPanel panel24 = new JPanel();
+		panel24.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
+		panel22.add(panel24, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+		previousConceptReviewButton = new JButton();
+		previousConceptReviewButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-advance-24 (reversed).png")));
+		previousConceptReviewButton.setText("");
+		panel24.add(previousConceptReviewButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, -1), null, 0, false));
+		nextConceptReviewButton = new JButton();
+		nextConceptReviewButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-advance-24.png")));
+		nextConceptReviewButton.setText("");
+		panel24.add(nextConceptReviewButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, -1), null, 0, false));
+		refreshConceptReviewButton = new JButton();
+		refreshConceptReviewButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-synchronize-32.png")));
+		refreshConceptReviewButton.setText("");
+		panel24.add(refreshConceptReviewButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(200, -1), null, 0, false));
+		final Spacer spacer11 = new Spacer();
+		panel24.add(spacer11, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		final JPanel panel25 = new JPanel();
+		panel25.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
+		reviewTabbedPane.addTab("Relation", panel25);
 		final JScrollPane scrollPane9 = new JScrollPane();
-		panel22.add(scrollPane9, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		panel25.add(scrollPane9, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		Font relationsForPropertyListFont = this.$$$getFont$$$("Verdana", -1, 12, relationsForPropertyList.getFont());
+		if (relationsForPropertyListFont != null) relationsForPropertyList.setFont(relationsForPropertyListFont);
 		scrollPane9.setViewportView(relationsForPropertyList);
 		Font includePropertyDescendantsCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, includePropertyDescendantsCheckBox.getFont());
 		if (includePropertyDescendantsCheckBoxFont != null)
 			includePropertyDescendantsCheckBox.setFont(includePropertyDescendantsCheckBoxFont);
 		this.$$$loadButtonText$$$(includePropertyDescendantsCheckBox, ResourceBundle.getBundle("log4j").getString("include.descendants1"));
-		panel22.add(includePropertyDescendantsCheckBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		final JPanel panel23 = new JPanel();
-		panel23.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-		panel22.add(panel23, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-		panel23.setBorder(BorderFactory.createTitledBorder(null, "OWL Object Property", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel23.getFont())));
+		panel25.add(includePropertyDescendantsCheckBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		final JPanel panel26 = new JPanel();
+		panel26.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+		panel25.add(panel26, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+		panel26.setBorder(BorderFactory.createTitledBorder(null, "OWL Object Property", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel26.getFont())));
 		Font owlPropertyLabelFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, owlPropertyLabel.getFont());
 		if (owlPropertyLabelFont != null) owlPropertyLabel.setFont(owlPropertyLabelFont);
 		owlPropertyLabel.setText("");
-		panel23.add(owlPropertyLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		refreshReviewPaneButton = new JButton();
-		refreshReviewPaneButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-synchronize-32.png")));
-		refreshReviewPaneButton.setText("");
-		panel17.add(refreshReviewPaneButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		nextReviewObjectButton = new JButton();
-		nextReviewObjectButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-advance-24.png")));
-		nextReviewObjectButton.setText("");
-		panel17.add(nextReviewObjectButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		previousReviewObjectButton = new JButton();
-		previousReviewObjectButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-advance-24 (reversed).png")));
-		previousReviewObjectButton.setText("");
-		panel17.add(previousReviewObjectButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		final Spacer spacer10 = new Spacer();
-		panel17.add(spacer10, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		panel26.add(owlPropertyLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+		final JPanel panel27 = new JPanel();
+		panel27.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
+		panel25.add(panel27, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+		previousRelationReviewButton = new JButton();
+		previousRelationReviewButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-advance-24 (reversed).png")));
+		previousRelationReviewButton.setText("");
+		panel27.add(previousRelationReviewButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, -1), null, 0, false));
+		nextRelationReviewButton = new JButton();
+		nextRelationReviewButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-advance-24.png")));
+		nextRelationReviewButton.setText("");
+		panel27.add(nextRelationReviewButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, -1), null, 0, false));
+		refreshRelationReviewButton = new JButton();
+		refreshRelationReviewButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-synchronize-32.png")));
+		refreshRelationReviewButton.setText("");
+		panel27.add(refreshRelationReviewButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(200, -1), null, 0, false));
+		final Spacer spacer12 = new Spacer();
+		panel27.add(spacer12, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
 		filePanel = new JPanel();
 		filePanel.setLayout(new GridLayoutManager(5, 6, new Insets(0, 0, 0, 0), -1, -1));
 		cardPanel.add(filePanel, "File");
-		final Spacer spacer11 = new Spacer();
-		filePanel.add(spacer11, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-		final Spacer spacer12 = new Spacer();
-		filePanel.add(spacer12, new GridConstraints(1, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
 		final Spacer spacer13 = new Spacer();
-		filePanel.add(spacer13, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		filePanel.add(spacer13, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+		final Spacer spacer14 = new Spacer();
+		filePanel.add(spacer14, new GridConstraints(1, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		final Spacer spacer15 = new Spacer();
+		filePanel.add(spacer15, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
 		progressBar = new JProgressBar();
 		progressBar.setStringPainted(true);
 		filePanel.add(progressBar, new GridConstraints(2, 0, 1, 6, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -1151,15 +1209,15 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		defaultListModel1.addElement("Export");
 		fileList.setModel(defaultListModel1);
 		scrollPane10.setViewportView(fileList);
-		final Spacer spacer14 = new Spacer();
-		filePanel.add(spacer14, new GridConstraints(1, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		final Spacer spacer16 = new Spacer();
+		filePanel.add(spacer16, new GridConstraints(1, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
 		backButton = new JButton();
 		backButton.setText("Back");
 		filePanel.add(backButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-		final Spacer spacer15 = new Spacer();
-		filePanel.add(spacer15, new GridConstraints(0, 1, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-		final Spacer spacer16 = new Spacer();
-		filePanel.add(spacer16, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		final Spacer spacer17 = new Spacer();
+		filePanel.add(spacer17, new GridConstraints(0, 1, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+		final Spacer spacer18 = new Spacer();
+		filePanel.add(spacer18, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
 		fileChooser = new JFileChooser();
 		filePanel.add(fileChooser, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
 	}
