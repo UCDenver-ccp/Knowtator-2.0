@@ -106,7 +106,6 @@ public final class KnowtatorXMLUtil extends XMLUtil {
 					String profileID = annotationElement.getAttribute(KnowtatorXMLAttributes.ANNOTATOR);
 					String type = annotationElement.getAttribute(KnowtatorXMLAttributes.TYPE);
 					String owlClassID = ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0)).getAttribute(KnowtatorXMLAttributes.ID);
-//					String owlClassLabel = ((Element) annotationElement.getElementsByTagName(KnowtatorXMLTags.CLASS).item(0)).getAttribute(KnowtatorXMLAttributes.LABEL);
 					String motivation = annotationElement.getAttribute(KnowtatorXMLAttributes.MOTIVATION);
 
 					Profile profile = model.getProfile(profileID).orElse(model.getDefaultProfile());

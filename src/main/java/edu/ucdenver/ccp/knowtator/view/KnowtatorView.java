@@ -32,6 +32,7 @@ import edu.ucdenver.ccp.knowtator.iaa.IAAException;
 import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
 import edu.ucdenver.ccp.knowtator.model.*;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
@@ -336,13 +337,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 						})));
 
 
-		backButton.addActionListener(e -> {
-			if (model.isNotLoading()) {
+		backButton.addActionListener(e -> getModel().ifPresent(model1 -> {
+			if (model1.isNotLoading()) {
 				CardLayout cl = (CardLayout) cardPanel.getLayout();
 				cl.show(cardPanel, "Main");
 				header.setSelectedIndex(1);
 			}
-		});
+		}));
 
 		header.addChangeListener(e -> {
 			if (header.getTitleAt(header.getSelectedIndex()).equals("File")) {
@@ -1297,6 +1298,12 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 	@Override
 	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
+		getModel().ifPresent(model1 -> event.getNew().ifPresent(o -> {
+			if (o instanceof GraphSpace && isVisible()) {
+				graphViewDialog.setVisible(true);
+			}
+		}));
+
 		getModel().ifPresent(model1 -> {
 			Optional optional = model1.getSelectedTextSource()
 					.flatMap(TextSource::getSelectedAnnotation);
