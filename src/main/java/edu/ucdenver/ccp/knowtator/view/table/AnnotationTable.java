@@ -40,7 +40,12 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
 				"Spanned Text",
 				"OWL Entity",
 				"Text Source"
-		}));
+		}) {
+			@Override
+			public boolean isCellEditable(int row, int col) {
+				return false;
+			}
+		});
 	}
 
 	@Override

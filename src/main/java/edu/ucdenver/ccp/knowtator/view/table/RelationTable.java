@@ -52,7 +52,12 @@ public class RelationTable extends KnowtatorTable<RelationAnnotation> {
 				"Object Text",
 				"Object OWL Class",
 				"Text Source"
-		}));
+		}){
+			@Override
+			public boolean isCellEditable(int row, int col) {
+				return false;
+			}
+		});
 
 		this.activeOWLPropertyDescendants = new HashSet<>();
 		this.includePropertyDescendantsCheckBox = includePropertyDescendantsCheckBox;
