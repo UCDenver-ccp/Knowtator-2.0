@@ -645,7 +645,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 		knowtatorComponents.forEach(KnowtatorComponent::reset);
 		getModel().ifPresent(model1 -> model1.addModelListener(this));
 		getModel().ifPresent(model1 -> model1.addOWLModelManagerListener(annotationClassLabel));
-
 	}
 
 	/**
@@ -1292,12 +1291,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 
 	@Override
 	public void modelChangeEvent(ChangeEvent<ModelObject> event) {
-		getModel().ifPresent(model1 -> event.getNew().ifPresent(o -> {
-			if (o instanceof GraphSpace && isVisible()) {
-				graphViewDialog.setVisible(true);
-			}
-		}));
-
 		getModel().ifPresent(model1 -> {
 			Optional optional = model1.getSelectedTextSource()
 					.flatMap(TextSource::getSelectedAnnotation);

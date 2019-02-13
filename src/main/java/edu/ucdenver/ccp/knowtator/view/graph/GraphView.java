@@ -272,7 +272,7 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		if (visible) {
-			graphSpaceChooser.reset();
+//			graphSpaceChooser.reset();
 			view.getModel()
 					.flatMap(BaseModel::getSelectedTextSource)
 					.ifPresent(textSource -> {
