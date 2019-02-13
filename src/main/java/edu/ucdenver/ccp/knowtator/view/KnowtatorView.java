@@ -32,7 +32,6 @@ import edu.ucdenver.ccp.knowtator.iaa.IAAException;
 import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIAA;
 import edu.ucdenver.ccp.knowtator.model.*;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
-import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
@@ -44,7 +43,10 @@ import edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog;
 import edu.ucdenver.ccp.knowtator.view.label.AnnotationAnnotatorLabel;
 import edu.ucdenver.ccp.knowtator.view.label.AnnotationClassLabel;
 import edu.ucdenver.ccp.knowtator.view.label.AnnotationIDLabel;
-import edu.ucdenver.ccp.knowtator.view.list.*;
+import edu.ucdenver.ccp.knowtator.view.list.ColorList;
+import edu.ucdenver.ccp.knowtator.view.list.GraphSpaceList;
+import edu.ucdenver.ccp.knowtator.view.list.ProfileList;
+import edu.ucdenver.ccp.knowtator.view.list.SpanList;
 import edu.ucdenver.ccp.knowtator.view.table.*;
 import edu.ucdenver.ccp.knowtator.view.textpane.KnowtatorTextPane;
 import org.apache.log4j.Logger;
@@ -600,17 +602,21 @@ public class KnowtatorView extends AbstractOWLClassViewComponent implements Drop
 				.ifPresent(KnowtatorTable::reset);
 		ActionListener nextTableAction = e -> getKnowtatorTable()
 				.ifPresent(knowtatorTable -> {
-					int nextRowIndex = Math.min(knowtatorTable.getSelectedRow() + 1, knowtatorTable.getRowCount() - 1);
-					knowtatorTable.setRowSelectionInterval(nextRowIndex, nextRowIndex);
-					knowtatorTable.scrollRectToVisible(knowtatorTable.getCellRect(nextRowIndex, 0, true));
-					knowtatorTable.reactToClick();
+					if (knowtatorTable.getRowCount() > 0) {
+						int nextRowIndex = Math.min(knowtatorTable.getSelectedRow() + 1, knowtatorTable.getRowCount() - 1);
+						knowtatorTable.setRowSelectionInterval(nextRowIndex, nextRowIndex);
+						knowtatorTable.scrollRectToVisible(knowtatorTable.getCellRect(nextRowIndex, 0, true));
+						knowtatorTable.reactToClick();
+					}
 				});
 		ActionListener previousTableAction = e -> getKnowtatorTable()
 				.ifPresent(knowtatorTable -> {
-					int previousRowIndex = Math.max(knowtatorTable.getSelectedRow() - 1, 0);
-					knowtatorTable.setRowSelectionInterval(previousRowIndex, previousRowIndex);
-					knowtatorTable.scrollRectToVisible(knowtatorTable.getCellRect(previousRowIndex, 0, true));
-					knowtatorTable.reactToClick();
+					if (knowtatorTable.getRowCount() > 0) {
+						int previousRowIndex = Math.max(knowtatorTable.getSelectedRow() - 1, 0);
+						knowtatorTable.setRowSelectionInterval(previousRowIndex, previousRowIndex);
+						knowtatorTable.scrollRectToVisible(knowtatorTable.getCellRect(previousRowIndex, 0, true));
+						knowtatorTable.reactToClick();
+					}
 				});
 
 		refreshTextReviewButton.addActionListener(refreshTableAction);

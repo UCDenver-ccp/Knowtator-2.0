@@ -24,6 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
+import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXMLUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction;
@@ -35,10 +36,12 @@ import java.io.IOException;
 
 public class TextSourceAction extends AbstractKnowtatorCollectionAction<TextSource> {
 	private final File file;
+	private final File annotationFile;
 
-	public TextSourceAction(KnowtatorModel model, CollectionActionType actionType, File file) {
+	public TextSourceAction(KnowtatorModel model, CollectionActionType actionType, File file, File annotationFile) {
 		super(model, actionType, "text source", model.getTextSources());
 		this.file = file;
+		this.annotationFile = annotationFile;
 	}
 
 	@Override
@@ -60,6 +63,9 @@ public class TextSourceAction extends AbstractKnowtatorCollectionAction<TextSour
 
 	@Override
 	protected void cleanUpAdd() {
-
+		if (annotationFile != null) {
+			KnowtatorXMLUtil xmlUtil = new KnowtatorXMLUtil();
+			xmlUtil.readToTextSource(object, annotationFile);
+		}
 	}
 }

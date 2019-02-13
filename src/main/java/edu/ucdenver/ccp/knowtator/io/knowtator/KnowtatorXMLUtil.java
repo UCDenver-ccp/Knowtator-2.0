@@ -60,6 +60,16 @@ public final class KnowtatorXMLUtil extends XMLUtil {
 		return Optional.empty();
 	}
 
+	public void readToTextSource(TextSource textSource, File file) {
+		Optional<Element> parentOptional = getRootElement(file);
+		parentOptional.ifPresent(parent -> {
+			for (Node documentNode : KnowtatorXMLUtil.asList(parent.getElementsByTagName(KnowtatorXMLTags.DOCUMENT))) {
+				Element documentElement = (Element) documentNode;
+				readToTextSource(textSource, documentElement);
+			}
+		});
+	}
+
 
 	public void readToTextSourceCollection(KnowtatorModel model, File file) {
 		Optional<Element> parentOptional = getRootElement(file);

@@ -190,7 +190,15 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject> e
 						actions.add(new ProfileAction(model, actionType, id));
 						break;
 					case DOCUMENT:
-						actions.add(new TextSourceAction(model, actionType, file));
+						JOptionPane.showMessageDialog( view, "Select annotation file");
+						JFileChooser fileChooser = new JFileChooser();
+						fileChooser.setCurrentDirectory(model.getAnnotationsLocation());
+
+						File annotationFile = null;
+						if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
+							annotationFile = fileChooser.getSelectedFile();
+						}
+						actions.add(new TextSourceAction(model, actionType, file, annotationFile));
 				}
 
 
@@ -209,12 +217,12 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject> e
 							2);
 				}
 
-					if (response != JOptionPane.CLOSED_OPTION) {
-						try {
-							model.registerAction(actions.get(response));
-						} catch (ActionUnperformableException e) {
-							JOptionPane.showMessageDialog(view, e.getMessage());
-						}
+				if (response != JOptionPane.CLOSED_OPTION) {
+					try {
+						model.registerAction(actions.get(response));
+					} catch (ActionUnperformableException e) {
+						JOptionPane.showMessageDialog(view, e.getMessage());
+					}
 				}
 			}
 		});

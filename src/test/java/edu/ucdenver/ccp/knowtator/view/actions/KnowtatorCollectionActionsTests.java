@@ -51,7 +51,7 @@ public class KnowtatorCollectionActionsTests {
     @Test
     public void addTextSourceActionTest() throws ActionUnperformableException {
 	    TestingHelpers.testKnowtatorAction(model,
-			    new TextSourceAction(model, ADD, TestingHelpers.getArticleFile(TestingHelpers.projectFileName, "document4")),
+			    new TextSourceAction(model, ADD, TestingHelpers.getArticleFile(TestingHelpers.projectFileName, "document4"), null),
                 TestingHelpers.defaultExpectedTextSources + 1,
                 TestingHelpers.defaultExpectedConceptAnnotations,
                 TestingHelpers.defaultExpectedSpans,
@@ -65,7 +65,7 @@ public class KnowtatorCollectionActionsTests {
     @Test
     public void removeTextSourceActionTest() throws ActionUnperformableException {
 	    TestingHelpers.testKnowtatorAction(model,
-			    new TextSourceAction(model, REMOVE, null),
+			    new TextSourceAction(model, REMOVE, null, null),
                 TestingHelpers.defaultExpectedTextSources - 1,
                 TestingHelpers.defaultExpectedConceptAnnotations - 2,
                 TestingHelpers.defaultExpectedSpans - 3,
