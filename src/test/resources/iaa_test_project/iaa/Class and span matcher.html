@@ -4,89 +4,408 @@
 <h1>Class and span matcher</h1>
 Annotations match if they have the same class assignment and the same spans.
 <hr>
-<p>For more detailed documentation on IAA please see the <a href="http://bionlp.sourceforge.net/Knowtator/iaa.shtml">IAA documentation</a>.
+<p>For more detailed documentation on IAA please see the <a href="http://bionlp.sourceforge.net/Knowtator/iaa.shtml">IAA
+    documentation</a>.
 <p>
 <h2>2-way IAA Results</h2>
 IAA calculated on 4 documents.
 <p><a href="Class and span matcher.dat">tabular data</a>
 <p>all annotations = matches + non-matches
-<br> IAA = matches / all annotations
+    <br> IAA = matches / all annotations
 <p>
-<table border=1><tr><td><b>Type</b></td><td><b>IAA</b></td>
-<td><b>matches</b></td>
-<td><b>non-matches</b></td>
-</tr>
-<tr><td><b>All classes</b></td><td>76.15%</td><td>348</td><td>109</td></tr>
-<tr><td>5'-cytidylyl group</td><td>0.00%</td><td>0</td><td>1</td></tr>
-<tr><td>5'-guanylyl group</td><td>0.00%</td><td>0</td><td>2</td></tr>
-<tr><td>5'-uridylyl group</td><td>0.00%</td><td>0</td><td>3</td></tr>
-<tr><td>acid</td><td>100.00%</td><td>2</td><td>0</td></tr>
-<tr><td>adenine group</td><td>0.00%</td><td>0</td><td>1</td></tr>
-<tr><td>alanine</td><td>0.00%</td><td>0</td><td>1</td></tr>
-<tr><td>alanine residue</td><td>0.00%</td><td>0</td><td>1</td></tr>
-<tr><td>alcohols</td><td>100.00%</td><td>4</td><td>0</td></tr>
-<tr><td>amino acids</td><td>0.00%</td><td>0</td><td>6</td></tr>
-<tr><td>amino-acid residues</td><td>0.00%</td><td>0</td><td>7</td></tr>
-<tr><td>anaesthetic</td><td>16.67%</td><td>2</td><td>10</td></tr>
-<tr><td>canonical nucleoside residues</td><td>0.00%</td><td>0</td><td>2</td></tr>
-<tr><td>carbon</td><td>0.00%</td><td>0</td><td>4</td></tr>
-<tr><td>carboxy group</td><td>0.00%</td><td>0</td><td>10</td></tr>
-<tr><td>cytidyl groups</td><td>0.00%</td><td>0</td><td>1</td></tr>
-<tr><td>cytosin-1-yl group</td><td>0.00%</td><td>0</td><td>1</td></tr>
-<tr><td>deoxyribonucleic acids</td><td>94.74%</td><td>54</td><td>3</td></tr>
-<tr><td>double-stranded DNA</td><td>71.43%</td><td>10</td><td>4</td></tr>
-<tr><td>drug</td><td>0.00%</td><td>0</td><td>2</td></tr>
-<tr><td>glutamate residue</td><td>0.00%</td><td>0</td><td>1</td></tr>
-<tr><td>glutamate(1-)</td><td>0.00%</td><td>0</td><td>1</td></tr>
-<tr><td>glutamate(2-)</td><td>0.00%</td><td>0</td><td>1</td></tr>
-<tr><td>glycine</td><td>100.00%</td><td>2</td><td>0</td></tr>
-<tr><td>guanine group</td><td>0.00%</td><td>0</td><td>3</td></tr>
-<tr><td>guanosyl groups</td><td>0.00%</td><td>0</td><td>2</td></tr>
-<tr><td>histidine</td><td>100.00%</td><td>2</td><td>0</td></tr>
-<tr><td>hydrogencarbonate</td><td>100.00%</td><td>2</td><td>0</td></tr>
-<tr><td>inhibitor</td><td>0.00%</td><td>0</td><td>2</td></tr>
-<tr><td>magnesium dichloride</td><td>100.00%</td><td>4</td><td>0</td></tr>
-<tr><td>messenger RNA</td><td>100.00%</td><td>30</td><td>0</td></tr>
-<tr><td>metal cations</td><td>0.00%</td><td>0</td><td>1</td></tr>
-<tr><td>metals</td><td>0.00%</td><td>0</td><td>1</td></tr>
-<tr><td>molecular entities</td><td>0.00%</td><td>0</td><td>4</td></tr>
-<tr><td>nucleotidyl groups</td><td>0.00%</td><td>0</td><td>3</td></tr>
-<tr><td>oligopeptides</td><td>100.00%</td><td>8</td><td>0</td></tr>
-<tr><td>peptides</td><td>100.00%</td><td>10</td><td>0</td></tr>
-<tr><td>phosphate(3-)</td><td>0.00%</td><td>0</td><td>1</td></tr>
-<tr><td>phosphates</td><td>0.00%</td><td>0</td><td>1</td></tr>
-<tr><td>pigment</td><td>0.00%</td><td>0</td><td>3</td></tr>
-<tr><td>potassium chloride</td><td>100.00%</td><td>4</td><td>0</td></tr>
-<tr><td>proline</td><td>0.00%</td><td>0</td><td>7</td></tr>
-<tr><td>proline residue</td><td>0.00%</td><td>0</td><td>7</td></tr>
-<tr><td>protease inhibitor</td><td>100.00%</td><td>4</td><td>0</td></tr>
-<tr><td>proteins</td><td>97.52%</td><td>118</td><td>3</td></tr>
-<tr><td>ribonucleic acids</td><td>100.00%</td><td>46</td><td>0</td></tr>
-<tr><td>single-stranded DNA</td><td>100.00%</td><td>12</td><td>0</td></tr>
-<tr><td>sodium chloride</td><td>100.00%</td><td>2</td><td>0</td></tr>
-<tr><td>sodium dodecyl sulfate</td><td>100.00%</td><td>4</td><td>0</td></tr>
-<tr><td>sodium phosphates</td><td>100.00%</td><td>2</td><td>0</td></tr>
-<tr><td>sucrose</td><td>100.00%</td><td>8</td><td>0</td></tr>
-<tr><td>terpenes</td><td>100.00%</td><td>6</td><td>0</td></tr>
-<tr><td>tert-pentyl group</td><td>100.00%</td><td>2</td><td>0</td></tr>
-<tr><td>tris</td><td>100.00%</td><td>6</td><td>0</td></tr>
-<tr><td>uracil-1-yl group</td><td>0.00%</td><td>0</td><td>3</td></tr>
-<tr><td>uridyl groups</td><td>0.00%</td><td>0</td><td>3</td></tr>
-<tr><td>water</td><td>57.14%</td><td>4</td><td>3</td></tr>
+<table border=1>
+    <tr>
+        <td><b>Type</b></td>
+        <td><b>IAA</b></td>
+        <td><b>matches</b></td>
+        <td><b>non-matches</b></td>
+    </tr>
+    <tr>
+        <td><b>All classes</b></td>
+        <td>76.15%</td>
+        <td>348</td>
+        <td>109</td>
+    </tr>
+    <tr>
+        <td>5'-cytidylyl group</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>5'-guanylyl group</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>2</td>
+    </tr>
+    <tr>
+        <td>5'-uridylyl group</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>acid</td>
+        <td>100.00%</td>
+        <td>2</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>adenine group</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>alanine</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>alanine residue</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>alcohols</td>
+        <td>100.00%</td>
+        <td>4</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>amino acids</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>6</td>
+    </tr>
+    <tr>
+        <td>amino-acid residues</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>7</td>
+    </tr>
+    <tr>
+        <td>anaesthetic</td>
+        <td>16.67%</td>
+        <td>2</td>
+        <td>10</td>
+    </tr>
+    <tr>
+        <td>canonical nucleoside residues</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>2</td>
+    </tr>
+    <tr>
+        <td>carbon</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>4</td>
+    </tr>
+    <tr>
+        <td>carboxy group</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>10</td>
+    </tr>
+    <tr>
+        <td>cytidyl groups</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>cytosin-1-yl group</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>deoxyribonucleic acids</td>
+        <td>94.74%</td>
+        <td>54</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>double-stranded DNA</td>
+        <td>71.43%</td>
+        <td>10</td>
+        <td>4</td>
+    </tr>
+    <tr>
+        <td>drug</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>2</td>
+    </tr>
+    <tr>
+        <td>glutamate residue</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>glutamate(1-)</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>glutamate(2-)</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>glycine</td>
+        <td>100.00%</td>
+        <td>2</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>guanine group</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>guanosyl groups</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>2</td>
+    </tr>
+    <tr>
+        <td>histidine</td>
+        <td>100.00%</td>
+        <td>2</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>hydrogencarbonate</td>
+        <td>100.00%</td>
+        <td>2</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>inhibitor</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>2</td>
+    </tr>
+    <tr>
+        <td>magnesium dichloride</td>
+        <td>100.00%</td>
+        <td>4</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>messenger RNA</td>
+        <td>100.00%</td>
+        <td>30</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>metal cations</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>metals</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>molecular entities</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>4</td>
+    </tr>
+    <tr>
+        <td>nucleotidyl groups</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>oligopeptides</td>
+        <td>100.00%</td>
+        <td>8</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>peptides</td>
+        <td>100.00%</td>
+        <td>10</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>phosphate(3-)</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>phosphates</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>pigment</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>potassium chloride</td>
+        <td>100.00%</td>
+        <td>4</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>proline</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>7</td>
+    </tr>
+    <tr>
+        <td>proline residue</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>7</td>
+    </tr>
+    <tr>
+        <td>protease inhibitor</td>
+        <td>100.00%</td>
+        <td>4</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>proteins</td>
+        <td>97.52%</td>
+        <td>118</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>ribonucleic acids</td>
+        <td>100.00%</td>
+        <td>46</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>single-stranded DNA</td>
+        <td>100.00%</td>
+        <td>12</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>sodium chloride</td>
+        <td>100.00%</td>
+        <td>2</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>sodium dodecyl sulfate</td>
+        <td>100.00%</td>
+        <td>4</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>sodium phosphates</td>
+        <td>100.00%</td>
+        <td>2</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>sucrose</td>
+        <td>100.00%</td>
+        <td>8</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>terpenes</td>
+        <td>100.00%</td>
+        <td>6</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>tert-pentyl group</td>
+        <td>100.00%</td>
+        <td>2</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>tris</td>
+        <td>100.00%</td>
+        <td>6</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>uracil-1-yl group</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>uridyl groups</td>
+        <td>0.00%</td>
+        <td>0</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>water</td>
+        <td>57.14%</td>
+        <td>4</td>
+        <td>3</td>
+    </tr>
 </table>
 <h2>match data</h2>
 <ul>
-<li><a href="Class and span matcher.matches.Kristin Garcia.html">matches for Kristin Garcia</a></li>
-<li><a href="Class and span matcher.matches.Mike Bada.html">matches for Mike Bada</a></li>
-</ul><hr>
+    <li><a href="Class and span matcher.matches.Kristin Garcia.html">matches for Kristin Garcia</a></li>
+    <li><a href="Class and span matcher.matches.Mike Bada.html">matches for Mike Bada</a></li>
+</ul>
+<hr>
 <h2>non-match data</h2>
 <ul>
-<li><a href="Class and span matcher.nonmatches.Kristin Garcia.html">non-matches for Kristin Garcia</a></li>
-<li><a href="Class and span matcher.nonmatches.Mike Bada.html">non-matches for Mike Bada</a></li>
-</ul><hr>
+    <li><a href="Class and span matcher.nonmatches.Kristin Garcia.html">non-matches for Kristin Garcia</a></li>
+    <li><a href="Class and span matcher.nonmatches.Mike Bada.html">non-matches for Mike Bada</a></li>
+</ul>
+<hr>
 <h2>Pair-wise agreement</h2>
-<table border=1><tr><td><b>Gold standard set</b></td><td><b>compared set</b></td><td><b>true positives</b></td><td><b>false positives</b></td><td><b>false negatives</b></td><td><b>precision</b></td><td><b>recall</b></td><td><b>F-score</b></td></tr>
-<tr><td>Kristin Garcia</td><td>Mike Bada</td><td>174</td><td>87</td><td>22</td><td>66.67%</td><td>88.78%</td><td>76.15%</td></tr>
-<tr><td>Mike Bada</td><td>Kristin Garcia</td><td>174</td><td>22</td><td>87</td><td>88.78%</td><td>66.67%</td><td>76.15%</td></tr>
+<table border=1>
+    <tr>
+        <td><b>Gold standard set</b></td>
+        <td><b>compared set</b></td>
+        <td><b>true positives</b></td>
+        <td><b>false positives</b></td>
+        <td><b>false negatives</b></td>
+        <td><b>precision</b></td>
+        <td><b>recall</b></td>
+        <td><b>F-score</b></td>
+    </tr>
+    <tr>
+        <td>Kristin Garcia</td>
+        <td>Mike Bada</td>
+        <td>174</td>
+        <td>87</td>
+        <td>22</td>
+        <td>66.67%</td>
+        <td>88.78%</td>
+        <td>76.15%</td>
+    </tr>
+    <tr>
+        <td>Mike Bada</td>
+        <td>Kristin Garcia</td>
+        <td>174</td>
+        <td>22</td>
+        <td>87</td>
+        <td>88.78%</td>
+        <td>66.67%</td>
+        <td>76.15%</td>
+    </tr>
 </table>
 Precision and recall are given equal weight for the F-score.

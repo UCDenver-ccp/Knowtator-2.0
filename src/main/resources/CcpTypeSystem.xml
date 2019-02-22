@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ MIT License
+  ~
+  ~ Copyright (c) 2018 Harrison Pielke-Lombardo
+  ~
+  ~  Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
 <typeSystemDescription xmlns="http://uima.apache.org/resourceSpecifier">
 
 
@@ -25,7 +49,8 @@
             <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.CCPDocumentInformation</name>
 
 
-            <description>The CCPDocumentInformation conceptAnnotation includes document metadata such as the document ID,
+            <description>The CCPDocumentInformation conceptAnnotation includes document metadata such as the document
+                ID,
                 document collection ID, secondary document IDs, document size, etc.
             </description>
 
@@ -95,7 +120,7 @@
                         biomedical domain, a particular document might be associated with a PubMed ID, however it might
                         also have a deprecated Medline ID, or perhaps a PubMed Central ID, either of which could be
                         stored in this StringArray. It is recommended that the type of ID along with the ID itself be
-                        stored, e.g. "MedlineID:12345".
+                        stored, mouseEvent.g. "MedlineID:12345".
                     </description>
 
 
@@ -147,9 +172,11 @@
             <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.CCPTextAnnotation</name>
 
 
-            <description>The CCP TextAnnotation extends the base conceptAnnotation class to include an conceptAnnotation ID, the
+            <description>The CCP TextAnnotation extends the base conceptAnnotation class to include an conceptAnnotation
+                ID, the
                 capability for multiple conceptAnnotation spans, a link to the annotator responsible for generating the
-                conceptAnnotation, membership to conceptAnnotation sets, and a link to a class mention which defines the class of this
+                conceptAnnotation, membership to conceptAnnotation sets, and a link to a class mention which defines the
+                class of this
                 conceptAnnotation.
             </description>
 
@@ -166,7 +193,8 @@
                     <name>annotationID</name>
 
 
-                    <description>The conceptAnnotation ID provides a means for identifying a particular conceptAnnotation. Setting
+                    <description>The conceptAnnotation ID provides a means for identifying a particular
+                        conceptAnnotation. Setting
                         this ID is optional. The default value should be -1.
                     </description>
 
@@ -216,7 +244,8 @@
                     <name>annotationSets</name>
 
 
-                    <description>Annotation Sets provide an arbitrary means of categorizing and clustering conceptAnnotations
+                    <description>Annotation Sets provide an arbitrary means of categorizing and clustering
+                        conceptAnnotations
                         into groups.
                     </description>
 
@@ -236,7 +265,8 @@
                     <name>numberOfSpans</name>
 
 
-                    <description>The number of spans comprising this conceptAnnotation. The CCP TextAnnotation allows the use
+                    <description>The number of spans comprising this conceptAnnotation. The CCP TextAnnotation allows
+                        the use
                         of multiple spans for a single conceptAnnotation.
                     </description>
 
@@ -253,8 +283,10 @@
                     <name>spans</name>
 
 
-                    <description>This FSArray stores the CCPSpans which comprise this conceptAnnotation. It should be noted
-                        that for an conceptAnnotation with multiple spans, the default begin and end fields are set to the
+                    <description>This FSArray stores the CCPSpans which comprise this conceptAnnotation. It should be
+                        noted
+                        that for an conceptAnnotation with multiple spans, the default begin and end fields are set to
+                        the
                         beginning of the first span and the end of the final span, respectively.
                     </description>
 
@@ -537,7 +569,8 @@
             <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.CCPSpan</name>
 
 
-            <description>The span object holds span information.This is a supplement to the default UIMA conceptAnnotation
+            <description>The span object holds span information.This is a supplement to the default UIMA
+                conceptAnnotation
                 which cannot handle multi-span conceptAnnotations.
             </description>
 
@@ -680,9 +713,12 @@
 
 
             <description>The conceptAnnotation set provides a means for arbitrarily categorizing or clustering groups of
-                conceptAnnotations. Annotations can be associated with multiple conceptAnnotation groups. Examples of use include,
-                defining Gold Standard conceptAnnotation sets, and delineating between the use of different parameters during
-                conceptAnnotation, among others. Each conceptAnnotation set is associated with a unique ID, a name and a description.
+                conceptAnnotations. Annotations can be associated with multiple conceptAnnotation groups. Examples of
+                use include,
+                defining Gold Standard conceptAnnotation sets, and delineating between the use of different parameters
+                during
+                conceptAnnotation, among others. Each conceptAnnotation set is associated with a unique ID, a name and a
+                description.
             </description>
 
 
@@ -824,7 +860,8 @@
             </description>
 
 
-            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.AnnotationMetadataProperty</supertypeName>
+            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.AnnotationMetadataProperty
+            </supertypeName>
 
 
             <features>
@@ -858,11 +895,12 @@
 
 
             <description>Superclass for metadata properties describing the result of an evaluation against a gold
-                standard, e.g. TP, FP, FN, etc.
+                standard, mouseEvent.g. TP, FP, FN, etc.
             </description>
 
 
-            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.AnnotationMetadataProperty</supertypeName>
+            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.AnnotationMetadataProperty
+            </supertypeName>
 
 
         </typeDescription>
@@ -874,7 +912,8 @@
             <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.TruePositiveProperty</name>
 
 
-            <description>Indicates this conceptAnnotation was scored as a True Positive during an evaluation.</description>
+            <description>Indicates this conceptAnnotation was scored as a True Positive during an evaluation.
+            </description>
 
 
             <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.TestSetProperty</supertypeName>
@@ -889,7 +928,8 @@
             <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.FalsePositiveProperty</name>
 
 
-            <description>Indicates that an conceptAnnotation was scored as a False Positive during an evaluation.</description>
+            <description>Indicates that an conceptAnnotation was scored as a False Positive during an evaluation.
+            </description>
 
 
             <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.TestSetProperty</supertypeName>
@@ -904,10 +944,12 @@
             <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.GoldStandardSetProperty</name>
 
 
-            <description>Indicates that an conceptAnnotation was part of the Gold Standard during an evaluation.</description>
+            <description>Indicates that an conceptAnnotation was part of the Gold Standard during an evaluation.
+            </description>
 
 
-            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.EvaluationResultProperty</supertypeName>
+            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.EvaluationResultProperty
+            </supertypeName>
 
 
         </typeDescription>
@@ -919,14 +961,16 @@
             <name>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.PartialMatchProperty</name>
 
 
-            <description>A subclass of False Positive Property. This property is used to indicate an conceptAnnotation that was
+            <description>A subclass of False Positive Property. This property is used to indicate an conceptAnnotation
+                that was
                 scored as a False Positive during an evaluation, but is a partial match to the Gold Standard. That is,
                 what is present is correct and the reason it was scored as a False Positive is because it is missing
                 something.
             </description>
 
 
-            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.TruePositiveProperty</supertypeName>
+            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.TruePositiveProperty
+            </supertypeName>
 
 
         </typeDescription>
@@ -943,7 +987,8 @@
             </description>
 
 
-            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.GoldStandardSetProperty</supertypeName>
+            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.GoldStandardSetProperty
+            </supertypeName>
 
 
         </typeDescription>
@@ -958,7 +1003,8 @@
             <description/>
 
 
-            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.EvaluationResultProperty</supertypeName>
+            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.EvaluationResultProperty
+            </supertypeName>
 
 
         </typeDescription>
@@ -1169,7 +1215,8 @@
             <description/>
 
 
-            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.AnnotationMetadataProperty</supertypeName>
+            <supertypeName>edu.ucdenver.ccp.knowtator.uima.conceptAnnotation.metadata.AnnotationMetadataProperty
+            </supertypeName>
 
 
             <features>

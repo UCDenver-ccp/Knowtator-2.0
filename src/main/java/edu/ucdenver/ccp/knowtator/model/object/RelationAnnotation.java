@@ -1,25 +1,25 @@
 /*
- *  MIT License
+ * MIT License
  *
- *  Copyright (c) 2018 Harrison Pielke-Lombardo
+ * Copyright (c) 2018 Harrison Pielke-Lombardo
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included in all
- *  copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- *  SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 package edu.ucdenver.ccp.knowtator.model.object;
@@ -28,154 +28,230 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
+import java.util.Arrays;
+import java.util.List;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
-import java.util.Arrays;
-import java.util.List;
+/** The type Relation annotation. */
+public class RelationAnnotation extends mxCell
+    implements GraphBoundModelObject<RelationAnnotation> {
+  /** The Quantifiers. */
+  static final List<String> QUANTIFIERS = Arrays.asList("some", "only", "max", "min", "exactly");
 
-public class RelationAnnotation extends mxCell implements GraphBoundModelObject<RelationAnnotation> {
-	static final List<String> QUANTIFIERS = Arrays.asList("some", "only", "max", "min", "exactly");
-	private final String quantifier;
-	private final String quantifierValue;
-	private final Profile annotator;
-	private String bratID;
-	private final KnowtatorModel model;
-	private final Boolean isNegated;
-	private final TextSource textSource;
-	private OWLObjectProperty property;
-	private final GraphSpace graphSpace;
-	private final String motivation;
+  private final String quantifier;
+  private final String quantifierValue;
+  private final Profile annotator;
+  private String bratID;
+  private final KnowtatorModel model;
+  private final Boolean isNegated;
+  private final TextSource textSource;
+  private OWLObjectProperty property;
+  private final GraphSpace graphSpace;
+  private final String motivation;
 
-	private final AnnotationNode sourceAnnotationNode;
-	private final AnnotationNode targetAnnotationNode;
+  private final AnnotationNode sourceAnnotationNode;
+  private final AnnotationNode targetAnnotationNode;
 
-	@SuppressWarnings("unused")
-	private final Logger log = Logger.getLogger(RelationAnnotation.class);
+  @SuppressWarnings("unused")
+  private final Logger log = Logger.getLogger(RelationAnnotation.class);
 
-	public GraphSpace getGraphSpace() {
-		return graphSpace;
-	}
+  public GraphSpace getGraphSpace() {
+    return graphSpace;
+  }
 
-	RelationAnnotation(GraphSpace graphSpace, String id, AnnotationNode source, AnnotationNode target, OWLObjectProperty property, Profile annotator, String quantifier, String quantifierValue, Boolean isNegated, String motivation) {
-		super(null, new mxGeometry(), null);
+  /**
+   * Instantiates a new Relation annotation.
+   *
+   * @param graphSpace the graph space
+   * @param id the id
+   * @param source the source
+   * @param target the target
+   * @param property the property
+   * @param annotator the annotator
+   * @param quantifier the quantifier
+   * @param quantifierValue the quantifier value
+   * @param isNegated the is negated
+   * @param motivation the motivation
+   */
+  RelationAnnotation(
+      GraphSpace graphSpace,
+      String id,
+      AnnotationNode source,
+      AnnotationNode target,
+      OWLObjectProperty property,
+      Profile annotator,
+      String quantifier,
+      String quantifierValue,
+      Boolean isNegated,
+      String motivation) {
+    super(null, new mxGeometry(), null);
 
-		this.isNegated = isNegated;
-		this.motivation = motivation;
-		this.textSource = graphSpace.getTextSource();
-		this.model = graphSpace.getKnowtatorModel();
-		this.annotator = annotator;
-		this.quantifier = quantifier;
-		this.quantifierValue = quantifierValue;
-		this.graphSpace = graphSpace;
+    this.isNegated = isNegated;
+    this.motivation = motivation;
+    this.textSource = graphSpace.getTextSource();
+    this.model = graphSpace.getKnowtatorModel();
+    this.annotator = annotator;
+    this.quantifier = quantifier;
+    this.quantifierValue = quantifierValue;
+    this.graphSpace = graphSpace;
 
-		model.verifyId(id, this, false);
+    model.verifyId(id, this, false);
 
-		getGeometry().setRelative(true);
-		setEdge(true);
-		setSource(source);
-		this.sourceAnnotationNode = source;
-		setTarget(target);
-		this.targetAnnotationNode = target;
-		setProperty(property);
-	}
+    getGeometry().setRelative(true);
+    setEdge(true);
+    setSource(source);
+    this.sourceAnnotationNode = source;
+    setTarget(target);
+    this.targetAnnotationNode = target;
+    setProperty(property);
+  }
 
-	@SuppressWarnings("unused")
-	String getBratID() {
-		return bratID;
-	}
+  /**
+   * Gets brat id.
+   *
+   * @return the brat id
+   */
+  @SuppressWarnings("unused")
+  String getBratID() {
+    return bratID;
+  }
 
-	@Override
-	public TextSource getTextSource() {
-		return textSource;
-	}
+  @Override
+  public TextSource getTextSource() {
+    return textSource;
+  }
 
-	@Override
-	public String toString() {
-		return String.format("%s", getOwlPropertyRendering());
-	}
+  @Override
+  public String toString() {
+    return String.format("%s", getOwlPropertyRendering());
+  }
 
-	@SuppressWarnings("unused")
-	void setBratID(String bratID) {
-		this.bratID = bratID;
-	}
+  /**
+   * Sets brat id.
+   *
+   * @param bratID the brat id
+   */
+  @SuppressWarnings("unused")
+  void setBratID(String bratID) {
+    this.bratID = bratID;
+  }
 
-	public String getOwlPropertyRendering() {
-		return model.getOWLEntityRendering(property);
-	}
+  /**
+   * Gets owl property rendering.
+   *
+   * @return the owl property rendering
+   */
+  public String getOwlPropertyRendering() {
+    return model.getOwlEntityRendering(property);
+  }
 
-	void setProperty(OWLObjectProperty owlObjectProperty) {
-		property = owlObjectProperty;
-		setLabel();
-		model.fireModelEvent(new ChangeEvent<>(model, null, this));
-	}
+  /**
+   * Sets property.
+   *
+   * @param owlObjectProperty the owl object property
+   */
+  void setProperty(OWLObjectProperty owlObjectProperty) {
+    property = owlObjectProperty;
+    setLabel();
+    model.fireModelEvent(new ChangeEvent<>(model, null, this));
+  }
 
-	void setLabel() {
-		setValue(String.format("%s%s\n%s %s",
-				isNegated ? "not " : "",
-				getOwlPropertyRendering(),
-				quantifier,
-				quantifierValue));
-	}
+  /** Sets label. */
+  void setLabel() {
+    setValue(
+        String.format(
+            "%s%s\n%s %s",
+            isNegated ? "not " : "", getOwlPropertyRendering(), quantifier, quantifierValue));
+  }
 
-	@Override
-	public void dispose() {
-	}
+  @Override
+  public void dispose() {}
 
-	@Override
-	public KnowtatorModel getKnowtatorModel() {
-		return model;
-	}
+  @Override
+  public KnowtatorModel getKnowtatorModel() {
+    return model;
+  }
 
-	@Override
-	public int compareTo(RelationAnnotation o) {
-		int val = GraphBoundModelObject.super.compareTo(o);
-		if (val == 0) {
-			val = model.getOWLObjectComparator().compare(property, o.getProperty());
-			if (val == 0) {
-				//noinspection unchecked
-				val = sourceAnnotationNode.compareTo(o.getSourceAnnotationNode());
-				if (val == 0) {
-					//noinspection unchecked
-					val = targetAnnotationNode.compareTo(o.getTargetAnnotationNode());
-					if (val == 0) {
-						val = id.compareTo(o.getId());
-					}
-				}
-			}
-		}
-		return val;
-	}
+  @Override
+  public int compareTo(RelationAnnotation o) {
+    int val = GraphBoundModelObject.super.compareTo(o);
+    if (val == 0) {
+      val = model.getOwlObjectComparator().compare(property, o.getProperty());
+      if (val == 0) {
+        //noinspection unchecked
+        val = sourceAnnotationNode.compareTo(o.getSourceAnnotationNode());
+        if (val == 0) {
+          //noinspection unchecked
+          val = targetAnnotationNode.compareTo(o.getTargetAnnotationNode());
+          if (val == 0) {
+            val = id.compareTo(o.getId());
+          }
+        }
+      }
+    }
+    return val;
+  }
 
-	private AnnotationNode getTargetAnnotationNode() {
-		return targetAnnotationNode;
-	}
+  private AnnotationNode getTargetAnnotationNode() {
+    return targetAnnotationNode;
+  }
 
-	private AnnotationNode getSourceAnnotationNode() {
-		return sourceAnnotationNode;
-	}
+  private AnnotationNode getSourceAnnotationNode() {
+    return sourceAnnotationNode;
+  }
 
-	public OWLObjectProperty getProperty() {
-		return property;
-	}
+  /**
+   * Gets property.
+   *
+   * @return the property
+   */
+  public OWLObjectProperty getProperty() {
+    return property;
+  }
 
-	public Profile getAnnotator() {
-		return annotator;
-	}
+  /**
+   * Gets annotator.
+   *
+   * @return the annotator
+   */
+  public Profile getAnnotator() {
+    return annotator;
+  }
 
-	public String getQuantifier() {
-		return quantifier;
-	}
+  /**
+   * Gets quantifier.
+   *
+   * @return the quantifier
+   */
+  public String getQuantifier() {
+    return quantifier;
+  }
 
-	public String getQuantifierValue() {
-		return quantifierValue;
-	}
+  /**
+   * Gets quantifier value.
+   *
+   * @return the quantifier value
+   */
+  public String getQuantifierValue() {
+    return quantifierValue;
+  }
 
-	public boolean getIsNegated() {
-		return isNegated;
-	}
+  /**
+   * Gets is negated.
+   *
+   * @return the is negated
+   */
+  public boolean getIsNegated() {
+    return isNegated;
+  }
 
-	public String getMotivation() {
-		return motivation;
-	}
+  /**
+   * Gets motivation.
+   *
+   * @return the motivation
+   */
+  public String getMotivation() {
+    return motivation;
+  }
 }

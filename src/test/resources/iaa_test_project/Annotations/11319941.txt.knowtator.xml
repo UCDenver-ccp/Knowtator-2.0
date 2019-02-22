@@ -1,121 +1,145 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ MIT License
+  ~
+  ~ Copyright (c) 2018 Harrison Pielke-Lombardo
+  ~
+  ~  Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
 <annotations textSource="11319941.txt">
-  <annotation>
-    <mention id="chebi_Instance_20013" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
-    <span start="26307" end="26318" />
-    <spannedText>tert-pentyl</spannedText>
-  </annotation>
-  <annotation>
-    <mention id="chebi_Instance_20017" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
-    <span start="26319" end="26326" />
-    <spannedText>alcohol</spannedText>
-  </annotation>
-  <annotation>
-    <mention id="chebi_Instance_20026" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
-    <span start="26402" end="26418" />
-    <spannedText>sodium phosphate</spannedText>
-  </annotation>
-  <annotation>
-    <mention id="chebi_Instance_30051" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
-    <span start="26330" end="26335" />
-    <spannedText>water</spannedText>
-  </annotation>
-  <annotation>
-    <mention id="chebi_Instance_30096" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
-    <span start="21580" end="21587" />
-    <spannedText>protein</spannedText>
-  </annotation>
-  <annotation>
-    <mention id="chebi_Instance_30102" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
-    <span start="21850" end="21857" />
-    <spannedText>protein</spannedText>
-  </annotation>
-  <annotation>
-    <mention id="chebi_Instance_70011" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
-    <span start="21235" end="21244" />
-    <spannedText>glutamate</spannedText>
-  </annotation>
-  <annotation>
-    <mention id="chebi_Instance_70016" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
-    <span start="21235" end="21244" />
-    <spannedText>glutamate</spannedText>
-  </annotation>
-  <annotation>
-    <mention id="chebi_Instance_70025" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
-    <span start="21540" end="21547" />
-    <spannedText>alanine</spannedText>
-  </annotation>
-  <annotation>
-    <mention id="chebi_Instance_70031" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
-    <span start="22409" end="22417" />
-    <spannedText>molecule</spannedText>
-  </annotation>
-  <annotation>
-    <mention id="chebi_Instance_70034" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
-    <span start="22626" end="22635" />
-    <spannedText>molecules</spannedText>
-  </annotation>
-  <annotation>
-    <mention id="chebi_Instance_70039" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
-    <span start="22890" end="22893" />
-    <spannedText>DNA</spannedText>
-  </annotation>
-  <annotation>
-    <mention id="chebi_Instance_70056" />
-    <annotator id="chebi_Instance_10016">Mike Bada</annotator>
-    <span start="30232" end="30235" />
-    <spannedText>DNA</spannedText>
-  </annotation>
-  <classMention id="chebi_Instance_20013">
-    <mentionClass id="CHEBI:30360">tert-pentyl group</mentionClass>
-  </classMention>
-  <classMention id="chebi_Instance_70056">
-    <mentionClass id="CHEBI:16991">deoxyribonucleic acids</mentionClass>
-  </classMention>
-  <classMention id="chebi_Instance_70034">
-    <mentionClass id="CHEBI:23367">molecular entities</mentionClass>
-  </classMention>
-  <classMention id="chebi_Instance_30096">
-    <mentionClass id="CHEBI:36080">proteins</mentionClass>
-  </classMention>
-  <classMention id="chebi_Instance_70039">
-    <mentionClass id="CHEBI:16991">deoxyribonucleic acids</mentionClass>
-  </classMention>
-  <classMention id="chebi_Instance_70025">
-    <mentionClass id="CHEBI:32441">alanine residue</mentionClass>
-  </classMention>
-  <classMention id="chebi_Instance_70031">
-    <mentionClass id="CHEBI:23367">molecular entities</mentionClass>
-  </classMention>
-  <classMention id="chebi_Instance_30051">
-    <mentionClass id="CHEBI:15377">water</mentionClass>
-  </classMention>
-  <classMention id="chebi_Instance_70011">
-    <mentionClass id="CHEBI:14321">glutamate(1-)</mentionClass>
-  </classMention>
-  <classMention id="chebi_Instance_30102">
-    <mentionClass id="CHEBI:36080">proteins</mentionClass>
-  </classMention>
-  <classMention id="chebi_Instance_70016">
-    <mentionClass id="CHEBI:29987">glutamate(2-)</mentionClass>
-  </classMention>
-  <classMention id="chebi_Instance_20026">
-    <mentionClass id="CHEBI:37586">sodium phosphates</mentionClass>
-  </classMention>
-  <classMention id="chebi_Instance_20017">
-    <mentionClass id="CHEBI:30879">alcohols</mentionClass>
-  </classMention>
+    <annotation>
+        <mention id="chebi_Instance_20013"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="26307" end="26318"/>
+        <spannedText>tert-pentyl</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_20017"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="26319" end="26326"/>
+        <spannedText>alcohol</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_20026"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="26402" end="26418"/>
+        <spannedText>sodium phosphate</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_30051"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="26330" end="26335"/>
+        <spannedText>water</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_30096"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="21580" end="21587"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_30102"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="21850" end="21857"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_70011"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="21235" end="21244"/>
+        <spannedText>glutamate</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_70016"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="21235" end="21244"/>
+        <spannedText>glutamate</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_70025"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="21540" end="21547"/>
+        <spannedText>alanine</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_70031"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="22409" end="22417"/>
+        <spannedText>molecule</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_70034"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="22626" end="22635"/>
+        <spannedText>molecules</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_70039"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="22890" end="22893"/>
+        <spannedText>DNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_70056"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="30232" end="30235"/>
+        <spannedText>DNA</spannedText>
+    </annotation>
+    <classMention id="chebi_Instance_20013">
+        <mentionClass id="CHEBI:30360">tert-pentyl group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_70056">
+        <mentionClass id="CHEBI:16991">deoxyribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_70034">
+        <mentionClass id="CHEBI:23367">molecular entities</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_30096">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_70039">
+        <mentionClass id="CHEBI:16991">deoxyribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_70025">
+        <mentionClass id="CHEBI:32441">alanine residue</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_70031">
+        <mentionClass id="CHEBI:23367">molecular entities</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_30051">
+        <mentionClass id="CHEBI:15377">water</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_70011">
+        <mentionClass id="CHEBI:14321">glutamate(1-)</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_30102">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_70016">
+        <mentionClass id="CHEBI:29987">glutamate(2-)</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_20026">
+        <mentionClass id="CHEBI:37586">sodium phosphates</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_20017">
+        <mentionClass id="CHEBI:30879">alcohols</mentionClass>
+    </classMention>
 </annotations>
 
