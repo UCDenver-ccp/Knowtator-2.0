@@ -63,9 +63,9 @@ public abstract class AbstractKnowtatorAction extends AbstractUndoableEdit
   /**
    * Execute.
    *
-   * @throws ActionUnperformableException the action unperformable exception
+   * @throws ActionUnperformable the action unperformable exception
    */
-  public abstract void execute() throws ActionUnperformableException;
+  public abstract void execute() throws ActionUnperformable;
 
   /**
    * Sets message.

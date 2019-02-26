@@ -79,11 +79,9 @@ public class ConceptAnnotation extends SpanCollection
     this.owlClass = owlClass;
     this.textSource = textSource;
 
-    model.verifyId(annotationID, this, false);
+    this.id = model.verifyId(annotationID, this, false);
 
     overlappingConceptAnnotations = new HashSet<>();
-
-    getColor();
   }
 
   public TextSource getTextSource() {
@@ -317,7 +315,7 @@ public class ConceptAnnotation extends SpanCollection
    */
   String toMultilineString() {
     return String.format(
-        "%s\n(%s)",
+        "%s%n(%s)",
         stream().map(Span::toString).collect(Collectors.joining("\n")),
         model.getOwlEntityRendering(owlClass));
   }

@@ -54,12 +54,11 @@ public class Span implements ConceptAnnotationBoundModelObject<Span> {
   public Span(@Nonnull ConceptAnnotation conceptAnnotation, String id, int start, int end) {
     this.model = conceptAnnotation.getKnowtatorModel();
 
-    this.id = id;
     this.start = start;
     this.end = end;
     this.conceptAnnotation = conceptAnnotation;
 
-    model.verifyId(id, this, false);
+    this.id = model.verifyId(id, this, false);
 
     if (start > end) {
       throw new IndexOutOfBoundsException(

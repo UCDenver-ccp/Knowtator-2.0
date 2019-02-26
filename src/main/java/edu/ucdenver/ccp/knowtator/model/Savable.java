@@ -24,15 +24,13 @@
 
 package edu.ucdenver.ccp.knowtator.model;
 
-import java.io.Serializable;
-
 /**
  * An interface for classes that have data that can be saved.
  *
  * @author Harrison Pielke-Lombardo
  */
 @SuppressWarnings("unused")
-public interface Savable extends Serializable {
+public interface Savable {
   /** Implementations should use this method to save their data. */
   void save();
 }

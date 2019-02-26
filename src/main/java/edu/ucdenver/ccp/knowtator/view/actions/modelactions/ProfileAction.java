@@ -32,7 +32,7 @@ import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorColorPalette;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType;
 import java.awt.Color;
@@ -67,7 +67,7 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
   }
 
   @Override
-  protected void cleanUpRemove() throws ActionUnperformableException {
+  protected void cleanUpRemove() throws ActionUnperformable {
     for (TextSource textSource : model.getTextSources()) {
       // Cast to array to avoid concurrent modification exceptions
       Object[] array = textSource.getConceptAnnotations().getCollection().toArray();
@@ -150,7 +150,7 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
                                 try {
                                   model1.registerAction(
                                       new ColorChangeAction(model1, profile, owlClasses, color));
-                                } catch (ActionUnperformableException e) {
+                                } catch (ActionUnperformable e) {
                                   JOptionPane.showMessageDialog(view, e.getMessage());
                                 }
                               });

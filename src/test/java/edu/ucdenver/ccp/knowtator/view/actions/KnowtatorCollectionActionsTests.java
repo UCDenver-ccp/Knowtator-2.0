@@ -51,7 +51,7 @@ public class KnowtatorCollectionActionsTests {
   }
 
   @Test
-  public void addTextSourceActionTest() throws ActionUnperformableException {
+  public void addTextSourceActionTest() throws ActionUnperformable {
     TestingHelpers.testKnowtatorAction(
         model,
         new TextSourceAction(
@@ -70,7 +70,7 @@ public class KnowtatorCollectionActionsTests {
   }
 
   @Test
-  public void removeTextSourceActionTest() throws ActionUnperformableException {
+  public void removeTextSourceActionTest() throws ActionUnperformable {
     TestingHelpers.testKnowtatorAction(
         model,
         new TextSourceAction(model, REMOVE, null, null),
@@ -85,7 +85,7 @@ public class KnowtatorCollectionActionsTests {
   }
 
   @Test
-  public void addConceptAnnotationActionTest() throws ActionUnperformableException {
+  public void addConceptAnnotationActionTest() throws ActionUnperformable {
     TestingHelpers.testKnowtatorAction(
         model,
         new ConceptAnnotationAction(model, ADD, model.getSelectedTextSource().get()),
@@ -100,7 +100,7 @@ public class KnowtatorCollectionActionsTests {
   }
 
   @Test
-  public void removeConceptAnnotationActionTest() throws ActionUnperformableException {
+  public void removeConceptAnnotationActionTest() throws ActionUnperformable {
     TextSource textSource = model.getSelectedTextSource().get();
     textSource.setSelectedConceptAnnotation(textSource.firstConceptAnnotation().get());
     TestingHelpers.testKnowtatorAction(
@@ -117,7 +117,7 @@ public class KnowtatorCollectionActionsTests {
   }
 
   @Test
-  public void addSpanActionTest() throws ActionUnperformableException {
+  public void addSpanActionTest() throws ActionUnperformable {
     TextSource textSource = model.getSelectedTextSource().get();
     textSource.setSelectedConceptAnnotation(textSource.firstConceptAnnotation().get());
     TestingHelpers.testKnowtatorAction(
@@ -135,7 +135,7 @@ public class KnowtatorCollectionActionsTests {
   }
 
   @Test
-  public void removeSpanActionTest() throws ActionUnperformableException {
+  public void removeSpanActionTest() throws ActionUnperformable {
     TextSource textSource = model.getSelectedTextSource().get();
     // First test remove span if there is only one in the collection. This should be equivalent to
     // just removing the annotation
@@ -175,7 +175,7 @@ public class KnowtatorCollectionActionsTests {
   }
 
   @Test
-  public void addProfileActionTest() throws ActionUnperformableException {
+  public void addProfileActionTest() throws ActionUnperformable {
     TestingHelpers.testKnowtatorAction(
         model,
         new ProfileAction(model, ADD, "I'm new here"),
@@ -190,7 +190,7 @@ public class KnowtatorCollectionActionsTests {
   }
 
   @Test
-  public void removeProfileActionTest() throws ActionUnperformableException {
+  public void removeProfileActionTest() throws ActionUnperformable {
     model.getProfiles().setSelection(model.getProfile("profile1").get());
     TestingHelpers.testKnowtatorAction(
         model,
@@ -204,18 +204,18 @@ public class KnowtatorCollectionActionsTests {
         TestingHelpers.defaultExpectedAnnotationNodes - 2,
         TestingHelpers.defaultExpectedTriples - 2);
 
-    assertThrows(ActionUnperformableException.class, this::removeDefaultProfileActionTest);
+    assertThrows(ActionUnperformable.class, this::removeDefaultProfileActionTest);
   }
 
   @SuppressWarnings("unused")
-  void removeDefaultProfileActionTest() throws ActionUnperformableException {
+  void removeDefaultProfileActionTest() throws ActionUnperformable {
     // It should not be possible to remove the default profile
     model.getProfiles().setSelection(model.getDefaultProfile());
     new ProfileAction(model, REMOVE, null).execute();
   }
 
   @Test
-  public void addGraphSpaceActionTest() throws ActionUnperformableException {
+  public void addGraphSpaceActionTest() throws ActionUnperformable {
     TestingHelpers.testKnowtatorAction(
         model,
         new GraphSpaceAction(model, ADD, "new_graph_space", model.getSelectedTextSource().get()),
@@ -230,7 +230,7 @@ public class KnowtatorCollectionActionsTests {
   }
 
   @Test
-  public void removeGraphSpaceActionTest() throws ActionUnperformableException {
+  public void removeGraphSpaceActionTest() throws ActionUnperformable {
     TextSource textSource = model.getSelectedTextSource().get();
     textSource.selectNextGraphSpace();
     TestingHelpers.testKnowtatorAction(

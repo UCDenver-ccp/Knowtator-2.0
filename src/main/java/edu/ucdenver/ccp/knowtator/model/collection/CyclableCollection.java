@@ -59,12 +59,12 @@ public abstract class CyclableCollection<K extends ModelObject>
     K previous;
     try {
       previous =
-          collection.contains(current) ? collection.lower(current) : collection.floor(current);
+          getCollection().contains(current) ? getCollection().lower(current) : getCollection().floor(current);
     } catch (NullPointerException npe) {
       previous = null;
     }
     if (previous == null) {
-      previous = collection.last();
+      previous = getCollection().last();
     }
 
     return previous;
@@ -80,12 +80,12 @@ public abstract class CyclableCollection<K extends ModelObject>
     K next;
     try {
       next =
-          collection.contains(current) ? collection.higher(current) : collection.ceiling(current);
+          getCollection().contains(current) ? getCollection().higher(current) : getCollection().ceiling(current);
     } catch (NullPointerException npe) {
       next = null;
     }
     if (next == null) {
-      next = collection.first();
+      next = getCollection().first();
     }
 
     return next;
@@ -98,7 +98,7 @@ public abstract class CyclableCollection<K extends ModelObject>
    */
   public Optional<K> first() {
     try {
-      return Optional.ofNullable(collection.first());
+      return Optional.ofNullable(getCollection().first());
     } catch (NoSuchElementException e) {
       return Optional.empty();
     }

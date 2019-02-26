@@ -182,7 +182,7 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
                     new ConceptAnnotation(
                         textSource, annotationID, owlClass.get(), profile, "identity", "");
                 if (conceptAnnotationCollection.containsID(annotationID)) {
-                  model.verifyId(null, newConceptAnnotation, false);
+                  newConceptAnnotation.setId(model.verifyId(null, newConceptAnnotation, false));
                 }
                 readToConceptAnnotation(newConceptAnnotation, annotationElement);
 

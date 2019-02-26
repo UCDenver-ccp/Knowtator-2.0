@@ -29,7 +29,7 @@ import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
-import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ConceptAnnotationAction;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ProfileAction;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.SpanAction;
@@ -77,31 +77,31 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
   }
 
   @Override
-  public void execute() throws ActionUnperformableException {
+  public void execute() throws ActionUnperformable {
     switch (actionType) {
       case ADD:
         final int size = collection.size();
         prepareAdd();
         collection.add(
-            getObject().orElseThrow(() -> new ActionUnperformableException(getMessage())));
+            getObject().orElseThrow(() -> new ActionUnperformable(getMessage())));
         cleanUpAdd();
         if (size + 1 != collection.size()) {
           setMessage("Object not added to collection");
-          throw new ActionUnperformableException(getMessage());
+          throw new ActionUnperformable(getMessage());
         }
         break;
       case REMOVE:
         final int size2 = collection.size();
         if (size2 == 0) {
           setMessage("Collection is empty");
-          throw new ActionUnperformableException(getMessage());
+          throw new ActionUnperformable(getMessage());
         }
         prepareRemove();
         collection.remove(
-            getObject().orElseThrow(() -> new ActionUnperformableException(getMessage())));
+            getObject().orElseThrow(() -> new ActionUnperformable(getMessage())));
         if (size2 - 1 != collection.size()) {
           setMessage("Object not removed from collection");
-          throw new ActionUnperformableException(getMessage());
+          throw new ActionUnperformable(getMessage());
         }
         cleanUpRemove();
         break;
@@ -117,16 +117,16 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
       case ADD:
         try {
           collection.remove(
-              getObject().orElseThrow(() -> new ActionUnperformableException(getMessage())));
-        } catch (ActionUnperformableException ignored) {
+              getObject().orElseThrow(() -> new ActionUnperformable(getMessage())));
+        } catch (ActionUnperformable ignored) {
           // Action couldn't be performed
         }
         break;
       case REMOVE:
         try {
           collection.add(
-              getObject().orElseThrow(() -> new ActionUnperformableException(getMessage())));
-        } catch (ActionUnperformableException ignored) {
+              getObject().orElseThrow(() -> new ActionUnperformable(getMessage())));
+        } catch (ActionUnperformable ignored) {
           // Action couldn't be performed
         }
         break;
@@ -143,12 +143,12 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
         try {
           int size = collection.size();
           collection.add(
-              getObject().orElseThrow(() -> new ActionUnperformableException(getMessage())));
+              getObject().orElseThrow(() -> new ActionUnperformable(getMessage())));
           if (size + 1 != collection.size()) {
             setMessage("Object not added to collection");
-            throw new ActionUnperformableException(getMessage());
+            throw new ActionUnperformable(getMessage());
           }
-        } catch (ActionUnperformableException ignored) {
+        } catch (ActionUnperformable ignored) {
           // Action couldn't be performed
         }
         break;
@@ -157,15 +157,15 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
           int size = collection.size();
           if (size == 0) {
             setMessage("Collection is empty");
-            throw new ActionUnperformableException(getMessage());
+            throw new ActionUnperformable(getMessage());
           }
           collection.remove(
-              getObject().orElseThrow(() -> new ActionUnperformableException(getMessage())));
+              getObject().orElseThrow(() -> new ActionUnperformable(getMessage())));
           if (size - 1 != collection.size()) {
             setMessage("Object not removed from collection");
-            throw new ActionUnperformableException(getMessage());
+            throw new ActionUnperformable(getMessage());
           }
-        } catch (ActionUnperformableException ignored) {
+        } catch (ActionUnperformable ignored) {
           // Action couldn't be performed
         }
         break;
@@ -181,9 +181,9 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
   /**
    * Actions that need to occur before collection item is removed.
    *
-   * @throws ActionUnperformableException If collection has no selection
+   * @throws ActionUnperformable If collection has no selection
    */
-  public void prepareRemove() throws ActionUnperformableException {
+  public void prepareRemove() throws ActionUnperformable {
     if (!getObject().isPresent()) {
       collection.getSelection().ifPresent(this::setObject);
     }
@@ -195,9 +195,9 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
   /**
    * Clean up remove.
    *
-   * @throws ActionUnperformableException the action unperformable exception
+   * @throws ActionUnperformable the action unperformable exception
    */
-  protected abstract void cleanUpRemove() throws ActionUnperformableException;
+  protected abstract void cleanUpRemove() throws ActionUnperformable;
 
   /** Clean up add. */
   @SuppressWarnings("EmptyMethod")
@@ -298,7 +298,7 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
                 if (response != JOptionPane.CLOSED_OPTION) {
                   try {
                     model.registerAction(actions.get(response));
-                  } catch (ActionUnperformableException e) {
+                  } catch (ActionUnperformable e) {
                     JOptionPane.showMessageDialog(view, e.getMessage());
                   }
                 }

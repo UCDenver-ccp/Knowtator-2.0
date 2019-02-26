@@ -102,7 +102,7 @@ public class KnowtatorIaa {
 
   private void initHtml() throws IaaException {
     try {
-      html = new PrintStream(new File(outputDirectory, "index.html"));
+      html = new PrintStream(new File(outputDirectory, "index.html"), "UTF-8");
       html.println("<html><head><title>Inter-Profile Agreement</title></head>");
       html.println("<body><ul>");
     } catch (IOException ioe) {

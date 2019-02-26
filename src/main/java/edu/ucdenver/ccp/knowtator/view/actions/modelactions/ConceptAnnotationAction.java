@@ -30,7 +30,7 @@ import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
-import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType;
 import java.util.Optional;
@@ -65,7 +65,7 @@ public class ConceptAnnotationAction extends AbstractKnowtatorCollectionAction<C
   }
 
   @Override
-  public void prepareRemove() throws ActionUnperformableException {
+  public void prepareRemove() throws ActionUnperformable {
     super.prepareRemove();
     textSource
         .getGraphSpaces()

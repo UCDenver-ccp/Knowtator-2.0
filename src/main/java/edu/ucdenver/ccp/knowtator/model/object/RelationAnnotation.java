@@ -96,7 +96,7 @@ public class RelationAnnotation extends mxCell
     this.quantifierValue = quantifierValue;
     this.graphSpace = graphSpace;
 
-    model.verifyId(id, this, false);
+    this.id = model.verifyId(id, this, false);
 
     getGeometry().setRelative(true);
     setEdge(true);
@@ -161,7 +161,7 @@ public class RelationAnnotation extends mxCell
   void setLabel() {
     setValue(
         String.format(
-            "%s%s\n%s %s",
+            "%s%s%n%s %s",
             isNegated ? "not " : "", getOwlPropertyRendering(), quantifier, quantifierValue));
   }
 

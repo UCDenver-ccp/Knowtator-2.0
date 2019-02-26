@@ -30,7 +30,7 @@ import com.mxgraph.util.mxEventSource;
 import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import edu.ucdenver.ccp.knowtator.view.actions.graph.GraphActions;
 import java.util.Arrays;
 import java.util.Optional;
@@ -108,7 +108,7 @@ class AddRelationListener implements mxEventSource.mxIEventListener {
                                       negation,
                                       motivation,
                                       graphSpace));
-                            } catch (ActionUnperformableException e) {
+                            } catch (ActionUnperformable e) {
                               JOptionPane.showMessageDialog(view, e.getMessage());
                             }
                           }

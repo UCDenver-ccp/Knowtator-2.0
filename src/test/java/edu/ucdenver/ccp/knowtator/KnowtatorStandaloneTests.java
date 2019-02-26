@@ -24,42 +24,11 @@
 
 package edu.ucdenver.ccp.knowtator;
 
-import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import org.junit.jupiter.api.Test;
 
 class KnowtatorStandaloneTests {
-
-  @SuppressWarnings("FieldCanBeLocal")
-  private KnowtatorModel controller;
-
-  private String[] projectFileNames = new String[] {"test_project", "old_project"};
-  private String[] articleFileNames =
-      new String[] {"document1", "document2", "document3", "document1_old", "brat_test"};
-  private String[] articleContent =
-      new String[] {
-        "This is a test document.",
-        "A second test document has appeared!",
-        "And another one!",
-        "This is a test document."
-      };
-  //    private String[] profileFileNames = new String[]{"profile1", "profile2"};
-
-  File getProjectFile(String projectName) {
-    return new File(
-        getClass()
-            .getResource(String.format("/%s/%s.knowtator", projectName, projectName))
-            .getFile());
-  }
-
-  File getArticleFile(String projectName, String articleName) {
-    return new File(
-        getClass()
-            .getResource(String.format("/%s/Articles/%s.txt", projectName, articleName))
-            .getFile());
-  }
 
   @Test
   void conversionTest() {

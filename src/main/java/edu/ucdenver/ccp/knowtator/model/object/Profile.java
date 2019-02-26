@@ -54,12 +54,8 @@ public class Profile implements ModelObject<Profile>, Savable {
   public Profile(KnowtatorModel model, String id) {
     colors = new HashMap<>();
     this.model = model;
-    model.verifyId(id, this, false);
+    this.id = model.verifyId(id, this, false);
   }
-
-  /*
-  COMPARISON
-   */
 
   @Override
   public int compareTo(Profile profile2) {
@@ -71,10 +67,6 @@ public class Profile implements ModelObject<Profile>, Savable {
     }
     return this.getId().toLowerCase().compareTo(profile2.getId().toLowerCase());
   }
-
-  /*
-  GETTERS
-   */
 
   @Override
   public String getId() {
@@ -91,10 +83,6 @@ public class Profile implements ModelObject<Profile>, Savable {
     return colors.getOrDefault(owlClass, KnowtatorDefaultSettings.COLORS.get(0));
   }
 
-  /*
-  SETTERS
-   */
-
   @Override
   public void setId(String id) {
     this.id = id;
@@ -109,10 +97,6 @@ public class Profile implements ModelObject<Profile>, Savable {
   public KnowtatorModel getKnowtatorModel() {
     return model;
   }
-
-  /*
-  ADDERS
-   */
 
   /**
    * Add color.

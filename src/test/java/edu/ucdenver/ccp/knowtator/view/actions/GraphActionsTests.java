@@ -50,7 +50,7 @@ class GraphActionsTests {
   }
 
   @Test
-  void removeSelectedAnnotationNodeTest() throws ActionUnperformableException {
+  void removeSelectedAnnotationNodeTest() throws ActionUnperformable {
     TextSource textSource = model.getSelectedTextSource().get();
     textSource.selectNextGraphSpace();
     GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
@@ -70,7 +70,7 @@ class GraphActionsTests {
   }
 
   @Test
-  void removeSelectedTripleTest() throws ActionUnperformableException {
+  void removeSelectedTripleTest() throws ActionUnperformable {
     TextSource textSource = model.getSelectedTextSource().get();
     textSource.selectNextGraphSpace();
     GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
@@ -90,7 +90,7 @@ class GraphActionsTests {
   }
 
   @Test
-  void addAnnotationNodeTest() throws ActionUnperformableException {
+  void addAnnotationNodeTest() throws ActionUnperformable {
     TextSource textSource = model.getSelectedTextSource().get();
     textSource.selectNextGraphSpace();
     textSource.selectNextGraphSpace();
@@ -110,7 +110,7 @@ class GraphActionsTests {
   }
 
   @Test
-  void addTripleTest() throws ActionUnperformableException {
+  void addTripleTest() throws ActionUnperformable {
     TextSource textSource = model.getSelectedTextSource().get();
     textSource.selectNextGraphSpace();
     textSource.selectNextGraphSpace();
@@ -135,7 +135,7 @@ class GraphActionsTests {
   }
 
   @Test
-  void applyLayoutTest() throws ActionUnperformableException {
+  void applyLayoutTest() throws ActionUnperformable {
     // TODO: This test only makes sure that the layout application doesn't change to graph space
     // model. It needs to check the positions
     TextSource textSource = model.getSelectedTextSource().get();

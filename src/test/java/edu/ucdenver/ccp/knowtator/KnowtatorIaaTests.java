@@ -50,8 +50,10 @@ class KnowtatorIaaTests {
     //        File goldStandardDir = new File(model.getProjectLocation(), "iaa");
     File outputDir = new File(controller.getProjectLocation(), "iaa_results");
     //noinspection ResultOfMethodCallIgnored
-    outputDir.mkdir();
-    knowtatorIAA = new KnowtatorIaa(outputDir, controller);
+    boolean created = outputDir.mkdir();
+    if (created) {
+      knowtatorIAA = new KnowtatorIaa(outputDir, controller);
+    }
   }
 
   @Test

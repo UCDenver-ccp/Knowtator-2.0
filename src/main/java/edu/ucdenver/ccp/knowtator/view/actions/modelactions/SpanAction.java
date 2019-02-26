@@ -29,7 +29,7 @@ import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActio
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
-import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType;
 
@@ -63,7 +63,7 @@ public class SpanAction extends AbstractKnowtatorCollectionAction<Span> {
   }
 
   @Override
-  public void prepareRemove() throws ActionUnperformableException {
+  public void prepareRemove() throws ActionUnperformable {
     // If the concept annotation only has one, remove the annotation instead
     if (conceptAnnotation.size() == 1) {
       setObject(null);
@@ -81,11 +81,11 @@ public class SpanAction extends AbstractKnowtatorCollectionAction<Span> {
   protected void cleanUpRemove() {}
 
   @Override
-  public void execute() throws ActionUnperformableException {
+  public void execute() throws ActionUnperformable {
     if (actionType == REMOVE && conceptAnnotation.size() == 1) {
       try {
         super.execute();
-      } catch (ActionUnperformableException ignored) {
+      } catch (ActionUnperformable ignored) {
         // Ok if action can't be performed
       }
     } else {

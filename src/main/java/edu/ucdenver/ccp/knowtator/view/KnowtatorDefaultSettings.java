@@ -26,8 +26,9 @@ package edu.ucdenver.ccp.knowtator.view;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /** Settings that should be consistent across the Knowtator view. */
 public class KnowtatorDefaultSettings {
@@ -35,8 +36,8 @@ public class KnowtatorDefaultSettings {
   public static final Font FONT = new Font("Verdana", Font.PLAIN, 10);
 
   /** The constant COLORS. */
-  public static final ArrayList<Color> COLORS =
-      new ArrayList<>(
+  public static final List<Color> COLORS =
+      Collections.unmodifiableList(
           Arrays.asList(
               new Color(0, 255, 255),
               new Color(255, 255, 0),

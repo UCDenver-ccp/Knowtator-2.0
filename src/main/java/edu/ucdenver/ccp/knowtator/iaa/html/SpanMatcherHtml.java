@@ -65,7 +65,7 @@ public class SpanMatcherHtml {
 
     String fileName = matcher.getName();
 
-    PrintStream html = new PrintStream(new File(directory, String.format("%s.html", fileName)));
+    PrintStream html = new PrintStream(new File(directory, String.format("%s.html", fileName)), "UTF-8");
 
     html.println(Iaa2Html.initHTML(matcher.getName(), matcher.getDescription()));
     html.printf("<h2>%d-way Iaa Results</h2>%n", iaa.getSetNames().size());
@@ -120,8 +120,8 @@ public class SpanMatcherHtml {
           type, percentageFormat.format(iaaScore), classMatches, classNonmatches);
       Map<String, int[]> confusionCounts = errorMatrix(sortedAllwayMatches.get(type), matchSets);
       html.println("<td>");
-      for (String confusedClass : confusionCounts.keySet()) {
-        html.printf("  %s=%d%n", confusedClass, confusionCounts.get(confusedClass)[0]);
+      for (Map.Entry<String, int[]> confusedClass : confusionCounts.entrySet()) {
+        html.printf("  %s=%d%n", confusedClass.getKey(), confusedClass.getValue()[0]);
       }
       html.println("</td>");
     }

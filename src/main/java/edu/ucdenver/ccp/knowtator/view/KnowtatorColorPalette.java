@@ -41,7 +41,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
 import javax.accessibility.AccessibleContext;
 import javax.swing.Icon;
 import javax.swing.JColorChooser;
@@ -188,7 +188,7 @@ public class KnowtatorColorPalette extends JColorChooser {
   class SwatchPanel extends JPanel {
 
     /** The Colors. */
-    ArrayList<Color> colors;
+    List<Color> colors;
     /** The Swatch size. */
     Dimension swatchSize;
     /** The Num swatches. */
@@ -407,9 +407,9 @@ public class KnowtatorColorPalette extends JColorChooser {
    * @author Harrison Pielke-Lombardo
    * @see JColorChooser
    */
-  class KnowtatorPreviewPanel extends JPanel {
+  static class KnowtatorPreviewPanel extends JPanel {
 
-    private final int textGap = 5;
+    private static final int textGap = 5;
     private String sampleText;
 
     private Color oldColor = null;
@@ -447,13 +447,7 @@ public class KnowtatorColorPalette extends JColorChooser {
       g.setColor(getBackground());
       g.fillRect(0, 0, getWidth(), getHeight());
 
-      if (this.getComponentOrientation().isLeftToRight()) {
-        paintText(g);
-
-      } else {
-
-        paintText(g);
-      }
+      paintText(g);
     }
 
     private void paintText(Graphics g) {

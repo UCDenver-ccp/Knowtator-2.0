@@ -71,7 +71,8 @@ public class Iaa2Html {
 
     String fileName = matcher.getName();
 
-    PrintStream html = new PrintStream(new File(directory, String.format("%s.html", fileName)));
+    PrintStream html =
+        new PrintStream(new File(directory, String.format("%s.html", fileName)), "UTF-8");
 
     initHTML(html, matcher.getName(), null, null, matcher.getDescription());
 
@@ -79,15 +80,16 @@ public class Iaa2Html {
     html.println("<p>");
     printTitleRowForAllwayIAA(html, matcher);
 
-    PrintStream tabular = new PrintStream(new File(directory, String.format("%s.dat", fileName)));
+    PrintStream tabular =
+        new PrintStream(new File(directory, String.format("%s.dat", fileName)), "UTF-8");
     tabular.printf(
-        "This file is provided to facilitate cut-n-paste into a spreadsheet.\n"
+        "This file is provided to facilitate cut-n-paste into a spreadsheet.%n"
             + "If you cannot directly copy the data below into a spreadsheet "
-            + "without it all going into a single cell,\n"
+            + "without it all going into a single cell,%n"
             + "then try copying to a text editor firstConceptAnnotation "
             + "and then copy it from there.  "
-            + "There is typically a 'paste special'\noption under the Edit menu that will "
-            + "allow you to paste the copied data as text.  This will also work.\n\n\n%n");
+            + "There is typically a 'paste special'%noption under the Edit menu that will "
+            + "allow you to paste the copied data as text.  This will also work.%n%n%n%n");
 
     if (matcher.returnsTrivials())
       tabular.println(
@@ -300,7 +302,7 @@ public class Iaa2Html {
     for (String set : sets) {
       String matchesFileName = String.format("%s.matches.%s.html", fileName, set);
       html.printf("<li><a href=\"%s\">matches for %s</a></li>%n", matchesFileName, set);
-      PrintStream matchesStream = new PrintStream(new File(directory, matchesFileName));
+      PrintStream matchesStream = new PrintStream(new File(directory, matchesFileName), "UTF-8");
       Set<ConceptAnnotation> matches = allwayMatches.get(set);
       Map<String, Set<ConceptAnnotation>> sortedMatches = sortByType(classes, matches);
 
@@ -325,7 +327,7 @@ public class Iaa2Html {
         html.printf(
             "<li><a href=\"%s\">trivial matches for %s</a></li>%n", trivialMatchesFileName, set);
         PrintStream trivialMatchesStream =
-            new PrintStream(new File(directory, trivialMatchesFileName));
+            new PrintStream(new File(directory, trivialMatchesFileName), "UTF-8");
         Set<ConceptAnnotation> trivialMatches = trivialAllwayMatches.get(set);
         Map<String, Set<ConceptAnnotation>> sortedTrivialMatches =
             sortByType(classes, trivialMatches);
@@ -351,7 +353,7 @@ public class Iaa2Html {
             "<li><a href=\"%s\">non-trivial matches for %s</a></li>%n",
             nontrivialMatchesFileName, set);
         PrintStream nontrivialMatchesStream =
-            new PrintStream(new File(directory, nontrivialMatchesFileName));
+            new PrintStream(new File(directory, nontrivialMatchesFileName), "UTF-8");
         Set<ConceptAnnotation> nontrivialMatches = nontrivialAllwayMatches.get(set);
         Map<String, Set<ConceptAnnotation>> sortedNontrivialMatches =
             sortByType(classes, nontrivialMatches);
@@ -396,7 +398,7 @@ public class Iaa2Html {
     for (String set : sets) {
       String errorsFileName = String.format("%s.nonmatches.%s.html", fileName, set);
       html.printf("<li><a href=\"%s\">non-matches for %s</a></li>%n", errorsFileName, set);
-      PrintStream errors = new PrintStream(new File(directory, errorsFileName));
+      PrintStream errors = new PrintStream(new File(directory, errorsFileName), "UTF-8");
       Set<ConceptAnnotation> nonmatches = allwayNonmatches.get(set);
       Map<String, Set<ConceptAnnotation>> sortedNonmatches = sortByType(classes, nonmatches);
 
@@ -427,7 +429,8 @@ public class Iaa2Html {
         html.printf(
             "<li><a href=\"%s\">trivial non-matches for %s</a></li>%n",
             trivialNonMatchesFileName, set);
-        PrintStream trivialErrors = new PrintStream(new File(directory, trivialNonMatchesFileName));
+        PrintStream trivialErrors =
+            new PrintStream(new File(directory, trivialNonMatchesFileName), "UTF-8");
         Set<ConceptAnnotation> trivialNonmatches = trivialAllwayNonmatches.get(set);
         Map<String, Set<ConceptAnnotation>> sortedTrivialNonmatches =
             sortByType(classes, trivialNonmatches);
@@ -453,7 +456,7 @@ public class Iaa2Html {
             "<li><a href=\"%s\">non-trivial non-matches for %s</a></li>%n",
             nontrivialNonMatchesFileName, set);
         PrintStream nontrivialErrors =
-            new PrintStream(new File(directory, nontrivialNonMatchesFileName));
+            new PrintStream(new File(directory, nontrivialNonMatchesFileName), "UTF-8");
         Set<ConceptAnnotation> nontrivialNonmatches = nontrivialAllwayNonmatches.get(set);
         Map<String, Set<ConceptAnnotation>> sortedNontrivialNonmatches =
             sortByType(classes, nontrivialNonmatches);
@@ -541,8 +544,8 @@ public class Iaa2Html {
    */
   static Set<ConceptAnnotation> getSingleSet(Map<String, Set<ConceptAnnotation>> annotations) {
     Set<ConceptAnnotation> returnValues = new HashSet<>();
-    for (String setName : annotations.keySet()) {
-      returnValues.addAll(annotations.get(setName));
+    for (Map.Entry<String, Set<ConceptAnnotation>> setName : annotations.entrySet()) {
+      returnValues.addAll(setName.getValue());
     }
     return returnValues;
   }
@@ -688,7 +691,7 @@ public class Iaa2Html {
    */
   static String initHTML(String title, String description) {
     return String.format(
-        "<html>\n<head><title>%s</title></head>\n<body>\n<h1>%s</h1>\n%s For more detailed documentation on Iaa please see the <a href=\"http://knowtator.sourceforge.net//iaa.shtml\">Iaa documentation</a>.\n",
+        "<html>%n<head><title>%s</title></head>%n<body>%n<h1>%s</h1>%n%s For more detailed documentation on Iaa please see the <a href=\"http://knowtator.sourceforge.net//iaa.shtml\">Iaa documentation</a>.%n",
         title, title, description);
   }
 
@@ -728,7 +731,7 @@ public class Iaa2Html {
     for (String set : sets) {
       String matchesFileName = String.format("%s.matches.%s.html", fileName, set);
       html.printf("<li><a href=\"%s\">matches for %s</a></li>%n", matchesFileName, set);
-      PrintStream matchesStream = new PrintStream(new File(directory, matchesFileName));
+      PrintStream matchesStream = new PrintStream(new File(directory, matchesFileName), "UTF-8");
       Set<ConceptAnnotation> matches = allwayMatches.get(set);
       Map<String, Set<ConceptAnnotation>> sortedMatches = Iaa2Html.sortByType(classes, matches);
 
@@ -783,7 +786,7 @@ public class Iaa2Html {
     for (String set : sets) {
       String errorsFileName = String.format("%s.nonmatches.%s.html", fileName, set);
       html.printf("<li><a href=\"%s\">non-matches for %s</a></li>%n", errorsFileName, set);
-      PrintStream errors = new PrintStream(new File(directory, errorsFileName));
+      PrintStream errors = new PrintStream(new File(directory, errorsFileName), "UTF-8");
       Set<ConceptAnnotation> nonmatches = allwayNonmatches.get(set);
       Map<String, Set<ConceptAnnotation>> sortedNonmatches =
           Iaa2Html.sortByType(classes, nonmatches);

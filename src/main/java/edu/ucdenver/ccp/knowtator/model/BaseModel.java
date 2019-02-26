@@ -34,7 +34,7 @@ import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.model.object.TextBoundModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
-import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -223,11 +223,12 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
    * @param modelObject The knowtator object
    * @param hasPriority True if the object should have priority over preexisting objects
    */
-  public void verifyId(String id, ModelObject modelObject, boolean hasPriority) {
+  public String verifyId(String id, ModelObject modelObject, boolean hasPriority) {
     String verifiedId = id;
 
     if (hasPriority && idRegistry.keySet().contains(id)) {
-      verifyId(id, idRegistry.get(id), false);
+      ModelObject mo = idRegistry.get(id);
+      modelObject.setId(verifyId(id, mo, false));
     } else {
       int i = idRegistry.size();
 
@@ -243,17 +244,17 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
       }
     }
     idRegistry.put(verifiedId, modelObject);
-    modelObject.setId(id == null ? verifiedId : id);
+    return id == null ? verifiedId : id;
   }
 
   /**
    * Registers an action and adds its edit to the undo manager.
    *
    * @param action An executable and undoable action
-   * @throws ActionUnperformableException the action unperformable exception
+   * @throws ActionUnperformable the action unperformable exception
    */
   public void registerAction(@Nonnull AbstractKnowtatorAction action)
-      throws ActionUnperformableException {
+      throws ActionUnperformable {
     action.execute();
     addEdit(action);
   }

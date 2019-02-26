@@ -54,7 +54,7 @@ class SpanActionsTests {
 
   private static void checkSpanModificationsTest(
       AbstractKnowtatorAction action, Span span, int expectedStart, int expectedEnd)
-      throws ActionUnperformableException {
+      throws ActionUnperformable {
     assert span.getStart() == initialStart;
     assert span.getEnd() == initialEnd;
     model.registerAction(action);
@@ -70,7 +70,7 @@ class SpanActionsTests {
   }
 
   @Test
-  void modifySpanActionTest() throws ActionUnperformableException {
+  void modifySpanActionTest() throws ActionUnperformable {
     TextSource textSource = model.getSelectedTextSource().get();
     ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
     textSource.setSelectedConceptAnnotation(conceptAnnotation);

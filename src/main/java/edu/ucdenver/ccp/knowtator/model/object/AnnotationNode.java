@@ -54,7 +54,7 @@ public class AnnotationNode extends mxCell
     this.conceptAnnotation = conceptAnnotation;
     this.graphSpace = graphSpace;
     this.model = conceptAnnotation.getKnowtatorModel();
-    model.verifyId(id, this, false);
+    setId(model.verifyId(id, this, false));
 
     setVertex(true);
     setConnectable(true);
@@ -80,7 +80,8 @@ public class AnnotationNode extends mxCell
 
   @Override
   public int compareTo(AnnotationNode o) {
-    return o.equals(this) ? 0 : 1;
+    return conceptAnnotation.compareTo(o.conceptAnnotation);
+
   }
 
   @Override

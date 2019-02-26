@@ -28,7 +28,7 @@ import com.google.common.io.Files;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
-import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -253,7 +253,7 @@ public class TestingHelpers {
    * @param expectedHighlighters the expected highlighters
    * @param expectedAnnotationNodes the expected annotation nodes
    * @param expectedTriples the expected triples
-   * @throws ActionUnperformableException the action unperformable exception
+   * @throws ActionUnperformable the action unperformable exception
    */
   public static void testKnowtatorAction(
       KnowtatorModel controller,
@@ -266,7 +266,7 @@ public class TestingHelpers {
       int expectedHighlighters,
       int expectedAnnotationNodes,
       int expectedTriples)
-      throws ActionUnperformableException {
+      throws ActionUnperformable {
     TestingHelpers.checkDefaultCollectionValues(controller);
     controller.registerAction(action);
     TestingHelpers.countCollections(

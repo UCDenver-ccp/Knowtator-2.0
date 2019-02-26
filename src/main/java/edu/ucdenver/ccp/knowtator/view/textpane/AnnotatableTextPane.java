@@ -44,7 +44,7 @@ import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorDefaultSettings;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ReassignOwlClassAction;
 import java.awt.BasicStroke;
@@ -66,7 +66,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
-import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 import javax.swing.text.Utilities;
@@ -106,7 +105,6 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
 
     MouseInputAdapter mouseListener =
         new MouseInputAdapter() {
-          Highlighter.Highlight tag = null;
           int pressOffset = 0;
 
           @Override
@@ -125,7 +123,6 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
             super.mousePressed(e);
             pressOffset = viewToModel(e.getPoint());
             highlightRegion(pressOffset, pressOffset, new RectanglePainter(Color.BLACK));
-            tag = getHighlighter().getHighlights()[getHighlighter().getHighlights().length - 1];
             view.getModel()
                 .flatMap(BaseModel::getSelectedTextSource)
                 .ifPresent(
@@ -405,11 +402,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
       setEnabled(false);
     } else {
       setEnabled(true);
-      if (event.getNew().filter(modelObject -> modelObject instanceof TextSource).isPresent()) {
-        showTextSource();
-      } else {
-        showTextSource();
-      }
+      showTextSource();
     }
   }
 
@@ -544,7 +537,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
                                                                 model,
                                                                 conceptAnnotation,
                                                                 owlClass));
-                                                      } catch (ActionUnperformableException e1) {
+                                                      } catch (ActionUnperformable e1) {
                                                         JOptionPane.showMessageDialog(
                                                             view, e1.getMessage());
                                                       }

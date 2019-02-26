@@ -80,10 +80,9 @@ public class GraphSpace extends mxGraph
 
     this.knowtatorModel = textSource.getKnowtatorModel();
     this.textSource = textSource;
-    this.id = id;
 
     // TODO: Make annotation nodes reflect changes in annotations
-    knowtatorModel.verifyId(id, this, false);
+    this.id = knowtatorModel.verifyId(id, this, false);
     knowtatorModel.addOntologyChangeListener(this);
     knowtatorModel.addOwlModelManagerListener(this);
 

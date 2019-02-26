@@ -53,7 +53,7 @@ class FilterActionsTests {
   }
 
   @Test
-  void filterActionTest() throws ActionUnperformableException {
+  void filterActionTest() throws ActionUnperformable {
     TestingHelpers.checkDefaultCollectionValues(model);
     TestingHelpers.testKnowtatorAction(
         model,

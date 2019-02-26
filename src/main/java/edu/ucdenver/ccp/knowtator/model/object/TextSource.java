@@ -76,7 +76,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
     this.graphSpaceCollection = new GraphSpaceCollection(model);
     model.addModelListener(this);
 
-    model.verifyId(FilenameUtils.getBaseName(textFileName), this, true);
+    this.id = model.verifyId(FilenameUtils.getBaseName(textFileName), this, true);
 
     textFile =
         new File(

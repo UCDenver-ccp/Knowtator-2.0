@@ -100,10 +100,13 @@ public class XmlUtil {
 
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     Document doc = null;
+    FileInputStream is = null;
     try {
+      is = new FileInputStream(file);
       DocumentBuilder db = dbf.newDocumentBuilder();
-      doc = db.parse(new FileInputStream(file));
+      doc = db.parse(is);
       doc.getDocumentElement().normalize();
+      is.close();
 
     } catch (ParserConfigurationException | IOException | SAXException e) {
       e.printStackTrace();
@@ -148,7 +151,7 @@ public class XmlUtil {
       tr.setOutputProperty("{http://knowtator.apache.org/xslt}indent-amount", "4");
 
       // send DOM to test_project
-      PrintWriter pw = new PrintWriter(file);
+      PrintWriter pw = new PrintWriter(file, "UTF-8");
       pw.close();
       OutputStream os = new FileOutputStream(file, false);
       tr.transform(

@@ -440,7 +440,7 @@ public class BratStandoffUtil {
         spannedText.append(" ");
       }
     }
-    writer.append(String.format("\t%s\n", spannedText.toString()));
+    writer.append(String.format("\t%s%n", spannedText.toString()));
   }
 
   private void writeFromSpan(Span span, Writer writer) throws IOException {

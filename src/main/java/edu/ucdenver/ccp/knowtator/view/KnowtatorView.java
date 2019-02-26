@@ -48,7 +48,7 @@ import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
-import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.FilterAction;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.SpanActions;
@@ -527,7 +527,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                                 knowtatorModel,
                                 FilterType.PROFILE,
                                 profileFilterCheckBox.isSelected()));
-                      } catch (ActionUnperformableException e1) {
+                      } catch (ActionUnperformable e1) {
                         JOptionPane.showMessageDialog(this, e1.getMessage());
                       }
                     }));
@@ -542,7 +542,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                                 knowtatorModel,
                                 FilterType.OWLCLASS,
                                 owlClassFilterCheckBox.isSelected()));
-                      } catch (ActionUnperformableException e1) {
+                      } catch (ActionUnperformable e1) {
                         JOptionPane.showMessageDialog(this, e1.getMessage());
                       }
                     }));
@@ -693,7 +693,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                                                         SpanActions.END,
                                                         SpanActions.SHRINK,
                                                         span));
-                                              } catch (ActionUnperformableException e1) {
+                                              } catch (ActionUnperformable e1) {
                                                 JOptionPane.showMessageDialog(
                                                     this, e1.getMessage());
                                               }
@@ -720,7 +720,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                                                         SpanActions.START,
                                                         SpanActions.SHRINK,
                                                         span));
-                                              } catch (ActionUnperformableException e1) {
+                                              } catch (ActionUnperformable e1) {
                                                 JOptionPane.showMessageDialog(
                                                     this, e1.getMessage());
                                               }
@@ -746,7 +746,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                                                         SpanActions.END,
                                                         SpanActions.GROW,
                                                         span));
-                                              } catch (ActionUnperformableException e1) {
+                                              } catch (ActionUnperformable e1) {
                                                 JOptionPane.showMessageDialog(
                                                     this, e1.getMessage());
                                               }
@@ -772,7 +772,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                                                         SpanActions.START,
                                                         SpanActions.GROW,
                                                         span));
-                                              } catch (ActionUnperformableException e1) {
+                                              } catch (ActionUnperformable e1) {
                                                 JOptionPane.showMessageDialog(
                                                     this, e1.getMessage());
                                               }

@@ -47,7 +47,7 @@ import edu.ucdenver.ccp.knowtator.model.object.RelationAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformableException;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import edu.ucdenver.ccp.knowtator.view.actions.graph.GraphActions;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.GraphSpaceAction;
 import edu.ucdenver.ccp.knowtator.view.chooser.GraphSpaceChooser;
@@ -242,7 +242,7 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
                                   try {
                                     model.registerAction(
                                         new GraphSpaceAction(model, REMOVE, null, textSource));
-                                  } catch (ActionUnperformableException e1) {
+                                  } catch (ActionUnperformable e1) {
                                     JOptionPane.showMessageDialog(view, e1.getMessage());
                                   }
                                 }));
@@ -275,7 +275,7 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
                                                 model.registerAction(
                                                     new GraphActions.RemoveCellsAction(
                                                         model, graphSpace));
-                                              } catch (ActionUnperformableException e1) {
+                                              } catch (ActionUnperformable e1) {
                                                 JOptionPane.showMessageDialog(
                                                     view, e1.getMessage());
                                               }
@@ -302,7 +302,7 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
                                                         model,
                                                         graphSpace,
                                                         conceptAnnotation));
-                                              } catch (ActionUnperformableException e1) {
+                                              } catch (ActionUnperformable e1) {
                                                 JOptionPane.showMessageDialog(
                                                     view, e1.getMessage());
                                               }
@@ -325,7 +325,7 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
                                                 model.registerAction(
                                                     new GraphActions.ApplyLayoutAction(
                                                         view, model, graphSpace));
-                                              } catch (ActionUnperformableException e1) {
+                                              } catch (ActionUnperformable e1) {
                                                 JOptionPane.showMessageDialog(
                                                     view, e1.getMessage());
                                               }
@@ -403,7 +403,7 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
                           try {
                             model.registerAction(
                                 new GraphSpaceAction(model, ADD, graphName, textSource));
-                          } catch (ActionUnperformableException e) {
+                          } catch (ActionUnperformable e) {
                             JOptionPane.showMessageDialog(view, e.getMessage());
                           }
                         }));

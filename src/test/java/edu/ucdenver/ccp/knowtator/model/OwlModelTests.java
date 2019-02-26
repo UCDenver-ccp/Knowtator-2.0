@@ -62,11 +62,11 @@ import org.semanticweb.owlapi.util.OWLEntityRenamer;
 @SuppressWarnings("EmptyMethod")
 class OwlModelTests {
 
-  private static KnowtatorModel model;
-  private static OWLOntologyManager owlOntologyManager;
-  private static OWLDataFactory dataFactory;
-  private static OWLOntology ontology;
-  private static OWLReasoner reasoner;
+  private KnowtatorModel model;
+  private OWLOntologyManager owlOntologyManager;
+  private OWLDataFactory dataFactory;
+  private OWLOntology ontology;
+  private OWLReasoner reasoner;
 
   @BeforeEach
   void setup() throws IOException {

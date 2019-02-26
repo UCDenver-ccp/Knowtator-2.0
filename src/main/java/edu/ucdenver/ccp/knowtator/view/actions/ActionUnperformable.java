@@ -25,13 +25,13 @@
 package edu.ucdenver.ccp.knowtator.view.actions;
 
 /** The type Action unperformable exception. */
-public class ActionUnperformableException extends Throwable {
+public class ActionUnperformable extends Throwable {
   /**
    * Instantiates a new Action unperformable exception.
    *
    * @param message the message
    */
-  public ActionUnperformableException(String message) {
+  public ActionUnperformable(String message) {
     super(message);
   }
 }
