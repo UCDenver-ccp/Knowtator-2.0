@@ -113,9 +113,14 @@ public abstract class SearchableTextPane extends JTextPane
         matcher.reset();
         //noinspection ResultOfMethodCallIgnored
         matcher.find();
-        if (keepSearchingCondition(matcher) && matcher.matches()) {
-          matchStart = matcher.start();
-          matchEnd = matcher.end();
+        if (keepSearchingCondition(matcher)) {
+          try {
+            matchStart = matcher.start();
+            matchEnd = matcher.end();
+
+          } catch (IllegalStateException ignored) {
+            // OK if nothing found
+          }
         }
       }
       view.getModel()

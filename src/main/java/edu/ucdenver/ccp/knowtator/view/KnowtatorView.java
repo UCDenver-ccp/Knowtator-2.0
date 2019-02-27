@@ -436,6 +436,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         e -> getModel().ifPresent(model1 -> model1.searchForString(searchTextField.getText())));
     nextMatchButton.addActionListener(e -> textPane.searchForward());
     previousMatchButton.addActionListener(e -> textPane.searchPrevious());
+    searchTextField.addActionListener(e -> textPane.searchForward());
 
     makeReviewPane();
 
