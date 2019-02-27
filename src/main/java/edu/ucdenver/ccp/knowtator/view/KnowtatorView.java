@@ -199,7 +199,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   private JPanel mainPanel;
   private JButton backButton;
   private JPanel filePanel;
-  private JFileChooser fileChooser;
   private JSplitPane body;
   private JPanel infoPane;
   private JPanel spanPane;
@@ -372,10 +371,12 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
           }
 
           @Override
-          public void ancestorRemoved(AncestorEvent event) {}
+          public void ancestorRemoved(AncestorEvent event) {
+          }
 
           @Override
-          public void ancestorMoved(AncestorEvent event) {}
+          public void ancestorMoved(AncestorEvent event) {
+          }
         });
   }
 
@@ -412,7 +413,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                                 })));
 
     backButton.addActionListener(
-        e ->
+        e -> {
+          if (getModel().isPresent()) {
             getModel()
                 .ifPresent(
                     model1 -> {
@@ -421,14 +423,19 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                         cl.show(cardPanel, "Main");
                         header.setSelectedIndex(1);
                       }
-                    }));
+                    });
+          } else {
+            CardLayout cl = (CardLayout) cardPanel.getLayout();
+            cl.show(cardPanel, "Main");
+            header.setSelectedIndex(1);
+          }
+        });
 
     header.addChangeListener(
         e -> {
           if (header.getTitleAt(header.getSelectedIndex()).equals("File")) {
             CardLayout cl = (CardLayout) cardPanel.getLayout();
             cl.show(cardPanel, "File");
-            fileList.setSelectedIndex(0);
           }
         });
 
@@ -449,8 +456,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     removeProfileButton.addActionListener(
         e ->
             Optional.of(
-                    JOptionPane.showConfirmDialog(
-                        this, "Are you sure you wish to remove this profile?"))
+                JOptionPane.showConfirmDialog(
+                    this, "Are you sure you wish to remove this profile?"))
                 .filter(result -> JOptionPane.OK_OPTION == result)
                 .ifPresent(
                     result -> pickAction(this, null, null, new ActionParameters(REMOVE, PROFILE))));
@@ -548,29 +555,31 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                       }
                     }));
 
-    Optional.ofNullable(KnowtatorView.PREFERENCES.get("Last Project", null))
-        .map(File::new)
-        .filter(File::exists)
-        .map(
-            file -> {
-              fileChooser.setCurrentDirectory(file);
-              return file;
-            })
-        .map(File::listFiles)
-        .flatMap(
-            files ->
-                Arrays.stream(files)
-                    .filter(file1 -> file1.getName().endsWith(".knowtator"))
-                    .findAny())
-        .ifPresent(fileChooser::setSelectedFile);
-    fileChooser.addActionListener(
-        e ->
-            Optional.ofNullable(e)
-                .filter(event -> event.getActionCommand().equals(JFileChooser.APPROVE_SELECTION))
-                .ifPresent(event -> open()));
-
     fileList.addListSelectionListener(
         e -> {
+          JFileChooser fileChooser = new JFileChooser();
+          Optional.ofNullable(KnowtatorView.PREFERENCES.get("Last Project", null))
+              .map(File::new)
+              .filter(File::exists)
+              .map(
+                  file -> {
+                    fileChooser.setCurrentDirectory(file);
+                    return file;
+                  })
+              .map(File::listFiles)
+              .flatMap(
+                  files ->
+                      Arrays.stream(files)
+                          .filter(file1 -> file1.getName().endsWith(".knowtator"))
+                          .findAny())
+              .ifPresent(fileChooser::setSelectedFile);
+          fileChooser.addActionListener(
+              e1 ->
+                  Optional.ofNullable(e1)
+                      .filter(
+                          event -> event.getActionCommand().equals(JFileChooser.APPROVE_SELECTION))
+                      .ifPresent(event -> open(fileChooser)));
+
           switch (fileList.getSelectedValue()) {
             case "Open":
               FileFilter fileFilter = new FileNameExtensionFilter("Knowtator", "knowtator");
@@ -595,6 +604,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
             default:
               break;
           }
+
+          fileChooser.showOpenDialog(this);
         });
 
     runIaaButton.addActionListener(
@@ -633,7 +644,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                     }));
   }
 
-  private void open() {
+  private void open(JFileChooser fileChooser) {
     switch (fileList.getSelectedValue()) {
       case "Open":
         new Loader(this, fileChooser.getSelectedFile(), progressBar, header, cardPanel).execute();
@@ -889,19 +900,24 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   }
 
   @Override
-  public void dropActionChanged(DropTargetDragEvent e) {}
+  public void dropActionChanged(DropTargetDragEvent e) {
+  }
 
   @Override
-  public void dragExit(DropTargetEvent e) {}
+  public void dragExit(DropTargetEvent e) {
+  }
 
   @Override
-  public void drop(DropTargetDropEvent e) {}
+  public void drop(DropTargetDropEvent e) {
+  }
 
   @Override
-  public void dragEnter(DropTargetDragEvent e) {}
+  public void dragEnter(DropTargetDragEvent e) {
+  }
 
   @Override
-  public void dragOver(DropTargetDragEvent e) {}
+  public void dragOver(DropTargetDragEvent e) {
+  }
 
   /**
    * Load project.
@@ -1493,17 +1509,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     final Spacer spacer12 = new Spacer();
     panel27.add(spacer12, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
     filePanel = new JPanel();
-    filePanel.setLayout(new GridLayoutManager(5, 6, new Insets(0, 0, 0, 0), -1, -1));
+    filePanel.setLayout(new GridLayoutManager(5, 5, new Insets(0, 0, 0, 0), -1, -1));
     cardPanel.add(filePanel, "File");
     final Spacer spacer13 = new Spacer();
     filePanel.add(spacer13, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     final Spacer spacer14 = new Spacer();
-    filePanel.add(spacer14, new GridConstraints(1, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+    filePanel.add(spacer14, new GridConstraints(1, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
     final Spacer spacer15 = new Spacer();
     filePanel.add(spacer15, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     progressBar = new JProgressBar();
     progressBar.setStringPainted(true);
-    filePanel.add(progressBar, new GridConstraints(2, 0, 1, 6, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+    filePanel.add(progressBar, new GridConstraints(2, 0, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     final JScrollPane scrollPane10 = new JScrollPane();
     filePanel.add(scrollPane10, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     fileList = new JList();
@@ -1519,16 +1535,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     fileList.setModel(defaultListModel1);
     scrollPane10.setViewportView(fileList);
     final Spacer spacer16 = new Spacer();
-    filePanel.add(spacer16, new GridConstraints(1, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+    filePanel.add(spacer16, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
     backButton = new JButton();
     backButton.setText("Back");
     filePanel.add(backButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     final Spacer spacer17 = new Spacer();
-    filePanel.add(spacer17, new GridConstraints(0, 1, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+    filePanel.add(spacer17, new GridConstraints(0, 1, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
     final Spacer spacer18 = new Spacer();
-    filePanel.add(spacer18, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-    fileChooser = new JFileChooser();
-    filePanel.add(fileChooser, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+    filePanel.add(spacer18, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
   }
 
   /**
@@ -1589,7 +1603,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   }
 
   @Override
-  public void filterChangedEvent() {}
+  public void filterChangedEvent() {
+  }
 
   @Override
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {
@@ -1632,7 +1647,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   }
 
   @Override
-  public void colorChangedEvent() {}
+  public void colorChangedEvent() {
+  }
 
   /**
    * Gets is one click graphs.
