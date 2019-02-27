@@ -108,7 +108,6 @@ public class Profile implements ModelObject<Profile>, Savable {
     colors.put(owlClass, c);
     model.fireColorChanged();
   }
-
   /**
    * Convert to hex string.
    *

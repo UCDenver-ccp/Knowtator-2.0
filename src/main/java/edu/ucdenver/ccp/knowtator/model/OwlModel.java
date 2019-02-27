@@ -152,7 +152,6 @@ public abstract class OwlModel extends BaseModel implements Serializable {
               ontology ->
                   ontology
                       .getClassesInSignature()
-                      .parallelStream()
                       .forEach(
                           owlClass -> {
                             for (String id : classIDs) {

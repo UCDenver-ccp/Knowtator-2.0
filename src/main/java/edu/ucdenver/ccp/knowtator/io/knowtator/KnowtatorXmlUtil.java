@@ -333,9 +333,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
     }
     model
         .getOwlClassesByIds(colorMap.keySet())
-        .entrySet()
-        .parallelStream()
-        .forEach(entry -> profile.addColor(entry.getValue(), colorMap.get(entry.getKey())));
+        .forEach((key, value) -> profile.addColor(value, colorMap.get(key)));
   }
 
   /**
