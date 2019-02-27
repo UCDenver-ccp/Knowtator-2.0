@@ -89,7 +89,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane
 
   @Override
   protected boolean shouldUpdateSearchTextFieldCondition() {
-    return !regexCheckBox.isSelected();
+    return !regexCheckBox.isSelected() && !isSearching;
   }
 
   @Override

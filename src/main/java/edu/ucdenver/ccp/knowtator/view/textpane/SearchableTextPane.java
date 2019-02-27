@@ -44,6 +44,7 @@ public abstract class SearchableTextPane extends JTextPane
   private Pattern pattern;
   private Matcher matcher;
   private final JTextField searchTextField;
+  boolean isSearching;
   /** The View. */
   final KnowtatorView view;
 
@@ -57,6 +58,7 @@ public abstract class SearchableTextPane extends JTextPane
     super();
     this.searchTextField = searchTextField;
     this.view = view;
+    this.isSearching = false;
     addCaretListener(
         e -> {
           if (shouldUpdateSearchTextFieldCondition()) {
@@ -95,6 +97,7 @@ public abstract class SearchableTextPane extends JTextPane
   /** Searches from the end of the selection forward, wrapping at the end. */
   public void searchForward() {
     if (matcher != null) {
+      isSearching = true;
       matcher.reset();
       int matchStart = -1;
       int matchEnd = 0;
@@ -110,12 +113,11 @@ public abstract class SearchableTextPane extends JTextPane
         matcher.reset();
         //noinspection ResultOfMethodCallIgnored
         matcher.find();
-        if (keepSearchingCondition(matcher)) {
+        if (keepSearchingCondition(matcher) && matcher.matches()) {
           matchStart = matcher.start();
           matchEnd = matcher.end();
         }
       }
-      requestFocusInWindow();
       view.getModel()
           .ifPresent(
               model ->
@@ -124,6 +126,7 @@ public abstract class SearchableTextPane extends JTextPane
                       .ifPresent(textSource -> textSource.setSelectedConceptAnnotation(null)));
       select(matchStart, matchEnd);
       refreshHighlights();
+      isSearching = false;
     }
   }
 
@@ -141,6 +144,7 @@ public abstract class SearchableTextPane extends JTextPane
   /** Searches the text pane backward from the selection start, wrapping at the beginning. */
   public void searchPrevious() {
     if (matcher != null) {
+      isSearching = true;
       matcher.reset();
       int matchStart = -1;
       int matchEnd = 0;
@@ -155,8 +159,9 @@ public abstract class SearchableTextPane extends JTextPane
           break;
         }
       }
-      requestFocusInWindow();
       select(matchStart, matchEnd);
+      refreshHighlights();
+      isSearching = false;
     }
   }
 
