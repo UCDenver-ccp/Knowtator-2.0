@@ -126,9 +126,8 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
 
   @Override
   public void dispose() {
-    for (int i = 0; i < getRowCount(); i++) {
-      ((DefaultTableModel) getModel()).removeRow(i);
-    }
+    clearSelection();
+    ((DefaultTableModel) getModel()).setRowCount(0);
     view.getModel().ifPresent(model -> model.removeModelListener(this));
   }
 
