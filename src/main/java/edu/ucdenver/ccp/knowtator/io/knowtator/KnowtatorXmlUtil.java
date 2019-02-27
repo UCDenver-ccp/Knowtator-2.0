@@ -176,6 +176,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
                 conceptAnnotationOptional
                     .map(o -> (ConceptAnnotation) o)
                     .ifPresent(conceptAnnotationCollection::add));
+    textSource.getConceptAnnotations().first().ifPresent(textSource::setSelectedConceptAnnotation);
   }
 
   private void readToConceptAnnotation(ConceptAnnotation conceptAnnotation, Element parent) {

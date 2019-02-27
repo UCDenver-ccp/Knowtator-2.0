@@ -259,7 +259,8 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
               }
               Optional<Span> finalSpan = span;
               SwingUtilities.invokeLater(
-                  () ->
+                  () -> {
+                    if (finalSpan.isPresent()) {
                       finalSpan.ifPresent(
                           span1 -> {
                             try {
@@ -270,7 +271,9 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
                                 | ArrayIndexOutOfBoundsException ignored) {
                               // It's fine if either of these are thrown
                             }
-                          }));
+                          });
+                    }
+                  });
             });
   }
 

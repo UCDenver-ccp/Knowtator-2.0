@@ -44,6 +44,7 @@ import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.OwlModel;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectableCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
@@ -120,6 +121,7 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
 import javax.swing.undo.UndoManager;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.ui.view.cls.AbstractOWLClassViewComponent;
@@ -485,9 +487,45 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     fontSizeSlider.addChangeListener(e -> textPane.setFontSize(fontSizeSlider.getValue()));
     showGraphViewerButton.addActionListener(e -> graphViewDialog.setVisible(true));
     previousTextSourceButton.addActionListener(
-        e -> getModel().ifPresent(BaseModel::selectPreviousTextSource));
+        e -> {
+          getModel().ifPresent(BaseModel::selectPreviousTextSource);
+          SwingUtilities.invokeLater(
+              () -> {
+                if (!getModel()
+                    .flatMap(
+                        model1 ->
+                            model1
+                                .getSelectedConceptAnnotation()
+                                .map(SelectableCollection::getSelection))
+                    .isPresent()) {
+                  try {
+                    textPane.scrollRectToVisible(textPane.modelToView(0));
+                  } catch (BadLocationException e1) {
+                    e1.printStackTrace();
+                  }
+                }
+              });
+        });
     nextTextSourceButton.addActionListener(
-        e -> getModel().ifPresent(BaseModel::selectNextTextSource));
+        e -> {
+          getModel().ifPresent(BaseModel::selectNextTextSource);
+          SwingUtilities.invokeLater(
+              () -> {
+                if (!getModel()
+                    .flatMap(
+                        model1 ->
+                            model1
+                                .getSelectedConceptAnnotation()
+                                .map(SelectableCollection::getSelection))
+                    .isPresent()) {
+                  try {
+                    textPane.scrollRectToVisible(textPane.modelToView(0));
+                  } catch (BadLocationException e1) {
+                    e1.printStackTrace();
+                  }
+                }
+              });
+        });
     addTextSourceButton.addActionListener(
         e -> {
           JFileChooser fileChooser = new JFileChooser();
