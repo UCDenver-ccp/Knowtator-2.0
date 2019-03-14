@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="classType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="id" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="spanType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:integer" name="end" use="required"/>
+        <xs:attribute type="xs:integer" name="start" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="annotationType">
+    <xs:sequence>
+      <xs:element type="classType" name="class"/>
+      <xs:element type="spanType" name="span" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="annotator" use="required"/>
+    <xs:attribute type="xs:string" name="id" use="required"/>
+    <xs:attribute type="xs:string" name="type"/>
+  </xs:complexType>
+  <xs:complexType name="vertexType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="annotation" use="required"/>
+        <xs:attribute type="xs:string" name="id" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="tripleType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="annotator" use="required"/>
+        <xs:attribute type="xs:string" name="id" use="required"/>
+        <xs:attribute type="xs:string" name="object" use="required"/>
+        <xs:attribute type="xs:string" name="property" use="required"/>
+        <xs:attribute type="xs:string" name="quantifier" use="required"/>
+        <xs:attribute type="xs:string" name="subject" use="required"/>
+        <xs:attribute type="xs:string" name="value"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="graph-spaceType">
+    <xs:sequence>
+      <xs:element type="vertexType" name="vertex" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="tripleType" name="triple" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="id" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="documentType">
+    <xs:sequence>
+      <xs:element type="annotationType" name="annotation" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="graph-spaceType" name="graph-space" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="id" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="knowtator-projectType">
+    <xs:sequence>
+      <xs:element type="documentType" name="document"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

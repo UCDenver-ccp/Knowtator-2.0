@@ -64,7 +64,7 @@ class KnowtatorStandalone extends JFrame {
    *
    * @param debug Specifies if debug mode should be entered.
    */
-  private KnowtatorStandalone(boolean debug) {
+  public KnowtatorStandalone(boolean debug) {
     view = new KnowtatorView();
 
     setContentPane(view);
