@@ -31,6 +31,7 @@ import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
+import edu.ucdenver.ccp.knowtator.model.object.Quantifier;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import java.io.File;
@@ -250,7 +251,7 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
                                         null,
                                         model.getDefaultProfile(),
                                         property,
-                                        "",
+                                        Quantifier.SOME,
                                         "",
                                         false,
                                         "")));

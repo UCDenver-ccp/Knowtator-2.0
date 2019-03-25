@@ -67,7 +67,7 @@ public class ConceptAnnotation extends SpanCollection
   public ConceptAnnotation(
       @Nonnull TextSource textSource,
       String annotationID,
-      @Nonnull OWLClass owlClass,
+      OWLClass owlClass,
       @Nonnull Profile annotator,
       String annotationType,
       String motivation) {

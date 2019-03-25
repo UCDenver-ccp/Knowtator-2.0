@@ -194,8 +194,7 @@ public class GraphSpace extends mxGraph
 
   /**
    * Adds a new triple.
-   *
-   * @param source The source node
+   *  @param source The source node
    * @param target The target node
    * @param id The triple id
    * @param annotator The annotator
@@ -211,15 +210,11 @@ public class GraphSpace extends mxGraph
       String id,
       Profile annotator,
       OWLObjectProperty property,
-      String quantifier,
+      Quantifier quantifier,
       String quantifierValue,
       Boolean isNegated,
       String motivation) {
     id = textSource.getGraphSpaces().verifyID(id, "edge");
-
-    if (!RelationAnnotation.QUANTIFIERS.contains(quantifier)) {
-      quantifier = "some";
-    }
 
     annotator = Optional.ofNullable(annotator).orElse(knowtatorModel.getDefaultProfile());
     RelationAnnotation newRelationAnnotation =

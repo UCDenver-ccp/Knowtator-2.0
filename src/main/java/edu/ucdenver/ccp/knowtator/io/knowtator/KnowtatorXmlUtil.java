@@ -33,6 +33,7 @@ import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
+import edu.ucdenver.ccp.knowtator.model.object.Quantifier;
 import edu.ucdenver.ccp.knowtator.model.object.RelationAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
@@ -246,7 +247,9 @@ public final class KnowtatorXmlUtil extends XmlUtil {
       String subjectID = tripleElem.getAttribute(KnowtatorXmlAttributes.TRIPLE_SUBJECT);
       String objectID = tripleElem.getAttribute(KnowtatorXmlAttributes.TRIPLE_OBJECT);
       String propertyID = tripleElem.getAttribute(KnowtatorXmlAttributes.TRIPLE_PROPERTY);
-      String quantifier = tripleElem.getAttribute(KnowtatorXmlAttributes.TRIPLE_QUANTIFIER);
+      String quantifierString = tripleElem.getAttribute(KnowtatorXmlAttributes.TRIPLE_QUANTIFIER);
+      Quantifier quantifier =
+          quantifierString.equals("") ? Quantifier.SOME : Quantifier.valueOf(quantifierString);
       String quantifierValue = tripleElem.getAttribute(KnowtatorXmlAttributes.TRIPLE_VALUE);
       String propertyIsNegated = tripleElem.getAttribute(KnowtatorXmlAttributes.IS_NEGATED);
       String motivation = tripleElem.getAttribute(KnowtatorXmlAttributes.MOTIVATION);
@@ -408,7 +411,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
     tripleElem.setAttribute(KnowtatorXmlAttributes.TRIPLE_PROPERTY, propertyID);
 
     tripleElem.setAttribute(
-        KnowtatorXmlAttributes.TRIPLE_QUANTIFIER, relationAnnotation.getQuantifier());
+        KnowtatorXmlAttributes.TRIPLE_QUANTIFIER, relationAnnotation.getQuantifier().name());
     tripleElem.setAttribute(
         KnowtatorXmlAttributes.TRIPLE_VALUE, relationAnnotation.getQuantifierValue());
     tripleElem.setAttribute(

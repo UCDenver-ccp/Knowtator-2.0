@@ -29,6 +29,7 @@ import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.object.Quantifier;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.graph.GraphActions;
 import java.io.IOException;
@@ -123,7 +124,7 @@ class GraphActionsTests {
     TestingHelpers.testKnowtatorAction(
         model,
         new GraphActions.AddTripleAction(
-            model, source, target, property, "some", null, false, "", graphSpace),
+            model, source, target, property, Quantifier.SOME, null, false, "", graphSpace),
         TestingHelpers.defaultExpectedTextSources,
         TestingHelpers.defaultExpectedConceptAnnotations,
         TestingHelpers.defaultExpectedSpans,

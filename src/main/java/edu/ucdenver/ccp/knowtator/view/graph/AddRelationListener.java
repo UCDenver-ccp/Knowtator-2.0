@@ -29,6 +29,7 @@ import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource;
 import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.object.Quantifier;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import edu.ucdenver.ccp.knowtator.view.actions.graph.GraphActions;
@@ -93,7 +94,7 @@ class AddRelationListener implements mxEventSource.mxIEventListener {
                             try {
                               AnnotationNode source = (AnnotationNode) edge.getSource();
                               AnnotationNode target = (AnnotationNode) edge.getTarget();
-                              String quantifier = relationOptionsDialog.getQuantifier();
+                              Quantifier quantifier = relationOptionsDialog.getQuantifier();
                               String motivation = relationOptionsDialog.getMotivation();
                               Boolean negation = relationOptionsDialog.getNegation();
                               String quantifierValue = relationOptionsDialog.getQuantifierValue();

@@ -30,6 +30,7 @@ import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
+import edu.ucdenver.ccp.knowtator.model.object.Quantifier;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import java.io.BufferedWriter;
@@ -338,7 +339,7 @@ public class BratStandoffUtil {
                                                   id,
                                                   annotator,
                                                   owlObjectProperty,
-                                                  "",
+                                                  Quantifier.SOME,
                                                   null,
                                                   false,
                                                   ""));

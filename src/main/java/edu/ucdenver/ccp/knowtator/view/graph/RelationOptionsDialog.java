@@ -27,6 +27,7 @@ package edu.ucdenver.ccp.knowtator.view.graph;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import edu.ucdenver.ccp.knowtator.model.object.Quantifier;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
@@ -69,14 +70,10 @@ class RelationOptionsDialog extends JDialog {
   private JCheckBox negateCheckBox;
   private JTextField quantifierValueTextField;
   private JTextArea previewTextArea;
-  private JComboBox<String> quantifierChooser;
+  private JComboBox<Quantifier> quantifierChooser;
   private JTextArea relationNotes;
 
-  private static final String SOME = "some";
-  private static final String ONLY = "only";
-  private static final String EXACTLY = "exactly";
-  private static final String MAX = "max";
-  private static final String MIN = "min";
+
 
   private int result;
 
@@ -118,7 +115,7 @@ class RelationOptionsDialog extends JDialog {
         JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
     quantifierChooser.setModel(
-        new DefaultComboBoxModel<>(new String[] {SOME, ONLY, EXACTLY, MAX, MIN}));
+        new DefaultComboBoxModel<>(Quantifier.values()));
 
     quantifierChooser.addItemListener(
         e -> {
@@ -154,7 +151,7 @@ class RelationOptionsDialog extends JDialog {
   }
 
   private void onOK() {
-    String quantifier = (String) quantifierChooser.getSelectedItem();
+    Quantifier quantifier = (Quantifier) quantifierChooser.getSelectedItem();
 
     // Correct for missing 0 if a decimal point is present
     if (quantifierValueTextField.getText().endsWith(".")) {
@@ -163,7 +160,7 @@ class RelationOptionsDialog extends JDialog {
 
     // Don't allow non-numeric values of exactly, min, or max are selected
     if (quantifier != null
-        && (quantifier.equals(EXACTLY) || quantifier.equals(MIN) || quantifier.equals(MAX))
+        && (quantifier.equals(Quantifier.EXACTLY) || quantifier.equals(Quantifier.MIN) || quantifier.equals(Quantifier.MAX))
         && !NumberUtils.isNumber(quantifierValueTextField.getText())) {
       JOptionPane.showMessageDialog(this, "Please enter a numeric value");
       return;
@@ -195,8 +192,8 @@ class RelationOptionsDialog extends JDialog {
    *
    * @return the quantifier
    */
-  public String getQuantifier() {
-    return (String) quantifierChooser.getSelectedItem();
+  public Quantifier getQuantifier() {
+    return (Quantifier) quantifierChooser.getSelectedItem();
   }
 
   /**

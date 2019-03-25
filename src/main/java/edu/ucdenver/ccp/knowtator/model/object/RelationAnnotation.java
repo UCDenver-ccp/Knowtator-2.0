@@ -28,8 +28,6 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGeometry;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
-import java.util.Arrays;
-import java.util.List;
 import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
@@ -37,9 +35,8 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 public class RelationAnnotation extends mxCell
     implements GraphBoundModelObject<RelationAnnotation> {
   /** The Quantifiers. */
-  static final List<String> QUANTIFIERS = Arrays.asList("some", "only", "max", "min", "exactly");
 
-  private final String quantifier;
+  private final Quantifier quantifier;
   private final String quantifierValue;
   private final Profile annotator;
   private String bratID;
@@ -74,14 +71,14 @@ public class RelationAnnotation extends mxCell
    * @param isNegated the is negated
    * @param motivation the motivation
    */
-  RelationAnnotation(
+  public RelationAnnotation(
       GraphSpace graphSpace,
       String id,
       AnnotationNode source,
       AnnotationNode target,
       OWLObjectProperty property,
       Profile annotator,
-      String quantifier,
+      Quantifier quantifier,
       String quantifierValue,
       Boolean isNegated,
       String motivation) {
@@ -224,7 +221,7 @@ public class RelationAnnotation extends mxCell
    *
    * @return the quantifier
    */
-  public String getQuantifier() {
+  public Quantifier getQuantifier() {
     return quantifier;
   }
 
