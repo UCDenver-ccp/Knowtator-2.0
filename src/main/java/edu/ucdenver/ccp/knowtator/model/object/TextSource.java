@@ -51,10 +51,10 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
 
   private final KnowtatorModel model;
   private final File saveFile;
-  private final ConceptAnnotationCollection conceptAnnotationCollection;
+  private final ConceptAnnotationCollection conceptAnnotations;
   private File textFile;
   private String content;
-  private final GraphSpaceCollection graphSpaceCollection;
+  private final GraphSpaceCollection graphSpaces;
   private String id;
 
   /**
@@ -72,8 +72,8 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
                 model.getAnnotationsLocation().getAbsolutePath(),
                 String.format("%s.xml", textFileName.replace(".txt", "")))
             : saveFile;
-    this.conceptAnnotationCollection = new ConceptAnnotationCollection(model, this);
-    this.graphSpaceCollection = new GraphSpaceCollection(model);
+    this.conceptAnnotations = new ConceptAnnotationCollection(model, this);
+    this.graphSpaces = new GraphSpaceCollection(model);
     model.addModelListener(this);
 
     this.id = model.verifyId(FilenameUtils.getBaseName(textFileName), this, true);
@@ -118,7 +118,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @return the concept annotations
    */
   public ConceptAnnotationCollection getConceptAnnotations() {
-    return conceptAnnotationCollection;
+    return conceptAnnotations;
   }
 
   @Override
@@ -133,8 +133,8 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
 
   @Override
   public void dispose() {
-    conceptAnnotationCollection.dispose();
-    graphSpaceCollection.dispose();
+    conceptAnnotations.dispose();
+    graphSpaces.dispose();
   }
 
   @Override
@@ -179,7 +179,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @return the graph spaces
    */
   public GraphSpaceCollection getGraphSpaces() {
-    return graphSpaceCollection;
+    return graphSpaces;
   }
 
   @Override
@@ -227,7 +227,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @return the selected annotation
    */
   public Optional<ConceptAnnotation> getSelectedAnnotation() {
-    return conceptAnnotationCollection.getSelection();
+    return conceptAnnotations.getSelection();
   }
 
   /**
@@ -237,17 +237,17 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @return the spans
    */
   public SpanCollection getSpans(Integer loc) {
-    return conceptAnnotationCollection.getSpans(loc);
+    return conceptAnnotations.getSpans(loc);
   }
 
   /** Select next span. */
   public void selectNextSpan() {
-    conceptAnnotationCollection.selectNextSpan();
+    conceptAnnotations.selectNextSpan();
   }
 
   /** Select previous span. */
   public void selectPreviousSpan() {
-    conceptAnnotationCollection.selectPreviousSpan();
+    conceptAnnotations.selectPreviousSpan();
   }
 
   /**
@@ -257,7 +257,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @return the annotation
    */
   public Optional<ConceptAnnotation> getAnnotation(String annotationID) {
-    return conceptAnnotationCollection.get(annotationID);
+    return conceptAnnotations.get(annotationID);
   }
 
   /**
@@ -266,7 +266,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @param conceptAnnotation the concept annotation
    */
   public void setSelectedConceptAnnotation(ConceptAnnotation conceptAnnotation) {
-    conceptAnnotationCollection.setSelection(conceptAnnotation);
+    conceptAnnotations.setSelection(conceptAnnotation);
   }
 
   /**
@@ -275,17 +275,17 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @param graphSpace the graph space
    */
   public void add(GraphSpace graphSpace) {
-    graphSpaceCollection.add(graphSpace);
+    graphSpaces.add(graphSpace);
   }
 
   /** Select previous graph space. */
   public void selectPreviousGraphSpace() {
-    graphSpaceCollection.selectPrevious();
+    graphSpaces.selectPrevious();
   }
 
   /** Select next graph space. */
   public void selectNextGraphSpace() {
-    graphSpaceCollection.selectNext();
+    graphSpaces.selectNext();
   }
 
   /**
@@ -294,7 +294,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @return the selected graph space
    */
   public Optional<GraphSpace> getSelectedGraphSpace() {
-    return graphSpaceCollection.getSelection();
+    return graphSpaces.getSelection();
   }
 
   /**
@@ -304,7 +304,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @return the boolean
    */
   public boolean containsID(String id) {
-    return graphSpaceCollection.containsID(id);
+    return graphSpaces.containsID(id);
   }
 
   /**
@@ -313,7 +313,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @return the optional
    */
   public Optional<ConceptAnnotation> firstConceptAnnotation() {
-    return conceptAnnotationCollection.first();
+    return conceptAnnotations.first();
   }
 
   /**
@@ -322,7 +322,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @return the number of graph spaces
    */
   public int getNumberOfGraphSpaces() {
-    return graphSpaceCollection.size();
+    return graphSpaces.size();
   }
 
   /**
@@ -331,7 +331,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @return the number of concept annotations
    */
   public int getNumberOfConceptAnnotations() {
-    return conceptAnnotationCollection.size();
+    return conceptAnnotations.size();
   }
 
   /**
@@ -340,11 +340,11 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @param graphSpace the graph space
    */
   public void setSelectedGraphSpace(GraphSpace graphSpace) {
-    graphSpaceCollection.setSelection(graphSpace);
+    graphSpaces.setSelection(graphSpace);
   }
 
   /** Select next concept annotation. */
   public void selectNextConceptAnnotation() {
-    conceptAnnotationCollection.selectNext();
+    conceptAnnotations.selectNext();
   }
 }

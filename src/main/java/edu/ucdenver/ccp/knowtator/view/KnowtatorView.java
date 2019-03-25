@@ -544,6 +544,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                   });
         });
 
+    removeTextSourceButton.addActionListener(
+        e -> pickAction(this, null, null, new ActionParameters(REMOVE, DOCUMENT)));
+
     assignColorToClassButton.addActionListener(
         e ->
             // TODO: This could be removed if class selection were reflected in color list
@@ -551,8 +554,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                 .flatMap(OwlModel::getSelectedOwlClass)
                 .ifPresent(owlClass -> assignColorToClass(this, owlClass)));
 
-    removeTextSourceButton.addActionListener(
-        e -> pickAction(this, null, null, new ActionParameters(REMOVE, DOCUMENT)));
 
     undoButton.addActionListener(
         e -> getModel().filter(UndoManager::canUndo).ifPresent(UndoManager::undo));
@@ -616,7 +617,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                   Optional.ofNullable(e1)
                       .filter(
                           event -> event.getActionCommand().equals(JFileChooser.APPROVE_SELECTION))
-                      .ifPresent(event -> open(fileChooser)));
+                      .ifPresent(event -> KnowtatorView.this.open(fileChooser)));
 
           switch (fileList.getSelectedValue()) {
             case "Open":
@@ -643,7 +644,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
               break;
           }
 
-          fileChooser.showOpenDialog(this);
+          fileChooser.showOpenDialog(KnowtatorView.this);
         });
 
     runIaaButton.addActionListener(
