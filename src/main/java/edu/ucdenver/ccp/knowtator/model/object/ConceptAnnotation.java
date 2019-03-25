@@ -317,7 +317,7 @@ public class ConceptAnnotation extends SpanCollection
     return String.format(
         "%s%n(%s)",
         stream().map(Span::toString).collect(Collectors.joining("\n")),
-        model.getOwlEntityRendering(owlClass));
+        owlClass == null ? annotationType : model.getOwlEntityRendering(owlClass));
   }
 
   /**

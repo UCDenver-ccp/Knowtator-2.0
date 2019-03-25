@@ -95,6 +95,8 @@ public final class KnowtatorXmlUtil extends XmlUtil {
     readToConceptAnnotationCollection(
         textSource.getKnowtatorModel(), textSource, textSource.getConceptAnnotations(), parent);
     readToGraphSpaceCollection(textSource, textSource.getGraphSpaces(), parent);
+    readToConceptAnnotationCollection(
+        textSource.getKnowtatorModel(), textSource, textSource.structureAnnotations, parent);
     textSource.getKnowtatorModel().addModelListener(textSource);
   }
 

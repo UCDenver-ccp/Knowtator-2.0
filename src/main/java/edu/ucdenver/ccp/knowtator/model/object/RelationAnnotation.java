@@ -140,7 +140,7 @@ public class RelationAnnotation extends mxCell
    * @return the owl property rendering
    */
   public String getOwlPropertyRendering() {
-    return model.getOwlEntityRendering(property);
+    return property == null ? "" : model.getOwlEntityRendering(property);
   }
 
   /**

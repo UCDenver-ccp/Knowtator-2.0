@@ -52,9 +52,11 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
   private final KnowtatorModel model;
   private final File saveFile;
   private final ConceptAnnotationCollection conceptAnnotations;
+  public ConceptAnnotationCollection structureAnnotations;
   private File textFile;
   private String content;
   private final GraphSpaceCollection graphSpaces;
+  private final GraphSpaceCollection structureGraphSpaces;
   private String id;
 
   /**
@@ -74,6 +76,8 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
             : saveFile;
     this.conceptAnnotations = new ConceptAnnotationCollection(model, this);
     this.graphSpaces = new GraphSpaceCollection(model);
+    this.structureAnnotations = new ConceptAnnotationCollection(model, this);
+    this.structureGraphSpaces = new GraphSpaceCollection(model);
     model.addModelListener(this);
 
     this.id = model.verifyId(FilenameUtils.getBaseName(textFileName), this, true);
@@ -346,5 +350,13 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
   /** Select next concept annotation. */
   public void selectNextConceptAnnotation() {
     conceptAnnotations.selectNext();
+  }
+
+  public ConceptAnnotationCollection getStructureAnnotations() {
+    return structureAnnotations;
+  }
+
+  public GraphSpaceCollection getStructureGraphSpaces() {
+    return structureGraphSpaces;
   }
 }

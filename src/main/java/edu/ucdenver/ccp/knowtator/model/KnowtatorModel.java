@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator.model;
 
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
+import edu.ucdenver.ccp.knowtator.io.conll.ConllUtil;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXmlUtil;
 import edu.ucdenver.ccp.knowtator.io.knowtator.OldKnowtatorXmlUtil;
 import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollection;
@@ -67,6 +68,7 @@ public class KnowtatorModel extends OwlModel {
       setRenderRdfsLabel();
       log.info("Loading profiles");
       KnowtatorXmlUtil xmlUtil = new KnowtatorXmlUtil();
+      ConllUtil conllUtil = new ConllUtil();
       OldKnowtatorXmlUtil oldXmlUtil = new OldKnowtatorXmlUtil();
       Files.list(getProfilesLocation().toPath())
           .filter(path -> path.toString().endsWith(".xml"))
@@ -79,6 +81,16 @@ public class KnowtatorModel extends OwlModel {
           .map(Path::toFile)
           .peek(file -> xmlUtil.readToTextSourceCollection(this, file))
           .forEach(file -> oldXmlUtil.readToTextSourceCollection(this, file));
+
+      log.info("Loading structures");
+      Files.list(structuresLocation.toPath())
+          .filter(path -> path.toString().endsWith(".xml"))
+          .map(Path::toFile)
+          .forEach(file -> xmlUtil.readToTextSourceCollection(this, file));
+      Files.list(structuresLocation.toPath())
+          .filter(path -> path.toString().endsWith(".conllu"))
+          .map(Path::toFile)
+          .forEach(file -> conllUtil.readToStructureAnnotations(this, file));
 
       profiles.first().ifPresent(profiles::setSelection);
       textSources.first().ifPresent(textSources::setSelection);

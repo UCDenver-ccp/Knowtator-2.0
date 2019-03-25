@@ -57,6 +57,8 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
   private final File annotationsLocation;
   private final File articlesLocation;
   private final File profilesLocation;
+  final File structuresLocation;
+
   /** The Ontologies location. */
   final File ontologiesLocation;
 
@@ -115,11 +117,13 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
       annotationsLocation = new File(projectLocation, "Annotations");
       profilesLocation = (new File(projectLocation, "Profiles"));
       ontologiesLocation = new File(projectLocation, "Ontologies");
+      structuresLocation = new File(projectLocation, "Structures");
       Files.createDirectories(projectLocation.toPath());
       Files.createDirectories(articlesLocation.toPath());
       Files.createDirectories(annotationsLocation.toPath());
       Files.createDirectories(profilesLocation.toPath());
       Files.createDirectories(ontologiesLocation.toPath());
+      Files.createDirectories(structuresLocation.toPath());
     } else {
       throw new IOException();
     }
