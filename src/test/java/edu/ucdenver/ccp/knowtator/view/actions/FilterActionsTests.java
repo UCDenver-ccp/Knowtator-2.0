@@ -60,23 +60,19 @@ class FilterActionsTests {
         new FilterAction(model, PROFILE, true),
         TestingHelpers.defaultExpectedTextSources,
         TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans - 3,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples);
+        TestingHelpers.defaultExpectedSpans - 3, TestingHelpers.defaultExpectedGraphSpaces, TestingHelpers.defaultExpectedProfiles, TestingHelpers.defaultExpectedHighlighters, TestingHelpers.defaultExpectedAnnotationNodes, TestingHelpers.defaultExpectedTriples, TestingHelpers.defaultExpectedStructureAnnotations,
+        TestingHelpers.defaultExpectedStructureGraphSpaces,
+        TestingHelpers.defaultExpectedStructureAnnotationNodes,
+        TestingHelpers.defaultExpectedStructureTriples);
     TestingHelpers.testKnowtatorAction(
         model,
         new FilterAction(model, PROFILE, false),
         TestingHelpers.defaultExpectedTextSources,
         TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples);
+        TestingHelpers.defaultExpectedSpans, TestingHelpers.defaultExpectedGraphSpaces, TestingHelpers.defaultExpectedProfiles, TestingHelpers.defaultExpectedHighlighters, TestingHelpers.defaultExpectedAnnotationNodes, TestingHelpers.defaultExpectedTriples, TestingHelpers.defaultExpectedStructureAnnotations,
+        TestingHelpers.defaultExpectedStructureGraphSpaces,
+        TestingHelpers.defaultExpectedStructureAnnotationNodes,
+        TestingHelpers.defaultExpectedStructureTriples);
 
     TextSource textSource = model.getSelectedTextSource().get();
     ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
@@ -89,22 +85,18 @@ class FilterActionsTests {
         new FilterAction(model, OWLCLASS, true),
         TestingHelpers.defaultExpectedTextSources,
         TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans - 5,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples);
+        TestingHelpers.defaultExpectedSpans - 5, TestingHelpers.defaultExpectedGraphSpaces, TestingHelpers.defaultExpectedProfiles, TestingHelpers.defaultExpectedHighlighters, TestingHelpers.defaultExpectedAnnotationNodes, TestingHelpers.defaultExpectedTriples, TestingHelpers.defaultExpectedStructureAnnotations,
+        TestingHelpers.defaultExpectedStructureGraphSpaces,
+        TestingHelpers.defaultExpectedStructureAnnotationNodes,
+        TestingHelpers.defaultExpectedStructureTriples);
     TestingHelpers.testKnowtatorAction(
         model,
         new FilterAction(model, OWLCLASS, false),
         TestingHelpers.defaultExpectedTextSources,
         TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples);
+        TestingHelpers.defaultExpectedSpans, TestingHelpers.defaultExpectedGraphSpaces, TestingHelpers.defaultExpectedProfiles, TestingHelpers.defaultExpectedHighlighters, TestingHelpers.defaultExpectedAnnotationNodes, TestingHelpers.defaultExpectedTriples, TestingHelpers.defaultExpectedStructureAnnotations,
+        TestingHelpers.defaultExpectedStructureGraphSpaces,
+        TestingHelpers.defaultExpectedStructureAnnotationNodes,
+        TestingHelpers.defaultExpectedStructureTriples);
   }
 }

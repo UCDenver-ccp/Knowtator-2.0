@@ -85,18 +85,40 @@ public final class KnowtatorXmlUtil extends XmlUtil {
           for (Node documentNode :
               KnowtatorXmlUtil.asList(parent.getElementsByTagName(KnowtatorXmlTags.DOCUMENT))) {
             Element documentElement = (Element) documentNode;
-            readToTextSource(textSource, documentElement);
+            readToTextSource(
+                textSource,
+                textSource.getConceptAnnotations(),
+                textSource.getGraphSpaces(),
+                documentElement);
           }
         });
   }
 
-  private void readToTextSource(TextSource textSource, Element parent) {
+  public void readStructuresToTextSource(TextSource textSource, File file) {
+    Optional<Element> parentOptional = getRootElement(file);
+    parentOptional.ifPresent(
+        parent -> {
+          for (Node documentNode :
+              KnowtatorXmlUtil.asList(parent.getElementsByTagName(KnowtatorXmlTags.DOCUMENT))) {
+            Element documentElement = (Element) documentNode;
+            readToTextSource(
+                textSource,
+                textSource.structureAnnotations,
+                textSource.structureGraphSpaces,
+                documentElement);
+          }
+        });
+  }
+
+  private void readToTextSource(
+      TextSource textSource,
+      ConceptAnnotationCollection annotations,
+      GraphSpaceCollection graphSpaces,
+      Element parent) {
     textSource.getKnowtatorModel().removeModelListener(textSource);
     readToConceptAnnotationCollection(
-        textSource.getKnowtatorModel(), textSource, textSource.getConceptAnnotations(), parent);
-    readToGraphSpaceCollection(textSource, textSource.getGraphSpaces(), parent);
-    readToConceptAnnotationCollection(
-        textSource.getKnowtatorModel(), textSource, textSource.structureAnnotations, parent);
+        textSource.getKnowtatorModel(), textSource, annotations, parent);
+    readToGraphSpaceCollection(textSource, graphSpaces, parent);
     textSource.getKnowtatorModel().addModelListener(textSource);
   }
 
@@ -106,7 +128,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
    * @param model the model
    * @param file the file
    */
-  public void readToTextSourceCollection(KnowtatorModel model, File file) {
+  public void readToTextSourceCollection(KnowtatorModel model, File file, boolean isStructures) {
     Optional<Element> parentOptional = getRootElement(file);
     parentOptional.ifPresent(
         parent -> {
@@ -120,7 +142,19 @@ public final class KnowtatorXmlUtil extends XmlUtil {
             }
             TextSource newTextSource = new TextSource(model, file, textFileName);
             model.getTextSources().add(newTextSource);
-            readToTextSource(newTextSource, documentElement);
+            if (isStructures) {
+              readToTextSource(
+                  newTextSource,
+                  newTextSource.structureAnnotations,
+                  newTextSource.structureGraphSpaces,
+                  documentElement);
+            } else {
+              readToTextSource(
+                  newTextSource,
+                  newTextSource.getConceptAnnotations(),
+                  newTextSource.getGraphSpaces(),
+                  documentElement);
+            }
           }
         });
   }

@@ -122,7 +122,7 @@ public class ConllUtil {
 
               sentences.forEach(
                   sentence1 -> {
-                    GraphSpace graphSpace = new GraphSpace(textSource, "Dependency tree");
+                    GraphSpace graphSpace = new GraphSpace(textSource, null);
                     textSource.getStructureGraphSpaces().add(graphSpace);
                     List<AnnotationNode> nodes =
                         sentence1.stream()

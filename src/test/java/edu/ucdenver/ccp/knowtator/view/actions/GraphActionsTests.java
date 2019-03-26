@@ -67,7 +67,11 @@ class GraphActionsTests {
         TestingHelpers.defaultExpectedProfiles,
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes - 1,
-        TestingHelpers.defaultExpectedTriples - 1);
+        TestingHelpers.defaultExpectedTriples - 1,
+        TestingHelpers.defaultExpectedStructureAnnotations,
+        TestingHelpers.defaultExpectedStructureGraphSpaces,
+        TestingHelpers.defaultExpectedStructureAnnotationNodes,
+        TestingHelpers.defaultExpectedStructureTriples);
   }
 
   @Test
@@ -87,7 +91,11 @@ class GraphActionsTests {
         TestingHelpers.defaultExpectedProfiles,
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples - 1);
+        TestingHelpers.defaultExpectedTriples - 1,
+        TestingHelpers.defaultExpectedStructureAnnotations,
+        TestingHelpers.defaultExpectedStructureGraphSpaces,
+        TestingHelpers.defaultExpectedStructureAnnotationNodes,
+        TestingHelpers.defaultExpectedStructureTriples);
   }
 
   @Test
@@ -107,7 +115,11 @@ class GraphActionsTests {
         TestingHelpers.defaultExpectedProfiles,
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes + 1,
-        TestingHelpers.defaultExpectedTriples);
+        TestingHelpers.defaultExpectedTriples,
+        TestingHelpers.defaultExpectedStructureAnnotations,
+        TestingHelpers.defaultExpectedStructureGraphSpaces,
+        TestingHelpers.defaultExpectedStructureAnnotationNodes,
+        TestingHelpers.defaultExpectedStructureTriples);
   }
 
   @Test
@@ -132,7 +144,11 @@ class GraphActionsTests {
         TestingHelpers.defaultExpectedProfiles,
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples + 1);
+        TestingHelpers.defaultExpectedTriples + 1,
+        TestingHelpers.defaultExpectedStructureAnnotations,
+        TestingHelpers.defaultExpectedStructureGraphSpaces,
+        TestingHelpers.defaultExpectedStructureAnnotationNodes,
+        TestingHelpers.defaultExpectedStructureTriples);
   }
 
   @Test
@@ -152,6 +168,10 @@ class GraphActionsTests {
         TestingHelpers.defaultExpectedProfiles,
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples);
+        TestingHelpers.defaultExpectedTriples,
+        TestingHelpers.defaultExpectedStructureAnnotations,
+        TestingHelpers.defaultExpectedStructureGraphSpaces,
+        TestingHelpers.defaultExpectedStructureAnnotationNodes,
+        TestingHelpers.defaultExpectedStructureTriples);
   }
 }

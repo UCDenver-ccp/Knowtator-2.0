@@ -109,12 +109,16 @@ class OwlModelTests {
         renamer.changeIRI(entityToIriMap),
         TestingHelpers.defaultExpectedTextSources,
         TestingHelpers.defaultExpectedConceptAnnotations,
+        TestingHelpers.defaultExpectedStructureAnnotations,
         TestingHelpers.defaultExpectedSpans,
         TestingHelpers.defaultExpectedGraphSpaces,
+        TestingHelpers.defaultExpectedStructureGraphSpaces,
         TestingHelpers.defaultExpectedProfiles,
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples);
+        TestingHelpers.defaultExpectedStructureAnnotationNodes,
+        TestingHelpers.defaultExpectedTriples,
+        TestingHelpers.defaultExpectedStructureTriples);
 
     ConceptAnnotation conceptAnnotation =
         model.getSelectedTextSource().get().getSelectedAnnotation().get();
@@ -139,12 +143,16 @@ class OwlModelTests {
         renamer.changeIRI(entityToIriMap),
         TestingHelpers.defaultExpectedTextSources,
         TestingHelpers.defaultExpectedConceptAnnotations,
+        TestingHelpers.defaultExpectedStructureAnnotations,
         TestingHelpers.defaultExpectedSpans,
         TestingHelpers.defaultExpectedGraphSpaces,
+        TestingHelpers.defaultExpectedStructureGraphSpaces,
         TestingHelpers.defaultExpectedProfiles,
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples);
+        TestingHelpers.defaultExpectedStructureAnnotationNodes,
+        TestingHelpers.defaultExpectedTriples,
+        TestingHelpers.defaultExpectedStructureTriples);
 
     GraphSpace graphSpace = model.getSelectedTextSource().get().getSelectedGraphSpace().get();
     RelationAnnotation relationAnnotation =
@@ -168,12 +176,16 @@ class OwlModelTests {
         remover.getChanges(),
         TestingHelpers.defaultExpectedTextSources,
         TestingHelpers.defaultExpectedConceptAnnotations - 2,
+        TestingHelpers.defaultExpectedStructureAnnotations,
         TestingHelpers.defaultExpectedSpans - 2,
         TestingHelpers.defaultExpectedGraphSpaces,
+        TestingHelpers.defaultExpectedStructureGraphSpaces,
         TestingHelpers.defaultExpectedProfiles,
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes - 3,
-        TestingHelpers.defaultExpectedTriples - 2);
+        TestingHelpers.defaultExpectedStructureAnnotationNodes,
+        TestingHelpers.defaultExpectedTriples - 2,
+        TestingHelpers.defaultExpectedStructureTriples);
     assert !ontology.containsClassInSignature(class2.getIRI());
   }
 
@@ -188,12 +200,16 @@ class OwlModelTests {
         remover.getChanges(),
         TestingHelpers.defaultExpectedTextSources,
         TestingHelpers.defaultExpectedConceptAnnotations,
+        TestingHelpers.defaultExpectedStructureAnnotations,
         TestingHelpers.defaultExpectedSpans,
         TestingHelpers.defaultExpectedGraphSpaces,
+        TestingHelpers.defaultExpectedStructureGraphSpaces,
         TestingHelpers.defaultExpectedProfiles,
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples - 2);
+        TestingHelpers.defaultExpectedStructureAnnotationNodes,
+        TestingHelpers.defaultExpectedTriples - 2,
+        TestingHelpers.defaultExpectedStructureTriples);
     assert !ontology.containsObjectPropertyInSignature(owlObjectProperty.getIRI());
   }
 
@@ -218,12 +234,16 @@ class OwlModelTests {
         changes,
         TestingHelpers.defaultExpectedTextSources,
         TestingHelpers.defaultExpectedConceptAnnotations,
+        TestingHelpers.defaultExpectedStructureAnnotations,
         TestingHelpers.defaultExpectedSpans,
         TestingHelpers.defaultExpectedGraphSpaces,
+        TestingHelpers.defaultExpectedStructureGraphSpaces,
         TestingHelpers.defaultExpectedProfiles,
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples);
+        TestingHelpers.defaultExpectedStructureAnnotationNodes,
+        TestingHelpers.defaultExpectedTriples,
+        TestingHelpers.defaultExpectedStructureTriples);
 
     assert !isSubClassTest(class1, class2);
     assert isSubClassTest(class3, class2);
@@ -273,12 +293,16 @@ class OwlModelTests {
         changes,
         TestingHelpers.defaultExpectedTextSources,
         TestingHelpers.defaultExpectedConceptAnnotations,
+        TestingHelpers.defaultExpectedStructureAnnotations,
         TestingHelpers.defaultExpectedSpans,
         TestingHelpers.defaultExpectedGraphSpaces,
+        TestingHelpers.defaultExpectedStructureGraphSpaces,
         TestingHelpers.defaultExpectedProfiles,
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples);
+        TestingHelpers.defaultExpectedStructureAnnotationNodes,
+        TestingHelpers.defaultExpectedTriples,
+        TestingHelpers.defaultExpectedStructureTriples);
 
     assert isSubObjectPropertyTest(property1, property2);
     assert isSubObjectPropertyTest(property3, property2);

@@ -47,11 +47,15 @@ public class TestingHelpers {
   /** The constant defaultExpectedConceptAnnotations. */
   public static final int defaultExpectedConceptAnnotations = 6;
 
+  public static final int defaultExpectedStructureAnnotations = 0;
+
   /** The constant defaultExpectedSpans. */
   public static final int defaultExpectedSpans = 7;
 
   /** The constant defaultExpectedGraphSpaces. */
   public static final int defaultExpectedGraphSpaces = 3;
+
+  public static final int defaultExpectedStructureGraphSpaces = 0;
 
   /** The constant defaultExpectedProfiles. */
   public static final int defaultExpectedProfiles = 2;
@@ -62,8 +66,12 @@ public class TestingHelpers {
   /** The constant defaultExpectedAnnotationNodes. */
   public static final int defaultExpectedAnnotationNodes = 7;
 
+  public static final int defaultExpectedStructureAnnotationNodes = 0;
+
   /** The constant defaultExpectedTriples. */
   public static final int defaultExpectedTriples = 4;
+
+  public static final int defaultExpectedStructureTriples = 0;
 
   /**
    * Gets project file.
@@ -109,6 +117,22 @@ public class TestingHelpers {
   }
 
   /**
+   * Gets loaded model.
+   *
+   * @return the loaded model
+   * @throws IOException the io exception
+   */
+  public static KnowtatorModel getLoadedModel(String projectFileName) throws IOException {
+    File projectDirectory = getProjectFile(projectFileName).getParentFile();
+    File tempProjectDir = Files.createTempDir();
+    FileUtils.copyDirectory(projectDirectory, tempProjectDir);
+    KnowtatorModel model = new KnowtatorModel(tempProjectDir, null);
+    model.load();
+
+    return model;
+  }
+
+  /**
    * Check default collection values.
    *
    * @param controller the controller
@@ -123,11 +147,15 @@ public class TestingHelpers {
         defaultExpectedProfiles,
         defaultExpectedHighlighters,
         defaultExpectedAnnotationNodes,
-        defaultExpectedTriples);
+        defaultExpectedTriples,
+        defaultExpectedStructureAnnotations,
+        defaultExpectedStructureGraphSpaces,
+        defaultExpectedStructureAnnotationNodes,
+        defaultExpectedStructureTriples);
   }
 
-  private static void countCollections(
-      KnowtatorModel controller,
+  public static void countCollections(
+      KnowtatorModel model,
       int expectedTextSources,
       int expectedConceptAnnotations,
       int expectedSpans,
@@ -135,15 +163,19 @@ public class TestingHelpers {
       int expectedProfiles,
       int expectedHighlighters,
       int expectedAnnotationNodes,
-      int expectedTriples) {
+      int expectedTriples,
+      int expectedStructureAnnotations,
+      int expectedStructureGraphSpaces,
+      int expectedStructureAnnotationNodes,
+      int expectedStructureTriples) {
 
-    int actualTextSources = controller.getNumberOfTextSources();
+    int actualTextSources = model.getNumberOfTextSources();
     int actualConceptAnnotations =
-        controller.getTextSources().stream()
-            .mapToInt(TextSource::getNumberOfConceptAnnotations)
-            .sum();
+        model.getTextSources().stream().mapToInt(TextSource::getNumberOfConceptAnnotations).sum();
+    int actualStructureAnnotations =
+        model.getTextSources().stream().mapToInt(TextSource::getNumberOfStructureAnnotations).sum();
     int actualSpans =
-        controller.getTextSources().stream()
+        model.getTextSources().stream()
             .mapToInt(textSource -> textSource.getSpans(null).size())
             .sum();
 
@@ -154,27 +186,31 @@ public class TestingHelpers {
         : String.format(
             "There were %d concept annotations instead of %d",
             actualConceptAnnotations, expectedConceptAnnotations);
+    assert actualStructureAnnotations == expectedStructureAnnotations
+        : String.format(
+            "There were %d structure annotations instead of %d",
+            actualStructureAnnotations, expectedStructureAnnotations);
     assert actualSpans == expectedSpans
         : String.format("There were %d spans instead of %d", actualSpans, expectedSpans);
 
-    int actualProfiles = controller.getNumberOfProfiles();
+    int actualProfiles = model.getNumberOfProfiles();
     assert actualProfiles == expectedProfiles
         : String.format("There were %d profiles instead of %d", actualProfiles, expectedProfiles);
 
     int actualHighlighters =
-        controller.getProfiles().stream().mapToInt(profile -> profile.getColors().size()).sum();
+        model.getProfiles().stream().mapToInt(profile -> profile.getColors().size()).sum();
     assert actualHighlighters == expectedHighlighters
         : String.format(
             "There were %d highlighters instead of %d", actualHighlighters, expectedHighlighters);
 
     int actualGraphSpaces =
-        controller.getTextSources().stream().mapToInt(TextSource::getNumberOfGraphSpaces).sum();
+        model.getTextSources().stream().mapToInt(TextSource::getNumberOfGraphSpaces).sum();
     assert actualGraphSpaces == expectedGraphSpaces
         : String.format(
             "There were %d graph spaces instead of %d", actualGraphSpaces, expectedGraphSpaces);
 
     int actualAnnotationNodes =
-        controller.getTextSources().stream()
+        model.getTextSources().stream()
             .mapToInt(
                 textSource ->
                     textSource.getGraphSpaces().stream()
@@ -188,7 +224,7 @@ public class TestingHelpers {
             "There were %d vertices instead of %d", actualAnnotationNodes, expectedAnnotationNodes);
 
     int actualTriples =
-        controller.getTextSources().stream()
+        model.getTextSources().stream()
             .mapToInt(
                 textSource ->
                     textSource.getGraphSpaces().stream()
@@ -199,6 +235,43 @@ public class TestingHelpers {
             .sum();
     assert actualTriples == expectedTriples
         : String.format("There were %d triples instead of %d", actualTriples, expectedTriples);
+
+    int actualStructureGraphSpaces =
+        model.getTextSources().stream().mapToInt(TextSource::getNumberOfStructureGraphSpaces).sum();
+    assert actualStructureGraphSpaces == expectedStructureGraphSpaces
+        : String.format(
+            "There were %d structure graph spaces instead of %d",
+            actualStructureGraphSpaces, expectedStructureGraphSpaces);
+
+    int actualStructureAnnotationNodes =
+        model.getTextSources().stream()
+            .mapToInt(
+                textSource ->
+                    textSource.getStructureGraphSpaces().stream()
+                        .mapToInt(
+                            graphSpace1 ->
+                                graphSpace1.getChildVertices(graphSpace1.getDefaultParent()).length)
+                        .sum())
+            .sum();
+    assert actualStructureAnnotationNodes == expectedStructureAnnotationNodes
+        : String.format(
+            "There were %d structure vertices instead of %d",
+            actualStructureAnnotationNodes, expectedStructureAnnotationNodes);
+
+    int actualStructureTriples =
+        model.getTextSources().stream()
+            .mapToInt(
+                textSource ->
+                    textSource.getStructureGraphSpaces().stream()
+                        .mapToInt(
+                            graphSpace1 ->
+                                graphSpace1.getChildEdges(graphSpace1.getDefaultParent()).length)
+                        .sum())
+            .sum();
+    assert actualStructureTriples == expectedStructureTriples
+        : String.format(
+            "There were %d structure triples instead of %d",
+            actualStructureTriples, expectedStructureTriples);
   }
 
   /**
@@ -220,12 +293,16 @@ public class TestingHelpers {
       List<? extends OWLOntologyChange> changes,
       int expectedTextSources,
       int expectedConceptAnnotations,
+      int expectedStructureAnnotations,
       int expectedSpans,
       int expectedGraphSpaces,
+      int expectedStructureGraphSpaces,
       int expectedProfiles,
       int expectedHighlighters,
       int expectedAnnotationNodes,
-      int expectedTriples) {
+      int expectedStructureAnnotationNodes,
+      int expectedTriples,
+      int expectedStructureTriples) {
     TestingHelpers.checkDefaultCollectionValues(controller);
     controller.getOwlOntologyManager().applyChanges(changes);
     TestingHelpers.countCollections(
@@ -237,7 +314,11 @@ public class TestingHelpers {
         expectedProfiles,
         expectedHighlighters,
         expectedAnnotationNodes,
-        expectedTriples);
+        expectedTriples,
+        expectedStructureAnnotations,
+        expectedStructureGraphSpaces,
+        expectedStructureAnnotationNodes,
+        expectedStructureTriples);
   }
 
   /**
@@ -265,7 +346,11 @@ public class TestingHelpers {
       int expectedProfiles,
       int expectedHighlighters,
       int expectedAnnotationNodes,
-      int expectedTriples)
+      int expectedTriples,
+      int expectedStructureAnnotations,
+      int expectedStructureGraphSpaces,
+      int expectedStructureAnnotationNodes,
+      int expectedStructureTriples)
       throws ActionUnperformable {
     TestingHelpers.checkDefaultCollectionValues(controller);
     controller.registerAction(action);
@@ -278,7 +363,11 @@ public class TestingHelpers {
         expectedProfiles,
         expectedHighlighters,
         expectedAnnotationNodes,
-        expectedTriples);
+        expectedTriples,
+        expectedStructureAnnotations,
+        expectedStructureGraphSpaces,
+        expectedStructureAnnotationNodes,
+        expectedStructureTriples);
     controller.undo();
     TestingHelpers.checkDefaultCollectionValues(controller);
     controller.redo();
@@ -291,7 +380,11 @@ public class TestingHelpers {
         expectedProfiles,
         expectedHighlighters,
         expectedAnnotationNodes,
-        expectedTriples);
+        expectedTriples,
+        expectedStructureAnnotations,
+        expectedStructureGraphSpaces,
+        expectedStructureAnnotationNodes,
+        expectedStructureTriples);
     controller.undo();
   }
 }

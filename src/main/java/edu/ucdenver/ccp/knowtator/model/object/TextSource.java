@@ -56,7 +56,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
   private File textFile;
   private String content;
   private final GraphSpaceCollection graphSpaces;
-  private final GraphSpaceCollection structureGraphSpaces;
+  public final GraphSpaceCollection structureGraphSpaces;
   private String id;
 
   /**
@@ -358,5 +358,13 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
 
   public GraphSpaceCollection getStructureGraphSpaces() {
     return structureGraphSpaces;
+  }
+
+  public int getNumberOfStructureAnnotations() {
+    return structureAnnotations.size();
+  }
+
+  public int getNumberOfStructureGraphSpaces() {
+    return structureGraphSpaces.size();
   }
 }
