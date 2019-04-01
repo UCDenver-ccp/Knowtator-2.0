@@ -848,7 +848,7 @@
                                     <properties/>
                                     <border type="none"/>
                                     <children>
-                                      <component id="61926" class="edu.ucdenver.ccp.knowtator.view.table.AnnotationTableForSpannedText" binding="conceptAnnotationsForTextTable" custom-create="true">
+                                      <component id="c3147" class="javax.swing.JTable" binding="conceptAnnotationsForTextTable" custom-create="true">
                                         <constraints/>
                                         <properties>
                                           <font name="Verdana" size="12"/>
