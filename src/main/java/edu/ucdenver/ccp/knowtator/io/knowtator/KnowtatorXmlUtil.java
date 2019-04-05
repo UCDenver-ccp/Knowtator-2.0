@@ -190,11 +190,11 @@ public final class KnowtatorXmlUtil extends XmlUtil {
 
               Profile profile = model.getProfile(profileID).orElse(model.getDefaultProfile());
 
-              Optional<OWLClass> owlClass = Optional.ofNullable(owlClassMap.get(owlClassID));
-              if (owlClass.isPresent()) {
+              OWLClass owlClass = owlClassMap.get(owlClassID);
+              if (owlClass != null || type != null) {
                 ConceptAnnotation newConceptAnnotation =
                     new ConceptAnnotation(
-                        textSource, annotationID, owlClass.get(), profile, type, motivation);
+                        textSource, annotationID, owlClass, profile, type, motivation);
                 readToConceptAnnotation(newConceptAnnotation, annotationElement);
                 if (newConceptAnnotation.size() == 0) {
                   return Optional.empty();
