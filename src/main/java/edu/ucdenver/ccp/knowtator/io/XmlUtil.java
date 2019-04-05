@@ -143,7 +143,7 @@ public class XmlUtil {
   public static void finishWritingXml(Document dom, File file) {
     try {
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
-      transformerFactory.setAttribute("indent-number", 2);
+//      transformerFactory.setAttribute("indent-number", 2);
       Transformer tr = transformerFactory.newTransformer();
       tr.setOutputProperty(OutputKeys.INDENT, "yes");
       tr.setOutputProperty(OutputKeys.METHOD, "xml");
