@@ -45,16 +45,11 @@ import javax.swing.table.DefaultTableModel;
  */
 public abstract class KnowtatorTable<M extends ModelObject> extends JTable
     implements KnowtatorComponent, ModelListener {
-  /** The View. */
-  protected final KnowtatorView view;
 
-  /**
-   * Instantiates a new Knowtator table.
-   *
-   * @param view the view
-   */
-  KnowtatorTable(KnowtatorView view) {
-    this.view = view;
+  KnowtatorView view;
+
+  /** Instantiates a new Knowtator table. */
+  KnowtatorTable() {
     getTableHeader().setFont(new Font(getFont().getName(), Font.BOLD, 16));
     setAutoCreateRowSorter(true);
 
@@ -151,5 +146,10 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
   @Override
   public void colorChangedEvent() {
     reactToModelEvent();
+  }
+
+  @Override
+  public void setView(KnowtatorView view) {
+    this.view = view;
   }
 }

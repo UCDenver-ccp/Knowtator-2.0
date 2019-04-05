@@ -25,7 +25,6 @@
 package edu.ucdenver.ccp.knowtator.view.label;
 
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import org.protege.editor.owl.model.event.EventType;
 import org.protege.editor.owl.model.event.OWLModelManagerChangeEvent;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
@@ -33,15 +32,6 @@ import org.protege.editor.owl.model.event.OWLModelManagerListener;
 /** The type Annotation class label. */
 public class AnnotationClassLabel extends AbstractConceptAnnotationLabel
     implements OWLModelManagerListener {
-
-  /**
-   * Instantiates a new Annotation class label.
-   *
-   * @param view the view
-   */
-  public AnnotationClassLabel(KnowtatorView view) {
-    super(view);
-  }
 
   @Override
   public void displayConceptAnnotation(ConceptAnnotation conceptAnnotation) {

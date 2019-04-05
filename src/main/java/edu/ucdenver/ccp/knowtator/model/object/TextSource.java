@@ -72,7 +72,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
         saveFile == null
             ? new File(
                 model.getAnnotationsLocation().getAbsolutePath(),
-                String.format("%s.xml", textFileName.replace(".txt", "")))
+                textFileName.replace(".txt", ".xml"))
             : saveFile;
     this.conceptAnnotations = new ConceptAnnotationCollection(model, this);
     this.graphSpaces = new GraphSpaceCollection(model);
@@ -366,5 +366,9 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
 
   public int getNumberOfStructureGraphSpaces() {
     return structureGraphSpaces.size();
+  }
+
+  public Optional<GraphSpace> getSelectedStructureGraphSpace() {
+    return structureGraphSpaces.getSelection();
   }
 }

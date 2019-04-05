@@ -27,7 +27,8 @@ package edu.ucdenver.ccp.knowtator.view.graph;
 import edu.ucdenver.ccp.knowtator.model.object.Quantifier;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Insets;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Window;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -156,7 +157,7 @@ class RelationOptionsDialog extends JDialog {
 
     // Don't allow non-numeric values of exactly, min, or max are selected
     if (quantifier != null
-        && (quantifier.equals(Quantifier.EXACTLY) || quantifier.equals(Quantifier.MIN) || quantifier.equals(Quantifier.MAX))
+        && (quantifier.equals(Quantifier.exactly) || quantifier.equals(Quantifier.min) || quantifier.equals(Quantifier.max))
         && !NumberUtils.isNumber(quantifierValueTextField.getText())) {
       JOptionPane.showMessageDialog(this, "Please enter a numeric value");
       return;

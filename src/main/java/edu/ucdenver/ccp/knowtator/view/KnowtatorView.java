@@ -87,12 +87,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.filechooser.FileFilter;
@@ -112,9 +110,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     implements DropTargetListener, KnowtatorComponent, ModelListener {
 
   private static final Logger log = Logger.getLogger(KnowtatorView.class);
-  /**
-   * The constant PREFERENCES.
-   */
+  /** The constant PREFERENCES. */
   public static final Preferences PREFERENCES = Preferences.userRoot().node("knowtator");
 
   private KnowtatorModel model;
@@ -206,15 +202,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   private final HashMap<JButton, ActionListener> spanSizeButtons;
   private final HashMap<JButton, ActionListener> selectionSizeButtons;
 
-  /**
-   * Creates all components and sets up its model.
-   */
+  /** Creates all components and sets up its model. */
   public KnowtatorView() {
     knowtatorComponents = new ArrayList<>();
     spanSizeButtons = new HashMap<>();
     selectionSizeButtons = new HashMap<>();
 
-//    $$$setupUI$$$();
+    //    $$$setupUI$$$();
 
     // This is necessary to force OSGI to load the mxGraphTransferable class to allow node dragging.
     // It is kind of a hacky fix, but it works for now.
@@ -252,6 +246,11 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
             relationsForPropertyList));
   }
 
+  @Override
+  public void setView(KnowtatorView view) {
+    knowtatorComponents.forEach(component -> component.setView(this));
+  }
+
   private static void changeFont(Component component, Font font) {
     component.setFont(font);
     if (component instanceof Container) {
@@ -270,17 +269,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     return Optional.ofNullable(model);
   }
 
-  /**
-   * Inherited but not used.
-   */
+  /** Inherited but not used. */
   @Override
   public void initialiseClassView() {
     changeFont(this, this.getParent().getFont());
   }
 
-  /**
-   * Creates custom UI components like chooser boxes and labels that listen to the model.
-   */
+  /** Creates custom UI components like chooser boxes and labels that listen to the model. */
   private void createUIComponents() {
     DropTarget dt = new DropTarget(this, this);
     dt.setActive(true);
@@ -298,32 +293,29 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
     textPane =
         new KnowtatorTextPane(
-            this, searchTextField, onlyAnnotationsCheckBox, regexCheckBox, caseSensitiveCheckBox);
-    graphViewDialog = new GraphViewDialog(this);
+            searchTextField, onlyAnnotationsCheckBox, regexCheckBox, caseSensitiveCheckBox);
+    graphViewDialog = new GraphViewDialog();
 
-    annotationAnnotatorLabel = new AnnotationAnnotatorLabel(this);
-    annotationClassLabel = new AnnotationClassLabel(this);
-    annotationIdLabel = new AnnotationIdLabel(this);
-    annotationNotes = new AnnotationNotes(this);
+    annotationAnnotatorLabel = new AnnotationAnnotatorLabel();
+    annotationClassLabel = new AnnotationClassLabel();
+    annotationIdLabel = new AnnotationIdLabel();
+    annotationNotes = new AnnotationNotes();
 
-    textSourceChooser = new TextSourceChooser(this);
+    textSourceChooser = new TextSourceChooser();
 
-    graphSpaceList = new GraphSpaceList(this);
-    spanList = new SpanList(this);
-    profileList = new ProfileList(this);
-    colorList = new ColorList(this);
+    graphSpaceList = new GraphSpaceList();
+    spanList = new SpanList();
+    profileList = new ProfileList();
+    colorList = new ColorList();
 
     annotationsContainingTextTextField = new JTextField();
 
     annotationsForClassTable =
-        new AnnotationTableForOwlClass(this, includeClassDescendantsCheckBox, owlClassLabel);
+        new AnnotationTableForOwlClass(includeClassDescendantsCheckBox, owlClassLabel);
     conceptAnnotationsForTextTable =
-        new AnnotationTableForSpannedText(
-            this, exactMatchCheckBox, annotationsContainingTextTextField);
+        new AnnotationTableForSpannedText(exactMatchCheckBox, annotationsContainingTextTextField);
     relationsForPropertyList =
-        new RelationTable(this, includePropertyDescendantsCheckBox, owlPropertyLabel);
-
-
+        new RelationTable(includePropertyDescendantsCheckBox, owlPropertyLabel);
 
     // The following methods keep the graph view dialog on top only when the view is active.
     KnowtatorView view = this;
@@ -350,18 +342,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
           }
 
           @Override
-          public void ancestorRemoved(AncestorEvent event) {
-          }
+          public void ancestorRemoved(AncestorEvent event) {}
 
           @Override
-          public void ancestorMoved(AncestorEvent event) {
-          }
+          public void ancestorMoved(AncestorEvent event) {}
         });
   }
 
-  /**
-   * Makes the buttons in the main display pane.
-   */
+  /** Makes the buttons in the main display pane. */
   private void makeButtons() {
     captureImageButton.addActionListener(
         e ->
@@ -435,8 +423,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     removeProfileButton.addActionListener(
         e ->
             Optional.of(
-                JOptionPane.showConfirmDialog(
-                    this, "Are you sure you wish to remove this profile?"))
+                    JOptionPane.showConfirmDialog(
+                        this, "Are you sure you wish to remove this profile?"))
                 .filter(result -> JOptionPane.OK_OPTION == result)
                 .ifPresent(
                     result -> pickAction(this, null, null, new ActionParameters(REMOVE, PROFILE))));
@@ -530,7 +518,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
             getModel()
                 .flatMap(OwlModel::getSelectedOwlClass)
                 .ifPresent(owlClass -> assignColorToClass(this, owlClass)));
-
 
     undoButton.addActionListener(
         e -> getModel().filter(UndoManager::canUndo).ifPresent(UndoManager::undo));
@@ -906,9 +893,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     return textPane;
   }
 
-  /**
-   * Calls dispose on the model and all components.
-   */
+  /** Calls dispose on the model and all components. */
   @Override
   public void disposeView() {
     getModel().ifPresent(BaseModel::dispose);
@@ -916,33 +901,29 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   }
 
   @Override
-  public void dropActionChanged(DropTargetDragEvent e) {
-  }
+  public void dropActionChanged(DropTargetDragEvent e) {}
 
   @Override
-  public void dragExit(DropTargetEvent e) {
-  }
+  public void dragExit(DropTargetEvent e) {}
 
   @Override
-  public void drop(DropTargetDropEvent e) {
-  }
+  public void drop(DropTargetDropEvent e) {}
 
   @Override
-  public void dragEnter(DropTargetDragEvent e) {
-  }
+  public void dragEnter(DropTargetDragEvent e) {}
 
   @Override
-  public void dragOver(DropTargetDragEvent e) {
-  }
+  public void dragOver(DropTargetDragEvent e) {}
 
   /**
    * Load project.
    *
-   * @param file             the file
+   * @param file the file
    * @param progressListener the progress listener
    * @throws IOException the io exception
    */
   public void loadProject(File file, ModelListener progressListener) throws IOException {
+    setView(this);
     if (!getModel().isPresent() || getModel().get().isNotLoading()) {
       getModel().ifPresent(BaseModel::dispose);
       if (getOWLWorkspace() != null) {
@@ -982,8 +963,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   }
 
   @Override
-  public void filterChangedEvent() {
-  }
+  public void filterChangedEvent() {}
 
   @Override
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {
@@ -1026,8 +1006,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   }
 
   @Override
-  public void colorChangedEvent() {
-  }
+  public void colorChangedEvent() {}
 
   /**
    * Gets is one click graphs.
@@ -1046,5 +1025,4 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   public boolean isSnapToWords() {
     return snapToWordsCheckBox.isSelected();
   }
-
 }

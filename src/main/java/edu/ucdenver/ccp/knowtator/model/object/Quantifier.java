@@ -25,15 +25,9 @@
 package edu.ucdenver.ccp.knowtator.model.object;
 
 public enum Quantifier {
-  SOME("some"),
-  ONLY("only"),
-  EXACTLY("exactly"),
-  MAX("max"),
-  MIN("min");
-
-  String name;
-
-  Quantifier(String name) {
-    this.name = name;
-  }
+  some,
+  only,
+  exactly,
+  max,
+  min
 }

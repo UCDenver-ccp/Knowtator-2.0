@@ -22,22 +22,8 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.chooser;
+package edu.ucdenver.ccp.knowtator.model;
 
-import edu.ucdenver.ccp.knowtator.model.object.TextSource;
-
-/** The type Text source chooser. */
-public class TextSourceChooser extends KnowtatorChooser<TextSource> {
-
-  @Override
-  protected void react() {
-    view.getModel().ifPresent(model -> setCollection(model.getTextSources()));
-    setSelected();
-  }
-
-  @Override
-  public void reset() {
-    super.reset();
-    view.getModel().ifPresent(model -> setCollection(model.getTextSources()));
-  }
+public interface StructureModeListener {
+  void structureModeChanged();
 }

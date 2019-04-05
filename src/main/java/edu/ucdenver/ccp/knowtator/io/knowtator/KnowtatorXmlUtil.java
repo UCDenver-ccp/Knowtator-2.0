@@ -285,7 +285,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
       String propertyID = tripleElem.getAttribute(KnowtatorXmlAttributes.TRIPLE_PROPERTY);
       String quantifierString = tripleElem.getAttribute(KnowtatorXmlAttributes.TRIPLE_QUANTIFIER);
       Quantifier quantifier =
-          quantifierString.equals("") ? Quantifier.SOME : Quantifier.valueOf(quantifierString);
+          quantifierString.equals("") ? Quantifier.some : Quantifier.valueOf(quantifierString);
       String quantifierValue = tripleElem.getAttribute(KnowtatorXmlAttributes.TRIPLE_VALUE);
       String propertyIsNegated = tripleElem.getAttribute(KnowtatorXmlAttributes.IS_NEGATED);
       String motivation = tripleElem.getAttribute(KnowtatorXmlAttributes.MOTIVATION);
@@ -493,9 +493,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
 
     classElement.setAttribute(
         KnowtatorXmlAttributes.ID,
-        conceptAnnotation
-            .getKnowtatorModel()
-            .getOwlEntityRendering(conceptAnnotation.getOwlClass()));
+        conceptAnnotation.getOwlClassRendering());
     classElement.setAttribute(KnowtatorXmlAttributes.LABEL, conceptAnnotation.getOwlClassLabel());
     annotationElem.appendChild(classElement);
 

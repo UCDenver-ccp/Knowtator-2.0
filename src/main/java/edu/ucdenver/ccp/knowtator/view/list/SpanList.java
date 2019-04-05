@@ -28,20 +28,11 @@ import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.util.Optional;
 
 /** The type Span list. */
 public class SpanList extends KnowtatorList<Span> {
 
-  /**
-   * Instantiates a new Span list.
-   *
-   * @param view the view
-   */
-  public SpanList(KnowtatorView view) {
-    super(view);
-  }
 
   @Override
   public void reactToClick() {

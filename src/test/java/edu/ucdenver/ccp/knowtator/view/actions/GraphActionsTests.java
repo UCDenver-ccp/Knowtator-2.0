@@ -136,7 +136,7 @@ class GraphActionsTests {
     TestingHelpers.testKnowtatorAction(
         model,
         new GraphActions.AddTripleAction(
-            model, source, target, property, Quantifier.SOME, null, false, "", graphSpace),
+            model, source, target, property, Quantifier.some, null, false, "", graphSpace),
         TestingHelpers.defaultExpectedTextSources,
         TestingHelpers.defaultExpectedConceptAnnotations,
         TestingHelpers.defaultExpectedSpans,
@@ -160,7 +160,7 @@ class GraphActionsTests {
     GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
     TestingHelpers.testKnowtatorAction(
         model,
-        new GraphActions.ApplyLayoutAction(null, model, graphSpace),
+        new GraphActions.ApplyLayoutAction(null, model, graphSpace, false),
         TestingHelpers.defaultExpectedTextSources,
         TestingHelpers.defaultExpectedConceptAnnotations,
         TestingHelpers.defaultExpectedSpans,

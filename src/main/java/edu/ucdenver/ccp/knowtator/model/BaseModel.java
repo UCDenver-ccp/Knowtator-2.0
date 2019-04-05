@@ -38,7 +38,6 @@ import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -77,6 +76,9 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
   /** The Loading. */
   boolean loading;
 
+  private Boolean isStructureMode;
+  private Set<StructureModeListener> structureModeListeners;
+
   /**
    * Instantiates a new Base model.
    *
@@ -87,10 +89,12 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
     idRegistry = new TreeMap<>();
 
     modelListeners = new HashSet<>();
+    structureModeListeners = new HashSet<>();
     filters = new HashMap<>();
     filters.put(FilterType.PROFILE, false);
     filters.put(FilterType.OWLCLASS, false);
     loading = false;
+    isStructureMode = false;
 
     selection = new Selection(0, 0);
 
@@ -101,11 +105,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
         throw new IOException();
       }
     }
-    if (projectLocation.exists()
-        && projectLocation.isDirectory()
-        && Files.list(projectLocation.toPath())
-            .map(Path::toString)
-            .anyMatch(name -> name.endsWith(".knowtator"))) {
+    if (projectLocation.exists() && projectLocation.isDirectory()) {
       if (Files.list(projectLocation.toPath())
           .noneMatch(path -> path.toString().endsWith(".knowtator"))) {
         Files.createFile(
@@ -257,8 +257,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
    * @param action An executable and undoable action
    * @throws ActionUnperformable the action unperformable exception
    */
-  public void registerAction(@Nonnull AbstractKnowtatorAction action)
-      throws ActionUnperformable {
+  public void registerAction(@Nonnull AbstractKnowtatorAction action) throws ActionUnperformable {
     action.execute();
     addEdit(action);
   }
@@ -313,7 +312,11 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
   }
 
   public Optional<GraphSpace> getSelectedGraphSpace() {
-    return getSelectedTextSource().flatMap(TextSource::getSelectedGraphSpace);
+    if (isStructureMode) {
+      return getSelectedTextSource().flatMap(TextSource::getSelectedStructureGraphSpace);
+    } else {
+      return getSelectedTextSource().flatMap(TextSource::getSelectedGraphSpace);
+    }
   }
 
   /**
@@ -378,6 +381,15 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
     modelListeners.forEach(ModelListener::filterChangedEvent);
   }
 
+  public void setStructureMode(Boolean isStructureMode) {
+    this.isStructureMode = isStructureMode;
+    fireStructureModeChangedEvent();
+  }
+
+  private void fireStructureModeChangedEvent() {
+    structureModeListeners.forEach(StructureModeListener::structureModeChanged);
+  }
+
   /**
    * Add model listener.
    *
@@ -408,5 +420,9 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
    */
   public void fireModelEvent(ChangeEvent<ModelObject> event) {
     modelListeners.forEach(modelListener -> modelListener.modelChangeEvent(event));
+  }
+
+  public void addStructureModeListener(StructureModeListener listener) {
+    structureModeListeners.add(listener);
   }
 }

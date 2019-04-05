@@ -31,4 +31,6 @@ public interface KnowtatorComponent {
 
   /** Dispose. */
   void dispose();
+
+  void setView(KnowtatorView view);
 }

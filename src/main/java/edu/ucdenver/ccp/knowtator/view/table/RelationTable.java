@@ -29,7 +29,6 @@ import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.object.RelationAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -47,13 +46,12 @@ public class RelationTable extends KnowtatorTable<RelationAnnotation> {
   /**
    * Instantiates a new Relation table.
    *
-   * @param view the view
    * @param includePropertyDescendantsCheckBox the include property descendants check box
    * @param owlPropertyLabel the owl property label
    */
   public RelationTable(
-      KnowtatorView view, JCheckBox includePropertyDescendantsCheckBox, JLabel owlPropertyLabel) {
-    super(view);
+      JCheckBox includePropertyDescendantsCheckBox, JLabel owlPropertyLabel) {
+    super();
     setModel(
         new DefaultTableModel(
             new Object[][] {},

@@ -46,18 +46,21 @@ public abstract class SearchableTextPane extends JTextPane
   private final JTextField searchTextField;
   boolean isSearching;
   /** The View. */
-  final KnowtatorView view;
+  KnowtatorView view;
+
+  @Override
+  public void setView(KnowtatorView view) {
+    this.view = view;
+  }
 
   /**
    * Instantiates a new Searchable text pane.
    *
-   * @param view The view
    * @param searchTextField A text field used to search the text pane
    */
-  SearchableTextPane(KnowtatorView view, JTextField searchTextField) {
+  SearchableTextPane(JTextField searchTextField) {
     super();
     this.searchTextField = searchTextField;
-    this.view = view;
     this.isSearching = false;
     addCaretListener(
         e -> {

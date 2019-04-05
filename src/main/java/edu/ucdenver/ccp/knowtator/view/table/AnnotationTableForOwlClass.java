@@ -24,7 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.view.table;
 
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JCheckBox;
@@ -40,13 +39,11 @@ public class AnnotationTableForOwlClass extends AnnotationTable {
   /**
    * Instantiates a new Annotation table for owl class.
    *
-   * @param view the view
    * @param includeClassDescendantsCheckBox the include class descendants check box
    * @param owlClassLabel the owl class label
    */
   public AnnotationTableForOwlClass(
-      KnowtatorView view, JCheckBox includeClassDescendantsCheckBox, JLabel owlClassLabel) {
-    super(view);
+      JCheckBox includeClassDescendantsCheckBox, JLabel owlClassLabel) {
     this.includeClassDescendantsCheckBox = includeClassDescendantsCheckBox;
     this.owlClassLabel = owlClassLabel;
     this.activeOwlClassDescendants = new HashSet<>();

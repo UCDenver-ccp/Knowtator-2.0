@@ -45,16 +45,14 @@ import org.semanticweb.owlapi.model.OWLEntity;
 public class ColorList extends JList<OWLClass> implements KnowtatorComponent, ModelListener {
 
   private final ListSelectionListener lsl;
-  private final KnowtatorView view;
+  private KnowtatorView view;
 
   /**
    * Instantiates a new Color list.
    *
-   * @param view the view
    */
-  public ColorList(KnowtatorView view) {
+  public ColorList() {
     setModel(new DefaultListModel<>());
-    this.view = view;
     setCellRenderer(new ColorListRenderer<>());
     lsl = e -> assignColorToClass(view, getSelectedValue());
   }
@@ -75,6 +73,11 @@ public class ColorList extends JList<OWLClass> implements KnowtatorComponent, Mo
                                     o -> ((DefaultListModel<OWLClass>) getModel()).addElement(o))));
 
     addListSelectionListener(lsl);
+  }
+
+  @Override
+  public void setView(KnowtatorView view) {
+    this.view = view;
   }
 
   @Override

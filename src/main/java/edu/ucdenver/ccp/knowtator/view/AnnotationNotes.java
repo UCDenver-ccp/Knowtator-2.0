@@ -38,15 +38,13 @@ import javax.swing.event.DocumentListener;
 /** The type Annotation notes. */
 public class AnnotationNotes extends JTextArea implements KnowtatorComponent, ModelListener {
   private ConceptAnnotation conceptAnnotation;
-  private final KnowtatorView view;
+  private KnowtatorView view;
 
   /**
    * Instantiates a new Annotation notes.
    *
-   * @param view the view
    */
-  AnnotationNotes(KnowtatorView view) {
-    this.view = view;
+  AnnotationNotes() {
     addKeyListener(
         new KeyListener() {
           @Override
@@ -77,6 +75,11 @@ public class AnnotationNotes extends JTextArea implements KnowtatorComponent, Mo
                 conceptAnnotation.setMotivation(getText());
               }
             });
+  }
+
+  @Override
+  public void setView(KnowtatorView view) {
+    this.view = view;
   }
 
   @Override

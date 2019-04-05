@@ -27,7 +27,6 @@ package edu.ucdenver.ccp.knowtator.view.list;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.util.Optional;
 
 /** The type Graph space list. */
@@ -35,10 +34,9 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
   /**
    * Instantiates a new Graph space list.
    *
-   * @param view the view
    */
-  public GraphSpaceList(KnowtatorView view) {
-    super(view);
+  public GraphSpaceList() {
+
   }
 
   @Override

@@ -100,26 +100,27 @@ public class GraphActions {
   /** The type Apply layout action. */
   public static class ApplyLayoutAction extends AbstractGraphAction {
     private final KnowtatorView view;
+    private final boolean isHorizontal;
 
     /**
      * Instantiates a new Apply layout action.
-     *
-     * @param view the view
+     *  @param view the view
      * @param model the model
      * @param graphSpace the graph space
      */
-    public ApplyLayoutAction(KnowtatorView view, KnowtatorModel model, GraphSpace graphSpace) {
+    public ApplyLayoutAction(KnowtatorView view, KnowtatorModel model, GraphSpace graphSpace, boolean isHorizontal) {
       super(model, "Apply layout", graphSpace);
       this.view = view;
+      this.isHorizontal = isHorizontal;
     }
 
     @Override
     public void perform() {
       mxHierarchicalLayout layout = new mxHierarchicalLayout(graphSpace);
-      layout.setOrientation(SwingConstants.WEST);
+
+      layout.setOrientation(this.isHorizontal ? SwingConstants.WEST : SwingConstants.NORTH);
       layout.setIntraCellSpacing(50);
       layout.setInterRankCellSpacing(125);
-      layout.setOrientation(SwingConstants.NORTH);
 
       try {
         graphSpace.getModel().beginUpdate();

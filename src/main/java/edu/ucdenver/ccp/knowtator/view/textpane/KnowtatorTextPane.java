@@ -27,7 +27,6 @@ package edu.ucdenver.ccp.knowtator.view.textpane;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.awt.image.BufferedImage;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,7 +41,6 @@ public class KnowtatorTextPane extends AnnotatableTextPane
   @SuppressWarnings("unused")
   private static Logger log = Logger.getLogger(KnowtatorTextPane.class);
 
-  private final KnowtatorView view;
   private final JCheckBox onlyInAnnotationsCheckBox;
   private final JCheckBox regexCheckBox;
   private final JCheckBox caseSensitiveCheckBox;
@@ -50,7 +48,6 @@ public class KnowtatorTextPane extends AnnotatableTextPane
   /**
    * Instantiates a new Knowtator text pane.
    *
-   * @param view A Knowtator view
    * @param searchTextField A text field to use to search the text pane
    * @param onlyInAnnotationsCheckBox A check box specifying whether to search in annotations or all
    *     text
@@ -58,13 +55,11 @@ public class KnowtatorTextPane extends AnnotatableTextPane
    * @param caseSensitiveCheckBox A check box specifying if the search should be case sensitive
    */
   public KnowtatorTextPane(
-      KnowtatorView view,
       JTextField searchTextField,
       JCheckBox onlyInAnnotationsCheckBox,
       JCheckBox regexCheckBox,
       JCheckBox caseSensitiveCheckBox) {
-    super(view, searchTextField);
-    this.view = view;
+    super(searchTextField);
     this.onlyInAnnotationsCheckBox = onlyInAnnotationsCheckBox;
     this.regexCheckBox = regexCheckBox;
     this.caseSensitiveCheckBox = caseSensitiveCheckBox;

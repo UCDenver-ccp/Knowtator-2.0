@@ -26,7 +26,6 @@ package edu.ucdenver.ccp.knowtator.view.label;
 
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 /** The type Annotation annotator label. */
 public class AnnotationAnnotatorLabel extends AbstractConceptAnnotationLabel
@@ -35,10 +34,8 @@ public class AnnotationAnnotatorLabel extends AbstractConceptAnnotationLabel
   /**
    * Instantiates a new Annotation annotator label.
    *
-   * @param view the view
    */
-  public AnnotationAnnotatorLabel(KnowtatorView view) {
-    super(view);
+  public AnnotationAnnotatorLabel() {
   }
 
   @Override

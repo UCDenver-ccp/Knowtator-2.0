@@ -26,7 +26,6 @@ package edu.ucdenver.ccp.knowtator.view.graph;
 
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -44,16 +43,13 @@ import javax.swing.SwingUtilities;
 public class GraphViewDialog extends JDialog implements KnowtatorComponent {
   private JPanel contentPane;
   private GraphView graphView;
-  private final KnowtatorView view;
+  private KnowtatorView view;
 
   /**
    * Instantiates a new Graph view dialog.
    *
-   * @param view the view
    */
-  public GraphViewDialog(KnowtatorView view) {
-
-    this.view = view;
+  public GraphViewDialog() {
 //    $$$setupUI$$$();
 
     setSize(new Dimension(800, 800));
@@ -103,7 +99,7 @@ public class GraphViewDialog extends JDialog implements KnowtatorComponent {
   }
 
   private void createUIComponents() {
-    graphView = new GraphView(this, view);
+    graphView = new GraphView(this);
   }
 
   @Override
@@ -116,6 +112,12 @@ public class GraphViewDialog extends JDialog implements KnowtatorComponent {
     super.dispose();
     graphView.dispose();
     setVisible(false);
+  }
+
+  @Override
+  public void setView(KnowtatorView view) {
+    this.view = view;
+    graphView.setView(view);
   }
 
   @Override

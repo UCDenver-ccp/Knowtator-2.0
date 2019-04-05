@@ -35,6 +35,7 @@ import com.mxgraph.util.mxEventSource;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
+import edu.ucdenver.ccp.knowtator.model.StructureModeListener;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
@@ -58,19 +59,14 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
@@ -82,15 +78,14 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import org.apache.log4j.Logger;
 
-/**
- * The type Graph view.
- */
-public class GraphView extends JPanel implements KnowtatorComponent, ModelListener {
+/** The type Graph view. */
+public class GraphView extends JPanel
+    implements KnowtatorComponent, ModelListener, StructureModeListener {
   @SuppressWarnings("unused")
-  private Logger log = Logger.getLogger(GraphView.class);
+  private Logger log = Logger.getLogger(KnowtatorView.class);
 
   private final JDialog dialog;
-  private final KnowtatorView view;
+  private KnowtatorView view;
   private final AddRelationListener addRelationListener;
   private JButton removeCellButton;
   private JButton addAnnotationNodeButton;
@@ -98,27 +93,14 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
   private JButton previousGraphSpaceButton;
   private JButton nextGraphSpaceButton;
   private mxGraphComponent graphComponent;
-  private JPanel rootPane;
   private GraphSpaceChooser graphSpaceChooser;
   private JButton addGraphSpaceButton;
   private JButton removeGraphSpaceButton;
   private JSlider zoomSlider;
   private JButton renameButton;
   private JButton exportToImagePngButton;
-  private JCheckBox negatedCheckBox;
-  private JLabel relationIdLabel;
-  private JLabel relationOwlObjectPropertyLabel;
-  private JComboBox quantifierChooser;
-  private JFormattedTextField quantifierValueTextField;
-  private JTextArea textArea1;
-  private JPanel nodeCard;
-  private JPanel relationCard;
-  private JLabel nodeIdLabel;
-  private JLabel conceptAnnotationLabel;
-  private JPanel graphPanel;
-  private JPanel graphInfoPanel;
-  private JPanel header;
-  private JSplitPane body;
+  private JRadioButton horizontalRadioButton;
+  private JPanel rootPane;
   private List<JComponent> graphSpaceButtons;
   private final mxEventSource.mxIEventListener removeCellsListener;
   private final mxEventSource.mxIEventListener moveCellsListener =
@@ -133,16 +115,15 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
    * Instantiates a new Graph view.
    *
    * @param dialog the dialog
-   * @param view   the view
    */
-  GraphView(JDialog dialog, KnowtatorView view) {
+  GraphView(JDialog dialog) {
+
     this.dialog = dialog;
-    this.view = view;
     setVisible(false);
-//    $$$setupUI$$$();
+    // $$$setupUI$$$();
     makeButtons();
 
-    addRelationListener = new AddRelationListener(view, this);
+    addRelationListener = new AddRelationListener(this);
     removeCellsListener =
         (sender, evt) -> {
           if (sender instanceof GraphSpace) {
@@ -159,61 +140,45 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
                 .ifPresent(
                     model ->
                         model
-                            .getSelectedTextSource()
+                            .getSelectedGraphSpace()
                             .ifPresent(
-                                textSource ->
-                                    textSource
-                                        .getSelectedGraphSpace()
-                                        .ifPresent(
-                                            graphSpace -> {
-                                              JFileChooser fileChooser = new JFileChooser();
-                                              fileChooser.setCurrentDirectory(
-                                                  model.getSaveLocation());
-                                              FileFilter fileFilter =
-                                                  new FileNameExtensionFilter("PNG", "png");
-                                              fileChooser.setFileFilter(fileFilter);
-                                              fileChooser.setSelectedFile(
-                                                  new File(
-                                                      String.format(
-                                                          "%s_%s.png",
-                                                          textSource.getId(), graphSpace.getId())));
-                                              if (fileChooser.showSaveDialog(view)
-                                                  == JFileChooser.APPROVE_OPTION) {
-                                                BufferedImage image =
-                                                    mxCellRenderer.createBufferedImage(
-                                                        graphSpace,
-                                                        null,
-                                                        1,
-                                                        Color.WHITE,
-                                                        true,
-                                                        null);
-                                                try {
-                                                  ImageIO.write(
-                                                      image,
-                                                      "PNG",
-                                                      new File(
-                                                          fileChooser
-                                                              .getSelectedFile()
-                                                              .getAbsolutePath()));
-                                                } catch (IOException e1) {
-                                                  e1.printStackTrace();
-                                                }
-                                              }
-                                            }))));
+                                graphSpace -> {
+                                  JFileChooser fileChooser = new JFileChooser();
+                                  fileChooser.setCurrentDirectory(model.getSaveLocation());
+                                  FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
+                                  fileChooser.setFileFilter(fileFilter);
+                                  fileChooser.setSelectedFile(
+                                      new File(
+                                          String.format(
+                                              "%s_%s.png",
+                                              graphSpace.getTextSource().getId(),
+                                              graphSpace.getId())));
+                                  if (fileChooser.showSaveDialog(view)
+                                      == JFileChooser.APPROVE_OPTION) {
+                                    BufferedImage image =
+                                        mxCellRenderer.createBufferedImage(
+                                            graphSpace, null, 1, Color.WHITE, true, null);
+                                    try {
+                                      ImageIO.write(
+                                          image,
+                                          "PNG",
+                                          new File(
+                                              fileChooser.getSelectedFile().getAbsolutePath()));
+                                    } catch (IOException e1) {
+                                      e1.printStackTrace();
+                                    }
+                                  }
+                                })));
 
     zoomSlider.addChangeListener(e -> graphComponent.zoomTo(zoomSlider.getValue() / 50.0, false));
     renameButton.addActionListener(
         e ->
             view.getModel()
-                .flatMap(BaseModel::getSelectedTextSource)
+                .flatMap(BaseModel::getSelectedGraphSpace)
                 .ifPresent(
-                    textSource ->
-                        textSource
-                            .getSelectedGraphSpace()
-                            .ifPresent(
-                                graphSpace ->
-                                    getGraphNameInput(view, textSource, null)
-                                        .ifPresent(graphSpace::setId))));
+                    graphSpace ->
+                        getGraphNameInput(view, graphSpace.getTextSource(), null)
+                            .ifPresent(graphSpace::setId)));
     addGraphSpaceButton.addActionListener(
         e -> view.getModel().flatMap(BaseModel::getSelectedTextSource).ifPresent(this::makeGraph));
     removeGraphSpaceButton.addActionListener(
@@ -252,22 +217,16 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
                 .ifPresent(
                     model ->
                         model
-                            .getSelectedTextSource()
+                            .getSelectedGraphSpace()
                             .ifPresent(
-                                textSource ->
-                                    textSource
-                                        .getSelectedGraphSpace()
-                                        .ifPresent(
-                                            graphSpace -> {
-                                              try {
-                                                model.registerAction(
-                                                    new GraphActions.RemoveCellsAction(
-                                                        model, graphSpace));
-                                              } catch (ActionUnperformable e1) {
-                                                JOptionPane.showMessageDialog(
-                                                    view, e1.getMessage());
-                                              }
-                                            }))));
+                                graphSpace -> {
+                                  try {
+                                    model.registerAction(
+                                        new GraphActions.RemoveCellsAction(model, graphSpace));
+                                  } catch (ActionUnperformable e1) {
+                                    JOptionPane.showMessageDialog(view, e1.getMessage());
+                                  }
+                                })));
 
     addAnnotationNodeButton.addActionListener(
         e ->
@@ -302,22 +261,21 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
                 .ifPresent(
                     model ->
                         model
-                            .getSelectedTextSource()
+                            .getSelectedGraphSpace()
                             .ifPresent(
-                                textSource ->
-                                    textSource
-                                        .getSelectedGraphSpace()
-                                        .ifPresent(
-                                            graphSpace -> {
-                                              try {
-                                                model.registerAction(
-                                                    new GraphActions.ApplyLayoutAction(
-                                                        view, model, graphSpace));
-                                              } catch (ActionUnperformable e1) {
-                                                JOptionPane.showMessageDialog(
-                                                    view, e1.getMessage());
-                                              }
-                                            }))));
+                                graphSpace -> {
+                                  try {
+                                    model.registerAction(
+                                        new GraphActions.ApplyLayoutAction(
+                                            view,
+                                            model,
+                                            graphSpace,
+                                            horizontalRadioButton.isSelected()));
+                                  } catch (ActionUnperformable e1) {
+                                    JOptionPane.showMessageDialog(view, e1.getMessage());
+                                  }
+                                })));
+
     graphSpaceButtons =
         Arrays.asList(
             renameButton,
@@ -352,7 +310,7 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
   private void createUIComponents() {
     JScrollPane scrollPane = new JScrollPane();
     scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-    graphSpaceChooser = new GraphSpaceChooser(view);
+    graphSpaceChooser = new GraphSpaceChooser();
     mxGraph testGraph = new mxGraph();
     graphComponent = new mxGraphComponent(testGraph);
   }
@@ -361,23 +319,7 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
   public void setVisible(boolean visible) {
     super.setVisible(visible);
     if (visible) {
-      view.getModel()
-          .flatMap(BaseModel::getSelectedTextSource)
-          .ifPresent(
-              textSource -> {
-                Optional<GraphSpace> graphSpaceOptional = textSource.getSelectedGraphSpace();
-                if (graphSpaceOptional.isPresent()) {
-                  graphSpaceOptional.ifPresent(this::showGraph);
-                } else {
-                  textSource.selectNextGraphSpace();
-                  graphSpaceOptional = textSource.getSelectedGraphSpace();
-                  if (graphSpaceOptional.isPresent()) {
-                    graphSpaceOptional.ifPresent(this::showGraph);
-                  } else {
-                    makeGraph(textSource);
-                  }
-                }
-              });
+      view.getModel().flatMap(BaseModel::getSelectedGraphSpace).ifPresent(this::showGraph);
     }
   }
 
@@ -441,9 +383,9 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
               });
     }
     Object[] message = {
-        "Graph Title", field1,
+      "Graph Title", field1,
     };
-    field1.addAncestorListener(new GraphView.RequestFocusListener());
+    field1.addAncestorListener(new RequestFocusListener());
     field1.setText(String.format("Graph Space %d", textSource.getNumberOfGraphSpaces()));
     int option =
         JOptionPane.showConfirmDialog(
@@ -479,12 +421,19 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
   @Override
   public void reset() {
     view.getModel().ifPresent(model -> model.addModelListener(this));
+    view.getModel().ifPresent(model -> model.addStructureModeListener(this));
     graphSpaceChooser.reset();
   }
 
   @Override
   public void dispose() {
     graphSpaceChooser.dispose();
+  }
+
+  @Override
+  public void setView(KnowtatorView view) {
+    this.view = view;
+    graphSpaceChooser.setView(view);
   }
 
   /**
@@ -497,8 +446,7 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
   }
 
   @Override
-  public void filterChangedEvent() {
-  }
+  public void filterChangedEvent() {}
 
   @Override
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {
@@ -529,7 +477,10 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
                   .map(modelObject -> (TextSource) modelObject)
                   .ifPresent(
                       textSource ->
-                          textSource.getSelectedGraphSpace().ifPresent(GraphView.this::showGraph));
+                          textSource
+                              .getKnowtatorModel()
+                              .getSelectedGraphSpace()
+                              .ifPresent(GraphView.this::showGraph));
               event
                   .getNew()
                   .filter(modelObject -> modelObject instanceof AnnotationNode)
@@ -597,10 +548,10 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
                           if (vertex instanceof AnnotationNode) {
                             String colorString =
                                 Integer.toHexString(
-                                    ((AnnotationNode) vertex)
-                                        .getConceptAnnotation()
-                                        .getColor()
-                                        .getRGB())
+                                        ((AnnotationNode) vertex)
+                                            .getConceptAnnotation()
+                                            .getColor()
+                                            .getRGB())
                                     .substring(2);
                             graphSpace.setCellStyles(
                                 mxConstants.STYLE_FILLCOLOR, colorString, new Object[] {vertex});
@@ -610,8 +561,7 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
                           graphSpace.getView().validateCell(vertex);
                         });
                 Arrays.stream(graphSpace.getChildEdges(graphSpace.getDefaultParent()))
-                    .forEach(
-                        edge -> graphSpace.getView().validateCell(edge));
+                    .forEach(edge -> graphSpace.getView().validateCell(edge));
               } finally {
                 graphSpace.getModel().endUpdate();
                 graphSpace.refresh();
@@ -620,18 +570,22 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
   }
 
   @Override
-  public void colorChangedEvent() {
+  public void colorChangedEvent() {}
+
+  @Override
+  public void structureModeChanged() {
+    view.getModel().flatMap(BaseModel::getSelectedGraphSpace).ifPresent(this::showGraph);
   }
 
-  /**
-   * Taken from https://tips4java.wordpress.com/2010/03/14/dialog-focus/
-   */
+  public KnowtatorView getView() {
+    return view;
+  }
+
+  /** Taken from https://tips4java.wordpress.com/2010/03/14/dialog-focus/ */
   static class RequestFocusListener implements AncestorListener {
     private final boolean removeListener;
 
-    /**
-     * Instantiates a new Request focus listener.
-     */
+    /** Instantiates a new Request focus listener. */
     /*
      *  Convenience constructor. The listener is only used once and then it is
      *  removed from the component.
@@ -668,11 +622,9 @@ public class GraphView extends JPanel implements KnowtatorComponent, ModelListen
     }
 
     @Override
-    public void ancestorRemoved(AncestorEvent e) {
-    }
+    public void ancestorRemoved(AncestorEvent e) {}
 
     @Override
-    public void ancestorMoved(AncestorEvent e) {
-    }
+    public void ancestorMoved(AncestorEvent e) {}
   }
 }

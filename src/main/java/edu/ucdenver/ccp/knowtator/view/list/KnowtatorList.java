@@ -45,15 +45,13 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K>
     implements KnowtatorComponent, ModelListener {
 
   /** The View. */
-  final KnowtatorView view;
+  KnowtatorView view;
 
   /**
    * Instantiates a new Knowtator list.
    *
-   * @param view the view
    */
-  KnowtatorList(KnowtatorView view) {
-    this.view = view;
+  KnowtatorList() {
     setModel(new DefaultListModel<>());
 
     KnowtatorList<K> list = this;
@@ -142,5 +140,10 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K>
   @Override
   public void colorChangedEvent() {
     reactToModelEvent();
+  }
+
+  @Override
+  public void setView(KnowtatorView view) {
+    this.view = view;
   }
 }

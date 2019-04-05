@@ -30,7 +30,6 @@ import com.mxgraph.util.mxEventSource;
 import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.object.Quantifier;
-import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import edu.ucdenver.ccp.knowtator.view.actions.graph.GraphActions;
 import java.util.Arrays;
@@ -40,17 +39,14 @@ import javax.swing.JOptionPane;
 /** The type Add relation listener. */
 class AddRelationListener implements mxEventSource.mxIEventListener {
 
-  private final KnowtatorView view;
   private final GraphView graphView;
 
   /**
    * Instantiates a new Add relation listener.
    *
-   * @param view the view
    * @param graphView the graph view
    */
-  AddRelationListener(KnowtatorView view, GraphView graphView) {
-    this.view = view;
+  AddRelationListener(GraphView graphView) {
     this.graphView = graphView;
   }
 
@@ -73,7 +69,7 @@ class AddRelationListener implements mxEventSource.mxIEventListener {
 
   private void processEdge(mxCell edge, GraphSpace graphSpace) {
     // For some reason the top object property doesn't play nice so don't allow it
-    view.getModel()
+    graphView.getView().getModel()
         .ifPresent(
             model ->
                 model
@@ -110,7 +106,7 @@ class AddRelationListener implements mxEventSource.mxIEventListener {
                                       motivation,
                                       graphSpace));
                             } catch (ActionUnperformable e) {
-                              JOptionPane.showMessageDialog(view, e.getMessage());
+                              JOptionPane.showMessageDialog(graphView, e.getMessage());
                             }
                           }
                         }));

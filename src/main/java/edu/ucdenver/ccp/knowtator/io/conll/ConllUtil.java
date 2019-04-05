@@ -33,7 +33,6 @@ import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,6 +50,7 @@ public class ConllUtil {
         .get(file.getName().replace(".tree.conllu", ""))
         .ifPresent(
             textSource -> {
+              textSource.getKnowtatorModel().removeModelListener(textSource);
               List<Map<ConllUField, String>> sentence = new ArrayList<>();
               List<List<Map<ConllUField, String>>> sentences = new ArrayList<>();
               try {
@@ -72,8 +72,6 @@ public class ConllUtil {
                     sentence.add(fieldMap);
                   }
                 }
-              } catch (FileNotFoundException e) {
-                e.printStackTrace();
               } catch (IOException e) {
                 e.printStackTrace();
               }
@@ -120,55 +118,57 @@ public class ConllUtil {
                     return new int[] {start1, end};
                   };
 
-              sentences.forEach(
-                  sentence1 -> {
-                    GraphSpace graphSpace = new GraphSpace(textSource, null);
-                    textSource.getStructureGraphSpaces().add(graphSpace);
-                    List<AnnotationNode> nodes =
-                        sentence1.stream()
-                            .map(
-                                fields -> {
-                                  ConceptAnnotation conceptAnnotation =
-                                      new ConceptAnnotation(
-                                          textSource,
-                                          null,
-                                          null,
-                                          model.getDefaultProfile(),
-                                          fields.get(ConllUField.DEPREL),
-                                          "");
-                                  int[] range = findEnd.apply(fields.get(ConllUField.FORM));
-                                  Span span = new Span(conceptAnnotation, null, range[0], range[1]);
-                                  conceptAnnotation.add(span);
-                                  return conceptAnnotation;
-                                })
-                            .peek(
-                                conceptAnnotation ->
-                                    textSource.getStructureAnnotations().add(conceptAnnotation))
-                            .map(
-                                conceptAnnotation ->
-                                    new AnnotationNode(null, conceptAnnotation, 0, 0, graphSpace))
-                            .peek(graphSpace::addCellToGraph)
-                            .collect(Collectors.toList());
-                    for (int i = 0; i < sentence1.size(); i++) {
-                      AnnotationNode source = nodes.get(i);
-                      int targetIdx = Integer.parseInt(sentence1.get(i).get(ConllUField.HEAD)) - 1;
-                      if (targetIdx > 0) {
-                        AnnotationNode target = nodes.get(targetIdx);
-                        OWLObjectProperty property =
-                            model.getOwlObjectPropertyById("depends_on").orElse(null);
-                        graphSpace.addTriple(
-                            source,
-                            target,
-                            null,
-                            model.getDefaultProfile(),
-                            property,
-                            Quantifier.SOME,
-                            "",
-                            false,
-                            "");
-                      }
-                    }
-                  });
+              for (int i1 = 0; i1 < sentences.size(); i1++) {
+                List<Map<ConllUField, String>> sentence1 = sentences.get(i1);
+                GraphSpace graphSpace =
+                    new GraphSpace(textSource, String.format("Sentence %d", i1));
+                textSource.getStructureGraphSpaces().add(graphSpace);
+                List<AnnotationNode> nodes =
+                    sentence1.stream()
+                        .map(
+                            fields -> {
+                              ConceptAnnotation conceptAnnotation =
+                                  new ConceptAnnotation(
+                                      textSource,
+                                      null,
+                                      null,
+                                      model.getDefaultProfile(),
+                                      fields.get(ConllUField.DEPREL),
+                                      "");
+                              int[] range = findEnd.apply(fields.get(ConllUField.FORM));
+                              Span span = new Span(conceptAnnotation, null, range[0], range[1]);
+                              conceptAnnotation.add(span);
+                              return conceptAnnotation;
+                            })
+                        .peek(
+                            conceptAnnotation ->
+                                textSource.getStructureAnnotations().add(conceptAnnotation))
+                        .map(
+                            conceptAnnotation ->
+                                new AnnotationNode(null, conceptAnnotation, 0, 0, graphSpace))
+                        .peek(graphSpace::addCellToGraph)
+                        .collect(Collectors.toList());
+                for (int i = 0; i < sentence1.size(); i++) {
+                  AnnotationNode source = nodes.get(i);
+                  int targetIdx = Integer.parseInt(sentence1.get(i).get(ConllUField.HEAD)) - 1;
+                  if (targetIdx > 0) {
+                    AnnotationNode target = nodes.get(targetIdx);
+                    OWLObjectProperty property =
+                        model.getOwlObjectPropertyById("depends_on").orElse(null);
+                    graphSpace.addTriple(
+                        source,
+                        target,
+                        null,
+                        model.getDefaultProfile(),
+                        property,
+                        Quantifier.some,
+                        "",
+                        false,
+                        "");
+                  }
+                }
+              }
+              textSource.getKnowtatorModel().addModelListener(textSource);
             });
   }
 

@@ -251,7 +251,7 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
                                         null,
                                         model.getDefaultProfile(),
                                         property,
-                                        Quantifier.SOME,
+                                        Quantifier.some,
                                         "",
                                         false,
                                         "")));
