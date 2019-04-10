@@ -30,6 +30,8 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXmlUtil;
 import edu.ucdenver.ccp.knowtator.io.knowtator.OldKnowtatorXmlUtil;
 import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -58,6 +60,13 @@ public class KnowtatorModel extends OwlModel {
     super(projectLocation, owlWorkspace);
     textSources = new TextSourceCollection(this);
     profiles = new ProfileCollection(this);
+  }
+
+  @Override
+  public void save() {
+    super.save();
+    profiles.forEach(Profile::save);
+    textSources.forEach(TextSource::save);
   }
 
   @Override

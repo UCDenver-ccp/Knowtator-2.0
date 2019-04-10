@@ -129,6 +129,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
     }
   }
 
+
   @Override
   public void caretUpdate(CaretEvent e) {
     int start = Math.min(e.getDot(), e.getMark());
@@ -424,5 +425,9 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 
   public void addStructureModeListener(StructureModeListener listener) {
     structureModeListeners.add(listener);
+  }
+
+  public File getStructuresLocation() {
+    return structuresLocation;
   }
 }

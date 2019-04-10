@@ -140,7 +140,9 @@ public final class KnowtatorXmlUtil extends XmlUtil {
             if (textFileName == null || textFileName.equals("")) {
               textFileName = textSourceId;
             }
-            TextSource newTextSource = new TextSource(model, file, textFileName);
+            Optional<TextSource> textSource = model.getTextSources().get(textSourceId);
+
+            TextSource newTextSource = textSource.orElse(new TextSource(model, file, textFileName));
             model.getTextSources().add(newTextSource);
             if (isStructures) {
               readToTextSource(
@@ -301,21 +303,16 @@ public final class KnowtatorXmlUtil extends XmlUtil {
           (AnnotationNode) ((mxGraphModel) graphSpace.getModel()).getCells().get(objectID);
 
       if (target != null && source != null) {
-        graphSpace
-            .getKnowtatorModel()
-            .getOwlObjectPropertyById(propertyID)
-            .ifPresent(
-                owlObjectProperty ->
-                    graphSpace.addTriple(
-                        source,
-                        target,
-                        id,
-                        annotator,
-                        owlObjectProperty,
-                        quantifier,
-                        quantifierValue,
-                        propertyIsNegated.equals(KnowtatorXmlAttributes.IS_NEGATED_TRUE),
-                        motivation));
+        graphSpace.addTriple(
+            source,
+            target,
+            id,
+            annotator,
+            graphSpace.getKnowtatorModel().getOwlObjectPropertyById(propertyID).orElse(null),
+            quantifier,
+            quantifierValue,
+            propertyIsNegated.equals(KnowtatorXmlAttributes.IS_NEGATED_TRUE),
+            motivation);
       }
     }
 
@@ -382,7 +379,9 @@ public final class KnowtatorXmlUtil extends XmlUtil {
    * @param textSource the text source
    */
   public void writeFromTextSource(TextSource textSource) {
-    Optional<Document> domOptional = startWrite(textSource.getSaveLocation());
+    File file = textSource.getSaveLocation();
+    Optional<Document> domOptional = startWrite(file);
+    File finalFile = file;
     domOptional.ifPresent(
         dom -> {
           Element root = dom.createElement(KnowtatorXmlTags.KNOWTATOR_PROJECT);
@@ -397,7 +396,31 @@ public final class KnowtatorXmlUtil extends XmlUtil {
             writeFromGraphSpaceCollection(textSource.getGraphSpaces(), dom, textSourceElement);
             root.appendChild(textSourceElement);
           } finally {
-            XmlUtil.finishWritingXml(dom, textSource.getSaveLocation());
+            XmlUtil.finishWritingXml(dom, finalFile);
+          }
+        });
+    file =
+        new File(
+            textSource.getKnowtatorModel().getStructuresLocation(),
+            textSource.getSaveLocation().getName());
+    Optional<Document> domOptional2 = startWrite(file);
+    File finalFile1 = file;
+    domOptional2.ifPresent(
+        dom -> {
+          Element root = dom.createElement(KnowtatorXmlTags.KNOWTATOR_PROJECT);
+          dom.appendChild(root);
+          try {
+            Element textSourceElement = dom.createElement(KnowtatorXmlTags.DOCUMENT);
+            textSourceElement.setAttribute(KnowtatorXmlAttributes.ID, textSource.getId());
+            textSourceElement.setAttribute(
+                KnowtatorXmlAttributes.FILE, textSource.getTextFile().getName());
+            writeFromConceptAnnotationCollection(
+                textSource.getStructureAnnotations(), dom, textSourceElement);
+            writeFromGraphSpaceCollection(
+                textSource.getStructureGraphSpaces(), dom, textSourceElement);
+            root.appendChild(textSourceElement);
+          } finally {
+            XmlUtil.finishWritingXml(dom, finalFile1);
           }
         });
   }
@@ -491,9 +514,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
 
     Element classElement = dom.createElement(KnowtatorXmlTags.CLASS);
 
-    classElement.setAttribute(
-        KnowtatorXmlAttributes.ID,
-        conceptAnnotation.getOwlClassRendering());
+    classElement.setAttribute(KnowtatorXmlAttributes.ID, conceptAnnotation.getOwlClassRendering());
     classElement.setAttribute(KnowtatorXmlAttributes.LABEL, conceptAnnotation.getOwlClassLabel());
     annotationElem.appendChild(classElement);
 

@@ -36,7 +36,7 @@ public class AnnotationClassLabel extends AbstractConceptAnnotationLabel
   @Override
   public void displayConceptAnnotation(ConceptAnnotation conceptAnnotation) {
     view.getModel()
-        .ifPresent(model -> setText(model.getOwlEntityRendering(conceptAnnotation.getOwlClass())));
+        .ifPresent(model -> setText(conceptAnnotation.getOwlClassRendering()));
   }
 
   @Override

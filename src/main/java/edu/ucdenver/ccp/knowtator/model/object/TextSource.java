@@ -261,7 +261,11 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @return the annotation
    */
   public Optional<ConceptAnnotation> getAnnotation(String annotationID) {
-    return conceptAnnotations.get(annotationID);
+    Optional<ConceptAnnotation> conceptAnnotation = conceptAnnotations.get(annotationID);
+    if (conceptAnnotation.isPresent()) {
+      return  conceptAnnotation;
+    }
+    return structureAnnotations.get(annotationID);
   }
 
   /**
