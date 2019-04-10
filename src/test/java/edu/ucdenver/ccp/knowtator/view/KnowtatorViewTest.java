@@ -27,12 +27,12 @@ package edu.ucdenver.ccp.knowtator.view;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
-import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorCollectionActionsTests;
+import edu.ucdenver.ccp.knowtator.view.actions.KnowtatorCollectionActionsTest;
 import java.io.IOException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class KnowtatorViewTests {
+class KnowtatorViewTest {
   private static KnowtatorView view;
 
   @BeforeAll
@@ -65,7 +65,7 @@ class KnowtatorViewTests {
     TestingHelpers.checkDefaultCollectionValues(controller);
     view.loadProject(controller.getProjectLocation(), null);
     TestingHelpers.checkDefaultCollectionValues(view.getModel().get());
-    KnowtatorCollectionActionsTests test = new KnowtatorCollectionActionsTests();
+    KnowtatorCollectionActionsTest test = new KnowtatorCollectionActionsTest();
     test.setModel(view.getModel().get());
     test.removeConceptAnnotationActionTest();
     test.removeGraphSpaceActionTest();

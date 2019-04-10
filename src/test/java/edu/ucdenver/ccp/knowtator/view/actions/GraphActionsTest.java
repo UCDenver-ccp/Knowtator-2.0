@@ -37,7 +37,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
-class GraphActionsTests {
+class GraphActionsTest {
 
   private static KnowtatorModel model;
 

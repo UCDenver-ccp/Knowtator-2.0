@@ -22,47 +22,44 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator;
+package edu.ucdenver.ccp.knowtator.model.collection;
 
+import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("EmptyMethod")
-class ProjectManagerTests {
-
-  private static KnowtatorModel model;
+class SelectableCollectionTest {
+  private static KnowtatorModel controller;
 
   static {
     try {
-      model = TestingHelpers.getLoadedModel();
+      controller = TestingHelpers.getLoadedModel();
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
   @Test
-  void loadProjectTest() {
-    TestingHelpers.checkDefaultCollectionValues(model);
-    model.load();
+  void selectNextTest() {
+    TextSource textSource = controller.getTextSources().get("document1").get();
+    assert textSource.equals(controller.getSelectedTextSource().get());
+    controller.selectNextTextSource();
+    controller.selectNextTextSource();
+    assert !textSource.equals(controller.getSelectedTextSource().get());
+    controller.selectNextTextSource();
+    assert textSource.equals(controller.getSelectedTextSource().get());
   }
 
   @Test
-  void newProjectTest() {}
-
-  @Test
-  void importToManagerTest() {}
-
-  @Test
-  void importProjectTest() {}
-
-  @SuppressWarnings("EmptyMethod")
-  @Test
-  void makeProjectStructureTest() {}
-
-  @Test
-  void loadWithAppropriateFormatTest() {}
-
-  @Test
-  void saveToFormatTest() {}
+  void selectPreviousTest() {
+    TextSource textSource = controller.getTextSources().get("document1").get();
+    assert textSource.equals(controller.getSelectedTextSource().get());
+    controller.selectPreviousTextSource();
+    controller.selectPreviousTextSource();
+    assert !textSource.equals(controller.getSelectedTextSource().get());
+    controller.selectPreviousTextSource();
+    assert textSource.equals(controller.getSelectedTextSource().get());
+  }
 }

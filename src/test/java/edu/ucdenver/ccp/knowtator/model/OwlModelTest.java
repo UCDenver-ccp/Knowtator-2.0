@@ -60,7 +60,7 @@ import org.semanticweb.owlapi.util.OWLEntityRemover;
 import org.semanticweb.owlapi.util.OWLEntityRenamer;
 
 @SuppressWarnings("EmptyMethod")
-class OwlModelTests {
+class OwlModelTest {
 
   private KnowtatorModel model;
   private OWLOntologyManager owlOntologyManager;

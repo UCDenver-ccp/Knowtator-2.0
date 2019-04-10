@@ -31,7 +31,7 @@ import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
-class ConceptAnnotationTests {
+class ConceptAnnotationTest {
   private static KnowtatorModel controller;
 
   static {

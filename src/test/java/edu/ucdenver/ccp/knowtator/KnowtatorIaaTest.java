@@ -34,7 +34,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class KnowtatorIaaTests {
+class KnowtatorIaaTest {
 
   private static KnowtatorIaa knowtatorIAA;
 

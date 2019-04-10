@@ -39,7 +39,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.OWLClass;
 
-class OwlActionsTests {
+class OwlActionsTest {
   private static KnowtatorModel model;
 
   static {

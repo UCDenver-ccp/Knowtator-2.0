@@ -37,7 +37,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class SpanActionsTests {
+class SpanActionsTest {
   private static KnowtatorModel model;
 
   @BeforeAll
