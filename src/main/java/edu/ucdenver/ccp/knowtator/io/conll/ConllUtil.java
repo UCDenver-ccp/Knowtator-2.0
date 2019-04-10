@@ -40,9 +40,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 public class ConllUtil {
+  private static final Logger log = Logger.getLogger(KnowtatorModel.class);
+
   public void readToStructureAnnotations(KnowtatorModel model, File file) {
 
     model
@@ -50,6 +53,7 @@ public class ConllUtil {
         .get(file.getName().replace(".tree.conllu", ""))
         .ifPresent(
             textSource -> {
+              log.info(String.format("Read structures from %s", file.getName()));
               textSource.getKnowtatorModel().removeModelListener(textSource);
               List<Map<ConllUField, String>> sentence = new ArrayList<>();
               List<List<Map<ConllUField, String>>> sentences = new ArrayList<>();
