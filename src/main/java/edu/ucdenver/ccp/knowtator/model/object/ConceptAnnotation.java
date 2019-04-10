@@ -191,11 +191,15 @@ public class ConceptAnnotation extends SpanCollection
    * @return the owl class label
    */
   public String getOwlClassLabel() {
-    return owlClass.getAnnotationPropertiesInSignature().stream()
-        .filter(OWLAnnotationProperty::isLabel)
-        .findFirst()
-        .map(OWLObject::toString)
-        .orElse(model.getOwlEntityRendering(owlClass));
+    if (owlClass != null) {
+      return owlClass.getAnnotationPropertiesInSignature().stream()
+          .filter(OWLAnnotationProperty::isLabel)
+          .findFirst()
+          .map(OWLObject::toString)
+          .orElse(model.getOwlEntityRendering(owlClass));
+    } else {
+      return "";
+    }
   }
 
   /**
@@ -317,7 +321,7 @@ public class ConceptAnnotation extends SpanCollection
     return String.format(
         "%s%n(%s)",
         stream().map(Span::toString).collect(Collectors.joining("\n")),
-        owlClass == null ? annotationType : model.getOwlEntityRendering(owlClass));
+        getOwlClassRendering());
   }
 
   /**
@@ -335,6 +339,6 @@ public class ConceptAnnotation extends SpanCollection
    * @return the owl class rendering
    */
   public String getOwlClassRendering() {
-    return model.getOwlEntityRendering(owlClass);
+    return  owlClass == null ? annotationType : model.getOwlEntityRendering(owlClass);
   }
 }
