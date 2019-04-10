@@ -85,16 +85,15 @@ public class ConllUtil {
                     int end = start1 + text.length();
                     try {
                       if (checkRealText(textSource, start, text, start1, end)) {
-                        start[0] = end + 1;
-                        return new int[] {start1, end};
-                      }
-                      start1 = start[0] + 1;
-                      end = start[0] + text.length() + 1;
-                      if (checkRealText(textSource, start, text, start1, end)) {
                         return new int[] {start1, end};
                       }
                       start1 = start[0] - 1;
                       end = start[0] + text.length() - 1;
+                      if (checkRealText(textSource, start, text, start1, end)) {
+                        return new int[] {start1, end};
+                      }
+                      start1 = start[0] + 1;
+                      end = start[0] + text.length() + 1;
                       if (checkRealText(textSource, start, text, start1, end)) {
                         return new int[] {start1, end};
                       }
@@ -105,6 +104,16 @@ public class ConllUtil {
                       }
                       start1 = start[0] + 2;
                       end = start[0] + text.length() + 2;
+                      if (checkRealText(textSource, start, text, start1, end)) {
+                        return new int[] {start1, end};
+                      }
+                      start1 = start[0] + -3;
+                      end = start[0] + text.length() + 3;
+                      if (checkRealText(textSource, start, text, start1, end)) {
+                        return new int[] {start1, end};
+                      }
+                      start1 = start[0] + 3;
+                      end = start[0] + text.length() + 3;
                       if (checkRealText(textSource, start, text, start1, end)) {
                         return new int[] {start1, end};
                       }
