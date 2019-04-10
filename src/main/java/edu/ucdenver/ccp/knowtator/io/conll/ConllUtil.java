@@ -151,7 +151,7 @@ public class ConllUtil {
                 for (int i = 0; i < sentence1.size(); i++) {
                   AnnotationNode source = nodes.get(i);
                   int targetIdx = Integer.parseInt(sentence1.get(i).get(ConllUField.HEAD)) - 1;
-                  if (targetIdx > 0) {
+                  if (targetIdx >= 0) {
                     AnnotationNode target = nodes.get(targetIdx);
                     OWLObjectProperty property =
                         model.getOwlObjectPropertyById("depends_on").orElse(null);
@@ -165,6 +165,12 @@ public class ConllUtil {
                         "",
                         false,
                         "");
+                  } else if (!sentence1.get(i).get(ConllUField.DEPREL).equals("root")) {
+                    try {
+                      throw new Exception("excluding root");
+                    } catch (Exception e) {
+                      e.printStackTrace();
+                    }
                   }
                 }
               }
