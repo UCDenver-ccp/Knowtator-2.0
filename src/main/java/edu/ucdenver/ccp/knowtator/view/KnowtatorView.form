@@ -31,8 +31,7 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <grid id="c253e" binding="infoPane" layout-manager="GridLayoutManager" row-count="11" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="0" left="0" bottom="0" right="0"/>
+                      <grid id="c253e" binding="infoPane" layout-manager="GridBagLayout">
                         <constraints border-constraint="Center"/>
                         <properties>
                           <maximumSize width="200" height="2147483647"/>
@@ -42,10 +41,10 @@
                           <font name="Verdana" size="18"/>
                         </border>
                         <children>
-                          <grid id="c9d64" binding="spanPane" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                            <margin top="0" left="0" bottom="0" right="0"/>
+                          <grid id="c9d64" binding="spanPane" layout-manager="GridBagLayout">
                             <constraints>
                               <grid row="8" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="0.0"/>
                             </constraints>
                             <properties/>
                             <border type="none" title="Spans">
@@ -55,6 +54,7 @@
                               <scrollpane id="bcf75">
                                 <constraints>
                                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="1.0" weighty="1.0"/>
                                 </constraints>
                                 <properties/>
                                 <border type="none"/>
@@ -67,10 +67,10 @@
                                   </component>
                                 </children>
                               </scrollpane>
-                              <grid id="e9543" layout-manager="GridLayoutManager" row-count="1" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                                <margin top="0" left="0" bottom="0" right="0"/>
+                              <grid id="e9543" layout-manager="GridBagLayout">
                                 <constraints>
                                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="1.0" weighty="0.0"/>
                                 </constraints>
                                 <properties/>
                                 <border type="none"/>
@@ -78,6 +78,7 @@
                                   <component id="c52ed" class="javax.swing.JButton" binding="growStartButton">
                                     <constraints>
                                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="0.0" weighty="1.0"/>
                                     </constraints>
                                     <properties>
                                       <font name="Verdana" size="10" style="0"/>
@@ -87,6 +88,7 @@
                                   <component id="30b5b" class="javax.swing.JButton" binding="shrinkStartButton">
                                     <constraints>
                                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="0.0" weighty="1.0"/>
                                     </constraints>
                                     <properties>
                                       <font name="Verdana" size="10" style="0"/>
@@ -96,6 +98,7 @@
                                   <component id="d63b8" class="javax.swing.JButton" binding="shrinkEndButton">
                                     <constraints>
                                       <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="0.0" weighty="1.0"/>
                                     </constraints>
                                     <properties>
                                       <font name="Verdana" size="10" style="0"/>
@@ -105,25 +108,21 @@
                                   <component id="2f979" class="javax.swing.JButton" binding="growEndButton">
                                     <constraints>
                                       <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="0.0" weighty="1.0"/>
                                     </constraints>
                                     <properties>
                                       <font name="Verdana" size="10" style="0"/>
                                       <text value="Grow End"/>
                                     </properties>
                                   </component>
-                                  <hspacer id="85fa6">
-                                    <constraints>
-                                      <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                                    </constraints>
-                                  </hspacer>
                                 </children>
                               </grid>
                             </children>
                           </grid>
-                          <grid id="e72fc" binding="graphSpacePane" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                            <margin top="0" left="0" bottom="0" right="0"/>
+                          <grid id="e72fc" binding="graphSpacePane" layout-manager="GridBagLayout">
                             <constraints>
                               <grid row="9" column="0" row-span="2" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="0.0"/>
                             </constraints>
                             <properties/>
                             <border type="none" title="Graph Spaces">
@@ -133,6 +132,7 @@
                               <scrollpane id="65a14">
                                 <constraints>
                                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="1.0" weighty="1.0"/>
                                 </constraints>
                                 <properties/>
                                 <border type="none"/>
@@ -150,6 +150,7 @@
                           <scrollpane id="abd72">
                             <constraints>
                               <grid row="3" column="0" row-span="5" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties/>
                             <border type="none" title="Notes">
@@ -164,10 +165,10 @@
                               </component>
                             </children>
                           </scrollpane>
-                          <grid id="355b4" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                            <margin top="0" left="0" bottom="0" right="0"/>
+                          <grid id="355b4" layout-manager="GridBagLayout">
                             <constraints>
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="0.0"/>
                             </constraints>
                             <properties/>
                             <border type="none" title="ID" title-justification="1">
@@ -177,6 +178,7 @@
                               <component id="93daf" class="edu.ucdenver.ccp.knowtator.view.label.AnnotationIdLabel" binding="annotationIdLabel" custom-create="true">
                                 <constraints>
                                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="1.0" weighty="1.0"/>
                                 </constraints>
                                 <properties>
                                   <font name="Verdana"/>
@@ -185,10 +187,10 @@
                               </component>
                             </children>
                           </grid>
-                          <grid id="fd063" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                            <margin top="0" left="0" bottom="0" right="0"/>
+                          <grid id="fd063" layout-manager="GridBagLayout">
                             <constraints>
                               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="0.0"/>
                             </constraints>
                             <properties/>
                             <border type="none" title="Annotator">
@@ -198,6 +200,7 @@
                               <component id="f53ad" class="edu.ucdenver.ccp.knowtator.view.label.AnnotationAnnotatorLabel" binding="annotationAnnotatorLabel" custom-create="true">
                                 <constraints>
                                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="1.0" weighty="1.0"/>
                                 </constraints>
                                 <properties>
                                   <font name="Verdana"/>
@@ -205,10 +208,10 @@
                               </component>
                             </children>
                           </grid>
-                          <grid id="93a71" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                            <margin top="0" left="0" bottom="0" right="0"/>
+                          <grid id="93a71" layout-manager="GridBagLayout">
                             <constraints>
                               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="0.0"/>
                             </constraints>
                             <properties/>
                             <border type="none" title="OWL CLass">
@@ -218,6 +221,7 @@
                               <component id="c8d8a" class="edu.ucdenver.ccp.knowtator.view.label.AnnotationClassLabel" binding="annotationClassLabel" custom-create="true">
                                 <constraints>
                                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="1.0" weighty="1.0"/>
                                 </constraints>
                                 <properties>
                                   <font name="Verdana"/>
@@ -226,11 +230,6 @@
                               </component>
                             </children>
                           </grid>
-                          <vspacer id="589f3">
-                            <constraints>
-                              <grid row="3" column="1" row-span="5" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                          </vspacer>
                         </children>
                       </grid>
                     </children>
@@ -263,43 +262,35 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <grid id="42301" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                    <margin top="0" left="0" bottom="0" right="0"/>
+                  <grid id="42301" layout-manager="GridBagLayout">
                     <constraints>
                       <tabbedpane title="File"/>
                     </constraints>
                     <properties/>
                     <border type="none"/>
-                    <children>
-                      <hspacer id="32237">
-                        <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                      </hspacer>
-                    </children>
+                    <children/>
                   </grid>
-                  <grid id="5cc01" layout-manager="GridLayoutManager" row-count="4" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                    <margin top="0" left="0" bottom="0" right="0"/>
+                  <grid id="5cc01" layout-manager="GridBagLayout">
                     <constraints>
                       <tabbedpane title="Home"/>
                     </constraints>
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <grid id="e833" binding="textSourcePane" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="0" left="0" bottom="0" right="0"/>
+                      <grid id="e833" binding="textSourcePane" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="0" column="0" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
                         <border type="none" title="Document" title-justification="2">
                           <font name="Verdana" size="14"/>
                         </border>
                         <children>
-                          <grid id="a39ac" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                            <margin top="0" left="0" bottom="0" right="0"/>
+                          <grid id="a39ac" layout-manager="GridBagLayout">
                             <constraints>
                               <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties/>
                             <border type="none"/>
@@ -307,6 +298,7 @@
                               <component id="fc89" class="javax.swing.JButton" binding="previousTextSourceButton">
                                 <constraints>
                                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="1.0" weighty="0.0"/>
                                 </constraints>
                                 <properties>
                                   <icon value="icon/icons8-advance-24 (reversed).png"/>
@@ -316,6 +308,7 @@
                               <component id="f8593" class="javax.swing.JButton" binding="nextTextSourceButton">
                                 <constraints>
                                   <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="1.0" weighty="0.0"/>
                                 </constraints>
                                 <properties>
                                   <icon value="icon/icons8-advance-24.png"/>
@@ -325,6 +318,7 @@
                               <component id="88617" class="javax.swing.JButton" binding="addTextSourceButton">
                                 <constraints>
                                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="1.0" weighty="1.0"/>
                                 </constraints>
                                 <properties>
                                   <icon value="icon/icons8-plus-24.png"/>
@@ -334,6 +328,7 @@
                               <component id="6673c" class="javax.swing.JButton" binding="removeTextSourceButton">
                                 <constraints>
                                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="1.0" weighty="1.0"/>
                                 </constraints>
                                 <properties>
                                   <icon value="icon/icons8-delete-24.png"/>
@@ -343,22 +338,18 @@
                               <component id="dbec8" class="edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser" binding="textSourceChooser" custom-create="true">
                                 <constraints>
                                   <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
                                 </constraints>
                                 <properties>
                                   <preferredSize width="150" height="24"/>
                                 </properties>
                               </component>
-                              <hspacer id="b5020">
-                                <constraints>
-                                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                                </constraints>
-                              </hspacer>
                             </children>
                           </grid>
-                          <grid id="331a3" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                            <margin top="0" left="0" bottom="0" right="0"/>
+                          <grid id="331a3" layout-manager="GridBagLayout">
                             <constraints>
                               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="0.0"/>
                             </constraints>
                             <properties/>
                             <border type="none" title="Font Size"/>
@@ -366,6 +357,7 @@
                               <component id="f15a2" class="javax.swing.JSlider" binding="fontSizeSlider">
                                 <constraints>
                                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="1.0" weighty="1.0"/>
                                 </constraints>
                                 <properties>
                                   <inverted value="false"/>
@@ -382,6 +374,7 @@
                           <component id="af9bf" class="javax.swing.JButton" binding="captureImageButton">
                             <constraints>
                               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="0.0"/>
                             </constraints>
                             <properties>
                               <icon value="icon/icons8-unsplash-32.png"/>
@@ -390,15 +383,10 @@
                           </component>
                         </children>
                       </grid>
-                      <hspacer id="5253">
-                        <constraints>
-                          <grid row="3" column="3" row-span="1" col-span="2" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                      </hspacer>
-                      <grid id="d64de" binding="undoPane" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="0" left="0" bottom="0" right="0"/>
+                      <grid id="d64de" binding="undoPane" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="0" column="2" row-span="4" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
                         <border type="none"/>
@@ -406,6 +394,7 @@
                           <component id="9c597" class="javax.swing.JButton" binding="undoButton" default-binding="true">
                             <constraints>
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="0.0"/>
                             </constraints>
                             <properties>
                               <icon value="icon/icons8-undo-32.png"/>
@@ -415,6 +404,7 @@
                           <component id="8c691" class="javax.swing.JButton" binding="showGraphViewerButton">
                             <constraints>
                               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="0.0"/>
                             </constraints>
                             <properties>
                               <font name="Verdana" size="10" style="0"/>
@@ -422,10 +412,10 @@
                               <text value=""/>
                             </properties>
                           </component>
-                          <grid id="5136" binding="filterPane" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                            <margin top="0" left="0" bottom="0" right="0"/>
+                          <grid id="5136" binding="filterPane" layout-manager="GridBagLayout">
                             <constraints>
                               <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties/>
                             <border type="none"/>
@@ -433,6 +423,7 @@
                               <component id="a3ff0" class="javax.swing.JCheckBox" binding="owlClassFilterCheckBox">
                                 <constraints>
                                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="1.0" weighty="1.0"/>
                                 </constraints>
                                 <properties>
                                   <font name="Verdana" size="10" style="0"/>
@@ -442,6 +433,7 @@
                               <component id="f1049" class="javax.swing.JCheckBox" binding="profileFilterCheckBox">
                                 <constraints>
                                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="1.0" weighty="1.0"/>
                                 </constraints>
                                 <properties>
                                   <font name="Verdana" size="10" style="0"/>
@@ -453,6 +445,7 @@
                           <component id="4baaa" class="javax.swing.JButton" binding="redoButton" default-binding="true">
                             <constraints>
                               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="0.0"/>
                             </constraints>
                             <properties>
                               <icon value="icon/icons8-redo-32.png"/>
@@ -462,6 +455,7 @@
                           <component id="3fc82" class="javax.swing.JButton" binding="assignColorToClassButton">
                             <constraints>
                               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="0.0"/>
                             </constraints>
                             <properties>
                               <icon value="icon/icons8-color-dropper-filled-50 (Custom).png"/>
@@ -470,20 +464,20 @@
                           </component>
                         </children>
                       </grid>
-                      <grid id="b34af" binding="annotationPaneButtons" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="0" left="0" bottom="0" right="0"/>
+                      <grid id="b34af" binding="annotationPaneButtons" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="0" column="1" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
                         <border type="none" title="Annotation" title-justification="2">
                           <font name="Verdana" size="14"/>
                         </border>
                         <children>
-                          <grid id="27a34" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                            <margin top="0" left="0" bottom="0" right="0"/>
+                          <grid id="27a34" layout-manager="GridBagLayout">
                             <constraints>
                               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties/>
                             <border type="none"/>
@@ -491,6 +485,7 @@
                               <component id="3b76c" class="javax.swing.JButton" binding="previousSpanButton">
                                 <constraints>
                                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="1.0" weighty="1.0"/>
                                 </constraints>
                                 <properties>
                                   <icon value="icon/icons8-advance-24 (reversed).png"/>
@@ -500,6 +495,7 @@
                               <component id="2ad30" class="javax.swing.JButton" binding="nextSpanButton">
                                 <constraints>
                                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="1.0" weighty="1.0"/>
                                 </constraints>
                                 <properties>
                                   <horizontalAlignment value="0"/>
@@ -509,10 +505,10 @@
                               </component>
                             </children>
                           </grid>
-                          <grid id="64a2e" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                            <margin top="0" left="0" bottom="0" right="0"/>
+                          <grid id="64a2e" layout-manager="GridBagLayout">
                             <constraints>
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties/>
                             <border type="none"/>
@@ -520,6 +516,7 @@
                               <component id="6fc0e" class="javax.swing.JButton" binding="addAnnotationButton">
                                 <constraints>
                                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="1.0" weighty="1.0"/>
                                 </constraints>
                                 <properties>
                                   <font name="Verdana" size="10" style="0"/>
@@ -533,6 +530,7 @@
                               <component id="e9c93" class="javax.swing.JButton" binding="removeAnnotationButton">
                                 <constraints>
                                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="1.0" weighty="1.0"/>
                                 </constraints>
                                 <properties>
                                   <font name="Verdana" size="10" style="0"/>
@@ -549,6 +547,7 @@
                       <component id="5ce35" class="javax.swing.JCheckBox" binding="oneClickGraphsCheckBox" default-binding="true">
                         <constraints>
                           <grid row="0" column="3" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <text value="One Click Graphs"/>
@@ -557,6 +556,7 @@
                       <component id="a2a69" class="javax.swing.JCheckBox" binding="snapToWordsCheckBox" default-binding="true">
                         <constraints>
                           <grid row="2" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <selected value="true"/>
@@ -566,6 +566,7 @@
                       <component id="73677" class="javax.swing.JRadioButton" binding="structuresRadioButton" default-binding="true">
                         <constraints>
                           <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <text value="Structures"/>
@@ -574,6 +575,7 @@
                       <component id="c4764" class="javax.swing.JRadioButton" binding="conceptsRadioButton" default-binding="true">
                         <constraints>
                           <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <text value="Concepts"/>
@@ -581,8 +583,7 @@
                       </component>
                     </children>
                   </grid>
-                  <grid id="8ec4a" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                    <margin top="0" left="0" bottom="0" right="0"/>
+                  <grid id="8ec4a" layout-manager="GridBagLayout">
                     <constraints>
                       <tabbedpane title="Profile"/>
                     </constraints>
@@ -592,6 +593,7 @@
                       <scrollpane id="35ce2">
                         <constraints>
                           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="1.0"/>
                         </constraints>
                         <properties/>
                         <border type="none" title="Colors" title-justification="2">
@@ -606,10 +608,10 @@
                           </component>
                         </children>
                       </scrollpane>
-                      <grid id="7ed8" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="0" left="0" bottom="0" right="0"/>
+                      <grid id="7ed8" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="1.0"/>
                         </constraints>
                         <properties/>
                         <border type="none" title="Profiles" title-justification="2">
@@ -619,6 +621,7 @@
                           <scrollpane id="85c4">
                             <constraints>
                               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties/>
                             <border type="none"/>
@@ -631,10 +634,10 @@
                               </component>
                             </children>
                           </scrollpane>
-                          <grid id="83e1f" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                            <margin top="0" left="0" bottom="0" right="0"/>
+                          <grid id="83e1f" layout-manager="GridBagLayout">
                             <constraints>
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="0.0"/>
                             </constraints>
                             <properties/>
                             <border type="none"/>
@@ -642,6 +645,7 @@
                               <component id="919c1" class="javax.swing.JButton" binding="addProfileButton" default-binding="true">
                                 <constraints>
                                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="1.0"/>
                                 </constraints>
                                 <properties>
                                   <font name="Verdana" size="10" style="0"/>
@@ -652,6 +656,7 @@
                               <component id="bde5c" class="javax.swing.JButton" binding="removeProfileButton" default-binding="true">
                                 <constraints>
                                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="1.0"/>
                                 </constraints>
                                 <properties>
                                   <enabled value="true"/>
@@ -660,19 +665,14 @@
                                   <text value=""/>
                                 </properties>
                               </component>
-                              <hspacer id="c4721">
-                                <constraints>
-                                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                                </constraints>
-                              </hspacer>
                             </children>
                           </grid>
                         </children>
                       </grid>
-                      <grid id="7942d" binding="iaaPane" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="10" left="10" bottom="10" right="10"/>
+                      <grid id="7942d" binding="iaaPane" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="1.0"/>
                         </constraints>
                         <properties/>
                         <border type="none" title="IAA">
@@ -682,6 +682,7 @@
                           <component id="21ed9" class="javax.swing.JButton" binding="runIaaButton">
                             <constraints>
                               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties>
                               <font name="Verdana" size="10" style="0"/>
@@ -691,6 +692,7 @@
                           <component id="d356b" class="javax.swing.JCheckBox" binding="iaaSpanCheckBox" default-binding="true">
                             <constraints>
                               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties>
                               <font name="Verdana" size="10" style="0"/>
@@ -700,6 +702,7 @@
                           <component id="6aa9e" class="javax.swing.JCheckBox" binding="iaaClassAndSpanCheckBox" default-binding="true">
                             <constraints>
                               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties>
                               <font name="Verdana" size="10" style="0"/>
@@ -709,6 +712,7 @@
                           <component id="a3b17" class="javax.swing.JCheckBox" binding="iaaClassCheckBox" default-binding="true">
                             <constraints>
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties>
                               <font name="Verdana" size="10" style="0"/>
@@ -717,15 +721,9 @@
                           </component>
                         </children>
                       </grid>
-                      <hspacer id="22f65">
-                        <constraints>
-                          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                      </hspacer>
                     </children>
                   </grid>
-                  <grid id="f5d1c" layout-manager="GridLayoutManager" row-count="3" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                    <margin top="0" left="0" bottom="0" right="0"/>
+                  <grid id="f5d1c" layout-manager="GridBagLayout">
                     <constraints>
                       <tabbedpane title="Search"/>
                     </constraints>
@@ -738,15 +736,16 @@
                             <preferred-size width="150" height="25"/>
                             <maximum-size width="-1" height="25"/>
                           </grid>
+                          <gridbag weightx="1.0" weighty="1.0"/>
                         </constraints>
                         <properties>
                           <font name="Verdana" size="10" style="0"/>
                         </properties>
                       </component>
-                      <grid id="eedb6" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="0" left="0" bottom="0" right="0"/>
+                      <grid id="eedb6" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="1.0"/>
                         </constraints>
                         <properties/>
                         <border type="none"/>
@@ -754,6 +753,7 @@
                           <component id="3945b" class="javax.swing.JButton" binding="nextMatchButton">
                             <constraints>
                               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties>
                               <font name="Verdana" size="10" style="0"/>
@@ -764,6 +764,7 @@
                           <component id="75a85" class="javax.swing.JButton" binding="previousMatchButton">
                             <constraints>
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties>
                               <font name="Verdana" size="10" style="0"/>
@@ -776,6 +777,7 @@
                       <component id="64bfd" class="javax.swing.JButton" binding="findTextInOntologyButton">
                         <constraints>
                           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="1.0"/>
                         </constraints>
                         <properties>
                           <font name="Verdana" size="10" style="0"/>
@@ -785,6 +787,7 @@
                       <component id="8972f" class="javax.swing.JCheckBox" binding="onlyAnnotationsCheckBox" custom-create="true">
                         <constraints>
                           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="1.0"/>
                         </constraints>
                         <properties>
                           <font name="Verdana" size="10" style="0"/>
@@ -794,6 +797,7 @@
                       <component id="906b0" class="javax.swing.JCheckBox" binding="regexCheckBox" custom-create="true">
                         <constraints>
                           <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="1.0"/>
                         </constraints>
                         <properties>
                           <font name="Verdana" size="10" style="0"/>
@@ -803,36 +807,26 @@
                       <component id="185e7" class="javax.swing.JCheckBox" binding="caseSensitiveCheckBox" custom-create="true">
                         <constraints>
                           <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="1.0"/>
                         </constraints>
                         <properties>
                           <font name="Verdana" size="10" style="0"/>
                           <text value="Case Sensitive"/>
                         </properties>
                       </component>
-                      <vspacer id="5a232">
-                        <constraints>
-                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                      </vspacer>
-                      <hspacer id="c8295">
-                        <constraints>
-                          <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                      </hspacer>
                     </children>
                   </grid>
-                  <grid id="c71ba" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                    <margin top="0" left="0" bottom="0" right="0"/>
+                  <grid id="c71ba" layout-manager="GridBagLayout">
                     <constraints>
                       <tabbedpane title="Review"/>
                     </constraints>
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <grid id="bf7a9" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="0" left="0" bottom="0" right="0"/>
+                      <grid id="bf7a9" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="1.0"/>
                         </constraints>
                         <properties/>
                         <border type="none"/>
@@ -842,6 +836,7 @@
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
                                 <preferred-size width="200" height="200"/>
                               </grid>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties>
                               <font name="Verdana" size="14"/>
@@ -849,8 +844,7 @@
                             </properties>
                             <border type="none"/>
                             <children>
-                              <grid id="45ad2" layout-manager="GridLayoutManager" row-count="2" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                                <margin top="0" left="0" bottom="0" right="0"/>
+                              <grid id="45ad2" layout-manager="GridBagLayout">
                                 <constraints>
                                   <tabbedpane title="Text"/>
                                 </constraints>
@@ -860,6 +854,7 @@
                                   <scrollpane id="f3132">
                                     <constraints>
                                       <grid row="1" column="0" row-span="1" col-span="5" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="1.0" weighty="1.0"/>
                                     </constraints>
                                     <properties/>
                                     <border type="none"/>
@@ -875,16 +870,17 @@
                                   <component id="1d6f3" class="javax.swing.JCheckBox" binding="exactMatchCheckBox" custom-create="true" default-binding="true">
                                     <constraints>
                                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="1.0" weighty="1.0"/>
                                     </constraints>
                                     <properties>
                                       <font name="Verdana" size="12" style="0"/>
                                       <text resource-bundle="log4j" key="exact.match"/>
                                     </properties>
                                   </component>
-                                  <grid id="54a6" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                                    <margin top="0" left="0" bottom="0" right="0"/>
+                                  <grid id="54a6" layout-manager="GridBagLayout">
                                     <constraints>
                                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="1.0" weighty="1.0"/>
                                     </constraints>
                                     <properties/>
                                     <border type="none" title="Text">
@@ -896,15 +892,16 @@
                                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                                             <preferred-size width="150" height="-1"/>
                                           </grid>
+                                          <gridbag weightx="1.0" weighty="1.0"/>
                                         </constraints>
                                         <properties/>
                                       </component>
                                     </children>
                                   </grid>
-                                  <grid id="f36aa" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                                    <margin top="0" left="0" bottom="0" right="0"/>
+                                  <grid id="f36aa" layout-manager="GridBagLayout">
                                     <constraints>
                                       <grid row="0" column="2" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="1.0" weighty="1.0"/>
                                     </constraints>
                                     <properties/>
                                     <border type="none"/>
@@ -914,6 +911,7 @@
                                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                                             <preferred-size width="100" height="-1"/>
                                           </grid>
+                                          <gridbag weightx="0.0" weighty="1.0"/>
                                         </constraints>
                                         <properties>
                                           <icon value="icon/icons8-advance-24 (reversed).png"/>
@@ -925,6 +923,7 @@
                                           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                                             <preferred-size width="100" height="-1"/>
                                           </grid>
+                                          <gridbag weightx="0.0" weighty="1.0"/>
                                         </constraints>
                                         <properties>
                                           <icon value="icon/icons8-advance-24.png"/>
@@ -936,23 +935,18 @@
                                           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                                             <preferred-size width="200" height="-1"/>
                                           </grid>
+                                          <gridbag weightx="0.0" weighty="1.0"/>
                                         </constraints>
                                         <properties>
                                           <icon value="icon/icons8-synchronize-32.png"/>
                                           <text value=""/>
                                         </properties>
                                       </component>
-                                      <hspacer id="6b263">
-                                        <constraints>
-                                          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                                        </constraints>
-                                      </hspacer>
                                     </children>
                                   </grid>
                                 </children>
                               </grid>
-                              <grid id="58174" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                                <margin top="0" left="0" bottom="0" right="0"/>
+                              <grid id="58174" layout-manager="GridBagLayout">
                                 <constraints>
                                   <tabbedpane title="Concept"/>
                                 </constraints>
@@ -962,6 +956,7 @@
                                   <scrollpane id="fe7cb">
                                     <constraints>
                                       <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="1.0" weighty="1.0"/>
                                     </constraints>
                                     <properties/>
                                     <border type="none"/>
@@ -977,16 +972,17 @@
                                   <component id="cd58c" class="javax.swing.JCheckBox" binding="includeClassDescendantsCheckBox" custom-create="true">
                                     <constraints>
                                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="1.0" weighty="0.0"/>
                                     </constraints>
                                     <properties>
                                       <font name="Verdana" size="12" style="0"/>
                                       <text resource-bundle="log4j" key="include.descendants"/>
                                     </properties>
                                   </component>
-                                  <grid id="c9efe" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                                    <margin top="0" left="0" bottom="0" right="0"/>
+                                  <grid id="c9efe" layout-manager="GridBagLayout">
                                     <constraints>
                                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="1.0" weighty="0.0"/>
                                     </constraints>
                                     <properties/>
                                     <border type="none" title="OWL Class">
@@ -996,6 +992,7 @@
                                       <component id="3ec6d" class="javax.swing.JLabel" binding="owlClassLabel" custom-create="true">
                                         <constraints>
                                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                          <gridbag weightx="1.0" weighty="1.0"/>
                                         </constraints>
                                         <properties>
                                           <text value=""/>
@@ -1003,10 +1000,10 @@
                                       </component>
                                     </children>
                                   </grid>
-                                  <grid id="ea59e" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                                    <margin top="0" left="0" bottom="0" right="0"/>
+                                  <grid id="ea59e" layout-manager="GridBagLayout">
                                     <constraints>
                                       <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="1.0" weighty="0.0"/>
                                     </constraints>
                                     <properties/>
                                     <border type="none"/>
@@ -1016,6 +1013,7 @@
                                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                                             <preferred-size width="100" height="-1"/>
                                           </grid>
+                                          <gridbag weightx="0.0" weighty="1.0"/>
                                         </constraints>
                                         <properties>
                                           <icon value="icon/icons8-advance-24 (reversed).png"/>
@@ -1027,6 +1025,7 @@
                                           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                                             <preferred-size width="100" height="-1"/>
                                           </grid>
+                                          <gridbag weightx="0.0" weighty="1.0"/>
                                         </constraints>
                                         <properties>
                                           <icon value="icon/icons8-advance-24.png"/>
@@ -1038,23 +1037,18 @@
                                           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                                             <preferred-size width="200" height="-1"/>
                                           </grid>
+                                          <gridbag weightx="0.0" weighty="1.0"/>
                                         </constraints>
                                         <properties>
                                           <icon value="icon/icons8-synchronize-32.png"/>
                                           <text value=""/>
                                         </properties>
                                       </component>
-                                      <hspacer id="c4660">
-                                        <constraints>
-                                          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                                        </constraints>
-                                      </hspacer>
                                     </children>
                                   </grid>
                                 </children>
                               </grid>
-                              <grid id="242ee" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                                <margin top="0" left="0" bottom="0" right="0"/>
+                              <grid id="242ee" layout-manager="GridBagLayout">
                                 <constraints>
                                   <tabbedpane title="Relation"/>
                                 </constraints>
@@ -1064,6 +1058,7 @@
                                   <scrollpane id="487a7">
                                     <constraints>
                                       <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="1.0" weighty="1.0"/>
                                     </constraints>
                                     <properties/>
                                     <border type="none"/>
@@ -1079,16 +1074,17 @@
                                   <component id="52218" class="javax.swing.JCheckBox" binding="includePropertyDescendantsCheckBox" custom-create="true">
                                     <constraints>
                                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="1.0" weighty="0.0"/>
                                     </constraints>
                                     <properties>
                                       <font name="Verdana" size="12" style="0"/>
                                       <text resource-bundle="log4j" key="include.descendants1"/>
                                     </properties>
                                   </component>
-                                  <grid id="d3403" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                                    <margin top="0" left="0" bottom="0" right="0"/>
+                                  <grid id="d3403" layout-manager="GridBagLayout">
                                     <constraints>
                                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="1.0" weighty="0.0"/>
                                     </constraints>
                                     <properties/>
                                     <border type="none" title="OWL Object Property">
@@ -1098,6 +1094,7 @@
                                       <component id="f5908" class="javax.swing.JLabel" binding="owlPropertyLabel" custom-create="true">
                                         <constraints>
                                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                          <gridbag weightx="1.0" weighty="1.0"/>
                                         </constraints>
                                         <properties>
                                           <font name="Verdana" size="10" style="0"/>
@@ -1106,10 +1103,10 @@
                                       </component>
                                     </children>
                                   </grid>
-                                  <grid id="8556f" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                                    <margin top="0" left="0" bottom="0" right="0"/>
+                                  <grid id="8556f" layout-manager="GridBagLayout">
                                     <constraints>
                                       <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="1.0" weighty="0.0"/>
                                     </constraints>
                                     <properties/>
                                     <border type="none"/>
@@ -1119,6 +1116,7 @@
                                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                                             <preferred-size width="100" height="-1"/>
                                           </grid>
+                                          <gridbag weightx="0.0" weighty="1.0"/>
                                         </constraints>
                                         <properties>
                                           <icon value="icon/icons8-advance-24 (reversed).png"/>
@@ -1130,6 +1128,7 @@
                                           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                                             <preferred-size width="100" height="-1"/>
                                           </grid>
+                                          <gridbag weightx="0.0" weighty="1.0"/>
                                         </constraints>
                                         <properties>
                                           <icon value="icon/icons8-advance-24.png"/>
@@ -1141,17 +1140,13 @@
                                           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                                             <preferred-size width="200" height="-1"/>
                                           </grid>
+                                          <gridbag weightx="0.0" weighty="1.0"/>
                                         </constraints>
                                         <properties>
                                           <icon value="icon/icons8-synchronize-32.png"/>
                                           <text value=""/>
                                         </properties>
                                       </component>
-                                      <hspacer id="c48b8">
-                                        <constraints>
-                                          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                                        </constraints>
-                                      </hspacer>
                                     </children>
                                   </grid>
                                 </children>
@@ -1166,32 +1161,17 @@
               </tabbedpane>
             </children>
           </grid>
-          <grid id="39898" binding="filePanel" layout-manager="GridLayoutManager" row-count="5" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-            <margin top="0" left="0" bottom="0" right="0"/>
+          <grid id="39898" binding="filePanel" layout-manager="GridBagLayout">
             <constraints>
               <card name="File"/>
             </constraints>
             <properties/>
             <border type="none"/>
             <children>
-              <vspacer id="b0c95">
-                <constraints>
-                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                </constraints>
-              </vspacer>
-              <hspacer id="52eb4">
-                <constraints>
-                  <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-              </hspacer>
-              <vspacer id="f01c8">
-                <constraints>
-                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                </constraints>
-              </vspacer>
               <component id="5363c" class="javax.swing.JProgressBar" binding="progressBar">
                 <constraints>
                   <grid row="2" column="0" row-span="1" col-span="5" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0"/>
                 </constraints>
                 <properties>
                   <stringPainted value="true"/>
@@ -1200,6 +1180,7 @@
               <scrollpane id="4b06">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="1.0"/>
                 </constraints>
                 <properties/>
                 <border type="none"/>
@@ -1218,29 +1199,15 @@
                   </component>
                 </children>
               </scrollpane>
-              <hspacer id="be983">
-                <constraints>
-                  <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-              </hspacer>
               <component id="35629" class="javax.swing.JButton" binding="backButton" default-binding="true">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0"/>
                 </constraints>
                 <properties>
                   <text value="Back"/>
                 </properties>
               </component>
-              <hspacer id="5b28d">
-                <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="4" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-              </hspacer>
-              <hspacer id="418e1">
-                <constraints>
-                  <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-              </hspacer>
             </children>
           </grid>
         </children>
