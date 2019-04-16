@@ -97,7 +97,7 @@ public class KnowtatorModel extends OwlModel {
           .map(Path::toFile)
           .forEach(file -> xmlUtil.readToTextSourceCollection(this, file, true));
       Files.list(structuresLocation.toPath())
-          .filter(path -> path.toString().endsWith(".conllu"))
+          .filter(path -> path.toString().endsWith(".conllu") || path.toString().endsWith(".conll"))
           .map(Path::toFile)
           .forEach(file -> conllUtil.readToStructureAnnotations(this, file));
 
