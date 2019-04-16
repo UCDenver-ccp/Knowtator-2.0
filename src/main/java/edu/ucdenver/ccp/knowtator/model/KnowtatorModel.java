@@ -62,6 +62,10 @@ public class KnowtatorModel extends OwlModel {
     profiles = new ProfileCollection(this);
   }
 
+  public void setLoading(Boolean isLoading) {
+    this.loading = isLoading;
+  }
+
   @Override
   public void save() {
     super.save();
@@ -73,7 +77,7 @@ public class KnowtatorModel extends OwlModel {
   public void load() {
     super.load();
     try {
-      loading = true;
+      setLoading(true);
       setRenderRdfsLabel();
       log.info("Loading profiles");
       KnowtatorXmlUtil xmlUtil = new KnowtatorXmlUtil();
@@ -107,7 +111,7 @@ public class KnowtatorModel extends OwlModel {
       e.printStackTrace();
     } finally {
       resetRenderRdfs();
-      loading = false;
+      setLoading(false);
     }
   }
 

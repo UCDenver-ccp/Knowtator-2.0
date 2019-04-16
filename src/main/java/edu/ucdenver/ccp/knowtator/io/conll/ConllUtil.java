@@ -50,7 +50,7 @@ public class ConllUtil {
 
     model
         .getTextSources()
-        .get(file.getName().replace(".tree.conllu", ""))
+        .get(file.getName().replace(".tree.conllu", "").replace(".conll", ""))
         .ifPresent(
             textSource -> {
               log.info(String.format("Read structures from %s", file.getName()));
