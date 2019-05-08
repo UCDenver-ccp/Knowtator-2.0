@@ -100,7 +100,7 @@ public class XmlUtil {
 
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     Document doc = null;
-    FileInputStream is = null;
+    FileInputStream is;
     try {
       is = new FileInputStream(file);
       DocumentBuilder db = dbf.newDocumentBuilder();

@@ -32,7 +32,9 @@
     <artifactId>knowtator</artifactId>
     <version>2.1.6</version>
     <name>Knowtator</name>
-    <description>A plug-in for the Protege 5.0+ Desktop ontology editor for editing in-text concept annotations and assertion annotations</description>
+    <description>A plug-in for the Protege 5.0+ Desktop ontology editor for editing in-text concept annotations and
+        assertion annotations
+    </description>
     <url>https://github.com/UCDenver-ccp/Knowtator-2.0</url>
     <packaging>bundle</packaging>
 
@@ -45,6 +47,7 @@
 
     <properties>
         <jdk.version>1.8</jdk.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <scm>
@@ -145,7 +148,9 @@
                 <configuration>
                     <instructions>
                         <Export-Package>edu.ucdenver.ccp.knowtator</Export-Package>
-                        <Update-Url>https://raw.githubusercontent.com/UCDenver-ccp/Knowtator-2.0/development/update.properties</Update-Url>
+                        <Update-Url>
+                            https://raw.githubusercontent.com/UCDenver-ccp/Knowtator-2.0/development/update.properties
+                        </Update-Url>
                         <Bundle-Name>Knowtator</Bundle-Name>
                         <Bundle-Category>protege</Bundle-Category>
                         <Bundle-Description>A plugin for annotating text</Bundle-Description>

@@ -25,7 +25,6 @@
 package edu.ucdenver.ccp.knowtator.model.object;
 
 import com.mxgraph.model.mxCell;
-import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
@@ -194,7 +193,8 @@ public class GraphSpace extends mxGraph
 
   /**
    * Adds a new triple.
-   *  @param source The source node
+   *
+   * @param source The source node
    * @param target The target node
    * @param id The triple id
    * @param annotator The annotator
@@ -214,7 +214,7 @@ public class GraphSpace extends mxGraph
       String quantifierValue,
       Boolean isNegated,
       String motivation) {
-    id = textSource.getGraphSpaces().verifyID(id, "edge");
+    //    id = textSource.getGraphSpaces().verifyID(id, "edge");
 
     annotator = Optional.ofNullable(annotator).orElse(knowtatorModel.getDefaultProfile());
     RelationAnnotation newRelationAnnotation =
@@ -278,10 +278,10 @@ public class GraphSpace extends mxGraph
    * @return the annotation node
    */
   public AnnotationNode makeAnnotationNode(ConceptAnnotation conceptAnnotation) {
-    String nodeId = textSource.getGraphSpaces().verifyID(null, "node");
-    AnnotationNode newVertex = new AnnotationNode(nodeId, conceptAnnotation, 20, 20, this);
+//    String nodeId = textSource.getGraphSpaces().verifyID(null, "node");
+    AnnotationNode newVertex = new AnnotationNode(null, conceptAnnotation, 20, 20, this);
     addCellToGraph(newVertex);
-    return (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(nodeId);
+    return newVertex; //(AnnotationNode) ((mxGraphModel) getModel()).getCells().get(nodeId);
   }
 
   @Override

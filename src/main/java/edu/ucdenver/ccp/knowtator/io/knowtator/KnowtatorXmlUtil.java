@@ -321,10 +321,9 @@ public final class KnowtatorXmlUtil extends XmlUtil {
           .getCells()
           .remove(((AnnotationNode) cell).getId(), cell);
       String nodeId =
-          graphSpace
-              .getTextSource()
-              .getGraphSpaces()
-              .verifyID(((AnnotationNode) cell).getId(), "node");
+          ((AnnotationNode) cell)
+              .getId(); // graphSpace.getTextSource().getGraphSpaces().verifyID(((AnnotationNode)
+                        // cell).getId(), "node");
       ((AnnotationNode) cell).setId(nodeId);
       ((mxGraphModel) graphSpace.getModel()).getCells().put(nodeId, cell);
     }
