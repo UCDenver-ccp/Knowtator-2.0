@@ -48,4 +48,22 @@ class ConllUtilTest {
         8072,
         7711);
   }
+
+//  @Test
+//  void readBioCreativeProject() throws  IOException {
+//    KnowtatorModel model = TestingHelpers.getLoadedModel("biocreative_chemprot");
+//    TestingHelpers.countCollections(model,
+//        1,
+//        0,
+//        0,
+//        0,
+//        1,
+//        0,
+//        0,
+//        0,
+//        8072,
+//        361,
+//        8072,
+//        7711);
+//  }
 }
