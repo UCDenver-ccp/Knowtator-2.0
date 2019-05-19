@@ -99,7 +99,7 @@ public class Loader extends SwingWorker implements ModelListener {
   protected Object doInBackground() throws Exception {
     progressBar1.setValue(0);
     view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-    view.loadProject(file.getParentFile(), this);
+    view.loadProject(file, this);
     return null;
   }
 

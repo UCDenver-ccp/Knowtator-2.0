@@ -105,28 +105,28 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
         throw new IOException();
       }
     }
-    if (projectLocation.exists() && projectLocation.isDirectory()) {
-      if (Files.list(projectLocation.toPath())
-          .noneMatch(path -> path.toString().endsWith(".knowtator"))) {
-        Files.createFile(
-            new File(projectLocation, String.format("%s.knowtator", projectLocation.getName()))
-                .toPath());
-      }
-      this.projectLocation = projectLocation;
-      articlesLocation = new File(projectLocation, "Articles");
-      annotationsLocation = new File(projectLocation, "Annotations");
-      profilesLocation = (new File(projectLocation, "Profiles"));
-      ontologiesLocation = new File(projectLocation, "Ontologies");
-      structuresLocation = new File(projectLocation, "Structures");
-      Files.createDirectories(projectLocation.toPath());
-      Files.createDirectories(articlesLocation.toPath());
-      Files.createDirectories(annotationsLocation.toPath());
-      Files.createDirectories(profilesLocation.toPath());
-      Files.createDirectories(ontologiesLocation.toPath());
-      Files.createDirectories(structuresLocation.toPath());
-    } else {
-      throw new IOException();
+
+
+    Files.createDirectories(projectLocation.toPath());
+
+    if (Files.list(projectLocation.toPath())
+        .noneMatch(path -> path.toString().endsWith(".knowtator"))) {
+      Files.createFile(
+          new File(projectLocation, String.format("%s.knowtator", projectLocation.getName()))
+              .toPath());
     }
+
+    this.projectLocation = projectLocation;
+    articlesLocation = new File(projectLocation, "Articles");
+    annotationsLocation = new File(projectLocation, "Annotations");
+    profilesLocation = (new File(projectLocation, "Profiles"));
+    ontologiesLocation = new File(projectLocation, "Ontologies");
+    structuresLocation = new File(projectLocation, "Structures");
+    Files.createDirectories(articlesLocation.toPath());
+    Files.createDirectories(annotationsLocation.toPath());
+    Files.createDirectories(profilesLocation.toPath());
+    Files.createDirectories(ontologiesLocation.toPath());
+    Files.createDirectories(structuresLocation.toPath());
   }
 
   @Override

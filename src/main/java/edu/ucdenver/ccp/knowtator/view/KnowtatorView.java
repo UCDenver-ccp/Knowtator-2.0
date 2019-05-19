@@ -498,6 +498,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                 }
               });
         });
+
     nextTextSourceButton.addActionListener(
         e -> {
           getModel().ifPresent(BaseModel::selectNextTextSource);
@@ -685,6 +686,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
             .ifPresent(
                 projectName -> {
                   File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
+
                   new Loader(this, projectDirectory, progressBar, header, cardPanel).execute();
                 });
         break;
