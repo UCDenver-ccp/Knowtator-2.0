@@ -257,7 +257,7 @@ public class Span implements ConceptAnnotationBoundModelObject<Span> {
   }
 
   public String toString() {
-    return String.format("%s", getSpannedText());
+    return String.format("%s [%d, %d]", getSpannedText(), start, end);
   }
 
   public ConceptAnnotation getConceptAnnotation() {

@@ -224,7 +224,7 @@ public class ConceptAnnotation extends SpanCollection
 
   @Override
   public String toString() {
-    return String.format("%s", stream().map(Span::toString).collect(Collectors.joining(" ")));
+    return String.format("%s", stream().map(Span::getSpannedText).collect(Collectors.joining(" ")));
   }
 
   /**
@@ -320,7 +320,7 @@ public class ConceptAnnotation extends SpanCollection
   String toMultilineString() {
     return String.format(
         "%s%n(%s)",
-        stream().map(Span::toString).collect(Collectors.joining("\n")),
+        stream().map(Span::getSpannedText).collect(Collectors.joining("\n")),
         getOwlClassRendering());
   }
 
