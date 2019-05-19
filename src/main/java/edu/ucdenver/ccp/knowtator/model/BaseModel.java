@@ -129,7 +129,6 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
     }
   }
 
-
   @Override
   public void caretUpdate(CaretEvent e) {
     int start = Math.min(e.getDot(), e.getMark());
@@ -237,7 +236,9 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
     } else {
       int i = idRegistry.size();
 
-      while (verifiedId == null || idRegistry.keySet().contains(verifiedId)) {
+      while (verifiedId == null
+          || verifiedId.equals("")
+          || idRegistry.keySet().contains(verifiedId)) {
         if (modelObject instanceof TextBoundModelObject) {
           verifiedId =
               String.format(
@@ -249,7 +250,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
       }
     }
     idRegistry.put(verifiedId, modelObject);
-    return id == null ? verifiedId : id;
+    return id == null || id.equals("") ? verifiedId : id;
   }
 
   /**
