@@ -410,8 +410,8 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
   }
 
   /** Fire color changed. */
-  public void fireColorChanged() {
-    modelListeners.forEach(ModelListener::colorChangedEvent);
+  public void fireColorChanged(Profile profile) {
+    modelListeners.forEach(modelListener -> modelListener.colorChangedEvent(profile));
   }
 
   /**

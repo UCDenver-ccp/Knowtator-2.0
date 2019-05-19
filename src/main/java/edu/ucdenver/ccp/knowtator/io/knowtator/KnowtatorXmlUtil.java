@@ -323,7 +323,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
       String nodeId =
           ((AnnotationNode) cell)
               .getId(); // graphSpace.getTextSource().getGraphSpaces().verifyID(((AnnotationNode)
-                        // cell).getId(), "node");
+      // cell).getId(), "node");
       ((AnnotationNode) cell).setId(nodeId);
       ((mxGraphModel) graphSpace.getModel()).getCells().put(nodeId, cell);
     }
@@ -354,6 +354,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
   }
 
   private void readToProfile(KnowtatorModel model, Profile profile, Element parent) {
+    model.removeModelListener(profile);
     Map<String, Color> colorMap = new HashMap<>();
     for (Node highlighterNode :
         KnowtatorXmlUtil.asList(parent.getElementsByTagName(KnowtatorXmlTags.HIGHLIGHTER))) {
@@ -370,6 +371,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
     model
         .getOwlClassesByIds(colorMap.keySet())
         .forEach((key, value) -> profile.addColor(value, colorMap.get(key)));
+    model.addModelListener(profile);
   }
 
   /**
@@ -378,6 +380,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
    * @param textSource the text source
    */
   public void writeFromTextSource(TextSource textSource) {
+
     File file = textSource.getSaveLocation();
     Optional<Document> domOptional = startWrite(file);
     File finalFile = file;
@@ -537,6 +540,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
    * @param profile the profile
    */
   public void writeFromProfile(Profile profile) {
+
     Optional<Document> domOptional = startWrite(profile.getSaveLocation());
     domOptional.ifPresent(
         dom -> {

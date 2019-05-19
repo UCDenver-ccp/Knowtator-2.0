@@ -39,6 +39,7 @@ import edu.ucdenver.ccp.knowtator.model.collection.SelectableCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
@@ -387,7 +388,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
   }
 
   @Override
-  public void colorChangedEvent() {
+  public void colorChangedEvent(Profile profile) {
     showTextSource();
   }
 

@@ -294,7 +294,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
   }
 
   @Override
-  public void colorChangedEvent() {}
+  public void colorChangedEvent(Profile profile) {}
 
   @Override
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {

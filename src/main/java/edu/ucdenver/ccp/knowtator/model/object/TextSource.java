@@ -27,6 +27,7 @@ package edu.ucdenver.ccp.knowtator.model.object;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXmlUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
+import edu.ucdenver.ccp.knowtator.model.OwlModel;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
@@ -205,7 +206,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
   public void filterChangedEvent() {}
 
   @Override
-  public void colorChangedEvent() {}
+  public void colorChangedEvent(Profile profile) {}
 
   @Override
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {
@@ -215,14 +216,32 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
         .filter(modelObject -> modelObject instanceof TextBoundModelObject)
         .map(modelObject -> (TextBoundModelObject) modelObject)
         .filter(textBoundModelObject -> textBoundModelObject.getTextSource().equals(this))
-        .ifPresent(modelObject -> save());
+        .ifPresent(
+            modelObject -> {
+              try {
+                model.setRenderRdfsLabel();
+              } catch (OwlModel.RendererSet rendererSet) {
+                save();
+              } finally {
+                model.resetRenderAnnotations();
+              }
+            });
     event
         .getOld()
         .filter(modelObject -> !(event instanceof SelectionEvent))
         .filter(modelObject -> modelObject instanceof TextBoundModelObject)
         .map(modelObject -> (TextBoundModelObject) modelObject)
         .filter(textBoundModelObject -> textBoundModelObject.getTextSource().equals(this))
-        .ifPresent(modelObject -> save());
+        .ifPresent(
+            modelObject -> {
+              try {
+                model.setRenderRdfsLabel();
+              } catch (OwlModel.RendererSet rendererSet) {
+                save();
+              } finally {
+                model.resetRenderAnnotations();
+              }
+            });
   }
 
   /**
@@ -263,7 +282,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
   public Optional<ConceptAnnotation> getAnnotation(String annotationID) {
     Optional<ConceptAnnotation> conceptAnnotation = conceptAnnotations.get(annotationID);
     if (conceptAnnotation.isPresent()) {
-      return  conceptAnnotation;
+      return conceptAnnotation;
     }
     return structureAnnotations.get(annotationID);
   }

@@ -29,6 +29,7 @@ import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.JTextArea;
@@ -117,5 +118,5 @@ public class AnnotationNotes extends JTextArea implements KnowtatorComponent, Mo
   }
 
   @Override
-  public void colorChangedEvent() {}
+  public void colorChangedEvent(Profile profile) {}
 }

@@ -104,7 +104,7 @@ public class ColorList extends JList<OWLClass> implements KnowtatorComponent, Mo
   }
 
   @Override
-  public void colorChangedEvent() {
+  public void colorChangedEvent(Profile profile) {
     setCollection();
   }
 

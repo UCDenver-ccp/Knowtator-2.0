@@ -116,14 +116,14 @@ public class Loader extends SwingWorker implements ModelListener {
                 view.getModel()
                     .ifPresent(
                         model -> {
-                          Float x =
+                          float x =
                               (model.getNumberOfTextSources() + model.getNumberOfProfiles())
                                   / maxVal
                                   * 100;
-                          setProgress(Math.min(100, x.intValue()));
+                          setProgress(Math.min(100, (int) x));
                         }));
   }
 
   @Override
-  public void colorChangedEvent() {}
+  public void colorChangedEvent(Profile profile) {}
 }

@@ -45,6 +45,7 @@ import edu.ucdenver.ccp.knowtator.model.collection.SelectableCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
@@ -1040,7 +1041,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   }
 
   @Override
-  public void colorChangedEvent() {
+  public void colorChangedEvent(Profile profile) {
   }
 
   /**

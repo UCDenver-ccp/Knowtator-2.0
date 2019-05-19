@@ -31,7 +31,6 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.OldKnowtatorXmlUtil;
 import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
-import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -68,51 +67,73 @@ public class KnowtatorModel extends OwlModel {
 
   @Override
   public void save() {
+    log.info(String.format("Saving project %d", getNumberOfTextSources()));
+
     super.save();
     profiles.forEach(Profile::save);
-    textSources.forEach(TextSource::save);
+    textSources.forEach(
+        textSource -> {
+          textSource.save();
+          log.info(String.format("Saved %s", textSource.getId()));
+        });
   }
 
   @Override
   public void load() {
     super.load();
     try {
+//      setRenderDisplayLabel();
+       setRenderRdfsLabel();
+    } catch (RendererSet rendererSet) {
       setLoading(true);
-      setRenderRdfsLabel();
+
       log.info("Loading profiles");
       KnowtatorXmlUtil xmlUtil = new KnowtatorXmlUtil();
       ConllUtil conllUtil = new ConllUtil();
       OldKnowtatorXmlUtil oldXmlUtil = new OldKnowtatorXmlUtil();
-      Files.list(getProfilesLocation().toPath())
-          .filter(path -> path.toString().endsWith(".xml"))
-          .map(Path::toFile)
-          .forEach(file -> xmlUtil.readToProfileCollection(this, file));
 
-      log.info("Loading annotations");
-      Files.list(getAnnotationsLocation().toPath())
-          .filter(path -> path.toString().endsWith(".xml"))
-          .map(Path::toFile)
-          .peek(file -> xmlUtil.readToTextSourceCollection(this, file, false))
-          .forEach(file -> oldXmlUtil.readToTextSourceCollection(this, file));
+      try {
+        Files.list(getProfilesLocation().toPath())
+            .filter(path -> path.toString().endsWith(".xml"))
+            .map(Path::toFile)
+            .forEach(file -> xmlUtil.readToProfileCollection(this, file));
 
-      log.info("Loading structures");
-      Files.list(structuresLocation.toPath())
-          .filter(path -> path.toString().endsWith(".xml"))
-          .map(Path::toFile)
-          .forEach(file -> xmlUtil.readToTextSourceCollection(this, file, true));
-      Files.list(structuresLocation.toPath())
-          .filter(path -> path.toString().endsWith(".conllu") || path.toString().endsWith(".conll"))
-          .map(Path::toFile)
-          .forEach(file -> conllUtil.readToStructureAnnotations(this, file));
+        log.info("Loading annotations");
+        Files.list(getAnnotationsLocation().toPath())
+            .filter(path -> path.toString().endsWith(".xml"))
+            .map(Path::toFile)
+            .peek(file -> xmlUtil.readToTextSourceCollection(this, file, false))
+            .forEach(file -> oldXmlUtil.readToTextSourceCollection(this, file));
 
-      profiles.first().ifPresent(profiles::setSelection);
-      textSources.first().ifPresent(textSources::setSelection);
-    } catch (IOException e) {
-      e.printStackTrace();
+        log.info("Loading structures");
+        Files.list(structuresLocation.toPath())
+            .filter(path -> path.toString().endsWith(".xml"))
+            .map(Path::toFile)
+            .forEach(file -> xmlUtil.readToTextSourceCollection(this, file, true));
+        Files.list(structuresLocation.toPath())
+            .filter(
+                path -> path.toString().endsWith(".conllu") || path.toString().endsWith(".conll"))
+            .map(Path::toFile)
+            .forEach(file -> conllUtil.readToStructureAnnotations(this, file));
+
+        profiles.first().ifPresent(profiles::setSelection);
+        textSources.first().ifPresent(textSources::setSelection);
+
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
     } finally {
-      resetRenderRdfs();
+      resetRenderAnnotations();
       setLoading(false);
     }
+//    try {
+//      setRenderRdfsLabel();
+//    } catch (RendererSet rendererSet) {
+//      save();
+//    } finally {
+//      resetRenderAnnotations();
+//    }
   }
 
   /**

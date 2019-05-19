@@ -27,6 +27,7 @@ package edu.ucdenver.ccp.knowtator.view.table;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.awt.Font;
@@ -144,7 +145,7 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
   }
 
   @Override
-  public void colorChangedEvent() {
+  public void colorChangedEvent(Profile profile) {
     reactToModelEvent();
   }
 

@@ -69,21 +69,17 @@ public class ColorChangeAction extends AbstractKnowtatorAction {
   @Override
   public void execute() {
     owlClasses.forEach(owlClass -> profile.addColor(owlClass, color));
-    profile.save();
   }
 
   @Override
   public void undo() {
-
     super.undo();
     oldColorAssignments.forEach(profile::addColor);
-    profile.save();
   }
 
   @Override
   public void redo() {
     super.redo();
     oldColorAssignments.keySet().forEach(owlClass -> profile.addColor(owlClass, color));
-    profile.save();
   }
 }

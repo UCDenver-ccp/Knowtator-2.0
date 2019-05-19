@@ -26,7 +26,10 @@ package edu.ucdenver.ccp.knowtator.model.object;
 
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXmlUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.ModelListener;
+import edu.ucdenver.ccp.knowtator.model.OwlModel;
 import edu.ucdenver.ccp.knowtator.model.Savable;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorDefaultSettings;
 import java.awt.Color;
 import java.io.File;
@@ -37,7 +40,7 @@ import org.apache.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLClass;
 
 /** The type Profile. */
-public class Profile implements ModelObject<Profile>, Savable {
+public class Profile implements ModelObject<Profile>, Savable, ModelListener {
   @SuppressWarnings("unused")
   private static Logger log = LogManager.getLogger(Profile.class);
 
@@ -55,6 +58,7 @@ public class Profile implements ModelObject<Profile>, Savable {
     colors = new HashMap<>();
     this.model = model;
     this.id = model.verifyId(id, this, false);
+    this.model.addModelListener(this);
   }
 
   @Override
@@ -106,7 +110,7 @@ public class Profile implements ModelObject<Profile>, Savable {
    */
   public void addColor(OWLClass owlClass, Color c) {
     colors.put(owlClass, c);
-    model.fireColorChanged();
+    model.fireColorChanged(this);
   }
   /**
    * Convert to hex string.
@@ -148,4 +152,23 @@ public class Profile implements ModelObject<Profile>, Savable {
   public Map<OWLClass, Color> getColors() {
     return colors;
   }
+
+  @Override
+  public void filterChangedEvent() {}
+
+  @Override
+  public void colorChangedEvent(Profile profile) {
+    if (profile == this) {
+      try {
+        model.setRenderRdfsLabel();
+      } catch (OwlModel.RendererSet rendererSet) {
+        save();
+      } finally {
+        model.resetRenderAnnotations();
+      }
+    }
+  }
+
+  @Override
+  public void modelChangeEvent(ChangeEvent<ModelObject> event) {}
 }

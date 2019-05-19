@@ -28,6 +28,7 @@ import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.model.object.TextBoundModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import org.apache.log4j.Logger;
@@ -73,7 +74,7 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
   public void filterChangedEvent() {}
 
   @Override
-  public void colorChangedEvent() {}
+  public void colorChangedEvent(Profile profile) {}
 
   @Override
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {

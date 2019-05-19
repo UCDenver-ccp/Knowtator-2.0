@@ -49,6 +49,24 @@ class ConllUtilTest {
         7711);
   }
 
+  @Test
+  void readConceptsAndAssertions() throws IOException {
+    KnowtatorModel model = TestingHelpers.getLoadedModel("concepts+assertions");
+    TestingHelpers.countCollections(model,
+        1,
+        643,
+        660,
+        49,
+        1,
+        0,
+        157,
+        91,
+        0,
+        0,
+        0,
+        0);
+  }
+
 //  @Test
 //  void readBioCreativeProject() throws  IOException {
 //    KnowtatorModel model = TestingHelpers.getLoadedModel("biocreative_chemprot");

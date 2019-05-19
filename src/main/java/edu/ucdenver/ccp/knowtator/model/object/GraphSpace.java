@@ -278,10 +278,10 @@ public class GraphSpace extends mxGraph
    * @return the annotation node
    */
   public AnnotationNode makeAnnotationNode(ConceptAnnotation conceptAnnotation) {
-//    String nodeId = textSource.getGraphSpaces().verifyID(null, "node");
+    //    String nodeId = textSource.getGraphSpaces().verifyID(null, "node");
     AnnotationNode newVertex = new AnnotationNode(null, conceptAnnotation, 20, 20, this);
     addCellToGraph(newVertex);
-    return newVertex; //(AnnotationNode) ((mxGraphModel) getModel()).getCells().get(nodeId);
+    return newVertex; // (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(nodeId);
   }
 
   @Override
@@ -403,18 +403,22 @@ public class GraphSpace extends mxGraph
 
   @Override
   public void handleChange(OWLModelManagerChangeEvent event) {
-    if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
-      Arrays.asList(getChildCells(getDefaultParent()))
-          .forEach(
-              o -> {
-                if (o instanceof RelationAnnotation) {
-                  ((RelationAnnotation) o).setLabel();
-                } else if (o instanceof AnnotationNode) {
-                  ((AnnotationNode) o)
-                      .setValue(((AnnotationNode) o).getConceptAnnotation().toMultilineString());
-                }
-              });
-      refresh();
+    if (event.isType(EventType.ENTITY_RENDERING_CHANGED)) {
+      try {
+        Arrays.asList(getChildCells(getDefaultParent()))
+            .forEach(
+                o -> {
+                  if (o instanceof RelationAnnotation) {
+                    ((RelationAnnotation) o).setLabel();
+                  } else if (o instanceof AnnotationNode) {
+                    ((AnnotationNode) o)
+                        .setValue(((AnnotationNode) o).getConceptAnnotation().toMultilineString());
+                  }
+                });
+        refresh();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
   }
 

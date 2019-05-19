@@ -249,7 +249,7 @@ public abstract class OwlModel extends BaseModel implements Serializable {
   }
 
   /** Sets render rdfs label. */
-  void setRenderRdfsLabel() {
+  public void setRenderRdfsLabel() throws RendererSet {
     if (!renderChangeInProgress()) {
       owlWorkSpace.ifPresent(
           owlWorkspace -> {
@@ -261,11 +261,29 @@ public abstract class OwlModel extends BaseModel implements Serializable {
 
             owlWorkspace.getOWLModelManager().refreshRenderer();
           });
+      throw new RendererSet();
+    }
+  }
+
+  void setRenderDisplayLabel() throws RendererSet {
+    if (!renderChangeInProgress()) {
+      owlWorkSpace.ifPresent(
+          owlWorkspace -> {
+            IRI labelIri =
+                owlWorkspace.getOWLModelManager().getOWLDataFactory().getOWLAnnotationProperty(IRI.create("http://www.owl-ontologies.com/unnamed.owl#display_label")).getIRI();
+            annotationIris = OWLRendererPreferences.getInstance().getAnnotationIRIs();
+            OWLRendererPreferences.getInstance()
+                .setAnnotations(Collections.singletonList(labelIri));
+
+            owlWorkspace.getOWLModelManager().refreshRenderer();
+          });
+      throw new RendererSet();
+
     }
   }
 
   /** Reset render rdfs. */
-  void resetRenderRdfs() {
+  public void resetRenderAnnotations() {
     if (renderChangeInProgress()) {
       owlWorkSpace.ifPresent(
           owlWorkspace -> {
@@ -490,5 +508,8 @@ public abstract class OwlModel extends BaseModel implements Serializable {
    */
   public OWLOntologyManager getOwlOntologyManager() {
     return owlOntologyManager;
+  }
+
+  public class RendererSet extends Throwable {
   }
 }

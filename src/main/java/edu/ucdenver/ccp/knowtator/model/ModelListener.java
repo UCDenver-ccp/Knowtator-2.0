@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.model;
 
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
 
 /** The interface Model listener. */
 public interface ModelListener {
@@ -33,7 +34,7 @@ public interface ModelListener {
   void filterChangedEvent();
 
   /** Color changed event. */
-  void colorChangedEvent();
+  void colorChangedEvent(Profile profile);
 
   /**
    * Model change event.
