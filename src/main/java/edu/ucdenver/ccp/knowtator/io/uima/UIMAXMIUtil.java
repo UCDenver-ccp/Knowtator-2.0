@@ -16,6 +16,12 @@ import edu.ucdenver.ccp.nlp.core.uima.annotation.CCPTextAnnotation;
 import edu.ucdenver.ccp.nlp.core.uima.assertion.CCPGraphSpace;
 import edu.ucdenver.ccp.nlp.core.uima.assertion.CCPTriple;
 import edu.ucdenver.ccp.nlp.core.uima.assertion.CCPVertex;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.stream.IntStream;
 import org.apache.log4j.Logger;
 import org.apache.uima.UIMAFramework;
 import org.apache.uima.analysis_engine.AnalysisEngine;
@@ -30,13 +36,7 @@ import org.apache.uima.util.CasIOUtils;
 import org.apache.uima.util.InvalidXMLException;
 import org.apache.uima.util.XMLInputSource;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Iterator;
-import java.util.stream.IntStream;
-
+/** The type Uimaxmi util. */
 public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
   @SuppressWarnings("unused")
   private static final Logger log = Logger.getLogger(UIMAXMIUtil.class);
@@ -44,9 +44,21 @@ public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
   // private static final File ANNOTATOR_DESCRIPTOR = new
   // File("E:/Documents/Knowtator-2.0/src/main/resources/KnowtatorToUIMAAnnotatorDescriptor.xml");
 
+  /**
+   * Read.
+   *
+   * @param standaloneSavable the standalone savable
+   * @param file the file
+   */
   @Override
   public void read(Savable standaloneSavable, File file) {}
 
+  /**
+   * Write.
+   *
+   * @param standaloneSavable the standalone savable
+   * @param file the file
+   */
   @Override
   public void write(Savable standaloneSavable, File file) {
     final URL ANNOTATOR_DESCRIPTOR =
@@ -106,9 +118,9 @@ public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
     convertAnnotationManagerToUIMA(textSource, textSourceAsCAS);
   }
 
-  private void convertAnnotationManagerToUIMA(
-          TextSource textSource, CAS textSourceAsCAS) {
-    textSource.getAnnotationManager()
+  private void convertAnnotationManagerToUIMA(TextSource textSource, CAS textSourceAsCAS) {
+    textSource
+        .getAnnotationManager()
         .getAnnotations()
         .forEach(
             annotation -> {
@@ -118,7 +130,8 @@ public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
                 e.printStackTrace();
               }
             });
-    textSource.getGraphSpaceManager()
+    textSource
+        .getGraphSpaceManager()
         .getGraphSpaceCollection()
         .getCollection()
         .forEach(

@@ -1,0 +1,253 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 Harrison Pielke-Lombardo
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package edu.ucdenver.ccp.knowtator.io.conll;
+
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.object.Quantifier;
+import edu.ucdenver.ccp.knowtator.model.object.Span;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.apache.log4j.Logger;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+
+public class ConllUtil {
+  private static final Logger log = Logger.getLogger(KnowtatorModel.class);
+
+  public void readToStructureAnnotations(KnowtatorModel model, File file) {
+
+    model
+        .getTextSources()
+        .get(file.getName().replace(".tree.conllu", "").replace(".conll", ""))
+        .ifPresent(
+            textSource -> {
+              log.info(String.format("Read structures from %s", file.getName()));
+              textSource.getKnowtatorModel().removeModelListener(textSource);
+              List<Map<ConllUField, String>> sentence = new ArrayList<>();
+              List<List<Map<ConllUField, String>>> sentences = new ArrayList<>();
+              try {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String line;
+                while (true) {
+                  line = br.readLine();
+                  if (line == null) {
+                    break;
+                  } else if (line.equals("") && sentence.size() > 0) {
+                    sentences.add(sentence);
+                    sentence = new ArrayList<>();
+                  } else {
+                    String[] fields = line.split("\t");
+                    Map<ConllUField, String> fieldMap = new HashMap<>();
+                    for (int i = 0; i < fields.length; i++) {
+                      fieldMap.put(ConllUField.values()[i], fields[i]);
+                    }
+                    sentence.add(fieldMap);
+                  }
+                }
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
+
+              final int[] start = {0};
+              java.util.function.Function<String, int[]> findEnd =
+                  (text) -> {
+                    if (text.length() == 2) {
+                      text = text.replace("``", "\"").replace("''", "\"");
+                    } else if (text.length() == 5) {
+                      text = text.replace("-LRB-", "[").replace("-RRB-", "]");
+                    } else if (text.length() == 1) {
+                      text = text.replace("...", "…");
+                    }
+                    int start1 = start[0];
+                    int end = start1 + text.length();
+                    try {
+                      for (int i = 0; i < 9; i++) {
+                        start1 = start[0] - i;
+                        end = start[0] + text.length() - i;
+                        if (checkRealText(textSource, start, text, start1, end)) {
+                          return new int[] {start1, end};
+                        }
+                        start1 = start[0] + i;
+                        end = start[0] + text.length() + i;
+                        if (checkRealText(textSource, start, text, start1, end)) {
+                          return new int[] {start1, end};
+                        }
+                      }
+                      //                      if (checkRealText(textSource, start, text, start1,
+                      // end)) {
+                      //                        return new int[] {start1, end};
+                      //                      }
+                      //                      start1 = start[0] - 1;
+                      //                      end = start[0] + text.length() - 1;
+                      //                      if (checkRealText(textSource, start, text, start1,
+                      // end)) {
+                      //                        return new int[] {start1, end};
+                      //                      }
+                      //                      start1 = start[0] + 1;
+                      //                      end = start[0] + text.length() + 1;
+                      //                      if (checkRealText(textSource, start, text, start1,
+                      // end)) {
+                      //                        return new int[] {start1, end};
+                      //                      }
+                      //                      start1 = start[0] - 2;
+                      //                      end = start[0] + text.length() - 2;
+                      //                      if (checkRealText(textSource, start, text, start1,
+                      // end)) {
+                      //                        return new int[] {start1, end};
+                      //                      }
+                      //                      start1 = start[0] + 2;
+                      //                      end = start[0] + text.length() + 2;
+                      //                      if (checkRealText(textSource, start, text, start1,
+                      // end)) {
+                      //                        return new int[] {start1, end};
+                      //                      }
+                      //                      start1 = start[0] - 3;
+                      //                      end = start[0] + text.length() - 3;
+                      //                      if (checkRealText(textSource, start, text, start1,
+                      // end)) {
+                      //                        return new int[] {start1, end};
+                      //                      }
+                      //                      start1 = start[0] + 3;
+                      //                      end = start[0] + text.length() + 3;
+                      //                      if (checkRealText(textSource, start, text, start1,
+                      // end)) {
+                      //                        return new int[] {start1, end};
+                      //                      }
+                      //                      start1 = start[0] - 4;
+                      //                      end = start[0] + text.length() - 4;
+                      //                      if (checkRealText(textSource, start, text, start1,
+                      // end)) {
+                      //                        return new int[] {start1, end};
+                      //                      }
+                      //                      start1 = start[0] + 4;
+                      //                      end = start[0] + text.length() + 4;
+                      //                      if (checkRealText(textSource, start, text, start1,
+                      // end)) {
+                      //                        return new int[] {start1, end};
+                      //                      }
+
+                      throw new Exception(
+                          String.format(
+                              "%s not found near %d %d", text, start[0], start[0] + text.length()));
+                    } catch (Exception e) {
+                      e.printStackTrace();
+                    }
+                    return new int[] {start1, end};
+                  };
+
+              for (int i1 = 0; i1 < sentences.size(); i1++) {
+                List<Map<ConllUField, String>> sentence1 = sentences.get(i1);
+                GraphSpace graphSpace =
+                    new GraphSpace(textSource, String.format("Sentence %d", i1));
+                textSource.getStructureGraphSpaces().add(graphSpace);
+                List<AnnotationNode> nodes =
+                    sentence1.stream()
+                        .map(
+                            fields -> {
+                              ConceptAnnotation conceptAnnotation =
+                                  new ConceptAnnotation(
+                                      textSource,
+                                      null,
+                                      null,
+                                      model.getDefaultProfile(),
+                                      fields.get(ConllUField.DEPREL),
+                                      "");
+                              int[] range = findEnd.apply(fields.get(ConllUField.FORM));
+
+                              Span span = new Span(conceptAnnotation, null, range[0], range[1]);
+                              conceptAnnotation.add(span);
+                              return conceptAnnotation;
+                            })
+                        .peek(
+                            conceptAnnotation ->
+                                textSource.getStructureAnnotations().add(conceptAnnotation))
+                        .map(
+                            conceptAnnotation ->
+                                new AnnotationNode(null, conceptAnnotation, 0, 0, graphSpace))
+                        .peek(graphSpace::addCellToGraph)
+                        .collect(Collectors.toList());
+                for (int i = 0; i < sentence1.size(); i++) {
+                  AnnotationNode source = nodes.get(i);
+                  int targetIdx = Integer.parseInt(sentence1.get(i).get(ConllUField.HEAD)) - 1;
+                  if (targetIdx >= 0) {
+                    AnnotationNode target = nodes.get(targetIdx);
+                    OWLObjectProperty property =
+                        model.getOwlObjectPropertyById("depends_on").orElse(null);
+                    graphSpace.addTriple(
+                        source,
+                        target,
+                        null,
+                        model.getDefaultProfile(),
+                        property,
+                        Quantifier.some,
+                        "",
+                        false,
+                        "");
+                  } else if (!(sentence1.get(i).get(ConllUField.DEPREL).equals("root")
+                      || sentence1.get(i).get(ConllUField.DEPREL).equals("ROOT"))) {
+                    try {
+                      throw new Exception("excluding root");
+                    } catch (Exception e) {
+                      e.printStackTrace();
+                    }
+                  }
+                }
+              }
+              textSource.getKnowtatorModel().addModelListener(textSource);
+            });
+  }
+
+  private boolean checkRealText(
+      TextSource textSource, int[] start, String text, int start1, int end) {
+    String realText;
+    realText = textSource.getContent().replace("·", "");
+
+    if (end <= realText.length()) {
+      realText =
+          realText
+              .substring(start1, end)
+              .replace("(", "[")
+              .replace(")", "]")
+              .replace("}", "]")
+              .replace("{", "[")
+              .replace("″", "\"");
+      if (realText.equals(text)) {
+        start[0] = end + 1;
+        return true;
+      }
+    }
+    return false;
+  }
+}
