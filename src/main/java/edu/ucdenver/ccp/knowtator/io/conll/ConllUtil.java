@@ -88,7 +88,11 @@ public class ConllUtil {
                     } else if (text.length() == 5) {
                       text = text.replace("-LRB-", "[").replace("-RRB-", "]");
                     } else if (text.length() == 1) {
-                      text = text.replace("...", "…");
+                      text = text.replace("...", "…")
+                      .replace("(", "[")
+                      .replace(")", "]")
+                      .replace("{", "[")
+                      .replace("}", "]");
                     }
                     int start1 = start[0];
                     int end = start1 + text.length();
@@ -105,58 +109,7 @@ public class ConllUtil {
                           return new int[] {start1, end};
                         }
                       }
-                      //                      if (checkRealText(textSource, start, text, start1,
-                      // end)) {
-                      //                        return new int[] {start1, end};
-                      //                      }
-                      //                      start1 = start[0] - 1;
-                      //                      end = start[0] + text.length() - 1;
-                      //                      if (checkRealText(textSource, start, text, start1,
-                      // end)) {
-                      //                        return new int[] {start1, end};
-                      //                      }
-                      //                      start1 = start[0] + 1;
-                      //                      end = start[0] + text.length() + 1;
-                      //                      if (checkRealText(textSource, start, text, start1,
-                      // end)) {
-                      //                        return new int[] {start1, end};
-                      //                      }
-                      //                      start1 = start[0] - 2;
-                      //                      end = start[0] + text.length() - 2;
-                      //                      if (checkRealText(textSource, start, text, start1,
-                      // end)) {
-                      //                        return new int[] {start1, end};
-                      //                      }
-                      //                      start1 = start[0] + 2;
-                      //                      end = start[0] + text.length() + 2;
-                      //                      if (checkRealText(textSource, start, text, start1,
-                      // end)) {
-                      //                        return new int[] {start1, end};
-                      //                      }
-                      //                      start1 = start[0] - 3;
-                      //                      end = start[0] + text.length() - 3;
-                      //                      if (checkRealText(textSource, start, text, start1,
-                      // end)) {
-                      //                        return new int[] {start1, end};
-                      //                      }
-                      //                      start1 = start[0] + 3;
-                      //                      end = start[0] + text.length() + 3;
-                      //                      if (checkRealText(textSource, start, text, start1,
-                      // end)) {
-                      //                        return new int[] {start1, end};
-                      //                      }
-                      //                      start1 = start[0] - 4;
-                      //                      end = start[0] + text.length() - 4;
-                      //                      if (checkRealText(textSource, start, text, start1,
-                      // end)) {
-                      //                        return new int[] {start1, end};
-                      //                      }
-                      //                      start1 = start[0] + 4;
-                      //                      end = start[0] + text.length() + 4;
-                      //                      if (checkRealText(textSource, start, text, start1,
-                      // end)) {
-                      //                        return new int[] {start1, end};
-                      //                      }
+
 
                       throw new Exception(
                           String.format(
