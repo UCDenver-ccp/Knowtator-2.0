@@ -124,7 +124,7 @@ public class ConllUtil {
               for (int i1 = 0; i1 < sentences.size(); i1++) {
                 List<Map<ConllUField, String>> sentence1 = sentences.get(i1);
                 GraphSpace graphSpace =
-                    new GraphSpace(textSource, String.format("Sentence %d", i1));
+                    new GraphSpace(textSource, String.format("%s-Sentence %d", textSource.getId(), i1));
                 textSource.getStructureGraphSpaces().add(graphSpace);
                 List<AnnotationNode> nodes =
                     sentence1.stream()
