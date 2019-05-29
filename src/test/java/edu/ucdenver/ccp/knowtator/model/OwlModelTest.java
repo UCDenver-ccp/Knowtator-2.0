@@ -248,6 +248,7 @@ class OwlModelTest {
     assert !isSubClassTest(class1, class2);
     assert isSubClassTest(class3, class2);
 
+    model.getTextSources().setSelection(model.getTextSources().get("document1").get());
     ConceptAnnotation conceptAnnotation =
         model.getSelectedTextSource().get().getSelectedAnnotation().get();
     assert conceptAnnotation.getOwlClass().equals(class2);
@@ -307,7 +308,7 @@ class OwlModelTest {
     assert isSubObjectPropertyTest(property1, property2);
     assert isSubObjectPropertyTest(property3, property2);
 
-    GraphSpace graphSpace = model.getSelectedTextSource().get().getSelectedGraphSpace().get();
+    GraphSpace graphSpace = model.getTextSources().get("document1").get().getSelectedGraphSpace().get();
     RelationAnnotation relationAnnotation =
         (RelationAnnotation) graphSpace.getChildEdges(graphSpace.getDefaultParent())[0];
     assert relationAnnotation.getProperty().equals(property2);

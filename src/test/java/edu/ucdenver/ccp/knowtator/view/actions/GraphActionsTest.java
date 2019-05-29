@@ -76,7 +76,7 @@ class GraphActionsTest {
 
   @Test
   void removeSelectedTripleTest() throws ActionUnperformable {
-    TextSource textSource = model.getSelectedTextSource().get();
+    TextSource textSource = model.getTextSources().get("document1").get();
     textSource.selectNextGraphSpace();
     GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
     Object cell = graphSpace.getModel().getChildAt(graphSpace.getDefaultParent(), 2);
@@ -100,7 +100,7 @@ class GraphActionsTest {
 
   @Test
   void addAnnotationNodeTest() throws ActionUnperformable {
-    TextSource textSource = model.getSelectedTextSource().get();
+    TextSource textSource = model.getTextSources().get("document1").get();
     textSource.selectNextGraphSpace();
     textSource.selectNextGraphSpace();
     GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
@@ -124,7 +124,7 @@ class GraphActionsTest {
 
   @Test
   void addTripleTest() throws ActionUnperformable {
-    TextSource textSource = model.getSelectedTextSource().get();
+    TextSource textSource = model.getTextSources().get("document1").get();
     textSource.selectNextGraphSpace();
     textSource.selectNextGraphSpace();
     GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
@@ -155,7 +155,7 @@ class GraphActionsTest {
   void applyLayoutTest() throws ActionUnperformable {
     // TODO: This test only makes sure that the layout application doesn't change to graph space
     // model. It needs to check the positions
-    TextSource textSource = model.getSelectedTextSource().get();
+    TextSource textSource = model.getTextSources().get("document1").get();
     textSource.selectNextGraphSpace();
     GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
     TestingHelpers.testKnowtatorAction(

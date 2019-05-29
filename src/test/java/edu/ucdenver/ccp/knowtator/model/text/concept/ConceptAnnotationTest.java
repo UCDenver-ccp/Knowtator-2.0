@@ -32,11 +32,11 @@ import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
 class ConceptAnnotationTest {
-  private static KnowtatorModel controller;
+  private static KnowtatorModel model;
 
   static {
     try {
-      controller = TestingHelpers.getLoadedModel();
+      model = TestingHelpers.getLoadedModel();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -44,21 +44,21 @@ class ConceptAnnotationTest {
 
   @Test
   void getSizeTest() {
-    TextSource textSource = controller.getSelectedTextSource().get();
+    TextSource textSource = model.getTextSources().get("document1").get();
     ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
     assert conceptAnnotation.getSize() == 4;
   }
 
   @Test
   void getSpannedTextTest() {
-    TextSource textSource = controller.getSelectedTextSource().get();
+    TextSource textSource = model.getTextSources().get("document1").get();
     ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
     assert conceptAnnotation.getSpannedText().equals("This");
   }
 
   @Test
   void containsTest() {
-    TextSource textSource = controller.getSelectedTextSource().get();
+    TextSource textSource = model.getTextSources().get("document1").get();
     ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
     assert conceptAnnotation.contains(0);
     assert conceptAnnotation.contains(2);

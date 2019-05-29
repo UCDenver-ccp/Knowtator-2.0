@@ -57,7 +57,7 @@ public class KnowtatorCollectionActionsTest {
         new TextSourceAction(
             model,
             ADD,
-            TestingHelpers.getArticleFile(TestingHelpers.projectFileName, "document4"),
+            TestingHelpers.getArticleFile("structure_test_project", "11532192"),
             null),
         TestingHelpers.defaultExpectedTextSources + 1,
         TestingHelpers.defaultExpectedConceptAnnotations,
@@ -75,6 +75,7 @@ public class KnowtatorCollectionActionsTest {
 
   @Test
   public void removeTextSourceActionTest() throws ActionUnperformable {
+    model.getTextSources().setSelection(model.getTextSources().get("document1").get());
     TestingHelpers.testKnowtatorAction(
         model,
         new TextSourceAction(model, REMOVE, null, null),
@@ -94,6 +95,7 @@ public class KnowtatorCollectionActionsTest {
 
   @Test
   public void addConceptAnnotationActionTest() throws ActionUnperformable {
+    model.getTextSources().setSelection(model.getTextSources().get("document1").get());
     TestingHelpers.testKnowtatorAction(
         model,
         new ConceptAnnotationAction(model, ADD, model.getSelectedTextSource().get()),
@@ -113,6 +115,7 @@ public class KnowtatorCollectionActionsTest {
 
   @Test
   public void removeConceptAnnotationActionTest() throws ActionUnperformable {
+    model.getTextSources().setSelection(model.getTextSources().get("document1").get());
     TextSource textSource = model.getSelectedTextSource().get();
     textSource.setSelectedConceptAnnotation(textSource.firstConceptAnnotation().get());
     TestingHelpers.testKnowtatorAction(
@@ -134,6 +137,7 @@ public class KnowtatorCollectionActionsTest {
 
   @Test
   public void addSpanActionTest() throws ActionUnperformable {
+    model.getTextSources().setSelection(model.getTextSources().get("document1").get());
     TextSource textSource = model.getSelectedTextSource().get();
     textSource.setSelectedConceptAnnotation(textSource.firstConceptAnnotation().get());
     TestingHelpers.testKnowtatorAction(
@@ -156,6 +160,7 @@ public class KnowtatorCollectionActionsTest {
 
   @Test
   public void removeSpanActionTest() throws ActionUnperformable {
+    model.getTextSources().setSelection(model.getTextSources().get("document1").get());
     TextSource textSource = model.getSelectedTextSource().get();
     // First test remove span if there is only one in the collection. This should be equivalent to
     // just removing the annotation
@@ -271,6 +276,7 @@ public class KnowtatorCollectionActionsTest {
 
   @Test
   public void removeGraphSpaceActionTest() throws ActionUnperformable {
+    model.getTextSources().setSelection(model.getTextSources().get("document1").get());
     TextSource textSource = model.getSelectedTextSource().get();
     textSource.selectNextGraphSpace();
     TestingHelpers.testKnowtatorAction(

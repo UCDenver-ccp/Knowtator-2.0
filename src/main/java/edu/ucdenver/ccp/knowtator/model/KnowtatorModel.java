@@ -31,6 +31,7 @@ import edu.ucdenver.ccp.knowtator.io.knowtator.OldKnowtatorXmlUtil;
 import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -145,6 +146,14 @@ public class KnowtatorModel extends OwlModel {
             .filter(path -> path.toString().endsWith(".xml"))
             .map(Path::toFile)
             .forEach(file -> xmlUtil.readToProfileCollection(this, file));
+
+        Files.list(getArticlesLocation().toPath())
+            .filter(path -> path.toString().endsWith(".txt"))
+            .map(Path::toFile)
+            .forEach(file -> {
+              TextSource newTextSource = new TextSource(this, null, file.getName());
+              textSources.add(newTextSource);
+            });
 
         log.info("Loading annotations");
         Files.list(getAnnotationsLocation().toPath())
