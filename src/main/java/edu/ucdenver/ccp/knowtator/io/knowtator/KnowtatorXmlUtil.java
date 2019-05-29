@@ -193,7 +193,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
               Profile profile = model.getProfile(profileID).orElse(model.getDefaultProfile());
 
               OWLClass owlClass = owlClassMap.get(owlClassID);
-              if (owlClass != null || type != null) {
+              if (owlClass != null || (type != null && !type.equals("identity"))) {
                 ConceptAnnotation newConceptAnnotation =
                     new ConceptAnnotation(
                         textSource, annotationID, owlClass, profile, type, motivation);
@@ -204,9 +204,15 @@ public final class KnowtatorXmlUtil extends XmlUtil {
                   return Optional.of(newConceptAnnotation);
                 }
               } else {
-                log.warn(
+                log.info(
                     String.format(
                         "OWL Class: %s not found for concept: %s", owlClassID, annotationID));
+                //                try {
+                //                  throw new Exception(owlClassID);
+                //                } catch (Exception e) {
+                //                  e.printStackTrace();
+                //                }OWL Class: SO_EXT:0001023 not found for concept:
+                // CRAFT_aggregate_ontology_Instance_247189
                 return Optional.empty();
               }
             })
@@ -309,6 +315,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
             id,
             annotator,
             graphSpace.getKnowtatorModel().getOwlObjectPropertyById(propertyID).orElse(null),
+            propertyID,
             quantifier,
             quantifierValue,
             propertyIsNegated.equals(KnowtatorXmlAttributes.IS_NEGATED_TRUE),

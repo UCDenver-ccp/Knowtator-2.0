@@ -52,6 +52,7 @@ public class RelationAnnotation extends mxCell
 
   @SuppressWarnings("unused")
   private final Logger log = Logger.getLogger(RelationAnnotation.class);
+  private String propertyID;
 
   public GraphSpace getGraphSpace() {
     return graphSpace;
@@ -59,24 +60,25 @@ public class RelationAnnotation extends mxCell
 
   /**
    * Instantiates a new Relation annotation.
-   *
-   * @param graphSpace the graph space
+   *  @param graphSpace the graph space
    * @param id the id
    * @param source the source
    * @param target the target
    * @param property the property
+   * @param propertyID the id or placeholder for the property
    * @param annotator the annotator
    * @param quantifier the quantifier
    * @param quantifierValue the quantifier value
    * @param isNegated the is negated
    * @param motivation the motivation
    */
-  public RelationAnnotation(
+  RelationAnnotation(
       GraphSpace graphSpace,
       String id,
       AnnotationNode source,
       AnnotationNode target,
       OWLObjectProperty property,
+      String propertyID,
       Profile annotator,
       Quantifier quantifier,
       String quantifierValue,
@@ -101,7 +103,7 @@ public class RelationAnnotation extends mxCell
     this.sourceAnnotationNode = source;
     setTarget(target);
     this.targetAnnotationNode = target;
-    setProperty(property);
+    setProperty(property, propertyID);
   }
 
   /**
@@ -140,7 +142,7 @@ public class RelationAnnotation extends mxCell
    * @return the owl property rendering
    */
   public String getOwlPropertyRendering() {
-    return property == null ? "" : model.getOwlEntityRendering(property);
+    return property == null ? this.propertyID : model.getOwlEntityRendering(property);
   }
 
   /**
@@ -148,8 +150,9 @@ public class RelationAnnotation extends mxCell
    *
    * @param owlObjectProperty the owl object property
    */
-  void setProperty(OWLObjectProperty owlObjectProperty) {
+  void setProperty(OWLObjectProperty owlObjectProperty, String owlPropertyID) {
     property = owlObjectProperty;
+    propertyID = owlPropertyID == null ? model.getOwlEntityRendering(property) : owlPropertyID;
     setLabel();
     model.fireModelEvent(new ChangeEvent<>(model, null, this));
   }

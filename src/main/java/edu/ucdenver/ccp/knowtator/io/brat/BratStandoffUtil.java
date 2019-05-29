@@ -339,7 +339,7 @@ public class BratStandoffUtil {
                                                   id,
                                                   annotator,
                                                   owlObjectProperty,
-                                                  Quantifier.some,
+                                                  propertyID, Quantifier.some,
                                                   null,
                                                   false,
                                                   ""));

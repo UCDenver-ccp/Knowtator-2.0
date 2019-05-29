@@ -81,9 +81,57 @@ public class KnowtatorModel extends OwlModel {
   @Override
   public void load() {
     super.load();
+    //    try {
+    //      setRenderDisplayLabel();
+    ////             setRenderRdfsLabel();
+    //    } catch (RendererSet rendererSet) {
+    //      setLoading(true);
+    //
+    //      log.info("Loading profiles");
+    //      KnowtatorXmlUtil xmlUtil = new KnowtatorXmlUtil();
+    //      ConllUtil conllUtil = new ConllUtil();
+    //      OldKnowtatorXmlUtil oldXmlUtil = new OldKnowtatorXmlUtil();
+    //
+    //      try {
+    //        Files.list(getProfilesLocation().toPath())
+    //            .filter(path -> path.toString().endsWith(".xml"))
+    //            .map(Path::toFile)
+    //            .forEach(file -> xmlUtil.readToProfileCollection(this, file));
+    //
+    //        log.info("Loading annotations");
+    //        Files.list(getAnnotationsLocation().toPath())
+    //            .filter(path -> path.toString().endsWith(".xml"))
+    //            .map(Path::toFile)
+    //            .peek(file -> xmlUtil.readToTextSourceCollection(this, file, false))
+    //            .forEach(file -> oldXmlUtil.readToTextSourceCollection(this, file));
+    //
+    //        log.info("Loading structures");
+    //        Files.list(structuresLocation.toPath())
+    //            .filter(path -> path.toString().endsWith(".xml"))
+    //            .map(Path::toFile)
+    //            .forEach(file -> xmlUtil.readToTextSourceCollection(this, file, true));
+    //        Files.list(structuresLocation.toPath())
+    //            .filter(
+    //                path -> path.toString().endsWith(".conllu") ||
+    // path.toString().endsWith(".conll"))
+    //            .map(Path::toFile)
+    //            .forEach(file -> conllUtil.readToStructureAnnotations(this, file));
+    //
+    //        profiles.first().ifPresent(profiles::setSelection);
+    //        textSources.first().ifPresent(textSources::setSelection);
+    //
+    //      } catch (IOException e) {
+    //        e.printStackTrace();
+    //      }
+    //
+    //    } finally {
+    //      resetRenderAnnotations();
+    //      setLoading(false);
+    //    }
+
     try {
-//      setRenderDisplayLabel();
-       setRenderRdfsLabel();
+      //      setRenderDisplayLabel();
+      setRenderRdfsLabel();
     } catch (RendererSet rendererSet) {
       setLoading(true);
 
@@ -127,13 +175,13 @@ public class KnowtatorModel extends OwlModel {
       resetRenderAnnotations();
       setLoading(false);
     }
-//    try {
-//      setRenderRdfsLabel();
-//    } catch (RendererSet rendererSet) {
-//      save();
-//    } finally {
-//      resetRenderAnnotations();
-//    }
+    //    try {
+    //      setRenderRdfsLabel();
+    //    } catch (RendererSet rendererSet) {
+    //      save();
+    //    } finally {
+    //      resetRenderAnnotations();
+    //    }
   }
 
   /**

@@ -191,7 +191,7 @@ public class GraphActions {
     @Override
     public void perform() {
       graphSpace.addTriple(
-          source, target, null, null, property, quantifier, quantifierValue, negation, motivation);
+          source, target, null, null, property, null, quantifier, quantifierValue, negation, motivation);
     }
   }
 }

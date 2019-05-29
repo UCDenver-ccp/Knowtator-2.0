@@ -193,12 +193,12 @@ public class GraphSpace extends mxGraph
 
   /**
    * Adds a new triple.
-   *
-   * @param source The source node
+   *  @param source The source node
    * @param target The target node
    * @param id The triple id
    * @param annotator The annotator
    * @param property The owl object property
+   * @param propertyID The property ID
    * @param quantifier The quantifier
    * @param quantifierValue A value for the quantifier
    * @param isNegated Negation
@@ -210,6 +210,7 @@ public class GraphSpace extends mxGraph
       String id,
       Profile annotator,
       OWLObjectProperty property,
+      String propertyID,
       Quantifier quantifier,
       String quantifierValue,
       Boolean isNegated,
@@ -224,6 +225,7 @@ public class GraphSpace extends mxGraph
             source,
             target,
             property,
+            propertyID,
             annotator,
             quantifier,
             quantifierValue,
@@ -370,7 +372,7 @@ public class GraphSpace extends mxGraph
               axiom.accept(addedCollector);
               annotationsToChangeOrRemove.forEach(
                   relationAnnotation ->
-                      relationAnnotation.setProperty((OWLObjectProperty) axiom.getEntity()));
+                      relationAnnotation.setProperty((OWLObjectProperty) axiom.getEntity(), null));
               annotationsToChangeOrRemove.clear();
             } else if (axChg instanceof RemoveAxiom) {
               axiom.accept(removedCollector);

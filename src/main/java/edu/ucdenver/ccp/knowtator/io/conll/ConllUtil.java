@@ -165,6 +165,7 @@ public class ConllUtil {
                         null,
                         model.getDefaultProfile(),
                         property,
+                        "depends_on",
                         Quantifier.some,
                         "",
                         false,
