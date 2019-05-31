@@ -77,7 +77,7 @@ class ProjectManagerTest {
     File file1 = new File(model.getAnnotationsLocation(), "document1.xml");
     File referenceFile =
         new File(
-            TestingHelpers.class.getResource("/test_project/Annotations/document1.xml").getFile());
+            TestingHelpers.class.getResource("/test_project_using_uris/Annotations/document1.xml").getFile());
 
     List<String> original = fileToLines(referenceFile);
     List<String> revised = fileToLines(file1);
