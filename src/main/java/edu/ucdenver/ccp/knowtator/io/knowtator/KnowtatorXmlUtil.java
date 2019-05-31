@@ -474,9 +474,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
       // Ok to ignore if an attribute not present
     }
 
-    String propertyID = relationAnnotation.getOwlPropertyRendering();
-
-    tripleElem.setAttribute(KnowtatorXmlAttributes.TRIPLE_PROPERTY, propertyID);
+    tripleElem.setAttribute(KnowtatorXmlAttributes.TRIPLE_PROPERTY, relationAnnotation.getProperty().toStringID());
 
     tripleElem.setAttribute(
         KnowtatorXmlAttributes.TRIPLE_QUANTIFIER, relationAnnotation.getQuantifier().name());
