@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="code" pattern="file[Knowtator-2.0]:src/main/java//*||file[Knowtator-2.0]:src/test/java//*" />
+</component>
