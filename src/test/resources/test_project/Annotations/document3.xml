@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<knowtator-project>
+<document id="document3" text-file="document3.txt">
+<annotation annotator="Default" id="mention_0" motivation="" type="identity">
+<class id="Food" label="Food"/>
+<span end="1" id="document3-11" start="0">A</span>
+</annotation>
+<annotation annotator="profile1" id="mention_1" motivation="" type="identity">
+<class id="Food" label="Food"/>
+<span end="36" id="document3-14" start="28">ppeared!</span>
+</annotation>
+<annotation annotator="Default" id="mention_2" motivation="" type="identity">
+<class id="Food" label="Food"/>
+<span end="36" id="document3-17" start="28">ppeared!</span>
+</annotation>
+<graph-space id="Old Knowtator Relations">
+<vertex annotation="mention_0" id="document3-19" x="20.0" y="20.0"/>
+<vertex annotation="mention_1" id="document3-20" x="20.0" y="20.0"/>
+<vertex annotation="mention_2" id="document3-22" x="20.0" y="20.0"/>
+<triple annotator="Default" id="document3-21" motivation="" object="document3-20" polarity="positive" property="hasIngredient" quantifier="some" subject="document3-19" value=""/>
+<triple annotator="Default" id="document3-23" motivation="" object="document3-22" polarity="positive" property="hasIngredient" quantifier="some" subject="document3-19" value=""/>
+</graph-space>
+</document>
+</knowtator-project>
