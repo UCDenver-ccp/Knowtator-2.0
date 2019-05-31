@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -192,28 +193,15 @@ public final class KnowtatorXmlUtil extends XmlUtil {
 
               Profile profile = model.getProfile(profileID).orElse(model.getDefaultProfile());
 
-              OWLClass owlClass = owlClassMap.get(owlClassID);
-              if (owlClass != null || (type != null && !type.equals("identity"))) {
-                ConceptAnnotation newConceptAnnotation =
-                    new ConceptAnnotation(
-                        textSource, annotationID, owlClass, profile, type, motivation);
-                readToConceptAnnotation(newConceptAnnotation, annotationElement);
-                if (newConceptAnnotation.size() == 0) {
-                  return Optional.empty();
-                } else {
-                  return Optional.of(newConceptAnnotation);
-                }
-              } else {
-                log.info(
-                    String.format(
-                        "OWL Class: %s not found for concept: %s", owlClassID, annotationID));
-                //                try {
-                //                  throw new Exception(owlClassID);
-                //                } catch (Exception e) {
-                //                  e.printStackTrace();
-                //                }OWL Class: SO_EXT:0001023 not found for concept:
-                // CRAFT_aggregate_ontology_Instance_247189
+              OWLClass owlClass = model.getOwlDataFactory().getOWLClass(IRI.create(owlClassID));
+              ConceptAnnotation newConceptAnnotation =
+                  new ConceptAnnotation(
+                      textSource, annotationID, owlClass, profile, type, motivation);
+              readToConceptAnnotation(newConceptAnnotation, annotationElement);
+              if (newConceptAnnotation.size() == 0) {
                 return Optional.empty();
+              } else {
+                return Optional.of(newConceptAnnotation);
               }
             })
         .forEach(
@@ -251,10 +239,13 @@ public final class KnowtatorXmlUtil extends XmlUtil {
 
       String id = graphSpaceElem.getAttribute(KnowtatorXmlAttributes.ID);
 
-      GraphSpace graphSpace = new GraphSpace(textSource, id);
-      graphSpaceCollection.add(graphSpace);
+      Optional<GraphSpace> graphSpace = textSource.getGraphSpaces().get(id);
+      if (!graphSpace.isPresent()) {
+        graphSpace = Optional.of(new GraphSpace(textSource, id));
+        graphSpaceCollection.add(graphSpace.get());
+      }
 
-      readToGraphSpace(graphSpace, graphSpaceElem);
+      readToGraphSpace(graphSpace.get(), graphSpaceElem);
     }
   }
 
@@ -271,15 +262,15 @@ public final class KnowtatorXmlUtil extends XmlUtil {
       double x = xstring.equals("") ? 20 : Double.parseDouble(xstring);
       double y = ystring.equals("") ? 20 : Double.parseDouble(ystring);
 
-      graphSpace
-          .getTextSource()
-          .getAnnotation(annotationID)
-          .ifPresent(
-              conceptAnnotation -> {
-                AnnotationNode newVertex =
-                    new AnnotationNode(id, conceptAnnotation, x, y, graphSpace);
-                graphSpace.addCellToGraph(newVertex);
-              });
+      Optional<ConceptAnnotation> conceptAnnotation =
+          graphSpace.getTextSource().getAnnotation(annotationID);
+      if (conceptAnnotation.isPresent()) {
+        AnnotationNode newVertex =
+            new AnnotationNode(id, conceptAnnotation.get(), x, y, graphSpace);
+        graphSpace.addCellToGraph(newVertex);
+      } else {
+        log.info(String.format("Annotation could not be found %s", annotationID));
+      }
     }
 
     for (Node tripleNode :
@@ -314,12 +305,22 @@ public final class KnowtatorXmlUtil extends XmlUtil {
             target,
             id,
             annotator,
-            graphSpace.getKnowtatorModel().getOwlObjectPropertyById(propertyID).orElse(null),
+            graphSpace
+                .getKnowtatorModel()
+                .getOwlDataFactory()
+                .getOWLObjectProperty(IRI.create(propertyID)),
             propertyID,
             quantifier,
             quantifierValue,
             propertyIsNegated.equals(KnowtatorXmlAttributes.IS_NEGATED_TRUE),
             motivation);
+      } else {
+        if (source == null) {
+          log.info(String.format("Could not find vertex: %s", subjectID));
+        }
+        if (target == null) {
+          log.info(String.format("Could not find vertex: %s", objectID));
+        }
       }
     }
 
@@ -474,7 +475,8 @@ public final class KnowtatorXmlUtil extends XmlUtil {
       // Ok to ignore if an attribute not present
     }
 
-    tripleElem.setAttribute(KnowtatorXmlAttributes.TRIPLE_PROPERTY, relationAnnotation.getProperty().toStringID());
+    tripleElem.setAttribute(
+        KnowtatorXmlAttributes.TRIPLE_PROPERTY, relationAnnotation.getProperty().toStringID());
 
     tripleElem.setAttribute(
         KnowtatorXmlAttributes.TRIPLE_QUANTIFIER, relationAnnotation.getQuantifier().name());
@@ -521,7 +523,8 @@ public final class KnowtatorXmlUtil extends XmlUtil {
 
     Element classElement = dom.createElement(KnowtatorXmlTags.CLASS);
 
-    classElement.setAttribute(KnowtatorXmlAttributes.ID, conceptAnnotation.getOwlClass().toStringID());
+    classElement.setAttribute(
+        KnowtatorXmlAttributes.ID, conceptAnnotation.getOwlClass().toStringID());
     classElement.setAttribute(KnowtatorXmlAttributes.LABEL, conceptAnnotation.getOwlClassLabel());
     annotationElem.appendChild(classElement);
 

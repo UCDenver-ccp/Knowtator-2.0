@@ -55,6 +55,7 @@ import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLObject;
@@ -508,6 +509,10 @@ public abstract class OwlModel extends BaseModel implements Serializable {
    */
   public OWLOntologyManager getOwlOntologyManager() {
     return owlOntologyManager;
+  }
+
+  public OWLDataFactory getOwlDataFactory() {
+    return owlOntologyManager.getOWLDataFactory();
   }
 
   public class RendererSet extends Throwable {
