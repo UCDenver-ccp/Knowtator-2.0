@@ -39,7 +39,7 @@ import org.semanticweb.owlapi.model.OWLOntologyChange;
 public class TestingHelpers {
 
   /** The constant projectFileName. */
-  private static final String projectFileName = "test_project";
+  private static final String projectFileName = "test_project_using_uris";
 
   /** The constant defaultExpectedTextSources. */
   public static final int defaultExpectedTextSources = 5;
