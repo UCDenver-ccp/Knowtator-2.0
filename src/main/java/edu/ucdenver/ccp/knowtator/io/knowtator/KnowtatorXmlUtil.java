@@ -523,7 +523,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
 
     Element classElement = dom.createElement(KnowtatorXmlTags.CLASS);
 
-    classElement.setAttribute(KnowtatorXmlAttributes.ID, conceptAnnotation.getOwlClassRendering());
+    classElement.setAttribute(KnowtatorXmlAttributes.ID, conceptAnnotation.getOwlClass().toStringID());
     classElement.setAttribute(KnowtatorXmlAttributes.LABEL, conceptAnnotation.getOwlClassLabel());
     annotationElem.appendChild(classElement);
 
