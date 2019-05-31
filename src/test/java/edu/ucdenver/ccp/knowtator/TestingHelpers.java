@@ -135,11 +135,11 @@ public class TestingHelpers {
   /**
    * Check default collection values.
    *
-   * @param controller the controller
+   * @param model the model
    */
-  public static void checkDefaultCollectionValues(KnowtatorModel controller) {
+  public static void checkDefaultCollectionValues(KnowtatorModel model) {
     TestingHelpers.countCollections(
-        controller,
+        model,
         defaultExpectedTextSources,
         defaultExpectedConceptAnnotations,
         defaultExpectedSpans,

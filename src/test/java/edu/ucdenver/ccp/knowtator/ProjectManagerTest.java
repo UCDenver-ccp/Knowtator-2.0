@@ -25,7 +25,11 @@
 package edu.ucdenver.ccp.knowtator;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("EmptyMethod")
@@ -45,6 +49,38 @@ class ProjectManagerTest {
   void loadProjectTest() {
     TestingHelpers.checkDefaultCollectionValues(model);
     model.load();
+  }
+
+  @Test
+  void saveProjectTest() throws IOException {
+    TestingHelpers.checkDefaultCollectionValues(model);
+    model.save();
+    TestingHelpers.checkDefaultCollectionValues(model);
+    File file1 = new File(model.getAnnotationsLocation(), "document1.xml");
+    File referenceFile =
+        new File(
+            TestingHelpers.class.getResource("/test_project/Annotations/document1.xml").getFile());
+    try {
+      assert FileUtils.contentEquals(file1, referenceFile);
+    } catch (AssertionError e) {
+      try (BufferedReader br = new BufferedReader(new FileReader(file1))) {
+        String line;
+        while ((line = br.readLine()) != null) {
+          System.out.println(line);
+        }
+      }
+
+      System.out.println();
+
+      try (BufferedReader br = new BufferedReader(new FileReader(referenceFile))) {
+        String line;
+        while ((line = br.readLine()) != null) {
+          System.out.println(line);
+        }
+      }
+
+      throw e;
+    }
   }
 
   @Test
