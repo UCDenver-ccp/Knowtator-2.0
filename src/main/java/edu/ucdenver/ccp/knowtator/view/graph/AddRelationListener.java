@@ -69,17 +69,14 @@ class AddRelationListener implements mxEventSource.mxIEventListener {
 
   private void processEdge(mxCell edge, GraphSpace graphSpace) {
     // For some reason the top object property doesn't play nice so don't allow it
-    graphView.getView().getModel()
+    graphView
+        .getView()
+        .getModel()
         .ifPresent(
             model ->
                 model
                     .getSelectedOwlObjectProperty()
-                    .filter(
-                        owlObjectProperty ->
-                            !owlObjectProperty
-                                .getIRI()
-                                .getShortForm()
-                                .equals("owl:topObjectProperty"))
+                    .filter(owlObjectProperty -> !owlObjectProperty.equals("owl:topObjectProperty"))
                     .ifPresent(
                         owlObjectProperty -> {
                           RelationOptionsDialog relationOptionsDialog =

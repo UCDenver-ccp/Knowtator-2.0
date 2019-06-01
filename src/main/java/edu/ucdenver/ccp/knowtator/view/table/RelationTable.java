@@ -35,11 +35,10 @@ import java.util.Set;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.table.DefaultTableModel;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 /** The type Relation table. */
 public class RelationTable extends KnowtatorTable<RelationAnnotation> {
-  private final Set<OWLObjectProperty> activeOwlPropertyDescendants;
+  private final Set<String> activeOwlPropertyDescendants;
   private final JCheckBox includePropertyDescendantsCheckBox;
   private final JLabel owlPropertyLabel;
 

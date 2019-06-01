@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 public class ConllUtil {
   private static final Logger log = Logger.getLogger(KnowtatorModel.class);
@@ -124,7 +123,8 @@ public class ConllUtil {
               for (int i1 = 0; i1 < sentences.size(); i1++) {
                 List<Map<ConllUField, String>> sentence1 = sentences.get(i1);
                 GraphSpace graphSpace =
-                    new GraphSpace(textSource, String.format("%s-Sentence %d", textSource.getId(), i1));
+                    new GraphSpace(
+                        textSource, String.format("%s-Sentence %d", textSource.getId(), i1));
                 textSource.getStructureGraphSpaces().add(graphSpace);
                 List<AnnotationNode> nodes =
                     sentence1.stream()
@@ -157,14 +157,11 @@ public class ConllUtil {
                   int targetIdx = Integer.parseInt(sentence1.get(i).get(ConllUField.HEAD)) - 1;
                   if (targetIdx >= 0) {
                     AnnotationNode target = nodes.get(targetIdx);
-                    OWLObjectProperty property =
-                        model.getOwlObjectPropertyById("depends_on").orElse(null);
                     graphSpace.addTriple(
                         source,
                         target,
                         null,
                         model.getDefaultProfile(),
-                        property,
                         "depends_on",
                         Quantifier.some,
                         "",

@@ -31,14 +31,13 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import org.semanticweb.owlapi.model.OWLClass;
 
 /** The type Color change action. */
 public class ColorChangeAction extends AbstractKnowtatorAction {
 
-  private final Map<OWLClass, Color> oldColorAssignments;
+  private final Map<String, Color> oldColorAssignments;
   private final Profile profile;
-  private final Set<OWLClass> owlClasses;
+  private final Set<String> owlClasses;
   private final Color color;
 
   /**
@@ -50,7 +49,7 @@ public class ColorChangeAction extends AbstractKnowtatorAction {
    * @param color the color
    */
   public ColorChangeAction(
-      KnowtatorModel model, Profile profile, Set<OWLClass> owlClasses, Color color) {
+      KnowtatorModel model, Profile profile, Set<String> owlClasses, Color color) {
     super(model, "Change color");
     this.profile = profile;
     this.owlClasses = owlClasses;

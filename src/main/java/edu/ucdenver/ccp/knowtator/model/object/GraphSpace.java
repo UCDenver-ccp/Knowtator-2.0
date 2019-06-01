@@ -146,7 +146,8 @@ public class GraphSpace extends mxGraph
                                 getTextSource().setSelectedConceptAnnotation(conceptAnnotation));
 
                   } else if (cell instanceof RelationAnnotation) {
-                    knowtatorModel.setSelectedOwlEntity(((RelationAnnotation) cell).getProperty());
+                    knowtatorModel.setSelectedOwlObjectProperty(
+                        ((RelationAnnotation) cell).getProperty());
                   }
                 }
               }
@@ -193,12 +194,12 @@ public class GraphSpace extends mxGraph
 
   /**
    * Adds a new triple.
-   *  @param source The source node
+   *
+   * @param source The source node
    * @param target The target node
    * @param id The triple id
    * @param annotator The annotator
    * @param property The owl object property
-   * @param propertyID The property ID
    * @param quantifier The quantifier
    * @param quantifierValue A value for the quantifier
    * @param isNegated Negation
@@ -209,8 +210,7 @@ public class GraphSpace extends mxGraph
       AnnotationNode target,
       String id,
       Profile annotator,
-      OWLObjectProperty property,
-      String propertyID,
+      String property,
       Quantifier quantifier,
       String quantifierValue,
       Boolean isNegated,
@@ -225,7 +225,6 @@ public class GraphSpace extends mxGraph
             source,
             target,
             property,
-            propertyID,
             annotator,
             quantifier,
             quantifierValue,
@@ -372,7 +371,7 @@ public class GraphSpace extends mxGraph
               axiom.accept(addedCollector);
               annotationsToChangeOrRemove.forEach(
                   relationAnnotation ->
-                      relationAnnotation.setProperty((OWLObjectProperty) axiom.getEntity(), null));
+                      relationAnnotation.setProperty(axiom.getEntity().toStringID()));
               annotationsToChangeOrRemove.clear();
             } else if (axChg instanceof RemoveAxiom) {
               axiom.accept(removedCollector);
@@ -381,7 +380,9 @@ public class GraphSpace extends mxGraph
                       o -> {
                         if (o instanceof RelationAnnotation) {
                           if (((RelationAnnotation) o).getProperty() != null) {
-                            if (((RelationAnnotation) o).getProperty().equals(axiom.getEntity())) {
+                            if (((RelationAnnotation) o)
+                                .getProperty()
+                                .equals(axiom.getEntity().toStringID())) {
                               annotationsToChangeOrRemove.add((RelationAnnotation) o);
                             }
                           }

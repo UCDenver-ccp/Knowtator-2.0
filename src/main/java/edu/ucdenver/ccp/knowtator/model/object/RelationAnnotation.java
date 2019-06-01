@@ -29,7 +29,6 @@ import com.mxgraph.model.mxGeometry;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 /** The type Relation annotation. */
 public class RelationAnnotation extends mxCell
@@ -43,7 +42,7 @@ public class RelationAnnotation extends mxCell
   private final KnowtatorModel model;
   private final Boolean isNegated;
   private final TextSource textSource;
-  private OWLObjectProperty property;
+  private String property;
   private final GraphSpace graphSpace;
   private final String motivation;
 
@@ -52,7 +51,6 @@ public class RelationAnnotation extends mxCell
 
   @SuppressWarnings("unused")
   private final Logger log = Logger.getLogger(RelationAnnotation.class);
-  private String propertyID;
 
   public GraphSpace getGraphSpace() {
     return graphSpace;
@@ -60,12 +58,11 @@ public class RelationAnnotation extends mxCell
 
   /**
    * Instantiates a new Relation annotation.
-   *  @param graphSpace the graph space
+   * @param graphSpace the graph space
    * @param id the id
    * @param source the source
    * @param target the target
    * @param property the property
-   * @param propertyID the id or placeholder for the property
    * @param annotator the annotator
    * @param quantifier the quantifier
    * @param quantifierValue the quantifier value
@@ -77,8 +74,7 @@ public class RelationAnnotation extends mxCell
       String id,
       AnnotationNode source,
       AnnotationNode target,
-      OWLObjectProperty property,
-      String propertyID,
+      String property,
       Profile annotator,
       Quantifier quantifier,
       String quantifierValue,
@@ -103,7 +99,7 @@ public class RelationAnnotation extends mxCell
     this.sourceAnnotationNode = source;
     setTarget(target);
     this.targetAnnotationNode = target;
-    setProperty(property, propertyID);
+    setProperty(property);
   }
 
   /**
@@ -141,8 +137,8 @@ public class RelationAnnotation extends mxCell
    *
    * @return the owl property rendering
    */
-  public String getOwlPropertyRendering() {
-    return property == null ? this.propertyID : model.getOwlEntityRendering(property);
+  private String getOwlPropertyRendering() {
+    return model.getOwlEntityRendering(property);
   }
 
   /**
@@ -150,9 +146,8 @@ public class RelationAnnotation extends mxCell
    *
    * @param owlObjectProperty the owl object property
    */
-  void setProperty(OWLObjectProperty owlObjectProperty, String owlPropertyID) {
+  void setProperty(String owlObjectProperty) {
     property = owlObjectProperty;
-    propertyID = owlPropertyID == null ? model.getOwlEntityRendering(property) : owlPropertyID;
     setLabel();
     model.fireModelEvent(new ChangeEvent<>(model, null, this));
   }
@@ -177,7 +172,7 @@ public class RelationAnnotation extends mxCell
   public int compareTo(RelationAnnotation o) {
     int val = GraphBoundModelObject.super.compareTo(o);
     if (val == 0) {
-      val = model.getOwlObjectComparator().compare(property, o.getProperty());
+      val = property.compareTo( o.getProperty());
       if (val == 0) {
         //noinspection unchecked
         val = sourceAnnotationNode.compareTo(o.getSourceAnnotationNode());
@@ -206,7 +201,7 @@ public class RelationAnnotation extends mxCell
    *
    * @return the property
    */
-  public OWLObjectProperty getProperty() {
+  public String getProperty() {
     return property;
   }
 

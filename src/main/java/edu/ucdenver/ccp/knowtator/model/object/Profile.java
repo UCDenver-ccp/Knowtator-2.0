@@ -37,7 +37,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.OWLClass;
 
 /** The type Profile. */
 public class Profile implements ModelObject<Profile>, Savable, ModelListener {
@@ -45,7 +44,7 @@ public class Profile implements ModelObject<Profile>, Savable, ModelListener {
   private static Logger log = LogManager.getLogger(Profile.class);
 
   private String id;
-  private final HashMap<OWLClass, Color> colors; // <ClassName, Highlighter>
+  private final HashMap<String, Color> colors; // <ClassName, Highlighter>
   private final KnowtatorModel model;
 
   /**
@@ -83,7 +82,7 @@ public class Profile implements ModelObject<Profile>, Savable, ModelListener {
    * @param owlClass the owl class
    * @return the color
    */
-  public Color getColor(OWLClass owlClass) {
+  public Color getColor(String owlClass) {
     return colors.getOrDefault(owlClass, KnowtatorDefaultSettings.COLORS.get(0));
   }
 
@@ -108,7 +107,7 @@ public class Profile implements ModelObject<Profile>, Savable, ModelListener {
    * @param owlClass the owl class
    * @param c the c
    */
-  public void addColor(OWLClass owlClass, Color c) {
+  public void addColor(String owlClass, Color c) {
     colors.put(owlClass, c);
     model.fireColorChanged(this);
   }
@@ -117,9 +116,6 @@ public class Profile implements ModelObject<Profile>, Savable, ModelListener {
    *
    * @param c the c
    * @return the string
-   */
-  /*
-  TRANSLATORS
    */
   public static String convertToHex(Color c) {
     return String.format("#%06x", c.getRGB() & 0x00FFFFFF);
@@ -149,7 +145,7 @@ public class Profile implements ModelObject<Profile>, Savable, ModelListener {
    *
    * @return the colors
    */
-  public Map<OWLClass, Color> getColors() {
+  public Map<String, Color> getColors() {
     return colors;
   }
 

@@ -35,7 +35,6 @@ import edu.ucdenver.ccp.knowtator.view.actions.graph.GraphActions;
 import java.io.IOException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 class GraphActionsTest {
 
@@ -132,7 +131,7 @@ class GraphActionsTest {
         (AnnotationNode) graphSpace.getChildVertices(graphSpace.getDefaultParent())[0];
     AnnotationNode target =
         (AnnotationNode) graphSpace.getChildVertices(graphSpace.getDefaultParent())[1];
-    OWLObjectProperty property = model.getOwlObjectPropertyById("hasBase").get();
+    String property = "hasBase";
     TestingHelpers.testKnowtatorAction(
         model,
         new GraphActions.AddTripleAction(

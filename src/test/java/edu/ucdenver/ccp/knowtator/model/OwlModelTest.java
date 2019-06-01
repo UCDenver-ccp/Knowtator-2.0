@@ -124,8 +124,8 @@ class OwlModelTest {
         model.getSelectedTextSource().get().getSelectedAnnotation().get();
 
     assert !ontology.containsClassInSignature(class2.getIRI());
-    assert ontology.containsClassInSignature(conceptAnnotation.getOwlClass().getIRI());
-    assert conceptAnnotation.getOwlClass().equals(model.getOwlClassById("BetterPizza").get());
+    assert ontology.containsClassInSignature(IRI.create(conceptAnnotation.getOwlClass()));
+    assert conceptAnnotation.getOwlClass().equals("BetterPizza");
   }
 
   @Test
@@ -159,10 +159,10 @@ class OwlModelTest {
         (RelationAnnotation) graphSpace.getChildEdges(graphSpace.getDefaultParent())[0];
 
     assert !ontology.containsObjectPropertyInSignature(property.getIRI());
-    assert ontology.containsObjectPropertyInSignature(relationAnnotation.getProperty().getIRI());
+    assert ontology.containsObjectPropertyInSignature(IRI.create(relationAnnotation.getProperty()));
     assert relationAnnotation
         .getProperty()
-        .equals(model.getOwlObjectPropertyById("betterHasBass").get());
+        .equals(model.getOwlObjectPropertyById("betterHasBass").get().toStringID());
   }
 
   @Test
@@ -251,7 +251,7 @@ class OwlModelTest {
     model.getTextSources().setSelection(model.getTextSources().get("document1").get());
     ConceptAnnotation conceptAnnotation =
         model.getSelectedTextSource().get().getSelectedAnnotation().get();
-    assert conceptAnnotation.getOwlClass().equals(class2);
+    assert conceptAnnotation.getOwlClass().equals(class2.toStringID());
   }
 
   boolean isSubClassTest(OWLClass potentialSuperClass, OWLClass owlClass) {
@@ -308,10 +308,11 @@ class OwlModelTest {
     assert isSubObjectPropertyTest(property1, property2);
     assert isSubObjectPropertyTest(property3, property2);
 
-    GraphSpace graphSpace = model.getTextSources().get("document1").get().getSelectedGraphSpace().get();
+    GraphSpace graphSpace =
+        model.getTextSources().get("document1").get().getSelectedGraphSpace().get();
     RelationAnnotation relationAnnotation =
         (RelationAnnotation) graphSpace.getChildEdges(graphSpace.getDefaultParent())[0];
-    assert relationAnnotation.getProperty().equals(property2);
+    assert relationAnnotation.getProperty().equals(property2.toStringID());
   }
 
   @Test

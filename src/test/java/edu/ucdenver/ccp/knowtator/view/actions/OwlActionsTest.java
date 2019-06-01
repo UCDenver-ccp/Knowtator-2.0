@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
-import org.semanticweb.owlapi.model.OWLClass;
 
 class OwlActionsTest {
   private static KnowtatorModel model;
@@ -57,15 +56,14 @@ class OwlActionsTest {
     ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
     textSource.setSelectedConceptAnnotation(conceptAnnotation);
 
-    OWLClass owlClass = model.getOwlClassById("Pizza").get();
-    assert model.getSelectedTextSource().get().getSelectedAnnotation().get().getOwlClass()
-        == owlClass;
+    String owlClass = model.getOwlClassById("Pizza").get().toStringID();
+    assert model.getSelectedTextSource().get().getSelectedAnnotation().get().getOwlClass().equals(owlClass);
 
     model.registerAction(
         new ReassignOwlClassAction(model, conceptAnnotation, model.getSelectedOwlClass().get()));
     assert conceptAnnotation.getOwlClass().equals(model.getSelectedOwlClass().get());
     model.undo();
-    assert conceptAnnotation.getOwlClass() == owlClass;
+    assert conceptAnnotation.getOwlClass().equals(owlClass);
     model.redo();
     assert conceptAnnotation.getOwlClass().equals(model.getSelectedOwlClass().get());
     model.undo();
@@ -83,7 +81,7 @@ class OwlActionsTest {
     assert profile.getColor(conceptAnnotation.getOwlClass()).equals(Color.RED);
 
     model.getSelectedTextSource().get().selectNextConceptAnnotation();
-    Set<OWLClass> owlClassSet = new HashSet<>();
+    Set<String> owlClassSet = new HashSet<>();
     owlClassSet.add(model.getSelectedOwlClass().get());
 
     model.registerAction(

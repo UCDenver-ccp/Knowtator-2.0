@@ -34,7 +34,6 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -49,6 +48,7 @@ import org.apache.log4j.Logger;
 import org.protege.editor.core.ui.util.AugmentedJTextField;
 import org.protege.editor.owl.model.OWLWorkspace;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
+import org.protege.editor.owl.model.selection.OWLSelectionModel;
 import org.protege.editor.owl.ui.renderer.OWLRendererPreferences;
 import org.protege.editor.owl.ui.search.SearchDialogPanel;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -58,7 +58,6 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
-import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
@@ -183,7 +182,7 @@ public abstract class OwlModel extends BaseModel implements Serializable {
    * @param propertyID the property id
    * @return the owl object property by id
    */
-  public Optional<OWLObjectProperty> getOwlObjectPropertyById(@Nonnull String propertyID) {
+  Optional<OWLObjectProperty> getOwlObjectPropertyById(@Nonnull String propertyID) {
     if (owlWorkSpace.isPresent()) {
       return owlWorkSpace.map(
           owlWorkSpace ->
@@ -210,16 +209,13 @@ public abstract class OwlModel extends BaseModel implements Serializable {
    *
    * @return the selected owl object property
    */
-  public Optional<OWLObjectProperty> getSelectedOwlObjectProperty() {
+  public Optional<String> getSelectedOwlObjectProperty() {
     if (owlWorkSpace.isPresent()) {
       return owlWorkSpace
-          .filter(
-              owlWorkspace ->
-                  owlWorkspace.getOWLSelectionModel().getSelectedEntity()
-                      instanceof OWLObjectProperty)
-          .map(
-              owlWorkspace ->
-                  (OWLObjectProperty) owlWorkspace.getOWLSelectionModel().getSelectedEntity());
+          .map(OWLWorkspace::getOWLSelectionModel)
+          .map(OWLSelectionModel::getSelectedEntity)
+          .filter(owlEntity -> owlEntity instanceof OWLObjectProperty)
+          .map(OWLEntity::toStringID);
     } else {
       return getSelectedTextSource()
           .flatMap(TextSource::getSelectedGraphSpace)
@@ -235,13 +231,14 @@ public abstract class OwlModel extends BaseModel implements Serializable {
    *
    * @return the selected owl class
    */
-  public Optional<OWLClass> getSelectedOwlClass() {
+  public Optional<String> getSelectedOwlClass() {
     if (owlWorkSpace.isPresent()) {
       return owlWorkSpace
           .filter(
               owlWorkspace ->
                   owlWorkspace.getOWLSelectionModel().getSelectedEntity() instanceof OWLClass)
-          .map(owlWorkspace -> (OWLClass) owlWorkspace.getOWLSelectionModel().getSelectedEntity());
+          .map(owlWorkspace -> (OWLClass) owlWorkspace.getOWLSelectionModel().getSelectedEntity())
+          .map(OWLEntity::toStringID);
     } else {
       return getSelectedTextSource()
           .flatMap(TextSource::getSelectedAnnotation)
@@ -271,7 +268,12 @@ public abstract class OwlModel extends BaseModel implements Serializable {
       owlWorkSpace.ifPresent(
           owlWorkspace -> {
             IRI labelIri =
-                owlWorkspace.getOWLModelManager().getOWLDataFactory().getOWLAnnotationProperty(IRI.create("http://www.owl-ontologies.com/unnamed.owl#display_label")).getIRI();
+                owlWorkspace
+                    .getOWLModelManager()
+                    .getOWLDataFactory()
+                    .getOWLAnnotationProperty(
+                        IRI.create("http://www.owl-ontologies.com/unnamed.owl#display_label"))
+                    .getIRI();
             annotationIris = OWLRendererPreferences.getInstance().getAnnotationIRIs();
             OWLRendererPreferences.getInstance()
                 .setAnnotations(Collections.singletonList(labelIri));
@@ -279,7 +281,6 @@ public abstract class OwlModel extends BaseModel implements Serializable {
             owlWorkspace.getOWLModelManager().refreshRenderer();
           });
       throw new RendererSet();
-
     }
   }
 
@@ -296,20 +297,20 @@ public abstract class OwlModel extends BaseModel implements Serializable {
   }
 
   /**
-   * Gets owlc lass descendants.
+   * Gets owlclass descendants.
    *
    * @param cls the cls
-   * @return the owlc lass descendants
+   * @return the owlclass descendants
    */
-  public Set<OWLClass> getOwlCLassDescendants(OWLClass cls) {
+  public Set<String> getOwlClassDescendants(String cls) {
     return owlWorkSpace
         .map(
             owlWorkspace ->
-                owlWorkspace
-                    .getOWLModelManager()
-                    .getOWLHierarchyManager()
+                owlWorkspace.getOWLModelManager().getOWLHierarchyManager()
                     .getOWLClassHierarchyProvider()
-                    .getDescendants(cls))
+                    .getDescendants(getOwlDataFactory().getOWLClass(IRI.create(cls))).stream()
+                    .map(OWLEntity::toStringID)
+                    .collect(Collectors.toSet()))
         .orElse(new HashSet<>());
   }
 
@@ -319,16 +320,17 @@ public abstract class OwlModel extends BaseModel implements Serializable {
    * @param owlObjectProperty the owl object property
    * @return the owl object property descendants
    */
-  public Set<OWLObjectProperty> getOwlObjectPropertyDescendants(
-      OWLObjectProperty owlObjectProperty) {
+  public Set<String> getOwlObjectPropertyDescendants(String owlObjectProperty) {
     return owlWorkSpace
         .map(
             owlWorkspace ->
-                owlWorkspace
-                    .getOWLModelManager()
-                    .getOWLHierarchyManager()
+                owlWorkspace.getOWLModelManager().getOWLHierarchyManager()
                     .getOWLObjectPropertyHierarchyProvider()
-                    .getDescendants(owlObjectProperty))
+                    .getDescendants(
+                        getOwlDataFactory().getOWLObjectProperty(IRI.create(owlObjectProperty)))
+                    .stream()
+                    .map(OWLEntity::toStringID)
+                    .collect(Collectors.toSet()))
         .orElse(new HashSet<>());
   }
 
@@ -338,12 +340,11 @@ public abstract class OwlModel extends BaseModel implements Serializable {
    * @param owlEntity the owl entity
    * @return the owl entity rendering
    */
-  public String getOwlEntityRendering(@Nonnull OWLEntity owlEntity) {
+  public String getOwlEntityRendering(String owlEntity) {
+    IRI iri = IRI.create(owlEntity);
     return owlWorkSpace
-        .map(
-            owlWorkspace ->
-                owlWorkspace.getOWLModelManager().getOWLEntityRenderer().render(owlEntity))
-        .orElse(owlEntity.getIRI().getShortForm());
+        .map(owlWorkspace -> owlWorkspace.getOWLModelManager().getOWLEntityRenderer().render(iri))
+        .orElse(iri.getShortForm());
   }
 
   /**
@@ -475,12 +476,16 @@ public abstract class OwlModel extends BaseModel implements Serializable {
     owlWorkSpace.ifPresent(owlWorkSpace -> owlWorkSpace.getOWLModelManager().addListener(listener));
   }
 
+  public void setSelectedOwlClass(String owlClass) {
+    setSelectedOwlEntity(owlOntologyManager.getOWLDataFactory().getOWLClass(IRI.create(owlClass)));
+  }
+
   /**
    * Sets selected owl entity.
    *
    * @param owlEntity the owl entity
    */
-  public void setSelectedOwlEntity(OWLEntity owlEntity) {
+  private void setSelectedOwlEntity(OWLEntity owlEntity) {
     if (isNotLoading()) {
       owlWorkSpace.ifPresent(
           owlWorkspace -> owlWorkspace.getOWLSelectionModel().setSelectedEntity(owlEntity));
@@ -492,17 +497,6 @@ public abstract class OwlModel extends BaseModel implements Serializable {
   }
 
   /**
-   * Gets owl object comparator.
-   *
-   * @return the owl object comparator
-   */
-  public Comparator<OWLObject> getOwlObjectComparator() {
-    return owlWorkSpace
-        .map(owlWorkspace -> owlWorkspace.getOWLModelManager().getOWLObjectComparator())
-        .orElse(Comparator.comparing(Object::toString));
-  }
-
-  /**
    * Gets owl ontology manager.
    *
    * @return the owl ontology manager
@@ -511,10 +505,15 @@ public abstract class OwlModel extends BaseModel implements Serializable {
     return owlOntologyManager;
   }
 
-  public OWLDataFactory getOwlDataFactory() {
-    return owlOntologyManager.getOWLDataFactory();
+  private OWLDataFactory getOwlDataFactory() {
+    return owlWorkSpace
+        .map(owlWorkspace -> owlWorkspace.getOWLModelManager().getOWLDataFactory())
+        .orElse(owlOntologyManager.getOWLDataFactory());
   }
 
-  public class RendererSet extends Throwable {
+  public void setSelectedOwlObjectProperty(String property) {
+    setSelectedOwlEntity(getOwlDataFactory().getOWLObjectProperty(IRI.create(property)));
   }
+
+  public class RendererSet extends Throwable {}
 }
