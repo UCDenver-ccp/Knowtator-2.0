@@ -3,7 +3,7 @@
 
 <knowtator-project>
     <profile id="profile1">
-        <highlighter class="IceCream" color="#00ffff"/>
-        <highlighter class="Pizza" color="#ff3333"/>
+        <highlighter class="http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream" color="#00ffff"/>
+        <highlighter class="http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza" color="#ff3333"/>
     </profile>
 </knowtator-project>
