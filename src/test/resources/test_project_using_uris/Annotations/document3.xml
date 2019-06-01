@@ -1,16 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ MIT License
+  ~
+  ~ Copyright (c) 2018 Harrison Pielke-Lombardo
+  ~
+  ~  Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
 <knowtator-project>
     <document id="document3" text-file="document3.txt">
         <annotation annotator="Default" id="mention_0" motivation="" type="identity">
-            <class id="Food" label="Food"/>
+            <class id="http://www.co-ode.org/ontologies/pizza/pizza.owl#Food" label="Food"/>
             <span end="1" id="document3-11" start="0">A</span>
         </annotation>
         <annotation annotator="profile1" id="mention_1" motivation="" type="identity">
-            <class id="Food" label="Food"/>
+            <class id="http://www.co-ode.org/ontologies/pizza/pizza.owl#Food" label="Food"/>
             <span end="36" id="document3-14" start="28">ppeared!</span>
         </annotation>
         <annotation annotator="Default" id="mention_2" motivation="" type="identity">
-            <class id="Food" label="Food"/>
+            <class id="http://www.co-ode.org/ontologies/pizza/pizza.owl#Food" label="Food"/>
             <span end="36" id="document3-17" start="28">ppeared!</span>
         </annotation>
         <graph-space id="Old Knowtator Relations">
@@ -18,9 +42,9 @@
             <vertex annotation="mention_1" id="document3-20" x="20.0" y="20.0"/>
             <vertex annotation="mention_2" id="document3-22" x="20.0" y="20.0"/>
             <triple annotator="Default" id="document3-21" motivation="" object="document3-20" polarity="positive"
-                    property="hasIngredient" quantifier="some" subject="document3-19" value=""/>
+                    property="http://www.co-ode.org/ontologies/pizza/pizza.owl#hasIngredient" quantifier="some" subject="document3-19" value=""/>
             <triple annotator="Default" id="document3-23" motivation="" object="document3-22" polarity="positive"
-                    property="hasIngredient" quantifier="some" subject="document3-19" value=""/>
+                    property="http://www.co-ode.org/ontologies/pizza/pizza.owl#hasIngredient" quantifier="some" subject="document3-19" value=""/>
         </graph-space>
     </document>
 </knowtator-project>

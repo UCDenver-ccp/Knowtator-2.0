@@ -125,7 +125,9 @@ class OwlModelTest {
 
     assert !ontology.containsClassInSignature(class2.getIRI());
     assert ontology.containsClassInSignature(IRI.create(conceptAnnotation.getOwlClass()));
-    assert conceptAnnotation.getOwlClass().equals(model.getOwlClassById("BetterPizza").toString());
+    assert conceptAnnotation
+        .getOwlClass()
+        .equals(model.getOwlClassById("BetterPizza").get().toStringID());
   }
 
   @Test
