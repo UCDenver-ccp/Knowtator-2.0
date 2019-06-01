@@ -134,9 +134,9 @@ public class ConllUtil {
                                   new ConceptAnnotation(
                                       textSource,
                                       null,
-                                      null,
-                                      model.getDefaultProfile(),
                                       fields.get(ConllUField.DEPREL),
+                                      model.getDefaultProfile(),
+                                      null,
                                       "");
                               int[] range = findEnd.apply(fields.get(ConllUField.FORM));
 

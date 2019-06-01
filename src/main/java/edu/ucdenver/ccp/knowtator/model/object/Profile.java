@@ -27,7 +27,6 @@ package edu.ucdenver.ccp.knowtator.model.object;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXmlUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
-import edu.ucdenver.ccp.knowtator.model.OwlModel;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorDefaultSettings;
@@ -155,13 +154,7 @@ public class Profile implements ModelObject<Profile>, Savable, ModelListener {
   @Override
   public void colorChangedEvent(Profile profile) {
     if (profile == this) {
-      try {
-        model.setRenderRdfsLabel();
-      } catch (OwlModel.RendererSet rendererSet) {
-        save();
-      } finally {
-        model.resetRenderAnnotations();
-      }
+      save();
     }
   }
 

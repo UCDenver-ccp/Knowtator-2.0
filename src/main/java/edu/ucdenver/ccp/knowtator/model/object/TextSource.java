@@ -27,7 +27,6 @@ package edu.ucdenver.ccp.knowtator.model.object;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXmlUtil;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
-import edu.ucdenver.ccp.knowtator.model.OwlModel;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
@@ -217,15 +216,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
         .map(modelObject -> (TextBoundModelObject) modelObject)
         .filter(textBoundModelObject -> textBoundModelObject.getTextSource().equals(this))
         .ifPresent(
-            modelObject -> {
-              try {
-                model.setRenderRdfsLabel();
-              } catch (OwlModel.RendererSet rendererSet) {
-                save();
-              } finally {
-                model.resetRenderAnnotations();
-              }
-            });
+            modelObject -> save());
     event
         .getOld()
         .filter(modelObject -> !(event instanceof SelectionEvent))
@@ -233,15 +224,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
         .map(modelObject -> (TextBoundModelObject) modelObject)
         .filter(textBoundModelObject -> textBoundModelObject.getTextSource().equals(this))
         .ifPresent(
-            modelObject -> {
-              try {
-                model.setRenderRdfsLabel();
-              } catch (OwlModel.RendererSet rendererSet) {
-                save();
-              } finally {
-                model.resetRenderAnnotations();
-              }
-            });
+            modelObject -> save());
   }
 
   /**
