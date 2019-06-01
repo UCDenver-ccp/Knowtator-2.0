@@ -133,7 +133,7 @@ public abstract class OwlModel extends BaseModel implements Serializable {
    * @param propertyID the property id
    * @return the owl object property by id
    */
-  Optional<OWLObjectProperty> getOwlObjectPropertyById(@Nonnull String propertyID) {
+  public Optional<OWLObjectProperty> getOwlObjectPropertyById(@Nonnull String propertyID) {
     if (owlWorkSpace.isPresent()) {
       return owlWorkSpace.map(
           owlWorkSpace ->

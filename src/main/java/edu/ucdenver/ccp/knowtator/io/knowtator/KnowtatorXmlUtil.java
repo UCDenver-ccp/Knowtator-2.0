@@ -42,6 +42,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -176,6 +178,12 @@ public final class KnowtatorXmlUtil extends XmlUtil {
 
               Profile profile = model.getProfile(profileID).orElse(model.getDefaultProfile());
 
+              Optional<OWLClass> owlClass = model.getOwlClassById(owlClassID);
+
+              if (owlClass.isPresent()) {
+                owlClassID = owlClass.get().toStringID();
+              }
+
               ConceptAnnotation newConceptAnnotation =
                   new ConceptAnnotation(
                       textSource, annotationID, owlClassID, profile, type, motivation);
@@ -281,6 +289,13 @@ public final class KnowtatorXmlUtil extends XmlUtil {
       AnnotationNode target =
           (AnnotationNode) ((mxGraphModel) graphSpace.getModel()).getCells().get(objectID);
 
+      Optional<OWLObjectProperty> owlObjectProperty =
+          graphSpace.getKnowtatorModel().getOwlObjectPropertyById(propertyID);
+
+      if (owlObjectProperty.isPresent()) {
+        propertyID = owlObjectProperty.get().toStringID();
+      }
+
       if (target != null && source != null) {
         graphSpace.addTriple(
             source,
@@ -352,6 +367,12 @@ public final class KnowtatorXmlUtil extends XmlUtil {
       Color color =
           new Color(
               (float) c.getRed() / 255, (float) c.getGreen() / 255, (float) c.getBlue() / 255, 1f);
+
+      Optional<OWLClass> owlClass = model.getOwlClassById(classID);
+
+      if (owlClass.isPresent()) {
+        classID = owlClass.get().toStringID();
+      }
 
       profile.addColor(classID, color);
     }
@@ -538,9 +559,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
                     (owlEntity, c) -> {
                       Element e = dom.createElement(KnowtatorXmlTags.HIGHLIGHTER);
 
-                      e.setAttribute(
-                          KnowtatorXmlAttributes.CLASS_ID,
-                          profile.getKnowtatorModel().getOwlEntityRendering(owlEntity));
+                      e.setAttribute(KnowtatorXmlAttributes.CLASS_ID, owlEntity);
 
                       e.setAttribute(KnowtatorXmlAttributes.COLOR, Profile.convertToHex(c));
                       profileElem.appendChild(e);
