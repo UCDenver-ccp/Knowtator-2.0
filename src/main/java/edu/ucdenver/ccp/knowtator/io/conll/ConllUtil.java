@@ -95,18 +95,20 @@ public class ConllUtil {
                               .replace("{", "[")
                               .replace("}", "]");
                     }
-                    int start1 = start[0];
-                    int end = start1 + text.length();
+                    int start1;
+                    int end;
                     try {
                       for (int i = 0; i < 9; i++) {
                         start1 = start[0] - i;
                         end = start[0] + text.length() - i;
-                        if (checkRealText(textSource, start, text, start1, end)) {
+                        end = checkRealText(textSource, start, text, start1, end);
+                        if (-1 < end) {
                           return new int[] {start1, end};
                         }
                         start1 = start[0] + i;
                         end = start[0] + text.length() + i;
-                        if (checkRealText(textSource, start, text, start1, end)) {
+                        end = checkRealText(textSource, start, text, start1, end);
+                        if (-1 < end) {
                           return new int[] {start1, end};
                         }
                       }
@@ -117,7 +119,7 @@ public class ConllUtil {
                     } catch (Exception e) {
                       e.printStackTrace();
                     }
-                    return new int[] {start1, end};
+                    return null;
                   };
 
               for (int i1 = 0; i1 < sentences.size(); i1++) {
@@ -181,25 +183,27 @@ public class ConllUtil {
             });
   }
 
-  private boolean checkRealText(
+  private int checkRealText(
       TextSource textSource, int[] start, String text, int start1, int end) {
     String realText;
-    realText = textSource.getContent().replace("·", "");
+    realText = textSource.getContent();
 
     if (end <= realText.length()) {
-      realText =
-          realText
-              .substring(start1, end)
+      realText = realText.substring(start1, end);
+      end += realText.split("·").length - 1;
+      realText = textSource.getContent().substring(start1, end)
               .replace("(", "[")
               .replace(")", "]")
               .replace("}", "]")
               .replace("{", "[")
               .replace("″", "\"");
-      if (realText.equals(text)) {
+
+
+      if (realText.replace("·", "").equals(text)) {
         start[0] = end + 1;
-        return true;
+        return end;
       }
     }
-    return false;
+    return -1;
   }
 }
