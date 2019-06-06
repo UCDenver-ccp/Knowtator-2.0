@@ -77,7 +77,9 @@ class ProjectManagerTest {
     File file1 = new File(model.getAnnotationsLocation(), "document1.xml");
     File referenceFile =
         new File(
-            TestingHelpers.class.getResource("/test_project_using_uris/Annotations/document1.xml").getFile());
+            TestingHelpers.class
+                .getResource("/test_project_using_uris/Annotations/document1.xml")
+                .getFile());
 
     List<String> original = fileToLines(referenceFile);
     List<String> revised = fileToLines(file1);
@@ -85,7 +87,7 @@ class ProjectManagerTest {
     Patch patch = DiffUtils.diff(original, revised);
 
     try {
-    assert patch.getDeltas().size() == 0;
+      assert patch.getDeltas().size() == 0;
     } catch (AssertionError e) {
       for (Delta delta : patch.getDeltas()) {
         System.out.println(delta);
