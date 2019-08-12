@@ -181,7 +181,12 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
               if (owlClass.isPresent()) {
                 ConceptAnnotation newConceptAnnotation =
                     new ConceptAnnotation(
-                        textSource, annotationID, owlClass.get(), profile, "identity", "");
+                        textSource,
+                        annotationID,
+                        owlClass.get().toStringID(),
+                        profile,
+                        "identity",
+                        "");
                 if (conceptAnnotationCollection.containsID(annotationID)) {
                   newConceptAnnotation.setId(model.verifyId(null, newConceptAnnotation, false));
                 }
@@ -241,20 +246,16 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
                 .map(oldKnowtatorGraphSpace::getAnnotationNodeForConceptAnnotation)
                 .ifPresent(
                     target ->
-                        model
-                            .getOwlObjectPropertyById(propertyID)
-                            .ifPresent(
-                                property ->
-                                    oldKnowtatorGraphSpace.addTriple(
-                                        source,
-                                        target,
-                                        null,
-                                        model.getDefaultProfile(),
-                                        property,
-                                        Quantifier.some,
-                                        "",
-                                        false,
-                                        "")));
+                        oldKnowtatorGraphSpace.addTriple(
+                            source,
+                            target,
+                            null,
+                            model.getDefaultProfile(),
+                            propertyID,
+                            Quantifier.some,
+                            "",
+                            false,
+                            ""));
           }
         });
   }

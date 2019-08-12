@@ -40,13 +40,10 @@ import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import java.awt.Color;
 import java.io.File;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -166,17 +163,6 @@ public final class KnowtatorXmlUtil extends XmlUtil {
       TextSource textSource,
       ConceptAnnotationCollection conceptAnnotationCollection,
       Element parent) {
-    HashSet<String> classIDs =
-        KnowtatorXmlUtil.asList(parent.getElementsByTagName(KnowtatorXmlTags.ANNOTATION)).stream()
-            .map(node -> (Element) node)
-            .map(
-                annotationElement ->
-                    ((Element)
-                            annotationElement.getElementsByTagName(KnowtatorXmlTags.CLASS).item(0))
-                        .getAttribute(KnowtatorXmlAttributes.ID))
-            .collect(Collectors.toCollection(HashSet::new));
-
-    Map<String, OWLClass> owlClassMap = model.getOwlClassesByIds(classIDs);
 
     KnowtatorXmlUtil.asList(parent.getElementsByTagName(KnowtatorXmlTags.ANNOTATION)).stream()
         .map(node -> (Element) node)
@@ -192,22 +178,20 @@ public final class KnowtatorXmlUtil extends XmlUtil {
 
               Profile profile = model.getProfile(profileID).orElse(model.getDefaultProfile());
 
-              OWLClass owlClass = owlClassMap.get(owlClassID);
-              if (owlClass != null || type != null) {
-                ConceptAnnotation newConceptAnnotation =
-                    new ConceptAnnotation(
-                        textSource, annotationID, owlClass, profile, type, motivation);
-                readToConceptAnnotation(newConceptAnnotation, annotationElement);
-                if (newConceptAnnotation.size() == 0) {
-                  return Optional.empty();
-                } else {
-                  return Optional.of(newConceptAnnotation);
-                }
-              } else {
-                log.warn(
-                    String.format(
-                        "OWL Class: %s not found for concept: %s", owlClassID, annotationID));
+              Optional<OWLClass> owlClass = model.getOwlClassById(owlClassID);
+
+              if (owlClass.isPresent()) {
+                owlClassID = owlClass.get().toStringID();
+              }
+
+              ConceptAnnotation newConceptAnnotation =
+                  new ConceptAnnotation(
+                      textSource, annotationID, owlClassID, profile, type, motivation);
+              readToConceptAnnotation(newConceptAnnotation, annotationElement);
+              if (newConceptAnnotation.size() == 0) {
                 return Optional.empty();
+              } else {
+                return Optional.of(newConceptAnnotation);
               }
             })
         .forEach(
@@ -245,10 +229,13 @@ public final class KnowtatorXmlUtil extends XmlUtil {
 
       String id = graphSpaceElem.getAttribute(KnowtatorXmlAttributes.ID);
 
-      GraphSpace graphSpace = new GraphSpace(textSource, id);
-      graphSpaceCollection.add(graphSpace);
+      Optional<GraphSpace> graphSpace = textSource.getGraphSpaces().get(id);
+      if (!graphSpace.isPresent()) {
+        graphSpace = Optional.of(new GraphSpace(textSource, id));
+        graphSpaceCollection.add(graphSpace.get());
+      }
 
-      readToGraphSpace(graphSpace, graphSpaceElem);
+      readToGraphSpace(graphSpace.get(), graphSpaceElem);
     }
   }
 
@@ -265,15 +252,15 @@ public final class KnowtatorXmlUtil extends XmlUtil {
       double x = xstring.equals("") ? 20 : Double.parseDouble(xstring);
       double y = ystring.equals("") ? 20 : Double.parseDouble(ystring);
 
-      graphSpace
-          .getTextSource()
-          .getAnnotation(annotationID)
-          .ifPresent(
-              conceptAnnotation -> {
-                AnnotationNode newVertex =
-                    new AnnotationNode(id, conceptAnnotation, x, y, graphSpace);
-                graphSpace.addCellToGraph(newVertex);
-              });
+      Optional<ConceptAnnotation> conceptAnnotation =
+          graphSpace.getTextSource().getAnnotation(annotationID);
+      if (conceptAnnotation.isPresent()) {
+        AnnotationNode newVertex =
+            new AnnotationNode(id, conceptAnnotation.get(), x, y, graphSpace);
+        graphSpace.addCellToGraph(newVertex);
+      } else {
+        log.info(String.format("Annotation could not be found %s", annotationID));
+      }
     }
 
     for (Node tripleNode :
@@ -302,17 +289,31 @@ public final class KnowtatorXmlUtil extends XmlUtil {
       AnnotationNode target =
           (AnnotationNode) ((mxGraphModel) graphSpace.getModel()).getCells().get(objectID);
 
+      Optional<OWLObjectProperty> owlObjectProperty =
+          graphSpace.getKnowtatorModel().getOwlObjectPropertyById(propertyID);
+
+      if (owlObjectProperty.isPresent()) {
+        propertyID = owlObjectProperty.get().toStringID();
+      }
+
       if (target != null && source != null) {
         graphSpace.addTriple(
             source,
             target,
             id,
             annotator,
-            graphSpace.getKnowtatorModel().getOwlObjectPropertyById(propertyID).orElse(null),
+            propertyID,
             quantifier,
             quantifierValue,
             propertyIsNegated.equals(KnowtatorXmlAttributes.IS_NEGATED_TRUE),
             motivation);
+      } else {
+        if (source == null) {
+          log.info(String.format("Could not find vertex: %s", subjectID));
+        }
+        if (target == null) {
+          log.info(String.format("Could not find vertex: %s", objectID));
+        }
       }
     }
 
@@ -355,7 +356,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
 
   private void readToProfile(KnowtatorModel model, Profile profile, Element parent) {
     model.removeModelListener(profile);
-    Map<String, Color> colorMap = new HashMap<>();
+
     for (Node highlighterNode :
         KnowtatorXmlUtil.asList(parent.getElementsByTagName(KnowtatorXmlTags.HIGHLIGHTER))) {
       Element highlighterElement = (Element) highlighterNode;
@@ -366,11 +367,15 @@ public final class KnowtatorXmlUtil extends XmlUtil {
       Color color =
           new Color(
               (float) c.getRed() / 255, (float) c.getGreen() / 255, (float) c.getBlue() / 255, 1f);
-      colorMap.put(classID, color);
+
+      Optional<OWLClass> owlClass = model.getOwlClassById(classID);
+
+      if (owlClass.isPresent()) {
+        classID = owlClass.get().toStringID();
+      }
+
+      profile.addColor(classID, color);
     }
-    model
-        .getOwlClassesByIds(colorMap.keySet())
-        .forEach((key, value) -> profile.addColor(value, colorMap.get(key)));
     model.addModelListener(profile);
   }
 
@@ -467,9 +472,8 @@ public final class KnowtatorXmlUtil extends XmlUtil {
       // Ok to ignore if an attribute not present
     }
 
-    String propertyID = relationAnnotation.getOwlPropertyRendering();
-
-    tripleElem.setAttribute(KnowtatorXmlAttributes.TRIPLE_PROPERTY, propertyID);
+    tripleElem.setAttribute(
+        KnowtatorXmlAttributes.TRIPLE_PROPERTY, relationAnnotation.getProperty());
 
     tripleElem.setAttribute(
         KnowtatorXmlAttributes.TRIPLE_QUANTIFIER, relationAnnotation.getQuantifier().name());
@@ -516,7 +520,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
 
     Element classElement = dom.createElement(KnowtatorXmlTags.CLASS);
 
-    classElement.setAttribute(KnowtatorXmlAttributes.ID, conceptAnnotation.getOwlClassRendering());
+    classElement.setAttribute(KnowtatorXmlAttributes.ID, conceptAnnotation.getOwlClass());
     classElement.setAttribute(KnowtatorXmlAttributes.LABEL, conceptAnnotation.getOwlClassLabel());
     annotationElem.appendChild(classElement);
 
@@ -555,9 +559,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
                     (owlEntity, c) -> {
                       Element e = dom.createElement(KnowtatorXmlTags.HIGHLIGHTER);
 
-                      e.setAttribute(
-                          KnowtatorXmlAttributes.CLASS_ID,
-                          profile.getKnowtatorModel().getOwlEntityRendering(owlEntity));
+                      e.setAttribute(KnowtatorXmlAttributes.CLASS_ID, owlEntity);
 
                       e.setAttribute(KnowtatorXmlAttributes.COLOR, Profile.convertToHex(c));
                       profileElem.appendChild(e);

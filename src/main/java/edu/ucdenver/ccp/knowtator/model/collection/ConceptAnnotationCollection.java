@@ -118,7 +118,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     boolean filterByOwlClass = model.isFilter(FilterType.OWLCLASS);
     boolean filterByProfile = model.isFilter(FilterType.PROFILE);
     Optional<Profile> activeProfile = model.getSelectedProfile();
-    Set<OWLClass> activeOwlClassDescendants = new HashSet<>();
+    Set<String> activeOwlClassDescendants = new HashSet<>();
 
     if (filterByOwlClass) {
       model
@@ -126,7 +126,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
           .ifPresent(
               owlClass -> {
                 activeOwlClassDescendants.add(owlClass);
-                activeOwlClassDescendants.addAll(model.getOwlCLassDescendants(owlClass));
+                activeOwlClassDescendants.addAll(model.getOwlClassDescendants(owlClass));
               });
     }
     return super.stream()
@@ -207,7 +207,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
     getSelection()
         .ifPresent(
-            conceptAnnotation -> model.setSelectedOwlEntity(conceptAnnotation.getOwlClass()));
+            conceptAnnotation -> model.setSelectedOwlClass(conceptAnnotation.getOwlClass()));
   }
 
   @Override
@@ -241,13 +241,13 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
             if (axChg instanceof AddAxiom) {
               axiom.accept(addedCollector);
               annotationsToChangeOrRemove.forEach(
-                  conceptAnnotation -> conceptAnnotation.setOwlClass((OWLClass) axiom.getEntity()));
+                  conceptAnnotation -> conceptAnnotation.setOwlClass(axiom.getEntity().toStringID()));
               annotationsToChangeOrRemove.clear();
             } else if (axChg instanceof RemoveAxiom) {
               axiom.accept(removedCollector);
               forEach(
                   conceptAnnotation -> {
-                    if (conceptAnnotation.getOwlClass().equals(axiom.getEntity())) {
+                    if (conceptAnnotation.getOwlClass().equals(axiom.getEntity().toStringID())) {
                       annotationsToChangeOrRemove.add(conceptAnnotation);
                     }
                   });

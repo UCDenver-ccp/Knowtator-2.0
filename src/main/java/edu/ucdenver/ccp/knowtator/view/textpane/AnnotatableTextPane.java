@@ -72,7 +72,6 @@ import javax.swing.text.Utilities;
 import javax.swing.text.View;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.OWLClass;
 
 /** A text pane that can be annotated. */
 public abstract class AnnotatableTextPane extends SearchableTextPane
@@ -522,7 +521,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
               view.getModel()
                   .ifPresent(
                       model -> {
-                        Optional<OWLClass> selectedOwlClass = model.getSelectedOwlClass();
+                        Optional<String> selectedOwlClass = model.getSelectedOwlClass();
                         selectedOwlClass.ifPresent(
                             owlClass ->
                                 model

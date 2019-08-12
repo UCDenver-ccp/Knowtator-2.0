@@ -143,12 +143,11 @@ public class XmlUtil {
   public static void finishWritingXml(Document dom, File file) {
     try {
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
-//      transformerFactory.setAttribute("indent-number", 2);
       Transformer tr = transformerFactory.newTransformer();
       tr.setOutputProperty(OutputKeys.INDENT, "yes");
       tr.setOutputProperty(OutputKeys.METHOD, "xml");
       tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-      tr.setOutputProperty("{http://knowtator.apache.org/xslt}indent-amount", "4");
+      tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
       // send DOM to test_project
       PrintWriter pw = new PrintWriter(file, "UTF-8");

@@ -243,20 +243,15 @@ public class BratStandoffUtil {
             annotation -> {
               String owlClassID =
                   annotation[1].split(StandoffTags.textBoundAnnotationTripleDelimiter)[0];
-              model
-                  .getOwlClassById(owlClassID)
-                  .ifPresent(
-                      owlClass -> {
-                        ConceptAnnotation newConceptAnnotation =
-                            new ConceptAnnotation(
-                                textSource, annotation[0], owlClass, profile, "identity", "");
-                        conceptAnnotationCollection.add(newConceptAnnotation);
-                        Map<Character, List<String[]>> map = new HashMap<>();
-                        List<String[]> list = new ArrayList<>();
-                        list.add(annotation);
-                        map.put(StandoffTags.TEXTBOUNDANNOTATION, list);
-                        readToConceptAnnotation(newConceptAnnotation, map);
-                      });
+              ConceptAnnotation newConceptAnnotation =
+                  new ConceptAnnotation(
+                      textSource, annotation[0], owlClassID, profile, "identity", "");
+              conceptAnnotationCollection.add(newConceptAnnotation);
+              Map<Character, List<String[]>> map = new HashMap<>();
+              List<String[]> list = new ArrayList<>();
+              list.add(annotation);
+              map.put(StandoffTags.TEXTBOUNDANNOTATION, list);
+              readToConceptAnnotation(newConceptAnnotation, map);
             });
 
     annotationMap
@@ -328,21 +323,16 @@ public class BratStandoffUtil {
                                       graphSpace.getAnnotationNodeForConceptAnnotation(
                                           objectConceptAnnotation);
 
-                                  graphSpace
-                                      .getKnowtatorModel()
-                                      .getOwlObjectPropertyById(propertyID)
-                                      .ifPresent(
-                                          owlObjectProperty ->
-                                              graphSpace.addTriple(
-                                                  source,
-                                                  target,
-                                                  id,
-                                                  annotator,
-                                                  owlObjectProperty,
-                                                  Quantifier.some,
-                                                  null,
-                                                  false,
-                                                  ""));
+                                  graphSpace.addTriple(
+                                      source,
+                                      target,
+                                      id,
+                                      annotator,
+                                      propertyID,
+                                      Quantifier.some,
+                                      null,
+                                      false,
+                                      "");
                                 });
                       });
             });

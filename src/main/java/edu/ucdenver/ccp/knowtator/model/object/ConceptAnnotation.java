@@ -34,9 +34,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLObject;
+import org.semanticweb.owlapi.model.IRI;
 
 /** The type Concept annotation. */
 public class ConceptAnnotation extends SpanCollection
@@ -45,7 +43,7 @@ public class ConceptAnnotation extends SpanCollection
   private static final Logger log = Logger.getLogger(ConceptAnnotation.class);
 
   private final TextSource textSource;
-  private OWLClass owlClass;
+  private String owlClass;
   private final String annotationType;
 
   private final Set<ConceptAnnotation> overlappingConceptAnnotations;
@@ -67,7 +65,7 @@ public class ConceptAnnotation extends SpanCollection
   public ConceptAnnotation(
       @Nonnull TextSource textSource,
       String annotationID,
-      OWLClass owlClass,
+      String owlClass,
       @Nonnull Profile annotator,
       String annotationType,
       String motivation) {
@@ -106,7 +104,7 @@ public class ConceptAnnotation extends SpanCollection
    *
    * @return the owl class
    */
-  public OWLClass getOwlClass() {
+  public String getOwlClass() {
     return owlClass;
   }
 
@@ -171,7 +169,7 @@ public class ConceptAnnotation extends SpanCollection
    *
    * @param owlClass the owl class
    */
-  public void setOwlClass(OWLClass owlClass) {
+  public void setOwlClass(String owlClass) {
     this.owlClass = owlClass;
     model.fireModelEvent(new ChangeEvent<>(model, null, this));
   }
@@ -191,15 +189,7 @@ public class ConceptAnnotation extends SpanCollection
    * @return the owl class label
    */
   public String getOwlClassLabel() {
-    if (owlClass != null) {
-      return owlClass.getAnnotationPropertiesInSignature().stream()
-          .filter(OWLAnnotationProperty::isLabel)
-          .findFirst()
-          .map(OWLObject::toString)
-          .orElse(model.getOwlEntityRendering(owlClass));
-    } else {
-      return "";
-    }
+    return IRI.create(owlClass).getShortForm();
   }
 
   /**
@@ -339,6 +329,6 @@ public class ConceptAnnotation extends SpanCollection
    * @return the owl class rendering
    */
   public String getOwlClassRendering() {
-    return  owlClass == null ? annotationType : model.getOwlEntityRendering(owlClass);
+    return  model.getOwlEntityRendering(owlClass);
   }
 }

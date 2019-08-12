@@ -24,8 +24,16 @@
 
 package edu.ucdenver.ccp.knowtator;
 
+import difflib.Delta;
+import difflib.DiffUtils;
+import difflib.Patch;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("EmptyMethod")
@@ -45,6 +53,47 @@ class ProjectManagerTest {
   void loadProjectTest() {
     TestingHelpers.checkDefaultCollectionValues(model);
     model.load();
+  }
+
+  private static List<String> fileToLines(File file) {
+    List<String> lines = new LinkedList<>();
+    String line;
+    try {
+      BufferedReader in = new BufferedReader(new FileReader(file));
+      while ((line = in.readLine()) != null) {
+        lines.add(line);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return lines;
+  }
+
+  @Test
+  void saveProjectTest() {
+    TestingHelpers.checkDefaultCollectionValues(model);
+    model.save();
+    TestingHelpers.checkDefaultCollectionValues(model);
+    File file1 = new File(model.getAnnotationsLocation(), "document1.xml");
+    File referenceFile =
+        new File(
+            TestingHelpers.class
+                .getResource("/test_project_using_uris/Annotations/document1.xml")
+                .getFile());
+
+    List<String> original = fileToLines(referenceFile);
+    List<String> revised = fileToLines(file1);
+
+    Patch patch = DiffUtils.diff(original, revised);
+
+    try {
+      assert patch.getDeltas().size() == 0;
+    } catch (AssertionError e) {
+      for (Delta delta : patch.getDeltas()) {
+        System.out.println(delta);
+      }
+      throw e;
+    }
   }
 
   @Test

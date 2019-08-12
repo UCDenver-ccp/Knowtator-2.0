@@ -146,7 +146,8 @@ public class GraphSpace extends mxGraph
                                 getTextSource().setSelectedConceptAnnotation(conceptAnnotation));
 
                   } else if (cell instanceof RelationAnnotation) {
-                    knowtatorModel.setSelectedOwlEntity(((RelationAnnotation) cell).getProperty());
+                    knowtatorModel.setSelectedOwlObjectProperty(
+                        ((RelationAnnotation) cell).getProperty());
                   }
                 }
               }
@@ -209,7 +210,7 @@ public class GraphSpace extends mxGraph
       AnnotationNode target,
       String id,
       Profile annotator,
-      OWLObjectProperty property,
+      String property,
       Quantifier quantifier,
       String quantifierValue,
       Boolean isNegated,
@@ -370,7 +371,7 @@ public class GraphSpace extends mxGraph
               axiom.accept(addedCollector);
               annotationsToChangeOrRemove.forEach(
                   relationAnnotation ->
-                      relationAnnotation.setProperty((OWLObjectProperty) axiom.getEntity()));
+                      relationAnnotation.setProperty(axiom.getEntity().toStringID()));
               annotationsToChangeOrRemove.clear();
             } else if (axChg instanceof RemoveAxiom) {
               axiom.accept(removedCollector);
@@ -379,7 +380,9 @@ public class GraphSpace extends mxGraph
                       o -> {
                         if (o instanceof RelationAnnotation) {
                           if (((RelationAnnotation) o).getProperty() != null) {
-                            if (((RelationAnnotation) o).getProperty().equals(axiom.getEntity())) {
+                            if (((RelationAnnotation) o)
+                                .getProperty()
+                                .equals(axiom.getEntity().toStringID())) {
                               annotationsToChangeOrRemove.add((RelationAnnotation) o);
                             }
                           }

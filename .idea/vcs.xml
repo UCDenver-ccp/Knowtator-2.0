@@ -2,5 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/{$PROJECT_NAME}.wiki" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Knowtator-2.0.wiki" vcs="Git" />
   </component>
 </project>

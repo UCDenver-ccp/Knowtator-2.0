@@ -38,11 +38,9 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.event.ListSelectionListener;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 /** The type Color list. */
-public class ColorList extends JList<OWLClass> implements KnowtatorComponent, ModelListener {
+public class ColorList extends JList<String> implements KnowtatorComponent, ModelListener {
 
   private final ListSelectionListener lsl;
   private KnowtatorView view;
@@ -68,9 +66,9 @@ public class ColorList extends JList<OWLClass> implements KnowtatorComponent, Mo
                     .ifPresent(
                         profile ->
                             profile.getColors().keySet().stream()
-                                .sorted(model.getOwlObjectComparator())
+                                .sorted()
                                 .forEach(
-                                    o -> ((DefaultListModel<OWLClass>) getModel()).addElement(o))));
+                                    o -> ((DefaultListModel<String>) getModel()).addElement(o))));
 
     addListSelectionListener(lsl);
   }
@@ -124,13 +122,13 @@ public class ColorList extends JList<OWLClass> implements KnowtatorComponent, Mo
     public Component getListCellRendererComponent(
         JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
       view.getModel()
-          .filter(model -> value instanceof OWLClass)
+          .filter(model -> value instanceof String)
           .ifPresent(
               model -> {
                 model
                     .getSelectedProfile()
                     .ifPresent(profile -> setBackground(profile.getColors().get(value)));
-                setText(model.getOwlEntityRendering((OWLEntity) value));
+                setText(value.toString());
               });
       return this;
     }

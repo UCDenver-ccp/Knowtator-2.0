@@ -34,7 +34,6 @@ import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.object.Quantifier;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import javax.swing.SwingConstants;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 /** The type Graph actions. */
 public class GraphActions {
@@ -150,7 +149,7 @@ public class GraphActions {
   public static class AddTripleAction extends AbstractGraphAction {
     private final AnnotationNode source;
     private final AnnotationNode target;
-    private final OWLObjectProperty property;
+    private final String property;
     private final Boolean negation;
     private final Quantifier quantifier;
     private final String quantifierValue;
@@ -158,7 +157,7 @@ public class GraphActions {
 
     /**
      * Instantiates a new Add triple action.
-     *  @param model the model
+     * @param model the model
      * @param source the source
      * @param target the target
      * @param property the property
@@ -172,7 +171,7 @@ public class GraphActions {
         KnowtatorModel model,
         AnnotationNode source,
         AnnotationNode target,
-        OWLObjectProperty property,
+        String property,
         Quantifier quantifier,
         String quantifierValue,
         Boolean negation,

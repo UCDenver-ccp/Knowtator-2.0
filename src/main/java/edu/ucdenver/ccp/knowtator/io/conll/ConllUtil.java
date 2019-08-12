@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 public class ConllUtil {
   private static final Logger log = Logger.getLogger(KnowtatorModel.class);
@@ -53,7 +52,7 @@ public class ConllUtil {
         .get(file.getName().replace(".tree.conllu", "").replace(".conll", ""))
         .ifPresent(
             textSource -> {
-              log.info(String.format("Read structures from %s", file.getName()));
+              log.info(String.format("Reading structures from %s", file.getName()));
               textSource.getKnowtatorModel().removeModelListener(textSource);
               List<Map<ConllUField, String>> sentence = new ArrayList<>();
               List<List<Map<ConllUField, String>>> sentences = new ArrayList<>();
@@ -87,76 +86,32 @@ public class ConllUtil {
                       text = text.replace("``", "\"").replace("''", "\"");
                     } else if (text.length() == 5) {
                       text = text.replace("-LRB-", "[").replace("-RRB-", "]");
-                    } else if (text.length() == 1) {
+                    } else if (text.length() == 3) {
                       text = text.replace("...", "…");
+                    } else if (text.length() == 1) {
+                      text =
+                          text.replace("(", "[")
+                              .replace(")", "]")
+                              .replace("{", "[")
+                              .replace("}", "]");
                     }
-                    int start1 = start[0];
-                    int end = start1 + text.length();
+                    int start1;
+                    int end;
                     try {
                       for (int i = 0; i < 9; i++) {
                         start1 = start[0] - i;
                         end = start[0] + text.length() - i;
-                        if (checkRealText(textSource, start, text, start1, end)) {
+                        end = checkRealText(textSource, start, text, start1, end);
+                        if (-1 < end) {
                           return new int[] {start1, end};
                         }
                         start1 = start[0] + i;
                         end = start[0] + text.length() + i;
-                        if (checkRealText(textSource, start, text, start1, end)) {
+                        end = checkRealText(textSource, start, text, start1, end);
+                        if (-1 < end) {
                           return new int[] {start1, end};
                         }
                       }
-                      //                      if (checkRealText(textSource, start, text, start1,
-                      // end)) {
-                      //                        return new int[] {start1, end};
-                      //                      }
-                      //                      start1 = start[0] - 1;
-                      //                      end = start[0] + text.length() - 1;
-                      //                      if (checkRealText(textSource, start, text, start1,
-                      // end)) {
-                      //                        return new int[] {start1, end};
-                      //                      }
-                      //                      start1 = start[0] + 1;
-                      //                      end = start[0] + text.length() + 1;
-                      //                      if (checkRealText(textSource, start, text, start1,
-                      // end)) {
-                      //                        return new int[] {start1, end};
-                      //                      }
-                      //                      start1 = start[0] - 2;
-                      //                      end = start[0] + text.length() - 2;
-                      //                      if (checkRealText(textSource, start, text, start1,
-                      // end)) {
-                      //                        return new int[] {start1, end};
-                      //                      }
-                      //                      start1 = start[0] + 2;
-                      //                      end = start[0] + text.length() + 2;
-                      //                      if (checkRealText(textSource, start, text, start1,
-                      // end)) {
-                      //                        return new int[] {start1, end};
-                      //                      }
-                      //                      start1 = start[0] - 3;
-                      //                      end = start[0] + text.length() - 3;
-                      //                      if (checkRealText(textSource, start, text, start1,
-                      // end)) {
-                      //                        return new int[] {start1, end};
-                      //                      }
-                      //                      start1 = start[0] + 3;
-                      //                      end = start[0] + text.length() + 3;
-                      //                      if (checkRealText(textSource, start, text, start1,
-                      // end)) {
-                      //                        return new int[] {start1, end};
-                      //                      }
-                      //                      start1 = start[0] - 4;
-                      //                      end = start[0] + text.length() - 4;
-                      //                      if (checkRealText(textSource, start, text, start1,
-                      // end)) {
-                      //                        return new int[] {start1, end};
-                      //                      }
-                      //                      start1 = start[0] + 4;
-                      //                      end = start[0] + text.length() + 4;
-                      //                      if (checkRealText(textSource, start, text, start1,
-                      // end)) {
-                      //                        return new int[] {start1, end};
-                      //                      }
 
                       throw new Exception(
                           String.format(
@@ -164,13 +119,14 @@ public class ConllUtil {
                     } catch (Exception e) {
                       e.printStackTrace();
                     }
-                    return new int[] {start1, end};
+                    return null;
                   };
 
               for (int i1 = 0; i1 < sentences.size(); i1++) {
                 List<Map<ConllUField, String>> sentence1 = sentences.get(i1);
                 GraphSpace graphSpace =
-                    new GraphSpace(textSource, String.format("Sentence %d", i1));
+                    new GraphSpace(
+                        textSource, String.format("%s-Sentence %d", textSource.getId(), i1));
                 textSource.getStructureGraphSpaces().add(graphSpace);
                 List<AnnotationNode> nodes =
                     sentence1.stream()
@@ -180,9 +136,9 @@ public class ConllUtil {
                                   new ConceptAnnotation(
                                       textSource,
                                       null,
-                                      null,
-                                      model.getDefaultProfile(),
                                       fields.get(ConllUField.DEPREL),
+                                      model.getDefaultProfile(),
+                                      null,
                                       "");
                               int[] range = findEnd.apply(fields.get(ConllUField.FORM));
 
@@ -203,14 +159,12 @@ public class ConllUtil {
                   int targetIdx = Integer.parseInt(sentence1.get(i).get(ConllUField.HEAD)) - 1;
                   if (targetIdx >= 0) {
                     AnnotationNode target = nodes.get(targetIdx);
-                    OWLObjectProperty property =
-                        model.getOwlObjectPropertyById("depends_on").orElse(null);
                     graphSpace.addTriple(
                         source,
                         target,
                         null,
                         model.getDefaultProfile(),
-                        property,
+                        "depends_on",
                         Quantifier.some,
                         "",
                         false,
@@ -229,25 +183,27 @@ public class ConllUtil {
             });
   }
 
-  private boolean checkRealText(
+  private int checkRealText(
       TextSource textSource, int[] start, String text, int start1, int end) {
     String realText;
-    realText = textSource.getContent().replace("·", "");
+    realText = textSource.getContent();
 
     if (end <= realText.length()) {
-      realText =
-          realText
-              .substring(start1, end)
+      realText = realText.substring(start1, end);
+      end += realText.split("·").length - 1;
+      realText = textSource.getContent().substring(start1, end)
               .replace("(", "[")
               .replace(")", "]")
               .replace("}", "]")
               .replace("{", "[")
               .replace("″", "\"");
-      if (realText.equals(text)) {
+
+
+      if (realText.replace("·", "").equals(text)) {
         start[0] = end + 1;
-        return true;
+        return end;
       }
     }
-    return false;
+    return -1;
   }
 }

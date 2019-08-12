@@ -2,3 +2,4 @@ target/
 /.directory
 src/test/resources/biocreative_chemprot/
 src/test/resources/concepts+assertions/
+/src/test/resources/biocreative_chemprot_small/

@@ -28,13 +28,12 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import org.semanticweb.owlapi.model.OWLClass;
 
 /** The type Annotation table for owl class. */
 public class AnnotationTableForOwlClass extends AnnotationTable {
   private final JCheckBox includeClassDescendantsCheckBox;
   private final JLabel owlClassLabel;
-  private final Set<OWLClass> activeOwlClassDescendants;
+  private final Set<String> activeOwlClassDescendants;
 
   /**
    * Instantiates a new Annotation table for owl class.
@@ -79,7 +78,7 @@ public class AnnotationTableForOwlClass extends AnnotationTable {
                           activeOwlClassDescendants.add(owlClass);
                           if (includeClassDescendantsCheckBox.isSelected()) {
                             activeOwlClassDescendants.addAll(
-                                model.getOwlCLassDescendants(owlClass));
+                                model.getOwlClassDescendants(owlClass));
                           }
                           owlClassLabel.setText(model.getOwlEntityRendering(owlClass));
                         }));

@@ -27,24 +27,22 @@ package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
-import org.semanticweb.owlapi.model.OWLClass;
 
 /** The type Reassign owl class action. */
 public class ReassignOwlClassAction extends AbstractKnowtatorAction {
 
-  private final OWLClass oldOwlClass;
+  private final String oldOwlClass;
   private final ConceptAnnotation conceptAnnotation;
-  private final OWLClass newOwlClass;
+  private final String newOwlClass;
 
   /**
    * Instantiates a new Reassign owl class action.
-   *
-   * @param model the model
+   *  @param model the model
    * @param conceptAnnotation the concept annotation
    * @param owlClass the owl class
    */
   public ReassignOwlClassAction(
-      KnowtatorModel model, ConceptAnnotation conceptAnnotation, OWLClass owlClass) {
+      KnowtatorModel model, ConceptAnnotation conceptAnnotation, String owlClass) {
     super(model, "Reassign OWL class");
 
     this.conceptAnnotation = conceptAnnotation;

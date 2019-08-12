@@ -94,11 +94,11 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
    * @param view the view
    * @param owlClass the owl class
    */
-  public static void assignColorToClass(KnowtatorView view, OWLClass owlClass) {
+  public static void assignColorToClass(KnowtatorView view, String owlClass) {
     view.getModel()
         .ifPresent(
             model1 -> {
-              Optional<OWLClass> objectOptional = Optional.ofNullable(owlClass);
+              Optional<String> objectOptional = Optional.ofNullable(owlClass);
 
               if (!objectOptional.isPresent()) {
                 objectOptional =
@@ -112,7 +112,7 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
               }
               objectOptional.ifPresent(
                   owlClass1 -> {
-                    Set<OWLClass> owlClasses = new HashSet<>();
+                    Set<String> owlClasses = new HashSet<>();
                     owlClasses.add(owlClass1);
 
                     JColorChooser colorChooser = new KnowtatorColorPalette();
@@ -140,7 +140,7 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
                       if (JOptionPane.showConfirmDialog(
                               view, String.format("Assign color to descendants of %s?", owlClass1))
                           == JOptionPane.OK_OPTION) {
-                        owlClasses.addAll(model1.getOwlCLassDescendants(owlClass1));
+                        owlClasses.addAll(model1.getOwlClassDescendants(owlClass1));
                       }
 
                       model1

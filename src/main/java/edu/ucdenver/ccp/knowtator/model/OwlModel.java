@@ -33,12 +33,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -49,15 +44,15 @@ import org.apache.log4j.Logger;
 import org.protege.editor.core.ui.util.AugmentedJTextField;
 import org.protege.editor.owl.model.OWLWorkspace;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
-import org.protege.editor.owl.ui.renderer.OWLRendererPreferences;
+import org.protege.editor.owl.model.selection.OWLSelectionModel;
 import org.protege.editor.owl.ui.search.SearchDialogPanel;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
-import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
@@ -75,8 +70,6 @@ public abstract class OwlModel extends BaseModel implements Serializable {
   @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
   private Optional<OWLWorkspace> owlWorkSpace;
 
-  private List<IRI> annotationIris;
-
   /**
    * Instantiates a new Owl model.
    *
@@ -89,7 +82,6 @@ public abstract class OwlModel extends BaseModel implements Serializable {
     this.owlOntologyManager = OWLManager.createOWLOntologyManager();
 
     owlWorkSpace = Optional.ofNullable(owlWorkspace);
-    annotationIris = null;
   }
 
   /**
@@ -123,47 +115,6 @@ public abstract class OwlModel extends BaseModel implements Serializable {
       }
       return Optional.empty();
     }
-  }
-
-  private List<String> getAnnotationLiterals(OWLOntology ontology, OWLClass owlClass) {
-    return ontology.getAnnotationAssertionAxioms(owlClass.getIRI()).stream()
-        .map(this::getAnnotationLiteral)
-        .filter(Optional::isPresent)
-        .map(Optional::get)
-        .collect(Collectors.toList());
-  }
-
-  /**
-   * Gets owl classes by i ds.
-   *
-   * @param classIDs the class i ds
-   * @return the owl classes by i ds
-   */
-  public Map<String, OWLClass> getOwlClassesByIds(Set<String> classIDs) {
-    Map<String, OWLClass> owlClassList = new HashMap<>();
-    if (owlWorkSpace.isPresent()) {
-      classIDs.forEach(
-          classID ->
-              getOwlClassById(classID).ifPresent(owlClass -> owlClassList.put(classID, owlClass)));
-    } else {
-      owlOntologyManager
-          .getOntologies()
-          .forEach(
-              ontology ->
-                  ontology
-                      .getClassesInSignature()
-                      .forEach(
-                          owlClass -> {
-                            for (String id : classIDs) {
-                              if (id.equals(owlClass.getIRI().getShortForm())
-                                  || getAnnotationLiterals(ontology, owlClass).contains(id)) {
-                                owlClassList.put(id, owlClass);
-                                break;
-                              }
-                            }
-                          }));
-    }
-    return owlClassList;
   }
 
   private Optional<String> getAnnotationLiteral(
@@ -209,16 +160,13 @@ public abstract class OwlModel extends BaseModel implements Serializable {
    *
    * @return the selected owl object property
    */
-  public Optional<OWLObjectProperty> getSelectedOwlObjectProperty() {
+  public Optional<String> getSelectedOwlObjectProperty() {
     if (owlWorkSpace.isPresent()) {
       return owlWorkSpace
-          .filter(
-              owlWorkspace ->
-                  owlWorkspace.getOWLSelectionModel().getSelectedEntity()
-                      instanceof OWLObjectProperty)
-          .map(
-              owlWorkspace ->
-                  (OWLObjectProperty) owlWorkspace.getOWLSelectionModel().getSelectedEntity());
+          .map(OWLWorkspace::getOWLSelectionModel)
+          .map(OWLSelectionModel::getSelectedEntity)
+          .filter(owlEntity -> owlEntity instanceof OWLObjectProperty)
+          .map(OWLEntity::toStringID);
     } else {
       return getSelectedTextSource()
           .flatMap(TextSource::getSelectedGraphSpace)
@@ -234,13 +182,14 @@ public abstract class OwlModel extends BaseModel implements Serializable {
    *
    * @return the selected owl class
    */
-  public Optional<OWLClass> getSelectedOwlClass() {
+  public Optional<String> getSelectedOwlClass() {
     if (owlWorkSpace.isPresent()) {
       return owlWorkSpace
           .filter(
               owlWorkspace ->
                   owlWorkspace.getOWLSelectionModel().getSelectedEntity() instanceof OWLClass)
-          .map(owlWorkspace -> (OWLClass) owlWorkspace.getOWLSelectionModel().getSelectedEntity());
+          .map(owlWorkspace -> (OWLClass) owlWorkspace.getOWLSelectionModel().getSelectedEntity())
+          .map(OWLEntity::toStringID);
     } else {
       return getSelectedTextSource()
           .flatMap(TextSource::getSelectedAnnotation)
@@ -248,67 +197,21 @@ public abstract class OwlModel extends BaseModel implements Serializable {
     }
   }
 
-  /** Sets render rdfs label. */
-  public void setRenderRdfsLabel() throws RendererSet {
-    if (!renderChangeInProgress()) {
-      owlWorkSpace.ifPresent(
-          owlWorkspace -> {
-            IRI labelIri =
-                owlWorkspace.getOWLModelManager().getOWLDataFactory().getRDFSLabel().getIRI();
-            annotationIris = OWLRendererPreferences.getInstance().getAnnotationIRIs();
-            OWLRendererPreferences.getInstance()
-                .setAnnotations(Collections.singletonList(labelIri));
-
-            owlWorkspace.getOWLModelManager().refreshRenderer();
-          });
-      throw new RendererSet();
-    }
-  }
-
-  void setRenderDisplayLabel() throws RendererSet {
-    if (!renderChangeInProgress()) {
-      owlWorkSpace.ifPresent(
-          owlWorkspace -> {
-            IRI labelIri =
-                owlWorkspace.getOWLModelManager().getOWLDataFactory().getOWLAnnotationProperty(IRI.create("http://www.owl-ontologies.com/unnamed.owl#display_label")).getIRI();
-            annotationIris = OWLRendererPreferences.getInstance().getAnnotationIRIs();
-            OWLRendererPreferences.getInstance()
-                .setAnnotations(Collections.singletonList(labelIri));
-
-            owlWorkspace.getOWLModelManager().refreshRenderer();
-          });
-      throw new RendererSet();
-
-    }
-  }
-
-  /** Reset render rdfs. */
-  public void resetRenderAnnotations() {
-    if (renderChangeInProgress()) {
-      owlWorkSpace.ifPresent(
-          owlWorkspace -> {
-            OWLRendererPreferences.getInstance().setAnnotations(annotationIris);
-            owlWorkspace.getOWLModelManager().refreshRenderer();
-            annotationIris = null;
-          });
-    }
-  }
-
   /**
-   * Gets owlc lass descendants.
+   * Gets owlclass descendants.
    *
    * @param cls the cls
-   * @return the owlc lass descendants
+   * @return the owlclass descendants
    */
-  public Set<OWLClass> getOwlCLassDescendants(OWLClass cls) {
+  public Set<String> getOwlClassDescendants(String cls) {
     return owlWorkSpace
         .map(
             owlWorkspace ->
-                owlWorkspace
-                    .getOWLModelManager()
-                    .getOWLHierarchyManager()
+                owlWorkspace.getOWLModelManager().getOWLHierarchyManager()
                     .getOWLClassHierarchyProvider()
-                    .getDescendants(cls))
+                    .getDescendants(getOwlDataFactory().getOWLClass(IRI.create(cls))).stream()
+                    .map(OWLEntity::toStringID)
+                    .collect(Collectors.toSet()))
         .orElse(new HashSet<>());
   }
 
@@ -318,16 +221,17 @@ public abstract class OwlModel extends BaseModel implements Serializable {
    * @param owlObjectProperty the owl object property
    * @return the owl object property descendants
    */
-  public Set<OWLObjectProperty> getOwlObjectPropertyDescendants(
-      OWLObjectProperty owlObjectProperty) {
+  public Set<String> getOwlObjectPropertyDescendants(String owlObjectProperty) {
     return owlWorkSpace
         .map(
             owlWorkspace ->
-                owlWorkspace
-                    .getOWLModelManager()
-                    .getOWLHierarchyManager()
+                owlWorkspace.getOWLModelManager().getOWLHierarchyManager()
                     .getOWLObjectPropertyHierarchyProvider()
-                    .getDescendants(owlObjectProperty))
+                    .getDescendants(
+                        getOwlDataFactory().getOWLObjectProperty(IRI.create(owlObjectProperty)))
+                    .stream()
+                    .map(OWLEntity::toStringID)
+                    .collect(Collectors.toSet()))
         .orElse(new HashSet<>());
   }
 
@@ -337,12 +241,11 @@ public abstract class OwlModel extends BaseModel implements Serializable {
    * @param owlEntity the owl entity
    * @return the owl entity rendering
    */
-  public String getOwlEntityRendering(@Nonnull OWLEntity owlEntity) {
+  public String getOwlEntityRendering(String owlEntity) {
+    IRI iri = IRI.create(owlEntity);
     return owlWorkSpace
-        .map(
-            owlWorkspace ->
-                owlWorkspace.getOWLModelManager().getOWLEntityRenderer().render(owlEntity))
-        .orElse(owlEntity.getIRI().getShortForm());
+        .map(owlWorkspace -> owlWorkspace.getOWLModelManager().getOWLEntityRenderer().render(iri))
+        .orElse(iri.getShortForm());
   }
 
   /**
@@ -474,31 +377,20 @@ public abstract class OwlModel extends BaseModel implements Serializable {
     owlWorkSpace.ifPresent(owlWorkSpace -> owlWorkSpace.getOWLModelManager().addListener(listener));
   }
 
+  public void setSelectedOwlClass(String owlClass) {
+    setSelectedOwlEntity(owlOntologyManager.getOWLDataFactory().getOWLClass(IRI.create(owlClass)));
+  }
+
   /**
    * Sets selected owl entity.
    *
    * @param owlEntity the owl entity
    */
-  public void setSelectedOwlEntity(OWLEntity owlEntity) {
+  private void setSelectedOwlEntity(OWLEntity owlEntity) {
     if (isNotLoading()) {
       owlWorkSpace.ifPresent(
           owlWorkspace -> owlWorkspace.getOWLSelectionModel().setSelectedEntity(owlEntity));
     }
-  }
-
-  private boolean renderChangeInProgress() {
-    return annotationIris != null;
-  }
-
-  /**
-   * Gets owl object comparator.
-   *
-   * @return the owl object comparator
-   */
-  public Comparator<OWLObject> getOwlObjectComparator() {
-    return owlWorkSpace
-        .map(owlWorkspace -> owlWorkspace.getOWLModelManager().getOWLObjectComparator())
-        .orElse(Comparator.comparing(Object::toString));
   }
 
   /**
@@ -510,6 +402,13 @@ public abstract class OwlModel extends BaseModel implements Serializable {
     return owlOntologyManager;
   }
 
-  public class RendererSet extends Throwable {
+  private OWLDataFactory getOwlDataFactory() {
+    return owlWorkSpace
+        .map(owlWorkspace -> owlWorkspace.getOWLModelManager().getOWLDataFactory())
+        .orElse(owlOntologyManager.getOWLDataFactory());
+  }
+
+  public void setSelectedOwlObjectProperty(String property) {
+    setSelectedOwlEntity(getOwlDataFactory().getOWLObjectProperty(IRI.create(property)));
   }
 }

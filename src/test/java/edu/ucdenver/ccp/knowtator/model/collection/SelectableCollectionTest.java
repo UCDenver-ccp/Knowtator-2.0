@@ -31,11 +31,11 @@ import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
 class SelectableCollectionTest {
-  private static KnowtatorModel controller;
+  private static KnowtatorModel model;
 
   static {
     try {
-      controller = TestingHelpers.getLoadedModel();
+      model = TestingHelpers.getLoadedModel();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -43,23 +43,29 @@ class SelectableCollectionTest {
 
   @Test
   void selectNextTest() {
-    TextSource textSource = controller.getTextSources().get("document1").get();
-    assert textSource.equals(controller.getSelectedTextSource().get());
-    controller.selectNextTextSource();
-    controller.selectNextTextSource();
-    assert !textSource.equals(controller.getSelectedTextSource().get());
-    controller.selectNextTextSource();
-    assert textSource.equals(controller.getSelectedTextSource().get());
+    TextSource textSource = model.getTextSources().get("document1").get();
+    assert textSource.equals(model.getTextSources().get("document1").get());
+    model.selectNextTextSource();
+    model.selectNextTextSource();
+    model.selectNextTextSource();
+    assert !textSource.equals(model.getSelectedTextSource().get());
+    model.selectNextTextSource();
+    model.selectNextTextSource();
+    model.selectNextTextSource();
+    assert textSource.equals(model.getSelectedTextSource().get());
   }
 
   @Test
   void selectPreviousTest() {
-    TextSource textSource = controller.getTextSources().get("document1").get();
-    assert textSource.equals(controller.getSelectedTextSource().get());
-    controller.selectPreviousTextSource();
-    controller.selectPreviousTextSource();
-    assert !textSource.equals(controller.getSelectedTextSource().get());
-    controller.selectPreviousTextSource();
-    assert textSource.equals(controller.getSelectedTextSource().get());
+    model.getTextSources().setSelection(model.getTextSources().get("document1").get());
+    TextSource textSource = model.getTextSources().get("document1").get();
+    assert textSource.equals(model.getTextSources().getSelection().get());
+    model.selectPreviousTextSource();
+    model.selectPreviousTextSource();
+    model.selectPreviousTextSource();
+    assert !textSource.equals(model.getSelectedTextSource().get());
+    model.selectPreviousTextSource();
+    model.selectPreviousTextSource();
+    assert textSource.equals(model.getSelectedTextSource().get());
   }
 }

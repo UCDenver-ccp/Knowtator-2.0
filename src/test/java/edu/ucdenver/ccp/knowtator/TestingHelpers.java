@@ -39,10 +39,10 @@ import org.semanticweb.owlapi.model.OWLOntologyChange;
 public class TestingHelpers {
 
   /** The constant projectFileName. */
-  public static final String projectFileName = "test_project";
+  private static final String projectFileName = "test_project_using_uris";
 
   /** The constant defaultExpectedTextSources. */
-  public static final int defaultExpectedTextSources = 3;
+  public static final int defaultExpectedTextSources = 5;
 
   /** The constant defaultExpectedConceptAnnotations. */
   public static final int defaultExpectedConceptAnnotations = 6;
@@ -135,11 +135,11 @@ public class TestingHelpers {
   /**
    * Check default collection values.
    *
-   * @param controller the controller
+   * @param model the model
    */
-  public static void checkDefaultCollectionValues(KnowtatorModel controller) {
+  public static void checkDefaultCollectionValues(KnowtatorModel model) {
     TestingHelpers.countCollections(
-        controller,
+        model,
         defaultExpectedTextSources,
         defaultExpectedConceptAnnotations,
         defaultExpectedSpans,
@@ -178,6 +178,53 @@ public class TestingHelpers {
         model.getTextSources().stream()
             .mapToInt(textSource -> textSource.getSpans(null).size())
             .sum();
+    int actualProfiles = model.getNumberOfProfiles();
+    int actualHighlighters =
+        model.getProfiles().stream().mapToInt(profile -> profile.getColors().size()).sum();
+    int actualGraphSpaces =
+        model.getTextSources().stream().mapToInt(TextSource::getNumberOfGraphSpaces).sum();
+    int actualAnnotationNodes =
+        model.getTextSources().stream()
+            .mapToInt(
+                textSource ->
+                    textSource.getGraphSpaces().stream()
+                        .mapToInt(
+                            graphSpace1 ->
+                                graphSpace1.getChildVertices(graphSpace1.getDefaultParent()).length)
+                        .sum())
+            .sum();
+    int actualTriples =
+        model.getTextSources().stream()
+            .mapToInt(
+                textSource ->
+                    textSource.getGraphSpaces().stream()
+                        .mapToInt(
+                            graphSpace1 ->
+                                graphSpace1.getChildEdges(graphSpace1.getDefaultParent()).length)
+                        .sum())
+            .sum();
+    int actualStructureGraphSpaces =
+        model.getTextSources().stream().mapToInt(TextSource::getNumberOfStructureGraphSpaces).sum();
+    int actualStructureAnnotationNodes =
+        model.getTextSources().stream()
+            .mapToInt(
+                textSource ->
+                    textSource.getStructureGraphSpaces().stream()
+                        .mapToInt(
+                            graphSpace1 ->
+                                graphSpace1.getChildVertices(graphSpace1.getDefaultParent()).length)
+                        .sum())
+            .sum();
+    int actualStructureTriples =
+        model.getTextSources().stream()
+            .mapToInt(
+                textSource ->
+                    textSource.getStructureGraphSpaces().stream()
+                        .mapToInt(
+                            graphSpace1 ->
+                                graphSpace1.getChildEdges(graphSpace1.getDefaultParent()).length)
+                        .sum())
+            .sum();
 
     assert actualTextSources == expectedTextSources
         : String.format(
@@ -193,81 +240,34 @@ public class TestingHelpers {
     assert actualSpans == expectedSpans
         : String.format("There were %d spans instead of %d", actualSpans, expectedSpans);
 
-    int actualProfiles = model.getNumberOfProfiles();
     assert actualProfiles == expectedProfiles
         : String.format("There were %d profiles instead of %d", actualProfiles, expectedProfiles);
 
-    int actualHighlighters =
-        model.getProfiles().stream().mapToInt(profile -> profile.getColors().size()).sum();
     assert actualHighlighters == expectedHighlighters
         : String.format(
             "There were %d highlighters instead of %d", actualHighlighters, expectedHighlighters);
 
-    int actualGraphSpaces =
-        model.getTextSources().stream().mapToInt(TextSource::getNumberOfGraphSpaces).sum();
     assert actualGraphSpaces == expectedGraphSpaces
         : String.format(
             "There were %d graph spaces instead of %d", actualGraphSpaces, expectedGraphSpaces);
 
-    int actualAnnotationNodes =
-        model.getTextSources().stream()
-            .mapToInt(
-                textSource ->
-                    textSource.getGraphSpaces().stream()
-                        .mapToInt(
-                            graphSpace1 ->
-                                graphSpace1.getChildVertices(graphSpace1.getDefaultParent()).length)
-                        .sum())
-            .sum();
     assert actualAnnotationNodes == expectedAnnotationNodes
         : String.format(
             "There were %d vertices instead of %d", actualAnnotationNodes, expectedAnnotationNodes);
 
-    int actualTriples =
-        model.getTextSources().stream()
-            .mapToInt(
-                textSource ->
-                    textSource.getGraphSpaces().stream()
-                        .mapToInt(
-                            graphSpace1 ->
-                                graphSpace1.getChildEdges(graphSpace1.getDefaultParent()).length)
-                        .sum())
-            .sum();
     assert actualTriples == expectedTriples
         : String.format("There were %d triples instead of %d", actualTriples, expectedTriples);
 
-    int actualStructureGraphSpaces =
-        model.getTextSources().stream().mapToInt(TextSource::getNumberOfStructureGraphSpaces).sum();
     assert actualStructureGraphSpaces == expectedStructureGraphSpaces
         : String.format(
             "There were %d structure graph spaces instead of %d",
             actualStructureGraphSpaces, expectedStructureGraphSpaces);
 
-    int actualStructureAnnotationNodes =
-        model.getTextSources().stream()
-            .mapToInt(
-                textSource ->
-                    textSource.getStructureGraphSpaces().stream()
-                        .mapToInt(
-                            graphSpace1 ->
-                                graphSpace1.getChildVertices(graphSpace1.getDefaultParent()).length)
-                        .sum())
-            .sum();
     assert actualStructureAnnotationNodes == expectedStructureAnnotationNodes
         : String.format(
             "There were %d structure vertices instead of %d",
             actualStructureAnnotationNodes, expectedStructureAnnotationNodes);
 
-    int actualStructureTriples =
-        model.getTextSources().stream()
-            .mapToInt(
-                textSource ->
-                    textSource.getStructureGraphSpaces().stream()
-                        .mapToInt(
-                            graphSpace1 ->
-                                graphSpace1.getChildEdges(graphSpace1.getDefaultParent()).length)
-                        .sum())
-            .sum();
     assert actualStructureTriples == expectedStructureTriples
         : String.format(
             "There were %d structure triples instead of %d",

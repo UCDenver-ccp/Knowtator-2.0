@@ -421,7 +421,9 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
    * @param event the event
    */
   public void fireModelEvent(ChangeEvent<ModelObject> event) {
-    modelListeners.forEach(modelListener -> modelListener.modelChangeEvent(event));
+    if (isNotLoading()) {
+      modelListeners.forEach(modelListener -> modelListener.modelChangeEvent(event));
+    }
   }
 
   public void addStructureModeListener(StructureModeListener listener) {

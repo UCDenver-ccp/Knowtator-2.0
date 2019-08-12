@@ -1,3 +1,0 @@
-<component name="DependencyValidationManager">
-  <scope name="src" pattern="(file[knowtator]:src/main/java//*||file[knowtator]:src/test/java//*||file:plugin.xml||file:pom.xml)&amp;&amp;!file:simplelogger.properties" />
-</component>

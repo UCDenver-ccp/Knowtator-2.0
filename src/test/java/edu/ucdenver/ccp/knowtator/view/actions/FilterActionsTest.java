@@ -74,6 +74,7 @@ class FilterActionsTest {
         TestingHelpers.defaultExpectedStructureAnnotationNodes,
         TestingHelpers.defaultExpectedStructureTriples);
 
+    model.getTextSources().setSelection(model.getTextSources().get("document1").get());
     TextSource textSource = model.getSelectedTextSource().get();
     ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
     textSource.setSelectedConceptAnnotation(conceptAnnotation);

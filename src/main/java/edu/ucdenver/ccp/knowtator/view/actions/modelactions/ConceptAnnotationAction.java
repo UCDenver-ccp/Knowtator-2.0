@@ -34,7 +34,6 @@ import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType;
 import java.util.Optional;
-import org.semanticweb.owlapi.model.OWLClass;
 
 /** The type Concept annotation action. */
 public class ConceptAnnotationAction extends AbstractKnowtatorCollectionAction<ConceptAnnotation> {
@@ -76,7 +75,7 @@ public class ConceptAnnotationAction extends AbstractKnowtatorCollectionAction<C
   protected void prepareAdd() {
     Optional<Profile> profileOptional = model.getSelectedProfile();
     if (profileOptional.isPresent()) {
-      Optional<OWLClass> owlClassOptional = model.getSelectedOwlClass();
+      Optional<String> owlClassOptional = model.getSelectedOwlClass();
       if (owlClassOptional.isPresent()) {
         ConceptAnnotation newConceptAnnotation =
             new ConceptAnnotation(
