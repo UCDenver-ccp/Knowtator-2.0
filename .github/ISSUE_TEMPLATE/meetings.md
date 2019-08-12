@@ -4,7 +4,7 @@ about: Set a meeting agenda, request a meeting or a topic be discussed at an upc
   meeting
 title: Project Meeting -- MM/DD/YYYY @ HH:MM
 labels: meetings
-assignees: callahantiff
+assignees: {$USER_NAME}
 
 ---
 

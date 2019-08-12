@@ -3,7 +3,7 @@ name: Coding Tasks
 about: Make requests to edit existing code or create new code
 title: 'Coding: short description of needed code'
 labels: coding
-assignees: callahantiff
+assignees: {$USER_NAME}
 
 ---
 

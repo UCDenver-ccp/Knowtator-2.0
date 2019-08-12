@@ -3,7 +3,7 @@ name: Pubs and Presentations
 about: Add a publication or presentation-related task
 title: 'TODO - Pubs+Presentation Task: Short description of task'
 labels: pubs+presentations
-assignees: callahantiff
+assignees: {$USER_NAME}
 
 ---
 
