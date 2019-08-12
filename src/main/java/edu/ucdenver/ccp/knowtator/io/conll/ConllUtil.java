@@ -52,7 +52,7 @@ public class ConllUtil {
         .get(file.getName().replace(".tree.conllu", "").replace(".conll", ""))
         .ifPresent(
             textSource -> {
-              log.info(String.format("Read structures from %s", file.getName()));
+              log.info(String.format("Reading structures from %s", file.getName()));
               textSource.getKnowtatorModel().removeModelListener(textSource);
               List<Map<ConllUField, String>> sentence = new ArrayList<>();
               List<List<Map<ConllUField, String>>> sentences = new ArrayList<>();
