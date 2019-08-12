@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Before running this script you must:"
-echo "   1) Create a new repository to serve as your {$PROJECT_NAME} framework based repository"
+echo "   1) Create a new repository to serve as your Abra-Collaboratory framework based repository"
 echo "   2) Create the first wiki page in your repository manually."
 
 if [ $# != 2 ]
@@ -20,30 +20,30 @@ fi
 USER_NAME=$1
 PROJECT_NAME=$2
 
-git clone https://github.com/{$USER_NAME}/{$PROJECT_NAME}.git
+git clone https://github.com/callahantiff/Abra-Collaboratory.git
 mkdir resources
 mkdir .github
-mv {$PROJECT_NAME}/.github/ISSUE_TEMPLATE .github/
-mv {$PROJECT_NAME}/resources/documentation resources/
-mv {$PROJECT_NAME}/resources/New_Collaborators_Invitation_Email.md resources/
+mv Abra-Collaboratory/.github/ISSUE_TEMPLATE .github/
+mv Abra-Collaboratory/resources/documentation resources/
+mv Abra-Collaboratory/resources/New_Collaborators_Invitation_Email.md resources/
 
-rm -rf {$PROJECT_NAME}/
+rm -rf Abra-Collaboratory/
 
 git add .
 git commit -m "Added Abra-C framework files"
 
-find . -type f ! -path '*/\.git/*' -exec sed -i 's/{$USER_NAME}/{$USER_NAME}/g' {} \;
-find . -type f ! -path '*/\.git/*' -exec sed -i 's/{$PROJECT_NAME}/{$PROJECT_NAME}/g' {} \;
+find . -type f ! -path '*/\.git/*' -exec sed -i 's/callahantiff/{$USER_NAME}/g' {} \;
+find . -type f ! -path '*/\.git/*' -exec sed -i 's/Abra-Collaboratory/{$PROJECT_NAME}/g' {} \;
 
 git add .
 git commit -m "Updated links and assignees"
 git push
 
-git clone https://github.com/{$USER_NAME}/{$PROJECT_NAME}.wiki.git
+git clone https://github.com/callahantiff/Abra-Collaboratory.wiki.git
 
 git clone https://github.com/${USER_NAME}/${PROJECT_NAME}.wiki.git
-mv {$PROJECT_NAME}.wiki/Our-Reproducible-Repository-Guidelines-😃.md ${PROJECT_NAME}.wiki
-mv {$PROJECT_NAME}.wiki/Using-GitHub-as-a-Reproducible-Research-Platform.md ${PROJECT_NAME}.wiki 
+mv Abra-Collaboratory.wiki/Our-Reproducible-Repository-Guidelines-😃.md ${PROJECT_NAME}.wiki
+mv Abra-Collaboratory.wiki/Using-GitHub-as-a-Reproducible-Research-Platform.md ${PROJECT_NAME}.wiki 
 cd ${PROJECT_NAME}.wiki
 git add .
 git commit -m "Added Abra-C guidelines"
@@ -52,8 +52,8 @@ git commit -m "Added Abra-C guidelines"
 git push wiki-fork -f
 
 cd ..
-rm -rf {$PROJECT_NAME}.wiki
+rm -rf Abra-Collaboratory.wiki
 rm -rf ${PROJECT_NAME}.wiki
 
 echo "The next step is to copy the project board templates."
-echo "See here for instructions: https://github.com/{$USER_NAME}/{$PROJECT_NAME}#add-projects-boards"
+echo "See here for instructions: https://github.com/callahantiff/Abra-Collaboratory#add-projects-boards"
