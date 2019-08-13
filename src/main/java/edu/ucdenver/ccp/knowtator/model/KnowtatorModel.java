@@ -109,18 +109,8 @@ public class KnowtatorModel extends OwlModel {
       Files.list(getAnnotationsLocation().toPath())
           .filter(path -> path.toString().endsWith(".xml"))
           .map(Path::toFile)
-          .peek(file -> xmlUtil.readToTextSourceCollection(this, file, false))
+          .peek(file -> xmlUtil.readToTextSourceCollection(this, file))
           .forEach(file -> oldXmlUtil.readToTextSourceCollection(this, file));
-
-      log.info("Loading structures");
-      Files.list(structuresLocation.toPath())
-          .filter(path -> path.toString().endsWith(".xml"))
-          .map(Path::toFile)
-          .forEach(file -> xmlUtil.readToTextSourceCollection(this, file, true));
-      Files.list(structuresLocation.toPath())
-          .filter(path -> path.toString().endsWith(".conllu") || path.toString().endsWith(".conll"))
-          .map(Path::toFile)
-          .forEach(file -> conllUtil.readToStructureAnnotations(this, file));
 
       profiles.first().ifPresent(profiles::setSelection);
       textSources.first().ifPresent(textSources::setSelection);
@@ -145,7 +135,7 @@ public class KnowtatorModel extends OwlModel {
     switch (extension) {
       case "xml":
         KnowtatorXmlUtil xmlUtil = new KnowtatorXmlUtil();
-        xmlUtil.readToTextSourceCollection(this, file, false);
+        xmlUtil.readToTextSourceCollection(this, file);
         break;
       case "ann":
         BratStandoffUtil standoffUtil = new BratStandoffUtil();

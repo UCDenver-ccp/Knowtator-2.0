@@ -26,7 +26,9 @@ package edu.ucdenver.ccp.knowtator.io.conll;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import org.junit.jupiter.api.Test;
 
 class ConllUtilTest {
@@ -34,19 +36,21 @@ class ConllUtilTest {
   @Test
   void readToStructureAnnotations() throws IOException {
     KnowtatorModel model = TestingHelpers.getLoadedModel("structure_test_project");
+    ConllUtil util = new ConllUtil();
+    Files.list(new File(model.getProjectLocation(), "Structures").toPath())
+        .forEach(file -> util.readToStructureAnnotations(model, file.toFile()));
+
     TestingHelpers.countCollections(model,
         1,
         0,
         0,
-        0,
+        361,
         1,
         0,
-        0,
-        0,
         8072,
-        361,
-        8072,
-        7711);
+        7711,
+        8072
+    );
   }
 
 //  @Test
@@ -66,40 +70,4 @@ class ConllUtilTest {
 //        8072,
 //        7711);
 //  }
-
-//  @Test
-//  void readBioCreativeProject() throws  IOException {
-//    KnowtatorModel model = TestingHelpers.getLoadedModel("biocreative_chemprot");
-//    TestingHelpers.countCollections(model,
-//        1020,
-//        25752,
-//        25752,
-//        6437,
-//        1,
-//        0,
-//        12874,
-//        6437,
-//        271288,
-//        10365,
-//        271288,
-//        260923);
-//  }
-
-  @Test
-  void readBioCreativeProject() throws  IOException {
-    KnowtatorModel model = TestingHelpers.getLoadedModel("biocreative_chemprot_small");
-    TestingHelpers.countCollections(model,
-        1,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        281,
-        11,
-        281,
-        270);
-  }
 }

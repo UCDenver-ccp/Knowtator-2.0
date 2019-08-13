@@ -64,10 +64,8 @@ public class KnowtatorCollectionActionsTest {
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
         TestingHelpers.defaultExpectedTriples,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultExpectedStructureAnnotations
+    );
   }
 
   @Test
@@ -84,10 +82,8 @@ public class KnowtatorCollectionActionsTest {
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes - 2,
         TestingHelpers.defaultExpectedTriples - 1,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultExpectedStructureAnnotations
+    );
   }
 
   @Test
@@ -104,10 +100,8 @@ public class KnowtatorCollectionActionsTest {
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
         TestingHelpers.defaultExpectedTriples,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultExpectedStructureAnnotations
+    );
   }
 
   @Test
@@ -126,10 +120,8 @@ public class KnowtatorCollectionActionsTest {
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes - 1,
         TestingHelpers.defaultExpectedTriples - 1,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultExpectedStructureAnnotations
+    );
   }
 
   @Test
@@ -149,10 +141,8 @@ public class KnowtatorCollectionActionsTest {
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
         TestingHelpers.defaultExpectedTriples,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultExpectedStructureAnnotations
+    );
   }
 
   @Test
@@ -176,10 +166,8 @@ public class KnowtatorCollectionActionsTest {
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes - 1,
         TestingHelpers.defaultExpectedTriples - 1,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultExpectedStructureAnnotations
+    );
 
     // Next test remove span if there are multiple spans. This should only remove the span.
     conceptAnnotation.setSelection(conceptAnnotation.first().get());
@@ -198,10 +186,8 @@ public class KnowtatorCollectionActionsTest {
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
         TestingHelpers.defaultExpectedTriples,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultExpectedStructureAnnotations
+    );
   }
 
   @Test
@@ -217,10 +203,8 @@ public class KnowtatorCollectionActionsTest {
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
         TestingHelpers.defaultExpectedTriples,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultExpectedStructureAnnotations
+    );
   }
 
   @Test
@@ -237,10 +221,8 @@ public class KnowtatorCollectionActionsTest {
         TestingHelpers.defaultExpectedHighlighters - 2,
         TestingHelpers.defaultExpectedAnnotationNodes - 2,
         TestingHelpers.defaultExpectedTriples - 2,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultExpectedStructureAnnotations
+    );
 
     assertThrows(ActionUnperformable.class, this::removeDefaultProfileActionTest);
   }
@@ -265,10 +247,8 @@ public class KnowtatorCollectionActionsTest {
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
         TestingHelpers.defaultExpectedTriples,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultExpectedStructureAnnotations
+    );
   }
 
   @Test
@@ -287,10 +267,8 @@ public class KnowtatorCollectionActionsTest {
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes - 2,
         TestingHelpers.defaultExpectedTriples - 1,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultExpectedStructureAnnotations
+    );
   }
 
   public void setModel(KnowtatorModel model) {

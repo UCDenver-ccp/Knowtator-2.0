@@ -368,10 +368,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
    * Makes the buttons in the main display pane.
    */
   private void makeButtons() {
-    structuresRadioButton.addChangeListener(
-        e ->
-            getModel()
-                .ifPresent(model -> model.setStructureMode(structuresRadioButton.isSelected())));
 
     captureImageButton.addActionListener(
         e ->

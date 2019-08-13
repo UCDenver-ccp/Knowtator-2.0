@@ -112,13 +112,11 @@ class OwlModelTest {
         TestingHelpers.defaultExpectedStructureAnnotations,
         TestingHelpers.defaultExpectedSpans,
         TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
         TestingHelpers.defaultExpectedProfiles,
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultExpectedTriples
+    );
 
     ConceptAnnotation conceptAnnotation =
         model.getSelectedTextSource().get().getSelectedAnnotation().get();
@@ -148,13 +146,11 @@ class OwlModelTest {
         TestingHelpers.defaultExpectedStructureAnnotations,
         TestingHelpers.defaultExpectedSpans,
         TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
         TestingHelpers.defaultExpectedProfiles,
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultExpectedTriples
+    );
 
     GraphSpace graphSpace = model.getSelectedTextSource().get().getSelectedGraphSpace().get();
     RelationAnnotation relationAnnotation =
@@ -181,13 +177,11 @@ class OwlModelTest {
         TestingHelpers.defaultExpectedStructureAnnotations,
         TestingHelpers.defaultExpectedSpans - 2,
         TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
         TestingHelpers.defaultExpectedProfiles,
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes - 3,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples - 2,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultExpectedTriples - 2
+    );
     assert !ontology.containsClassInSignature(class2.getIRI());
   }
 
@@ -205,13 +199,11 @@ class OwlModelTest {
         TestingHelpers.defaultExpectedStructureAnnotations,
         TestingHelpers.defaultExpectedSpans,
         TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
         TestingHelpers.defaultExpectedProfiles,
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples - 2,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultExpectedTriples - 2
+    );
     assert !ontology.containsObjectPropertyInSignature(owlObjectProperty.getIRI());
   }
 
@@ -239,13 +231,11 @@ class OwlModelTest {
         TestingHelpers.defaultExpectedStructureAnnotations,
         TestingHelpers.defaultExpectedSpans,
         TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
         TestingHelpers.defaultExpectedProfiles,
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultExpectedTriples
+    );
 
     assert !isSubClassTest(class1, class2);
     assert isSubClassTest(class3, class2);
@@ -299,13 +289,11 @@ class OwlModelTest {
         TestingHelpers.defaultExpectedStructureAnnotations,
         TestingHelpers.defaultExpectedSpans,
         TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
         TestingHelpers.defaultExpectedProfiles,
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultExpectedTriples
+    );
 
     assert isSubObjectPropertyTest(property1, property2);
     assert isSubObjectPropertyTest(property3, property2);

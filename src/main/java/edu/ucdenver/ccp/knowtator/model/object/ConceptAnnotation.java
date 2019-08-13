@@ -73,7 +73,7 @@ public class ConceptAnnotation extends SpanCollection
       @Nonnull Profile annotator,
       String annotationType,
       String motivation,
-      String[] layers) {
+      Set<String> layers) {
     super(textSource.getKnowtatorModel());
 
     this.annotator = annotator;
@@ -82,7 +82,7 @@ public class ConceptAnnotation extends SpanCollection
     this.owlClass = owlClass;
     this.textSource = textSource;
     this.layers = new HashSet<>();
-    this.layers.addAll(Arrays.asList(layers));
+    this.layers.addAll(layers);
 
     this.id = model.verifyId(annotationID, this, false);
 
@@ -337,5 +337,9 @@ public class ConceptAnnotation extends SpanCollection
    */
   public String getOwlClassRendering() {
     return model.getOwlEntityRendering(owlClass);
+  }
+
+  public Set<String> getLayers() {
+    return layers;
   }
 }

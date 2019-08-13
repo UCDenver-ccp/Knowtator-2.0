@@ -55,8 +55,6 @@ public class TestingHelpers {
   /** The constant defaultExpectedGraphSpaces. */
   public static final int defaultExpectedGraphSpaces = 3;
 
-  public static final int defaultExpectedStructureGraphSpaces = 0;
-
   /** The constant defaultExpectedProfiles. */
   public static final int defaultExpectedProfiles = 2;
 
@@ -66,12 +64,10 @@ public class TestingHelpers {
   /** The constant defaultExpectedAnnotationNodes. */
   public static final int defaultExpectedAnnotationNodes = 7;
 
-  public static final int defaultExpectedStructureAnnotationNodes = 0;
-
   /** The constant defaultExpectedTriples. */
   public static final int defaultExpectedTriples = 4;
 
-  public static final int defaultExpectedStructureTriples = 0;
+  public static int defaultAnnotationLayers = 1;
 
   /**
    * Gets project file.
@@ -148,10 +144,7 @@ public class TestingHelpers {
         defaultExpectedHighlighters,
         defaultExpectedAnnotationNodes,
         defaultExpectedTriples,
-        defaultExpectedStructureAnnotations,
-        defaultExpectedStructureGraphSpaces,
-        defaultExpectedStructureAnnotationNodes,
-        defaultExpectedStructureTriples);
+        defaultExpectedStructureAnnotations);
   }
 
   public static void countCollections(
@@ -164,19 +157,39 @@ public class TestingHelpers {
       int expectedHighlighters,
       int expectedAnnotationNodes,
       int expectedTriples,
-      int expectedStructureAnnotations,
-      int expectedStructureGraphSpaces,
-      int expectedStructureAnnotationNodes,
-      int expectedStructureTriples) {
+      int expectedStructureAnnotations) {
 
     int actualTextSources = model.getNumberOfTextSources();
     int actualConceptAnnotations =
-        model.getTextSources().stream().mapToInt(TextSource::getNumberOfConceptAnnotations).sum();
+        model.getTextSources().stream()
+            .mapToInt(
+                textSource ->
+                    Math.toIntExact(
+                        textSource.getConceptAnnotations().stream()
+                            .filter(
+                                conceptAnnotation ->
+                                    !conceptAnnotation.getLayers().contains("Structures"))
+                            .count()))
+            .sum();
     int actualStructureAnnotations =
-        model.getTextSources().stream().mapToInt(TextSource::getNumberOfStructureAnnotations).sum();
+        model.getTextSources().stream()
+            .mapToInt(
+                textSource ->
+                    Math.toIntExact(
+                        textSource.getConceptAnnotations().stream()
+                            .filter(
+                                conceptAnnotation ->
+                                    conceptAnnotation.getLayers().contains("Structures"))
+                            .count()))
+            .sum();
     int actualSpans =
         model.getTextSources().stream()
-            .mapToInt(textSource -> textSource.getSpans(null).size())
+            .mapToInt(
+                textSource ->
+                    Math.toIntExact(textSource.getSpans(null).stream()
+                        .filter(
+                            span -> !span.getConceptAnnotation().getLayers().contains("Structures"))
+                        .count()))
             .sum();
     int actualProfiles = model.getNumberOfProfiles();
     int actualHighlighters =
@@ -198,28 +211,6 @@ public class TestingHelpers {
             .mapToInt(
                 textSource ->
                     textSource.getGraphSpaces().stream()
-                        .mapToInt(
-                            graphSpace1 ->
-                                graphSpace1.getChildEdges(graphSpace1.getDefaultParent()).length)
-                        .sum())
-            .sum();
-    int actualStructureGraphSpaces =
-        model.getTextSources().stream().mapToInt(TextSource::getNumberOfStructureGraphSpaces).sum();
-    int actualStructureAnnotationNodes =
-        model.getTextSources().stream()
-            .mapToInt(
-                textSource ->
-                    textSource.getStructureGraphSpaces().stream()
-                        .mapToInt(
-                            graphSpace1 ->
-                                graphSpace1.getChildVertices(graphSpace1.getDefaultParent()).length)
-                        .sum())
-            .sum();
-    int actualStructureTriples =
-        model.getTextSources().stream()
-            .mapToInt(
-                textSource ->
-                    textSource.getStructureGraphSpaces().stream()
                         .mapToInt(
                             graphSpace1 ->
                                 graphSpace1.getChildEdges(graphSpace1.getDefaultParent()).length)
@@ -257,21 +248,6 @@ public class TestingHelpers {
 
     assert actualTriples == expectedTriples
         : String.format("There were %d triples instead of %d", actualTriples, expectedTriples);
-
-    assert actualStructureGraphSpaces == expectedStructureGraphSpaces
-        : String.format(
-            "There were %d structure graph spaces instead of %d",
-            actualStructureGraphSpaces, expectedStructureGraphSpaces);
-
-    assert actualStructureAnnotationNodes == expectedStructureAnnotationNodes
-        : String.format(
-            "There were %d structure vertices instead of %d",
-            actualStructureAnnotationNodes, expectedStructureAnnotationNodes);
-
-    assert actualStructureTriples == expectedStructureTriples
-        : String.format(
-            "There were %d structure triples instead of %d",
-            actualStructureTriples, expectedStructureTriples);
   }
 
   /**
@@ -296,13 +272,10 @@ public class TestingHelpers {
       int expectedStructureAnnotations,
       int expectedSpans,
       int expectedGraphSpaces,
-      int expectedStructureGraphSpaces,
       int expectedProfiles,
       int expectedHighlighters,
       int expectedAnnotationNodes,
-      int expectedStructureAnnotationNodes,
-      int expectedTriples,
-      int expectedStructureTriples) {
+      int expectedTriples) {
     TestingHelpers.checkDefaultCollectionValues(controller);
     controller.getOwlOntologyManager().applyChanges(changes);
     TestingHelpers.countCollections(
@@ -315,10 +288,7 @@ public class TestingHelpers {
         expectedHighlighters,
         expectedAnnotationNodes,
         expectedTriples,
-        expectedStructureAnnotations,
-        expectedStructureGraphSpaces,
-        expectedStructureAnnotationNodes,
-        expectedStructureTriples);
+        expectedStructureAnnotations);
   }
 
   /**
@@ -347,10 +317,7 @@ public class TestingHelpers {
       int expectedHighlighters,
       int expectedAnnotationNodes,
       int expectedTriples,
-      int expectedStructureAnnotations,
-      int expectedStructureGraphSpaces,
-      int expectedStructureAnnotationNodes,
-      int expectedStructureTriples)
+      int expectedStructureAnnotations)
       throws ActionUnperformable {
     TestingHelpers.checkDefaultCollectionValues(controller);
     controller.registerAction(action);
@@ -364,10 +331,7 @@ public class TestingHelpers {
         expectedHighlighters,
         expectedAnnotationNodes,
         expectedTriples,
-        expectedStructureAnnotations,
-        expectedStructureGraphSpaces,
-        expectedStructureAnnotationNodes,
-        expectedStructureTriples);
+        expectedStructureAnnotations);
     controller.undo();
     TestingHelpers.checkDefaultCollectionValues(controller);
     controller.redo();
@@ -381,10 +345,7 @@ public class TestingHelpers {
         expectedHighlighters,
         expectedAnnotationNodes,
         expectedTriples,
-        expectedStructureAnnotations,
-        expectedStructureGraphSpaces,
-        expectedStructureAnnotationNodes,
-        expectedStructureTriples);
+        expectedStructureAnnotations);
     controller.undo();
   }
 }

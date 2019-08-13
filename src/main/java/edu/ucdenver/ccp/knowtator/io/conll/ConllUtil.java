@@ -24,7 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.io.conll;
 
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
@@ -37,7 +36,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,7 +47,7 @@ import org.apache.log4j.Logger;
 public class ConllUtil {
   private static final Logger log = Logger.getLogger(KnowtatorModel.class);
 
-  public void readToStructureAnnotations(KnowtatorModel model, File file) {
+  void readToStructureAnnotations(KnowtatorModel model, File file) {
 
     model
         .getTextSources()
@@ -128,7 +129,7 @@ public class ConllUtil {
                 GraphSpace graphSpace =
                     new GraphSpace(
                         textSource, String.format("%s-Sentence %d", textSource.getId(), i1));
-                textSource.getStructureGraphSpaces().add(graphSpace);
+                textSource.add(graphSpace);
                 List<AnnotationNode> nodes =
                     sentence1.stream()
                         .map(
@@ -141,7 +142,7 @@ public class ConllUtil {
                                       model.getDefaultProfile(),
                                       null,
                                       "",
-                                      BaseModel.DEFAULT_LAYERS);
+                                      new HashSet<>(Collections.singletonList("Structures")));
                               int[] range = findEnd.apply(fields.get(ConllUField.FORM));
 
                               Span span = new Span(conceptAnnotation, null, range[0], range[1]);
@@ -150,7 +151,7 @@ public class ConllUtil {
                             })
                         .peek(
                             conceptAnnotation ->
-                                textSource.getStructureAnnotations().add(conceptAnnotation))
+                                textSource.getConceptAnnotations().add(conceptAnnotation))
                         .map(
                             conceptAnnotation ->
                                 new AnnotationNode(null, conceptAnnotation, 0, 0, graphSpace))
@@ -185,21 +186,22 @@ public class ConllUtil {
             });
   }
 
-  private int checkRealText(
-      TextSource textSource, int[] start, String text, int start1, int end) {
+  private int checkRealText(TextSource textSource, int[] start, String text, int start1, int end) {
     String realText;
     realText = textSource.getContent();
 
     if (end <= realText.length()) {
       realText = realText.substring(start1, end);
       end += realText.split("·").length - 1;
-      realText = textSource.getContent().substring(start1, end)
+      realText =
+          textSource
+              .getContent()
+              .substring(start1, end)
               .replace("(", "[")
               .replace(")", "]")
               .replace("}", "]")
               .replace("{", "[")
               .replace("″", "\"");
-
 
       if (realText.replace("·", "").equals(text)) {
         start[0] = end + 1;

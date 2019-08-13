@@ -38,6 +38,7 @@ import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -52,12 +53,12 @@ import javax.swing.undo.UndoManager;
 /** The type Base model. */
 public abstract class BaseModel extends UndoManager implements CaretListener, Savable {
 
-  public static final String[] DEFAULT_LAYERS = new String[]{"Default"};
+  public static final HashSet<String> DEFAULT_LAYERS =
+      new HashSet<>(Collections.singletonList("Default"));
   private final File projectLocation;
   private final File annotationsLocation;
   private final File articlesLocation;
   private final File profilesLocation;
-  final File structuresLocation;
 
   /** The Ontologies location. */
   final File ontologiesLocation;
@@ -77,9 +78,8 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
   /** The Loading. */
   boolean loading;
 
-  private Boolean isStructureMode;
   private Set<StructureModeListener> structureModeListeners;
-  private String[] selectedLayers;
+  private Set<String> activeLayers;
 
   /**
    * Instantiates a new Base model.
@@ -96,8 +96,8 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
     filters.put(FilterType.PROFILE, false);
     filters.put(FilterType.OWLCLASS, false);
     loading = false;
-    isStructureMode = false;
-    selectedLayers = new String[]{"Default"};
+    activeLayers = new HashSet<>();
+    activeLayers.addAll(DEFAULT_LAYERS);
 
     selection = new Selection(0, 0);
 
@@ -108,7 +108,6 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
         throw new IOException();
       }
     }
-
 
     Files.createDirectories(projectLocation.toPath());
 
@@ -124,12 +123,10 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
     annotationsLocation = new File(projectLocation, "Annotations");
     profilesLocation = (new File(projectLocation, "Profiles"));
     ontologiesLocation = new File(projectLocation, "Ontologies");
-    structuresLocation = new File(projectLocation, "Structures");
     Files.createDirectories(articlesLocation.toPath());
     Files.createDirectories(annotationsLocation.toPath());
     Files.createDirectories(profilesLocation.toPath());
     Files.createDirectories(ontologiesLocation.toPath());
-    Files.createDirectories(structuresLocation.toPath());
   }
 
   @Override
@@ -317,11 +314,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
   }
 
   public Optional<GraphSpace> getSelectedGraphSpace() {
-    if (isStructureMode) {
-      return getSelectedTextSource().flatMap(TextSource::getSelectedStructureGraphSpace);
-    } else {
-      return getSelectedTextSource().flatMap(TextSource::getSelectedGraphSpace);
-    }
+    return getSelectedTextSource().flatMap(TextSource::getSelectedGraphSpace);
   }
 
   /**
@@ -386,8 +379,8 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
     modelListeners.forEach(ModelListener::filterChangedEvent);
   }
 
-  public void setStructureMode(Boolean isStructureMode) {
-    this.isStructureMode = isStructureMode;
+  public void addActiveLayer(String layer) {
+    activeLayers.add(layer);
     fireStructureModeChangedEvent();
   }
 
@@ -433,11 +426,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
     structureModeListeners.add(listener);
   }
 
-  public File getStructuresLocation() {
-    return structuresLocation;
-  }
-
-  public String[] getSelectedLayers() {
-    return selectedLayers;
+  public Set<String> getActiveLayers() {
+    return activeLayers;
   }
 }

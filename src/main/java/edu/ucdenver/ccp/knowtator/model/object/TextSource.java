@@ -52,11 +52,9 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
   private final KnowtatorModel model;
   private final File saveFile;
   private final ConceptAnnotationCollection conceptAnnotations;
-  public ConceptAnnotationCollection structureAnnotations;
   private File textFile;
   private String content;
   private final GraphSpaceCollection graphSpaces;
-  public final GraphSpaceCollection structureGraphSpaces;
   private String id;
 
   /**
@@ -76,8 +74,6 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
             : saveFile;
     this.conceptAnnotations = new ConceptAnnotationCollection(model, this);
     this.graphSpaces = new GraphSpaceCollection(model);
-    this.structureAnnotations = new ConceptAnnotationCollection(model, this);
-    this.structureGraphSpaces = new GraphSpaceCollection(model);
     model.addModelListener(this);
 
     this.id = model.verifyId(FilenameUtils.getBaseName(textFileName), this, true);
@@ -263,11 +259,8 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @return the annotation
    */
   public Optional<ConceptAnnotation> getAnnotation(String annotationID) {
-    Optional<ConceptAnnotation> conceptAnnotation = conceptAnnotations.get(annotationID);
-    if (conceptAnnotation.isPresent()) {
-      return conceptAnnotation;
-    }
-    return structureAnnotations.get(annotationID);
+    return conceptAnnotations.get(annotationID);
+
   }
 
   /**
@@ -356,25 +349,5 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
   /** Select next concept annotation. */
   public void selectNextConceptAnnotation() {
     conceptAnnotations.selectNext();
-  }
-
-  public ConceptAnnotationCollection getStructureAnnotations() {
-    return structureAnnotations;
-  }
-
-  public GraphSpaceCollection getStructureGraphSpaces() {
-    return structureGraphSpaces;
-  }
-
-  public int getNumberOfStructureAnnotations() {
-    return structureAnnotations.size();
-  }
-
-  public int getNumberOfStructureGraphSpaces() {
-    return structureGraphSpaces.size();
-  }
-
-  public Optional<GraphSpace> getSelectedStructureGraphSpace() {
-    return structureGraphSpaces.getSelection();
   }
 }

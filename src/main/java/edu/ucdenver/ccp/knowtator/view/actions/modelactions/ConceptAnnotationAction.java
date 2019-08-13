@@ -80,7 +80,7 @@ public class ConceptAnnotationAction extends AbstractKnowtatorCollectionAction<C
         ConceptAnnotation newConceptAnnotation =
             new ConceptAnnotation(
                 textSource, null, owlClassOptional.get(), profileOptional.get(), "identity", "",
-                model.getSelectedLayers());
+                model.getActiveLayers());
         newConceptAnnotation.add(
             new Span(
                 newConceptAnnotation,
