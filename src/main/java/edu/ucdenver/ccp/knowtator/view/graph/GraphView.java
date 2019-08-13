@@ -117,8 +117,9 @@ public class GraphView extends JPanel
    *
    * @param dialog the dialog
    */
-  GraphView(JDialog dialog) {
+  GraphView(KnowtatorView view, JDialog dialog) {
 
+    this.view = view;
     this.dialog = dialog;
     $$$setupUI$$$();
     setVisible(false);
@@ -312,7 +313,7 @@ public class GraphView extends JPanel
   private void createUIComponents() {
     JScrollPane scrollPane = new JScrollPane();
     scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-    graphSpaceChooser = new GraphSpaceChooser();
+    graphSpaceChooser = new GraphSpaceChooser(view);
     mxGraph testGraph = new mxGraph();
     graphComponent = new mxGraphComponent(testGraph);
   }
@@ -430,12 +431,6 @@ public class GraphView extends JPanel
   @Override
   public void dispose() {
     graphSpaceChooser.dispose();
-  }
-
-  @Override
-  public void setView(KnowtatorView view) {
-    this.view = view;
-    graphSpaceChooser.setView(view);
   }
 
   /**

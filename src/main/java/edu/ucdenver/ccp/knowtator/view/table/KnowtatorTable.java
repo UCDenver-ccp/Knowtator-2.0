@@ -50,7 +50,8 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
   KnowtatorView view;
 
   /** Instantiates a new Knowtator table. */
-  KnowtatorTable() {
+  KnowtatorTable(KnowtatorView view) {
+    this.view = view;
     getTableHeader().setFont(new Font(getFont().getName(), Font.BOLD, 16));
     setAutoCreateRowSorter(true);
 
@@ -147,10 +148,5 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
   @Override
   public void colorChangedEvent(Profile profile) {
     reactToModelEvent();
-  }
-
-  @Override
-  public void setView(KnowtatorView view) {
-    this.view = view;
   }
 }

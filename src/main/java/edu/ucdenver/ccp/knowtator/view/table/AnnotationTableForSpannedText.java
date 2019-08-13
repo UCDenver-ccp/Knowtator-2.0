@@ -24,6 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.table;
 
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
@@ -39,9 +40,10 @@ public class AnnotationTableForSpannedText extends AnnotationTable {
    * @param exactMatchCheckBox the exact match check box
    * @param annotationsContainingTextTextField the annotations containing text text field
    */
-  public AnnotationTableForSpannedText(
+  public AnnotationTableForSpannedText(KnowtatorView view,
       JCheckBox exactMatchCheckBox,
-      JTextField annotationsContainingTextTextField) {
+                                       JTextField annotationsContainingTextTextField) {
+    super(view);
     this.exactMatchCheckBox = exactMatchCheckBox;
     this.annotationsContainingTextTextField = annotationsContainingTextTextField;
   }

@@ -27,6 +27,7 @@ package edu.ucdenver.ccp.knowtator.view.table;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.util.Optional;
 import javax.swing.table.DefaultTableModel;
 
@@ -37,8 +38,8 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
    * Instantiates a new Annotation table.
    *
    */
-  AnnotationTable() {
-    super();
+  AnnotationTable(KnowtatorView view) {
+    super(view);
     setModel(
         new DefaultTableModel(
             new Object[][] {}, new String[] {"Spanned Text", "OWL Entity", "Text Source"}) {

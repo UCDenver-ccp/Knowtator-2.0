@@ -48,11 +48,9 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K>
   /** The View. */
   KnowtatorView view;
 
-  /**
-   * Instantiates a new Knowtator list.
-   *
-   */
-  KnowtatorList() {
+  /** Instantiates a new Knowtator list. */
+  KnowtatorList(KnowtatorView view) {
+    this.view = view;
     setModel(new DefaultListModel<>());
 
     KnowtatorList<K> list = this;
@@ -122,7 +120,7 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K>
   }
 
   /** React to model event. */
-  void reactToModelEvent() {
+  private void reactToModelEvent() {
     ((DefaultListModel) getModel()).clear();
     addElementsFromModel();
     setSelected();
@@ -141,10 +139,5 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K>
   @Override
   public void colorChangedEvent(Profile profile) {
     reactToModelEvent();
-  }
-
-  @Override
-  public void setView(KnowtatorView view) {
-    this.view = view;
   }
 }

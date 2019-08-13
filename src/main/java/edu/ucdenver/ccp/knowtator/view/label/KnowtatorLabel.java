@@ -42,7 +42,8 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
    * Instantiates a new Knowtator label.
    *
    */
-  KnowtatorLabel() {
+  KnowtatorLabel(KnowtatorView view) {
+    this.view = view;
   }
 
   /** React. */
@@ -72,10 +73,5 @@ public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponen
   @Override
   public void colorChangedEvent(Profile profile) {
     react();
-  }
-
-  @Override
-  public void setView(KnowtatorView view) {
-    this.view = view;
   }
 }

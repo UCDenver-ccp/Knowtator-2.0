@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.view.label;
 
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.util.Optional;
 
 /** Abstract label for concept annotations. */
@@ -35,7 +36,8 @@ public abstract class AbstractConceptAnnotationLabel extends KnowtatorLabel {
    * Instantiates a new Abstract concept annotation label.
    *
    */
-  AbstractConceptAnnotationLabel() {
+  AbstractConceptAnnotationLabel(KnowtatorView view) {
+    super(view);
   }
 
   @Override

@@ -49,8 +49,8 @@ public class GraphViewDialog extends JDialog implements KnowtatorComponent {
   /**
    * Instantiates a new Graph view dialog.
    */
-  public GraphViewDialog() {
-//    $$$setupUI$$$();
+  public GraphViewDialog(KnowtatorView view) {
+    this.view = view;
 
     $$$setupUI$$$();
     setSize(new Dimension(800, 800));
@@ -100,7 +100,7 @@ public class GraphViewDialog extends JDialog implements KnowtatorComponent {
   }
 
   private void createUIComponents() {
-    graphView = new GraphView(this);
+    graphView = new GraphView(this.view, this);
   }
 
   @Override
@@ -113,12 +113,6 @@ public class GraphViewDialog extends JDialog implements KnowtatorComponent {
     super.dispose();
     graphView.dispose();
     setVisible(false);
-  }
-
-  @Override
-  public void setView(KnowtatorView view) {
-    this.view = view;
-    graphView.setView(view);
   }
 
   @Override

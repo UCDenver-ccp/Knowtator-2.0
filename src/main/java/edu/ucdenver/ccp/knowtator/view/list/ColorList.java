@@ -45,11 +45,9 @@ public class ColorList extends JList<String> implements KnowtatorComponent, Mode
   private final ListSelectionListener lsl;
   private KnowtatorView view;
 
-  /**
-   * Instantiates a new Color list.
-   *
-   */
-  public ColorList() {
+  /** Instantiates a new Color list. */
+  public ColorList(KnowtatorView view) {
+    this.view = view;
     setModel(new DefaultListModel<>());
     setCellRenderer(new ColorListRenderer<>());
     lsl = e -> assignColorToClass(view, getSelectedValue());
@@ -71,11 +69,6 @@ public class ColorList extends JList<String> implements KnowtatorComponent, Mode
                                     o -> ((DefaultListModel<String>) getModel()).addElement(o))));
 
     addListSelectionListener(lsl);
-  }
-
-  @Override
-  public void setView(KnowtatorView view) {
-    this.view = view;
   }
 
   @Override

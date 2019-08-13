@@ -44,6 +44,7 @@ import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorDefaultSettings;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ReassignOwlClassAction;
@@ -87,8 +88,8 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
    *
    * @param searchTextField the search text field
    */
-  AnnotatableTextPane(JTextField searchTextField) {
-    super(searchTextField);
+  AnnotatableTextPane(KnowtatorView view, JTextField searchTextField) {
+    super(view, searchTextField);
     setEditable(false);
     setFont(KnowtatorDefaultSettings.FONT);
 

@@ -25,10 +25,20 @@
 package edu.ucdenver.ccp.knowtator.view.label;
 
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 /** The type Annotation id label. */
 public class AnnotationIdLabel extends AbstractConceptAnnotationLabel {
 
+
+  /**
+   * Instantiates a new Abstract concept annotation label.
+   *
+   * @param view The view
+   */
+  public AnnotationIdLabel(KnowtatorView view) {
+    super(view);
+  }
 
   @Override
   public void displayConceptAnnotation(ConceptAnnotation conceptAnnotation) {

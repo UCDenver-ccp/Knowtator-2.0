@@ -260,11 +260,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
             relationsForPropertyList));
   }
 
-  @Override
-  public void setView(KnowtatorView view) {
-    knowtatorComponents.forEach(component -> component.setView(this));
-  }
-
   private static void changeFont(Component component, Font font) {
     component.setFont(font);
     if (component instanceof Container) {
@@ -310,30 +305,30 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     owlPropertyLabel = new JLabel();
 
     textPane =
-        new KnowtatorTextPane(
+        new KnowtatorTextPane(this,
             searchTextField, onlyAnnotationsCheckBox, regexCheckBox, caseSensitiveCheckBox);
-    graphViewDialog = new GraphViewDialog();
+    graphViewDialog = new GraphViewDialog(this);
 
-    annotationAnnotatorLabel = new AnnotationAnnotatorLabel();
-    annotationClassLabel = new AnnotationClassLabel();
-    annotationIdLabel = new AnnotationIdLabel();
-    annotationNotes = new AnnotationNotes();
+    annotationAnnotatorLabel = new AnnotationAnnotatorLabel(this);
+    annotationClassLabel = new AnnotationClassLabel(this);
+    annotationIdLabel = new AnnotationIdLabel(this);
+    annotationNotes = new AnnotationNotes(this);
 
-    textSourceChooser = new TextSourceChooser();
+    textSourceChooser = new TextSourceChooser(this);
 
-    graphSpaceList = new GraphSpaceList();
-    spanList = new SpanList();
-    profileList = new ProfileList();
-    colorList = new ColorList();
+    graphSpaceList = new GraphSpaceList(this);
+    spanList = new SpanList(this);
+    profileList = new ProfileList(this);
+    colorList = new ColorList(this);
 
     annotationsContainingTextTextField = new JTextField();
 
     annotationsForClassTable =
-        new AnnotationTableForOwlClass(includeClassDescendantsCheckBox, owlClassLabel);
+        new AnnotationTableForOwlClass(this, includeClassDescendantsCheckBox, owlClassLabel);
     conceptAnnotationsForTextTable =
-        new AnnotationTableForSpannedText(exactMatchCheckBox, annotationsContainingTextTextField);
+        new AnnotationTableForSpannedText(this, exactMatchCheckBox, annotationsContainingTextTextField);
     relationsForPropertyList =
-        new RelationTable(includePropertyDescendantsCheckBox, owlPropertyLabel);
+        new RelationTable(this, includePropertyDescendantsCheckBox, owlPropertyLabel);
 
     // The following methods keep the graph view dialog on top only when the view is active.
     KnowtatorView view = this;
@@ -959,7 +954,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
    * @throws IOException the io exception
    */
   public void loadProject(File file, ModelListener progressListener) throws IOException {
-    setView(this);
     if (!getModel().isPresent() || getModel().get().isNotLoading()) {
       getModel().ifPresent(BaseModel::dispose);
       if (getOWLWorkspace() != null) {

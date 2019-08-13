@@ -48,11 +48,9 @@ public abstract class KnowtatorChooser<K extends ModelObject> extends JComboBox<
   /** The View. */
   KnowtatorView view;
 
-  /**
-   * Instantiates a new Knowtator chooser.
-   *
-   */
-  KnowtatorChooser() {
+  /** Instantiates a new Knowtator chooser. */
+  KnowtatorChooser(KnowtatorView view) {
+    this.view = view;
     al =
         e -> {
           JComboBox comboBox = (JComboBox) e.getSource();
@@ -121,10 +119,5 @@ public abstract class KnowtatorChooser<K extends ModelObject> extends JComboBox<
   @Override
   public void colorChangedEvent(Profile profile) {
     react();
-  }
-
-  @Override
-  public void setView(KnowtatorView view) {
-    this.view = view;
   }
 }

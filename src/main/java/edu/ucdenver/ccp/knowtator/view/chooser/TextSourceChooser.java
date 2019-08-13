@@ -25,9 +25,19 @@
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
 /** The type Text source chooser. */
 public class TextSourceChooser extends KnowtatorChooser<TextSource> {
+
+  /**
+   * Instantiates a new Knowtator chooser.
+   *
+   * @param view The Knowtator view
+   */
+  public TextSourceChooser(KnowtatorView view) {
+    super(view);
+  }
 
   @Override
   protected void react() {
