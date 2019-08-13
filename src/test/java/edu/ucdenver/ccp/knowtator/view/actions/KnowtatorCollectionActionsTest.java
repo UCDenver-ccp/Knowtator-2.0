@@ -55,10 +55,7 @@ public class KnowtatorCollectionActionsTest {
     TestingHelpers.testKnowtatorAction(
         model,
         new TextSourceAction(
-            model,
-            ADD,
-            TestingHelpers.getArticleFile("structure_test_project", "11532192"),
-            null),
+            model, ADD, TestingHelpers.getArticleFile("structure_test_project", "11532192"), null),
         TestingHelpers.defaultExpectedTextSources + 1,
         TestingHelpers.defaultExpectedConceptAnnotations,
         TestingHelpers.defaultExpectedSpans,

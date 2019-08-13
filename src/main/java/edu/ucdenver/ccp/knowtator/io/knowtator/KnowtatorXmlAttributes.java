@@ -28,6 +28,7 @@ package edu.ucdenver.ccp.knowtator.io.knowtator;
 class KnowtatorXmlAttributes {
   /** The constant ID. */
   public static final String ID = "id";
+  static final String LAYER = "layer";
 
   /** The Annotator. */
   static final String ANNOTATOR = "annotator"; // also in OLD

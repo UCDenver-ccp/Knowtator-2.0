@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.io.knowtator;
 
 import com.mxgraph.model.mxGraphModel;
 import edu.ucdenver.ccp.knowtator.io.XmlUtil;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
@@ -42,6 +43,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.slf4j.Logger;
@@ -180,13 +182,27 @@ public final class KnowtatorXmlUtil extends XmlUtil {
 
               Optional<OWLClass> owlClass = model.getOwlClassById(owlClassID);
 
+              List<String> layers =
+                      KnowtatorXmlUtil.asList(
+                              annotationElement.getElementsByTagName(KnowtatorXmlAttributes.LAYER))
+                          .stream()
+                          .map(node -> (Element) node)
+                          .map(Node::getTextContent)
+                          .collect(Collectors.toList());
+
               if (owlClass.isPresent()) {
                 owlClassID = owlClass.get().toStringID();
               }
 
               ConceptAnnotation newConceptAnnotation =
                   new ConceptAnnotation(
-                      textSource, annotationID, owlClassID, profile, type, motivation);
+                      textSource,
+                      annotationID,
+                      owlClassID,
+                      profile,
+                      type,
+                      motivation,
+                      layers.size() == 0 ? BaseModel.DEFAULT_LAYERS : (String[]) layers.toArray());
               readToConceptAnnotation(newConceptAnnotation, annotationElement);
               if (newConceptAnnotation.size() == 0) {
                 return Optional.empty();

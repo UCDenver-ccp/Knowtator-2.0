@@ -28,6 +28,9 @@ import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -51,6 +54,7 @@ public class ConceptAnnotation extends SpanCollection
   private String bratID;
   private String motivation;
   private String id;
+  private Set<String> layers;
 
   /**
    * Instantiates a new Concept annotation.
@@ -68,7 +72,8 @@ public class ConceptAnnotation extends SpanCollection
       String owlClass,
       @Nonnull Profile annotator,
       String annotationType,
-      String motivation) {
+      String motivation,
+      String[] layers) {
     super(textSource.getKnowtatorModel());
 
     this.annotator = annotator;
@@ -76,6 +81,8 @@ public class ConceptAnnotation extends SpanCollection
     this.motivation = motivation;
     this.owlClass = owlClass;
     this.textSource = textSource;
+    this.layers = new HashSet<>();
+    this.layers.addAll(Arrays.asList(layers));
 
     this.id = model.verifyId(annotationID, this, false);
 
@@ -329,6 +336,6 @@ public class ConceptAnnotation extends SpanCollection
    * @return the owl class rendering
    */
   public String getOwlClassRendering() {
-    return  model.getOwlEntityRendering(owlClass);
+    return model.getOwlEntityRendering(owlClass);
   }
 }

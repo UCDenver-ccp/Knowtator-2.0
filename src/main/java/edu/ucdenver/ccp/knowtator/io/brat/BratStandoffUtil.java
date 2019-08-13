@@ -24,6 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.io.brat;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
@@ -245,7 +246,13 @@ public class BratStandoffUtil {
                   annotation[1].split(StandoffTags.textBoundAnnotationTripleDelimiter)[0];
               ConceptAnnotation newConceptAnnotation =
                   new ConceptAnnotation(
-                      textSource, annotation[0], owlClassID, profile, "identity", "");
+                      textSource,
+                      annotation[0],
+                      owlClassID,
+                      profile,
+                      "identity",
+                      "",
+                      BaseModel.DEFAULT_LAYERS);
               conceptAnnotationCollection.add(newConceptAnnotation);
               Map<Character, List<String[]>> map = new HashMap<>();
               List<String[]> list = new ArrayList<>();

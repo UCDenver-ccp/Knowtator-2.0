@@ -52,6 +52,7 @@ import javax.swing.undo.UndoManager;
 /** The type Base model. */
 public abstract class BaseModel extends UndoManager implements CaretListener, Savable {
 
+  public static final String[] DEFAULT_LAYERS = new String[]{"Default"};
   private final File projectLocation;
   private final File annotationsLocation;
   private final File articlesLocation;
@@ -78,6 +79,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 
   private Boolean isStructureMode;
   private Set<StructureModeListener> structureModeListeners;
+  private String[] selectedLayers;
 
   /**
    * Instantiates a new Base model.
@@ -95,6 +97,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
     filters.put(FilterType.OWLCLASS, false);
     loading = false;
     isStructureMode = false;
+    selectedLayers = new String[]{"Default"};
 
     selection = new Selection(0, 0);
 
@@ -432,5 +435,9 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 
   public File getStructuresLocation() {
     return structuresLocation;
+  }
+
+  public String[] getSelectedLayers() {
+    return selectedLayers;
   }
 }

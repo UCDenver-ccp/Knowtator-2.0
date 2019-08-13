@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator.io.knowtator;
 
 import edu.ucdenver.ccp.knowtator.io.XmlUtil;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
@@ -186,7 +187,8 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
                         owlClass.get().toStringID(),
                         profile,
                         "identity",
-                        "");
+                        "",
+                        BaseModel.DEFAULT_LAYERS);
                 if (conceptAnnotationCollection.containsID(annotationID)) {
                   newConceptAnnotation.setId(model.verifyId(null, newConceptAnnotation, false));
                 }

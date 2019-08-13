@@ -24,6 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.io.conll;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
@@ -139,7 +140,8 @@ public class ConllUtil {
                                       fields.get(ConllUField.DEPREL),
                                       model.getDefaultProfile(),
                                       null,
-                                      "");
+                                      "",
+                                      BaseModel.DEFAULT_LAYERS);
                               int[] range = findEnd.apply(fields.get(ConllUField.FORM));
 
                               Span span = new Span(conceptAnnotation, null, range[0], range[1]);
