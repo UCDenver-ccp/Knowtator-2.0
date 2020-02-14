@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "shadow-cljs": "2.8.69"
+  },
+  "dependencies": {
+    "create-react-class": "15.6.3",
+    "d3": "^5.14.1",
+    "highlight.js": "9.15.10",
+    "mousetrap": "^1.6.3",
+    "react": "16.8.6",
+    "react-dom": "16.8.6",
+    "react-highlight.js": "1.0.7"
+  }
+}
