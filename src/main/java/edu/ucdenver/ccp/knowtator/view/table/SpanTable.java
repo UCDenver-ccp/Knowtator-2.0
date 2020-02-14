@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package edu.ucdenver.ccp.knowtator.view.list;
+package edu.ucdenver.ccp.knowtator.view.table;
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
@@ -30,23 +30,31 @@ import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.util.Optional;
+import javax.swing.table.DefaultTableModel;
 
 /** The type Span list. */
-public class SpanList extends KnowtatorList<Span> {
-
+public class SpanTable extends KnowtatorTable<Span> {
 
   /**
    * Instantiates a new Knowtator list.
    *
    * @param view The Knowtator view
    */
-  public SpanList(KnowtatorView view) {
+  public SpanTable(KnowtatorView view) {
     super(view);
+    setModel(
+        new DefaultTableModel(
+            new Object[][] {}, new String[] {"Spanned Text", "Start", "-", "+", "End", "-", "+"}) {
+          @Override
+          public boolean isCellEditable(int row, int col) {
+            return false;
+          }
+        });
   }
 
   @Override
   public void reactToClick() {
-    Optional<Span> spanOptional = Optional.ofNullable(getSelectedValue());
+    Optional<Span> spanOptional = getSelectedValue();
     spanOptional.ifPresent(
         span -> {
           view.getModel()
@@ -57,20 +65,33 @@ public class SpanList extends KnowtatorList<Span> {
   }
 
   @Override
-  protected void addElementsFromModel() {
+  public void addElementsFromModel() {
     view.getModel()
         .flatMap(BaseModel::getSelectedTextSource)
         .flatMap(TextSource::getSelectedAnnotation)
-        .ifPresent(
-            conceptAnnotation ->
-                conceptAnnotation.forEach(span -> getDefaultListModel().addElement(span)));
+        .ifPresent(conceptAnnotation -> conceptAnnotation.forEach(this::addValue));
   }
 
   @Override
-  protected Optional<Span> getSelectedFromModel() {
+  protected Optional<Object> getSelectedFromModel() {
     return view.getModel()
         .flatMap(BaseModel::getSelectedTextSource)
         .flatMap(TextSource::getSelectedAnnotation)
-        .flatMap(ConceptAnnotation::getSelection);
+        .flatMap(ConceptAnnotation::getSelection)
+        .map(span -> span);
+  }
+
+  @Override
+  Optional<Span> getSelectedValue() {
+    return Optional.empty();
+  }
+
+  @Override
+  void addValue(Span modelObject) {
+    ((DefaultTableModel) getModel())
+        .addRow(
+            new Object[] {
+              modelObject, modelObject.getStart(), "+", "-", modelObject.getEnd(), "-", "-"
+            });
   }
 }

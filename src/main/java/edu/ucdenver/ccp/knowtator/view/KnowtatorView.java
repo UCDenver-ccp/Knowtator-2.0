@@ -59,7 +59,7 @@ import edu.ucdenver.ccp.knowtator.view.label.AnnotationIdLabel;
 import edu.ucdenver.ccp.knowtator.view.list.ColorList;
 import edu.ucdenver.ccp.knowtator.view.list.GraphSpaceList;
 import edu.ucdenver.ccp.knowtator.view.list.ProfileList;
-import edu.ucdenver.ccp.knowtator.view.list.SpanList;
+import edu.ucdenver.ccp.knowtator.view.table.SpanTable;
 import edu.ucdenver.ccp.knowtator.view.table.AnnotationTable;
 import edu.ucdenver.ccp.knowtator.view.table.AnnotationTableForOwlClass;
 import edu.ucdenver.ccp.knowtator.view.table.AnnotationTableForSpannedText;
@@ -133,7 +133,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   private AnnotationAnnotatorLabel annotationAnnotatorLabel;
   private AnnotationClassLabel annotationClassLabel;
   private AnnotationNotes annotationNotes;
-  private SpanList spanList;
+  private SpanTable spanTable;
   private JButton shrinkEndButton;
   private JButton growEndButton;
   private JButton growStartButton;
@@ -252,7 +252,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
             annotationIdLabel,
             annotationAnnotatorLabel,
             annotationClassLabel,
-            spanList,
+            spanTable,
             graphSpaceList,
             textSourceChooser,
             (KnowtatorComponent) conceptAnnotationsForTextTable,
@@ -317,7 +317,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     textSourceChooser = new TextSourceChooser(this);
 
     graphSpaceList = new GraphSpaceList(this);
-    spanList = new SpanList(this);
+    spanTable = new SpanTable(this);
     profileList = new ProfileList(this);
     colorList = new ColorList(this);
 
@@ -1100,11 +1100,11 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     spanPane.add(scrollPane1, gbc);
-    Font spanListFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, spanList.getFont());
-    if (spanListFont != null) {
-      spanList.setFont(spanListFont);
+    Font spanTableFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, spanTable.getFont());
+    if (spanTableFont != null) {
+      spanTable.setFont(spanTableFont);
     }
-    scrollPane1.setViewportView(spanList);
+    scrollPane1.setViewportView(spanTable);
     final JPanel panel2 = new JPanel();
     panel2.setLayout(new GridBagLayout());
     gbc = new GridBagConstraints();

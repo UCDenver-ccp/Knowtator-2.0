@@ -59,7 +59,7 @@
                                 <properties/>
                                 <border type="none"/>
                                 <children>
-                                  <component id="434b8" class="edu.ucdenver.ccp.knowtator.view.list.SpanList" binding="spanList" custom-create="true">
+                                  <component id="434b8" class="edu.ucdenver.ccp.knowtator.view.table.SpanTable" binding="spanTable" custom-create="true">
                                     <constraints/>
                                     <properties>
                                       <font name="Verdana" size="10" style="0"/>
