@@ -1,7 +1,6 @@
 (ns knowtator.subs
   (:require
    [re-frame.core :as re-frame]
-   [knowtator.db :as db]
    [knowtator.model :as model]))
 
 (re-frame/reg-sub

@@ -5,66 +5,62 @@
    [breaking-point.core :as bp]
    [knowtator.subs :as subs]
    [knowtator.events :as evts]
-   [knowtator.html-util :as html]
-   ["rangy/lib/rangy-textrange" :as rangy-txt]))
+   [knowtator.html-util :as html]))
+
+(defn home-title []
+  [re-com/title
+   :label "Knowtator"
+   :level :level1])
+
+(defn doc-header []
+  [re-com/title
+   :label @(re-frame/subscribe [::subs/visible-doc-id])
+   :level :level2])
 
 ;; Editor
 
-(defn editor-foredrop
-  []
-  (let [text (re-frame/subscribe [::subs/selected-span-content])]
-   [:div#foredrop.foredrop {:style {:z-index 3
-                                    :background-color :transparent}}
-    [:div.highlights
-     (doall
-       (for [text @text]
-         (if (string? text)
-           text
-           (let [{:keys [id content selected]} text]
-             ^{:key (str (random-uuid))}
-             [:div.popup {:style {#_:border #_:solid
-                                  :color :black
-                                  :border-color :black}}
-              (when selected
-                [:span.popuptext.show {:style {:z-index 3}
-                                       :id (str id "popup")}
-                 id])
-              content]))))]]))
+(defn popup-text-annotation
+  [{:keys [ann content id]}]
+  [:div.popup {:style {:border :solid
+                       :background-color @(re-frame/subscribe [::subs/ann-color ann])
+                       :color :black
+                       :border-color :black}}
 
-(defn class?
-  [e c]
-  (-> e .-classList (.contains c)))
+   [:span.popuptext.show {:style {:z-index 3}
+                          :id (str id "popup")}
+    id]
+   content])
 
-(defn get-parent-element-of-class
-  [e c]
-  (if (class? e c)
-    e
-    (recur (.-parentElement e) c)))
-
-(defn text-selection
-  [e]
-  (let [e (get-parent-element-of-class e "text-annotation-editor")]
-    (-> rangy-txt .getSelection (.saveCharacterRanges e) (js->clj :keywordize-keys true) first :characterRange)))
+(defn text-annotation
+  [{:keys [content ann]}]
+  [:span {:style {:background-color @(re-frame/subscribe [::subs/ann-color ann])}}
+   content])
 
 (defn editor
-  []
-  (let [doc-id(re-frame/subscribe [::subs/visible-doc-id])
-        text (re-frame/subscribe [::subs/highlighted-text])]
-   [:div
-    ;; [document-controls]
-    #_[annotation-controls]
-    [:h2 @doc-id]
-    [:div.text-annotation-editor {:on-click #(re-frame.core/dispatch [::evts/record-selection (text-selection (.-target %)) @doc-id])
-                                      :read-only true
-                                      :on-scroll #(html/unify-scroll "textarea" "backdrop" "foredrop")}
+  [doc-id]
+  (let [text (re-frame/subscribe [::subs/highlighted-text])
+        selected-span-id (re-frame/subscribe [::subs/selected-span-id])]
+    [:div.text-annotation-editor {:on-click #(re-frame.core/dispatch [::evts/record-selection (html/text-selection (.-target %) "text-annotation-editor") doc-id])}
      (doall
        (for [text @text]
          (if (string? text)
            text
-           (let [{:keys [content ann]} text]
-             ^{:key (str (random-uuid))}
-             [:span {:style {:background-color @(re-frame/subscribe [::subs/ann-color ann])}}
-              content]))))]]))
+           (let [{:keys [id] :as span} text]
+             (if (= id @selected-span-id)
+               ^{:key (str (random-uuid))}
+               [popup-text-annotation span]
+               ^{:key (str (random-uuid))}
+               [text-annotation span])))))]))
+
+(defn home-panel
+  []
+  (let [doc-id (re-frame/subscribe [::subs/visible-doc-id])]
+    [:div
+     [home-title]
+     #_[document-controls]
+     #_[annotation-controls]
+     [doc-header]
+     [editor @doc-id]]))
 
 ;; home
 
@@ -81,27 +77,22 @@
         :alert-type :info
         :body rpe])]))
 
-(defn home-title []
-  (let [name (re-frame/subscribe [::subs/name])]
-    [re-com/title
-     :label "Knowtator"
-     :level :level1]))
 
 (defn link-to-about-page []
   [re-com/hyperlink-href
    :label "go to About Page"
    :href "#/about"])
 
-(defn home-panel []
-  [re-com/v-box
-   :gap "1em"
-   :children [[home-title]
-              [editor]
-              [link-to-about-page]
-              [display-re-pressed-example]
-              [:div
-               [:h3 (str "screen-width: " @(re-frame/subscribe [::bp/screen-width]))]
-               [:h3 (str "screen: " @(re-frame/subscribe [::bp/screen]))]]]])
+#_(defn home-panel []
+    [re-com/v-box
+     :gap "1em"
+     :children [[home-title]
+                [text-annotation]
+                [link-to-about-page]
+                [display-re-pressed-example]
+                [:div
+                 [:h3 (str "screen-width: " @(re-frame/subscribe [::bp/screen-width]))]
+                 [:h3 (str "screen: " @(re-frame/subscribe [::bp/screen]))]]]])
 
 ;; about
 

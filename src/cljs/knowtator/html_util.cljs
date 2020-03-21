@@ -1,5 +1,6 @@
 (ns knowtator.html-util
   (:require [goog.object :as gobj]
+            ["rangy/lib/rangy-textrange" :as rangy-txt]
             [re-frame.core :refer [->interceptor
                                    get-coeffect assoc-coeffect
                                    get-effect assoc-effect]]))
@@ -113,3 +114,18 @@
         master-elem   (get-element-by-id master-id)]
     (doseq [e follower-elems]
       (set! (.-scrollTop e) (.-scrollTop master-elem)))))
+
+(defn class?
+  [e c]
+  (-> e .-classList (.contains c)))
+
+(defn get-parent-element-of-class
+  [e c]
+  (if (class? e c)
+    e
+    (recur (.-parentElement e) c)))
+
+(defn text-selection
+  [e c]
+  (let [e (get-parent-element-of-class e c)]
+    (-> rangy-txt .getSelection (.saveCharacterRanges e) (js->clj :keywordize-keys true) first :characterRange)))
