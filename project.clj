@@ -24,9 +24,9 @@
 
   :jvm-opts ["-Xmx1G"]
 
-  :source-paths ["src/clj" "src/cljs"]
+  :source-paths ["src/clj" "src/cljs" "src/cljc"]
 
-  :test-paths   ["test/cljs"]
+  :test-paths   ["test"]
 
   :clean-targets ^{:protect false} ["resources/public/js/compiled" "target"
                                     "test/js"

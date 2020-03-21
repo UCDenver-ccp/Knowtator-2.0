@@ -106,9 +106,6 @@
   ::profiles
   :profiles)
 
-(defn ann-color
-  [{:keys [profile concept]} profiles]
-  (get-in profiles [profile concept]))
 
 (re-frame/reg-sub
   ::ann-color
