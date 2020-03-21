@@ -1,4 +1,4 @@
-(ns knowtator-clj.config)
+(ns knowtator.config)
 
 (def debug?
   ^boolean goog.DEBUG)

@@ -1,4 +1,4 @@
-(ns knowtator-clj.util
+(ns knowtator.util
   (:require [goog.object :as gobj]
             [re-frame.core :refer [->interceptor
                                    get-coeffect assoc-coeffect

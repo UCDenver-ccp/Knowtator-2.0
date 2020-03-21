@@ -1,9 +1,12 @@
-(ns knowtator-clj.css
-  (:require [garden.def :refer [defstyles]]  ; TODO look at garden-watcher
-            [garden.stylesheet :as s]
-            [garden.core :as g]
+(ns knowtator.css
+  (:require [garden.def :refer [defstyles]]
             [garden.selectors :as sel]
+            [garden.stylesheet  :as s]
             [clojure.string :as str]))
+
+(defstyles screen
+  [:body {:color "red"}]
+  [:.level1 {:color "green"}])
 
 (defstyles screen
   (sel/defselector *)

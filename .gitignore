@@ -1,16 +1,22 @@
-/*.log
-/target
+/out/
+/resources/public/js/compiled/
+/target/
 /*-init.clj
-/resources/public/js/compiled
-out
-/node_modules
-/.lein-repl-history
-/.lsp/
-/knowtator-clj.iml
-/.shadow-cljs/
-/package-lock.json
-/karma.conf.js
-/system.properties
-/TAGS
+/*.log
+
+# Leiningen
+/.lein-*
 /.nrepl-port
-/.idea/
+
+# Node.js dependencies
+/node_modules/
+
+# shadow-cljs cache, port files
+/.shadow-cljs/
+
+# clj-kondo cache
+/.clj-kondo/.cache
+/.clj-kondo/
+/.dir-locals.el
+/karma.conf.js
+/package-lock.json

@@ -1,5 +1,5 @@
-(ns knowtator-clj.db
-  (:require [knowtator-clj.util  :as util]))
+(ns knowtator.db
+  (:require [knowtator.util  :as util]))
 (def default-db
   {:spans {:s1 {:id :s1
                 :ann :a1

@@ -1,1 +1,1 @@
-web: java $JVM_OPTS -cp target/knowtator-clj.jar clojure.main -m knowtator-clj.server
+web: java $JVM_OPTS -cp target/knowtator.jar clojure.main -m knowtator.server

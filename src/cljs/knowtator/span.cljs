@@ -1,4 +1,4 @@
-(ns knowtator-clj.span)
+(ns knowtator.span)
 
 (defn contain-loc?
   [{:keys [start end]} i]
