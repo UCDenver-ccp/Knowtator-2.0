@@ -1,18 +1,8 @@
-(ns knowtator.util
+(ns knowtator.html-util
   (:require [goog.object :as gobj]
             [re-frame.core :refer [->interceptor
                                    get-coeffect assoc-coeffect
                                    get-effect assoc-effect]]))
-(defn filter-vals
-  [f m]
-  (->> m
-       (filter #(f (second %)))
-       (into {})))
-
-(defn map-vals
-  [f m]
-  (zipmap (keys m)
-          (map f (vals m))))
 
 (defn win-inner-w
   []
@@ -108,20 +98,6 @@
                    (->> db
                         (assoc original-db viz-id)
                         (assoc-effect context' :db)))))))))
-
-(defn toggle-contains-set
-  [coll x]
-  (if (contains? coll x)
-    (disj coll x)
-    (conj (or coll #{}) x)))
-
-(defn toggle-contains-vector
-  [coll x]
-  (if (some #(= x %) coll)
-    (->> coll
-         (remove #(= x %))
-         (vec))
-    (conj (or coll []) x)))
 
 (defn len-text
   "Calculates the length of a span of text."

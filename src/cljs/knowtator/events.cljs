@@ -3,9 +3,7 @@
    [re-frame.core :as re-frame]
    [knowtator.db :as db]
    [day8.re-frame.tracing :refer-macros [fn-traced]]
-
-   [knowtator.util :as util ]
-   [knowtator.span  :as span ]))
+   [knowtator.model :as model]))
 
 (re-frame/reg-event-db
  ::initialize-db
@@ -28,18 +26,14 @@
     (cond-> {:db (update db :selection merge text-range)}
       (= start end) (assoc :dispatch [::select-span start doc-id]))))
 
-(defn spans-containing-loc
-  [loc spans]
-  (util/filter-vals #(span/contain-loc? % loc) spans))
-
 (re-frame/reg-event-db
   ::select-span
   (fn [db [_ loc doc-id]]
     (let [anns (:anns db)
           span-id         (->> db
                             :spans
-                            (db/filter-in-doc doc-id anns)
-                            (spans-containing-loc loc)
+                            (model/filter-in-doc doc-id anns)
+                            (model/spans-containing-loc loc)
                             vals
                             first
                             :id)]

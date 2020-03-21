@@ -1,5 +1,5 @@
-(ns knowtator.db
-  (:require [knowtator.util  :as util]))
+(ns knowtator.db)
+
 (def default-db
   {:spans {:s1 {:id :s1
                 :ann :a1
@@ -52,25 +52,3 @@ We have discovered remarkable numerical and volumetric variation in the mouse st
    :selection {:doc :d1
                :ann nil
                :span nil}})
-
-;; Functions for resolving across data types
-
-(defn in-doc?
-  ([{:keys [doc]} doc-id]
-   (= doc doc-id))
-  ([{:keys [ann]} anns doc-id]
-   (in-doc? (get anns ann) doc-id)))
-
-(defn filter-in-doc
-  ([doc-id anns]
-   (util/filter-vals #(in-doc? % doc-id) anns))
-  ([doc-id anns spans]
-   (util/filter-vals #(in-doc? % anns doc-id) spans)))
-
-(defn in-ann?
-  [{:keys [ann]} ann-id]
-  (= ann ann-id))
-
-(defn filter-in-ann
-  ([ann-id spans]
-   (util/filter-vals #(in-ann? % ann-id) spans)))

@@ -1,8 +1,8 @@
 (ns knowtator.subs
   (:require
    [re-frame.core :as re-frame]
-   [knowtator.span :as span]
-   [knowtator.db :as db]))
+   [knowtator.db :as db]
+   [knowtator.model :as model]))
 
 (re-frame/reg-sub
  ::name
@@ -49,17 +49,8 @@
   :<- [::visible-doc-id]
   :<- [::anns]
   :<- [::spans]
-  #(apply db/filter-in-doc %))
+  #(apply model/filter-in-doc %))
 
-(defn resolve-span-content
-  [content spans]
-  (let [[container i] (reduce (fn [[container i] {:keys [start end] :as span}]
-                                [(conj container
-                                   (subs content i start)
-                                   (assoc span :content (subs content start end)))
-                                 end])
-                        [[] 0] spans)]
-    (conj container (subs content i))))
 (re-frame/reg-sub
   ::highlighted-text
   :<- [::visible-doc-content]
@@ -67,9 +58,9 @@
   (fn [[content spans] _]
     (->> spans
       vals
-      span/make-overlapping-spans
-      span/sort-spans-by-loc
-      (resolve-span-content content))))
+      model/make-overlapping-spans
+      model/sort-spans-by-loc
+      (model/resolve-span-content content))))
 
 (re-frame/reg-sub
   ::selected-span-id
@@ -86,8 +77,7 @@
   :<- [::selected-ann-id]
   :<- [::spans]
   (fn [[ann-id spans]]
-    (db/filter-in-ann ann-id spans)))
-
+    (model/filter-in-ann ann-id spans)))
 
 (re-frame/reg-sub
   ::selected-span-content
@@ -99,19 +89,18 @@
            (assoc-in spans [span-id :selected] true)
            spans)
       vals
-      (resolve-span-content content)
+      (model/resolve-span-content content)
       (remove nil?))))
 
 (re-frame/reg-sub
   ::profiles
   :profiles)
 
-
 (re-frame/reg-sub
   ::ann-color
   :<- [::anns]
   :<- [::profiles]
   (fn [[anns profiles] [_ ann]]
-    (cond (not (coll? ann)) (ann-color (get anns ann) profiles)
-          (empty? (rest ann)) (ann-color (get anns (first ann)) profiles)
+    (cond (not (coll? ann)) (model/ann-color (get anns ann) profiles)
+          (empty? (rest ann)) (model/ann-color (get anns (first ann)) profiles)
           :else "grey")))

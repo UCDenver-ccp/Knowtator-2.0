@@ -5,8 +5,7 @@
    [breaking-point.core :as bp]
    [knowtator.subs :as subs]
    [knowtator.events :as evts]
-   [knowtator.util :as util]
-   [rangy :as rangy]
+   [knowtator.html-util :as html]
    ["rangy/lib/rangy-textrange" :as rangy-txt]))
 
 ;; Editor
@@ -57,7 +56,7 @@
     [:h2 @doc-id]
     [:div.text-annotation-editor {:on-click #(re-frame.core/dispatch [::evts/record-selection (text-selection (.-target %)) @doc-id])
                                       :read-only true
-                                      :on-scroll #(util/unify-scroll "textarea" "backdrop" "foredrop")}
+                                      :on-scroll #(html/unify-scroll "textarea" "backdrop" "foredrop")}
      (doall
        (for [text @text]
          (if (string? text)
