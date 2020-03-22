@@ -1,5 +1,6 @@
 (ns knowtator.model
-  (:require [knowtator.util :as util]))
+  (:require [knowtator.util :as util]
+            [clojure.string :as str]))
 
 (defn ann-color
   [{:keys [profile concept]} profiles]
@@ -112,6 +113,32 @@
      (if (empty? spans)
        finished
        (recur new-spans finished)))))
+
+(defn split-into-paragraphs
+  [spans]
+  (->> spans
+    (reduce (fn [[paragraphs current] span]
+              (if (string? span)
+                (let [[first-p & rest-p] (str/split-lines span)
+                      middle-p (->> rest-p
+                                 butlast
+                                 (map vector))
+                      rest-p (map vector rest-p)
+                      last-p (last rest-p)
+                      current (conj current first-p)]
+                  (cond
+                    (and (empty? rest-p) (not (str/ends-with? span "\n"))) [paragraphs current]
+                    (str/ends-with? span "\n") [(-> paragraphs
+                                                  (conj current)
+                                                  (into rest-p))
+                                                []]
+                    :else [(-> paragraphs
+                             (conj current)
+                             (into middle-p))
+                           last-p]))
+                [paragraphs (conj current span)]))
+      [[][]])
+    (apply conj)))
 
 #_(let [spans [{:id :C  :start 3 :end 7}
                {:id :B :start 2 :end 8}

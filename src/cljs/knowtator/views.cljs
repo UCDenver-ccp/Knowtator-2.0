@@ -21,36 +21,41 @@
 
 (defn popup-text-annotation
   [{:keys [ann content id]}]
-  [:div.popup {:style {:border :solid
-                       :background-color @(re-frame/subscribe [::subs/ann-color ann])
-                       :color :black
-                       :border-color :black}}
-
-   [:span.popuptext.show {:style {:z-index 3}
-                          :id (str id "popup")}
-    id]
+  [re-com/p-span
+   {:style {:background-color @(re-frame/subscribe [::subs/ann-color ann])
+            :color :black
+            :border-color :black
+            :border :solid}}
+   #_[:span {:style {:z-index 3}
+             :id (str id "popup")
+             :class ["popup" "popuptext" "show"]}
+      id]
    content])
 
 (defn text-annotation
   [{:keys [content ann]}]
-  [:span {:style {:background-color @(re-frame/subscribe [::subs/ann-color ann])}}
+  [re-com/p-span {:style {:background-color @(re-frame/subscribe [::subs/ann-color ann])}}
    content])
 
 (defn editor
   [doc-id]
-  (let [text (re-frame/subscribe [::subs/highlighted-text])
+  (let [paragraphs (re-frame/subscribe [::subs/highlighted-text])
         selected-span-id (re-frame/subscribe [::subs/selected-span-id])]
-    [:div.text-annotation-editor {:on-click #(re-frame.core/dispatch [::evts/record-selection (html/text-selection (.-target %) "text-annotation-editor") doc-id])}
+    [:div.text-annotation-editor.popup {:on-click #(re-frame.core/dispatch [::evts/record-selection (html/text-selection (.-target %) "text-annotation-editor") doc-id])}
      (doall
-       (for [text @text]
-         (if (string? text)
-           text
-           (let [{:keys [id] :as span} text]
-             (if (= id @selected-span-id)
-               ^{:key (str (random-uuid))}
-               [popup-text-annotation span]
-               ^{:key (str (random-uuid))}
-               [text-annotation span])))))]))
+       (for [paragraph @paragraphs]
+         ^{:key (str (random-uuid))}
+         [re-com/p
+          (doall
+            (for [text paragraph]
+              (if (string? text)
+                text
+                (let [{:keys [id] :as span} text]
+                  (if (= id @selected-span-id)
+                    ^{:key (str (random-uuid))}
+                    [text-annotation span]
+                    ^{:key (str (random-uuid))}
+                    [text-annotation span])))))]))]))
 
 (defn home-panel
   []

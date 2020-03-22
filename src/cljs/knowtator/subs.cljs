@@ -59,7 +59,8 @@
       vals
       model/make-overlapping-spans
       model/sort-spans-by-loc
-      (model/resolve-span-content content))))
+      (model/resolve-span-content content)
+      model/split-into-paragraphs)))
 
 (re-frame/reg-sub
   ::selected-span-id
