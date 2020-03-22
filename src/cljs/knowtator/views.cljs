@@ -21,15 +21,17 @@
 
 (defn popup-text-annotation
   [{:keys [ann content id]}]
+  (println id)
   [re-com/p-span
    {:style {:background-color @(re-frame/subscribe [::subs/ann-color ann])
             :color :black
             :border-color :black
-            :border :solid}}
-   #_[:span {:style {:z-index 3}
-             :id (str id "popup")
-             :class ["popup" "popuptext" "show"]}
-      id]
+            :border :solid}
+    :class ["popup"]}
+   [:span {:style {:z-index 3}
+           :id (str id "popup")
+           :class ["popuptext" "show"]}
+    id]
    content])
 
 (defn text-annotation
@@ -41,7 +43,7 @@
   [doc-id]
   (let [paragraphs (re-frame/subscribe [::subs/highlighted-text])
         selected-span-id (re-frame/subscribe [::subs/selected-span-id])]
-    [:div.text-annotation-editor.popup {:on-click #(re-frame.core/dispatch [::evts/record-selection (html/text-selection (.-target %) "text-annotation-editor") doc-id])}
+    [:div.text-annotation-editor {:on-click #(re-frame.core/dispatch [::evts/record-selection (html/text-selection (.-target %) "text-annotation-editor") doc-id])}
      (doall
        (for [paragraph @paragraphs]
          ^{:key (str (random-uuid))}
@@ -53,7 +55,7 @@
                 (let [{:keys [id] :as span} text]
                   (if (= id @selected-span-id)
                     ^{:key (str (random-uuid))}
-                    [text-annotation span]
+                    [popup-text-annotation span]
                     ^{:key (str (random-uuid))}
                     [text-annotation span])))))]))]))
 
