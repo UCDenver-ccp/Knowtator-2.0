@@ -50,8 +50,8 @@
 
   [:textarea {:display          :block
               :position         :absolute
-              :bottom 0
-              :left 0
+              :bottom           0
+              :left             0
               :font             [(str/join " " ["20px/28px" "'Open Sans'"]) :sans-serif]
               :z-index          0
               :margin           0
@@ -95,32 +95,32 @@
 
   [:textarea:focus, :button:focus {:outline    :none
                                    :box-shadow [0 0 0 "2px" "#c6aada"]}]
-  [:.popup {:position :relative
-            :display :inline-block
-            :cursor :pointer
-            :-webkit-user-select :none
-            :-moz-user-select :none
-            :user-select :none}
-   [:.popuptext {:visibility :hidden
-                 :width "160px"
+  [:.popup {:position      :relative
+            :display       :inline-block
+            :cursor        :pointer
+            ;; :-webkit-user-select :none
+            ;; :-moz-user-select :none
+            #_:user-select #_:none}
+   [:.popuptext {:visibility       :hidden
+                 :width            "160px"
                  :background-color "#555"
-                 :color "#fff"
-                 :text-align :center
-                 :border-radius "6px"
-                 :padding "8px 0"
-                 :position :absolute
-                 :z-index 1
-                 :bottom "125%"
-                 :left "50%"
-                 :margin-left "-80px"}
-    [(sel/& sel/after) {:content "\"\""
-                        :position :absolute
-                        :top "100%"
-                        :left "50%"
-                        :margin-left "-5px"
+                 :color            "#fff"
+                 :text-align       :center
+                 :border-radius    "6px"
+                 :padding          "8px 0"
+                 :position         :absolute
+                 :z-index          1
+                 :bottom           "125%"
+                 :left             "50%"
+                 :margin-left      "-80px"}
+    [(sel/& sel/after) {:content      "\"\""
+                        :position     :absolute
+                        :top          "100%"
+                        :left         "50%"
+                        :margin-left  "-5px"
                         :border-width "5px"
                         :border-style :solid
                         :border-color "#555 transparent transparent transparent"}]]
-   [:.show {:visibility :visible
+   [:.show {:visibility         :visible
             :-web-kit-animation "fadeIn 1s"
-            :animation "fadeIn 1s"}]])
+            :animation          "fadeIn 1s"}]])
