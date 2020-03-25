@@ -68,6 +68,12 @@
     (get-in db [:selection :span])))
 
 (re-frame/reg-sub
+  ::selected-span?
+  :<- [::selected-span-id]
+  (fn [sel-id [_ id]]
+    (= sel-id id)))
+
+(re-frame/reg-sub
   ::selected-ann-id
   (fn [db _]
     (get-in db [:spans (get-in db [:selection :span]) :ann])))
