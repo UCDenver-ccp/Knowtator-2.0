@@ -95,12 +95,12 @@
 
   [:textarea:focus, :button:focus {:outline    :none
                                    :box-shadow [0 0 0 "2px" "#c6aada"]}]
-  [:.popup {:position      :relative
-            :display       :inline-block
-            :cursor        :pointer
-            ;; :-webkit-user-select :none
+  [:.popup {:position            :relative
+            :display             :inline-block
+            :cursor              :pointer
+            :-webkit-user-select :none
             ;; :-moz-user-select :none
-            #_:user-select #_:none}
+            #_:user-select       #_:none}
    [:.popuptext {:visibility       :hidden
                  :width            "160px"
                  :background-color "#555"

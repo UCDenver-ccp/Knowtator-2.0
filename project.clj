@@ -15,7 +15,8 @@
                  [yogthos/config "1.1.7"]
                  [ring "1.7.1"]
                  [re-pressed "0.3.1"]
-                 [breaking-point "0.1.2"]]
+                 [breaking-point "0.1.2"]
+                 [uk.org.russet/tawny-owl "2.0.2"]]
 
   :plugins [[lein-garden "0.3.0"]
             [lein-shell "0.5.0"]]

@@ -117,8 +117,6 @@ textarea:focus, button:focus {
   display: inline-block;
   cursor: pointer;
   -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
 }
 
 .popup .popuptext {
