@@ -33,7 +33,6 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.util.Optional;
-import javax.swing.DefaultListModel;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
@@ -130,7 +129,7 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
 
   /** React to model event. */
   public void reactToModelEvent() {
-    ((DefaultListModel) getModel()).clear();
+    ((DefaultTableModel) getModel()).setRowCount(0);
     addElementsFromModel();
     setSelected();
   }
