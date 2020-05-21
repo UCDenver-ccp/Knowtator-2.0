@@ -25,5 +25,5 @@
 package edu.ucdenver.ccp.knowtator.io.conll;
 
 public enum ConllUField {
-  ID, FORM, LEMMA, UPOS, XPOS, FEATS, HEAD, DEPREL, DEPS, MISC;
+  ID, FORM, LEMMA, UPOS, XPOS, FEATS, HEAD, DEPREL, DEPS, MISC
 }

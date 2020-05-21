@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.view.list;
 
 import static edu.ucdenver.ccp.knowtator.view.actions.modelactions.ProfileAction.assignColorToClass;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
@@ -56,17 +57,11 @@ public class ColorList extends JList<String> implements KnowtatorComponent, Mode
   private void setCollection() {
     removeListSelectionListener(lsl);
     setModel(new DefaultListModel<>());
-    view.getModel()
-        .ifPresent(
-            model ->
-                model
-                    .getSelectedProfile()
-                    .ifPresent(
-                        profile ->
-                            profile.getColors().keySet().stream()
-                                .sorted()
-                                .forEach(
-                                    o -> ((DefaultListModel<String>) getModel()).addElement(o))));
+    view.getModel().flatMap(BaseModel::getSelectedProfile).ifPresent(profile ->
+        profile.getColors().keySet().stream()
+            .sorted()
+            .forEach(
+                o -> ((DefaultListModel<String>) getModel()).addElement(o)));
 
     addListSelectionListener(lsl);
   }

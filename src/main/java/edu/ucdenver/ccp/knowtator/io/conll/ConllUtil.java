@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 
@@ -145,7 +146,7 @@ public class ConllUtil {
                                       new HashSet<>(Collections.singletonList("Structures")));
                               int[] range = findEnd.apply(fields.get(ConllUField.FORM));
 
-                              Span span = new Span(conceptAnnotation, null, range[0], range[1]);
+                              Span span = new Span(conceptAnnotation, null, Objects.requireNonNull(range)[0], range[1]);
                               conceptAnnotation.add(span);
                               return conceptAnnotation;
                             })

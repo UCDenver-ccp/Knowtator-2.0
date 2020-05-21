@@ -110,18 +110,13 @@ public class Loader extends SwingWorker implements ModelListener {
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {
     event
         .getNew()
-        .filter(modelObject -> modelObject instanceof TextSource || modelObject instanceof Profile)
-        .ifPresent(
-            textSource ->
-                view.getModel()
-                    .ifPresent(
-                        model -> {
-                          float x =
-                              (model.getNumberOfTextSources() + model.getNumberOfProfiles())
-                                  / maxVal
-                                  * 100;
-                          setProgress(Math.min(100, (int) x));
-                        }));
+        .filter(modelObject -> modelObject instanceof TextSource || modelObject instanceof Profile).flatMap(textSource -> view.getModel()).ifPresent(model -> {
+      float x =
+          (model.getNumberOfTextSources() + model.getNumberOfProfiles())
+              / maxVal
+              * 100;
+      setProgress(Math.min(100, (int) x));
+    });
   }
 
   @Override

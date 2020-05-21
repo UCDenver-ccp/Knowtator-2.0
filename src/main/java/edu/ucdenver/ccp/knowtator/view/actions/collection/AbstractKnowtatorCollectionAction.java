@@ -27,6 +27,7 @@ package edu.ucdenver.ccp.knowtator.view.actions.collection;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
@@ -245,18 +246,12 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
                             break;
                           case SPAN:
                             model
-                                .getSelectedTextSource()
-                                .ifPresent(
-                                    textSource ->
-                                        textSource
-                                            .getSelectedAnnotation()
-                                            .ifPresent(
-                                                conceptAnnotation ->
-                                                    actions.add(
-                                                        new SpanAction(
-                                                            model,
-                                                            actionType,
-                                                            conceptAnnotation))));
+                                .getSelectedTextSource().flatMap(TextSource::getSelectedAnnotation).ifPresent(conceptAnnotation ->
+                                actions.add(
+                                    new SpanAction(
+                                        model,
+                                        actionType,
+                                        conceptAnnotation)));
                             break;
                           case PROFILE:
                             actions.add(new ProfileAction(model, actionType, id));

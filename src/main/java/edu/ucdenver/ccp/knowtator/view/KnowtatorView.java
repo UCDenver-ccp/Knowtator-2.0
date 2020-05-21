@@ -87,6 +87,7 @@ import java.awt.event.WindowFocusListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -714,25 +715,19 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                 .ifPresent(
                     model1 ->
                         model1
-                            .getSelectedConceptAnnotation()
-                            .ifPresent(
-                                conceptAnnotation ->
-                                    conceptAnnotation
-                                        .getSelection()
-                                        .ifPresent(
-                                            span -> {
-                                              try {
-                                                model1.registerAction(
-                                                    new SpanActions.ModifySpanAction(
-                                                        model1,
-                                                        SpanActions.END,
-                                                        SpanActions.SHRINK,
-                                                        span));
-                                              } catch (ActionUnperformable e1) {
-                                                JOptionPane.showMessageDialog(
-                                                    this, e1.getMessage());
-                                              }
-                                            }))));
+                            .getSelectedConceptAnnotation().flatMap(SelectableCollection::getSelection).ifPresent(span -> {
+                          try {
+                            model1.registerAction(
+                                new SpanActions.ModifySpanAction(
+                                    model1,
+                                    SpanActions.END,
+                                    SpanActions.SHRINK,
+                                    span));
+                          } catch (ActionUnperformable e1) {
+                            JOptionPane.showMessageDialog(
+                                this, e1.getMessage());
+                          }
+                        })));
 
     spanSizeButtons.put(
         shrinkStartButton,
@@ -741,25 +736,19 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                 .ifPresent(
                     model1 ->
                         model1
-                            .getSelectedConceptAnnotation()
-                            .ifPresent(
-                                conceptAnnotation ->
-                                    conceptAnnotation
-                                        .getSelection()
-                                        .ifPresent(
-                                            span -> {
-                                              try {
-                                                model1.registerAction(
-                                                    new SpanActions.ModifySpanAction(
-                                                        model1,
-                                                        SpanActions.START,
-                                                        SpanActions.SHRINK,
-                                                        span));
-                                              } catch (ActionUnperformable e1) {
-                                                JOptionPane.showMessageDialog(
-                                                    this, e1.getMessage());
-                                              }
-                                            }))));
+                            .getSelectedConceptAnnotation().flatMap(SelectableCollection::getSelection).ifPresent(span -> {
+                          try {
+                            model1.registerAction(
+                                new SpanActions.ModifySpanAction(
+                                    model1,
+                                    SpanActions.START,
+                                    SpanActions.SHRINK,
+                                    span));
+                          } catch (ActionUnperformable e1) {
+                            JOptionPane.showMessageDialog(
+                                this, e1.getMessage());
+                          }
+                        })));
     spanSizeButtons.put(
         growEndButton,
         e ->
@@ -767,25 +756,19 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                 .ifPresent(
                     model1 ->
                         model1
-                            .getSelectedConceptAnnotation()
-                            .ifPresent(
-                                conceptAnnotation ->
-                                    conceptAnnotation
-                                        .getSelection()
-                                        .ifPresent(
-                                            span -> {
-                                              try {
-                                                model1.registerAction(
-                                                    new SpanActions.ModifySpanAction(
-                                                        model1,
-                                                        SpanActions.END,
-                                                        SpanActions.GROW,
-                                                        span));
-                                              } catch (ActionUnperformable e1) {
-                                                JOptionPane.showMessageDialog(
-                                                    this, e1.getMessage());
-                                              }
-                                            }))));
+                            .getSelectedConceptAnnotation().flatMap(SelectableCollection::getSelection).ifPresent(span -> {
+                          try {
+                            model1.registerAction(
+                                new SpanActions.ModifySpanAction(
+                                    model1,
+                                    SpanActions.END,
+                                    SpanActions.GROW,
+                                    span));
+                          } catch (ActionUnperformable e1) {
+                            JOptionPane.showMessageDialog(
+                                this, e1.getMessage());
+                          }
+                        })));
     spanSizeButtons.put(
         growStartButton,
         e ->
@@ -793,25 +776,19 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                 .ifPresent(
                     model1 ->
                         model1
-                            .getSelectedConceptAnnotation()
-                            .ifPresent(
-                                conceptAnnotation ->
-                                    conceptAnnotation
-                                        .getSelection()
-                                        .ifPresent(
-                                            span -> {
-                                              try {
-                                                model1.registerAction(
-                                                    new SpanActions.ModifySpanAction(
-                                                        model1,
-                                                        SpanActions.START,
-                                                        SpanActions.GROW,
-                                                        span));
-                                              } catch (ActionUnperformable e1) {
-                                                JOptionPane.showMessageDialog(
-                                                    this, e1.getMessage());
-                                              }
-                                            }))));
+                            .getSelectedConceptAnnotation().flatMap(SelectableCollection::getSelection).ifPresent(span -> {
+                          try {
+                            model1.registerAction(
+                                new SpanActions.ModifySpanAction(
+                                    model1,
+                                    SpanActions.START,
+                                    SpanActions.GROW,
+                                    span));
+                          } catch (ActionUnperformable e1) {
+                            JOptionPane.showMessageDialog(
+                                this, e1.getMessage());
+                          }
+                        })));
 
     selectionSizeButtons.put(
         shrinkEndButton,
@@ -994,17 +971,12 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
   @Override
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {
-    getModel()
-        .ifPresent(
-            model1 ->
-                event
-                    .getNew()
-                    .ifPresent(
-                        o -> {
-                          if (o instanceof GraphSpace && isVisible()) {
-                            graphViewDialog.setVisible(true);
-                          }
-                        }));
+    getModel().flatMap(model1 -> event
+        .getNew()).ifPresent(o -> {
+      if (o instanceof GraphSpace && isVisible()) {
+        graphViewDialog.setVisible(true);
+      }
+    });
 
     getModel()
         .ifPresent(
@@ -1080,7 +1052,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     infoPane.setMaximumSize(new Dimension(200, 2147483647));
     infoPane.setMinimumSize(new Dimension(200, 158));
     panel1.add(infoPane, BorderLayout.CENTER);
-    infoPane.setBorder(BorderFactory.createTitledBorder(null, "Info", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 18, infoPane.getFont())));
+    infoPane.setBorder(BorderFactory.createTitledBorder(null, "Info", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 18, infoPane.getFont()), null));
     spanPane = new JPanel();
     spanPane.setLayout(new GridBagLayout());
     GridBagConstraints gbc;
@@ -1091,7 +1063,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     infoPane.add(spanPane, gbc);
-    spanPane.setBorder(BorderFactory.createTitledBorder(null, "Spans", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 16, spanPane.getFont())));
+    spanPane.setBorder(BorderFactory.createTitledBorder(null, "Spans", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 16, spanPane.getFont()), null));
     final JScrollPane scrollPane1 = new JScrollPane();
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
@@ -1167,7 +1139,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     infoPane.add(graphSpacePane, gbc);
-    graphSpacePane.setBorder(BorderFactory.createTitledBorder(null, "Graph Spaces", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 16, graphSpacePane.getFont())));
+    graphSpacePane.setBorder(BorderFactory.createTitledBorder(null, "Graph Spaces", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 16, graphSpacePane.getFont()), null));
     final JScrollPane scrollPane2 = new JScrollPane();
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
@@ -1190,7 +1162,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     infoPane.add(scrollPane3, gbc);
-    scrollPane3.setBorder(BorderFactory.createTitledBorder(null, "Notes", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, scrollPane3.getFont())));
+    scrollPane3.setBorder(BorderFactory.createTitledBorder(null, "Notes", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, scrollPane3.getFont()), null));
     Font annotationNotesFont = this.$$$getFont$$$("Verdana", -1, 12, annotationNotes.getFont());
     if (annotationNotesFont != null) {
       annotationNotes.setFont(annotationNotesFont);
@@ -1204,7 +1176,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     infoPane.add(panel3, gbc);
-    panel3.setBorder(BorderFactory.createTitledBorder(null, "ID", TitledBorder.LEFT, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel3.getFont())));
+    panel3.setBorder(BorderFactory.createTitledBorder(null, "ID", TitledBorder.LEFT, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel3.getFont()), null));
     Font annotationIdLabelFont = this.$$$getFont$$$("Verdana", -1, -1, annotationIdLabel.getFont());
     if (annotationIdLabelFont != null) {
       annotationIdLabel.setFont(annotationIdLabelFont);
@@ -1225,7 +1197,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     infoPane.add(panel4, gbc);
-    panel4.setBorder(BorderFactory.createTitledBorder(null, "Annotator", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel4.getFont())));
+    panel4.setBorder(BorderFactory.createTitledBorder(null, "Annotator", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel4.getFont()), null));
     Font annotationAnnotatorLabelFont = this.$$$getFont$$$("Verdana", -1, -1, annotationAnnotatorLabel.getFont());
     if (annotationAnnotatorLabelFont != null) {
       annotationAnnotatorLabel.setFont(annotationAnnotatorLabelFont);
@@ -1245,7 +1217,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     infoPane.add(panel5, gbc);
-    panel5.setBorder(BorderFactory.createTitledBorder(null, "OWL CLass", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel5.getFont())));
+    panel5.setBorder(BorderFactory.createTitledBorder(null, "OWL CLass", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel5.getFont()), null));
     Font annotationClassLabelFont = this.$$$getFont$$$("Verdana", -1, -1, annotationClassLabel.getFont());
     if (annotationClassLabelFont != null) {
       annotationClassLabel.setFont(annotationClassLabelFont);
@@ -1287,7 +1259,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     panel7.add(textSourcePane, gbc);
-    textSourcePane.setBorder(BorderFactory.createTitledBorder(null, "Document", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, textSourcePane.getFont())));
+    textSourcePane.setBorder(BorderFactory.createTitledBorder(null, "Document", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, textSourcePane.getFont()), null));
     final JPanel panel8 = new JPanel();
     panel8.setLayout(new GridBagLayout());
     gbc = new GridBagConstraints();
@@ -1347,7 +1319,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     textSourcePane.add(panel9, gbc);
-    panel9.setBorder(BorderFactory.createTitledBorder("Font Size"));
+    panel9.setBorder(BorderFactory.createTitledBorder(null, "Font Size", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
     fontSizeSlider = new JSlider();
     fontSizeSlider.setInverted(false);
     fontSizeSlider.setMajorTickSpacing(8);
@@ -1464,7 +1436,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     panel7.add(annotationPaneButtons, gbc);
-    annotationPaneButtons.setBorder(BorderFactory.createTitledBorder(null, "Annotation", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, annotationPaneButtons.getFont())));
+    annotationPaneButtons.setBorder(BorderFactory.createTitledBorder(null, "Annotation", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, annotationPaneButtons.getFont()), null));
     final JPanel panel10 = new JPanel();
     panel10.setLayout(new GridBagLayout());
     gbc = new GridBagConstraints();
@@ -1581,7 +1553,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     panel12.add(scrollPane5, gbc);
-    scrollPane5.setBorder(BorderFactory.createTitledBorder(null, "Colors", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, scrollPane5.getFont())));
+    scrollPane5.setBorder(BorderFactory.createTitledBorder(null, "Colors", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, scrollPane5.getFont()), null));
     Font colorListFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, colorList.getFont());
     if (colorListFont != null) {
       colorList.setFont(colorListFont);
@@ -1595,7 +1567,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     panel12.add(panel13, gbc);
-    panel13.setBorder(BorderFactory.createTitledBorder(null, "Profiles", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel13.getFont())));
+    panel13.setBorder(BorderFactory.createTitledBorder(null, "Profiles", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel13.getFont()), null));
     final JScrollPane scrollPane6 = new JScrollPane();
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
@@ -1651,13 +1623,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.gridy = 0;
     gbc.weighty = 1.0;
     panel12.add(iaaPane, gbc);
-    iaaPane.setBorder(BorderFactory.createTitledBorder(null, "IAA", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, iaaPane.getFont())));
+    iaaPane.setBorder(BorderFactory.createTitledBorder(null, "IAA", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, iaaPane.getFont()), null));
     runIaaButton = new JButton();
     Font runIaaButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, runIaaButton.getFont());
     if (runIaaButtonFont != null) {
       runIaaButton.setFont(runIaaButtonFont);
     }
-    this.$$$loadButtonText$$$(runIaaButton, ResourceBundle.getBundle("log4j").getString("run.iaa"));
+    this.$$$loadButtonText$$$(runIaaButton, this.$$$getMessageFromBundle$$$("log4j", "run.iaa"));
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 3;
@@ -1670,7 +1642,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     if (iaaSpanCheckBoxFont != null) {
       iaaSpanCheckBox.setFont(iaaSpanCheckBoxFont);
     }
-    this.$$$loadButtonText$$$(iaaSpanCheckBox, ResourceBundle.getBundle("ui").getString("span1"));
+    this.$$$loadButtonText$$$(iaaSpanCheckBox, this.$$$getMessageFromBundle$$$("ui", "span1"));
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 1;
@@ -1683,7 +1655,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     if (iaaClassAndSpanCheckBoxFont != null) {
       iaaClassAndSpanCheckBox.setFont(iaaClassAndSpanCheckBoxFont);
     }
-    this.$$$loadButtonText$$$(iaaClassAndSpanCheckBox, ResourceBundle.getBundle("ui").getString("class.and.span"));
+    this.$$$loadButtonText$$$(iaaClassAndSpanCheckBox, this.$$$getMessageFromBundle$$$("ui", "class.and.span"));
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 2;
@@ -1696,7 +1668,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     if (iaaClassCheckBoxFont != null) {
       iaaClassCheckBox.setFont(iaaClassCheckBoxFont);
     }
-    this.$$$loadButtonText$$$(iaaClassCheckBox, ResourceBundle.getBundle("log4j").getString("class1"));
+    this.$$$loadButtonText$$$(iaaClassCheckBox, this.$$$getMessageFromBundle$$$("log4j", "class1"));
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 0;
@@ -1761,7 +1733,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     if (findTextInOntologyButtonFont != null) {
       findTextInOntologyButton.setFont(findTextInOntologyButtonFont);
     }
-    this.$$$loadButtonText$$$(findTextInOntologyButton, ResourceBundle.getBundle("log4j").getString("find.in.ontology1"));
+    this.$$$loadButtonText$$$(findTextInOntologyButton, this.$$$getMessageFromBundle$$$("log4j", "find.in.ontology1"));
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 1;
@@ -1851,7 +1823,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     if (exactMatchCheckBoxFont != null) {
       exactMatchCheckBox.setFont(exactMatchCheckBoxFont);
     }
-    this.$$$loadButtonText$$$(exactMatchCheckBox, ResourceBundle.getBundle("log4j").getString("exact.match"));
+    this.$$$loadButtonText$$$(exactMatchCheckBox, this.$$$getMessageFromBundle$$$("log4j", "exact.match"));
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
     gbc.gridy = 0;
@@ -1868,7 +1840,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     panel19.add(panel20, gbc);
-    panel20.setBorder(BorderFactory.createTitledBorder(null, "Text", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel20.getFont())));
+    panel20.setBorder(BorderFactory.createTitledBorder(null, "Text", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel20.getFont()), null));
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 0;
@@ -1935,7 +1907,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     if (includeClassDescendantsCheckBoxFont != null) {
       includeClassDescendantsCheckBox.setFont(includeClassDescendantsCheckBoxFont);
     }
-    this.$$$loadButtonText$$$(includeClassDescendantsCheckBox, ResourceBundle.getBundle("log4j").getString("include.descendants"));
+    this.$$$loadButtonText$$$(includeClassDescendantsCheckBox, this.$$$getMessageFromBundle$$$("log4j", "include.descendants"));
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
     gbc.gridy = 0;
@@ -1950,7 +1922,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     panel22.add(panel23, gbc);
-    panel23.setBorder(BorderFactory.createTitledBorder(null, "OWL Class", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel23.getFont())));
+    panel23.setBorder(BorderFactory.createTitledBorder(null, "OWL Class", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel23.getFont()), null));
     owlClassLabel.setText("");
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
@@ -2015,7 +1987,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     if (includePropertyDescendantsCheckBoxFont != null) {
       includePropertyDescendantsCheckBox.setFont(includePropertyDescendantsCheckBoxFont);
     }
-    this.$$$loadButtonText$$$(includePropertyDescendantsCheckBox, ResourceBundle.getBundle("log4j").getString("include.descendants1"));
+    this.$$$loadButtonText$$$(includePropertyDescendantsCheckBox, this.$$$getMessageFromBundle$$$("log4j", "include.descendants1"));
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
     gbc.gridy = 0;
@@ -2030,7 +2002,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     panel25.add(panel26, gbc);
-    panel26.setBorder(BorderFactory.createTitledBorder(null, "OWL Object Property", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel26.getFont())));
+    panel26.setBorder(BorderFactory.createTitledBorder(null, "OWL Object Property", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel26.getFont()), null));
     Font owlPropertyLabelFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, owlPropertyLabel.getFont());
     if (owlPropertyLabelFont != null) {
       owlPropertyLabel.setFont(owlPropertyLabelFont);
@@ -2141,6 +2113,23 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
       }
     }
     return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+  }
+
+  private static Method $$$cachedGetBundleMethod$$$ = null;
+
+  private String $$$getMessageFromBundle$$$(String path, String key) {
+    ResourceBundle bundle;
+    try {
+      Class<?> thisClass = this.getClass();
+      if ($$$cachedGetBundleMethod$$$ == null) {
+        Class<?> dynamicBundleClass = thisClass.getClassLoader().loadClass("com.intellij.DynamicBundle");
+        $$$cachedGetBundleMethod$$$ = dynamicBundleClass.getMethod("getBundle", String.class, Class.class);
+      }
+      bundle = (ResourceBundle) $$$cachedGetBundleMethod$$$.invoke(null, path, thisClass);
+    } catch (Exception e) {
+      bundle = ResourceBundle.getBundle(path);
+    }
+    return bundle.getString(key);
   }
 
   /**

@@ -301,7 +301,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
     Iterator<Span> spanIterator = spans.iterator();
     if (spanIterator.hasNext()) {
       Span lastSpan = spanIterator.next();
-      for (; spanIterator.hasNext(); ) {
+      while (spanIterator.hasNext()) {
         Span span = spanIterator.next();
         if (span.intersects(lastSpan)) {
           highlightRegion(
@@ -421,7 +421,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
   }
 
   /** The type Rectangle painter. */
-  class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {
+  static class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {
 
     /**
      * Instantiates a new Rectangle painter.
@@ -526,24 +526,18 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
                         selectedOwlClass.ifPresent(
                             owlClass ->
                                 model
-                                    .getSelectedTextSource()
-                                    .ifPresent(
-                                        textSource1 ->
-                                            textSource1
-                                                .getSelectedAnnotation()
-                                                .ifPresent(
-                                                    conceptAnnotation -> {
-                                                      try {
-                                                        model.registerAction(
-                                                            new ReassignOwlClassAction(
-                                                                model,
-                                                                conceptAnnotation,
-                                                                owlClass));
-                                                      } catch (ActionUnperformable e1) {
-                                                        JOptionPane.showMessageDialog(
-                                                            view, e1.getMessage());
-                                                      }
-                                                    })));
+                                    .getSelectedTextSource().flatMap(TextSource::getSelectedAnnotation).ifPresent(conceptAnnotation -> {
+                                  try {
+                                    model.registerAction(
+                                        new ReassignOwlClassAction(
+                                            model,
+                                            conceptAnnotation,
+                                            owlClass));
+                                  } catch (ActionUnperformable e1) {
+                                    JOptionPane.showMessageDialog(
+                                        view, e1.getMessage());
+                                  }
+                                }));
                       }));
 
       return menuItem;
@@ -629,20 +623,14 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
         show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
       } else {
         view.getModel()
-            .flatMap(BaseModel::getSelectedTextSource)
-            .ifPresent(
-                textSource ->
-                    textSource
-                        .getSelectedAnnotation()
-                        .ifPresent(
-                            conceptAnnotation ->
-                                conceptAnnotation
-                                    .getSelection()
-                                    .filter(
-                                        span ->
-                                            span.getStart() <= releaseOffset
-                                                && releaseOffset <= span.getEnd())
-                                    .ifPresent(span -> clickedInsideSpan(conceptAnnotation))));
+            .flatMap(BaseModel::getSelectedTextSource).flatMap(TextSource::getSelectedAnnotation).ifPresent(conceptAnnotation ->
+            conceptAnnotation
+                .getSelection()
+                .filter(
+                    span ->
+                        span.getStart() <= releaseOffset
+                            && releaseOffset <= span.getEnd())
+                .ifPresent(span -> clickedInsideSpan(conceptAnnotation)));
       }
     }
 

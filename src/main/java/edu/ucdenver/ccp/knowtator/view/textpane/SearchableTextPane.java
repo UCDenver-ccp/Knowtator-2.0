@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.view.textpane;
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectableCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
@@ -122,12 +123,7 @@ public abstract class SearchableTextPane extends JTextPane
           }
         }
       }
-      view.getModel()
-          .ifPresent(
-              model ->
-                  model
-                      .getSelectedTextSource()
-                      .ifPresent(textSource -> textSource.setSelectedConceptAnnotation(null)));
+      view.getModel().flatMap(BaseModel::getSelectedTextSource).ifPresent(textSource -> textSource.setSelectedConceptAnnotation(null));
       select(matchStart, matchEnd);
       refreshHighlights();
       isSearching = false;
@@ -186,17 +182,8 @@ public abstract class SearchableTextPane extends JTextPane
   @Override
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {
     view.getModel()
-        .flatMap(BaseModel::getSelectedTextSource)
-        .ifPresent(
-            textSource ->
-                textSource
-                    .getSelectedAnnotation()
-                    .ifPresent(
-                        conceptAnnotation ->
-                            conceptAnnotation
-                                .getSelection()
-                                .ifPresent(
-                                    span -> searchTextField.setText(span.getSpannedText()))));
+        .flatMap(BaseModel::getSelectedTextSource).flatMap(textSource -> textSource
+        .getSelectedAnnotation().flatMap(SelectableCollection::getSelection)).ifPresent(span -> searchTextField.setText(span.getSpannedText()));
     event
         .getNew()
         .ifPresent(

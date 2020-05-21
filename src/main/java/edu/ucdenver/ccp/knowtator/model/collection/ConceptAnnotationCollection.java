@@ -152,32 +152,22 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
   /** Select next span. */
   public void selectNextSpan() {
-    getSelection()
-        .ifPresent(
-            conceptAnnotation ->
-                conceptAnnotation
-                    .getSelection()
-                    .map(span -> getSpans(null).getNext(span))
-                    .ifPresent(
-                        nextSpan -> {
-                          setSelection(nextSpan.getConceptAnnotation());
-                          nextSpan.getConceptAnnotation().setSelection(nextSpan);
-                        }));
+    getSelection().flatMap(conceptAnnotation -> conceptAnnotation
+        .getSelection()
+        .map(span -> getSpans(null).getNext(span))).ifPresent(nextSpan -> {
+      setSelection(nextSpan.getConceptAnnotation());
+      nextSpan.getConceptAnnotation().setSelection(nextSpan);
+    });
   }
 
   /** Select previous span. */
   public void selectPreviousSpan() {
-    getSelection()
-        .ifPresent(
-            conceptAnnotation ->
-                conceptAnnotation
-                    .getSelection()
-                    .map(span -> getSpans(null).getPrevious(span))
-                    .ifPresent(
-                        nextSpan -> {
-                          setSelection(nextSpan.getConceptAnnotation());
-                          nextSpan.getConceptAnnotation().setSelection(nextSpan);
-                        }));
+    getSelection().flatMap(conceptAnnotation -> conceptAnnotation
+        .getSelection()
+        .map(span -> getSpans(null).getPrevious(span))).ifPresent(nextSpan -> {
+      setSelection(nextSpan.getConceptAnnotation());
+      nextSpan.getConceptAnnotation().setSelection(nextSpan);
+    });
   }
 
   /*

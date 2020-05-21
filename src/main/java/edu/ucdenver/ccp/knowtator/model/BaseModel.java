@@ -230,7 +230,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
   public String verifyId(String id, ModelObject modelObject, boolean hasPriority) {
     String verifiedId = id;
 
-    if (hasPriority && idRegistry.keySet().contains(id)) {
+    if (hasPriority && idRegistry.containsKey(id)) {
       ModelObject mo = idRegistry.get(id);
       modelObject.setId(verifyId(id, mo, false));
     } else {
@@ -238,7 +238,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 
       while (verifiedId == null
           || verifiedId.equals("")
-          || idRegistry.keySet().contains(verifiedId)) {
+          || idRegistry.containsKey(verifiedId)) {
         if (modelObject instanceof TextBoundModelObject) {
           verifiedId =
               String.format(
