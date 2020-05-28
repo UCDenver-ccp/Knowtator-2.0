@@ -186,7 +186,7 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
                 log.warn(
                     String.format(
                         "OWL Class: %s not found for concept: %s", owlClassID, annotationID));
-
+                model.addOWLClassNotFoundAnnotations(annotationID, owlClassID);
               }
 
               ConceptAnnotation newConceptAnnotation =

@@ -36,6 +36,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLWorkspace;
 
@@ -48,6 +50,7 @@ import org.protege.editor.owl.model.OWLWorkspace;
 public class KnowtatorModel extends OwlModel {
 
   private static final Logger log = Logger.getLogger(KnowtatorModel.class);
+  private List<String[]> OWLClassNotFoundAnnotations;
 
   /**
    * The constructor initializes all of the models and managers @param projectLocation the project
@@ -106,6 +109,7 @@ public class KnowtatorModel extends OwlModel {
               });
 
       log.info("Loading annotations");
+      OWLClassNotFoundAnnotations = new ArrayList<>();
       Files.list(getAnnotationsLocation().toPath())
           .filter(path -> path.toString().endsWith(".xml"))
           .map(Path::toFile)
@@ -157,5 +161,9 @@ public class KnowtatorModel extends OwlModel {
    */
   public static void main(String[] args) {
     log.info("Knowtator");
+  }
+
+  public void addOWLClassNotFoundAnnotations(String annotationID, String owlClassID) {
+    OWLClassNotFoundAnnotations.add(new String[]{annotationID, owlClassID});
   }
 }

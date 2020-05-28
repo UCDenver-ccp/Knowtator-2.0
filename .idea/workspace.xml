@@ -31,7 +31,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5586eae-97ae-4be5-aa9b-4eaaef9d25b4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/table/SpanTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/table/SpanTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/KnowtatorXmlUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/KnowtatorXmlUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/OldKnowtatorXmlUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/OldKnowtatorXmlUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/KnowtatorModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/KnowtatorModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIaaTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIaaTest.java" afterDir="false" />
     </list>
     <list id="9e563f0c-91e9-4ed0-b3db-d36bc1e81506" name="Made test for adding an annotation layer" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -77,7 +81,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/test" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
@@ -85,7 +89,7 @@
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
-  <component name="RunManager" selected="Application.GUI">
+  <component name="RunManager" selected="JUnit.KnowtatorIaaTest.runClassIaaTest">
     <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
       <setting name="replType" value="NREPL" />
       <setting name="execution" value="LEININGEN" />
@@ -120,38 +124,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ConllUtilTest.readToStructureAnnotations" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Knowtator-2.0" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.io.conll.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator.io.conll" />
-      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.io.conll.ConllUtilTest" />
-      <option name="METHOD_NAME" value="readToStructureAnnotations" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="FilterActionsTest.filterActionTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Knowtator-2.0" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.view.actions.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator.view.actions" />
-      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.view.actions.FilterActionsTest" />
-      <option name="METHOD_NAME" value="filterActionTest" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="KnowtatorCollectionActionsTest.removeProfileActionTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Knowtator-2.0" />
       <extension name="coverage">
@@ -168,17 +140,49 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="KnowtatorViewTest.closeAppTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="KnowtatorIaaTest.runClassIaaTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Knowtator-2.0" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.view.*" />
+          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator.view" />
-      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.view.KnowtatorViewTest" />
-      <option name="METHOD_NAME" value="closeAppTest" />
+      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator" />
+      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.KnowtatorIaaTest" />
+      <option name="METHOD_NAME" value="runClassIaaTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="KnowtatorIaaTest.runSpanIaaTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Knowtator-2.0" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator" />
+      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.KnowtatorIaaTest" />
+      <option name="METHOD_NAME" value="runSpanIaaTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ProjectManagerTest.saveProjectTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Knowtator-2.0" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator" />
+      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.ProjectManagerTest" />
+      <option name="METHOD_NAME" value="saveProjectTest" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -187,18 +191,18 @@
     <list>
       <item itemvalue="Application.GUI" />
       <item itemvalue="JUnit.All in Knowtator-2.0" />
-      <item itemvalue="JUnit.ConllUtilTest.readToStructureAnnotations" />
-      <item itemvalue="JUnit.FilterActionsTest.filterActionTest" />
-      <item itemvalue="JUnit.KnowtatorViewTest.closeAppTest" />
       <item itemvalue="JUnit.KnowtatorCollectionActionsTest.removeProfileActionTest" />
+      <item itemvalue="JUnit.KnowtatorIaaTest.runSpanIaaTest" />
+      <item itemvalue="JUnit.KnowtatorIaaTest.runClassIaaTest" />
+      <item itemvalue="JUnit.ProjectManagerTest.saveProjectTest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.KnowtatorIaaTest.runClassIaaTest" />
         <item itemvalue="JUnit.All in Knowtator-2.0" />
+        <item itemvalue="JUnit.ProjectManagerTest.saveProjectTest" />
+        <item itemvalue="JUnit.KnowtatorIaaTest.runSpanIaaTest" />
         <item itemvalue="JUnit.KnowtatorCollectionActionsTest.removeProfileActionTest" />
-        <item itemvalue="JUnit.KnowtatorViewTest.closeAppTest" />
-        <item itemvalue="JUnit.FilterActionsTest.filterActionTest" />
-        <item itemvalue="JUnit.ConllUtilTest.readToStructureAnnotations" />
       </list>
     </recent_temporary>
   </component>
@@ -213,7 +217,8 @@
       <option name="presentableId" value="Default" />
       <updated>1590015864586</updated>
       <workItem from="1590015931849" duration="5034000" />
-      <workItem from="1590021108923" duration="3153000" />
+      <workItem from="1590021108923" duration="4034000" />
+      <workItem from="1590640467043" duration="4327000" />
     </task>
     <servers />
   </component>
@@ -274,76 +279,100 @@
     <option name="LAST_COMMIT_MESSAGE" value="Added layers to ConceptAnnotations" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="262" y="151" width="1148" height="823" key="#xdebugger.evaluate" timestamp="1590020129196">
+    <state x="678" y="391" key="#com.intellij.debugger.actions.ViewTextAction" timestamp="1590640910031">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="678" y="391" key="#com.intellij.debugger.actions.ViewTextAction/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590640910031" />
+    <state x="393" y="291" key="#org.jetbrains.debugger.memory.view.InstancesWindow" timestamp="1590640881683">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="393" y="291" key="#org.jetbrains.debugger.memory.view.InstancesWindow/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590640881683" />
+    <state x="770" y="280" key="#xdebugger.XInspectDialog" timestamp="1590640936140">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="770" y="280" key="#xdebugger.XInspectDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590640936140" />
+    <state x="262" y="151" width="1148" height="823" key="#xdebugger.evaluate" timestamp="1590643179880">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="262" y="151" width="1148" height="823" key="#xdebugger.evaluate/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020129196" />
+    <state x="262" y="151" key="#xdebugger.evaluate/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590643179880" />
     <state x="593" y="392" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1590021376178">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="593" y="392" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021376178" />
-    <state x="2268" y="208" key="FileChooserDialogImpl" timestamp="1590016550191">
-      <screen x="1680" y="0" width="1600" height="900" />
+    <state x="617" y="277" key="FileChooserDialogImpl" timestamp="1590641690380">
+      <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="2268" y="208" key="FileChooserDialogImpl/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590016550191" />
-    <state width="1634" height="254" key="GridCell.Tab.0.bottom" timestamp="1590025967056">
+    <state x="617" y="277" key="FileChooserDialogImpl/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590641690380" />
+    <state width="830" height="638" key="GridCell.Tab.0.bottom" timestamp="1590644571908">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
-    <state width="1634" height="254" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590025967056" />
+    <state width="1634" height="254" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791277" />
     <state width="1554" height="255" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
-    <state width="1634" height="254" key="GridCell.Tab.0.center" timestamp="1590025967056">
+    <state width="830" height="638" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590644571908" />
+    <state width="830" height="638" key="GridCell.Tab.0.center" timestamp="1590644571907">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
-    <state width="1634" height="254" key="GridCell.Tab.0.center/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590025967056" />
+    <state width="1634" height="254" key="GridCell.Tab.0.center/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791276" />
     <state width="1554" height="255" key="GridCell.Tab.0.center/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
-    <state width="1634" height="254" key="GridCell.Tab.0.left" timestamp="1590025967048">
+    <state width="830" height="638" key="GridCell.Tab.0.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590644571907" />
+    <state width="830" height="638" key="GridCell.Tab.0.left" timestamp="1590644571907">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
-    <state width="1634" height="254" key="GridCell.Tab.0.left/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590025967048" />
+    <state width="1634" height="254" key="GridCell.Tab.0.left/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791276" />
     <state width="1554" height="255" key="GridCell.Tab.0.left/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386105" />
-    <state width="1634" height="254" key="GridCell.Tab.0.right" timestamp="1590025967056">
+    <state width="830" height="638" key="GridCell.Tab.0.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590644571907" />
+    <state width="830" height="638" key="GridCell.Tab.0.right" timestamp="1590644571908">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
-    <state width="1634" height="254" key="GridCell.Tab.0.right/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590025967056" />
+    <state width="1634" height="254" key="GridCell.Tab.0.right/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791277" />
     <state width="1554" height="255" key="GridCell.Tab.0.right/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
-    <state width="830" height="638" key="GridCell.Tab.1.bottom" timestamp="1590021085398">
+    <state width="830" height="638" key="GridCell.Tab.0.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590644571908" />
+    <state width="830" height="638" key="GridCell.Tab.1.bottom" timestamp="1590644578341">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085398" />
     <state width="830" height="638" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
-    <state width="830" height="638" key="GridCell.Tab.1.center" timestamp="1590021085395">
+    <state width="830" height="638" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590644578341" />
+    <state width="830" height="638" key="GridCell.Tab.1.center" timestamp="1590644578340">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.center/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085395" />
     <state width="830" height="638" key="GridCell.Tab.1.center/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
-    <state width="830" height="638" key="GridCell.Tab.1.left" timestamp="1590021085394">
+    <state width="830" height="638" key="GridCell.Tab.1.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590644578340" />
+    <state width="830" height="638" key="GridCell.Tab.1.left" timestamp="1590644578339">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.left/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085394" />
     <state width="830" height="638" key="GridCell.Tab.1.left/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333598" />
-    <state width="830" height="638" key="GridCell.Tab.1.right" timestamp="1590021085397">
+    <state width="830" height="638" key="GridCell.Tab.1.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590644578339" />
+    <state width="830" height="638" key="GridCell.Tab.1.right" timestamp="1590644578340">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.right/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085396" />
     <state width="830" height="638" key="GridCell.Tab.1.right/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
+    <state width="830" height="638" key="GridCell.Tab.1.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590644578340" />
     <state x="324" y="108" key="SettingsEditor" timestamp="1590021238448">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="324" y="108" key="SettingsEditor/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021238448" />
     <state x="1989" y="56" key="SettingsEditor/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590016572556" />
-    <state x="531" y="119" width="728" height="858" key="find.popup" timestamp="1590031547538">
+    <state x="531" y="119" width="728" height="858" key="find.popup" timestamp="1590641699232">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="531" y="119" width="728" height="858" key="find.popup/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590031547538" />
     <state x="2186" y="66" width="693" height="768" key="find.popup/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590018340948" />
+    <state x="531" y="119" width="728" height="858" key="find.popup/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590641699232" />
     <state x="599" y="355" width="482" height="395" key="scopes" timestamp="1590021373525">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="599" y="355" width="482" height="395" key="scopes/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021373525" />
-    <state x="2143" y="194" width="672" height="678" key="search.everywhere.popup" timestamp="1590020093615">
-      <screen x="1680" y="0" width="1600" height="900" />
+    <state x="486" y="262" width="706" height="758" key="search.everywhere.popup" timestamp="1590640634680">
+      <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="2143" y="194" width="672" height="678" key="search.everywhere.popup/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020093615" />
+    <state x="486" y="262" width="706" height="758" key="search.everywhere.popup/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590640634680" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -359,35 +388,50 @@
           <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/BaseModel.java</url>
-          <line>429</line>
-          <option name="timeStamp" value="29" />
+          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/KnowtatorIaa.java</url>
+          <line>123</line>
+          <option name="timeStamp" value="47" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/conll/ConllUtil.java</url>
-          <line>52</line>
-          <option name="timeStamp" value="33" />
+          <url>file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIaaTest.java</url>
+          <line>60</line>
+          <option name="timeStamp" value="49" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/conll/ConllUtil.java</url>
-          <line>57</line>
-          <option name="timeStamp" value="34" />
+          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/OldKnowtatorXmlUtil.java</url>
+          <line>119</line>
+          <option name="timeStamp" value="53" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/conll/ConllUtil.java</url>
-          <line>54</line>
-          <option name="timeStamp" value="35" />
+          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/OldKnowtatorXmlUtil.java</url>
+          <line>118</line>
+          <option name="timeStamp" value="54" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/TestingHelpers.java</url>
-          <line>249</line>
-          <option name="timeStamp" value="39" />
+          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/OldKnowtatorXmlUtil.java</url>
+          <line>130</line>
+          <option name="timeStamp" value="55" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/OldKnowtatorXmlUtil.java</url>
+          <line>147</line>
+          <option name="timeStamp" value="56" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/OldKnowtatorXmlUtil.java</url>
+          <line>162</line>
+          <option name="timeStamp" value="59" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/ConceptAnnotation.java</url>
+          <line>177</line>
+          <option name="timeStamp" value="66" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="JUnit">
-        <watch expression="((GraphSpaceCollection)((TextSource)model.textSources.collection.toArray()[0]).graphSpaces).model" custom="edu.ucdenver.ccp.knowtator.model.object.TextSource,edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection" />
+        <watch expression="controller.textSources" />
       </configuration>
     </watches-manager>
   </component>
