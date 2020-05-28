@@ -414,7 +414,7 @@ public class BratStandoffUtil {
 
     writer.append(String.format("%s\t%s ", conceptAnnotation.getBratID(), renderedOwlClassID));
 
-    visualConfig.get("labels").put(renderedOwlClassID, conceptAnnotation.getOwlClassLabel());
+    visualConfig.get("labels").put(renderedOwlClassID, conceptAnnotation.getOwlClassRendering());
     visualConfig
         .get("drawing")
         .put(

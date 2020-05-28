@@ -7,59 +7,59 @@ option under the Edit menu that will allow you to paste the copied data as text.
 
 type	matches	non-matches
 All classes	348	108
-5'-cytidylyl group	0	1
-5'-guanylyl group	0	2
-5'-uridylyl group	0	3
-acid	2	0
-adenine group	0	1
-alanine	0	1
-alanine residue	0	1
-alcohols	4	0
-amino acids	0	6
-amino-acid residues	0	7
-anaesthetic	2	10
-canonical nucleoside residues	0	1
-carbon	0	4
-carboxy group	0	10
-cytidyl groups	0	1
-cytosin-1-yl group	0	1
-deoxyribonucleic acids	54	3
-double-stranded DNA	10	4
-drug	0	2
-glutamate residue	0	1
-glutamate(1-)	0	1
-glutamate(2-)	0	1
-glycine	2	0
-guanine group	0	3
-guanosyl groups	0	2
-histidine	2	0
-hydrogencarbonate	2	0
-inhibitor	0	2
-magnesium dichloride	4	0
-messenger RNA	30	0
-metal cations	0	1
-metals	0	1
-molecular entities	0	4
-nucleotidyl groups	0	3
-oligopeptides	8	0
-peptides	10	0
-phosphate(3-)	0	1
-phosphates	0	1
-pigment	0	3
-potassium chloride	4	0
-proline	0	7
-proline residue	0	7
-protease inhibitor	4	0
-proteins	118	3
-ribonucleic acids	46	0
-single-stranded DNA	12	0
-sodium chloride	2	0
-sodium dodecyl sulfate	4	0
-sodium phosphates	2	0
-sucrose	8	0
-terpenes	6	0
-tert-pentyl group	2	0
-tris	6	0
-uracil-1-yl group	0	3
-uridyl groups	0	3
-water	4	3
+CHEBI:1432	0	1
+CHEBI:1542	2	0
+CHEBI:1644	0	1
+CHEBI:1699	54	3
+CHEBI:1836	0	1
+CHEBI:2352	0	1
+CHEBI:2352	0	1
+CHEBI:2388	0	2
+CHEBI:2445	0	2
+CHEBI:2446	0	2
+CHEBI:2613	0	3
+CHEBI:2627	0	7
+CHEBI:2724	0	3
+CHEBI:2724	0	3
+CHEBI:2757	2	0
+CHEBI:2998	0	1
+CHEBI:3036	2	0
+CHEBI:3075	0	3
+CHEBI:3075	0	1
+CHEBI:3075	0	1
+CHEBI:3075	0	3
+CHEBI:3244	0	1
+CHEBI:3248	0	1
+CHEBI:3287	0	7
+CHEBI:3369	46	0
+CHEBI:3369	30	0
+CHEBI:3379	0	1
+CHEBI:3522	0	2
+CHEBI:3752	2	0
+CHEBI:3767	4	0
+CHEBI:3886	2	10
+CHEBI:4688	0	10
+CHEBI:470	10	4
+CHEBI:916	12	0
+CHEBI_15377	4	3
+CHEBI_16670	10	0
+CHEBI_17544	2	0
+CHEBI_17992	8	0
+CHEBI_23367	0	4
+CHEBI_25213	0	1
+CHEBI_25613	0	3
+CHEBI_25676	8	0
+CHEBI_26020	0	1
+CHEBI_26710	2	0
+CHEBI_27594	0	4
+CHEBI_30879	4	0
+CHEBI_32588	4	0
+CHEBI_33521	0	1
+CHEBI_33708	0	7
+CHEBI_33709	0	6
+CHEBI_35186	6	0
+CHEBI_36080	118	3
+CHEBI_37586	2	0
+CHEBI_6636	4	0
+CHEBI_8984	4	0
+CHEBI_9754	6	0

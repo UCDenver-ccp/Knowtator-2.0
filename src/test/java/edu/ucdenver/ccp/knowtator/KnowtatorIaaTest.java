@@ -31,6 +31,7 @@ import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -100,7 +101,7 @@ class KnowtatorIaaTest {
   }
 
   @Test
-  void runSpanIaaTest() throws IaaException, IOException {
+  void runSpanIaaTest() throws IOException, IaaException {
     TestingHelpers.countCollections(
         controller,
         defaultExpectedTextSources,
@@ -153,5 +154,10 @@ class KnowtatorIaaTest {
           new File(outputDir, "index.html").getAbsolutePath()));
       throw e;
     }
+  }
+
+  @AfterAll
+  static void cleanUp() {
+    knowtatorIAA.closeHtml();
   }
 }

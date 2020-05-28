@@ -146,7 +146,6 @@ public class KnowtatorIaa {
           annotationTextNames);
       html.printf(
           "<li><a href=\"%s.html\">%s</a></li>%n", classMatcher.getName(), classMatcher.getName());
-      closeHtml();
     } catch (Exception e) {
       throw new IaaException(e);
     }
@@ -168,11 +167,12 @@ public class KnowtatorIaa {
    * @throws IaaException the iaa exception
    */
   public void runSpanIaa() throws IaaException {
-    try {
+
       SpanMatcher spanMatcher = new SpanMatcher();
       Iaa spanIaa = new Iaa(setNames);
 
       runIaaWithMatcher(spanMatcher, spanIaa);
+    try {
       SpanMatcherHtml.printIaa(
           spanIaa,
           spanMatcher,
@@ -180,12 +180,17 @@ public class KnowtatorIaa {
           textSources.size(),
           annotationTexts,
           annotationTextNames);
-      html.printf(
-          "<li><a href=\"%s.html\">%s</a></li>%n", spanMatcher.getName(), spanMatcher.getName());
-      closeHtml();
-    } catch (Exception e) {
-      throw new IaaException(e);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+    html.printf(
+          "<li><a href=\"%s.html\">%s</a></li>%n", spanMatcher.getName(), spanMatcher.getName());
+
+      try {
+        String x;
+      } catch (Exception e) {
+        throw new IaaException(e);
+      }
   }
 
   /**
@@ -210,7 +215,6 @@ public class KnowtatorIaa {
       html.printf(
           "<li><a href=\"%s.html\">%s</a></li>%n",
           classAndSpanMatcher.getName(), classAndSpanMatcher.getName());
-      closeHtml();
     } catch (Exception e) {
       throw new IaaException(e);
     }

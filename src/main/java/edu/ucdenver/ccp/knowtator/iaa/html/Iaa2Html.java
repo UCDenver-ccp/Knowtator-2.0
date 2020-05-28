@@ -205,6 +205,9 @@ public class Iaa2Html {
           (double) classNontrivialMatches
               / ((double) classNontrivialMatches + (double) classNontrivialNonmatches);
 
+      if (type.startsWith("<") && type.endsWith(">")) {
+        type = type.substring(1, type.length()- 2);
+      }
       if (matcher.returnsTrivials()) {
         html.printf(
             "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td></tr>%n",
@@ -583,7 +586,7 @@ public class Iaa2Html {
       sortedAnnotations.put(type, new HashSet<>());
     }
     for (ConceptAnnotation conceptAnnotation : conceptAnnotations) {
-      String type = conceptAnnotation.getOwlClassLabel();
+      String type = conceptAnnotation.getOwlClassRendering();
       sortedAnnotations.get(type).add(conceptAnnotation);
     }
     return sortedAnnotations;

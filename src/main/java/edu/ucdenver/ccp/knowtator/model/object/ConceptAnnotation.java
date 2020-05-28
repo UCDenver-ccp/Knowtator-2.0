@@ -34,7 +34,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.IRI;
 
 /** The type Concept annotation. */
 public class ConceptAnnotation extends SpanCollection
@@ -43,7 +42,6 @@ public class ConceptAnnotation extends SpanCollection
   private static final Logger log = Logger.getLogger(ConceptAnnotation.class);
 
   private final TextSource textSource;
-  private String owlClassLabel;
   private String owlClass;
   private final String annotationType;
 
@@ -81,24 +79,10 @@ public class ConceptAnnotation extends SpanCollection
     this.textSource = textSource;
     this.layers = new HashSet<>();
     this.layers.addAll(layers);
-    this.owlClassLabel = IRI.create(owlClass).getShortForm();
 
     this.id = model.verifyId(annotationID, this, false);
 
     overlappingConceptAnnotations = new HashSet<>();
-  }
-
-  public ConceptAnnotation(
-      @Nonnull TextSource textSource,
-      String annotationID,
-      String owlClass,
-      String owlClassLabel,
-      @Nonnull Profile annotator,
-      String annotationType,
-      String motivation,
-      Set<String> layers) {
-    this(textSource, annotationID, owlClass, annotator, annotationType, motivation, layers);
-    this.owlClassLabel = owlClassLabel;
   }
 
   public TextSource getTextSource() {
@@ -200,16 +184,6 @@ public class ConceptAnnotation extends SpanCollection
    */
   public void setBratID(String bratID) {
     this.bratID = bratID;
-  }
-
-  /**
-   * Gets owl class label.
-   *
-   * @return the owl class label
-   */
-  public String getOwlClassLabel() {
-    return owlClassLabel;
-//    return getOwlClassRendering();
   }
 
   /**
