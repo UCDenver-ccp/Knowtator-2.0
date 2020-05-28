@@ -37,6 +37,18 @@ import org.junit.jupiter.api.Test;
 class KnowtatorIaaTest {
 
   private static KnowtatorIaa knowtatorIAA;
+  private static File outputDir;
+  private static File goldStandardDir;
+  static KnowtatorModel controller;
+  private final int defaultExpectedTextSources = 4;
+  private final int defaultExpectedConceptAnnotations = 456;
+  private final int defaultExpectedGraphSpaces = 4;
+  private final int defaultExpectedSpans = 456;
+  private final int defaultExpectedProfiles = 3;
+  private final int defaultExpectedHighlighters = 0;
+  private final int defaultExpectedAnnotationNodes = 0;
+  private final int defaultExpectedTriples = 0;
+  private final int defaultExpectedStructureAnnotations = 0;
 
   @BeforeAll
   static void makeProjectTest() throws IaaException, IOException {
@@ -44,12 +56,14 @@ class KnowtatorIaaTest {
     File projectDirectory = TestingHelpers.getProjectFile(projectFileName).getParentFile();
     File tempProjectDir = Files.createTempDir();
     FileUtils.copyDirectory(projectDirectory, tempProjectDir);
-    KnowtatorModel controller = new KnowtatorModel(tempProjectDir, null);
+
+    controller = new KnowtatorModel(tempProjectDir, null);
     controller.load();
 
-    //        File goldStandardDir = new File(model.getProjectLocation(), "iaa");
-    File outputDir = new File(controller.getProjectLocation(), "iaa_results");
-    //noinspection ResultOfMethodCallIgnored
+    goldStandardDir = new File(controller.getProjectLocation(), "iaa");
+
+    outputDir = new File(controller.getProjectLocation(), "iaa_results");
+
     boolean created = outputDir.mkdir();
     if (created) {
       knowtatorIAA = new KnowtatorIaa(outputDir, controller);
@@ -57,26 +71,72 @@ class KnowtatorIaaTest {
   }
 
   @Test
-  void runClassIaaTest() throws IaaException {
+  void runClassIaaTest() throws IOException, IaaException {
+    TestingHelpers.countCollections(
+        controller,
+        defaultExpectedTextSources,
+        defaultExpectedConceptAnnotations,
+        defaultExpectedSpans,
+        defaultExpectedGraphSpaces,
+        defaultExpectedProfiles,
+        defaultExpectedHighlighters,
+        defaultExpectedAnnotationNodes,
+        defaultExpectedTriples,
+        defaultExpectedStructureAnnotations);
     knowtatorIAA.runClassIaa();
     // TODO: Rerun test data because concept annotations no longer store owl class label
 
-    //        assert FileUtils.contentEqualsIgnoreEOL(new File(outputDir, "Class matcher.dat"), new
-    // File(goldStandardDir, "Class matcher.dat"), "utf-8");
+    try {
+      assert FileUtils.contentEqualsIgnoreEOL(
+          new File(outputDir, "Class matcher.dat"),
+          new File(goldStandardDir, "Class matcher.dat"),
+          "utf-8");
+    } catch (AssertionError e) {
+      System.out.println(String.format("Gold: %s\nThis: %s\n",
+          new File(goldStandardDir, "index.html").getAbsolutePath(),
+          new File(outputDir, "index.html").getAbsolutePath()));
+      throw e;
+    }
   }
 
   @Test
-  void runSpanIaaTest() throws IaaException {
+  void runSpanIaaTest() throws IaaException, IOException {
+    TestingHelpers.countCollections(
+        controller,
+        defaultExpectedTextSources,
+        defaultExpectedConceptAnnotations,
+        defaultExpectedSpans,
+        defaultExpectedGraphSpaces,
+        defaultExpectedProfiles,
+        defaultExpectedHighlighters,
+        defaultExpectedAnnotationNodes,
+        defaultExpectedTriples,
+        defaultExpectedStructureAnnotations);
     knowtatorIAA.runSpanIaa();
-    //        assert FileUtils.contentEqualsIgnoreEOL(new File(outputDir, "Span matcher.dat"), new
-    // File(goldStandardDir, "Span matcher.dat"), "utf-8");
+    assert FileUtils.contentEqualsIgnoreEOL(
+        new File(outputDir, "Span matcher.dat"),
+        new File(goldStandardDir, "Span matcher.dat"),
+        "utf-8");
   }
 
   @Test
-  void runClassAndSpanIaaTest() throws IaaException {
+  void runClassAndSpanIaaTest() throws IaaException, IOException {
+    TestingHelpers.countCollections(
+        controller,
+        defaultExpectedTextSources,
+        defaultExpectedConceptAnnotations,
+        defaultExpectedSpans,
+        defaultExpectedGraphSpaces,
+        defaultExpectedProfiles,
+        defaultExpectedHighlighters,
+        defaultExpectedAnnotationNodes,
+        defaultExpectedTriples,
+        defaultExpectedStructureAnnotations);
     knowtatorIAA.runClassAndSpanIaa();
 
-    //        assert FileUtils.contentEqualsIgnoreEOL(new File(outputDir, "Class and span
-    // matcher.dat"), new File(goldStandardDir, "Class and span matcher.dat"), "utf-8");
+    assert FileUtils.contentEqualsIgnoreEOL(
+        new File(outputDir, "Class and span matcher.dat"),
+        new File(goldStandardDir, "Class and span matcher.dat"),
+        "utf-8");
   }
 }
