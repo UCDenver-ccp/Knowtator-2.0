@@ -39,7 +39,7 @@ class KnowtatorIaaTest {
   private static KnowtatorIaa knowtatorIAA;
   private static File outputDir;
   private static File goldStandardDir;
-  static KnowtatorModel controller;
+  private static KnowtatorModel controller;
   private final int defaultExpectedTextSources = 4;
   private final int defaultExpectedConceptAnnotations = 456;
   private final int defaultExpectedGraphSpaces = 4;
@@ -113,10 +113,18 @@ class KnowtatorIaaTest {
         defaultExpectedTriples,
         defaultExpectedStructureAnnotations);
     knowtatorIAA.runSpanIaa();
-    assert FileUtils.contentEqualsIgnoreEOL(
-        new File(outputDir, "Span matcher.dat"),
-        new File(goldStandardDir, "Span matcher.dat"),
-        "utf-8");
+
+    try {
+      assert FileUtils.contentEqualsIgnoreEOL(
+          new File(outputDir, "Span matcher.html"),
+          new File(goldStandardDir, "Span matcher.html"),
+          "utf-8");
+    } catch (AssertionError e) {
+      System.out.println(String.format("Gold: %s\nThis: %s\n",
+          new File(goldStandardDir, "index.html").getAbsolutePath(),
+          new File(outputDir, "index.html").getAbsolutePath()));
+      throw e;
+    }
   }
 
   @Test
@@ -134,9 +142,16 @@ class KnowtatorIaaTest {
         defaultExpectedStructureAnnotations);
     knowtatorIAA.runClassAndSpanIaa();
 
-    assert FileUtils.contentEqualsIgnoreEOL(
-        new File(outputDir, "Class and span matcher.dat"),
-        new File(goldStandardDir, "Class and span matcher.dat"),
-        "utf-8");
+    try {
+      assert FileUtils.contentEqualsIgnoreEOL(
+          new File(outputDir, "Class and span matcher.dat"),
+          new File(goldStandardDir, "Class and span matcher.dat"),
+          "utf-8");
+    } catch (AssertionError e) {
+      System.out.println(String.format("Gold: %s\nThis: %s\n",
+          new File(goldStandardDir, "index.html").getAbsolutePath(),
+          new File(outputDir, "index.html").getAbsolutePath()));
+      throw e;
+    }
   }
 }

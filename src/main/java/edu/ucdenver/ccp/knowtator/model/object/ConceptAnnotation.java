@@ -43,6 +43,7 @@ public class ConceptAnnotation extends SpanCollection
   private static final Logger log = Logger.getLogger(ConceptAnnotation.class);
 
   private final TextSource textSource;
+  private String owlClassLabel;
   private String owlClass;
   private final String annotationType;
 
@@ -51,7 +52,7 @@ public class ConceptAnnotation extends SpanCollection
   private String bratID;
   private String motivation;
   private String id;
-  private Set<String> layers;
+  private final Set<String> layers;
 
   /**
    * Instantiates a new Concept annotation.
@@ -80,10 +81,24 @@ public class ConceptAnnotation extends SpanCollection
     this.textSource = textSource;
     this.layers = new HashSet<>();
     this.layers.addAll(layers);
+    this.owlClassLabel = IRI.create(owlClass).getShortForm();
 
     this.id = model.verifyId(annotationID, this, false);
 
     overlappingConceptAnnotations = new HashSet<>();
+  }
+
+  public ConceptAnnotation(
+      @Nonnull TextSource textSource,
+      String annotationID,
+      String owlClass,
+      String owlClassLabel,
+      @Nonnull Profile annotator,
+      String annotationType,
+      String motivation,
+      Set<String> layers) {
+    this(textSource, annotationID, owlClass, annotator, annotationType, motivation, layers);
+    this.owlClassLabel = owlClassLabel;
   }
 
   public TextSource getTextSource() {
@@ -193,7 +208,8 @@ public class ConceptAnnotation extends SpanCollection
    * @return the owl class label
    */
   public String getOwlClassLabel() {
-    return IRI.create(owlClass).getShortForm();
+    return owlClassLabel;
+//    return getOwlClassRendering();
   }
 
   /**

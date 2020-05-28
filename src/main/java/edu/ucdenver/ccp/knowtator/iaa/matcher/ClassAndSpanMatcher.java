@@ -115,7 +115,7 @@ public class ClassAndSpanMatcher implements Matcher {
   }
 
   public String getName() {
-    return "Class and Span matcher";
+    return "Class and span matcher";
   }
 
   public String getDescription() {

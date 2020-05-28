@@ -159,6 +159,7 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
                               .getElementsByTagName(OldKnowtatorXmlTags.MENTION_CLASS)
                               .item(0))
                       .getAttribute(OldKnowtatorXmlAttributes.ID);
+              String owlClassLabel = classElement.getElementsByTagName(OldKnowtatorXmlTags.MENTION_CLASS).item(0).getTextContent();
 
               String profileID = null;
               try {
@@ -194,6 +195,7 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
                       textSource,
                       annotationID,
                       owlClassID,
+                      owlClassLabel,
                       profile,
                       "identity",
                       "",
