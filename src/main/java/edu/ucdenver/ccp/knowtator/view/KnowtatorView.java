@@ -302,6 +302,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     includeClassDescendantsCheckBox = new JCheckBox();
     includePropertyDescendantsCheckBox = new JCheckBox();
     exactMatchCheckBox = new JCheckBox();
+    reviewRegexCheckBox = new JCheckBox();
     owlClassLabel = new JLabel();
     owlPropertyLabel = new JLabel();
 
@@ -1364,7 +1365,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     }
     exactMatchCheckBox.setText("Exact");
     panel14.add(exactMatchCheckBox);
-    reviewRegexCheckBox = new JCheckBox();
     Font reviewRegexCheckBoxFont = this.$$$getFont$$$(null, Font.BOLD, 14, reviewRegexCheckBox.getFont());
     if (reviewRegexCheckBoxFont != null) {
       reviewRegexCheckBox.setFont(reviewRegexCheckBoxFont);
@@ -1952,12 +1952,12 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     final JPanel panel40 = new JPanel();
     panel40.setLayout(new BorderLayout(0, 0));
     filePanel.add(panel40, BorderLayout.NORTH);
-    backButton = new JButton();
-    backButton.setText("Back");
-    panel40.add(backButton, BorderLayout.EAST);
     progressBar = new JProgressBar();
     progressBar.setStringPainted(true);
     panel40.add(progressBar, BorderLayout.CENTER);
+    backButton = new JButton();
+    backButton.setText("Back");
+    panel40.add(backButton, BorderLayout.WEST);
     label6.setLabelFor(searchTextField);
   }
 

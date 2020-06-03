@@ -433,7 +433,7 @@
                                                       <text value="Exact"/>
                                                     </properties>
                                                   </component>
-                                                  <component id="4f623" class="javax.swing.JCheckBox" binding="reviewRegexCheckBox">
+                                                  <component id="4f623" class="javax.swing.JCheckBox" binding="reviewRegexCheckBox" custom-create="true">
                                                     <constraints/>
                                                     <properties>
                                                       <font size="14" style="1"/>
