@@ -110,6 +110,12 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
           public void mouseDragged(MouseEvent e) {
             super.mouseDragged(e);
             refreshHighlights();
+            highlightRegion(pressOffset, pressOffset, new RectanglePainter(Color.BLACK));
+           
+            view.getModel()
+                .flatMap(BaseModel::getSelectedTextSource)
+                .flatMap(TextSource::getSelectedAnnotation)
+                .ifPresent(annotation -> annotation.setSelection(null));
           }
 
           @Override
@@ -121,14 +127,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
           public void mousePressed(MouseEvent e) {
             super.mousePressed(e);
             pressOffset = viewToModel(e.getPoint());
-            highlightRegion(pressOffset, pressOffset, new RectanglePainter(Color.BLACK));
-            view.getModel()
-                .flatMap(BaseModel::getSelectedTextSource)
-                .ifPresent(
-                    textSource -> {
-                      // TODO: I may want to make this set the selected span to null instead
-                      textSource.setSelectedConceptAnnotation(null);
-                    });
+
           }
 
           @Override
@@ -215,6 +214,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
               if (view.getModel()
                   .flatMap(BaseModel::getSelectedTextSource)
                   .flatMap(TextSource::getSelectedAnnotation)
+                  .flatMap(ConceptAnnotation::getSelection)
                   .isPresent()) {
                 highlightSelectedAnnotation();
               } else {

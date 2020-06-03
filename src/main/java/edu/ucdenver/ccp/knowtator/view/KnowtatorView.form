@@ -98,6 +98,13 @@
                                             <properties/>
                                             <border type="none"/>
                                             <children>
+                                              <component id="c52ed" class="javax.swing.JButton" binding="growStartButton">
+                                                <constraints/>
+                                                <properties>
+                                                  <font name="Verdana" size="10" style="0"/>
+                                                  <text value="Grow Start"/>
+                                                </properties>
+                                              </component>
                                               <component id="30b5b" class="javax.swing.JButton" binding="shrinkStartButton">
                                                 <constraints/>
                                                 <properties>
@@ -117,13 +124,6 @@
                                                 <properties>
                                                   <font name="Verdana" size="10" style="0"/>
                                                   <text value="Grow End"/>
-                                                </properties>
-                                              </component>
-                                              <component id="c52ed" class="javax.swing.JButton" binding="growStartButton">
-                                                <constraints/>
-                                                <properties>
-                                                  <font name="Verdana" size="10" style="0"/>
-                                                  <text value="Grow Start"/>
                                                 </properties>
                                               </component>
                                             </children>

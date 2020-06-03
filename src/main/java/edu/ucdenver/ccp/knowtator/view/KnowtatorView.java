@@ -1081,6 +1081,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     spanPane.add(panel3, gbc);
+    growStartButton = new JButton();
+    Font growStartButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, growStartButton.getFont());
+    if (growStartButtonFont != null) {
+      growStartButton.setFont(growStartButtonFont);
+    }
+    growStartButton.setText("Grow Start");
+    panel3.add(growStartButton);
     shrinkStartButton = new JButton();
     Font shrinkStartButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, shrinkStartButton.getFont());
     if (shrinkStartButtonFont != null) {
@@ -1102,13 +1109,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     }
     growEndButton.setText("Grow End");
     panel3.add(growEndButton);
-    growStartButton = new JButton();
-    Font growStartButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, growStartButton.getFont());
-    if (growStartButtonFont != null) {
-      growStartButton.setFont(growStartButtonFont);
-    }
-    growStartButton.setText("Grow Start");
-    panel3.add(growStartButton);
     graphSpacePane = new JPanel();
     graphSpacePane.setLayout(new GridBagLayout());
     tabbedPane1.addTab("Graph Spaces", graphSpacePane);
