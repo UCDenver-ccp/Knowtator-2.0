@@ -32,7 +32,6 @@
   <component name="ChangeListManager">
     <list default="true" id="b5586eae-97ae-4be5-aa9b-4eaaef9d25b4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/html/SpanMatcherHtml.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/html/SpanMatcherHtml.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java" afterDir="false" />
     </list>
@@ -217,7 +216,7 @@
       <workItem from="1590015931849" duration="5034000" />
       <workItem from="1590021108923" duration="4034000" />
       <workItem from="1590640467043" duration="19344000" />
-      <workItem from="1591151697877" duration="1261000" />
+      <workItem from="1591151697877" duration="2181000" />
     </task>
     <task id="LOCAL-00001" summary="Old knowtator projects read annotations even if owl class is not found">
       <created>1590645202357</created>
@@ -247,7 +246,21 @@
       <option name="project" value="LOCAL" />
       <updated>1590660132685</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Fixed span confused class assignments output.">
+      <created>1591153293888</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1591153293888</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Moved span, graphspace, and notes info to tabs. Moved filter settings to settings">
+      <created>1591153363815</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1591153363815</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -308,7 +321,10 @@
     <MESSAGE value="Record and log when annotation owl classes aren't found" />
     <MESSAGE value="IAA appears to be working correctly with very minor differences if any" />
     <MESSAGE value="Using owlclassrendering for iaa output. Fixed iaa index file for multiple matchers." />
-    <option name="LAST_COMMIT_MESSAGE" value="Using owlclassrendering for iaa output. Fixed iaa index file for multiple matchers." />
+    <MESSAGE value="Fixed span confused class assignments output." />
+    <MESSAGE value="Moved span, graphspace, and notes info to tabs. Moved filter settings to settings" />
+    <MESSAGE value="Moved review panel to a tab with concept info panel" />
+    <option name="LAST_COMMIT_MESSAGE" value="Moved review panel to a tab with concept info panel" />
   </component>
   <component name="WindowStateProjectService">
     <state x="678" y="391" key="#com.intellij.debugger.actions.ViewTextAction" timestamp="1590640910031">
@@ -337,30 +353,30 @@
     </state>
     <state x="2268" y="208" key="FileChooserDialogImpl/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590016550191" />
     <state x="617" y="277" key="FileChooserDialogImpl/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590641690380" />
-    <state width="1634" height="254" key="GridCell.Tab.0.bottom" timestamp="1590693562567">
+    <state width="1634" height="254" key="GridCell.Tab.0.bottom" timestamp="1591153835497">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791277" />
     <state width="1554" height="255" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
-    <state width="1634" height="254" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590693562567" />
-    <state width="1634" height="254" key="GridCell.Tab.0.center" timestamp="1590693562567">
+    <state width="1634" height="254" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591153835497" />
+    <state width="1634" height="254" key="GridCell.Tab.0.center" timestamp="1591153835497">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.center/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791276" />
     <state width="1554" height="255" key="GridCell.Tab.0.center/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
-    <state width="1634" height="254" key="GridCell.Tab.0.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590693562567" />
-    <state width="1634" height="254" key="GridCell.Tab.0.left" timestamp="1590693562567">
+    <state width="1634" height="254" key="GridCell.Tab.0.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591153835497" />
+    <state width="1634" height="254" key="GridCell.Tab.0.left" timestamp="1591153835497">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.left/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791276" />
     <state width="1554" height="255" key="GridCell.Tab.0.left/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386105" />
-    <state width="1634" height="254" key="GridCell.Tab.0.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590693562567" />
-    <state width="1634" height="254" key="GridCell.Tab.0.right" timestamp="1590693562567">
+    <state width="1634" height="254" key="GridCell.Tab.0.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591153835497" />
+    <state width="1634" height="254" key="GridCell.Tab.0.right" timestamp="1591153835497">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.right/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791277" />
     <state width="1554" height="255" key="GridCell.Tab.0.right/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
-    <state width="1634" height="254" key="GridCell.Tab.0.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590693562567" />
+    <state width="1634" height="254" key="GridCell.Tab.0.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591153835497" />
     <state width="1634" height="381" key="GridCell.Tab.1.bottom" timestamp="1590693562490">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
@@ -390,6 +406,10 @@
     </state>
     <state x="324" y="108" key="SettingsEditor/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021238448" />
     <state x="1989" y="56" key="SettingsEditor/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590016572556" />
+    <state x="616" y="430" key="com.intellij.uiDesigner.propertyInspector.editors.string.StringEditorDialog" timestamp="1591153596457">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="616" y="430" key="com.intellij.uiDesigner.propertyInspector.editors.string.StringEditorDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591153596457" />
     <state x="531" y="119" width="728" height="858" key="find.popup" timestamp="1590659897225">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
