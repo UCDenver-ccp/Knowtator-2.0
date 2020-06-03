@@ -211,6 +211,12 @@
                                           <text value=""/>
                                         </properties>
                                       </component>
+                                      <component id="b4f90" class="javax.swing.JButton" binding="reassignButton" default-binding="true">
+                                        <constraints/>
+                                        <properties>
+                                          <text value="Reassign"/>
+                                        </properties>
+                                      </component>
                                     </children>
                                   </grid>
                                   <grid id="fd063" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">

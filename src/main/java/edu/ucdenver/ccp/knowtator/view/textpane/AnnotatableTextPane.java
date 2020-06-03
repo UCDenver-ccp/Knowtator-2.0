@@ -111,7 +111,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
             super.mouseDragged(e);
             refreshHighlights();
             highlightRegion(pressOffset, pressOffset, new RectanglePainter(Color.BLACK));
-           
+
             view.getModel()
                 .flatMap(BaseModel::getSelectedTextSource)
                 .flatMap(TextSource::getSelectedAnnotation)

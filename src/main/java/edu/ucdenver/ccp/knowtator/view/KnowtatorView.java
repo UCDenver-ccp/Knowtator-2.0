@@ -49,6 +49,7 @@ import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.FilterAction;
+import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ReassignOwlClassAction;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.SpanActions;
 import edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog;
@@ -202,6 +203,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   private JButton refreshRelationReviewButton;
   private JCheckBox snapToWordsCheckBox;
   private JTabbedPane header;
+  private JButton reassignButton;
 
   private final List<KnowtatorComponent> knowtatorComponents;
   private final HashMap<JButton, ActionListener> spanSizeButtons;
@@ -235,6 +237,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
       e.printStackTrace();
     }
     makeButtons();
+    header.setSelectedIndex(0);
     knowtatorComponents.addAll(
         Arrays.asList(
             profileList,
@@ -456,6 +459,27 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                 null,
                 new ActionParameters(REMOVE, ANNOTATION),
                 new ActionParameters(REMOVE, SPAN)));
+
+    reassignButton.addActionListener(e -> getModel()
+        .ifPresent(
+            model -> {
+              Optional<String> selectedOwlClass = model.getSelectedOwlClass();
+              selectedOwlClass.ifPresent(
+                  owlClass ->
+                      model
+                          .getSelectedTextSource().flatMap(TextSource::getSelectedAnnotation).ifPresent(conceptAnnotation -> {
+                        try {
+                          model.registerAction(
+                              new ReassignOwlClassAction(
+                                  model,
+                                  conceptAnnotation,
+                                  owlClass));
+                        } catch (ActionUnperformable e1) {
+                          JOptionPane.showMessageDialog(
+                              this, e1.getMessage());
+                        }
+                      }));
+            }));
 
     makeSpanButtons();
 
@@ -1166,6 +1190,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     }
     annotationClassLabel.setText("");
     panel5.add(annotationClassLabel);
+    reassignButton = new JButton();
+    reassignButton.setText("Reassign");
+    panel5.add(reassignButton);
     final JPanel panel6 = new JPanel();
     panel6.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
     gbc = new GridBagConstraints();

@@ -78,8 +78,8 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW" value="false" />
-    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW" value="false" />
+    <property name="UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW" value="true" />
+    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW" value="true" />
     <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH" value="508" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
@@ -91,7 +91,7 @@
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
-  <component name="RunManager" selected="Application.GUI">
+  <component name="RunManager" selected="Application.Unnamed">
     <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
       <setting name="replType" value="NREPL" />
       <setting name="execution" value="LEININGEN" />
@@ -281,7 +281,7 @@
       <workItem from="1590015931849" duration="5034000" />
       <workItem from="1590021108923" duration="4034000" />
       <workItem from="1590640467043" duration="19344000" />
-      <workItem from="1591151697877" duration="18994000" />
+      <workItem from="1591151697877" duration="19800000" />
     </task>
     <task id="LOCAL-00001" summary="Old knowtator projects read annotations even if owl class is not found">
       <created>1590645202357</created>
@@ -346,7 +346,14 @@
       <option name="project" value="LOCAL" />
       <updated>1591169739784</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Clicking doesn't deselect concept annotation.">
+      <created>1591170778924</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1591170778924</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -432,10 +439,10 @@
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="627" y="256" key="#com.intellij.ide.macro.MacrosDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591161192054" />
-    <state x="653" y="256" key="#com.intellij.ide.util.MemberChooser" timestamp="1591159711203">
+    <state x="653" y="256" key="#com.intellij.ide.util.MemberChooser" timestamp="1591170859030">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
-    <state x="653" y="256" key="#com.intellij.ide.util.MemberChooser/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591159711203" />
+    <state x="653" y="256" key="#com.intellij.ide.util.MemberChooser/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591170859030" />
     <state x="577" y="340" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1591165178355">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
@@ -474,54 +481,54 @@
     </state>
     <state x="2268" y="208" key="FileChooserDialogImpl/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590016550191" />
     <state x="617" y="277" key="FileChooserDialogImpl/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591161228394" />
-    <state width="1634" height="254" key="GridCell.Tab.0.bottom" timestamp="1591170394265">
+    <state width="1634" height="254" key="GridCell.Tab.0.bottom" timestamp="1591171353105">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791277" />
     <state width="1554" height="255" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
-    <state width="1634" height="254" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591170394265" />
-    <state width="1634" height="254" key="GridCell.Tab.0.center" timestamp="1591170394265">
+    <state width="1634" height="254" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591171353105" />
+    <state width="1634" height="254" key="GridCell.Tab.0.center" timestamp="1591171353105">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.center/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791276" />
     <state width="1554" height="255" key="GridCell.Tab.0.center/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
-    <state width="1634" height="254" key="GridCell.Tab.0.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591170394265" />
-    <state width="1634" height="254" key="GridCell.Tab.0.left" timestamp="1591170394265">
+    <state width="1634" height="254" key="GridCell.Tab.0.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591171353105" />
+    <state width="1634" height="254" key="GridCell.Tab.0.left" timestamp="1591171353104">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.left/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791276" />
     <state width="1554" height="255" key="GridCell.Tab.0.left/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386105" />
-    <state width="1634" height="254" key="GridCell.Tab.0.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591170394265" />
-    <state width="1634" height="254" key="GridCell.Tab.0.right" timestamp="1591170394265">
+    <state width="1634" height="254" key="GridCell.Tab.0.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591171353104" />
+    <state width="1634" height="254" key="GridCell.Tab.0.right" timestamp="1591171353105">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.right/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791277" />
     <state width="1554" height="255" key="GridCell.Tab.0.right/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
-    <state width="1634" height="254" key="GridCell.Tab.0.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591170394265" />
-    <state width="1634" height="381" key="GridCell.Tab.1.bottom" timestamp="1591170187941">
+    <state width="1634" height="254" key="GridCell.Tab.0.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591171353105" />
+    <state width="1634" height="381" key="GridCell.Tab.1.bottom" timestamp="1591171333330">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085398" />
     <state width="830" height="638" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
-    <state width="1634" height="381" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591170187941" />
-    <state width="1634" height="381" key="GridCell.Tab.1.center" timestamp="1591170187941">
+    <state width="1634" height="381" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591171333330" />
+    <state width="1634" height="381" key="GridCell.Tab.1.center" timestamp="1591171333330">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.center/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085395" />
     <state width="830" height="638" key="GridCell.Tab.1.center/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
-    <state width="1634" height="381" key="GridCell.Tab.1.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591170187941" />
-    <state width="1634" height="381" key="GridCell.Tab.1.left" timestamp="1591170187941">
+    <state width="1634" height="381" key="GridCell.Tab.1.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591171333330" />
+    <state width="1634" height="381" key="GridCell.Tab.1.left" timestamp="1591171333330">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.left/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085394" />
     <state width="830" height="638" key="GridCell.Tab.1.left/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333598" />
-    <state width="1634" height="381" key="GridCell.Tab.1.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591170187941" />
-    <state width="1634" height="381" key="GridCell.Tab.1.right" timestamp="1591170187941">
+    <state width="1634" height="381" key="GridCell.Tab.1.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591171333330" />
+    <state width="1634" height="381" key="GridCell.Tab.1.right" timestamp="1591171333330">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.right/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085396" />
     <state width="830" height="638" key="GridCell.Tab.1.right/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
-    <state width="1634" height="381" key="GridCell.Tab.1.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591170187941" />
+    <state width="1634" height="381" key="GridCell.Tab.1.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591171333330" />
     <state x="324" y="108" key="SettingsEditor" timestamp="1590021238448">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
@@ -535,12 +542,12 @@
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="616" y="430" key="com.intellij.uiDesigner.propertyInspector.editors.string.StringEditorDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591153596457" />
-    <state x="531" y="119" width="728" height="858" key="find.popup" timestamp="1591168027656">
+    <state x="531" y="119" width="728" height="858" key="find.popup" timestamp="1591170978480">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="531" y="119" width="728" height="858" key="find.popup/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590031547538" />
     <state x="2186" y="66" width="693" height="768" key="find.popup/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590018340948" />
-    <state x="531" y="119" width="728" height="858" key="find.popup/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591168027656" />
+    <state x="531" y="119" width="728" height="858" key="find.popup/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591170978480" />
     <state x="599" y="355" width="482" height="395" key="scopes" timestamp="1590021373525">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
@@ -556,7 +563,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java</url>
-          <line>664</line>
+          <line>688</line>
           <option name="timeStamp" value="20" />
         </line-breakpoint>
       </breakpoints>
