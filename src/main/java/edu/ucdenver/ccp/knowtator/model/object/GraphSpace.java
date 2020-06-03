@@ -406,7 +406,7 @@ public class GraphSpace extends mxGraph
 
   @Override
   public void handleChange(OWLModelManagerChangeEvent event) {
-    if (event.isType(EventType.ENTITY_RENDERING_CHANGED)) {
+    if (event.isType(EventType.ENTITY_RENDERER_CHANGED)) {
       try {
         Arrays.asList(getChildCells(getDefaultParent()))
             .forEach(
@@ -414,8 +414,7 @@ public class GraphSpace extends mxGraph
                   if (o instanceof RelationAnnotation) {
                     ((RelationAnnotation) o).setLabel();
                   } else if (o instanceof AnnotationNode) {
-                    ((AnnotationNode) o)
-                        .setValue(((AnnotationNode) o).getConceptAnnotation().toMultilineString());
+                    ((AnnotationNode) o).setValue(((AnnotationNode) o).getConceptAnnotation().toMultilineString());
                   }
                 });
         refresh();
