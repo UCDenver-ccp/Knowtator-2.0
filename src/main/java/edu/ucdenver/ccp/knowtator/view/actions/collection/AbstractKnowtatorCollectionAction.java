@@ -257,16 +257,26 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
                             actions.add(new ProfileAction(model, actionType, id));
                             break;
                           case DOCUMENT:
-                            JOptionPane.showMessageDialog(view, "Select annotation file");
-                            JFileChooser fileChooser = new JFileChooser();
-                            fileChooser.setCurrentDirectory(model.getAnnotationsLocation());
-
                             File annotationFile = null;
-                            if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-                              annotationFile = fileChooser.getSelectedFile();
+                            if (actionType.equals(CollectionActionType.ADD)) {
+                              JOptionPane.showMessageDialog(view, "Select annotation file");
+                              JFileChooser fileChooser = new JFileChooser();
+                              fileChooser.setCurrentDirectory(model.getAnnotationsLocation());
+
+
+                              if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
+                                annotationFile = fileChooser.getSelectedFile();
+                                actions.add(
+                                    new TextSourceAction(model, actionType, file, annotationFile));
+                              }
+                            } else {
+                              int response = JOptionPane.showConfirmDialog(view, "Remove document from project? (document and annotations will NOT be deleted)", null, JOptionPane.YES_NO_OPTION);
+                              if (response == JOptionPane.YES_OPTION) {
+                                actions.add(
+                                    new TextSourceAction(model, actionType, file, annotationFile));
+                              }
                             }
-                            actions.add(
-                                new TextSourceAction(model, actionType, file, annotationFile));
+
                             break;
                           default:
                             break;
