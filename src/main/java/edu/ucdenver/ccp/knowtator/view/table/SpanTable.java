@@ -44,7 +44,7 @@ public class SpanTable extends KnowtatorTable<Span> {
     super(view);
     setModel(
         new DefaultTableModel(
-            new Object[][] {}, new String[] {"Spanned Text", "Start", "-", "+", "End", "-", "+"}) {
+            new Object[][] {}, new String[] {"Spanned Text", "Start", "End"}) {
           @Override
           public boolean isCellEditable(int row, int col) {
             return false;
@@ -91,7 +91,7 @@ public class SpanTable extends KnowtatorTable<Span> {
     ((DefaultTableModel) getModel())
         .addRow(
             new Object[] {
-              modelObject, modelObject.getStart(), "+", "-", modelObject.getEnd(), "-", "-"
+              modelObject, modelObject.getStart(), modelObject.getEnd()
             });
   }
 }
