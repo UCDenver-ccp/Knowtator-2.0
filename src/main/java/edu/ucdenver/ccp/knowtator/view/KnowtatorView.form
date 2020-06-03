@@ -834,80 +834,68 @@
                         <properties/>
                         <border type="none"/>
                         <children>
-                          <grid id="94338" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+                          <grid id="2b250" layout-manager="BorderLayout" hgap="0" vgap="0">
                             <constraints>
-                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="1.0" weighty="0.0"/>
                             </constraints>
                             <properties/>
                             <border type="none"/>
                             <children>
-                              <component id="f1049" class="javax.swing.JCheckBox" binding="profileFilterCheckBox">
-                                <constraints/>
-                                <properties>
-                                  <font name="Verdana" size="10" style="0"/>
-                                  <text value="Current Profile"/>
-                                  <toolTipText value="Toggle filter annotations by current profile"/>
-                                </properties>
-                              </component>
-                              <component id="a3ff0" class="javax.swing.JCheckBox" binding="owlClassFilterCheckBox">
-                                <constraints/>
-                                <properties>
-                                  <font name="Verdana" size="10" style="0"/>
-                                  <text value="Current OWL Class"/>
-                                  <toolTipText value="Toggle filter annotations by current OWL class"/>
-                                </properties>
-                              </component>
-                              <component id="af9bf" class="javax.swing.JButton" binding="captureImageButton">
-                                <constraints/>
-                                <properties>
-                                  <icon value="icon/icons8-unsplash-32.png"/>
-                                  <text value=""/>
-                                  <toolTipText value="Capture document"/>
-                                </properties>
-                              </component>
-                              <component id="8c691" class="javax.swing.JButton" binding="showGraphViewerButton">
-                                <constraints/>
-                                <properties>
-                                  <font name="Verdana" size="10" style="0"/>
-                                  <icon value="icon/icons8-tree-structure-32.png"/>
-                                  <text value=""/>
-                                  <toolTipText value="Open graph space viewer for document"/>
-                                </properties>
-                              </component>
-                              <grid id="331a3" layout-manager="GridBagLayout">
-                                <constraints/>
+                              <grid id="94338" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+                                <constraints border-constraint="East"/>
                                 <properties/>
-                                <border type="none" title="Font Size"/>
+                                <border type="none"/>
                                 <children>
-                                  <component id="f15a2" class="javax.swing.JSlider" binding="fontSizeSlider">
-                                    <constraints>
-                                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                                      <gridbag weightx="1.0" weighty="1.0"/>
-                                    </constraints>
+                                  <component id="f1049" class="javax.swing.JCheckBox" binding="profileFilterCheckBox">
+                                    <constraints/>
                                     <properties>
-                                      <inverted value="false"/>
-                                      <majorTickSpacing value="8"/>
-                                      <maximum value="28"/>
-                                      <minimum value="8"/>
-                                      <minorTickSpacing value="1"/>
-                                      <snapToTicks value="true"/>
-                                      <value value="16"/>
+                                      <font name="Verdana" size="10" style="0"/>
+                                      <text value="Current Profile"/>
+                                      <toolTipText value="Toggle filter annotations by current profile"/>
                                     </properties>
                                   </component>
+                                  <component id="a3ff0" class="javax.swing.JCheckBox" binding="owlClassFilterCheckBox">
+                                    <constraints/>
+                                    <properties>
+                                      <font name="Verdana" size="10" style="0"/>
+                                      <text value="Current OWL Class"/>
+                                      <toolTipText value="Toggle filter annotations by current OWL class"/>
+                                    </properties>
+                                  </component>
+                                  <component id="af9bf" class="javax.swing.JButton" binding="captureImageButton">
+                                    <constraints/>
+                                    <properties>
+                                      <icon value="icon/icons8-unsplash-32.png"/>
+                                      <text value=""/>
+                                      <toolTipText value="Capture document"/>
+                                    </properties>
+                                  </component>
+                                  <grid id="331a3" layout-manager="GridBagLayout">
+                                    <constraints/>
+                                    <properties/>
+                                    <border type="none" title="Font Size"/>
+                                    <children>
+                                      <component id="f15a2" class="javax.swing.JSlider" binding="fontSizeSlider">
+                                        <constraints>
+                                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                          <gridbag weightx="1.0" weighty="1.0"/>
+                                        </constraints>
+                                        <properties>
+                                          <inverted value="false"/>
+                                          <majorTickSpacing value="8"/>
+                                          <maximum value="28"/>
+                                          <minimum value="8"/>
+                                          <minorTickSpacing value="1"/>
+                                          <snapToTicks value="true"/>
+                                          <value value="16"/>
+                                        </properties>
+                                      </component>
+                                    </children>
+                                  </grid>
                                 </children>
                               </grid>
-                            </children>
-                          </grid>
-                          <grid id="be905" layout-manager="BorderLayout" hgap="0" vgap="0">
-                            <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties/>
-                            <border type="none"/>
-                            <children>
-                              <grid id="61e76" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                              <grid id="8c209" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
                                 <constraints border-constraint="West"/>
                                 <properties/>
                                 <border type="none"/>
@@ -930,36 +918,6 @@
                                   </component>
                                 </children>
                               </grid>
-                              <grid id="784b8" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
-                                <constraints border-constraint="East"/>
-                                <properties/>
-                                <border type="none"/>
-                                <children>
-                                  <component id="fc89" class="javax.swing.JButton" binding="previousTextSourceButton">
-                                    <constraints/>
-                                    <properties>
-                                      <icon value="icon/icons8-advance-24 (reversed).png"/>
-                                      <text value=""/>
-                                      <toolTipText value="Next document"/>
-                                    </properties>
-                                  </component>
-                                  <component id="f8593" class="javax.swing.JButton" binding="nextTextSourceButton">
-                                    <constraints/>
-                                    <properties>
-                                      <icon value="icon/icons8-advance-24.png"/>
-                                      <text value=""/>
-                                      <toolTipText value="Previous document"/>
-                                    </properties>
-                                  </component>
-                                  <component id="dbec8" class="edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser" binding="textSourceChooser" custom-create="true">
-                                    <constraints/>
-                                    <properties>
-                                      <preferredSize width="150" height="24"/>
-                                      <toolTipText value="Choose a document to view"/>
-                                    </properties>
-                                  </component>
-                                </children>
-                              </grid>
                             </children>
                           </grid>
                         </children>
@@ -977,7 +935,7 @@
                               <grid id="a25ac" layout-manager="GridBagLayout">
                                 <constraints border-constraint="West"/>
                                 <properties/>
-                                <border type="none" title="Annotation/Span">
+                                <border type="none" title="">
                                   <font size="14"/>
                                 </border>
                                 <children>
@@ -1022,6 +980,15 @@
                                           <verticalTextPosition value="3"/>
                                         </properties>
                                       </component>
+                                      <component id="8c691" class="javax.swing.JButton" binding="showGraphViewerButton">
+                                        <constraints/>
+                                        <properties>
+                                          <font name="Verdana" size="10" style="0"/>
+                                          <icon value="icon/icons8-tree-structure-32.png"/>
+                                          <text value=""/>
+                                          <toolTipText value="Open graph space viewer for document"/>
+                                        </properties>
+                                      </component>
                                     </children>
                                   </grid>
                                   <component id="2d029" class="edu.ucdenver.ccp.knowtator.view.label.AnnotatorLabel" binding="activeProfileLabel" custom-create="true">
@@ -1034,6 +1001,48 @@
                                       <text value=""/>
                                     </properties>
                                   </component>
+                                  <grid id="ecb79" layout-manager="GridBagLayout">
+                                    <constraints>
+                                      <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="0.0" weighty="0.0"/>
+                                    </constraints>
+                                    <properties/>
+                                    <border type="none"/>
+                                    <children>
+                                      <component id="fc89" class="javax.swing.JButton" binding="previousTextSourceButton">
+                                        <constraints>
+                                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                          <gridbag weightx="0.0" weighty="0.0"/>
+                                        </constraints>
+                                        <properties>
+                                          <icon value="icon/icons8-advance-24 (reversed).png"/>
+                                          <text value=""/>
+                                          <toolTipText value="Next document"/>
+                                        </properties>
+                                      </component>
+                                      <component id="f8593" class="javax.swing.JButton" binding="nextTextSourceButton">
+                                        <constraints>
+                                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                          <gridbag weightx="0.0" weighty="0.0"/>
+                                        </constraints>
+                                        <properties>
+                                          <icon value="icon/icons8-advance-24.png"/>
+                                          <text value=""/>
+                                          <toolTipText value="Previous document"/>
+                                        </properties>
+                                      </component>
+                                      <component id="dbec8" class="edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser" binding="textSourceChooser" custom-create="true">
+                                        <constraints>
+                                          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                          <gridbag weightx="0.0" weighty="0.0"/>
+                                        </constraints>
+                                        <properties>
+                                          <preferredSize width="150" height="24"/>
+                                          <toolTipText value="Choose a document to view"/>
+                                        </properties>
+                                      </component>
+                                    </children>
+                                  </grid>
                                 </children>
                               </grid>
                               <grid id="528e0" layout-manager="GridBagLayout">
@@ -1043,7 +1052,7 @@
                                 <children>
                                   <component id="78845" class="javax.swing.JTextField" binding="searchTextField" custom-create="true">
                                     <constraints>
-                                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                                      <grid row="0" column="1" row-span="1" col-span="2" vsize-policy="6" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
                                         <preferred-size width="150" height="25"/>
                                         <maximum-size width="-1" height="25"/>
                                       </grid>
@@ -1067,7 +1076,7 @@
                                   </component>
                                   <grid id="b85c1" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
                                     <constraints>
-                                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                      <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                                       <gridbag weightx="0.0" weighty="0.0"/>
                                     </constraints>
                                     <properties/>
@@ -1101,7 +1110,7 @@
                                   </grid>
                                   <component id="64bfd" class="javax.swing.JButton" binding="findTextInOntologyButton">
                                     <constraints>
-                                      <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                      <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                                       <gridbag weightx="0.0" weighty="0.0"/>
                                     </constraints>
                                     <properties>
@@ -1112,7 +1121,7 @@
                                   </component>
                                   <grid id="8dae7" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
                                     <constraints>
-                                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                      <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                                       <gridbag weightx="0.0" weighty="0.0"/>
                                     </constraints>
                                     <properties/>
