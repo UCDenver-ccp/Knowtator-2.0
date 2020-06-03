@@ -30,13 +30,7 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b5586eae-97ae-4be5-aa9b-4eaaef9d25b4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/KnowtatorIaa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/KnowtatorIaa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIaaTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIaaTest.java" afterDir="false" />
-    </list>
+    <list default="true" id="b5586eae-97ae-4be5-aa9b-4eaaef9d25b4" name="Default Changelist" comment="" />
     <list id="9e563f0c-91e9-4ed0-b3db-d36bc1e81506" name="Made test for adding an annotation layer" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,8 +73,8 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW" value="false" />
-    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW" value="true" />
+    <property name="UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW" value="true" />
+    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW" value="false" />
     <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH" value="508" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
@@ -92,7 +86,7 @@
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
-  <component name="RunManager" selected="JUnit.All in Knowtator-2.0">
+  <component name="RunManager" selected="Application.GUI">
     <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
       <setting name="replType" value="NREPL" />
       <setting name="execution" value="LEININGEN" />
@@ -282,7 +276,7 @@
       <workItem from="1590015931849" duration="5034000" />
       <workItem from="1590021108923" duration="4034000" />
       <workItem from="1590640467043" duration="19344000" />
-      <workItem from="1591151697877" duration="26678000" />
+      <workItem from="1591151697877" duration="33029000" />
     </task>
     <task id="LOCAL-00001" summary="Old knowtator projects read annotations even if owl class is not found">
       <created>1590645202357</created>
@@ -368,7 +362,35 @@
       <option name="project" value="LOCAL" />
       <updated>1591176054733</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Fixed regex checkbox not initialized in create UI components">
+      <created>1591178764808</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1591178764808</updated>
+    </task>
+    <task id="LOCAL-00014" summary="IAA takes a collection of profiles and text sources">
+      <created>1591178796707</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1591178796707</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Made dialog for selecting IAA options.">
+      <created>1591185038363</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1591185038363</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Made dialog for selecting IAA options.">
+      <created>1591185049440</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1591185049440</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -437,13 +459,20 @@
     <MESSAGE value="Clicking doesn't deselect concept annotation." />
     <MESSAGE value="Added reassign OWLClass button" />
     <MESSAGE value="Added review regex checkbox. File as button. Active profile display" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added review regex checkbox. File as button. Active profile display" />
+    <MESSAGE value="Fixed regex checkbox not initialized in create UI components" />
+    <MESSAGE value="IAA takes a collection of profiles and text sources" />
+    <MESSAGE value="Made dialog for selecting IAA options." />
+    <option name="LAST_COMMIT_MESSAGE" value="Made dialog for selecting IAA options." />
   </component>
   <component name="WindowStateProjectService">
     <state x="512" y="261" key="#Unnamed" timestamp="1591162173520">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="512" y="261" key="#Unnamed/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591162173520" />
+    <state x="518" y="213" key="#com.intellij.codeInsight.i18n.I18nizeQuickFixDialog_Form" timestamp="1591184961047">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="518" y="213" key="#com.intellij.codeInsight.i18n.I18nizeQuickFixDialog_Form/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591184961047" />
     <state x="678" y="391" key="#com.intellij.debugger.actions.ViewTextAction" timestamp="1590640910031">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
@@ -456,10 +485,10 @@
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="627" y="256" key="#com.intellij.ide.macro.MacrosDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591161192054" />
-    <state x="653" y="256" key="#com.intellij.ide.util.MemberChooser" timestamp="1591175699469">
+    <state x="653" y="256" key="#com.intellij.ide.util.MemberChooser" timestamp="1591183367269">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
-    <state x="653" y="256" key="#com.intellij.ide.util.MemberChooser/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591175699469" />
+    <state x="653" y="256" key="#com.intellij.ide.util.MemberChooser/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591183367269" />
     <state x="577" y="340" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1591165178355">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
@@ -502,54 +531,54 @@
     </state>
     <state x="2268" y="208" key="FileChooserDialogImpl/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590016550191" />
     <state x="617" y="277" key="FileChooserDialogImpl/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591161228394" />
-    <state width="1634" height="381" key="GridCell.Tab.0.bottom" timestamp="1591177430560">
+    <state width="1634" height="381" key="GridCell.Tab.0.bottom" timestamp="1591184874843">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791277" />
     <state width="1554" height="255" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
-    <state width="1634" height="381" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591177430560" />
-    <state width="1634" height="381" key="GridCell.Tab.0.center" timestamp="1591177430560">
+    <state width="1634" height="381" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591184874843" />
+    <state width="1634" height="381" key="GridCell.Tab.0.center" timestamp="1591184874843">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.center/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791276" />
     <state width="1554" height="255" key="GridCell.Tab.0.center/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
-    <state width="1634" height="381" key="GridCell.Tab.0.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591177430560" />
-    <state width="1634" height="381" key="GridCell.Tab.0.left" timestamp="1591177430560">
+    <state width="1634" height="381" key="GridCell.Tab.0.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591184874843" />
+    <state width="1634" height="381" key="GridCell.Tab.0.left" timestamp="1591184874843">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.left/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791276" />
     <state width="1554" height="255" key="GridCell.Tab.0.left/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386105" />
-    <state width="1634" height="381" key="GridCell.Tab.0.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591177430560" />
-    <state width="1634" height="381" key="GridCell.Tab.0.right" timestamp="1591177430560">
+    <state width="1634" height="381" key="GridCell.Tab.0.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591184874843" />
+    <state width="1634" height="381" key="GridCell.Tab.0.right" timestamp="1591184874843">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.right/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791277" />
     <state width="1554" height="255" key="GridCell.Tab.0.right/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
-    <state width="1634" height="381" key="GridCell.Tab.0.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591177430560" />
-    <state width="1634" height="381" key="GridCell.Tab.1.bottom" timestamp="1591177438409">
+    <state width="1634" height="381" key="GridCell.Tab.0.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591184874843" />
+    <state width="1634" height="381" key="GridCell.Tab.1.bottom" timestamp="1591184874843">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085398" />
     <state width="830" height="638" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
-    <state width="1634" height="381" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591177438409" />
-    <state width="1634" height="381" key="GridCell.Tab.1.center" timestamp="1591177438409">
+    <state width="1634" height="381" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591184874843" />
+    <state width="1634" height="381" key="GridCell.Tab.1.center" timestamp="1591184874843">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.center/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085395" />
     <state width="830" height="638" key="GridCell.Tab.1.center/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
-    <state width="1634" height="381" key="GridCell.Tab.1.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591177438409" />
-    <state width="1634" height="381" key="GridCell.Tab.1.left" timestamp="1591177438409">
+    <state width="1634" height="381" key="GridCell.Tab.1.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591184874843" />
+    <state width="1634" height="381" key="GridCell.Tab.1.left" timestamp="1591184874843">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.left/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085394" />
     <state width="830" height="638" key="GridCell.Tab.1.left/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333598" />
-    <state width="1634" height="381" key="GridCell.Tab.1.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591177438409" />
-    <state width="1634" height="381" key="GridCell.Tab.1.right" timestamp="1591177438409">
+    <state width="1634" height="381" key="GridCell.Tab.1.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591184874843" />
+    <state width="1634" height="381" key="GridCell.Tab.1.right" timestamp="1591184874843">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.right/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085396" />
     <state width="830" height="638" key="GridCell.Tab.1.right/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
-    <state width="1634" height="381" key="GridCell.Tab.1.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591177438409" />
+    <state width="1634" height="381" key="GridCell.Tab.1.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591184874843" />
     <state x="661" y="261" key="RollbackChangesDialog" timestamp="1591176399516">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
@@ -567,12 +596,16 @@
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="616" y="430" key="com.intellij.uiDesigner.propertyInspector.editors.string.StringEditorDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591173275400" />
-    <state x="531" y="119" width="728" height="858" key="find.popup" timestamp="1591176613135">
+    <state x="531" y="119" width="728" height="858" key="find.popup" timestamp="1591184438461">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="531" y="119" width="728" height="858" key="find.popup/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590031547538" />
     <state x="2186" y="66" width="693" height="768" key="find.popup/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590018340948" />
-    <state x="531" y="119" width="728" height="858" key="find.popup/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591176613135" />
+    <state x="531" y="119" width="728" height="858" key="find.popup/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591184438461" />
+    <state x="637" y="296" key="refactoring.ChangeSignatureDialog" timestamp="1591180054952">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="637" y="296" key="refactoring.ChangeSignatureDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591180054952" />
     <state x="599" y="355" width="482" height="395" key="scopes" timestamp="1590021373525">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
@@ -584,15 +617,6 @@
     <state x="486" y="262" width="706" height="758" key="search.everywhere.popup/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591176667727" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIaaTest.java</url>
-          <line>74</line>
-          <option name="timeStamp" value="23" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="JUnit">
         <watch expression="controller.textSources" />

@@ -33,8 +33,6 @@ import static edu.ucdenver.ccp.knowtator.view.actions.collection.KnowtatorCollec
 import static edu.ucdenver.ccp.knowtator.view.actions.collection.KnowtatorCollectionType.SPAN;
 
 import com.mxgraph.swing.util.mxGraphTransferable;
-import edu.ucdenver.ccp.knowtator.iaa.IaaException;
-import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIaa;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
@@ -53,6 +51,7 @@ import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ReassignOwlClassActi
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.SpanActions;
 import edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog;
+import edu.ucdenver.ccp.knowtator.view.iaa.IAAOptionsDialog;
 import edu.ucdenver.ccp.knowtator.view.label.AnnotationAnnotatorLabel;
 import edu.ucdenver.ccp.knowtator.view.label.AnnotationClassLabel;
 import edu.ucdenver.ccp.knowtator.view.label.AnnotationIdLabel;
@@ -90,6 +89,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -98,7 +98,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
-import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -189,11 +188,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   private JPanel spanPane;
   private JPanel graphSpacePane;
   private JComponent rootPane;
-  private JPanel iaaPane;
   private JButton runIaaButton;
-  private JCheckBox iaaSpanCheckBox;
-  private JCheckBox iaaClassAndSpanCheckBox;
-  private JCheckBox iaaClassCheckBox;
   private JButton captureImageButton;
   private JCheckBox oneClickGraphsCheckBox;
   private JTable conceptAnnotationsForTextTable;
@@ -659,26 +654,15 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                       //
                       fileChooser.setAcceptAllFileFilterUsed(false);
                       if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-                        File outputDirectory = fileChooser.getSelectedFile();
-
-
+                        File outputDirectory = new File(fileChooser.getSelectedFile(), "IAA_results");
                         try {
-                          KnowtatorIaa knowtatorIaa = new KnowtatorIaa(outputDirectory, model, model.getTextSources().stream().map(TextSource::getId).collect(Collectors.toSet()), model.getProfiles().stream().map(Profile::getId).collect(Collectors.toSet()));
-
-                          if (iaaClassCheckBox.isSelected()) {
-                            knowtatorIaa.runClassIaa();
-                          }
-                          if (iaaSpanCheckBox.isSelected()) {
-                            knowtatorIaa.runSpanIaa();
-                          }
-                          if (iaaClassAndSpanCheckBox.isSelected()) {
-                            knowtatorIaa.runClassAndSpanIaa();
-                          }
-
-                          knowtatorIaa.closeHtml();
-                        } catch (IaaException e1) {
-                          e1.printStackTrace();
+                          Files.createDirectories(outputDirectory.toPath());
+                        } catch (IOException ioException) {
+                          ioException.printStackTrace();
                         }
+                        JDialog iaaDialog = new IAAOptionsDialog(JOptionPane.getFrameForComponent(this), model, outputDirectory);
+                        iaaDialog.pack();
+                        iaaDialog.setVisible(true);
                       }
                     }));
   }
@@ -1592,41 +1576,16 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     removeProfileButton.setText("");
     removeProfileButton.setToolTipText("Remove a profile");
     panel21.add(removeProfileButton);
-    iaaPane = new JPanel();
-    iaaPane.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-    gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 2;
-    panel20.add(iaaPane, gbc);
-    iaaPane.setBorder(BorderFactory.createTitledBorder(null, "Inter-Annotator Agreement", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, iaaPane.getFont()), null));
-    iaaSpanCheckBox = new JCheckBox();
-    Font iaaSpanCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, iaaSpanCheckBox.getFont());
-    if (iaaSpanCheckBoxFont != null) {
-      iaaSpanCheckBox.setFont(iaaSpanCheckBoxFont);
-    }
-    this.$$$loadButtonText$$$(iaaSpanCheckBox, this.$$$getMessageFromBundle$$$("ui", "span1"));
-    iaaPane.add(iaaSpanCheckBox);
-    iaaClassAndSpanCheckBox = new JCheckBox();
-    Font iaaClassAndSpanCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, iaaClassAndSpanCheckBox.getFont());
-    if (iaaClassAndSpanCheckBoxFont != null) {
-      iaaClassAndSpanCheckBox.setFont(iaaClassAndSpanCheckBoxFont);
-    }
-    this.$$$loadButtonText$$$(iaaClassAndSpanCheckBox, this.$$$getMessageFromBundle$$$("ui", "class.and.span"));
-    iaaPane.add(iaaClassAndSpanCheckBox);
-    iaaClassCheckBox = new JCheckBox();
-    Font iaaClassCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, iaaClassCheckBox.getFont());
-    if (iaaClassCheckBoxFont != null) {
-      iaaClassCheckBox.setFont(iaaClassCheckBoxFont);
-    }
-    this.$$$loadButtonText$$$(iaaClassCheckBox, this.$$$getMessageFromBundle$$$("log4j", "class1"));
-    iaaPane.add(iaaClassCheckBox);
     runIaaButton = new JButton();
     Font runIaaButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, runIaaButton.getFont());
     if (runIaaButtonFont != null) {
       runIaaButton.setFont(runIaaButtonFont);
     }
     this.$$$loadButtonText$$$(runIaaButton, this.$$$getMessageFromBundle$$$("log4j", "run.iaa"));
-    iaaPane.add(runIaaButton);
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 2;
+    panel20.add(runIaaButton, gbc);
     final JPanel panel22 = new JPanel();
     panel22.setLayout(new BorderLayout(0, 0));
     splitPane1.setRightComponent(panel22);

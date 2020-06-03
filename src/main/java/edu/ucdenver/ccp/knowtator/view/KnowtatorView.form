@@ -726,46 +726,16 @@
                                           </component>
                                         </children>
                                       </grid>
-                                      <grid id="7942d" binding="iaaPane" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                                      <component id="21ed9" class="javax.swing.JButton" binding="runIaaButton">
                                         <constraints>
                                           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                                           <gridbag weightx="0.0" weighty="0.0"/>
                                         </constraints>
-                                        <properties/>
-                                        <border type="none" title="Inter-Annotator Agreement">
-                                          <font name="Verdana" size="14"/>
-                                        </border>
-                                        <children>
-                                          <component id="d356b" class="javax.swing.JCheckBox" binding="iaaSpanCheckBox" default-binding="true">
-                                            <constraints/>
-                                            <properties>
-                                              <font name="Verdana" size="10" style="0"/>
-                                              <text resource-bundle="ui" key="span1"/>
-                                            </properties>
-                                          </component>
-                                          <component id="6aa9e" class="javax.swing.JCheckBox" binding="iaaClassAndSpanCheckBox" default-binding="true">
-                                            <constraints/>
-                                            <properties>
-                                              <font name="Verdana" size="10" style="0"/>
-                                              <text resource-bundle="ui" key="class.and.span"/>
-                                            </properties>
-                                          </component>
-                                          <component id="a3b17" class="javax.swing.JCheckBox" binding="iaaClassCheckBox" default-binding="true">
-                                            <constraints/>
-                                            <properties>
-                                              <font name="Verdana" size="10" style="0"/>
-                                              <text resource-bundle="log4j" key="class1"/>
-                                            </properties>
-                                          </component>
-                                          <component id="21ed9" class="javax.swing.JButton" binding="runIaaButton">
-                                            <constraints/>
-                                            <properties>
-                                              <font name="Verdana" size="10" style="0"/>
-                                              <text resource-bundle="log4j" key="run.iaa"/>
-                                            </properties>
-                                          </component>
-                                        </children>
-                                      </grid>
+                                        <properties>
+                                          <font name="Verdana" size="10" style="0"/>
+                                          <text resource-bundle="log4j" key="run.iaa"/>
+                                        </properties>
+                                      </component>
                                     </children>
                                   </grid>
                                   <grid id="4334" layout-manager="BorderLayout" hgap="0" vgap="0">
