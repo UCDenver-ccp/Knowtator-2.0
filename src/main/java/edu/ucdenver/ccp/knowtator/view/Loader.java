@@ -108,6 +108,7 @@ public class Loader extends SwingWorker implements ModelListener {
     view.getModel().ifPresent(model -> {
       if (!model.getOWLClassNotFoundAnnotations().isEmpty()) {
         JTable message = new JTable();
+        message.setAutoCreateRowSorter(true);
         message.setModel(
             new DefaultTableModel(
                 new Object[][] {}, new String[] {"Annotation ID", "OWL class not found"}) {

@@ -33,7 +33,9 @@
                 <children>
                   <component id="47f41" class="javax.swing.JTable" binding="profilesTable">
                     <constraints/>
-                    <properties/>
+                    <properties>
+                      <autoCreateRowSorter value="true"/>
+                    </properties>
                   </component>
                 </children>
               </scrollpane>
