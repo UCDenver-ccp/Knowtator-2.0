@@ -45,6 +45,7 @@ import org.protege.editor.core.ui.util.AugmentedJTextField;
 import org.protege.editor.owl.model.OWLWorkspace;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
 import org.protege.editor.owl.model.selection.OWLSelectionModel;
+import org.protege.editor.owl.model.selection.OWLSelectionModelListener;
 import org.protege.editor.owl.ui.search.SearchDialogPanel;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
@@ -375,6 +376,15 @@ public abstract class OwlModel extends BaseModel implements Serializable {
    */
   public void addOwlModelManagerListener(OWLModelManagerListener listener) {
     owlWorkSpace.ifPresent(owlWorkSpace -> owlWorkSpace.getOWLModelManager().addListener(listener));
+  }
+
+  /**
+   * Add owl model manager listener.
+   *
+   * @param listener the listener
+   */
+  public void addOwlSelectionModelListener(OWLSelectionModelListener listener) {
+    owlWorkSpace.ifPresent(owlWorkSpace -> owlWorkSpace.getOWLSelectionModel().addListener(listener));
   }
 
   public void setSelectedOwlClass(String owlClass) {

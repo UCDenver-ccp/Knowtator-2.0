@@ -28,23 +28,30 @@ import static edu.ucdenver.ccp.knowtator.view.actions.modelactions.ProfileAction
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
+import edu.ucdenver.ccp.knowtator.model.OwlModel;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import java.awt.BasicStroke;
 import java.awt.Component;
+import java.util.Optional;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.event.ListSelectionListener;
+import org.apache.log4j.Logger;
+import org.protege.editor.owl.model.selection.OWLSelectionModelListener;
 
 /** The type Color list. */
-public class ColorList extends JList<String> implements KnowtatorComponent, ModelListener {
+public class ColorList extends JList<String> implements KnowtatorComponent, ModelListener, OWLSelectionModelListener {
 
   private final ListSelectionListener lsl;
-  private KnowtatorView view;
+  private final KnowtatorView view;
+  private static final Logger log = Logger.getLogger(ColorList.class);
 
   /** Instantiates a new Color list. */
   public ColorList(KnowtatorView view) {
@@ -94,6 +101,19 @@ public class ColorList extends JList<String> implements KnowtatorComponent, Mode
     setCollection();
   }
 
+  @Override
+  public void selectionChanged() {
+    Optional<String> owlClassOptional = view.getModel().flatMap(OwlModel::getSelectedOwlClass);
+
+    owlClassOptional.ifPresent(owlClass -> {
+      setCollection();
+      int i = ((DefaultListModel) getModel()).indexOf(owlClass);
+      if (-1 < i) {
+        scrollRectToVisible(getCellBounds(i, i));
+      }
+    });
+  }
+
   /**
    * The type Color list renderer.
    *
@@ -113,6 +133,12 @@ public class ColorList extends JList<String> implements KnowtatorComponent, Mode
           .filter(model -> value instanceof String)
           .ifPresent(
               model -> {
+                Optional<String> owlClass = model.getSelectedOwlClass();
+                if (owlClass.isPresent() && value.equals(owlClass.get())) {
+                  setBorder(BorderFactory.createStrokeBorder(new BasicStroke(2)));
+                } else {
+                  setBorder(null);
+                }
                 model
                     .getSelectedProfile()
                     .ifPresent(profile -> setBackground(profile.getColors().get(value)));
