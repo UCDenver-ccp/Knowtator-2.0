@@ -41,130 +41,6 @@
                           <font name="Verdana" size="18"/>
                         </border>
                         <children>
-                          <grid id="c9d64" binding="spanPane" layout-manager="GridBagLayout">
-                            <constraints>
-                              <grid row="8" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="1.0" weighty="0.0"/>
-                            </constraints>
-                            <properties/>
-                            <border type="none" title="Spans">
-                              <font name="Verdana" size="16"/>
-                            </border>
-                            <children>
-                              <scrollpane id="bcf75">
-                                <constraints>
-                                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                                  <gridbag weightx="1.0" weighty="1.0"/>
-                                </constraints>
-                                <properties/>
-                                <border type="none"/>
-                                <children>
-                                  <component id="434b8" class="edu.ucdenver.ccp.knowtator.view.table.SpanTable" binding="spanTable" custom-create="true">
-                                    <constraints/>
-                                    <properties>
-                                      <font name="Verdana" size="10" style="0"/>
-                                    </properties>
-                                  </component>
-                                </children>
-                              </scrollpane>
-                              <grid id="e9543" layout-manager="GridBagLayout">
-                                <constraints>
-                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                                  <gridbag weightx="1.0" weighty="0.0"/>
-                                </constraints>
-                                <properties/>
-                                <border type="none"/>
-                                <children>
-                                  <component id="c52ed" class="javax.swing.JButton" binding="growStartButton">
-                                    <constraints>
-                                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                      <gridbag weightx="0.0" weighty="1.0"/>
-                                    </constraints>
-                                    <properties>
-                                      <font name="Verdana" size="10" style="0"/>
-                                      <text value="Grow Start"/>
-                                    </properties>
-                                  </component>
-                                  <component id="30b5b" class="javax.swing.JButton" binding="shrinkStartButton">
-                                    <constraints>
-                                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                      <gridbag weightx="0.0" weighty="1.0"/>
-                                    </constraints>
-                                    <properties>
-                                      <font name="Verdana" size="10" style="0"/>
-                                      <text value="Shrink Start"/>
-                                    </properties>
-                                  </component>
-                                  <component id="d63b8" class="javax.swing.JButton" binding="shrinkEndButton">
-                                    <constraints>
-                                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                      <gridbag weightx="0.0" weighty="1.0"/>
-                                    </constraints>
-                                    <properties>
-                                      <font name="Verdana" size="10" style="0"/>
-                                      <text value="Shrink End"/>
-                                    </properties>
-                                  </component>
-                                  <component id="2f979" class="javax.swing.JButton" binding="growEndButton">
-                                    <constraints>
-                                      <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                      <gridbag weightx="0.0" weighty="1.0"/>
-                                    </constraints>
-                                    <properties>
-                                      <font name="Verdana" size="10" style="0"/>
-                                      <text value="Grow End"/>
-                                    </properties>
-                                  </component>
-                                </children>
-                              </grid>
-                            </children>
-                          </grid>
-                          <grid id="e72fc" binding="graphSpacePane" layout-manager="GridBagLayout">
-                            <constraints>
-                              <grid row="9" column="0" row-span="2" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="1.0" weighty="0.0"/>
-                            </constraints>
-                            <properties/>
-                            <border type="none" title="Graph Spaces">
-                              <font name="Verdana" size="16"/>
-                            </border>
-                            <children>
-                              <scrollpane id="65a14">
-                                <constraints>
-                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                                  <gridbag weightx="1.0" weighty="1.0"/>
-                                </constraints>
-                                <properties/>
-                                <border type="none"/>
-                                <children>
-                                  <component id="6bfe9" class="edu.ucdenver.ccp.knowtator.view.list.GraphSpaceList" binding="graphSpaceList" custom-create="true">
-                                    <constraints/>
-                                    <properties>
-                                      <font name="Verdana" size="10" style="0"/>
-                                    </properties>
-                                  </component>
-                                </children>
-                              </scrollpane>
-                            </children>
-                          </grid>
-                          <scrollpane id="abd72">
-                            <constraints>
-                              <grid row="3" column="0" row-span="5" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="1.0" weighty="1.0"/>
-                            </constraints>
-                            <properties/>
-                            <border type="none" title="Notes">
-                              <font name="Verdana" size="14"/>
-                            </border>
-                            <children>
-                              <component id="e6510" class="edu.ucdenver.ccp.knowtator.view.AnnotationNotes" binding="annotationNotes" custom-create="true">
-                                <constraints/>
-                                <properties>
-                                  <font name="Verdana" size="12"/>
-                                </properties>
-                              </component>
-                            </children>
-                          </scrollpane>
                           <grid id="355b4" layout-manager="GridBagLayout">
                             <constraints>
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -230,6 +106,149 @@
                               </component>
                             </children>
                           </grid>
+                          <tabbedpane id="15d51">
+                            <constraints>
+                              <grid row="3" column="0" row-span="5" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                                <preferred-size width="200" height="200"/>
+                              </grid>
+                              <gridbag weightx="1.0" weighty="1.0"/>
+                            </constraints>
+                            <properties/>
+                            <border type="none"/>
+                            <children>
+                              <grid id="c9d64" binding="spanPane" layout-manager="GridBagLayout">
+                                <constraints>
+                                  <tabbedpane title="Spans"/>
+                                </constraints>
+                                <properties/>
+                                <border type="none" title="Spans">
+                                  <font name="Verdana" size="16"/>
+                                </border>
+                                <children>
+                                  <scrollpane id="bcf75">
+                                    <constraints>
+                                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="1.0" weighty="1.0"/>
+                                    </constraints>
+                                    <properties/>
+                                    <border type="none"/>
+                                    <children>
+                                      <component id="434b8" class="edu.ucdenver.ccp.knowtator.view.table.SpanTable" binding="spanTable" custom-create="true">
+                                        <constraints/>
+                                        <properties>
+                                          <font name="Verdana" size="10" style="0"/>
+                                        </properties>
+                                      </component>
+                                    </children>
+                                  </scrollpane>
+                                  <grid id="e9543" layout-manager="GridBagLayout">
+                                    <constraints>
+                                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="1.0" weighty="0.0"/>
+                                    </constraints>
+                                    <properties/>
+                                    <border type="none"/>
+                                    <children>
+                                      <component id="c52ed" class="javax.swing.JButton" binding="growStartButton">
+                                        <constraints>
+                                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                          <gridbag weightx="0.0" weighty="1.0"/>
+                                        </constraints>
+                                        <properties>
+                                          <font name="Verdana" size="10" style="0"/>
+                                          <text value="Grow Start"/>
+                                        </properties>
+                                      </component>
+                                      <component id="30b5b" class="javax.swing.JButton" binding="shrinkStartButton">
+                                        <constraints>
+                                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                          <gridbag weightx="0.0" weighty="1.0"/>
+                                        </constraints>
+                                        <properties>
+                                          <font name="Verdana" size="10" style="0"/>
+                                          <text value="Shrink Start"/>
+                                        </properties>
+                                      </component>
+                                      <component id="d63b8" class="javax.swing.JButton" binding="shrinkEndButton">
+                                        <constraints>
+                                          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                          <gridbag weightx="0.0" weighty="1.0"/>
+                                        </constraints>
+                                        <properties>
+                                          <font name="Verdana" size="10" style="0"/>
+                                          <text value="Shrink End"/>
+                                        </properties>
+                                      </component>
+                                      <component id="2f979" class="javax.swing.JButton" binding="growEndButton">
+                                        <constraints>
+                                          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                          <gridbag weightx="0.0" weighty="1.0"/>
+                                        </constraints>
+                                        <properties>
+                                          <font name="Verdana" size="10" style="0"/>
+                                          <text value="Grow End"/>
+                                        </properties>
+                                      </component>
+                                    </children>
+                                  </grid>
+                                </children>
+                              </grid>
+                              <grid id="e72fc" binding="graphSpacePane" layout-manager="GridBagLayout">
+                                <constraints>
+                                  <tabbedpane title="Graph Spaces"/>
+                                </constraints>
+                                <properties/>
+                                <border type="none" title="Graph Spaces">
+                                  <font name="Verdana" size="16"/>
+                                </border>
+                                <children>
+                                  <scrollpane id="65a14">
+                                    <constraints>
+                                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="1.0" weighty="1.0"/>
+                                    </constraints>
+                                    <properties/>
+                                    <border type="none"/>
+                                    <children>
+                                      <component id="6bfe9" class="edu.ucdenver.ccp.knowtator.view.list.GraphSpaceList" binding="graphSpaceList" custom-create="true">
+                                        <constraints/>
+                                        <properties>
+                                          <font name="Verdana" size="10" style="0"/>
+                                        </properties>
+                                      </component>
+                                    </children>
+                                  </scrollpane>
+                                </children>
+                              </grid>
+                              <grid id="6c223" layout-manager="GridBagLayout">
+                                <constraints>
+                                  <tabbedpane title="Notes"/>
+                                </constraints>
+                                <properties/>
+                                <border type="none"/>
+                                <children>
+                                  <scrollpane id="abd72">
+                                    <constraints>
+                                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="1.0" weighty="1.0"/>
+                                    </constraints>
+                                    <properties/>
+                                    <border type="none" title="Notes">
+                                      <font name="Verdana" size="14"/>
+                                    </border>
+                                    <children>
+                                      <component id="e6510" class="edu.ucdenver.ccp.knowtator.view.AnnotationNotes" binding="annotationNotes" custom-create="true">
+                                        <constraints/>
+                                        <properties>
+                                          <font name="Verdana" size="12"/>
+                                        </properties>
+                                      </component>
+                                    </children>
+                                  </scrollpane>
+                                </children>
+                              </grid>
+                            </children>
+                          </tabbedpane>
                         </children>
                       </grid>
                     </children>
@@ -246,6 +265,7 @@
                         <properties>
                           <minimumSize width="200" height="22"/>
                           <preferredSize width="500" height="500"/>
+                          <text value=""/>
                         </properties>
                       </component>
                     </children>
@@ -346,31 +366,6 @@
                               </component>
                             </children>
                           </grid>
-                          <grid id="331a3" layout-manager="GridBagLayout">
-                            <constraints>
-                              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="1.0" weighty="0.0"/>
-                            </constraints>
-                            <properties/>
-                            <border type="none" title="Font Size"/>
-                            <children>
-                              <component id="f15a2" class="javax.swing.JSlider" binding="fontSizeSlider">
-                                <constraints>
-                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                                  <gridbag weightx="1.0" weighty="1.0"/>
-                                </constraints>
-                                <properties>
-                                  <inverted value="false"/>
-                                  <majorTickSpacing value="8"/>
-                                  <maximum value="28"/>
-                                  <minimum value="8"/>
-                                  <minorTickSpacing value="1"/>
-                                  <snapToTicks value="true"/>
-                                  <value value="16"/>
-                                </properties>
-                              </component>
-                            </children>
-                          </grid>
                           <component id="af9bf" class="javax.swing.JButton" binding="captureImageButton">
                             <constraints>
                               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -412,36 +407,6 @@
                               <text value=""/>
                             </properties>
                           </component>
-                          <grid id="5136" binding="filterPane" layout-manager="GridBagLayout">
-                            <constraints>
-                              <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="1.0" weighty="1.0"/>
-                            </constraints>
-                            <properties/>
-                            <border type="none"/>
-                            <children>
-                              <component id="a3ff0" class="javax.swing.JCheckBox" binding="owlClassFilterCheckBox">
-                                <constraints>
-                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                  <gridbag weightx="1.0" weighty="1.0"/>
-                                </constraints>
-                                <properties>
-                                  <font name="Verdana" size="10" style="0"/>
-                                  <text value="OWL Class"/>
-                                </properties>
-                              </component>
-                              <component id="f1049" class="javax.swing.JCheckBox" binding="profileFilterCheckBox">
-                                <constraints>
-                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                  <gridbag weightx="1.0" weighty="1.0"/>
-                                </constraints>
-                                <properties>
-                                  <font name="Verdana" size="10" style="0"/>
-                                  <text value="Profile"/>
-                                </properties>
-                              </component>
-                            </children>
-                          </grid>
                           <component id="4baaa" class="javax.swing.JButton" binding="redoButton" default-binding="true">
                             <constraints>
                               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -544,43 +509,6 @@
                           </grid>
                         </children>
                       </grid>
-                      <component id="5ce35" class="javax.swing.JCheckBox" binding="oneClickGraphsCheckBox" default-binding="true">
-                        <constraints>
-                          <grid row="0" column="3" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="1.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <text value="One Click Graphs"/>
-                        </properties>
-                      </component>
-                      <component id="a2a69" class="javax.swing.JCheckBox" binding="snapToWordsCheckBox" default-binding="true">
-                        <constraints>
-                          <grid row="2" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="1.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <selected value="true"/>
-                          <text value="Snap to words"/>
-                        </properties>
-                      </component>
-                      <component id="73677" class="javax.swing.JRadioButton" binding="structuresRadioButton" default-binding="true">
-                        <constraints>
-                          <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="1.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <text value="Structures"/>
-                        </properties>
-                      </component>
-                      <component id="c4764" class="javax.swing.JRadioButton" binding="conceptsRadioButton" default-binding="true">
-                        <constraints>
-                          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="1.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <text value="Concepts"/>
-                        </properties>
-                      </component>
                     </children>
                   </grid>
                   <grid id="8ec4a" layout-manager="GridBagLayout">
@@ -1155,6 +1083,97 @@
                           </tabbedpane>
                         </children>
                       </grid>
+                    </children>
+                  </grid>
+                  <grid id="70800" layout-manager="GridBagLayout">
+                    <constraints>
+                      <tabbedpane title="Settings"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="c4764" class="javax.swing.JRadioButton" binding="conceptsRadioButton" default-binding="true">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <text value="Concepts"/>
+                        </properties>
+                      </component>
+                      <component id="5ce35" class="javax.swing.JCheckBox" binding="oneClickGraphsCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <text value="One Click Graphs"/>
+                        </properties>
+                      </component>
+                      <component id="a2a69" class="javax.swing.JCheckBox" binding="snapToWordsCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <selected value="true"/>
+                          <text value="Snap to words"/>
+                        </properties>
+                      </component>
+                      <component id="73677" class="javax.swing.JRadioButton" binding="structuresRadioButton" default-binding="true">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <text value="Structures"/>
+                        </properties>
+                      </component>
+                      <grid id="331a3" layout-manager="GridBagLayout">
+                        <constraints>
+                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="0.0"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none" title="Font Size"/>
+                        <children>
+                          <component id="f15a2" class="javax.swing.JSlider" binding="fontSizeSlider">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
+                            </constraints>
+                            <properties>
+                              <inverted value="false"/>
+                              <majorTickSpacing value="8"/>
+                              <maximum value="28"/>
+                              <minimum value="8"/>
+                              <minorTickSpacing value="1"/>
+                              <snapToTicks value="true"/>
+                              <value value="16"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <component id="f1049" class="javax.swing.JCheckBox" binding="profileFilterCheckBox">
+                        <constraints>
+                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="1.0"/>
+                        </constraints>
+                        <properties>
+                          <font name="Verdana" size="10" style="0"/>
+                          <text value="Profile"/>
+                        </properties>
+                      </component>
+                      <component id="a3ff0" class="javax.swing.JCheckBox" binding="owlClassFilterCheckBox">
+                        <constraints>
+                          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="1.0"/>
+                        </constraints>
+                        <properties>
+                          <font name="Verdana" size="10" style="0"/>
+                          <text value="OWL Class"/>
+                        </properties>
+                      </component>
                     </children>
                   </grid>
                 </children>

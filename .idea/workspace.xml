@@ -32,34 +32,9 @@
   <component name="ChangeListManager">
     <list default="true" id="b5586eae-97ae-4be5-aa9b-4eaaef9d25b4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/Iaa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/Iaa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/KnowtatorIaa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/KnowtatorIaa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/html/Iaa2Html.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/html/Iaa2Html.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/html/SpanMatcherHtml.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/html/SpanMatcherHtml.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/matcher/ClassAndSpanMatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/matcher/ClassAndSpanMatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/brat/BratStandoffUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/brat/BratStandoffUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/KnowtatorXmlUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/KnowtatorXmlUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/OldKnowtatorXmlUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/OldKnowtatorXmlUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/ConceptAnnotation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/ConceptAnnotation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIaaTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIaaTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.dat" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.matches.Kristin Garcia.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.matches.Kristin Garcia.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.matches.Mike Bada.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.matches.Mike Bada.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.nonmatches.Kristin Garcia.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.nonmatches.Kristin Garcia.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.nonmatches.Mike Bada.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.nonmatches.Mike Bada.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.dat" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.matches.Kristin Garcia.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.matches.Kristin Garcia.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.matches.Mike Bada.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.matches.Mike Bada.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.nonmatches.Kristin Garcia.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.nonmatches.Kristin Garcia.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.nonmatches.Mike Bada.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.nonmatches.Mike Bada.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.matches.Kristin Garcia.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.matches.Kristin Garcia.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.matches.Mike Bada.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.matches.Mike Bada.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.nonmatches.Kristin Garcia.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.nonmatches.Kristin Garcia.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.nonmatches.Mike Bada.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.nonmatches.Mike Bada.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java" afterDir="false" />
     </list>
     <list id="9e563f0c-91e9-4ed0-b3db-d36bc1e81506" name="Made test for adding an annotation layer" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -113,7 +88,7 @@
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
-  <component name="RunManager" selected="JUnit.KnowtatorIaaTest">
+  <component name="RunManager" selected="JUnit.All in Knowtator-2.0">
     <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
       <setting name="replType" value="NREPL" />
       <setting name="execution" value="LEININGEN" />
@@ -221,10 +196,10 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.All in Knowtator-2.0" />
         <item itemvalue="JUnit.KnowtatorIaaTest" />
         <item itemvalue="JUnit.KnowtatorIaaTest.runSpanIaaTest" />
         <item itemvalue="JUnit.KnowtatorIaaTest.runClassAndSpanIaaTest" />
-        <item itemvalue="JUnit.All in Knowtator-2.0" />
         <item itemvalue="JUnit.KnowtatorIaaTest.runClassIaaTest" />
       </list>
     </recent_temporary>
@@ -241,7 +216,8 @@
       <updated>1590015864586</updated>
       <workItem from="1590015931849" duration="5034000" />
       <workItem from="1590021108923" duration="4034000" />
-      <workItem from="1590640467043" duration="17695000" />
+      <workItem from="1590640467043" duration="19344000" />
+      <workItem from="1591151697877" duration="1261000" />
     </task>
     <task id="LOCAL-00001" summary="Old knowtator projects read annotations even if owl class is not found">
       <created>1590645202357</created>
@@ -264,7 +240,14 @@
       <option name="project" value="LOCAL" />
       <updated>1590657854427</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Using owlclassrendering for iaa output. Fixed iaa index file for multiple matchers.">
+      <created>1590660132685</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1590660132685</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -324,7 +307,8 @@
     <MESSAGE value="Old knowtator projects read annotations even if owl class is not found" />
     <MESSAGE value="Record and log when annotation owl classes aren't found" />
     <MESSAGE value="IAA appears to be working correctly with very minor differences if any" />
-    <option name="LAST_COMMIT_MESSAGE" value="IAA appears to be working correctly with very minor differences if any" />
+    <MESSAGE value="Using owlclassrendering for iaa output. Fixed iaa index file for multiple matchers." />
+    <option name="LAST_COMMIT_MESSAGE" value="Using owlclassrendering for iaa output. Fixed iaa index file for multiple matchers." />
   </component>
   <component name="WindowStateProjectService">
     <state x="678" y="391" key="#com.intellij.debugger.actions.ViewTextAction" timestamp="1590640910031">
@@ -353,54 +337,54 @@
     </state>
     <state x="2268" y="208" key="FileChooserDialogImpl/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590016550191" />
     <state x="617" y="277" key="FileChooserDialogImpl/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590641690380" />
-    <state width="1634" height="254" key="GridCell.Tab.0.bottom" timestamp="1590659948863">
+    <state width="1634" height="254" key="GridCell.Tab.0.bottom" timestamp="1590693562567">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791277" />
     <state width="1554" height="255" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
-    <state width="1634" height="254" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590659948863" />
-    <state width="1634" height="254" key="GridCell.Tab.0.center" timestamp="1590659948863">
+    <state width="1634" height="254" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590693562567" />
+    <state width="1634" height="254" key="GridCell.Tab.0.center" timestamp="1590693562567">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.center/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791276" />
     <state width="1554" height="255" key="GridCell.Tab.0.center/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
-    <state width="1634" height="254" key="GridCell.Tab.0.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590659948863" />
-    <state width="1634" height="254" key="GridCell.Tab.0.left" timestamp="1590659948863">
+    <state width="1634" height="254" key="GridCell.Tab.0.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590693562567" />
+    <state width="1634" height="254" key="GridCell.Tab.0.left" timestamp="1590693562567">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.left/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791276" />
     <state width="1554" height="255" key="GridCell.Tab.0.left/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386105" />
-    <state width="1634" height="254" key="GridCell.Tab.0.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590659948863" />
-    <state width="1634" height="254" key="GridCell.Tab.0.right" timestamp="1590659948863">
+    <state width="1634" height="254" key="GridCell.Tab.0.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590693562567" />
+    <state width="1634" height="254" key="GridCell.Tab.0.right" timestamp="1590693562567">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.right/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791277" />
     <state width="1554" height="255" key="GridCell.Tab.0.right/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
-    <state width="1634" height="254" key="GridCell.Tab.0.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590659948863" />
-    <state width="1634" height="381" key="GridCell.Tab.1.bottom" timestamp="1590659783039">
+    <state width="1634" height="254" key="GridCell.Tab.0.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590693562567" />
+    <state width="1634" height="381" key="GridCell.Tab.1.bottom" timestamp="1590693562490">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085398" />
     <state width="830" height="638" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
-    <state width="1634" height="381" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590659783039" />
-    <state width="1634" height="381" key="GridCell.Tab.1.center" timestamp="1590659783038">
+    <state width="1634" height="381" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590693562490" />
+    <state width="1634" height="381" key="GridCell.Tab.1.center" timestamp="1590693562490">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.center/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085395" />
     <state width="830" height="638" key="GridCell.Tab.1.center/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
-    <state width="1634" height="381" key="GridCell.Tab.1.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590659783038" />
-    <state width="1634" height="381" key="GridCell.Tab.1.left" timestamp="1590659783038">
+    <state width="1634" height="381" key="GridCell.Tab.1.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590693562490" />
+    <state width="1634" height="381" key="GridCell.Tab.1.left" timestamp="1590693562489">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.left/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085394" />
     <state width="830" height="638" key="GridCell.Tab.1.left/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333598" />
-    <state width="1634" height="381" key="GridCell.Tab.1.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590659783038" />
-    <state width="1634" height="381" key="GridCell.Tab.1.right" timestamp="1590659783038">
+    <state width="1634" height="381" key="GridCell.Tab.1.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590693562489" />
+    <state width="1634" height="381" key="GridCell.Tab.1.right" timestamp="1590693562490">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.right/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085396" />
     <state width="830" height="638" key="GridCell.Tab.1.right/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
-    <state width="1634" height="381" key="GridCell.Tab.1.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590659783038" />
+    <state width="1634" height="381" key="GridCell.Tab.1.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590693562490" />
     <state x="324" y="108" key="SettingsEditor" timestamp="1590021238448">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
@@ -432,7 +416,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java</url>
-          <line>679</line>
+          <line>678</line>
           <option name="timeStamp" value="20" />
         </line-breakpoint>
       </breakpoints>
