@@ -124,7 +124,11 @@ public class SpanMatcherHtml {
 
       html.println("<td>");
       for (Map.Entry<String, int[]> confusedClass : confusionCounts.entrySet()) {
-        html.printf("  %s=%d%n", confusedClass.getKey(), confusedClass.getValue()[0]);
+        String confusedType = confusedClass.getKey();
+        if (confusedType.startsWith("<") && confusedType.endsWith(">")) {
+          confusedType = confusedType.substring(1, confusedType.length()- 2);
+        }
+        html.printf("  %s=%d%n", confusedType, confusedClass.getValue()[0]);
       }
       html.println("</td>");
     }
