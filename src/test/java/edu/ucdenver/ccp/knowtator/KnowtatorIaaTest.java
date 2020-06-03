@@ -28,8 +28,13 @@ import com.google.common.io.Files;
 import edu.ucdenver.ccp.knowtator.iaa.IaaException;
 import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIaa;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollection;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,7 +45,7 @@ class KnowtatorIaaTest {
   private static KnowtatorIaa knowtatorIAA;
   private static File outputDir;
   private static File goldStandardDir;
-  private static KnowtatorModel controller;
+  private static KnowtatorModel model;
   private final int defaultExpectedTextSources = 4;
   private final int defaultExpectedConceptAnnotations = 456;
   private final int defaultExpectedGraphSpaces = 4;
@@ -58,23 +63,37 @@ class KnowtatorIaaTest {
     File tempProjectDir = Files.createTempDir();
     FileUtils.copyDirectory(projectDirectory, tempProjectDir);
 
-    controller = new KnowtatorModel(tempProjectDir, null);
-    controller.load();
+    model = new KnowtatorModel(tempProjectDir, null);
+    model.load();
 
-    goldStandardDir = new File(controller.getProjectLocation(), "iaa");
+    goldStandardDir = new File(model.getProjectLocation(), "iaa");
 
-    outputDir = new File(controller.getProjectLocation(), "iaa_results");
+    outputDir = new File(model.getProjectLocation(), "iaa_results");
 
     boolean created = outputDir.mkdir();
     if (created) {
-      knowtatorIAA = new KnowtatorIaa(outputDir, controller);
+      ProfileCollection profiles = new ProfileCollection(model);
+      profiles.remove(profiles.getDefaultProfile());
+      HashSet<String> myProfiles = new HashSet<>();
+      myProfiles.add("Kristin Garcia");
+      myProfiles.add("Mike Bada");
+
+      model.getProfile("Kristin Garcia").ifPresent(profiles::add);
+      model.getProfile("Mike Bada").ifPresent(profiles::add);
+      knowtatorIAA = new KnowtatorIaa(outputDir,
+          model,
+          model.getTextSources().stream().map(TextSource::getId).collect(Collectors.toSet()),
+          model.getProfiles().stream()
+              .map(Profile::getId)
+              .filter(myProfiles::contains)
+              .collect(Collectors.toSet()));
     }
   }
 
   @Test
   void runClassIaaTest() throws IOException, IaaException {
     TestingHelpers.countCollections(
-        controller,
+        model,
         defaultExpectedTextSources,
         defaultExpectedConceptAnnotations,
         defaultExpectedSpans,
@@ -103,7 +122,7 @@ class KnowtatorIaaTest {
   @Test
   void runSpanIaaTest() throws IOException, IaaException {
     TestingHelpers.countCollections(
-        controller,
+        model,
         defaultExpectedTextSources,
         defaultExpectedConceptAnnotations,
         defaultExpectedSpans,
@@ -131,7 +150,7 @@ class KnowtatorIaaTest {
   @Test
   void runClassAndSpanIaaTest() throws IaaException, IOException {
     TestingHelpers.countCollections(
-        controller,
+        model,
         defaultExpectedTextSources,
         defaultExpectedConceptAnnotations,
         defaultExpectedSpans,

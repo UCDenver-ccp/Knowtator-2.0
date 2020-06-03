@@ -32,17 +32,17 @@ import edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.SpanMatcher;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
-import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /** The type Knowtator iaa. */
 public class KnowtatorIaa {
@@ -50,11 +50,9 @@ public class KnowtatorIaa {
 
   // KnowtatorFilter filter;
 
-  private final TextSourceCollection textSources;
-
   // Project project;
 
-  private final KnowtatorModel controller;
+  private final KnowtatorModel model;
 
   // KnowtatorProjectUtil kpu;
 
@@ -76,28 +74,31 @@ public class KnowtatorIaa {
    * Instantiates a new Knowtator iaa.
    *
    * @param outputDirectory the output directory
-   * @param controller the controller
+   * @param model the model
    * @throws IaaException the iaa exception
    */
   @SuppressWarnings("unused")
-  public KnowtatorIaa(File outputDirectory, KnowtatorModel controller) throws IaaException {
+  public KnowtatorIaa(File outputDirectory, KnowtatorModel model, Collection<String> textSources, Collection<String> profiles) throws IaaException {
 
     this.outputDirectory = outputDirectory;
     // this.filter = filter;
-    this.textSources = controller.getTextSources();
 
-    this.controller = controller;
+    this.model = model;
     annotationTexts = new HashMap<>();
     annotationTextNames = new HashMap<>();
 
-    initSetNames();
-    initTextSourceAnnotations();
+    setNames = new HashSet<>(profiles);
+    textSourceAnnotationsMap = new HashMap<>();
+    textSources.stream()
+        .map(id -> model.getTextSources().get(id))
+        .filter(Optional::isPresent)
+        .map(Optional::get)
+        .forEach(textSource -> textSourceAnnotationsMap.put(textSource, textSource.getConceptAnnotations()));
     initHtml();
   }
 
   private void initSetNames() {
-    setNames = controller.getProfiles().stream().map(Profile::getId).collect(Collectors.toSet());
-    setNames.remove("Default");
+
   }
 
   private void initHtml() throws IaaException {
@@ -118,13 +119,6 @@ public class KnowtatorIaa {
     html.close();
   }
 
-  private void initTextSourceAnnotations() {
-    textSourceAnnotationsMap = new HashMap<>();
-    for (TextSource textSource : textSources) {
-      textSourceAnnotationsMap.put(textSource, textSource.getConceptAnnotations());
-    }
-  }
-
   /**
    * Run class iaa.
    *
@@ -141,7 +135,7 @@ public class KnowtatorIaa {
           classIaa,
           classMatcher,
           outputDirectory,
-          textSources.size(),
+          textSourceAnnotationsMap.size(),
           annotationTexts,
           annotationTextNames);
       html.printf(
@@ -177,20 +171,16 @@ public class KnowtatorIaa {
           spanIaa,
           spanMatcher,
           outputDirectory,
-          textSources.size(),
+          textSourceAnnotationsMap.size(),
           annotationTexts,
           annotationTextNames);
     } catch (IOException e) {
       e.printStackTrace();
     }
     html.printf(
-          "<li><a href=\"%s.html\">%s</a></li>%n", spanMatcher.getName(), spanMatcher.getName());
-
-      try {
-        String x;
-      } catch (Exception e) {
-        throw new IaaException(e);
-      }
+          "<li><a href=\"%s.html\">%s</a></li>%n",
+        spanMatcher.getName(),
+        spanMatcher.getName());
   }
 
   /**
@@ -209,7 +199,7 @@ public class KnowtatorIaa {
           classAndSpanIaa,
           classAndSpanMatcher,
           outputDirectory,
-          textSources.size(),
+          textSourceAnnotationsMap.size(),
           annotationTexts,
           annotationTextNames);
       html.printf(

@@ -98,6 +98,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -660,8 +661,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                       if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
                         File outputDirectory = fileChooser.getSelectedFile();
 
+
                         try {
-                          KnowtatorIaa knowtatorIaa = new KnowtatorIaa(outputDirectory, model);
+                          KnowtatorIaa knowtatorIaa = new KnowtatorIaa(outputDirectory, model, model.getTextSources().stream().map(TextSource::getId).collect(Collectors.toSet()), model.getProfiles().stream().map(Profile::getId).collect(Collectors.toSet()));
 
                           if (iaaClassCheckBox.isSelected()) {
                             knowtatorIaa.runClassIaa();
