@@ -48,12 +48,14 @@ import org.protege.editor.owl.model.selection.OWLSelectionModel;
 import org.protege.editor.owl.model.selection.OWLSelectionModelListener;
 import org.protege.editor.owl.ui.search.SearchDialogPanel;
 import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.model.HasAnnotationPropertiesInSignature;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLNamedObject;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
@@ -66,10 +68,10 @@ public abstract class OwlModel extends BaseModel implements Serializable {
   @SuppressWarnings("unused")
   private static final Logger log = LogManager.getLogger(OwlModel.class);
 
-  private OWLOntologyManager owlOntologyManager;
+  private final OWLOntologyManager owlOntologyManager;
 
   @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-  private Optional<OWLWorkspace> owlWorkSpace;
+  private final Optional<OWLWorkspace> owlWorkSpace;
 
   /**
    * Instantiates a new Owl model.
@@ -421,5 +423,19 @@ public abstract class OwlModel extends BaseModel implements Serializable {
 
   public void setSelectedOwlObjectProperty(String property) {
     setSelectedOwlEntity(getOwlDataFactory().getOWLObjectProperty(IRI.create(property)));
+  }
+
+  public IRI[] getOWLAnnotationProperties() {
+    return owlWorkSpace
+        .map(owlWorkspace -> owlWorkspace.getOWLModelManager().getOntologies().stream()
+        .map(HasAnnotationPropertiesInSignature::getAnnotationPropertiesInSignature)
+        .flatMap(Set::stream)
+        .map(OWLNamedObject::getIRI)
+        .toArray(IRI[]::new))
+        .orElseGet(() -> owlOntologyManager.getOntologies().stream()
+        .map(HasAnnotationPropertiesInSignature::getAnnotationPropertiesInSignature)
+        .flatMap(Set::stream)
+        .map(OWLNamedObject::getIRI)
+        .toArray(IRI[]::new));
   }
 }

@@ -102,7 +102,6 @@ public class IAAOptionsDialog extends JDialog {
         JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
     documentsTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-
     documentsTableModel = new IAATableModel(
         new Object[][] {},
         "Document",
@@ -110,9 +109,9 @@ public class IAAOptionsDialog extends JDialog {
             .map(ModelObject::getId)
             .collect(Collectors.toList()));
     documentsTable.setModel(documentsTableModel);
+    documentsSelectAllButton.addActionListener(e -> documentsTableModel.toggleAll());
 
     profilesTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-
     profilesTableModel = new IAATableModel(
         new Object[][] {},
         "Document",
@@ -120,9 +119,8 @@ public class IAAOptionsDialog extends JDialog {
             .map(ModelObject::getId)
             .collect(Collectors.toList()));
     profilesTable.setModel(profilesTableModel);
-
     profilesSelectAllButton.addActionListener(e -> profilesTableModel.toggleAll());
-    documentsSelectAllButton.addActionListener(e -> documentsTableModel.toggleAll());
+
   }
 
   private static class IAATableModel extends DefaultTableModel {
@@ -171,25 +169,27 @@ public class IAAOptionsDialog extends JDialog {
     Set<String> profiles = profilesTableModel.getSelectedItems();
 
     Set<String> textSources = documentsTableModel.getSelectedItems();
+    if (profiles.size() <= 2 && !textSources.isEmpty() &&
+        (iaaClassCheckBox.isSelected() || iaaSpanCheckBox.isSelected() || iaaClassAndSpanCheckBox.isSelected())) {
+      try {
+        KnowtatorIaa knowtatorIaa = new KnowtatorIaa(outputDirectory, model, textSources, profiles);
 
-    try {
-      KnowtatorIaa knowtatorIaa = new KnowtatorIaa(outputDirectory, model, textSources, profiles);
+        if (iaaClassCheckBox.isSelected()) {
+          knowtatorIaa.runClassIaa();
+        }
+        if (iaaSpanCheckBox.isSelected()) {
+          knowtatorIaa.runSpanIaa();
+        }
+        if (iaaClassAndSpanCheckBox.isSelected()) {
+          knowtatorIaa.runClassAndSpanIaa();
+        }
 
-      if (iaaClassCheckBox.isSelected()) {
-        knowtatorIaa.runClassIaa();
+        knowtatorIaa.closeHtml();
+      } catch (IaaException e1) {
+        e1.printStackTrace();
       }
-      if (iaaSpanCheckBox.isSelected()) {
-        knowtatorIaa.runSpanIaa();
-      }
-      if (iaaClassAndSpanCheckBox.isSelected()) {
-        knowtatorIaa.runClassAndSpanIaa();
-      }
-
-      knowtatorIaa.closeHtml();
-    } catch (IaaException e1) {
-      e1.printStackTrace();
+      dispose();
     }
-    dispose();
   }
 
   private void onCancel() {

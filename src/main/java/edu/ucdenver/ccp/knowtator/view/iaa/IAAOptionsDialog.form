@@ -117,12 +117,12 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
-        <border type="none" title-resource-bundle="log4j" title-key="mode"/>
+        <border type="none"/>
         <children>
           <grid id="2b8af" layout-manager="GridBagLayout">
             <constraints border-constraint="North"/>
             <properties/>
-            <border type="none"/>
+            <border type="none" title="Mode"/>
             <children>
               <component id="c802a" class="javax.swing.JCheckBox" binding="iaaClassCheckBox">
                 <constraints>
