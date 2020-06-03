@@ -102,7 +102,8 @@ public abstract class OwlModel extends BaseModel implements Serializable {
             ontology.getClassesInSignature().stream()
                 .filter(
                     owlClass ->
-                        owlClass.getIRI().getShortForm().equals(classID)
+                        owlClass.getIRI().toString().equals(classID)
+                            || owlClass.getIRI().getShortForm().equals(classID)
                             || ontology.getAnnotationAssertionAxioms(owlClass.getIRI()).stream()
                                 .anyMatch(
                                     owlAnnotationAssertionAxiom ->

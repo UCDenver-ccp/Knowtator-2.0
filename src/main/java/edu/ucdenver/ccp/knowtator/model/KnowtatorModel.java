@@ -50,6 +50,11 @@ import org.protege.editor.owl.model.OWLWorkspace;
 public class KnowtatorModel extends OwlModel {
 
   private static final Logger log = Logger.getLogger(KnowtatorModel.class);
+
+  public List<String[]> getOWLClassNotFoundAnnotations() {
+    return OWLClassNotFoundAnnotations;
+  }
+
   private List<String[]> OWLClassNotFoundAnnotations;
 
   /**

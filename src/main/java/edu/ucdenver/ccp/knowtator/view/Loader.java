@@ -34,9 +34,13 @@ import java.awt.Cursor;
 import java.io.File;
 import java.util.Objects;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.SwingWorker;
+import javax.swing.table.DefaultTableModel;
 
 /** The type Loader. */
 public class Loader extends SwingWorker implements ModelListener {
@@ -100,6 +104,26 @@ public class Loader extends SwingWorker implements ModelListener {
     progressBar1.setValue(0);
     view.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     view.loadProject(file, this);
+
+    view.getModel().ifPresent(model -> {
+      if (!model.getOWLClassNotFoundAnnotations().isEmpty()) {
+        JTable message = new JTable();
+        message.setModel(
+            new DefaultTableModel(
+                new Object[][] {}, new String[] {"Annotation ID", "OWL class not found"}) {
+              @Override
+              public boolean isCellEditable(int row, int col) {
+                return false;
+              }
+            });
+        for (String[] item : model.getOWLClassNotFoundAnnotations()) {
+          ((DefaultTableModel) message.getModel())
+              .addRow(item);
+        }
+        JOptionPane.showMessageDialog(view, new JScrollPane(message));
+      }
+    });
+
     return null;
   }
 
