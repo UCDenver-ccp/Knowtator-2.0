@@ -27,8 +27,7 @@ package edu.ucdenver.ccp.knowtator.view.iaa;
 import edu.ucdenver.ccp.knowtator.iaa.IaaException;
 import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIaa;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.object.Profile;
-import edu.ucdenver.ccp.knowtator.model.object.TextSource;
+import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -38,11 +37,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -51,14 +50,17 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
 
 public class IAAOptionsDialog extends JDialog {
   private JPanel contentPane;
   private JButton buttonOK;
   private JButton buttonCancel;
-  private JButton selectAllButton1;
+  private JButton documentsSelectAllButton;
   private JPanel profilesPanel;
   private JPanel documentsPanel;
   private final File outputDirectory;
@@ -66,7 +68,11 @@ public class IAAOptionsDialog extends JDialog {
   private JCheckBox iaaClassCheckBox;
   private JCheckBox iaaSpanCheckBox;
   private JCheckBox iaaClassAndSpanCheckBox;
-  private JButton selectAllButton;
+  private JButton profilesSelectAllButton;
+  private JTable profilesTable;
+  private JTable documentsTable;
+  IAATableModel profilesTableModel;
+  IAATableModel documentsTableModel;
 
   public IAAOptionsDialog(Window parent, KnowtatorModel model, File outputDirectory) {
     super(parent);
@@ -94,66 +100,77 @@ public class IAAOptionsDialog extends JDialog {
     contentPane.registerKeyboardAction(e -> onCancel(),
         KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
         JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-    GridBagConstraints gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 0;
-    gbc.anchor = GridBagConstraints.WEST;
 
-    for (TextSource textSource : model.getTextSources()) {
-      gbc.gridy += 1;
-      documentsPanel.add(new JCheckBox(textSource.getId()), gbc);
+    documentsTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+    documentsTableModel = new IAATableModel(
+        new Object[][] {},
+        "Document",
+        model.getTextSources().stream()
+            .map(ModelObject::getId)
+            .collect(Collectors.toList()));
+    documentsTable.setModel(documentsTableModel);
+
+    profilesTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+    profilesTableModel = new IAATableModel(
+        new Object[][] {},
+        "Document",
+        model.getProfiles().stream()
+            .map(ModelObject::getId)
+            .collect(Collectors.toList()));
+    profilesTable.setModel(profilesTableModel);
+
+    profilesSelectAllButton.addActionListener(e -> profilesTableModel.toggleAll());
+    documentsSelectAllButton.addActionListener(e -> documentsTableModel.toggleAll());
+  }
+
+  private static class IAATableModel extends DefaultTableModel {
+    private final int checkCol = 1;
+    IAATableModel(Object[][] data, String col, List<String> collection) {
+      super(data, new String[] {col, "Checkbox"});
+
+      for (String item : collection) {
+        addRow(new Object[] {item, Boolean.FALSE});
+      }
     }
 
-    gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 0;
-    gbc.anchor = GridBagConstraints.WEST;
-
-    for (Profile profile : model.getProfiles()) {
-      gbc.gridy += 1;
-      profilesPanel.add(new JCheckBox(profile.getId()), gbc);
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+      if (columnIndex == 1) {
+        return getValueAt(0, checkCol).getClass();
+      } else {
+        return super.getColumnClass(columnIndex);
+      }
     }
-    selectAllButton.addActionListener(e -> {
-      List<JCheckBox> checkBoxes = Arrays.stream(profilesPanel.getComponents())
-          .filter(component -> component instanceof JCheckBox)
-          .map(component -> (JCheckBox) component)
-          .collect(Collectors.toList());
 
-      if (checkBoxes.stream().allMatch(AbstractButton::isSelected)) {
-        checkBoxes.forEach(jCheckBox -> jCheckBox.setSelected(false));
-      } else {
-        checkBoxes.forEach(jCheckBox -> jCheckBox.setSelected(true));
-      }
-    });
-    selectAllButton1.addActionListener(e -> {
-      List<JCheckBox> checkBoxes = Arrays.stream(documentsPanel.getComponents())
-          .filter(component -> component instanceof JCheckBox)
-          .map(component -> (JCheckBox) component).collect(Collectors.toList());
+    Set<String> getSelectedItems() {
+      return IntStream.range(0, getRowCount())
+          .filter(i -> (Boolean) getValueAt(i, 1))
+          .mapToObj(i -> (String) getValueAt(i, 0))
+          .collect(Collectors.toSet());
+    }
 
-      if (checkBoxes.stream().allMatch(AbstractButton::isSelected)) {
-        checkBoxes.forEach(jCheckBox -> jCheckBox.setSelected(false));
+    boolean allSelected() {
+      return IntStream.range(0, getRowCount())
+          .allMatch(i -> (Boolean) getValueAt(i, 1));
+    }
+
+    void toggleAll() {
+      if (allSelected()) {
+        IntStream.range(0, getRowCount())
+            .forEach(i -> setValueAt(Boolean.FALSE, i, checkCol));
       } else {
-        checkBoxes.forEach(jCheckBox -> jCheckBox.setSelected(true));
+        IntStream.range(0, getRowCount())
+            .forEach(i -> setValueAt(Boolean.TRUE, i, checkCol));
       }
-    });
+    }
   }
 
   private void onOK() {
-    Set<String> profiles = Arrays.stream(profilesPanel.getComponents())
-        .filter(component -> component instanceof JCheckBox)
-        .map(component -> (JCheckBox) component)
-        .filter(AbstractButton::isSelected)
-        .map(AbstractButton::getText)
-        .filter(text -> text.equals("Select all"))
-        .collect(Collectors.toSet());
+    Set<String> profiles = profilesTableModel.getSelectedItems();
 
-    Set<String> textSources = Arrays.stream(documentsPanel.getComponents())
-        .filter(component -> component instanceof JCheckBox)
-        .map(component -> (JCheckBox) component)
-        .filter(AbstractButton::isSelected)
-        .map(AbstractButton::getText)
-        .filter(text -> text.equals("Select all"))
-        .collect(Collectors.toSet());
+    Set<String> textSources = documentsTableModel.getSelectedItems();
 
     try {
       KnowtatorIaa knowtatorIaa = new KnowtatorIaa(outputDirectory, model, textSources, profiles);
@@ -201,18 +218,16 @@ public class IAAOptionsDialog extends JDialog {
     gbc.fill = GridBagConstraints.BOTH;
     contentPane.add(panel1, gbc);
     panel1.setBorder(BorderFactory.createTitledBorder(null, this.$$$getMessageFromBundle$$$("ui", "profiles"), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-    final JScrollPane scrollPane1 = new JScrollPane();
-    panel1.add(scrollPane1, BorderLayout.NORTH);
     profilesPanel = new JPanel();
-    profilesPanel.setLayout(new GridBagLayout());
-    scrollPane1.setViewportView(profilesPanel);
-    selectAllButton = new JButton();
-    this.$$$loadButtonText$$$(selectAllButton, this.$$$getMessageFromBundle$$$("log4j", "select.all"));
-    gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 0;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    profilesPanel.add(selectAllButton, gbc);
+    profilesPanel.setLayout(new BorderLayout(0, 0));
+    panel1.add(profilesPanel, BorderLayout.NORTH);
+    profilesSelectAllButton = new JButton();
+    this.$$$loadButtonText$$$(profilesSelectAllButton, this.$$$getMessageFromBundle$$$("log4j", "select.all"));
+    profilesPanel.add(profilesSelectAllButton, BorderLayout.NORTH);
+    final JScrollPane scrollPane1 = new JScrollPane();
+    profilesPanel.add(scrollPane1, BorderLayout.CENTER);
+    profilesTable = new JTable();
+    scrollPane1.setViewportView(profilesTable);
     final JPanel panel2 = new JPanel();
     panel2.setLayout(new BorderLayout(0, 0));
     gbc = new GridBagConstraints();
@@ -223,18 +238,16 @@ public class IAAOptionsDialog extends JDialog {
     gbc.fill = GridBagConstraints.BOTH;
     contentPane.add(panel2, gbc);
     panel2.setBorder(BorderFactory.createTitledBorder(null, this.$$$getMessageFromBundle$$$("log4j", "documents"), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-    final JScrollPane scrollPane2 = new JScrollPane();
-    panel2.add(scrollPane2, BorderLayout.NORTH);
     documentsPanel = new JPanel();
-    documentsPanel.setLayout(new GridBagLayout());
-    scrollPane2.setViewportView(documentsPanel);
-    selectAllButton1 = new JButton();
-    this.$$$loadButtonText$$$(selectAllButton1, this.$$$getMessageFromBundle$$$("log4j", "select.all"));
-    gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 0;
-    gbc.anchor = GridBagConstraints.WEST;
-    documentsPanel.add(selectAllButton1, gbc);
+    documentsPanel.setLayout(new BorderLayout(0, 0));
+    panel2.add(documentsPanel, BorderLayout.NORTH);
+    documentsSelectAllButton = new JButton();
+    this.$$$loadButtonText$$$(documentsSelectAllButton, this.$$$getMessageFromBundle$$$("log4j", "select.all"));
+    documentsPanel.add(documentsSelectAllButton, BorderLayout.NORTH);
+    final JScrollPane scrollPane2 = new JScrollPane();
+    documentsPanel.add(scrollPane2, BorderLayout.CENTER);
+    documentsTable = new JTable();
+    scrollPane2.setViewportView(documentsTable);
     final JPanel panel3 = new JPanel();
     panel3.setLayout(new GridBagLayout());
     gbc = new GridBagConstraints();

@@ -15,29 +15,30 @@
         <properties/>
         <border type="none" title-resource-bundle="ui" title-key="profiles"/>
         <children>
-          <scrollpane id="10b0e">
+          <grid id="b3814" binding="profilesPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints border-constraint="North"/>
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="b3814" binding="profilesPanel" layout-manager="GridBagLayout">
-                <constraints/>
+              <component id="8518e" class="javax.swing.JButton" binding="profilesSelectAllButton">
+                <constraints border-constraint="North"/>
+                <properties>
+                  <text resource-bundle="log4j" key="select.all"/>
+                </properties>
+              </component>
+              <scrollpane id="ae2cf">
+                <constraints border-constraint="Center"/>
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="8518e" class="javax.swing.JButton" binding="selectAllButton" default-binding="true">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text resource-bundle="log4j" key="select.all"/>
-                    </properties>
+                  <component id="47f41" class="javax.swing.JTable" binding="profilesTable">
+                    <constraints/>
+                    <properties/>
                   </component>
                 </children>
-              </grid>
+              </scrollpane>
             </children>
-          </scrollpane>
+          </grid>
         </children>
       </grid>
       <grid id="5990f" layout-manager="BorderLayout" hgap="0" vgap="0">
@@ -48,29 +49,30 @@
         <properties/>
         <border type="none" title-resource-bundle="log4j" title-key="documents"/>
         <children>
-          <scrollpane id="dd779">
+          <grid id="42f84" binding="documentsPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints border-constraint="North"/>
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="42f84" binding="documentsPanel" layout-manager="GridBagLayout">
-                <constraints/>
+              <component id="18dd8" class="javax.swing.JButton" binding="documentsSelectAllButton">
+                <constraints border-constraint="North"/>
+                <properties>
+                  <text resource-bundle="log4j" key="select.all"/>
+                </properties>
+              </component>
+              <scrollpane id="e533f">
+                <constraints border-constraint="Center"/>
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="18dd8" class="javax.swing.JButton" binding="selectAllButton1" default-binding="true">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                    <properties>
-                      <text resource-bundle="log4j" key="select.all"/>
-                    </properties>
+                  <component id="87406" class="javax.swing.JTable" binding="documentsTable">
+                    <constraints/>
+                    <properties/>
                   </component>
                 </children>
-              </grid>
+              </scrollpane>
             </children>
-          </scrollpane>
+          </grid>
         </children>
       </grid>
       <grid id="9538f" layout-manager="GridBagLayout">
