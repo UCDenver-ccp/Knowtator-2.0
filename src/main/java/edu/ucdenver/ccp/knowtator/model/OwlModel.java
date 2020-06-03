@@ -95,7 +95,7 @@ public abstract class OwlModel extends BaseModel implements Serializable {
     if (owlWorkSpace.isPresent()) {
       return owlWorkSpace.map(
           owlWorkspace ->
-              owlWorkspace.getOWLModelManager().getOWLEntityFinder().getOWLClass(classID));
+              owlWorkspace.getOWLModelManager().getOWLEntityFinder().getOWLClass(String.format("<%s>", classID)));
     } else {
       for (OWLOntology ontology : owlOntologyManager.getOntologies()) {
         Optional<OWLClass> owlClassOptional =
