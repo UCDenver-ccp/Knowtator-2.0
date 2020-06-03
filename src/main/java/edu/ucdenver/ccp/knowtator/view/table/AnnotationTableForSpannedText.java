@@ -25,53 +25,75 @@
 package edu.ucdenver.ccp.knowtator.view.table;
 
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import java.util.regex.Pattern;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
-/** The type Annotation table for spanned text. */
+/**
+ * The type Annotation table for spanned text.
+ */
 public class AnnotationTableForSpannedText extends AnnotationTable {
 
   private final JCheckBox exactMatchCheckBox;
+  private final JCheckBox regexCheckBox;
   private final JTextField annotationsContainingTextTextField;
 
   /**
    * Instantiates a new Annotation table for spanned text.
    *
-   * @param exactMatchCheckBox the exact match check box
+   * @param exactMatchCheckBox                 the exact match check box
    * @param annotationsContainingTextTextField the annotations containing text text field
    */
   public AnnotationTableForSpannedText(KnowtatorView view,
-      JCheckBox exactMatchCheckBox,
+                                       JCheckBox exactMatchCheckBox,
+                                       JCheckBox regexCheckBox,
                                        JTextField annotationsContainingTextTextField) {
     super(view);
     this.exactMatchCheckBox = exactMatchCheckBox;
+    this.regexCheckBox = regexCheckBox;
     this.annotationsContainingTextTextField = annotationsContainingTextTextField;
   }
 
   @Override
   public void addElementsFromModel() {
-    view.getModel()
-        .ifPresent(
-            model ->
-                model
-                    .getTextSources()
-                    .forEach(
-                        textSource ->
-                            textSource.getConceptAnnotations().stream()
-                                .filter(
-                                    conceptAnnotation ->
-                                        (exactMatchCheckBox.isSelected()
-                                                && conceptAnnotation
-                                                    .getSpannedText()
-                                                    .equals(
-                                                        annotationsContainingTextTextField
-                                                            .getText()))
-                                            || (!exactMatchCheckBox.isSelected()
-                                                && conceptAnnotation
-                                                    .getSpannedText()
-                                                    .contains(
-                                                        annotationsContainingTextTextField
-                                                            .getText())))
-                                .forEach(this::addValue)));
+    String text = annotationsContainingTextTextField.getText();
+
+    if (regexCheckBox.isSelected()) {
+      final Pattern pattern = Pattern.compile(text);
+      view.getModel()
+          .ifPresent(
+              model ->
+                  model
+                      .getTextSources()
+                      .forEach(
+                          textSource ->
+                              textSource.getConceptAnnotations().stream()
+                                  .filter(
+                                      conceptAnnotation -> pattern
+                                          .matcher(conceptAnnotation.getSpannedText())
+                                          .find()
+                                  )
+                                  .forEach(this::addValue)));
+    } else {
+      view.getModel()
+          .ifPresent(
+              model ->
+                  model
+                      .getTextSources()
+                      .forEach(
+                          textSource ->
+                              textSource.getConceptAnnotations().stream()
+                                  .filter(
+                                      conceptAnnotation -> (exactMatchCheckBox.isSelected()
+                                          && conceptAnnotation
+                                          .getSpannedText()
+                                          .equals(text))
+                                          || (!exactMatchCheckBox.isSelected()
+                                          && conceptAnnotation
+                                          .getSpannedText()
+                                          .contains(text))
+                                  )
+                                  .forEach(this::addValue)));
+    }
   }
 }
