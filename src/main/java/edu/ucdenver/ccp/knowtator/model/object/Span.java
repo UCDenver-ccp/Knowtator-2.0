@@ -251,8 +251,9 @@ public class Span implements ConceptAnnotationBoundModelObject<Span> {
     model.fireModelEvent(new ChangeEvent<>(model, null, this));
   }
 
+  @Override
   public String toString() {
-    return String.format("%s [%d, %d]", getSpannedText(), start, end);
+    return getSpannedText();
   }
 
   public ConceptAnnotation getConceptAnnotation() {
