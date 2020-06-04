@@ -125,6 +125,7 @@ public class IAAOptionsDialog extends JDialog {
 
   private static class IAATableModel extends DefaultTableModel {
     private final int checkCol = 1;
+
     IAATableModel(Object[][] data, String col, List<String> collection) {
       super(data, new String[] {col, "Checkbox"});
 
@@ -227,6 +228,7 @@ public class IAAOptionsDialog extends JDialog {
     final JScrollPane scrollPane1 = new JScrollPane();
     profilesPanel.add(scrollPane1, BorderLayout.CENTER);
     profilesTable = new JTable();
+    profilesTable.setAutoCreateRowSorter(true);
     scrollPane1.setViewportView(profilesTable);
     final JPanel panel2 = new JPanel();
     panel2.setLayout(new BorderLayout(0, 0));
@@ -287,10 +289,10 @@ public class IAAOptionsDialog extends JDialog {
     gbc.gridy = 0;
     gbc.fill = GridBagConstraints.BOTH;
     contentPane.add(panel4, gbc);
-    panel4.setBorder(BorderFactory.createTitledBorder(null, this.$$$getMessageFromBundle$$$("log4j", "mode"), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
     final JPanel panel5 = new JPanel();
     panel5.setLayout(new GridBagLayout());
     panel4.add(panel5, BorderLayout.NORTH);
+    panel5.setBorder(BorderFactory.createTitledBorder(null, "Mode", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
     iaaClassCheckBox = new JCheckBox();
     this.$$$loadButtonText$$$(iaaClassCheckBox, this.$$$getMessageFromBundle$$$("log4j", "class.iaa"));
     gbc = new GridBagConstraints();
