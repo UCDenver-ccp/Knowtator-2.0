@@ -31,8 +31,10 @@
   <component name="ChangeListManager">
     <list default="true" id="b5586eae-97ae-4be5-aa9b-4eaaef9d25b4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/iaa/IAAOptionsDialog.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/iaa/IAAOptionsDialog.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/iaa/IAAOptionsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/iaa/IAAOptionsDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/textpane/SearchableTextPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/textpane/SearchableTextPane.java" afterDir="false" />
     </list>
     <list id="9e563f0c-91e9-4ed0-b3db-d36bc1e81506" name="Made test for adding an annotation layer" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -82,7 +84,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="extract.method.default.visibility" value="private" />
-    <property name="last_opened_file_path" value="/usr/share/java/protege/run.sh" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
@@ -90,7 +92,7 @@
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
-  <component name="RunManager" selected="Application.Unnamed">
+  <component name="RunManager" selected="Application.GUI">
     <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
       <setting name="replType" value="NREPL" />
       <setting name="execution" value="LEININGEN" />
@@ -437,7 +439,28 @@
       <option name="project" value="LOCAL" />
       <updated>1591220930269</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Made IAA document selection into a scrollable table">
+      <created>1591225766301</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1591225766301</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Made tables sortable">
+      <created>1591226101595</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1591226101595</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Added check for valid IAA options.">
+      <created>1591228055615</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1591228055615</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -491,8 +514,6 @@
       <path value="$PROJECT_DIR$/Knowtator-2.0.wiki" />
       <path value="$PROJECT_DIR$/{$PROJECT_NAME}.wiki" />
     </ignored-roots>
-    <MESSAGE value="Components are created with KnowtatorView as parameter" />
-    <MESSAGE value="Made test for adding an annotation layer" />
     <MESSAGE value="Added layers to ConceptAnnotations" />
     <MESSAGE value="Old knowtator projects read annotations even if owl class is not found" />
     <MESSAGE value="Record and log when annotation owl classes aren't found" />
@@ -515,7 +536,10 @@
     <MESSAGE value="Fixed finding owl cLass by id. The owl entity finder is very finicky about when it needs surrounding &quot;&lt;&gt;&quot;" />
     <MESSAGE value="Fixed annotation node rendering update." />
     <MESSAGE value="Moved document controls back to top" />
-    <option name="LAST_COMMIT_MESSAGE" value="Moved document controls back to top" />
+    <MESSAGE value="Made IAA document selection into a scrollable table" />
+    <MESSAGE value="Made tables sortable" />
+    <MESSAGE value="Added check for valid IAA options." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added check for valid IAA options." />
   </component>
   <component name="WindowStateProjectService">
     <state x="512" y="261" key="#Unnamed" timestamp="1591162173520">
@@ -538,10 +562,10 @@
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="627" y="256" key="#com.intellij.ide.macro.MacrosDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591161192054" />
-    <state x="653" y="256" key="#com.intellij.ide.util.MemberChooser" timestamp="1591223079951">
+    <state x="653" y="256" key="#com.intellij.ide.util.MemberChooser" timestamp="1591228349886">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
-    <state x="653" y="256" key="#com.intellij.ide.util.MemberChooser/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591223079951" />
+    <state x="653" y="256" key="#com.intellij.ide.util.MemberChooser/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591228349886" />
     <state x="577" y="340" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1591165178355">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
@@ -579,59 +603,59 @@
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="0" y="16" width="1680" height="1034" maximized="true" key="DiffContextDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591176679241" />
-    <state x="617" y="277" key="FileChooserDialogImpl" timestamp="1591161228394">
+    <state x="617" y="277" key="FileChooserDialogImpl" timestamp="1591227393392">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="2268" y="208" key="FileChooserDialogImpl/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590016550191" />
-    <state x="617" y="277" key="FileChooserDialogImpl/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591161228394" />
-    <state width="1634" height="381" key="GridCell.Tab.0.bottom" timestamp="1591224182497">
+    <state x="617" y="277" key="FileChooserDialogImpl/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591227393392" />
+    <state width="1634" height="381" key="GridCell.Tab.0.bottom" timestamp="1591228702054">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791277" />
     <state width="1554" height="255" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
-    <state width="1634" height="381" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591224182497" />
-    <state width="1634" height="381" key="GridCell.Tab.0.center" timestamp="1591224182497">
+    <state width="1634" height="381" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591228702054" />
+    <state width="1634" height="381" key="GridCell.Tab.0.center" timestamp="1591228702054">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.center/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791276" />
     <state width="1554" height="255" key="GridCell.Tab.0.center/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
-    <state width="1634" height="381" key="GridCell.Tab.0.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591224182497" />
-    <state width="1634" height="381" key="GridCell.Tab.0.left" timestamp="1591224182496">
+    <state width="1634" height="381" key="GridCell.Tab.0.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591228702054" />
+    <state width="1634" height="381" key="GridCell.Tab.0.left" timestamp="1591228702054">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.left/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791276" />
     <state width="1554" height="255" key="GridCell.Tab.0.left/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386105" />
-    <state width="1634" height="381" key="GridCell.Tab.0.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591224182496" />
-    <state width="1634" height="381" key="GridCell.Tab.0.right" timestamp="1591224182497">
+    <state width="1634" height="381" key="GridCell.Tab.0.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591228702054" />
+    <state width="1634" height="381" key="GridCell.Tab.0.right" timestamp="1591228702054">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="1634" height="254" key="GridCell.Tab.0.right/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791277" />
     <state width="1554" height="255" key="GridCell.Tab.0.right/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
-    <state width="1634" height="381" key="GridCell.Tab.0.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591224182497" />
-    <state width="1634" height="381" key="GridCell.Tab.1.bottom" timestamp="1591224183090">
+    <state width="1634" height="381" key="GridCell.Tab.0.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591228702054" />
+    <state width="1634" height="381" key="GridCell.Tab.1.bottom" timestamp="1591228702054">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085398" />
     <state width="830" height="638" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
-    <state width="1634" height="381" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591224183090" />
-    <state width="1634" height="381" key="GridCell.Tab.1.center" timestamp="1591224183090">
+    <state width="1634" height="381" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591228702054" />
+    <state width="1634" height="381" key="GridCell.Tab.1.center" timestamp="1591228702054">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.center/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085395" />
     <state width="830" height="638" key="GridCell.Tab.1.center/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
-    <state width="1634" height="381" key="GridCell.Tab.1.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591224183090" />
-    <state width="1634" height="381" key="GridCell.Tab.1.left" timestamp="1591224183090">
+    <state width="1634" height="381" key="GridCell.Tab.1.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591228702054" />
+    <state width="1634" height="381" key="GridCell.Tab.1.left" timestamp="1591228702054">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.left/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085394" />
     <state width="830" height="638" key="GridCell.Tab.1.left/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333598" />
-    <state width="1634" height="381" key="GridCell.Tab.1.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591224183090" />
-    <state width="1634" height="381" key="GridCell.Tab.1.right" timestamp="1591224183090">
+    <state width="1634" height="381" key="GridCell.Tab.1.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591228702054" />
+    <state width="1634" height="381" key="GridCell.Tab.1.right" timestamp="1591228702054">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state width="830" height="638" key="GridCell.Tab.1.right/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085396" />
     <state width="830" height="638" key="GridCell.Tab.1.right/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
-    <state width="1634" height="381" key="GridCell.Tab.1.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591224183090" />
+    <state width="1634" height="381" key="GridCell.Tab.1.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591228702054" />
     <state x="663" y="485" key="ReplaceDuplicatesPrompt" timestamp="1591225067162">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
@@ -649,20 +673,20 @@
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="742" y="327" key="com.intellij.tools.ToolSelectDialog.dimensionServiceKey/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591161232251" />
-    <state x="616" y="430" key="com.intellij.uiDesigner.propertyInspector.editors.string.StringEditorDialog" timestamp="1591173275400">
+    <state x="616" y="430" key="com.intellij.uiDesigner.propertyInspector.editors.string.StringEditorDialog" timestamp="1591226241306">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
-    <state x="616" y="430" key="com.intellij.uiDesigner.propertyInspector.editors.string.StringEditorDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591173275400" />
+    <state x="616" y="430" key="com.intellij.uiDesigner.propertyInspector.editors.string.StringEditorDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591226241306" />
     <state x="578" y="295" key="extract.method.dialog" timestamp="1591225047985">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="578" y="295" key="extract.method.dialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591225047985" />
-    <state x="531" y="119" width="1056" height="858" key="find.popup" timestamp="1591222989959">
+    <state x="531" y="119" width="1056" height="858" key="find.popup" timestamp="1591228638673">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="531" y="119" width="728" height="858" key="find.popup/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590031547538" />
     <state x="2186" y="66" width="693" height="768" key="find.popup/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590018340948" />
-    <state x="531" y="119" width="1056" height="858" key="find.popup/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591222989959" />
+    <state x="531" y="119" width="1056" height="858" key="find.popup/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591228638673" />
     <state x="637" y="296" key="refactoring.ChangeSignatureDialog" timestamp="1591180054952">
       <screen x="0" y="45" width="1680" height="1005" />
     </state>

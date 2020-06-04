@@ -182,8 +182,12 @@ public abstract class SearchableTextPane extends JTextPane
   @Override
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {
     view.getModel()
-        .flatMap(BaseModel::getSelectedTextSource).flatMap(textSource -> textSource
-        .getSelectedAnnotation().flatMap(SelectableCollection::getSelection)).ifPresent(span -> searchTextField.setText(span.getSpannedText()));
+        .flatMap(BaseModel::getSelectedTextSource)
+        .flatMap(textSource -> textSource
+        .getSelectedAnnotation()
+        .flatMap(SelectableCollection::getSelection))
+        .filter(span -> shouldUpdateSearchTextFieldCondition())
+        .ifPresent(span -> searchTextField.setText(span.getSpannedText()));
     event
         .getNew()
         .ifPresent(
