@@ -65,7 +65,6 @@ public class ColorList extends JList<String[]> implements KnowtatorComponent, Mo
   }
 
   private void setCollection() {
-    log.warn("here");
     removeListSelectionListener(lsl);
     setModel(new DefaultListModel<>());
     view.getModel().ifPresent(model -> model.getSelectedProfile().ifPresent(profile ->

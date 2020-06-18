@@ -10,3 +10,4 @@ src/test/resources/concepts+assertions/
 /.lein-failures
 /.dir-locals.el
 /.nrepl-port
+/.idea/libraries/

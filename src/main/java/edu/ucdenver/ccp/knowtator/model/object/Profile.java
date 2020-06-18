@@ -165,7 +165,7 @@ public class Profile implements ModelObject<Profile>, Savable, ModelListener {
   public void verifyHighLighters(Set<String> owlClasses) {
     HashMap<String, Color> verifiedColors = new HashMap<>();
     colors.entrySet().stream()
-        .filter(entry -> owlClasses.contains(entry.getKey()))
+        .filter(entry -> model.getOwlClassById(entry.getKey()).isPresent())
         .forEach(entry -> verifiedColors.put(entry.getKey(), entry.getValue()));
     colors = verifiedColors;
   }

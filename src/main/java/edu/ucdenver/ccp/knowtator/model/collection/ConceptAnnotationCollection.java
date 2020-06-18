@@ -208,6 +208,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
   @Override
   public void dispose() {
     model.removeOntologyChangeListener(this);
+    model.removeModelListener(this);
     super.dispose();
   }
 
