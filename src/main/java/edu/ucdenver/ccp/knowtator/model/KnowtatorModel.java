@@ -37,7 +37,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLWorkspace;
 
@@ -123,6 +125,10 @@ public class KnowtatorModel extends OwlModel {
 
       profiles.first().ifPresent(profiles::setSelection);
       textSources.first().ifPresent(textSources::setSelection);
+
+      Set<String> owlClasses = new HashSet<>();
+      textSources.forEach(textSource -> textSource.getConceptAnnotations().forEach(conceptAnnotation -> owlClasses.add(conceptAnnotation.getOwlClass())));
+      profiles.verifyHighlighters(owlClasses);
 
     } catch (IOException e) {
       e.printStackTrace();
