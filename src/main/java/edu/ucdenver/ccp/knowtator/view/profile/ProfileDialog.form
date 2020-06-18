@@ -143,14 +143,6 @@
                           <toolTipText value="Add color for current OWL class"/>
                         </properties>
                       </component>
-                      <component id="26c95" class="javax.swing.JButton" binding="removeColorButton">
-                        <constraints/>
-                        <properties>
-                          <icon value="icon/icons8-delete-24.png"/>
-                          <text value=""/>
-                          <toolTipText value="Remove current color"/>
-                        </properties>
-                      </component>
                     </children>
                   </grid>
                 </children>

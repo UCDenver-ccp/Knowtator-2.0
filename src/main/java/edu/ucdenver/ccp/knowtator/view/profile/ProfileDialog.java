@@ -28,7 +28,9 @@ import static edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtat
 import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.ADD;
 import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.REMOVE;
 import static edu.ucdenver.ccp.knowtator.view.actions.collection.KnowtatorCollectionType.PROFILE;
+import static edu.ucdenver.ccp.knowtator.view.actions.modelactions.ProfileAction.assignColorToClass;
 
+import edu.ucdenver.ccp.knowtator.model.OwlModel;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
 import edu.ucdenver.ccp.knowtator.view.iaa.IAAOptionsDialog;
@@ -65,11 +67,10 @@ public class ProfileDialog extends JDialog {
   private JPanel contentPane;
   private JButton buttonOK;
   ProfileList profileList;
-  ColorList colorList;
+  public ColorList colorList;
   private JButton addProfileButton;
   private JButton removeProfileButton;
   private JButton addColorButton;
-  private JButton removeColorButton;
   private JButton runIaaButton;
   private final KnowtatorView view;
 
@@ -101,6 +102,12 @@ public class ProfileDialog extends JDialog {
                 .ifPresent(
                     result -> pickAction(this.view, null, null, new ActionParameters(REMOVE, PROFILE))));
 
+    addColorButton.addActionListener(
+        e ->
+            // TODO: This could be removed if class selection were reflected in color list
+            this.view.getModel()
+                .flatMap(OwlModel::getSelectedOwlClass)
+                .ifPresent(owlClass -> assignColorToClass(this.view, owlClass)));
     runIaaButton.addActionListener(
         e ->
             this.view.getModel()
@@ -266,11 +273,6 @@ public class ProfileDialog extends JDialog {
     addColorButton.setText("");
     addColorButton.setToolTipText("Add color for current OWL class");
     panel7.add(addColorButton);
-    removeColorButton = new JButton();
-    removeColorButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-delete-24.png")));
-    removeColorButton.setText("");
-    removeColorButton.setToolTipText("Remove current color");
-    panel7.add(removeColorButton);
   }
 
   /**
