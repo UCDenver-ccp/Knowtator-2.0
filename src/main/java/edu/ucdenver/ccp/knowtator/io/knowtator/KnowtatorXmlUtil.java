@@ -171,9 +171,9 @@ public final class KnowtatorXmlUtil extends XmlUtil {
               if (owlClass.isPresent()) {
                 owlClassID = owlClass.get().toStringID();
               } else {
-//                log.warn(
-//                    String.format(
-//                        "OWL Class: %s not found for concept: %s", owlClassID, annotationID));
+                log.warn(
+                    String.format(
+                        "OWL Class: %s not found for concept: %s", owlClassID, annotationID));
                 model.addOWLClassNotFoundAnnotations(annotationID, owlClassID);
               }
 
