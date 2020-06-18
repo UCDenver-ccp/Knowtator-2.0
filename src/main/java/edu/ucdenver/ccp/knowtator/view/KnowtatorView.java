@@ -29,7 +29,6 @@ import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActio
 import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.REMOVE;
 import static edu.ucdenver.ccp.knowtator.view.actions.collection.KnowtatorCollectionType.ANNOTATION;
 import static edu.ucdenver.ccp.knowtator.view.actions.collection.KnowtatorCollectionType.DOCUMENT;
-import static edu.ucdenver.ccp.knowtator.view.actions.collection.KnowtatorCollectionType.PROFILE;
 import static edu.ucdenver.ccp.knowtator.view.actions.collection.KnowtatorCollectionType.SPAN;
 
 import com.mxgraph.swing.util.mxGraphTransferable;
@@ -51,14 +50,12 @@ import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ReassignOwlClassActi
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.SpanActions;
 import edu.ucdenver.ccp.knowtator.view.chooser.TextSourceChooser;
 import edu.ucdenver.ccp.knowtator.view.graph.GraphViewDialog;
-import edu.ucdenver.ccp.knowtator.view.iaa.IAAOptionsDialog;
 import edu.ucdenver.ccp.knowtator.view.label.AnnotationAnnotatorLabel;
 import edu.ucdenver.ccp.knowtator.view.label.AnnotationClassLabel;
 import edu.ucdenver.ccp.knowtator.view.label.AnnotationIdLabel;
 import edu.ucdenver.ccp.knowtator.view.label.AnnotatorLabel;
-import edu.ucdenver.ccp.knowtator.view.list.ColorList;
 import edu.ucdenver.ccp.knowtator.view.list.GraphSpaceList;
-import edu.ucdenver.ccp.knowtator.view.list.ProfileList;
+import edu.ucdenver.ccp.knowtator.view.profile.ProfileDialog;
 import edu.ucdenver.ccp.knowtator.view.table.AnnotationTable;
 import edu.ucdenver.ccp.knowtator.view.table.AnnotationTableForOwlClass;
 import edu.ucdenver.ccp.knowtator.view.table.AnnotationTableForSpannedText;
@@ -89,7 +86,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -157,10 +153,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   private JButton redoButton;
   private JProgressBar progressBar;
   private JList<String> fileList;
-  private JButton removeProfileButton;
-  private ProfileList profileList;
-  private JButton addProfileButton;
-  private ColorList colorList;
   private JTextField annotationsContainingTextTextField;
   private JCheckBox exactMatchCheckBox;
   private JLabel owlClassLabel;
@@ -188,7 +180,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   private JPanel spanPane;
   private JPanel graphSpacePane;
   private JComponent rootPane;
-  private JButton runIaaButton;
   private JButton captureImageButton;
   private JCheckBox oneClickGraphsCheckBox;
   private JTable conceptAnnotationsForTextTable;
@@ -204,8 +195,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
   private JCheckBox reviewRegexCheckBox;
   private AnnotatorLabel activeProfileLabel;
   private JButton fileButton;
+  private JButton profileButton;
 
-  private final List<KnowtatorComponent> knowtatorComponents;
+  public final List<KnowtatorComponent> knowtatorComponents;
   private final HashMap<JButton, ActionListener> spanSizeButtons;
   private final HashMap<JButton, ActionListener> selectionSizeButtons;
 
@@ -240,8 +232,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     header.setSelectedIndex(0);
     knowtatorComponents.addAll(
         Arrays.asList(
-            profileList,
-            colorList,
             textPane,
             graphViewDialog,
             annotationNotes,
@@ -317,8 +307,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
     graphSpaceList = new GraphSpaceList(this);
     spanTable = new SpanTable(this);
-    profileList = new ProfileList(this);
-    colorList = new ColorList(this);
 
     annotationsContainingTextTextField = new JTextField();
 
@@ -427,22 +415,15 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     previousMatchButton.addActionListener(e -> textPane.searchPrevious());
     searchTextField.addActionListener(e -> textPane.searchForward());
 
-    makeReviewPane();
+    profileButton.addActionListener(
+        e -> {
+          JDialog dialog = new ProfileDialog(JOptionPane.getFrameForComponent(this), this);
+          dialog.pack();
+          dialog.setVisible(true);
+        }
+    );
 
-    addProfileButton.addActionListener(
-        e ->
-            Optional.ofNullable(JOptionPane.showInputDialog(this, "Enter a name for the profile"))
-                .ifPresent(
-                    profileName ->
-                        pickAction(this, profileName, null, new ActionParameters(ADD, PROFILE))));
-    removeProfileButton.addActionListener(
-        e ->
-            Optional.of(
-                JOptionPane.showConfirmDialog(
-                    this, "Are you sure you wish to remove this profile?"))
-                .filter(result -> JOptionPane.OK_OPTION == result)
-                .ifPresent(
-                    result -> pickAction(this, null, null, new ActionParameters(REMOVE, PROFILE))));
+    makeReviewPane();
 
     addAnnotationButton.addActionListener(
         e ->
@@ -641,30 +622,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
           fileChooser.showOpenDialog(KnowtatorView.this);
         });
 
-    runIaaButton.addActionListener(
-        e ->
-            getModel()
-                .ifPresent(
-                    model -> {
-                      JFileChooser fileChooser = new JFileChooser();
-                      fileChooser.setCurrentDirectory(model.getSaveLocation());
-                      fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                      //
-                      // disable the "All files" option.
-                      //
-                      fileChooser.setAcceptAllFileFilterUsed(false);
-                      if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-                        File outputDirectory = new File(fileChooser.getSelectedFile(), "IAA_results");
-                        try {
-                          Files.createDirectories(outputDirectory.toPath());
-                        } catch (IOException ioException) {
-                          ioException.printStackTrace();
-                        }
-                        JDialog iaaDialog = new IAAOptionsDialog(JOptionPane.getFrameForComponent(this), model, outputDirectory);
-                        iaaDialog.pack();
-                        iaaDialog.setVisible(true);
-                      }
-                    }));
+
   }
 
   private void open(JFileChooser fileChooser) {
@@ -870,7 +828,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     knowtatorComponents.forEach(KnowtatorComponent::reset);
     getModel().ifPresent(model1 -> model1.addModelListener(this));
     getModel().ifPresent(model1 -> model1.addOwlModelManagerListener(annotationClassLabel));
-    getModel().ifPresent(model1 -> model1.addOwlSelectionModelListener(colorList));
   }
 
   /**
@@ -1527,83 +1484,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.fill = GridBagConstraints.HORIZONTAL;
     panel18.add(refreshRelationReviewButton, gbc);
     final JPanel panel19 = new JPanel();
-    panel19.setLayout(new BorderLayout(0, 0));
-    header.addTab("Profile", panel19);
-    final JSplitPane splitPane1 = new JSplitPane();
-    panel19.add(splitPane1, BorderLayout.CENTER);
-    final JPanel panel20 = new JPanel();
-    panel20.setLayout(new GridBagLayout());
-    splitPane1.setLeftComponent(panel20);
-    panel20.setBorder(BorderFactory.createTitledBorder(null, "Profiles", TitledBorder.LEFT, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel20.getFont()), null));
-    final JScrollPane scrollPane7 = new JScrollPane();
-    gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 1;
-    gbc.weightx = 1.0;
-    gbc.weighty = 1.0;
-    gbc.fill = GridBagConstraints.BOTH;
-    panel20.add(scrollPane7, gbc);
-    Font profileListFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 12, profileList.getFont());
-    if (profileListFont != null) {
-      profileList.setFont(profileListFont);
-    }
-    profileList.setToolTipText("Click to activate a profile");
-    scrollPane7.setViewportView(profileList);
-    final JPanel panel21 = new JPanel();
-    panel21.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-    gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 0;
-    gbc.weightx = 1.0;
-    gbc.fill = GridBagConstraints.BOTH;
-    panel20.add(panel21, gbc);
-    addProfileButton = new JButton();
-    Font addProfileButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, addProfileButton.getFont());
-    if (addProfileButtonFont != null) {
-      addProfileButton.setFont(addProfileButtonFont);
-    }
-    addProfileButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-plus-24.png")));
-    addProfileButton.setText("");
-    addProfileButton.setToolTipText("Add a profile");
-    panel21.add(addProfileButton);
-    removeProfileButton = new JButton();
-    removeProfileButton.setEnabled(true);
-    Font removeProfileButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, removeProfileButton.getFont());
-    if (removeProfileButtonFont != null) {
-      removeProfileButton.setFont(removeProfileButtonFont);
-    }
-    removeProfileButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-delete-24.png")));
-    removeProfileButton.setText("");
-    removeProfileButton.setToolTipText("Remove a profile");
-    panel21.add(removeProfileButton);
-    runIaaButton = new JButton();
-    Font runIaaButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, runIaaButton.getFont());
-    if (runIaaButtonFont != null) {
-      runIaaButton.setFont(runIaaButtonFont);
-    }
-    this.$$$loadButtonText$$$(runIaaButton, this.$$$getMessageFromBundle$$$("log4j", "run.iaa"));
-    gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 2;
-    panel20.add(runIaaButton, gbc);
-    final JPanel panel22 = new JPanel();
-    panel22.setLayout(new BorderLayout(0, 0));
-    splitPane1.setRightComponent(panel22);
-    panel22.setBorder(BorderFactory.createTitledBorder(null, "Colors", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$(null, -1, 14, panel22.getFont()), null));
-    final JScrollPane scrollPane8 = new JScrollPane();
-    panel22.add(scrollPane8, BorderLayout.CENTER);
-    Font colorListFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, colorList.getFont());
-    if (colorListFont != null) {
-      colorList.setFont(colorListFont);
-    }
-    colorList.setToolTipText("Click to set OWL Class color");
-    scrollPane8.setViewportView(colorList);
-    final JPanel panel23 = new JPanel();
-    panel23.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-    panel22.add(panel23, BorderLayout.NORTH);
-    final JPanel panel24 = new JPanel();
-    panel24.setLayout(new GridBagLayout());
-    header.addTab("Settings", panel24);
+    panel19.setLayout(new GridBagLayout());
+    header.addTab("Settings", panel19);
     oneClickGraphsCheckBox = new JCheckBox();
     oneClickGraphsCheckBox.setText("One Click Graphs");
     gbc = new GridBagConstraints();
@@ -1611,7 +1493,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.gridy = 0;
     gbc.weightx = 1.0;
     gbc.anchor = GridBagConstraints.WEST;
-    panel24.add(oneClickGraphsCheckBox, gbc);
+    panel19.add(oneClickGraphsCheckBox, gbc);
     snapToWordsCheckBox = new JCheckBox();
     snapToWordsCheckBox.setSelected(true);
     snapToWordsCheckBox.setText("Snap to words");
@@ -1620,30 +1502,30 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.gridy = 1;
     gbc.weightx = 1.0;
     gbc.anchor = GridBagConstraints.WEST;
-    panel24.add(snapToWordsCheckBox, gbc);
-    final JPanel panel25 = new JPanel();
-    panel25.setLayout(new BorderLayout(0, 0));
-    body.setLeftComponent(panel25);
-    final JScrollPane scrollPane9 = new JScrollPane();
-    panel25.add(scrollPane9, BorderLayout.CENTER);
+    panel19.add(snapToWordsCheckBox, gbc);
+    final JPanel panel20 = new JPanel();
+    panel20.setLayout(new BorderLayout(0, 0));
+    body.setLeftComponent(panel20);
+    final JScrollPane scrollPane7 = new JScrollPane();
+    panel20.add(scrollPane7, BorderLayout.CENTER);
     textPane.setMinimumSize(new Dimension(200, 22));
     textPane.setPreferredSize(new Dimension(500, 500));
     textPane.setText("");
-    scrollPane9.setViewportView(textPane);
-    final JPanel panel26 = new JPanel();
-    panel26.setLayout(new GridBagLayout());
-    panel25.add(panel26, BorderLayout.SOUTH);
-    final JPanel panel27 = new JPanel();
-    panel27.setLayout(new BorderLayout(0, 0));
+    scrollPane7.setViewportView(textPane);
+    final JPanel panel21 = new JPanel();
+    panel21.setLayout(new GridBagLayout());
+    panel20.add(panel21, BorderLayout.SOUTH);
+    final JPanel panel22 = new JPanel();
+    panel22.setLayout(new BorderLayout(0, 0));
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 0;
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
-    panel26.add(panel27, gbc);
-    final JPanel panel28 = new JPanel();
-    panel28.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
-    panel27.add(panel28, BorderLayout.EAST);
+    panel21.add(panel22, gbc);
+    final JPanel panel23 = new JPanel();
+    panel23.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+    panel22.add(panel23, BorderLayout.EAST);
     profileFilterCheckBox = new JCheckBox();
     Font profileFilterCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, profileFilterCheckBox.getFont());
     if (profileFilterCheckBoxFont != null) {
@@ -1651,7 +1533,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     }
     profileFilterCheckBox.setText("Current Profile");
     profileFilterCheckBox.setToolTipText("Toggle filter annotations by current profile");
-    panel28.add(profileFilterCheckBox);
+    panel23.add(profileFilterCheckBox);
     owlClassFilterCheckBox = new JCheckBox();
     Font owlClassFilterCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, owlClassFilterCheckBox.getFont());
     if (owlClassFilterCheckBoxFont != null) {
@@ -1659,16 +1541,16 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     }
     owlClassFilterCheckBox.setText("Current OWL Class");
     owlClassFilterCheckBox.setToolTipText("Toggle filter annotations by current OWL class");
-    panel28.add(owlClassFilterCheckBox);
+    panel23.add(owlClassFilterCheckBox);
     captureImageButton = new JButton();
     captureImageButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-unsplash-32.png")));
     captureImageButton.setText("");
     captureImageButton.setToolTipText("Capture document");
-    panel28.add(captureImageButton);
-    final JPanel panel29 = new JPanel();
-    panel29.setLayout(new GridBagLayout());
-    panel28.add(panel29);
-    panel29.setBorder(BorderFactory.createTitledBorder(null, "Font Size", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+    panel23.add(captureImageButton);
+    final JPanel panel24 = new JPanel();
+    panel24.setLayout(new GridBagLayout());
+    panel23.add(panel24);
+    panel24.setBorder(BorderFactory.createTitledBorder(null, "Font Size", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
     fontSizeSlider = new JSlider();
     fontSizeSlider.setInverted(false);
     fontSizeSlider.setMajorTickSpacing(8);
@@ -1683,48 +1565,48 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.weightx = 1.0;
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
-    panel29.add(fontSizeSlider, gbc);
-    final JPanel panel30 = new JPanel();
-    panel30.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-    panel27.add(panel30, BorderLayout.WEST);
+    panel24.add(fontSizeSlider, gbc);
+    final JPanel panel25 = new JPanel();
+    panel25.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+    panel22.add(panel25, BorderLayout.WEST);
     addTextSourceButton = new JButton();
     addTextSourceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-plus-24.png")));
     addTextSourceButton.setText("");
     addTextSourceButton.setToolTipText("Add a document");
-    panel30.add(addTextSourceButton);
+    panel25.add(addTextSourceButton);
     removeTextSourceButton = new JButton();
     removeTextSourceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-delete-24.png")));
     removeTextSourceButton.setText("");
     removeTextSourceButton.setToolTipText("Remove current document from display");
-    panel30.add(removeTextSourceButton);
-    final JPanel panel31 = new JPanel();
-    panel31.setLayout(new BorderLayout(0, 0));
-    panel25.add(panel31, BorderLayout.NORTH);
-    final JPanel panel32 = new JPanel();
-    panel32.setLayout(new BorderLayout(0, 0));
-    panel31.add(panel32, BorderLayout.CENTER);
-    final JPanel panel33 = new JPanel();
-    panel33.setLayout(new GridBagLayout());
-    panel32.add(panel33, BorderLayout.WEST);
-    panel33.setBorder(BorderFactory.createTitledBorder(null, "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$(null, -1, 14, panel33.getFont()), null));
-    final JLabel label5 = new JLabel();
-    Font label5Font = this.$$$getFont$$$(null, Font.BOLD, 12, label5.getFont());
-    if (label5Font != null) {
-      label5.setFont(label5Font);
+    panel25.add(removeTextSourceButton);
+    final JPanel panel26 = new JPanel();
+    panel26.setLayout(new BorderLayout(0, 0));
+    panel20.add(panel26, BorderLayout.NORTH);
+    final JPanel panel27 = new JPanel();
+    panel27.setLayout(new BorderLayout(0, 0));
+    panel26.add(panel27, BorderLayout.CENTER);
+    final JPanel panel28 = new JPanel();
+    panel28.setLayout(new GridBagLayout());
+    panel27.add(panel28, BorderLayout.WEST);
+    panel28.setBorder(BorderFactory.createTitledBorder(null, "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$(null, -1, 14, panel28.getFont()), null));
+    profileButton = new JButton();
+    Font profileButtonFont = this.$$$getFont$$$(null, Font.BOLD, 12, profileButton.getFont());
+    if (profileButtonFont != null) {
+      profileButton.setFont(profileButtonFont);
     }
-    label5.setText("Active Profile:");
+    profileButton.setText("Active Profile:");
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 0;
-    panel33.add(label5, gbc);
-    final JPanel panel34 = new JPanel();
-    panel34.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+    panel28.add(profileButton, gbc);
+    final JPanel panel29 = new JPanel();
+    panel29.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 1;
     gbc.gridwidth = 2;
     gbc.fill = GridBagConstraints.BOTH;
-    panel33.add(panel34, gbc);
+    panel28.add(panel29, gbc);
     addAnnotationButton = new JButton();
     Font addAnnotationButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, addAnnotationButton.getFont());
     if (addAnnotationButtonFont != null) {
@@ -1736,7 +1618,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     addAnnotationButton.setToolTipText("Add annotation or span");
     addAnnotationButton.setVerticalAlignment(0);
     addAnnotationButton.setVerticalTextPosition(3);
-    panel34.add(addAnnotationButton);
+    panel29.add(addAnnotationButton);
     removeAnnotationButton = new JButton();
     Font removeAnnotationButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, removeAnnotationButton.getFont());
     if (removeAnnotationButtonFont != null) {
@@ -1747,7 +1629,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     removeAnnotationButton.setText("");
     removeAnnotationButton.setToolTipText("Remove annotation or span");
     removeAnnotationButton.setVerticalTextPosition(3);
-    panel34.add(removeAnnotationButton);
+    panel29.add(removeAnnotationButton);
     showGraphViewerButton = new JButton();
     Font showGraphViewerButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, showGraphViewerButton.getFont());
     if (showGraphViewerButtonFont != null) {
@@ -1756,7 +1638,37 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     showGraphViewerButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-tree-structure-32.png")));
     showGraphViewerButton.setText("");
     showGraphViewerButton.setToolTipText("Open graph space viewer for document");
-    panel34.add(showGraphViewerButton);
+    panel29.add(showGraphViewerButton);
+    final JPanel panel30 = new JPanel();
+    panel30.setLayout(new GridBagLayout());
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 2;
+    gbc.gridwidth = 2;
+    gbc.fill = GridBagConstraints.BOTH;
+    panel28.add(panel30, gbc);
+    previousTextSourceButton = new JButton();
+    previousTextSourceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-advance-24 (reversed).png")));
+    previousTextSourceButton.setText("");
+    previousTextSourceButton.setToolTipText("Next document");
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    panel30.add(previousTextSourceButton, gbc);
+    nextTextSourceButton = new JButton();
+    nextTextSourceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-advance-24.png")));
+    nextTextSourceButton.setText("");
+    nextTextSourceButton.setToolTipText("Previous document");
+    gbc = new GridBagConstraints();
+    gbc.gridx = 1;
+    gbc.gridy = 0;
+    panel30.add(nextTextSourceButton, gbc);
+    textSourceChooser.setPreferredSize(new Dimension(150, 24));
+    textSourceChooser.setToolTipText("Choose a document to view");
+    gbc = new GridBagConstraints();
+    gbc.gridx = 2;
+    gbc.gridy = 0;
+    panel30.add(textSourceChooser, gbc);
     Font activeProfileLabelFont = this.$$$getFont$$$(null, -1, -1, activeProfileLabel.getFont());
     if (activeProfileLabelFont != null) {
       activeProfileLabel.setFont(activeProfileLabelFont);
@@ -1765,40 +1677,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
     gbc.gridy = 0;
-    panel33.add(activeProfileLabel, gbc);
-    final JPanel panel35 = new JPanel();
-    panel35.setLayout(new GridBagLayout());
-    gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 2;
-    gbc.gridwidth = 2;
-    gbc.fill = GridBagConstraints.BOTH;
-    panel33.add(panel35, gbc);
-    previousTextSourceButton = new JButton();
-    previousTextSourceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-advance-24 (reversed).png")));
-    previousTextSourceButton.setText("");
-    previousTextSourceButton.setToolTipText("Next document");
-    gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 0;
-    panel35.add(previousTextSourceButton, gbc);
-    nextTextSourceButton = new JButton();
-    nextTextSourceButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-advance-24.png")));
-    nextTextSourceButton.setText("");
-    nextTextSourceButton.setToolTipText("Previous document");
-    gbc = new GridBagConstraints();
-    gbc.gridx = 1;
-    gbc.gridy = 0;
-    panel35.add(nextTextSourceButton, gbc);
-    textSourceChooser.setPreferredSize(new Dimension(150, 24));
-    textSourceChooser.setToolTipText("Choose a document to view");
-    gbc = new GridBagConstraints();
-    gbc.gridx = 2;
-    gbc.gridy = 0;
-    panel35.add(textSourceChooser, gbc);
-    final JPanel panel36 = new JPanel();
-    panel36.setLayout(new GridBagLayout());
-    panel32.add(panel36, BorderLayout.CENTER);
+    panel28.add(activeProfileLabel, gbc);
+    final JPanel panel31 = new JPanel();
+    panel31.setLayout(new GridBagLayout());
+    panel27.add(panel31, BorderLayout.CENTER);
     Font searchTextFieldFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, searchTextField.getFont());
     if (searchTextFieldFont != null) {
       searchTextField.setFont(searchTextFieldFont);
@@ -1811,43 +1693,43 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc.weightx = 1.0;
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    panel36.add(searchTextField, gbc);
-    final JLabel label6 = new JLabel();
-    label6.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-search-52.png")));
-    label6.setText("");
+    panel31.add(searchTextField, gbc);
+    final JLabel label5 = new JLabel();
+    label5.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-search-52.png")));
+    label5.setText("");
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 0;
     gbc.anchor = GridBagConstraints.WEST;
-    panel36.add(label6, gbc);
-    final JPanel panel37 = new JPanel();
-    panel37.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+    panel31.add(label5, gbc);
+    final JPanel panel32 = new JPanel();
+    panel32.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
     gbc = new GridBagConstraints();
     gbc.gridx = 2;
     gbc.gridy = 1;
     gbc.fill = GridBagConstraints.BOTH;
-    panel36.add(panel37, gbc);
+    panel31.add(panel32, gbc);
     Font onlyAnnotationsCheckBoxFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, onlyAnnotationsCheckBox.getFont());
     if (onlyAnnotationsCheckBoxFont != null) {
       onlyAnnotationsCheckBox.setFont(onlyAnnotationsCheckBoxFont);
     }
     onlyAnnotationsCheckBox.setText("Only in Annotations");
     onlyAnnotationsCheckBox.setToolTipText("Toggle search for text contained only in annotations");
-    panel37.add(onlyAnnotationsCheckBox);
+    panel32.add(onlyAnnotationsCheckBox);
     Font regexCheckBoxFont = this.$$$getFont$$$(null, Font.BOLD, 14, regexCheckBox.getFont());
     if (regexCheckBoxFont != null) {
       regexCheckBox.setFont(regexCheckBoxFont);
     }
     regexCheckBox.setText(".*");
     regexCheckBox.setToolTipText("Toggle regex search");
-    panel37.add(regexCheckBox);
+    panel32.add(regexCheckBox);
     Font caseSensitiveCheckBoxFont = this.$$$getFont$$$(null, Font.BOLD, 12, caseSensitiveCheckBox.getFont());
     if (caseSensitiveCheckBoxFont != null) {
       caseSensitiveCheckBox.setFont(caseSensitiveCheckBoxFont);
     }
     caseSensitiveCheckBox.setText("Aa");
     caseSensitiveCheckBox.setToolTipText("Toggle case sensitive search");
-    panel37.add(caseSensitiveCheckBox);
+    panel32.add(caseSensitiveCheckBox);
     findTextInOntologyButton = new JButton();
     Font findTextInOntologyButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, findTextInOntologyButton.getFont());
     if (findTextInOntologyButtonFont != null) {
@@ -1858,14 +1740,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     gbc = new GridBagConstraints();
     gbc.gridx = 3;
     gbc.gridy = 1;
-    panel36.add(findTextInOntologyButton, gbc);
-    final JPanel panel38 = new JPanel();
-    panel38.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+    panel31.add(findTextInOntologyButton, gbc);
+    final JPanel panel33 = new JPanel();
+    panel33.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
     gbc = new GridBagConstraints();
     gbc.gridx = 3;
     gbc.gridy = 0;
     gbc.fill = GridBagConstraints.BOTH;
-    panel36.add(panel38, gbc);
+    panel31.add(panel33, gbc);
     previousMatchButton = new JButton();
     Font previousMatchButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, previousMatchButton.getFont());
     if (previousMatchButtonFont != null) {
@@ -1874,7 +1756,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     previousMatchButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-sort-up-24.png")));
     previousMatchButton.setText("");
     previousMatchButton.setToolTipText("Previous match");
-    panel38.add(previousMatchButton);
+    panel33.add(previousMatchButton);
     nextMatchButton = new JButton();
     Font nextMatchButtonFont = this.$$$getFont$$$("Verdana", Font.PLAIN, 10, nextMatchButton.getFont());
     if (nextMatchButtonFont != null) {
@@ -1883,13 +1765,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     nextMatchButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-sort-down-24.png")));
     nextMatchButton.setText("");
     nextMatchButton.setToolTipText("Next match");
-    panel38.add(nextMatchButton);
-    final JPanel panel39 = new JPanel();
-    panel39.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-    panel31.add(panel39, BorderLayout.NORTH);
+    panel33.add(nextMatchButton);
+    final JPanel panel34 = new JPanel();
+    panel34.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+    panel26.add(panel34, BorderLayout.NORTH);
     final JToolBar toolBar1 = new JToolBar();
     toolBar1.setFloatable(false);
-    panel39.add(toolBar1);
+    panel34.add(toolBar1);
     fileButton = new JButton();
     fileButton.setText("File");
     toolBar1.add(fileButton);
@@ -1907,8 +1789,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     filePanel = new JPanel();
     filePanel.setLayout(new BorderLayout(0, 0));
     cardPanel.add(filePanel, "File");
-    final JScrollPane scrollPane10 = new JScrollPane();
-    filePanel.add(scrollPane10, BorderLayout.CENTER);
+    final JScrollPane scrollPane8 = new JScrollPane();
+    filePanel.add(scrollPane8, BorderLayout.CENTER);
     fileList = new JList();
     Font fileListFont = this.$$$getFont$$$("Verdana", Font.BOLD, 14, fileList.getFont());
     if (fileListFont != null) {
@@ -1920,17 +1802,17 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     defaultListModel1.addElement("Import");
     defaultListModel1.addElement("Export");
     fileList.setModel(defaultListModel1);
-    scrollPane10.setViewportView(fileList);
-    final JPanel panel40 = new JPanel();
-    panel40.setLayout(new BorderLayout(0, 0));
-    filePanel.add(panel40, BorderLayout.NORTH);
+    scrollPane8.setViewportView(fileList);
+    final JPanel panel35 = new JPanel();
+    panel35.setLayout(new BorderLayout(0, 0));
+    filePanel.add(panel35, BorderLayout.NORTH);
     progressBar = new JProgressBar();
     progressBar.setStringPainted(true);
-    panel40.add(progressBar, BorderLayout.CENTER);
+    panel35.add(progressBar, BorderLayout.CENTER);
     backButton = new JButton();
     backButton.setText("Back");
-    panel40.add(backButton, BorderLayout.WEST);
-    label6.setLabelFor(searchTextField);
+    panel35.add(backButton, BorderLayout.WEST);
+    label5.setLabelFor(searchTextField);
   }
 
   /**

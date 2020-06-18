@@ -659,122 +659,6 @@
                               </grid>
                             </children>
                           </grid>
-                          <grid id="8ec4a" layout-manager="BorderLayout" hgap="0" vgap="0">
-                            <constraints>
-                              <tabbedpane title="Profile"/>
-                            </constraints>
-                            <properties/>
-                            <border type="none"/>
-                            <children>
-                              <splitpane id="a5510">
-                                <constraints border-constraint="Center"/>
-                                <properties/>
-                                <border type="none"/>
-                                <children>
-                                  <grid id="7ed8" layout-manager="GridBagLayout">
-                                    <constraints>
-                                      <splitpane position="left"/>
-                                    </constraints>
-                                    <properties/>
-                                    <border type="none" title="Profiles" title-justification="1">
-                                      <font name="Verdana" size="14"/>
-                                    </border>
-                                    <children>
-                                      <scrollpane id="85c4">
-                                        <constraints>
-                                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                                          <gridbag weightx="1.0" weighty="1.0"/>
-                                        </constraints>
-                                        <properties/>
-                                        <border type="none"/>
-                                        <children>
-                                          <component id="a5d14" class="edu.ucdenver.ccp.knowtator.view.list.ProfileList" binding="profileList" custom-create="true">
-                                            <constraints/>
-                                            <properties>
-                                              <font name="Verdana" size="12" style="0"/>
-                                              <toolTipText value="Click to activate a profile"/>
-                                            </properties>
-                                          </component>
-                                        </children>
-                                      </scrollpane>
-                                      <grid id="83e1f" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
-                                        <constraints>
-                                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                                          <gridbag weightx="1.0" weighty="0.0"/>
-                                        </constraints>
-                                        <properties/>
-                                        <border type="none"/>
-                                        <children>
-                                          <component id="919c1" class="javax.swing.JButton" binding="addProfileButton" default-binding="true">
-                                            <constraints/>
-                                            <properties>
-                                              <font name="Verdana" size="10" style="0"/>
-                                              <icon value="icon/icons8-plus-24.png"/>
-                                              <text value=""/>
-                                              <toolTipText value="Add a profile"/>
-                                            </properties>
-                                          </component>
-                                          <component id="bde5c" class="javax.swing.JButton" binding="removeProfileButton" default-binding="true">
-                                            <constraints/>
-                                            <properties>
-                                              <enabled value="true"/>
-                                              <font name="Verdana" size="10" style="0"/>
-                                              <icon value="icon/icons8-delete-24.png"/>
-                                              <text value=""/>
-                                              <toolTipText value="Remove a profile"/>
-                                            </properties>
-                                          </component>
-                                        </children>
-                                      </grid>
-                                      <component id="21ed9" class="javax.swing.JButton" binding="runIaaButton">
-                                        <constraints>
-                                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                          <gridbag weightx="0.0" weighty="0.0"/>
-                                        </constraints>
-                                        <properties>
-                                          <font name="Verdana" size="10" style="0"/>
-                                          <text resource-bundle="log4j" key="run.iaa"/>
-                                        </properties>
-                                      </component>
-                                    </children>
-                                  </grid>
-                                  <grid id="4334" layout-manager="BorderLayout" hgap="0" vgap="0">
-                                    <constraints>
-                                      <splitpane position="right"/>
-                                    </constraints>
-                                    <properties/>
-                                    <border type="none" title="Colors">
-                                      <font size="14"/>
-                                    </border>
-                                    <children>
-                                      <scrollpane id="35ce2">
-                                        <constraints border-constraint="Center"/>
-                                        <properties/>
-                                        <border type="none" title-justification="2">
-                                          <font name="Verdana" size="14"/>
-                                        </border>
-                                        <children>
-                                          <component id="83849" class="edu.ucdenver.ccp.knowtator.view.list.ColorList" binding="colorList" custom-create="true">
-                                            <constraints/>
-                                            <properties>
-                                              <font name="Verdana" size="10" style="0"/>
-                                              <toolTipText value="Click to set OWL Class color"/>
-                                            </properties>
-                                          </component>
-                                        </children>
-                                      </scrollpane>
-                                      <grid id="45a3e" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
-                                        <constraints border-constraint="North"/>
-                                        <properties/>
-                                        <border type="none"/>
-                                        <children/>
-                                      </grid>
-                                    </children>
-                                  </grid>
-                                </children>
-                              </splitpane>
-                            </children>
-                          </grid>
                           <grid id="70800" layout-manager="GridBagLayout">
                             <constraints>
                               <tabbedpane title="Settings"/>
@@ -939,7 +823,7 @@
                                   <font size="14"/>
                                 </border>
                                 <children>
-                                  <component id="41aeb" class="javax.swing.JLabel">
+                                  <component id="990f7" class="javax.swing.JButton" binding="profileButton">
                                     <constraints>
                                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                                       <gridbag weightx="0.0" weighty="0.0"/>
@@ -991,16 +875,6 @@
                                       </component>
                                     </children>
                                   </grid>
-                                  <component id="2d029" class="edu.ucdenver.ccp.knowtator.view.label.AnnotatorLabel" binding="activeProfileLabel" custom-create="true">
-                                    <constraints>
-                                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                                      <gridbag weightx="0.0" weighty="0.0"/>
-                                    </constraints>
-                                    <properties>
-                                      <font/>
-                                      <text value=""/>
-                                    </properties>
-                                  </component>
                                   <grid id="ecb79" layout-manager="GridBagLayout">
                                     <constraints>
                                       <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -1043,6 +917,16 @@
                                       </component>
                                     </children>
                                   </grid>
+                                  <component id="2d029" class="edu.ucdenver.ccp.knowtator.view.label.AnnotatorLabel" binding="activeProfileLabel" custom-create="true">
+                                    <constraints>
+                                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                                      <gridbag weightx="0.0" weighty="0.0"/>
+                                    </constraints>
+                                    <properties>
+                                      <font/>
+                                      <text value=""/>
+                                    </properties>
+                                  </component>
                                 </children>
                               </grid>
                               <grid id="528e0" layout-manager="GridBagLayout">
