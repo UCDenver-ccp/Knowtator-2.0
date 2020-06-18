@@ -417,8 +417,9 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
     profileButton.addActionListener(
         e -> {
-          JDialog dialog = new ProfileDialog(JOptionPane.getFrameForComponent(this), this);
+          ProfileDialog dialog = new ProfileDialog(JOptionPane.getFrameForComponent(this), this);
           dialog.pack();
+          dialog.colorList.selectionChanged();
           dialog.setVisible(true);
         }
     );

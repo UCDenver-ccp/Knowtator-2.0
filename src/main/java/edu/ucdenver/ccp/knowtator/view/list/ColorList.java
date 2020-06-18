@@ -35,6 +35,7 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.awt.BasicStroke;
 import java.awt.Component;
+import java.util.Enumeration;
 import java.util.Optional;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -111,7 +112,19 @@ public class ColorList extends JList<String[]> implements KnowtatorComponent, Mo
     owlClassOptional.ifPresent(owlClass -> {
       setCollection();
       int i = ((DefaultListModel) getModel()).indexOf(owlClass);
+      i = 0;
+      Enumeration<String[]> e = ((DefaultListModel<String[]>) getModel()).elements();
+      while(e.hasMoreElements()) {
+        if(owlClass.equals(e.nextElement()[0])) {
+          break;
+        }
+        i++;
+      }
+
+      log.warn(owlClass);
+      log.warn(i);
       if (-1 < i) {
+        log.warn("here");
         scrollRectToVisible(getCellBounds(i, i));
       }
     });
