@@ -65,6 +65,7 @@
   []
   (let [doc-id (re-frame/subscribe [::subs/visible-doc-id])]
     [:div
+     {:width @(re-frame/subscribe [::bp/screen-width])}
      [home-title]
      [document-controls]
      #_[annotation-controls]
