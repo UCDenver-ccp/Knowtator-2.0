@@ -20,3 +20,4 @@
 /.dir-locals.el
 /karma.conf.js
 /package-lock.json
+/.idea/
