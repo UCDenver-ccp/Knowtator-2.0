@@ -4,19 +4,19 @@
    [knowtator.model :as model]))
 
 (re-frame/reg-sub
- ::name
- (fn [db]
-   (:name db)))
+  ::name
+  (fn [db]
+    (:name db)))
 
 (re-frame/reg-sub
- ::active-panel
- (fn [db _]
-   (:active-panel db)))
+  ::active-panel
+  (fn [db _]
+    (:active-panel db)))
 
 (re-frame/reg-sub
- ::re-pressed-example
- (fn [db _]
-   (:re-pressed-example db)))
+  ::re-pressed-example
+  (fn [db _]
+    (:re-pressed-example db)))
 
 (re-frame/reg-sub
   ::visible-doc-id
@@ -114,6 +114,6 @@
   :<- [::anns]
   :<- [::profiles]
   (fn [[anns profiles] [_ ann]]
-    (cond (not (coll? ann)) (model/ann-color (get anns ann) profiles)
+    (cond (not (coll? ann))   (model/ann-color (get anns ann) profiles)
           (empty? (rest ann)) (model/ann-color (get anns (first ann)) profiles)
-          :else "grey")))
+          :else               "grey")))

@@ -6,14 +6,14 @@
    [knowtator.model :as model]))
 
 (re-frame/reg-event-db
- ::initialize-db
- (fn-traced [_ _]
-   db/default-db))
+  ::initialize-db
+  (fn-traced [_ _]
+    db/default-db))
 
 (re-frame/reg-event-db
- ::set-active-panel
- (fn-traced [db [_ active-panel]]
-   (assoc db :active-panel active-panel)))
+  ::set-active-panel
+  (fn-traced [db [_ active-panel]]
+    (assoc db :active-panel active-panel)))
 
 (re-frame/reg-event-db
   ::set-re-pressed-example
@@ -29,8 +29,8 @@
 (re-frame/reg-event-db
   ::select-span
   (fn [db [_ loc doc-id]]
-    (let [anns (:anns db)
-          span-id         (->> db
+    (let [anns    (:anns db)
+          span-id (->> db
                             :spans
                             (model/filter-in-doc doc-id anns)
                             (model/spans-containing-loc loc)

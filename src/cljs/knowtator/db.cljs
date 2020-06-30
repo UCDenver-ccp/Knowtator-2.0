@@ -1,37 +1,37 @@
 (ns knowtator.db)
 
 (def default-db
-  {:spans {:s1 {:id :s1
-                :ann :a1
-                :start 30
-                :end 35}
-           :s2 {:id :s2
-                :ann :a1
-                :start 36
-                :end 44}
-           :s3 {:id :s3
-                :ann :a2
-                :start 58
-                :end 65}
-           :s4 {:id :s4
-                :ann :a2
-                :start 83
-                :end 89}
-           :s5 {:id :s5
-                :ann :a1
-                :start 124
-                :end 132}}
-   :anns {:a1 {:id :a1
-               :profile :p1
-               :concept :c1
-               :doc :d1}
-          :a2 {:id :a2
-               :profile :p1
-               :concept :c2
-               :doc :d1}}
+  {:spans    {:s1 {:id    :s1
+                   :ann   :a1
+                   :start 30
+                   :end   35}
+              :s2 {:id    :s2
+                   :ann   :a1
+                   :start 36
+                   :end   44}
+              :s3 {:id    :s3
+                   :ann   :a2
+                   :start 58
+                   :end   65}
+              :s4 {:id    :s4
+                   :ann   :a2
+                   :start 83
+                   :end   89}
+              :s5 {:id    :s5
+                   :ann   :a1
+                   :start 124
+                   :end   132}}
+   :anns     {:a1 {:id      :a1
+                   :profile :p1
+                   :concept :c1
+                   :doc     :d1}
+              :a2 {:id      :a2
+                   :profile :p1
+                   :concept :c2
+                   :doc     :d1}}
    :profiles {:p1 {:c1 "blue"
                    :c2 "green"}}
-   :docs     {:d2 {:id :d2
+   :docs     {:d2 {:id      :d2
                    :content "hey"}
               :d1 {:id :d1
                    :content
@@ -51,6 +51,6 @@ Conclusion
 
 We have discovered remarkable numerical and volumetric variation in the mouse striatum, and we have been able to map two QTLs that modulate independent anatomic parameters.
 "}}
-   :selection {:doc :d1
-               :ann nil
+   :selection {:doc  :d1
+               :ann  nil
                :span nil}})

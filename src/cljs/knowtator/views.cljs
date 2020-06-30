@@ -47,6 +47,7 @@
                 text
                 ^{:key (str (random-uuid))}
                 [popup-text-annotation text])))]))]))
+
 (defn document-controls
   []
   (let [selected-id (reagent.core/atom nil)]
@@ -124,7 +125,7 @@
 
 (defn- panels [panel-name]
   (case panel-name
-    :home-panel [home-panel]
+    :home-panel  [home-panel]
     :about-panel [about-panel]
     [:div]))
 
