@@ -62,6 +62,16 @@
                :model @(re-frame/subscribe [::subs/visible-doc-id])
                :on-change #(re-frame/dispatch [::evts/select-doc %])]]])
 
+(defn annotation-controls
+  []
+  [re-com/h-box
+   :children [[re-com/md-circle-icon-button
+               :md-icon-name "zmdi-plus"
+               :on-click #(re-frame/dispatch [::evts/add-ann])]
+              [re-com/md-circle-icon-button
+               :md-icon-name "zmdi-minus"
+               :on-click #(re-frame/dispatch [::evts/remove-selected-ann])]]])
+
 (defn home-panel
   []
   (let [doc-id (re-frame/subscribe [::subs/visible-doc-id])]
@@ -69,7 +79,7 @@
      {:width @(re-frame/subscribe [::bp/screen-width])}
      [home-title]
      [document-controls]
-     #_[annotation-controls]
+     [annotation-controls]
      [doc-header]
      [editor @doc-id]]))
 

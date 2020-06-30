@@ -51,6 +51,8 @@ Conclusion
 
 We have discovered remarkable numerical and volumetric variation in the mouse striatum, and we have been able to map two QTLs that modulate independent anatomic parameters.
 "}}
-   :selection {:doc  :d1
-               :ann  nil
-               :span nil}})
+   :selection {:doc     :d1
+               :ann     nil
+               :profile :p1
+               :concept :c1
+               :span    nil}})
