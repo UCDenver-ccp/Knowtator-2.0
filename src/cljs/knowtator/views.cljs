@@ -50,16 +50,17 @@
 
 (defn document-controls
   []
-  (let [selected-id (reagent.core/atom nil)]
-    [re-com/h-box
-     :children [[re-com/button
-                 :label "add document"]
-                [re-com/button
-                 :label "remove document"]
-                [re-com/single-dropdown
-                 :choices @(re-frame/subscribe [::subs/doc-ids])
-                 :model @(re-frame/subscribe [::subs/visible-doc-id])
-                 :on-change #(re-frame/dispatch [::evts/select-doc %])]]]))
+  [re-com/h-box
+   :children [[re-com/md-circle-icon-button
+               :md-icon-name "zmdi-plus"
+               :on-click #(re-frame/dispatch [::evts/add-doc])]
+              [re-com/md-circle-icon-button
+               :md-icon-name "zmdi-minus"
+               :on-click #(re-frame/dispatch [::evts/remove-selected-doc])]
+              [re-com/single-dropdown
+               :choices @(re-frame/subscribe [::subs/doc-ids])
+               :model @(re-frame/subscribe [::subs/visible-doc-id])
+               :on-change #(re-frame/dispatch [::evts/select-doc %])]]])
 
 (defn home-panel
   []

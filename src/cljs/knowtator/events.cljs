@@ -45,3 +45,18 @@
     (assoc db :selection {:doc  doc-id
                           :ann  nil
                           :span nil})))
+
+(re-frame/reg-event-db
+  ::add-doc
+  (fn [db [_]]
+    (assoc-in db [:docs :d3]  {:id      :d3
+                               :content "I'm the third"})))
+(re-frame/reg-event-db
+  ::remove-selected-doc
+  (fn [db [_]]
+    (-> db
+      (update :docs dissoc (get-in db [:selection :doc]))
+      (assoc-in [:selection :doc] (-> db
+                                    :docs
+                                    keys
+                                    first)))))
