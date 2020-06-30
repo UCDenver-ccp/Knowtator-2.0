@@ -38,3 +38,10 @@
                             first
                             :id)]
       (assoc-in db [:selection :span] span-id))))
+
+(re-frame/reg-event-db
+  ::select-doc
+  (fn [db [_ doc-id]]
+    (assoc db :selection {:doc  doc-id
+                          :ann  nil
+                          :span nil})))

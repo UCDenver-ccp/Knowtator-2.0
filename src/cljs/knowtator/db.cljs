@@ -31,9 +31,11 @@
                :doc :d1}}
    :profiles {:p1 {:c1 "blue"
                    :c2 "green"}}
-   :docs {:d1 {:id :d1
-               :content
-               "Complex trait analysis of the mouse striatum: independent QTLs modulate volume and neuron number
+   :docs     {:d2 {:id :d2
+                   :content "hey"}
+              :d1 {:id :d1
+                   :content
+                   "Complex trait analysis of the mouse striatum: independent QTLs modulate volume and neuron number
 
 Abstract
 

@@ -47,13 +47,25 @@
                 text
                 ^{:key (str (random-uuid))}
                 [popup-text-annotation text])))]))]))
+(defn document-controls
+  []
+  (let [selected-id (reagent.core/atom nil)]
+    [re-com/h-box
+     :children [[re-com/button
+                 :label "add document"]
+                [re-com/button
+                 :label "remove document"]
+                [re-com/single-dropdown
+                 :choices @(re-frame/subscribe [::subs/doc-ids])
+                 :model @(re-frame/subscribe [::subs/visible-doc-id])
+                 :on-change #(re-frame/dispatch [::evts/select-doc %])]]]))
 
 (defn home-panel
   []
   (let [doc-id (re-frame/subscribe [::subs/visible-doc-id])]
     [:div
      [home-title]
-     #_[document-controls]
+     [document-controls]
      #_[annotation-controls]
      [doc-header]
      [editor @doc-id]]))

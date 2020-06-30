@@ -28,6 +28,13 @@
   :docs)
 
 (re-frame/reg-sub
+  ::doc-ids
+  :<- [::docs]
+  #(->> %
+     vals
+     (map (fn [doc] (assoc doc :label (:id doc))))))
+
+(re-frame/reg-sub
   ::visible-doc-content
   :<- [::visible-doc-id]
   :<- [::docs]
