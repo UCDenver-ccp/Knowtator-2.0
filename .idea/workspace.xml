@@ -29,11 +29,7 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b5586eae-97ae-4be5-aa9b-4eaaef9d25b4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/list/ColorList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/list/ColorList.java" afterDir="false" />
-    </list>
+    <list default="true" id="b5586eae-97ae-4be5-aa9b-4eaaef9d25b4" name="Default Changelist" comment="" />
     <list id="9e563f0c-91e9-4ed0-b3db-d36bc1e81506" name="Made test for adding an annotation layer" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -300,7 +296,7 @@
       <workItem from="1591485665394" duration="305000" />
       <workItem from="1591485986455" duration="601000" />
       <workItem from="1592423099414" duration="19956000" />
-      <workItem from="1592468854392" duration="901000" />
+      <workItem from="1592468854392" duration="1500000" />
     </task>
     <task id="LOCAL-00001" summary="Old knowtator projects read annotations even if owl class is not found">
       <created>1590645202357</created>
@@ -657,34 +653,34 @@
     </state>
     <state x="2268" y="208" key="FileChooserDialogImpl/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590016550191" />
     <state x="617" y="277" key="FileChooserDialogImpl/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591227393392" />
-    <state width="1620" height="403" key="GridCell.Tab.0.bottom" timestamp="1592469749244">
+    <state width="1620" height="403" key="GridCell.Tab.0.bottom" timestamp="1592470546282">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1620" height="403" key="GridCell.Tab.0.bottom/0.0.1680.1050/1680.200.1600.900@0.0.1680.1050" timestamp="1592469749244" />
+    <state width="1620" height="403" key="GridCell.Tab.0.bottom/0.0.1680.1050/1680.200.1600.900@0.0.1680.1050" timestamp="1592470546282" />
     <state width="1620" height="403" key="GridCell.Tab.0.bottom/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833324" />
     <state width="1634" height="254" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791277" />
     <state width="1554" height="255" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
     <state width="1634" height="254" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591244218674" />
-    <state width="1620" height="403" key="GridCell.Tab.0.center" timestamp="1592469749244">
+    <state width="1620" height="403" key="GridCell.Tab.0.center" timestamp="1592470546282">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1620" height="403" key="GridCell.Tab.0.center/0.0.1680.1050/1680.200.1600.900@0.0.1680.1050" timestamp="1592469749244" />
+    <state width="1620" height="403" key="GridCell.Tab.0.center/0.0.1680.1050/1680.200.1600.900@0.0.1680.1050" timestamp="1592470546282" />
     <state width="1620" height="403" key="GridCell.Tab.0.center/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833324" />
     <state width="1634" height="254" key="GridCell.Tab.0.center/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791276" />
     <state width="1554" height="255" key="GridCell.Tab.0.center/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
     <state width="1634" height="254" key="GridCell.Tab.0.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591244218674" />
-    <state width="1620" height="403" key="GridCell.Tab.0.left" timestamp="1592469749244">
+    <state width="1620" height="403" key="GridCell.Tab.0.left" timestamp="1592470546282">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1620" height="403" key="GridCell.Tab.0.left/0.0.1680.1050/1680.200.1600.900@0.0.1680.1050" timestamp="1592469749244" />
+    <state width="1620" height="403" key="GridCell.Tab.0.left/0.0.1680.1050/1680.200.1600.900@0.0.1680.1050" timestamp="1592470546282" />
     <state width="1620" height="403" key="GridCell.Tab.0.left/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833324" />
     <state width="1634" height="254" key="GridCell.Tab.0.left/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791276" />
     <state width="1554" height="255" key="GridCell.Tab.0.left/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386105" />
     <state width="1634" height="254" key="GridCell.Tab.0.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591244218674" />
-    <state width="1620" height="403" key="GridCell.Tab.0.right" timestamp="1592469749244">
+    <state width="1620" height="403" key="GridCell.Tab.0.right" timestamp="1592470546282">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state width="1620" height="403" key="GridCell.Tab.0.right/0.0.1680.1050/1680.200.1600.900@0.0.1680.1050" timestamp="1592469749244" />
+    <state width="1620" height="403" key="GridCell.Tab.0.right/0.0.1680.1050/1680.200.1600.900@0.0.1680.1050" timestamp="1592470546282" />
     <state width="1620" height="403" key="GridCell.Tab.0.right/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833324" />
     <state width="1634" height="254" key="GridCell.Tab.0.right/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791277" />
     <state width="1554" height="255" key="GridCell.Tab.0.right/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
