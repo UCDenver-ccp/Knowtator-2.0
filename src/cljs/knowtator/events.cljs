@@ -87,41 +87,38 @@
 
 (defn cycle-coll
   [id db k dir]
+  ;; TODO sorting of spans needs to be handled by start and end locs
   (let [docs (-> db k keys sort vec)
         f    (case dir
-               :next #(let [val (inc %2)]
-                        (if (<= (count %1) val)
+               :next #(let [val (inc %)]
+                        (if (<= (count docs) val)
                           0
                           val))
-               :prev #(let [val (dec %2)]
+               :prev #(let [val (dec %)]
                         (if (neg? val)
-                          (dec (count %1))
-                          val)) )]
+                          (dec (count docs))
+                          val)))]
     (->> id
       (.indexOf docs)
-      (f docs)
+      f
       (get docs))))
+
+(defn cycle-selection
+  [db sel col dir]
+  (update-in db [:selection sel] cycle-coll db col dir))
 
 (re-frame/reg-event-db
   ::select-prev-doc
-  (fn [db [_]]
-    (-> db
-      (update-in [:selection :doc] cycle-coll db :docs :prev))))
+  #(cycle-selection % :doc :docs :prev))
 
 (re-frame/reg-event-db
   ::select-next-doc
-  (fn [db [_]]
-    (-> db
-      (update-in [:selection :doc] cycle-coll db :docs :next))))
+  #(cycle-selection % :doc :docs :next))
 
 (re-frame/reg-event-db
   ::select-prev-span
-  (fn [db [_]]
-    (-> db
-      (update-in [:selection :span] cycle-coll db :spans :prev))))
+  #(cycle-selection % :span :spans :prev))
 
 (re-frame/reg-event-db
   ::select-next-span
-  (fn [db [_]]
-    (-> db
-      (update-in [:selection :span] cycle-coll db :spans :next))))
+  #(cycle-selection % :span :spans :next))
