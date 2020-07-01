@@ -202,3 +202,12 @@
   ::done-searching
   (fn [db]
     (assoc-in db [:search :un-searched?] false)))
+
+(re-frame/reg-event-db
+  ::set-concept-color
+  (undoable "Setting color for concept")
+  (fn [db [_ color]]
+    (assoc-in db [:profiles
+                  (get-in db [:selection :profile])
+                  (get-in db [:selection :concept])]
+      color)))

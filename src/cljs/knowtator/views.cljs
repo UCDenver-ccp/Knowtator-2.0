@@ -175,12 +175,20 @@
                :disabled? (not (<sub [:redos?]))
                :on-click #(>evt [:redo])]]])
 
+(defn color-controls
+  []
+  [re-com/h-box
+   :children [[:input#my {:type      :color
+                          :class     "rc-button"
+                          :on-change #(>evt [::evts/set-concept-color (html/target-value %)])}]]])
+
 (defn home-panel
   []
   [re-com/v-box
    :children [[home-title]
               [undo-controls]
               [profile-controls]
+              [color-controls]
               [document-controls]
               [annotation-controls]
               [span-controls]
