@@ -44,22 +44,23 @@
 
 (defn editor
   [doc-id]
-
   [:div
    [doc-header]
-   [:div.text-annotation-editor {:on-click #(>evt [::evts/record-selection (html/text-selection (.-target %) "text-annotation-editor") doc-id])}
-    (doall
-      (for [paragraph (<sub [::subs/highlighted-text])]
-        ^{:key (str (random-uuid))}
-        [re-com/p
-         {:style {:text-align   :justify
-                  :text-justify :inter-word}}
-         (doall
-           (for [text paragraph]
-             (if (string? text)
-               text
-               ^{:key (str (random-uuid))}
-               [popup-text-annotation text])))]))]])
+   [re-com/scroller
+    :height "300px"
+    :child [:div.text-annotation-editor {:on-click #(>evt [::evts/record-selection (html/text-selection (.-target %) "text-annotation-editor") doc-id])}
+            (doall
+              (for [paragraph (<sub [::subs/highlighted-text])]
+                ^{:key (str (random-uuid))}
+                [re-com/p
+                 {:style {:text-align   :justify
+                          :text-justify :inter-word}}
+                 (doall
+                   (for [text paragraph]
+                     (if (string? text)
+                       text
+                       ^{:key (str (random-uuid))}
+                       [popup-text-annotation text])))]))]]])
 
 
 (defn document-controls
@@ -140,17 +141,16 @@
 
 (defn home-panel
   []
-  [:div
-   {:width (<sub [::bp/screen-width])}
-   [home-title]
-   [document-controls]
-   [annotation-controls]
-   [span-controls]
-   [search-area]
-   [re-com/h-box
-    :gap "10px"
-    :children [[editor (<sub [::subs/visible-doc-id])]
-               [annotation-info]]]])
+  [re-com/v-box
+   :width (str (<sub [::bp/screen-width]) "px")
+   :children [[home-title]
+              [document-controls]
+              [annotation-controls]
+              [span-controls]
+              [search-area]
+              [re-com/h-split
+               :panel-1 [editor (<sub [::subs/visible-doc-id])]
+               :panel-2 [annotation-info]]]])
 
 ;; home
 
