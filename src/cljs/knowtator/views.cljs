@@ -148,9 +148,10 @@
               [annotation-controls]
               [span-controls]
               [search-area]
-              [re-com/h-split
-               :panel-1 [editor (<sub [::subs/visible-doc-id])]
-               :panel-2 [annotation-info]]]])
+              [re-com/h-box
+               :width (str (- (<sub [::bp/screen-width]) 50) "px")
+               :children [[editor (<sub [::subs/visible-doc-id])]
+                          [annotation-info]]]]])
 
 ;; home
 
