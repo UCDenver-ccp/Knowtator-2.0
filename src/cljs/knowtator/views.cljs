@@ -52,6 +52,12 @@
   []
   [re-com/h-box
    :children [[re-com/md-circle-icon-button
+               :md-icon-name "zmdi-arrow-left"
+               :on-click #(>evt [::evts/select-prev-doc])]
+              [re-com/md-circle-icon-button
+               :md-icon-name "zmdi-arrow-right"
+               :on-click #(>evt [::evts/select-next-doc])]
+              [re-com/md-circle-icon-button
                :md-icon-name "zmdi-plus"
                :on-click #(>evt [::evts/add-doc])]
               [re-com/md-circle-icon-button

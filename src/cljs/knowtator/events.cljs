@@ -83,3 +83,30 @@
       (update :spans dissoc (get-in db [:selection :span]))
       (assoc-in [:selection :ann] nil)
       (assoc-in [:selection :span] nil))))
+
+
+(defn next-doc
+  [doc-id db f]
+  (let [docs (-> db :docs keys sort vec)]
+    (->> doc-id
+      (.indexOf docs)
+      (f docs)
+      (get docs))))
+
+(re-frame/reg-event-db
+  ::select-prev-doc
+  (fn [db [_]]
+    (-> db
+      (update-in [:selection :doc] next-doc db #(let [val (dec %2)]
+                                                  (if (neg? val)
+                                                    (dec (count %1))
+                                                    val))))))
+
+(re-frame/reg-event-db
+  ::select-next-doc
+  (fn [db [_]]
+    (-> db
+      (update-in [:selection :doc] next-doc db #(let [val (inc %2)]
+                                                  (if (<= (count %1) val)
+                                                    0
+                                                    val))))))
