@@ -30,7 +30,7 @@
 (re-frame/reg-sub
   ::doc-maps
   :<- [::docs]
-  #(vals %))
+  vals)
 
 (re-frame/reg-sub
   ::visible-doc-content
@@ -111,6 +111,11 @@
   :profiles)
 
 (re-frame/reg-sub
+  ::profile-maps
+  :<- [::profiles]
+  vals)
+
+(re-frame/reg-sub
   ::ann-color
   :<- [::anns]
   :<- [::profiles]
@@ -145,3 +150,7 @@
         re-pattern
         (re-seq content)
         count))))
+
+(re-frame/reg-sub
+  ::selected-profile
+  #(get-in % [:selection :profile]))

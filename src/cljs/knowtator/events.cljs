@@ -42,11 +42,14 @@
       (assoc-in db [:selection :span] span-id))))
 
 (re-frame/reg-event-db
+  ::select-profile
+  (fn [db [_ profile-id]]
+    (assoc-in db [:selection :profile] profile-id)))
+
+(re-frame/reg-event-db
   ::select-doc
   (fn [db [_ doc-id]]
-    (assoc db :selection {:doc  doc-id
-                          :ann  nil
-                          :span nil})))
+    (assoc-in db [:selection :doc] doc-id)))
 
 (re-frame/reg-event-db
   ::add-doc

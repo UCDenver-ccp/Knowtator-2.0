@@ -29,7 +29,11 @@
                    :profile :p1
                    :concept :c2
                    :doc     :d1}}
-   :profiles {:p1 {:c1 "blue"
+   :profiles {:p1 {:id :p1
+                   :c1 "blue"
+                   :c2 "green"}
+              :p2 {:id :p2
+                   :c1 "red"
                    :c2 "green"}}
    :docs     {:d2 {:id      :d2
                    :content "hey"}

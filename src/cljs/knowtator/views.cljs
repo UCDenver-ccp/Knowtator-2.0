@@ -85,6 +85,22 @@
                :model (<sub [::subs/visible-doc-id])
                :on-change #(>evt [::evts/select-doc %])]]])
 
+(defn profile-controls
+  []
+  [re-com/h-box
+   :children [[re-com/md-circle-icon-button
+               :md-icon-name "zmdi-plus"
+               :on-click #(>evt [::evts/add-profile])]
+              [re-com/md-circle-icon-button
+               :md-icon-name "zmdi-minus"
+               :on-click #(>evt [::evts/remove-selected-profile])]
+              [re-com/single-dropdown
+               :choices (<sub [::subs/profile-maps])
+               :label-fn :id
+               :filter-box? true
+               :model (<sub [::subs/selected-profile])
+               :on-change #(>evt [::evts/select-profile %])]]])
+
 (defn annotation-controls
   []
   [re-com/h-box
@@ -94,6 +110,7 @@
               [re-com/md-circle-icon-button
                :md-icon-name "zmdi-minus"
                :on-click #(>evt [::evts/remove-selected-ann])]]])
+
 
 (defn span-controls
   []
@@ -150,6 +167,7 @@
   []
   [re-com/v-box
    :children [[home-title]
+              [profile-controls]
               [document-controls]
               [annotation-controls]
               [span-controls]
