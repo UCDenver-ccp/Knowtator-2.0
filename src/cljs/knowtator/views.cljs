@@ -78,6 +78,16 @@
                :md-icon-name "zmdi-minus"
                :on-click #(>evt [::evts/remove-selected-ann])]]])
 
+(defn span-controls
+  []
+  [re-com/h-box
+   :children [[re-com/md-circle-icon-button
+               :md-icon-name "zmdi-arrow-left"
+               :on-click #(>evt [::evts/select-prev-span])]
+              [re-com/md-circle-icon-button
+               :md-icon-name "zmdi-arrow-right"
+               :on-click #(>evt [::evts/select-next-span])]]])
+
 (defn home-panel
   []
   [:div
@@ -85,6 +95,7 @@
    [home-title]
    [document-controls]
    [annotation-controls]
+   [span-controls]
    [doc-header]
    [editor (<sub [::subs/visible-doc-id])]])
 

@@ -85,10 +85,19 @@
       (assoc-in [:selection :span] nil))))
 
 
-(defn next-doc
-  [doc-id db f]
-  (let [docs (-> db :docs keys sort vec)]
-    (->> doc-id
+(defn cycle-coll
+  [id db k dir]
+  (let [docs (-> db k keys sort vec)
+        f    (case dir
+               :next #(let [val (inc %2)]
+                        (if (<= (count %1) val)
+                          0
+                          val))
+               :prev #(let [val (dec %2)]
+                        (if (neg? val)
+                          (dec (count %1))
+                          val)) )]
+    (->> id
       (.indexOf docs)
       (f docs)
       (get docs))))
@@ -97,16 +106,22 @@
   ::select-prev-doc
   (fn [db [_]]
     (-> db
-      (update-in [:selection :doc] next-doc db #(let [val (dec %2)]
-                                                  (if (neg? val)
-                                                    (dec (count %1))
-                                                    val))))))
+      (update-in [:selection :doc] cycle-coll db :docs :prev))))
 
 (re-frame/reg-event-db
   ::select-next-doc
   (fn [db [_]]
     (-> db
-      (update-in [:selection :doc] next-doc db #(let [val (inc %2)]
-                                                  (if (<= (count %1) val)
-                                                    0
-                                                    val))))))
+      (update-in [:selection :doc] cycle-coll db :docs :next))))
+
+(re-frame/reg-event-db
+  ::select-prev-span
+  (fn [db [_]]
+    (-> db
+      (update-in [:selection :span] cycle-coll db :spans :prev))))
+
+(re-frame/reg-event-db
+  ::select-next-span
+  (fn [db [_]]
+    (-> db
+      (update-in [:selection :span] cycle-coll db :spans :next))))
