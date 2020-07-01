@@ -127,3 +127,12 @@
   :<- [::anns]
   (fn [[ann-id anns]]
     (get anns ann-id)))
+
+(re-frame/reg-sub
+  ::search-text
+  (fn [db]
+    (get-in db [:search :search-text])))
+
+(re-frame/reg-sub
+  ::un-searched?
+  #(get-in % [:search :un-searched?]))

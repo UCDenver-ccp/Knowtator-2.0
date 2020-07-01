@@ -1,5 +1,6 @@
 (ns knowtator.views
   (:require
+   [reagent.core :as reagent]
    [re-frame.core :as re-frame]
    [re-com.core :as re-com]
    [breaking-point.core :as bp]
@@ -20,11 +21,21 @@
 ;; Editor
 
 (defn popup-text-annotation
-  [{:keys [ann content id]}]
-  [re-com/p-span
-   {:style {:background-color (<sub [::subs/ann-color ann])
-            :border           (when (<sub [::subs/selected-span? id]) :solid)}}
-   content])
+  [{:keys [ann content id searched]}]
+  (let [e-id (random-uuid)]
+    (reagent/create-class
+      {:reagent-render      (fn []
+                              [re-com/p-span
+                               {:id    e-id
+                                :style (cond-> {:background-color (<sub [::subs/ann-color ann])
+                                                :border           (when (<sub [::subs/selected-span? id]) :solid)}
+                                         searched (assoc :color :red))}
+                               content])
+       :component-did-mount (fn [comp]
+                              (let [e (.getElementById js/document e-id)]
+                                (when (and (<sub [::subs/un-searched?]) searched)
+                                  (>evt [::evts/done-searching])
+                                  (.scrollIntoView e))))})))
 
 (defn text-annotation
   [{:keys [content ann]}]
@@ -118,6 +129,14 @@
                               [re-com/label
                                :label (str v)]]]))]])
 
+(defn search-area
+  []
+  [re-com/input-text
+   :model (<sub [::subs/search-text])
+   :on-change #(>evt [::evts/update-search-text %])
+   :change-on-blur? false
+   :placeholder "search document"])
+
 (defn home-panel
   []
   [:div
@@ -126,6 +145,7 @@
    [document-controls]
    [annotation-controls]
    [span-controls]
+   [search-area]
    [re-com/h-box
     :gap "10px"
     :children [[editor (<sub [::subs/visible-doc-id])]

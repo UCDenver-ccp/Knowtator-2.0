@@ -4,7 +4,8 @@
    [knowtator.db :as db]
    [knowtator.subs :as subs]
    [day8.re-frame.tracing :refer-macros [fn-traced]]
-   [knowtator.model :as model]))
+   [knowtator.model :as model]
+   [clojure.string :as str]))
 
 (re-frame/reg-event-db
   ::initialize-db
@@ -148,3 +149,33 @@
 (re-frame/reg-event-db
   ::grow-selected-span-end
   #(mod-span % :end inc))
+
+(re-frame/reg-event-db
+  ::find-in-selected-doc
+  (fn [db [_ text]]
+    (let [doc-id            (get-in db [:selection :doc])
+          doc               (get-in db [:docs doc-id :content])
+          last-search-start (get-in db [:spans :last-search-span :start])
+          result            (or
+                              (str/index-of doc text last-search-start)
+                              (str/index-of doc text))]
+      (-> db
+        (assoc-in [:spans :last-search-span] {:id       :last-search-span
+                                              :searched result
+                                              :ann      :last-search-ann
+                                              :start    result
+                                              :end      (when result (+ result (count text)))})
+        (assoc-in [:anns :last-search-ann] {:id  :last-search-ann
+                                            :doc doc-id})
+        (assoc-in [:search :un-searched?] true)))))
+
+(re-frame/reg-event-fx
+  ::update-search-text
+  (fn [{:keys [db]} [_ text]]
+    {:db       (assoc-in db [:search :search-text] text)
+     :dispatch [::find-in-selected-doc text]}))
+
+(re-frame/reg-event-db
+  ::done-searching
+  (fn [db]
+    (assoc-in db [:search :un-searched?] false)))
