@@ -163,10 +163,23 @@
               [re-com/label
                :label (<sub [::subs/search-matches])]]])
 
+(defn undo-controls
+  []
+  [re-com/h-box
+   :children [[re-com/md-circle-icon-button
+               :md-icon-name "zmdi-undo"
+               :disabled? (not (<sub [:undos?]))
+               :on-click #(>evt [:undo])]
+              [re-com/md-circle-icon-button
+               :md-icon-name "zmdi-redo"
+               :disabled? (not (<sub [:redos?]))
+               :on-click #(>evt [:redo])]]])
+
 (defn home-panel
   []
   [re-com/v-box
    :children [[home-title]
+              [undo-controls]
               [profile-controls]
               [document-controls]
               [annotation-controls]

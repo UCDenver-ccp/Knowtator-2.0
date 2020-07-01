@@ -5,7 +5,8 @@
    [knowtator.subs :as subs]
    [day8.re-frame.tracing :refer-macros [fn-traced]]
    [knowtator.model :as model]
-   [clojure.string :as str]))
+   [clojure.string :as str]
+   [day8.re-frame.undo :as undo :refer [undoable]]))
 
 (re-frame/reg-event-db
   ::initialize-db
@@ -53,6 +54,7 @@
 
 (re-frame/reg-event-db
   ::add-doc
+  (undoable "Adding document")
   (fn [db [_]]
     (assoc-in db [:docs :d3]  {:id      :d3
                                :content "I'm the third"})))
@@ -66,6 +68,7 @@
 
 (re-frame/reg-event-db
   ::add-ann
+  (undoable "Adding annotation")
   (fn [db [_]]
     (let [span-id (unique-id db :spans "s" (->> :spans (get db) count))
           ann-id  (unique-id db :anns "a" (->> :anns (get db) count))]
@@ -83,6 +86,7 @@
 
 (re-frame/reg-event-db
   ::remove-selected-doc
+  (undoable "Removing document")
   (fn [db [_]]
     (-> db
       (update :docs dissoc (get-in db [:selection :doc]))
@@ -92,6 +96,7 @@
                                     first)))))
 (re-frame/reg-event-db
   ::remove-selected-ann
+  (undoable "Removing annotation")
   (fn [db [_]]
     (-> db
       (update :anns dissoc (get-in db [:selection :ann]))
@@ -149,18 +154,22 @@
 
 (re-frame/reg-event-db
   ::grow-selected-span-start
+  (undoable "Growing span start")
   #(mod-span % :start dec))
 
 (re-frame/reg-event-db
   ::shrink-selected-span-start
+  (undoable "Shrinking span start")
   #(mod-span % :start inc))
 
 (re-frame/reg-event-db
   ::shrink-selected-span-end
+  (undoable "Shrinking span end")
   #(mod-span % :end dec))
 
 (re-frame/reg-event-db
   ::grow-selected-span-end
+  (undoable "Growing span end")
   #(mod-span % :end inc))
 
 (re-frame/reg-event-db

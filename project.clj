@@ -8,6 +8,7 @@
                  [reagent "0.9.1"]
                  [re-frame "0.11.0"]
                  [re-com "2.7.0"]
+                 [day8.re-frame/undo "0.3.3"]
                  [secretary "1.2.3"]
                  [garden "1.3.9"]
                  [ns-tracker "0.4.0"]
