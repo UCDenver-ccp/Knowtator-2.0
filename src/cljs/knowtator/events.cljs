@@ -152,12 +152,13 @@
 
 (re-frame/reg-event-db
   ::find-in-selected-doc
-  (fn [db [_ text]]
+  (fn [db]
     (let [doc-id            (get-in db [:selection :doc])
           doc               (get-in db [:docs doc-id :content])
+          text              (get-in db [:search :query])
           last-search-start (get-in db [:spans :last-search-span :start])
           result            (or
-                              (str/index-of doc text last-search-start)
+                              (str/index-of doc text (inc last-search-start))
                               (str/index-of doc text))]
       (-> db
         (assoc-in [:spans :last-search-span] {:id       :last-search-span
@@ -172,7 +173,7 @@
 (re-frame/reg-event-fx
   ::update-search-text
   (fn [{:keys [db]} [_ text]]
-    {:db       (assoc-in db [:search :search-text] text)
+    {:db       (assoc-in db [:search :query] text)
      :dispatch [::find-in-selected-doc text]}))
 
 (re-frame/reg-event-db

@@ -131,8 +131,19 @@
 (re-frame/reg-sub
   ::search-text
   (fn [db]
-    (get-in db [:search :search-text])))
+    (get-in db [:search :query])))
 
 (re-frame/reg-sub
   ::un-searched?
   #(get-in % [:search :un-searched?]))
+
+(re-frame/reg-sub
+  ::search-matches
+  :<- [::search-text]
+  :<- [::visible-doc-content]
+  (fn [[query content]]
+    (when (and query (not= "" query))
+      (-> query
+        re-pattern
+        (re-seq content)
+        count))))

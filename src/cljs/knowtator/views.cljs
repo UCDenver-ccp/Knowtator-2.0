@@ -133,11 +133,16 @@
 
 (defn search-area
   []
-  [re-com/input-text
-   :model (<sub [::subs/search-text])
-   :on-change #(>evt [::evts/update-search-text %])
-   :change-on-blur? false
-   :placeholder "search document"])
+  [re-com/h-box
+   :children [[re-com/input-text
+               :model (<sub [::subs/search-text])
+               :on-change #(>evt [::evts/update-search-text %])
+               ;; :attr {:on-key-press #(when (html/key? % :enter)
+               ;;                         (>evt [::evts/find-in-selected-doc]))}
+               :change-on-blur? false
+               :placeholder "search document"]
+              [re-com/label
+               :label (<sub [::subs/search-matches])]]])
 
 (defn home-panel
   []
