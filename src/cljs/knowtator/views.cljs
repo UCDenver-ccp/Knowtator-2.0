@@ -122,6 +122,7 @@
                :level :level3]
               (let [ann (<sub [::subs/selected-ann-map])]
                 (for [[k v] ann]
+                  ^{:key (str (random-uuid))}
                   [re-com/h-box
                    :gap "10px"
                    :children [[re-com/label
