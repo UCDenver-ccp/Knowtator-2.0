@@ -147,7 +147,6 @@
 (defn home-panel
   []
   [re-com/v-box
-   :width (str (<sub [::bp/screen-width]) "px")
    :children [[home-title]
               [document-controls]
               [annotation-controls]
@@ -221,4 +220,5 @@
 (defn main-panel []
   [re-com/v-box
    :height "100%"
+   :width (str (<sub [::bp/screen-width]) "px")
    :children [[panels (<sub [::subs/active-panel])]]])
