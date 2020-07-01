@@ -86,7 +86,19 @@
                :on-click #(>evt [::evts/select-prev-span])]
               [re-com/md-circle-icon-button
                :md-icon-name "zmdi-arrow-right"
-               :on-click #(>evt [::evts/select-next-span])]]])
+               :on-click #(>evt [::evts/select-next-span])]
+              [re-com/md-circle-icon-button
+               :md-icon-name "zmdi-plus"
+               :on-click #(>evt [::evts/grow-selected-span-start])]
+              [re-com/md-circle-icon-button
+               :md-icon-name "zmdi-minus"
+               :on-click #(>evt [::evts/shrink-selected-span-start])]
+              [re-com/md-circle-icon-button
+               :md-icon-name "zmdi-minus"
+               :on-click #(>evt [::evts/shrink-selected-span-end])]
+              [re-com/md-circle-icon-button
+               :md-icon-name "zmdi-plus"
+               :on-click #(>evt [::evts/grow-selected-span-end])]]])
 
 (defn home-panel
   []

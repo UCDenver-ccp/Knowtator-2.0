@@ -69,10 +69,13 @@
       (model/resolve-span-content content)
       model/split-into-paragraphs)))
 
+(defn selected-span
+  [db]
+  (get-in db [:selection :span]))
+
 (re-frame/reg-sub
   ::selected-span-id
-  (fn [db _]
-    (get-in db [:selection :span])))
+  selected-span)
 
 (re-frame/reg-sub
   ::selected-span?

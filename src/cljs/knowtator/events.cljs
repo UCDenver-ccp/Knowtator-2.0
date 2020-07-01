@@ -2,6 +2,7 @@
   (:require
    [re-frame.core :as re-frame]
    [knowtator.db :as db]
+   [knowtator.subs :as subs]
    [day8.re-frame.tracing :refer-macros [fn-traced]]
    [knowtator.model :as model]))
 
@@ -31,12 +32,12 @@
   (fn [db [_ loc doc-id]]
     (let [anns    (:anns db)
           span-id (->> db
-                            :spans
-                            (model/filter-in-doc doc-id anns)
-                            (model/spans-containing-loc loc)
-                            vals
-                            first
-                            :id)]
+                    :spans
+                    (model/filter-in-doc doc-id anns)
+                    (model/spans-containing-loc loc)
+                    vals
+                    first
+                    :id)]
       (assoc-in db [:selection :span] span-id))))
 
 (re-frame/reg-event-db
@@ -122,3 +123,28 @@
 (re-frame/reg-event-db
   ::select-next-span
   #(cycle-selection % :span :spans :next))
+
+(defn mod-span
+  [db loc f]
+  (let [s (subs/selected-span db)]
+    (update-in db [:spans s] #(let [{:keys [start end] :as new-s} (update % loc f)]
+                                (cond-> new-s
+                                  (< end start) (assoc
+                                                  :start (:end new-s)
+                                                  :end (:start new-s)))))))
+
+(re-frame/reg-event-db
+  ::grow-selected-span-start
+  #(mod-span % :start dec))
+
+(re-frame/reg-event-db
+  ::shrink-selected-span-start
+  #(mod-span % :start inc))
+
+(re-frame/reg-event-db
+  ::shrink-selected-span-end
+  #(mod-span % :end dec))
+
+(re-frame/reg-event-db
+  ::grow-selected-span-end
+  #(mod-span % :end inc))
