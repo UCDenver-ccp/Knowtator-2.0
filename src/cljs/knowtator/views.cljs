@@ -1,7 +1,6 @@
 (ns knowtator.views
   (:require
    [reagent.core :as reagent]
-   [re-frame.core :as re-frame]
    [re-com.core :as re-com]
    [breaking-point.core :as bp]
    [knowtator.subs :as subs]
@@ -48,7 +47,8 @@
    [doc-header]
    [re-com/scroller
     :height "300px"
-    :child [:div.text-annotation-editor {:on-click #(>evt [::evts/record-selection (html/text-selection (.-target %) "text-annotation-editor") doc-id])}
+    :child [:div.text-annotation-editor {:on-click  #(>evt [::evts/record-selection (html/text-selection (.-target %) "text-annotation-editor") doc-id])
+                                         :style {:padding "10px"}}
             (doall
               (for [paragraph (<sub [::subs/highlighted-text])]
                 ^{:key (str (random-uuid))}
