@@ -120,3 +120,10 @@
     (cond (not (coll? ann))   (model/ann-color (get anns ann) profiles)
           (empty? (rest ann)) (model/ann-color (get anns (first ann)) profiles)
           :else               "grey")))
+
+(re-frame/reg-sub
+  ::selected-ann-map
+  :<- [::selected-ann-id]
+  :<- [::anns]
+  (fn [[ann-id anns]]
+    (get anns ann-id)))

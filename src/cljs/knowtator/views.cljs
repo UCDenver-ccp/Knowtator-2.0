@@ -33,19 +33,22 @@
 
 (defn editor
   [doc-id]
-  [:div.text-annotation-editor {:on-click #(>evt [::evts/record-selection (html/text-selection (.-target %) "text-annotation-editor") doc-id])}
-   (doall
-     (for [paragraph (<sub [::subs/highlighted-text])]
-       ^{:key (str (random-uuid))}
-       [re-com/p
-        {:style {:text-align   :justify
-                 :text-justify :inter-word}}
-        (doall
-          (for [text paragraph]
-            (if (string? text)
-              text
-              ^{:key (str (random-uuid))}
-              [popup-text-annotation text])))]))])
+
+  [:div
+   [doc-header]
+   [:div.text-annotation-editor {:on-click #(>evt [::evts/record-selection (html/text-selection (.-target %) "text-annotation-editor") doc-id])}
+    (doall
+      (for [paragraph (<sub [::subs/highlighted-text])]
+        ^{:key (str (random-uuid))}
+        [re-com/p
+         {:style {:text-align   :justify
+                  :text-justify :inter-word}}
+         (doall
+           (for [text paragraph]
+             (if (string? text)
+               text
+               ^{:key (str (random-uuid))}
+               [popup-text-annotation text])))]))]])
 
 
 (defn document-controls
@@ -100,6 +103,21 @@
                :md-icon-name "zmdi-plus"
                :on-click #(>evt [::evts/grow-selected-span-end])]]])
 
+(defn annotation-info
+  []
+  [re-com/v-box
+   :children [[re-com/title
+               :label "Annotation"
+               :level :level3]
+              (let [ann (<sub [::subs/selected-ann-map])]
+                (for [[k v] ann]
+                  [re-com/h-box
+                   :gap "10px"
+                   :children [[re-com/label
+                               :label (name k)]
+                              [re-com/label
+                               :label (str v)]]]))]])
+
 (defn home-panel
   []
   [:div
@@ -108,8 +126,10 @@
    [document-controls]
    [annotation-controls]
    [span-controls]
-   [doc-header]
-   [editor (<sub [::subs/visible-doc-id])]])
+   [re-com/h-box
+    :gap "10px"
+    :children [[editor (<sub [::subs/visible-doc-id])]
+               [annotation-info]]]])
 
 ;; home
 
