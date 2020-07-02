@@ -62,8 +62,6 @@
   (fn [[content spans] _]
     (->> spans
       vals
-      model/make-overlapping-spans
-      model/sort-spans-by-loc
       (model/resolve-span-content content)
       model/split-into-paragraphs)))
 

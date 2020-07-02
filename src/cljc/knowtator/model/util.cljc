@@ -14,15 +14,100 @@
           :profiles (s/map-of ::specs/id ::specs/profile))
   :ret (s/nilable ::specs/color))
 
+
+(defn sort-spans-by-loc
+  [spans]
+  (sort-by (juxt :start :end) spans))
+
+
+(defn split-right
+  [{s1e :end :as s1}
+   {s2e :end :as s2}]
+  (let [start (min s1e s2e)
+        end   (max s1e s2e)]
+    (when (not= start end)
+      (assoc (if (< s1e s2e) s2 s1)
+        :start start
+        :end end))))
+
+
+(defn split-left
+  [{s1s :start :as s1}
+   {s2s :start :as s2}]
+  (let [start (min s1s s2s)
+        end   (max s1s s2s)]
+    (when (not= start end)
+      (assoc (if (< s1s s2s) s1 s2)
+        :start start
+        :end end))))
+
+
+(defn split-overlap
+  [{s1s :start s1e :end :as s1}
+   {s2s :start s2e :end :as s2}]
+  (let [start (max s1s s2s)
+        end   (min s1e s2e)]
+    (when (not= start end)
+      (assoc (merge-with util/combine-as-set s1 s2)
+        :start start
+        :end end))))
+
+
+(defn overlap?
+  [{s1s :start s1e :end}
+   {s2s :start s2e :end}]
+  (or (<= s1s s2s (dec s1e))
+    (<= s2s s1s (dec s2e))))
+
+
+(defn split-spans-into-overlaps
+  [s1 s2]
+  [(split-right s1 s2)
+   (split-overlap s1 s2)
+   (split-left s1 s2)])
+
+(defn make-overlapping-spans
+  ([spans]
+   (make-overlapping-spans spans #{}))
+  ([spans finished]
+   (let [s1        (first spans)
+         spans     (set (rest spans))
+         new-spans (->> spans
+                     (reduce (fn [spans s2]
+                               (if (overlap? s1 s2)
+                                 (->> s2
+                                   (split-spans-into-overlaps s1)
+                                   (remove nil?)
+                                   (into spans))
+                                 (conj spans s2)))
+                       #{}))
+         finished  (if (= spans new-spans)
+                     (conj finished s1)
+                     finished)]
+     (if (empty? spans)
+       finished
+       (recur new-spans finished)))))
+
+#_(s/fdef make-overlapping-spans
+    :args (s/alt :unary (s/coll-of ::specs/span)
+            :binary (s/cat
+                      :spans (s/coll-of ::specs/span)
+                      :finished set?))
+    :ret (s/coll-of ::specs/span))
+
 (defn resolve-span-content
   [content spans]
-  (let [[container i] (reduce (fn [[container i] {:keys [start end] :as span}]
-                                [(conj container
-                                   (subs content i start)
-                                   (assoc span :content (subs content start end)))
-                                 end])
-                        [[] 0] spans)]
+  (let [[container i] (->> spans
+                        make-overlapping-spans
+                        sort-spans-by-loc
+                        (reduce (fn [[container i] {:keys [start end] :as span}]
+                                  [(conj container
+                                     (subs content i start)
+                                     (assoc span :content (subs content start end)))
+                                   end])
+                          [[] 0]))]
     (conj container (subs content i))))
+
 
 (defn in-doc?
   ([{:keys [doc]} doc-id]
@@ -52,75 +137,6 @@
 (defn spans-containing-loc
   [loc spans]
   (util/filter-vals #(contain-loc? % loc) spans))
-
-(defn split-right
-  [{s1e :end :as s1}
-   {s2e :end :as s2}]
-  (let [start (min s1e s2e)
-        end (max s1e s2e)]
-    (when (not= start end)
-      (assoc (if (< s1e s2e) s2 s1)
-             :start start
-             :end end))))
-
-(defn split-left
-  [{s1s :start :as s1}
-   {s2s :start :as s2}]
-  (let [start (min s1s s2s)
-        end (max s1s s2s)]
-    (when (not= start end)
-      (assoc (if (< s1s s2s) s1 s2)
-             :start start
-             :end end))))
-
-
-(defn split-overlap
-  [{s1s :start s1e :end :as s1}
-   {s2s :start s2e :end :as s2}]
-  (let [start (max s1s s2s)
-        end (min s1e s2e)]
-    (when (not= start end)
-      (assoc (merge-with util/combine-as-set s1 s2)
-             :start start
-             :end end))))
-
-(defn sort-spans-by-loc
-  [spans]
-  (sort-by (juxt :start :end) spans))
-
-(defn overlap?
-  [{s1s :start s1e :end}
-   {s2s :start s2e :end}]
-  (or (<= s1s s2s (dec s1e))
-      (<= s2s s1s (dec s2e))))
-
-(defn split-spans-into-overlaps
-  [s1 s2]
-  [(split-right s1 s2)
-   (split-overlap s1 s2)
-   (split-left s1 s2)])
-
-(defn make-overlapping-spans
-  ([spans]
-   (make-overlapping-spans spans #{}))
-  ([spans finished]
-   (let [s1 (first spans)
-         spans (set (rest spans))
-         new-spans (->> spans
-                        (reduce (fn [spans s2]
-                                  (if (overlap? s1 s2)
-                                    (->> s2
-                                         (split-spans-into-overlaps s1)
-                                         (remove nil?)
-                                         (into spans))
-                                    (conj spans s2)))
-                                #{}))
-         finished (if (= spans new-spans)
-                    (conj finished s1)
-                    finished)]
-     (if (empty? spans)
-       finished
-       (recur new-spans finished)))))
 
 (defn split-into-paragraphs
   [spans]
