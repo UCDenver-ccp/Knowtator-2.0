@@ -77,12 +77,26 @@
   (or (<= s1s s2s (dec s1e))
     (<= s2s s1s (dec s2e))))
 
+(s/fdef overlap?
+  :args (s/cat
+          :s1 ::specs/span
+          :s2 ::specs/span)
+  :ret boolean?)
 
 (defn split-spans-into-overlaps
   [s1 s2]
   [(split-right s1 s2)
    (split-overlap s1 s2)
    (split-left s1 s2)])
+
+(s/fdef split-spans-into-overlaps
+  :args (s/cat
+          :s1 ::specs/span
+          :s2 ::specs/span)
+  :ret (s/cat
+         :right (s/nilable ::specs/span)
+         :overlap (s/nilable :span-overlap/span)
+         :left (s/nilable ::specs/span)))
 
 (defn make-overlapping-spans
   ([spans]
