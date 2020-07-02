@@ -65,6 +65,11 @@
         :start start
         :end end))))
 
+(s/fdef split-overlap
+  :args (s/cat
+          :s1 ::specs/span
+          :s2 ::specs/span)
+  :ret (s/nilable :span-overlap/span))
 
 (defn overlap?
   [{s1s :start s1e :end}
