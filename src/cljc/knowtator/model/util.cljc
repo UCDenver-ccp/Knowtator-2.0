@@ -120,12 +120,12 @@
        finished
        (recur new-spans finished)))))
 
-#_(s/fdef make-overlapping-spans
-    :args (s/alt :unary (s/coll-of ::specs/span)
-            :binary (s/cat
-                      :spans (s/coll-of ::specs/span)
-                      :finished set?))
-    :ret (s/coll-of ::specs/span))
+(s/fdef make-overlapping-spans
+  :args (s/alt :unary (s/coll-of ::specs/span :count 1)
+          :binary (s/cat
+                    :spans (s/coll-of ::specs/span :count 1)
+                    :finished (s/coll-of (s/or :overlap :span-overlap/span :regular ::specs/span))))
+  :ret (s/coll-of (s/or :overlap :span-overlap/span :regular ::specs/span)))
 
 (defn resolve-span-content
   [content spans]
