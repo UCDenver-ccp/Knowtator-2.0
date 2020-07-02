@@ -1,10 +1,18 @@
-(ns knowtator.model
+(ns knowtator.model.util
   (:require [knowtator.util :as util]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [knowtator.model.specs :as specs]
+            [clojure.spec.alpha :as s]))
 
 (defn ann-color
   [{:keys [profile concept]} profiles]
-  (get-in profiles [profile concept]))
+  (get-in profiles [profile :colors concept]))
+
+(s/fdef ann-color
+  :args (s/cat
+          :ann (s/keys :req-un [:ann/profile :ann/concept])
+          :profiles (s/map-of ::specs/id ::specs/profile))
+  :ret (s/nilable ::specs/color))
 
 (defn resolve-span-content
   [content spans]
