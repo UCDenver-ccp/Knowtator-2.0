@@ -19,6 +19,9 @@
   [spans]
   (sort-by (juxt :start :end) spans))
 
+(s/fdef sort-spans-by-loc
+  :args (s/cat :spans (s/coll-of ::specs/span :kind vector?))
+  :ret (s/coll-of ::specs/span))
 
 (defn split-right
   [{s1e :end :as s1}
@@ -30,6 +33,11 @@
         :start start
         :end end))))
 
+(s/fdef split-right
+  :args (s/cat
+          :s1 ::specs/span
+          :s2 ::specs/span)
+  :ret (s/nilable ::specs/span))
 
 (defn split-left
   [{s1s :start :as s1}
@@ -41,6 +49,11 @@
         :start start
         :end end))))
 
+(s/fdef split-left
+  :args (s/cat
+          :s1 ::specs/span
+          :s2 ::specs/span)
+  :ret (s/nilable ::specs/span))
 
 (defn split-overlap
   [{s1s :start s1e :end :as s1}
