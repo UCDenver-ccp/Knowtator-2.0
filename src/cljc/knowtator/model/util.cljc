@@ -157,19 +157,19 @@
     (reduce (fn [[paragraphs current] span]
               (if (string? span)
                 (let [[first-p & rest-p] (str/split-lines span)
-                      middle-p (->> rest-p
+                      middle-p           (->> rest-p
                                  butlast
                                  (map vector))
-                      rest-p (map vector rest-p)
-                      last-p (last rest-p)
-                      current (conj current first-p)]
+                      rest-p             (map vector rest-p)
+                      last-p             (last rest-p)
+                      current            (conj current first-p)]
                   (cond
                     (and (empty? rest-p) (not (str/ends-with? span "\n"))) [paragraphs current]
-                    (str/ends-with? span "\n") [(-> paragraphs
+                    (str/ends-with? span "\n")                             [(-> paragraphs
                                                   (conj current)
                                                   (into rest-p))
                                                 []]
-                    :else [(-> paragraphs
+                    :else                                                  [(-> paragraphs
                              (conj current)
                              (into middle-p))
                            last-p]))
@@ -177,11 +177,11 @@
       [[][]])
     (apply conj)))
 
-#_(let [spans [{:id :C  :start 3 :end 7}
-               {:id :B :start 2 :end 8}
-               {:id :A :start 1 :end 3}
-               {:id :D  :start 6 :end 10}
-               {:id :E :start 100 :end 120}]
+#_(let [spans         [{:id :C :start 3 :end 7}
+                       {:id :B :start 2 :end 8}
+                       {:id :A :start 1 :end 3}
+                       {:id :D :start 6 :end 10}
+                       {:id :E :start 100 :end 120}]
         true-overlaps #{{:id #{:A :B}, :start 2, :end 3 :ann #{nil}}
                         {:id #{:A}, :start 1, :end 2 :ann #{nil}}
                         {:id #{:D}, :start 8, :end 10 :ann #{nil}}
@@ -189,5 +189,5 @@
                         {:id #{:B :C}, :start 3, :end 6 :ann #{nil}}
                         {:id #{:B :C :D}, :start 6, :end 7 :ann #{nil}}
                         {:id #{:E}, :start 100, :end 120 :ann #{nil}}}
-        overlaps (make-overlapping-spans spans)]
+        overlaps      (make-overlapping-spans spans)]
     (assert (= overlaps true-overlaps) (clojure.data/diff overlaps true-overlaps)))
