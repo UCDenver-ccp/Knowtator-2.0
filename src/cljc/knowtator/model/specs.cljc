@@ -4,8 +4,8 @@
             [miner.strgen :as sg]))
 
 (s/def ::id keyword?)
-(s/def :span/start int?)
-(s/def :span/end int?)
+(s/def :span/start (s/and int? (complement neg?)))
+(s/def :span/end (s/and int? (complement neg?)))
 (s/def :span/ann ::id)
 (s/def :ann/profile ::id)
 (s/def :ann/concept ::id)
