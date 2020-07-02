@@ -1,11 +1,6 @@
 (ns knowtator.model-test
   (:require [knowtator.model :as model]
-            [clojure.test :as t]
-            [clojure.spec.alpha :as s]
-            [clojure.string :as str]))
-
-
-
+            [clojure.test :as t]))
 
 (t/deftest ann-color-test
   (t/testing "Annotation color from profile"
