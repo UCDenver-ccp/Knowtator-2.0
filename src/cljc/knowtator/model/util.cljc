@@ -119,10 +119,17 @@
        finished
        (recur new-spans finished)))))
 
+(s/def ::spans (s/with-gen (s/coll-of ::specs/span)
+                 #(s/gen (s/coll-of (s/with-gen ::specs/span
+                                      (fn []
+                                        (gen/such-that (fn [{:keys [start end]}]
+                                                         (< start end))
+                                          (s/gen ::specs/span))))))))
+
 (s/fdef make-overlapping-spans
-  :args (s/alt :unary (s/coll-of ::specs/span :count 1)
+  :args (s/alt :unary (s/cat :spans ::spans)
           :binary (s/cat
-                    :spans (s/coll-of ::specs/span :count 1)
+                    :spans ::spans
                     :finished (s/coll-of (s/or :overlap :span-overlap/span :regular ::specs/span))))
   :ret (s/coll-of (s/or :overlap :span-overlap/span :regular ::specs/span)))
 
