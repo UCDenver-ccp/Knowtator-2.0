@@ -104,15 +104,14 @@
   ([spans finished]
    (let [s1        (first spans)
          spans     (set (rest spans))
-         new-spans (->> spans
-                     (reduce (fn [spans s2]
-                               (if (overlap? s1 s2)
-                                 (->> s2
-                                   (split-spans-into-overlaps s1)
-                                   (remove nil?)
-                                   (into spans))
-                                 (conj spans s2)))
-                       #{}))
+         new-spans (reduce (fn [spans s2]
+                             (if (overlap? s1 s2)
+                               (->> s2
+                                 (split-spans-into-overlaps s1)
+                                 (remove nil?)
+                                 (into spans))
+                               (conj spans s2)))
+                     #{} spans)
          finished  (if (= spans new-spans)
                      (conj finished s1)
                      finished)]
