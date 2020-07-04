@@ -147,23 +147,24 @@
                           [[] 0]))]
     (conj container (subs content i))))
 
-#_(s/fdef resolve-span-content
-    :args (s/spec (s/cat
-                    :content ::specs/content
-                    :content2 ::specs/span)
-            :gen #(gen/tuple
-                    (gen/fmap (partial apply str) (gen/vector (gen/char-alpha) 100))
-                    (gen/fmap (fn [span]
-                                (let [start (rand-int 100)]
+(s/fdef resolve-span-content
+  :args (s/with-gen (s/cat
+                      :content ::specs/content
+                      :spans ::spans)
+          #(gen/tuple
+             (gen/fmap (partial apply str) (gen/vector (gen/char-alpha) 100))
+             (gen/fmap (partial map (fn [span]
+                                (let [start (rand-int 100)
+                                      end   (+ (inc start) (rand-int (- 100 (inc start))))]
                                   (assoc span
                                     :start start
-                                    :end (- 100 (rand-int start)))))
-                      (s/gen ::specs/span))))
-    :ret (s/coll-of (s/or :string string?
-                      :span (s/merge
-                              (s/keys :req-un [::specs/content])
-                              ::specs/span))
-           :kind vector?))
+                                    :end end))))
+               (s/gen ::spans))))
+  :ret (s/coll-of (s/or :string string?
+                    :span (s/merge
+                            (s/keys :req-un [::specs/content])
+                            (s/or :regular ::specs/span :overlap :span-overlap/span)))
+         :kind vector?))
 
 (defn in-doc?
   ([{:keys [doc]} doc-id]
