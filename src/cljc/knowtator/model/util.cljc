@@ -1,6 +1,7 @@
 (ns knowtator.model.util
   (:require [knowtator.util :as util]
             [clojure.string :as str]
+            [clojure.spec.gen.alpha :as gen]
             [knowtator.model.specs :as specs]
             [clojure.spec.alpha :as s]))
 
