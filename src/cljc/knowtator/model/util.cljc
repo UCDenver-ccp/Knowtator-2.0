@@ -172,6 +172,16 @@
   ([{:keys [ann]} anns doc-id]
    (in-doc? (get anns ann) doc-id)))
 
+(s/fdef in-doc?
+  :args (s/alt
+          :ann-in-doc (s/cat
+                        :ann ::specs/ann
+                        :doc-id ::specs/id)
+          :span-in-doc (s/cat
+                         :span ::specs/span
+                         :anns (s/map-of ::specs/id ::specs/ann)
+                         :doc-id ::specs/id))
+  :ret boolean?)
 
 (defn filter-in-doc
   ([doc-id anns]
@@ -179,21 +189,49 @@
   ([doc-id anns spans]
    (util/filter-vals #(in-doc? % anns doc-id) spans)))
 
+(s/fdef filter-in-doc
+  :args (s/alt
+          :anns-in-doc (s/cat
+                         :doc-id ::specs/id
+                         :ann (s/map-of ::specs/id ::specs/ann))
+          :spans-in-doc (s/cat
+                          :doc-id ::specs/id
+                          :anns (s/map-of ::specs/id ::specs/ann)
+                          :spans (s/map-of ::specs/id ::specs/span)))
+  :ret (s/or :anns (s/map-of ::specs/id ::specs/ann)
+         :spans (s/map-of ::specs/id ::specs/span)))
+
 (defn in-ann?
   [{:keys [ann]} ann-id]
   (= ann ann-id))
+
+(s/fdef in-ann?
+  :args (s/cat :span ::specs/span :ann-id ::specs/id)
+  :ret boolean?)
 
 (defn filter-in-ann
   ([ann-id spans]
    (util/filter-vals #(in-ann? % ann-id) spans)))
 
+(s/fdef filter-in-ann
+  :args (s/cat :ann-id ::specs/id :spans (s/map-of ::specs/id ::specs/span))
+  :ret (s/map-of ::specs/id ::specs/span))
+
 (defn contain-loc?
   [{:keys [start end]} i]
   (<= start i end))
 
+(s/fdef contain-loc?
+  :args (s/cat :span ::specs/span :loc int?)
+  :ret boolean?)
+
 (defn spans-containing-loc
   [loc spans]
   (util/filter-vals #(contain-loc? % loc) spans))
+
+(s/fdef filter-in-ann
+  :args (s/cat :loc int? :spans (s/map-of ::specs/id ::specs/span))
+  :ret (s/map-of ::specs/id ::specs/span))
 
 (defn split-into-paragraphs
   [spans]
@@ -202,24 +240,39 @@
               (if (string? span)
                 (let [[first-p & rest-p] (str/split-lines span)
                       middle-p           (->> rest-p
-                                 butlast
-                                 (map vector))
+                                           butlast
+                                           (map vector))
                       rest-p             (map vector rest-p)
                       last-p             (last rest-p)
                       current            (conj current first-p)]
                   (cond
                     (and (empty? rest-p) (not (str/ends-with? span "\n"))) [paragraphs current]
                     (str/ends-with? span "\n")                             [(-> paragraphs
-                                                  (conj current)
-                                                  (into rest-p))
-                                                []]
+                                                                              (conj current)
+                                                                              (into rest-p))
+                                                                            []]
                     :else                                                  [(-> paragraphs
-                             (conj current)
-                             (into middle-p))
-                           last-p]))
+                                                                              (conj current)
+                                                                              (into middle-p))
+                                                                            last-p]))
                 [paragraphs (conj current span)]))
-      [[][]])
+      [[] []])
     (apply conj)))
+
+(s/fdef split-into-paragraphs
+  :args (s/cat :spans (s/coll-of (s/or
+                                   :string string?
+                                   :regular ::specs/span
+                                   :overlap :span-overlap/span)))
+  :ret (s/coll-of
+         (s/coll-of (s/or
+                      :p string?
+                      :regular ::specs/span
+                      :overlap :span-overlap/span)
+           :kind vector?)
+         :kind vector?)
+  :fn (fn [{:keys [args ret]}]
+        (<= (count ret) (count args))))
 
 #_(let [spans         [{:id :C :start 3 :end 7}
                        {:id :B :start 2 :end 8}
