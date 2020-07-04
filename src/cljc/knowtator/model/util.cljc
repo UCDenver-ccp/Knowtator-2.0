@@ -102,19 +102,19 @@
   ([spans]
    (make-overlapping-spans spans #{}))
   ([spans finished]
-   (let [s1        (first spans)
-         spans     (set (rest spans))
-         new-spans (reduce (fn [spans s2]
-                             (if (overlap? s1 s2)
-                               (->> s2
-                                 (split-spans-into-overlaps s1)
-                                 (remove nil?)
-                                 (into spans))
-                               (conj spans s2)))
-                     #{} spans)
-         finished  (if (= spans new-spans)
-                     (conj finished s1)
-                     finished)]
+   (let [s1                   (first spans)
+         spans                (set (rest spans))
+         [new-spans finished] (if (some (partial overlap? s1) spans)
+                                [(reduce (fn [spans s2]
+                                           (if (overlap? s1 s2)
+                                             (->> s2
+                                               (split-spans-into-overlaps s1)
+                                               (remove nil?)
+                                               (into spans))
+                                             (conj spans s2)))
+                                   #{} spans)
+                                 finished]
+                                (if s1 [spans (conj finished s1)] [spans finished]))]
      (if (empty? spans)
        finished
        (recur new-spans finished)))))
@@ -122,15 +122,16 @@
 (s/def ::spans (s/with-gen (s/coll-of ::specs/span)
                  #(s/gen (s/coll-of (s/with-gen ::specs/span
                                       (fn []
-                                        (gen/such-that (fn [{:keys [start end]}]
-                                                         (< start end))
+                                        (gen/fmap (fn [{:keys [start end] :as span}]
+                                                    (cond-> span
+                                                      (< end start) (assoc :start end :end start)))
                                           (s/gen ::specs/span))))))))
 
 (s/fdef make-overlapping-spans
   :args (s/alt :unary (s/cat :spans ::spans)
           :binary (s/cat
                     :spans ::spans
-                    :finished (s/coll-of (s/or :overlap :span-overlap/span :regular ::specs/span))))
+                    :finished (s/coll-of (s/or :overlap :span-overlap/span :regular ::specs/span) :kind set?)))
   :ret (s/coll-of (s/or :overlap :span-overlap/span :regular ::specs/span)))
 
 (defn resolve-span-content
@@ -146,6 +147,23 @@
                           [[] 0]))]
     (conj container (subs content i))))
 
+#_(s/fdef resolve-span-content
+    :args (s/spec (s/cat
+                    :content ::specs/content
+                    :content2 ::specs/span)
+            :gen #(gen/tuple
+                    (gen/fmap (partial apply str) (gen/vector (gen/char-alpha) 100))
+                    (gen/fmap (fn [span]
+                                (let [start (rand-int 100)]
+                                  (assoc span
+                                    :start start
+                                    :end (- 100 (rand-int start)))))
+                      (s/gen ::specs/span))))
+    :ret (s/coll-of (s/or :string string?
+                      :span (s/merge
+                              (s/keys :req-un [::specs/content])
+                              ::specs/span))
+           :kind vector?))
 
 (defn in-doc?
   ([{:keys [doc]} doc-id]
