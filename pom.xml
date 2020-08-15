@@ -53,12 +53,12 @@
         <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>protege-common</artifactId>
-            <version>5.0.0-RC1</version>
+            <version>5.5.0</version>
         </dependency>
         <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>protege-editor-core</artifactId>
-            <version>5.0.0-RC1</version>
+            <version>5.5.0</version>
         </dependency>
         <dependency>
             <groupId>edu.stanford.protege</groupId>
