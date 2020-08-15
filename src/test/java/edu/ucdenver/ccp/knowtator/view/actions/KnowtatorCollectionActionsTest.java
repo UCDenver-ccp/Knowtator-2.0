@@ -220,7 +220,7 @@ public class KnowtatorCollectionActionsTest {
         TestingHelpers.defaultExpectedProfiles - 1,
         TestingHelpers.defaultExpectedHighlighters - 2,
         TestingHelpers.defaultExpectedAnnotationNodes - 2,
-        TestingHelpers.defaultExpectedTriples - 3,
+        TestingHelpers.defaultExpectedTriples - 2,
         TestingHelpers.defaultExpectedStructureAnnotations
     );
 

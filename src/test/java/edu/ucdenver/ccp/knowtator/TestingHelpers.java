@@ -65,7 +65,7 @@ public class TestingHelpers {
   public static final int defaultExpectedAnnotationNodes = 7;
 
   /** The constant defaultExpectedTriples. */
-  public static final int defaultExpectedTriples = 5;
+  public static final int defaultExpectedTriples = 4;
 
   public static int defaultAnnotationLayers = 1;
 
