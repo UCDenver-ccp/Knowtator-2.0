@@ -11,3 +11,4 @@ src/test/resources/concepts+assertions/
 /.dir-locals.el
 /.nrepl-port
 /.idea/libraries/
+/.idea/knowtator.iml
