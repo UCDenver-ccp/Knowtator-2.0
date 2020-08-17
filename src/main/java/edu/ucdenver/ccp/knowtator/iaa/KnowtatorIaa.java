@@ -31,7 +31,6 @@ import edu.ucdenver.ccp.knowtator.iaa.matcher.ClassMatcher;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.SpanMatcher;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import java.io.File;
@@ -43,8 +42,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-/** The type Knowtator iaa. */
+/**
+ * The type Knowtator iaa.
+ */
 public class KnowtatorIaa {
   private final File outputDirectory;
 
@@ -64,7 +66,7 @@ public class KnowtatorIaa {
 
   private final Map<ConceptAnnotation, String> annotationTextNames;
 
-  private Map<TextSource, ConceptAnnotationCollection> textSourceAnnotationsMap;
+  private Map<TextSource, Collection<ConceptAnnotation>> textSourceAnnotationsMap;
 
   private PrintStream html;
 
@@ -74,15 +76,19 @@ public class KnowtatorIaa {
    * Instantiates a new Knowtator iaa.
    *
    * @param outputDirectory the output directory
-   * @param model the model
+   * @param model           the model
    * @throws IaaException the iaa exception
    */
   @SuppressWarnings("unused")
-  public KnowtatorIaa(File outputDirectory, KnowtatorModel model, Collection<String> textSources, Collection<String> profiles) throws IaaException {
+  public KnowtatorIaa(File outputDirectory, KnowtatorModel model,
+                      Collection<String> textSources,
+                      Collection<String> profiles,
+                      Collection<String> owlClasses) throws IaaException {
 
     this.outputDirectory = outputDirectory;
     // this.filter = filter;
 
+    HashSet<String> owlClasses1 = new HashSet<>(owlClasses);
     this.model = model;
     annotationTexts = new HashMap<>();
     annotationTextNames = new HashMap<>();
@@ -93,7 +99,14 @@ public class KnowtatorIaa {
         .map(id -> model.getTextSources().get(id))
         .filter(Optional::isPresent)
         .map(Optional::get)
-        .forEach(textSource -> textSourceAnnotationsMap.put(textSource, textSource.getConceptAnnotations()));
+        .forEach(textSource -> {
+
+          Collection<ConceptAnnotation> conceptAnnotations = textSource.getConceptAnnotations().stream()
+              .filter(conceptAnnotation -> owlClasses1.contains(conceptAnnotation.getOwlClass()))
+              .collect(Collectors.toList());
+
+          textSourceAnnotationsMap.put(textSource, conceptAnnotations);
+        });
     initHtml();
   }
 
@@ -111,7 +124,9 @@ public class KnowtatorIaa {
     }
   }
 
-  /** Close html. */
+  /**
+   * Close html.
+   */
   public void closeHtml() {
     html.println("</ul>");
     html.println("</body></html>");
@@ -146,9 +161,9 @@ public class KnowtatorIaa {
   }
 
   private void runIaaWithMatcher(Matcher matcher, Iaa iaa) throws IaaException {
-    for (ConceptAnnotationCollection conceptAnnotationCollection :
+    for (Collection<ConceptAnnotation> conceptAnnotationCollection :
         textSourceAnnotationsMap.values()) {
-      Set<ConceptAnnotation> conceptAnnotations = conceptAnnotationCollection.getCollection();
+      Set<ConceptAnnotation> conceptAnnotations = new HashSet<>(conceptAnnotationCollection);
       iaa.setConceptAnnotations(conceptAnnotations);
       iaa.allwayIaa(matcher);
       iaa.pairwiseIaa(matcher);
@@ -162,10 +177,10 @@ public class KnowtatorIaa {
    */
   public void runSpanIaa() throws IaaException {
 
-      SpanMatcher spanMatcher = new SpanMatcher();
-      Iaa spanIaa = new Iaa(setNames);
+    SpanMatcher spanMatcher = new SpanMatcher();
+    Iaa spanIaa = new Iaa(setNames);
 
-      runIaaWithMatcher(spanMatcher, spanIaa);
+    runIaaWithMatcher(spanMatcher, spanIaa);
     try {
       SpanMatcherHtml.printIaa(
           spanIaa,
@@ -178,7 +193,7 @@ public class KnowtatorIaa {
       e.printStackTrace();
     }
     html.printf(
-          "<li><a href=\"%s.html\">%s</a></li>%n",
+        "<li><a href=\"%s.html\">%s</a></li>%n",
         spanMatcher.getName(),
         spanMatcher.getName());
   }

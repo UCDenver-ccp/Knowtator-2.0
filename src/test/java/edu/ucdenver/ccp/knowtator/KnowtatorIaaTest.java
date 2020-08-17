@@ -29,10 +29,12 @@ import edu.ucdenver.ccp.knowtator.iaa.IaaException;
 import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIaa;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollection;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
@@ -86,7 +88,11 @@ class KnowtatorIaaTest {
           model.getProfiles().stream()
               .map(Profile::getId)
               .filter(myProfiles::contains)
-              .collect(Collectors.toSet()));
+              .collect(Collectors.toSet()),
+          new ArrayList<>(new HashSet<String>(model.getTextSources().stream()
+              .flatMap(textSource -> textSource.getConceptAnnotations().stream()
+                  .map(ConceptAnnotation::getOwlClass))
+              .collect(Collectors.toSet()))));
     }
   }
 

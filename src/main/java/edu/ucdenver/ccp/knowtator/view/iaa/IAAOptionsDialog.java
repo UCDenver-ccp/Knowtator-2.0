@@ -27,6 +27,7 @@ package edu.ucdenver.ccp.knowtator.view.iaa;
 import edu.ucdenver.ccp.knowtator.iaa.IaaException;
 import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIaa;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -37,6 +38,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -71,8 +74,11 @@ public class IAAOptionsDialog extends JDialog {
   private JButton profilesSelectAllButton;
   private JTable profilesTable;
   private JTable documentsTable;
+  private JButton owlClassesSelectAllButton;
+  private JTable owlClassesTable;
   IAATableModel profilesTableModel;
   IAATableModel documentsTableModel;
+  IAATableModel owlClassesTableModel;
 
   public IAAOptionsDialog(Window parent, KnowtatorModel model, File outputDirectory) {
     super(parent);
@@ -114,13 +120,23 @@ public class IAAOptionsDialog extends JDialog {
     profilesTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     profilesTableModel = new IAATableModel(
         new Object[][] {},
-        "Document",
+        "Profile",
         model.getProfiles().stream()
             .map(ModelObject::getId)
             .collect(Collectors.toList()));
     profilesTable.setModel(profilesTableModel);
     profilesSelectAllButton.addActionListener(e -> profilesTableModel.toggleAll());
 
+    owlClassesTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    owlClassesTableModel = new IAATableModel(
+        new Object[][] {},
+        "OWL Classes",
+        new ArrayList<>(new HashSet<>(model.getTextSources().stream()
+            .flatMap(textSource -> textSource.getConceptAnnotations().stream()
+                .map(ConceptAnnotation::getOwlClass))
+            .collect(Collectors.toSet()))));
+    owlClassesTable.setModel(owlClassesTableModel);
+    owlClassesSelectAllButton.addActionListener(e -> owlClassesTableModel.toggleAll());
   }
 
   private static class IAATableModel extends DefaultTableModel {
@@ -168,12 +184,13 @@ public class IAAOptionsDialog extends JDialog {
 
   private void onOK() {
     Set<String> profiles = profilesTableModel.getSelectedItems();
+    Set<String> owlClasses = owlClassesTableModel.getSelectedItems();
 
     Set<String> textSources = documentsTableModel.getSelectedItems();
     if (profiles.size() <= 2 && !textSources.isEmpty() &&
         (iaaClassCheckBox.isSelected() || iaaSpanCheckBox.isSelected() || iaaClassAndSpanCheckBox.isSelected())) {
       try {
-        KnowtatorIaa knowtatorIaa = new KnowtatorIaa(outputDirectory, model, textSources, profiles);
+        KnowtatorIaa knowtatorIaa = new KnowtatorIaa(outputDirectory, model, textSources, profiles, owlClasses);
 
         if (iaaClassCheckBox.isSelected()) {
           knowtatorIaa.runClassIaa();
@@ -251,19 +268,69 @@ public class IAAOptionsDialog extends JDialog {
     documentsTable = new JTable();
     scrollPane2.setViewportView(documentsTable);
     final JPanel panel3 = new JPanel();
-    panel3.setLayout(new GridBagLayout());
+    panel3.setLayout(new BorderLayout(0, 0));
     gbc = new GridBagConstraints();
-    gbc.gridx = 2;
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.fill = GridBagConstraints.BOTH;
+    contentPane.add(panel3, gbc);
+    final JPanel panel4 = new JPanel();
+    panel4.setLayout(new GridBagLayout());
+    panel3.add(panel4, BorderLayout.NORTH);
+    panel4.setBorder(BorderFactory.createTitledBorder(null, "Mode", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+    iaaClassCheckBox = new JCheckBox();
+    this.$$$loadButtonText$$$(iaaClassCheckBox, this.$$$getMessageFromBundle$$$("log4j", "class.iaa"));
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.anchor = GridBagConstraints.WEST;
+    panel4.add(iaaClassCheckBox, gbc);
+    iaaSpanCheckBox = new JCheckBox();
+    this.$$$loadButtonText$$$(iaaSpanCheckBox, this.$$$getMessageFromBundle$$$("log4j", "span.iaa"));
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 1;
+    gbc.anchor = GridBagConstraints.WEST;
+    panel4.add(iaaSpanCheckBox, gbc);
+    iaaClassAndSpanCheckBox = new JCheckBox();
+    this.$$$loadButtonText$$$(iaaClassAndSpanCheckBox, this.$$$getMessageFromBundle$$$("log4j", "class.and.span.iaa"));
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 2;
+    gbc.anchor = GridBagConstraints.WEST;
+    panel4.add(iaaClassAndSpanCheckBox, gbc);
+    final JPanel panel5 = new JPanel();
+    panel5.setLayout(new BorderLayout(0, 0));
+    gbc = new GridBagConstraints();
+    gbc.gridx = 3;
+    gbc.gridy = 0;
+    gbc.fill = GridBagConstraints.BOTH;
+    contentPane.add(panel5, gbc);
+    panel5.setBorder(BorderFactory.createTitledBorder(null, "OWL Classes", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+    final JPanel panel6 = new JPanel();
+    panel6.setLayout(new BorderLayout(0, 0));
+    panel5.add(panel6, BorderLayout.CENTER);
+    owlClassesSelectAllButton = new JButton();
+    owlClassesSelectAllButton.setText("Select all");
+    panel6.add(owlClassesSelectAllButton, BorderLayout.NORTH);
+    final JScrollPane scrollPane3 = new JScrollPane();
+    panel6.add(scrollPane3, BorderLayout.CENTER);
+    owlClassesTable = new JTable();
+    scrollPane3.setViewportView(owlClassesTable);
+    final JPanel panel7 = new JPanel();
+    panel7.setLayout(new GridBagLayout());
+    gbc = new GridBagConstraints();
+    gbc.gridx = 3;
     gbc.gridy = 1;
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
-    contentPane.add(panel3, gbc);
+    contentPane.add(panel7, gbc);
     final JPanel spacer1 = new JPanel();
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 0;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    panel3.add(spacer1, gbc);
+    panel7.add(spacer1, gbc);
     buttonOK = new JButton();
     this.$$$loadButtonText$$$(buttonOK, this.$$$getMessageFromBundle$$$("log4j", "ok"));
     gbc = new GridBagConstraints();
@@ -272,7 +339,7 @@ public class IAAOptionsDialog extends JDialog {
     gbc.weightx = 1.0;
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    panel3.add(buttonOK, gbc);
+    panel7.add(buttonOK, gbc);
     buttonCancel = new JButton();
     this.$$$loadButtonText$$$(buttonCancel, this.$$$getMessageFromBundle$$$("log4j", "cancel"));
     gbc = new GridBagConstraints();
@@ -281,39 +348,7 @@ public class IAAOptionsDialog extends JDialog {
     gbc.weightx = 1.0;
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    panel3.add(buttonCancel, gbc);
-    final JPanel panel4 = new JPanel();
-    panel4.setLayout(new BorderLayout(0, 0));
-    gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 0;
-    gbc.fill = GridBagConstraints.BOTH;
-    contentPane.add(panel4, gbc);
-    final JPanel panel5 = new JPanel();
-    panel5.setLayout(new GridBagLayout());
-    panel4.add(panel5, BorderLayout.NORTH);
-    panel5.setBorder(BorderFactory.createTitledBorder(null, "Mode", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-    iaaClassCheckBox = new JCheckBox();
-    this.$$$loadButtonText$$$(iaaClassCheckBox, this.$$$getMessageFromBundle$$$("log4j", "class.iaa"));
-    gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 0;
-    gbc.anchor = GridBagConstraints.WEST;
-    panel5.add(iaaClassCheckBox, gbc);
-    iaaSpanCheckBox = new JCheckBox();
-    this.$$$loadButtonText$$$(iaaSpanCheckBox, this.$$$getMessageFromBundle$$$("log4j", "span.iaa"));
-    gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 1;
-    gbc.anchor = GridBagConstraints.WEST;
-    panel5.add(iaaSpanCheckBox, gbc);
-    iaaClassAndSpanCheckBox = new JCheckBox();
-    this.$$$loadButtonText$$$(iaaClassAndSpanCheckBox, this.$$$getMessageFromBundle$$$("log4j", "class.and.span.iaa"));
-    gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 2;
-    gbc.anchor = GridBagConstraints.WEST;
-    panel5.add(iaaClassAndSpanCheckBox, gbc);
+    panel7.add(buttonCancel, gbc);
   }
 
   private static Method $$$cachedGetBundleMethod$$$ = null;
