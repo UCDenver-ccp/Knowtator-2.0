@@ -95,21 +95,21 @@
     <orderEntry type="library" name="Maven: org.codehaus.woodstox:stax2-api:3.1.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.ws.commons.axiom:axiom-dom:1.2.14" level="project" />
     <orderEntry type="library" name="Maven: dk.brics.automaton:automaton:1.11-8" level="project" />
-    <orderEntry type="library" name="Maven: edu.stanford.protege:protege-common:5.0.0-RC1" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:protege-common:5.5.0" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:protege-launcher:5.5.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.felix:org.apache.felix.main:5.4.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.felix:org.apache.felix.framework:5.4.0" level="project" />
     <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:1.1.3" level="project" />
     <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:1.1.3" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:log4j-over-slf4j:1.7.12" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:jul-to-slf4j:1.7.12" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.felix:org.apache.felix.main:4.4.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.felix:org.apache.felix.framework:4.4.1" level="project" />
-    <orderEntry type="library" name="Maven: edu.stanford.protege:protege-editor-core:5.5.0" level="project" />
-    <orderEntry type="library" name="Maven: edu.stanford.protege:protege-launcher:5.5.0" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.registry:3.5.0.v20100503" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.core:org.eclipse.core.jobs:3.5.0.v20100515" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.equinox:org.eclipse.equinox.common:3.6.0.v20100503" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.osgi:org.eclipse.osgi:3.6.0.v20100517" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven:maven-artifact:3.3.9" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.plexus:plexus-utils:3.0.22" level="project" />
+    <orderEntry type="library" name="Maven: edu.stanford.protege:protege-editor-core:5.5.0" level="project" />
     <orderEntry type="library" name="Maven: edu.stanford.protege:protege-editor-owl:5.5.0" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.mdock:mdock:2.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jgit:org.eclipse.jgit:4.8.0.201706111038-r" level="project" />

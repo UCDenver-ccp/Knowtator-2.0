@@ -111,20 +111,16 @@ public class ColorList extends JList<String[]> implements KnowtatorComponent, Mo
 
     owlClassOptional.ifPresent(owlClass -> {
       setCollection();
-      int i = ((DefaultListModel) getModel()).indexOf(owlClass);
-      i = 0;
+      int i = -1;
       Enumeration<String[]> e = ((DefaultListModel<String[]>) getModel()).elements();
       while(e.hasMoreElements()) {
+        i++;
         if(owlClass.equals(e.nextElement()[0])) {
           break;
         }
-        i++;
       }
 
-      log.warn(owlClass);
-      log.warn(i);
       if (-1 < i) {
-        log.warn("here");
         scrollRectToVisible(getCellBounds(i, i));
       }
     });
