@@ -127,7 +127,7 @@ public class ProfileDialog extends JDialog {
                         } catch (IOException ioException) {
                           ioException.printStackTrace();
                         }
-                        JDialog iaaDialog = new IAAOptionsDialog(JOptionPane.getFrameForComponent(this), model, outputDirectory);
+                        JDialog iaaDialog = new IAAOptionsDialog(JOptionPane.getFrameForComponent(this), model, view, outputDirectory);
                         iaaDialog.pack();
                         iaaDialog.setVisible(true);
                       }

@@ -90,8 +90,8 @@ public class KnowtatorModel extends OwlModel {
   }
 
   @Override
-  public void load() {
-    super.load();
+  public void load(File projectLocation) {
+    super.load(projectLocation);
 
     setLoading(true);
 
@@ -101,12 +101,12 @@ public class KnowtatorModel extends OwlModel {
     OldKnowtatorXmlUtil oldXmlUtil = new OldKnowtatorXmlUtil();
 
     try {
-      Files.list(getProfilesLocation().toPath())
+      Files.list(getProfilesLocation(projectLocation).toPath())
           .filter(path -> path.toString().endsWith(".xml"))
           .map(Path::toFile)
           .forEach(file -> xmlUtil.readToProfileCollection(this, file));
 
-      Files.list(getArticlesLocation().toPath())
+      Files.list(getArticlesLocation(projectLocation).toPath())
           .filter(path -> path.toString().endsWith(".txt"))
           .map(Path::toFile)
           .forEach(
@@ -117,7 +117,7 @@ public class KnowtatorModel extends OwlModel {
 
       log.info("Loading annotations");
       OWLClassNotFoundAnnotations = new ArrayList<>();
-      Files.list(getAnnotationsLocation().toPath())
+      Files.list(getAnnotationsLocation(getProjectLocation()).toPath())
           .filter(path -> path.toString().endsWith(".xml"))
           .map(Path::toFile)
           .peek(file -> xmlUtil.readToTextSourceCollection(this, file))

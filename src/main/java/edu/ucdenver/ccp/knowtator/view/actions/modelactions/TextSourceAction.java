@@ -55,9 +55,9 @@ public class TextSourceAction extends AbstractKnowtatorCollectionAction<TextSour
 
   @Override
   protected void prepareAdd() {
-    if (!file.getParentFile().equals(model.getArticlesLocation())) {
+    if (!file.getParentFile().equals(model.getArticlesLocation(model.getProjectLocation()))) {
       try {
-        FileUtils.copyFile(file, new File(model.getArticlesLocation(), file.getName()));
+        FileUtils.copyFile(file, new File(model.getArticlesLocation(model.getProjectLocation()), file.getName()));
       } catch (IOException e) {
         e.printStackTrace();
       }

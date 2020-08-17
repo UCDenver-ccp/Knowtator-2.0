@@ -66,7 +66,7 @@ class KnowtatorIaaTest {
     FileUtils.copyDirectory(projectDirectory, tempProjectDir);
 
     model = new KnowtatorModel(tempProjectDir, null);
-    model.load();
+    model.load(model.getProjectLocation());
 
     goldStandardDir = new File(model.getProjectLocation(), "iaa");
 
@@ -89,7 +89,7 @@ class KnowtatorIaaTest {
               .map(Profile::getId)
               .filter(myProfiles::contains)
               .collect(Collectors.toSet()),
-          new ArrayList<>(new HashSet<String>(model.getTextSources().stream()
+          new ArrayList<>(new HashSet<>(model.getTextSources().stream()
               .flatMap(textSource -> textSource.getConceptAnnotations().stream()
                   .map(ConceptAnnotation::getOwlClass))
               .collect(Collectors.toSet()))));

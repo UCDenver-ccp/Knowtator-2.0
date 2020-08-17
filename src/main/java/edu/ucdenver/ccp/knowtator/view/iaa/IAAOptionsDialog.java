@@ -29,6 +29,7 @@ import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIaa;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -37,10 +38,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -51,6 +55,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -76,11 +81,12 @@ public class IAAOptionsDialog extends JDialog {
   private JTable documentsTable;
   private JButton owlClassesSelectAllButton;
   private JTable owlClassesTable;
+  private JButton compareAcrossProjectsButton;
   IAATableModel profilesTableModel;
   IAATableModel documentsTableModel;
   IAATableModel owlClassesTableModel;
 
-  public IAAOptionsDialog(Window parent, KnowtatorModel model, File outputDirectory) {
+  public IAAOptionsDialog(Window parent, KnowtatorModel model, KnowtatorView view, File outputDirectory) {
     super(parent);
     this.outputDirectory = outputDirectory;
     this.model = model;
@@ -137,6 +143,39 @@ public class IAAOptionsDialog extends JDialog {
             .collect(Collectors.toSet()))));
     owlClassesTable.setModel(owlClassesTableModel);
     owlClassesSelectAllButton.addActionListener(e -> owlClassesTableModel.toggleAll());
+
+    compareAcrossProjectsButton.addActionListener(e -> {
+      JFileChooser fileChooser = new JFileChooser();
+      Optional.ofNullable(KnowtatorView.PREFERENCES.get("Last Project", null))
+          .map(File::new)
+          .filter(File::exists)
+          .map(
+              file -> {
+                fileChooser.setCurrentDirectory(file);
+                return file;
+              })
+          .map(File::listFiles)
+          .flatMap(
+              files ->
+                  Arrays.stream(files)
+                      .filter(file1 -> file1.getName().endsWith(".knowtator"))
+                      .findAny())
+          .ifPresent(fileChooser::setSelectedFile);
+      fileChooser.addActionListener(
+          e1 ->
+              Optional.ofNullable(e1)
+                  .filter(
+                      event -> event.getActionCommand().equals(JFileChooser.APPROVE_SELECTION))
+                  .ifPresent(event -> {
+                    try {
+                      KnowtatorModel model2 = new KnowtatorModel(fileChooser.getSelectedFile(), view.getOWLWorkspace());
+                      model2.load(model2.getProjectLocation());
+                      model2.load(model.getProjectLocation());
+                    } catch (IOException ioException) {
+                      ioException.printStackTrace();
+                    }
+                  }));
+    });
   }
 
   private static class IAATableModel extends DefaultTableModel {
@@ -349,6 +388,13 @@ public class IAAOptionsDialog extends JDialog {
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     panel7.add(buttonCancel, gbc);
+    compareAcrossProjectsButton = new JButton();
+    compareAcrossProjectsButton.setText("Compare across projects");
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 1;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    contentPane.add(compareAcrossProjectsButton, gbc);
   }
 
   private static Method $$$cachedGetBundleMethod$$$ = null;

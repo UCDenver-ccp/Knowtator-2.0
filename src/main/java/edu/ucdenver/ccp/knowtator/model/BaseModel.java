@@ -56,12 +56,6 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
   public static final HashSet<String> DEFAULT_LAYERS =
       new HashSet<>(Collections.singletonList("Default"));
   private final File projectLocation;
-  private final File annotationsLocation;
-  private final File articlesLocation;
-  private final File profilesLocation;
-
-  /** The Ontologies location. */
-  final File ontologiesLocation;
 
   private final Set<ModelListener> modelListeners;
   private final Map<FilterType, Boolean> filters;
@@ -119,14 +113,15 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
     }
 
     this.projectLocation = projectLocation;
-    articlesLocation = new File(projectLocation, "Articles");
-    annotationsLocation = new File(projectLocation, "Annotations");
-    profilesLocation = (new File(projectLocation, "Profiles"));
-    ontologiesLocation = new File(projectLocation, "Ontologies");
-    Files.createDirectories(articlesLocation.toPath());
-    Files.createDirectories(annotationsLocation.toPath());
-    Files.createDirectories(profilesLocation.toPath());
-    Files.createDirectories(ontologiesLocation.toPath());
+
+    Files.createDirectories(getArticlesLocation(projectLocation).toPath());
+    Files.createDirectories(getAnnotationsLocation(projectLocation).toPath());
+    Files.createDirectories(getProfilesLocation(projectLocation).toPath());
+    Files.createDirectories(getOntologiesLocation(projectLocation).toPath());
+  }
+
+  File getOntologiesLocation(File projectLocation) {
+    return new File(projectLocation, "Ontologies");
   }
 
   @Override
@@ -174,8 +169,9 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
    *
    * @return the annotations location
    */
-  public File getAnnotationsLocation() {
-    return annotationsLocation;
+  public File getAnnotationsLocation(File projectLocation) {
+    return new File(projectLocation, "Annotations");
+
   }
 
   /**
@@ -295,9 +291,10 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
    * Gets articles location.
    *
    * @return the articles location
+   * @param projectLocation project location
    */
-  public File getArticlesLocation() {
-    return articlesLocation;
+  public File getArticlesLocation(File projectLocation) {
+    return new File(projectLocation, "Articles");
   }
 
   /**
@@ -321,9 +318,10 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
    * Gets profiles location.
    *
    * @return the profiles location
+   * @param projectLocation project location
    */
-  File getProfilesLocation() {
-    return profilesLocation;
+  File getProfilesLocation(File projectLocation) {
+    return new File(projectLocation, "Profiles");
   }
 
   /** Dispose. */
@@ -428,5 +426,14 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 
   public Set<String> getActiveLayers() {
     return activeLayers;
+  }
+
+  public File getArticlesLocation(File annotationFileLocation, File projectLocation) {
+    File file = new File(annotationFileLocation.getParentFile(), "Articles");
+    if (file.exists()) {
+      return file;
+    } else {
+      return getArticlesLocation(projectLocation);
+    }
   }
 }

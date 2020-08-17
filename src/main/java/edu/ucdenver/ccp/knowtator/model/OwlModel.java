@@ -287,10 +287,10 @@ public abstract class OwlModel extends BaseModel implements Serializable {
   /**
    * Load.
    */
-  public void load() {
+  public void load(File projectLocation) {
     log.info("Loading ontologies");
     try {
-      Files.list(ontologiesLocation.toPath())
+      Files.list(getOntologiesLocation(projectLocation).toPath())
           .filter(path -> path.toString().endsWith(".owl"))
           .map(path -> path.toFile().toURI().toString())
           .forEach(

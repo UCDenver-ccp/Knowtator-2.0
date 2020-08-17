@@ -69,7 +69,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
     this.saveFile =
         saveFile == null
             ? new File(
-                model.getAnnotationsLocation().getAbsolutePath(),
+                model.getAnnotationsLocation(model.getProjectLocation()).getAbsolutePath(),
                 textFileName.replace(".txt", ".xml"))
             : saveFile;
     this.conceptAnnotations = new ConceptAnnotationCollection(model, this);
@@ -80,7 +80,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
 
     textFile =
         new File(
-            model.getArticlesLocation(),
+            model.getArticlesLocation(this.saveFile, model.getProjectLocation()),
             textFileName.endsWith(".txt") ? textFileName : String.format("%s.txt", textFileName));
 
     if (!textFile.exists()) {
@@ -94,7 +94,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
           textFile =
               Files.copy(
                       Paths.get(file.toURI()),
-                      Paths.get(model.getArticlesLocation().toURI().resolve(file.getName())))
+                      Paths.get(model.getArticlesLocation(model.getProjectLocation()).toURI().resolve(file.getName())))
                   .toFile();
         } catch (IOException e) {
           e.printStackTrace();
@@ -159,7 +159,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
           content = FileUtils.readFileToString(textFile, "UTF-8");
           return content;
         } catch (IOException e) {
-          textFile = new File(model.getArticlesLocation(), String.format("%s.txt", id));
+          textFile = new File(model.getArticlesLocation(model.getProjectLocation()), String.format("%s.txt", id));
           while (!textFile.exists()) {
             JFileChooser fileChooser = new JFileChooser();
             if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -194,7 +194,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @return the save location
    */
   public File getSaveLocation() {
-    return new File(model.getAnnotationsLocation().getAbsolutePath(), saveFile.getName());
+    return new File(model.getAnnotationsLocation(model.getProjectLocation()).getAbsolutePath(), saveFile.getName());
   }
 
   @Override

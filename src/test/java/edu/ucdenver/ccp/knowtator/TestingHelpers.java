@@ -107,7 +107,7 @@ public class TestingHelpers {
     File tempProjectDir = Files.createTempDir();
     FileUtils.copyDirectory(projectDirectory, tempProjectDir);
     KnowtatorModel model = new KnowtatorModel(tempProjectDir, null);
-    model.load();
+    model.load(model.getProjectLocation());
 
     return model;
   }
@@ -123,7 +123,7 @@ public class TestingHelpers {
     File tempProjectDir = Files.createTempDir();
     FileUtils.copyDirectory(projectDirectory, tempProjectDir);
     KnowtatorModel model = new KnowtatorModel(tempProjectDir, null);
-    model.load();
+    model.load(model.getProjectLocation());
 
     return model;
   }

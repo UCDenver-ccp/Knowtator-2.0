@@ -52,7 +52,7 @@ class ProjectManagerTest {
   @Test
   void loadProjectTest() {
     TestingHelpers.checkDefaultCollectionValues(model);
-    model.load();
+    model.load(model.getProjectLocation());
   }
 
   private static List<String> fileToLines(File file) {
@@ -74,7 +74,7 @@ class ProjectManagerTest {
     TestingHelpers.checkDefaultCollectionValues(model);
     model.save();
     TestingHelpers.checkDefaultCollectionValues(model);
-    File file1 = new File(model.getAnnotationsLocation(), "document1.xml");
+    File file1 = new File(model.getAnnotationsLocation(model.getProjectLocation()), "document1.xml");
     File referenceFile =
         new File(
             TestingHelpers.class

@@ -36,7 +36,6 @@ import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
-import edu.ucdenver.ccp.knowtator.model.OwlModel;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectableCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
@@ -516,7 +515,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
           getModel()
               .ifPresent(
                   model1 -> {
-                    fileChooser.setCurrentDirectory(model1.getArticlesLocation());
+                    fileChooser.setCurrentDirectory(model1.getArticlesLocation(model.getProjectLocation()));
 
                     if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                       pickAction(
@@ -897,7 +896,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         getModel().ifPresent(model1 -> model1.addModelListener(progressListener));
       }
       log.info(String.format("Opening from %s", file.getAbsolutePath()));
-      getModel().ifPresent(OwlModel::load);
+      getModel().ifPresent(owlModel -> owlModel.load(owlModel.getProjectLocation()));
       if (progressListener != null) {
         getModel().ifPresent(model1 -> model1.removeModelListener(progressListener));
       }

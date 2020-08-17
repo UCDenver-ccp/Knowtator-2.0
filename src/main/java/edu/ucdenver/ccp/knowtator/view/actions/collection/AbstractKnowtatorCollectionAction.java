@@ -261,7 +261,7 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
                             if (actionType.equals(CollectionActionType.ADD)) {
                               JOptionPane.showMessageDialog(view, "Select annotation file");
                               JFileChooser fileChooser = new JFileChooser();
-                              fileChooser.setCurrentDirectory(model.getAnnotationsLocation());
+                              fileChooser.setCurrentDirectory(model.getAnnotationsLocation(model.getProjectLocation()));
 
 
                               if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
