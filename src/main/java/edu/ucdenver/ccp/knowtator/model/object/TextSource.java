@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator.model.object;
 
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXmlUtil;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.Savable;
@@ -80,7 +81,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
 
     textFile =
         new File(
-            model.getArticlesLocation(this.saveFile, model.getProjectLocation()),
+            BaseModel.getArticlesLocation(this.saveFile, model.getProjectLocation()),
             textFileName.endsWith(".txt") ? textFileName : String.format("%s.txt", textFileName));
 
     if (!textFile.exists()) {
@@ -94,7 +95,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
           textFile =
               Files.copy(
                       Paths.get(file.toURI()),
-                      Paths.get(model.getArticlesLocation(model.getProjectLocation()).toURI().resolve(file.getName())))
+                      Paths.get(BaseModel.getArticlesLocation(model.getProjectLocation()).toURI().resolve(file.getName())))
                   .toFile();
         } catch (IOException e) {
           e.printStackTrace();
@@ -159,7 +160,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
           content = FileUtils.readFileToString(textFile, "UTF-8");
           return content;
         } catch (IOException e) {
-          textFile = new File(model.getArticlesLocation(model.getProjectLocation()), String.format("%s.txt", id));
+          textFile = new File(BaseModel.getArticlesLocation(model.getProjectLocation()), String.format("%s.txt", id));
           while (!textFile.exists()) {
             JFileChooser fileChooser = new JFileChooser();
             if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {

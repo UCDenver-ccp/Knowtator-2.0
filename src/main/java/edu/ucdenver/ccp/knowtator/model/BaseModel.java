@@ -120,7 +120,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
     Files.createDirectories(getOntologiesLocation(projectLocation).toPath());
   }
 
-  File getOntologiesLocation(File projectLocation) {
+  public static File getOntologiesLocation(File projectLocation) {
     return new File(projectLocation, "Ontologies");
   }
 
@@ -293,7 +293,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
    * @return the articles location
    * @param projectLocation project location
    */
-  public File getArticlesLocation(File projectLocation) {
+  public static File getArticlesLocation(File projectLocation) {
     return new File(projectLocation, "Articles");
   }
 
@@ -320,7 +320,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
    * @return the profiles location
    * @param projectLocation project location
    */
-  File getProfilesLocation(File projectLocation) {
+  public static File getProfilesLocation(File projectLocation) {
     return new File(projectLocation, "Profiles");
   }
 
@@ -428,7 +428,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
     return activeLayers;
   }
 
-  public File getArticlesLocation(File annotationFileLocation, File projectLocation) {
+  public static File getArticlesLocation(File annotationFileLocation, File projectLocation) {
     File file = new File(annotationFileLocation.getParentFile(), "Articles");
     if (file.exists()) {
       return file;

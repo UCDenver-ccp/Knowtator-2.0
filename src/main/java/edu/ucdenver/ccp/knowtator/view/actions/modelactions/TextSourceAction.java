@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXmlUtil;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.AbstractKnowtatorCollectionAction;
@@ -55,9 +56,9 @@ public class TextSourceAction extends AbstractKnowtatorCollectionAction<TextSour
 
   @Override
   protected void prepareAdd() {
-    if (!file.getParentFile().equals(model.getArticlesLocation(model.getProjectLocation()))) {
+    if (!file.getParentFile().equals(BaseModel.getArticlesLocation(model.getProjectLocation()))) {
       try {
-        FileUtils.copyFile(file, new File(model.getArticlesLocation(model.getProjectLocation()), file.getName()));
+        FileUtils.copyFile(file, new File(BaseModel.getArticlesLocation(model.getProjectLocation()), file.getName()));
       } catch (IOException e) {
         e.printStackTrace();
       }

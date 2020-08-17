@@ -515,7 +515,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
           getModel()
               .ifPresent(
                   model1 -> {
-                    fileChooser.setCurrentDirectory(model1.getArticlesLocation(model.getProjectLocation()));
+                    fileChooser.setCurrentDirectory(BaseModel.getArticlesLocation(model.getProjectLocation()));
 
                     if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                       pickAction(
