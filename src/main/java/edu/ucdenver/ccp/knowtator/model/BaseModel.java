@@ -95,13 +95,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 
     selection = new Selection(0, 0);
 
-    if (projectLocation.isFile()) {
-      if (projectLocation.getName().endsWith(".knowtator")) {
-        projectLocation = new File(projectLocation.getParent());
-      } else {
-        throw new IOException();
-      }
-    }
+    this.projectLocation = validateProjectLocation(projectLocation);
 
     Files.createDirectories(projectLocation.toPath());
 
@@ -112,12 +106,22 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
               .toPath());
     }
 
-    this.projectLocation = projectLocation;
-
     Files.createDirectories(getArticlesLocation(projectLocation).toPath());
     Files.createDirectories(getAnnotationsLocation(projectLocation).toPath());
     Files.createDirectories(getProfilesLocation(projectLocation).toPath());
     Files.createDirectories(getOntologiesLocation(projectLocation).toPath());
+  }
+
+  public static File validateProjectLocation(File projectLocation) throws IOException {
+    if (projectLocation.isFile()) {
+      if (projectLocation.getName().endsWith(".knowtator")) {
+        return new File(projectLocation.getParent());
+      } else {
+        throw new IOException();
+      }
+    } else {
+      return projectLocation;
+    }
   }
 
   public static File getOntologiesLocation(File projectLocation) {
@@ -169,7 +173,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
    *
    * @return the annotations location
    */
-  public File getAnnotationsLocation(File projectLocation) {
+  public static File getAnnotationsLocation(File projectLocation) {
     return new File(projectLocation, "Annotations");
 
   }

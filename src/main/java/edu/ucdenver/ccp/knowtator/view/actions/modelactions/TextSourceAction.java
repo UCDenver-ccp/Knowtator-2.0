@@ -63,7 +63,7 @@ public class TextSourceAction extends AbstractKnowtatorCollectionAction<TextSour
         e.printStackTrace();
       }
     }
-    setObject(new TextSource(model, file, file.getName()));
+    setObject(new TextSource(model, file, null));
   }
 
   @Override

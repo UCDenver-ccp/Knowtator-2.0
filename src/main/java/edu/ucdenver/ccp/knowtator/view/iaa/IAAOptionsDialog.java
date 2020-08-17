@@ -56,12 +56,15 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 public class IAAOptionsDialog extends JDialog {
@@ -171,10 +174,21 @@ public class IAAOptionsDialog extends JDialog {
                       KnowtatorModel model2 = new KnowtatorModel(fileChooser.getSelectedFile(), view.getOWLWorkspace());
                       model2.load(model2.getProjectLocation());
                       model2.load(model.getProjectLocation());
+
+                      JDialog iaaDialog = new IAAOptionsDialog(JOptionPane.getFrameForComponent(this), model2, view, outputDirectory);
+                      iaaDialog.pack();
+                      iaaDialog.setVisible(true);
+                      this.onCancel();
                     } catch (IOException ioException) {
                       ioException.printStackTrace();
                     }
                   }));
+
+      FileFilter fileFilter = new FileNameExtensionFilter("Knowtator", "knowtator");
+      fileChooser.setFileFilter(fileFilter);
+      fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+      fileChooser.showOpenDialog(view);
     });
   }
 

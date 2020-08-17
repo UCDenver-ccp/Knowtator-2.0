@@ -33,10 +33,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5586eae-97ae-4be5-aa9b-4eaaef9d25b4" name="Default Changelist" comment="Made folder location access static.">
+      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Profiles/Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/BaseModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/BaseModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/KnowtatorModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/KnowtatorModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/TextSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/TextSource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/modelactions/TextSourceAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/modelactions/TextSourceAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/iaa/IAAOptionsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/iaa/IAAOptionsDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/profile/ProfileDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/profile/ProfileDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/ProjectManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/ProjectManagerTest.java" afterDir="false" />
     </list>
     <list id="9e563f0c-91e9-4ed0-b3db-d36bc1e81506" name="Made test for adding an annotation layer" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -96,7 +101,7 @@
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit5" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
     <property name="extract.method.default.visibility" value="private" />
-    <property name="last_opened_file_path" value="/opt/protege/run.sh" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/test/resources/iaa_test_project/Profiles" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
@@ -111,8 +116,11 @@
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
     </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/test/resources/iaa_test_project/Profiles" />
+    </key>
   </component>
-  <component name="RunManager" selected="JUnit.All in Knowtator-2.0">
+  <component name="RunManager" selected="JUnit.ProjectManagerTest">
     <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
       <setting name="replType" value="NREPL" />
       <setting name="execution" value="LEININGEN" />
@@ -148,15 +156,13 @@
         <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_Protege" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -185,48 +191,48 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ProfileDialogTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ProjectManagerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Knowtator-2.0" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.view.profile.*" />
+          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator.view.profile" />
-      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.view.profile.ProfileDialogTest" />
+      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator" />
+      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.ProjectManagerTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ProfileDialogTest.addProfileDialogTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ProjectManagerTest.importProjectTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Knowtator-2.0" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.view.profile.*" />
+          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator.view.profile" />
-      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.view.profile.ProfileDialogTest" />
-      <option name="METHOD_NAME" value="addProfileDialogTest" />
+      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator" />
+      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.ProjectManagerTest" />
+      <option name="METHOD_NAME" value="importProjectTest" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ProfileDialogTest.okProfileDialogTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ProjectManagerTest.loadProjectTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Knowtator-2.0" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.view.profile.*" />
+          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator.view.profile" />
-      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.view.profile.ProfileDialogTest" />
-      <option name="METHOD_NAME" value="okProfileDialogTest" />
+      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator" />
+      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.ProjectManagerTest" />
+      <option name="METHOD_NAME" value="loadProjectTest" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -285,19 +291,19 @@
       <item itemvalue="Application.Run Protege" />
       <item itemvalue="Application.GUI" />
       <item itemvalue="JUnit.All in Knowtator-2.0" />
-      <item itemvalue="JUnit.ProfileDialogTest.okProfileDialogTest" />
-      <item itemvalue="JUnit.ProfileDialogTest" />
-      <item itemvalue="JUnit.ProfileDialogTest.addProfileDialogTest" />
       <item itemvalue="JUnit.OwlModelTest.addOwlClassTest" />
       <item itemvalue="Maven.knowtator [install]" />
+      <item itemvalue="JUnit.ProjectManagerTest" />
+      <item itemvalue="JUnit.ProjectManagerTest.importProjectTest" />
+      <item itemvalue="JUnit.ProjectManagerTest.loadProjectTest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.ProjectManagerTest" />
+        <item itemvalue="JUnit.ProjectManagerTest.loadProjectTest" />
         <item itemvalue="JUnit.All in Knowtator-2.0" />
+        <item itemvalue="JUnit.ProjectManagerTest.importProjectTest" />
         <item itemvalue="JUnit.OwlModelTest.addOwlClassTest" />
-        <item itemvalue="JUnit.ProfileDialogTest.addProfileDialogTest" />
-        <item itemvalue="JUnit.ProfileDialogTest" />
-        <item itemvalue="JUnit.ProfileDialogTest.okProfileDialogTest" />
       </list>
     </recent_temporary>
   </component>
@@ -326,7 +332,8 @@
       <workItem from="1592423099414" duration="19956000" />
       <workItem from="1592468854392" duration="1500000" />
       <workItem from="1597451857748" duration="2910000" />
-      <workItem from="1597675948461" duration="9118000" />
+      <workItem from="1597675948461" duration="12548000" />
+      <workItem from="1597702869327" duration="3279000" />
     </task>
     <task id="LOCAL-00001" summary="Old knowtator projects read annotations even if owl class is not found">
       <created>1590645202357</created>
@@ -552,7 +559,14 @@
       <option name="project" value="LOCAL" />
       <updated>1597688202074</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Made folder location access static.">
+      <created>1597688451516</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1597688451516</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -682,10 +696,11 @@
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="770" y="280" key="#xdebugger.XInspectDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590640936140" />
-    <state x="532" y="190" width="1148" height="823" key="#xdebugger.evaluate" timestamp="1592455292657">
+    <state x="578" y="211" width="697" height="839" key="#xdebugger.evaluate" timestamp="1597706054876">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="532" y="190" key="#xdebugger.evaluate/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592455292657" />
+    <state x="578" y="211" width="697" height="839" key="#xdebugger.evaluate/0.0.1680.1050@0.0.1680.1050" timestamp="1597706054876" />
     <state x="262" y="151" width="1148" height="823" key="#xdebugger.evaluate/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020129196" />
     <state x="1013" y="240" key="#xdebugger.evaluate/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591224195434" />
     <state x="593" y="363" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1597688355778">
@@ -703,79 +718,79 @@
     <state x="617" y="242" key="FileChooserDialogImpl/0.0.1680.1050@0.0.1680.1050" timestamp="1597677361481" />
     <state x="2268" y="208" key="FileChooserDialogImpl/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590016550191" />
     <state x="617" y="277" key="FileChooserDialogImpl/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591227393392" />
-    <state width="1620" height="366" key="GridCell.Tab.0.bottom" timestamp="1597688151021">
+    <state width="1634" height="250" key="GridCell.Tab.0.bottom" timestamp="1597706097542">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state width="1562" height="372" key="GridCell.Tab.0.bottom/0.0.1680.1050/1680.150.1600.900@0.0.1680.1050" timestamp="1597453563238" />
     <state width="1620" height="403" key="GridCell.Tab.0.bottom/0.0.1680.1050/1680.200.1600.900@0.0.1680.1050" timestamp="1592470546282" />
     <state width="1620" height="403" key="GridCell.Tab.0.bottom/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833324" />
-    <state width="1620" height="366" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1597688151021" />
+    <state width="1634" height="250" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1597706097542" />
     <state width="1634" height="254" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791277" />
     <state width="1554" height="255" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
     <state width="1634" height="254" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591244218674" />
-    <state width="1620" height="366" key="GridCell.Tab.0.center" timestamp="1597688151021">
+    <state width="1634" height="250" key="GridCell.Tab.0.center" timestamp="1597706097541">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state width="1562" height="372" key="GridCell.Tab.0.center/0.0.1680.1050/1680.150.1600.900@0.0.1680.1050" timestamp="1597453563238" />
     <state width="1620" height="403" key="GridCell.Tab.0.center/0.0.1680.1050/1680.200.1600.900@0.0.1680.1050" timestamp="1592470546282" />
     <state width="1620" height="403" key="GridCell.Tab.0.center/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833324" />
-    <state width="1620" height="366" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1597688151021" />
+    <state width="1634" height="250" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1597706097541" />
     <state width="1634" height="254" key="GridCell.Tab.0.center/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791276" />
     <state width="1554" height="255" key="GridCell.Tab.0.center/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
     <state width="1634" height="254" key="GridCell.Tab.0.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591244218674" />
-    <state width="1620" height="366" key="GridCell.Tab.0.left" timestamp="1597688151020">
+    <state width="1634" height="250" key="GridCell.Tab.0.left" timestamp="1597706097541">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state width="1562" height="372" key="GridCell.Tab.0.left/0.0.1680.1050/1680.150.1600.900@0.0.1680.1050" timestamp="1597453563238" />
     <state width="1620" height="403" key="GridCell.Tab.0.left/0.0.1680.1050/1680.200.1600.900@0.0.1680.1050" timestamp="1592470546282" />
     <state width="1620" height="403" key="GridCell.Tab.0.left/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833324" />
-    <state width="1620" height="366" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1597688151020" />
+    <state width="1634" height="250" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1597706097541" />
     <state width="1634" height="254" key="GridCell.Tab.0.left/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791276" />
     <state width="1554" height="255" key="GridCell.Tab.0.left/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386105" />
     <state width="1634" height="254" key="GridCell.Tab.0.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591244218674" />
-    <state width="1620" height="366" key="GridCell.Tab.0.right" timestamp="1597688151021">
+    <state width="1634" height="250" key="GridCell.Tab.0.right" timestamp="1597706097542">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state width="1562" height="372" key="GridCell.Tab.0.right/0.0.1680.1050/1680.150.1600.900@0.0.1680.1050" timestamp="1597453563238" />
     <state width="1620" height="403" key="GridCell.Tab.0.right/0.0.1680.1050/1680.200.1600.900@0.0.1680.1050" timestamp="1592470546282" />
     <state width="1620" height="403" key="GridCell.Tab.0.right/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833324" />
-    <state width="1620" height="366" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1597688151021" />
+    <state width="1634" height="250" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1597706097542" />
     <state width="1634" height="254" key="GridCell.Tab.0.right/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791277" />
     <state width="1554" height="255" key="GridCell.Tab.0.right/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
     <state width="1634" height="254" key="GridCell.Tab.0.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591244218674" />
-    <state width="1620" height="454" key="GridCell.Tab.1.bottom" timestamp="1597684914979">
+    <state width="1634" height="250" key="GridCell.Tab.1.bottom" timestamp="1597706097542">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state width="1562" height="390" key="GridCell.Tab.1.bottom/0.0.1680.1050/1680.150.1600.900@0.0.1680.1050" timestamp="1597453073592" />
     <state width="1620" height="422" key="GridCell.Tab.1.bottom/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833323" />
-    <state width="1620" height="454" key="GridCell.Tab.1.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1597684914979" />
+    <state width="1634" height="250" key="GridCell.Tab.1.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1597706097542" />
     <state width="830" height="638" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085398" />
     <state width="830" height="638" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
     <state width="1634" height="381" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591230169287" />
-    <state width="1620" height="454" key="GridCell.Tab.1.center" timestamp="1597684914978">
+    <state width="1634" height="250" key="GridCell.Tab.1.center" timestamp="1597706097542">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state width="1562" height="390" key="GridCell.Tab.1.center/0.0.1680.1050/1680.150.1600.900@0.0.1680.1050" timestamp="1597453073592" />
     <state width="1620" height="422" key="GridCell.Tab.1.center/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833322" />
-    <state width="1620" height="454" key="GridCell.Tab.1.center/0.0.1680.1050@0.0.1680.1050" timestamp="1597684914978" />
+    <state width="1634" height="250" key="GridCell.Tab.1.center/0.0.1680.1050@0.0.1680.1050" timestamp="1597706097542" />
     <state width="830" height="638" key="GridCell.Tab.1.center/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085395" />
     <state width="830" height="638" key="GridCell.Tab.1.center/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
     <state width="1634" height="381" key="GridCell.Tab.1.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591230169287" />
-    <state width="1620" height="454" key="GridCell.Tab.1.left" timestamp="1597684914978">
+    <state width="1634" height="250" key="GridCell.Tab.1.left" timestamp="1597706097542">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state width="1562" height="390" key="GridCell.Tab.1.left/0.0.1680.1050/1680.150.1600.900@0.0.1680.1050" timestamp="1597453073592" />
     <state width="1620" height="422" key="GridCell.Tab.1.left/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833322" />
-    <state width="1620" height="454" key="GridCell.Tab.1.left/0.0.1680.1050@0.0.1680.1050" timestamp="1597684914978" />
+    <state width="1634" height="250" key="GridCell.Tab.1.left/0.0.1680.1050@0.0.1680.1050" timestamp="1597706097542" />
     <state width="830" height="638" key="GridCell.Tab.1.left/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085394" />
     <state width="830" height="638" key="GridCell.Tab.1.left/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333598" />
     <state width="1634" height="381" key="GridCell.Tab.1.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591230169287" />
-    <state width="1620" height="454" key="GridCell.Tab.1.right" timestamp="1597684914979">
+    <state width="1634" height="250" key="GridCell.Tab.1.right" timestamp="1597706097542">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state width="1562" height="390" key="GridCell.Tab.1.right/0.0.1680.1050/1680.150.1600.900@0.0.1680.1050" timestamp="1597453073592" />
     <state width="1620" height="422" key="GridCell.Tab.1.right/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833322" />
-    <state width="1620" height="454" key="GridCell.Tab.1.right/0.0.1680.1050@0.0.1680.1050" timestamp="1597684914979" />
+    <state width="1634" height="250" key="GridCell.Tab.1.right/0.0.1680.1050@0.0.1680.1050" timestamp="1597706097542" />
     <state width="830" height="638" key="GridCell.Tab.1.right/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085396" />
     <state width="830" height="638" key="GridCell.Tab.1.right/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
     <state width="1634" height="381" key="GridCell.Tab.1.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591230169287" />
@@ -822,11 +837,11 @@
       <screen x="0" y="45" width="1680" height="1005" />
     </state>
     <state x="578" y="295" key="extract.method.dialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591225047985" />
-    <state x="311" y="75" width="1056" height="897" key="find.popup" timestamp="1597688308926">
+    <state x="311" y="75" width="1056" height="897" key="find.popup" timestamp="1597688668656">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="311" y="75" width="1056" height="897" key="find.popup/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592467187568" />
-    <state x="311" y="75" width="1056" height="897" key="find.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1597688308926" />
+    <state x="311" y="75" width="1056" height="897" key="find.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1597688668656" />
     <state x="531" y="119" width="728" height="858" key="find.popup/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590031547538" />
     <state x="2186" y="66" width="693" height="768" key="find.popup/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590018340948" />
     <state x="531" y="119" width="1056" height="858" key="find.popup/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591229572446" />
@@ -855,6 +870,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/KnowtatorXmlUtil.java</url>
           <line>175</line>
           <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/TextSource.java</url>
+          <line>89</line>
+          <option name="timeStamp" value="35" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

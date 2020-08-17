@@ -111,7 +111,7 @@ public class KnowtatorModel extends OwlModel {
           .map(Path::toFile)
           .forEach(
               file -> {
-                TextSource newTextSource = new TextSource(this, null, file.getName());
+                TextSource newTextSource = new TextSource(this, file, null);
                 textSources.add(newTextSource);
               });
 

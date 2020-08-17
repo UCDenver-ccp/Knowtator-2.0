@@ -27,6 +27,7 @@ package edu.ucdenver.ccp.knowtator;
 import difflib.Delta;
 import difflib.DiffUtils;
 import difflib.Patch;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,6 +35,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("EmptyMethod")
@@ -41,12 +43,9 @@ class ProjectManagerTest {
 
   private static KnowtatorModel model;
 
-  static {
-    try {
-      model = TestingHelpers.getLoadedModel();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+  @BeforeEach
+  void setup() throws IOException {
+    model = TestingHelpers.getLoadedModel();
   }
 
   @Test
@@ -74,7 +73,7 @@ class ProjectManagerTest {
     TestingHelpers.checkDefaultCollectionValues(model);
     model.save();
     TestingHelpers.checkDefaultCollectionValues(model);
-    File file1 = new File(model.getAnnotationsLocation(model.getProjectLocation()), "document1.xml");
+    File file1 = new File(BaseModel.getAnnotationsLocation(model.getProjectLocation()), "document1.xml");
     File referenceFile =
         new File(
             TestingHelpers.class
@@ -103,7 +102,27 @@ class ProjectManagerTest {
   void importToManagerTest() {}
 
   @Test
-  void importProjectTest() {}
+  void importProjectTest() throws IOException {
+    TestingHelpers.checkDefaultCollectionValues(model);
+    String projectName = "iaa_test_project";
+    File projectFile = new File(
+        TestingHelpers.class
+            .getResource(String.format("/%s/%s.knowtator", projectName, projectName))
+            .getFile());
+    projectFile = BaseModel.validateProjectLocation(projectFile);
+    model.load(projectFile);
+    TestingHelpers.countCollections(model,
+        TestingHelpers.defaultExpectedTextSources,
+        TestingHelpers.defaultExpectedConceptAnnotations,
+        TestingHelpers.defaultExpectedSpans,
+        TestingHelpers.defaultExpectedGraphSpaces,
+        TestingHelpers.defaultExpectedProfiles,
+        TestingHelpers.defaultExpectedHighlighters,
+        TestingHelpers.defaultExpectedAnnotationNodes,
+        TestingHelpers.defaultExpectedTriples,
+        TestingHelpers.defaultExpectedStructureAnnotations);
+
+  }
 
   @SuppressWarnings("EmptyMethod")
   @Test

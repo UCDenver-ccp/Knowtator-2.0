@@ -62,27 +62,29 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * Instantiates a new Text source.
    *
    * @param model the model
-   * @param saveFile the save file
-   * @param textFileName the text file name
+   * @param file save file or source text file
    */
-  public TextSource(KnowtatorModel model, File saveFile, String textFileName) {
+  public TextSource(KnowtatorModel model, File file, String textSourceName) {
     this.model = model;
-    this.saveFile =
-        saveFile == null
-            ? new File(
-                model.getAnnotationsLocation(model.getProjectLocation()).getAbsolutePath(),
-                textFileName.replace(".txt", ".xml"))
-            : saveFile;
+    if (file.getName().endsWith(".txt")) {
+      this.saveFile = new File(BaseModel.getAnnotationsLocation(model.getProjectLocation()).getAbsolutePath(),
+          file.getName().replace(".txt", ".xml"));
+      this.textFile = file;
+    } else if (file.getName().endsWith(".xml")) {
+      this.saveFile = file;
+      this.textFile = new File(BaseModel.getArticlesLocation(model.getProjectLocation()).getAbsolutePath(),
+          textSourceName == null ? file.getName().replace(".xml", ".txt") : textSourceName.endsWith(".txt") ? textSourceName : textSourceName.concat(".txt"));
+    } else {
+      this.saveFile = new File(BaseModel.getArticlesLocation(model.getProjectLocation()).getAbsolutePath(),
+          file.getName().concat(".xml"));
+      this.textFile = new File(BaseModel.getArticlesLocation(model.getProjectLocation()).getAbsolutePath(),
+          file.getName().concat(".txt"));
+    }
     this.conceptAnnotations = new ConceptAnnotationCollection(model, this);
     this.graphSpaces = new GraphSpaceCollection(model);
     model.addModelListener(this);
 
-    this.id = model.verifyId(FilenameUtils.getBaseName(textFileName), this, true);
-
-    textFile =
-        new File(
-            BaseModel.getArticlesLocation(this.saveFile, model.getProjectLocation()),
-            textFileName.endsWith(".txt") ? textFileName : String.format("%s.txt", textFileName));
+    this.id = model.verifyId(FilenameUtils.getBaseName(this.textFile.getName().replace(".txt", "")), this, true);
 
     if (!textFile.exists()) {
       JFileChooser fileChooser = new JFileChooser();
@@ -90,12 +92,12 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
           String.format("Could not find file for %s. Choose file location", id));
 
       if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-        File file = fileChooser.getSelectedFile();
+        File file1 = fileChooser.getSelectedFile();
         try {
           textFile =
               Files.copy(
                       Paths.get(file.toURI()),
-                      Paths.get(BaseModel.getArticlesLocation(model.getProjectLocation()).toURI().resolve(file.getName())))
+                      Paths.get(BaseModel.getArticlesLocation(model.getProjectLocation()).toURI().resolve(file1.getName())))
                   .toFile();
         } catch (IOException e) {
           e.printStackTrace();
@@ -195,7 +197,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @return the save location
    */
   public File getSaveLocation() {
-    return new File(model.getAnnotationsLocation(model.getProjectLocation()).getAbsolutePath(), saveFile.getName());
+    return new File(BaseModel.getAnnotationsLocation(model.getProjectLocation()).getAbsolutePath(), saveFile.getName());
   }
 
   @Override
