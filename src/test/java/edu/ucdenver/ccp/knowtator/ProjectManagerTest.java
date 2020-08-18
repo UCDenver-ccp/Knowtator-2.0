@@ -112,11 +112,11 @@ class ProjectManagerTest {
     projectFile = BaseModel.validateProjectLocation(projectFile);
     model.load(projectFile);
     TestingHelpers.countCollections(model,
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
+        TestingHelpers.defaultExpectedTextSources + 4,
+        TestingHelpers.defaultExpectedConceptAnnotations + 456,
+        TestingHelpers.defaultExpectedSpans + 456,
+        TestingHelpers.defaultExpectedGraphSpaces + 4,
+        TestingHelpers.defaultExpectedProfiles + 2,
         TestingHelpers.defaultExpectedHighlighters,
         TestingHelpers.defaultExpectedAnnotationNodes,
         TestingHelpers.defaultExpectedTriples,
