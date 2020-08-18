@@ -117,7 +117,7 @@ public class KnowtatorModel extends OwlModel {
 
       log.info("Loading annotations");
       OWLClassNotFoundAnnotations = new ArrayList<>();
-      Files.list(getAnnotationsLocation(getProjectLocation()).toPath())
+      Files.list(getAnnotationsLocation(projectLocation).toPath())
           .filter(path -> path.toString().endsWith(".xml"))
           .map(Path::toFile)
           .peek(file -> xmlUtil.readToTextSourceCollection(this, file))
