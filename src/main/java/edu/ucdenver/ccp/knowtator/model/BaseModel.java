@@ -97,19 +97,20 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 
     this.projectLocation = validateProjectLocation(projectLocation);
 
-    Files.createDirectories(projectLocation.toPath());
-
-    if (Files.list(projectLocation.toPath())
+    if (!this.projectLocation.exists()) {
+      Files.createDirectories(projectLocation.toPath());
+    }
+    if (Files.list(this.projectLocation.toPath())
         .noneMatch(path -> path.toString().endsWith(".knowtator"))) {
       Files.createFile(
-          new File(projectLocation, String.format("%s.knowtator", projectLocation.getName()))
+          new File(this.projectLocation, String.format("%s.knowtator", projectLocation.getName()))
               .toPath());
     }
 
-    Files.createDirectories(getArticlesLocation(projectLocation).toPath());
-    Files.createDirectories(getAnnotationsLocation(projectLocation).toPath());
-    Files.createDirectories(getProfilesLocation(projectLocation).toPath());
-    Files.createDirectories(getOntologiesLocation(projectLocation).toPath());
+    Files.createDirectories(getArticlesLocation(this.projectLocation).toPath());
+    Files.createDirectories(getAnnotationsLocation(this.projectLocation).toPath());
+    Files.createDirectories(getProfilesLocation(this.projectLocation).toPath());
+    Files.createDirectories(getOntologiesLocation(this.projectLocation).toPath());
   }
 
   public static File validateProjectLocation(File projectLocation) throws IOException {
