@@ -218,38 +218,67 @@ public class TestingHelpers {
                         .sum())
             .sum();
 
-    assert actualTextSources == expectedTextSources
-        : String.format(
-            "There were %d text sources instead of %d", actualTextSources, expectedTextSources);
-    assert actualConceptAnnotations == expectedConceptAnnotations
-        : String.format(
-            "There were %d concept annotations instead of %d",
-            actualConceptAnnotations, expectedConceptAnnotations);
-    assert actualStructureAnnotations == expectedStructureAnnotations
-        : String.format(
-            "There were %d structure annotations instead of %d",
-            actualStructureAnnotations, expectedStructureAnnotations);
-    assert actualSpans == expectedSpans
-        : String.format("There were %d spans instead of %d", actualSpans, expectedSpans);
+    String error = "";
 
-    assert actualProfiles == expectedProfiles
-        : String.format("There were %d profiles instead of %d", actualProfiles, expectedProfiles);
+    try {
+        assert actualTextSources == expectedTextSources;
+    } catch (AssertionError e) {
+      error = error.concat(String.format("\nThere were %d text sources instead of %d", actualTextSources, expectedTextSources));
+    }
 
-    assert actualHighlighters == expectedHighlighters
-        : String.format(
-            "There were %d highlighters instead of %d", actualHighlighters, expectedHighlighters);
+    try {
+        assert actualConceptAnnotations == expectedConceptAnnotations;
+    } catch (AssertionError e) {
+        error = error.concat(String.format("\nThere were %d concept annotations instead of %d", actualConceptAnnotations, expectedConceptAnnotations));
+    }
 
-    assert actualGraphSpaces == expectedGraphSpaces
-        : String.format(
-            "There were %d graph spaces instead of %d", actualGraphSpaces, expectedGraphSpaces);
+    try {
+        assert actualStructureAnnotations == expectedStructureAnnotations;
+    } catch (AssertionError e) {
+        error = error.concat(String.format("\nThere were %d structure annotations instead of %d", actualStructureAnnotations, expectedStructureAnnotations));
+    }
 
-    assert actualAnnotationNodes == expectedAnnotationNodes
-        : String.format(
-            "There were %d vertices instead of %d", actualAnnotationNodes, expectedAnnotationNodes);
+    try {
+      assert actualSpans == expectedSpans;
+    } catch (AssertionError e) {
+      error = error.concat(String.format("\nThere were %d spans instead of %d%n", actualSpans, expectedSpans));
+    }
 
-    assert actualTriples == expectedTriples
-        : String.format("There were %d triples instead of %d", actualTriples, expectedTriples);
+    try {
+        assert actualProfiles == expectedProfiles;
+    } catch (AssertionError e) {
+        error = error.concat(String.format("\nThere were %d profiles instead of %d", actualProfiles, expectedProfiles));
+    }
+
+    try {
+        assert actualHighlighters == expectedHighlighters;
+    } catch (AssertionError e) {
+        error = error.concat(String.format("\nThere were %d highlighters instead of %d", actualHighlighters, expectedHighlighters));
+    }
+
+    try {
+        assert actualGraphSpaces == expectedGraphSpaces;
+    } catch (AssertionError e) {
+        error = error.concat(String.format("\nThere were %d graph spaces instead of %d", actualGraphSpaces, expectedGraphSpaces));
+    }
+
+    try {
+        assert actualAnnotationNodes == expectedAnnotationNodes;
+    } catch (AssertionError e) {
+        error = error.concat(String.format("\nThere were %d vertices instead of %d", actualAnnotationNodes, expectedAnnotationNodes));
+    }
+
+    try {
+        assert actualTriples == expectedTriples;
+    } catch (AssertionError e) {
+        error = error.concat(String.format("\nThere were %d triples instead of %d", actualTriples, expectedTriples));
+    }
+
+    if (!error.equals("")) {
+        throw new AssertionError(error);
+    }
   }
+
 
   /**
    * Test owl action.
