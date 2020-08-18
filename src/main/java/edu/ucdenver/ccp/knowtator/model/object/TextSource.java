@@ -72,8 +72,12 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
       this.textFile = file;
     } else if (file.getName().endsWith(".xml")) {
       this.saveFile = file;
-      this.textFile = new File(BaseModel.getArticlesLocation(model.getProjectLocation()).getAbsolutePath(),
-          textSourceName == null ? file.getName().replace(".xml", ".txt") : textSourceName.endsWith(".txt") ? textSourceName : textSourceName.concat(".txt"));
+      String textFileName = textSourceName == null ? file.getName().replace(".xml", ".txt") : textSourceName.endsWith(".txt") ? textSourceName : textSourceName.concat(".txt");
+      this.textFile = new File(BaseModel.getArticlesLocation(file.getParentFile().getParentFile()).getAbsolutePath(), textFileName);
+      if (!this.textFile.exists()) {
+        this.textFile = new File(BaseModel.getArticlesLocation(model.getProjectLocation()).getAbsolutePath(), textFileName);
+      }
+
     } else {
       this.saveFile = new File(BaseModel.getArticlesLocation(model.getProjectLocation()).getAbsolutePath(),
           file.getName().concat(".xml"));
