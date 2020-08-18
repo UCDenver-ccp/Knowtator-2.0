@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="edu.ucdenver.ccp.knowtator.view.iaa.IAAOptionsDialog">
   <grid id="cbd77" binding="contentPane" layout-manager="GridBagLayout">
     <constraints>
-      <xy x="48" y="54" width="532" height="297"/>
+      <xy x="48" y="54" width="662" height="297"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -145,12 +145,37 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="ca11" class="javax.swing.JTable" binding="owlClassesTable">
+                  <component id="ca11" class="edu.ucdenver.ccp.knowtator.view.iaa.IAAOptionsDialog$OWLClassesTable" binding="owlClassesTable" custom-create="true">
                     <constraints/>
                     <properties/>
                   </component>
                 </children>
               </scrollpane>
+            </children>
+          </grid>
+          <grid id="5a60" layout-manager="GridBagLayout">
+            <constraints border-constraint="South"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="47b0" class="javax.swing.JButton" binding="chooseFromHierarchyButton" default-binding="true">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value="Choose from hierarchy"/>
+                </properties>
+              </component>
+              <component id="5340e" class="javax.swing.JCheckBox" binding="includeSubclassesCheckBox" default-binding="true">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value="Include subclasses"/>
+                </properties>
+              </component>
             </children>
           </grid>
         </children>

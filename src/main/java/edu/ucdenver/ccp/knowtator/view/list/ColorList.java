@@ -79,12 +79,14 @@ public class ColorList extends JList<String[]> implements KnowtatorComponent, Mo
   @Override
   public void reset() {
     view.getModel().ifPresent(model -> model.addModelListener(this));
+    view.getModel().ifPresent(model -> model.addOwlSelectionModelListener(this));
     setCollection();
   }
 
   @Override
   public void dispose() {
     view.getModel().ifPresent(model -> model.removeModelListener(this));
+    view.getModel().ifPresent(model -> model.removeOwlSelectionModelListener(this));
     setModel(new DefaultListModel<>());
   }
 

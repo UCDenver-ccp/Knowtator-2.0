@@ -479,4 +479,8 @@ public abstract class OwlModel extends BaseModel implements Serializable {
       owlWorkspace.getOWLModelManager().refreshRenderer();
     });
   }
+
+  public void removeOwlSelectionModelListener(OWLSelectionModelListener listener) {
+    owlWorkSpace.ifPresent(owlWorkSpace -> owlWorkSpace.getOWLSelectionModel().removeListener(listener));
+  }
 }
