@@ -67,6 +67,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.selection.OWLSelectionModelListener;
 
 public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
@@ -88,11 +89,12 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
   private JButton owlClassesSelectAllButton;
   private OWLClassesTable owlClassesTable;
   private JButton compareAcrossProjectsButton;
-  private JButton chooseFromHierarchyButton;
   private JCheckBox includeSubclassesCheckBox;
   IAATableModel profilesTableModel;
   IAATableModel documentsTableModel;
   IAATableModel owlClassesTableModel;
+
+  private static final Logger log = Logger.getLogger(IAAOptionsDialog.class);
 
   public IAAOptionsDialog(Window parent, KnowtatorModel model, KnowtatorView view, File outputDirectory) {
     super(parent);
@@ -102,7 +104,7 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
     $$$setupUI$$$();
 
     setContentPane(contentPane);
-    setModal(true);
+    setModal(false);
     getRootPane().setDefaultButton(buttonOK);
 
     buttonOK.addActionListener(e -> onOK());
@@ -202,18 +204,21 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
 
   private void createUIComponents() {
     // TODO: place custom component creation code here
-    owlClassesTable = new OWLClassesTable(model, view);
+    includeSubclassesCheckBox = new JCheckBox();
+    owlClassesTable = new OWLClassesTable(model, view, includeSubclassesCheckBox);
   }
 
   private static class OWLClassesTable extends JTable implements KnowtatorComponent, OWLSelectionModelListener {
 
     private final KnowtatorModel model;
     private final KnowtatorView view;
+    private final JCheckBox includeSubclassesCheckBox;
 
-    public OWLClassesTable(KnowtatorModel model, KnowtatorView view) {
+    public OWLClassesTable(KnowtatorModel model, KnowtatorView view, JCheckBox includeSubclassesCheckBox) {
       super();
       this.model = model;
       this.view = view;
+      this.includeSubclassesCheckBox = includeSubclassesCheckBox;
     }
 
     @Override
@@ -221,18 +226,30 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
       Optional<String> owlClassOptional = model.getSelectedOwlClass();
 
       owlClassOptional.ifPresent(owlClass -> {
-        int i = -1;
-        for (int j = 0; j < getModel().getRowCount(); j++) {
-          if (getValueAt(0, j).equals(owlClass)) {
-            break;
+        int i = selectOwlClass(owlClass);
+        if (includeSubclassesCheckBox.isSelected()) {
+          for (String d : model.getOwlClassDescendants(owlClass)) {
+            selectOwlClass(d);
           }
-          i++;
         }
 
-        if (-1 < i) {
-          scrollRectToVisible(getCellRect(i, i, true));
+        if (-1 < i && i < getModel().getRowCount()) {
+          scrollRectToVisible(getCellRect(i, 0, true));
         }
       });
+
+    }
+
+    private int selectOwlClass(String owlClass) {
+      int i = getModel().getRowCount() == 0 ? -1 : 0;
+      while (i < getModel().getRowCount() && (i != -1 && !getValueAt(i, 0).equals(owlClass))) {
+        i++;
+      }
+
+      if (-1 < i && i < getModel().getRowCount()) {
+        setValueAt(Boolean.TRUE, i, 1);
+      }
+      return i;
     }
 
     @Override
@@ -287,6 +304,7 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
             .forEach(i -> setValueAt(Boolean.TRUE, i, checkCol));
       }
     }
+
   }
 
   private void onOK() {
@@ -325,6 +343,7 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
   @Override
   public void reset() {
     view.knowtatorComponents.add(owlClassesTable);
+    owlClassesTable.reset();
   }
 
   @Override
@@ -438,17 +457,9 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
     final JPanel panel7 = new JPanel();
     panel7.setLayout(new GridBagLayout());
     panel5.add(panel7, BorderLayout.SOUTH);
-    chooseFromHierarchyButton = new JButton();
-    chooseFromHierarchyButton.setText("Choose from hierarchy");
-    gbc = new GridBagConstraints();
-    gbc.gridx = 0;
-    gbc.gridy = 0;
-    gbc.fill = GridBagConstraints.HORIZONTAL;
-    panel7.add(chooseFromHierarchyButton, gbc);
-    includeSubclassesCheckBox = new JCheckBox();
     includeSubclassesCheckBox.setText("Include subclasses");
     gbc = new GridBagConstraints();
-    gbc.gridx = 1;
+    gbc.gridx = 0;
     gbc.gridy = 0;
     gbc.anchor = GridBagConstraints.WEST;
     panel7.add(includeSubclassesCheckBox, gbc);
