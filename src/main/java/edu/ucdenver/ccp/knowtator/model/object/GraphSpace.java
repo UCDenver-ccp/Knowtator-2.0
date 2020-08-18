@@ -279,10 +279,13 @@ public class GraphSpace extends mxGraph
    * @return the annotation node
    */
   public AnnotationNode makeAnnotationNode(ConceptAnnotation conceptAnnotation) {
-    //    String nodeId = textSource.getGraphSpaces().verifyID(null, "node");
-    AnnotationNode newVertex = new AnnotationNode(null, conceptAnnotation, 20, 20, this);
+    return addAnnotationNode(null, conceptAnnotation, 20, 20);
+  }
+
+  public AnnotationNode addAnnotationNode(String id, ConceptAnnotation conceptAnnotation, double x, double y) {
+    AnnotationNode newVertex = new AnnotationNode(id, conceptAnnotation, x, y, this);
     addCellToGraph(newVertex);
-    return newVertex; // (AnnotationNode) ((mxGraphModel) getModel()).getCells().get(nodeId);
+    return newVertex;
   }
 
   @Override

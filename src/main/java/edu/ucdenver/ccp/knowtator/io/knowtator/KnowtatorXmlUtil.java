@@ -254,9 +254,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
       Optional<ConceptAnnotation> conceptAnnotation =
           graphSpace.getTextSource().getAnnotation(annotationID);
       if (conceptAnnotation.isPresent()) {
-        AnnotationNode newVertex =
-            new AnnotationNode(id, conceptAnnotation.get(), x, y, graphSpace);
-        graphSpace.addCellToGraph(newVertex);
+        graphSpace.addAnnotationNode(id, conceptAnnotation.get(), x, y);
       } else {
         log.info(String.format("Annotation could not be found %s", annotationID));
       }
