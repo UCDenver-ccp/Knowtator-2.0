@@ -29,6 +29,7 @@ import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIaa;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.awt.BorderLayout;
@@ -68,10 +69,13 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import org.apache.log4j.Logger;
+import org.protege.editor.owl.model.OWLWorkspace;
 import org.protege.editor.owl.model.selection.OWLSelectionModelListener;
 
 public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
   private final KnowtatorView view;
+  private KnowtatorModel iaaModel;
+  private KnowtatorModel model;
   private JPanel contentPane;
   private JButton buttonOK;
   private JButton buttonCancel;
@@ -79,7 +83,6 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
   private JPanel profilesPanel;
   private JPanel documentsPanel;
   private final File outputDirectory;
-  private final KnowtatorModel model;
   private JCheckBox iaaClassCheckBox;
   private JCheckBox iaaSpanCheckBox;
   private JCheckBox iaaClassAndSpanCheckBox;
@@ -100,6 +103,7 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
     super(parent);
     this.outputDirectory = outputDirectory;
     this.model = model;
+    this.iaaModel = model;
     this.view = view;
     $$$setupUI$$$();
 
@@ -124,36 +128,13 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
         KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
         JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
+    setModels(model);
     documentsTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    documentsTableModel = new IAATableModel(
-        new Object[][] {},
-        "Document",
-        model.getTextSources().stream()
-            .map(ModelObject::getId)
-            .collect(Collectors.toList()));
-    documentsTable.setModel(documentsTableModel);
-    documentsSelectAllButton.addActionListener(e -> documentsTableModel.toggleAll());
-
-    profilesTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    profilesTableModel = new IAATableModel(
-        new Object[][] {},
-        "Profile",
-        model.getProfiles().stream()
-            .map(ModelObject::getId)
-            .collect(Collectors.toList()));
-    profilesTable.setModel(profilesTableModel);
-    profilesSelectAllButton.addActionListener(e -> profilesTableModel.toggleAll());
-
     owlClassesTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    owlClassesTableModel = new IAATableModel(
-        new Object[][] {},
-        "OWL Classes",
-        new ArrayList<>(new HashSet<>(model.getTextSources().stream()
-            .flatMap(textSource -> textSource.getConceptAnnotations().stream()
-                .map(ConceptAnnotation::getOwlClass))
-            .collect(Collectors.toSet()))));
-    owlClassesTable.setModel(owlClassesTableModel);
+    profilesTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     owlClassesSelectAllButton.addActionListener(e -> owlClassesTableModel.toggleAll());
+    documentsSelectAllButton.addActionListener(e -> documentsTableModel.toggleAll());
+    profilesSelectAllButton.addActionListener(e -> profilesTableModel.toggleAll());
 
     compareAcrossProjectsButton.addActionListener(e -> {
       JFileChooser fileChooser = new JFileChooser();
@@ -179,14 +160,11 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
                       event -> event.getActionCommand().equals(JFileChooser.APPROVE_SELECTION))
                   .ifPresent(event -> {
                     try {
-                      KnowtatorModel model2 = new KnowtatorModel(fileChooser.getSelectedFile(), view.getOWLWorkspace());
-                      model2.load(model2.getProjectLocation());
-                      model2.load(model.getProjectLocation());
+                      File projectLocation1 = fileChooser.getSelectedFile();
+                      KnowtatorModel newModel = mergeProjects(projectLocation1, this.model, view.getOWLWorkspace(), false, this);
 
-                      JDialog iaaDialog = new IAAOptionsDialog(JOptionPane.getFrameForComponent(this), model2, view, outputDirectory);
-                      iaaDialog.pack();
-                      iaaDialog.setVisible(true);
-                      this.onCancel();
+                      setModels(newModel);
+
                     } catch (IOException ioException) {
                       ioException.printStackTrace();
                     }
@@ -202,40 +180,93 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
     reset();
   }
 
+  public static KnowtatorModel mergeProjects(File projectLocation1, KnowtatorModel model2, OWLWorkspace owlWorkspace, boolean mergeProfiles, JDialog component) throws IOException {
+    KnowtatorModel newModel = new KnowtatorModel(projectLocation1, owlWorkspace);
+    newModel.load(projectLocation1);
+    Set<Profile> profilesInCommon = newModel.getProfiles().stream()
+        .filter(profile -> model2.getProfiles().contains(profile))
+        .collect(Collectors.toSet());
+
+    for (Profile profile : profilesInCommon) {
+      if (mergeProfiles || JOptionPane.showConfirmDialog(component,
+          String.format("Merge %s between projects for IAA?", profile),
+          "Profile merge?",
+          JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
+        profile.setId(String.format("%s - %s",
+            profile.getId(),
+            projectLocation1
+                .getName()
+                .replace(".knowtator", "")));
+      }
+    }
+
+    newModel.load(model2.getProjectLocation());
+    return newModel;
+  }
+
+  private void setModels(KnowtatorModel model) {
+    this.iaaModel = model;
+    documentsTableModel = new IAATableModel(
+        new Object[][] {},
+        "Document",
+        model.getTextSources().stream()
+            .map(ModelObject::getId)
+            .collect(Collectors.toList()));
+    documentsTable.setModel(documentsTableModel);
+
+    profilesTableModel = new IAATableModel(
+        new Object[][] {},
+        "Profile",
+        model.getProfiles().stream()
+            .map(ModelObject::getId)
+            .collect(Collectors.toList()));
+    profilesTable.setModel(profilesTableModel);
+
+
+    owlClassesTableModel = new IAATableModel(
+        new Object[][] {},
+        "OWL Classes",
+        new ArrayList<>(new HashSet<>(model.getTextSources().stream()
+            .flatMap(textSource -> textSource.getConceptAnnotations().stream()
+                .map(ConceptAnnotation::getOwlClass))
+            .collect(Collectors.toSet()))));
+    owlClassesTable.setModel(owlClassesTableModel);
+  }
+
   private void createUIComponents() {
-    // TODO: place custom component creation code here
     includeSubclassesCheckBox = new JCheckBox();
-    owlClassesTable = new OWLClassesTable(model, view, includeSubclassesCheckBox);
+    owlClassesTable = new OWLClassesTable(view, includeSubclassesCheckBox);
   }
 
   private static class OWLClassesTable extends JTable implements KnowtatorComponent, OWLSelectionModelListener {
 
-    private final KnowtatorModel model;
     private final KnowtatorView view;
     private final JCheckBox includeSubclassesCheckBox;
 
-    public OWLClassesTable(KnowtatorModel model, KnowtatorView view, JCheckBox includeSubclassesCheckBox) {
+    public OWLClassesTable(KnowtatorView view, JCheckBox includeSubclassesCheckBox) {
       super();
-      this.model = model;
       this.view = view;
       this.includeSubclassesCheckBox = includeSubclassesCheckBox;
     }
 
     @Override
     public void selectionChanged() throws Exception {
-      Optional<String> owlClassOptional = model.getSelectedOwlClass();
+      view.getModel().ifPresent(model -> {
+        Optional<String> owlClassOptional = model.getSelectedOwlClass();
 
-      owlClassOptional.ifPresent(owlClass -> {
-        int i = selectOwlClass(owlClass);
-        if (includeSubclassesCheckBox.isSelected()) {
-          for (String d : model.getOwlClassDescendants(owlClass)) {
-            selectOwlClass(d);
+        owlClassOptional.ifPresent(owlClass -> {
+          int i = selectOwlClass(owlClass);
+          if (includeSubclassesCheckBox.isSelected()) {
+            for (String d : model.getOwlClassDescendants(owlClass)) {
+              selectOwlClass(d);
+            }
           }
-        }
 
-        if (-1 < i && i < getModel().getRowCount()) {
-          scrollRectToVisible(getCellRect(i, 0, true));
-        }
+          if (-1 < i && i < getModel().getRowCount()) {
+            scrollRectToVisible(getCellRect(i, 0, true));
+          }
+        });
+
       });
 
     }
@@ -269,6 +300,13 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
     IAATableModel(Object[][] data, String col, List<String> collection) {
       super(data, new String[] {col, "Checkbox"});
 
+      setCollection(collection);
+    }
+
+    private void setCollection(List<String> collection) {
+      for (int i = 0; i < this.getRowCount(); i++) {
+        removeRow(i);
+      }
       for (String item : collection) {
         addRow(new Object[] {item, Boolean.FALSE});
       }
@@ -315,7 +353,7 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
     if (profiles.size() <= 2 && !textSources.isEmpty() &&
         (iaaClassCheckBox.isSelected() || iaaSpanCheckBox.isSelected() || iaaClassAndSpanCheckBox.isSelected())) {
       try {
-        KnowtatorIaa knowtatorIaa = new KnowtatorIaa(outputDirectory, model, textSources, profiles, owlClasses);
+        KnowtatorIaa knowtatorIaa = new KnowtatorIaa(outputDirectory, iaaModel, textSources, profiles, owlClasses);
 
         if (iaaClassCheckBox.isSelected()) {
           knowtatorIaa.runClassIaa();

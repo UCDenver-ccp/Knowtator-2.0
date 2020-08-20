@@ -91,6 +91,11 @@ public class KnowtatorModel extends OwlModel {
 
   @Override
   public void load(File projectLocation) {
+    try {
+      projectLocation = validateProjectLocation(projectLocation);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     super.load(projectLocation);
 
     setLoading(true);
@@ -105,7 +110,10 @@ public class KnowtatorModel extends OwlModel {
           .filter(path -> path.toString().endsWith(".xml"))
           .map(Path::toFile)
           .forEach(file -> xmlUtil.readToProfileCollection(this, file));
-
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    try {
       Files.list(getArticlesLocation(projectLocation).toPath())
           .filter(path -> path.toString().endsWith(".txt"))
           .map(Path::toFile)
@@ -114,6 +122,10 @@ public class KnowtatorModel extends OwlModel {
                 TextSource newTextSource = new TextSource(this, file, null);
                 textSources.add(newTextSource);
               });
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    try {
 
       log.info("Loading annotations");
       OWLClassNotFoundAnnotations = new ArrayList<>();
@@ -122,17 +134,16 @@ public class KnowtatorModel extends OwlModel {
           .map(Path::toFile)
           .peek(file -> xmlUtil.readToTextSourceCollection(this, file))
           .forEach(file -> oldXmlUtil.readToTextSourceCollection(this, file));
-
-      profiles.first().ifPresent(profiles::setSelection);
-      textSources.first().ifPresent(textSources::setSelection);
-
-      Set<String> owlClasses = new HashSet<>();
-      textSources.forEach(textSource -> textSource.getConceptAnnotations().forEach(conceptAnnotation -> owlClasses.add(conceptAnnotation.getOwlClass())));
-      profiles.verifyHighlighters(owlClasses);
-
     } catch (IOException e) {
       e.printStackTrace();
     }
+    profiles.first().ifPresent(profiles::setSelection);
+    textSources.first().ifPresent(textSources::setSelection);
+
+    Set<String> owlClasses = new HashSet<>();
+    textSources.forEach(textSource -> textSource.getConceptAnnotations().forEach(conceptAnnotation -> owlClasses.add(conceptAnnotation.getOwlClass())));
+    profiles.verifyHighlighters(owlClasses);
+
 
     setLoading(false);
   }
