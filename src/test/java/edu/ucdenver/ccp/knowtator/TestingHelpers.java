@@ -241,7 +241,7 @@ public class TestingHelpers {
     try {
       assert actualSpans == expectedSpans;
     } catch (AssertionError e) {
-      error = error.concat(String.format("\nThere were %d spans instead of %d%n", actualSpans, expectedSpans));
+      error = error.concat(String.format("\nThere were %d spans instead of %d", actualSpans, expectedSpans));
     }
 
     try {
@@ -265,7 +265,7 @@ public class TestingHelpers {
     try {
         assert actualAnnotationNodes == expectedAnnotationNodes;
     } catch (AssertionError e) {
-        error = error.concat(String.format("\nThere were %d vertices instead of %d", actualAnnotationNodes, expectedAnnotationNodes));
+        error = error.concat(String.format("\nThere were %d annotation nodes instead of %d", actualAnnotationNodes, expectedAnnotationNodes));
     }
 
     try {
