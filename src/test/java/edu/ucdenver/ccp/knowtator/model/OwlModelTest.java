@@ -104,19 +104,7 @@ class OwlModelTest {
     Map<OWLEntity, IRI> entityToIriMap = new HashMap<>();
     entityToIriMap.put(class2, IRI.create(class2.getIRI().getNamespace(), "BetterPizza"));
 
-    TestingHelpers.testOwlAction(
-        model,
-        renamer.changeIRI(entityToIriMap),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedSpans,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples
-    );
+    TestingHelpers.testOwlAction(model, renamer.changeIRI(entityToIriMap), TestingHelpers.defaultCounts);
 
     ConceptAnnotation conceptAnnotation =
         model.getSelectedTextSource().get().getSelectedAnnotation().get();
@@ -138,19 +126,7 @@ class OwlModelTest {
     Map<OWLEntity, IRI> entityToIriMap = new HashMap<>();
     entityToIriMap.put(property, IRI.create(property.getIRI().getNamespace(), "betterHasBass"));
 
-    TestingHelpers.testOwlAction(
-        model,
-        renamer.changeIRI(entityToIriMap),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedSpans,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples
-    );
+    TestingHelpers.testOwlAction(model, renamer.changeIRI(entityToIriMap), TestingHelpers.defaultCounts);
 
     GraphSpace graphSpace = model.getSelectedTextSource().get().getSelectedGraphSpace().get();
     RelationAnnotation relationAnnotation =
@@ -172,16 +148,7 @@ class OwlModelTest {
     TestingHelpers.testOwlAction(
         model,
         remover.getChanges(),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations - 2,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedSpans - 2,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes - 3,
-        TestingHelpers.defaultExpectedTriples - 2
-    );
+        TestingHelpers.defaultCounts.copy(0, -2,  -2, 0, 0, 0, -3, -2,0));
     assert !ontology.containsClassInSignature(class2.getIRI());
   }
 
@@ -191,19 +158,8 @@ class OwlModelTest {
     assert ontology.containsObjectPropertyInSignature(owlObjectProperty.getIRI());
     OWLEntityRemover remover = new OWLEntityRemover(Collections.singleton(ontology));
     owlObjectProperty.accept(remover);
-    TestingHelpers.testOwlAction(
-        model,
-        remover.getChanges(),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedSpans,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples - 2
-    );
+    TestingHelpers.testOwlAction(model, remover.getChanges(),
+        TestingHelpers.defaultCounts.copy(0, 0, 0, 0, 0, 0,  0, -2, 0));
     assert !ontology.containsObjectPropertyInSignature(owlObjectProperty.getIRI());
   }
 
@@ -223,19 +179,7 @@ class OwlModelTest {
         owlSubClassOfAxiom -> changes.add(new RemoveAxiom(ontology, owlSubClassOfAxiom)));
     changes.add(new AddAxiom(ontology, axiom2));
 
-    TestingHelpers.testOwlAction(
-        model,
-        changes,
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedSpans,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples
-    );
+    TestingHelpers.testOwlAction(model, changes, TestingHelpers.defaultCounts);
 
     assert !isSubClassTest(class1, class2);
     assert isSubClassTest(class3, class2);
@@ -281,19 +225,7 @@ class OwlModelTest {
         owlSubClassOfAxiom -> changes.add(new RemoveAxiom(ontology, owlSubClassOfAxiom)));
     changes.add(new AddAxiom(ontology, axiom2));
 
-    TestingHelpers.testOwlAction(
-        model,
-        changes,
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedSpans,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples
-    );
+    TestingHelpers.testOwlAction(model, changes, TestingHelpers.defaultCounts);
 
     assert isSubObjectPropertyTest(property1, property2);
     assert isSubObjectPropertyTest(property3, property2);

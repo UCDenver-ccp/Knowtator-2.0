@@ -48,15 +48,7 @@ class KnowtatorIaaTest {
   private static File outputDir;
   private static File goldStandardDir;
   private static KnowtatorModel model;
-  private final int defaultExpectedTextSources = 4;
-  private final int defaultExpectedConceptAnnotations = 456;
-  private final int defaultExpectedGraphSpaces = 4;
-  private final int defaultExpectedSpans = 456;
-  private final int defaultExpectedProfiles = 3;
-  private final int defaultExpectedHighlighters = 0;
-  private final int defaultExpectedAnnotationNodes = 0;
-  private final int defaultExpectedTriples = 0;
-  private final int defaultExpectedStructureAnnotations = 0;
+  private static final TestingHelpers.ProjectCounts counts = new TestingHelpers.ProjectCounts(4, 456, 456, 4, 3, 0, 0, 0, 0);
 
   @BeforeAll
   static void makeProjectTest() throws IaaException, IOException {
@@ -98,17 +90,7 @@ class KnowtatorIaaTest {
 
   @Test
   void runClassIaaTest() throws IOException, IaaException {
-    TestingHelpers.countCollections(
-        model,
-        defaultExpectedTextSources,
-        defaultExpectedConceptAnnotations,
-        defaultExpectedSpans,
-        defaultExpectedGraphSpaces,
-        defaultExpectedProfiles,
-        defaultExpectedHighlighters,
-        defaultExpectedAnnotationNodes,
-        defaultExpectedTriples,
-        defaultExpectedStructureAnnotations);
+    TestingHelpers.countCollections(model, counts);
     knowtatorIAA.runClassIaa();
     // TODO: Rerun test data because concept annotations no longer store owl class label
 
@@ -127,17 +109,7 @@ class KnowtatorIaaTest {
 
   @Test
   void runSpanIaaTest() throws IOException, IaaException {
-    TestingHelpers.countCollections(
-        model,
-        defaultExpectedTextSources,
-        defaultExpectedConceptAnnotations,
-        defaultExpectedSpans,
-        defaultExpectedGraphSpaces,
-        defaultExpectedProfiles,
-        defaultExpectedHighlighters,
-        defaultExpectedAnnotationNodes,
-        defaultExpectedTriples,
-        defaultExpectedStructureAnnotations);
+    TestingHelpers.countCollections(model, counts);
     knowtatorIAA.runSpanIaa();
 
     try {
@@ -155,17 +127,7 @@ class KnowtatorIaaTest {
 
   @Test
   void runClassAndSpanIaaTest() throws IaaException, IOException {
-    TestingHelpers.countCollections(
-        model,
-        defaultExpectedTextSources,
-        defaultExpectedConceptAnnotations,
-        defaultExpectedSpans,
-        defaultExpectedGraphSpaces,
-        defaultExpectedProfiles,
-        defaultExpectedHighlighters,
-        defaultExpectedAnnotationNodes,
-        defaultExpectedTriples,
-        defaultExpectedStructureAnnotations);
+    TestingHelpers.countCollections(model, counts);
     knowtatorIAA.runClassAndSpanIaa();
 
     try {

@@ -111,16 +111,9 @@ class ProjectManagerTest {
             .getFile());
     projectFile = BaseModel.validateProjectLocation(projectFile);
     model.load(projectFile);
-    TestingHelpers.countCollections(model,
-        TestingHelpers.defaultExpectedTextSources + 4,
-        TestingHelpers.defaultExpectedConceptAnnotations + 456,
-        TestingHelpers.defaultExpectedSpans + 456,
-        TestingHelpers.defaultExpectedGraphSpaces + 4,
-        TestingHelpers.defaultExpectedProfiles + 2,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples,
-        TestingHelpers.defaultExpectedStructureAnnotations);
+
+    TestingHelpers.ProjectCounts counts = TestingHelpers.defaultCounts.copy(4, 456, 456, 4, 2, 0, 0, 0, 0);
+    TestingHelpers.countCollections(model, counts);
 
   }
 

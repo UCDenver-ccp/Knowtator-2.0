@@ -41,6 +41,8 @@ public class TestingHelpers {
   /** The constant projectFileName. */
   private static final String projectFileName = "test_project_using_uris";
 
+  public static final ProjectCounts defaultCounts = new ProjectCounts(5, 6, 7, 3, 2, 3, 7, 4, 0);
+
   /** The constant defaultExpectedTextSources. */
   public static final int defaultExpectedTextSources = 5;
 
@@ -134,30 +136,10 @@ public class TestingHelpers {
    * @param model the model
    */
   public static void checkDefaultCollectionValues(KnowtatorModel model) {
-    TestingHelpers.countCollections(
-        model,
-        defaultExpectedTextSources,
-        defaultExpectedConceptAnnotations,
-        defaultExpectedSpans,
-        defaultExpectedGraphSpaces,
-        defaultExpectedProfiles,
-        defaultExpectedHighlighters,
-        defaultExpectedAnnotationNodes,
-        defaultExpectedTriples,
-        defaultExpectedStructureAnnotations);
+    TestingHelpers.countCollections(model, defaultCounts);
   }
 
-  public static void countCollections(
-      KnowtatorModel model,
-      int expectedTextSources,
-      int expectedConceptAnnotations,
-      int expectedSpans,
-      int expectedGraphSpaces,
-      int expectedProfiles,
-      int expectedHighlighters,
-      int expectedAnnotationNodes,
-      int expectedTriples,
-      int expectedStructureAnnotations) {
+  public static void countCollections(KnowtatorModel model, ProjectCounts counts) {
 
     int actualTextSources = model.getNumberOfTextSources();
     int actualConceptAnnotations =
@@ -221,57 +203,57 @@ public class TestingHelpers {
     String error = "";
 
     try {
-        assert actualTextSources == expectedTextSources;
+        assert actualTextSources == counts.ets;
     } catch (AssertionError e) {
-      error = error.concat(String.format("\nThere were %d text sources instead of %d", actualTextSources, expectedTextSources));
+      error = error.concat(String.format("\nThere were %d text sources instead of %d", actualTextSources, counts.ets));
     }
 
     try {
-        assert actualConceptAnnotations == expectedConceptAnnotations;
+        assert actualConceptAnnotations == counts.eca;
     } catch (AssertionError e) {
-        error = error.concat(String.format("\nThere were %d concept annotations instead of %d", actualConceptAnnotations, expectedConceptAnnotations));
+        error = error.concat(String.format("\nThere were %d concept annotations instead of %d", actualConceptAnnotations, counts.eca));
     }
 
     try {
-        assert actualStructureAnnotations == expectedStructureAnnotations;
+        assert actualStructureAnnotations == counts.esa;
     } catch (AssertionError e) {
-        error = error.concat(String.format("\nThere were %d structure annotations instead of %d", actualStructureAnnotations, expectedStructureAnnotations));
+        error = error.concat(String.format("\nThere were %d structure annotations instead of %d", actualStructureAnnotations, counts.esa));
     }
 
     try {
-      assert actualSpans == expectedSpans;
+      assert actualSpans == counts.es;
     } catch (AssertionError e) {
-      error = error.concat(String.format("\nThere were %d spans instead of %d", actualSpans, expectedSpans));
+      error = error.concat(String.format("\nThere were %d spans instead of %d", actualSpans, counts.es));
     }
 
     try {
-        assert actualProfiles == expectedProfiles;
+        assert actualProfiles == counts.ep;
     } catch (AssertionError e) {
-        error = error.concat(String.format("\nThere were %d profiles instead of %d", actualProfiles, expectedProfiles));
+        error = error.concat(String.format("\nThere were %d profiles instead of %d", actualProfiles, counts.ep));
     }
 
     try {
-        assert actualHighlighters == expectedHighlighters;
+        assert actualHighlighters == counts.eh;
     } catch (AssertionError e) {
-        error = error.concat(String.format("\nThere were %d highlighters instead of %d", actualHighlighters, expectedHighlighters));
+        error = error.concat(String.format("\nThere were %d highlighters instead of %d", actualHighlighters, counts.eh));
     }
 
     try {
-        assert actualGraphSpaces == expectedGraphSpaces;
+        assert actualGraphSpaces == counts.egs;
     } catch (AssertionError e) {
-        error = error.concat(String.format("\nThere were %d graph spaces instead of %d", actualGraphSpaces, expectedGraphSpaces));
+        error = error.concat(String.format("\nThere were %d graph spaces instead of %d", actualGraphSpaces, counts.egs));
     }
 
     try {
-        assert actualAnnotationNodes == expectedAnnotationNodes;
+        assert actualAnnotationNodes == counts.ean;
     } catch (AssertionError e) {
-        error = error.concat(String.format("\nThere were %d annotation nodes instead of %d", actualAnnotationNodes, expectedAnnotationNodes));
+        error = error.concat(String.format("\nThere were %d annotation nodes instead of %d", actualAnnotationNodes, counts.ean));
     }
 
     try {
-        assert actualTriples == expectedTriples;
+        assert actualTriples == counts.et;
     } catch (AssertionError e) {
-        error = error.concat(String.format("\nThere were %d triples instead of %d", actualTriples, expectedTriples));
+        error = error.concat(String.format("\nThere were %d triples instead of %d", actualTriples, counts.et));
     }
 
     if (!error.equals("")) {
@@ -285,40 +267,13 @@ public class TestingHelpers {
    *
    * @param controller the controller
    * @param changes the changes
-   * @param expectedTextSources the expected text sources
-   * @param expectedConceptAnnotations the expected concept annotations
-   * @param expectedSpans the expected spans
-   * @param expectedGraphSpaces the expected graph spaces
-   * @param expectedProfiles the expected profiles
-   * @param expectedHighlighters the expected highlighters
-   * @param expectedAnnotationNodes the expected annotation nodes
-   * @param expectedTriples the expected triples
    */
   public static void testOwlAction(
       KnowtatorModel controller,
-      List<? extends OWLOntologyChange> changes,
-      int expectedTextSources,
-      int expectedConceptAnnotations,
-      int expectedStructureAnnotations,
-      int expectedSpans,
-      int expectedGraphSpaces,
-      int expectedProfiles,
-      int expectedHighlighters,
-      int expectedAnnotationNodes,
-      int expectedTriples) {
+      List<? extends OWLOntologyChange> changes, ProjectCounts counts) {
     TestingHelpers.checkDefaultCollectionValues(controller);
     controller.getOwlOntologyManager().applyChanges(changes);
-    TestingHelpers.countCollections(
-        controller,
-        expectedTextSources,
-        expectedConceptAnnotations,
-        expectedSpans,
-        expectedGraphSpaces,
-        expectedProfiles,
-        expectedHighlighters,
-        expectedAnnotationNodes,
-        expectedTriples,
-        expectedStructureAnnotations);
+    TestingHelpers.countCollections(controller, counts);
   }
 
   /**
@@ -326,56 +281,83 @@ public class TestingHelpers {
    *
    * @param controller the controller
    * @param action the action
-   * @param expectedTextSources the expected text sources
-   * @param expectedConceptAnnotations the expected concept annotations
-   * @param expectedSpans the expected spans
-   * @param expectedGraphSpaces the expected graph spaces
-   * @param expectedProfiles the expected profiles
-   * @param expectedHighlighters the expected highlighters
-   * @param expectedAnnotationNodes the expected annotation nodes
-   * @param expectedTriples the expected triples
    * @throws ActionUnperformable the action unperformable exception
    */
   public static void testKnowtatorAction(
       KnowtatorModel controller,
       AbstractKnowtatorAction action,
-      int expectedTextSources,
-      int expectedConceptAnnotations,
-      int expectedSpans,
-      int expectedGraphSpaces,
-      int expectedProfiles,
-      int expectedHighlighters,
-      int expectedAnnotationNodes,
-      int expectedTriples,
-      int expectedStructureAnnotations)
+      ProjectCounts counts)
       throws ActionUnperformable {
     TestingHelpers.checkDefaultCollectionValues(controller);
     controller.registerAction(action);
-    TestingHelpers.countCollections(
-        controller,
-        expectedTextSources,
-        expectedConceptAnnotations,
-        expectedSpans,
-        expectedGraphSpaces,
-        expectedProfiles,
-        expectedHighlighters,
-        expectedAnnotationNodes,
-        expectedTriples,
-        expectedStructureAnnotations);
+    TestingHelpers.countCollections(controller, counts);
     controller.undo();
     TestingHelpers.checkDefaultCollectionValues(controller);
     controller.redo();
-    TestingHelpers.countCollections(
-        controller,
-        expectedTextSources,
-        expectedConceptAnnotations,
-        expectedSpans,
-        expectedGraphSpaces,
-        expectedProfiles,
-        expectedHighlighters,
-        expectedAnnotationNodes,
-        expectedTriples,
-        expectedStructureAnnotations);
+    TestingHelpers.countCollections(controller, counts);
     controller.undo();
+  }
+
+  public static class ProjectCounts {
+    private final int ets;
+    private final int eca;
+    private final int es;
+    private final int egs;
+    private final int ep;
+    private final int eh;
+    private final int ean;
+    private final int et;
+    private final int esa;
+
+    public ProjectCounts(int ets, int eca, int es, int egs, int ep, int eh, int ean, int et, int esa) {
+      this.ets = ets;
+      this.eca = eca;
+      this.es = es;
+      this.egs = egs;
+      this.ep = ep;
+      this.eh = eh;
+      this.ean = ean;
+      this.et = et;
+      this.esa = esa;
+    }
+
+    public ProjectCounts copy(int etsC, int ecaC, int esC, int egsC, int epC, int ehC, int eanC, int etC, int esaC) {
+      return new ProjectCounts(
+          this.ets + etsC,
+          this.eca + ecaC,
+          this.es + esC,
+          this.egs + egsC,
+          this.ep + epC,
+          this.eh + ehC,
+          this.ean + eanC,
+          this.et + etC,
+          this.esa + esaC);
+    }
+
+    public ProjectCounts copy() {
+      return new ProjectCounts(
+          this.ets,
+          this.eca,
+          this.es,
+          this.egs,
+          this.ep,
+          this.eh,
+          this.ean,
+          this.et,
+          this.esa);
+    }
+
+    public ProjectCounts add(ProjectCounts counts2, ProjectCounts overlaps) {
+      return new ProjectCounts(
+      this.ets + counts2.ets - overlaps.ets,
+          this.eca + counts2.eca - overlaps.eca,
+          this.es + counts2.es - overlaps.es,
+          this.egs + counts2.egs - overlaps.egs,
+          this.ep + counts2.ep - overlaps.ep,
+          this.eh + counts2.eh - overlaps.eh,
+          this.ean + counts2.ean - overlaps.ean,
+          this.et + counts2.et - overlaps.et,
+          this.esa + counts2.esa - overlaps.esa);
+    }
   }
 }

@@ -56,16 +56,7 @@ public class KnowtatorCollectionActionsTest {
         model,
         new TextSourceAction(
             model, ADD, TestingHelpers.getArticleFile("structure_test_project", "11532192"), null),
-        TestingHelpers.defaultExpectedTextSources + 1,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples,
-        TestingHelpers.defaultExpectedStructureAnnotations
-    );
+        TestingHelpers.defaultCounts.copy(1, 0, 0, 0, 0, 0, 0, 0, 0));
   }
 
   @Test
@@ -74,16 +65,7 @@ public class KnowtatorCollectionActionsTest {
     TestingHelpers.testKnowtatorAction(
         model,
         new TextSourceAction(model, REMOVE, null, null),
-        TestingHelpers.defaultExpectedTextSources - 1,
-        TestingHelpers.defaultExpectedConceptAnnotations - 2,
-        TestingHelpers.defaultExpectedSpans - 3,
-        TestingHelpers.defaultExpectedGraphSpaces - 1,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes - 2,
-        TestingHelpers.defaultExpectedTriples - 1,
-        TestingHelpers.defaultExpectedStructureAnnotations
-    );
+        TestingHelpers.defaultCounts.copy(-1, -2, -3, -1, 0, 0, -2, -1, 0));
   }
 
   @Test
@@ -92,16 +74,7 @@ public class KnowtatorCollectionActionsTest {
     TestingHelpers.testKnowtatorAction(
         model,
         new ConceptAnnotationAction(model, ADD, model.getSelectedTextSource().get()),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations + 1,
-        TestingHelpers.defaultExpectedSpans + 1,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples,
-        TestingHelpers.defaultExpectedStructureAnnotations
-    );
+        TestingHelpers.defaultCounts.copy(0, 1, 1, 0, 0, 0,0, 0, 0));
   }
 
   @Test
@@ -112,16 +85,7 @@ public class KnowtatorCollectionActionsTest {
     TestingHelpers.testKnowtatorAction(
         model,
         new ConceptAnnotationAction(model, REMOVE, model.getSelectedTextSource().get()),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations - 1,
-        TestingHelpers.defaultExpectedSpans - 1,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes - 1,
-        TestingHelpers.defaultExpectedTriples - 1,
-        TestingHelpers.defaultExpectedStructureAnnotations
-    );
+        TestingHelpers.defaultCounts.copy(0, -1, -1, 0,0, 0, -1, -1, 0));
   }
 
   @Test
@@ -133,16 +97,7 @@ public class KnowtatorCollectionActionsTest {
         model,
         new SpanAction(
             model, ADD, model.getSelectedTextSource().get().getSelectedAnnotation().get()),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans + 1,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples,
-        TestingHelpers.defaultExpectedStructureAnnotations
-    );
+        TestingHelpers.defaultCounts.copy(0, 0, 1, 0, 0, 0, 0, 0, 0));
   }
 
   @Test
@@ -158,16 +113,7 @@ public class KnowtatorCollectionActionsTest {
         model,
         new SpanAction(
             model, REMOVE, model.getSelectedTextSource().get().getSelectedAnnotation().get()),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations - 1,
-        TestingHelpers.defaultExpectedSpans - 1,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes - 1,
-        TestingHelpers.defaultExpectedTriples - 1,
-        TestingHelpers.defaultExpectedStructureAnnotations
-    );
+        TestingHelpers.defaultCounts.copy(0, -1, -1, 0, 0, 0, -1, -1, 0));
 
     // Next test remove span if there are multiple spans. This should only remove the span.
     conceptAnnotation.setSelection(conceptAnnotation.first().get());
@@ -178,16 +124,7 @@ public class KnowtatorCollectionActionsTest {
         model,
         new SpanAction(
             model, REMOVE, model.getSelectedTextSource().get().getSelectedAnnotation().get()),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans - 1,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples,
-        TestingHelpers.defaultExpectedStructureAnnotations
-    );
+        TestingHelpers.defaultCounts.copy(0, 0, -1, 0, 0, 0, 0, 0, 0));
   }
 
   @Test
@@ -195,16 +132,7 @@ public class KnowtatorCollectionActionsTest {
     TestingHelpers.testKnowtatorAction(
         model,
         new ProfileAction(model, ADD, "I'm new here"),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles + 1,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples,
-        TestingHelpers.defaultExpectedStructureAnnotations
-    );
+        TestingHelpers.defaultCounts.copy(0, 0, 0, 0, 1, 0, 0, 0, 0));
   }
 
   @Test
@@ -213,16 +141,7 @@ public class KnowtatorCollectionActionsTest {
     TestingHelpers.testKnowtatorAction(
         model,
         new ProfileAction(model, REMOVE, null),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations - 2,
-        TestingHelpers.defaultExpectedSpans - 3,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles - 1,
-        TestingHelpers.defaultExpectedHighlighters - 2,
-        TestingHelpers.defaultExpectedAnnotationNodes - 2,
-        TestingHelpers.defaultExpectedTriples - 2,
-        TestingHelpers.defaultExpectedStructureAnnotations
-    );
+        TestingHelpers.defaultCounts.copy(0, -2, -3, 0, -1, -2, -2, -2, 0));
 
     assertThrows(ActionUnperformable.class, this::removeDefaultProfileActionTest);
   }
@@ -239,15 +158,7 @@ public class KnowtatorCollectionActionsTest {
     TestingHelpers.testKnowtatorAction(
         model,
         new GraphSpaceAction(model, ADD, "new_graph_space", model.getSelectedTextSource().get()),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans,
-        TestingHelpers.defaultExpectedGraphSpaces + 1,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples,
-        TestingHelpers.defaultExpectedStructureAnnotations
+        TestingHelpers.defaultCounts.copy(0, 0, 0, 1, 0, 0, 0, 0, 0)
     );
   }
 
@@ -259,16 +170,7 @@ public class KnowtatorCollectionActionsTest {
     TestingHelpers.testKnowtatorAction(
         model,
         new GraphSpaceAction(model, REMOVE, null, model.getSelectedTextSource().get()),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans,
-        TestingHelpers.defaultExpectedGraphSpaces - 1,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes - 2,
-        TestingHelpers.defaultExpectedTriples - 1,
-        TestingHelpers.defaultExpectedStructureAnnotations
-    );
+        TestingHelpers.defaultCounts.copy(0, 0, 0, -1, 0, 0, -2, -1, 0));
   }
 
   public void setModel(KnowtatorModel model) {

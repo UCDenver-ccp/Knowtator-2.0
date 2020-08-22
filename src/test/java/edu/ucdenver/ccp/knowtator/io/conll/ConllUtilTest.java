@@ -40,17 +40,9 @@ class ConllUtilTest {
     Files.list(new File(model.getProjectLocation(), "Structures").toPath())
         .forEach(file -> util.readToStructureAnnotations(model, file.toFile()));
 
-    TestingHelpers.countCollections(model,
-        1,
-        0,
-        0,
-        361,
-        1,
-        0,
-        8072,
-        7711,
-        8072
-    );
+    TestingHelpers.ProjectCounts counts = new TestingHelpers.ProjectCounts(1, 0, 0, 361, 1, 0, 8072, 7711, 8072);
+
+    TestingHelpers.countCollections(model, counts);
   }
 
 //  @Test

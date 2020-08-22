@@ -24,13 +24,11 @@
 
 package edu.ucdenver.ccp.knowtator.view.iaa;
 
-import com.google.common.io.Files;
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import java.io.File;
 import java.io.IOException;
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 
 class IAAOptionsDialogTest {
@@ -42,66 +40,54 @@ class IAAOptionsDialogTest {
 
     KnowtatorModel model2 = new KnowtatorModel(project2, null);
     model2.load(model2.getProjectLocation());
-    TestingHelpers.countCollections(model2,
-        97,
-        740,
-        740,
-        412,
-        2,
-        0,
-        381,
-        96,
-        0);
+
+    TestingHelpers.ProjectCounts model2Counts = new TestingHelpers.ProjectCounts(97, 740, 740, 412, 2, 0, 381, 96, 0);
+    TestingHelpers.countCollections(model2, model2Counts);
 
     KnowtatorModel model1 = new KnowtatorModel(project1, null);
     model1.load(model1.getProjectLocation());
-    TestingHelpers.countCollections(model1,
-        97,
-        718,
-        718,
-        412,
-        1,
-        18,
-        381,
-        96,
-        0);
+    TestingHelpers.ProjectCounts model1Counts = new TestingHelpers.ProjectCounts(97, 718, 718, 412, 1, 18, 381, 96, 0);
+    TestingHelpers.countCollections(model1, model1Counts);
 
     KnowtatorModel mergeModel = IAAOptionsDialog.mergeProjects(project1, model2, null, true, null);
-    TestingHelpers.countCollections(mergeModel,
-        97,
-        1458,
-        1458,
-        412,
-        3,
-        18,
-        381,
-        96,
-        0);
+    TestingHelpers.ProjectCounts overlapCounts = new TestingHelpers.ProjectCounts(97, 718, 718, 412, 0, 0, 0, 0, 0);
+    TestingHelpers.ProjectCounts mergeModelCounts = model1Counts.add(model2Counts, overlapCounts);
+    TestingHelpers.countCollections(mergeModel, mergeModelCounts);
+//    97,
+//        1458,
+//        1458,
+//        412,
+//        3,
+//        18,
+//        381,
+//        96,
+//        0
+  }
+
+  private void checkMerge(String projectName1, TestingHelpers.ProjectCounts project1Counts, String projectName2, TestingHelpers.ProjectCounts project2Counts, TestingHelpers.ProjectCounts overlapCounts) throws IOException {
+    KnowtatorModel model1  = TestingHelpers.getLoadedModel(projectName1);
+    TestingHelpers.countCollections(model1, project1Counts);
+
+    KnowtatorModel model2 = TestingHelpers.getLoadedModel(projectName2);
+    TestingHelpers.countCollections(model2, project2Counts);
+
+    model2.load(model1.getProjectLocation());
+    TestingHelpers.ProjectCounts mergeCounts = project2Counts.add(project1Counts, overlapCounts);
+    TestingHelpers.countCollections(model2, mergeCounts);
+
   }
 
   @Test
   public void mergeProjectsTest2() throws ActionUnperformable, IOException {
-    String projectName = "import_test_project1";
+    String projectName1 = "import_test_project1";
 
-    File projectDirectory = new File(
-        TestingHelpers.class
-            .getResource(String.format("/%s/%s.knowtator", projectName, projectName))
-            .getFile()).getParentFile();
-    File tempProjectDir = Files.createTempDir();
-    FileUtils.copyDirectory(projectDirectory, tempProjectDir);
-    KnowtatorModel model = new KnowtatorModel(tempProjectDir, null);
-    model.load(model.getProjectLocation());
+    KnowtatorModel model1  = TestingHelpers.getLoadedModel(projectName1);
 
-    TestingHelpers.countCollections(
-        model,
-        1,
-        1,
-        1,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0);
+    TestingHelpers.ProjectCounts model1Counts = new TestingHelpers.ProjectCounts(1, 1, 1, 0 , 1, 0 , 0, 0, 0);
+
+    TestingHelpers.countCollections(model1,model1Counts);
+
+    String projectName2 = "import_test_project1";
+    KnowtatorModel model2 = TestingHelpers.getLoadedModel(projectName2);
   }
 }
