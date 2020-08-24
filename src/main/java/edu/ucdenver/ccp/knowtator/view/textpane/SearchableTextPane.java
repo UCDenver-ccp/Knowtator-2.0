@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.view.textpane;
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
+import edu.ucdenver.ccp.knowtator.model.collection.SelectableCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
@@ -48,18 +49,14 @@ public abstract class SearchableTextPane extends JTextPane
   /** The View. */
   KnowtatorView view;
 
-  @Override
-  public void setView(KnowtatorView view) {
-    this.view = view;
-  }
-
   /**
    * Instantiates a new Searchable text pane.
    *
    * @param searchTextField A text field used to search the text pane
    */
-  SearchableTextPane(JTextField searchTextField) {
+  SearchableTextPane(KnowtatorView view, JTextField searchTextField) {
     super();
+    this.view = view;
     this.searchTextField = searchTextField;
     this.isSearching = false;
     addCaretListener(
@@ -126,12 +123,7 @@ public abstract class SearchableTextPane extends JTextPane
           }
         }
       }
-      view.getModel()
-          .ifPresent(
-              model ->
-                  model
-                      .getSelectedTextSource()
-                      .ifPresent(textSource -> textSource.setSelectedConceptAnnotation(null)));
+      view.getModel().flatMap(BaseModel::getSelectedTextSource).ifPresent(textSource -> textSource.setSelectedConceptAnnotation(null));
       select(matchStart, matchEnd);
       refreshHighlights();
       isSearching = false;
@@ -191,16 +183,11 @@ public abstract class SearchableTextPane extends JTextPane
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {
     view.getModel()
         .flatMap(BaseModel::getSelectedTextSource)
-        .ifPresent(
-            textSource ->
-                textSource
-                    .getSelectedAnnotation()
-                    .ifPresent(
-                        conceptAnnotation ->
-                            conceptAnnotation
-                                .getSelection()
-                                .ifPresent(
-                                    span -> searchTextField.setText(span.getSpannedText()))));
+        .flatMap(textSource -> textSource
+        .getSelectedAnnotation()
+        .flatMap(SelectableCollection::getSelection))
+        .filter(span -> shouldUpdateSearchTextFieldCondition())
+        .ifPresent(span -> searchTextField.setText(span.getSpannedText()));
     event
         .getNew()
         .ifPresent(

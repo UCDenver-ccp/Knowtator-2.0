@@ -34,7 +34,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import org.apache.log4j.Logger;
-import org.semanticweb.owlapi.model.IRI;
 
 /** The type Concept annotation. */
 public class ConceptAnnotation extends SpanCollection
@@ -51,6 +50,7 @@ public class ConceptAnnotation extends SpanCollection
   private String bratID;
   private String motivation;
   private String id;
+  private final Set<String> layers;
 
   /**
    * Instantiates a new Concept annotation.
@@ -68,7 +68,8 @@ public class ConceptAnnotation extends SpanCollection
       String owlClass,
       @Nonnull Profile annotator,
       String annotationType,
-      String motivation) {
+      String motivation,
+      Set<String> layers) {
     super(textSource.getKnowtatorModel());
 
     this.annotator = annotator;
@@ -76,6 +77,8 @@ public class ConceptAnnotation extends SpanCollection
     this.motivation = motivation;
     this.owlClass = owlClass;
     this.textSource = textSource;
+    this.layers = new HashSet<>();
+    this.layers.addAll(layers);
 
     this.id = model.verifyId(annotationID, this, false);
 
@@ -181,15 +184,6 @@ public class ConceptAnnotation extends SpanCollection
    */
   public void setBratID(String bratID) {
     this.bratID = bratID;
-  }
-
-  /**
-   * Gets owl class label.
-   *
-   * @return the owl class label
-   */
-  public String getOwlClassLabel() {
-    return IRI.create(owlClass).getShortForm();
   }
 
   /**
@@ -329,6 +323,10 @@ public class ConceptAnnotation extends SpanCollection
    * @return the owl class rendering
    */
   public String getOwlClassRendering() {
-    return  model.getOwlEntityRendering(owlClass);
+    return model.getOwlEntityRendering(owlClass);
+  }
+
+  public Set<String> getLayers() {
+    return layers;
   }
 }

@@ -36,6 +36,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.apache.log4j.Logger;
 import org.protege.editor.owl.model.OWLWorkspace;
 
@@ -48,6 +52,12 @@ import org.protege.editor.owl.model.OWLWorkspace;
 public class KnowtatorModel extends OwlModel {
 
   private static final Logger log = Logger.getLogger(KnowtatorModel.class);
+
+  public List<String[]> getOWLClassNotFoundAnnotations() {
+    return OWLClassNotFoundAnnotations;
+  }
+
+  private List<String[]> OWLClassNotFoundAnnotations;
 
   /**
    * The constructor initializes all of the models and managers @param projectLocation the project
@@ -80,8 +90,13 @@ public class KnowtatorModel extends OwlModel {
   }
 
   @Override
-  public void load() {
-    super.load();
+  public void load(File projectLocation) {
+    try {
+      projectLocation = validateProjectLocation(projectLocation);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    super.load(projectLocation);
 
     setLoading(true);
 
@@ -91,43 +106,44 @@ public class KnowtatorModel extends OwlModel {
     OldKnowtatorXmlUtil oldXmlUtil = new OldKnowtatorXmlUtil();
 
     try {
-      Files.list(getProfilesLocation().toPath())
+      Files.list(getProfilesLocation(projectLocation).toPath())
           .filter(path -> path.toString().endsWith(".xml"))
           .map(Path::toFile)
           .forEach(file -> xmlUtil.readToProfileCollection(this, file));
-
-      Files.list(getArticlesLocation().toPath())
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    try {
+      Files.list(getArticlesLocation(projectLocation).toPath())
           .filter(path -> path.toString().endsWith(".txt"))
           .map(Path::toFile)
           .forEach(
               file -> {
-                TextSource newTextSource = new TextSource(this, null, file.getName());
+                TextSource newTextSource = new TextSource(this, file, null);
                 textSources.add(newTextSource);
               });
-
-      log.info("Loading annotations");
-      Files.list(getAnnotationsLocation().toPath())
-          .filter(path -> path.toString().endsWith(".xml"))
-          .map(Path::toFile)
-          .peek(file -> xmlUtil.readToTextSourceCollection(this, file, false))
-          .forEach(file -> oldXmlUtil.readToTextSourceCollection(this, file));
-
-      log.info("Loading structures");
-      Files.list(structuresLocation.toPath())
-          .filter(path -> path.toString().endsWith(".xml"))
-          .map(Path::toFile)
-          .forEach(file -> xmlUtil.readToTextSourceCollection(this, file, true));
-      Files.list(structuresLocation.toPath())
-          .filter(path -> path.toString().endsWith(".conllu") || path.toString().endsWith(".conll"))
-          .map(Path::toFile)
-          .forEach(file -> conllUtil.readToStructureAnnotations(this, file));
-
-      profiles.first().ifPresent(profiles::setSelection);
-      textSources.first().ifPresent(textSources::setSelection);
-
     } catch (IOException e) {
       e.printStackTrace();
     }
+    try {
+
+      log.info("Loading annotations");
+      OWLClassNotFoundAnnotations = new ArrayList<>();
+      Files.list(getAnnotationsLocation(projectLocation).toPath())
+          .filter(path -> path.toString().endsWith(".xml"))
+          .map(Path::toFile)
+          .peek(file -> xmlUtil.readToTextSourceCollection(this, file))
+          .forEach(file -> oldXmlUtil.readToTextSourceCollection(this, file));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    profiles.first().ifPresent(profiles::setSelection);
+    textSources.first().ifPresent(textSources::setSelection);
+
+    Set<String> owlClasses = new HashSet<>();
+    textSources.forEach(textSource -> textSource.getConceptAnnotations().forEach(conceptAnnotation -> owlClasses.add(conceptAnnotation.getOwlClass())));
+    profiles.verifyHighlighters(owlClasses);
+
 
     setLoading(false);
   }
@@ -145,7 +161,7 @@ public class KnowtatorModel extends OwlModel {
     switch (extension) {
       case "xml":
         KnowtatorXmlUtil xmlUtil = new KnowtatorXmlUtil();
-        xmlUtil.readToTextSourceCollection(this, file, false);
+        xmlUtil.readToTextSourceCollection(this, file);
         break;
       case "ann":
         BratStandoffUtil standoffUtil = new BratStandoffUtil();
@@ -167,5 +183,9 @@ public class KnowtatorModel extends OwlModel {
    */
   public static void main(String[] args) {
     log.info("Knowtator");
+  }
+
+  public void addOWLClassNotFoundAnnotations(String annotationID, String owlClassID) {
+    OWLClassNotFoundAnnotations.add(new String[]{annotationID, owlClassID});
   }
 }

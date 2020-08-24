@@ -26,10 +26,20 @@ package edu.ucdenver.ccp.knowtator.view.list;
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.util.Optional;
 
 /** The type Profile list. */
 public class ProfileList extends KnowtatorList<Profile> {
+
+  /**
+   * Instantiates a new Knowtator list.
+   *
+   * @param view The view
+   */
+  public ProfileList(KnowtatorView view) {
+    super(view);
+  }
 
   @Override
   public void reactToClick() {

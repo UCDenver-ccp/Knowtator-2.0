@@ -42,7 +42,6 @@ import java.util.Set;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import org.semanticweb.owlapi.model.OWLClass;
 
 /** The type Profile action. */
 public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {

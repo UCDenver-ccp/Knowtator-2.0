@@ -1,13 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SCOPE_TYPE" value="8" />
+    <option name="CUSTOM_SCOPE_NAME" value="important" />
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:development" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </select>
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="2ec6707e-7a2e-4107-ad5c-f3e6cd381480" name="Default Changelist" comment="" />
-    <ignored path="$PROJECT_DIR$/classes/" />
-    <ignored path="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/uima/" />
-    <ignored path="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/" />
-    <ignored path="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/" />
-    <ignored path="$PROJECT_DIR$/target/" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <list default="true" id="b5586eae-97ae-4be5-aa9b-4eaaef9d25b4" name="Default Changelist" comment="Simplified adding of text sources to be just about the file chosen (txt vs. xml)." />
+    <list id="9e563f0c-91e9-4ed0-b3db-d36bc1e81506" name="Made test for adding an annotation layer" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,313 +42,77 @@
   <component name="CodeInsightWorkspaceSettings">
     <option name="optimizeImportsOnTheFly" value="true" />
   </component>
-  <component name="DatabaseView">
-    <option name="SHOW_INTERMEDIATE" value="true" />
-    <option name="GROUP_DATA_SOURCES" value="true" />
-    <option name="GROUP_SCHEMA" value="true" />
-    <option name="GROUP_CONTENTS" value="false" />
-    <option name="SORT_POSITIONED" value="false" />
-    <option name="SHOW_EMPTY_GROUPS" value="false" />
-    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
-    <option name="HIDDEN_KINDS">
-      <set />
-    </option>
-    <expand />
-    <select />
-  </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/model/text/concept/ConceptAnnotationTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="816">
-              <caret line="61" selection-start-line="61" selection-end-line="61" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/view/actions/FilterActionsTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1032">
-              <caret line="76" column="87" selection-start-line="76" selection-start-column="87" selection-end-line="76" selection-end-column="87" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/view/actions/GraphActionsTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2952">
-              <caret line="156" column="74" selection-start-line="156" selection-start-column="74" selection-end-line="156" selection-end-column="74" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/view/actions/KnowtatorCollectionActionsTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1608">
-              <caret line="104" column="26" selection-start-line="104" selection-start-column="26" selection-end-line="104" selection-end-column="26" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/view/actions/OwlActionsTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="960">
-              <caret line="75" column="87" selection-start-line="75" selection-start-column="87" selection-end-line="75" selection-end-column="87" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/model/OwlModelTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4728">
-              <caret line="252" column="4" selection-start-line="252" selection-start-column="4" selection-end-line="252" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/ProjectManagerTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="744">
-              <caret line="53" column="41" selection-start-line="53" selection-start-column="41" selection-end-line="53" selection-end-column="41" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/model/collection/SelectableCollectionTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="984">
-              <caret line="67" column="37" selection-start-line="67" selection-start-column="37" selection-end-line="67" selection-end-column="37" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/view/actions/SpanActionsTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1080">
-              <caret line="78" column="41" selection-start-line="78" selection-start-column="41" selection-end-line="78" selection-end-column="41" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/TestingHelpers.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="600">
-              <caret line="66" column="60" selection-start-line="66" selection-start-column="60" selection-end-line="66" selection-end-column="60" />
-              <folding>
-                <element signature="e#3157#3286#0" expanded="true" />
-                <element signature="e#3554#3686#0" expanded="true" />
-                <element signature="e#3880#3952#1" expanded="true" />
-                <element signature="e#3904#3951#0" expanded="true" />
-                <element signature="e#3957#4001#1" expanded="true" />
-                <element signature="e#4069#4133#1" expanded="true" />
-                <element signature="e#4384#4456#1" expanded="true" />
-                <element signature="e#4408#4455#0" expanded="true" />
-                <element signature="e#4461#4505#1" expanded="true" />
-                <element signature="e#4573#4637#1" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>setView</find>
-      <find>getOwlClassR</find>
-      <find>open</find>
-      <find>load</find>
-      <find>readtotext</find>
-      <find>save</find>
-      <find>test</find>
-      <find>structure</find>
-      <find>guice</find>
-      <find>google</find>
-      <find>is</find>
-      <find>ren</find>
-      <find>writi</find>
-      <find>set</find>
-      <find>span.to</find>
-      <find>span::</find>
-      <find>new</find>
-      <find>CRAFT_aggregate_ontology_Instance_51841</find>
-      <find>\n1\t</find>
-      <find>\n</find>
-      <find>isloa</find>
-    </findStrings>
-    <replaceStrings>
-      <replace />
-    </replaceStrings>
-  </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="load_uris" />
-      </map>
-    </option>
-  </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
       <list>
-        <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/model/text/concept/ConceptAnnotationTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/model/collection/SelectableCollectionTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/view/actions/KnowtatorCollectionActionsTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/view/actions/FilterActionsTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/view/actions/SpanActionsTest.java" />
-        <option value="$PROJECT_DIR$/src/test/resources/test_project/Annotations/document2.xml" />
-        <option value="$PROJECT_DIR$/src/test/resources/test_project/Annotations/document3.xml" />
-        <option value="$PROJECT_DIR$/src/test/resources/test_project/Annotations/old_document3.xml" />
-        <option value="$PROJECT_DIR$/plugin.xml" />
-        <option value="$PROJECT_DIR$/update.properties" />
-        <option value="$PROJECT_DIR$/src/main/resources/KnowtatorToUIMAAnnotatorDescriptor.xml" />
-        <option value="$PROJECT_DIR$/src/main/resources/CcpTypeSystem.xml" />
-        <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/src/test/resources/test_project/Annotations/document1.xml" />
-        <option value="$PROJECT_DIR$/src/test/resources/test_project_using_uris/Annotations/document1.xml" />
-        <option value="$PROJECT_DIR$/src/test/resources/test_project_using_uris/Annotations/old_document3.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/modelactions/ConceptAnnotationAction.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/collection/ConceptAnnotationCollection.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/table/AnnotationTableForOwlClass.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/modelactions/ProfileAction.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/modelactions/ColorChangeAction.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/modelactions/ReassignOwlClassAction.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/list/ColorList.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/AddRelationListener.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/textpane/AnnotatableTextPane.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/graph/GraphActions.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/GraphSpace.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/table/RelationTable.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/OldKnowtatorXmlUtil.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/brat/BratStandoffUtil.java" />
-        <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/view/actions/OwlActionsTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/view/actions/GraphActionsTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/ConceptAnnotation.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/RelationAnnotation.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/Profile.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/TextSource.java" />
-        <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/model/OwlModelTest.java" />
-        <option value="$PROJECT_DIR$/src/test/resources/test_project_using_uris/Annotations/document2.xml" />
-        <option value="$PROJECT_DIR$/src/test/resources/test_project_using_uris/Annotations/document3.xml" />
-        <option value="$PROJECT_DIR$/src/test/resources/test_project_using_uris/Profiles/Default.xml" />
-        <option value="$PROJECT_DIR$/src/test/resources/test_project_using_uris/Profiles/profile1.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/OwlModel.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/KnowtatorXmlUtil.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/KnowtatorModel.java" />
-        <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/io/conll/ConllUtilTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/ProjectManagerTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/XmlUtil.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/conll/ConllUtil.java" />
-        <option value="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/BaseModel.java" />
-        <option value="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/TestingHelpers.java" />
+        <option value="Class" />
+        <option value="JUnit5 Test Class" />
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="development" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="MIXED" />
+  </component>
   <component name="MavenImportPreferences">
-    <option name="importingSettings">
-      <MavenImportingSettings>
-        <option name="importAutomatically" value="true" />
-      </MavenImportingSettings>
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="$APPLICATION_HOME_DIR$/plugins/maven/lib/maven3" />
+      </MavenGeneralSettings>
     </option>
   </component>
-  <component name="MavenProjectNavigator">
-    <treeState>
-      <expand>
-        <path>
-          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
-          <item name="Knowtator" type="9519ce18:MavenProjectsStructure$ProjectNode" />
-        </path>
-        <path>
-          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
-          <item name="Knowtator" type="9519ce18:MavenProjectsStructure$ProjectNode" />
-          <item name="Lifecycle" type="58874e2:MavenProjectsStructure$LifecycleNode" />
-        </path>
-      </expand>
-      <select />
-    </treeState>
-  </component>
   <component name="NamedScopeManager">
+    <scope name="important" pattern="src:edu.ucdenver.ccp.knowtator.*||src:edu.ucdenver.ccp.knowtator.model.*||src:edu.ucdenver.ccp.knowtator.model.collection.*||src:edu.ucdenver.ccp.knowtator.model.collection.event.*||src:edu.ucdenver.ccp.knowtator.model.object.*||test:edu.*||src:edu..*" />
     <order>
       <scope name="code" />
     </order>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1920" />
-    <option name="y" value="30" />
-    <option name="width" value="1680" />
-    <option name="height" value="1050" />
-  </component>
+  <component name="ProjectId" id="1cBxbN40PINuAxuAjDuPveCF0y0" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW" value="true" />
+    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW" value="true" />
+    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH" value="531" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="add_unversioned_files" value="$PROJECT_DIR$/src/test/resources/biocreative_chemprot_small/Structures/23402364.conll&#10;/home/harrison/Documents/Knowtator-2.0/src/test/resources/concepts+assertions/Annotations/11319941.xml" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit5" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
     <property name="extract.method.default.visibility" value="private" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/test/resources" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/test/resources/import_test_project2" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="project.structure.side.proportion" value="0.0" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="copyright" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="Console" />
   </component>
   <component name="RecentsManager">
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="edu.ucdenver.ccp.knowtator.view.iaa" />
+      <recent name="edu.ucdenver.ccp.knowtator.view.profile" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/test/resources" />
-      <recent name="$PROJECT_DIR$/src/test/resources/biocreative_chemprot/Articles" />
-      <recent name="$PROJECT_DIR$/src/test/resources/biocreative_chemprot/Structures" />
-      <recent name="$PROJECT_DIR$/src/test/resources/test_project_using_uris/Annotations" />
-      <recent name="$PROJECT_DIR$/src/test/resources/test_project/Annotations" />
+      <recent name="$PROJECT_DIR$/src/test/resources/import_test_project2" />
+      <recent name="$PROJECT_DIR$/src/test/resources/iaa_test_project/Profiles" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
-  <component name="RunManager" selected="Application.Protege">
-    <configuration name="Protege" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.model.KnowtatorModel" />
-      <module name="Knowtator-2.0" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-        <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="clean install" />
-        <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_protege" />
-      </method>
-    </configuration>
-    <configuration name="standalone" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.KnowtatorStandalone" />
-      <module name="Knowtator-2.0" />
-      <option name="PROGRAM_PARAMETERS" value="g" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="JUnit.All in Knowtator-2.0">
     <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
       <setting name="replType" value="NREPL" />
       <setting name="execution" value="LEININGEN" />
@@ -341,6 +131,42 @@
       <module name="" />
       <method v="2" />
     </configuration>
+    <configuration name="Debug GUI" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.KnowtatorStandalone" />
+      <module name="Knowtator-2.0" />
+      <option name="PROGRAM_PARAMETERS" value="d" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GUI" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.KnowtatorStandalone" />
+      <module name="Knowtator-2.0" />
+      <option name="PROGRAM_PARAMETERS" value="g" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Run Protege" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.model.KnowtatorModel" />
+      <module name="Knowtator-2.0" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+        <option name="RunConfigurationTask" enabled="true" run_configuration_name="knowtator [install]" run_configuration_type="MavenRunConfiguration" />
+        <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_Protege" />
+      </method>
+    </configuration>
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="All in Knowtator-2.0" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Knowtator-2.0" />
       <option name="PACKAGE_NAME" value="" />
@@ -349,163 +175,412 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="FilterActionsTest.filterActionTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="IAAOptionsDialogTest.mergeProjects" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Knowtator-2.0" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.view.actions.*" />
+          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.view.iaa.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator.view.actions" />
-      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.view.actions.FilterActionsTest" />
-      <option name="METHOD_NAME" value="filterActionTest" />
+      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator.view.iaa" />
+      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.view.iaa.IAAOptionsDialogTest" />
+      <option name="METHOD_NAME" value="mergeProjects" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="KnowtatorCollectionActionsTest.addConceptAnnotationActionTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="IAAOptionsDialogTest.mergeProjectsTest2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Knowtator-2.0" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.view.actions.*" />
+          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.view.iaa.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator.view.actions" />
-      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.view.actions.KnowtatorCollectionActionsTest" />
-      <option name="METHOD_NAME" value="addConceptAnnotationActionTest" />
+      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator.view.iaa" />
+      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.view.iaa.IAAOptionsDialogTest" />
+      <option name="METHOD_NAME" value="mergeProjectsTest2" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="KnowtatorCollectionActionsTest.addTextSourceActionTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ProjectManagerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Knowtator-2.0" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.view.actions.*" />
+          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator.view.actions" />
-      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.view.actions.KnowtatorCollectionActionsTest" />
-      <option name="METHOD_NAME" value="addTextSourceActionTest" />
+      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator" />
+      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.ProjectManagerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ProjectManagerTest.importProjectTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Knowtator-2.0" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator" />
+      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.ProjectManagerTest" />
+      <option name="METHOD_NAME" value="importProjectTest" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="KnowtatorCollectionActionsTest.removeTextSourceActionTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Knowtator-2.0" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.view.actions.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator.view.actions" />
-      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.view.actions.KnowtatorCollectionActionsTest" />
-      <option name="METHOD_NAME" value="removeTextSourceActionTest" />
-      <option name="TEST_OBJECT" value="method" />
+    <configuration name="knowtator [install]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings">
+          <MavenRunnerSettings>
+            <option name="delegateBuildToMaven" value="false" />
+            <option name="environmentProperties">
+              <map>
+                <entry key="PROTEGE_HOME" value="/opt/protege" />
+              </map>
+            </option>
+            <option name="jreName" value="#USE_PROJECT_JDK" />
+            <option name="mavenProperties">
+              <map />
+            </option>
+            <option name="passParentEnv" value="true" />
+            <option name="runMavenInBackground" value="true" />
+            <option name="skipTests" value="false" />
+            <option name="vmOptions" value="-Dmaven.test.skip=true" />
+          </MavenRunnerSettings>
+        </option>
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="install" />
+              </list>
+            </option>
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <configuration name="Unnamed" type="#org.osmorc.OsgiConfigurationType" vmParameters="" programParameters="" includeAllBundlesInClassPath="false" workingDir="$PROJECT_DIR$/classes/run.osgi/" useAlternativeJre="false" alternativeJrePath="" frameworkStartLevel="1" defaultStartLevel="5" generateWorkingDir="false">
+      <framework instance="" />
+      <additionalProperties startConsole="true" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.standalone" />
-      <item itemvalue="Application.Protege" />
+      <item itemvalue="Application.Run Protege" />
+      <item itemvalue="Application.GUI" />
+      <item itemvalue="Application.Debug GUI" />
       <item itemvalue="JUnit.All in Knowtator-2.0" />
-      <item itemvalue="JUnit.KnowtatorCollectionActionsTest.addTextSourceActionTest" />
-      <item itemvalue="JUnit.KnowtatorCollectionActionsTest.removeTextSourceActionTest" />
-      <item itemvalue="JUnit.KnowtatorCollectionActionsTest.addConceptAnnotationActionTest" />
-      <item itemvalue="JUnit.FilterActionsTest.filterActionTest" />
+      <item itemvalue="JUnit.ProjectManagerTest" />
+      <item itemvalue="JUnit.ProjectManagerTest.importProjectTest" />
+      <item itemvalue="JUnit.IAAOptionsDialogTest.mergeProjects" />
+      <item itemvalue="JUnit.IAAOptionsDialogTest.mergeProjectsTest2" />
+      <item itemvalue="Maven.knowtator [install]" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.FilterActionsTest.filterActionTest" />
         <item itemvalue="JUnit.All in Knowtator-2.0" />
-        <item itemvalue="JUnit.KnowtatorCollectionActionsTest.addConceptAnnotationActionTest" />
-        <item itemvalue="JUnit.KnowtatorCollectionActionsTest.removeTextSourceActionTest" />
-        <item itemvalue="JUnit.KnowtatorCollectionActionsTest.addTextSourceActionTest" />
+        <item itemvalue="JUnit.IAAOptionsDialogTest.mergeProjectsTest2" />
+        <item itemvalue="JUnit.IAAOptionsDialogTest.mergeProjects" />
+        <item itemvalue="JUnit.ProjectManagerTest.importProjectTest" />
+        <item itemvalue="JUnit.ProjectManagerTest" />
       </list>
     </recent_temporary>
   </component>
-  <component name="TestHistory">
-    <history-entry file="ConllUtilTest_readBioCreativeProject - 2019.06.05 at 00h 42m 15s.xml">
-      <configuration name="ConllUtilTest.readBioCreativeProject" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="ConllUtilTest_readBioCreativeProject - 2019.06.05 at 00h 42m 27s.xml">
-      <configuration name="ConllUtilTest.readBioCreativeProject" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="ConllUtilTest_readBioCreativeProject - 2019.06.05 at 00h 42m 42s.xml">
-      <configuration name="ConllUtilTest.readBioCreativeProject" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="ConllUtilTest_readBioCreativeProject - 2019.06.05 at 00h 42m 53s.xml">
-      <configuration name="ConllUtilTest.readBioCreativeProject" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="ConllUtilTest_readBioCreativeProject - 2019.06.05 at 00h 57m 38s.xml">
-      <configuration name="ConllUtilTest.readBioCreativeProject" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="All_in_Knowtator-2_0 - 2019.06.06 at 14h 27m 58s.xml">
-      <configuration name="All in Knowtator-2.0" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="ProjectManagerTest_saveProjectTest - 2019.06.06 at 14h 28m 24s.xml">
-      <configuration name="ProjectManagerTest.saveProjectTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="ProjectManagerTest_saveProjectTest - 2019.06.06 at 14h 28m 35s.xml">
-      <configuration name="ProjectManagerTest.saveProjectTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="ProjectManagerTest_saveProjectTest - 2019.06.06 at 14h 30m 30s.xml">
-      <configuration name="ProjectManagerTest.saveProjectTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="All_in_Knowtator-2_0 - 2019.06.06 at 22h 32m 11s.xml">
-      <configuration name="All in Knowtator-2.0" configurationId="JUnit" />
-    </history-entry>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="project-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration />
   </component>
-  <component name="ToolWindowManager">
-    <frame x="1599" y="39" width="1682" height="1012" extended-state="6" />
-    <editor active="true" />
-    <layout>
-      <window_info id="Designer" order="0" />
-      <window_info id="UI Designer" order="1" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info id="Structure" order="3" side_tool="true" weight="0.25" />
-      <window_info auto_hide="true" content_ui="combo" id="Project" order="4" weight="0.21428572" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32957393" />
-      <window_info anchor="bottom" x="5199" y="385" width="1362" height="792" id="Run" order="2" sideWeight="0.4987163" weight="0.35176992" />
-      <window_info anchor="bottom" x="-1" y="419" width="1602" height="902" id="Debug" order="3" sideWeight="0.49935815" type="FLOATING" weight="0.44862154" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="FindBugs-IDEA" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.39598998" />
-      <window_info anchor="bottom" id="Docker" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="CheckStyle" order="10" />
-      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5012837" side_tool="true" weight="0.4774436" />
-      <window_info anchor="bottom" id="Messages" order="12" weight="0.37468672" />
-      <window_info anchor="bottom" id="Run with VisualVM" order="13" />
-      <window_info anchor="bottom" id="Database Changes" order="14" />
-      <window_info anchor="bottom" id="Version Control" order="15" sideWeight="0.4993895" weight="0.39021614" />
-      <window_info anchor="bottom" id="Debug with VisualVM" order="16" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" auto_hide="true" id="Maven" order="3" sideWeight="0.49914822" weight="0.20940171" />
-      <window_info anchor="right" id="Leiningen" order="4" weight="0.3298969" />
-      <window_info anchor="right" id="Palette" order="5" />
-      <window_info anchor="right" id="Google Cloud Storage" order="6" show_stripe_button="false" weight="0.3298969" />
-      <window_info anchor="right" id="SciView" order="7" />
-      <window_info anchor="right" id="Database" order="8" />
-      <window_info anchor="right" id="Palette&#9;" order="9" />
-      <window_info anchor="right" id="REPL" order="10" side_tool="true" />
-      <window_info anchor="right" x="0" y="0" width="370" height="874" id="Documentation" order="11" sideWeight="0.5008518" side_tool="true" weight="0.27086008" />
-    </layout>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b5586eae-97ae-4be5-aa9b-4eaaef9d25b4" name="Default Changelist" comment="" />
+      <created>1590015864586</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1590015864586</updated>
+      <workItem from="1590015931849" duration="5034000" />
+      <workItem from="1590021108923" duration="4034000" />
+      <workItem from="1590640467043" duration="19344000" />
+      <workItem from="1591151697877" duration="37942000" />
+      <workItem from="1591190246555" duration="3546000" />
+      <workItem from="1591241306446" duration="623000" />
+      <workItem from="1591242881808" duration="701000" />
+      <workItem from="1591485127142" duration="474000" />
+      <workItem from="1591485619634" duration="22000" />
+      <workItem from="1591485665394" duration="305000" />
+      <workItem from="1591485986455" duration="601000" />
+      <workItem from="1592423099414" duration="19956000" />
+      <workItem from="1592468854392" duration="1500000" />
+      <workItem from="1597451857748" duration="2910000" />
+      <workItem from="1597675948461" duration="12548000" />
+      <workItem from="1597702869327" duration="8469000" />
+      <workItem from="1597939957315" duration="9954000" />
+      <workItem from="1598148037567" duration="6402000" />
+    </task>
+    <task id="LOCAL-00001" summary="Old knowtator projects read annotations even if owl class is not found">
+      <created>1590645202357</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1590645202362</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Record and log when annotation owl classes aren't found">
+      <created>1590645307975</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1590645307975</updated>
+    </task>
+    <task id="LOCAL-00003" summary="IAA appears to be working correctly with very minor differences if any">
+      <created>1590657854427</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1590657854427</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Using owlclassrendering for iaa output. Fixed iaa index file for multiple matchers.">
+      <created>1590660132685</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1590660132685</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Fixed span confused class assignments output.">
+      <created>1591153293888</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1591153293888</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Moved span, graphspace, and notes info to tabs. Moved filter settings to settings">
+      <created>1591153363815</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1591153363815</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Moved review panel to a tab with concept info panel">
+      <created>1591153916131</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1591153916131</updated>
+    </task>
+    <task id="LOCAL-00008" summary="UI changes. Color list scrolls to selected owl class">
+      <created>1591163744320</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1591163744320</updated>
+    </task>
+    <task id="LOCAL-00009" summary="UI changes">
+      <created>1591169739784</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1591169739784</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Clicking doesn't deselect concept annotation.">
+      <created>1591170778924</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1591170778924</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Added reassign OWLClass button">
+      <created>1591171762632</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1591171762632</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Added review regex checkbox. File as button. Active profile display">
+      <created>1591176054733</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1591176054733</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Fixed regex checkbox not initialized in create UI components">
+      <created>1591178764808</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1591178764808</updated>
+    </task>
+    <task id="LOCAL-00014" summary="IAA takes a collection of profiles and text sources">
+      <created>1591178796707</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1591178796707</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Made dialog for selecting IAA options.">
+      <created>1591185038363</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1591185038363</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Made dialog for selecting IAA options.">
+      <created>1591185049440</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1591185049440</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Made dialog for selecting IAA options.">
+      <created>1591185391186</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1591185391186</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Removed reassign owl class from right click menu">
+      <created>1591185620626</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1591185620626</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Added table of annotations with no matches found">
+      <created>1591188407309</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1591188407309</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Added confirm to removing a text source.">
+      <created>1591188428799</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1591188428799</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Fixed finding owl cLass by id. The owl entity finder is very finicky about when it needs surrounding &quot;&lt;&gt;&quot;">
+      <created>1591192905013</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1591192905013</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Moved document controls back to top">
+      <created>1591220930269</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1591220930269</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Made IAA document selection into a scrollable table">
+      <created>1591225766301</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1591225766301</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Made tables sortable">
+      <created>1591226101595</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1591226101595</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Added check for valid IAA options.">
+      <created>1591228055615</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1591228055615</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Row sorter for IAA dialog.">
+      <created>1591228852282</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1591228852282</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Row sorter for IAA dialog.">
+      <created>1591228867134</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1591228867134</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Fixed searchtextfield updating when changing documents">
+      <created>1591229221095</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1591229221095</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Remove span string method">
+      <created>1591230075426</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1591230075426</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Fixed opening active profile button when no colors in profile.">
+      <created>1597682562146</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1597682562146</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Added choices for OWL classes in IAA calculation.">
+      <created>1597684996786</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1597684996786</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Made option to compare across projects for IAA.">
+      <created>1597688202074</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1597688202074</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Made folder location access static.">
+      <created>1597688451516</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1597688451516</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Simplified adding of text sources to be just about the file chosen (txt vs. xml).">
+      <created>1597706369163</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1597706369163</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
+    <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -513,19 +588,16 @@
         <entry key="MAIN">
           <value>
             <State>
-              <option name="RECENTLY_FILTERED_USER_GROUPS">
-                <collection />
-              </option>
-              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
-                <collection />
-              </option>
-              <option name="COLUMN_ORDER">
-                <list>
-                  <option value="0" />
-                  <option value="1" />
-                  <option value="2" />
-                  <option value="3" />
-                </list>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="development" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
               </option>
             </State>
           </value>
@@ -546,943 +618,314 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Tests pass. Ignored files." />
-    <MESSAGE value="Corrected creation of new project" />
-    <MESSAGE value="Treat all braces the same." />
-    <MESSAGE value="BioCreative read in without error." />
-    <MESSAGE value="Use property ID when OWL property can't be found" />
-    <MESSAGE value="Textsource included in graphspace naming." />
-    <MESSAGE value="Load all .txt Articles" />
-    <MESSAGE value="Made test document for testing saving to uris" />
-    <MESSAGE value="Made test for saving project" />
-    <MESSAGE value="Updated copyright scope" />
-    <MESSAGE value="Verified document1 saves correctly with rendering method." />
-    <MESSAGE value="Fails when checking if saves to uris" />
-    <MESSAGE value="Concept annotations appear to save with uri" />
-    <MESSAGE value="Passed save test for document1" />
-    <MESSAGE value="Failed load for annotations with uris for class IDs" />
-    <MESSAGE value="Passed save test for document1 with uris." />
-    <MESSAGE value="Concept annotations use string form of owl class" />
-    <MESSAGE value="Removed rendering set on save" />
-    <MESSAGE value="All annotations read in correctly." />
-    <MESSAGE value="Profiles read in correctly" />
-    <MESSAGE value="Check if class exists before using the supplied ID." />
-    <MESSAGE value="Improved reading of biocreative conll" />
-    <MESSAGE value="Universal indent setting" />
-    <MESSAGE value="Don't send model events while loading" />
-    <MESSAGE value="Fixed grammar" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed grammar" />
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/Knowtator-2.0.wiki" />
+      <path value="$PROJECT_DIR$/{$PROJECT_NAME}.wiki" />
+    </ignored-roots>
+    <MESSAGE value="UI changes. Color list scrolls to selected owl class" />
+    <MESSAGE value="UI changes" />
+    <MESSAGE value="Clicking doesn't deselect concept annotation." />
+    <MESSAGE value="Added reassign OWLClass button" />
+    <MESSAGE value="Added review regex checkbox. File as button. Active profile display" />
+    <MESSAGE value="Fixed regex checkbox not initialized in create UI components" />
+    <MESSAGE value="IAA takes a collection of profiles and text sources" />
+    <MESSAGE value="Made dialog for selecting IAA options." />
+    <MESSAGE value="Removed reassign owl class from right click menu" />
+    <MESSAGE value="Added table of annotations with no matches found" />
+    <MESSAGE value="Added confirm to removing a text source." />
+    <MESSAGE value="Fixed finding owl cLass by id. The owl entity finder is very finicky about when it needs surrounding &quot;&lt;&gt;&quot;" />
+    <MESSAGE value="Fixed annotation node rendering update." />
+    <MESSAGE value="Moved document controls back to top" />
+    <MESSAGE value="Made IAA document selection into a scrollable table" />
+    <MESSAGE value="Made tables sortable" />
+    <MESSAGE value="Added check for valid IAA options." />
+    <MESSAGE value="Row sorter for IAA dialog." />
+    <MESSAGE value="Fixed searchtextfield updating when changing documents" />
+    <MESSAGE value="Remove span string method" />
+    <MESSAGE value="Fixed opening active profile button when no colors in profile." />
+    <MESSAGE value="Added choices for OWL classes in IAA calculation." />
+    <MESSAGE value="Made option to compare across projects for IAA." />
+    <MESSAGE value="Made folder location access static." />
+    <MESSAGE value="Simplified adding of text sources to be just about the file chosen (txt vs. xml)." />
+    <option name="LAST_COMMIT_MESSAGE" value="Simplified adding of text sources to be just about the file chosen (txt vs. xml)." />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="512" y="261" key="#Unnamed" timestamp="1591162173520">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="512" y="261" key="#Unnamed/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591162173520" />
+    <state x="518" y="213" key="#com.intellij.codeInsight.i18n.I18nizeQuickFixDialog_Form" timestamp="1591184961047">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="518" y="213" key="#com.intellij.codeInsight.i18n.I18nizeQuickFixDialog_Form/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591184961047" />
+    <state x="678" y="391" key="#com.intellij.debugger.actions.ViewTextAction" timestamp="1590640910031">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="678" y="391" key="#com.intellij.debugger.actions.ViewTextAction/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590640910031" />
+    <state x="32" y="204" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1597862215998">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="304" y="168" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592455369662" />
+    <state x="32" y="204" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1597862215998" />
+    <state x="304" y="206" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591161573747" />
+    <state x="627" y="256" key="#com.intellij.ide.macro.MacrosDialog" timestamp="1591161192054">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="627" y="256" key="#com.intellij.ide.macro.MacrosDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591161192054" />
+    <state x="653" y="220" key="#com.intellij.ide.util.MemberChooser" timestamp="1597861394360">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="653" y="220" key="#com.intellij.ide.util.MemberChooser/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592459247726" />
+    <state x="653" y="220" key="#com.intellij.ide.util.MemberChooser/0.0.1680.1050@0.0.1680.1050" timestamp="1597861394360" />
+    <state x="653" y="256" key="#com.intellij.ide.util.MemberChooser/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591228349886" />
+    <state x="577" y="340" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1591165178355">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="577" y="340" key="#com.intellij.ide.util.TreeClassChooserDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591165178355" />
+    <state x="577" y="308" key="#com.intellij.ide.util.TreeFileChooserDialog" timestamp="1592451818298">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="577" y="308" key="#com.intellij.ide.util.TreeFileChooserDialog/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592451818298" />
+    <state x="577" y="340" key="#com.intellij.ide.util.TreeFileChooserDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591169483534" />
+    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1597943334704">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1597943334704" />
+    <state x="1195" y="631" key="#com.intellij.tools.ToolEditorDialog" timestamp="1597677707735">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="1195" y="631" key="#com.intellij.tools.ToolEditorDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1597677707735" />
+    <state x="612" y="380" key="#com.intellij.tools.ToolEditorDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591161230685" />
+    <state x="629" y="325" key="#com.intellij.uiDesigner.palette.ComponentItemDialog" timestamp="1591165182021">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="629" y="325" key="#com.intellij.uiDesigner.palette.ComponentItemDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591165182021" />
+    <state x="393" y="291" key="#org.jetbrains.debugger.memory.view.InstancesWindow" timestamp="1590640881683">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="393" y="291" key="#org.jetbrains.debugger.memory.view.InstancesWindow/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590640881683" />
+    <state x="770" y="280" key="#xdebugger.XInspectDialog" timestamp="1590640936140">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="770" y="280" key="#xdebugger.XInspectDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1590640936140" />
+    <state x="789" y="211" width="697" height="839" key="#xdebugger.evaluate" timestamp="1598200105112">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="532" y="190" key="#xdebugger.evaluate/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592455292657" />
+    <state x="789" y="211" width="697" height="839" key="#xdebugger.evaluate/0.0.1680.1050@0.0.1680.1050" timestamp="1598200105112" />
+    <state x="262" y="151" width="1148" height="823" key="#xdebugger.evaluate/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020129196" />
+    <state x="1013" y="240" key="#xdebugger.evaluate/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591224195434" />
+    <state x="593" y="363" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1597688355778">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="593" y="363" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1680.1050@0.0.1680.1050" timestamp="1597688355778" />
+    <state x="593" y="392" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021376178" />
+    <state x="0" y="16" width="1680" height="1034" maximized="true" key="DiffContextDialog" timestamp="1591176679241">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="0" y="16" width="1680" height="1034" maximized="true" key="DiffContextDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591176679241" />
+    <state x="617" y="242" key="FileChooserDialogImpl" timestamp="1597677361481">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="617" y="242" key="FileChooserDialogImpl/0.0.1680.1050@0.0.1680.1050" timestamp="1597677361481" />
+    <state x="2268" y="208" key="FileChooserDialogImpl/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590016550191" />
+    <state x="617" y="277" key="FileChooserDialogImpl/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591227393392" />
+    <state width="1634" height="238" key="GridCell.Tab.0.bottom" timestamp="1598299974225">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="1562" height="372" key="GridCell.Tab.0.bottom/0.0.1680.1050/1680.150.1600.900@0.0.1680.1050" timestamp="1597453563238" />
+    <state width="1620" height="403" key="GridCell.Tab.0.bottom/0.0.1680.1050/1680.200.1600.900@0.0.1680.1050" timestamp="1592470546282" />
+    <state width="1620" height="403" key="GridCell.Tab.0.bottom/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833324" />
+    <state width="1634" height="238" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1598299974225" />
+    <state width="1634" height="254" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791277" />
+    <state width="1554" height="255" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
+    <state width="1634" height="254" key="GridCell.Tab.0.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591244218674" />
+    <state width="1634" height="238" key="GridCell.Tab.0.center" timestamp="1598299974225">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="1562" height="372" key="GridCell.Tab.0.center/0.0.1680.1050/1680.150.1600.900@0.0.1680.1050" timestamp="1597453563238" />
+    <state width="1620" height="403" key="GridCell.Tab.0.center/0.0.1680.1050/1680.200.1600.900@0.0.1680.1050" timestamp="1592470546282" />
+    <state width="1620" height="403" key="GridCell.Tab.0.center/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833324" />
+    <state width="1634" height="238" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1598299974225" />
+    <state width="1634" height="254" key="GridCell.Tab.0.center/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791276" />
+    <state width="1554" height="255" key="GridCell.Tab.0.center/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
+    <state width="1634" height="254" key="GridCell.Tab.0.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591244218674" />
+    <state width="1634" height="238" key="GridCell.Tab.0.left" timestamp="1598299974224">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="1562" height="372" key="GridCell.Tab.0.left/0.0.1680.1050/1680.150.1600.900@0.0.1680.1050" timestamp="1597453563238" />
+    <state width="1620" height="403" key="GridCell.Tab.0.left/0.0.1680.1050/1680.200.1600.900@0.0.1680.1050" timestamp="1592470546282" />
+    <state width="1620" height="403" key="GridCell.Tab.0.left/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833324" />
+    <state width="1634" height="238" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1598299974224" />
+    <state width="1634" height="254" key="GridCell.Tab.0.left/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791276" />
+    <state width="1554" height="255" key="GridCell.Tab.0.left/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386105" />
+    <state width="1634" height="254" key="GridCell.Tab.0.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591244218674" />
+    <state width="1634" height="238" key="GridCell.Tab.0.right" timestamp="1598299974225">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="1562" height="372" key="GridCell.Tab.0.right/0.0.1680.1050/1680.150.1600.900@0.0.1680.1050" timestamp="1597453563238" />
+    <state width="1620" height="403" key="GridCell.Tab.0.right/0.0.1680.1050/1680.200.1600.900@0.0.1680.1050" timestamp="1592470546282" />
+    <state width="1620" height="403" key="GridCell.Tab.0.right/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833324" />
+    <state width="1634" height="238" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1598299974225" />
+    <state width="1634" height="254" key="GridCell.Tab.0.right/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590033791277" />
+    <state width="1554" height="255" key="GridCell.Tab.0.right/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020386106" />
+    <state width="1634" height="254" key="GridCell.Tab.0.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591244218674" />
+    <state width="818" height="261" key="GridCell.Tab.1.bottom" timestamp="1598299146483">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="1562" height="390" key="GridCell.Tab.1.bottom/0.0.1680.1050/1680.150.1600.900@0.0.1680.1050" timestamp="1597453073592" />
+    <state width="1620" height="422" key="GridCell.Tab.1.bottom/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833323" />
+    <state width="818" height="261" key="GridCell.Tab.1.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1598299146483" />
+    <state width="830" height="638" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085398" />
+    <state width="830" height="638" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
+    <state width="1634" height="381" key="GridCell.Tab.1.bottom/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591230169287" />
+    <state width="818" height="261" key="GridCell.Tab.1.center" timestamp="1598299146482">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="1562" height="390" key="GridCell.Tab.1.center/0.0.1680.1050/1680.150.1600.900@0.0.1680.1050" timestamp="1597453073592" />
+    <state width="1620" height="422" key="GridCell.Tab.1.center/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833322" />
+    <state width="818" height="261" key="GridCell.Tab.1.center/0.0.1680.1050@0.0.1680.1050" timestamp="1598299146482" />
+    <state width="830" height="638" key="GridCell.Tab.1.center/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085395" />
+    <state width="830" height="638" key="GridCell.Tab.1.center/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
+    <state width="1634" height="381" key="GridCell.Tab.1.center/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591230169287" />
+    <state width="818" height="261" key="GridCell.Tab.1.left" timestamp="1598299146482">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="1562" height="390" key="GridCell.Tab.1.left/0.0.1680.1050/1680.150.1600.900@0.0.1680.1050" timestamp="1597453073592" />
+    <state width="1620" height="422" key="GridCell.Tab.1.left/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833322" />
+    <state width="818" height="261" key="GridCell.Tab.1.left/0.0.1680.1050@0.0.1680.1050" timestamp="1598299146482" />
+    <state width="830" height="638" key="GridCell.Tab.1.left/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085394" />
+    <state width="830" height="638" key="GridCell.Tab.1.left/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333598" />
+    <state width="1634" height="381" key="GridCell.Tab.1.left/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591230169287" />
+    <state width="818" height="261" key="GridCell.Tab.1.right" timestamp="1598299146483">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="1562" height="390" key="GridCell.Tab.1.right/0.0.1680.1050/1680.150.1600.900@0.0.1680.1050" timestamp="1597453073592" />
+    <state width="1620" height="422" key="GridCell.Tab.1.right/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592468833322" />
+    <state width="818" height="261" key="GridCell.Tab.1.right/0.0.1680.1050@0.0.1680.1050" timestamp="1598299146483" />
+    <state width="830" height="638" key="GridCell.Tab.1.right/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021085396" />
+    <state width="830" height="638" key="GridCell.Tab.1.right/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020333599" />
+    <state width="1634" height="381" key="GridCell.Tab.1.right/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591230169287" />
+    <state x="377" y="217" key="Maven.ArtifactSearchDialog" timestamp="1592464488654">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="377" y="217" key="Maven.ArtifactSearchDialog/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592464488654" />
+    <state x="663" y="485" key="ReplaceDuplicatesPrompt" timestamp="1591225067162">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="663" y="485" key="ReplaceDuplicatesPrompt/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591225067162" />
+    <state x="661" y="261" key="RollbackChangesDialog" timestamp="1591228900102">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="661" y="261" key="RollbackChangesDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591228900102" />
+    <state x="324" y="66" key="SettingsEditor" timestamp="1592461024244">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="324" y="66" key="SettingsEditor/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592461024244" />
+    <state x="324" y="108" key="SettingsEditor/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021238448" />
+    <state x="1989" y="56" key="SettingsEditor/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590016572556" />
+    <state width="661" height="446" key="SwitcherDM" timestamp="1597784576290">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="661" height="446" key="SwitcherDM/0.0.1680.1050@0.0.1680.1050" timestamp="1597784576290" />
+    <state x="721" y="356" key="UIDesigner.ListEditorDialog" timestamp="1592451572155">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="721" y="356" key="UIDesigner.ListEditorDialog/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592451572155" />
+    <state x="440" y="284" key="Vcs.Push.Dialog.v2" timestamp="1591230097648">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="440" y="284" key="Vcs.Push.Dialog.v2/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591230097648" />
+    <state x="326" y="477" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1597942723214">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="326" y="477" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1680.1050@0.0.1680.1050" timestamp="1597942723214" />
+    <state x="583" y="380" key="com.intellij.testIntegration.createTest.CreateTestDialog" timestamp="1597858800426">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="583" y="380" key="com.intellij.testIntegration.createTest.CreateTestDialog/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592453049835" />
+    <state x="583" y="380" key="com.intellij.testIntegration.createTest.CreateTestDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1597858800426" />
+    <state x="96" y="280" key="com.intellij.tools.ToolSelectDialog.dimensionServiceKey" timestamp="1597677709585">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="96" y="280" key="com.intellij.tools.ToolSelectDialog.dimensionServiceKey/0.0.1680.1050@0.0.1680.1050" timestamp="1597677709585" />
+    <state x="742" y="327" key="com.intellij.tools.ToolSelectDialog.dimensionServiceKey/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591161232251" />
+    <state x="616" y="402" key="com.intellij.uiDesigner.propertyInspector.editors.string.StringEditorDialog" timestamp="1598299428752">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="616" y="402" key="com.intellij.uiDesigner.propertyInspector.editors.string.StringEditorDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1598299428752" />
+    <state x="616" y="430" key="com.intellij.uiDesigner.propertyInspector.editors.string.StringEditorDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591226241306" />
+    <state x="790" y="291" width="890" height="606" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1597857238350">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="790" y="291" width="890" height="606" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1680.1050@0.0.1680.1050" timestamp="1597857238350" />
+    <state x="578" y="295" key="extract.method.dialog" timestamp="1591225047985">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="578" y="295" key="extract.method.dialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591225047985" />
+    <state x="311" y="75" width="1056" height="897" key="find.popup" timestamp="1598199376816">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="311" y="75" width="1056" height="897" key="find.popup/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592467187568" />
+    <state x="311" y="75" width="1056" height="897" key="find.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1598199376816" />
+    <state x="531" y="119" width="728" height="858" key="find.popup/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590031547538" />
+    <state x="2186" y="66" width="693" height="768" key="find.popup/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590018340948" />
+    <state x="531" y="119" width="1056" height="858" key="find.popup/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591229572446" />
+    <state x="544" y="298" key="refactoring.ChangeSignatureDialog" timestamp="1597686505869">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="637" y="262" key="refactoring.ChangeSignatureDialog/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592454546696" />
+    <state x="544" y="298" key="refactoring.ChangeSignatureDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1597686505869" />
+    <state x="637" y="296" key="refactoring.ChangeSignatureDialog/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591180054952" />
+    <state x="599" y="355" width="482" height="395" key="scopes" timestamp="1590021373525">
+      <screen x="0" y="45" width="1680" height="1005" />
+    </state>
+    <state x="599" y="355" width="482" height="395" key="scopes/0.45.1680.1005/1680.0.1600.900@0.45.1680.1005" timestamp="1590021373525" />
+    <state x="486" y="227" width="706" height="792" key="search.everywhere.popup" timestamp="1597943327258">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="486" y="227" width="706" height="792" key="search.everywhere.popup/0.0.1680.1050/1680.75.1600.900@0.0.1680.1050" timestamp="1592462598600" />
+    <state x="486" y="227" width="706" height="792" key="search.everywhere.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1597943327258" />
+    <state x="2143" y="194" width="672" height="678" key="search.everywhere.popup/0.45.1680.1005/1680.0.1600.900@1680.0.1600.900" timestamp="1590020093615" />
+    <state x="486" y="262" width="706" height="758" key="search.everywhere.popup/0.45.1680.1005/1680.230.1600.900@0.45.1680.1005" timestamp="1591225025615" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/Loader.java</url>
-          <line>101</line>
-          <properties />
-          <option name="timeStamp" value="13" />
+          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/KnowtatorXmlUtil.java</url>
+          <line>175</line>
+          <option name="timeStamp" value="28" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java</url>
-          <line>967</line>
-          <properties />
-          <option name="timeStamp" value="17" />
+          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/TextSource.java</url>
+          <line>93</line>
+          <option name="timeStamp" value="35" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java</url>
-          <line>687</line>
-          <properties />
-          <option name="timeStamp" value="20" />
+          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/graph/GraphActions.java</url>
+          <line>86</line>
+          <option name="timeStamp" value="38" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/TextSource.java</url>
+          <line>77</line>
+          <option name="timeStamp" value="44" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/modelactions/ConceptAnnotationAction.java</url>
+          <line>77</line>
+          <option name="timeStamp" value="101" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/TestingHelpers.java</url>
+          <line>259</line>
+          <option name="timeStamp" value="110" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
-  </component>
-  <component name="debuggerHistoryManager">
-    <expressions id="evaluateCodeFragment">
-      <expression>
-        <expression-string>textSource.getContent().replace(&quot;·&quot;, &quot;&quot;).substring(start[0], start[0] + text.length())</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>textSource.getContent().substring(start[0], start[0] + text.length())</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>textSource.getContent()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>textSource.getContent().substring(start1, end)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>realText
-              .substring(start1, end)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>textSource.getContent().substring(range[0], range[1])</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>conceptAnnotation.getOwlClass().equals(axiom.getEntity().toStringID())</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>model.getOwlClassById(&quot;BetterPizza&quot;).toString()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>model.getTextSources().stream()
-            .map(
-                textSource -&gt;
-                    textSource.getGraphSpaces().stream()
-                        .map(
-                            graphSpace1 -&gt;
-                                graphSpace1.getChildVertices(graphSpace1.getDefaultParent()))
-                        .toArray())
-            .toArray();</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>CODE_FRAGMENT</evaluation-mode>
-      </expression>
-    </expressions>
-    <expressions id="breakpointCondition">
-      <expression>
-        <expression-string>modelObject.getClass() == Span.class</expression-string>
-        <language-id>JAVA</language-id>
-        <custom-info>edu.ucdenver.ccp.knowtator.model.object.Span</custom-info>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>modelObject.getClass()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>id.equals(&quot;Sentence 243&quot;)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>id == &quot;Sentence 243&quot;</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>objectID == &quot;11532192-23990&quot;</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-    </expressions>
-    <expressions id="evaluateExpression">
-      <expression>
-        <expression-string>textSource.getContent().substring(start[0], start[0] + text.length())</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>textSource.gett</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>textSource.getContent().substring(start[0] - 8, start[0] + text.length() -8)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>textSource.getContent().substring(start[0] - 8, start[0] + text.length() + 8)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>textSource.getContent().substring(start[0] - 10, start[0] + text.length() + 10)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>textSource.getContent().substring(start[0] + 1, start[0] + text.length() + 1)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>textSource.getContent().substring(start[0] - 6, start[0] + text.length() + 6)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>textSource.getContent().substring(start[0] -6, start[0]+text.length()+6)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>textSource.getContent().substring(start[0] -5, start[0]+text.length()+5)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-    </expressions>
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/test/resources/test_project_using_uris/Annotations/old_document3.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="43" column="59" lean-forward="true" selection-start-line="43" selection-start-column="59" selection-end-line="43" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/modelactions/ConceptAnnotationAction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="499">
-          <caret line="88" column="40" selection-start-line="88" selection-start-column="40" selection-end-line="88" selection-end-column="40" />
-          <folding>
-            <element signature="e#3066#3132#1" expanded="true" />
-            <element signature="e#3104#3131#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/table/AnnotationTableForOwlClass.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1254">
-          <caret line="82" column="58" selection-start-line="82" selection-start-column="58" selection-end-line="82" selection-end-column="58" />
-          <folding>
-            <element signature="e#3131#3236#0" expanded="true" />
-            <element signature="e#3131#3236#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/modelactions/ProfileAction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="151" column="54" selection-start-line="151" selection-start-column="54" selection-end-line="151" selection-end-column="54" />
-          <folding>
-            <element signature="e#3772#3838#1" expanded="true" />
-            <element signature="e#4362#4405#1" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/modelactions/ColorChangeAction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-649">
-          <caret line="37" column="26" selection-start-line="37" selection-start-column="26" selection-end-line="37" selection-end-column="26" />
-          <folding>
-            <element signature="e#2325#2369#1" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/modelactions/ReassignOwlClassAction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="53" column="11" selection-start-line="53" selection-start-column="11" selection-end-line="53" selection-end-column="11" />
-          <folding>
-            <element signature="e#2108#2139#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/list/ColorList.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="124" column="51" selection-start-line="124" selection-start-column="51" selection-end-line="124" selection-end-column="51" />
-          <folding>
-            <element signature="e#2899#2940#0" expanded="true" />
-            <element signature="e#2899#2940#0" expanded="true" />
-            <element signature="e#4405#4424#0" expanded="true" />
-            <element signature="e#4276#4306#0" expanded="true" />
-            <element signature="e#4276#4306#0" expanded="true" />
-            <element signature="e#4326#4351#0" expanded="true" />
-            <element signature="e#4427#4443#0" expanded="true" />
-            <element signature="e#4326#4351#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/AddRelationListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="113">
-          <caret line="92" column="57" selection-start-line="92" selection-start-column="57" selection-end-line="92" selection-end-column="57" />
-          <folding>
-            <element signature="e#2809#2837#0" expanded="true" />
-            <element signature="e#2809#2857#0" expanded="true" />
-            <element signature="e#2915#2972#0" expanded="true" />
-            <element signature="e#3022#3072#0" expanded="true" />
-            <element signature="e#3022#3072#0" expanded="true" />
-            <element signature="e#3022#3072#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/textpane/AnnotatableTextPane.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="157">
-          <caret line="523" column="30" selection-start-line="523" selection-start-column="30" selection-end-line="523" selection-end-column="30" />
-          <folding>
-            <element signature="e#17841#17868#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/graph/GraphActions.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="157">
-          <caret line="182" column="22" selection-start-line="182" selection-start-column="22" selection-end-line="182" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/table/RelationTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="164" column="99" selection-start-line="164" selection-start-column="99" selection-end-line="164" selection-end-column="99" />
-          <folding>
-            <element signature="e#5776#5833#0" expanded="true" />
-            <element signature="e#5873#5924#0" expanded="true" />
-            <element signature="e#5873#5924#0" expanded="true" />
-            <element signature="e#6035#6161#0" expanded="true" />
-            <element signature="e#6035#6161#0" expanded="true" />
-            <element signature="e#6217#6289#0" expanded="true" />
-            <element signature="e#6217#6289#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/OldKnowtatorXmlUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="311">
-          <caret line="255" column="31" selection-start-line="255" selection-start-column="31" selection-end-line="255" selection-end-column="31" />
-          <folding>
-            <element signature="e#7390#7454#1" expanded="true" />
-            <element signature="e#7838#8012#0" expanded="true" />
-            <element signature="e#7838#8012#0" expanded="true" />
-            <element signature="e#7916#7993#0" expanded="true" />
-            <element signature="e#7916#7993#0" expanded="true" />
-            <element signature="e#8185#9115#0" expanded="true" />
-            <element signature="e#8185#9115#0" expanded="true" />
-            <element signature="e#8311#8466#0" expanded="true" />
-            <element signature="e#8502#8516#0" expanded="true" />
-            <element signature="e#8628#8745#1" expanded="true" />
-            <element signature="e#8774#8832#1" expanded="true" />
-            <element signature="e#8796#8831#0" expanded="true" />
-            <element signature="e#8796#8831#0" expanded="true" />
-            <element signature="e#8861#9007#0" expanded="true" />
-            <element signature="e#8861#9007#0" expanded="true" />
-            <element signature="e#8918#8976#0" expanded="true" />
-            <element signature="e#8918#8976#0" expanded="true" />
-            <element signature="e#8918#8976#0" expanded="true" />
-            <element signature="e#9498#9519#0" expanded="true" />
-            <element signature="e#9593#9683#1" expanded="true" />
-            <element signature="e#9804#9980#1" expanded="true" />
-            <element signature="e#9838#9917#0" expanded="true" />
-            <element signature="e#9838#9917#0" expanded="true" />
-            <element signature="e#9992#10103#1" expanded="true" />
-            <element signature="e#10115#11088#0" expanded="true" />
-            <element signature="e#10120#10145#0" expanded="true" />
-            <element signature="e#10115#11088#0" expanded="true" />
-            <element signature="e#10298#10363#1" expanded="true" />
-            <element signature="e#10332#10362#0" expanded="true" />
-            <element signature="e#10376#10461#1" expanded="true" />
-            <element signature="e#10864#10889#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/brat/BratStandoffUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="157">
-          <caret line="85" column="14" selection-start-line="85" selection-start-column="14" selection-end-line="85" selection-end-column="14" />
-          <folding>
-            <element signature="e#9142#9308#1" expanded="true" />
-            <element signature="e#9392#9445#1" expanded="true" />
-            <element signature="e#9460#9500#1" expanded="true" />
-            <element signature="e#9482#9499#0" expanded="true" />
-            <element signature="e#9517#9537#0" expanded="true" />
-            <element signature="e#9517#9537#0" expanded="true" />
-            <element signature="e#9553#9600#0" expanded="true" />
-            <element signature="e#9553#9600#0" expanded="true" />
-            <element signature="e#9553#9600#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/GraphSpace.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="91">
-          <caret line="375" column="54" selection-start-line="375" selection-start-column="54" selection-end-line="375" selection-end-column="54" />
-          <folding>
-            <element signature="e#6499#6610#0" expanded="true" />
-            <element signature="e#6568#6595#0" expanded="true" />
-            <element signature="e#6568#6595#0" expanded="true" />
-            <element signature="e#6568#6609#0" expanded="true" />
-            <element signature="e#6499#6610#0" expanded="true" />
-            <element signature="e#6742#6785#0" expanded="true" />
-            <element signature="e#6746#6760#0" expanded="true" />
-            <element signature="e#6746#6760#0" expanded="true" />
-            <element signature="e#6742#6785#0" expanded="true" />
-            <element signature="e#6790#6828#0" expanded="true" />
-            <element signature="e#6790#6828#0" expanded="true" />
-            <element signature="e#6834#6920#1" expanded="true" />
-            <element signature="e#6870#6882#0" expanded="true" />
-            <element signature="e#6909#6918#0" expanded="true" />
-            <element signature="e#6925#7031#0" expanded="true" />
-            <element signature="e#6925#7031#0" expanded="true" />
-            <element signature="e#6957#6969#0" expanded="true" />
-            <element signature="e#6980#6989#0" expanded="true" />
-            <element signature="e#7173#7183#0" expanded="true" />
-            <element signature="e#7365#7375#0" expanded="true" />
-            <element signature="e#8200#8234#0" expanded="true" />
-            <element signature="e#8241#8535#1" expanded="true" />
-            <element signature="e#8610#8648#0" expanded="true" />
-            <element signature="e#8851#8981#0" expanded="true" />
-            <element signature="e#8851#8981#0" expanded="true" />
-            <element signature="e#8937#8954#0" expanded="true" />
-            <element signature="e#8937#8954#0" expanded="true" />
-            <element signature="e#9002#9116#0" expanded="true" />
-            <element signature="e#9002#9116#0" expanded="true" />
-            <element signature="e#9421#9488#1" expanded="true" />
-            <element signature="e#9520#9644#0" expanded="true" />
-            <element signature="e#9524#9539#0" expanded="true" />
-            <element signature="e#9520#9644#0" expanded="true" />
-            <element signature="e#9979#10064#1" expanded="true" />
-            <element signature="e#10234#10235#0" expanded="true" />
-            <element signature="e#10253#10254#0" expanded="true" />
-            <element signature="e#10292#10293#0" expanded="true" />
-            <element signature="e#10311#10312#0" expanded="true" />
-            <element signature="e#10357#10358#0" expanded="true" />
-            <element signature="e#10379#10380#0" expanded="true" />
-            <element signature="e#10424#10472#0" expanded="true" />
-            <element signature="e#10452#10470#0" expanded="true" />
-            <element signature="e#10424#10472#0" expanded="true" />
-            <element signature="e#10527#10639#0" expanded="true" />
-            <element signature="e#10527#10639#0" expanded="true" />
-            <element signature="e#10585#10612#0" expanded="true" />
-            <element signature="e#10585#10612#0" expanded="true" />
-            <element signature="e#10654#10758#0" expanded="true" />
-            <element signature="e#10654#10758#0" expanded="true" />
-            <element signature="e#10708#10731#0" expanded="true" />
-            <element signature="e#10708#10731#0" expanded="true" />
-            <element signature="e#10807#10825#0" expanded="true" />
-            <element signature="e#10879#11009#0" expanded="true" />
-            <element signature="e#10879#11009#0" expanded="true" />
-            <element signature="e#10965#10982#0" expanded="true" />
-            <element signature="e#10965#10982#0" expanded="true" />
-            <element signature="e#11198#11199#0" expanded="true" />
-            <element signature="e#11229#11230#0" expanded="true" />
-            <element signature="e#11440#11683#0" expanded="true" />
-            <element signature="e#11445#11458#0" expanded="true" />
-            <element signature="e#11478#11496#0" expanded="true" />
-            <element signature="e#11440#11683#0" expanded="true" />
-            <element signature="e#11507#11677#0" expanded="true" />
-            <element signature="e#11507#11677#0" expanded="true" />
-            <element signature="e#11555#11669#0" expanded="true" />
-            <element signature="e#11559#11584#0" expanded="true" />
-            <element signature="e#11559#11584#0" expanded="true" />
-            <element signature="e#11559#11607#0" expanded="true" />
-            <element signature="e#11559#11633#0" expanded="true" />
-            <element signature="e#11559#11633#0" expanded="true" />
-            <element signature="e#11555#11669#0" expanded="true" />
-            <element signature="e#11755#11756#0" expanded="true" />
-            <element signature="e#11782#11783#0" expanded="true" />
-            <element signature="e#11787#11818#0" expanded="true" />
-            <element signature="e#11921#11976#1" expanded="true" />
-            <element signature="e#11981#12038#1" expanded="true" />
-            <element signature="e#12043#12125#1" expanded="true" />
-            <element signature="e#12130#12216#1" expanded="true" />
-            <element signature="e#12222#12292#1" expanded="true" />
-            <element signature="e#12298#14011#0" expanded="true" />
-            <element signature="e#12303#12324#0" expanded="true" />
-            <element signature="e#12298#14011#0" expanded="true" />
-            <element signature="e#12344#12391#1" expanded="true" />
-            <element signature="e#12361#12375#0" expanded="true" />
-            <element signature="e#12361#12390#0" expanded="true" />
-            <element signature="e#12398#14005#0" expanded="true" />
-            <element signature="e#12402#12421#0" expanded="true" />
-            <element signature="e#12398#14005#0" expanded="true" />
-            <element signature="e#12433#12477#1" expanded="true" />
-            <element signature="e#12456#12476#0" expanded="true" />
-            <element signature="e#12486#13760#0" expanded="true" />
-            <element signature="e#12486#13760#0" expanded="true" />
-            <element signature="e#12533#12602#1" expanded="true" />
-            <element signature="e#12561#12601#0" expanded="true" />
-            <element signature="e#12584#12600#0" expanded="true" />
-            <element signature="e#12561#12601#0" expanded="true" />
-            <element signature="e#12613#13750#0" expanded="true" />
-            <element signature="e#12617#12634#0" expanded="true" />
-            <element signature="e#12613#13750#0" expanded="true" />
-            <element signature="e#12679#13738#0" expanded="true" />
-            <element signature="e#12679#13738#0" expanded="true" />
-            <element signature="e#12900#12917#0" expanded="true" />
-            <element signature="e#13004#13738#0" expanded="true" />
-            <element signature="e#13004#13738#0" expanded="true" />
-            <element signature="e#13128#13146#0" expanded="true" />
-            <element signature="e#13230#13698#0" expanded="true" />
-            <element signature="e#13230#13698#0" expanded="true" />
-            <element signature="e#13295#13672#0" expanded="true" />
-            <element signature="e#13299#13323#0" expanded="true" />
-            <element signature="e#13299#13323#0" expanded="true" />
-            <element signature="e#13299#13337#0" expanded="true" />
-            <element signature="e#13295#13672#0" expanded="true" />
-            <element signature="e#13377#13644#0" expanded="true" />
-            <element signature="e#13381#13405#0" expanded="true" />
-            <element signature="e#13381#13405#0" expanded="true" />
-            <element signature="e#13381#13452#0" expanded="true" />
-            <element signature="e#13381#13524#0" expanded="true" />
-            <element signature="e#13381#13524#0" expanded="true" />
-            <element signature="e#13377#13644#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/ConceptAnnotation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="169">
-          <caret line="191" column="46" selection-start-line="191" selection-start-column="46" selection-end-line="191" selection-end-column="46" />
-          <folding>
-            <element signature="e#4913#4914#0" expanded="true" />
-            <element signature="e#4926#4961#0" expanded="true" />
-            <element signature="e#4949#4950#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/RelationAnnotation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="157">
-          <caret line="139" column="2" selection-start-line="139" selection-start-column="2" selection-end-line="139" selection-end-column="2" />
-          <folding>
-            <element signature="e#4153#4154#0" expanded="true" />
-            <element signature="e#4207#4208#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/Profile.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="157" column="5" selection-start-line="157" selection-start-column="5" selection-end-line="157" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#3513#3523#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/TextSource.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-305">
-          <caret line="226" column="28" selection-start-line="226" selection-start-column="28" selection-end-line="226" selection-end-column="28" />
-          <folding>
-            <element signature="e#6916#6939#0" expanded="true" />
-            <element signature="e#7111#7145#0" expanded="true" />
-            <element signature="e#7187#7223#0" expanded="true" />
-            <element signature="e#7102#7151#0" expanded="true" />
-            <element signature="e#7102#7151#0" expanded="true" />
-            <element signature="e#7675#7708#0" expanded="true" />
-            <element signature="e#7842#7843#0" expanded="true" />
-            <element signature="e#7891#7892#0" expanded="true" />
-            <element signature="e#7952#7953#0" expanded="true" />
-            <element signature="e#7997#7998#0" expanded="true" />
-            <element signature="e#8066#8067#0" expanded="true" />
-            <element signature="e#8115#8116#0" expanded="true" />
-            <element signature="e#8306#8391#1" expanded="true" />
-            <element signature="e#8094#8168#0" expanded="true" />
-            <element signature="e#8400#8429#0" expanded="true" />
-            <element signature="e#8094#8168#0" expanded="true" />
-            <element signature="e#8420#8470#0" expanded="true" />
-            <element signature="e#8420#8470#0" expanded="true" />
-            <element signature="e#8886#8887#0" expanded="true" />
-            <element signature="e#8923#8924#0" expanded="true" />
-            <element signature="e#9005#9006#0" expanded="true" />
-            <element signature="e#9043#9044#0" expanded="true" />
-            <element signature="e#9117#9118#0" expanded="true" />
-            <element signature="e#9151#9152#0" expanded="true" />
-            <element signature="e#9295#9296#0" expanded="true" />
-            <element signature="e#9308#9334#0" expanded="true" />
-            <element signature="e#9338#9339#0" expanded="true" />
-            <element signature="e#9470#9471#0" expanded="true" />
-            <element signature="e#9513#9514#0" expanded="true" />
-            <element signature="e#9661#9662#0" expanded="true" />
-            <element signature="e#9704#9705#0" expanded="true" />
-            <element signature="e#9836#9837#0" expanded="true" />
-            <element signature="e#9871#9872#0" expanded="true" />
-            <element signature="e#10024#10025#0" expanded="true" />
-            <element signature="e#10066#10067#0" expanded="true" />
-            <element signature="e#10216#10217#0" expanded="true" />
-            <element signature="e#9920#9956#0" expanded="true" />
-            <element signature="e#9920#9956#0" expanded="true" />
-            <element signature="e#10262#10263#0" expanded="true" />
-            <element signature="e#10350#10351#0" expanded="true" />
-            <element signature="e#10391#10392#0" expanded="true" />
-            <element signature="e#10457#10458#0" expanded="true" />
-            <element signature="e#10494#10495#0" expanded="true" />
-            <element signature="e#10553#10554#0" expanded="true" />
-            <element signature="e#10590#10591#0" expanded="true" />
-            <element signature="e#10640#10641#0" expanded="true" />
-            <element signature="e#10684#10685#0" expanded="true" />
-            <element signature="e#10734#10735#0" expanded="true" />
-            <element signature="e#10778#10779#0" expanded="true" />
-            <element signature="e#10857#10892#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/test_project_using_uris/Annotations/document2.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="34" column="127" selection-start-line="34" selection-start-column="127" selection-end-line="34" selection-end-column="127" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/test_project_using_uris/Annotations/document1.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" column="72" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="72" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/test_project_using_uris/Profiles/Default.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="5" column="77" selection-start-line="5" selection-start-column="77" selection-end-line="5" selection-end-column="77" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/test_project_using_uris/Annotations/document3.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="38" column="21" lean-forward="true" selection-start-line="38" selection-start-column="21" selection-end-line="38" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/test_project_using_uris/Profiles/profile1.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="3" column="19" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/biocreative_chemprot/Articles3/23402364.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="1" column="27" selection-start-line="1" selection-start-column="27" selection-end-line="1" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/biocreative_chemprot/Structures2/23402364.conll">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-330" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/KnowtatorXmlUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5390">
-          <caret line="291" column="53" selection-start-line="291" selection-start-column="53" selection-end-line="291" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/Span.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2508">
-          <caret line="144" column="35" selection-start-line="144" selection-start-column="35" selection-end-line="144" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/biocreative_chemprot_small/Articles/1322791.txt" />
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/resources/biocreative_chemprot_small/Structures/23402364.conll">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="6" column="44" selection-start-line="6" selection-start-column="44" selection-end-line="6" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/io/conll/ConllUtilTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1408">
-          <caret line="89" column="30" selection-start-line="89" selection-start-column="30" selection-end-line="89" selection-end-column="30" />
-          <folding>
-            <element signature="e#2535#2612#1" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/XmlUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="144" column="79" selection-start-line="144" selection-start-column="79" selection-end-line="144" selection-end-column="79" />
-          <folding>
-            <element signature="e#4763#4811#1" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/collection/ConceptAnnotationCollection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="251">
-          <caret line="209" column="39" selection-start-line="209" selection-start-column="39" selection-end-line="209" selection-end-column="39" />
-          <folding>
-            <element signature="e#7439#7470#0" expanded="true" />
-            <element signature="e#9052#9083#0" expanded="true" />
-            <element signature="e#9091#9108#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/OwlModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="379" column="14" selection-start-line="379" selection-start-column="14" selection-end-line="379" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/BaseModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="426" column="45" lean-forward="true" selection-start-line="426" selection-start-column="45" selection-end-line="426" selection-end-column="45" />
-          <folding>
-            <element signature="e#10470#10471#0" expanded="true" />
-            <element signature="e#10495#10496#0" expanded="true" />
-            <element signature="e#11996#11997#0" expanded="true" />
-            <element signature="e#12031#12032#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/conll/ConllUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="55" column="45" selection-start-line="55" selection-start-column="45" selection-end-line="55" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphViewDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2016">
-          <caret line="124" column="14" selection-start-line="124" selection-start-column="14" selection-end-line="124" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/chooser/KnowtatorChooser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1872">
-          <caret line="112" column="6" selection-start-line="112" selection-start-column="6" selection-end-line="112" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/KnowtatorModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3384">
-          <caret line="178" column="29" selection-start-line="178" selection-start-column="29" selection-end-line="178" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="20568">
-          <caret line="971" column="7" selection-start-line="971" selection-start-column="7" selection-end-line="971" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/chooser/TextSourceChooser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="25" selection-start-line="25" selection-end-line="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/model/text/concept/ConceptAnnotationTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="816">
-          <caret line="61" selection-start-line="61" selection-end-line="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/view/actions/FilterActionsTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1032">
-          <caret line="76" column="87" selection-start-line="76" selection-start-column="87" selection-end-line="76" selection-end-column="87" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/view/actions/GraphActionsTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2952">
-          <caret line="156" column="74" selection-start-line="156" selection-start-column="74" selection-end-line="156" selection-end-column="74" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/view/actions/KnowtatorCollectionActionsTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1608">
-          <caret line="104" column="26" selection-start-line="104" selection-start-column="26" selection-end-line="104" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/view/actions/OwlActionsTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="960">
-          <caret line="75" column="87" selection-start-line="75" selection-start-column="87" selection-end-line="75" selection-end-column="87" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/model/OwlModelTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4728">
-          <caret line="252" column="4" selection-start-line="252" selection-start-column="4" selection-end-line="252" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/ProjectManagerTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="744">
-          <caret line="53" column="41" selection-start-line="53" selection-start-column="41" selection-end-line="53" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/model/collection/SelectableCollectionTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="984">
-          <caret line="67" column="37" selection-start-line="67" selection-start-column="37" selection-end-line="67" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/view/actions/SpanActionsTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1080">
-          <caret line="78" column="41" selection-start-line="78" selection-start-column="41" selection-end-line="78" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/TestingHelpers.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="66" column="60" selection-start-line="66" selection-start-column="60" selection-end-line="66" selection-end-column="60" />
-          <folding>
-            <element signature="e#3157#3286#0" expanded="true" />
-            <element signature="e#3554#3686#0" expanded="true" />
-            <element signature="e#3880#3952#1" expanded="true" />
-            <element signature="e#3904#3951#0" expanded="true" />
-            <element signature="e#3957#4001#1" expanded="true" />
-            <element signature="e#4069#4133#1" expanded="true" />
-            <element signature="e#4384#4456#1" expanded="true" />
-            <element signature="e#4408#4455#0" expanded="true" />
-            <element signature="e#4461#4505#1" expanded="true" />
-            <element signature="e#4573#4637#1" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-  </component>
-  <component name="masterDetails">
-    <states>
-      <state key="ArtifactsStructureConfigurable.UI">
-        <settings>
-          <artifact-editor />
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="Copyright.UI">
-        <settings>
-          <last-edited>My Copyright</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="FacetStructureConfigurable.UI">
-        <settings>
-          <last-edited>Kotlin (knowtator)|Invalid</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="GlobalLibrariesConfigurable.UI">
-        <settings>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="JdkListConfigurable.UI">
-        <settings>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ModuleStructureConfigurable.UI">
-        <settings>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ProjectLibrariesConfigurable.UI">
-        <settings>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ScopeChooserConfigurable.UI">
-        <settings>
-          <last-edited>code</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-          <order>
-            <scope name="code" />
-          </order>
-        </settings>
-      </state>
-    </states>
   </component>
 </project>

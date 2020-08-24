@@ -40,9 +40,6 @@ import org.junit.jupiter.api.Test;
 class FilterActionsTest {
   private static KnowtatorModel model;
 
-  static {
-  }
-
   @BeforeAll
   static void setup() {
     try {
@@ -55,24 +52,10 @@ class FilterActionsTest {
   @Test
   void filterActionTest() throws ActionUnperformable {
     TestingHelpers.checkDefaultCollectionValues(model);
-    TestingHelpers.testKnowtatorAction(
-        model,
-        new FilterAction(model, PROFILE, true),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans - 3, TestingHelpers.defaultExpectedGraphSpaces, TestingHelpers.defaultExpectedProfiles, TestingHelpers.defaultExpectedHighlighters, TestingHelpers.defaultExpectedAnnotationNodes, TestingHelpers.defaultExpectedTriples, TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
-    TestingHelpers.testKnowtatorAction(
-        model,
-        new FilterAction(model, PROFILE, false),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans, TestingHelpers.defaultExpectedGraphSpaces, TestingHelpers.defaultExpectedProfiles, TestingHelpers.defaultExpectedHighlighters, TestingHelpers.defaultExpectedAnnotationNodes, TestingHelpers.defaultExpectedTriples, TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
+    TestingHelpers.testKnowtatorAction(model, new FilterAction(model, PROFILE, true),
+        TestingHelpers.defaultCounts.copy(0, -2, -3, 0, 0, 0, 0, 0, 0));
+    TestingHelpers.testKnowtatorAction(model, new FilterAction(model, PROFILE, false),
+        TestingHelpers.defaultCounts);
 
     model.getTextSources().setSelection(model.getTextSources().get("document1").get());
     TextSource textSource = model.getSelectedTextSource().get();
@@ -84,20 +67,10 @@ class FilterActionsTest {
     TestingHelpers.testKnowtatorAction(
         model,
         new FilterAction(model, OWLCLASS, true),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans - 5, TestingHelpers.defaultExpectedGraphSpaces, TestingHelpers.defaultExpectedProfiles, TestingHelpers.defaultExpectedHighlighters, TestingHelpers.defaultExpectedAnnotationNodes, TestingHelpers.defaultExpectedTriples, TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultCounts.copy(0, -4, -5, 0, 0, 0, 0, 0, 0));
     TestingHelpers.testKnowtatorAction(
         model,
         new FilterAction(model, OWLCLASS, false),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans, TestingHelpers.defaultExpectedGraphSpaces, TestingHelpers.defaultExpectedProfiles, TestingHelpers.defaultExpectedHighlighters, TestingHelpers.defaultExpectedAnnotationNodes, TestingHelpers.defaultExpectedTriples, TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultCounts);
   }
 }

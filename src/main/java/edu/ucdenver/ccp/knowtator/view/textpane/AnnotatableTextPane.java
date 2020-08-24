@@ -44,9 +44,8 @@ import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorDefaultSettings;
-import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
+import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.ActionParameters;
-import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ReassignOwlClassAction;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -59,7 +58,6 @@ import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -77,7 +75,7 @@ import org.apache.log4j.Logger;
 public abstract class AnnotatableTextPane extends SearchableTextPane
     implements KnowtatorComponent, ModelListener {
   @SuppressWarnings("unused")
-  private Logger log = LogManager.getLogger(AnnotatableTextPane.class.getName());
+  private final Logger log = LogManager.getLogger(AnnotatableTextPane.class.getName());
 
   private final DefaultHighlighter.DefaultHighlightPainter overlapHighlighter =
       new DefaultHighlighter.DefaultHighlightPainter(Color.LIGHT_GRAY);
@@ -87,8 +85,8 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
    *
    * @param searchTextField the search text field
    */
-  AnnotatableTextPane(JTextField searchTextField) {
-    super(searchTextField);
+  AnnotatableTextPane(KnowtatorView view, JTextField searchTextField) {
+    super(view, searchTextField);
     setEditable(false);
     setFont(KnowtatorDefaultSettings.FONT);
 
@@ -109,6 +107,12 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
           public void mouseDragged(MouseEvent e) {
             super.mouseDragged(e);
             refreshHighlights();
+            highlightRegion(pressOffset, pressOffset, new RectanglePainter(Color.BLACK));
+
+            view.getModel()
+                .flatMap(BaseModel::getSelectedTextSource)
+                .flatMap(TextSource::getSelectedAnnotation)
+                .ifPresent(annotation -> annotation.setSelection(null));
           }
 
           @Override
@@ -120,14 +124,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
           public void mousePressed(MouseEvent e) {
             super.mousePressed(e);
             pressOffset = viewToModel(e.getPoint());
-            highlightRegion(pressOffset, pressOffset, new RectanglePainter(Color.BLACK));
-            view.getModel()
-                .flatMap(BaseModel::getSelectedTextSource)
-                .ifPresent(
-                    textSource -> {
-                      // TODO: I may want to make this set the selected span to null instead
-                      textSource.setSelectedConceptAnnotation(null);
-                    });
+
           }
 
           @Override
@@ -214,6 +211,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
               if (view.getModel()
                   .flatMap(BaseModel::getSelectedTextSource)
                   .flatMap(TextSource::getSelectedAnnotation)
+                  .flatMap(ConceptAnnotation::getSelection)
                   .isPresent()) {
                 highlightSelectedAnnotation();
               } else {
@@ -300,7 +298,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
     Iterator<Span> spanIterator = spans.iterator();
     if (spanIterator.hasNext()) {
       Span lastSpan = spanIterator.next();
-      for (; spanIterator.hasNext(); ) {
+      while (spanIterator.hasNext()) {
         Span span = spanIterator.next();
         if (span.intersects(lastSpan)) {
           highlightRegion(
@@ -420,7 +418,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
   }
 
   /** The type Rectangle painter. */
-  class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {
+  static class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {
 
     /**
      * Instantiates a new Rectangle painter.
@@ -514,40 +512,6 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
       this.mouseEvent = mouseEvent;
     }
 
-    private JMenuItem reassignOwlClassCommand() {
-      JMenuItem menuItem = new JMenuItem("Reassign OWL class");
-      menuItem.addActionListener(
-          e ->
-              view.getModel()
-                  .ifPresent(
-                      model -> {
-                        Optional<String> selectedOwlClass = model.getSelectedOwlClass();
-                        selectedOwlClass.ifPresent(
-                            owlClass ->
-                                model
-                                    .getSelectedTextSource()
-                                    .ifPresent(
-                                        textSource1 ->
-                                            textSource1
-                                                .getSelectedAnnotation()
-                                                .ifPresent(
-                                                    conceptAnnotation -> {
-                                                      try {
-                                                        model.registerAction(
-                                                            new ReassignOwlClassAction(
-                                                                model,
-                                                                conceptAnnotation,
-                                                                owlClass));
-                                                      } catch (ActionUnperformable e1) {
-                                                        JOptionPane.showMessageDialog(
-                                                            view, e1.getMessage());
-                                                      }
-                                                    })));
-                      }));
-
-      return menuItem;
-    }
-
     private JMenuItem addAnnotationCommand() {
       JMenuItem menuItem = new JMenuItem("Add concept");
       menuItem.addActionListener(
@@ -628,20 +592,14 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
         show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
       } else {
         view.getModel()
-            .flatMap(BaseModel::getSelectedTextSource)
-            .ifPresent(
-                textSource ->
-                    textSource
-                        .getSelectedAnnotation()
-                        .ifPresent(
-                            conceptAnnotation ->
-                                conceptAnnotation
-                                    .getSelection()
-                                    .filter(
-                                        span ->
-                                            span.getStart() <= releaseOffset
-                                                && releaseOffset <= span.getEnd())
-                                    .ifPresent(span -> clickedInsideSpan(conceptAnnotation))));
+            .flatMap(BaseModel::getSelectedTextSource).flatMap(TextSource::getSelectedAnnotation).ifPresent(conceptAnnotation ->
+            conceptAnnotation
+                .getSelection()
+                .filter(
+                    span ->
+                        span.getStart() <= releaseOffset
+                            && releaseOffset <= span.getEnd())
+                .ifPresent(span -> clickedInsideSpan(conceptAnnotation)));
       }
     }
 
@@ -650,7 +608,6 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
       if (conceptAnnotation.size() > 1) {
         add(removeSpanFromAnnotationCommand(conceptAnnotation));
       }
-      add(reassignOwlClassCommand());
       show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
     }
   }

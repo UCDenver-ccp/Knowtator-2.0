@@ -27,6 +27,7 @@ package edu.ucdenver.ccp.knowtator;
 import difflib.Delta;
 import difflib.DiffUtils;
 import difflib.Patch;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,6 +35,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("EmptyMethod")
@@ -41,18 +43,15 @@ class ProjectManagerTest {
 
   private static KnowtatorModel model;
 
-  static {
-    try {
-      model = TestingHelpers.getLoadedModel();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+  @BeforeEach
+  void setup() throws IOException {
+    model = TestingHelpers.getLoadedModel();
   }
 
   @Test
   void loadProjectTest() {
     TestingHelpers.checkDefaultCollectionValues(model);
-    model.load();
+    model.load(model.getProjectLocation());
   }
 
   private static List<String> fileToLines(File file) {
@@ -74,7 +73,7 @@ class ProjectManagerTest {
     TestingHelpers.checkDefaultCollectionValues(model);
     model.save();
     TestingHelpers.checkDefaultCollectionValues(model);
-    File file1 = new File(model.getAnnotationsLocation(), "document1.xml");
+    File file1 = new File(BaseModel.getAnnotationsLocation(model.getProjectLocation()), "document1.xml");
     File referenceFile =
         new File(
             TestingHelpers.class
@@ -103,7 +102,20 @@ class ProjectManagerTest {
   void importToManagerTest() {}
 
   @Test
-  void importProjectTest() {}
+  void importProjectTest() throws IOException {
+    TestingHelpers.checkDefaultCollectionValues(model);
+    String projectName = "iaa_test_project";
+    File projectFile = new File(
+        TestingHelpers.class
+            .getResource(String.format("/%s/%s.knowtator", projectName, projectName))
+            .getFile());
+    projectFile = BaseModel.validateProjectLocation(projectFile);
+    model.load(projectFile);
+
+    TestingHelpers.ProjectCounts counts = TestingHelpers.defaultCounts.copy(4, 456, 456, 4, 2, 0, 0, 0, 0);
+    TestingHelpers.countCollections(model, counts);
+
+  }
 
   @SuppressWarnings("EmptyMethod")
   @Test

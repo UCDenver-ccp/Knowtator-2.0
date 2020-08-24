@@ -45,7 +45,8 @@ public class AnnotationNotes extends JTextArea implements KnowtatorComponent, Mo
    * Instantiates a new Annotation notes.
    *
    */
-  AnnotationNotes() {
+  AnnotationNotes(KnowtatorView view) {
+    this.view = view;
     addKeyListener(
         new KeyListener() {
           @Override
@@ -76,11 +77,6 @@ public class AnnotationNotes extends JTextArea implements KnowtatorComponent, Mo
                 conceptAnnotation.setMotivation(getText());
               }
             });
-  }
-
-  @Override
-  public void setView(KnowtatorView view) {
-    this.view = view;
   }
 
   @Override

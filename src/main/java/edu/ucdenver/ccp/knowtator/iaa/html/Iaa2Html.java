@@ -86,7 +86,7 @@ public class Iaa2Html {
         "This file is provided to facilitate cut-n-paste into a spreadsheet.%n"
             + "If you cannot directly copy the data below into a spreadsheet "
             + "without it all going into a single cell,%n"
-            + "then try copying to a text editor firstConceptAnnotation "
+            + "then try copying to a text editor first "
             + "and then copy it from there.  "
             + "There is typically a 'paste special'%noption under the Edit menu that will "
             + "allow you to paste the copied data as text.  This will also work.%n%n%n%n");
@@ -205,6 +205,9 @@ public class Iaa2Html {
           (double) classNontrivialMatches
               / ((double) classNontrivialMatches + (double) classNontrivialNonmatches);
 
+      if (type.startsWith("<") && type.endsWith(">")) {
+        type = type.substring(1, type.length()- 2);
+      }
       if (matcher.returnsTrivials()) {
         html.printf(
             "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td><td>%d</td></tr>%n",
@@ -231,8 +234,15 @@ public class Iaa2Html {
       } else {
         html.printf(
             "<tr><td>%s</td><td>%s</td><td>%d</td><td>%d</td></tr>%n",
-            type, percentageFormat.format(iaaScore), classMatches, classNonmatches);
-        tabular.printf("%s\t%d\t%d%n", type, classMatches, classNonmatches);
+            type,
+            percentageFormat.format(iaaScore),
+            classMatches,
+            classNonmatches);
+        tabular.printf(
+            "%s\t%d\t%d%n",
+            type,
+            classMatches,
+            classNonmatches);
       }
     }
     html.println("</table>");
@@ -576,7 +586,7 @@ public class Iaa2Html {
       sortedAnnotations.put(type, new HashSet<>());
     }
     for (ConceptAnnotation conceptAnnotation : conceptAnnotations) {
-      String type = conceptAnnotation.getOwlClassLabel();
+      String type = conceptAnnotation.getOwlClassRendering();
       sortedAnnotations.get(type).add(conceptAnnotation);
     }
     return sortedAnnotations;

@@ -34,6 +34,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.lang.reflect.Method;
 import java.util.ResourceBundle;
 import javax.swing.AbstractButton;
 import javax.swing.DefaultComboBoxModel;
@@ -311,7 +312,7 @@ class RelationOptionsDialog extends JDialog {
     if (label2Font != null) {
       label2.setFont(label2Font);
     }
-    this.$$$loadLabelText$$$(label2, ResourceBundle.getBundle("log4j").getString("value2"));
+    this.$$$loadLabelText$$$(label2, this.$$$getMessageFromBundle$$$("log4j", "value2"));
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
     gbc.gridy = 0;
@@ -371,7 +372,7 @@ class RelationOptionsDialog extends JDialog {
     if (negateCheckBoxFont != null) {
       negateCheckBox.setFont(negateCheckBoxFont);
     }
-    this.$$$loadButtonText$$$(negateCheckBox, ResourceBundle.getBundle("log4j").getString("negate1"));
+    this.$$$loadButtonText$$$(negateCheckBox, this.$$$getMessageFromBundle$$$("log4j", "negate1"));
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 1;
@@ -425,6 +426,23 @@ class RelationOptionsDialog extends JDialog {
       }
     }
     return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+  }
+
+  private static Method $$$cachedGetBundleMethod$$$ = null;
+
+  private String $$$getMessageFromBundle$$$(String path, String key) {
+    ResourceBundle bundle;
+    try {
+      Class<?> thisClass = this.getClass();
+      if ($$$cachedGetBundleMethod$$$ == null) {
+        Class<?> dynamicBundleClass = thisClass.getClassLoader().loadClass("com.intellij.DynamicBundle");
+        $$$cachedGetBundleMethod$$$ = dynamicBundleClass.getMethod("getBundle", String.class, Class.class);
+      }
+      bundle = (ResourceBundle) $$$cachedGetBundleMethod$$$.invoke(null, path, thisClass);
+    } catch (Exception e) {
+      bundle = ResourceBundle.getBundle(path);
+    }
+    return bundle.getString(key);
   }
 
   /**
@@ -491,4 +509,5 @@ class RelationOptionsDialog extends JDialog {
   public JComponent $$$getRootComponent$$$() {
     return contentPane;
   }
+
 }

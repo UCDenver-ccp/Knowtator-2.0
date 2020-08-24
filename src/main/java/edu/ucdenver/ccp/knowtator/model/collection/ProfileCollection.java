@@ -27,6 +27,7 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import java.util.Optional;
+import java.util.Set;
 
 /** The type Profile collection. */
 public class ProfileCollection extends KnowtatorCollection<Profile> {
@@ -78,5 +79,9 @@ public class ProfileCollection extends KnowtatorCollection<Profile> {
     }
     super.remove(profile);
     selectNext();
+  }
+
+  public void verifyHighlighters(Set<String> owlClasses) {
+    forEach(profile -> profile.verifyHighLighters(owlClasses));
   }
 }

@@ -38,6 +38,7 @@ import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -52,14 +53,9 @@ import javax.swing.undo.UndoManager;
 /** The type Base model. */
 public abstract class BaseModel extends UndoManager implements CaretListener, Savable {
 
+  public static final HashSet<String> DEFAULT_LAYERS =
+      new HashSet<>(Collections.singletonList("Default"));
   private final File projectLocation;
-  private final File annotationsLocation;
-  private final File articlesLocation;
-  private final File profilesLocation;
-  final File structuresLocation;
-
-  /** The Ontologies location. */
-  final File ontologiesLocation;
 
   private final Set<ModelListener> modelListeners;
   private final Map<FilterType, Boolean> filters;
@@ -76,8 +72,8 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
   /** The Loading. */
   boolean loading;
 
-  private Boolean isStructureMode;
   private Set<StructureModeListener> structureModeListeners;
+  private Set<String> activeLayers;
 
   /**
    * Instantiates a new Base model.
@@ -94,39 +90,43 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
     filters.put(FilterType.PROFILE, false);
     filters.put(FilterType.OWLCLASS, false);
     loading = false;
-    isStructureMode = false;
+    activeLayers = new HashSet<>();
+    activeLayers.addAll(DEFAULT_LAYERS);
 
     selection = new Selection(0, 0);
 
-    if (projectLocation.isFile()) {
-      if (projectLocation.getName().endsWith(".knowtator")) {
-        projectLocation = new File(projectLocation.getParent());
-      } else {
-        throw new IOException();
-      }
+    this.projectLocation = validateProjectLocation(projectLocation);
+
+    if (!this.projectLocation.exists()) {
+      Files.createDirectories(projectLocation.toPath());
     }
-
-
-    Files.createDirectories(projectLocation.toPath());
-
-    if (Files.list(projectLocation.toPath())
+    if (Files.list(this.projectLocation.toPath())
         .noneMatch(path -> path.toString().endsWith(".knowtator"))) {
       Files.createFile(
-          new File(projectLocation, String.format("%s.knowtator", projectLocation.getName()))
+          new File(this.projectLocation, String.format("%s.knowtator", projectLocation.getName()))
               .toPath());
     }
 
-    this.projectLocation = projectLocation;
-    articlesLocation = new File(projectLocation, "Articles");
-    annotationsLocation = new File(projectLocation, "Annotations");
-    profilesLocation = (new File(projectLocation, "Profiles"));
-    ontologiesLocation = new File(projectLocation, "Ontologies");
-    structuresLocation = new File(projectLocation, "Structures");
-    Files.createDirectories(articlesLocation.toPath());
-    Files.createDirectories(annotationsLocation.toPath());
-    Files.createDirectories(profilesLocation.toPath());
-    Files.createDirectories(ontologiesLocation.toPath());
-    Files.createDirectories(structuresLocation.toPath());
+    Files.createDirectories(getArticlesLocation(this.projectLocation).toPath());
+    Files.createDirectories(getAnnotationsLocation(this.projectLocation).toPath());
+    Files.createDirectories(getProfilesLocation(this.projectLocation).toPath());
+    Files.createDirectories(getOntologiesLocation(this.projectLocation).toPath());
+  }
+
+  public static File validateProjectLocation(File projectLocation) throws IOException {
+    if (projectLocation.isFile()) {
+      if (projectLocation.getName().endsWith(".knowtator")) {
+        return new File(projectLocation.getParent());
+      } else {
+        throw new IOException();
+      }
+    } else {
+      return projectLocation;
+    }
+  }
+
+  public static File getOntologiesLocation(File projectLocation) {
+    return new File(projectLocation, "Ontologies");
   }
 
   @Override
@@ -174,8 +174,9 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
    *
    * @return the annotations location
    */
-  public File getAnnotationsLocation() {
-    return annotationsLocation;
+  public static File getAnnotationsLocation(File projectLocation) {
+    return new File(projectLocation, "Annotations");
+
   }
 
   /**
@@ -230,7 +231,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
   public String verifyId(String id, ModelObject modelObject, boolean hasPriority) {
     String verifiedId = id;
 
-    if (hasPriority && idRegistry.keySet().contains(id)) {
+    if (hasPriority && idRegistry.containsKey(id)) {
       ModelObject mo = idRegistry.get(id);
       modelObject.setId(verifyId(id, mo, false));
     } else {
@@ -238,7 +239,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 
       while (verifiedId == null
           || verifiedId.equals("")
-          || idRegistry.keySet().contains(verifiedId)) {
+          || idRegistry.containsKey(verifiedId)) {
         if (modelObject instanceof TextBoundModelObject) {
           verifiedId =
               String.format(
@@ -295,9 +296,10 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
    * Gets articles location.
    *
    * @return the articles location
+   * @param projectLocation project location
    */
-  public File getArticlesLocation() {
-    return articlesLocation;
+  public static File getArticlesLocation(File projectLocation) {
+    return new File(projectLocation, "Articles");
   }
 
   /**
@@ -314,20 +316,17 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
   }
 
   public Optional<GraphSpace> getSelectedGraphSpace() {
-    if (isStructureMode) {
-      return getSelectedTextSource().flatMap(TextSource::getSelectedStructureGraphSpace);
-    } else {
-      return getSelectedTextSource().flatMap(TextSource::getSelectedGraphSpace);
-    }
+    return getSelectedTextSource().flatMap(TextSource::getSelectedGraphSpace);
   }
 
   /**
    * Gets profiles location.
    *
    * @return the profiles location
+   * @param projectLocation project location
    */
-  File getProfilesLocation() {
-    return profilesLocation;
+  public static File getProfilesLocation(File projectLocation) {
+    return new File(projectLocation, "Profiles");
   }
 
   /** Dispose. */
@@ -383,8 +382,8 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
     modelListeners.forEach(ModelListener::filterChangedEvent);
   }
 
-  public void setStructureMode(Boolean isStructureMode) {
-    this.isStructureMode = isStructureMode;
+  public void addActiveLayer(String layer) {
+    activeLayers.add(layer);
     fireStructureModeChangedEvent();
   }
 
@@ -430,7 +429,16 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
     structureModeListeners.add(listener);
   }
 
-  public File getStructuresLocation() {
-    return structuresLocation;
+  public Set<String> getActiveLayers() {
+    return activeLayers;
+  }
+
+  public static File getArticlesLocation(File annotationFileLocation, File projectLocation) {
+    File file = new File(annotationFileLocation.getParentFile(), "Articles");
+    if (file.exists()) {
+      return file;
+    } else {
+      return getArticlesLocation(projectLocation);
+    }
   }
 }

@@ -24,9 +24,11 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.collection;
 
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
@@ -50,20 +52,24 @@ import javax.swing.JOptionPane;
 public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
     extends AbstractKnowtatorAction {
 
-  /** The Action type. */
+  /**
+   * The Action type.
+   */
   protected final CollectionActionType actionType;
 
   private final KnowtatorCollection<K> collection;
-  /** The Object. */
+  /**
+   * The Object.
+   */
   protected K object;
 
   /**
    * Instantiates a new Abstract knowtator collection action.
    *
-   * @param model the model
-   * @param actionType the action type
+   * @param model            the model
+   * @param actionType       the action type
    * @param presentationName the presentation name
-   * @param collection the collection
+   * @param collection       the collection
    */
   protected AbstractKnowtatorCollectionAction(
       KnowtatorModel model,
@@ -189,7 +195,9 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
     }
   }
 
-  /** Prepare add. */
+  /**
+   * Prepare add.
+   */
   protected abstract void prepareAdd();
 
   /**
@@ -199,7 +207,9 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
    */
   protected abstract void cleanUpRemove() throws ActionUnperformable;
 
-  /** Clean up add. */
+  /**
+   * Clean up add.
+   */
   @SuppressWarnings("EmptyMethod")
   protected abstract void cleanUpAdd();
 
@@ -215,9 +225,9 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
   /**
    * Way to choose which action should occur.
    *
-   * @param view The Knowtator view
-   * @param id The profile id
-   * @param file The document file
+   * @param view                 The Knowtator view
+   * @param id                   The profile id
+   * @param file                 The document file
    * @param actionParametersList Additional parameters for actions
    */
   public static void pickAction(
@@ -245,33 +255,38 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
                             break;
                           case SPAN:
                             model
-                                .getSelectedTextSource()
-                                .ifPresent(
-                                    textSource ->
-                                        textSource
-                                            .getSelectedAnnotation()
-                                            .ifPresent(
-                                                conceptAnnotation ->
-                                                    actions.add(
-                                                        new SpanAction(
-                                                            model,
-                                                            actionType,
-                                                            conceptAnnotation))));
+                                .getSelectedTextSource().flatMap(TextSource::getSelectedAnnotation).ifPresent(conceptAnnotation ->
+                                actions.add(
+                                    new SpanAction(
+                                        model,
+                                        actionType,
+                                        conceptAnnotation)));
                             break;
                           case PROFILE:
                             actions.add(new ProfileAction(model, actionType, id));
                             break;
                           case DOCUMENT:
-                            JOptionPane.showMessageDialog(view, "Select annotation file");
-                            JFileChooser fileChooser = new JFileChooser();
-                            fileChooser.setCurrentDirectory(model.getAnnotationsLocation());
-
                             File annotationFile = null;
-                            if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
-                              annotationFile = fileChooser.getSelectedFile();
+                            if (actionType.equals(CollectionActionType.ADD)) {
+                              int choice = JOptionPane.showConfirmDialog(view, "Select annotation file?", "Annotation file", JOptionPane.YES_NO_OPTION);
+                              if (choice == JOptionPane.YES_OPTION) {
+                                JFileChooser fileChooser = new JFileChooser();
+                                fileChooser.setCurrentDirectory(BaseModel.getAnnotationsLocation(model.getProjectLocation()));
+                                if (fileChooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
+                                  annotationFile = fileChooser.getSelectedFile();
+                                }
+                              }
+
+                              actions.add(new TextSourceAction(model, actionType, file, annotationFile));
+
+                            } else {
+                              int response = JOptionPane.showConfirmDialog(view, "Remove document from project? (document and annotations will NOT be deleted)", null, JOptionPane.YES_NO_OPTION);
+                              if (response == JOptionPane.YES_OPTION) {
+                                actions.add(
+                                    new TextSourceAction(model, actionType, file, annotationFile));
+                              }
                             }
-                            actions.add(
-                                new TextSourceAction(model, actionType, file, annotationFile));
+
                             break;
                           default:
                             break;

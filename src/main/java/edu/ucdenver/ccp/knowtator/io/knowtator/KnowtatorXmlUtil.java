@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.io.knowtator;
 
 import com.mxgraph.model.mxGraphModel;
 import edu.ucdenver.ccp.knowtator.io.XmlUtil;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
@@ -42,6 +43,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.slf4j.Logger;
@@ -91,22 +94,6 @@ public final class KnowtatorXmlUtil extends XmlUtil {
         });
   }
 
-  public void readStructuresToTextSource(TextSource textSource, File file) {
-    Optional<Element> parentOptional = getRootElement(file);
-    parentOptional.ifPresent(
-        parent -> {
-          for (Node documentNode :
-              KnowtatorXmlUtil.asList(parent.getElementsByTagName(KnowtatorXmlTags.DOCUMENT))) {
-            Element documentElement = (Element) documentNode;
-            readToTextSource(
-                textSource,
-                textSource.structureAnnotations,
-                textSource.structureGraphSpaces,
-                documentElement);
-          }
-        });
-  }
-
   private void readToTextSource(
       TextSource textSource,
       ConceptAnnotationCollection annotations,
@@ -125,7 +112,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
    * @param model the model
    * @param file the file
    */
-  public void readToTextSourceCollection(KnowtatorModel model, File file, boolean isStructures) {
+  public void readToTextSourceCollection(KnowtatorModel model, File file) {
     Optional<Element> parentOptional = getRootElement(file);
     parentOptional.ifPresent(
         parent -> {
@@ -141,19 +128,12 @@ public final class KnowtatorXmlUtil extends XmlUtil {
 
             TextSource newTextSource = textSource.orElse(new TextSource(model, file, textFileName));
             model.getTextSources().add(newTextSource);
-            if (isStructures) {
-              readToTextSource(
-                  newTextSource,
-                  newTextSource.structureAnnotations,
-                  newTextSource.structureGraphSpaces,
-                  documentElement);
-            } else {
-              readToTextSource(
-                  newTextSource,
-                  newTextSource.getConceptAnnotations(),
-                  newTextSource.getGraphSpaces(),
-                  documentElement);
-            }
+
+            readToTextSource(
+                newTextSource,
+                newTextSource.getConceptAnnotations(),
+                newTextSource.getGraphSpaces(),
+                documentElement);
           }
         });
   }
@@ -180,13 +160,32 @@ public final class KnowtatorXmlUtil extends XmlUtil {
 
               Optional<OWLClass> owlClass = model.getOwlClassById(owlClassID);
 
+              Set<String> layers =
+                  KnowtatorXmlUtil.asList(
+                          annotationElement.getElementsByTagName(KnowtatorXmlAttributes.LAYER))
+                      .stream()
+                      .map(node -> (Element) node)
+                      .map(Node::getTextContent)
+                      .collect(Collectors.toSet());
+
               if (owlClass.isPresent()) {
                 owlClassID = owlClass.get().toStringID();
+              } else {
+                log.warn(
+                    String.format(
+                        "OWL Class: %s not found for concept: %s", owlClassID, annotationID));
+                model.addOWLClassNotFoundAnnotations(annotationID, owlClassID);
               }
 
               ConceptAnnotation newConceptAnnotation =
                   new ConceptAnnotation(
-                      textSource, annotationID, owlClassID, profile, type, motivation);
+                      textSource,
+                      annotationID,
+                      owlClassID,
+                      profile,
+                      type,
+                      motivation,
+                      layers.size() == 0 ? BaseModel.DEFAULT_LAYERS : layers);
               readToConceptAnnotation(newConceptAnnotation, annotationElement);
               if (newConceptAnnotation.size() == 0) {
                 return Optional.empty();
@@ -255,9 +254,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
       Optional<ConceptAnnotation> conceptAnnotation =
           graphSpace.getTextSource().getAnnotation(annotationID);
       if (conceptAnnotation.isPresent()) {
-        AnnotationNode newVertex =
-            new AnnotationNode(id, conceptAnnotation.get(), x, y, graphSpace);
-        graphSpace.addCellToGraph(newVertex);
+        graphSpace.addAnnotationNode(id, conceptAnnotation.get(), x, y);
       } else {
         log.info(String.format("Annotation could not be found %s", annotationID));
       }
@@ -388,7 +385,6 @@ public final class KnowtatorXmlUtil extends XmlUtil {
 
     File file = textSource.getSaveLocation();
     Optional<Document> domOptional = startWrite(file);
-    File finalFile = file;
     domOptional.ifPresent(
         dom -> {
           Element root = dom.createElement(KnowtatorXmlTags.KNOWTATOR_PROJECT);
@@ -403,31 +399,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
             writeFromGraphSpaceCollection(textSource.getGraphSpaces(), dom, textSourceElement);
             root.appendChild(textSourceElement);
           } finally {
-            XmlUtil.finishWritingXml(dom, finalFile);
-          }
-        });
-    file =
-        new File(
-            textSource.getKnowtatorModel().getStructuresLocation(),
-            textSource.getSaveLocation().getName());
-    Optional<Document> domOptional2 = startWrite(file);
-    File finalFile1 = file;
-    domOptional2.ifPresent(
-        dom -> {
-          Element root = dom.createElement(KnowtatorXmlTags.KNOWTATOR_PROJECT);
-          dom.appendChild(root);
-          try {
-            Element textSourceElement = dom.createElement(KnowtatorXmlTags.DOCUMENT);
-            textSourceElement.setAttribute(KnowtatorXmlAttributes.ID, textSource.getId());
-            textSourceElement.setAttribute(
-                KnowtatorXmlAttributes.FILE, textSource.getTextFile().getName());
-            writeFromConceptAnnotationCollection(
-                textSource.getStructureAnnotations(), dom, textSourceElement);
-            writeFromGraphSpaceCollection(
-                textSource.getStructureGraphSpaces(), dom, textSourceElement);
-            root.appendChild(textSourceElement);
-          } finally {
-            XmlUtil.finishWritingXml(dom, finalFile1);
+            XmlUtil.finishWritingXml(dom, file);
           }
         });
   }
@@ -521,7 +493,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
     Element classElement = dom.createElement(KnowtatorXmlTags.CLASS);
 
     classElement.setAttribute(KnowtatorXmlAttributes.ID, conceptAnnotation.getOwlClass());
-    classElement.setAttribute(KnowtatorXmlAttributes.LABEL, conceptAnnotation.getOwlClassLabel());
+    classElement.setAttribute(KnowtatorXmlAttributes.LABEL, conceptAnnotation.getOwlClassRendering());
     annotationElem.appendChild(classElement);
 
     conceptAnnotation.forEach(span -> writeFromSpan(span, dom, annotationElem));

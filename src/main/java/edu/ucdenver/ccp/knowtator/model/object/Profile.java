@@ -34,6 +34,7 @@ import java.awt.Color;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -43,7 +44,7 @@ public class Profile implements ModelObject<Profile>, Savable, ModelListener {
   private static Logger log = LogManager.getLogger(Profile.class);
 
   private String id;
-  private final HashMap<String, Color> colors; // <ClassName, Highlighter>
+  private HashMap<String, Color> colors; // <ClassName, Highlighter>
   private final KnowtatorModel model;
 
   /**
@@ -160,4 +161,12 @@ public class Profile implements ModelObject<Profile>, Savable, ModelListener {
 
   @Override
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {}
+
+  public void verifyHighLighters(Set<String> owlClasses) {
+    HashMap<String, Color> verifiedColors = new HashMap<>();
+    colors.entrySet().stream()
+        .filter(entry -> model.getOwlClassById(entry.getKey()).isPresent())
+        .forEach(entry -> verifiedColors.put(entry.getKey(), entry.getValue()));
+    colors = verifiedColors;
+  }
 }

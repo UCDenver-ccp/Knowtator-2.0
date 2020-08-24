@@ -3,3 +3,13 @@ target/
 src/test/resources/biocreative_chemprot/
 src/test/resources/concepts+assertions/
 /src/test/resources/biocreative_chemprot_small/
+/.clj-kondo/
+/node_modules/
+/.shadow-cljs/
+/resources/public/
+/.lein-failures
+/.dir-locals.el
+/.nrepl-port
+/.idea/libraries/
+/.idea/knowtator.iml
+/.attach_pid272926

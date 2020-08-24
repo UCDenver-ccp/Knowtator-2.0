@@ -33,7 +33,6 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.util.Optional;
-import javax.swing.DefaultListModel;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
@@ -50,7 +49,8 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
   KnowtatorView view;
 
   /** Instantiates a new Knowtator table. */
-  KnowtatorTable() {
+  KnowtatorTable(KnowtatorView view) {
+    this.view = view;
     getTableHeader().setFont(new Font(getFont().getName(), Font.BOLD, 16));
     setAutoCreateRowSorter(true);
 
@@ -129,7 +129,7 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
 
   /** React to model event. */
   public void reactToModelEvent() {
-    ((DefaultListModel) getModel()).clear();
+    ((DefaultTableModel) getModel()).setRowCount(0);
     addElementsFromModel();
     setSelected();
   }
@@ -147,10 +147,5 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
   @Override
   public void colorChangedEvent(Profile profile) {
     reactToModelEvent();
-  }
-
-  @Override
-  public void setView(KnowtatorView view) {
-    this.view = view;
   }
 }

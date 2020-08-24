@@ -117,8 +117,9 @@ public class GraphView extends JPanel
    *
    * @param dialog the dialog
    */
-  GraphView(JDialog dialog) {
+  GraphView(KnowtatorView view, JDialog dialog) {
 
+    this.view = view;
     this.dialog = dialog;
     $$$setupUI$$$();
     setVisible(false);
@@ -312,7 +313,7 @@ public class GraphView extends JPanel
   private void createUIComponents() {
     JScrollPane scrollPane = new JScrollPane();
     scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-    graphSpaceChooser = new GraphSpaceChooser();
+    graphSpaceChooser = new GraphSpaceChooser(view);
     mxGraph testGraph = new mxGraph();
     graphComponent = new mxGraphComponent(testGraph);
   }
@@ -432,12 +433,6 @@ public class GraphView extends JPanel
     graphSpaceChooser.dispose();
   }
 
-  @Override
-  public void setView(KnowtatorView view) {
-    this.view = view;
-    graphSpaceChooser.setView(view);
-  }
-
   /**
    * Gets graph component.
    *
@@ -477,13 +472,9 @@ public class GraphView extends JPanel
               event
                   .getNew()
                   .filter(modelObject -> modelObject instanceof TextSource)
-                  .map(modelObject -> (TextSource) modelObject)
-                  .ifPresent(
-                      textSource ->
-                          textSource
-                              .getKnowtatorModel()
-                              .getSelectedGraphSpace()
-                              .ifPresent(GraphView.this::showGraph));
+                  .map(modelObject -> (TextSource) modelObject).flatMap(textSource -> textSource
+                  .getKnowtatorModel()
+                  .getSelectedGraphSpace()).ifPresent(GraphView.this::showGraph);
               event
                   .getNew()
                   .filter(modelObject -> modelObject instanceof AnnotationNode)
@@ -605,7 +596,7 @@ public class GraphView extends JPanel
     final JPanel panel2 = new JPanel();
     panel2.setLayout(new GridBagLayout());
     panel1.add(panel2, BorderLayout.WEST);
-    panel2.setBorder(BorderFactory.createTitledBorder(null, "Nodes and Edges", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel2.getFont())));
+    panel2.setBorder(BorderFactory.createTitledBorder(null, "Nodes and Edges", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel2.getFont()), null));
     addAnnotationNodeButton = new JButton();
     addAnnotationNodeButton.setIcon(new ImageIcon(getClass().getResource("/icon/icons8-plus-24.png")));
     addAnnotationNodeButton.setText("");
@@ -654,7 +645,7 @@ public class GraphView extends JPanel
     final JPanel panel3 = new JPanel();
     panel3.setLayout(new GridBagLayout());
     panel1.add(panel3, BorderLayout.EAST);
-    panel3.setBorder(BorderFactory.createTitledBorder(null, "Graph Spaces", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel3.getFont())));
+    panel3.setBorder(BorderFactory.createTitledBorder(null, "Graph Spaces", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 14, panel3.getFont()), null));
     final JPanel panel4 = new JPanel();
     panel4.setLayout(new GridBagLayout());
     gbc = new GridBagConstraints();
@@ -782,7 +773,7 @@ public class GraphView extends JPanel
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     panel9.add(panel10, gbc);
-    panel10.setBorder(BorderFactory.createTitledBorder(null, "Node ID", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 16, panel10.getFont())));
+    panel10.setBorder(BorderFactory.createTitledBorder(null, "Node ID", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 16, panel10.getFont()), null));
     final JLabel label1 = new JLabel();
     Font label1Font = this.$$$getFont$$$("Verdana", -1, -1, label1.getFont());
     if (label1Font != null) {
@@ -804,7 +795,7 @@ public class GraphView extends JPanel
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     panel9.add(panel11, gbc);
-    panel11.setBorder(BorderFactory.createTitledBorder(null, "Concept Annotation", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 16, panel11.getFont())));
+    panel11.setBorder(BorderFactory.createTitledBorder(null, "Concept Annotation", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 16, panel11.getFont()), null));
     final JLabel label2 = new JLabel();
     Font label2Font = this.$$$getFont$$$("Verdana", -1, -1, label2.getFont());
     if (label2Font != null) {
@@ -831,7 +822,7 @@ public class GraphView extends JPanel
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     panel12.add(panel13, gbc);
-    panel13.setBorder(BorderFactory.createTitledBorder(null, "Relation ID", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 16, panel13.getFont())));
+    panel13.setBorder(BorderFactory.createTitledBorder(null, "Relation ID", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 16, panel13.getFont()), null));
     final JLabel label3 = new JLabel();
     label3.setEnabled(false);
     Font label3Font = this.$$$getFont$$$("Verdana", -1, -1, label3.getFont());
@@ -860,7 +851,7 @@ public class GraphView extends JPanel
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     panel12.add(panel14, gbc);
-    panel14.setBorder(BorderFactory.createTitledBorder(null, "OWL Object Property", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 16, panel14.getFont())));
+    panel14.setBorder(BorderFactory.createTitledBorder(null, "OWL Object Property", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 16, panel14.getFont()), null));
     final JLabel label4 = new JLabel();
     Font label4Font = this.$$$getFont$$$("Verdana", -1, -1, label4.getFont());
     if (label4Font != null) {
@@ -884,7 +875,7 @@ public class GraphView extends JPanel
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     panel12.add(panel15, gbc);
-    panel15.setBorder(BorderFactory.createTitledBorder(null, "Quantifier", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 16, panel15.getFont())));
+    panel15.setBorder(BorderFactory.createTitledBorder(null, "Quantifier", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 16, panel15.getFont()), null));
     final JComboBox comboBox1 = new JComboBox();
     comboBox1.setEnabled(false);
     Font comboBox1Font = this.$$$getFont$$$("Verdana", -1, -1, comboBox1.getFont());
@@ -916,7 +907,7 @@ public class GraphView extends JPanel
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     panel12.add(panel16, gbc);
-    panel16.setBorder(BorderFactory.createTitledBorder(null, "Quantifier Value", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 16, panel16.getFont())));
+    panel16.setBorder(BorderFactory.createTitledBorder(null, "Quantifier Value", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 16, panel16.getFont()), null));
     final JFormattedTextField formattedTextField1 = new JFormattedTextField();
     Font formattedTextField1Font = this.$$$getFont$$$("Verdana", -1, -1, formattedTextField1.getFont());
     if (formattedTextField1Font != null) {
@@ -953,7 +944,7 @@ public class GraphView extends JPanel
     gbc.weighty = 1.0;
     gbc.fill = GridBagConstraints.BOTH;
     panel12.add(panel17, gbc);
-    panel17.setBorder(BorderFactory.createTitledBorder(null, "Notes", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 16, panel17.getFont())));
+    panel17.setBorder(BorderFactory.createTitledBorder(null, "Notes", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, this.$$$getFont$$$("Verdana", -1, 16, panel17.getFont()), null));
     final JScrollPane scrollPane1 = new JScrollPane();
     gbc = new GridBagConstraints();
     gbc.gridx = 0;

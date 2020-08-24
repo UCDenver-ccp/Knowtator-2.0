@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator.model.object;
 
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXmlUtil;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.Savable;
@@ -52,40 +53,42 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
   private final KnowtatorModel model;
   private final File saveFile;
   private final ConceptAnnotationCollection conceptAnnotations;
-  public ConceptAnnotationCollection structureAnnotations;
   private File textFile;
   private String content;
   private final GraphSpaceCollection graphSpaces;
-  public final GraphSpaceCollection structureGraphSpaces;
   private String id;
 
   /**
    * Instantiates a new Text source.
    *
    * @param model the model
-   * @param saveFile the save file
-   * @param textFileName the text file name
+   * @param file save file or source text file
    */
-  public TextSource(KnowtatorModel model, File saveFile, String textFileName) {
+  public TextSource(KnowtatorModel model, File file, String textSourceName) {
     this.model = model;
-    this.saveFile =
-        saveFile == null
-            ? new File(
-                model.getAnnotationsLocation().getAbsolutePath(),
-                textFileName.replace(".txt", ".xml"))
-            : saveFile;
+    if (file.getName().endsWith(".txt")) {
+      this.saveFile = new File(BaseModel.getAnnotationsLocation(model.getProjectLocation()).getAbsolutePath(),
+          file.getName().replace(".txt", ".xml"));
+      this.textFile = file;
+    } else if (file.getName().endsWith(".xml")) {
+      this.saveFile = file;
+      String textFileName = textSourceName == null ? file.getName().replace(".xml", ".txt") : textSourceName.endsWith(".txt") ? textSourceName : textSourceName.concat(".txt");
+      this.textFile = new File(BaseModel.getArticlesLocation(file.getParentFile().getParentFile()).getAbsolutePath(), textFileName);
+      if (!this.textFile.exists()) {
+        this.textFile = new File(BaseModel.getArticlesLocation(model.getProjectLocation()).getAbsolutePath(), textFileName);
+      }
+
+    } else {
+      this.saveFile = new File(BaseModel.getArticlesLocation(model.getProjectLocation()).getAbsolutePath(),
+          file.getName().concat(".xml"));
+      this.textFile = new File(BaseModel.getArticlesLocation(model.getProjectLocation()).getAbsolutePath(),
+          file.getName().concat(".txt"));
+    }
     this.conceptAnnotations = new ConceptAnnotationCollection(model, this);
     this.graphSpaces = new GraphSpaceCollection(model);
-    this.structureAnnotations = new ConceptAnnotationCollection(model, this);
-    this.structureGraphSpaces = new GraphSpaceCollection(model);
     model.addModelListener(this);
 
-    this.id = model.verifyId(FilenameUtils.getBaseName(textFileName), this, true);
-
-    textFile =
-        new File(
-            model.getArticlesLocation(),
-            textFileName.endsWith(".txt") ? textFileName : String.format("%s.txt", textFileName));
+    this.id = model.verifyId(FilenameUtils.getBaseName(this.textFile.getName().replace(".txt", "")), this, true);
 
     if (!textFile.exists()) {
       JFileChooser fileChooser = new JFileChooser();
@@ -93,12 +96,12 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
           String.format("Could not find file for %s. Choose file location", id));
 
       if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-        File file = fileChooser.getSelectedFile();
+        File file1 = fileChooser.getSelectedFile();
         try {
           textFile =
               Files.copy(
                       Paths.get(file.toURI()),
-                      Paths.get(model.getArticlesLocation().toURI().resolve(file.getName())))
+                      Paths.get(BaseModel.getArticlesLocation(model.getProjectLocation()).toURI().resolve(file1.getName())))
                   .toFile();
         } catch (IOException e) {
           e.printStackTrace();
@@ -163,7 +166,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
           content = FileUtils.readFileToString(textFile, "UTF-8");
           return content;
         } catch (IOException e) {
-          textFile = new File(model.getArticlesLocation(), String.format("%s.txt", id));
+          textFile = new File(BaseModel.getArticlesLocation(model.getProjectLocation()), String.format("%s.txt", id));
           while (!textFile.exists()) {
             JFileChooser fileChooser = new JFileChooser();
             if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -198,7 +201,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @return the save location
    */
   public File getSaveLocation() {
-    return new File(model.getAnnotationsLocation().getAbsolutePath(), saveFile.getName());
+    return new File(BaseModel.getAnnotationsLocation(model.getProjectLocation()).getAbsolutePath(), saveFile.getName());
   }
 
   @Override
@@ -263,11 +266,8 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @return the annotation
    */
   public Optional<ConceptAnnotation> getAnnotation(String annotationID) {
-    Optional<ConceptAnnotation> conceptAnnotation = conceptAnnotations.get(annotationID);
-    if (conceptAnnotation.isPresent()) {
-      return conceptAnnotation;
-    }
-    return structureAnnotations.get(annotationID);
+    return conceptAnnotations.get(annotationID);
+
   }
 
   /**
@@ -356,25 +356,5 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
   /** Select next concept annotation. */
   public void selectNextConceptAnnotation() {
     conceptAnnotations.selectNext();
-  }
-
-  public ConceptAnnotationCollection getStructureAnnotations() {
-    return structureAnnotations;
-  }
-
-  public GraphSpaceCollection getStructureGraphSpaces() {
-    return structureGraphSpaces;
-  }
-
-  public int getNumberOfStructureAnnotations() {
-    return structureAnnotations.size();
-  }
-
-  public int getNumberOfStructureGraphSpaces() {
-    return structureGraphSpaces.size();
-  }
-
-  public Optional<GraphSpace> getSelectedStructureGraphSpace() {
-    return structureGraphSpaces.getSelection();
   }
 }

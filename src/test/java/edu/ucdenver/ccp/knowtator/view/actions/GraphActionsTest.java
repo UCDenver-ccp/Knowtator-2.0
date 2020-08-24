@@ -59,18 +59,7 @@ class GraphActionsTest {
     TestingHelpers.testKnowtatorAction(
         model,
         new GraphActions.RemoveCellsAction(model, graphSpace),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes - 1,
-        TestingHelpers.defaultExpectedTriples - 1,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultCounts.copy(0, 0, 0, 0, 0, 0, -1, -1, 0));
   }
 
   @Test
@@ -83,18 +72,7 @@ class GraphActionsTest {
     TestingHelpers.testKnowtatorAction(
         model,
         new GraphActions.RemoveCellsAction(model, graphSpace),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples - 1,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultCounts.copy(0,0, 0, 0, 0, 0, 0, -1, 0));
   }
 
   @Test
@@ -107,18 +85,7 @@ class GraphActionsTest {
     TestingHelpers.testKnowtatorAction(
         model,
         new GraphActions.AddAnnotationNodeAction(null, model, graphSpace, conceptAnnotation),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes + 1,
-        TestingHelpers.defaultExpectedTriples,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultCounts.copy(0, 0, 0, 0, 0, 0, 1, 0, 0));
   }
 
   @Test
@@ -136,18 +103,7 @@ class GraphActionsTest {
         model,
         new GraphActions.AddTripleAction(
             model, source, target, property, Quantifier.some, null, false, "", graphSpace),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples + 1,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultCounts.copy(0, 0, 0, 0, 0, 0, 0, 1, 0));
   }
 
   @Test
@@ -160,17 +116,6 @@ class GraphActionsTest {
     TestingHelpers.testKnowtatorAction(
         model,
         new GraphActions.ApplyLayoutAction(null, model, graphSpace, false),
-        TestingHelpers.defaultExpectedTextSources,
-        TestingHelpers.defaultExpectedConceptAnnotations,
-        TestingHelpers.defaultExpectedSpans,
-        TestingHelpers.defaultExpectedGraphSpaces,
-        TestingHelpers.defaultExpectedProfiles,
-        TestingHelpers.defaultExpectedHighlighters,
-        TestingHelpers.defaultExpectedAnnotationNodes,
-        TestingHelpers.defaultExpectedTriples,
-        TestingHelpers.defaultExpectedStructureAnnotations,
-        TestingHelpers.defaultExpectedStructureGraphSpaces,
-        TestingHelpers.defaultExpectedStructureAnnotationNodes,
-        TestingHelpers.defaultExpectedStructureTriples);
+        TestingHelpers.defaultCounts);
   }
 }

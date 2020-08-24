@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator.io.knowtator;
 
 import edu.ucdenver.ccp.knowtator.io.XmlUtil;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
@@ -178,44 +179,48 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
               Profile profile = model.getProfile(profileID).orElse(model.getDefaultProfile());
 
               Optional<OWLClass> owlClass = model.getOwlClassById(owlClassID);
-              if (owlClass.isPresent()) {
-                ConceptAnnotation newConceptAnnotation =
-                    new ConceptAnnotation(
-                        textSource,
-                        annotationID,
-                        owlClass.get().toStringID(),
-                        profile,
-                        "identity",
-                        "");
-                if (conceptAnnotationCollection.containsID(annotationID)) {
-                  newConceptAnnotation.setId(model.verifyId(null, newConceptAnnotation, false));
-                }
-                readToConceptAnnotation(newConceptAnnotation, annotationElement);
 
-                // No need to keep annotations with no allSpanCollection
-                if (newConceptAnnotation.size() == 0) {
-                  return Optional.empty();
-                } else {
-                  KnowtatorXmlUtil.asList(
-                          classElement.getElementsByTagName(OldKnowtatorXmlTags.HAS_SLOT_MENTION))
-                      .stream()
-                      .map(node -> (Element) node)
-                      .forEach(
-                          slotMentionElement -> {
-                            String slotMentionID =
-                                slotMentionElement.getAttribute(OldKnowtatorXmlAttributes.ID);
-                            Element slotElement = slotToClassIdMap.get(slotMentionID);
-                            if (slotElement != null) {
-                              annotationToSlotMap.put(newConceptAnnotation, slotElement);
-                            }
-                          });
-                  return Optional.of(newConceptAnnotation);
-                }
+              if (owlClass.isPresent()) {
+                owlClassID = owlClass.get().toStringID();
               } else {
                 log.warn(
                     String.format(
                         "OWL Class: %s not found for concept: %s", owlClassID, annotationID));
+                model.addOWLClassNotFoundAnnotations(annotationID, owlClassID);
+              }
+
+              ConceptAnnotation newConceptAnnotation =
+                  new ConceptAnnotation(
+                      textSource,
+                      annotationID,
+                      owlClassID,
+                      profile,
+                      "identity",
+                      "",
+                      BaseModel.DEFAULT_LAYERS);
+              if (conceptAnnotationCollection.containsID(annotationID)) {
+                newConceptAnnotation.setId(model.verifyId(null, newConceptAnnotation, false));
+              }
+              readToConceptAnnotation(newConceptAnnotation, annotationElement);
+
+              // No need to keep annotations with no allSpanCollection
+              if (newConceptAnnotation.size() == 0) {
                 return Optional.empty();
+              } else {
+                KnowtatorXmlUtil.asList(
+                    classElement.getElementsByTagName(OldKnowtatorXmlTags.HAS_SLOT_MENTION))
+                    .stream()
+                    .map(node -> (Element) node)
+                    .forEach(
+                        slotMentionElement -> {
+                          String slotMentionID =
+                              slotMentionElement.getAttribute(OldKnowtatorXmlAttributes.ID);
+                          Element slotElement = slotToClassIdMap.get(slotMentionID);
+                          if (slotElement != null) {
+                            annotationToSlotMap.put(newConceptAnnotation, slotElement);
+                          }
+                        });
+                return Optional.of(newConceptAnnotation);
               }
             })
         .forEach(

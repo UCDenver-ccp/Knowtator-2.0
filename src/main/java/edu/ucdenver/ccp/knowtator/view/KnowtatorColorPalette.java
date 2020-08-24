@@ -185,7 +185,7 @@ public class KnowtatorColorPalette extends JColorChooser {
    * Reimplementation of the SwatchPanel class used to make the default swatch panel because it
    * wasn't public.
    */
-  class SwatchPanel extends JPanel {
+  static class SwatchPanel extends JPanel {
 
     /** The Colors. */
     List<Color> colors;

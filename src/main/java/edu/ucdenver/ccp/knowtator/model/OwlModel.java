@@ -34,6 +34,7 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,14 +46,21 @@ import org.protege.editor.core.ui.util.AugmentedJTextField;
 import org.protege.editor.owl.model.OWLWorkspace;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
 import org.protege.editor.owl.model.selection.OWLSelectionModel;
+import org.protege.editor.owl.model.selection.OWLSelectionModelListener;
+import org.protege.editor.owl.ui.prefix.OWLEntityPrefixedNameRenderer;
+import org.protege.editor.owl.ui.renderer.OWLEntityRendererImpl;
+import org.protege.editor.owl.ui.renderer.OWLRendererPreferences;
+import org.protege.editor.owl.ui.renderer.plugin.RendererPlugin;
 import org.protege.editor.owl.ui.search.SearchDialogPanel;
 import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.model.HasAnnotationPropertiesInSignature;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLNamedObject;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
@@ -60,21 +68,24 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 
-/** The type Owl model. */
+/**
+ * The type Owl model.
+ */
 public abstract class OwlModel extends BaseModel implements Serializable {
   @SuppressWarnings("unused")
   private static final Logger log = LogManager.getLogger(OwlModel.class);
 
-  private OWLOntologyManager owlOntologyManager;
+  private final OWLOntologyManager owlOntologyManager;
 
   @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-  private Optional<OWLWorkspace> owlWorkSpace;
+  private final Optional<OWLWorkspace> owlWorkSpace;
+  private List<IRI> iris;
 
   /**
    * Instantiates a new Owl model.
    *
    * @param projectLocation the project location
-   * @param owlWorkspace the owl workspace
+   * @param owlWorkspace    the owl workspace
    * @throws IOException the io exception
    */
   OwlModel(File projectLocation, OWLWorkspace owlWorkspace) throws IOException {
@@ -92,22 +103,26 @@ public abstract class OwlModel extends BaseModel implements Serializable {
    */
   public Optional<OWLClass> getOwlClassById(@Nonnull String classID) {
     if (owlWorkSpace.isPresent()) {
-      return owlWorkSpace.map(
+      return owlWorkSpace.flatMap(
           owlWorkspace ->
-              owlWorkspace.getOWLModelManager().getOWLEntityFinder().getOWLClass(classID));
+              owlWorkspace.getOWLModelManager().getOWLEntityFinder().getEntities(IRI.create(classID)).stream()
+                  .filter(owlEntity -> owlEntity instanceof OWLClass)
+                  .map(owlEntity -> (OWLClass) owlEntity)
+                  .findAny());
     } else {
       for (OWLOntology ontology : owlOntologyManager.getOntologies()) {
         Optional<OWLClass> owlClassOptional =
             ontology.getClassesInSignature().stream()
                 .filter(
                     owlClass ->
-                        owlClass.getIRI().getShortForm().equals(classID)
+                        owlClass.getIRI().toString().equals(classID)
+                            || owlClass.getIRI().getShortForm().equals(classID)
                             || ontology.getAnnotationAssertionAxioms(owlClass.getIRI()).stream()
-                                .anyMatch(
-                                    owlAnnotationAssertionAxiom ->
-                                        getAnnotationLiteral(owlAnnotationAssertionAxiom)
-                                            .map(label -> label.equals(classID))
-                                            .orElse(false)))
+                            .anyMatch(
+                                owlAnnotationAssertionAxiom ->
+                                    getAnnotationLiteral(owlAnnotationAssertionAxiom)
+                                        .map(label -> label.equals(classID))
+                                        .orElse(false)))
                 .findFirst();
         if (owlClassOptional.isPresent()) {
           return owlClassOptional;
@@ -269,11 +284,13 @@ public abstract class OwlModel extends BaseModel implements Serializable {
         });
   }
 
-  /** Load. */
-  public void load() {
+  /**
+   * Load.
+   */
+  public void load(File projectLocation) {
     log.info("Loading ontologies");
     try {
-      Files.list(ontologiesLocation.toPath())
+      Files.list(getOntologiesLocation(projectLocation).toPath())
           .filter(path -> path.toString().endsWith(".owl"))
           .map(path -> path.toFile().toURI().toString())
           .forEach(
@@ -377,6 +394,15 @@ public abstract class OwlModel extends BaseModel implements Serializable {
     owlWorkSpace.ifPresent(owlWorkSpace -> owlWorkSpace.getOWLModelManager().addListener(listener));
   }
 
+  /**
+   * Add owl model manager listener.
+   *
+   * @param listener the listener
+   */
+  public void addOwlSelectionModelListener(OWLSelectionModelListener listener) {
+    owlWorkSpace.ifPresent(owlWorkSpace -> owlWorkSpace.getOWLSelectionModel().addListener(listener));
+  }
+
   public void setSelectedOwlClass(String owlClass) {
     setSelectedOwlEntity(owlOntologyManager.getOWLDataFactory().getOWLClass(IRI.create(owlClass)));
   }
@@ -410,5 +436,51 @@ public abstract class OwlModel extends BaseModel implements Serializable {
 
   public void setSelectedOwlObjectProperty(String property) {
     setSelectedOwlEntity(getOwlDataFactory().getOWLObjectProperty(IRI.create(property)));
+  }
+
+  public IRI[] getOWLAnnotationProperties() {
+    return owlWorkSpace
+        .map(owlWorkspace -> owlWorkspace.getOWLModelManager().getOntologies().stream()
+            .map(HasAnnotationPropertiesInSignature::getAnnotationPropertiesInSignature)
+            .flatMap(Set::stream)
+            .map(OWLNamedObject::getIRI)
+            .toArray(IRI[]::new))
+        .orElseGet(() -> owlOntologyManager.getOntologies().stream()
+            .map(HasAnnotationPropertiesInSignature::getAnnotationPropertiesInSignature)
+            .flatMap(Set::stream)
+            .map(OWLNamedObject::getIRI)
+            .toArray(IRI[]::new));
+  }
+
+  protected boolean isMyRendererPlugin(RendererPlugin plugin) {
+    return plugin.getRendererClassName().equals("org.protege.editor.owl.ui.prefix.OWLEntityPrefixedNameRenderer");
+  }
+
+  void setRendering() {
+
+    owlWorkSpace.ifPresent(owlWorkspace -> {
+      OWLRendererPreferences preferences = OWLRendererPreferences.getInstance();
+      preferences.setRendererPlugin(preferences.getRendererPluginByClassName(OWLEntityPrefixedNameRenderer.class.getName()));
+      for (RendererPlugin plugin : preferences.getRendererPlugins()) {
+        log.warn(plugin.getRendererClassName());
+        if (isMyRendererPlugin(plugin)) {
+          preferences.setRendererPlugin(plugin);
+          owlWorkspace.getOWLModelManager().refreshRenderer();
+          break;
+        }
+      }
+    });
+  }
+
+  void resetRendering() {
+    owlWorkSpace.ifPresent(owlWorkspace -> {
+      OWLRendererPreferences preferences = OWLRendererPreferences.getInstance();
+      preferences.setRendererPlugin(preferences.getRendererPluginByClassName(OWLEntityRendererImpl.class.getName()));
+      owlWorkspace.getOWLModelManager().refreshRenderer();
+    });
+  }
+
+  public void removeOwlSelectionModelListener(OWLSelectionModelListener listener) {
+    owlWorkSpace.ifPresent(owlWorkSpace -> owlWorkSpace.getOWLSelectionModel().removeListener(listener));
   }
 }

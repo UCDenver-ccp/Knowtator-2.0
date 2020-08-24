@@ -29,6 +29,7 @@ import edu.ucdenver.ccp.knowtator.iaa.Iaa;
 import edu.ucdenver.ccp.knowtator.iaa.matcher.Matcher;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -50,7 +51,6 @@ public class SpanMatcherHtml {
    * @param numberOfDocs the number of docs
    * @param annotationTexts the annotation texts
    * @param annotationTextNames the annotation text names
-   * @throws Exception the exception
    */
   public static void printIaa(
       Iaa iaa,
@@ -58,8 +58,7 @@ public class SpanMatcherHtml {
       File directory,
       int numberOfDocs,
       Map<ConceptAnnotation, String> annotationTexts,
-      Map<ConceptAnnotation, String> annotationTextNames)
-      throws Exception {
+      Map<ConceptAnnotation, String> annotationTextNames) throws IOException {
     NumberFormat percentageFormat = NumberFormat.getPercentInstance();
     percentageFormat.setMinimumFractionDigits(2);
 
@@ -114,14 +113,22 @@ public class SpanMatcherHtml {
       int classNonmatches = sortedAllwayNonmatches.get(type).size();
 
       iaaScore = (double) classMatches / ((double) classMatches + (double) classNonmatches);
+      Map<String, int[]> confusionCounts = errorMatrix(sortedAllwayMatches.get(type), matchSets);
 
+      if (type.startsWith("<") && type.endsWith(">")) {
+        type = type.substring(1, type.length()- 2);
+      }
       html.printf(
           "<tr><td>%s</td><td>%s</td><td>%d</td><td>%d</td>%n",
           type, percentageFormat.format(iaaScore), classMatches, classNonmatches);
-      Map<String, int[]> confusionCounts = errorMatrix(sortedAllwayMatches.get(type), matchSets);
+
       html.println("<td>");
       for (Map.Entry<String, int[]> confusedClass : confusionCounts.entrySet()) {
-        html.printf("  %s=%d%n", confusedClass.getKey(), confusedClass.getValue()[0]);
+        String confusedType = confusedClass.getKey();
+        if (confusedType.startsWith("<") && confusedType.endsWith(">")) {
+          confusedType = confusedType.substring(1, confusedType.length()- 2);
+        }
+        html.printf("  %s=%d%n", confusedType, confusedClass.getValue()[0]);
       }
       html.println("</td>");
     }
@@ -172,7 +179,7 @@ public class SpanMatcherHtml {
       Set<ConceptAnnotation> matchedConceptAnnotations = matchSets.get(match);
       for (ConceptAnnotation matchedConceptAnnotation : matchedConceptAnnotations) {
         if (!matchedConceptAnnotation.equals(match)) {
-          String annotationClass = matchedConceptAnnotation.getOwlClassLabel();
+          String annotationClass = matchedConceptAnnotation.getOwlClassRendering();
           if (!counts.containsKey(annotationClass)) {
             counts.put(annotationClass, new int[1]);
           }

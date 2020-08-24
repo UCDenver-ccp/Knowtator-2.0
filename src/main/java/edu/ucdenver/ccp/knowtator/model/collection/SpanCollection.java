@@ -50,18 +50,22 @@ public class SpanCollection extends KnowtatorCollection<Span> {
 
   @Override
   public Stream<Span> stream() {
-    boolean filterByProfile = model.isFilter(PROFILE);
+    if (model != null) {
+      boolean filterByProfile = model.isFilter(PROFILE);
 
-    return model
-        .getSelectedProfile()
-        .map(
-            profile ->
-                super.stream()
-                    .filter(
-                        span ->
-                            !filterByProfile
-                                || span.getConceptAnnotation().getAnnotator().equals(profile)))
-        .orElse(super.stream());
+      return model
+          .getSelectedProfile()
+          .map(
+              profile ->
+                  super.stream()
+                      .filter(
+                          span ->
+                              !filterByProfile
+                                  || span.getConceptAnnotation().getAnnotator().equals(profile)))
+          .orElse(super.stream());
+    } else {
+      return super.stream();
+    }
   }
 
   @Override

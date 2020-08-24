@@ -28,15 +28,27 @@ import com.google.common.io.Files;
 import edu.ucdenver.ccp.knowtator.iaa.IaaException;
 import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIaa;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollection;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class KnowtatorIaaTest {
 
   private static KnowtatorIaa knowtatorIAA;
+  private static File outputDir;
+  private static File goldStandardDir;
+  private static KnowtatorModel model;
+  private static final TestingHelpers.ProjectCounts counts = new TestingHelpers.ProjectCounts(4, 456, 456, 4, 3, 0, 0, 0, 0);
 
   @BeforeAll
   static void makeProjectTest() throws IaaException, IOException {
@@ -44,39 +56,95 @@ class KnowtatorIaaTest {
     File projectDirectory = TestingHelpers.getProjectFile(projectFileName).getParentFile();
     File tempProjectDir = Files.createTempDir();
     FileUtils.copyDirectory(projectDirectory, tempProjectDir);
-    KnowtatorModel controller = new KnowtatorModel(tempProjectDir, null);
-    controller.load();
 
-    //        File goldStandardDir = new File(model.getProjectLocation(), "iaa");
-    File outputDir = new File(controller.getProjectLocation(), "iaa_results");
-    //noinspection ResultOfMethodCallIgnored
+    model = new KnowtatorModel(tempProjectDir, null);
+    model.load(model.getProjectLocation());
+
+    goldStandardDir = new File(model.getProjectLocation(), "iaa");
+
+    outputDir = new File(model.getProjectLocation(), "iaa_results");
+
     boolean created = outputDir.mkdir();
     if (created) {
-      knowtatorIAA = new KnowtatorIaa(outputDir, controller);
+      ProfileCollection profiles = new ProfileCollection(model);
+      profiles.remove(profiles.getDefaultProfile());
+      HashSet<String> myProfiles = new HashSet<>();
+      myProfiles.add("Kristin Garcia");
+      myProfiles.add("Mike Bada");
+
+      model.getProfile("Kristin Garcia").ifPresent(profiles::add);
+      model.getProfile("Mike Bada").ifPresent(profiles::add);
+      knowtatorIAA = new KnowtatorIaa(outputDir,
+          model,
+          model.getTextSources().stream().map(TextSource::getId).collect(Collectors.toSet()),
+          model.getProfiles().stream()
+              .map(Profile::getId)
+              .filter(myProfiles::contains)
+              .collect(Collectors.toSet()),
+          new ArrayList<>(new HashSet<>(model.getTextSources().stream()
+              .flatMap(textSource -> textSource.getConceptAnnotations().stream()
+                  .map(ConceptAnnotation::getOwlClass))
+              .collect(Collectors.toSet()))));
     }
   }
 
   @Test
-  void runClassIaaTest() throws IaaException {
+  void runClassIaaTest() throws IOException, IaaException {
+    TestingHelpers.countCollections(model, counts);
     knowtatorIAA.runClassIaa();
     // TODO: Rerun test data because concept annotations no longer store owl class label
 
-    //        assert FileUtils.contentEqualsIgnoreEOL(new File(outputDir, "Class matcher.dat"), new
-    // File(goldStandardDir, "Class matcher.dat"), "utf-8");
+    try {
+      assert FileUtils.contentEqualsIgnoreEOL(
+          new File(outputDir, "Class matcher.dat"),
+          new File(goldStandardDir, "Class matcher.dat"),
+          "utf-8");
+    } catch (AssertionError e) {
+      System.out.println(String.format("Gold: %s\nThis: %s\n",
+          new File(goldStandardDir, "index.html").getAbsolutePath(),
+          new File(outputDir, "index.html").getAbsolutePath()));
+      throw e;
+    }
   }
 
   @Test
-  void runSpanIaaTest() throws IaaException {
+  void runSpanIaaTest() throws IOException, IaaException {
+    TestingHelpers.countCollections(model, counts);
     knowtatorIAA.runSpanIaa();
-    //        assert FileUtils.contentEqualsIgnoreEOL(new File(outputDir, "Span matcher.dat"), new
-    // File(goldStandardDir, "Span matcher.dat"), "utf-8");
+
+    try {
+      assert FileUtils.contentEqualsIgnoreEOL(
+          new File(outputDir, "Span matcher.html"),
+          new File(goldStandardDir, "Span matcher.html"),
+          "utf-8");
+    } catch (AssertionError e) {
+      System.out.println(String.format("Gold: %s\nThis: %s\n",
+          new File(goldStandardDir, "index.html").getAbsolutePath(),
+          new File(outputDir, "index.html").getAbsolutePath()));
+      throw e;
+    }
   }
 
   @Test
-  void runClassAndSpanIaaTest() throws IaaException {
+  void runClassAndSpanIaaTest() throws IaaException, IOException {
+    TestingHelpers.countCollections(model, counts);
     knowtatorIAA.runClassAndSpanIaa();
 
-    //        assert FileUtils.contentEqualsIgnoreEOL(new File(outputDir, "Class and span
-    // matcher.dat"), new File(goldStandardDir, "Class and span matcher.dat"), "utf-8");
+    try {
+      assert FileUtils.contentEqualsIgnoreEOL(
+          new File(outputDir, "Class and span matcher.dat"),
+          new File(goldStandardDir, "Class and span matcher.dat"),
+          "utf-8");
+    } catch (AssertionError e) {
+      System.out.println(String.format("Gold: %s\nThis: %s\n",
+          new File(goldStandardDir, "index.html").getAbsolutePath(),
+          new File(outputDir, "index.html").getAbsolutePath()));
+      throw e;
+    }
+  }
+
+  @AfterAll
+  static void cleanUp() {
+    knowtatorIAA.closeHtml();
   }
 }
