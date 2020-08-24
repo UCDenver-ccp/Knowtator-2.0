@@ -81,13 +81,12 @@ class IAAOptionsDialogTest {
   public void mergeProjectsTest2() throws ActionUnperformable, IOException {
     String projectName1 = "import_test_project1";
 
-    KnowtatorModel model1  = TestingHelpers.getLoadedModel(projectName1);
-
     TestingHelpers.ProjectCounts model1Counts = new TestingHelpers.ProjectCounts(1, 1, 1, 0 , 1, 0 , 0, 0, 0);
 
-    TestingHelpers.countCollections(model1,model1Counts);
+    String projectName2 = "import_test_project2";
+    TestingHelpers.ProjectCounts model2Counts = new TestingHelpers.ProjectCounts(1, 2, 1, 0, 1, 0, 0, 0, 0);
 
-    String projectName2 = "import_test_project1";
-    KnowtatorModel model2 = TestingHelpers.getLoadedModel(projectName2);
+    TestingHelpers.ProjectCounts overlaps = new TestingHelpers.ProjectCounts(1,1,1,0,1,0,0,0,0);
+    checkMerge(projectName1, model1Counts, projectName2, model2Counts, overlaps);
   }
 }
