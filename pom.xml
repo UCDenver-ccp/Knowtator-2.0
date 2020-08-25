@@ -7,7 +7,7 @@
 
     <groupId>edu.ucdenver.ccp</groupId>
     <artifactId>knowtator</artifactId>
-    <version>2.1.6</version>
+    <version>2.1.7</version>
     <name>Knowtator</name>
     <description>A plug-in for the Protege 5.0+ Desktop ontology editor for editing in-text concept annotations and
         assertion annotations
@@ -31,7 +31,7 @@
         <connection>scm:git:git@github.com:UCDenver-ccp/Knowtator-2.0.git</connection>
         <developerConnection>scm:git:git@github.com:UCDenver-ccp/Knowtator-2.0.git</developerConnection>
         <url>https://github.com/UCDenver-ccp/Knowtator-2.0</url>
-        <tag>v2.1.6</tag>
+        <tag>v2.1.7</tag>
     </scm>
 
     <issueManagement>
