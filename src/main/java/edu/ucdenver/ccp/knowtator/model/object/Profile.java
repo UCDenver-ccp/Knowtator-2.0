@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator.model.object;
 
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXmlUtil;
+import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.Savable;
@@ -137,7 +138,7 @@ public class Profile implements ModelObject<Profile>, Savable, ModelListener {
    * @return the save location
    */
   public File getSaveLocation() {
-    return new File(model.getSaveLocation().getAbsolutePath(), String.format("%s.xml", id));
+    return new File(BaseModel.getProfilesLocation(model.getProjectLocation()).getAbsolutePath(), String.format("%s.xml", id));
   }
 
   /**
