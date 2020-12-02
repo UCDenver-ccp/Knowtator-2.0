@@ -39,7 +39,7 @@ import javax.swing.event.DocumentListener;
 /** The type Annotation notes. */
 public class AnnotationNotes extends JTextArea implements KnowtatorComponent, ModelListener {
   private ConceptAnnotation conceptAnnotation;
-  private KnowtatorView view;
+  private final KnowtatorView view;
 
   /**
    * Instantiates a new Annotation notes.

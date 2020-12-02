@@ -72,8 +72,8 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
   /** The Loading. */
   boolean loading;
 
-  private Set<StructureModeListener> structureModeListeners;
-  private Set<String> activeLayers;
+  private final Set<StructureModeListener> structureModeListeners;
+  private final Set<String> activeLayers;
 
   /**
    * Instantiates a new Base model.

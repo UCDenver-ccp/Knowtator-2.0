@@ -46,7 +46,7 @@ import javax.swing.table.DefaultTableModel;
 public abstract class KnowtatorTable<M extends ModelObject> extends JTable
     implements KnowtatorComponent, ModelListener {
 
-  KnowtatorView view;
+  final KnowtatorView view;
 
   /** Instantiates a new Knowtator table. */
   KnowtatorTable(KnowtatorView view) {

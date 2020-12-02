@@ -76,7 +76,7 @@ import org.protege.editor.owl.model.selection.OWLSelectionModelListener;
 public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
   private final KnowtatorView view;
   private KnowtatorModel iaaModel;
-  private KnowtatorModel model;
+  private final KnowtatorModel model;
   private JPanel contentPane;
   private JButton buttonOK;
   private JButton buttonCancel;

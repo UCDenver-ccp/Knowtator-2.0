@@ -35,6 +35,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.Method;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.swing.AbstractButton;
 import javax.swing.DefaultComboBoxModel;
@@ -50,6 +51,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.text.StyleContext;
 import org.apache.commons.lang3.math.NumberUtils;
 
 /**
@@ -425,7 +428,10 @@ class RelationOptionsDialog extends JDialog {
         resultName = currentFont.getName();
       }
     }
-    return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+    Font font = new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+    boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("mac");
+    Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());
+    return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
   }
 
   private static Method $$$cachedGetBundleMethod$$$ = null;

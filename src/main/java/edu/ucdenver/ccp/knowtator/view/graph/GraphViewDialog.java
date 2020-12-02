@@ -44,7 +44,7 @@ import javax.swing.SwingUtilities;
 public class GraphViewDialog extends JDialog implements KnowtatorComponent {
   private JPanel contentPane;
   private GraphView graphView;
-  private KnowtatorView view;
+  private final KnowtatorView view;
 
   /**
    * Instantiates a new Graph view dialog.

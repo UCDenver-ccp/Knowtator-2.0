@@ -54,8 +54,6 @@ public class KnowtatorIaa {
 
   // Project project;
 
-  private final KnowtatorModel model;
-
   // KnowtatorProjectUtil kpu;
 
   // MentionUtil mentionUtil;
@@ -66,11 +64,11 @@ public class KnowtatorIaa {
 
   private final Map<ConceptAnnotation, String> annotationTextNames;
 
-  private Map<TextSource, Collection<ConceptAnnotation>> textSourceAnnotationsMap;
+  private final Map<TextSource, Collection<ConceptAnnotation>> textSourceAnnotationsMap;
 
   private PrintStream html;
 
-  private Set<String> setNames;
+  private final Set<String> setNames;
 
   /**
    * Instantiates a new Knowtator iaa.
@@ -89,7 +87,6 @@ public class KnowtatorIaa {
     // this.filter = filter;
 
     HashSet<String> owlClasses1 = new HashSet<>(owlClasses);
-    this.model = model;
     annotationTexts = new HashMap<>();
     annotationTextNames = new HashMap<>();
 

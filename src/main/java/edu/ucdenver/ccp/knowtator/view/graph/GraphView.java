@@ -62,6 +62,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
@@ -73,8 +74,10 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.StyleContext;
 import org.apache.log4j.Logger;
 
 /**
@@ -83,10 +86,10 @@ import org.apache.log4j.Logger;
 public class GraphView extends JPanel
     implements KnowtatorComponent, ModelListener, StructureModeListener {
   @SuppressWarnings("unused")
-  private Logger log = Logger.getLogger(KnowtatorView.class);
+  private final Logger log = Logger.getLogger(KnowtatorView.class);
 
   private final JDialog dialog;
-  private KnowtatorView view;
+  private final KnowtatorView view;
   private final AddRelationListener addRelationListener;
   private JButton removeCellButton;
   private JButton addAnnotationNodeButton;
@@ -983,7 +986,10 @@ public class GraphView extends JPanel
         resultName = currentFont.getName();
       }
     }
-    return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+    Font font = new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+    boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("mac");
+    Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());
+    return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
   }
 
   /**

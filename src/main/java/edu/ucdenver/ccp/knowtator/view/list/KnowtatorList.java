@@ -46,7 +46,7 @@ public abstract class KnowtatorList<K extends ModelObject> extends JList<K>
     implements KnowtatorComponent, ModelListener {
 
   /** The View. */
-  KnowtatorView view;
+  final KnowtatorView view;
 
   /** Instantiates a new Knowtator list. */
   KnowtatorList(KnowtatorView view) {

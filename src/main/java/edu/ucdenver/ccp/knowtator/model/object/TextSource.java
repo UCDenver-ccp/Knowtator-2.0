@@ -48,7 +48,7 @@ import org.apache.log4j.Logger;
 /** The type Text source. */
 public class TextSource implements ModelObject<TextSource>, Savable, ModelListener {
   @SuppressWarnings("unused")
-  private static Logger log = LogManager.getLogger(TextSource.class);
+  private static final Logger log = LogManager.getLogger(TextSource.class);
 
   private final KnowtatorModel model;
   private final File saveFile;

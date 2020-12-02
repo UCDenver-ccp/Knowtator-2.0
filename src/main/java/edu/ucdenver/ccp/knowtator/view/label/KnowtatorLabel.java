@@ -36,7 +36,7 @@ import javax.swing.JLabel;
 public abstract class KnowtatorLabel extends JLabel implements KnowtatorComponent, ModelListener {
 
   /** The View. */
-  KnowtatorView view;
+  final KnowtatorView view;
 
   /**
    * Instantiates a new Knowtator label.

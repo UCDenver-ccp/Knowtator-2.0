@@ -40,7 +40,7 @@ public class KnowtatorTextPane extends AnnotatableTextPane
     implements KnowtatorComponent, ModelListener {
 
   @SuppressWarnings("unused")
-  private static Logger log = Logger.getLogger(KnowtatorTextPane.class);
+  private static final Logger log = Logger.getLogger(KnowtatorTextPane.class);
 
   private final JCheckBox onlyInAnnotationsCheckBox;
   private final JCheckBox regexCheckBox;

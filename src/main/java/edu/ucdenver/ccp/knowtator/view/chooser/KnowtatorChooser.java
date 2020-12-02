@@ -46,7 +46,7 @@ public abstract class KnowtatorChooser<K extends ModelObject> extends JComboBox<
   private final ActionListener al;
   private KnowtatorCollection<K> collection;
   /** The View. */
-  KnowtatorView view;
+  final KnowtatorView view;
 
   /** Instantiates a new Knowtator chooser. */
   KnowtatorChooser(KnowtatorView view) {

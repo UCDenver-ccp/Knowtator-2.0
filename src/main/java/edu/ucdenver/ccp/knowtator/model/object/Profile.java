@@ -42,7 +42,7 @@ import org.apache.log4j.Logger;
 /** The type Profile. */
 public class Profile implements ModelObject<Profile>, Savable, ModelListener {
   @SuppressWarnings("unused")
-  private static Logger log = LogManager.getLogger(Profile.class);
+  private static final Logger log = LogManager.getLogger(Profile.class);
 
   private String id;
   private HashMap<String, Color> colors; // <ClassName, Highlighter>

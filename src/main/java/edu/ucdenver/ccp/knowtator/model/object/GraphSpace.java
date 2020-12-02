@@ -63,7 +63,7 @@ public class GraphSpace extends mxGraph
         OWLOntologyChangeListener,
         TextBoundModelObject<GraphSpace> {
   @SuppressWarnings("unused")
-  private Logger log = Logger.getLogger(GraphSpace.class);
+  private final Logger log = Logger.getLogger(GraphSpace.class);
 
   private final KnowtatorModel knowtatorModel;
   private final TextSource textSource;
