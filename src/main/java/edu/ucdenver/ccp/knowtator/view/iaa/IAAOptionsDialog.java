@@ -251,7 +251,7 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
     }
 
     @Override
-    public void selectionChanged() throws Exception {
+    public void selectionChanged() {
       view.getModel().ifPresent(model -> {
         Optional<String> owlClassOptional = model.getSelectedOwlClass();
 

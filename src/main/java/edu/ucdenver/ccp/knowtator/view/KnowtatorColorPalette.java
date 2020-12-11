@@ -387,7 +387,7 @@ public class KnowtatorColorPalette extends JColorChooser {
   }
 
   /** The type Main swatch panel. */
-  class MainSwatchPanel extends SwatchPanel {
+  static class MainSwatchPanel extends SwatchPanel {
 
     protected void initValues() {
       swatchSize = new Dimension(100, 100);
