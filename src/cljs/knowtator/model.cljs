@@ -1,8 +1,8 @@
-(ns knowtator.model.util
+(ns knowtator.model
   (:require [knowtator.util :as util]
             [clojure.string :as str]
             [clojure.spec.gen.alpha :as gen]
-            [knowtator.model.specs :as specs]
+            [knowtator.specs :as specs]
             [clojure.spec.alpha :as s]))
 
 (defn ann-color
@@ -167,28 +167,45 @@
                             (s/or :regular ::specs/span :overlap :span-overlap/span)))
          :kind vector?))
 
-(defn in-doc?
-  ([{:keys [doc]} doc-id]
-   (= doc doc-id))
-  ([{:keys [ann]} anns doc-id]
-   (in-doc? (get anns ann) doc-id)))
+(defn in-restriction?
+  ([ann restriction]
+   (every? (fn [[k v]]
+             (= (get ann k) v))
+     restriction))
+  ([{:keys [ann]} anns restriction]
+   (in-restriction? (get anns ann) restriction)))
 
-(s/fdef in-doc?
+(s/fdef in-restriction?
   :args (s/alt
-          :ann-in-doc (s/cat
-                        :ann ::specs/ann
-                        :doc-id ::specs/id)
-          :span-in-doc (s/cat
-                         :span ::specs/span
-                         :anns (s/map-of ::specs/id ::specs/ann)
-                         :doc-id ::specs/id))
+          :ann-in-restriction (s/cat
+                                :ann ::specs/ann
+                                :restriction ::specs/restriction)
+          :span-in-restriction (s/cat
+                                 :span ::specs/span
+                                 :anns (s/map-of ::specs/id ::specs/ann)
+                                 :restriction ::specs/restriction))
   :ret boolean?)
 
-(defn filter-in-doc
-  ([doc-id anns]
-   (util/filter-vals #(in-doc? % doc-id) anns))
-  ([doc-id anns spans]
-   (util/filter-vals #(in-doc? % anns doc-id) spans)))
+(defn in-ann?
+  [{:keys [ann]} ann-id]
+  (= ann ann-id))
+
+(s/fdef in-ann?
+  :args (s/cat :span ::specs/span :ann-id ::specs/id)
+  :ret boolean?)
+
+(defn filter-in-restriction
+  ([restriction anns]
+   (util/filter-vals #(in-restriction? % restriction) anns))
+  ([restriction anns spans]
+   (util/filter-vals #(in-restriction? % anns restriction) spans)))
+
+
+#_(defn filter-in-profile
+    ([profile-id anns]
+     (util/filter-vals #(in-profile? % profile-id) anns))
+    ([profile-id anns spans]
+     (util/filter-vals #(in-profile? % anns profile-id) spans)))
 
 (s/fdef filter-in-doc
   :args (s/alt
@@ -202,13 +219,7 @@
   :ret (s/or :anns (s/map-of ::specs/id ::specs/ann)
          :spans (s/map-of ::specs/id ::specs/span)))
 
-(defn in-ann?
-  [{:keys [ann]} ann-id]
-  (= ann ann-id))
 
-(s/fdef in-ann?
-  :args (s/cat :span ::specs/span :ann-id ::specs/id)
-  :ret boolean?)
 
 (defn filter-in-ann
   ([ann-id spans]
@@ -274,6 +285,44 @@
          :kind vector?)
   :fn (fn [{:keys [args ret]}]
         (<= (count ret) (count args))))
+
+(defn unique-id
+  [db k prefix suffix-num]
+  (let [id (->> suffix-num (str prefix) keyword)]
+    (if (contains? (get db k) id)
+      (recur db k prefix (inc suffix-num))
+      id)))
+
+(defn cycle-coll
+  [id db k dir]
+  ;; TODO sorting of spans needs to be handled by start and end locs
+  (let [docs (-> db k keys sort vec)
+        f    (case dir
+               :next #(let [val (inc %)]
+                        (if (<= (count docs) val)
+                          0
+                          val))
+               :prev #(let [val (dec %)]
+                        (if (neg? val)
+                          (dec (count docs))
+                          val)))]
+    (->> id
+      (.indexOf docs)
+      f
+      (get docs))))
+
+(defn cycle-selection
+  [db sel col dir]
+  (update-in db [:selection sel] cycle-coll db col dir))
+
+(defn mod-span
+  [db loc f]
+  (let [s (get-in db [:selection :span])]
+    (update-in db [:spans s] #(let [{:keys [start end] :as new-s} (update % loc f)]
+                                (cond-> new-s
+                                  (< end start) (assoc
+                                                  :start (:end new-s)
+                                                  :end (:start new-s)))))))
 
 #_(let [spans         [{:id :C :start 3 :end 7}
                        {:id :B :start 2 :end 8}
