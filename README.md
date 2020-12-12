@@ -23,7 +23,6 @@ you.
   ([Wiki](https://github.com/weavejester/compojure/wiki), [API docs](http://weavejester.github.com/compojure)) ->
   [Ring](https://github.com/ring-clojure/ring)
   ([Wiki](https://github.com/ring-clojure/ring/wiki), [API docs](http://ring-clojure.github.com/ring))
-  - Client-side routing: [Secretary](https://github.com/gf3/secretary)
   - CSS rendering: [Garden](https://github.com/noprompt/garden)
   - UI components: [re-com](https://github.com/day8/re-com)
   - Keyboard event handler: [re-pressed](https://github.com/gadfly361/re-pressed)
@@ -87,7 +86,8 @@ Use your preferred editor or IDE that supports Clojure/ClojureScript development
 1. Install [JDK 8 or later](https://openjdk.java.net/install/) (Java Development Kit)
 2. Install [Leiningen](https://leiningen.org/#install) (Clojure/ClojureScript project task &
 dependency management)
-3. Install [Node.js](https://nodejs.org/) (JavaScript runtime environment)
+3. Install [Node.js](https://nodejs.org/) (JavaScript runtime environment) which should include
+   [NPM](https://docs.npmjs.com/cli/npm) or if your Node.js installation does not include NPM also install it.
 4. Install [karma-cli](https://www.npmjs.com/package/karma-cli) (test runner):
     ```sh
     npm install -g karma-cli
@@ -102,11 +102,11 @@ dependency management)
        ```
 6. Install [clj-kondo](https://github.com/borkdude/clj-kondo/blob/master/doc/install.md) (linter)
 7. Clone this repo and open a terminal in the `knowtator` project root directory
-8. Download project dependencies:
+8. (Optional) Download project dependencies:
     ```sh
-    lein deps && npm install
+    lein deps
     ```
-9. Setup [lint cache](https://github.com/borkdude/clj-kondo#project-setup):
+9. (Optional) Setup [lint cache](https://github.com/borkdude/clj-kondo#project-setup):
     ```sh
     clj-kondo --lint "$(lein classpath)"
     ```
@@ -148,11 +148,11 @@ the enhancement request in their bug tracker:
 
 ### Running the App
 
-Start a temporary local web server, build the app with the `dev` profile, and serve the app with
-hot reload:
+Start a temporary local web server, build the app with the `dev` profile, and serve the app,
+browser test runner and karma test runner with hot reload:
 
 ```sh
-lein dev
+lein watch
 ```
 
 Please be patient; it may take over 20 seconds to see any output, and over 40 seconds to complete.
@@ -184,8 +184,8 @@ been created for you.
 
 See
 [Shadow CLJS User's Guide: Editor Integration](https://shadow-cljs.github.io/docs/UsersGuide.html#_editor_integration).
-Note that `lein dev` runs `shadow-cljs watch` for you, and that this project's running build id is
-`app`, or the keyword `:app` in a Clojure context.
+Note that `lein watch` runs `shadow-cljs watch` for you, and that this project's running build ids is
+`app`, `browser-test`, `karma-test`, or the keywords `:app`, `:browser-test`, `:karma-test` in a Clojure context.
 
 Alternatively, search the web for info on connecting to a `shadow-cljs` ClojureScript browser REPL
 from your editor and configuration.
@@ -219,10 +219,20 @@ Build the app with the `prod` profile, start a temporary local web server, launc
 Chrome/Chromium, run tests, and stop the web server:
 
 ```sh
-lein karma
+lein ci
 ```
 
 Please be patient; it may take over 15 seconds to see any output, and over 25 seconds to complete.
+
+Or, for auto-reload:
+```sh
+lein watch
+```
+
+Then in another terminal:
+```sh
+karma start
+```
 
 ### Compiling CSS with `lein-garden`
 
@@ -279,7 +289,7 @@ Use `debug?` for logging or other tasks that should run only on `dev` builds:
 Build the app with the `prod` profile:
 
 ```sh
-lein with-profile prod uberjar
+lein with-profile release uberjar
 ```
 
 Please be patient; it may take a few seconds to see any output, and over 50 seconds to complete.
@@ -301,12 +311,25 @@ If `port` is not set, the server will run on port 3000 by default.
 
 ### Deploying to Heroku
 
-1. [Create a Heroku app](https://devcenter.heroku.com/articles/creating-apps):
+1. Heroku deploys happen from a git repository:
+    ```sh
+    git init .
+    git add -A
+    git commit -m "Initial commit"
+    ```
+
+2. [Create a Heroku app](https://devcenter.heroku.com/articles/creating-apps):
     ```sh
     heroku create
     ```
 
-2. [Deploy the app code](https://devcenter.heroku.com/articles/git#deploying-code):
+3. [Add the relevant buildpacks](https://devcenter.heroku.com/articles/using-node-js-with-clojure-and-clojurescript-applications)
+    ```sh
+    heroku buildpacks:add heroku/nodejs
+    heroku buildpacks:add heroku/clojure
+    ```
+
+4. [Deploy the app code](https://devcenter.heroku.com/articles/git#deploying-code):
 
     ```sh
     git push heroku master
