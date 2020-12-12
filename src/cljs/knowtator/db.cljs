@@ -26,15 +26,15 @@
                    :concept :c1
                    :doc     :d1}
               :a2 {:id      :a2
-                   :profile :p1
+                   :profile :p2
                    :concept :c2
                    :doc     :d1}}
-   :profiles {:p1 {:id :p1
-                   :c1 "blue"
-                   :c2 "green"}
-              :p2 {:id :p2
-                   :c1 "red"
-                   :c2 "green"}}
+   :profiles {:p1 {:id     :p1
+                   :colors {:c1 "blue"
+                            :c2 "green"}}
+              :p2 {:id     :p2
+                   :colors {:c1 "red"
+                            :c2 "green"}}}
    :docs     {:d2 {:id      :d2
                    :content "hey"}
               :d1 {:id :d1

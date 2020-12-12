@@ -2,11 +2,10 @@
   (:require
    [re-frame.core :as re-frame]
    [knowtator.db :as db]
-   [knowtator.subs :as subs]
    [day8.re-frame.tracing :refer-macros [fn-traced]]
    [knowtator.model :as model]
-   [clojure.string :as str]
-   [day8.re-frame.undo :as undo :refer [undoable]]))
+   [day8.re-frame.undo :as undo :refer [undoable]]
+   [clojure.string :as str]))
 
 (re-frame/reg-event-db
   ::initialize-db
@@ -14,14 +13,17 @@
     db/default-db))
 
 (re-frame/reg-event-db
-  ::set-active-panel
-  (fn-traced [db [_ active-panel]]
-    (assoc db :active-panel active-panel)))
-
-(re-frame/reg-event-db
-  ::set-re-pressed-example
-  (fn [db [_ value]]
-    (assoc db :re-pressed-example value)))
+  ::select-span
+  (fn [db [_ loc doc-id]]
+    (let [anns    (:anns db)
+          span-id (->> db
+                    :spans
+                    (model/filter-in-restriction {:doc doc-id} anns)
+                    (model/spans-containing-loc loc)
+                    vals
+                    first
+                    :id)]
+      (assoc-in db [:selection :span] span-id))))
 
 (re-frame/reg-event-fx
   ::record-selection
@@ -30,59 +32,49 @@
       (= start end) (assoc :dispatch [::select-span start doc-id]))))
 
 (re-frame/reg-event-db
-  ::select-span
-  (fn [db [_ loc doc-id]]
-    (let [anns    (:anns db)
-          span-id (->> db
-                    :spans
-                    (model/filter-in-doc doc-id anns)
-                    (model/spans-containing-loc loc)
-                    vals
-                    first
-                    :id)]
-      (assoc-in db [:selection :span] span-id))))
-
-(re-frame/reg-event-db
   ::select-profile
   (fn [db [_ profile-id]]
     (assoc-in db [:selection :profile] profile-id)))
+
+(re-frame/reg-event-db
+  ::toggle-profile-restriction
+  (fn [db]
+    (update-in db [:selection :profile-restriction] not)))
 
 (re-frame/reg-event-db
   ::select-doc
   (fn [db [_ doc-id]]
     (assoc-in db [:selection :doc] doc-id)))
 
+
 (re-frame/reg-event-db
   ::add-doc
   (undoable "Adding document")
   (fn [db [_]]
-    (assoc-in db [:docs :d3]  {:id      :d3
-                               :content "I'm the third"})))
-
-(defn unique-id
-  [db k prefix suffix-num]
-  (let [id (->> suffix-num (str prefix) keyword)]
-    (if (contains? (get db k) id)
-      (recur db k prefix (inc suffix-num))
-      id)))
+    (let [doc-id (model/unique-id db :docs "d" (-> db :docs count))]
+      (-> db
+        (assoc-in [:docs doc-id]  {:id      doc-id
+                                   :content (str "I'm called " doc-id)})
+        (assoc-in [:selection :doc] doc-id)))))
 
 (re-frame/reg-event-db
   ::add-ann
   (undoable "Adding annotation")
   (fn [db [_]]
-    (let [span-id (unique-id db :spans "s" (->> :spans (get db) count))
-          ann-id  (unique-id db :anns "a" (->> :anns (get db) count))]
+    (let [span-id                                 (model/unique-id db :spans "s" (-> db :spans count))
+          ann-id                                  (model/unique-id db :anns "a" (-> db :anns count))
+          {:keys [profile concept doc end start]} (:selection db)]
       (-> db
         (assoc-in [:anns ann-id]  {:id      ann-id
-                                   :profile (get-in db [:selection :profile])
-                                   :concept (get-in db [:selection :concept])
-                                   :doc     (get-in db [:selection :doc])})
+                                   :profile profile
+                                   :concept concept
+                                   :doc     doc})
         (assoc-in [:spans span-id] {:id    span-id
                                     :ann   ann-id
-                                    :end   (get-in db [:selection :end])
-                                    :start (get-in db [:selection :start])})
+                                    :end   end
+                                    :start start})
         (assoc-in [:selection :ann] ann-id)
-        (assoc-in [:selection :spn] span-id)))))
+        (assoc-in [:selection :span] span-id)))))
 
 (re-frame/reg-event-db
   ::remove-selected-doc
@@ -105,72 +97,41 @@
       (assoc-in [:selection :span] nil))))
 
 
-(defn cycle-coll
-  [id db k dir]
-  ;; TODO sorting of spans needs to be handled by start and end locs
-  (let [docs (-> db k keys sort vec)
-        f    (case dir
-               :next #(let [val (inc %)]
-                        (if (<= (count docs) val)
-                          0
-                          val))
-               :prev #(let [val (dec %)]
-                        (if (neg? val)
-                          (dec (count docs))
-                          val)))]
-    (->> id
-      (.indexOf docs)
-      f
-      (get docs))))
-
-(defn cycle-selection
-  [db sel col dir]
-  (update-in db [:selection sel] cycle-coll db col dir))
-
 (re-frame/reg-event-db
   ::select-prev-doc
-  #(cycle-selection % :doc :docs :prev))
+  #(model/cycle-selection % :doc :docs :prev))
 
 (re-frame/reg-event-db
   ::select-next-doc
-  #(cycle-selection % :doc :docs :next))
+  #(model/cycle-selection % :doc :docs :next))
 
 (re-frame/reg-event-db
   ::select-prev-span
-  #(cycle-selection % :span :spans :prev))
+  #(model/cycle-selection % :span :spans :prev))
 
 (re-frame/reg-event-db
   ::select-next-span
-  #(cycle-selection % :span :spans :next))
-
-(defn mod-span
-  [db loc f]
-  (let [s (subs/selected-span db)]
-    (update-in db [:spans s] #(let [{:keys [start end] :as new-s} (update % loc f)]
-                                (cond-> new-s
-                                  (< end start) (assoc
-                                                  :start (:end new-s)
-                                                  :end (:start new-s)))))))
+  #(model/cycle-selection % :span :spans :next))
 
 (re-frame/reg-event-db
   ::grow-selected-span-start
   (undoable "Growing span start")
-  #(mod-span % :start dec))
+  #(model/mod-span % :start dec))
 
 (re-frame/reg-event-db
   ::shrink-selected-span-start
   (undoable "Shrinking span start")
-  #(mod-span % :start inc))
+  #(model/mod-span % :start inc))
 
 (re-frame/reg-event-db
   ::shrink-selected-span-end
   (undoable "Shrinking span end")
-  #(mod-span % :end dec))
+  #(model/mod-span % :end dec))
 
 (re-frame/reg-event-db
   ::grow-selected-span-end
   (undoable "Growing span end")
-  #(mod-span % :end inc))
+  #(model/mod-span % :end inc))
 
 (re-frame/reg-event-db
   ::find-in-selected-doc
@@ -182,6 +143,7 @@
           result            (or
                               (str/index-of doc text (inc last-search-start))
                               (str/index-of doc text))]
+      ;; TODO the last-search-span, when overlapped with selected span, causes division on overlapped span.
       (-> db
         (assoc-in [:spans :last-search-span] {:id       :last-search-span
                                               :searched result
@@ -203,11 +165,13 @@
   (fn [db]
     (assoc-in db [:search :un-searched?] false)))
 
+
 (re-frame/reg-event-db
   ::set-concept-color
   (undoable "Setting color for concept")
   (fn [db [_ color]]
     (assoc-in db [:profiles
                   (get-in db [:selection :profile])
+                  :colors
                   (get-in db [:selection :concept])]
       color)))

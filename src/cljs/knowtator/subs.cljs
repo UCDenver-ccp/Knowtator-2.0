@@ -1,44 +1,62 @@
 (ns knowtator.subs
   (:require
    [re-frame.core :as re-frame]
-   [knowtator.model :as model]))
+   [knowtator.model :as model]
+   [clojure.string :as str]
+   [knowtator.html-colors :as html-colors]))
 
 (re-frame/reg-sub
-  ::name
-  (fn [db]
-    (:name db)))
+ ::re-pressed-example
+ (fn [db _]
+   (:re-pressed-example db)))
 
 (re-frame/reg-sub
   ::active-panel
-  (fn [db _]
-    (:active-panel db)))
+  (constantly :home))
 
 (re-frame/reg-sub
-  ::re-pressed-example
-  (fn [db _]
-    (:re-pressed-example db)))
+  ::profile-maps
+  (fn [db]
+    (-> db :profiles vals)))
 
 (re-frame/reg-sub
-  ::visible-doc-id
+  ::selected-profile
+  (fn [db]
+    (get-in db [:selection :profile])))
+
+(re-frame/reg-sub
+  ::selected-doc
   (fn [db]
     (get-in db [:selection :doc])))
 
 (re-frame/reg-sub
-  ::docs
-  :docs)
-
-(re-frame/reg-sub
   ::doc-maps
-  :<- [::docs]
-  vals)
+  (fn [db]
+    (-> db :docs vals)))
 
 (re-frame/reg-sub
-  ::visible-doc-content
-  :<- [::visible-doc-id]
-  :<- [::docs]
-  (fn [[doc-id docs] _]
-    (get-in docs [doc-id :content])))
+  ::search-query
+  (fn [db]
+    (get-in db [:search :query])))
 
+(re-frame/reg-sub
+  ::doc-contents
+  (fn [{:keys [docs]}]
+    (zipmap (keys docs)
+      (map :content (vals docs)))))
+
+(re-frame/reg-sub
+  ::selected-content
+  :<- [::selected-doc]
+  :<- [::doc-contents]
+  (fn [[doc contents]]
+    (get contents doc)))
+
+(re-frame/reg-sub
+  ::search-matches
+  :<- [::search-query]
+  :<- [::selected-content]
+  (fn [[query content]]))
 
 (re-frame/reg-sub
   ::anns
@@ -49,69 +67,39 @@
   :spans)
 
 (re-frame/reg-sub
+  ::profiles
+  :profiles)
+
+(re-frame/reg-sub
+  ::profile-restriction?
+  #(get-in % [:selection :profile-restriction]))
+
+(re-frame/reg-sub
+  ::visual-restriction
+  :<- [::selected-doc]
+  :<- [::selected-profile]
+  :<- [::profile-restriction?]
+  (fn [[doc-id profile-id profile-restricted?]]
+    (cond-> {:doc doc-id}
+      profile-restricted? (assoc :profile profile-id))))
+
+(re-frame/reg-sub
   ::visible-spans
-  :<- [::visible-doc-id]
+  :<- [::visual-restriction]
   :<- [::anns]
   :<- [::spans]
-  #(apply model/filter-in-doc %))
+  (fn [[restriction anns spans] _]
+    (model/filter-in-restriction restriction anns spans)))
 
 (re-frame/reg-sub
   ::highlighted-text
-  :<- [::visible-doc-content]
+  :<- [::selected-content]
   :<- [::visible-spans]
   (fn [[content spans] _]
     (->> spans
       vals
       (model/resolve-span-content content)
       model/split-into-paragraphs)))
-
-(defn selected-span
-  [db]
-  (get-in db [:selection :span]))
-
-(re-frame/reg-sub
-  ::selected-span-id
-  selected-span)
-
-(re-frame/reg-sub
-  ::selected-span?
-  :<- [::selected-span-id]
-  (fn [sel-id [_ id]]
-    (= sel-id id)))
-
-(re-frame/reg-sub
-  ::selected-ann-id
-  (fn [db _]
-    (get-in db [:spans (get-in db [:selection :span]) :ann])))
-
-(re-frame/reg-sub
-  ::selected-ann-spans
-  :<- [::selected-ann-id]
-  :<- [::spans]
-  (fn [[ann-id spans]]
-    (model/filter-in-ann ann-id spans)))
-
-(re-frame/reg-sub
-  ::selected-span-content
-  :<- [::visible-doc-content]
-  :<- [::selected-span-id]
-  :<- [::selected-ann-spans]
-  (fn [[content span-id spans] _]
-    (->> (if span-id
-           (assoc-in spans [span-id :selected] true)
-           spans)
-      vals
-      (model/resolve-span-content content)
-      (remove nil?))))
-
-(re-frame/reg-sub
-  ::profiles
-  :profiles)
-
-(re-frame/reg-sub
-  ::profile-maps
-  :<- [::profiles]
-  vals)
 
 (re-frame/reg-sub
   ::ann-color
@@ -123,32 +111,39 @@
           :else               "grey")))
 
 (re-frame/reg-sub
-  ::selected-ann-map
-  :<- [::selected-ann-id]
-  :<- [::anns]
-  (fn [[ann-id anns]]
-    (get anns ann-id)))
+  ::selected-span-id
+  #(get-in % [:selection :span]))
 
 (re-frame/reg-sub
-  ::search-text
-  (fn [db]
-    (get-in db [:search :query])))
+  ::selected-span?
+  :<- [::selected-span-id]
+  (fn [sel-id [_ id]]
+    (= sel-id id)))
 
 (re-frame/reg-sub
   ::un-searched?
   #(get-in % [:search :un-searched?]))
 
 (re-frame/reg-sub
-  ::search-matches
-  :<- [::search-text]
-  :<- [::visible-doc-content]
-  (fn [[query content]]
-    (when (and query (not= "" query))
-      (-> query
-        re-pattern
-        (re-seq content)
-        count))))
+  ::selected-ann
+  #(get-in % [:selection :ann]))
 
 (re-frame/reg-sub
-  ::selected-profile
-  #(get-in % [:selection :profile]))
+  ::ann-info
+  (fn [db [_ ann-id]]
+    (get-in db [:anns ann-id])))
+
+(re-frame/reg-sub
+  ::selected-concept
+  #(get-in % [:selection :concept]))
+
+(re-frame/reg-sub
+  ::selected-color
+  :<- [::selected-profile]
+  :<- [::selected-concept]
+  :<- [::profiles]
+  (fn [[profile-id concept-id profiles]]
+    (let [color (get-in profiles [profile-id :colors concept-id])]
+      (if (str/starts-with? color "#")
+        color
+        (get html-colors/html-colors color)))))
