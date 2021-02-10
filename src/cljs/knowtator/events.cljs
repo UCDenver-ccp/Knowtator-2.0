@@ -15,15 +15,16 @@
 (re-frame/reg-event-db
   ::select-span
   (fn [db [_ loc doc-id]]
-    (let [anns    (:anns db)
-          span-id (->> db
-                    :spans
-                    (model/filter-in-restriction {:doc doc-id} anns)
-                    (model/spans-containing-loc loc)
-                    vals
-                    first
-                    :id)]
-      (assoc-in db [:selection :span] span-id))))
+    (let [anns             (:anns db)
+          {:keys [id ann]} (->> db
+                             :spans
+                             (model/filter-in-restriction {:doc doc-id} anns)
+                             (model/spans-containing-loc loc)
+                             vals
+                             first)]
+      (-> db
+        (assoc-in [:selection :span] id)
+        (assoc-in [:selection :ann] ann)))))
 
 (re-frame/reg-event-fx
   ::record-selection
