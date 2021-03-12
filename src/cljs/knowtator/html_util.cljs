@@ -1,9 +1,9 @@
 (ns knowtator.html-util
   (:require [goog.object :as gobj]
-            ["rangy/lib/rangy-textrange" :as rangy-txt]
-            [re-frame.core :refer [->interceptor
-                                   get-coeffect assoc-coeffect
-                                   get-effect assoc-effect]]))
+            [re-frame.core
+             :refer
+             [->interceptor assoc-coeffect assoc-effect get-coeffect get-effect]]
+            ["rangy/lib/rangy-textrange" :as rangy-txt]))
 
 (defn win-inner-w
   []

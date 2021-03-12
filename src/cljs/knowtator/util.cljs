@@ -11,7 +11,6 @@
   (zipmap (keys m)
     (map f (vals m))))
 
-
 (defn toggle-contains-set
   [coll x]
   (if (contains? coll x)

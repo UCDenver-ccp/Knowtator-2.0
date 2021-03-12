@@ -1,15 +1,12 @@
 (ns knowtator.core
-  (:require
-   [reagent.dom :as rdom]
-   [re-frame.core :as re-frame]
-   [re-pressed.core :as rp]
-   [breaking-point.core :as bp]
-   [knowtator.events :as events]
-   [knowtator.routes :as routes]
-   [knowtator.views :as views]
-   [knowtator.config :as config]
-   ))
-
+  (:require [breaking-point.core :as bp]
+            [knowtator.config :as config]
+            [knowtator.events :as events]
+            [knowtator.routes :as routes]
+            [knowtator.views :as views]
+            [re-frame.core :as re-frame]
+            [re-pressed.core :as rp]
+            [reagent.dom :as rdom]))
 
 (defn dev-setup []
   (when config/debug?

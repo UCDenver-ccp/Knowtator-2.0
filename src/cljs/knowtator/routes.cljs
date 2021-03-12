@@ -1,9 +1,8 @@
 (ns knowtator.routes
-  (:require
-   [bidi.bidi :as bidi]
-   [pushy.core :as pushy]
-   [re-frame.core :as re-frame]
-   [knowtator.events :as events]))
+  (:require [bidi.bidi :as bidi]
+            [knowtator.events :as events]
+            [pushy.core :as pushy]
+            [re-frame.core :as re-frame]))
 
 (defmulti panels identity)
 (defmethod panels :default [] [:div "No panel found for this route."])

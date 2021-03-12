@@ -1,21 +1,20 @@
 (ns knowtator.views
-  (:require
-   [reagent.core :as r]
-   [re-frame.core :as re-frame]
-   [re-com.core :as re-com :refer [at]]
-   [breaking-point.core :as bp]
-   [knowtator.events :as events]
-   [knowtator.routes :as routes]
-   [knowtator.subs :as subs]
-   ["react-graph-vis" :as rgv]
-   #_["rangy/lib/rangy-textrange" :as rangy-txt]
-   ))
+  (:require [breaking-point.core :as bp]
+            [knowtator.events :as events]
+            [knowtator.routes :as routes]
+            [knowtator.subs :as subs]
+            [re-com.core :as re-com :refer [at]]
+            [re-frame.core :as re-frame]
+            [reagent.core :as r]
+            ["react-graph-vis" :as rgv]
+            ["rangy/lib/rangy-textrange" :as rangy-txt]))
 
 (def <sub (comp deref re-frame/subscribe))
 (def >evt re-frame/dispatch)
 
 
 ;; home
+
 
 (defn display-re-pressed-example []
   (let [re-pressed-example (re-frame/subscribe [::subs/re-pressed-example])]
@@ -54,8 +53,7 @@
               [display-re-pressed-example]
               [:div
                [:h3 (str "screen-width: " @(re-frame/subscribe [::bp/screen-width]))]
-               [:h3 (str "screen: " @(re-frame/subscribe [::bp/screen]))]]
-              ]])
+               [:h3 (str "screen: " @(re-frame/subscribe [::bp/screen]))]]]])
 
 (defmethod routes/panels :home-panel [] [home-panel])
 
@@ -105,7 +103,6 @@
        :options options
        :events  events
        :style   {:height "640px"}}]]))
-
 
 (defmethod routes/panels :graph-panel [] [graph-panel])
 
@@ -242,7 +239,7 @@
 (defn text-selection
   [e c]
   (let [e (get-parent-element-of-class e c)]
-    #_(-> rangy-txt .getSelection (.saveCharacterRanges e) (js->clj :keywordize-keys true) first :characterRange)))
+    (-> rangy-txt .getSelection (.saveCharacterRanges e) (js->clj :keywordize-keys true) first :characterRange)))
 
 (defn popup-text-annotation
   [{:keys [ann content id searched]}]
@@ -314,8 +311,6 @@
    :children [[editor (<sub [::subs/selected-doc])]
               [annotation-info (<sub [::subs/selected-ann])]]])
 
-
-
 (defn annotation-panel []
   [re-com/v-box
    :children [[annotation-title]
@@ -327,7 +322,6 @@
               [span-controls]
               [search-controls]
               [doc-display]]])
-
 
 (defmethod routes/panels :annotation-panel [] [annotation-panel])
 

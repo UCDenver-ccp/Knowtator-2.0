@@ -1,9 +1,8 @@
 (ns knowtator.subs
-  (:require
-   [re-frame.core :as re-frame]
-   [clojure.string :as str]
-   [knowtator.html-colors :as html-colors]
-   [knowtator.model :as model]))
+  (:require [clojure.string :as str]
+            [knowtator.html-colors :as html-colors]
+            [knowtator.model :as model]
+            [re-frame.core :as re-frame]))
 
 (re-frame/reg-sub
   ::name
@@ -11,9 +10,9 @@
     (:name db)))
 
 (re-frame/reg-sub
- ::active-panel
- (fn [db _]
-   (:active-panel db)))
+  ::active-panel
+  (fn [db _]
+    (:active-panel db)))
 
 (re-frame/reg-sub
   ::re-pressed-example

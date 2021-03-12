@@ -1,9 +1,9 @@
 (ns knowtator.model
-  (:require [knowtator.util :as util]
-            [clojure.string :as str]
+  (:require [clojure.spec.alpha :as s]
             [clojure.spec.gen.alpha :as gen]
+            [clojure.string :as str]
             [knowtator.specs :as specs]
-            [clojure.spec.alpha :as s]))
+            [knowtator.util :as util]))
 
 (defn ann-color
   [{:keys [profile concept]} profiles]
@@ -14,7 +14,6 @@
           :ann (s/keys :req-un [:ann/profile :ann/concept])
           :profiles (s/map-of ::specs/id ::specs/profile))
   :ret (s/nilable ::specs/color))
-
 
 (defn sort-spans-by-loc
   [spans]
@@ -200,7 +199,6 @@
   ([restriction anns spans]
    (util/filter-vals #(in-restriction? % anns restriction) spans)))
 
-
 #_(defn filter-in-profile
     ([profile-id anns]
      (util/filter-vals #(in-profile? % profile-id) anns))
@@ -218,8 +216,6 @@
                           :spans (s/map-of ::specs/id ::specs/span)))
   :ret (s/or :anns (s/map-of ::specs/id ::specs/ann)
          :spans (s/map-of ::specs/id ::specs/span)))
-
-
 
 (defn filter-in-ann
   ([ann-id spans]
