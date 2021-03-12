@@ -4,20 +4,15 @@
             [knowtator.routes :as routes]
             [knowtator.subs :as subs]
             [re-com.core :as re-com :refer [at]]
-            [re-frame.core :as re-frame]
+            [re-frame.core :as rf]
             [reagent.core :as r]
+            [knowtator.util :refer [>evt <sub]]
+            [knowtator.text-annotation.views :as text-ann]
             ["react-graph-vis" :as rgv]
             ["rangy/lib/rangy-textrange" :as rangy-txt]))
 
-(def <sub (comp deref re-frame/subscribe))
-(def >evt re-frame/dispatch)
-
-
-;; home
-
-
 (defn display-re-pressed-example []
-  (let [re-pressed-example (re-frame/subscribe [::subs/re-pressed-example])]
+  (let [re-pressed-example (<sub [::subs/re-pressed-example])]
     [:div
 
      [:p
@@ -25,14 +20,14 @@
       [:strong [:code "hello"]]
       [:span ". So go ahead, try it out!"]]
 
-     (when-let [rpe @re-pressed-example]
+     (when-let [rpe re-pressed-example]
        [re-com/alert-box
         :src        (at)
         :alert-type :info
         :body       rpe])]))
 
 (defn home-title []
-  (let [name (re-frame/subscribe [::subs/name])]
+  (let [name (rf/subscribe [::subs/name])]
     [re-com/title
      :src   (at)
      :label (str "Hello from " @name ". This is the Home Page.")
@@ -42,7 +37,7 @@
   [re-com/hyperlink
    :src      (at)
    :label    "go to About Page"
-   :on-click #(re-frame/dispatch [::events/navigate :about])])
+   :on-click #(rf/dispatch [::events/navigate :about])])
 
 (defn home-panel []
   [re-com/v-box
@@ -52,8 +47,8 @@
               [link-to-about-page]
               [display-re-pressed-example]
               [:div
-               [:h3 (str "screen-width: " @(re-frame/subscribe [::bp/screen-width]))]
-               [:h3 (str "screen: " @(re-frame/subscribe [::bp/screen]))]]]])
+               [:h3 (str "screen-width: " @(rf/subscribe [::bp/screen-width]))]
+               [:h3 (str "screen: " @(rf/subscribe [::bp/screen]))]]]])
 
 (defmethod routes/panels :home-panel [] [home-panel])
 
@@ -69,7 +64,7 @@
   [re-com/hyperlink
    :src      (at)
    :label    "go to Home Page"
-   :on-click #(re-frame/dispatch [::events/navigate :home])])
+   :on-click #(rf/dispatch [::events/navigate :home])])
 
 (defn about-panel []
   [re-com/v-box
@@ -81,8 +76,8 @@
 (defmethod routes/panels :about-panel [] [about-panel])
 
 (defn graph-panel []
-  (let [name    (re-frame/subscribe [::subs/name])
-        graph   (re-frame/subscribe [::subs/graph])
+  (let [name    (rf/subscribe [::subs/name])
+        graph   (rf/subscribe [::subs/graph])
         options {:layout {:hierarchical false}
                  :edges  {:color "#000000"}}
         events  {:select       (fn [e]
@@ -95,7 +90,7 @@
                                                        (js->clj :keywordize-keys true)
                                                        (get-in [:pointer :canvas]))]
                                    (println x y)
-                                   (re-frame/dispatch [::events/add-node])))}]
+                                   (rf/dispatch [::events/add-node])))}]
 
     [:div
      [(r/adapt-react-class (aget rgv "default"))
@@ -221,96 +216,14 @@
               [re-com/label
                :label (<sub [::subs/search-matches])]]])
 
-(defn doc-header [doc-id]
-  [re-com/title
-   :label doc-id
-   :level :level2])
-
-(defn class?
-  [e c]
-  (-> e .-classList (.contains c)))
-
-(defn get-parent-element-of-class
-  [e c]
-  (if (class? e c)
-    e
-    (recur (.-parentElement e) c)))
-
-(defn text-selection
-  [e c]
-  (let [e (get-parent-element-of-class e c)]
-    (-> rangy-txt .getSelection (.saveCharacterRanges e) (js->clj :keywordize-keys true) first :characterRange)))
-
-(defn popup-text-annotation
-  [{:keys [ann content id searched]}]
-  (let [e-id (random-uuid)]
-    (r/create-class
-      {:reagent-render (fn []
-                         ;; TODO always scrolls e to top
-                         (when-let [e (and (<sub [::subs/selected-span? id])
-                                        (.getElementById js/document e-id))]
-                           (.scrollIntoView e))
-                         [re-com/p-span
-                          {:id    e-id
-                           :style (cond-> {:background-color (<sub [::subs/ann-color ann])
-                                           :border           (when (<sub [::subs/selected-span? id]) :solid)}
-                                    searched (assoc :color :red))}
-                          content])
-       :component-did-mount
-       (fn [comp]
-         (let [e (.getElementById js/document e-id)]
-           (when (and (<sub [::subs/un-searched?]) searched)
-             (>evt [::events/done-searching])
-             (.scrollIntoView e))))})))
-
-(defn editor-paragraph [paragraph]
-  [re-com/p
-   {:style {:text-align   :justify
-            :text-justify :inter-word}}
-   (doall
-     (for [text paragraph]
-       (if (string? text)
-         text
-         ^{:key (str (random-uuid))}
-         [popup-text-annotation text])))])
-
-(defn editor
-  [doc-id]
-  [:div
-   [doc-header doc-id]
-   [re-com/scroller
-    :height "300px"
-    :child [:div.text-annotation-editor
-            {:on-click #(let [selection (text-selection (.-target %) "text-annotation-editor")]
-                          (>evt [::events/record-selection selection doc-id]))
-             :style    {:padding "10px"}}
-            (doall
-              (for [paragraph (<sub [::subs/highlighted-text])]
-                ^{:key (str (random-uuid))}
-                [editor-paragraph paragraph]))]]])
-
-(defn annotation-info
-  [ann-id]
-  [re-com/v-box
-   :children [[re-com/title
-               :label "Annotation"
-               :level :level3]
-              (let [ann (<sub [::subs/ann-info ann-id])]
-                (for [[k v] ann]
-                  ^{:key (str (random-uuid))}
-                  [re-com/h-box
-                   :gap "10px"
-                   :children [[re-com/label
-                               :label (name k)]
-                              [re-com/label
-                               :label (str v)]]]))]])
-
 (defn doc-display []
-  [re-com/h-split
-   :src (at)
-   :width (str (- (<sub [::bp/screen-width]) 50) "px")
-   :panel-1 [editor (<sub [::subs/selected-doc])]
-   :panel-2 [annotation-info (<sub [::subs/selected-ann])]])
+  [:div
+   [text-ann/doc-header (<sub [::subs/selected-doc])]
+   [re-com/h-split
+    :src (at)
+    :width (str (- (<sub [::bp/screen-width]) 50) "px")
+    :panel-1 [text-ann/editor (<sub [::subs/selected-doc])]
+    :panel-2 [text-ann/annotation-info (<sub [::subs/selected-ann])]]])
 
 (defn annotation-panel []
   [re-com/v-box
@@ -330,7 +243,7 @@
 ;; main
 
 (defn main-panel []
-  (let [active-panel (re-frame/subscribe [::subs/active-panel])]
+  (let [active-panel (rf/subscribe [::subs/active-panel])]
     [re-com/v-box
      :src      (at)
      :height   "100%"
