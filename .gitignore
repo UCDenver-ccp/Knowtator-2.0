@@ -20,3 +20,4 @@
 /package-lock.json
 /.clj-kondo/
 /.dir-locals.el
+/karma.conf.js
