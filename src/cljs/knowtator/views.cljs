@@ -306,13 +306,15 @@
                                :label (str v)]]]))]])
 
 (defn doc-display []
-  [re-com/h-box
+  [re-com/h-split
+   :src (at)
    :width (str (- (<sub [::bp/screen-width]) 50) "px")
-   :children [[editor (<sub [::subs/selected-doc])]
-              [annotation-info (<sub [::subs/selected-ann])]]])
+   :panel-1 [editor (<sub [::subs/selected-doc])]
+   :panel-2 [annotation-info (<sub [::subs/selected-ann])]])
 
 (defn annotation-panel []
   [re-com/v-box
+   :src (at)
    :children [[annotation-title]
               [undo-controls]
               [profile-controls]
