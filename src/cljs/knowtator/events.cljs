@@ -1,7 +1,5 @@
 (ns knowtator.events
-  (:require [day8.re-frame.tracing :refer-macros [fn-traced]]
-            [ajax.core :as ajax]
-            [day8.re-frame.http-fx]
+  (:require [ajax.core :as ajax]
             [clojure.string :as str]
             [day8.re-frame.tracing :refer-macros [fn-traced]]
             [day8.re-frame.undo :as undo :refer [undoable]]

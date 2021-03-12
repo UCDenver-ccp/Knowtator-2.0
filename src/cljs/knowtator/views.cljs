@@ -8,8 +8,7 @@
             [reagent.core :as r]
             [knowtator.util :refer [>evt <sub]]
             [knowtator.text-annotation.views :as text-ann]
-            ["react-graph-vis" :as rgv]
-            ["rangy/lib/rangy-textrange" :as rangy-txt]))
+            ["react-graph-vis" :as rgv]))
 
 (defn display-re-pressed-example []
   (let [re-pressed-example (<sub [::subs/re-pressed-example])]
@@ -76,9 +75,7 @@
 (defmethod routes/panels :about-panel [] [about-panel])
 
 (defn graph-panel []
-  (let [name    (rf/subscribe [::subs/name])
-        graph   (rf/subscribe [::subs/graph])
-        options {:layout {:hierarchical false}
+  (let [options {:layout {:hierarchical false}
                  :edges  {:color "#000000"}}
         events  {:select       (fn [e]
                                  (let [e                     (js->clj e :keywordize-keys true)
@@ -94,7 +91,7 @@
 
     [:div
      [(r/adapt-react-class (aget rgv "default"))
-      {:graph   @graph
+      {:graph   (<sub [::subs/graph])
        :options options
        :events  events
        :style   {:height "640px"}}]]))

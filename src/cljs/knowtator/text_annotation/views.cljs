@@ -22,7 +22,7 @@
                                    searched (assoc :color :red))}
                          content])
       :component-did-mount
-      (fn [comp]
+      (fn [_]
         (let [e (.getElementById js/document e-id)]
           (when (and (<sub [::subs/un-searched?]) searched)
             (>evt [::events/done-searching])
