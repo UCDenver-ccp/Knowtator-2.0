@@ -1,0 +1,27 @@
+{:deps  {org.clojure/clojure           {:mvn/version "1.10.3"}
+         org.clojure/clojurescript     {:mvn/version "1.10.773"
+                                        :exclusions  [com.google.javascript/closure-compiler-unshaded
+                                                      org.clojure/google-closure-library
+                                                      org.clojure/google-closure-library-third-party]}
+         thheller/shadow-cljs          {:mvn/version "2.11.21"}
+         reagent/reagent               {:mvn/version "1.0.0"}
+         re-frame/re-frame             {:mvn/version "1.2.0"}
+         day8.re-frame/tracing         {:mvn/version "0.6.0"}
+         re-com/re-com                 {:mvn/version "2.13.2"}
+         bidi/bidi                     {:mvn/version "2.1.6"}
+         kibu/pushy                    {:mvn/version "0.3.8"}
+         garden/garden                 {:mvn/version "1.3.10"}
+         ns-tracker/ns-tracker         {:mvn/version "0.4.0"}
+         re-pressed/re-pressed         {:mvn/version "0.3.1"}
+         breaking-point/breaking-point {:mvn/version "0.1.2"}
+         binaryage/devtools            {:mvn/version "1.0.2"}
+         com.velisco/strgen            {:mvn/version "0.1.8"}
+         day8.re-frame/undo            {:mvn/version "0.3.3"}
+         day8.re-frame/http-fx         {:mvn/version "v0.2.0"}
+         day8.re-frame/re-frame-10x    {:mvn/version "1.0.1"}}
+ :paths ["src/clj" "src/cljs"]
+
+ :aliases {:dev {:extra-deps  {binaryage/devtools {:mvn/version "1.0.2"}}
+                 :extra-paths ["dev"]}
+
+           :test {:extra-paths ["test/cljs"]}}}

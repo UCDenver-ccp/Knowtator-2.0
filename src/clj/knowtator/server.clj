@@ -1,5 +1,5 @@
-(ns knowtator.server
-  (:require [knowtator.handler :refer [handler]]
+(ns my-app.server
+  (:require [my-app.handler :refer [handler]]
             [config.core :refer [env]]
             [ring.adapter.jetty :refer [run-jetty]])
   (:gen-class))

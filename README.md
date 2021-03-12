@@ -35,8 +35,7 @@ you.
   - Test runner: [Karma](https://github.com/karma-runner/karma)
 * Development tools
   - Debugging: [CLJS DevTools](https://github.com/binaryage/cljs-devtools),
-  [`re-frame-10x`](https://github.com/day8/re-frame-10x),
-  [re-frisk](https://github.com/flexsurfer/re-frisk)
+  [`re-frame-10x`](https://github.com/day8/re-frame-10x)
   - Emacs integration: [CIDER](https://github.com/clojure-emacs/cider)
   - Linter: [clj-kondo](https://github.com/borkdude/clj-kondo)
 

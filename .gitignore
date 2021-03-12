@@ -17,11 +17,6 @@
 
 # clj-kondo cache
 /.clj-kondo/.cache
+/package-lock.json
 /.clj-kondo/
 /.dir-locals.el
-/karma.conf.js
-/package-lock.json
-/.idea/
-/.attach_pid*
-/.lsp/
-/Knowtator-2.0.iml

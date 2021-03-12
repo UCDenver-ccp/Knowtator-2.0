@@ -155,11 +155,11 @@
           #(gen/tuple
              (gen/fmap (partial apply str) (gen/vector (gen/char-alpha) 100))
              (gen/fmap (partial map (fn [span]
-                                (let [start (rand-int 100)
-                                      end   (+ (inc start) (rand-int (- 100 (inc start))))]
-                                  (assoc span
-                                    :start start
-                                    :end end))))
+                                      (let [start (rand-int 100)
+                                            end   (+ (inc start) (rand-int (- 100 (inc start))))]
+                                        (assoc span
+                                          :start start
+                                          :end end))))
                (s/gen ::spans))))
   :ret (s/coll-of (s/or :string string?
                     :span (s/merge

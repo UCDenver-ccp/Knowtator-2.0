@@ -1,4 +1,4 @@
-(ns knowtator.handler
+(ns my-app.handler
   (:require
     [compojure.core :refer [GET defroutes]]
     [compojure.route :refer [resources not-found]]
