@@ -233,7 +233,7 @@
     :level :level1]
    [dt/datatable
     :text-annotation-table
-    [::subs/ann-vals]
+    [::subs/anns]
     [{::dt/column-key   [:id]
       ::dt/sorting      {::dt/enabled? true}
       ::dt/column-label "id"}
@@ -247,7 +247,7 @@
                               [:th {:col-span 6}
                                [:strong
                                 "Total selected: "
-                                (count (<sub [::dt/selected-items :text-annotation-table [::subs/ann-vals]]))]]])}]])
+                                (count (<sub [::dt/selected-items :text-annotation-table [::subs/anns]]))]]])}]])
 
 (defmethod routes/panels :review-panel [] [review-panel])
 

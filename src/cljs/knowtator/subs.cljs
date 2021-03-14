@@ -69,19 +69,19 @@
   (fn [[query content]]))
 
 (re-frame/reg-sub
-  ::anns
+  ::ann-map
   :anns)
 
 (re-frame/reg-sub
-  ::ann-vals
+  ::anns
   (comp vals :anns))
 
 (re-frame/reg-sub
-  ::spans
+  ::span-map
   :spans)
 
 (re-frame/reg-sub
-  ::profiles
+  ::profile-map
   :profiles)
 
 (re-frame/reg-sub
@@ -100,8 +100,8 @@
 (re-frame/reg-sub
   ::visible-spans
   :<- [::visual-restriction]
-  :<- [::anns]
-  :<- [::spans]
+  :<- [::ann-map]
+  :<- [::span-map]
   (fn [[restriction anns spans] _]
     (model/filter-in-restriction restriction anns spans)))
 
@@ -117,8 +117,8 @@
 
 (re-frame/reg-sub
   ::ann-color
-  :<- [::anns]
-  :<- [::profiles]
+  :<- [::ann-map]
+  :<- [::profile-map]
   (fn [[anns profiles] [_ ann]]
     (cond (not (coll? ann))   (model/ann-color (get anns ann) profiles)
           (empty? (rest ann)) (model/ann-color (get anns (first ann)) profiles)
@@ -155,7 +155,7 @@
   ::selected-color
   :<- [::selected-profile]
   :<- [::selected-concept]
-  :<- [::profiles]
+  :<- [::profile-map]
   (fn [[profile-id concept-id profiles]]
     (let [color (get-in profiles [profile-id :colors concept-id])]
       (if (str/starts-with? color "#")
