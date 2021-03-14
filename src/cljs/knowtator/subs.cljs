@@ -73,6 +73,10 @@
   :anns)
 
 (re-frame/reg-sub
+  ::ann-vals
+  (comp vals :anns))
+
+(re-frame/reg-sub
   ::spans
   :spans)
 

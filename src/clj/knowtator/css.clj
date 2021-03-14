@@ -1,12 +1,25 @@
 (ns knowtator.css
   (:require [garden.def :refer [defstyles]]
             [garden.selectors :as sel]
-            [garden.stylesheet  :as s]
+            [garden.stylesheet :as s]
             [clojure.string :as str]))
 
-(defstyles screen
-  [:body {:color "red"}]
-  [:.level1 {:color "green"}])
+(defstyles datatable
+  [:div.ui.list
+   [:div.item {:padding ".4em !important"}]
+   [:div.item.active {:font-weight :bold}]
+   [:div.item.hover {:cursor           :pointer
+                     :background-color "#eee"}]]
+  [:i.start.icon:hover {:text-shadow (str/join " " [0 0 "2px" :darkgrey])}]
+  [:.muted {:color (str/join " " [:grey "!important"])}]
+  [(sel/> :table.re-frame-datatable :thead)
+   [:th.sorted-by:after {:display :inline-block
+                         :content "'\\f0dc'"}]
+   [:th.sorted-by.desc:after {:content "'\\f0d7'"}]
+   [:th.sorted-by.asc:after {:content "'\\f0d8'"}]
+   [:th:after {:display     :none
+               :font-family :Icons
+               :margin-left ".5em"}]])
 
 (defstyles screen
   (sel/defselector *)

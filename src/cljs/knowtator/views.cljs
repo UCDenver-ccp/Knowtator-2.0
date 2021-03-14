@@ -1,14 +1,15 @@
 (ns knowtator.views
-  (:require [breaking-point.core :as bp]
+  (:require ["react-graph-vis" :as rgv]
+            [breaking-point.core :as bp]
             [knowtator.events :as events]
             [knowtator.routes :as routes]
             [knowtator.subs :as subs]
-            [re-com.core :as re-com :refer [at]]
-            [re-frame.core :as rf]
-            [reagent.core :as r]
-            [knowtator.util :refer [>evt <sub]]
             [knowtator.text-annotation.views :as text-ann]
-            ["react-graph-vis" :as rgv]))
+            [knowtator.util :refer [<sub >evt]]
+            [re-com.core :as re-com :refer [at]]
+            [re-frame-datatable.core :as dt]
+            [re-frame.core :as rf]
+            [reagent.core :as r]))
 
 (defn display-re-pressed-example []
   (let [re-pressed-example (<sub [::subs/re-pressed-example])]
@@ -223,6 +224,32 @@
               [doc-display]]])
 
 (defmethod routes/panels :annotation-panel [] [annotation-panel])
+
+(defn review-panel []
+  [:div
+   [re-com/title
+    :src   (at)
+    :label "Review"
+    :level :level1]
+   [dt/datatable
+    :text-annotation-table
+    [::subs/ann-vals]
+    [{::dt/column-key   [:id]
+      ::dt/sorting      {::dt/enabled? true}
+      ::dt/column-label "id"}
+     {::dt/column-key   [:concept]
+      ::dt/sorting      {::dt/enabled? true}
+      ::dt/column-label "concept"}]
+    {::dt/table-classes    ["ui" "table"]
+     ::dt/selection        {::dt/enabled? true}
+     ::dt/footer-component (fn []
+                             [:tr
+                              [:th {:col-span 6}
+                               [:strong
+                                "Total selected: "
+                                (count (<sub [::dt/selected-items :text-annotation-table [::subs/ann-vals]]))]]])}]])
+
+(defmethod routes/panels :review-panel [] [review-panel])
 
 ;; main
 

@@ -9,10 +9,11 @@
 
 (def routes
   (atom
-    ["/" {""           :annotation
+    ["/" {""           :review
           "about"      :about
           "graph"      :graph
-          "annotation" :annotation}]))
+          "annotation" :annotation
+          "review"     :review}]))
 
 (defn parse
   [url]
