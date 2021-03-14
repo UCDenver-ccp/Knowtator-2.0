@@ -10,23 +10,24 @@
   [{:keys [ann content id searched]}]
   (let [e-id (random-uuid)]
     (r/create-class
-     {:reagent-render (fn []
+      {:reagent-render (fn []
                          ;; TODO always scrolls e to top
-                        (when-let [e (and (<sub [::subs/selected-span? id])
-                                          (.getElementById js/document e-id))]
-                          (.scrollIntoView e))
-                        [re-com/p-span
-                         {:id    e-id
-                          :style (cond-> {:background-color (<sub [::subs/ann-color ann])
-                                          :border           (when (<sub [::subs/selected-span? id]) :solid)}
-                                   searched (assoc :color :red))}
-                         content])
-      :component-did-mount
-      (fn [_]
-        (let [e (.getElementById js/document e-id)]
-          (when (and (<sub [::subs/un-searched?]) searched)
-            (>evt [::events/done-searching])
-            (.scrollIntoView e))))})))
+                         (when-let [e (and (<sub [::subs/selected-span? id])
+                                        (.getElementById js/document e-id))]
+                           (.scrollIntoView e))
+                         [re-com/p-span
+                          {:id    e-id
+                           :style (cond-> {:background-color (<sub [::subs/ann-color ann])
+                                           :border           (when (<sub [::subs/selected-span? id]) :solid)
+                                           :cursor :pointer}
+                                    searched (assoc :color :red))}
+                          content])
+       :component-did-mount
+       (fn [_]
+         (let [e (.getElementById js/document e-id)]
+           (when (and (<sub [::subs/un-searched?]) searched)
+             (>evt [::events/done-searching])
+             (.scrollIntoView e))))})))
 
 (defn editor-paragraph [paragraph]
   [re-com/p
