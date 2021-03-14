@@ -38,19 +38,6 @@
    :label    "go to About Page"
    :on-click #(rf/dispatch [::events/navigate :about])])
 
-(defn home-panel []
-  [re-com/v-box
-   :src      (at)
-   :gap      "1em"
-   :children [[home-title]
-              [link-to-about-page]
-              [display-re-pressed-example]
-              [:div
-               [:h3 (str "screen-width: " @(rf/subscribe [::bp/screen-width]))]
-               [:h3 (str "screen: " @(rf/subscribe [::bp/screen]))]]]])
-
-(defmethod routes/panels :home-panel [] [home-panel])
-
 ;; about
 
 (defn about-title []

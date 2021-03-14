@@ -9,7 +9,7 @@
 
 (def routes
   (atom
-    ["/" {""           :home
+    ["/" {""           :annotation
           "about"      :about
           "graph"      :graph
           "annotation" :annotation}]))
