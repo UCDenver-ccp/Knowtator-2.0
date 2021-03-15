@@ -221,3 +221,8 @@
                   :colors
                   (get-in db [:selection :concept])]
       color)))
+
+(re-frame/reg-event-db
+  ::select-review-type
+  (fn [db [_ id]]
+    (assoc-in db [:selection :review-type] id)))

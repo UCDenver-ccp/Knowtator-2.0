@@ -225,29 +225,36 @@
 
 (defmethod routes/panels :annotation-panel [] [annotation-panel])
 
+(defn review-table [cols sub]
+  (when cols
+    [dt/datatable :text-annotation-table sub #_[::subs/anns]
+     (map (fn [col]
+            {::dt/column-key   [(keyword col)]
+             ::dt/sorting      {::dt/enabled? true}
+             ::dt/column-label col})
+       cols)
+     {::dt/table-classes    ["ui" "table"]
+      ::dt/selection        {::dt/enabled? true}
+      ::dt/footer-component (fn []
+                              [:tr
+                               [:th {:col-span 6}
+                                [:strong
+                                 "Total selected: "
+                                 (count (<sub [::dt/selected-items :text-annotation-table [::subs/anns]]))]]])}]))
+
 (defn review-panel []
   [:div
    [re-com/title
     :src   (at)
     :label "Review"
     :level :level1]
-   [dt/datatable
-    :text-annotation-table
-    [::subs/anns]
-    [{::dt/column-key   [:id]
-      ::dt/sorting      {::dt/enabled? true}
-      ::dt/column-label "id"}
-     {::dt/column-key   [:concept]
-      ::dt/sorting      {::dt/enabled? true}
-      ::dt/column-label "concept"}]
-    {::dt/table-classes    ["ui" "table"]
-     ::dt/selection        {::dt/enabled? true}
-     ::dt/footer-component (fn []
-                             [:tr
-                              [:th {:col-span 6}
-                               [:strong
-                                "Total selected: "
-                                (count (<sub [::dt/selected-items :text-annotation-table [::subs/anns]]))]]])}]])
+   [re-com/single-dropdown
+    :choices (<sub [::subs/review-types])
+    :model (<sub [::subs/selected-review-type])
+    :on-change #(>evt [::events/select-review-type %])]
+   (let [cols          (<sub [::subs/review-type-columns])
+         {:keys [sub]} (<sub [::subs/review-type-info])]
+     [review-table cols sub])])
 
 (defmethod routes/panels :review-panel [] [review-panel])
 

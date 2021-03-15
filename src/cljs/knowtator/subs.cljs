@@ -2,7 +2,10 @@
   (:require [clojure.string :as str]
             [knowtator.html-colors :as html-colors]
             [knowtator.model :as model]
-            [re-frame.core :as re-frame]))
+            [re-frame.core :as re-frame]
+            [knowtator.specs :as specs]
+            [clojure.spec.alpha :as s]
+            [knowtator.util :as util]))
 
 (re-frame/reg-sub
   ::name
@@ -161,3 +164,43 @@
       (if (str/starts-with? color "#")
         color
         (get html-colors/html-colors color)))))
+
+(re-frame/reg-sub
+  ::selected-review-type
+  (fn [db _]
+    (get-in db [:selection :review-type])))
+
+(re-frame/reg-sub
+  ::review-type-info
+  :<- [::selected-review-type]
+  :<- [::review-types]
+  (fn [[review-type review-types]]
+    (get (util/map-with-key :id review-types) review-type)))
+
+(re-frame/reg-sub
+  ::review-type-columns
+  :<- [::review-type-info]
+  (fn [info]
+    (when (some? info)
+      (->> info
+        :spec
+        s/get-spec
+        s/describe
+        last
+        (map name)))))
+
+(re-frame/reg-sub
+  ::docs
+  (comp vals :docs))
+
+(re-frame/reg-sub
+  ::review-types
+  (fn [_ _]
+    [{:id    :anns
+      :spec  ::specs/ann
+      :sub   [::anns]
+      :label "Annotations"}
+     {:id    :docs
+      :spec  ::specs/doc
+      :sub   [::docs]
+      :label "Documents"}]))

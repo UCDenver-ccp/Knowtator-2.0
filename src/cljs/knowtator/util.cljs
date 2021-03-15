@@ -4,6 +4,10 @@
 (def <sub (comp deref rf/subscribe))
 (def >evt rf/dispatch)
 
+(defn map-with-key [k ms]
+  (zipmap (map k ms)
+    ms))
+
 (defn filter-vals
   [f m]
   (->> m
