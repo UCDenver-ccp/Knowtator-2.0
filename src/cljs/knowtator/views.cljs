@@ -1,7 +1,7 @@
 (ns knowtator.views
   (:require ["react-graph-vis" :as rgv]
             [breaking-point.core :as bp]
-            [knowtator.events :as events]
+            [knowtator.events :as evts]
             [knowtator.routes :as routes]
             [knowtator.subs :as subs]
             [knowtator.text-annotation.views :as text-ann]
@@ -37,7 +37,7 @@
   [re-com/hyperlink
    :src      (at)
    :label    "go to About Page"
-   :on-click #(rf/dispatch [::events/navigate :about])])
+   :on-click #(rf/dispatch [::evts/navigate :about])])
 
 ;; about
 
@@ -51,7 +51,7 @@
   [re-com/hyperlink
    :src      (at)
    :label    "go to Home Page"
-   :on-click #(rf/dispatch [::events/navigate :home])])
+   :on-click #(rf/dispatch [::evts/navigate :home])])
 
 (defn about-panel []
   [re-com/v-box
@@ -75,7 +75,7 @@
                                                        (js->clj :keywordize-keys true)
                                                        (get-in [:pointer :canvas]))]
                                    (println x y)
-                                   (rf/dispatch [::events/add-node])))}]
+                                   (rf/dispatch [::evts/add-node])))}]
 
     [:div
      [(r/adapt-react-class (aget rgv "default"))
@@ -96,30 +96,30 @@
   [re-com/h-box
    :children [[re-com/md-circle-icon-button
                :md-icon-name "zmdi-undo"
-               :on-click #(>evt [::events/undo])]
+               :on-click #(>evt [::evts/undo])]
               [re-com/md-circle-icon-button
                :md-icon-name "zmdi-redo"
-               :on-click #(>evt [::events/redo])]]])
+               :on-click #(>evt [::evts/redo])]]])
 
 (defn profile-controls
   []
   [re-com/h-box
    :children [[re-com/md-circle-icon-button
                :md-icon-name "zmdi-plus"
-               :on-click #(>evt [::events/add-profile])]
+               :on-click #(>evt [::evts/add-profile])]
               [re-com/md-circle-icon-button
                :md-icon-name "zmdi-minus"
-               :on-click #(>evt [::events/remove-selected-profile])]
+               :on-click #(>evt [::evts/remove-selected-profile])]
               [re-com/single-dropdown
                :choices (<sub [::subs/profile-maps])
                :label-fn :id
                :filter-box? true
                :model (<sub [::subs/selected-profile])
-               :on-change #(>evt [::events/select-profile %])]
+               :on-change #(>evt [::evts/select-profile %])]
               [re-com/checkbox
                :model (<sub [::subs/profile-restriction?])
                :label "Restrict to profile"
-               :on-change #(>evt [::events/toggle-profile-restriction])]]])
+               :on-change #(>evt [::evts/toggle-profile-restriction])]]])
 
 (defn target-value
   "Returns value found in text field"
@@ -132,68 +132,68 @@
    :children [[:input#my {:type      :color
                           :class     "rc-button"
                           :value     (<sub [::subs/selected-color])
-                          :on-change #(>evt [::events/set-concept-color (target-value %)])}]]])
+                          :on-change #(>evt [::evts/set-concept-color (target-value %)])}]]])
 
 (defn document-controls
   []
   [re-com/h-box
    :children [[re-com/md-circle-icon-button
                :md-icon-name "zmdi-arrow-left"
-               :on-click #(>evt [::events/select-prev-doc])]
+               :on-click #(>evt [::evts/select-prev-doc])]
               [re-com/md-circle-icon-button
                :md-icon-name "zmdi-arrow-right"
-               :on-click #(>evt [::events/select-next-doc])]
+               :on-click #(>evt [::evts/select-next-doc])]
               [re-com/md-circle-icon-button
                :md-icon-name "zmdi-plus"
-               :on-click #(>evt [::events/add-doc])]
+               :on-click #(>evt [::evts/add-doc])]
               [re-com/md-circle-icon-button
                :md-icon-name "zmdi-minus"
-               :on-click #(>evt [::events/remove-selected-doc])]
+               :on-click #(>evt [::evts/remove-selected-doc])]
               [re-com/single-dropdown
                :choices (<sub [::subs/doc-map])
                :label-fn :id
                :filter-box? true
                :model (<sub [::subs/selected-doc])
-               :on-change #(>evt [::events/select-doc %])]]])
+               :on-change #(>evt [::evts/select-doc %])]]])
 
 (defn annotation-controls
   []
   [re-com/h-box
    :children [[re-com/md-circle-icon-button
                :md-icon-name "zmdi-plus"
-               :on-click #(>evt [::events/add-ann])]
+               :on-click #(>evt [::evts/add-ann])]
               [re-com/md-circle-icon-button
                :md-icon-name "zmdi-minus"
-               :on-click #(>evt [::events/remove-selected-ann])]]])
+               :on-click #(>evt [::evts/remove-selected-ann])]]])
 
 (defn span-controls
   []
   [re-com/h-box
    :children [[re-com/md-circle-icon-button
                :md-icon-name "zmdi-arrow-left"
-               :on-click #(>evt [::events/select-prev-span])]
+               :on-click #(>evt [::evts/select-prev-span])]
               [re-com/md-circle-icon-button
                :md-icon-name "zmdi-arrow-right"
-               :on-click #(>evt [::events/select-next-span])]
+               :on-click #(>evt [::evts/select-next-span])]
               [re-com/md-circle-icon-button
                :md-icon-name "zmdi-plus"
-               :on-click #(>evt [::events/grow-selected-span-start])]
+               :on-click #(>evt [::evts/grow-selected-span-start])]
               [re-com/md-circle-icon-button
                :md-icon-name "zmdi-minus"
-               :on-click #(>evt [::events/shrink-selected-span-start])]
+               :on-click #(>evt [::evts/shrink-selected-span-start])]
               [re-com/md-circle-icon-button
                :md-icon-name "zmdi-minus"
-               :on-click #(>evt [::events/shrink-selected-span-end])]
+               :on-click #(>evt [::evts/shrink-selected-span-end])]
               [re-com/md-circle-icon-button
                :md-icon-name "zmdi-plus"
-               :on-click #(>evt [::events/grow-selected-span-end])]]])
+               :on-click #(>evt [::evts/grow-selected-span-end])]]])
 
 (defn search-controls
   []
   [re-com/h-box
    :children [[re-com/input-text
                :model (<sub [::subs/search-query])
-               :on-change #(>evt [::events/update-search-text %])
+               :on-change #(>evt [::evts/update-search-text %])
                ;; :attr {:on-key-press #(when (html/key? % :enter)
                ;;                         (>evt [::events/find-in-selected-doc]))}
                :change-on-blur? false
@@ -252,7 +252,7 @@
    [re-com/single-dropdown
     :choices (<sub [::subs/review-types])
     :model (<sub [::subs/selected-review-type])
-    :on-change #(>evt [::events/select-review-type %])]
+    :on-change #(>evt [::evts/select-review-type %])]
    [review-table]])
 
 (defmethod routes/panels :review-panel [] [review-panel])
