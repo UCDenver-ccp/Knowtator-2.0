@@ -63,9 +63,10 @@
     (let [anns             (:anns db)
           {:keys [id ann]} (->> db
                              :spans
-                             (model/filter-in-restriction {:doc doc-id} anns)
-                             (model/spans-containing-loc loc)
                              vals
+                             (model/spans-with-spanned-text (:docs db) (:anns db))
+                             (filter #(model/in-restriction? %  {:doc doc-id}))
+                             (model/spans-containing-loc loc)
                              first)]
       (-> db
         (assoc-in [:selection :spans] id)

@@ -167,12 +167,10 @@
          :kind vector?))
 
 (defn in-restriction?
-  ([ann restriction]
-   (every? (fn [[k v]]
-             (= (get ann k) v))
-     restriction))
-  ([{:keys [ann]} anns restriction]
-   (in-restriction? (get anns ann) restriction)))
+  [m restriction]
+  (every? (fn [[k v]]
+            (= (get m k) v))
+    restriction))
 
 (s/fdef in-restriction?
   :args (s/alt
@@ -185,46 +183,6 @@
                                  :restriction ::specs/restriction))
   :ret boolean?)
 
-(defn in-ann?
-  [{:keys [ann]} ann-id]
-  (= ann ann-id))
-
-(s/fdef in-ann?
-  :args (s/cat :span ::specs/span :ann-id ::specs/id)
-  :ret boolean?)
-
-(defn filter-in-restriction
-  ([restriction anns]
-   (util/filter-vals #(in-restriction? % restriction) anns))
-  ([restriction anns spans]
-   (util/filter-vals #(in-restriction? % anns restriction) spans)))
-
-#_(defn filter-in-profile
-    ([profile-id anns]
-     (util/filter-vals #(in-profile? % profile-id) anns))
-    ([profile-id anns spans]
-     (util/filter-vals #(in-profile? % anns profile-id) spans)))
-
-(s/fdef filter-in-doc
-  :args (s/alt
-          :anns-in-doc (s/cat
-                         :doc-id ::specs/id
-                         :ann (s/map-of ::specs/id ::specs/ann))
-          :spans-in-doc (s/cat
-                          :doc-id ::specs/id
-                          :anns (s/map-of ::specs/id ::specs/ann)
-                          :spans (s/map-of ::specs/id ::specs/span)))
-  :ret (s/or :anns (s/map-of ::specs/id ::specs/ann)
-         :spans (s/map-of ::specs/id ::specs/span)))
-
-(defn filter-in-ann
-  ([ann-id spans]
-   (util/filter-vals #(in-ann? % ann-id) spans)))
-
-(s/fdef filter-in-ann
-  :args (s/cat :ann-id ::specs/id :spans (s/map-of ::specs/id ::specs/span))
-  :ret (s/map-of ::specs/id ::specs/span))
-
 (defn contain-loc?
   [{:keys [start end]} i]
   (<= start i end))
@@ -235,7 +193,7 @@
 
 (defn spans-containing-loc
   [loc spans]
-  (util/filter-vals #(contain-loc? % loc) spans))
+  (filter #(contain-loc? % loc) spans))
 
 (s/fdef filter-in-ann
   :args (s/cat :loc int? :spans (s/map-of ::specs/id ::specs/span))
@@ -308,10 +266,11 @@
       (get docs))))
 
 (defn cycle-selection
-  [db coll-id dir]
+  [db restriction coll-id dir]
   (let [coll (->> coll-id
                (get db)
                vals
+               restriction
                (map :id))]
     (update-in db [:selection coll-id] cycle-coll coll dir)))
 
@@ -338,3 +297,17 @@
                         {:id #{:E}, :start 100, :end 120 :ann #{nil}}}
         overlaps      (make-overlapping-spans spans)]
     (assert (= overlaps true-overlaps) (clojure.data/diff overlaps true-overlaps)))
+
+(defn spans-with-spanned-text
+  [doc-map ann-map spans]
+  (->> spans
+    (map #(let [doc-id (get-in ann-map [(:ann %) :doc])]
+            (assoc % :doc doc-id)))
+    (group-by :doc)
+    (mapcat (fn [[doc-id spans]]
+              (map (fn [{:keys [start end] :as span}]
+                     (let [content (-> doc-map
+                                     (get-in [doc-id :content])
+                                     (subs start end))]
+                       (assoc span :content content)))
+                spans)))))

@@ -87,6 +87,14 @@
   #(get-in % [:selection :profile-restriction]))
 
 (reg-sub
+  ::spans-with-spanned-text
+  :<- [::doc-map]
+  :<- [::ann-map]
+  :<- [::spans]
+  (fn [[doc-map ann-map spans]]
+    (model/spans-with-spanned-text doc-map ann-map spans)))
+
+(reg-sub
   ::visual-restriction
   :<- [::selected-doc]
   :<- [::selected-profile]
@@ -98,10 +106,9 @@
 (reg-sub
   ::visible-spans
   :<- [::visual-restriction]
-  :<- [::ann-map]
-  :<- [::span-map]
-  (fn [[restriction anns spans] _]
-    (model/filter-in-restriction restriction anns spans)))
+  :<- [::spans-with-spanned-text]
+  (fn [[restriction spans] _]
+    (filter #(model/in-restriction? % restriction) spans)))
 
 (reg-sub
   ::highlighted-text
@@ -109,7 +116,6 @@
   :<- [::visible-spans]
   (fn [[content spans] _]
     (->> spans
-      vals
       (model/resolve-span-content content)
       model/split-into-paragraphs)))
 
@@ -168,18 +174,3 @@
 (reg-sub
   ::spans
   (comp vals :spans))
-
-(reg-sub
-  ::spans-with-spanned-text
-  :<- [::doc-map]
-  :<- [::ann-map]
-  :<- [::spans]
-  (fn [[doc-map ann-map spans]]
-    (->> spans
-      (map #(assoc % :doc (get-in ann-map [(:ann %) :doc])))
-      (group-by :doc)
-      (mapcat (fn [[doc-id spans]]
-                (map (fn [{:keys [start end] :as span}]
-                       (assoc span :content
-                         (subs (get-in doc-map [doc-id :content]) start end)))
-                  spans))))))

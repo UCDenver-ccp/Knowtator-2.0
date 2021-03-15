@@ -6,7 +6,11 @@
 (reg-event-db
   ::cycle
   (fn [db [_ coll-id direction]]
-    (model/cycle-selection db coll-id direction)))
+    (let [restriction (case coll-id
+                        :spans (comp (partial filter #(model/in-restriction? %  {:doc (get-in db [:selection :docs])}))
+                                 (partial model/spans-with-spanned-text (:docs db) (:anns db)))
+                        identity)]
+      (model/cycle-selection db restriction coll-id direction))))
 
 (reg-event-db
   ::grow-selected-span-start
