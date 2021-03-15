@@ -60,8 +60,7 @@
 (reg-event-db
   ::select-span
   (fn [db [_ loc doc-id]]
-    (let [anns             (:anns db)
-          {:keys [id ann]} (->> db
+    (let [{:keys [id ann]} (->> db
                              :spans
                              vals
                              (model/spans-with-spanned-text (:docs db) (:anns db))
