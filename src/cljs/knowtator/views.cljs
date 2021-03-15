@@ -2,12 +2,12 @@
   (:require ["react-graph-vis" :as rgv]
             [breaking-point.core :as bp]
             [knowtator.events :as evts]
+            [knowtator.review.views :as review]
             [knowtator.routes :as routes]
             [knowtator.subs :as subs]
             [knowtator.text-annotation.views :as text-ann]
             [knowtator.util :refer [<sub >evt]]
             [re-com.core :as re-com :refer [at]]
-            [re-frame-datatable.core :as dt]
             [re-frame.core :as rf]
             [reagent.core :as r]))
 
@@ -225,23 +225,6 @@
 
 (defmethod routes/panels :annotation-panel [] [annotation-panel])
 
-(defn review-table []
-  [(fn [cols] ; Anonymous function used to force re-rendering of table columns
-     (when cols
-       [dt/datatable :text-annotation-table [::subs/values-to-review]
-        (for [col cols]
-          {::dt/column-key   [(keyword col)]
-           ::dt/sorting      {::dt/enabled? true}
-           ::dt/column-label col})
-        {::dt/table-classes    ["ui" "table"]
-         ::dt/selection        {::dt/enabled? true}
-         ::dt/footer-component (fn []
-                                 [:tr
-                                  [:th {:col-span 6}
-                                   [:strong
-                                    "Total selected: "
-                                    (count (<sub [::dt/selected-items :text-annotation-table [::subs/anns]]))]]])}]))
-   (<sub [::subs/selected-review-columns])])
 
 (defn review-panel []
   [:div
@@ -249,11 +232,8 @@
     :src   (at)
     :label "Review"
     :level :level1]
-   [re-com/single-dropdown
-    :choices (<sub [::subs/review-types])
-    :model (<sub [::subs/selected-review-type])
-    :on-change #(>evt [::evts/select-review-type %])]
-   [review-table]])
+   [review/chooser]
+   [review/table]])
 
 (defmethod routes/panels :review-panel [] [review-panel])
 

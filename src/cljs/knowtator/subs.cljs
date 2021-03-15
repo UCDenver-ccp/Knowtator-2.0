@@ -2,10 +2,7 @@
   (:require [clojure.string :as str]
             [knowtator.html-colors :as html-colors]
             [knowtator.model :as model]
-            [re-frame.core :as rf :refer [reg-sub]]
-            [knowtator.specs :as specs]
-            [clojure.spec.alpha :as s]
-            [knowtator.util :as util]))
+            [re-frame.core :as rf :refer [reg-sub]]))
 
 (reg-sub
   ::name
@@ -164,38 +161,6 @@
         color
         (get html-colors/html-colors color)))))
 
-(reg-sub
-  ::selected-review-type
-  (fn [db _]
-    (get-in db [:selection :review-type])))
-
-(reg-sub
-  ::review-type-info
-  :<- [::selected-review-type]
-  :<- [::review-types]
-  (fn [[review-type review-types]]
-    (get (util/map-with-key :id review-types) review-type)))
-
-(reg-sub
-  ::selected-review-columns
-  :<- [::review-type-info]
-  (fn [info]
-    (when (some? info)
-      (->> info
-        :spec
-        s/get-spec
-        s/describe
-        last
-        (map name)))))
-
-(reg-sub
-  ::values-to-review
-  :<- [::review-type-info]
-  (fn [info]
-    (-> info
-      :sub
-      rf/subscribe
-      deref)))
 
 (reg-sub
   ::docs
@@ -219,23 +184,3 @@
                        (assoc span :content
                          (subs (get-in doc-map [doc-id :content]) start end)))
                   spans))))))
-
-
-(s/def ::content string?)
-(s/def ::spans-with-spanned-text (s/keys :req-un [:span/end :span/start ::specs/id ::content]))
-
-(reg-sub
-  ::review-types
-  (fn [_ _]
-    [{:id    :anns
-      :spec  ::specs/ann
-      :sub   [::anns]
-      :label "Annotations"}
-     {:id    :spans
-      :spec  ::spans-with-spanned-text
-      :sub   [::spans-with-spanned-text]
-      :label "Spans"}
-     {:id    :docs
-      :spec  ::specs/doc
-      :sub   [::docs]
-      :label "Documents"}]))
