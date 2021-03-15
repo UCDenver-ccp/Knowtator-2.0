@@ -178,7 +178,7 @@
     (get (util/map-with-key :id review-types) review-type)))
 
 (re-frame/reg-sub
-  ::review-type-columns
+  ::selected-review-columns
   :<- [::review-type-info]
   (fn [info]
     (when (some? info)
@@ -190,8 +190,21 @@
         (map name)))))
 
 (re-frame/reg-sub
+  ::values-to-review
+  :<- [::review-type-info]
+  (fn [info]
+    (-> info
+      :sub
+      re-frame/subscribe
+      deref)))
+
+(re-frame/reg-sub
   ::docs
   (comp vals :docs))
+
+(re-frame/reg-sub
+  ::spans
+  (comp vals :spans))
 
 (re-frame/reg-sub
   ::review-types
@@ -200,6 +213,10 @@
       :spec  ::specs/ann
       :sub   [::anns]
       :label "Annotations"}
+     {:id    :spans
+      :spec  ::specs/span
+      :sub   [::spans]
+      :label "Spans"}
      {:id    :docs
       :spec  ::specs/doc
       :sub   [::docs]

@@ -9,7 +9,8 @@
             [re-com.core :as re-com :refer [at]]
             [re-frame-datatable.core :as dt]
             [re-frame.core :as rf]
-            [reagent.core :as r]))
+            [reagent.core :as r]
+            [re-frame.core :as re-frame]))
 
 (defn display-re-pressed-example []
   (let [re-pressed-example (<sub [::subs/re-pressed-example])]
@@ -225,22 +226,23 @@
 
 (defmethod routes/panels :annotation-panel [] [annotation-panel])
 
-(defn review-table [cols sub]
-  (when cols
-    [dt/datatable :text-annotation-table sub #_[::subs/anns]
-     (map (fn [col]
-            {::dt/column-key   [(keyword col)]
-             ::dt/sorting      {::dt/enabled? true}
-             ::dt/column-label col})
-       cols)
-     {::dt/table-classes    ["ui" "table"]
-      ::dt/selection        {::dt/enabled? true}
-      ::dt/footer-component (fn []
-                              [:tr
-                               [:th {:col-span 6}
-                                [:strong
-                                 "Total selected: "
-                                 (count (<sub [::dt/selected-items :text-annotation-table [::subs/anns]]))]]])}]))
+(defn review-table []
+  [(fn [cols] ; Anonymous function used to force re-rendering of table columns
+     (when cols
+       [dt/datatable :text-annotation-table [::subs/values-to-review]
+        (for [col cols]
+          {::dt/column-key   [(keyword col)]
+           ::dt/sorting      {::dt/enabled? true}
+           ::dt/column-label col})
+        {::dt/table-classes    ["ui" "table"]
+         ::dt/selection        {::dt/enabled? true}
+         ::dt/footer-component (fn []
+                                 [:tr
+                                  [:th {:col-span 6}
+                                   [:strong
+                                    "Total selected: "
+                                    (count (<sub [::dt/selected-items :text-annotation-table [::subs/anns]]))]]])}]))
+   (<sub [::subs/selected-review-columns])])
 
 (defn review-panel []
   [:div
@@ -252,9 +254,7 @@
     :choices (<sub [::subs/review-types])
     :model (<sub [::subs/selected-review-type])
     :on-change #(>evt [::events/select-review-type %])]
-   (let [cols          (<sub [::subs/review-type-columns])
-         {:keys [sub]} (<sub [::subs/review-type-info])]
-     [review-table cols sub])])
+   [review-table]])
 
 (defmethod routes/panels :review-panel [] [review-panel])
 
