@@ -134,7 +134,7 @@
    [re-com/h-split
     :src (at)
     :width (str (- (<sub [::bp/screen-width]) 50) "px")
-    :panel-1 [tav/editor (<sub [::subs/selected-doc])]
+    :panel-1[tav/editor (<sub [::subs/selected-doc])]
     :panel-2 [tav/annotation-info (<sub [::subs/selected-ann])]]])
 
 (defn annotation-panel []

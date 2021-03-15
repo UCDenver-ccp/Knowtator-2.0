@@ -2,7 +2,11 @@
   (:require [clojure.string :as str]
             [knowtator.html-colors :as html-colors]
             [knowtator.model :as model]
-            [re-frame.core :as rf :refer [reg-sub]]))
+            [re-frame.core :as rf :refer [reg-sub]]
+            [knowtator.db :as db]))
+
+(defn ->db-map [k]
+  (comp (partial apply zipmap) (juxt (partial map :id) identity) k))
 
 (reg-sub
   ::name
@@ -26,7 +30,7 @@
 
 (reg-sub
   ::profiles
-  (comp vals :profiles))
+  :profiles)
 
 (reg-sub
   ::selected-profile
@@ -40,7 +44,7 @@
 
 (reg-sub
   ::doc-map
-  :docs)
+  (->db-map :docs))
 
 (reg-sub
   ::search-query
@@ -50,8 +54,8 @@
 (reg-sub
   ::doc-contents
   (fn [{:keys [docs]}]
-    (zipmap (keys docs)
-      (map :content (vals docs)))))
+    (zipmap (map :id docs)
+      (map :content docs))))
 
 (reg-sub
   ::selected-content
@@ -68,19 +72,15 @@
 
 (reg-sub
   ::ann-map
-  :anns)
+  (->db-map :anns))
 
 (reg-sub
   ::anns
-  (comp vals :anns))
-
-(reg-sub
-  ::span-map
-  :spans)
+  :anns)
 
 (reg-sub
   ::profile-map
-  :profiles)
+  (->db-map :profiles))
 
 (reg-sub
   ::profile-restriction?
@@ -88,11 +88,11 @@
 
 (reg-sub
   ::spans-with-spanned-text
-  :<- [::doc-map]
-  :<- [::ann-map]
+  :<- [::docs]
+  :<- [::anns]
   :<- [::spans]
-  (fn [[doc-map ann-map spans]]
-    (model/spans-with-spanned-text doc-map ann-map spans)))
+  (fn [[docs anns spans]]
+    (model/spans-with-spanned-text docs anns spans)))
 
 (reg-sub
   ::visual-restriction
@@ -169,8 +169,8 @@
 
 (reg-sub
   ::docs
-  (comp vals :docs))
+  :docs)
 
 (reg-sub
   ::spans
-  (comp vals :spans))
+  :spans)

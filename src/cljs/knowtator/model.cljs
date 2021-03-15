@@ -3,7 +3,8 @@
             [clojure.spec.gen.alpha :as gen]
             [clojure.string :as str]
             [knowtator.specs :as specs]
-            [knowtator.util :as util]))
+            [knowtator.util :as util]
+            [clojure.set :as set]))
 
 (defn ann-color
   [{:keys [profile concept]} profiles]
@@ -269,19 +270,29 @@
   [db restriction coll-id dir]
   (let [coll (->> coll-id
                (get db)
-               vals
                restriction
                (map :id))]
     (update-in db [:selection coll-id] cycle-coll coll dir)))
 
+(defn fn-if
+  [v test-fn when-fn]
+  (cond-> v
+    (test-fn v) when-fn))
+
 (defn mod-span
   [db loc f]
   (let [s (get-in db [:selection :spans])]
-    (update-in db [:spans s] #(let [{:keys [start end] :as new-s} (update % loc f)]
-                                (cond-> new-s
-                                  (< end start) (assoc
-                                                  :start (:end new-s)
-                                                  :end (:start new-s)))))))
+    (update db :spans (fn [spans]
+                        (let [spans (zipmap (map :id spans) spans)]
+                          (-> spans
+                            (assoc s (let [new-span (-> spans
+                                                      (get s)
+                                                      (update loc f))]
+                                       (fn-if new-span
+                                         (comp (partial apply <) (juxt :start :end)) #(set/rename-keys % {:start :end
+                                                                                                 :end   :start}))))
+                            vals))))))
+
 
 #_(let [spans         [{:id :C :start 3 :end 7}
                        {:id :B :start 2 :end 8}
@@ -299,15 +310,17 @@
     (assert (= overlaps true-overlaps) (clojure.data/diff overlaps true-overlaps)))
 
 (defn spans-with-spanned-text
-  [doc-map ann-map spans]
-  (->> spans
-    (map #(let [doc-id (get-in ann-map [(:ann %) :doc])]
-            (assoc % :doc doc-id)))
-    (group-by :doc)
-    (mapcat (fn [[doc-id spans]]
-              (map (fn [{:keys [start end] :as span}]
-                     (let [content (-> doc-map
-                                     (get-in [doc-id :content])
-                                     (subs start end))]
-                       (assoc span :content content)))
-                spans)))))
+  [docs anns spans]
+  (let [ann-map (zipmap (map :id anns) anns)
+        doc-map (zipmap (map :id docs) docs)]
+    (->> spans
+      (map (fn [{:keys [ann] :as span}]
+             (assoc span :doc (get-in ann-map [ann :doc]))))
+      (group-by :doc)
+      (mapcat (fn [[doc-id spans]]
+                (map (fn [{:keys [start end] :as span}]
+                       (let [content (-> doc-map
+                                       (get-in [doc-id :content])
+                                       (subs start end))]
+                         (assoc span :content content)))
+                  spans))))))

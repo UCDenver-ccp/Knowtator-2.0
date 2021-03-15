@@ -69,9 +69,9 @@
                          (>evt [::events/record-selection selection doc-id]))
             :style    {:padding "10px"}}
            (doall
-            (for [paragraph (<sub [::subs/highlighted-text])]
-              ^{:key (str (random-uuid))}
-              [editor-paragraph paragraph]))]])
+             (for [paragraph (<sub [::subs/highlighted-text])]
+               ^{:key (str (random-uuid))}
+               [editor-paragraph paragraph]))]])
 
 (defn annotation-info
   [ann-id]

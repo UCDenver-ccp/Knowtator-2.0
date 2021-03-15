@@ -7,7 +7,7 @@
   ::cycle
   (fn [db [_ coll-id direction]]
     (let [restriction (case coll-id
-                        :spans (comp (partial filter #(model/in-restriction? %  {:doc (get-in db [:selection :docs])}))
+                        :spans (comp (partial filter #(model/in-restriction? % {:doc (get-in db [:selection :docs])}))
                                  (partial model/spans-with-spanned-text (:docs db) (:anns db)))
                         identity)]
       (model/cycle-selection db restriction coll-id direction))))
