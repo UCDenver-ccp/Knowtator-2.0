@@ -283,14 +283,17 @@
   [db loc f]
   (let [s (get-in db [:selection :spans])]
     (update db :spans (fn [spans]
-                        (let [spans (zipmap (map :id spans) spans)]
+                        (let [spans    (zipmap (map :id spans) spans)
+                              new-span (let [new-span (-> spans
+                                                        (get s)
+                                                        (update loc f))]
+                                         (fn-if new-span
+                                           (comp (partial apply <)
+                                             (juxt :end :start))
+                                           #(set/rename-keys % {:start :end
+                                                                :end   :start})))]
                           (-> spans
-                            (assoc s (let [new-span (-> spans
-                                                      (get s)
-                                                      (update loc f))]
-                                       (fn-if new-span
-                                         (comp (partial apply <) (juxt :start :end)) #(set/rename-keys % {:start :end
-                                                                                                 :end   :start}))))
+                            (cond-> s (assoc s new-span))
                             vals))))))
 
 
