@@ -151,7 +151,7 @@
                :md-icon-name "zmdi-minus"
                :on-click #(>evt [::events/remove-selected-doc])]
               [re-com/single-dropdown
-               :choices (<sub [::subs/doc-maps])
+               :choices (<sub [::subs/doc-map])
                :label-fn :id
                :filter-box? true
                :model (<sub [::subs/selected-doc])

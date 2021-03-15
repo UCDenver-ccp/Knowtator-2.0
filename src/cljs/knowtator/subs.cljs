@@ -43,9 +43,8 @@
     (get-in db [:selection :doc])))
 
 (re-frame/reg-sub
-  ::doc-maps
-  (fn [db]
-    (-> db :docs vals)))
+  ::doc-map
+  :docs)
 
 (re-frame/reg-sub
   ::search-query
@@ -207,6 +206,25 @@
   (comp vals :spans))
 
 (re-frame/reg-sub
+  ::spans-with-spanned-text
+  :<- [::doc-map]
+  :<- [::ann-map]
+  :<- [::spans]
+  (fn [[doc-map ann-map spans]]
+    (->> spans
+      (map #(assoc % :doc (get-in ann-map [(:ann %) :doc])))
+      (group-by :doc)
+      (mapcat (fn [[doc-id spans]]
+                (map (fn [{:keys [start end] :as span}]
+                       (assoc span :content
+                         (subs (get-in doc-map [doc-id :content]) start end)))
+                  spans))))))
+
+
+(s/def ::content string?)
+(s/def ::spans-with-spanned-text (s/keys :req-un [:span/end :span/start ::specs/id ::content]))
+
+(re-frame/reg-sub
   ::review-types
   (fn [_ _]
     [{:id    :anns
@@ -214,8 +232,8 @@
       :sub   [::anns]
       :label "Annotations"}
      {:id    :spans
-      :spec  ::specs/span
-      :sub   [::spans]
+      :spec  ::spans-with-spanned-text
+      :sub   [::spans-with-spanned-text]
       :label "Spans"}
      {:id    :docs
       :spec  ::specs/doc
