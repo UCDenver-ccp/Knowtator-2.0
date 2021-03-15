@@ -1,6 +1,5 @@
 (ns spec-test
-  (:require [knowtator.model.specs :refer :all]
-            [clojure.test :refer [is deftest]]
+  (:require [clojure.test :refer [is deftest]]
             [knowtator.model.util]
             [clojure.spec.test.alpha :as stest]))
 
