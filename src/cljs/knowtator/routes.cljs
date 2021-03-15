@@ -2,7 +2,7 @@
   (:require [bidi.bidi :as bidi]
             [knowtator.events :as events]
             [pushy.core :as pushy]
-            [re-frame.core :as re-frame]))
+            [re-frame.core :as rf]))
 
 (defmulti panels identity)
 (defmethod panels :default [] [:div "No panel found for this route."])
@@ -26,7 +26,7 @@
 (defn dispatch
   [route]
   (let [panel (keyword (str (name (:handler route)) "-panel"))]
-    (re-frame/dispatch [::events/set-active-panel panel])))
+    (rf/dispatch [::events/set-active-panel panel])))
 
 (def history
   (pushy/pushy dispatch parse))
@@ -39,7 +39,7 @@
   []
   (pushy/start! history))
 
-(re-frame/reg-fx
+(rf/reg-fx
   :navigate
   (fn [handler]
     (navigate! handler)))

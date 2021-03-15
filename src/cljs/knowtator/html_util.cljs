@@ -1,6 +1,6 @@
 (ns knowtator.html-util
   (:require [goog.object :as gobj]
-            [re-frame.core
+            [re-frame.core :as rf
              :refer
              [->interceptor assoc-coeffect assoc-effect get-coeffect get-effect]]
             ["rangy/lib/rangy-textrange" :as rangy-txt]))
@@ -56,8 +56,8 @@
             (.on node (name on) on-fn))
           node ons))
 
-(def <sub (comp deref re-frame.core/subscribe))
-(def >evt re-frame.core/dispatch)
+(def <sub (comp deref rf/subscribe))
+(def >evt rf/dispatch)
 
 (defn remove-nth
   [v n]

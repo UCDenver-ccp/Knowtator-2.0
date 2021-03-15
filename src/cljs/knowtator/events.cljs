@@ -5,20 +5,20 @@
             [day8.re-frame.undo :as undo :refer [undoable]]
             [knowtator.db :as db]
             [knowtator.model :as model]
-            [re-frame.core :as re-frame]
+            [re-frame.core :as rf :refer [reg-event-db reg-event-fx]]
             [re-pressed.core :as rp]))
 
-(re-frame/reg-event-db
+(reg-event-db
   ::initialize-db
   (fn-traced [_ _]
     db/default-db))
 
-(re-frame/reg-event-fx
+(reg-event-fx
   ::navigate
   (fn-traced [_ [_ handler]]
     {:navigate handler}))
 
-(re-frame/reg-event-fx
+(reg-event-fx
   ::set-active-panel
   (fn-traced [{:keys [db]} [_ active-panel]]
     {:db       (assoc db :active-panel active-panel)
@@ -34,12 +34,12 @@
                  [[{:keyCode 27} ;; escape
                    ]]}]}))
 
-(re-frame/reg-event-db
+(reg-event-db
   ::set-re-pressed-example
   (fn [db [_ value]]
     (assoc db :re-pressed-example value)))
 
-(re-frame/reg-event-db
+(reg-event-db
   ::add-node
   (fn [db _]
     (update-in db [:graph :nodes] conj {:id (count (lazy-cat
@@ -47,7 +47,7 @@
                                                      (get-in db [:graph :edges])))})))
 
 
-(re-frame/reg-event-fx
+(reg-event-fx
   ::import-owl
   (fn [state _]
     (assoc state :http-xhiro {:method          :get
@@ -57,7 +57,7 @@
                               :on-success      [:add-ontology]
                               :on-failure      [:handle-failure]})))
 
-(re-frame/reg-event-db
+(reg-event-db
   ::select-span
   (fn [db [_ loc doc-id]]
     (let [anns             (:anns db)
@@ -71,29 +71,29 @@
         (assoc-in [:selection :span] id)
         (assoc-in [:selection :ann] ann)))))
 
-(re-frame/reg-event-fx
+(reg-event-fx
   ::record-selection
   (fn [{:keys [db]} [_ {:keys [start end] :as text-range} doc-id]]
     (cond-> {:db (update db :selection merge text-range)}
       (= start end) (assoc :dispatch [::select-span start doc-id]))))
 
-(re-frame/reg-event-db
+(reg-event-db
   ::select-profile
   (fn [db [_ profile-id]]
     (assoc-in db [:selection :profile] profile-id)))
 
-(re-frame/reg-event-db
+(reg-event-db
   ::toggle-profile-restriction
   (fn [db]
     (update-in db [:selection :profile-restriction] not)))
 
-(re-frame/reg-event-db
+(reg-event-db
   ::select-doc
   (fn [db [_ doc-id]]
     (assoc-in db [:selection :doc] doc-id)))
 
 
-(re-frame/reg-event-db
+(reg-event-db
   ::add-doc
   (undoable "Adding document")
   (fn [db [_]]
@@ -103,7 +103,7 @@
                                    :content (str "I'm called " doc-id)})
         (assoc-in [:selection :doc] doc-id)))))
 
-(re-frame/reg-event-db
+(reg-event-db
   ::add-ann
   (undoable "Adding annotation")
   (fn [db [_]]
@@ -122,7 +122,7 @@
         (assoc-in [:selection :ann] ann-id)
         (assoc-in [:selection :span] span-id)))))
 
-(re-frame/reg-event-db
+(reg-event-db
   ::remove-selected-doc
   (undoable "Removing document")
   (fn [db [_]]
@@ -132,7 +132,7 @@
                                     :docs
                                     keys
                                     first)))))
-(re-frame/reg-event-db
+(reg-event-db
   ::remove-selected-ann
   (undoable "Removing annotation")
   (fn [db [_]]
@@ -143,43 +143,43 @@
       (assoc-in [:selection :span] nil))))
 
 
-(re-frame/reg-event-db
+(reg-event-db
   ::select-prev-doc
   #(model/cycle-selection % :doc :docs :prev))
 
-(re-frame/reg-event-db
+(reg-event-db
   ::select-next-doc
   #(model/cycle-selection % :doc :docs :next))
 
-(re-frame/reg-event-db
+(reg-event-db
   ::select-prev-span
   #(model/cycle-selection % :span :spans :prev))
 
-(re-frame/reg-event-db
+(reg-event-db
   ::select-next-span
   #(model/cycle-selection % :span :spans :next))
 
-(re-frame/reg-event-db
+(reg-event-db
   ::grow-selected-span-start
   (undoable "Growing span start")
   #(model/mod-span % :start dec))
 
-(re-frame/reg-event-db
+(reg-event-db
   ::shrink-selected-span-start
   (undoable "Shrinking span start")
   #(model/mod-span % :start inc))
 
-(re-frame/reg-event-db
+(reg-event-db
   ::shrink-selected-span-end
   (undoable "Shrinking span end")
   #(model/mod-span % :end dec))
 
-(re-frame/reg-event-db
+(reg-event-db
   ::grow-selected-span-end
   (undoable "Growing span end")
   #(model/mod-span % :end inc))
 
-(re-frame/reg-event-db
+(reg-event-db
   ::find-in-selected-doc
   (fn [db]
     (let [doc-id            (get-in db [:selection :doc])
@@ -200,19 +200,19 @@
                                             :doc doc-id})
         (assoc-in [:search :un-searched?] true)))))
 
-(re-frame/reg-event-fx
+(reg-event-fx
   ::update-search-text
   (fn [{:keys [db]} [_ text]]
     {:db       (assoc-in db [:search :query] text)
      :dispatch [::find-in-selected-doc text]}))
 
-(re-frame/reg-event-db
+(reg-event-db
   ::done-searching
   (fn [db]
     (assoc-in db [:search :un-searched?] false)))
 
 
-(re-frame/reg-event-db
+(reg-event-db
   ::set-concept-color
   (undoable "Setting color for concept")
   (fn [db [_ color]]
@@ -222,7 +222,7 @@
                   (get-in db [:selection :concept])]
       color)))
 
-(re-frame/reg-event-db
+(reg-event-db
   ::select-review-type
   (fn [db [_ id]]
     (assoc-in db [:selection :review-type] id)))

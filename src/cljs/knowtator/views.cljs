@@ -9,8 +9,7 @@
             [re-com.core :as re-com :refer [at]]
             [re-frame-datatable.core :as dt]
             [re-frame.core :as rf]
-            [reagent.core :as r]
-            [re-frame.core :as re-frame]))
+            [reagent.core :as r]))
 
 (defn display-re-pressed-example []
   (let [re-pressed-example (<sub [::subs/re-pressed-example])]
