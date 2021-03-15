@@ -68,8 +68,8 @@
                              vals
                              first)]
       (-> db
-        (assoc-in [:selection :span] id)
-        (assoc-in [:selection :ann] ann)))))
+        (assoc-in [:selection :spans] id)
+        (assoc-in [:selection :anns] ann)))))
 
 (reg-event-fx
   ::record-selection
@@ -80,7 +80,7 @@
 (reg-event-db
   ::find-in-selected-doc
   (fn [db]
-    (let [doc-id            (get-in db [:selection :doc])
+    (let [doc-id            (get-in db [:selection :docs])
           doc               (get-in db [:docs doc-id :content])
           text              (get-in db [:search :query])
           last-search-start (get-in db [:spans :last-search-span :start])
@@ -114,7 +114,7 @@
   (undoable "Setting color for concept")
   (fn [db [_ color]]
     (assoc-in db [:profiles
-                  (get-in db [:selection :profile])
+                  (get-in db [:selection :profiles])
                   :colors
-                  (get-in db [:selection :concept])]
+                  (get-in db [:selection :concepts])]
       color)))

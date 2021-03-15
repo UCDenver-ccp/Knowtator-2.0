@@ -4,20 +4,9 @@
             [re-frame.core :refer [reg-event-db]]))
 
 (reg-event-db
-  ::select-prev-doc
-  #(model/cycle-selection % :doc :docs :prev))
-
-(reg-event-db
-  ::select-next-doc
-  #(model/cycle-selection % :doc :docs :next))
-
-(reg-event-db
-  ::select-prev-span
-  #(model/cycle-selection % :span :spans :prev))
-
-(reg-event-db
-  ::select-next-span
-  #(model/cycle-selection % :span :spans :next))
+  ::cycle
+  (fn [db [_ coll-id direction]]
+    (model/cycle-selection db coll-id direction)))
 
 (reg-event-db
   ::grow-selected-span-start
@@ -42,12 +31,12 @@
 (reg-event-db
   ::select-doc
   (fn [db [_ doc-id]]
-    (assoc-in db [:selection :doc] doc-id)))
+    (assoc-in db [:selection :docs] doc-id)))
 
 (reg-event-db
   ::select-profile
   (fn [db [_ profile-id]]
-    (assoc-in db [:selection :profile] profile-id)))
+    (assoc-in db [:selection :profiles] profile-id)))
 
 (reg-event-db
   ::toggle-profile-restriction
@@ -62,43 +51,43 @@
       (-> db
         (assoc-in [:docs doc-id]  {:id      doc-id
                                    :content (str "I'm called " doc-id)})
-        (assoc-in [:selection :doc] doc-id)))))
+        (assoc-in [:selection :docs] doc-id)))))
 
 (reg-event-db
   ::add-ann
   (undoable "Adding annotation")
   (fn [db [_]]
-    (let [span-id                                 (model/unique-id db :spans "s" (-> db :spans count))
-          ann-id                                  (model/unique-id db :anns "a" (-> db :anns count))
-          {:keys [profile concept doc end start]} (:selection db)]
+    (let [span-id                                    (model/unique-id db :spans "s" (-> db :spans count))
+          ann-id                                     (model/unique-id db :anns "a" (-> db :anns count))
+          {:keys [profiles concepts docs end start]} (:selection db)]
       (-> db
         (assoc-in [:anns ann-id]  {:id      ann-id
-                                   :profile profile
-                                   :concept concept
-                                   :doc     doc})
+                                   :profile profiles
+                                   :concept concepts
+                                   :doc     docs})
         (assoc-in [:spans span-id] {:id    span-id
                                     :ann   ann-id
                                     :end   end
                                     :start start})
-        (assoc-in [:selection :ann] ann-id)
-        (assoc-in [:selection :span] span-id)))))
+        (assoc-in [:selection :anns] ann-id)
+        (assoc-in [:selection :spans] span-id)))))
 
 (reg-event-db
   ::remove-selected-doc
   (undoable "Removing document")
   (fn [db [_]]
     (-> db
-      (update :docs dissoc (get-in db [:selection :doc]))
-      (assoc-in [:selection :doc] (-> db
-                                    :docs
-                                    keys
-                                    first)))))
+      (update :docs dissoc (get-in db [:selection :docs]))
+      (assoc-in [:selection :docs] (-> db
+                                     :docs
+                                     keys
+                                     first)))))
 (reg-event-db
   ::remove-selected-ann
   (undoable "Removing annotation")
   (fn [db [_]]
     (-> db
-      (update :anns dissoc (get-in db [:selection :ann]))
-      (update :spans dissoc (get-in db [:selection :span]))
-      (assoc-in [:selection :ann] nil)
-      (assoc-in [:selection :span] nil))))
+      (update :anns dissoc (get-in db [:selection :anns]))
+      (update :spans dissoc (get-in db [:selection :spans]))
+      (assoc-in [:selection :anns] nil)
+      (assoc-in [:selection :spans] nil))))

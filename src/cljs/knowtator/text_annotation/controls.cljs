@@ -29,10 +29,10 @@
   [re-com/h-box
    :children [[re-com/md-circle-icon-button
                :md-icon-name "zmdi-arrow-left"
-               :on-click #(>evt [::evts/select-prev-doc])]
+               :on-click #(>evt [::evts/cycle :docs :prev])]
               [re-com/md-circle-icon-button
                :md-icon-name "zmdi-arrow-right"
-               :on-click #(>evt [::evts/select-next-doc])]
+               :on-click #(>evt [::evts/cycle :docs :next])]
               [re-com/md-circle-icon-button
                :md-icon-name "zmdi-plus"
                :on-click #(>evt [::evts/add-doc])]
@@ -61,10 +61,10 @@
   [re-com/h-box
    :children [[re-com/md-circle-icon-button
                :md-icon-name "zmdi-arrow-left"
-               :on-click #(>evt [::evts/select-prev-span])]
+               :on-click #(>evt [::evts/cycle :spans :prev])]
               [re-com/md-circle-icon-button
                :md-icon-name "zmdi-arrow-right"
-               :on-click #(>evt [::evts/select-next-span])]
+               :on-click #(>evt [::evts/cycle :spans :next])]
               [re-com/md-circle-icon-button
                :md-icon-name "zmdi-plus"
                :on-click #(>evt [::evts/grow-selected-span-start])]

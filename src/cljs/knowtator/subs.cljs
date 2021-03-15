@@ -31,12 +31,12 @@
 (reg-sub
   ::selected-profile
   (fn [db]
-    (get-in db [:selection :profile])))
+    (get-in db [:selection :profiles])))
 
 (reg-sub
   ::selected-doc
   (fn [db]
-    (get-in db [:selection :doc])))
+    (get-in db [:selection :docs])))
 
 (reg-sub
   ::doc-map
@@ -124,7 +124,7 @@
 
 (reg-sub
   ::selected-span-id
-  #(get-in % [:selection :span]))
+  #(get-in % [:selection :spans]))
 
 (reg-sub
   ::selected-span?
@@ -138,7 +138,7 @@
 
 (reg-sub
   ::selected-ann
-  #(get-in % [:selection :ann]))
+  #(get-in % [:selection :anns]))
 
 (reg-sub
   ::ann-info
@@ -147,7 +147,7 @@
 
 (reg-sub
   ::selected-concept
-  #(get-in % [:selection :concept]))
+  #(get-in % [:selection :concepts]))
 
 (reg-sub
   ::selected-color

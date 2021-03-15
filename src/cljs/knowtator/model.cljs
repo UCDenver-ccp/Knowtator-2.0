@@ -290,9 +290,9 @@
       id)))
 
 (defn cycle-coll
-  [id db k dir]
+  [id coll dir]
   ;; TODO sorting of spans needs to be handled by start and end locs
-  (let [docs (-> db k keys sort vec)
+  (let [docs (->> coll sort vec)
         f    (case dir
                :next #(let [val (inc %)]
                         (if (<= (count docs) val)
@@ -308,12 +308,16 @@
       (get docs))))
 
 (defn cycle-selection
-  [db sel col dir]
-  (update-in db [:selection sel] cycle-coll db col dir))
+  [db coll-id dir]
+  (let [coll (->> coll-id
+               (get db)
+               vals
+               (map :id))]
+    (update-in db [:selection coll-id] cycle-coll coll dir)))
 
 (defn mod-span
   [db loc f]
-  (let [s (get-in db [:selection :span])]
+  (let [s (get-in db [:selection :spans])]
     (update-in db [:spans s] #(let [{:keys [start end] :as new-s} (update % loc f)]
                                 (cond-> new-s
                                   (< end start) (assoc
