@@ -25,9 +25,8 @@
     (:graph db)))
 
 (reg-sub
-  ::profile-maps
-  (fn [db]
-    (-> db :profiles vals)))
+  ::profiles
+  (comp vals :profiles))
 
 (reg-sub
   ::selected-profile
