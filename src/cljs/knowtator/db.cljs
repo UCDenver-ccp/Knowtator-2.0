@@ -31,7 +31,11 @@
               {:id    :s5
                :ann   :a1
                :start 124
-               :end   132}]
+               :end   132}
+              {:id    :s6
+               :ann   :a3
+               :start 0
+               :end   1}]
    :anns     [{:id      :a1
                :profile :p1
                :concept :c1
@@ -39,7 +43,11 @@
               {:id      :a2
                :profile :p2
                :concept :c2
-               :doc     :d1}]
+               :doc     :d1}
+              {:id      :a3
+               :profile :p1
+               :concept :c1
+               :doc     :d2}]
    :profiles [{:id     :p1
                :colors {:c1 "blue"
                         :c2 "green"}}

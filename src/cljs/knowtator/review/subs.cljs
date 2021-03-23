@@ -4,14 +4,25 @@
    [knowtator.specs :as specs]
    [knowtator.util :as util]
    [re-frame.core :as rf :refer [reg-sub]]
-   [knowtator.subs :as subs]))
+   [knowtator.subs :as subs]
+   [knowtator.model :as model]))
+
+(reg-sub
+  ::restricted-anns
+  :<- [::subs/anns]
+  :<- [::review-filter]
+  (fn [[anns filt] _]
+    (println filt)
+    (->> anns
+      (remove #(when (seq filt)
+                 ((complement model/in-restriction?) % {:doc (keyword filt)}))))))
 
 (reg-sub
   ::review-types
   (fn [_ _]
     [{:id    :anns
       :spec  ::specs/ann
-      :sub   [::subs/anns]
+      :sub   [::restricted-anns]
       :label "Annotations"}
      {:id    :spans
       :spec  ::specs/spans-with-spanned-text
