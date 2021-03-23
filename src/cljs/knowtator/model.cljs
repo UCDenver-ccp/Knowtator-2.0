@@ -170,7 +170,12 @@
 (defn in-restriction?
   [m restriction]
   (every? (fn [[k v]]
-            (= (get m k) v))
+            (if (seq v)
+              ((->> v
+                 (remove nil?)
+                 set)
+               (get m k))
+              true))
     restriction))
 
 (s/fdef in-restriction?

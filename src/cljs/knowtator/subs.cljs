@@ -100,8 +100,8 @@
   :<- [::selected-profile]
   :<- [::profile-restriction?]
   (fn [[doc-id profile-id profile-restricted?]]
-    (cond-> {:doc doc-id}
-      profile-restricted? (assoc :profile profile-id))))
+    (cond-> {:doc [doc-id]}
+      profile-restricted? (assoc :profile [profile-id]))))
 
 (reg-sub
   ::visible-spans

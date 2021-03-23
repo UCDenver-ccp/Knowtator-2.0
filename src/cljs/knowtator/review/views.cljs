@@ -3,17 +3,30 @@
             [re-frame-datatable.core :as dt]
             [knowtator.review.subs :as subs]
             [knowtator.review.events :as evts]
-            [re-com.core :as re-com]))
+            [re-com.core :as re-com]
+            [knowtator.util :as util]))
 
 (defn filterer []
-  [re-com/h-box
-   :children [[re-com/single-dropdown
-               :model (<sub [::subs/selected-review-filter-type])
-               :choices (<sub [::subs/review-filter-types])
-               :on-change #(>evt [::evts/select-review-filter-type %])]
-              [re-com/input-text
-               :model (<sub [::subs/review-filter-string])
-               :on-change #(>evt [::evts/set-review-filter %])]]])
+  [re-com/v-box
+   :children
+   (cons
+     [re-com/h-box
+      :children [[re-com/single-dropdown
+                  :model (<sub [::subs/selected-review-filter-type])
+                  :choices (<sub [::subs/review-filter-types])
+                  :on-change #(>evt [::evts/select-review-filter-type %])]
+                 [re-com/input-text
+                  :model ""
+                  :on-change #(>evt [::evts/add-review-filter %])]]]
+     (for [[filt-type filt-items] (<sub [::subs/review-filter])
+           filt-item-i            (range (count filt-items))]
+       [re-com/h-box
+        :children [[re-com/label
+                    :label (get-in (util/map-with-key :id (<sub [::subs/review-filter-types]))
+                             [filt-type :label])]
+                   [re-com/input-text
+                    :model (<sub [::subs/review-filter-item-string filt-type filt-item-i])
+                    :on-change #(>evt [::evts/update-review-filter-item % filt-type filt-item-i])]]]))])
 
 (defn chooser []
   [re-com/single-dropdown

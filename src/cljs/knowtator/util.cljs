@@ -38,3 +38,8 @@
   (let [x (if (coll? x) x (hash-set x))
         y (if (coll? y) y (hash-set y))]
     (into x y)))
+
+(defn vec-remove
+  "remove elem in coll"
+  [coll pos]
+  (vec (concat (subvec coll 0 pos) (subvec coll (inc pos)))))

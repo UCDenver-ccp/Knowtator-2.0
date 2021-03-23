@@ -76,7 +76,17 @@
   :<- [::review-filter]
   :<- [::selected-review-filter-type]
   (fn [[filt filt-type] _]
-    (when-let [filt (get-in filt [filt-type])]
+    (when-let [filt (first (get-in filt [filt-type]))]
+      (when (keyword? filt)
+        (-> filt
+          name
+          str)))))
+(reg-sub
+  ::review-filter-item-string
+  :<- [::review-filter]
+  :<- [::selected-review-filter-type]
+  (fn [[filt] [_ filt-type filt-item-i]]
+    (when-let [filt (get-in filt [filt-type filt-item-i])]
       (when (keyword? filt)
         (-> filt
           name
