@@ -14,8 +14,8 @@
   (fn [[anns filt] _]
     (println filt)
     (->> anns
-      (remove #(when (seq filt)
-                 ((complement model/in-restriction?) % {:doc (keyword filt)}))))))
+      (remove #(when filt
+                 ((complement model/in-restriction?) % filt))))))
 
 (reg-sub
   ::review-types
@@ -70,3 +70,31 @@
   ::review-filter
   (fn [db _]
     (get-in db [:selection :review-filter])))
+
+(reg-sub
+  ::review-filter-string
+  :<- [::review-filter]
+  :<- [::selected-review-filter-type]
+  (fn [[filt filt-type] _]
+    (when-let [filt (get-in filt [filt-type])]
+      (when (keyword? filt)
+        (-> filt
+          name
+          str)))))
+
+(reg-sub
+  ::review-filter-types
+  (fn [_ _]
+    [{:id    :doc
+      :label "Document"}
+     {:id    :ann
+      :label "Annotation"}
+     {:id    :span
+      :label "Span"}
+     {:id    :profile
+      :label "Profile"}]))
+
+(reg-sub
+  ::selected-review-filter-type
+  (fn [db _]
+    (get-in db [:selection :review-filter-type])))

@@ -6,9 +6,14 @@
             [re-com.core :as re-com]))
 
 (defn filterer []
-  [re-com/input-text
-   :model (<sub [::subs/review-filter])
-   :on-change #(>evt [::evts/set-review-filter %])])
+  [re-com/h-box
+   :children [[re-com/single-dropdown
+               :model (<sub [::subs/selected-review-filter-type])
+               :choices (<sub [::subs/review-filter-types])
+               :on-change #(>evt [::evts/select-review-filter-type %])]
+              [re-com/input-text
+               :model (<sub [::subs/review-filter-string])
+               :on-change #(>evt [::evts/set-review-filter %])]]])
 
 (defn chooser []
   [re-com/single-dropdown
