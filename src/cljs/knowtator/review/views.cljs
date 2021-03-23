@@ -5,6 +5,11 @@
             [knowtator.review.events :as evts]
             [re-com.core :as re-com]))
 
+(defn filterer []
+  [re-com/input-text
+   :model (<sub [::subs/review-filter])
+   :on-change #(>evt [::evts/set-review-filter %])])
+
 (defn chooser []
   [re-com/single-dropdown
    :choices (<sub [::subs/review-types])

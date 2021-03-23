@@ -54,3 +54,8 @@
       :sub
       rf/subscribe
       deref)))
+
+(reg-sub
+  ::review-filter
+  (fn [db _]
+    (get-in db [:selection :review-filter])))

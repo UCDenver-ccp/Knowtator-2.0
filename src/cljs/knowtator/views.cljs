@@ -157,7 +157,9 @@
     :src   (at)
     :label "Review"
     :level :level1]
-   [review/chooser]
+   [re-com/h-box
+    :children [[review/chooser]
+               [review/filterer]]]
    [review/table]])
 
 (defmethod routes/panels :review-panel [] [review-panel])
