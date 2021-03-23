@@ -36,4 +36,4 @@
 
 
 (s/def ::content string?)
-(s/def ::spans-with-spanned-text (s/keys :req-un [:span/end :span/start ::id ::content]))
+(s/def ::spans-with-spanned-text (s/keys :req-un [::id :span/ann :span/start :span/end ::content]))
