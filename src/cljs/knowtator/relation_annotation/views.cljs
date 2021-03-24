@@ -3,7 +3,6 @@
             [knowtator.relation-annotation.events :as evts]
             [knowtator.relation-annotation.subs :as subs]
             [knowtator.util :as util :refer [<sub >evt]]
-            [re-frame.core :as rf]
             [reagent.core :as r]))
 
 (def visjs-graph (aget rgv "default"))
@@ -23,9 +22,11 @@
 
 (defn graph []
   [vis :relation-annotation-graph [::subs/graph]
-   :options {:layout  {:hierarchical false}
-             :edges   {:color "#000000"}
-             :physics (<sub [::subs/graph-physics])}
+   :options {:layout       {:hierarchical false}
+             :edges        {:color "#000000"}
+             :physics      (<sub [::subs/graph-physics])
+             :interaction  {:hover true}
+             :manipulation {:enabled true}}
    :events  {:click        (fn [{:keys                   [nodes]
                                 {{:keys [x y]} :canvas} :pointer}]
                              (>evt [::evts/toggle-node-physics (first nodes) x y]))
