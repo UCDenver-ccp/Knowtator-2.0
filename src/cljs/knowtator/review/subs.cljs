@@ -7,16 +7,14 @@
    [knowtator.subs :as subs]
    [knowtator.model :as model]))
 
-(reg-sub
-  ::restricted-anns
+(reg-sub ::restricted-anns
   :<- [::subs/anns]
   (fn [anns [_ filt-table]]
     (let [filts @(rf/subscribe filt-table)]
       (->> anns
         (remove #((complement model/in-restriction?) % filts))))))
 
-(reg-sub
-  ::review-types
+(reg-sub ::review-types
   (fn [_ _]
     [{:id    :anns
       :spec  ::specs/ann
@@ -31,20 +29,17 @@
       :sub   [::subs/docs]
       :label "Documents"}]))
 
-(reg-sub
-  ::selected-review-type
+(reg-sub ::selected-review-type
   (fn [db _]
     (get-in db [:selection :review-type])))
 
-(reg-sub
-  ::review-type-info
+(reg-sub ::review-type-info
   :<- [::selected-review-type]
   :<- [::review-types]
   (fn [[review-type review-types]]
     (get (util/map-with-key :id review-types) review-type)))
 
-(reg-sub
-  ::selected-review-columns
+(reg-sub ::selected-review-columns
   :<- [::review-type-info]
   (fn [info]
     (when (some? info)
@@ -55,8 +50,7 @@
         last
         (map name)))))
 
-(reg-sub
-  ::values-to-review
+(reg-sub ::values-to-review
   :<- [::review-type-info]
   (fn [info [_ filter-table]]
     (-> info
@@ -65,21 +59,18 @@
       rf/subscribe
       deref)))
 
-(reg-sub
-  ::review-filters
+(reg-sub ::review-filters
   (fn [db _]
     (vals (get-in db [:selection :review-filters]))))
 
-(reg-sub
-  ::flattened-review-filters
+(reg-sub ::flattened-review-filters
   :<- [::review-filters]
   (fn [filts _]
     (for [filt filts
           item (:filter-values filt)]
       (assoc filt :item item))))
 
-(reg-sub
-  ::review-filter-types
+(reg-sub ::review-filter-types
   (fn [_ _]
     [{:id    :doc
       :label "Document"}
@@ -90,20 +81,17 @@
      {:id    :profile
       :label "Profile"}]))
 
-(reg-sub
-  ::review-filter-type
+(reg-sub ::review-filter-type
   :<- [::review-filter-types]
   (fn [types [_ id]]
     (->> types
       (util/map-with-key :id)
       id)))
 
-(reg-sub
-  ::selected-review-filter-type
+(reg-sub ::selected-review-filter-type
   (fn [db _]
     (get-in db [:selection :review-filter-type])))
 
-(reg-sub
-  ::show-filters
+(reg-sub ::show-filters
   (fn [db _]
     (get-in db [:selection :show-filters])))

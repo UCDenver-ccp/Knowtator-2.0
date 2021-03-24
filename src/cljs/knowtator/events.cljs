@@ -8,18 +8,15 @@
             [re-frame.core :as rf :refer [reg-event-db reg-event-fx]]
             [re-pressed.core :as rp]))
 
-(reg-event-db
-  ::initialize-db
+(reg-event-db ::initialize-db
   (fn-traced [_ _]
     db/default-db))
 
-(reg-event-fx
-  ::navigate
+(reg-event-fx ::navigate
   (fn-traced [_ [_ handler]]
     {:navigate handler}))
 
-(reg-event-fx
-  ::set-active-panel
+(reg-event-fx ::set-active-panel
   (fn-traced [{:keys [db]} [_ active-panel]]
     {:db       (assoc db :active-panel active-panel)
      :dispatch [::rp/set-keydown-rules
@@ -34,13 +31,11 @@
                  [[{:keyCode 27} ;; escape
                    ]]}]}))
 
-(reg-event-db
-  ::set-re-pressed-example
+(reg-event-db ::set-re-pressed-example
   (fn [db [_ value]]
     (assoc db :re-pressed-example value)))
 
-(reg-event-fx
-  ::import-owl
+(reg-event-fx ::import-owl
   (fn [state _]
     (assoc state :http-xhiro {:method          :get
                               :uri             "/ontology"
@@ -49,8 +44,7 @@
                               :on-success      [:add-ontology]
                               :on-failure      [:handle-failure]})))
 
-(reg-event-db
-  ::select-span
+(reg-event-db ::select-span
   (fn [db [_ loc doc-id]]
     (let [{:keys [id ann]} (->> db
                              :spans
@@ -62,14 +56,12 @@
         (assoc-in [:selection :spans] id)
         (assoc-in [:selection :anns] ann)))))
 
-(reg-event-fx
-  ::record-selection
+(reg-event-fx ::record-selection
   (fn [{:keys [db]} [_ {:keys [start end] :as text-range} doc-id]]
     (cond-> {:db (update db :selection merge text-range)}
       (= start end) (assoc :dispatch [::select-span start doc-id]))))
 
-(reg-event-db
-  ::find-in-selected-doc
+(reg-event-db ::find-in-selected-doc
   (fn [db]
     (let [doc-id            (get-in db [:selection :docs])
           doc               (get-in db [:docs doc-id :content])
@@ -89,19 +81,16 @@
                                             :doc doc-id})
         (assoc-in [:search :un-searched?] true)))))
 
-(reg-event-fx
-  ::update-search-text
+(reg-event-fx ::update-search-text
   (fn [{:keys [db]} [_ text]]
     {:db       (assoc-in db [:search :query] text)
      :dispatch [::find-in-selected-doc text]}))
 
-(reg-event-db
-  ::done-searching
+(reg-event-db ::done-searching
   (fn [db]
     (assoc-in db [:search :un-searched?] false)))
 
-(reg-event-db
-  ::set-concept-color
+(reg-event-db ::set-concept-color
   (undoable "Setting color for concept")
   (fn [db [_ color]]
     (assoc-in db [:profiles
