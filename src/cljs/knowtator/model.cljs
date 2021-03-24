@@ -169,12 +169,9 @@
 
 (defn in-restriction?
   [m restriction]
-  (every? (fn [[k v]]
-            (if (seq v)
-              ((->> v
-                 (remove nil?)
-                 set)
-               (get m k))
+  (every? (fn [{:keys [filter-type filter-values]}]
+            (if (seq filter-values)
+              (filter-values (get m filter-type))
               true))
     restriction))
 

@@ -10,12 +10,11 @@
 (reg-sub
   ::restricted-anns
   :<- [::subs/anns]
-  :<- [::review-filter]
+  :<- [::review-filters]
   (fn [[anns filt] _]
     (println filt)
     (->> anns
-      (remove #(when filt
-                 ((complement model/in-restriction?) % filt))))))
+      (remove #((complement model/in-restriction?) % filt)))))
 
 (reg-sub
   ::review-types
@@ -67,30 +66,17 @@
       deref)))
 
 (reg-sub
-  ::review-filter
+  ::review-filters
   (fn [db _]
-    (get-in db [:selection :review-filter])))
+    (vals (get-in db [:selection :review-filters]))))
 
 (reg-sub
-  ::review-filter-string
-  :<- [::review-filter]
-  :<- [::selected-review-filter-type]
-  (fn [[filt filt-type] _]
-    (when-let [filt (first (get-in filt [filt-type]))]
-      (when (keyword? filt)
-        (-> filt
-          name
-          str)))))
-(reg-sub
-  ::review-filter-item-string
-  :<- [::review-filter]
-  :<- [::selected-review-filter-type]
-  (fn [[filt] [_ filt-type filt-item-i]]
-    (when-let [filt (get-in filt [filt-type filt-item-i])]
-      (when (keyword? filt)
-        (-> filt
-          name
-          str)))))
+  ::flattened-review-filters
+  :<- [::review-filters]
+  (fn [filts _]
+    (for [filt filts
+          item (:filter-values filt)]
+      (assoc filt :item item))))
 
 (reg-sub
   ::review-filter-types
@@ -103,6 +89,14 @@
       :label "Span"}
      {:id    :profile
       :label "Profile"}]))
+
+(reg-sub
+  ::review-filter-type
+  :<- [::review-filter-types]
+  (fn [types [_ id]]
+    (->> types
+      (util/map-with-key :id)
+      id)))
 
 (reg-sub
   ::selected-review-filter-type

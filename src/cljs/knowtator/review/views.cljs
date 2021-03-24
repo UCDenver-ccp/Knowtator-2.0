@@ -9,24 +9,27 @@
 (defn filterer []
   [re-com/v-box
    :children
-   (cons
-     [re-com/h-box
-      :children [[re-com/single-dropdown
-                  :model (<sub [::subs/selected-review-filter-type])
-                  :choices (<sub [::subs/review-filter-types])
-                  :on-change #(>evt [::evts/select-review-filter-type %])]
-                 [re-com/input-text
-                  :model ""
-                  :on-change #(>evt [::evts/add-review-filter %])]]]
-     (for [[filt-type filt-items] (<sub [::subs/review-filter])
-           filt-item-i            (range (count filt-items))]
-       [re-com/h-box
-        :children [[re-com/label
-                    :label (get-in (util/map-with-key :id (<sub [::subs/review-filter-types]))
-                             [filt-type :label])]
-                   [re-com/input-text
-                    :model (<sub [::subs/review-filter-item-string filt-type filt-item-i])
-                    :on-change #(>evt [::evts/update-review-filter-item % filt-type filt-item-i])]]]))])
+   [[re-com/h-box
+     :children [[re-com/single-dropdown
+                 :model (<sub [::subs/selected-review-filter-type])
+                 :choices (<sub [::subs/review-filter-types])
+                 :on-change #(>evt [::evts/select-review-filter-type %])]
+                [re-com/input-text
+                 :model ""
+                 :on-change #(>evt [::evts/add-review-filter %])]]]
+    [dt/datatable :filter-table [::subs/flattened-review-filters]
+     [{::dt/column-key   [:filter-type]
+       ::dt/sorting      {::dt/enabled? true}
+       ::dt/column-label "Type"
+       ::dt/render-fn    (fn [val]
+                           (:label (<sub [::subs/review-filter-type val])))}
+      {::dt/column-key   [:item]
+       ::dt/column-label "Value"
+       ::dt/render-fn    (fn [val {:keys [filter-type]}]
+                           [re-com/input-text
+                            :model (str (name val))
+                            :on-change #(>evt [::evts/update-review-filter-item val % filter-type])])}]
+     {::dt/table-classes ["table" "ui" "celled"]}]]])
 
 (defn chooser []
   [re-com/single-dropdown
@@ -42,7 +45,7 @@
           {::dt/column-key   [(keyword col)]
            ::dt/sorting      {::dt/enabled? true}
            ::dt/column-label col})
-        {::dt/table-classes    ["ui" "table"]
+        {::dt/table-classes    ["ui" "table" "celled"]
          ::dt/selection        {::dt/enabled? true}
          ::dt/footer-component (fn []
                                  [:tr

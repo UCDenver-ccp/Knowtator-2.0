@@ -2,7 +2,8 @@
   (:require
    [re-frame.core :refer [reg-event-db]]
    [cljs.reader :as reader]
-   [knowtator.util :as util]))
+   [knowtator.util :as util]
+   [clojure.set :as set]))
 
 (reg-event-db
   ::select-review-type
@@ -21,14 +22,12 @@
           filt      (reader/read-string filt-str)]
       (->> filt
         keyword
-        (update-in db [:selection :review-filter filt-type] (fnil conj []))))))
+        (update-in db [:selection :review-filters filt-type] (fnil update {:filter-type filt-type}) :filter-values (fnil conj #{}))))))
 
 (reg-event-db
   ::update-review-filter-item
-  (fn [db [_ filt-str filt-type filt-item-i]]
-    (let [filt (reader/read-string filt-str)]
-      (if filt
-        (->> filt
-          keyword
-          (assoc-in db [:selection :review-filter filt-type filt-item-i]))
-        (update-in db [:selection :review-filter filt-type] util/vec-remove filt-item-i)))))
+  (fn [db [_ old-val new-val-str filt-type]]
+    (let [new-val (reader/read-string new-val-str)]
+      (if new-val
+        (update-in db [:selection :review-filters filt-type :filter-values] set/rename-keys {old-val (keyword new-val)})
+        (update-in db [:selection :review-filters filt-type :filter-values] disj old-val)))))
