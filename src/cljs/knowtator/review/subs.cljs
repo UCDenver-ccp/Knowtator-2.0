@@ -10,11 +10,10 @@
 (reg-sub
   ::restricted-anns
   :<- [::subs/anns]
-  :<- [::review-filters]
-  (fn [[anns filt] _]
-    (println filt)
-    (->> anns
-      (remove #((complement model/in-restriction?) % filt)))))
+  (fn [anns [_ filt-table]]
+    (let [filts @(rf/subscribe filt-table)]
+      (->> anns
+        (remove #((complement model/in-restriction?) % filts))))))
 
 (reg-sub
   ::review-types
@@ -59,9 +58,10 @@
 (reg-sub
   ::values-to-review
   :<- [::review-type-info]
-  (fn [info]
+  (fn [info [_ filter-table]]
     (-> info
       :sub
+      (conj filter-table)
       rf/subscribe
       deref)))
 

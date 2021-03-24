@@ -1,10 +1,9 @@
 (ns knowtator.review.views
-  (:require [knowtator.util :refer [<sub >evt]]
-            [re-frame-datatable.core :as dt]
+  (:require [knowtator.review.events :as evts]
             [knowtator.review.subs :as subs]
-            [knowtator.review.events :as evts]
+            [knowtator.util :refer [<sub >evt]]
             [re-com.core :as re-com]
-            [knowtator.util :as util]))
+            [re-frame-datatable.core :as dt]))
 
 (defn filterer []
   [re-com/v-box
@@ -17,7 +16,7 @@
                 [re-com/input-text
                  :model ""
                  :on-change #(>evt [::evts/add-review-filter %])]]]
-    [dt/datatable :filter-table [::subs/flattened-review-filters]
+    [dt/datatable ::filter-table [::subs/flattened-review-filters]
      [{::dt/column-key   [:filter-type]
        ::dt/sorting      {::dt/enabled? true}
        ::dt/column-label "Type"
@@ -29,7 +28,8 @@
                            [re-com/input-text
                             :model (str (name val))
                             :on-change #(>evt [::evts/update-review-filter-item val % filter-type])])}]
-     {::dt/table-classes ["table" "ui" "celled"]}]]])
+     {::dt/table-classes ["table" "ui" "celled"]
+      ::dt/selection     {::dt/enabled? true}}]]])
 
 (defn chooser []
   [re-com/single-dropdown
@@ -40,7 +40,7 @@
 (defn table []
   [(fn [cols] ; Anonymous function used to force re-rendering of table columns
      (when cols
-       [dt/datatable :text-annotation-table [::subs/values-to-review]
+       [dt/datatable ::text-annotation-table [::subs/values-to-review [::dt/selected-items ::filter-table [::subs/flattened-review-filters]]]
         (for [col cols]
           {::dt/column-key   [(keyword col)]
            ::dt/sorting      {::dt/enabled? true}
@@ -52,5 +52,5 @@
                                   [:th {:col-span 6}
                                    [:strong
                                     "Total selected: "
-                                    (count (<sub [::dt/selected-items :text-annotation-table [::subs/values-to-review]]))]]])}]))
+                                    (count (<sub [::dt/selected-items :text-annotation-table [::subs/values-to-review [::dt/selected-items ::filter-table [::subs/flattened-review-filters]]]]))]]])}]))
    (<sub [::subs/selected-review-columns])])
