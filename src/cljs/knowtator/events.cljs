@@ -39,14 +39,6 @@
   (fn [db [_ value]]
     (assoc db :re-pressed-example value)))
 
-(reg-event-db
-  ::add-node
-  (fn [db _]
-    (update-in db [:graph :nodes] conj {:id (count (lazy-cat
-                                                     (get-in db [:graph :nodes])
-                                                     (get-in db [:graph :edges])))})))
-
-
 (reg-event-fx
   ::import-owl
   (fn [state _]

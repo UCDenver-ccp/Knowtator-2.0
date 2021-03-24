@@ -2,8 +2,7 @@
   (:require [clojure.string :as str]
             [knowtator.html-colors :as html-colors]
             [knowtator.model :as model]
-            [re-frame.core :as rf :refer [reg-sub]]
-            [knowtator.db :as db]))
+            [re-frame.core :as rf :refer [reg-sub]]))
 
 (defn ->db-map [k]
   (comp (partial apply zipmap) (juxt (partial map :id) identity) k))
@@ -22,11 +21,6 @@
   ::re-pressed-example
   (fn [db _]
     (:re-pressed-example db)))
-
-(reg-sub
-  ::graph
-  (fn [db]
-    (:graph db)))
 
 (reg-sub
   ::profiles

@@ -1,14 +1,12 @@
 (ns knowtator.views
-  (:require ["react-graph-vis" :as rgv]
-            [breaking-point.core :as bp]
+  (:require [breaking-point.core :as bp]
             [knowtator.events :as evts]
+            [knowtator.relation-annotation.views :as ra]
             [knowtator.review.views :as review]
-            [knowtator.review.subs :as review-subs]
-            [knowtator.review.events :as review-evts]
             [knowtator.routes :as routes]
             [knowtator.subs :as subs]
-            [knowtator.text-annotation.views :as tav]
             [knowtator.text-annotation.controls :as tac]
+            [knowtator.text-annotation.views :as tav]
             [knowtator.util :refer [<sub >evt]]
             [re-com.core :as re-com :refer [at]]
             [re-frame.core :as rf]
@@ -65,26 +63,7 @@
 
 
 (defn graph-panel []
-  (let [options {:layout {:hierarchical false}
-                 :edges  {:color "#000000"}}
-        events  {:select       (fn [e]
-                                 (let [e                     (js->clj e :keywordize-keys true)
-                                       {:keys [nodes edges]} e]
-                                   (println "Nodes:" nodes)
-                                   (println "Edges:" edges)))
-                 :double-click (fn [e]
-                                 (let [{:keys [x y]} (-> e
-                                                       (js->clj :keywordize-keys true)
-                                                       (get-in [:pointer :canvas]))]
-                                   (println x y)
-                                   (rf/dispatch [::evts/add-node])))}]
-
-    [:div
-     [(r/adapt-react-class (aget rgv "default"))
-      {:graph   (<sub [::subs/graph])
-       :options options
-       :events  events
-       :style   {:height "640px"}}]]))
+  [ra/graph])
 
 
 (defn annotation-title []
