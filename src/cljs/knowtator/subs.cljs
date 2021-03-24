@@ -96,7 +96,7 @@
 
 (reg-sub ::ann-color
   :<- [::ann-map]
-  :<- [::profile-map]
+  :<- [::profiles]
   (fn [[anns profiles] [_ ann]]
     (cond (not (coll? ann))   (model/ann-color (get anns ann) profiles)
           (empty? (rest ann)) (model/ann-color (get anns (first ann)) profiles)

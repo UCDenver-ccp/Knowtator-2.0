@@ -21,14 +21,12 @@
     :style   style}])
 
 (defn graph []
-  [vis :relation-annotation-graph [::subs/graph]
+  [vis :relation-annotation-graph [::subs/realized-graph]
    :options {:layout       {:hierarchical false}
              :edges        {:color "#000000"}
              :physics      (<sub [::subs/graph-physics])
              :interaction  {:hover true}
              :manipulation {:enabled true}}
-   :events  {:click        (fn [{:keys                   [nodes]
-                                {{:keys [x y]} :canvas} :pointer}]
-                             (>evt [::evts/toggle-node-physics (first nodes) x y]))
-             :double-click (fn [{{{:keys [x y]} :canvas} :pointer}]
-                             (>evt [::evts/add-node x y]))}])
+   :events  {:click (fn [{:keys                   [nodes]
+                         {{:keys [x y]} :canvas} :pointer}]
+                      (>evt [::evts/toggle-node-physics (first nodes) x y]))}])

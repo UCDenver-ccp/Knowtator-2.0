@@ -10,7 +10,23 @@
 
 (reg-event-db ::initialize-db
   (fn-traced [_ _]
-    db/default-db))
+    (let [db db/default-db]
+      (-> db
+        (assoc-in [:graph :nodes]
+          (->> db
+            :anns
+            (map-indexed (fn [i ann]
+                           {:id  (keyword (str "n" (inc i)))
+                            :ann (:id ann)}))))
+        (update :graph
+          (fn [{:keys [nodes] :as graph}]
+            (assoc graph :edges
+              (->> (for [source (take 2 #_(int (/ (count nodes) 2)) (shuffle nodes))
+                         target (take 3 #_(int (/ (count nodes) 3)) (shuffle nodes))]
+                     {:from (:id source)
+                      :to   (:id target)})
+                (map-indexed (fn [i edge]
+                               (assoc edge :id (keyword (str "e" (inc i))))))))))))))
 
 (reg-event-fx ::navigate
   (fn-traced [_ [_ handler]]

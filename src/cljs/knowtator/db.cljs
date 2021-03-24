@@ -1,17 +1,7 @@
 (ns knowtator.db)
 
 (def default-db
-  {:name  "re-frame"
-   :graph {:nodes [{:id 1 :label "Node 1" :color "#e04141"}
-                   {:id 2 :label "Node 2" :color "#e09c41"}
-                   {:id 3 :label "Node 3" :color "#e0df41"}
-                   {:id 4 :label "Node 4" :color "#7be041"}
-                   {:id 5 :label "Node 5" :color "#41e0c9"}]
-           :edges [{:from 1 :to 2 :id 6}
-                   {:from 1 :to 3 :id 7}
-                   {:from 2 :to 4 :id 8}
-                   {:from 2 :to 5 :id 9}]}
-
+  {:name     "re-frame"
    :spans    [{:id    :s1
                :ann   :a1
                :start 30

@@ -8,7 +8,7 @@
 
 (defn ann-color
   [{:keys [profile concept]} profiles]
-  (get-in profiles [profile :colors concept]))
+  (get-in (util/map-with-key :id profiles) [profile :colors concept]))
 
 (s/fdef ann-color
   :args (s/cat
