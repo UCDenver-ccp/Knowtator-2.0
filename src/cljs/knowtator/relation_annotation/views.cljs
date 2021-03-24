@@ -13,21 +13,21 @@
   (fn [e]
     (f (js->clj e :keywordize-keys true))))
 
-(defn vis [graph & {:keys [options events style]
-                    :or {style {:height "640px"}}}]
+(defn vis [id graph & {:keys [options events style]
+                       :or   {style {:height "640px"}}}]
   [(r/adapt-react-class visjs-graph)
-   {:graph   graph
+   {:graph   (<sub graph)
     :options options
     :events  (util/map-vals handler-fn events)
     :style   style}])
 
 (defn graph []
-  [vis (<sub [::subs/graph])
-   :options {:layout {:hierarchical false}
-             :edges  {:color "#000000"}}
-   :events  {:select       (fn [{:keys [nodes edges]}]
-                             (println "Nodes:" nodes)
-                             (println "Edges:" edges))
+  [vis :relation-annotation-graph [::subs/graph]
+   :options {:layout  {:hierarchical false}
+             :edges   {:color "#000000"}
+             :physics (<sub [::subs/graph-physics])}
+   :events  {:click        (fn [{:keys                   [nodes]
+                                {{:keys [x y]} :canvas} :pointer}]
+                             (>evt [::evts/toggle-node-physics (first nodes) x y]))
              :double-click (fn [{{{:keys [x y]} :canvas} :pointer}]
-                             (println x y)
-                             (rf/dispatch [::evts/add-node]))}])
+                             (>evt [::evts/add-node x y]))}])

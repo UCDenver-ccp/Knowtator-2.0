@@ -2,5 +2,8 @@
   (:require [re-frame.core :refer [reg-sub]]))
 
 (reg-sub ::graph
-  (fn [db]
-    (:graph db)))
+  :graph)
+
+(reg-sub ::graph-physics
+  (fn [db _]
+    (true? (get-in db [:graph :physics]))))
