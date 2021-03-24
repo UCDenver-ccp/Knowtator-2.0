@@ -80,21 +80,6 @@ mark {
   background-color: #b1d5e5;
 }
 
-button {
-  appearance: none;
-  width: 300px;
-  margin: 30px, auto, 0;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-  font: 18px, 'Opens Sans', sans-serif;
-  background-color: #74637f;
-  letter-spacing: 1px;
-  border-radius: 6px;
-  display: block;
-  color: #fff;
-}
-
 .perspective, .backdrop {
   transform: perspective(1500px), translateX(-125px), rotateY(45deg), scale(0.9);
 }

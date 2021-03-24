@@ -80,19 +80,6 @@
           :color            :transparent
           :background-color "#b1d5e5"}]
 
-  [:button {:display          :block
-            :width            "300px"
-            :margin           ["30px" :auto 0]
-            :padding          "10px"
-            :border           :none
-            :border-radius    "6px"
-            :color            "#fff"
-            :background-color "#74637f"
-            :font             ["18px" "'Opens Sans'", :sans-serif]
-            :letter-spacing   "1px"
-            :appearance       :none
-            :cursor           :pointer}]
-
   [:.perspective :.backdrop {:transform ["perspective(1500px)"
                                          "translateX(-125px)"
                                          "rotateY(45deg)"
