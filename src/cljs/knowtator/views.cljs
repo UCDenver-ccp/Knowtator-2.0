@@ -3,6 +3,8 @@
             [breaking-point.core :as bp]
             [knowtator.events :as evts]
             [knowtator.review.views :as review]
+            [knowtator.review.subs :as review-subs]
+            [knowtator.review.events :as review-evts]
             [knowtator.routes :as routes]
             [knowtator.subs :as subs]
             [knowtator.text-annotation.views :as tav]
@@ -150,6 +152,22 @@
               [search-controls]
               [doc-display]]])
 
+(defn filter-controls []
+  (let [showing? (r/atom false)]
+    [:div {:style {:position :fixed
+                   :top      0
+                   :right    0
+                   :z-index  1}}
+     [re-com/popover-anchor-wrapper
+      :showing? showing?
+      :position :below-left
+      :anchor [re-com/button
+               :on-click (re-com/handler-fn (swap! showing? not))
+               :label "Filters"]
+      :popover [re-com/popover-content-wrapper
+                :title "Filters"
+                :body [review/filterer]]]]))
+
 
 (defn review-panel []
   [:div
@@ -157,10 +175,9 @@
     :src   (at)
     :label "Review"
     :level :level1]
-   [re-com/h-box
-    :children [[review/chooser]
-               [review/filterer]]]
-   [review/table]])
+   [review/chooser]
+   [review/table]
+   [filter-controls]])
 
 (defmethod routes/panels :review-panel [] [review-panel])
 (defmethod routes/panels :annotation-panel [] [annotation-panel])

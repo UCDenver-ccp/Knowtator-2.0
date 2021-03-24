@@ -102,3 +102,8 @@
   ::selected-review-filter-type
   (fn [db _]
     (get-in db [:selection :review-filter-type])))
+
+(reg-sub
+  ::show-filters
+  (fn [db _]
+    (get-in db [:selection :show-filters])))

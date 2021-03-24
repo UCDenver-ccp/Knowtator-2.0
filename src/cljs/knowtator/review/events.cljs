@@ -31,3 +31,8 @@
       (if new-val
         (update-in db [:selection :review-filters filt-type :filter-values] set/rename-keys {old-val (keyword new-val)})
         (update-in db [:selection :review-filters filt-type :filter-values] disj old-val)))))
+
+(reg-event-db
+  ::review-toggle-filters
+  (fn [db [_ val]]
+    (assoc-in db [:selection :show-filters] val)))
