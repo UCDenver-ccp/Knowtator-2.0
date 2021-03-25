@@ -2,7 +2,8 @@
   (:require [clojure.test :refer [deftest is testing]]
             [knowtator.knowtator-xml-parser :as sut]))
 
-(def annotation-xmls (sut/read-annotation-files "test_project_using_uris"))
+(def project-file-name "test_project_using_uris")
+(def annotation-xmls (sut/read-annotation-files project-file-name))
 
 (deftest parse-documents-test
   (testing "Basic parse documents from annotation files"
@@ -14,6 +15,24 @@
               :file-name "document3.txt"}}
           (-> annotation-xmls
             sut/parse-documents
+            set)))))
+
+(deftest realize-documents-test
+  (testing "Find documents corresponding text file and read its contents"
+    (is (= #{{:id        "document3",
+              :file-name "document3.txt",
+              :content   "A second test document has appeared!"}
+             {:id        "document1",
+              :file-name "document1.txt",
+              :content   "This is a test document."}
+             {:id "document2", :file-name nil, :content "And another one!"}}
+          (->> #{{:id        "document1",
+                  :file-name "document1.txt"}
+                 {:id        "document2",
+                  :file-name nil}
+                 {:id        "document3",
+                  :file-name "document3.txt"}}
+            (sut/realize-documents project-file-name)
             set)))))
 
 (deftest parse-annotations-test

@@ -31,6 +31,23 @@
                {:id        ?doc
                 :file-name ?file-name}))))
 
+(defn read-document-text-file [project-file-name article-file-name]
+  (-> project-file-name
+    (io/file "Articles" article-file-name)
+    str
+    io/resource
+    io/file
+    slurp))
+
+(defn realize-documents [project-file-name docs]
+  (->> docs
+    (map (fn [{:keys [file-name id] :as doc}]
+           (let [file-name (if file-name
+                             file-name
+                             (str id ".txt"))
+                 content   (read-document-text-file project-file-name file-name)]
+             (assoc doc :content content))))))
+
 (defn parse-annotations [xmls]
   (->> xmls
     (mapcat #(m/rewrites %
