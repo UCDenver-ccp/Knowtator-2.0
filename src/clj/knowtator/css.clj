@@ -21,14 +21,16 @@
                :font-family :Icons
                :margin-left ".5em"}]])
 
-(defstyles screen
+(defstyles knowtator
+  [:body {:margin           "30px"
+          :background-color "#f0f0f0"}])
+
+(defstyles text-annotation-editor
   (sel/defselector *)
   (sel/defpseudoelement before)
   (sel/defpseudoelement after)
   (s/at-import "https://fonts.googleapis.com/css?family=Open+Sans")
   [* (* before) (* after) {:box-sizing :border-box}]
-  [:body {:margin           "30px"
-          :background-color "#f0f0f0"}]
   [:.container {:margin-bottom "-25px !important"}]
   [:.container :.backdrop :textarea :.foredrop {:width  "100%"
                                                 :height "1000px"}]
