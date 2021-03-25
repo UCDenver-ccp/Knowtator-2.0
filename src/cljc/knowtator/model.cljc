@@ -314,18 +314,38 @@
         overlaps      (make-overlapping-spans spans)]
     (assert (= overlaps true-overlaps) (clojure.data/diff overlaps true-overlaps)))
 
-(defn spans-with-spanned-text
+(defn realize-span
+  [doc-map ann-map {:keys [start end ann] :as span}]
+  (let [{:keys [doc] :as ann} (get ann-map ann)
+        content               (-> doc-map
+                                (get-in [doc :content])
+                                (subs start end))]
+    (-> span
+      (->> (merge ann))
+      (assoc :content content))))
+
+(defn realize-spans
   [docs anns spans]
-  (let [ann-map (zipmap (map :id anns) anns)
-        doc-map (zipmap (map :id docs) docs)]
+  (let [ann-map (util/map-with-key :id anns)
+        doc-map (util/map-with-key :id docs)]
     (->> spans
-      (map (fn [{:keys [ann] :as span}]
-             (assoc span :doc (get-in ann-map [ann :doc]))))
-      (group-by :doc)
-      (mapcat (fn [[doc-id spans]]
-                (map (fn [{:keys [start end] :as span}]
-                       (let [content (-> doc-map
-                                       (get-in [doc-id :content])
-                                       (subs start end))]
-                         (assoc span :content content)))
-                  spans))))))
+      (map (partial realize-span doc-map ann-map)))))
+
+(defn realize-ann
+  [profile-map realized-spans {:keys [profile id concept] :as ann}]
+  (-> ann
+    (assoc
+      :content (->> realized-spans
+                 (group-by :ann)
+                 id
+                 (map :content)
+                 (interpose " ")
+                 (apply str))
+      :color (get-in profile-map [profile concept]))))
+
+(defn realize-anns
+  [docs profiles spans anns]
+  (let [realized-spans (realize-spans docs anns spans)
+        profile-map    (util/map-with-key :id profiles)]
+    (->> anns
+      (map (partial realize-ann profile-map realized-spans)))))
