@@ -27,6 +27,8 @@
 
 (defstyles text-annotation-editor
   (sel/defselector *)
+  (declare before)
+  (declare after)
   (sel/defpseudoelement before)
   (sel/defpseudoelement after)
   (s/at-import "https://fonts.googleapis.com/css?family=Open+Sans")

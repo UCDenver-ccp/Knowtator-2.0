@@ -1,14 +1,12 @@
 (ns knowtator.middleware
-  (:require [knowtator.env :refer [defaults]]
-            [clojure.tools.logging :as log]
+  (:require [clojure.tools.logging :as log]
+            [knowtator.env :refer [defaults]]
             [knowtator.layout :refer [error-page]]
-            [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
             [knowtator.middleware.formats :as formats]
             [muuntaja.middleware :refer [wrap-format wrap-params]]
-            [knowtator.config :refer [env]]
-            [ring.middleware.flash :refer [wrap-flash]]
-            #_[ring.adapter.undertow.middleware.session :refer [wrap-session]]
-            [ring.middleware.defaults :refer [site-defaults wrap-defaults]]))
+            [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
+            [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
+            [ring.middleware.flash :refer [wrap-flash]]))
 
 (defn wrap-internal-error [handler]
   (fn [req]
@@ -27,7 +25,6 @@
      (error-page
        {:status 403
         :title  "Invalid anti-forgery token"})}))
-
 
 (defn wrap-formats [handler]
   (let [wrapped (-> handler wrap-params (wrap-format formats/instance))]

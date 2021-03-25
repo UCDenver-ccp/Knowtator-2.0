@@ -1,12 +1,12 @@
 (ns knowtator.core
-  (:require [knowtator.handler :as handler]
+  (:gen-class)
+  (:require [clojure.tools.cli :refer [parse-opts]]
+            [clojure.tools.logging :as log]
+            [knowtator.config :refer [env]]
+            [knowtator.handler :as handler]
             [knowtator.nrepl :as nrepl]
             [luminus.http-server :as http]
-            [knowtator.config :refer [env]]
-            [clojure.tools.cli :refer [parse-opts]]
-            [clojure.tools.logging :as log]
-            [mount.core :as mount])
-  (:gen-class))
+            [mount.core :as mount]))
 
 ;; log uncaught exceptions in threads
 (Thread/setDefaultUncaughtExceptionHandler
@@ -20,6 +20,7 @@
   [["-p" "--port PORT" "Port number"
     :parse-fn #(Integer/parseInt %)]])
 
+(declare http-server)
 (mount/defstate ^{:on-reload :noop} http-server
   :start
   (http/start
@@ -31,6 +32,7 @@
   :stop
   (http/stop http-server))
 
+(declare repl-server)
 (mount/defstate ^{:on-reload :noop} repl-server
   :start
   (when (env :nrepl-port)
@@ -39,7 +41,6 @@
   :stop
   (when repl-server
     (nrepl/stop repl-server)))
-
 
 (defn stop-app []
   (doseq [component (:stopped (mount/stop))]

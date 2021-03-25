@@ -1,7 +1,7 @@
 (ns knowtator.env
-  (:require [selmer.parser :as parser]
-            [clojure.tools.logging :as log]
-            [knowtator.dev-middleware :refer [wrap-dev]]))
+  (:require [clojure.tools.logging :as log]
+            [knowtator.dev-middleware :refer [wrap-dev]]
+            [selmer.parser :as parser]))
 
 (def defaults
   {:init       (fn []

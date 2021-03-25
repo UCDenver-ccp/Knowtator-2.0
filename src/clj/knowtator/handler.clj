@@ -1,18 +1,19 @@
 (ns knowtator.handler
-  (:require [shadow.http.push-state :as push-state]
-            [knowtator.middleware :as middleware]
+  (:require [knowtator.env :refer [defaults]]
             [knowtator.layout :refer [error-page]]
+            [knowtator.middleware :as middleware]
             [knowtator.routes.home :refer [home-routes]]
+            [mount.core :as mount]
             [reitit.ring :as ring]
             [ring.middleware.content-type :refer [wrap-content-type]]
-            [ring.middleware.webjars :refer [wrap-webjars]]
-            [knowtator.env :refer [defaults]]
-            [mount.core :as mount]))
+            [ring.middleware.webjars :refer [wrap-webjars]]))
 
+(declare init-app)
 (mount/defstate init-app
   :start ((or (:init defaults) (fn [])))
   :stop  ((or (:stop defaults) (fn []))))
 
+(declare app-routes)
 (mount/defstate app-routes
   :start
   (ring/ring-handler

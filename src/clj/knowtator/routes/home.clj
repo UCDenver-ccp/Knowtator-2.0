@@ -1,9 +1,9 @@
 (ns knowtator.routes.home
-  (:require [knowtator.layout :as layout]
-            [clojure.java.io :as io]
+  (:require [clojure.java.io :as io]
+            [knowtator.layout :as layout]
             [knowtator.middleware :as middleware]
-            [ring.util.response :refer [resource-response]]
-            [ring.util.http-response :as response]))
+            [ring.util.http-response :as response]
+            [ring.util.response :refer [resource-response]]))
 
 (defn home-page [request]
   (layout/render request "index.html"))
@@ -18,5 +18,8 @@
    ["/test" {:get (fn [_]
                     (resource-response "html/test.html"))}]
    ["/docs" {:get (fn [_]
-                    (-> (response/ok (-> "docs/docs.md" io/resource slurp))
+                    (-> "docs/docs.md"
+                      io/resource
+                      slurp
+                      response/ok
                       (response/header "Content-Type" "text/plain; charset=utf-8")))}]])
