@@ -21,3 +21,4 @@
 /.clj-kondo/
 /.dir-locals.el
 /karma.conf.js
+/resources/public/css/
