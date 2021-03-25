@@ -75,47 +75,59 @@
                                    :content [{:tag   :class
                                               :attrs {:label "cl1"
                                                       :id    "c1"}}]}]}]}))))
-  (testing "Multiple profiles"
-    (is (= [{:id     :p1
-             :colors {"c1" "blue"}}
-            {:id     :p2
-             :colors {"c1" "blue"}}]
-          (sut/parse-profile (atom 0)
+  (testing "Multiple annotations"
+    (is (= [{:id      :a1
+             :profile :p1
+             :concept "c1"
+             :doc     :d1}
+            {:id      :a2
+             :profile :p1
+             :concept "c1"
+             :doc     :d1}]
+          (sut/parse-annotation (atom 0)
             {:tag     :knowtator-project
-             :content [{:tag     :profile
-                        :attrs   {:id "p1"}
-                        :content [{:tag   :highlighter
-                                   :attrs {:color "blue"
-                                           :class "c1"}}]}
-                       {:tag     :profile
-                        :attrs   {:id "p2"}
-                        :content [{:tag   :highlighter
-                                   :attrs {:color "blue"
-                                           :class "c1"}}]}]}))))
+             :content [{:tag     :document
+                        :attrs   {:id "d1"}
+                        :content [{:tag     :annotation
+                                   :attrs   {:id        "a1"
+                                             :annotator "p1"}
+                                   :content [{:tag   :class
+                                              :attrs {:label "cl1"
+                                                      :id    "c1"}}]}
+                                  {:tag     :annotation
+                                   :attrs   {:id        "a2"
+                                             :annotator "p1"}
+                                   :content [{:tag   :class
+                                              :attrs {:label "cl1"
+                                                      :id    "c1"}}]}]}]}))))
   (testing "Missing ID"
-    (is (= [{:id     :profile-1
-             :colors {"c1" "blue"}}]
-          (sut/parse-profile (atom 0)
+    (is (= [{:id      :annotation-1
+             :profile :p1
+             :concept "c1"
+             :doc     :d1}]
+          (sut/parse-annotation (atom 0)
             {:tag     :knowtator-project
-             :content [{:tag     :profile
-                        :attrs   {}
-                        :content [{:tag   :highlighter
-                                   :attrs {:color "blue"
-                                           :class "c1"}}]}]}))))
-  (testing "Multiple colors"
-    (is (= [{:id     :p1
-             :colors {"c1" "blue"
-                      "c2" "red"}}]
-          (sut/parse-profile (atom 0)
+             :content [{:tag     :document
+                        :attrs   {:id "d1"}
+                        :content [{:tag     :annotation
+                                   :attrs   {:annotator "p1"}
+                                   :content [{:tag   :class
+                                              :attrs {:label "cl1"
+                                                      :id    "c1"}}]}]}]}))))
+  (testing "Missing annotator"
+    (is (= [{:id      :a1
+             :profile :Default
+             :concept "c1"
+             :doc     :d1}]
+          (sut/parse-annotation (atom 0)
             {:tag     :knowtator-project
-             :content [{:tag     :profile
-                        :attrs   {:id "p1"}
-                        :content [{:tag   :highlighter
-                                   :attrs {:color "blue"
-                                           :class "c1"}}
-                                  {:tag   :highlighter
-                                   :attrs {:color "red"
-                                           :class "c2"}}]}]})))))
+             :content [{:tag     :document
+                        :attrs   {:id "d1"}
+                        :content [{:tag     :annotation
+                                   :attrs   {:id "a1"}
+                                   :content [{:tag   :class
+                                              :attrs {:label "cl1"
+                                                      :id    "c1"}}]}]}]})))))
 
 (deftest parse-documents-test
   (testing "Basic parse documents from annotation files"

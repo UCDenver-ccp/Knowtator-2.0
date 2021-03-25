@@ -76,7 +76,7 @@
                                                        :label ?concept-label}})})})}
     {:id      (m/app (partial verify-id counter "annotation-") ?ann)
      :doc     (m/app keyword ?doc)
-     :profile (m/app keyword ?profile)
+     :profile (m/app #(or (keyword %) :Default) ?profile)
      :concept ?concept}))
 
 (defn parse-span [counter xml]
