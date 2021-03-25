@@ -1,0 +1,26 @@
+* Knowtator
+** Starting development environment
+*** Starting sever
+**** Config
+     The server is configured using [[./dev-config.edn]].
+***** port
+      This is the port that the server serves webpages to.
+**** Running
+     I am using the =mount= package to automatically reload changes on the server. The functions for starting and stopping this are in [[./dev/clj/user.clj]].
+     To use this functionality we use the =dev= alias when starting the repl.
+**** Commands
+     1. In Emacs =sesman-start= =cider-jack-in-clj=
+     2. Type =(start)= into the REPL after it loads.
+
+*** Starting the client
+**** Config
+     [[./shadow-cljs.edn]] contains the configuration for the client.
+***** nrepl port
+      This is the port that nrepls can connect to shadow-cljs.
+**** Preparing
+     shadow-cljs performs the function of =mount=. It is started in server mode and then cljs REPLs can be connected to it.
+     Because we are working in Emacs and using CIDER, we need some extra middleware and dependencies. These are kept in the =cljs-dev= alias.
+**** Commands
+     1. In terminal =clj -M:cljs-dev:shadow-cljs server=
+     2. In Emacs =sesman-start= =cider-connect-cljs knowtator:localhost:8777=
+     3. Open browser to localhost:3000

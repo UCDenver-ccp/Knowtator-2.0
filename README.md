@@ -1,13 +1,5 @@
 # knowtator
 
-## Developing in Emacs
-1. sesman-start cider-jack-in-clj
-2. Type (start) into REPL
-3. Open terminal and run clj -M:cljs-dev:shadow-cljs server
-4. sesman-start cider-connect-cljs knowtator:localhost:8777
-5. Open browser to localhost:3000/
-
-
 ## Getting Started
 
 ### Project Overview
