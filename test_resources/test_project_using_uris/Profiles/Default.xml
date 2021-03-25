@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+
+<knowtator-project>
+    <profile id="Default">
+        <highlighter class="http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza" color="#ff0000"/>
+    </profile>
+</knowtator-project>

@@ -55,4 +55,6 @@
                             :jvm-opts    ["-Dconf=dev-config.edn" ]}
            :shadow-cljs    {:main-opts ["-m" "shadow.cljs.devtools.cli"]}
 
-           :test {:extra-paths ["test/cljs"]}}}
+           :test {:extra-paths ["test/cljs"
+                                "test/clj"
+                                "test_resources"]}}}

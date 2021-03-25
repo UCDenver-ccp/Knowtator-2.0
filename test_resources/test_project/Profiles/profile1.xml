@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+
+<knowtator-project>
+    <profile id="profile1">
+        <highlighter class="IceCream" color="#00ffff"/>
+        <highlighter class="Pizza" color="#ff3333"/>
+    </profile>
+</knowtator-project>

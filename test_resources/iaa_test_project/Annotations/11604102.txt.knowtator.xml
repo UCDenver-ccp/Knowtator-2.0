@@ -1,0 +1,1390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<annotations textSource="11604102.txt">
+    <annotation>
+        <mention id="chebi_Instance_50004"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="442" end="449"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50010"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="549" end="556"/>
+        <spannedText>Protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50016"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="809" end="816"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50031"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="1338" end="1346"/>
+        <spannedText>proteins</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50039"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="1555" end="1562"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50042"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="3183" end="3191"/>
+        <spannedText>proteins</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50048"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="430" end="433"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50240"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="1185" end="1200"/>
+        <spannedText>protein product</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50250"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="1919" end="1923"/>
+        <spannedText>mRNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50257"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="3171" end="3174"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50264"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="3973" end="3977"/>
+        <spannedText>mRNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50271"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="4184" end="4192"/>
+        <spannedText>proteins</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50277"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="4280" end="4287"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50283"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="4297" end="4300"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50299"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="4367" end="4374"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50305"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="4436" end="4439"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50312"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="4623" end="4627"/>
+        <spannedText>mRNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50319"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="4916" end="4923"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50332"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="5334" end="5341"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50338"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="5355" end="5358"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50360"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="5506" end="5514"/>
+        <spannedText>proteins</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50372"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="5610" end="5618"/>
+        <spannedText>proteins</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50390"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="5694" end="5697"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50397"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="5706" end="5713"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50403"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="5872" end="5880"/>
+        <spannedText>proteins</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50406"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="6259" end="6267"/>
+        <spannedText>proteins</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50409"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="9569" end="9576"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50412"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="9690" end="9697"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50415"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="10037" end="10044"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50418"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="10165" end="10172"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50421"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="10573" end="10580"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50424"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="10628" end="10635"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50427"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="11727" end="11735"/>
+        <spannedText>proteins</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50430"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="12167" end="12174"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50433"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="12233" end="12241"/>
+        <spannedText>proteins</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50436"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="12353" end="12360"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50439"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="12395" end="12402"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50442"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="12568" end="12576"/>
+        <spannedText>proteins</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50445"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="12930" end="12938"/>
+        <spannedText>proteins</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50448"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="12997" end="13004"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50451"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="13237" end="13244"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50454"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="13297" end="13304"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50457"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="14459" end="14467"/>
+        <spannedText>proteins</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50460"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="14808" end="14816"/>
+        <spannedText>proteins</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50463"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="15193" end="15200"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50466"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="17904" end="17911"/>
+        <spannedText>protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50469"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="18267" end="18275"/>
+        <spannedText>proteins</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50472"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="18397" end="18405"/>
+        <spannedText>proteins</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50475"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="19142" end="19149"/>
+        <spannedText>Protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50478"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="19243" end="19250"/>
+        <spannedText>Protein</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50481"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="3555" end="3559"/>
+        <spannedText>mRNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50488"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="5910" end="5913"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50492"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="6368" end="6371"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50496"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="8222" end="8226"/>
+        <spannedText>mRNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50500"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="8301" end="8305"/>
+        <spannedText>mRNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50504"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="9119" end="9123"/>
+        <spannedText>RNAs</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50508"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="11715" end="11718"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50512"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="11805" end="11808"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50516"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="11828" end="11832"/>
+        <spannedText>mRNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50520"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="11845" end="11849"/>
+        <spannedText>mRNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50524"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="11954" end="11958"/>
+        <spannedText>mRNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50528"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="12221" end="12224"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50532"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="12341" end="12344"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50536"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="12718" end="12723"/>
+        <spannedText>mRNAs</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50540"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="12918" end="12921"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50544"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="12985" end="12988"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50548"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="13067" end="13072"/>
+        <spannedText>mRNAs</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50552"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="13225" end="13228"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50556"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="13965" end="13968"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50560"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="14232" end="14236"/>
+        <spannedText>mRNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50564"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="14328" end="14332"/>
+        <spannedText>mRNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50568"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="14529" end="14533"/>
+        <spannedText>mRNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50572"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="14565" end="14568"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50576"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="14837" end="14840"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50580"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="15012" end="15015"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50584"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="15181" end="15184"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50588"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="15477" end="15481"/>
+        <spannedText>mRNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50592"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="15847" end="15850"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_50596"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="844" end="847"/>
+        <spannedText>RNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60015"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="9430" end="9433"/>
+        <spannedText>DNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60022"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="9525" end="9528"/>
+        <spannedText>DNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60038"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="9799" end="9811"/>
+        <spannedText>oligopeptide</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60064"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="11240" end="11247"/>
+        <spannedText>sucrose</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60070"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="11395" end="11402"/>
+        <spannedText>Sucrose</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60076"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="11562" end="11569"/>
+        <spannedText>sucrose</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60139"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="13102" end="13109"/>
+        <spannedText>glycine</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60199"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="16708" end="16711"/>
+        <spannedText>DNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60206"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="16713" end="16716"/>
+        <spannedText>DNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60216"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="17939" end="17951"/>
+        <spannedText>oligopeptide</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60222"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="18230" end="18233"/>
+        <spannedText>DNA</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60232"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="18337" end="18340"/>
+        <spannedText>His</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60250"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="18509" end="18521"/>
+        <spannedText>oligopeptide</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60256"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="18673" end="18680"/>
+        <spannedText>peptide</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60262"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="18831" end="18843"/>
+        <spannedText>oligopeptide</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60268"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="18936" end="18940"/>
+        <spannedText>NaCl</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60274"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="18969" end="18972"/>
+        <spannedText>SDS</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60281"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="18980" end="18984"/>
+        <spannedText>Tris</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60294"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="19342" end="19345"/>
+        <spannedText>SDS</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60301"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="19807" end="19811"/>
+        <spannedText>Tris</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60308"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="19828" end="19831"/>
+        <spannedText>KCl</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60314"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="19838" end="19843"/>
+        <spannedText>MgCl2</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60320"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="19941" end="19960"/>
+        <spannedText>protease inhibitors</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60326"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="19977" end="19996"/>
+        <spannedText>Protease Inhibitors</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60332"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="20285" end="20292"/>
+        <spannedText>sucrose</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60338"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="20312" end="20316"/>
+        <spannedText>Tris</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60345"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="20325" end="20328"/>
+        <spannedText>KCl</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_60351"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="20338" end="20343"/>
+        <spannedText>MgCl2</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80211"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="877" end="884"/>
+        <spannedText>proline</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80233"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="890" end="891"/>
+        <spannedText>C</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80247"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="3870" end="3871"/>
+        <spannedText>U</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80250"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="3899" end="3900"/>
+        <spannedText>G</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80253"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="3904" end="3905"/>
+        <spannedText>C</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80256"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80259"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="3906" end="3914"/>
+        <spannedText>residues</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80263"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="3928" end="3929"/>
+        <spannedText>U</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80282"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="4323" end="4330"/>
+        <spannedText>proline</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80288"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="4336" end="4337"/>
+        <spannedText>C</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80298"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="4522" end="4537"/>
+        <spannedText>protein product</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80314"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="4931" end="4950"/>
+        <spannedText>amino acid residues</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80323"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="5388" end="5389"/>
+        <spannedText>C</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80343"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="5423" end="5430"/>
+        <spannedText>proline</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80358"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="5527" end="5538"/>
+        <spannedText>amino acids</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80373"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="5681" end="5688"/>
+        <spannedText>proline</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80385"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="5939" end="5940"/>
+        <spannedText>C</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80399"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="5950" end="5957"/>
+        <spannedText>proline</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80405"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="6184" end="6185"/>
+        <spannedText>C</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80416"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="6273" end="6283"/>
+        <spannedText>amino acid</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80435"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="9646" end="9647"/>
+        <spannedText>C</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80442"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="9713" end="9714"/>
+        <spannedText>C</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80458"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="9724" end="9731"/>
+        <spannedText>proline</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80467"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="9835" end="9853"/>
+        <spannedText>amino acid residue</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80473"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="9861" end="9862"/>
+        <spannedText>C</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80528"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="14019" end="14020"/>
+        <spannedText>U</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80531"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="14030" end="14031"/>
+        <spannedText>G</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80534"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="14191" end="14193"/>
+        <spannedText>nt</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80548"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="14405" end="14412"/>
+        <spannedText>proline</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80562"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="14903" end="14905"/>
+        <spannedText>nt</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80579"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="18031" end="18032"/>
+        <spannedText>C</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80591"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="18346" end="18351"/>
+        <spannedText>metal</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80598"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="18545" end="18563"/>
+        <spannedText>ammo acid residues</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80613"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="19406" end="19407"/>
+        <spannedText>C</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80621"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="19887" end="19896"/>
+        <spannedText>inhibitor</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80742"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="3870" end="3871"/>
+        <spannedText>U</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80746"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="3870" end="3871"/>
+        <spannedText>U</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80750"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="3899" end="3900"/>
+        <spannedText>G</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80754"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="3899" end="3900"/>
+        <spannedText>G</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80758"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="3904" end="3905"/>
+        <spannedText>C</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80762"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="3904" end="3905"/>
+        <spannedText>C</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80766"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="3928" end="3929"/>
+        <spannedText>U</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80770"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="3928" end="3929"/>
+        <spannedText>U</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80774"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="14019" end="14020"/>
+        <spannedText>U</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80778"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="14019" end="14020"/>
+        <spannedText>U</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80782"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="14030" end="14031"/>
+        <spannedText>G</spannedText>
+    </annotation>
+    <annotation>
+        <mention id="chebi_Instance_80786"/>
+        <annotator id="chebi_Instance_10016">Mike Bada</annotator>
+        <span start="14030" end="14031"/>
+        <spannedText>G</spannedText>
+    </annotation>
+    <classMention id="chebi_Instance_60338">
+        <mentionClass id="CHEBI:9754">tris</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50299">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60332">
+        <mentionClass id="CHEBI:17992">sucrose</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50277">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60326">
+        <mentionClass id="CHEBI:37670">protease inhibitor</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50283">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60320">
+        <mentionClass id="CHEBI:37670">protease inhibitor</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50271">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60314">
+        <mentionClass id="CHEBI:6636">magnesium dichloride</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60076">
+        <mentionClass id="CHEBI:17992">sucrose</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50257">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60064">
+        <mentionClass id="CHEBI:17992">sucrose</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60308">
+        <mentionClass id="CHEBI:32588">potassium chloride</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60070">
+        <mentionClass id="CHEBI:17992">sucrose</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60301">
+        <mentionClass id="CHEBI:9754">tris</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50264">
+        <mentionClass id="CHEBI:33699">messenger RNA</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60015">
+        <mentionClass id="CHEBI:16991">deoxyribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50250">
+        <mentionClass id="CHEBI:33699">messenger RNA</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50240">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60351">
+        <mentionClass id="CHEBI:6636">magnesium dichloride</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60038">
+        <mentionClass id="CHEBI:25676">oligopeptides</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60022">
+        <mentionClass id="CHEBI:16991">deoxyribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60345">
+        <mentionClass id="CHEBI:32588">potassium chloride</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80766">
+        <mentionClass id="CHEBI:27243">uridyl groups</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80770">
+        <mentionClass id="CHEBI:27244">5'-uridylyl group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80774">
+        <mentionClass id="CHEBI:27243">uridyl groups</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80778">
+        <mentionClass id="CHEBI:27244">5'-uridylyl group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50596">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60256">
+        <mentionClass id="CHEBI:16670">peptides</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80750">
+        <mentionClass id="CHEBI:24459">guanosyl groups</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50592">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50048">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80754">
+        <mentionClass id="CHEBI:24460">5'-guanylyl group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50588">
+        <mentionClass id="CHEBI:33699">messenger RNA</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60250">
+        <mentionClass id="CHEBI:25676">oligopeptides</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80758">
+        <mentionClass id="CHEBI:23525">cytidyl groups</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50039">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50584">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80762">
+        <mentionClass id="CHEBI:23526">5'-cytidylyl group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50042">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50580">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50031">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60232">
+        <mentionClass id="CHEBI:27570">histidine</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80782">
+        <mentionClass id="CHEBI:24459">guanosyl groups</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50016">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80786">
+        <mentionClass id="CHEBI:24460">5'-guanylyl group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60222">
+        <mentionClass id="CHEBI:16991">deoxyribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50010">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50540">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60294">
+        <mentionClass id="CHEBI:8984">sodium dodecyl sulfate</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50544">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50004">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50532">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50536">
+        <mentionClass id="CHEBI:33699">messenger RNA</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50524">
+        <mentionClass id="CHEBI:33699">messenger RNA</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60281">
+        <mentionClass id="CHEBI:9754">tris</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50528">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50516">
+        <mentionClass id="CHEBI:33699">messenger RNA</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50520">
+        <mentionClass id="CHEBI:33699">messenger RNA</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50572">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50576">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60274">
+        <mentionClass id="CHEBI:8984">sodium dodecyl sulfate</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50564">
+        <mentionClass id="CHEBI:33699">messenger RNA</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50568">
+        <mentionClass id="CHEBI:33699">messenger RNA</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50556">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60262">
+        <mentionClass id="CHEBI:25676">oligopeptides</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50560">
+        <mentionClass id="CHEBI:33699">messenger RNA</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50548">
+        <mentionClass id="CHEBI:33699">messenger RNA</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50552">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60268">
+        <mentionClass id="CHEBI:26710">sodium chloride</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80416">
+        <mentionClass id="CHEBI:33708">amino-acid residues</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80405">
+        <mentionClass id="CHEBI:46883">carboxy group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50488">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80399">
+        <mentionClass id="CHEBI:32874">proline residue</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50492">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80385">
+        <mentionClass id="CHEBI:46883">carboxy group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50496">
+        <mentionClass id="CHEBI:33699">messenger RNA</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80467">
+        <mentionClass id="CHEBI:33708">amino-acid residues</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50500">
+        <mentionClass id="CHEBI:33699">messenger RNA</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80458">
+        <mentionClass id="CHEBI:32874">proline residue</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50504">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80442">
+        <mentionClass id="CHEBI:46883">carboxy group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50508">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80435">
+        <mentionClass id="CHEBI:46883">carboxy group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50512">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80314">
+        <mentionClass id="CHEBI:33708">amino-acid residues</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60199">
+        <mentionClass id="CHEBI:16991">deoxyribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50460">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80298">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50463">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80288">
+        <mentionClass id="CHEBI:46883">carboxy group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50466">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60206">
+        <mentionClass id="CHEBI:16991">deoxyribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80282">
+        <mentionClass id="CHEBI:32874">proline residue</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50469">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80373">
+        <mentionClass id="CHEBI:32874">proline residue</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50472">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80358">
+        <mentionClass id="CHEBI:33708">amino-acid residues</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50475">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80343">
+        <mentionClass id="CHEBI:32874">proline residue</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50478">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60216">
+        <mentionClass id="CHEBI:25676">oligopeptides</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80323">
+        <mentionClass id="CHEBI:46883">carboxy group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50481">
+        <mentionClass id="CHEBI:33699">messenger RNA</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50439">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80598">
+        <mentionClass id="CHEBI:33708">amino-acid residues</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50436">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80613">
+        <mentionClass id="CHEBI:46883">carboxy group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50445">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80579">
+        <mentionClass id="CHEBI:46883">carboxy group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50442">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80591">
+        <mentionClass id="CHEBI:25213">metal cations</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50451">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80742">
+        <mentionClass id="CHEBI:27243">uridyl groups</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50448">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80746">
+        <mentionClass id="CHEBI:27244">5'-uridylyl group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50457">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80621">
+        <mentionClass id="CHEBI:35222">inhibitor</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50454">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80528">
+        <mentionClass id="CHEBI:30759">uracil-1-yl group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50415">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80531">
+        <mentionClass id="CHEBI:30755">guanine group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50412">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80473">
+        <mentionClass id="CHEBI:46883">carboxy group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50421">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50418">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80562">
+        <mentionClass id="CHEBI:25613">nucleotidyl groups</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50427">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50424">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80534">
+        <mentionClass id="CHEBI:25613">nucleotidyl groups</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50433">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80548">
+        <mentionClass id="CHEBI:32874">proline residue</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50430">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50397">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50390">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50406">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50409">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50403">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50360">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_60139">
+        <mentionClass id="CHEBI:15428">glycine</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50372">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50332">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80233">
+        <mentionClass id="CHEBI:46883">carboxy group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80247">
+        <mentionClass id="CHEBI:30759">uracil-1-yl group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80250">
+        <mentionClass id="CHEBI:30755">guanine group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80253">
+        <mentionClass id="CHEBI:30758">cytosin-1-yl group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80256">
+        <mentionClass id="CHEBI:33791">canonical nucleoside residues</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80259">
+        <mentionClass id="CHEBI:33791">canonical nucleoside residues</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80263">
+        <mentionClass id="CHEBI:30759">uracil-1-yl group</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50338">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50312">
+        <mentionClass id="CHEBI:33699">messenger RNA</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50305">
+        <mentionClass id="CHEBI:33697">ribonucleic acids</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_50319">
+        <mentionClass id="CHEBI:36080">proteins</mentionClass>
+    </classMention>
+    <classMention id="chebi_Instance_80211">
+        <mentionClass id="CHEBI:32874">proline residue</mentionClass>
+    </classMention>
+</annotations>
+

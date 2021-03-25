@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<knowtator-project>
+    <document id="d1" text-file="d1.txt">
+        <annotation annotator="p1" id="a1" motivation="" type="identity">
+            <class id="c1" label="c1"/>
+            <span end="1" start="0" id="s1">a</span>
+        </annotation>
+    </document>
+</knowtator-project>

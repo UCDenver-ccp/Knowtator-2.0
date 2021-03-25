@@ -1,0 +1,65 @@
+This file is provided to facilitate cut-n-paste into a spreadsheet.
+If you cannot directly copy the data below into a spreadsheet without it all going into a single cell,
+then try copying to a text editor first and then copy it from there.  There is typically a 'paste special'
+option under the Edit menu that will allow you to paste the copied data as text.  This will also work.
+
+
+
+type	matches	non-matches
+All classes	350	106
+CHEBI:1432	0	1
+CHEBI:1542	2	0
+CHEBI:1644	0	1
+CHEBI:1699	54	3
+CHEBI:1836	0	1
+CHEBI:2352	0	1
+CHEBI:2352	0	1
+CHEBI:2388	0	2
+CHEBI:2445	0	2
+CHEBI:2446	0	2
+CHEBI:2613	0	3
+CHEBI:2627	0	7
+CHEBI:2724	0	3
+CHEBI:2724	0	3
+CHEBI:2757	2	0
+CHEBI:2998	0	1
+CHEBI:3036	2	0
+CHEBI:3075	0	3
+CHEBI:3075	0	1
+CHEBI:3075	0	1
+CHEBI:3075	0	3
+CHEBI:3244	0	1
+CHEBI:3248	0	1
+CHEBI:3287	0	7
+CHEBI:3369	46	0
+CHEBI:3369	30	0
+CHEBI:3379	0	1
+CHEBI:3522	0	2
+CHEBI:3752	2	0
+CHEBI:3767	4	0
+CHEBI:3886	2	10
+CHEBI:4688	0	10
+CHEBI:470	10	4
+CHEBI:916	12	0
+CHEBI_15377	4	3
+CHEBI_16670	10	0
+CHEBI_17544	2	0
+CHEBI_17992	8	0
+CHEBI_23367	0	4
+CHEBI_25213	0	1
+CHEBI_25613	0	3
+CHEBI_25676	8	0
+CHEBI_26020	0	1
+CHEBI_26710	2	0
+CHEBI_27594	0	4
+CHEBI_30879	4	0
+CHEBI_32588	4	0
+CHEBI_33521	0	1
+CHEBI_33708	0	7
+CHEBI_33709	0	6
+CHEBI_35186	6	0
+CHEBI_36080	120	1
+CHEBI_37586	2	0
+CHEBI_6636	4	0
+CHEBI_8984	4	0
+CHEBI_9754	6	0
