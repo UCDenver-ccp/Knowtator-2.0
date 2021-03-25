@@ -1,4 +1,7 @@
-{:nrepl  {:port 8777}
+{:nrepl  {:port       8777
+          :middleware [refactor-nrepl.middleware/wrap-refactor,
+                       cider.nrepl/cider-middleware,
+                       cider.piggieback/wrap-cljs-repl]}
  :builds {:app {:target     :browser
                 :output-dir "resources/public/js/compiled"
                 :asset-path "/js/compiled"
@@ -13,18 +16,15 @@
                               {day8.re-frame.tracing day8.re-frame.tracing-stubs}}}
 
                 :devtools {:http-root "resources/public"
-                           :http-port 8280
-                           }}
-          :browser-test
-          {:target    :browser-test
-           :ns-regexp "-test$"
-           :runner-ns shadow.test.browser
-           :test-dir  "target/browser-test"
-           :devtools  {:http-root "target/browser-test"
-                       :http-port 8290}}
+                           :http-port 8280}}
+          :browser-test {:target    :browser-test
+                         :ns-regexp "-test$"
+                         :runner-ns shadow.test.browser
+                         :test-dir  "target/browser-test"
+                         :devtools  {:http-root "target/browser-test"
+                                     :http-port 8290}}
 
-          :karma-test
-          {:target    :karma
-           :ns-regexp "-test$"
-           :output-to "target/karma-test.js"}}
+          :karma-test {:target    :karma
+                       :ns-regexp "-test$"
+                       :output-to "target/karma-test.js"}}
  :deps true}

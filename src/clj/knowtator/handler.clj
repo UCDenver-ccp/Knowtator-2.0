@@ -1,16 +1,35 @@
-(ns my-app.handler
-  (:require
-    [compojure.core :refer [GET defroutes]]
-    [compojure.route :refer [resources not-found]]
-    [ring.util.response :refer [resource-response]]
-    [ring.middleware.reload :refer [wrap-reload]]
-    [shadow.http.push-state :as push-state]))
+(ns knowtator.handler
+  (:require [shadow.http.push-state :as push-state]
+            [knowtator.middleware :as middleware]
+            [knowtator.layout :refer [error-page]]
+            [knowtator.routes.home :refer [home-routes]]
+            [reitit.ring :as ring]
+            [ring.middleware.content-type :refer [wrap-content-type]]
+            [ring.middleware.webjars :refer [wrap-webjars]]
+            [knowtator.env :refer [defaults]]
+            [mount.core :as mount]))
 
-(defroutes routes
-  (GET "/" [] (resource-response "index.html" {:root "public"}))
-  (resources "/")
-  (not-found "Page not found"))
+(mount/defstate init-app
+  :start ((or (:init defaults) (fn [])))
+  :stop  ((or (:stop defaults) (fn []))))
 
-(def dev-handler (-> #'routes wrap-reload push-state/handle))
+(mount/defstate app-routes
+  :start
+  (ring/ring-handler
+    (ring/router
+      [(home-routes)])
+    (ring/routes
+      (ring/create-resource-handler
+        {:path "/"})
+      (wrap-content-type
+        (wrap-webjars (constantly nil)))
+      (ring/create-default-handler
+        {:not-found
+         (constantly (error-page {:status 404, :title "404 - Page not found"}))
+         :method-not-allowed
+         (constantly (error-page {:status 405, :title "405 - Not allowed"}))
+         :not-acceptable
+         (constantly (error-page {:status 406, :title "406 - Not acceptable"}))}))))
 
-(def handler routes)
+(defn app []
+  (middleware/wrap-base #'app-routes))
