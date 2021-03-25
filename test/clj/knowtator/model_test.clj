@@ -2,8 +2,36 @@
   (:require [clojure.test :refer [testing is deftest]]
             [knowtator.model :as sut]))
 
+(deftest realize-span-test
+  (testing "Realize simple span"
+    (is (= {:id      :s1
+            :ann     :a1
+            :start   1
+            :end     5
+            :doc     :d1
+            :concept :c1
+            :profile :p1
+            :content "he b"}
+          (sut/realize-span
+            {:d1 {:id      :d1
+                  :content "The brown fox jumped over the dog."}
+             :d2 {:id :content
+                  :d2 "WRONG"}}
+            {:a1 {:id      :a1
+                  :doc     :d1
+                  :profile :p1
+                  :concept :c1}
+             :a2 {:id      :a2
+                  :doc     :d2
+                  :profile :p2
+                  :concept :c2}}
+            {:id    :s1
+             :ann   :a1
+             :start 1
+             :end   5})))))
+
 (deftest realize-ann-test
-  (testing "Realize simple ann"
+  (testing "Realize simple ann with disjoint spans."
     (is (= {:id      :a1
             :profile :p1
             :concept :c1
