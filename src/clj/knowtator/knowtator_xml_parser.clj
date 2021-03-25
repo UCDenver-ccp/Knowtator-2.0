@@ -20,9 +20,19 @@
         (map xml/parse)
         (map (partial walk/postwalk struct->map))))))
 
-(defn parse-annotations [file-name]
-  (->> file-name
-    read-annotation-files
+(defn parse-documents [xmls]
+  (->> xmls
+    (mapcat #(m/rewrites %
+               {:tag     :knowtator-project
+                :attrs   nil
+                :content (m/scan {:tag   :document
+                                  :attrs {:id        ?doc
+                                          :text-file ?file-name}})}
+               {:id        ?doc
+                :file-name ?file-name}))))
+
+(defn parse-annotations [xmls]
+  (->> xmls
     (mapcat #(m/rewrites %
                {:tag     :knowtator-project
                 :attrs   nil
