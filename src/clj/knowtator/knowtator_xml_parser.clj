@@ -6,13 +6,13 @@
             [clojure.string :as str]
             [knowtator.util :as util]))
 
-(defn read-annotation-files [project-file-name]
+(defn read-project-xmls [dir project-file-name]
   (letfn [(struct->map [x]
             (cond->> x
               (instance? clojure.lang.PersistentStructMap x)
               (into {})))]
     (-> project-file-name
-      (io/file "Annotations")
+      (io/file dir)
       file-seq
       rest
       (->>
@@ -37,7 +37,6 @@
       (->> xmls
         (mapcat #(m/rewrites %
                    {:tag     :knowtator-project
-                    :attrs   nil
                     :content (m/scan {:tag   :document
                                       :attrs {:id        ?doc
                                               :text-file ?file-name}})}
@@ -51,7 +50,6 @@
   (->> xmls
     (mapcat #(m/rewrites %
                {:tag     :knowtator-project
-                :attrs   nil
                 :content (m/scan {:tag     :document
                                   :attrs   {:id ?doc}
                                   :content (m/scan
@@ -66,12 +64,29 @@
                {:id      ?ann
                 :doc     ?doc
                 :profile ?profile
-                :concept ?concept-label}))))
+                :concept ?concept-label}))
+    set))
+
+(defn parse-profiles [xmls]
+  (->> xmls
+    (mapcat #(m/rewrites %
+               {:tag     :knowtator-project
+                :content (m/scan
+                           {:tag     :profile
+                            :attrs   {:id ?id}
+                            :content [{:tag   :highlighter
+                                       :attrs {:class !concept
+                                               :color !color}}
+                                      ...]})}
+               {:id     (m/app keyword ?id)
+                :colors (m/app (partial apply hash-map) [!concept !color ...])}))))
+
 
 (defn parse-project [project-file]
-  (let [annotation-xmls (read-annotation-files project-file)]
+  (let [annotation-xmls (read-project-xmls "Annotations" project-file)
+        profile-xmls    (read-project-xmls "Profiles" project-file)]
     {:anns     (parse-annotations annotation-xmls)
      :docs     (parse-documents project-file annotation-xmls)
-     :profiles []
+     :profiles (parse-profiles profile-xmls)
      :spans    []
      :graphs   []}))
