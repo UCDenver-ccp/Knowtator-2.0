@@ -18,6 +18,80 @@
                         :content [{:tag   :highlighter
                                    :attrs {:color "blue"
                                            :class "c1"}}]}]}))))
+  (testing "Multiple profiles"
+    (is (= [{:id     :p1
+             :colors {"c1" "blue"}}
+            {:id     :p2
+             :colors {"c1" "blue"}}]
+          (sut/parse-profile (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :profile
+                        :attrs   {:id "p1"}
+                        :content [{:tag   :highlighter
+                                   :attrs {:color "blue"
+                                           :class "c1"}}]}
+                       {:tag     :profile
+                        :attrs   {:id "p2"}
+                        :content [{:tag   :highlighter
+                                   :attrs {:color "blue"
+                                           :class "c1"}}]}]}))))
+  (testing "Missing ID"
+    (is (= [{:id     :profile-1
+             :colors {"c1" "blue"}}]
+          (sut/parse-profile (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :profile
+                        :attrs   {}
+                        :content [{:tag   :highlighter
+                                   :attrs {:color "blue"
+                                           :class "c1"}}]}]}))))
+  (testing "Multiple colors"
+    (is (= [{:id     :p1
+             :colors {"c1" "blue"
+                      "c2" "red"}}]
+          (sut/parse-profile (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :profile
+                        :attrs   {:id "p1"}
+                        :content [{:tag   :highlighter
+                                   :attrs {:color "blue"
+                                           :class "c1"}}
+                                  {:tag   :highlighter
+                                   :attrs {:color "red"
+                                           :class "c2"}}]}]})))))
+(deftest parse-annotation-test
+  (testing "Basic"
+    (is (= [{:id      :a1
+             :profile :p1
+             :concept "c1"
+             :doc     :d1}]
+          (sut/parse-annotation (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :document
+                        :attrs   {:id "d1"}
+                        :content [{:tag     :annotation
+                                   :attrs   {:id        "a1"
+                                             :annotator "p1"}
+                                   :content [{:tag   :class
+                                              :attrs {:label "cl1"
+                                                      :id    "c1"}}]}]}]}))))
+  (testing "Multiple profiles"
+    (is (= [{:id     :p1
+             :colors {"c1" "blue"}}
+            {:id     :p2
+             :colors {"c1" "blue"}}]
+          (sut/parse-profile (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :profile
+                        :attrs   {:id "p1"}
+                        :content [{:tag   :highlighter
+                                   :attrs {:color "blue"
+                                           :class "c1"}}]}
+                       {:tag     :profile
+                        :attrs   {:id "p2"}
+                        :content [{:tag   :highlighter
+                                   :attrs {:color "blue"
+                                           :class "c1"}}]}]}))))
   (testing "Missing ID"
     (is (= [{:id     :profile-1
              :colors {"c1" "blue"}}]
@@ -71,27 +145,39 @@
     (is (= [{:id      :mention_0,
              :doc     :document1,
              :profile :Default,
-             :concept "Pizza"}
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
             {:id      :mention_1,
              :doc     :document1,
              :profile :profile1,
-             :concept "IceCream"}
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream"}
             {:id      :mention_3,
              :doc     :document2,
              :profile :Default,
-             :concept nil}
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
             {:id      :mention_0,
              :doc     :document3,
              :profile :Default,
-             :concept "Food"}
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
+            {:id      :mention_0,
+             :doc     :document3,
+             :profile :Default,
+             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
             {:id      :mention_1,
              :doc     :document3,
              :profile :profile1,
-             :concept "Food"}
+             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
+            {:id      :mention_1,
+             :doc     :document3,
+             :profile :profile1,
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
             {:id      :mention_2,
              :doc     :document3,
              :profile :Default,
-             :concept "Food"}]
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
+            {:id      :mention_2,
+             :doc     :document3,
+             :profile :Default,
+             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}]
           (->> annotation-xmls
             sut/parse-annotations
             (sort-by (juxt :doc :id)))))))
@@ -130,27 +216,39 @@
     (is (= {:anns     [6 #{{:id      :mention_0,
                             :doc     :document1,
                             :profile :Default,
-                            :concept "Pizza"}
+                            :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
                            {:id      :mention_1,
                             :doc     :document1,
                             :profile :profile1,
-                            :concept "IceCream"}
+                            :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream"}
                            {:id      :mention_3,
                             :doc     :document2,
                             :profile :Default,
-                            :concept nil}
+                            :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
                            {:id      :mention_0,
                             :doc     :document3,
                             :profile :Default,
-                            :concept "Food"}
+                            :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
+                           {:id      :mention_0,
+                            :doc     :document3,
+                            :profile :Default,
+                            :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
                            {:id      :mention_1,
                             :doc     :document3,
                             :profile :profile1,
-                            :concept "Food"}
+                            :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
+                           {:id      :mention_1,
+                            :doc     :document3,
+                            :profile :profile1,
+                            :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
                            {:id      :mention_2,
                             :doc     :document3,
                             :profile :Default,
-                            :concept "Food"}}]
+                            :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
+                           {:id      :mention_2,
+                            :doc     :document3,
+                            :profile :Default,
+                            :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}}]
             :docs     [5 [{:file-name "document1.txt",
                            :id        :document1,
                            :content   "This is a test document."}
@@ -165,7 +263,16 @@
                            :content   "Look at me."}
                           {:file-name "long_article.txt"
                            :id        :long_article}]]
-            :spans    [7]
+            :spans    [7 [{:id :document1-26, :ann :mention_0, :start 0, :end 4}
+                          {:id :document1-28, :ann :mention_1, :start 10, :end 14}
+                          {:id :document1-29, :ann :mention_1, :start 15, :end 24}
+                          {:id :span-1 :ann :mention_3, :start 0, :end 3}
+                          {:id :document3-11, :ann :mention_0, :start 0, :end 1}
+                          {:id :document3-14, :ann :mention_1, :start 28, :end 36}
+                          {:id :document3-17, :ann :mention_2, :start 28, :end 36}
+                          {:id :document3-11, :ann :mention_0, :start 0, :end 1}
+                          {:id :span-2 :ann :mention_1, :start 28, :end 36}
+                          {:id :span-3 :ann :mention_2, :start 28, :end 36}]]
             :graphs   [3]
             :profiles [2 [{:id :Default,
                            :colors

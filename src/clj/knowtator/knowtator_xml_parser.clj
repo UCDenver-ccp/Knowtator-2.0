@@ -77,7 +77,7 @@
     {:id      (m/app (partial verify-id counter "annotation-") ?ann)
      :doc     (m/app keyword ?doc)
      :profile (m/app keyword ?profile)
-     :concept ?concept-label}))
+     :concept ?concept}))
 
 (defn parse-span [counter xml]
   (m/rewrites xml
@@ -119,7 +119,6 @@
         (util/map-with-key :id)
         (merge-with (partial merge-with (comp (partial some identity) vector)) articles)
         vals))))
-
 
 (defn parse-annotations [xmls]
   (->> xmls
