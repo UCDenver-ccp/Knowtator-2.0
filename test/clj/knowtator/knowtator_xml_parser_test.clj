@@ -1,9 +1,10 @@
 (ns knowtator.knowtator-xml-parser-test
   (:require [clojure.test :refer [deftest is testing]]
-            [knowtator.knowtator-xml-parser :as sut]))
+            [knowtator.knowtator-xml-parser :as sut]
+            [clojure.java.io :as io]))
 
-(def project-file-name "test_project_using_uris")
-(def annotation-xmls (sut/read-annotation-files project-file-name))
+(def project-file (io/resource "test_project_using_uris"))
+(def annotation-xmls (sut/read-annotation-files project-file))
 
 (deftest parse-documents-test
   (testing "Basic parse documents from annotation files"
@@ -32,7 +33,7 @@
                   :file-name nil}
                  {:id        "document3",
                   :file-name "document3.txt"}}
-            (sut/realize-documents project-file-name)
+            (sut/realize-documents project-file)
             set)))))
 
 (deftest parse-annotations-test

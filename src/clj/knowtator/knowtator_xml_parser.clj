@@ -11,9 +11,6 @@
               (into {})))]
     (-> project-file-name
       (io/file "Annotations")
-      str
-      io/resource
-      io/file
       file-seq
       rest
       (->>
@@ -31,12 +28,9 @@
                {:id        ?doc
                 :file-name ?file-name}))))
 
-(defn read-document-text-file [project-file-name article-file-name]
-  (-> project-file-name
+(defn read-document-text-file [project-file article-file-name]
+  (-> project-file
     (io/file "Articles" article-file-name)
-    str
-    io/resource
-    io/file
     slurp))
 
 (defn realize-documents [project-file-name docs]
