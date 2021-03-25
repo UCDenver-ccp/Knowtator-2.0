@@ -12,11 +12,18 @@
   (fn [e]
     (f (js->clj e :keywordize-keys true))))
 
+(defn manipulation-handler-fn
+  [f]
+  (fn [data callback]
+    (callback (f (js->clj data :keywordize-keys true)))))
+
 (defn vis [id graph & {:keys [options events style]
                        :or   {style {:height "640px"}}}]
   [(r/adapt-react-class visjs-graph)
    {:graph   (<sub graph)
-    :options options
+    :options (-> options
+               (update :manipulation (partial util/map-vals manipulation-handler-fn))
+               (assoc-in [:manipulation :enabled] true))
     :events  (util/map-vals handler-fn events)
     :style   style}])
 
@@ -26,7 +33,18 @@
              :edges        {:color "#000000"}
              :physics      (<sub [::subs/graph-physics])
              :interaction  {:hover true}
-             :manipulation {:enabled true}}
+             :manipulation {:add-node    (fn [node-data]
+                                           (>evt [::evts/add-node node-data]))
+                            :add-edge    (fn [edge-data]
+                                           (println edge-data))
+                            :edit-node   (fn [node-data]
+                                           (println node-data))
+                            :edit-edge   (fn [edge-data]
+                                           (println edge-data))
+                            :delete-node (fn [node-ids]
+                                           (println node-ids))
+                            :delete-edge (fn [edge-ids]
+                                           (println edge-ids))}}
    :events  {:click (fn [{:keys                   [nodes]
                          {{:keys [x y]} :canvas} :pointer}]
                       (>evt [::evts/toggle-node-physics (first nodes) x y]))}])
