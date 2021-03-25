@@ -8,63 +8,94 @@
 
 (deftest parse-documents-test
   (testing "Basic parse documents from annotation files"
-    (is (= #{{:id        "document1",
-              :file-name "document1.txt"}
-             {:id        "document2",
-              :file-name nil}
-             {:id        "document3",
-              :file-name "document3.txt"}}
-          (-> annotation-xmls
-            sut/parse-documents
-            set)))))
-
-(deftest realize-documents-test
-  (testing "Find documents corresponding text file and read its contents"
-    (is (= #{{:id        "document3",
-              :file-name "document3.txt",
-              :content   "A second test document has appeared!"}
-             {:id        "document1",
-              :file-name "document1.txt",
-              :content   "This is a test document."}
-             {:id "document2", :file-name nil, :content "And another one!"}}
-          (->> #{{:id        "document1",
-                  :file-name "document1.txt"}
-                 {:id        "document2",
-                  :file-name nil}
-                 {:id        "document3",
-                  :file-name "document3.txt"}}
-            (sut/realize-documents project-file)
-            set)))))
+    (is (= [5 [{:file-name "document1.txt",
+                :id        "document1",
+                :content   "This is a test document."}
+               {:file-name "document2.txt",
+                :id        "document2",
+                :content   "And another one!"}
+               {:file-name "document3.txt",
+                :id        "document3",
+                :content   "A second test document has appeared!"}
+               {:file-name "document4.txt", :id "document4", :content "Look at me."}
+               {:file-name "long_article.txt"
+                :id        "long_article"}]]
+          (->> annotation-xmls
+            (sut/parse-documents project-file)
+            (sort-by :id)
+            vec
+            (#(update % 4 dissoc :content))
+            ((juxt count identity)))))))
 
 (deftest parse-annotations-test
   (testing "Basic parse annotations from annotation files"
-    (is (= #{{:id      "mention_0",
-              :doc     "document1",
-              :profile "Default",
-              :concept "Pizza"}
-             {:id      "mention_1",
-              :doc     "document1",
-              :profile "profile1",
-              :concept "IceCream"}
-             {:id      "mention_3",
-              :doc     "document2",
-              :profile "Default",
-              :concept nil}
-             {:id      "mention_0",
-              :doc     "document3",
-              :profile "Default",
-              :concept "Food"}
-             {:id      "mention_1",
-              :doc     "document3",
-              :profile "profile1",
-              :concept "Food"}
-             {:id      "mention_2",
-              :doc     "document3",
-              :profile "Default",
-              :concept "Food"}}
-          (-> annotation-xmls
+    (is (= [{:id      "mention_0",
+             :doc     "document1",
+             :profile "Default",
+             :concept "Pizza"}
+            {:id      "mention_1",
+             :doc     "document1",
+             :profile "profile1",
+             :concept "IceCream"}
+            {:id      "mention_3",
+             :doc     "document2",
+             :profile "Default",
+             :concept nil}
+            {:id      "mention_0",
+             :doc     "document3",
+             :profile "Default",
+             :concept "Food"}
+            {:id      "mention_1",
+             :doc     "document3",
+             :profile "profile1",
+             :concept "Food"}
+            {:id      "mention_2",
+             :doc     "document3",
+             :profile "Default",
+             :concept "Food"}]
+          (->> annotation-xmls
             sut/parse-annotations
-            set)))))
+            (sort-by (juxt :doc :id)))))))
+
+(deftest parse-project-test
+  (testing "Basic project"
+    (is (= {:anns     #{{:id      "mention_0",
+                         :doc     "document1",
+                         :profile "Default",
+                         :concept "Pizza"}
+                        {:id      "mention_1",
+                         :doc     "document1",
+                         :profile "profile1",
+                         :concept "IceCream"}
+                        {:id      "mention_3",
+                         :doc     "document2",
+                         :profile "Default",
+                         :concept nil}
+                        {:id      "mention_0",
+                         :doc     "document3",
+                         :profile "Default",
+                         :concept "Food"}
+                        {:id      "mention_1",
+                         :doc     "document3",
+                         :profile "profile1",
+                         :concept "Food"}
+                        {:id      "mention_2",
+                         :doc     "document3",
+                         :profile "Default",
+                         :concept "Food"}}
+            :docs     #{{:id        "document3",
+                         :file-name "document3.txt",
+                         :content   "A second test document has appeared!"}
+                        {:id        "document1",
+                         :file-name "document1.txt",
+                         :content   "This is a test document."}
+                        {:id        "document2",
+                         :file-name nil,
+                         :content   "And another one!"}}
+            :spans    []
+            :graphs   []
+            :profiles []}
+          (sut/parse-project project-file)))))
 
 ;; public static final ProjectCounts defaultCounts = new ProjectCounts(5, 6, 7, 3, 2, 3, 7, 4, 0);
 

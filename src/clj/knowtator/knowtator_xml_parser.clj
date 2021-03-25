@@ -2,7 +2,9 @@
   (:require [clojure.java.io :as io]
             [clojure.walk :as walk]
             [clojure.xml :as xml]
-            [meander.epsilon :as m]))
+            [meander.epsilon :as m]
+            [clojure.string :as str]
+            [knowtator.util :as util]))
 
 (defn read-annotation-files [project-file-name]
   (letfn [(struct->map [x]
@@ -17,30 +19,33 @@
         (map xml/parse)
         (map (partial walk/postwalk struct->map))))))
 
-(defn parse-documents [xmls]
-  (->> xmls
-    (mapcat #(m/rewrites %
-               {:tag     :knowtator-project
-                :attrs   nil
-                :content (m/scan {:tag   :document
-                                  :attrs {:id        ?doc
-                                          :text-file ?file-name}})}
-               {:id        ?doc
-                :file-name ?file-name}))))
-
-(defn read-document-text-file [project-file article-file-name]
-  (-> project-file
-    (io/file "Articles" article-file-name)
-    slurp))
-
-(defn realize-documents [project-file-name docs]
-  (->> docs
-    (map (fn [{:keys [file-name id] :as doc}]
-           (let [file-name (if file-name
-                             file-name
-                             (str id ".txt"))
-                 content   (read-document-text-file project-file-name file-name)]
-             (assoc doc :content content))))))
+(defn parse-documents [project-file xmls]
+  (letfn [(file-name [f]
+            (str (.getName f)))
+          (file-name->id [f]
+            (-> f
+              file-name
+              (str/replace-first #"\.txt$" "")))]
+    (let [articles (-> project-file
+                     (io/file "Articles")
+                     file-seq
+                     rest
+                     (->>
+                       (map (juxt file-name file-name->id slurp))
+                       (map (partial zipmap [:file-name :id :content]))
+                       (util/map-with-key :id)))]
+      (->> xmls
+        (mapcat #(m/rewrites %
+                   {:tag     :knowtator-project
+                    :attrs   nil
+                    :content (m/scan {:tag   :document
+                                      :attrs {:id        ?doc
+                                              :text-file ?file-name}})}
+                   {:id        ?doc
+                    :file-name ?file-name}))
+        (util/map-with-key :id)
+        (merge-with (partial merge-with (comp (partial some identity) vector)) articles)
+        vals))))
 
 (defn parse-annotations [xmls]
   (->> xmls
@@ -62,3 +67,11 @@
                 :doc     ?doc
                 :profile ?profile
                 :concept ?concept-label}))))
+
+(defn parse-project [project-file]
+  (let [annotation-xmls (read-annotation-files project-file)]
+    {:anns     (parse-annotations annotation-xmls)
+     :docs     (parse-documents project-file annotation-xmls)
+     :profiles []
+     :spans    []
+     :graphs   []}))
