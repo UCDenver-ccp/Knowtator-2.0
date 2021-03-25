@@ -6,6 +6,12 @@
             [clojure.string :as str]
             [knowtator.util :as util]))
 
+
+(defn verify-id [counter prefix id]
+  (keyword (or id
+             (do (swap! counter inc)
+                 (str prefix @counter)))))
+
 (defn read-project-xmls [dir project-file-name]
   (letfn [(struct->map [x]
             (cond->> x
@@ -19,18 +25,18 @@
         (map xml/parse)
         (map (partial walk/postwalk struct->map))))))
 
-(defn parse-profile [xml]
+(defn parse-profile [counter xml]
   (m/rewrites xml
     {:tag     :knowtator-project
      :content (m/scan
                 {:tag     :profile
                  :attrs   {:id ?id}
                  :content [{:tag   :highlighter
-                            :attrs {:class !concept
-                                    :color !color}}
+                            :attrs {:class !concepts
+                                    :color !colors}}
                            ...]})}
-    {:id     (m/app keyword ?id)
-     :colors (m/app (partial apply hash-map) [!concept !color ...])}))
+    {:id     (m/app (partial verify-id counter "profile-") ?id)
+     :colors (m/app (partial apply hash-map) [!concepts !colors ...])}))
 
 (defn parse-document [xml]
   (m/rewrites xml
@@ -59,7 +65,7 @@
      :profile ?profile
      :concept ?concept-label}))
 
-(defn parse-span [verify-id xml]
+(defn parse-span [counter xml]
   (m/rewrites xml
     {:tag     :knowtator-project
      :content (m/scan
@@ -73,7 +79,7 @@
                                                    :start ?start
                                                    :end   ?end}
                                          :content ?content})})})}
-    {:id    (m/app verify-id ?id)
+    {:id    (m/app (partial verify-id counter "span-") ?id)
      :ann   ?ann
      :start (m/app #(Integer/parseInt %) ?start)
      :end   (m/app #(Integer/parseInt %) ?end)}))
@@ -107,17 +113,12 @@
 
 (defn parse-profiles [xmls]
   (->> xmls
-    (mapcat parse-profile)))
-
+    (mapcat (partial parse-profile (atom 0)))))
 
 (defn parse-spans [xmls]
-  (let [id-idx (atom 0)]
-    (letfn [(verify-id [id]
-              (or id
-                (do (swap! id-idx inc)
-                    (str "span-" @id-idx))))]
-      (->> xmls
-        (mapcat (partial parse-span verify-id))))))
+  (let [counter (atom 0)]
+    (->> xmls
+      (mapcat (partial parse-span counter)))))
 
 (defn parse-project [project-file]
   (let [annotation-xmls (read-project-xmls "Annotations" project-file)

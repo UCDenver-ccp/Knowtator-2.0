@@ -7,6 +7,42 @@
 (def project-file (io/resource "test_project_using_uris"))
 (def annotation-xmls (sut/read-project-xmls "Annotations" project-file))
 
+(deftest parse-profile-test
+  (testing "Basic"
+    (is (= [{:id     :p1
+             :colors {"c1" "blue"}}]
+          (sut/parse-profile (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :profile
+                        :attrs   {:id "p1"}
+                        :content [{:tag   :highlighter
+                                   :attrs {:color "blue"
+                                           :class "c1"}}]}]}))))
+  (testing "Missing ID"
+    (is (= [{:id     :profile-1
+             :colors {"c1" "blue"}}]
+          (sut/parse-profile (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :profile
+                        :attrs   {}
+                        :content [{:tag   :highlighter
+                                   :attrs {:color "blue"
+                                           :class "c1"}}]}]}))))
+  (testing "Multiple colors"
+    (is (= [{:id     :p1
+             :colors {"c1" "blue"
+                      "c2" "red"}}]
+          (sut/parse-profile (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :profile
+                        :attrs   {:id "p1"}
+                        :content [{:tag   :highlighter
+                                   :attrs {:color "blue"
+                                           :class "c1"}}
+                                  {:tag   :highlighter
+                                   :attrs {:color "red"
+                                           :class "c2"}}]}]})))))
+
 (deftest parse-documents-test
   (testing "Basic parse documents from annotation files"
     (is (= [5 [{:file-name "document1.txt",
@@ -74,16 +110,16 @@
 
 (deftest parse-spans-test
   (testing "Parse basic project for spans"
-    (is (= [{:id "document1-26", :ann "mention_0", :start 0, :end 4}
-            {:id "document1-28", :ann "mention_1", :start 10, :end 14}
-            {:id "document1-29", :ann "mention_1", :start 15, :end 24}
-            {:id "span-1" :ann "mention_3", :start 0, :end 3}
-            {:id "document3-11", :ann "mention_0", :start 0, :end 1}
-            {:id "document3-14", :ann "mention_1", :start 28, :end 36}
-            {:id "document3-17", :ann "mention_2", :start 28, :end 36}
-            {:id "document3-11", :ann "mention_0", :start 0, :end 1}
-            {:id "span-2" :ann "mention_1", :start 28, :end 36}
-            {:id "span-3" :ann "mention_2", :start 28, :end 36}]
+    (is (= [{:id :document1-26, :ann "mention_0", :start 0, :end 4}
+            {:id :document1-28, :ann "mention_1", :start 10, :end 14}
+            {:id :document1-29, :ann "mention_1", :start 15, :end 24}
+            {:id :span-1 :ann "mention_3", :start 0, :end 3}
+            {:id :document3-11, :ann "mention_0", :start 0, :end 1}
+            {:id :document3-14, :ann "mention_1", :start 28, :end 36}
+            {:id :document3-17, :ann "mention_2", :start 28, :end 36}
+            {:id :document3-11, :ann "mention_0", :start 0, :end 1}
+            {:id :span-2 :ann "mention_1", :start 28, :end 36}
+            {:id :span-3 :ann "mention_2", :start 28, :end 36}]
           (->> annotation-xmls
             sut/parse-spans)))))
 
