@@ -8,6 +8,7 @@
 
 (declare
   ?id
+  ?concept
   ?concepts
   !concepts
   !colors
@@ -51,16 +52,16 @@
     {:id     (m/app (partial verify-id counter "profile-") ?id)
      :colors (m/app (partial apply hash-map) [!concepts !colors ...])}))
 
-(defn parse-document [xml]
+(defn parse-document [counter xml]
   (m/rewrites xml
     {:tag     :knowtator-project
      :content (m/scan {:tag   :document
                        :attrs {:id        ?doc
                                :text-file ?file-name}})}
-    {:id        ?doc
+    {:id        (m/app (partial verify-id counter "document-") ?doc)
      :file-name ?file-name}))
 
-(defn parse-annotation [xml]
+(defn parse-annotation [counter xml]
   (m/rewrites xml
     {:tag     :knowtator-project
      :content (m/scan {:tag     :document
@@ -73,9 +74,9 @@
                                               {:tag   :class
                                                :attrs {:id    ?concept
                                                        :label ?concept-label}})})})}
-    {:id      ?ann
-     :doc     ?doc
-     :profile ?profile
+    {:id      (m/app (partial verify-id counter "annotation-") ?ann)
+     :doc     (m/app keyword ?doc)
+     :profile (m/app keyword ?profile)
      :concept ?concept-label}))
 
 (defn parse-span [counter xml]
@@ -93,7 +94,7 @@
                                                    :end   ?end}
                                          :content ?content})})})}
     {:id    (m/app (partial verify-id counter "span-") ?id)
-     :ann   ?ann
+     :ann   (m/app keyword ?ann)
      :start (m/app #(Integer/parseInt %) ?start)
      :end   (m/app #(Integer/parseInt %) ?end)}))
 
@@ -103,7 +104,8 @@
           (file-name->id [f]
             (-> f
               file-name
-              (str/replace-first #"\.txt$" "")))]
+              (str/replace-first #"\.txt$" "")
+              keyword))]
     (let [articles (-> project-file
                      (io/file "Articles")
                      file-seq
@@ -113,7 +115,7 @@
                        (map (partial zipmap [:file-name :id :content]))
                        (util/map-with-key :id)))]
       (->> xmls
-        (mapcat parse-document)
+        (mapcat (partial parse-document (atom 0)))
         (util/map-with-key :id)
         (merge-with (partial merge-with (comp (partial some identity) vector)) articles)
         vals))))
@@ -121,7 +123,7 @@
 
 (defn parse-annotations [xmls]
   (->> xmls
-    (mapcat parse-annotation)
+    (mapcat (partial parse-annotation (atom 0)))
     set))
 
 (defn parse-profiles [xmls]

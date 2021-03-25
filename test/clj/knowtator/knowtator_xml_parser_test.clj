@@ -46,17 +46,19 @@
 (deftest parse-documents-test
   (testing "Basic parse documents from annotation files"
     (is (= [5 [{:file-name "document1.txt",
-                :id        "document1",
+                :id        :document1,
                 :content   "This is a test document."}
                {:file-name "document2.txt",
-                :id        "document2",
+                :id        :document2,
                 :content   "And another one!"}
                {:file-name "document3.txt",
-                :id        "document3",
+                :id        :document3,
                 :content   "A second test document has appeared!"}
-               {:file-name "document4.txt", :id "document4", :content "Look at me."}
+               {:file-name "document4.txt",
+                :id        :document4,
+                :content   "Look at me."}
                {:file-name "long_article.txt"
-                :id        "long_article"}]]
+                :id        :long_article}]]
           (->> annotation-xmls
             (sut/parse-documents project-file)
             (sort-by :id)
@@ -66,29 +68,29 @@
 
 (deftest parse-annotations-test
   (testing "Basic parse annotations from annotation files"
-    (is (= [{:id      "mention_0",
-             :doc     "document1",
-             :profile "Default",
+    (is (= [{:id      :mention_0,
+             :doc     :document1,
+             :profile :Default,
              :concept "Pizza"}
-            {:id      "mention_1",
-             :doc     "document1",
-             :profile "profile1",
+            {:id      :mention_1,
+             :doc     :document1,
+             :profile :profile1,
              :concept "IceCream"}
-            {:id      "mention_3",
-             :doc     "document2",
-             :profile "Default",
+            {:id      :mention_3,
+             :doc     :document2,
+             :profile :Default,
              :concept nil}
-            {:id      "mention_0",
-             :doc     "document3",
-             :profile "Default",
+            {:id      :mention_0,
+             :doc     :document3,
+             :profile :Default,
              :concept "Food"}
-            {:id      "mention_1",
-             :doc     "document3",
-             :profile "profile1",
+            {:id      :mention_1,
+             :doc     :document3,
+             :profile :profile1,
              :concept "Food"}
-            {:id      "mention_2",
-             :doc     "document3",
-             :profile "Default",
+            {:id      :mention_2,
+             :doc     :document3,
+             :profile :Default,
              :concept "Food"}]
           (->> annotation-xmls
             sut/parse-annotations
@@ -110,57 +112,59 @@
 
 (deftest parse-spans-test
   (testing "Parse basic project for spans"
-    (is (= [{:id :document1-26, :ann "mention_0", :start 0, :end 4}
-            {:id :document1-28, :ann "mention_1", :start 10, :end 14}
-            {:id :document1-29, :ann "mention_1", :start 15, :end 24}
-            {:id :span-1 :ann "mention_3", :start 0, :end 3}
-            {:id :document3-11, :ann "mention_0", :start 0, :end 1}
-            {:id :document3-14, :ann "mention_1", :start 28, :end 36}
-            {:id :document3-17, :ann "mention_2", :start 28, :end 36}
-            {:id :document3-11, :ann "mention_0", :start 0, :end 1}
-            {:id :span-2 :ann "mention_1", :start 28, :end 36}
-            {:id :span-3 :ann "mention_2", :start 28, :end 36}]
+    (is (= [{:id :document1-26, :ann :mention_0, :start 0, :end 4}
+            {:id :document1-28, :ann :mention_1, :start 10, :end 14}
+            {:id :document1-29, :ann :mention_1, :start 15, :end 24}
+            {:id :span-1 :ann :mention_3, :start 0, :end 3}
+            {:id :document3-11, :ann :mention_0, :start 0, :end 1}
+            {:id :document3-14, :ann :mention_1, :start 28, :end 36}
+            {:id :document3-17, :ann :mention_2, :start 28, :end 36}
+            {:id :document3-11, :ann :mention_0, :start 0, :end 1}
+            {:id :span-2 :ann :mention_1, :start 28, :end 36}
+            {:id :span-3 :ann :mention_2, :start 28, :end 36}]
           (->> annotation-xmls
             sut/parse-spans)))))
 
 (deftest parse-project-test
   (testing "Basic project"
-    (is (= {:anns     [6 #{{:id      "mention_0",
-                            :doc     "document1",
-                            :profile "Default",
+    (is (= {:anns     [6 #{{:id      :mention_0,
+                            :doc     :document1,
+                            :profile :Default,
                             :concept "Pizza"}
-                           {:id      "mention_1",
-                            :doc     "document1",
-                            :profile "profile1",
+                           {:id      :mention_1,
+                            :doc     :document1,
+                            :profile :profile1,
                             :concept "IceCream"}
-                           {:id      "mention_3",
-                            :doc     "document2",
-                            :profile "Default",
+                           {:id      :mention_3,
+                            :doc     :document2,
+                            :profile :Default,
                             :concept nil}
-                           {:id      "mention_0",
-                            :doc     "document3",
-                            :profile "Default",
+                           {:id      :mention_0,
+                            :doc     :document3,
+                            :profile :Default,
                             :concept "Food"}
-                           {:id      "mention_1",
-                            :doc     "document3",
-                            :profile "profile1",
+                           {:id      :mention_1,
+                            :doc     :document3,
+                            :profile :profile1,
                             :concept "Food"}
-                           {:id      "mention_2",
-                            :doc     "document3",
-                            :profile "Default",
+                           {:id      :mention_2,
+                            :doc     :document3,
+                            :profile :Default,
                             :concept "Food"}}]
             :docs     [5 [{:file-name "document1.txt",
-                           :id        "document1",
+                           :id        :document1,
                            :content   "This is a test document."}
                           {:file-name "document2.txt",
-                           :id        "document2",
+                           :id        :document2,
                            :content   "And another one!"}
                           {:file-name "document3.txt",
-                           :id        "document3",
+                           :id        :document3,
                            :content   "A second test document has appeared!"}
-                          {:file-name "document4.txt", :id "document4", :content "Look at me."}
+                          {:file-name "document4.txt",
+                           :id        :document4,
+                           :content   "Look at me."}
                           {:file-name "long_article.txt"
-                           :id        "long_article"}]]
+                           :id        :long_article}]]
             :spans    [7]
             :graphs   [3]
             :profiles [2 [{:id :Default,
