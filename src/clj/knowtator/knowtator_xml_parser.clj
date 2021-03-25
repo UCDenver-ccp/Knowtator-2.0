@@ -6,6 +6,19 @@
             [clojure.string :as str]
             [knowtator.util :as util]))
 
+(declare
+  ?id
+  ?concepts
+  !concepts
+  !colors
+  ?ann
+  ?doc
+  ?file-name
+  ?profile
+  ?start
+  ?end
+  ?content
+  ?concept-label)
 
 (defn verify-id [counter prefix id]
   (keyword (or id
