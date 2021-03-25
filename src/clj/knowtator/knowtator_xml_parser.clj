@@ -81,33 +81,33 @@
                {:id     (m/app keyword ?id)
                 :colors (m/app (partial apply hash-map) [!concept !color ...])}))))
 
+(defn parse-span [verify-id xml]
+  (m/rewrites xml
+    {:tag     :knowtator-project
+     :content (m/scan
+                {:tag     :document
+                 :content (m/scan
+                            {:tag     :annotation
+                             :attrs   {:id ?ann}
+                             :content (m/scan
+                                        {:tag     :span
+                                         :attrs   {:id    ?id
+                                                   :start ?start
+                                                   :end   ?end}
+                                         :content ?content})})})}
+    {:id    (m/app verify-id ?id)
+     :ann   ?ann
+     :start (m/app #(Integer/parseInt %) ?start)
+     :end   (m/app #(Integer/parseInt %) ?end)}))
 
 (defn parse-spans [xmls]
   (let [id-idx (atom 0)]
-    (->> xmls
-      (mapcat (fn [x]
-                (m/rewrites x
-                  {:tag     :knowtator-project
-                   :content (m/scan
-                              {:tag     :document
-                               :content (m/scan
-                                          {:tag     :annotation
-                                           :attrs   {:id ?ann}
-                                           :content (m/scan
-                                                      {:tag     :span
-                                                       :attrs   {:id    ?id
-                                                                 :start ?start
-                                                                 :end   ?end}
-                                                       :content ?content})})})}
-                  {:id    (m/app #(or %
-                                    (do
-                                      (swap! id-idx inc)
-                                      (str "span-" @id-idx)))
-                            ?id)
-                   :ann   ?ann
-                   :start (m/app #(Integer/parseInt %) ?start)
-                   :end   (m/app #(Integer/parseInt %) ?end)}))))))
-
+    (letfn [(verify-id [id]
+              (or id
+                (do (swap! id-idx inc)
+                    (str "span-" @id-idx))))]
+      (->> xmls
+        (mapcat (partial parse-span verify-id))))))
 
 (defn parse-project [project-file]
   (let [annotation-xmls (read-project-xmls "Annotations" project-file)
