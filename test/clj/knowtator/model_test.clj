@@ -2,6 +2,52 @@
   (:require [clojure.test :refer [testing is deftest]]
             [knowtator.model :as sut]))
 
+(def test-db {:profiles [{:id     :p1
+                          :colors {:c1 "green"
+                                   :c2 "red"}}
+                         {:id     :p2
+                          :colors {:c1 "blue"}}]
+              :spans    [{:id    :s1
+                          :ann   :a1
+                          :start 0
+                          :end   15}
+                         {:id      :s2
+                          :ann     :a2
+                          :start   2
+                          :end     3
+                          :content "WRONG"}
+                         {:id    :s3
+                          :ann   :a1
+                          :start 16
+                          :end   45}]
+              :docs     [{:id      :d1
+                          :content "The quick brown fox jumped over the lazy dog."}
+                         {:id      :d2
+                          :content "WRONG"}]
+              :anns     [{:id      :a1
+                          :doc     :d1
+                          :profile :p1
+                          :concept :c1}
+                         {:id      :a2
+                          :doc     :d2
+                          :profile :p2
+                          :concept :c2}]})
+
+(deftest realize-ann-node-test
+  (testing "Realize simple ann-node"
+    (is (= {:id      :n1
+            :ann     :a1
+            :doc     :d1
+            :concept :c1
+            :profile :p1
+            :color   "green"
+            :label   "The quick brown fox jumped over the lazy dog."
+            :content "The quick brown fox jumped over the lazy dog."}
+          (sut/realize-ann-node
+            test-db
+            {:id  :n1
+             :ann :a1})))))
+
 (deftest realize-span-test
   (testing "Realize simple span"
     (is (= {:id      :s1
@@ -11,10 +57,10 @@
             :doc     :d1
             :concept :c1
             :profile :p1
-            :content "he b"}
+            :content "he q"}
           (sut/realize-span
             {:d1 {:id      :d1
-                  :content "The brown fox jumped over the dog."}
+                  :content "The quick brown fox jumped over the lazy dog."}
              :d2 {:id :content
                   :d2 "WRONG"}}
             {:a1 {:id      :a1
@@ -37,26 +83,14 @@
             :concept :c1
             :doc     :d1
             :color   "green"
-            :content "The brown fox jumped over the lazy dog."}
+            :content "The quick brown fox jumped over the lazy dog."}
           (sut/realize-ann
-            {:p1 {:c1 "green"
-                  :c2 "red"}
-             :p2 {:c1 "blue"}}
-            [{:id      :s1
-              :ann     :a1
-              :start   1
-              :end     10
-              :content "The brown fox"}
-             {:id      :s2
-              :ann     :a2
-              :start   2
-              :end     11
-              :content "WRONG"}
-             {:id      :s3
-              :ann     :a1
-              :start   20
-              :end     24
-              :content "jumped over the lazy dog."}]
+            (sut/realize-spans test-db)
+            {:p1 {:id     :p1
+                  :colors {:c1 "green"
+                           :c2 "red"}}
+             :p2 {:id     :p1
+                  :colors {:c1 "blue"}}}
             {:id      :a1
              :profile :p1
              :concept :c1

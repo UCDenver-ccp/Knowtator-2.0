@@ -63,8 +63,7 @@
 (reg-event-db ::select-span
   (fn [db [_ loc doc-id]]
     (let [{:keys [id ann]} (->> db
-                             :spans
-                             (model/spans-with-spanned-text (:docs db) (:anns db))
+                             model/realize-spans
                              (filter #(model/in-restriction? %  {:doc [doc-id]}))
                              (model/spans-containing-loc loc)
                              first)]

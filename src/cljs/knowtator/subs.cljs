@@ -66,11 +66,8 @@
   #(get-in % [:selection :profile-restriction]))
 
 (reg-sub ::spans-with-spanned-text
-  :<- [::docs]
-  :<- [::anns]
-  :<- [::spans]
-  (fn [[docs anns spans]]
-    (model/spans-with-spanned-text docs anns spans)))
+  (fn [db _]
+    (model/realize-spans db)))
 
 (reg-sub ::visual-restriction
   :<- [::selected-doc]

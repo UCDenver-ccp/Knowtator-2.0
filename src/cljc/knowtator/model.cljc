@@ -269,10 +269,8 @@
       (get docs))))
 
 (defn cycle-selection
-  [db restriction coll-id dir]
-  (let [coll (->> coll-id
-               (get db)
-               restriction
+  [db coll coll-id dir]
+  (let [coll (->> coll
                (map :id))]
     (update-in db [:selection coll-id] cycle-coll coll dir)))
 
@@ -325,27 +323,36 @@
       (assoc :content content))))
 
 (defn realize-spans
-  [docs anns spans]
+  [{:keys [docs anns] :as db}]
   (let [ann-map (util/map-with-key :id anns)
         doc-map (util/map-with-key :id docs)]
-    (->> spans
-      (map (partial realize-span doc-map ann-map)))))
+    (-> db
+      (update :spans (partial map (partial realize-span doc-map ann-map))))))
 
 (defn realize-ann
-  [profile-map realized-spans {:keys [profile id concept] :as ann}]
+  [{:keys [spans]} profile-map {:keys [profile id concept] :as ann}]
   (-> ann
     (assoc
-      :content (->> realized-spans
+      :content (->> spans
                  (group-by :ann)
                  id
                  (map :content)
                  (interpose " ")
                  (apply str))
-      :color (get-in profile-map [profile concept]))))
+      :color (get-in profile-map [profile :colors concept]))))
 
 (defn realize-anns
-  [docs profiles spans anns]
-  (let [realized-spans (realize-spans docs anns spans)
-        profile-map    (util/map-with-key :id profiles)]
-    (->> anns
-      (map (partial realize-ann profile-map realized-spans)))))
+  [{:keys [profiles] :as db}]
+  (let [profile-map (util/map-with-key :id profiles)]
+    (-> db
+      (update :anns (partial map (partial realize-ann (realize-spans db) profile-map))))))
+
+(defn realize-ann-node
+  [db {:keys [ann] :as node}]
+  (let [realized-ann (->> db
+                       realize-anns
+                       :anns
+                       (util/map-with-key :id)
+                       ann)
+        node         (merge realized-ann node)]
+    (assoc node :label (:content node))))
