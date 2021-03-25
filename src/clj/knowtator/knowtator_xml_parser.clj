@@ -59,7 +59,7 @@
                        :attrs {:id        ?doc
                                :text-file ?file-name}})}
     {:id        (m/app (partial verify-id counter "document-") ?doc)
-     :file-name ?file-name}))
+     :file-name (m/app #(or % (str ?doc ".txt")) ?file-name)}))
 
 (defn parse-annotation [counter xml]
   (m/rewrites xml

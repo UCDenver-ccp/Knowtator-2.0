@@ -128,6 +128,43 @@
                                    :content [{:tag   :class
                                               :attrs {:label "cl1"
                                                       :id    "c1"}}]}]}]})))))
+(deftest parse-document-test
+  (testing "Basic"
+    (is (= [{:id        :d1
+             :file-name "fn1"}]
+          (sut/parse-document (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag   :document
+                        :attrs {:id        "d1"
+                                :text-file "fn1"}}]}))))
+  (testing "Multiple documents"
+    (is (= [{:id        :d1
+             :file-name "fn1"}
+            {:id        :d2
+             :file-name "fn1"}]
+          (sut/parse-document (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag   :document
+                        :attrs {:id        "d1"
+                                :text-file "fn1"}}
+                       {:tag   :document
+                        :attrs {:id        "d2"
+                                :text-file "fn1"}}]}))))
+  (testing "Missing ID"
+    (is (= [{:id        :document-1
+             :file-name "fn1"}]
+          (sut/parse-document (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag   :document
+                        :attrs {:text-file "fn1"}}]}))))
+
+  (testing "Missing file name"
+    (is (= [{:id        :d1
+             :file-name "d1.txt"}]
+          (sut/parse-document (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag   :document
+                        :attrs {:id "d1"}}]})))))
 
 (deftest parse-documents-test
   (testing "Basic parse documents from annotation files"
