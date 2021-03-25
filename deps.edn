@@ -11,6 +11,7 @@
         selmer/selmer              {:mvn/version "1.12.33"}
         ring-webjars/ring-webjars  {:mvn/version "0.2.0"}
         luminus-undertow           {:mvn/version "0.1.7"}
+        org.clojure/core.match     {:mvn/version "1.0.0"}
 
         ;; ClojureScript client
         org.clojure/clojurescript {:mvn/version "1.10.773"
