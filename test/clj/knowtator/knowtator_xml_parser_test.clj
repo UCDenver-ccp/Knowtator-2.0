@@ -72,6 +72,21 @@
             (sut/read-project-xmls "Profiles")
             sut/parse-profiles)))))
 
+(deftest parse-spans-test
+  (testing "Parse basic project for spans"
+    (is (= [{:id "document1-26", :ann "mention_0", :start 0, :end 4}
+            {:id "document1-28", :ann "mention_1", :start 10, :end 14}
+            {:id "document1-29", :ann "mention_1", :start 15, :end 24}
+            {:id "span-1" :ann "mention_3", :start 0, :end 3}
+            {:id "document3-11", :ann "mention_0", :start 0, :end 1}
+            {:id "document3-14", :ann "mention_1", :start 28, :end 36}
+            {:id "document3-17", :ann "mention_2", :start 28, :end 36}
+            {:id "document3-11", :ann "mention_0", :start 0, :end 1}
+            {:id "span-2" :ann "mention_1", :start 28, :end 36}
+            {:id "span-3" :ann "mention_2", :start 28, :end 36}]
+          (->> annotation-xmls
+            sut/parse-spans)))))
+
 (deftest parse-project-test
   (testing "Basic project"
     (is (= {:anns     [6 #{{:id      "mention_0",

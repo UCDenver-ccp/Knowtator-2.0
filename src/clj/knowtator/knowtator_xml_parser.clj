@@ -82,11 +82,38 @@
                 :colors (m/app (partial apply hash-map) [!concept !color ...])}))))
 
 
+(defn parse-spans [xmls]
+  (let [id-idx (atom 0)]
+    (->> xmls
+      (mapcat (fn [x]
+                (m/rewrites x
+                  {:tag     :knowtator-project
+                   :content (m/scan
+                              {:tag     :document
+                               :content (m/scan
+                                          {:tag     :annotation
+                                           :attrs   {:id ?ann}
+                                           :content (m/scan
+                                                      {:tag     :span
+                                                       :attrs   {:id    ?id
+                                                                 :start ?start
+                                                                 :end   ?end}
+                                                       :content ?content})})})}
+                  {:id    (m/app #(or %
+                                    (do
+                                      (swap! id-idx inc)
+                                      (str "span-" @id-idx)))
+                            ?id)
+                   :ann   ?ann
+                   :start (m/app #(Integer/parseInt %) ?start)
+                   :end   (m/app #(Integer/parseInt %) ?end)}))))))
+
+
 (defn parse-project [project-file]
   (let [annotation-xmls (read-project-xmls "Annotations" project-file)
         profile-xmls    (read-project-xmls "Profiles" project-file)]
     {:anns     (parse-annotations annotation-xmls)
      :docs     (parse-documents project-file annotation-xmls)
      :profiles (parse-profiles profile-xmls)
-     :spans    []
+     :spans    (parse-spans annotation-xmls)
      :graphs   []}))
