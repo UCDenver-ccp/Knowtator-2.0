@@ -67,7 +67,7 @@
 
 (reg-sub ::spans-with-spanned-text
   (fn [db _]
-    (model/realize-spans db)))
+    (:spans (model/realize-spans db))))
 
 (reg-sub ::visual-restriction
   :<- [::selected-doc]

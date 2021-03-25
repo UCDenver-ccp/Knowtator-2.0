@@ -64,6 +64,7 @@
   (fn [db [_ loc doc-id]]
     (let [{:keys [id ann]} (->> db
                              model/realize-spans
+                             :spans
                              (filter #(model/in-restriction? %  {:doc [doc-id]}))
                              (model/spans-containing-loc loc)
                              first)]

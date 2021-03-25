@@ -8,6 +8,7 @@
     (let [restriction (case coll-id
                         :spans (->> db
                                  model/realize-spans
+                                 :spans
                                  (filter #(model/in-restriction? % {:doc [(get-in db [:selection :docs])]})))
                         identity)]
       (model/cycle-selection db restriction coll-id direction))))
