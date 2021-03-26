@@ -62,32 +62,60 @@
     {:id     (m/app (partial verify-id counter "profile-") ?id)
      :colors (m/app (partial apply hash-map) [!concepts !colors ...])}))
 
+(defsyntax document [id-pattern file-name-pattern]
+  `{:tag   :document
+    :attrs {:id        ~id-pattern
+            :text-file ~file-name-pattern}})
+
 (defn parse-document [counter xml]
   (m/rewrites xml
     {:tag     :knowtator-project
-     :content (m/scan {:tag   :document
-                       :attrs {:id        ?doc
-                               :text-file ?file-name}})}
-    {:id        (m/app (partial verify-id counter "document-") ?doc)
-     :file-name (m/app #(or % (str ?doc ".txt")) ?file-name)}))
+     :content (m/scan (document ?id ?file-name))}
+    {:id        (m/app (partial verify-id counter "document-") ?id)
+     :file-name (m/app #(or % (str ?id ".txt")) ?file-name)}))
+
+(defsyntax concept [concept-pattern concept-label-pattern]
+  `{:tag   :class
+    :attrs {:id    ~concept-pattern
+            :label ~concept-label-pattern}})
+
+(defsyntax annotation [id-pattern profile-pattern concept-pattern concept-label-pattern]
+  `{:tag     :annotation
+    :attrs   {:id        ~id-pattern
+              :annotator ~profile-pattern}
+    :content (m/scan (concept ~concept-pattern ~concept-label-pattern))})
 
 (defn parse-annotation [counter xml]
   (m/rewrites xml
     {:tag     :knowtator-project
      :content (m/scan {:tag     :document
                        :attrs   {:id ?doc}
-                       :content (m/scan
-                                  {:tag     :annotation
-                                   :attrs   {:id        ?ann
-                                             :annotator ?profile}
-                                   :content (m/scan
-                                              {:tag   :class
-                                               :attrs {:id    ?concept
-                                                       :label ?concept-label}})})})}
-    {:id      (m/app (partial verify-id counter "annotation-") ?ann)
+                       :content (m/scan (annotation ?id ?profile ?concept ?concept-label))})}
+    {:id      (m/app (partial verify-id counter "annotation-") ?id)
      :doc     (m/app keyword ?doc)
      :profile (m/app #(or (keyword %) :Default) ?profile)
      :concept ?concept}))
+
+(defsyntax annotation-node [vertex-pattern annotation-pattern]
+  `{:tag   :vertex
+    :attrs {:id         ~vertex-pattern
+            :annotation ~annotation-pattern}})
+
+(defsyntax relation-annotation [edge-pattern from-pattern to-pattern]
+  `{:tag   :triple
+    :attrs {:id      ~edge-pattern
+            :subject ~from-pattern
+            :object  ~to-pattern}})
+
+(defsyntax graph-space [graph-space-pattern
+                        vertex-pattern annotation-pattern
+                        edge-pattern from-pattern to-pattern]
+  `{:tag     :graph-space
+    :attrs   {:id ~graph-space-pattern}
+    :content [(m/or
+                (annotation-node ~vertex-pattern ~annotation-pattern)
+                (relation-annotation ~edge-pattern ~from-pattern ~to-pattern))
+              ...]})
 
 (defn parse-graph-space [counter xml]
   (-> xml
@@ -95,18 +123,7 @@
       {:tag     :knowtator-project
        :content (m/scan {:tag     :document
                          :attrs   {:id ?doc}
-                         :content (m/scan
-                                    {:tag     :graph-space
-                                     :attrs   {:id ?id}
-                                     :content [(m/or
-                                                 {:tag   :vertex
-                                                  :attrs {:id         !vs
-                                                          :annotation !as}}
-                                                 {:tag   :triple
-                                                  :attrs {:id      !es
-                                                          :subject !ts
-                                                          :object  !fs }})
-                                               ...]})})}
+                         :content (m/scan (graph-space ?id !vs !as !es !fs !ts))})}
       {:id    (m/app (partial verify-id counter "graph-space-") ?id)
        :doc   (m/app keyword ?doc)
        :nodes [{:id  (m/app keyword !vs)
@@ -122,6 +139,11 @@
                ...]})
     (->> (map #(update % :edges (partial remove nil?))))))
 
+(defsyntax span [span-pattern start-pattern end-pattern]
+  `{:tag   :span
+    :attrs {:id    ~span-pattern
+            :start ~start-pattern
+            :end   ~end-pattern}})
 
 (defn parse-span [counter xml]
   (m/rewrites xml
@@ -131,12 +153,7 @@
                  :content (m/scan
                             {:tag     :annotation
                              :attrs   {:id ?ann}
-                             :content (m/scan
-                                        {:tag     :span
-                                         :attrs   {:id    ?id
-                                                   :start ?start
-                                                   :end   ?end}
-                                         :content ?content})})})}
+                             :content (m/scan (span ?id ?start ?end))})})}
     {:id    (m/app (partial verify-id counter "span-") ?id)
      :ann   (m/app keyword ?ann)
      :start (m/app #(let [start (Integer/parseInt %)
