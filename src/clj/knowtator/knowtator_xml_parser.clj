@@ -140,9 +140,14 @@
     (mapcat (partial parse-profile (atom 0)))))
 
 (defn parse-spans [xmls]
-  (let [counter (atom 0)]
-    (->> xmls
-      (mapcat (partial parse-span counter)))))
+  (let [counter              (atom 0)
+        spans                (->> xmls
+                               (mapcat (partial parse-span counter)))
+        unique-content-spans (->> spans
+                               (group-by (juxt :ann :start :end))
+                               vals
+                               (map first))]
+    unique-content-spans))
 
 (defn parse-project [project-file]
   (let [annotation-xmls (read-project-xmls "Annotations" project-file)
