@@ -4,7 +4,7 @@
             [clojure.walk :as walk]
             [clojure.xml :as xml]
             [knowtator.util :as util]
-            [meander.epsilon :as m]))
+            [meander.epsilon :as m :refer [defsyntax]]))
 
 (declare
   ?id
@@ -45,12 +45,12 @@
         (map xml/parse)
         (map (partial walk/postwalk struct->map))))))
 
-(m/defsyntax concept-color [concepts-pattern colors-pattern]
+(defsyntax concept-color [concepts-pattern colors-pattern]
   `{:tag   :highlighter
     :attrs {:class ~concepts-pattern
             :color ~colors-pattern}})
 
-(m/defsyntax profile [id-pattern concepts-pattern colors-pattern]
+(defsyntax profile [id-pattern concepts-pattern colors-pattern]
   `{:tag     :profile
     :attrs   {:id ~id-pattern}
     :content [(concept-color ~concepts-pattern ~colors-pattern) ...]})
