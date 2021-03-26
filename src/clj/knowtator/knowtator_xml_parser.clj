@@ -86,31 +86,37 @@
      :concept ?concept}))
 
 (defn parse-graph-space [counter xml]
-  (m/rewrites xml
-    {:tag     :knowtator-project
-     :content (m/scan {:tag     :document
-                       :attrs   {:id ?doc}
-                       :content (m/scan
-                                  {:tag     :graph-space
-                                   :attrs   {:id ?id}
-                                   :content [(m/or
-                                               {:tag   :vertex
-                                                :attrs {:id         !vs
-                                                        :annotation !as}}
-                                               {:tag   :triple
-                                                :attrs {:id      !es
-                                                        :subject !ts
-                                                        :object  !fs }})
-                                             ...]})})}
-    {:id    (m/app (partial verify-id counter "graph-space-") ?id)
-     :doc   (m/app keyword ?doc)
-     :nodes [{:id  (m/app keyword !vs)
-              :ann (m/app keyword !as)}
-             ...]
-     :edges [{:id   (m/app keyword !es)
-              :from (m/app keyword !fs)
-              :to   (m/app keyword !ts)}
-             ...]}))
+  (-> xml
+    (m/rewrites
+      {:tag     :knowtator-project
+       :content (m/scan {:tag     :document
+                         :attrs   {:id ?doc}
+                         :content (m/scan
+                                    {:tag     :graph-space
+                                     :attrs   {:id ?id}
+                                     :content [(m/or
+                                                 {:tag   :vertex
+                                                  :attrs {:id         !vs
+                                                          :annotation !as}}
+                                                 {:tag   :triple
+                                                  :attrs {:id      !es
+                                                          :subject !ts
+                                                          :object  !fs }})
+                                               ...]})})}
+      {:id    (m/app (partial verify-id counter "graph-space-") ?id)
+       :doc   (m/app keyword ?doc)
+       :nodes [{:id  (m/app keyword !vs)
+                :ann (m/app keyword !as)}
+               ...]
+       :edges [(m/app (fn [{:keys [from to] :as e}]
+                        (let [vs (set (map keyword !vs))]
+                          (when (and (vs from) (vs to))
+                            e)))
+                 {:id   (m/app keyword !es)
+                  :from (m/app keyword !fs)
+                  :to   (m/app keyword !ts)})
+               ...]})
+    (->> (map #(update % :edges (partial remove nil?))))))
 
 
 (defn parse-span [counter xml]

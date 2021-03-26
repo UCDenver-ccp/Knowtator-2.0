@@ -230,6 +230,26 @@
                                               :attrs {:subject "n1"
                                                       :object  "n2"
                                                       :id      "e1"}}]}]}]}))))
+
+  (testing "Missing nodes from edges"
+    (is (= [{:id    :g1
+             :doc   :d1
+             :nodes [{:id  :n1
+                      :ann :a1}]
+             :edges []}]
+          (sut/parse-graph-space (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :document
+                        :attrs   {:id "d1"}
+                        :content [{:tag     :graph-space
+                                   :attrs   {:id "g1"}
+                                   :content [{:tag   :vertex
+                                              :attrs {:annotation "a1"
+                                                      :id         "n1"}}
+                                             {:tag   :triple
+                                              :attrs {:subject "n1"
+                                                      :object  "n2"
+                                                      :id      "e1"}}]}]}]}))))
   #_(testing "Disconnected nodes"
       (is (= [{:id    :g1
                :doc   :d1
@@ -592,7 +612,7 @@
             {:id    (keyword "Old Knowtator Relations"),
              :doc   :document3,
              :nodes [],
-             :edges [{:id :document3-21, :from :document3-22, :to :document3-20}]}]
+             :edges []}]
           (sut/parse-graph-spaces annotation-xmls)))))
 
 
