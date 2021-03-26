@@ -45,16 +45,18 @@
         (map xml/parse)
         (map (partial walk/postwalk struct->map))))))
 
+(m/defsyntax profile [id-pattern concepts-pattern colors-pattern]
+  `{:tag     :profile
+    :attrs   {:id ~id-pattern}
+    :content [{:tag   :highlighter
+               :attrs {:class ~concepts-pattern
+                       :color ~colors-pattern}}
+              ...]})
+
 (defn parse-profile [counter xml]
   (m/rewrites xml
     {:tag     :knowtator-project
-     :content (m/scan
-                {:tag     :profile
-                 :attrs   {:id ?id}
-                 :content [{:tag   :highlighter
-                            :attrs {:class !concepts
-                                    :color !colors}}
-                           ...]})}
+     :content (m/scan (profile ?id !concepts !colors))}
     {:id     (m/app (partial verify-id counter "profile-") ?id)
      :colors (m/app (partial apply hash-map) [!concepts !colors ...])}))
 
@@ -195,7 +197,12 @@
 
 (defn parse-project [project-file]
   (let [annotation-xmls (read-project-xmls "Annotations" project-file)
-        profile-xmls    (read-project-xmls "Profiles" project-file)]
+        profile-xmls    (read-project-xmls "Profiles" project-file)
+        annotation-xmls (apply merge-with (fn [x y]
+                                            (if (and (coll? x) (coll? y))
+                                              (into x y)
+                                              y))
+                          annotation-xmls)]
     {:anns     (parse-annotations annotation-xmls)
      :docs     (parse-documents project-file annotation-xmls)
      :profiles (parse-profiles profile-xmls)
