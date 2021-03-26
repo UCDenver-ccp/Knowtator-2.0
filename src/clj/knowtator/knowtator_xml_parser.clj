@@ -45,13 +45,15 @@
         (map xml/parse)
         (map (partial walk/postwalk struct->map))))))
 
+(m/defsyntax concept-color [concepts-pattern colors-pattern]
+  `{:tag   :highlighter
+    :attrs {:class ~concepts-pattern
+            :color ~colors-pattern}})
+
 (m/defsyntax profile [id-pattern concepts-pattern colors-pattern]
   `{:tag     :profile
     :attrs   {:id ~id-pattern}
-    :content [{:tag   :highlighter
-               :attrs {:class ~concepts-pattern
-                       :color ~colors-pattern}}
-              ...]})
+    :content [(concept-color ~concepts-pattern ~colors-pattern) ...]})
 
 (defn parse-profile [counter xml]
   (m/rewrites xml

@@ -615,7 +615,6 @@
              :edges []}]
           (sut/parse-graph-spaces annotation-xmls)))))
 
-
 (deftest parse-project-test
   (testing "Basic project"
     (is (= {:anns     [6 #{{:id      :mention_0,
