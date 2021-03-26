@@ -128,6 +128,252 @@
                                    :content [{:tag   :class
                                               :attrs {:label "cl1"
                                                       :id    "c1"}}]}]}]})))))
+
+(deftest parse-graph-space-test
+  (testing "Basic"
+    (is (= [{:id    :g1
+             :doc   :d1
+             :nodes [{:id  :n1
+                      :ann :a1}
+                     {:id  :n2
+                      :ann :a2}]
+             :edges [{:id   :e1
+                      :to   :n1
+                      :from :n2}]}]
+          (sut/parse-graph-space (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :document
+                        :attrs   {:id "d1"}
+                        :content [{:tag     :graph-space
+                                   :attrs   {:id "g1"}
+                                   :content [{:tag   :vertex
+                                              :attrs {:annotation "a1"
+                                                      :id         "n1"}}
+                                             {:tag   :vertex
+                                              :attrs {:annotation "a2"
+                                                      :id         "n2"}}
+                                             {:tag   :triple
+                                              :attrs {:subject "n1"
+                                                      :object  "n2"
+                                                      :id      "e1"}}]}]}]}))))
+  (testing "Multiple graph spaces"
+    (is (= [{:id    :g1
+             :doc   :d1
+             :nodes [{:id  :n1
+                      :ann :a1}
+                     {:id  :n2
+                      :ann :a2}]
+             :edges [{:id   :e1
+                      :to   :n1
+                      :from :n2}]}
+            {:id    :g2
+             :doc   :d1
+             :nodes [{:id  :n1
+                      :ann :a1}
+                     {:id  :n2
+                      :ann :a2}]
+             :edges [{:id   :e1
+                      :to   :n1
+                      :from :n2}]}]
+          (sut/parse-graph-space (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :document
+                        :attrs   {:id "d1"}
+                        :content [{:tag     :graph-space
+                                   :attrs   {:id "g1"}
+                                   :content [{:tag   :vertex
+                                              :attrs {:annotation "a1"
+                                                      :id         "n1"}}
+                                             {:tag   :vertex
+                                              :attrs {:annotation "a2"
+                                                      :id         "n2"}}
+                                             {:tag   :triple
+                                              :attrs {:subject "n1"
+                                                      :object  "n2"
+                                                      :id      "e1"}}]}
+                                  {:tag     :graph-space
+                                   :attrs   {:id "g2"}
+                                   :content [{:tag   :vertex
+                                              :attrs {:annotation "a1"
+                                                      :id         "n1"}}
+                                             {:tag   :vertex
+                                              :attrs {:annotation "a2"
+                                                      :id         "n2"}}
+                                             {:tag   :triple
+                                              :attrs {:subject "n1"
+                                                      :object  "n2"
+                                                      :id      "e1"}}]}]}]}))))
+
+  (testing "Missing ID"
+    (is (= [{:id    :graph-space-1
+             :doc   :d1
+             :nodes [{:id  :n1
+                      :ann :a1}
+                     {:id  :n2
+                      :ann :a2}]
+             :edges [{:id   :e1
+                      :to   :n1
+                      :from :n2}]}]
+          (sut/parse-graph-space (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :document
+                        :attrs   {:id "d1"}
+                        :content [{:tag     :graph-space
+                                   :attrs   {}
+                                   :content [{:tag   :vertex
+                                              :attrs {:annotation "a1"
+                                                      :id         "n1"}}
+                                             {:tag   :vertex
+                                              :attrs {:annotation "a2"
+                                                      :id         "n2"}}
+                                             {:tag   :triple
+                                              :attrs {:subject "n1"
+                                                      :object  "n2"
+                                                      :id      "e1"}}]}]}]}))))
+  #_(testing "Disconnected nodes"
+      (is (= [{:id    :g1
+               :doc   :d1
+               :nodes [{:id  :n1
+                        :ann :a1}
+                       {:id  :n2
+                        :ann :a1}]
+               :edges [{:id   :e1
+                        :to   :n1
+                        :from :n2}]}]
+            (sut/parse-graph-space (atom 0)
+              {:tag     :knowtator-project
+               :content [{:tag     :document
+                          :attrs   {:id "d1"}
+                          :content [{:tag     :graph-space
+                                     :attrs   {:id "g1"}
+                                     :content [{:tag   :vertex
+                                                :attrs {:annotation "a1"
+                                                        :id         "n1"}}
+                                               {:tag   :vertex
+                                                :attrs {:annotation "a1"
+                                                        :id         "n2"}}
+                                               {:tag   :vertex
+                                                :attrs {:annotation "a1"
+                                                        :id         "n3"}}
+                                               {:tag   :triple
+                                                :attrs {:subject "n1"
+                                                        :object  "n2"
+                                                        :id      "e1"}}]}]}]}))))
+  (testing "Ordering of edges and nodes in xml"
+    (is (= [{:id    :g1
+             :doc   :d1
+             :nodes [{:id  :n1
+                      :ann :a1}
+                     {:id  :n2
+                      :ann :a1}]
+             :edges [{:id   :e1
+                      :to   :n1
+                      :from :n2}]}]
+          (sut/parse-graph-space (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :document
+                        :attrs   {:id "d1"}
+                        :content [{:tag     :graph-space
+                                   :attrs   {:id "g1"}
+                                   :content [{:tag   :vertex
+                                              :attrs {:annotation "a1"
+                                                      :id         "n1"}}
+                                             {:tag   :triple
+                                              :attrs {:subject "n1"
+                                                      :object  "n2"
+                                                      :id      "e1"}}
+                                             {:tag   :vertex
+                                              :attrs {:annotation "a1"
+                                                      :id         "n2"}}]}]}]})))
+    (is (= [{:id    :g1
+             :doc   :d1
+             :nodes [{:id  :n1
+                      :ann :a1}
+                     {:id  :n2
+                      :ann :a1}]
+             :edges [{:id   :e1
+                      :to   :n1
+                      :from :n2}]}]
+          (sut/parse-graph-space (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :document
+                        :attrs   {:id "d1"}
+                        :content [{:tag     :graph-space
+                                   :attrs   {:id "g1"}
+                                   :content [{:tag   :triple
+                                              :attrs {:subject "n1"
+                                                      :object  "n2"
+                                                      :id      "e1"}}
+                                             {:tag   :vertex
+                                              :attrs {:annotation "a1"
+                                                      :id         "n1"}}
+                                             {:tag   :vertex
+                                              :attrs {:annotation "a1"
+                                                      :id         "n2"}}]}]}]})))
+    (is (= [{:id    :g1
+             :doc   :d1
+             :nodes [{:id  :n1
+                      :ann :a1}
+                     {:id  :n2
+                      :ann :a1}]
+             :edges [{:id   :e1
+                      :to   :n1
+                      :from :n2}
+                     {:id   :e2
+                      :to   :n1
+                      :from :n2}]}]
+          (sut/parse-graph-space (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :document
+                        :attrs   {:id "d1"}
+                        :content [{:tag     :graph-space
+                                   :attrs   {:id "g1"}
+                                   :content [{:tag   :triple
+                                              :attrs {:subject "n1"
+                                                      :object  "n2"
+                                                      :id      "e1"}}
+                                             {:tag   :triple
+                                              :attrs {:subject "n1"
+                                                      :object  "n2"
+                                                      :id      "e2"}}
+                                             {:tag   :vertex
+                                              :attrs {:annotation "a1"
+                                                      :id         "n1"}}
+                                             {:tag   :vertex
+                                              :attrs {:annotation "a1"
+                                                      :id         "n2"}}]}]}]})))
+    (is (= [{:id    :g1
+             :doc   :d1
+             :nodes [{:id  :n1
+                      :ann :a1}
+                     {:id  :n2
+                      :ann :a1}]
+             :edges [{:id   :e1
+                      :to   :n1
+                      :from :n2}
+                     {:id   :e2
+                      :to   :n1
+                      :from :n2}]}]
+          (sut/parse-graph-space (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :document
+                        :attrs   {:id "d1"}
+                        :content [{:tag     :graph-space
+                                   :attrs   {:id "g1"}
+                                   :content [{:tag   :triple
+                                              :attrs {:subject "n1"
+                                                      :object  "n2"
+                                                      :id      "e1"}}
+                                             {:tag   :vertex
+                                              :attrs {:annotation "a1"
+                                                      :id         "n1"}}
+                                             {:tag   :vertex
+                                              :attrs {:annotation "a1"
+                                                      :id         "n2"}}
+                                             {:tag   :triple
+                                              :attrs {:subject "n1"
+                                                      :object  "n2"
+                                                      :id      "e2"}}]}]}]})))))
 (deftest parse-span-test
   (testing "Basic"
     (is (= [{:id    :s1
@@ -321,6 +567,33 @@
           (->> annotation-xmls
             sut/parse-spans
             (sort-by :id))))))
+
+(deftest parse-graph-spaces-test
+  (testing "Parse basic project for graph spaces"
+    (is (= [{:id    :graph_0,
+             :doc   :document1,
+             :nodes
+             [{:id :node_0, :ann :mention_0} {:id :node_1, :ann :mention_1}],
+             :edges [{:id :edge_0, :from :node_1, :to :node_0}]}
+            {:id    :graph_2,
+             :doc   :document2,
+             :nodes
+             [{:id :node_0, :ann :mention_3} {:id :node_1, :ann :mention_3}],
+             :edges [{:id :edge_0, :from :node_1, :to :node_0}]}
+            {:id  (keyword "Old Knowtator Relations")
+             :doc :document3,
+             :nodes
+             [{:id :document3-19, :ann :mention_0}
+              {:id :document3-20, :ann :mention_1}
+              {:id :document3-22, :ann :mention_2}],
+             :edges
+             [{:id :document3-21, :from :document3-20, :to :document3-19}
+              {:id :document3-23, :from :document3-22, :to :document3-19}]}
+            {:id    (keyword "Old Knowtator Relations"),
+             :doc   :document3,
+             :nodes [],
+             :edges [{:id :document3-21, :from :document3-22, :to :document3-20}]}]
+          (sut/parse-graph-spaces annotation-xmls)))))
 
 
 (deftest parse-project-test

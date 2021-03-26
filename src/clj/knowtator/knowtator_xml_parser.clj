@@ -1,10 +1,10 @@
 (ns knowtator.knowtator-xml-parser
   (:require [clojure.java.io :as io]
+            [clojure.string :as str]
             [clojure.walk :as walk]
             [clojure.xml :as xml]
-            [meander.epsilon :as m]
-            [clojure.string :as str]
-            [knowtator.util :as util]))
+            [knowtator.util :as util]
+            [meander.epsilon :as m]))
 
 (declare
   ?id
@@ -12,6 +12,12 @@
   ?concepts
   !concepts
   !colors
+  !vs
+  !es
+  !ns
+  !ts
+  !fs
+  !as
   ?ann
   ?doc
   ?file-name
@@ -78,6 +84,34 @@
      :doc     (m/app keyword ?doc)
      :profile (m/app #(or (keyword %) :Default) ?profile)
      :concept ?concept}))
+
+(defn parse-graph-space [counter xml]
+  (m/rewrites xml
+    {:tag     :knowtator-project
+     :content (m/scan {:tag     :document
+                       :attrs   {:id ?doc}
+                       :content (m/scan
+                                  {:tag     :graph-space
+                                   :attrs   {:id ?id}
+                                   :content [(m/or
+                                               {:tag   :vertex
+                                                :attrs {:id         !vs
+                                                        :annotation !as}}
+                                               {:tag   :triple
+                                                :attrs {:id      !es
+                                                        :subject !ts
+                                                        :object  !fs }})
+                                             ...]})})}
+    {:id    (m/app (partial verify-id counter "graph-space-") ?id)
+     :doc   (m/app keyword ?doc)
+     :nodes [{:id  (m/app keyword !vs)
+              :ann (m/app keyword !as)}
+             ...]
+     :edges [{:id   (m/app keyword !es)
+              :from (m/app keyword !fs)
+              :to   (m/app keyword !ts)}
+             ...]}))
+
 
 (defn parse-span [counter xml]
   (m/rewrites xml
@@ -149,6 +183,10 @@
                                (map first))]
     unique-content-spans))
 
+(defn parse-graph-spaces [xmls]
+  (->> xmls
+    (mapcat (partial parse-graph-space (atom 0)))))
+
 (defn parse-project [project-file]
   (let [annotation-xmls (read-project-xmls "Annotations" project-file)
         profile-xmls    (read-project-xmls "Profiles" project-file)]
@@ -156,4 +194,4 @@
      :docs     (parse-documents project-file annotation-xmls)
      :profiles (parse-profiles profile-xmls)
      :spans    (parse-spans annotation-xmls)
-     :graphs   []}))
+     :graphs   (parse-graph-spaces annotation-xmls)}))
