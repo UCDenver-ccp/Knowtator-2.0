@@ -35,6 +35,24 @@
                         :content [{:tag   :highlighter
                                    :attrs {:color "blue"
                                            :class "c1"}}]}]}))))
+  (testing "Something else between profiles"
+    (is (= [{:id     :p1
+             :colors {"c1" "blue"}}
+            {:id     :p2
+             :colors {"c1" "blue"}}]
+          (sut/parse-profile (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :profile
+                        :attrs   {:id "p1"}
+                        :content [{:tag   :highlighter
+                                   :attrs {:color "blue"
+                                           :class "c1"}}]}
+                       [1 2 3]
+                       {:tag     :profile
+                        :attrs   {:id "p2"}
+                        :content [{:tag   :highlighter
+                                   :attrs {:color "blue"
+                                           :class "c1"}}]}]}))))
   (testing "Missing ID"
     (is (= [{:id     :profile-1
              :colors {"c1" "blue"}}]
