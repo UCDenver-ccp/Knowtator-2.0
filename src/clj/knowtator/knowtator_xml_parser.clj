@@ -95,8 +95,18 @@
                                          :content ?content})})})}
     {:id    (m/app (partial verify-id counter "span-") ?id)
      :ann   (m/app keyword ?ann)
-     :start (m/app #(Integer/parseInt %) ?start)
-     :end   (m/app #(Integer/parseInt %) ?end)}))
+     :start (m/app #(let [start (Integer/parseInt %)
+                          end   (Integer/parseInt ?end)]
+                      (if (< start end)
+                        start
+                        end))
+              ?start)
+     :end   (m/app #(let [start (Integer/parseInt ?start)
+                          end   (Integer/parseInt %)]
+                      (if (< start end)
+                        end
+                        start))
+              ?end)}))
 
 (defn parse-documents [project-file xmls]
   (letfn [(file-name [f]

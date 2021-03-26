@@ -128,6 +128,70 @@
                                    :content [{:tag   :class
                                               :attrs {:label "cl1"
                                                       :id    "c1"}}]}]}]})))))
+(deftest parse-span-test
+  (testing "Basic"
+    (is (= [{:id    :s1
+             :ann   :a1
+             :start 0
+             :end   1}]
+          (sut/parse-span (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :document
+                        :content [{:tag     :annotation
+                                   :attrs   {:id "a1"}
+                                   :content [{:tag   :span
+                                              :attrs {:id    "s1"
+                                                      :start "0"
+                                                      :end   "1"}}]}]}]}))))
+  (testing "Multiple spans"
+    (is (= [{:id    :s1
+             :ann   :a1
+             :start 0
+             :end   1}
+            {:id    :s2
+             :ann   :a1
+             :start 0
+             :end   1}]
+          (sut/parse-span (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :document
+                        :content [{:tag     :annotation
+                                   :attrs   {:id "a1"}
+                                   :content [{:tag   :span
+                                              :attrs {:id    "s1"
+                                                      :start "0"
+                                                      :end   "1"}}
+                                             {:tag   :span
+                                              :attrs {:id    "s2"
+                                                      :start "0"
+                                                      :end   "1"}}]}]}]}))))
+  (testing "Missing ID"
+    (is (= [{:id    :span-1
+             :ann   :a1
+             :start 0
+             :end   1}]
+          (sut/parse-span (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :document
+                        :content [{:tag     :annotation
+                                   :attrs   {:id "a1"}
+                                   :content [{:tag   :span
+                                              :attrs {:start "0"
+                                                      :end   "1"}}]}]}]}))))
+  (testing "Start greater than end"
+    (is (= [{:id    :s1
+             :ann   :a1
+             :start 0
+             :end   1}]
+          (sut/parse-span (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :document
+                        :content [{:tag     :annotation
+                                   :attrs   {:id "a1"}
+                                   :content [{:tag   :span
+                                              :attrs {:id    "s1"
+                                                      :end   "0"
+                                                      :start "1"}}]}]}]})))))
 (deftest parse-document-test
   (testing "Basic"
     (is (= [{:id        :d1
