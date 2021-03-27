@@ -118,6 +118,24 @@
                                    :content [{:tag   :class
                                               :attrs {:label "cl1"
                                                       :id    "c1"}}]}]}]}))))
+  (testing "Multiple concepts"
+    (is (= [{:id      :a1
+             :profile :p1
+             :concept "c1"
+             :doc     :d1}]
+          (sut/parse-annotation (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :document
+                        :attrs   {:id "d1"}
+                        :content [{:tag     :annotation
+                                   :attrs   {:id        "a1"
+                                             :annotator "p1"}
+                                   :content [{:tag   :class
+                                              :attrs {:label "cl1"
+                                                      :id    "c1"}}
+                                             {:tag   :class
+                                              :attrs {:label "cl1"
+                                                      :id    "c2"}}]}]}]}))))
   (testing "Missing ID"
     (is (= [{:id      :annotation-1
              :profile :p1

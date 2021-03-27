@@ -79,22 +79,27 @@
     :attrs {:id    ~concept-pattern
             :label ~concept-label-pattern}})
 
-(defsyntax annotation [id-pattern profile-pattern concept-pattern concept-label-pattern]
+(defsyntax annotation [id-pattern profile-pattern concept-pattern concept-label-pattern span-pattern start-pattern end-pattern]
   `{:tag     :annotation
     :attrs   {:id        ~id-pattern
               :annotator ~profile-pattern}
-    :content (m/scan (concept ~concept-pattern ~concept-label-pattern))})
+    :content [(m/or
+                (concept ~concept-pattern ~concept-label-pattern)
+                (span ~span-pattern ~start-pattern ~end-pattern))
+              ...]})
 
 (defn parse-annotation [counter xml]
-  (m/rewrites xml
+  (m/rewrite xml
     {:tag     :knowtator-project
      :content (m/scan {:tag     :document
                        :attrs   {:id ?doc}
-                       :content (m/scan (annotation ?id ?profile ?concept ?concept-label))})}
-    {:id      (m/app (partial verify-id counter "annotation-") ?id)
-     :doc     (m/app keyword ?doc)
-     :profile (m/app #(or (keyword %) :Default) ?profile)
-     :concept ?concept}))
+                       :content [(m/or (annotation !id !profile !concept !concept-label _ _ _) _)
+                                 ...]})}
+    [{:id      (m/app (partial verify-id counter "annotation-") !id)
+      :doc     (m/app keyword ?doc)
+      :profile (m/app #(or (keyword %) :Default) !profile)
+      :concept !concept}
+     ...]))
 
 (defsyntax annotation-node [vertex-pattern annotation-pattern]
   `{:tag   :vertex
