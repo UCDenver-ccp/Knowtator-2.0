@@ -71,25 +71,32 @@
 
 
 
-(defsyntax annotation-node [vertex-pattern annotation-pattern]
+(defsyntax annotation-node [{vertex-pattern :node annotation-pattern :node-ann
+                             :or            {vertex-pattern     '_
+                                             annotation-pattern '_}}]
   `{:tag   :vertex
     :attrs {:id         ~vertex-pattern
             :annotation ~annotation-pattern}})
 
-(defsyntax relation-annotation [edge-pattern from-pattern to-pattern]
+(defsyntax relation-annotation [{edge-pattern :edge
+                                 from-pattern :from
+                                 to-pattern   :to
+                                 :or          {edge-pattern '_
+                                               from-pattern '_
+                                               to-pattern   '_}}]
   `{:tag   :triple
     :attrs {:id      ~edge-pattern
             :subject ~from-pattern
             :object  ~to-pattern}})
 
-(defsyntax graph-space [graph-space-pattern
-                        vertex-pattern annotation-pattern
-                        edge-pattern from-pattern to-pattern]
+(defsyntax graph-space [{graph-space-pattern :graph
+                         :or                 {graph-space-pattern '_}
+                         :as                 args}]
   `{:tag     :graph-space
     :attrs   {:id ~graph-space-pattern}
     :content [(m/or
-                (annotation-node ~vertex-pattern ~annotation-pattern)
-                (relation-annotation ~edge-pattern ~from-pattern ~to-pattern))
+                (annotation-node ~args)
+                (relation-annotation ~args))
               ...]})
 
 (defn parse-graph-space [counter xml]
@@ -98,7 +105,12 @@
       {:tag     :knowtator-project
        :content (m/scan {:tag     :document
                          :attrs   {:id ?doc}
-                         :content (m/scan (graph-space ?id !vs !as !es !fs !ts))})}
+                         :content (m/scan (graph-space {:graph    ?id
+                                                        :node     !vs
+                                                        :node-ann !as
+                                                        :edge     !es
+                                                        :from     !fs
+                                                        :to       !ts}))})}
       {:id    (m/app (partial verify-id counter "graph-space-") ?id)
        :doc   (m/app keyword ?doc)
        :nodes [{:id  (m/app keyword !vs)
@@ -114,7 +126,12 @@
                ...]})
     (->> (map #(update % :edges (partial remove nil?))))))
 
-(defsyntax span [span-pattern start-pattern end-pattern]
+(defsyntax span [{span-pattern  :span
+                  start-pattern :start
+                  end-pattern   :end
+                  :or           {span-pattern  '_
+                                 start-pattern '_
+                                 end-pattern   '_}}]
   `{:tag   :span
     :attrs {:id    ~span-pattern
             :start (m/app #(Integer/parseInt %) ~start-pattern)
@@ -124,52 +141,32 @@
                         profile-pattern       :profile
                         concept-pattern       :concept
                         concept-label-pattern :concept-label
-                        span-pattern          :span
-                        start-pattern         :start
-                        end-pattern           :end
                         :or
                         {id-pattern            '_
                          profile-pattern       '_
                          concept-pattern       '_
-                         concept-label-pattern '_
-                         span-pattern          '_
-                         start-pattern         '_
-                         end-pattern           '_}}]
+                         concept-label-pattern '_}
+                        :as                   args}]
   `{:tag     :annotation
     :attrs   {:id        ~id-pattern
               :annotator ~profile-pattern}
     :content [(m/or
                 (concept ~concept-pattern ~concept-label-pattern)
-                (span ~span-pattern ~start-pattern ~end-pattern))
+                (span ~args))
               ...]})
 
 (defsyntax document
-  [{id-pattern              :id
-    file-name-pattern       :file-name
-    graph-space-pattern     :graph
-    vertex-pattern          :node
-    node-annotation-pattern :node-ann
-    edge-pattern            :edge
-    from-pattern            :from
-    to-pattern              :to
-    :or
-    {id-pattern              '_
-     file-name-pattern       '_
-     graph-space-pattern     '_
-     vertex-pattern          '_
-     node-annotation-pattern '_
-     edge-pattern            '_
-     from-pattern            '_
-     to-pattern              '_}
-    :as                     args}]
+  [{id-pattern        :id
+    file-name-pattern :file-name
+    :or               {id-pattern        '_
+                       file-name-pattern '_}
+    :as               args}]
   `{:tag     :document
     :attrs   {:id        ~id-pattern
               :text-file ~file-name-pattern}
     :content [(m/or
                 (annotation ~args)
-                (graph-space ~graph-space-pattern
-                  ~vertex-pattern ~node-annotation-pattern
-                  ~edge-pattern ~from-pattern ~to-pattern))
+                (graph-space ~args))
               ...]})
 
 (m/rewrite {:tag     :document
