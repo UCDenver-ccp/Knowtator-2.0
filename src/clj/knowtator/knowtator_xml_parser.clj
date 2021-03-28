@@ -79,27 +79,7 @@
     :attrs {:id    ~concept-pattern
             :label ~concept-label-pattern}})
 
-(defsyntax annotation [id-pattern profile-pattern concept-pattern concept-label-pattern span-pattern start-pattern end-pattern]
-  `{:tag     :annotation
-    :attrs   {:id        ~id-pattern
-              :annotator ~profile-pattern}
-    :content [(m/or
-                (concept ~concept-pattern ~concept-label-pattern)
-                (span ~span-pattern ~start-pattern ~end-pattern))
-              ...]})
 
-(defn parse-annotation [counter xml]
-  (m/rewrite xml
-    {:tag     :knowtator-project
-     :content (m/scan {:tag     :document
-                       :attrs   {:id ?doc}
-                       :content [(m/or (annotation !id !profile !concept !concept-label _ _ _) _)
-                                 ...]})}
-    [{:id      (m/app (partial verify-id counter "annotation-") !id)
-      :doc     (m/app keyword ?doc)
-      :profile (m/app #(or (keyword %) :Default) !profile)
-      :concept !concept}
-     ...]))
 
 (defsyntax annotation-node [vertex-pattern annotation-pattern]
   `{:tag   :vertex
@@ -147,32 +127,45 @@
 (defsyntax span [span-pattern start-pattern end-pattern]
   `{:tag   :span
     :attrs {:id    ~span-pattern
-            :start ~start-pattern
-            :end   ~end-pattern}})
+            :start (m/app #(Integer/parseInt %) ~start-pattern)
+            :end   (m/app #(Integer/parseInt %) ~end-pattern)}})
+
+(defsyntax annotation [id-pattern profile-pattern concept-pattern concept-label-pattern span-pattern start-pattern end-pattern]
+  `{:tag     :annotation
+    :attrs   {:id        ~id-pattern
+              :annotator ~profile-pattern}
+    :content [(m/or
+                (concept ~concept-pattern ~concept-label-pattern)
+                (span ~span-pattern ~start-pattern ~end-pattern))
+              ...]})
+
+(defn parse-annotation [counter xml]
+  (m/rewrite xml
+    {:tag     :knowtator-project
+     :content (m/scan {:tag     :document
+                       :attrs   {:id ?doc}
+                       :content [(m/or (annotation !id !profile !concept !concept-label _ _ _) _)
+                                 ...]})}
+    [{:id      (m/app (partial verify-id counter "annotation-") !id)
+      :doc     (m/app keyword ?doc)
+      :profile (m/app #(or (keyword %) :Default) !profile)
+      :concept !concept}
+     ...]))
 
 (defn parse-span [counter xml]
-  (m/rewrites xml
-    {:tag     :knowtator-project
-     :content (m/scan
-                {:tag     :document
-                 :content (m/scan
-                            {:tag     :annotation
-                             :attrs   {:id ?ann}
-                             :content (m/scan (span ?id ?start ?end))})})}
-    {:id    (m/app (partial verify-id counter "span-") ?id)
-     :ann   (m/app keyword ?ann)
-     :start (m/app #(let [start (Integer/parseInt %)
-                          end   (Integer/parseInt ?end)]
-                      (if (< start end)
-                        start
-                        end))
-              ?start)
-     :end   (m/app #(let [start (Integer/parseInt ?start)
-                          end   (Integer/parseInt %)]
-                      (if (< start end)
-                        end
-                        start))
-              ?end)}))
+  (mapcat identity
+    (m/rewrites xml
+      {:tag     :knowtator-project
+       :content (m/scan
+                  {:tag     :document
+                   :content (m/scan (annotation ?ann _ _ _ !id !start !end))})}
+      [(m/app (fn [[id ann start end]]
+                {:id    (verify-id counter "span-" id)
+                 :ann   (keyword ann)
+                 :start (min start end)
+                 :end   (max start end)})
+         [!id ?ann !start !end])
+       ...])))
 
 (defn parse-documents [project-file xmls]
   (letfn [(file-name [f]

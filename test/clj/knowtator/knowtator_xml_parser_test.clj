@@ -467,6 +467,42 @@
                                               :attrs {:id    "s2"
                                                       :start "0"
                                                       :end   "1"}}]}]}]}))))
+  (testing "Multiple annotations"
+    (is (= [{:id :document3-11, :ann :mention_0, :start 0, :end 1}
+            {:id :document3-14, :ann :mention_1, :start 28, :end 36}
+            {:id :document3-17, :ann :mention_2, :start 28, :end 36}]
+          (->> {:tag     :knowtator-project
+                :content [{:tag     :document
+                           :content [{:tag     :annotation
+                                      :attrs   {:annotator  "Default"
+                                                :id         "mention_0"
+                                                :motivation ""
+                                                :type       "identity"}
+                                      :content [{:tag   :span
+                                                 :attrs {:end   "1"
+                                                         :id    "document3-11"
+                                                         :start "0"}}]}
+                                     {:tag     :annotation
+                                      :attrs   {:annotator  "profile1"
+                                                :id         "mention_1"
+                                                :motivation ""
+                                                :type       "identity"}
+                                      :content [{:tag   :span
+                                                 :attrs {:end   "36"
+                                                         :id    "document3-14"
+                                                         :start "28"}}]}
+                                     {:tag     :annotation
+                                      :attrs   {:annotator  "Default"
+                                                :id         "mention_2"
+                                                :motivation ""
+                                                :type       "identity"}
+                                      :content [{:tag     :span
+                                                 :attrs   {:end   "36"
+                                                           :id    "document3-17"
+                                                           :start "28"}
+                                                 :content ["ppeared!"]}]}]}]}
+            (sut/parse-span (atom 0))))))
+
   (testing "Missing ID"
     (is (= [{:id    :span-1
              :ann   :a1
