@@ -120,7 +120,21 @@
             :start (m/app #(Integer/parseInt %) ~start-pattern)
             :end   (m/app #(Integer/parseInt %) ~end-pattern)}})
 
-(defsyntax annotation [id-pattern profile-pattern concept-pattern concept-label-pattern span-pattern start-pattern end-pattern]
+(defsyntax annotation [{id-pattern            :ann
+                        profile-pattern       :profile
+                        concept-pattern       :concept
+                        concept-label-pattern :concept-label
+                        span-pattern          :span
+                        start-pattern         :start
+                        end-pattern           :end
+                        :or
+                        {id-pattern            '_
+                         profile-pattern       '_
+                         concept-pattern       '_
+                         concept-label-pattern '_
+                         span-pattern          '_
+                         start-pattern         '_
+                         end-pattern           '_}}]
   `{:tag     :annotation
     :attrs   {:id        ~id-pattern
               :annotator ~profile-pattern}
@@ -128,48 +142,41 @@
                 (concept ~concept-pattern ~concept-label-pattern)
                 (span ~span-pattern ~start-pattern ~end-pattern))
               ...]})
-(defsyntax document [{id-pattern              :id
-                      file-name-pattern       :file-name
-                      annotation-pattern      :ann
-                      profile-pattern         :profile
-                      concept-pattern         :concept
-                      concept-label-pattern   :concept-label
-                      span-pattern            :span
-                      start-pattern           :start
-                      end-pattern             :end
-                      graph-space-pattern     :graph
-                      vertex-pattern          :node
-                      node-annotation-pattern :node-ann
-                      edge-pattern            :edge
-                      from-pattern            :from
-                      to-pattern              :to
-                      :or
-                      {id-pattern              '_
-                       file-name-pattern       '_
-                       annotation-pattern      '_
-                       profile-pattern         '_
-                       concept-pattern         '_
-                       concept-label-pattern   '_
-                       span-pattern            '_
-                       start-pattern           '_
-                       end-pattern             '_
-                       graph-space-pattern     '_
-                       vertex-pattern          '_
-                       node-annotation-pattern '_
-                       edge-pattern            '_
-                       from-pattern            '_
-                       to-pattern              '_}}]
+
+(defsyntax document
+  [{id-pattern              :id
+    file-name-pattern       :file-name
+    graph-space-pattern     :graph
+    vertex-pattern          :node
+    node-annotation-pattern :node-ann
+    edge-pattern            :edge
+    from-pattern            :from
+    to-pattern              :to
+    :or
+    {id-pattern              '_
+     file-name-pattern       '_
+     graph-space-pattern     '_
+     vertex-pattern          '_
+     node-annotation-pattern '_
+     edge-pattern            '_
+     from-pattern            '_
+     to-pattern              '_}
+    :as                     args}]
   `{:tag     :document
     :attrs   {:id        ~id-pattern
               :text-file ~file-name-pattern}
     :content [(m/or
-                (annotation ~annotation-pattern ~profile-pattern
-                  ~concept-pattern ~concept-label-pattern
-                  ~span-pattern ~start-pattern ~end-pattern)
+                (annotation ~args)
                 (graph-space ~graph-space-pattern
                   ~vertex-pattern ~node-annotation-pattern
                   ~edge-pattern ~from-pattern ~to-pattern))
               ...]})
+
+(m/rewrite {:tag     :document
+            :attrs   {:id "d1"}
+            :content []}
+  (document {:id ?id})
+  ?id)
 
 (defn parse-document [counter xml]
   (m/rewrites xml
@@ -187,11 +194,7 @@
                            :ann           !id
                            :profile       !profile
                            :concept       !concept
-                           :concept-label !concept-label})
-                #_{:tag     :document
-                   :attrs   {:id ?doc}
-                   :content [(m/or (annotation !id !profile !concept !concept-label _ _ _) _)
-                             ...]})}
+                           :concept-label !concept-label}))}
     [{:id      (m/app (partial verify-id counter "annotation-") !id)
       :doc     (m/app keyword ?doc)
       :profile (m/app #(or (keyword %) :Default) !profile)
@@ -204,7 +207,10 @@
       {:tag     :knowtator-project
        :content (m/scan
                   {:tag     :document
-                   :content (m/scan (annotation ?ann _ _ _ !id !start !end))})}
+                   :content (m/scan (annotation {:ann   ?ann
+                                                 :span  !id
+                                                 :start !start
+                                                 :end   !end}))})}
       [(m/app (fn [[id ann start end]]
                 {:id    (verify-id counter "span-" id)
                  :ann   (keyword ann)
