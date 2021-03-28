@@ -45,26 +45,31 @@
         (map xml/parse)
         (map (partial walk/postwalk struct->map))))))
 
-(defsyntax concept-color [concepts colors]
+(defsyntax concept-color [{:keys [concepts colors]
+                           :or   {concepts '_
+                                  colors   '_}}]
   `{:tag   :highlighter
     :attrs {:class ~concepts
             :color ~colors}})
 
-(defsyntax profile [id concepts colors]
+(defsyntax profile [{:keys [profile] :as args
+                     :or   {profile '_}}]
   `{:tag     :profile
-    :attrs   {:id ~id}
-    :content [(concept-color ~concepts ~colors) ...]})
+    :attrs   {:id ~profile}
+    :content [(concept-color ~args) ...]})
 
 (defn parse-profile [counter xml]
   (m/rewrites xml
     {:tag     :knowtator-project
-     :content (m/scan (profile ?id !concepts !colors))}
+     :content (m/scan (profile {:profile  ?id
+                                :concepts !concepts
+                                :colors   !colors}))}
     {:id     (m/app (partial verify-id counter "profile-") ?id)
      :colors (m/app (partial apply hash-map) [!concepts !colors ...])}))
 
-
-
-(defsyntax concept [concept concept-label]
+(defsyntax concept [{:keys [concept concept-label]
+                     :or   {concept       '_
+                            concept-label '_}}]
   `{:tag   :class
     :attrs {:id    ~concept
             :label ~concept-label}})
@@ -130,16 +135,14 @@
             :start (m/app #(Integer/parseInt %) ~start)
             :end   (m/app #(Integer/parseInt %) ~end)}})
 
-(defsyntax annotation [{:keys [ann profile concept concept-label] :as args
-                        :or   {ann           '_
-                               profile       '_
-                               concept       '_
-                               concept-label '_}}]
+(defsyntax annotation [{:keys [ann profile] :as args
+                        :or   {ann     '_
+                               profile '_}}]
   `{:tag     :annotation
     :attrs   {:id        ~ann
               :annotator ~profile}
     :content [(m/or
-                (concept ~concept ~concept-label)
+                (concept ~args)
                 (span ~args))
               ...]})
 
