@@ -45,15 +45,15 @@
         (map xml/parse)
         (map (partial walk/postwalk struct->map))))))
 
-(defsyntax concept-color [concepts-pattern colors-pattern]
+(defsyntax concept-color [concepts colors]
   `{:tag   :highlighter
-    :attrs {:class ~concepts-pattern
-            :color ~colors-pattern}})
+    :attrs {:class ~concepts
+            :color ~colors}})
 
-(defsyntax profile [id-pattern concepts-pattern colors-pattern]
+(defsyntax profile [id concepts colors]
   `{:tag     :profile
-    :attrs   {:id ~id-pattern}
-    :content [(concept-color ~concepts-pattern ~colors-pattern) ...]})
+    :attrs   {:id ~id}
+    :content [(concept-color ~concepts ~colors) ...]})
 
 (defn parse-profile [counter xml]
   (m/rewrites xml
@@ -64,36 +64,31 @@
 
 
 
-(defsyntax concept [concept-pattern concept-label-pattern]
+(defsyntax concept [concept concept-label]
   `{:tag   :class
-    :attrs {:id    ~concept-pattern
-            :label ~concept-label-pattern}})
+    :attrs {:id    ~concept
+            :label ~concept-label}})
 
-
-
-(defsyntax annotation-node [{vertex-pattern :node annotation-pattern :node-ann
-                             :or            {vertex-pattern     '_
-                                             annotation-pattern '_}}]
+(defsyntax annotation-node [{:keys [node node-ann]
+                             :or   {node     '_
+                                    node-ann '_}}]
   `{:tag   :vertex
-    :attrs {:id         ~vertex-pattern
-            :annotation ~annotation-pattern}})
+    :attrs {:id         ~node
+            :annotation ~node-ann}})
 
-(defsyntax relation-annotation [{edge-pattern :edge
-                                 from-pattern :from
-                                 to-pattern   :to
-                                 :or          {edge-pattern '_
-                                               from-pattern '_
-                                               to-pattern   '_}}]
+(defsyntax relation-annotation [{:keys [edge from to]
+                                 :or   {edge '_
+                                        from '_
+                                        to   '_}}]
   `{:tag   :triple
-    :attrs {:id      ~edge-pattern
-            :subject ~from-pattern
-            :object  ~to-pattern}})
+    :attrs {:id      ~edge
+            :subject ~from
+            :object  ~to}})
 
-(defsyntax graph-space [{graph-space-pattern :graph
-                         :or                 {graph-space-pattern '_}
-                         :as                 args}]
+(defsyntax graph-space [{:keys [graph] :as args
+                         :or   {graph '_}}]
   `{:tag     :graph-space
-    :attrs   {:id ~graph-space-pattern}
+    :attrs   {:id ~graph}
     :content [(m/or
                 (annotation-node ~args)
                 (relation-annotation ~args))
@@ -126,44 +121,35 @@
                ...]})
     (->> (map #(update % :edges (partial remove nil?))))))
 
-(defsyntax span [{span-pattern  :span
-                  start-pattern :start
-                  end-pattern   :end
-                  :or           {span-pattern  '_
-                                 start-pattern '_
-                                 end-pattern   '_}}]
+(defsyntax span [{:keys [span start end]
+                  :or   {span  '_
+                         start '_
+                         end   '_}}]
   `{:tag   :span
-    :attrs {:id    ~span-pattern
-            :start (m/app #(Integer/parseInt %) ~start-pattern)
-            :end   (m/app #(Integer/parseInt %) ~end-pattern)}})
+    :attrs {:id    ~span
+            :start (m/app #(Integer/parseInt %) ~start)
+            :end   (m/app #(Integer/parseInt %) ~end)}})
 
-(defsyntax annotation [{id-pattern            :ann
-                        profile-pattern       :profile
-                        concept-pattern       :concept
-                        concept-label-pattern :concept-label
-                        :or
-                        {id-pattern            '_
-                         profile-pattern       '_
-                         concept-pattern       '_
-                         concept-label-pattern '_}
-                        :as                   args}]
+(defsyntax annotation [{:keys [ann profile concept concept-label] :as args
+                        :or   {ann           '_
+                               profile       '_
+                               concept       '_
+                               concept-label '_}}]
   `{:tag     :annotation
-    :attrs   {:id        ~id-pattern
-              :annotator ~profile-pattern}
+    :attrs   {:id        ~ann
+              :annotator ~profile}
     :content [(m/or
-                (concept ~concept-pattern ~concept-label-pattern)
+                (concept ~concept ~concept-label)
                 (span ~args))
               ...]})
 
 (defsyntax document
-  [{id-pattern        :doc
-    file-name-pattern :file-name
-    :or               {id-pattern        '_
-                       file-name-pattern '_}
-    :as               args}]
+  [{:keys [doc file-name] :as args
+    :or   {doc       '_
+           file-name '_}}]
   `{:tag     :document
-    :attrs   {:id        ~id-pattern
-              :text-file ~file-name-pattern}
+    :attrs   {:id        ~doc
+              :text-file ~file-name}
     :content [(m/or
                 (annotation ~args)
                 (graph-space ~args))
