@@ -156,7 +156,7 @@
               ...]})
 
 (defsyntax document
-  [{id-pattern        :id
+  [{id-pattern        :doc
     file-name-pattern :file-name
     :or               {id-pattern        '_
                        file-name-pattern '_}
@@ -169,16 +169,10 @@
                 (graph-space ~args))
               ...]})
 
-(m/rewrite {:tag     :document
-            :attrs   {:id "d1"}
-            :content []}
-  (document {:id ?id})
-  ?id)
-
 (defn parse-document [counter xml]
   (m/rewrites xml
     {:tag     :knowtator-project
-     :content (m/scan (document {:id        ?id
+     :content (m/scan (document {:doc       ?id
                                  :file-name ?file-name}))}
     {:id        (m/app (partial verify-id counter "document-") ?id)
      :file-name (m/app #(or % (str ?id ".txt")) ?file-name)}))
@@ -187,7 +181,7 @@
   (m/rewrite xml
     {:tag     :knowtator-project
      :content (m/scan
-                (document {:id            ?doc
+                (document {:doc           ?doc
                            :ann           !id
                            :profile       !profile
                            :concept       !concept
