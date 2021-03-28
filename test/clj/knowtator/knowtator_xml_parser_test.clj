@@ -1,7 +1,7 @@
 (ns knowtator.knowtator-xml-parser-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [clojure.java.io :as io]
+            [clojure.test :refer [deftest is testing]]
             [knowtator.knowtator-xml-parser :as sut]
-            [clojure.java.io :as io]
             [knowtator.util :as util]))
 
 (def project-file (io/resource "test_project_using_uris"))
@@ -536,9 +536,10 @@
              :file-name "fn1"}]
           (sut/parse-document (atom 0)
             {:tag     :knowtator-project
-             :content [{:tag   :document
-                        :attrs {:id        "d1"
-                                :text-file "fn1"}}]}))))
+             :content [{:tag     :document
+                        :attrs   {:id        "d1"
+                                  :text-file "fn1"}
+                        :content []}]}))))
   (testing "Multiple documents"
     (is (= [{:id        :d1
              :file-name "fn1"}
@@ -546,27 +547,31 @@
              :file-name "fn1"}]
           (sut/parse-document (atom 0)
             {:tag     :knowtator-project
-             :content [{:tag   :document
-                        :attrs {:id        "d1"
-                                :text-file "fn1"}}
-                       {:tag   :document
-                        :attrs {:id        "d2"
-                                :text-file "fn1"}}]}))))
+             :content [{:tag     :document
+                        :attrs   {:id        "d1"
+                                  :text-file "fn1"}
+                        :content []}
+                       {:tag     :document
+                        :attrs   {:id        "d2"
+                                  :text-file "fn1"}
+                        :content []}]}))))
   (testing "Missing ID"
     (is (= [{:id        :document-1
              :file-name "fn1"}]
           (sut/parse-document (atom 0)
             {:tag     :knowtator-project
-             :content [{:tag   :document
-                        :attrs {:text-file "fn1"}}]}))))
+             :content [{:tag     :document
+                        :attrs   {:text-file "fn1"}
+                        :content []}]}))))
 
   (testing "Missing file name"
     (is (= [{:id        :d1
              :file-name "d1.txt"}]
           (sut/parse-document (atom 0)
             {:tag     :knowtator-project
-             :content [{:tag   :document
-                        :attrs {:id "d1"}}]})))))
+             :content [{:tag     :document
+                        :attrs   {:id "d1"}
+                        :content []}]})))))
 
 (deftest parse-documents-test
   (testing "Basic parse documents from annotation files"

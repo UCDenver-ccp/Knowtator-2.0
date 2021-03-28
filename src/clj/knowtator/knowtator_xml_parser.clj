@@ -62,17 +62,7 @@
     {:id     (m/app (partial verify-id counter "profile-") ?id)
      :colors (m/app (partial apply hash-map) [!concepts !colors ...])}))
 
-(defsyntax document [id-pattern file-name-pattern]
-  `{:tag   :document
-    :attrs {:id        ~id-pattern
-            :text-file ~file-name-pattern}})
 
-(defn parse-document [counter xml]
-  (m/rewrites xml
-    {:tag     :knowtator-project
-     :content (m/scan (document ?id ?file-name))}
-    {:id        (m/app (partial verify-id counter "document-") ?id)
-     :file-name (m/app #(or % (str ?id ".txt")) ?file-name)}))
 
 (defsyntax concept [concept-pattern concept-label-pattern]
   `{:tag   :class
@@ -138,14 +128,70 @@
                 (concept ~concept-pattern ~concept-label-pattern)
                 (span ~span-pattern ~start-pattern ~end-pattern))
               ...]})
+(defsyntax document [{id-pattern              :id
+                      file-name-pattern       :file-name
+                      annotation-pattern      :ann
+                      profile-pattern         :profile
+                      concept-pattern         :concept
+                      concept-label-pattern   :concept-label
+                      span-pattern            :span
+                      start-pattern           :start
+                      end-pattern             :end
+                      graph-space-pattern     :graph
+                      vertex-pattern          :node
+                      node-annotation-pattern :node-ann
+                      edge-pattern            :edge
+                      from-pattern            :from
+                      to-pattern              :to
+                      :or
+                      {id-pattern              '_
+                       file-name-pattern       '_
+                       annotation-pattern      '_
+                       profile-pattern         '_
+                       concept-pattern         '_
+                       concept-label-pattern   '_
+                       span-pattern            '_
+                       start-pattern           '_
+                       end-pattern             '_
+                       graph-space-pattern     '_
+                       vertex-pattern          '_
+                       node-annotation-pattern '_
+                       edge-pattern            '_
+                       from-pattern            '_
+                       to-pattern              '_}}]
+  `{:tag     :document
+    :attrs   {:id        ~id-pattern
+              :text-file ~file-name-pattern}
+    :content [(m/or
+                (annotation ~annotation-pattern ~profile-pattern
+                  ~concept-pattern ~concept-label-pattern
+                  ~span-pattern ~start-pattern ~end-pattern)
+                (graph-space ~graph-space-pattern
+                  ~vertex-pattern ~node-annotation-pattern
+                  ~edge-pattern ~from-pattern ~to-pattern))
+              ...]})
+
+(defn parse-document [counter xml]
+  (m/rewrites xml
+    {:tag     :knowtator-project
+     :content (m/scan (document {:id        ?id
+                                 :file-name ?file-name}))}
+    {:id        (m/app (partial verify-id counter "document-") ?id)
+     :file-name (m/app #(or % (str ?id ".txt")) ?file-name)}))
 
 (defn parse-annotation [counter xml]
   (m/rewrite xml
     {:tag     :knowtator-project
-     :content (m/scan {:tag     :document
-                       :attrs   {:id ?doc}
-                       :content [(m/or (annotation !id !profile !concept !concept-label _ _ _) _)
-                                 ...]})}
+     :content (m/scan
+                (document {:id            ?doc
+                           :ann           !id
+                           :profile       !profile
+                           :concept       !concept
+                           :concept-label !concept-label})
+                #_{:tag     :document
+                   :attrs   {:id ?doc}
+                   :content [(m/or (annotation !id !profile !concept !concept-label _ _ _) _)
+                             ...]})}
     [{:id      (m/app (partial verify-id counter "annotation-") !id)
       :doc     (m/app keyword ?doc)
       :profile (m/app #(or (keyword %) :Default) !profile)
