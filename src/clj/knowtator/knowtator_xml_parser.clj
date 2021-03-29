@@ -67,13 +67,6 @@
     {:id     (m/app (partial verify-id counter "profile-") ?id)
      :colors (m/app (partial apply hash-map) [!concepts !colors ...])}))
 
-(defsyntax concept [{:keys [concept concept-label]
-                     :or   {concept       '_
-                            concept-label '_}}]
-  `{:tag   :class
-    :attrs {:id    ~concept
-            :label ~concept-label}})
-
 (defsyntax annotation-node [{:keys [node node-ann]
                              :or   {node     '_
                                     node-ann '_}}]
@@ -98,6 +91,50 @@
                 (annotation-node ~args)
                 (relation-annotation ~args))
               ...]})
+
+(defsyntax concept [{:keys [concept concept-label]
+                     :or   {concept       '_
+                            concept-label '_}}]
+  `{:tag   :class
+    :attrs {:id    ~concept
+            :label ~concept-label}})
+
+(defsyntax span [{:keys [span start end]
+                  :or   {span  '_
+                         start '_
+                         end   '_}}]
+  `{:tag   :span
+    :attrs {:id    ~span
+            :start (m/app #(Integer/parseInt %) ~start)
+            :end   (m/app #(Integer/parseInt %) ~end)}})
+
+
+(defsyntax annotation [{:keys [ann profile] :as args
+                        :or   {ann     '_
+                               profile '_}}]
+  `{:tag     :annotation
+    :attrs   {:id        ~ann
+              :annotator ~profile}
+    :content (m/scan (m/or
+                       (concept ~args)
+                       (span ~args)))})
+
+(defsyntax document
+  [{:keys [doc file-name] :as args
+    :or   {doc       '_
+           file-name '_}}]
+  `{:tag     :document
+    :attrs   {:id        ~doc
+              :text-file ~file-name}
+    :content (m/or
+               (m/scan (m/or
+                         (annotation ~args)
+                         (graph-space ~args)))
+               [])})
+
+(defsyntax knowtator-project [args]
+  `{:tag     :knowtator-project
+    :content (m/scan (document ~args))})
 
 (defn parse-graph-space [counter xml]
   (-> xml
@@ -126,21 +163,6 @@
                ...]})
     (->> (map #(update % :edges (partial remove nil?))))))
 
-(defsyntax span [{:keys [span start end]
-                  :or   {span  '_
-                         start '_
-                         end   '_}}]
-  `{:tag   :span
-    :attrs {:id    ~span
-            :start (m/app #(Integer/parseInt %) ~start)
-            :end   (m/app #(Integer/parseInt %) ~end)}})
-
-
-
-(defsyntax knowtator-project [args]
-  `{:tag     :knowtator-project
-    :content (m/scan (document ~args))})
-
 (defn parse-document [counter xml]
   (m/rewrites xml
     (knowtator-project {:doc       ?id
@@ -164,28 +186,6 @@
        ...])
     (->> (mapcat identity))))
 
-(defsyntax annotation [{:keys [ann profile] :as args
-                        :or   {ann     '_
-                               profile '_}}]
-  `{:tag     :annotation
-    :attrs   {:id        ~ann
-              :annotator ~profile}
-    :content (m/scan (m/or
-                       (concept ~args)
-                       (span ~args)))})
-
-(defsyntax document
-  [{:keys [doc file-name] :as args
-    :or   {doc       '_
-           file-name '_}}]
-  `{:tag     :document
-    :attrs   {:id        ~doc
-              :text-file ~file-name}
-    :content (m/or
-               (m/scan (m/or
-                         (annotation ~args)
-                         (graph-space ~args)))
-               [])})
 
 (defn parse-span [counter xml]
   (-> xml
