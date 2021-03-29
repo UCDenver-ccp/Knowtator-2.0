@@ -220,16 +220,17 @@
               file-name
               (str/replace-first #"\.txt$" "")
               keyword))]
-    (let [articles (-> project-file
-                     (io/file "Articles")
-                     file-seq
-                     rest
-                     (->>
-                       (map (juxt file-name file-name->id slurp))
-                       (map (partial zipmap [:file-name :id :content]))
-                       (util/map-with-key :id)))]
-      (->> xmls
-        (mapcat (partial parse-document (atom 0)))
+    (let [articles  (-> project-file
+                      (io/file "Articles")
+                      file-seq
+                      rest
+                      (->>
+                        (map (juxt file-name file-name->id slurp))
+                        (map (partial zipmap [:file-name :id :content]))
+                        (util/map-with-key :id)))
+          documents (->> xmls
+                      (mapcat (partial parse-document (atom 0))))]
+      (->> documents
         (util/map-with-key :id)
         (merge-with (partial merge-with (comp (partial some identity) vector)) articles)
         vals))))
