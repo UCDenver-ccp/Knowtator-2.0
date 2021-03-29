@@ -194,23 +194,23 @@
              :doc     :document2
              :profile :Default
              :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
-            {:id      :annotation-1
-             :doc     :document3
-             :profile :Default
-             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
-            {:id      :annotation-2
-             :doc     :document3
-             :profile :profile1
-             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
-            {:id      :annotation-3
-             :doc     :document3
-             :profile :Default
-             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
             {:id      :annotation-4
              :doc     :document3
+             :profile :Default
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
+            {:id      :annotation-5
+             :doc     :document3
+             :profile :profile1
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
+            {:id      :annotation-6
+             :doc     :document3
+             :profile :Default
+             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
+            {:id      :annotation-7
+             :doc     :document3
              :profile :profile1
              :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
-            {:id      :annotation-5
+            {:id      :annotation-8
              :doc     :document3
              :profile :Default
              :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
@@ -764,7 +764,7 @@
                         :ann   :a2
                         :start 0
                         :end   1}
-                       {:id    :span-1
+                       {:id    :span-7
                         :ann   :a2
                         :start 1
                         :end   2}]
@@ -776,11 +776,11 @@
                         :doc   :d1
                         :nodes [{:id  :n1
                                  :ann :a1}
-                                {:id  :node-1
+                                {:id  :node-10
                                  :ann :a2}]
                         :edges [{:id        :e1
                                  :from      :n1
-                                 :to        :node-1
+                                 :to        :node-10
                                  #_#_:label :ep1}]}]}
           (sut/parse-project [{:id      :d1
                                :content "Hi"}]
@@ -794,8 +794,8 @@
                        {:tag     :document
                         :attrs   {:id "d1" :text-file "tf.txt"}
                         :content [{:tag     :annotation
-                                   :attrs   {:annotator  "p1"
-                                             :id         "a1"
+                                   :attrs   {:id         "a1"
+                                             :annotator  "p1"
                                              :motivation ""
                                              :type       "identity"}
                                    :content [{:tag   :class
@@ -837,7 +837,7 @@
                                               :attrs {:annotator  "Default"
                                                       :id         "e1"
                                                       :motivation ""
-                                                      :object     "node-1"
+                                                      :object     "node-10"
                                                       :polarity   "positive"
                                                       :property   "ep1"
                                                       :quantifier "some"
@@ -857,23 +857,23 @@
                          :doc     :document2
                          :profile :Default
                          :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
-                        {:id      :annotation-1
-                         :doc     :document3
-                         :profile :Default
-                         :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
-                        {:id      :annotation-2
-                         :doc     :document3
-                         :profile :profile1
-                         :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
-                        {:id      :annotation-3
-                         :doc     :document3
-                         :profile :Default
-                         :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
                         {:id      :annotation-4
                          :doc     :document3
+                         :profile :Default
+                         :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
+                        {:id      :annotation-5
+                         :doc     :document3
+                         :profile :profile1
+                         :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
+                        {:id      :annotation-6
+                         :doc     :document3
+                         :profile :Default
+                         :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
+                        {:id      :annotation-7
+                         :doc     :document3
                          :profile :profile1
                          :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
-                        {:id      :annotation-5
+                        {:id      :annotation-8
                          :doc     :document3
                          :profile :Default
                          :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
@@ -898,7 +898,7 @@
             :spans  [7 [{:id :document1-26 :ann :mention_0 :start 0 :end 4}
                         {:id :document1-28 :ann :mention_1 :start 10 :end 14}
                         {:id :document1-29 :ann :mention_1 :start 15 :end 24}
-                        {:id :span-1 :ann :mention_3 :start 0 :end 3}
+                        {:id :span-15 :ann :mention_3 :start 0 :end 3}
                         {:id :document3-11 :ann :mention_0 :start 0 :end 1}
                         {:id :document3-14 :ann :mention_1 :start 28 :end 36}
                         {:id :document3-17 :ann :mention_2 :start 28 :end 36}]]
