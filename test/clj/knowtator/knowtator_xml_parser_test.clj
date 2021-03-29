@@ -13,7 +13,7 @@
   (testing "Basic"
     (is (= [{:id     :p1
              :colors {"c1" "blue"}}]
-          (sut/parse-profile (atom 0)
+          (sut/parse-profiles (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :profile
                         :attrs   {:id "p1"}
@@ -25,7 +25,7 @@
              :colors {"c1" "blue"}}
             {:id     :p2
              :colors {"c1" "blue"}}]
-          (sut/parse-profile (atom 0)
+          (sut/parse-profiles (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :profile
                         :attrs   {:id "p1"}
@@ -42,7 +42,7 @@
              :colors {"c1" "blue"}}
             {:id     :p2
              :colors {"c1" "blue"}}]
-          (sut/parse-profile (atom 0)
+          (sut/parse-profiles (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :profile
                         :attrs   {:id "p1"}
@@ -58,7 +58,7 @@
   (testing "Missing ID"
     (is (= [{:id     :profile-1
              :colors {"c1" "blue"}}]
-          (sut/parse-profile (atom 0)
+          (sut/parse-profiles (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :profile
                         :attrs   {}
@@ -69,7 +69,7 @@
     (is (= [{:id     :p1
              :colors {"c1" "blue"
                       "c2" "red"}}]
-          (sut/parse-profile (atom 0)
+          (sut/parse-profiles (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :profile
                         :attrs   {:id "p1"}
@@ -91,7 +91,7 @@
               "#00ffff"}}]
           (->> project-file
             (sut/read-project-xmls "Profiles")
-            (sut/parse-profile (atom 0)))))))
+            (sut/parse-profiles (atom 0)))))))
 
 (deftest parse-annotation-test
   (testing "Basic"
@@ -99,7 +99,7 @@
              :profile :p1
              :concept "c1"
              :doc     :d1}]
-          (sut/parse-annotation (atom 0)
+          (sut/parse-annotations (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:id "d1"}
@@ -118,7 +118,7 @@
              :profile :p1
              :concept "c1"
              :doc     :d1}]
-          (sut/parse-annotation (atom 0)
+          (sut/parse-annotations (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:id "d1"}
@@ -157,7 +157,7 @@
              :profile :p1
              :concept "c1"
              :doc     :d1}]
-          (sut/parse-annotation (atom 0)
+          (sut/parse-annotations (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:id "d1"}
@@ -171,7 +171,7 @@
              :profile :Default
              :concept "c1"
              :doc     :d1}]
-          (sut/parse-annotation (atom 0)
+          (sut/parse-annotations (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:id "d1"}
@@ -219,7 +219,7 @@
              :profile :Default
              :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}]
           (->> annotation-xmls
-            (sut/parse-annotation (atom 0))
+            (sut/parse-annotations (atom 0))
             (sort-by (juxt :doc :id :concept)))))))
 
 (deftest parse-graph-space-test
@@ -233,7 +233,7 @@
              :edges [{:id   :e1
                       :from :n1
                       :to   :n2}]}]
-          (sut/parse-graph-space (atom 0)
+          (sut/parse-graph-spaces (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:id "d1"}
@@ -268,7 +268,7 @@
              :edges [{:id   :e1
                       :from :n1
                       :to   :n2}]}]
-          (sut/parse-graph-space (atom 0)
+          (sut/parse-graph-spaces (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:id "d1"}
@@ -307,7 +307,7 @@
              :edges [{:id   :e1
                       :from :n1
                       :to   :n2}]}]
-          (sut/parse-graph-space (atom 0)
+          (sut/parse-graph-spaces (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:id "d1"}
@@ -330,7 +330,7 @@
              :nodes [{:id  :n1
                       :ann :a1}]
              :edges []}]
-          (sut/parse-graph-space (atom 0)
+          (sut/parse-graph-spaces (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:id "d1"}
@@ -382,7 +382,7 @@
              :edges [{:id   :e1
                       :from :n1
                       :to   :n2}]}]
-          (sut/parse-graph-space (atom 0)
+          (sut/parse-graph-spaces (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:id "d1"}
@@ -407,7 +407,7 @@
              :edges [{:id   :e1
                       :from :n1
                       :to   :n2}]}]
-          (sut/parse-graph-space (atom 0)
+          (sut/parse-graph-spaces (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:id "d1"}
@@ -435,7 +435,7 @@
                      {:id   :e2
                       :from :n1
                       :to   :n2}]}]
-          (sut/parse-graph-space (atom 0)
+          (sut/parse-graph-spaces (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:id "d1"}
@@ -467,7 +467,7 @@
                      {:id   :e2
                       :from :n1
                       :to   :n2}]}]
-          (sut/parse-graph-space (atom 0)
+          (sut/parse-graph-spaces (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:id "d1"}
@@ -522,7 +522,7 @@
                      {:id   :document3-23
                       :from :document3-19
                       :to   :document3-22}]}]
-          (sut/parse-graph-space (atom 0) annotation-xmls)))))
+          (sut/parse-graph-spaces (atom 0) annotation-xmls)))))
 
 (deftest parse-span-test
   (testing "Basic"
@@ -530,7 +530,7 @@
              :ann   :a1
              :start 0
              :end   1}]
-          (sut/parse-span (atom 0)
+          (sut/parse-spans (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {}
@@ -545,7 +545,7 @@
              :ann   :a1
              :start 0
              :end   1}]
-          (sut/parse-span (atom 0)
+          (sut/parse-spans (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {}
@@ -567,7 +567,7 @@
              :ann   :a1
              :start 0
              :end   2}]
-          (sut/parse-span (atom 0)
+          (sut/parse-spans (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {}
@@ -616,14 +616,14 @@
                                                            :id    "document3-17"
                                                            :start "28"}
                                                  :content ["ppeared!"]}]}]}]}
-            (sut/parse-span (atom 0))))))
+            (sut/parse-spans (atom 0))))))
 
   (testing "Missing ID"
     (is (= [{:id    :span-1
              :ann   :a1
              :start 0
              :end   1}]
-          (sut/parse-span (atom 0)
+          (sut/parse-spans (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {}
@@ -637,7 +637,7 @@
              :ann   :a1
              :start 0
              :end   1}]
-          (sut/parse-span (atom 0)
+          (sut/parse-spans (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {}
@@ -657,14 +657,14 @@
             {:id :document3-17 :ann :mention_2 :start 28 :end 36}
             {:id :span-1 :ann :mention_3 :start 0 :end 3}]
           (->> annotation-xmls
-            (sut/parse-span (atom 0))
+            (sut/parse-spans (atom 0))
             (sort-by :id))))))
 
 (deftest parse-document-test
   (testing "Basic"
     (is (= [{:id        :d1
              :file-name "fn1"}]
-          (sut/parse-document (atom 0) nil
+          (sut/parse-documents (atom 0) nil
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:id        "d1"
@@ -675,7 +675,7 @@
              :file-name "fn1"}
             {:id        :d2
              :file-name "fn1"}]
-          (sut/parse-document (atom 0) nil
+          (sut/parse-documents (atom 0) nil
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:id        "d1"
@@ -688,7 +688,7 @@
   (testing "Missing ID"
     (is (= [{:id        :document-1
              :file-name "fn1"}]
-          (sut/parse-document (atom 0) nil
+          (sut/parse-documents (atom 0) nil
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:text-file "fn1"}
@@ -697,7 +697,7 @@
   (testing "Missing file name"
     (is (= [{:id        :d1
              :file-name "d1.txt"}]
-          (sut/parse-document (atom 0) nil
+          (sut/parse-documents (atom 0) nil
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:id "d1"}
@@ -719,7 +719,7 @@
                {:file-name "long_article.txt"
                 :id        :long_article}]]
           (->> annotation-xmls
-            (sut/parse-document (atom 0) articles)
+            (sut/parse-documents (atom 0) articles)
             (sort-by :id)
             vec
             (#(update % 4 dissoc :content))

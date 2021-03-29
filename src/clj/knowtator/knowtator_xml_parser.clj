@@ -134,7 +134,7 @@
                        (document ~args)
                        (profile ~args)))})
 
-(defn parse-profile [counter xml]
+(defn parse-profiles [counter xml]
   (-> xml
     (m/rewrites
       (knowtator-project {:profile  !id
@@ -145,7 +145,7 @@
        ...])
     (->> (apply concat))))
 
-(defn parse-graph-space [counter xml]
+(defn parse-graph-spaces [counter xml]
   (-> xml
     (m/rewrites
       (knowtator-project {:doc      !doc
@@ -188,7 +188,7 @@
       (map (juxt file-name file-name->id slurp))
       (map (partial zipmap [:file-name :id :content])))))
 
-(defn parse-document [counter articles xml]
+(defn parse-documents [counter articles xml]
   (let [articles (util/map-with-key :id articles)]
     (-> xml
       (m/rewrites
@@ -205,7 +205,7 @@
         vals))))
 
 
-(defn parse-annotation [counter xml]
+(defn parse-annotations [counter xml]
   (-> xml
     (m/rewrites
       (knowtator-project {:doc           !doc
@@ -231,7 +231,7 @@
         {})
       vals)))
 
-(defn parse-span [counter xml]
+(defn parse-spans [counter xml]
   (-> xml
     (m/rewrites
       (knowtator-project {:ann   !ann
@@ -254,8 +254,8 @@
   (let [merged-annotation-xml (read-project-xmls "Annotations" project-file)
         profile-xmls          (read-project-xmls "Profiles" project-file)
         articles              (read-articles project-file)]
-    {:anns     (parse-annotation (atom 0) merged-annotation-xml)
-     :docs     (parse-document (atom 0) articles merged-annotation-xml)
-     :profiles (parse-profile (atom 0) profile-xmls)
-     :spans    (parse-span (atom 0) merged-annotation-xml)
-     :graphs   (parse-graph-space (atom 0) merged-annotation-xml)}))
+    {:anns     (parse-annotations (atom 0) merged-annotation-xml)
+     :docs     (parse-documents (atom 0) articles merged-annotation-xml)
+     :profiles (parse-profiles (atom 0) profile-xmls)
+     :spans    (parse-spans (atom 0) merged-annotation-xml)
+     :graphs   (parse-graph-spaces (atom 0) merged-annotation-xml)}))
