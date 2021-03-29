@@ -33,7 +33,7 @@
                (do (swap! counter inc)
                    (str prefix @counter))))))
 
-(defn read-project-xmls [dir project-file-name]
+(defn read-project-xml-dir [dir project-file-name]
   (letfn [(struct->map [x]
             (cond->> x
               (instance? clojure.lang.PersistentStructMap x)
@@ -49,6 +49,16 @@
                             (into x y)
                             y))))))
 
+
+(defn read-project-xmls [project-file-name]
+  (let [profile-xml    (read-project-xml-dir "Profiles" project-file-name)
+        annotation-xml (read-project-xml-dir "Annotations" project-file-name)]
+    (merge-with (fn [x y]
+                  (if (and (coll? x) (coll? y))
+                    (into x y)
+                    y))
+      profile-xml annotation-xml)))
+
 (defsyntax concept-color [{:keys [concepts colors]
                            :or   {concepts '_
                                   colors   '_}}]
@@ -63,11 +73,12 @@
     :content [(concept-color ~args) ...]})
 
 
-(defsyntax annotation-node [{:keys [node node-ann]
+(defsyntax annotation-node [{:keys [node node-ann counter]
                              :or   {node     '_
-                                    node-ann '_}}]
+                                    node-ann '_
+                                    counter  '(atom 0)}}]
   `{:tag   :vertex
-    :attrs {:id         ~node
+    :attrs {:id         (m/app (partial verify-id ~counter "node-") ~node)
             :annotation ~node-ann}})
 
 (defsyntax relation-annotation [{:keys [edge from to]
@@ -148,23 +159,24 @@
 (defn parse-graph-spaces [counter xml]
   (-> xml
     (m/rewrites
-      (knowtator-project {:doc      !doc
-                          :graph    !id
-                          :node     !vs
-                          :node-ann !as
-                          :edge     !es
-                          :from     !fs
-                          :to       !ts})
+      (knowtator-project {:doc          !doc
+                          :graph        !id
+                          :node         !vs
+                          :node-ann     !as
+                          :edge         !es
+                          :from         !fs
+                          :to           !ts
+                          :node-counter counter})
       [{:id    (m/app (partial verify-id counter "graph-space-") !id)
         :doc   (m/app keyword !doc)
-        :nodes [{:id  (m/app keyword !vs)
+        :nodes [{:id  !vs
                  :ann (m/app keyword !as)}
                 ...]
         :edges [(m/app (fn [{:keys [from to] :as e}]
                          (let [vs (set (map keyword !vs))]
                            (when (and (vs from) (vs to))
                              e)))
-                  {:id   (m/app keyword !es)
+                  {:id   (m/app (partial verify-id counter "edge-") !es)
                    :from (m/app keyword !fs)
                    :to   (m/app keyword !ts)})
                 ...]}
@@ -250,12 +262,9 @@
       vals
       (map first))))
 
-(defn parse-project [project-file]
-  (let [merged-annotation-xml (read-project-xmls "Annotations" project-file)
-        profile-xmls          (read-project-xmls "Profiles" project-file)
-        articles              (read-articles project-file)]
-    {:anns     (parse-annotations (atom 0) merged-annotation-xml)
-     :docs     (parse-documents (atom 0) articles merged-annotation-xml)
-     :profiles (parse-profiles (atom 0) profile-xmls)
-     :spans    (parse-spans (atom 0) merged-annotation-xml)
-     :graphs   (parse-graph-spaces (atom 0) merged-annotation-xml)}))
+(defn parse-project [articles xml]
+  {:anns     (parse-annotations (atom 0) xml)
+   :docs     (parse-documents (atom 0) articles xml)
+   :profiles (parse-profiles (atom 0) xml)
+   :spans    (parse-spans (atom 0) xml)
+   :graphs   (parse-graph-spaces (atom 0) xml)})

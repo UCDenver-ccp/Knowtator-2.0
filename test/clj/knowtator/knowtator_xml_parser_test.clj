@@ -5,7 +5,7 @@
             [knowtator.util :as util]))
 
 (def project-file (io/resource "test_project_using_uris"))
-(def annotation-xmls (sut/read-project-xmls "Annotations" project-file))
+(def project-xml (sut/read-project-xmls project-file))
 
 (def articles (sut/read-articles project-file))
 
@@ -90,7 +90,7 @@
               "http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream"
               "#00ffff"}}]
           (->> project-file
-            (sut/read-project-xmls "Profiles")
+            sut/read-project-xmls
             (sut/parse-profiles (atom 0)))))))
 
 (deftest parse-annotation-test
@@ -218,7 +218,7 @@
              :doc     :document3
              :profile :Default
              :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}]
-          (->> annotation-xmls
+          (->> project-xml
             (sut/parse-annotations (atom 0))
             (sort-by (juxt :doc :id :concept)))))))
 
@@ -522,7 +522,7 @@
                      {:id   :document3-23
                       :from :document3-19
                       :to   :document3-22}]}]
-          (sut/parse-graph-spaces (atom 0) annotation-xmls)))))
+          (sut/parse-graph-spaces (atom 0) project-xml)))))
 
 (deftest parse-span-test
   (testing "Basic"
@@ -582,9 +582,9 @@
                                                       :start "0"
                                                       :end   "2"}}]}]}]}))))
   (testing "Multiple annotations"
-    (is (= [{:id :document3-11, :ann :mention_0, :start 0, :end 1}
-            {:id :document3-14, :ann :mention_1, :start 28, :end 36}
-            {:id :document3-17, :ann :mention_2, :start 28, :end 36}]
+    (is (= [{:id :document3-11 :ann :mention_0 :start 0 :end 1}
+            {:id :document3-14 :ann :mention_1 :start 28 :end 36}
+            {:id :document3-17 :ann :mention_2 :start 28 :end 36}]
           (->> {:tag     :knowtator-project
                 :content [{:tag     :document
                            :attrs   {}
@@ -656,7 +656,7 @@
             {:id :document3-14 :ann :mention_1 :start 28 :end 36}
             {:id :document3-17 :ann :mention_2 :start 28 :end 36}
             {:id :span-1 :ann :mention_3 :start 0 :end 3}]
-          (->> annotation-xmls
+          (->> project-xml
             (sut/parse-spans (atom 0))
             (sort-by :id))))))
 
@@ -718,7 +718,7 @@
                 :content   "Look at me."}
                {:file-name "long_article.txt"
                 :id        :long_article}]]
-          (->> annotation-xmls
+          (->> project-xml
             (sut/parse-documents (atom 0) articles)
             (sort-by :id)
             vec
@@ -726,16 +726,16 @@
             ((juxt count identity)))))))
 
 (deftest read-articles-test
-  (is (= [{:file-name "document1.txt",
-           :id        :document1,
+  (is (= [{:file-name "document1.txt"
+           :id        :document1
            :content   "This is a test document."}
-          {:file-name "document2.txt",
-           :id        :document2,
+          {:file-name "document2.txt"
+           :id        :document2
            :content   "And another one!"}
-          {:file-name "document3.txt",
-           :id        :document3,
+          {:file-name "document3.txt"
+           :id        :document3
            :content   "A second test document has appeared!"}
-          {:file-name "document4.txt", :id :document4, :content "Look at me."}
+          {:file-name "document4.txt" :id :document4 :content "Look at me."}
           {:file-name "long_article.txt"
            :id        :long_article}]
         (-> project-file
@@ -744,6 +744,106 @@
           (update 4 dissoc :content)))))
 
 (deftest parse-project-test
+  (testing "Basic"
+    (is (= {:anns     [{:id      :a1
+                        :doc     :d1
+                        :profile :p1
+                        :concept "c1"}
+                       {:id      :a2
+                        :doc     :d1
+                        :profile :Default
+                        :concept "c2"}]
+            :docs     [{:id        :d1
+                        :file-name "tf.txt"
+                        :content   "Hi"}]
+            :spans    [{:id    :s1
+                        :ann   :a1
+                        :start 0
+                        :end   1}
+                       {:id    :s2
+                        :ann   :a2
+                        :start 0
+                        :end   1}
+                       {:id    :span-1
+                        :ann   :a2
+                        :start 1
+                        :end   2}]
+            :profiles [{:id     :p1
+                        :colors {:c1 :default}}
+                       {:id     :Default
+                        :colors {:c1 "blue"}}]
+            :graphs   [{:id    :g1
+                        :doc   :d1
+                        :nodes [{:id  :n1
+                                 :ann :a1}
+                                {:id  :node-1
+                                 :ann :a2}]
+                        :edges [{:id        :e1
+                                 :from      :n1
+                                 :to        :node-1
+                                 #_#_:label :ep1}]}]}
+          (sut/parse-project [{:id      :d1
+                               :content "Hi"}]
+            {:tag     :knowtator-project
+             :content [{:tag     :profile
+                        :attrs   {:id "p1"}
+                        :content [{:tag   :highlighter
+                                   :attrs {:class "c1"
+                                           :color "blue"}}]}
+
+                       {:tag     :document
+                        :attrs   {:id "d1" :text-file "tf.txt"}
+                        :content [{:tag     :annotation
+                                   :attrs   {:annotator  "p1"
+                                             :id         "a1"
+                                             :motivation ""
+                                             :type       "identity"}
+                                   :content [{:tag   :class
+                                              :attrs {:id    "c1"
+                                                      :label "cl1"}}
+                                             {:tag     :span
+                                              :attrs   {:id    "s1"
+                                                        :start "0"
+                                                        :end   "1"}
+                                              :content ["H"]}]}
+                                  {:tag     :annotation
+                                   :attrs   {:id         "a2"
+                                             :motivation ""
+                                             :type       "identity"}
+                                   :content [{:tag   :class
+                                              :attrs {:id    "c2"
+                                                      :label "cl2"}}
+                                             {:tag     :span
+                                              :attrs   {:id    "s2"
+                                                        :start "0"
+                                                        :end   "1"}
+                                              :content ["H"]}
+                                             {:tag     :span
+                                              :attrs   {:start "1"
+                                                        :end   "2"}
+                                              :content ["i"]}]}
+                                  {:tag     :graph-space
+                                   :attrs   {:id "g1"}
+                                   :content [{:tag   :vertex
+                                              :attrs {:annotation "a1"
+                                                      :id         "n1"
+                                                      :x          "20.0"
+                                                      :y          "20.0"}}
+                                             {:tag   :vertex
+                                              :attrs {:annotation "a2"
+                                                      :x          "20.0"
+                                                      :y          "20.0"}}
+                                             {:tag   :triple
+                                              :attrs {:annotator  "Default"
+                                                      :id         "e1"
+                                                      :motivation ""
+                                                      :object     "node-1"
+                                                      :polarity   "positive"
+                                                      :property   "ep1"
+                                                      :quantifier "some"
+                                                      :subject    "n1"
+                                                      :value      ""}}]}]}]}))))
+
   (testing "Simple project"
     (is (= {:anns   [9 [{:id      :mention_0
                          :doc     :document1
@@ -843,12 +943,14 @@
                            {"http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza" "#ff3333"
                             "http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream"
                             "#00ffff"}}]]}
-          (-> project-file
-            sut/parse-project
-            (update :docs vec)
-            (update-in [:docs 4] dissoc :content)
-            (update :anns (partial sort-by (juxt :doc :id :concept)))
-            (->> (util/map-vals (juxt count identity))))))))
+          (let [articles (sut/read-articles project-file)
+                xml      (sut/read-project-xmls project-file)]
+            (-> articles
+              (sut/parse-project xml)
+              (update :docs vec)
+              (update-in [:docs 4] dissoc :content)
+              (update :anns (partial sort-by (juxt :doc :id :concept)))
+              (->> (util/map-vals (juxt count identity)))))))))
 
 ;; public static final ProjectCounts defaultCounts = new ProjectCounts(5 6 7 3 2 3 7 4 0);
 ;; defaultExpectedStructureAnnotations = 0;
