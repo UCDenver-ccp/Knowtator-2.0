@@ -134,12 +134,14 @@
 
 (defsyntax knowtator-project [args]
   `{:tag     :knowtator-project
-    :content (m/scan (document ~args))})
+    :content (m/scan (m/or
+                       (document ~args)
+                       (profile ~args)))})
 
 (defn parse-graph-space [counter xml]
   (-> xml
     (m/rewrites
-      (knowtator-project {:doc      ?doc
+      (knowtator-project {:doc      !doc
                           :graph    !id
                           :node     !vs
                           :node-ann !as
@@ -147,7 +149,7 @@
                           :from     !fs
                           :to       !ts})
       [{:id    (m/app (partial verify-id counter "graph-space-") !id)
-        :doc   (m/app keyword ?doc)
+        :doc   (m/app keyword !doc)
         :nodes [{:id  (m/app keyword !vs)
                  :ann (m/app keyword !as)}
                 ...]
@@ -164,23 +166,28 @@
     (->> (map #(update % :edges (partial remove nil?))))))
 
 (defn parse-document [counter xml]
-  (m/rewrites xml
-    (knowtator-project {:doc       ?id
-                        :file-name ?file-name})
-    {:id        (m/app (partial verify-id counter "document-") ?id)
-     :file-name (m/app #(or % (str ?id ".txt")) ?file-name)}))
+  (-> xml
+    (m/rewrites
+      (knowtator-project {:doc       !id
+                          :file-name !file-name})
+      [(m/app (fn [[id file-name]]
+                {:id        (verify-id counter "document-" id)
+                 :file-name (or file-name (str id ".txt"))})
+         [!id !file-name])
+       ...])
+    (->> (mapcat identity))))
 
 
 (defn parse-annotation [counter xml]
   (-> xml
     (m/rewrites
-      (knowtator-project {:doc           ?doc
+      (knowtator-project {:doc           !doc
                           :ann           !id
                           :profile       !profile
                           :concept       !concept
                           :concept-label !concept-label})
       [{:id      (m/app (partial verify-id counter "annotation-") !id)
-        :doc     (m/app keyword ?doc)
+        :doc     (m/app keyword !doc)
         :profile (m/app #(or (keyword %) :Default) !profile)
         :concept !concept}
        ...])
