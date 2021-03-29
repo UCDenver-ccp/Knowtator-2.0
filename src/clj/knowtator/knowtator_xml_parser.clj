@@ -7,10 +7,9 @@
             [meander.epsilon :as m :refer [defsyntax]]))
 
 (declare
-  ?id
-  ?concept
-  ?concepts
+  !id
   !concepts
+  !concept
   !colors
   !vs
   !es
@@ -18,14 +17,14 @@
   !ts
   !fs
   !as
-  ?ann
-  ?doc
-  ?file-name
-  ?profile
-  ?start
-  ?end
-  ?content
-  ?concept-label)
+  !ann
+  !doc
+  !file-name
+  !profile
+  !start
+  !end
+  !content
+  !concept-label)
 
 (defn verify-id [counter prefix id]
   (keyword (or id
@@ -58,14 +57,6 @@
     :attrs   {:id ~profile}
     :content [(concept-color ~args) ...]})
 
-(defn parse-profile [counter xml]
-  (m/rewrites xml
-    {:tag     :knowtator-project
-     :content (m/scan (profile {:profile  ?id
-                                :concepts !concepts
-                                :colors   !colors}))}
-    {:id     (m/app (partial verify-id counter "profile-") ?id)
-     :colors (m/app (partial apply hash-map) [!concepts !colors ...])}))
 
 (defsyntax annotation-node [{:keys [node node-ann]
                              :or   {node     '_
@@ -137,6 +128,17 @@
     :content (m/scan (m/or
                        (document ~args)
                        (profile ~args)))})
+
+(defn parse-profile [counter xml]
+  (-> xml
+    (m/rewrites
+      (knowtator-project {:profile  !id
+                          :concepts !concepts
+                          :colors   !colors})
+      [{:id     (m/app (partial verify-id counter "profile-") !id)
+        :colors (m/app (partial apply hash-map) [!concepts !colors ...])}
+       ...])
+    (->> (mapcat identity))))
 
 (defn parse-graph-space [counter xml]
   (-> xml
