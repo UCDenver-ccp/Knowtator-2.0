@@ -20,6 +20,7 @@
   !ann
   !doc
   !file-name
+  !file-name-id
   !profile
   !start
   !end
@@ -139,11 +140,10 @@
   `{:tag     :document
     :attrs   {:id        (m/app (partial verify-id ~counter "document-") (m/and ~doc ~file-name-id))
               :text-file ~file-name}
-    :content (m/or
+    :content (m/or (m/pred empty?)
                (m/scan (m/or
                          (annotation ~args)
-                         (graph-space ~args)))
-               [])})
+                         (graph-space ~args))))})
 
 (defsyntax knowtator-project [args]
   `{:tag     :knowtator-project
@@ -159,7 +159,7 @@
                           :colors   !colors
                           :counter  counter})
       [{:id     !id
-        :colors (m/app (partial apply hash-map) [!concepts !colors ...])}
+        :colors (m/map-of !concepts !colors)}
        ...])
     (->> (apply concat))))
 
