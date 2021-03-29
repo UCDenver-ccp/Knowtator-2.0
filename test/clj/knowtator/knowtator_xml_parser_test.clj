@@ -704,11 +704,7 @@
                       :from :document3-19}
                      {:id   :document3-23
                       :from :document3-19
-                      :to   :document3-22}]}
-            {:id    (keyword "Old Knowtator Relations")
-             :doc   :document3
-             :nodes []
-             :edges []}]
+                      :to   :document3-22}]}]
           (sut/parse-graph-spaces annotation-xmls)))))
 
 (deftest parse-project-test

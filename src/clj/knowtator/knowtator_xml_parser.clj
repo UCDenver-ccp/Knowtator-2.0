@@ -139,28 +139,28 @@
 (defn parse-graph-space [counter xml]
   (-> xml
     (m/rewrites
-      {:tag     :knowtator-project
-       :content (m/scan {:tag     :document
-                         :attrs   {:id ?doc}
-                         :content (m/scan (graph-space {:graph    ?id
-                                                        :node     !vs
-                                                        :node-ann !as
-                                                        :edge     !es
-                                                        :from     !fs
-                                                        :to       !ts}))})}
-      {:id    (m/app (partial verify-id counter "graph-space-") ?id)
-       :doc   (m/app keyword ?doc)
-       :nodes [{:id  (m/app keyword !vs)
-                :ann (m/app keyword !as)}
-               ...]
-       :edges [(m/app (fn [{:keys [from to] :as e}]
-                        (let [vs (set (map keyword !vs))]
-                          (when (and (vs from) (vs to))
-                            e)))
-                 {:id   (m/app keyword !es)
-                  :from (m/app keyword !fs)
-                  :to   (m/app keyword !ts)})
-               ...]})
+      (knowtator-project {:doc      ?doc
+                          :graph    !id
+                          :node     !vs
+                          :node-ann !as
+                          :edge     !es
+                          :from     !fs
+                          :to       !ts})
+      [{:id    (m/app (partial verify-id counter "graph-space-") !id)
+        :doc   (m/app keyword ?doc)
+        :nodes [{:id  (m/app keyword !vs)
+                 :ann (m/app keyword !as)}
+                ...]
+        :edges [(m/app (fn [{:keys [from to] :as e}]
+                         (let [vs (set (map keyword !vs))]
+                           (when (and (vs from) (vs to))
+                             e)))
+                  {:id   (m/app keyword !es)
+                   :from (m/app keyword !fs)
+                   :to   (m/app keyword !ts)})
+                ...]}
+       ...])
+    (->> (mapcat identity))
     (->> (map #(update % :edges (partial remove nil?))))))
 
 (defn parse-document [counter xml]
