@@ -7,6 +7,8 @@
 (def project-file (io/resource "test_project_using_uris"))
 (def annotation-xmls (sut/read-project-xmls "Annotations" project-file))
 
+(def articles (sut/read-articles project-file))
+
 (deftest parse-profile-test
   (testing "Basic"
     (is (= [{:id     :p1
@@ -76,7 +78,21 @@
                                            :class "c1"}}
                                   {:tag   :highlighter
                                    :attrs {:color "red"
-                                           :class "c2"}}]}]})))))
+                                           :class "c2"}}]}]}))))
+
+  (testing "Simple project"
+    (is (= [{:id :Default
+             :colors
+             {"http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza" "#ff0000"}}
+            {:id :profile1
+             :colors
+             {"http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza" "#ff3333"
+              "http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream"
+              "#00ffff"}}]
+          (->> project-file
+            (sut/read-project-xmls "Profiles")
+            (sut/parse-profile (atom 0)))))))
+
 (deftest parse-annotation-test
   (testing "Basic"
     (is (= [{:id      :a1
@@ -163,7 +179,48 @@
                                    :attrs   {:id "a1"}
                                    :content [{:tag   :class
                                               :attrs {:label "cl1"
-                                                      :id    "c1"}}]}]}]})))))
+                                                      :id    "c1"}}]}]}]}))))
+
+  (testing "Simple project"
+    (is (= [{:id      :mention_0
+             :doc     :document1
+             :profile :Default
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
+            {:id      :mention_1
+             :doc     :document1
+             :profile :profile1
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream"}
+            {:id      :mention_3
+             :doc     :document2
+             :profile :Default
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
+            {:id      :annotation-1
+             :doc     :document3
+             :profile :Default
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
+            {:id      :annotation-2
+             :doc     :document3
+             :profile :profile1
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
+            {:id      :annotation-3
+             :doc     :document3
+             :profile :Default
+             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
+            {:id      :annotation-4
+             :doc     :document3
+             :profile :profile1
+             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
+            {:id      :annotation-5
+             :doc     :document3
+             :profile :Default
+             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
+            {:id      :mention_2
+             :doc     :document3
+             :profile :Default
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}]
+          (->> annotation-xmls
+            (sut/parse-annotation (atom 0))
+            (sort-by (juxt :doc :id :concept)))))))
 
 (deftest parse-graph-space-test
   (testing "Basic"
@@ -429,7 +486,44 @@
                                              {:tag   :triple
                                               :attrs {:subject "n1"
                                                       :object  "n2"
-                                                      :id      "e2"}}]}]}]})))))
+                                                      :id      "e2"}}]}]}]}))))
+
+  (testing "Simple project"
+    (is (= [{:id    :graph_0
+             :doc   :document1
+             :nodes [{:id  :node_0
+                      :ann :mention_0}
+                     {:id  :node_1
+                      :ann :mention_1}]
+             :edges [{:id :edge_0
+
+                      :from :node_0
+                      :to   :node_1}]}
+            {:id    :graph_2
+             :doc   :document2
+             :nodes [{:id  :node_0
+                      :ann :mention_3}
+                     {:id  :node_1
+                      :ann :mention_3}]
+             :edges [{:id   :edge_0
+                      :to   :node_1
+                      :from :node_0}]}
+            {:id    (keyword "Old Knowtator Relations")
+             :doc   :document3
+             :nodes [{:id  :document3-19
+                      :ann :mention_0}
+                     {:id  :document3-20
+                      :ann :mention_1}
+                     {:id  :document3-22
+                      :ann :mention_2}]
+             :edges [{:id   :document3-21
+                      :to   :document3-20
+                      :from :document3-19}
+                     {:id   :document3-23
+                      :from :document3-19
+                      :to   :document3-22}]}]
+          (sut/parse-graph-space (atom 0) annotation-xmls)))))
+
 (deftest parse-span-test
   (testing "Basic"
     (is (= [{:id    :s1
@@ -450,10 +544,6 @@
     (is (= [{:id    :s1
              :ann   :a1
              :start 0
-             :end   1}
-            {:id    :s2
-             :ann   :a1
-             :start 0
              :end   1}]
           (sut/parse-span (atom 0)
             {:tag     :knowtator-project
@@ -468,7 +558,29 @@
                                              {:tag   :span
                                               :attrs {:id    "s2"
                                                       :start "0"
-                                                      :end   "1"}}]}]}]}))))
+                                                      :end   "1"}}]}]}]})))
+    (is (= [{:id    :s1
+             :ann   :a1
+             :start 0
+             :end   1}
+            {:id    :s2
+             :ann   :a1
+             :start 0
+             :end   2}]
+          (sut/parse-span (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :document
+                        :attrs   {}
+                        :content [{:tag     :annotation
+                                   :attrs   {:id "a1"}
+                                   :content [{:tag   :span
+                                              :attrs {:id    "s1"
+                                                      :start "0"
+                                                      :end   "1"}}
+                                             {:tag   :span
+                                              :attrs {:id    "s2"
+                                                      :start "0"
+                                                      :end   "2"}}]}]}]}))))
   (testing "Multiple annotations"
     (is (= [{:id :document3-11, :ann :mention_0, :start 0, :end 1}
             {:id :document3-14, :ann :mention_1, :start 28, :end 36}
@@ -534,12 +646,25 @@
                                    :content [{:tag   :span
                                               :attrs {:id    "s1"
                                                       :end   "0"
-                                                      :start "1"}}]}]}]})))))
+                                                      :start "1"}}]}]}]}))))
+
+  (testing "Simple project"
+    (is (= [{:id :document1-26 :ann :mention_0 :start 0 :end 4}
+            {:id :document1-28 :ann :mention_1 :start 10 :end 14}
+            {:id :document1-29 :ann :mention_1 :start 15 :end 24}
+            {:id :document3-11 :ann :mention_0 :start 0 :end 1}
+            {:id :document3-14 :ann :mention_1 :start 28 :end 36}
+            {:id :document3-17 :ann :mention_2 :start 28 :end 36}
+            {:id :span-1 :ann :mention_3 :start 0 :end 3}]
+          (->> annotation-xmls
+            (sut/parse-span (atom 0))
+            (sort-by :id))))))
+
 (deftest parse-document-test
   (testing "Basic"
     (is (= [{:id        :d1
              :file-name "fn1"}]
-          (sut/parse-document (atom 0)
+          (sut/parse-document (atom 0) nil
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:id        "d1"
@@ -550,7 +675,7 @@
              :file-name "fn1"}
             {:id        :d2
              :file-name "fn1"}]
-          (sut/parse-document (atom 0)
+          (sut/parse-document (atom 0) nil
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:id        "d1"
@@ -563,7 +688,7 @@
   (testing "Missing ID"
     (is (= [{:id        :document-1
              :file-name "fn1"}]
-          (sut/parse-document (atom 0)
+          (sut/parse-document (atom 0) nil
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:text-file "fn1"}
@@ -572,14 +697,13 @@
   (testing "Missing file name"
     (is (= [{:id        :d1
              :file-name "d1.txt"}]
-          (sut/parse-document (atom 0)
+          (sut/parse-document (atom 0) nil
             {:tag     :knowtator-project
              :content [{:tag     :document
                         :attrs   {:id "d1"}
-                        :content []}]})))))
+                        :content []}]}))))
 
-(deftest parse-documents-test
-  (testing "Basic parse documents from annotation files"
+  (testing "Simple project"
     (is (= [5 [{:file-name "document1.txt"
                 :id        :document1
                 :content   "This is a test document."}
@@ -595,120 +719,32 @@
                {:file-name "long_article.txt"
                 :id        :long_article}]]
           (->> annotation-xmls
-            (sut/parse-documents project-file)
+            (sut/parse-document (atom 0) articles)
             (sort-by :id)
             vec
             (#(update % 4 dissoc :content))
             ((juxt count identity)))))))
 
-(deftest parse-annotations-test
-  (testing "Basic parse annotations from annotation files"
-    (is (= [{:id      :mention_0
-             :doc     :document1
-             :profile :Default
-             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
-            {:id      :mention_1
-             :doc     :document1
-             :profile :profile1
-             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream"}
-            {:id      :mention_3
-             :doc     :document2
-             :profile :Default
-             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
-            {:id      :annotation-1
-             :doc     :document3
-             :profile :Default
-             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
-            {:id      :annotation-2
-             :doc     :document3
-             :profile :profile1
-             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
-            {:id      :annotation-3
-             :doc     :document3
-             :profile :Default
-             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
-            {:id      :annotation-4
-             :doc     :document3
-             :profile :profile1
-             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
-            {:id      :annotation-5
-             :doc     :document3
-             :profile :Default
-             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
-            {:id      :mention_2
-             :doc     :document3
-             :profile :Default
-             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}]
-          (->> annotation-xmls
-            sut/parse-annotations
-            (sort-by (juxt :doc :id :concept)))))))
-
-(deftest parse-profiles-test
-  (testing "Basic project profile parsing"
-    (is (= [{:id :Default
-             :colors
-             {"http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza" "#ff0000"}}
-            {:id :profile1
-             :colors
-             {"http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza" "#ff3333"
-              "http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream"
-              "#00ffff"}}]
-          (->> project-file
-            (sut/read-project-xmls "Profiles")
-            sut/parse-profiles)))))
-
-(deftest parse-spans-test
-  (testing "Parse basic project for spans"
-    (is (= [{:id :document1-26 :ann :mention_0 :start 0 :end 4}
-            {:id :document1-28 :ann :mention_1 :start 10 :end 14}
-            {:id :document1-29 :ann :mention_1 :start 15 :end 24}
-            {:id :document3-11 :ann :mention_0 :start 0 :end 1}
-            {:id :document3-14 :ann :mention_1 :start 28 :end 36}
-            {:id :document3-17 :ann :mention_2 :start 28 :end 36}
-            {:id :span-1 :ann :mention_3 :start 0 :end 3}]
-          (->> annotation-xmls
-            sut/parse-spans
-            (sort-by :id))))))
-
-(deftest parse-graph-spaces-test
-  (testing "Parse basic project for graph spaces"
-    (is (= [{:id    :graph_0
-             :doc   :document1
-             :nodes [{:id  :node_0
-                      :ann :mention_0}
-                     {:id  :node_1
-                      :ann :mention_1}]
-             :edges [{:id :edge_0
-
-                      :from :node_0
-                      :to   :node_1}]}
-            {:id    :graph_2
-             :doc   :document2
-             :nodes [{:id  :node_0
-                      :ann :mention_3}
-                     {:id  :node_1
-                      :ann :mention_3}]
-             :edges [{:id   :edge_0
-                      :to   :node_1
-                      :from :node_0}]}
-            {:id    (keyword "Old Knowtator Relations")
-             :doc   :document3
-             :nodes [{:id  :document3-19
-                      :ann :mention_0}
-                     {:id  :document3-20
-                      :ann :mention_1}
-                     {:id  :document3-22
-                      :ann :mention_2}]
-             :edges [{:id   :document3-21
-                      :to   :document3-20
-                      :from :document3-19}
-                     {:id   :document3-23
-                      :from :document3-19
-                      :to   :document3-22}]}]
-          (sut/parse-graph-spaces annotation-xmls)))))
+(deftest read-articles-test
+  (is (= [{:file-name "document1.txt",
+           :id        :document1,
+           :content   "This is a test document."}
+          {:file-name "document2.txt",
+           :id        :document2,
+           :content   "And another one!"}
+          {:file-name "document3.txt",
+           :id        :document3,
+           :content   "A second test document has appeared!"}
+          {:file-name "document4.txt", :id :document4, :content "Look at me."}
+          {:file-name "long_article.txt"
+           :id        :long_article}]
+        (-> project-file
+          sut/read-articles
+          vec
+          (update 4 dissoc :content)))))
 
 (deftest parse-project-test
-  (testing "Basic project"
+  (testing "Simple project"
     (is (= {:anns   [9 [{:id      :mention_0
                          :doc     :document1
                          :profile :Default

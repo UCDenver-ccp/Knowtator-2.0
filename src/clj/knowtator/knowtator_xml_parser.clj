@@ -43,7 +43,11 @@
       file-seq
       rest
       (map xml/parse)
-      (map (partial walk/postwalk struct->map)))))
+      (map (partial walk/postwalk struct->map))
+      (apply merge-with (fn [x y]
+                          (if (and (coll? x) (coll? y))
+                            (into x y)
+                            y))))))
 
 (defsyntax concept-color [{:keys [concepts colors]
                            :or   {concepts '_
@@ -169,17 +173,36 @@
       (apply concat)
       (map #(update % :edges (partial remove nil?))))))
 
-(defn parse-document [counter xml]
-  (-> xml
-    (m/rewrites
-      (knowtator-project {:doc       !id
-                          :file-name !file-name})
-      [(m/app (fn [[id file-name]]
-                {:id        (verify-id counter "document-" id)
-                 :file-name (or file-name (str id ".txt"))})
-         [!id !file-name])
-       ...])
-    (->> (apply concat))))
+(defn read-articles [project-file]
+  (letfn [(file-name [f]
+            (str (.getName f)))
+          (file-name->id [f]
+            (-> f
+              file-name
+              (str/replace-first #"\.txt$" "")
+              keyword))]
+    (->> "Articles"
+      (io/file project-file)
+      file-seq
+      rest
+      (map (juxt file-name file-name->id slurp))
+      (map (partial zipmap [:file-name :id :content])))))
+
+(defn parse-document [counter articles xml]
+  (let [articles (util/map-with-key :id articles)]
+    (-> xml
+      (m/rewrites
+        (knowtator-project {:doc       !id
+                            :file-name !file-name})
+        [(m/app (fn [[id file-name]]
+                  {:id        (verify-id counter "document-" id)
+                   :file-name (or file-name (str id ".txt"))})
+           [!id !file-name])
+         ...])
+      (->> (apply concat)
+        (util/map-with-key :id)
+        (merge-with (partial merge-with (comp (partial some identity) vector)) articles)
+        vals))))
 
 
 (defn parse-annotation [counter xml]
@@ -195,8 +218,18 @@
         :profile (m/app #(or (keyword %) :Default) !profile)
         :concept !concept}
        ...])
-    (->> (apply concat))))
-
+    (->> (apply concat)
+      (reduce
+        (fn [annotations {:keys [id] :as ann}]
+          (let [id (verify-id counter "annotation-"
+                     (when-not (->> annotations
+                                 id
+                                 ((every-pred identity
+                                    (comp (partial vector ann) (partial map #(dissoc % :id)) (partial apply not=)))))
+                       id))]
+            (assoc annotations id (assoc ann :id id))))
+        {})
+      vals)))
 
 (defn parse-span [counter xml]
   (-> xml
@@ -212,68 +245,17 @@
                  :end   (max start end)})
          [!id !ann !start !end])
        ...])
-    (->> (apply concat))))
-
-(defn parse-documents [project-file xmls]
-  (letfn [(file-name [f]
-            (str (.getName f)))
-          (file-name->id [f]
-            (-> f
-              file-name
-              (str/replace-first #"\.txt$" "")
-              keyword))]
-    (let [articles (->> "Articles"
-                     (io/file project-file)
-                     file-seq
-                     rest
-                     (map (juxt file-name file-name->id slurp))
-                     (map (partial zipmap [:file-name :id :content]))
-                     (util/map-with-key :id))]
-      (->> xmls
-        (mapcat (partial parse-document (atom 0)))
-        (util/map-with-key :id)
-        (merge-with (partial merge-with (comp (partial some identity) vector)) articles)
-        vals))))
-
-(defn parse-annotations [xmls]
-  (let [counter (atom 0)]
-    (->> xmls
-      (mapcat (partial parse-annotation counter))
-      (reduce
-        (fn [annotations {:keys [id] :as ann}]
-          (let [id (verify-id counter "annotation-"
-                     (when-not (->> annotations
-                                 id
-                                 ((every-pred identity
-                                    (comp (partial vector ann) (partial map #(dissoc % :id)) (partial apply not=)))))
-                       id))]
-            (assoc annotations id (assoc ann :id id))))
-        {})
-      vals)))
-
-(defn parse-profiles [xmls]
-  (mapcat (partial parse-profile (atom 0)) xmls))
-
-(defn parse-spans [xmls]
-  (->> xmls
-    (mapcat (partial parse-span (atom 0)))
-    (group-by (juxt :ann :start :end))
-    vals
-    (map first)))
-
-(defn parse-graph-spaces [xmls]
-  (mapcat (partial parse-graph-space (atom 0)) xmls))
+    (->> (apply concat)
+      (group-by (juxt :ann :start :end))
+      vals
+      (map first))))
 
 (defn parse-project [project-file]
-  (let [annotation-xmls     (read-project-xmls "Annotations" project-file)
-        profile-xmls        (read-project-xmls "Profiles" project-file)
-        #_#_annotation-xmls (apply merge-with (fn [x y]
-                                                (if (and (coll? x) (coll? y))
-                                                  (into x y)
-                                                  y))
-                              annotation-xmls)]
-    {:anns     (parse-annotations annotation-xmls)
-     :docs     (parse-documents project-file annotation-xmls)
-     :profiles (parse-profiles profile-xmls)
-     :spans    (parse-spans annotation-xmls)
-     :graphs   (parse-graph-spaces annotation-xmls)}))
+  (let [merged-annotation-xml (read-project-xmls "Annotations" project-file)
+        profile-xmls          (read-project-xmls "Profiles" project-file)
+        articles              (read-articles project-file)]
+    {:anns     (parse-annotation (atom 0) merged-annotation-xml)
+     :docs     (parse-document (atom 0) articles merged-annotation-xml)
+     :profiles (parse-profile (atom 0) profile-xmls)
+     :spans    (parse-span (atom 0) merged-annotation-xml)
+     :graphs   (parse-graph-space (atom 0) merged-annotation-xml)}))
