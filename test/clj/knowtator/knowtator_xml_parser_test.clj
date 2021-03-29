@@ -615,33 +615,33 @@
              :doc     :document2
              :profile :Default
              :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
-            {:id      :mention_0
+            {:id      :annotation-1
              :doc     :document3
              :profile :Default
              :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
-            {:id      :mention_0
-             :doc     :document3
-             :profile :Default
-             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
-            {:id      :mention_1
-             :doc     :document3
-             :profile :profile1
-             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
-            {:id      :mention_1
+            {:id      :annotation-2
              :doc     :document3
              :profile :profile1
              :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
+            {:id      :annotation-3
+             :doc     :document3
+             :profile :Default
+             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
+            {:id      :annotation-4
+             :doc     :document3
+             :profile :profile1
+             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
+            {:id      :annotation-5
+             :doc     :document3
+             :profile :Default
+             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
             {:id      :mention_2
              :doc     :document3
              :profile :Default
-             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
-            {:id      :mention_2
-             :doc     :document3
-             :profile :Default
-             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}]
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}]
           (->> annotation-xmls
             sut/parse-annotations
-            (sort-by (juxt :doc :id)))))))
+            (sort-by (juxt :doc :id :concept)))))))
 
 (deftest parse-profiles-test
   (testing "Basic project profile parsing"
@@ -709,64 +709,96 @@
 
 (deftest parse-project-test
   (testing "Basic project"
-    (is (= {:anns     [6 #{{:id      :mention_0
-                            :doc     :document1
-                            :profile :Default
-                            :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
-                           {:id      :mention_1
-                            :doc     :document1
-                            :profile :profile1
-                            :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream"}
-                           {:id      :mention_3
-                            :doc     :document2
-                            :profile :Default
-                            :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
-                           {:id      :mention_0
-                            :doc     :document3
-                            :profile :Default
-                            :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
-                           {:id      :mention_0
-                            :doc     :document3
-                            :profile :Default
-                            :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
-                           {:id      :mention_1
-                            :doc     :document3
-                            :profile :profile1
-                            :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
-                           {:id      :mention_1
-                            :doc     :document3
-                            :profile :profile1
-                            :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
-                           {:id      :mention_2
-                            :doc     :document3
-                            :profile :Default
-                            :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
-                           {:id      :mention_2
-                            :doc     :document3
-                            :profile :Default
-                            :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}}]
-            :docs     [5 [{:file-name "document1.txt"
-                           :id        :document1
-                           :content   "This is a test document."}
-                          {:file-name "document2.txt"
-                           :id        :document2
-                           :content   "And another one!"}
-                          {:file-name "document3.txt"
-                           :id        :document3
-                           :content   "A second test document has appeared!"}
-                          {:file-name "document4.txt"
-                           :id        :document4
-                           :content   "Look at me."}
-                          {:file-name "long_article.txt"
-                           :id        :long_article}]]
-            :spans    [7 [{:id :document1-26 :ann :mention_0 :start 0 :end 4}
-                          {:id :document1-28 :ann :mention_1 :start 10 :end 14}
-                          {:id :document1-29 :ann :mention_1 :start 15 :end 24}
-                          {:id :span-1 :ann :mention_3 :start 0 :end 3}
-                          {:id :document3-11 :ann :mention_0 :start 0 :end 1}
-                          {:id :document3-14 :ann :mention_1 :start 28 :end 36}
-                          {:id :document3-17 :ann :mention_2 :start 28 :end 36}]]
-            :graphs   [3]
+    (is (= {:anns   [9 [{:id      :mention_0
+                         :doc     :document1
+                         :profile :Default
+                         :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
+                        {:id      :mention_1
+                         :doc     :document1
+                         :profile :profile1
+                         :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream"}
+                        {:id      :mention_3
+                         :doc     :document2
+                         :profile :Default
+                         :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
+                        {:id      :annotation-1
+                         :doc     :document3
+                         :profile :Default
+                         :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
+                        {:id      :annotation-2
+                         :doc     :document3
+                         :profile :profile1
+                         :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
+                        {:id      :annotation-3
+                         :doc     :document3
+                         :profile :Default
+                         :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
+                        {:id      :annotation-4
+                         :doc     :document3
+                         :profile :profile1
+                         :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
+                        {:id      :annotation-5
+                         :doc     :document3
+                         :profile :Default
+                         :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
+                        {:id      :mention_2
+                         :doc     :document3
+                         :profile :Default
+                         :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}]]
+            :docs   [5 [{:file-name "document1.txt"
+                         :id        :document1
+                         :content   "This is a test document."}
+                        {:file-name "document2.txt"
+                         :id        :document2
+                         :content   "And another one!"}
+                        {:file-name "document3.txt"
+                         :id        :document3
+                         :content   "A second test document has appeared!"}
+                        {:file-name "document4.txt"
+                         :id        :document4
+                         :content   "Look at me."}
+                        {:file-name "long_article.txt"
+                         :id        :long_article}]]
+            :spans  [7 [{:id :document1-26 :ann :mention_0 :start 0 :end 4}
+                        {:id :document1-28 :ann :mention_1 :start 10 :end 14}
+                        {:id :document1-29 :ann :mention_1 :start 15 :end 24}
+                        {:id :span-1 :ann :mention_3 :start 0 :end 3}
+                        {:id :document3-11 :ann :mention_0 :start 0 :end 1}
+                        {:id :document3-14 :ann :mention_1 :start 28 :end 36}
+                        {:id :document3-17 :ann :mention_2 :start 28 :end 36}]]
+            :graphs [3 [{:id    :graph_0
+                         :doc   :document1
+                         :nodes [{:id  :node_0
+                                  :ann :mention_0}
+                                 {:id  :node_1
+                                  :ann :mention_1}]
+                         :edges [{:id :edge_0
+
+                                  :from :node_0
+                                  :to   :node_1}]}
+                        {:id    :graph_2
+                         :doc   :document2
+                         :nodes [{:id  :node_0
+                                  :ann :mention_3}
+                                 {:id  :node_1
+                                  :ann :mention_3}]
+                         :edges [{:id   :edge_0
+                                  :to   :node_1
+                                  :from :node_0}]}
+                        {:id    (keyword "Old Knowtator Relations")
+                         :doc   :document3
+                         :nodes [{:id  :document3-19
+                                  :ann :mention_0}
+                                 {:id  :document3-20
+                                  :ann :mention_1}
+                                 {:id  :document3-22
+                                  :ann :mention_2}]
+                         :edges [{:id   :document3-21
+                                  :to   :document3-20
+                                  :from :document3-19}
+                                 {:id   :document3-23
+                                  :from :document3-19
+                                  :to   :document3-22}]}]]
             :profiles [2 [{:id :Default
                            :colors
                            {"http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza" "#ff0000"}}
@@ -779,6 +811,7 @@
             sut/parse-project
             (update :docs vec)
             (update-in [:docs 4] dissoc :content)
+            (update :anns (partial sort-by (juxt :doc :id :concept)))
             (->> (util/map-vals (juxt count identity))))))))
 
 ;; public static final ProjectCounts defaultCounts = new ProjectCounts(5 6 7 3 2 3 7 4 0);

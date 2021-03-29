@@ -235,9 +235,20 @@
         vals))))
 
 (defn parse-annotations [xmls]
-  (->> xmls
-    (mapcat (partial parse-annotation (atom 0)))
-    set))
+  (let [counter     (atom 0)
+        annotations (->> xmls
+                      (mapcat (partial parse-annotation counter)))]
+    (vals (reduce
+            (fn [annotations {:keys [id] :as ann}]
+              (if (contains? annotations id)
+                (if (= (-> annotations id (dissoc :id)) (dissoc ann :id))
+                  annotations
+                  (let [id  (verify-id counter "annotation-" nil)
+                        ann (assoc ann :id id)]
+                    (assoc annotations id ann)))
+                (assoc annotations id ann))
+              )
+            {} annotations))))
 
 (defn parse-profiles [xmls]
   (->> xmls
@@ -258,13 +269,13 @@
     (mapcat (partial parse-graph-space (atom 0)))))
 
 (defn parse-project [project-file]
-  (let [annotation-xmls (read-project-xmls "Annotations" project-file)
-        profile-xmls    (read-project-xmls "Profiles" project-file)
-        annotation-xmls (apply merge-with (fn [x y]
-                                            (if (and (coll? x) (coll? y))
-                                              (into x y)
-                                              y))
-                          annotation-xmls)]
+  (let [annotation-xmls     (read-project-xmls "Annotations" project-file)
+        profile-xmls        (read-project-xmls "Profiles" project-file)
+        #_#_annotation-xmls (apply merge-with (fn [x y]
+                                                (if (and (coll? x) (coll? y))
+                                                  (into x y)
+                                                  y))
+                              annotation-xmls)]
     {:anns     (parse-annotations annotation-xmls)
      :docs     (parse-documents project-file annotation-xmls)
      :profiles (parse-profiles profile-xmls)
