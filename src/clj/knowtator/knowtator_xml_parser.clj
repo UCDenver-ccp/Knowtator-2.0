@@ -135,16 +135,44 @@
             :start (m/app #(Integer/parseInt %) ~start)
             :end   (m/app #(Integer/parseInt %) ~end)}})
 
+
+
+(defsyntax knowtator-project [args]
+  `{:tag     :knowtator-project
+    :content (m/scan (document ~args))})
+
+(defn parse-document [counter xml]
+  (m/rewrites xml
+    (knowtator-project {:doc       ?id
+                        :file-name ?file-name})
+    {:id        (m/app (partial verify-id counter "document-") ?id)
+     :file-name (m/app #(or % (str ?id ".txt")) ?file-name)}))
+
+
+(defn parse-annotation [counter xml]
+  (-> xml
+    (m/rewrites
+      (knowtator-project {:doc           ?doc
+                          :ann           !id
+                          :profile       !profile
+                          :concept       !concept
+                          :concept-label !concept-label})
+      [{:id      (m/app (partial verify-id counter "annotation-") !id)
+        :doc     (m/app keyword ?doc)
+        :profile (m/app #(or (keyword %) :Default) !profile)
+        :concept !concept}
+       ...])
+    (->> (mapcat identity))))
+
 (defsyntax annotation [{:keys [ann profile] :as args
                         :or   {ann     '_
                                profile '_}}]
   `{:tag     :annotation
     :attrs   {:id        ~ann
               :annotator ~profile}
-    :content [(m/or
-                (concept ~args)
-                (span ~args))
-              ...]})
+    :content (m/scan (m/or
+                       (concept ~args)
+                       (span ~args)))})
 
 (defsyntax document
   [{:keys [doc file-name] :as args
@@ -153,51 +181,27 @@
   `{:tag     :document
     :attrs   {:id        ~doc
               :text-file ~file-name}
-    :content [(m/or
-                (annotation ~args)
-                (graph-space ~args))
-              ...]})
-
-(defn parse-document [counter xml]
-  (m/rewrites xml
-    {:tag     :knowtator-project
-     :content (m/scan (document {:doc       ?id
-                                 :file-name ?file-name}))}
-    {:id        (m/app (partial verify-id counter "document-") ?id)
-     :file-name (m/app #(or % (str ?id ".txt")) ?file-name)}))
-
-(defn parse-annotation [counter xml]
-  (m/rewrite xml
-    {:tag     :knowtator-project
-     :content (m/scan
-                (document {:doc           ?doc
-                           :ann           !id
-                           :profile       !profile
-                           :concept       !concept
-                           :concept-label !concept-label}))}
-    [{:id      (m/app (partial verify-id counter "annotation-") !id)
-      :doc     (m/app keyword ?doc)
-      :profile (m/app #(or (keyword %) :Default) !profile)
-      :concept !concept}
-     ...]))
+    :content (m/or
+               (m/scan (m/or
+                         (annotation ~args)
+                         (graph-space ~args)))
+               [])})
 
 (defn parse-span [counter xml]
-  (mapcat identity
-    (m/rewrites xml
-      {:tag     :knowtator-project
-       :content (m/scan
-                  {:tag     :document
-                   :content (m/scan (annotation {:ann   ?ann
-                                                 :span  !id
-                                                 :start !start
-                                                 :end   !end}))})}
+  (-> xml
+    (m/rewrites
+      (knowtator-project {:ann   !ann
+                          :span  !id
+                          :start !start
+                          :end   !end})
       [(m/app (fn [[id ann start end]]
                 {:id    (verify-id counter "span-" id)
                  :ann   (keyword ann)
                  :start (min start end)
                  :end   (max start end)})
-         [!id ?ann !start !end])
-       ...])))
+         [!id !ann !start !end])
+       ...])
+    (->> (mapcat identity))))
 
 (defn parse-documents [project-file xmls]
   (letfn [(file-name [f]
