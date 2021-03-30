@@ -104,15 +104,17 @@
                 (annotation-node ~args)
                 (relation-annotation ~args))
               ...]})
-(defsyntax annotation [{:keys [ann counter profile span-ann] :as args
-                        :or   {ann      '_
-                               profile  '_
-                               span-ann '_
-                               counter  '(atom -1)}}]
+(defsyntax annotation [{:keys [ann counter profile] :as args
+                        :or   {ann     '_
+                               profile '_
+                               counter '(atom -1)}}]
   `{:tag     :annotation
-    :attrs   {:id        (m/app (partial verify-id ~counter "annotation-") (m/and ~ann ~span-ann))
+    :attrs   {:id        (m/app (partial verify-id ~counter "annotation-") ~ann)
               :annotator ~profile}
-    :content (m/scan (span ~args))})
+    :content [(m/or
+                (span ~args)
+                (concept ~args))
+              ...]})
 
 (defsyntax concept [{:keys [concept concept-label]
                      :or   {concept       '_
@@ -206,36 +208,35 @@
 (defn parse-annotations [counter xml]
   (-> xml
     (m/rewrites
-      (knowtator-project {:doc         !doc
-                          :profile     !profile
-                          :ann         !id
-                          :span        !span
-                          :start       !start
-                          :end         !end
-                          #_#_:concept !concept
-                          :counter     counter})
-      [{:id          !id
-        :profile     (m/app #(or (keyword %) :Default) !profile)
-        :doc         (m/app keyword !doc)
-        #_#_:concept [!concept ...]
-        :spans       [{:id    !span
-                       :start !start
-                       :end   !end}
-                      ...]}
+      (knowtator-project {:doc     !doc
+                          :profile !profile
+                          :ann     !id
+                          :span    !span
+                          :start   !start
+                          :end     !end
+                          :concept !concept
+                          :counter counter})
+      [{:id      !id
+        :profile (m/app #(or (keyword %) :Default) !profile)
+        :doc     (m/app keyword !doc)
+        :concept !concept
+        :spans   [{:id    !span
+                   :start !start
+                   :end   !end}
+                  ...]}
        ...])
     (->>
       (apply concat)
       (reduce
         (fn [annotations {:keys [id] :as ann}]
-          (let [id (verify-id counter "annotation-"
-                     (when-not (->> annotations
-                                 id
-                                 ((every-pred identity
-                                    (comp (partial vector ann) (partial map #(dissoc % :id)) (partial apply not=)))))
-                       id))]
-            (assoc annotations id (assoc ann :id id))))
+          (let [new-id (verify-id counter "annotation-" (when-not (id annotations) id))]
+            (cond-> annotations
+              (not (some #(= (dissoc % :id) (dissoc ann :id))
+                     (id annotations)))
+              (update id (fnil conj #{}) (assoc ann :id new-id)))))
         {})
-      vals)))
+      vals
+      (apply concat))))
 
 (defn read-articles [project-file]
   (letfn [(file-name [f]

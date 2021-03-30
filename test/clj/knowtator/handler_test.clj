@@ -17,11 +17,7 @@
                      :id      123}}
           ((sut/start-app-routes) {:request-method :get
                                    :uri            "/project/doc/123"})))
-    (is (= {:anns   [{:id      :annotation-4
-                      :doc     :document3
-                      :profile :Default
-                      :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
-                     {:id      :mention_0
+    (is (= {:anns   [{:id      :mention_0
                       :doc     :document1
                       :profile :Default
                       :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
@@ -33,6 +29,10 @@
                       :doc     :document2
                       :profile :Default
                       :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
+                     {:id      :annotation-4
+                      :doc     :document3
+                      :profile :Default
+                      :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
                      {:id      :annotation-5
                       :doc     :document3
                       :profile :profile1
@@ -67,13 +67,16 @@
                       :content   "Look at me."}
                      {:file-name "long_article.txt"
                       :id        :long_article}]
-            :spans  [{:id :document3-11 :ann :annotation-7 :start 0 :end 1}
-                     {:id :document1-29 :ann :annotation-4 :start 15 :end 24}
-                     {:id :document3-14 :ann :annotation-6 :start 28 :end 36}
-                     {:id :document1-28 :ann :mention_1 :start 10 :end 14}
-                     {:id :document1-26 :ann :mention_0 :start 0 :end 4}
-                     {:id :span-2 :ann :mention_3 :start 0 :end 3}
-                     {:id :document3-17 :ann :mention_2 :start 28 :end 36}]
+            :spans  [{:id :document1-26, :start 0, :end 4, :ann :mention_0}
+                     {:id :document1-28, :start 10, :end 14, :ann :mention_1}
+                     {:id :document1-29, :start 15, :end 24, :ann :mention_1}
+                     {:id :document3-11, :start 0, :end 1, :ann :annotation-4}
+                     {:id :document3-11, :start 0, :end 1, :ann :annotation-6}
+                     {:id :document3-14, :start 28, :end 36, :ann :annotation-5}
+                     {:id :document3-17, :start 28, :end 36, :ann :mention_2}
+                     {:id :span-1, :start 0, :end 3, :ann :mention_3}
+                     {:id :span-2, :start 28, :end 36, :ann :annotation-7}
+                     {:id :span-3, :start 28, :end 36, :ann :annotation-8}]
             :graphs [{:id    :graph_0
                       :doc   :document1
                       :nodes [{:id  :node_0
@@ -123,4 +126,5 @@
             m/decode-response-body
             (update-in [:docs] vec)
             (update-in [:docs 4] dissoc :content)
+            (update :spans (partial sort-by (juxt :id :ann)))
             (update-in [:anns] (partial sort-by (juxt :doc :id :concept))))))))

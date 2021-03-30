@@ -225,7 +225,7 @@
                                                       :start "0"
                                                       :end   "1"}}]}]}]}))))
   (testing "Missing span ID"
-    (is (= [{:id      :annotation-1
+    (is (= [{:id      :a1
              :profile :p1
              :concept "c1"
              :doc     :d1
@@ -235,9 +235,10 @@
           (sut/parse-annotations (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
-                        :attrs   {}
+                        :attrs   {:id "d1"}
                         :content [{:tag     :annotation
-                                   :attrs   {:id "a1"}
+                                   :attrs   {:id        "a1"
+                                             :annotator "p1"}
                                    :content [{:tag   :span
                                               :attrs {:start "0"
                                                       :end   "1"}}
@@ -268,42 +269,53 @@
                                                       :end   "1"}}]}]}]}))))
 
   (testing "Simple project"
-    (is (= [{:id      :mention_0
-             :doc     :document1
-             :profile :Default
-             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
-            {:id      :mention_1
-             :doc     :document1
-             :profile :profile1
-             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream"}
-            {:id      :mention_3
-             :doc     :document2
-             :profile :Default
-             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
-            {:id      :annotation-4
-             :doc     :document3
-             :profile :Default
-             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
-            {:id      :annotation-5
-             :doc     :document3
-             :profile :profile1
-             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
-            {:id      :annotation-6
-             :doc     :document3
-             :profile :Default
-             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
-            {:id      :annotation-7
-             :doc     :document3
-             :profile :profile1
-             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
-            {:id      :annotation-8
-             :doc     :document3
-             :profile :Default
-             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
-            {:id      :mention_2
-             :doc     :document3
-             :profile :Default
-             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}]
+    (is (= [{:id      :mention_0,
+             :profile :Default,
+             :doc     :document1,
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza",
+             :spans   [{:id :document1-26, :start 0, :end 4}]}
+            {:id      :mention_1,
+             :profile :profile1,
+             :doc     :document1,
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream",
+             :spans
+             [{:id :document1-28, :start 10, :end 14}
+              {:id :document1-29, :start 15, :end 24}]}
+            {:id      :mention_3,
+             :profile :Default,
+             :doc     :document2,
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza",
+             :spans   [{:id :span-1, :start 0, :end 3}]}
+            {:id      :annotation-4,
+             :profile :Default,
+             :doc     :document3,
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food",
+             :spans   [{:id :document3-11, :start 0, :end 1}]}
+            {:id      :annotation-5,
+             :profile :profile1,
+             :doc     :document3,
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food",
+             :spans   [{:id :document3-14, :start 28, :end 36}]}
+            {:id      :annotation-6,
+             :profile :Default,
+             :doc     :document3,
+             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food",
+             :spans   [{:id :document3-11, :start 0, :end 1}]}
+            {:id      :annotation-7,
+             :profile :profile1,
+             :doc     :document3,
+             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food",
+             :spans   [{:id :span-2, :start 28, :end 36}]}
+            {:id      :annotation-8,
+             :profile :Default,
+             :doc     :document3,
+             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food",
+             :spans   [{:id :span-3, :start 28, :end 36}]}
+            {:id      :mention_2,
+             :profile :Default,
+             :doc     :document3,
+             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food",
+             :spans   [{:id :document3-17, :start 28, :end 36}]}]
           (->> project-xml
             (sut/parse-annotations (atom 0))
             (sort-by (juxt :doc :id :concept)))))))
@@ -699,13 +711,16 @@
                          :end   0}]}]))))
 
   (testing "Simple project"
-    (is (= [{:id :document1-26 :ann :mention_0 :start 0 :end 4}
-            {:id :document1-28 :ann :mention_1 :start 10 :end 14}
-            {:id :document1-29 :ann :annotation-4 :start 15 :end 24}
-            {:id :document3-11 :ann :annotation-7 :start 0 :end 1}
-            {:id :document3-14 :ann :annotation-6 :start 28 :end 36}
-            {:id :document3-17 :ann :mention_2 :start 28 :end 36}
-            {:id :span-1 :ann :annotation-8 :start 0 :end 3}]
+    (is (= [{:id :document1-26, :start 0, :end 4, :ann :mention_0}
+            {:id :document1-28, :start 10, :end 14, :ann :mention_1}
+            {:id :document1-29, :start 15, :end 24, :ann :mention_1}
+            {:id :document3-11, :start 0, :end 1, :ann :annotation-4}
+            {:id :document3-11, :start 0, :end 1, :ann :annotation-6}
+            {:id :document3-14, :start 28, :end 36, :ann :annotation-5}
+            {:id :document3-17, :start 28, :end 36, :ann :mention_2}
+            {:id :span-1, :start 0, :end 3, :ann :mention_3}
+            {:id :span-2, :start 28, :end 36, :ann :annotation-7}
+            {:id :span-3, :start 28, :end 36, :ann :annotation-8}]
           (->> project-xml
             (sut/parse-annotations (atom 0))
             sut/parse-spans
@@ -811,15 +826,27 @@
                         :colors {:c1 :default}}
                        {:id     :Default
                         :colors {:c1 "blue"}}]
+            :spans    [{:id    :s1
+                        :start 0
+                        :end   1
+                        :ann   :a1}
+                       {:id    :s2
+                        :start 0
+                        :end   1
+                        :ann   :a2}
+                       {:id    :span-1
+                        :start 1
+                        :end   2
+                        :ann   :a2}]
             :graphs   [{:id    :g1
                         :doc   :d1
                         :nodes [{:id  :n1
                                  :ann :a1}
-                                {:id  :node-10
+                                {:id  :node-8
                                  :ann :a2}]
                         :edges [{:id        :e1
                                  :from      :n1
-                                 :to        :node-10
+                                 :to        :node-8
                                  #_#_:label :ep1}]}]}
           (sut/parse-project [{:id      :d1
                                :content "Hi"}]
@@ -842,6 +869,11 @@
                                                       :label "cl1"}}
                                              {:tag     :span
                                               :attrs   {:id    "s1"
+                                                        :start "0"
+                                                        :end   "1"}
+                                              :content ["H"]}
+                                             {:tag     :span
+                                              :attrs   {:id    "s2"
                                                         :start "0"
                                                         :end   "1"}
                                               :content ["H"]}]}
@@ -876,7 +908,7 @@
                                               :attrs {:annotator  "Default"
                                                       :id         "e1"
                                                       :motivation ""
-                                                      :object     "node-10"
+                                                      :object     "node-8"
                                                       :polarity   "positive"
                                                       :property   "ep1"
                                                       :quantifier "some"
@@ -884,42 +916,42 @@
                                                       :value      ""}}]}]}]}))))
 
   (testing "Simple project"
-    (is (= {:anns   [9 [{:id      :mention_0
-                         :doc     :document1
-                         :profile :Default
-                         :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
-                        {:id      :mention_1
-                         :doc     :document1
-                         :profile :profile1
-                         :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream"}
-                        {:id      :mention_3
-                         :doc     :document2
-                         :profile :Default
-                         :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"}
-                        {:id      :annotation-4
-                         :doc     :document3
-                         :profile :Default
-                         :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
-                        {:id      :annotation-5
-                         :doc     :document3
-                         :profile :profile1
-                         :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}
-                        {:id      :annotation-6
-                         :doc     :document3
-                         :profile :Default
-                         :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
-                        {:id      :annotation-7
-                         :doc     :document3
-                         :profile :profile1
-                         :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
-                        {:id      :annotation-8
-                         :doc     :document3
-                         :profile :Default
-                         :concept "http://www.co-ode.org/ontologies/pizza.owl#Food"}
-                        {:id      :mention_2
-                         :doc     :document3
-                         :profile :Default
-                         :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"}]]
+    (is (= {:anns   [#_6 9 [{:id      :mention_0,
+                             :profile :Default,
+                             :doc     :document1,
+                             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza",}
+                            {:id      :mention_1,
+                             :profile :profile1,
+                             :doc     :document1,
+                             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream",}
+                            {:id      :mention_3,
+                             :profile :Default,
+                             :doc     :document2,
+                             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza",}
+                            {:id      :annotation-4,
+                             :profile :Default,
+                             :doc     :document3,
+                             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food",}
+                            {:id      :annotation-5,
+                             :profile :profile1,
+                             :doc     :document3,
+                             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food",}
+                            {:id      :annotation-6,
+                             :profile :Default,
+                             :doc     :document3,
+                             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food",}
+                            {:id      :annotation-7,
+                             :profile :profile1,
+                             :doc     :document3,
+                             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food",}
+                            {:id      :annotation-8,
+                             :profile :Default,
+                             :doc     :document3,
+                             :concept "http://www.co-ode.org/ontologies/pizza.owl#Food",}
+                            {:id      :mention_2,
+                             :profile :Default,
+                             :doc     :document3,
+                             :concept "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food",}]]
             :docs   [5 [{:file-name "document1.txt"
                          :id        :document1
                          :content   "This is a test document."}
@@ -934,13 +966,16 @@
                          :content   "Look at me."}
                         {:file-name "long_article.txt"
                          :id        :long_article}]]
-            :spans  [7 [{:id :document1-26 :ann :mention_0 :start 0 :end 4}
-                        {:id :document1-28 :ann :mention_1 :start 10 :end 14}
-                        {:id :document1-29 :ann :mention_1 :start 15 :end 24}
-                        {:id :span-15 :ann :mention_3 :start 0 :end 3}
-                        {:id :document3-11 :ann :annotation-4 :start 0 :end 1}
-                        {:id :document3-14 :ann :annotation-5 :start 28 :end 36}
-                        {:id :document3-17 :ann :annotation-6 :start 28 :end 36}]]
+            :spans  [#_7 10 [{:id :document1-26, :start 0, :end 4, :ann :mention_0}
+                             {:id :document1-28, :start 10, :end 14, :ann :mention_1}
+                             {:id :document1-29, :start 15, :end 24, :ann :mention_1}
+                             {:id :document3-11, :start 0, :end 1, :ann :annotation-4}
+                             {:id :document3-11, :start 0, :end 1, :ann :annotation-6}
+                             {:id :document3-14, :start 28, :end 36, :ann :annotation-5}
+                             {:id :document3-17, :start 28, :end 36, :ann :mention_2}
+                             {:id :span-1, :start 0, :end 3, :ann :mention_3}
+                             {:id :span-2, :start 28, :end 36, :ann :annotation-7}
+                             {:id :span-3, :start 28, :end 36, :ann :annotation-8}]]
             :graphs [3 [{:id    :graph_0
                          :doc   :document1
                          :nodes [{:id  :node_0
@@ -989,6 +1024,7 @@
               (update :docs vec)
               (update-in [:docs 4] dissoc :content)
               (update :anns (partial sort-by (juxt :doc :id :concept)))
+              (update :spans (partial sort-by (juxt :id :ann)))
               (->> (util/map-vals (juxt count identity)))))))))
 
 ;; public static final ProjectCounts defaultCounts = new ProjectCounts(5 6 7 3 2 3 7 4 0);
