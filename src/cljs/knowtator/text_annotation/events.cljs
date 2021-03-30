@@ -6,14 +6,16 @@
             [knowtator.util :as util]))
 
 (reg-event-db ::cycle
-  (fn [db [_ coll-id direction]]
-    (let [restriction (case coll-id
-                        :spans (->> db
-                                 model/realize-spans
-                                 :spans
-                                 (filter #(model/in-restriction? % {:doc [(get-in db [:selection :docs])]})))
-                        identity)]
-      (model/cycle-selection db restriction coll-id direction))))
+  (fn-traced [db [_ coll-id direction]]
+    (let [coll (case coll-id
+                 :spans (->> db
+                          model/realize-spans
+                          :text-annotation
+                          :spans
+                          (filter #(model/in-restriction? % {:filter-tye    :doc
+                                                             :filter-values #{(get-in db [:selection :docs])}})))
+                 identity)]
+      (model/cycle-selection db coll coll-id direction))))
 
 (reg-event-db ::grow-selected-span-start
   (undoable "Growing span start")
