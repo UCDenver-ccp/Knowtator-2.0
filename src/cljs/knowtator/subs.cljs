@@ -83,7 +83,8 @@
   :<- [::visual-restriction]
   :<- [::spans-with-spanned-text]
   (fn [[restriction spans] _]
-    (filter #(model/in-restriction? % restriction) spans)))
+    (->> spans
+      (filter #(model/in-restriction? % restriction)))))
 
 (reg-sub ::highlighted-text
   :<- [::selected-content]
@@ -139,7 +140,7 @@
           default-color)))))
 
 (reg-sub ::docs
-  (comp :docs :text-annotation))
+  (comp (partial sort-by :id) :docs :text-annotation))
 
 (reg-sub ::spans
   (comp :spans :text-annotation))

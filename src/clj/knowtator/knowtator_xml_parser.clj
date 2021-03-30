@@ -45,6 +45,7 @@
       (io/file project-file-name)
       file-seq
       rest
+      (filter (comp #(str/ends-with? % ".xml") str))
       (map xml/parse)
       (map (partial walk/postwalk struct->map))
       (apply merge-with (fn [x y]

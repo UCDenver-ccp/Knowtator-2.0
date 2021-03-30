@@ -2,6 +2,7 @@
   (:require [clojure.java.io :as io]
             [clojure.test :refer [deftest is testing]]
             [knowtator.knowtator-xml-parser :as sut]
+            [knowtator.model :as model]
             [knowtator.util :as util]))
 
 (def project-file (io/resource "test_project_using_uris"))
@@ -1025,7 +1026,25 @@
               (update-in [:docs 4] dissoc :content)
               (update :anns (partial sort-by (juxt :doc :id :concept)))
               (update :spans (partial sort-by (juxt :id :ann)))
-              (->> (util/map-vals (juxt count identity)))))))))
+              (->> (util/map-vals (juxt count identity))))))))
+
+  (testing "Full project"
+    (let [project-file (io/resource "concepts+assertions 3_2 copy/")
+          project-xml  (sut/read-project-xmls project-file)
+          articles     (sut/read-articles project-file)]
+      (is (= {:anns 5263, :profiles 1, :spans 5319, :graphs 497}
+            (-> (sut/parse-project articles project-xml)
+              (dissoc :docs)
+              (->> (util/map-vals count)))))
+      (is (= {:anns 5264, :profiles 1, :spans 5320, :graphs 497}
+            (->> {:text-annotation (sut/parse-project articles project-xml)}
+              model/realize-spans
+              :text-annotation
+              :spans
+              (take 1)
+              #_(filter #(model/in-restriction? % {:filter-type   :doc
+                                                   :filter-values #{:15876356}}))
+              #_(->> (util/map-vals count))))))))
 
 ;; public static final ProjectCounts defaultCounts = new ProjectCounts(5 6 7 3 2 3 7 4 0);
 ;; defaultExpectedStructureAnnotations = 0;

@@ -26,11 +26,14 @@
                            :get        {:coercion   schema/coercion
                                         :parameters {:path {:file-name s/Str}}
                                         :handler    (fn [{{{:keys [file-name]} :path} :parameters}]
-                                                      (let [project-file (io/resource file-name)
+                                                      (let [project-file (io/resource "concepts+assertions 3_2 copy/")
                                                             project-xml  (kparser/read-project-xmls project-file)
                                                             articles     (kparser/read-articles project-file)]
                                                         {:status 200
-                                                         :body   (kparser/parse-project articles project-xml)}))}}]
+                                                         :body   (as-> (kparser/parse-project articles project-xml) project
+                                                                   (update project :docs (comp (partial take 1) (partial sort-by :id)))
+                                                                   (update project :anns (partial filter (comp (->> project :docs (map :id) set) :doc)))
+                                                                   (update project :spans (partial filter (comp (->> project :anns (map :id) set) :ann))))}))}}]
    ["/doc/:id" {:name ::single-doc
                 :get  {:coercion   schema/coercion
                        :parameters {:path {:id s/Int}}

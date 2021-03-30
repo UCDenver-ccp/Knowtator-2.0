@@ -53,9 +53,10 @@
                                           ring/ring-devel {:mvn/version "1.9.2"}
                                           prone/prone     {:mvn/version "2020-01-17"}}
                             :extra-paths ["dev/clj"]
-                            :jvm-opts    ["-Dconf=dev-config.edn" ]}
+                            :jvm-opts    ["-Dconf=dev-config.edn" "-Xss10m"]}
            :shadow-cljs    {:main-opts ["-m" "shadow.cljs.devtools.cli"]}
 
            :test {:extra-paths ["test/cljs"
                                 "test/clj"
-                                "test_resources"]}}}
+                                "test_resources"
+                                "/home/harrison/Downloads/concepts+assertions 3_2 copy"]}}}

@@ -40,9 +40,9 @@
   (fn [db [_ result]]
     (-> db
       (assoc :text-annotation result)
-      (assoc-in [:selection :docs] (-> result :docs first :id))
-      (assoc-in [:selection :profiles] (-> result :profiles first :id))
-      (assoc-in [:selection :concepts] (-> result :anns first :concept)))))
+      (assoc-in [:selection :docs] (->> result :docs (sort-by :id) first :id))
+      (assoc-in [:selection :profiles] (->> result :profiles (sort-by :id) first :id))
+      (assoc-in [:selection :concepts] (->> result :anns (sort-by :id) first :concept)))))
 
 (reg-event-db ::report-failure
   (fn [db [_ result]]
