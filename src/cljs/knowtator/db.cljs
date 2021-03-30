@@ -70,4 +70,5 @@ We have discovered remarkable numerical and volumetric variation in the mouse st
                :profiles    :p1
                :concepts    :c1
                :spans       nil
-               :review-type :anns}})
+               :review-type :anns}
+   :defaults  {:color "#00ffff"}})

@@ -27,7 +27,8 @@
                                   {:from (:id source)
                                    :to   (:id target)})
                              (map-indexed (fn [i edge]
-                                            (assoc edge :id (keyword (str "e" (inc i)))))))))))
+                                            (assoc edge :id (keyword (str "e" (inc i))))))))))
+                     (assoc-in [:selection :doc] (-> db :text-annotation :docs first :id)))
        :http-xhrio {:method          :get
                     :uri             "/project/project/test_project_using_uris"
                     :format          (ajax/transit-request-format)
@@ -37,7 +38,11 @@
 
 (reg-event-db ::set-project
   (fn [db [_ result]]
-    (assoc db :text-annotation result)))
+    (-> db
+      (assoc :text-annotation result)
+      (assoc-in [:selection :docs] (-> result :docs first :id))
+      (assoc-in [:selection :profiles] (-> result :profiles first :id))
+      (assoc-in [:selection :concepts] (-> result :anns first :concept)))))
 
 (reg-event-db ::report-failure
   (fn [db [_ result]]
@@ -81,6 +86,7 @@
   (fn [db [_ loc doc-id]]
     (let [{:keys [id ann]} (->> db
                              model/realize-spans
+                             :text-annotation
                              :spans
                              (filter #(model/in-restriction? %  {:doc [doc-id]}))
                              (model/spans-containing-loc loc)
