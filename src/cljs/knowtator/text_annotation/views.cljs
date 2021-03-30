@@ -16,7 +16,10 @@
                          ;; TODO always scrolls e to top
                          (when-let [e (and (<sub [::subs/selected-span? id])
                                         (.getElementById js/document e-id))]
-                           (.scrollIntoView e))
+                           (.scrollIntoView e
+                             (clj->js {:behavior :smooth  #_ [:auto :smooth]
+                                       :block    :center  #_ [:start :center :end :nearest]
+                                       :inline   :nearest #_ [:start :center :end :nearest]})))
                          [re-com/p-span
                           {:id    e-id
                            :style (cond-> {:background-color (<sub [::subs/ann-color ann])
@@ -29,7 +32,9 @@
          (let [e (.getElementById js/document e-id)]
            (when (and (<sub [::subs/un-searched?]) searched)
              (>evt [::events/done-searching])
-             (.scrollIntoView e))))})))
+             (.scrollIntoView e {:behavior :smooth  #_ [:auto :smooth]
+                                 :block    :end     #_ [:start :center :end :nearest]
+                                 :inline   :nearest #_ [:start :center :end :nearest]}))))})))
 
 (defn editor-paragraph [paragraph]
   [re-com/p
