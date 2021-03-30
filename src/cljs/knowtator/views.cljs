@@ -83,10 +83,10 @@
   [re-com/h-box
    :children [[re-com/md-circle-icon-button
                :md-icon-name "zmdi-undo"
-               :on-click #(>evt [::evts/undo])]
+               :on-click #(>evt [:undo])]
               [re-com/md-circle-icon-button
                :md-icon-name "zmdi-redo"
-               :on-click #(>evt [::evts/redo])]]])
+               :on-click #(>evt [:redo])]]])
 
 
 (defn target-value
