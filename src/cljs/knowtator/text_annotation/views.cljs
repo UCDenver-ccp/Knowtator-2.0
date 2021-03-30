@@ -9,7 +9,7 @@
             [reagent.core :as r]))
 
 (defn popup-text-annotation
-  [{:keys [ann content id searched]}]
+  [{:keys [content id searched color]}]
   (let [e-id (random-uuid)]
     (r/create-class
       {:reagent-render (fn []
@@ -22,8 +22,11 @@
                                        :inline   :nearest #_ [:start :center :end :nearest]})))
                          [re-com/p-span
                           {:id    e-id
-                           :style (cond-> {:background-color (<sub [::subs/ann-color ann])
-                                           :border           (when (<sub [::subs/selected-span? id]) :solid)
+                           :style (cond-> {:background-color color
+                                           :border  :solid
+                                           :border-color (if (<sub [::subs/selected-span? id])
+                                                           :black
+                                                           color)
                                            :cursor :pointer}
                                     searched (assoc :color :red))}
                           content])
