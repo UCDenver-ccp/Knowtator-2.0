@@ -130,7 +130,8 @@
         (map (partial zipmap [:prop :val]))))))
 
 (reg-sub ::selected-concept
-  #(get-in % [:selection :concepts]))
+  (fn [db _]
+    (get-in db [:selection :concepts])))
 
 (reg-sub ::default-color
   #(get-in % [:defaults :color]))

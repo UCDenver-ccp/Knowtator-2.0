@@ -85,16 +85,22 @@
 
 (reg-event-db ::select-span
   (fn-traced [db [_ loc doc-id]]
-    (let [{:keys [id ann]} (->> db
-                             model/realize-spans
-                             :text-annotation
-                             :spans
-                             (filter #(model/in-restriction? %  {:doc [doc-id]}))
-                             (model/spans-containing-loc loc)
-                             first)]
+    (let [{:keys [id ann]}  (->> db
+                              model/realize-spans
+                              :text-annotation
+                              :spans
+                              (filter #(model/in-restriction? %  {:doc [doc-id]}))
+                              (model/spans-containing-loc loc)
+                              first)
+          {:keys [concept]} (->> db
+                              :text-annotation
+                              :anns
+                              (util/map-with-key :id)
+                              ann)]
       (-> db
         (assoc-in [:selection :spans] id)
-        (assoc-in [:selection :anns] ann)))))
+        (assoc-in [:selection :anns] ann)
+        (assoc-in [:selection :concepts] concept)))))
 
 (reg-event-fx ::record-selection
   (fn-traced [{:keys [db]} [_ {:keys [start end] :as text-range} doc-id]]
