@@ -5,7 +5,7 @@
             [re-frame.core :as rf :refer [reg-sub]]))
 
 (defn ->db-map [k]
-  (comp (partial apply zipmap) (juxt (partial map :id) identity) k))
+  (comp (partial apply zipmap) (juxt (partial map :id) identity) k :text-annotation))
 
 (reg-sub ::name
   (fn [db]
@@ -20,7 +20,7 @@
     (:re-pressed-example db)))
 
 (reg-sub ::profiles
-  :profiles)
+  (comp :profiles :text-annotation))
 
 (reg-sub ::selected-profile
   (fn [db]
@@ -38,7 +38,7 @@
     (get-in db [:search :query])))
 
 (reg-sub ::doc-contents
-  (fn [{:keys [docs]}]
+  (fn [{{:keys [docs]} :text-annotation}]
     (zipmap (map :id docs)
       (map :content docs))))
 
@@ -57,7 +57,7 @@
   (->db-map :anns))
 
 (reg-sub ::anns
-  :anns)
+  (comp :anns :text-annotation))
 
 (reg-sub ::profile-map
   (->db-map :profiles))
@@ -67,21 +67,24 @@
 
 (reg-sub ::spans-with-spanned-text
   (fn [db _]
-    (:spans (model/realize-spans db))))
+    (get-in (model/realize-spans db) [:text-annotation :spans])))
 
 (reg-sub ::visual-restriction
   :<- [::selected-doc]
   :<- [::selected-profile]
   :<- [::profile-restriction?]
   (fn [[doc-id profile-id profile-restricted?]]
-    (cond-> {:doc [doc-id]}
-      profile-restricted? (assoc :profile [profile-id]))))
+    (cond-> [{:filter-type   :doc
+              :filter-values #{doc-id}}]
+      profile-restricted? (conj {:filter-type   :profile
+                                 :filter-values #{profile-id}}))))
 
 (reg-sub ::visible-spans
   :<- [::visual-restriction]
   :<- [::spans-with-spanned-text]
   (fn [[restriction spans] _]
-    (filter #(model/in-restriction? % restriction) spans)))
+    (->> spans
+      (filter #(model/in-restriction? % restriction)))))
 
 (reg-sub ::highlighted-text
   :<- [::selected-content]
@@ -114,24 +117,30 @@
   #(get-in % [:selection :anns]))
 
 (reg-sub ::ann-info
-  (fn [db [_ ann-id]]
-    (get-in db [:anns ann-id])))
+  :<- [::ann-map]
+  (fn [anns [_ ann-id]]
+    (get-in anns [ann-id])))
 
 (reg-sub ::selected-concept
   #(get-in % [:selection :concepts]))
+
+(reg-sub ::default-color
+  #(get-in % [:defaults :color]))
 
 (reg-sub ::selected-color
   :<- [::selected-profile]
   :<- [::selected-concept]
   :<- [::profile-map]
-  (fn [[profile-id concept-id profiles]]
+  :<- [::default-color]
+  (fn [[profile-id concept-id profiles default-color]]
     (let [color (get-in profiles [profile-id :colors concept-id])]
-      (if (str/starts-with? color "#")
+      (if (and color (str/starts-with? color "#"))
         color
-        (get html-colors/html-colors color)))))
+        (or (get html-colors/html-colors color)
+          default-color)))))
 
 (reg-sub ::docs
-  :docs)
+  (comp (partial sort-by :id) :docs :text-annotation))
 
 (reg-sub ::spans
-  :spans)
+  (comp :spans :text-annotation))

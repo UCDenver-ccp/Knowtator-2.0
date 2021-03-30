@@ -2,36 +2,36 @@
   (:require [clojure.test :refer [testing is deftest]]
             [knowtator.model :as sut]))
 
-(def test-db {:profiles [{:id     :p1
-                          :colors {:c1 "green"
-                                   :c2 "red"}}
-                         {:id     :p2
-                          :colors {:c1 "blue"}}]
-              :spans    [{:id    :s1
-                          :ann   :a1
-                          :start 0
-                          :end   15}
-                         {:id      :s2
-                          :ann     :a2
-                          :start   2
-                          :end     3
-                          :content "WRONG"}
-                         {:id    :s3
-                          :ann   :a1
-                          :start 16
-                          :end   45}]
-              :docs     [{:id      :d1
-                          :content "The quick brown fox jumped over the lazy dog."}
-                         {:id      :d2
-                          :content "WRONG"}]
-              :anns     [{:id      :a1
-                          :doc     :d1
-                          :profile :p1
-                          :concept :c1}
-                         {:id      :a2
-                          :doc     :d2
-                          :profile :p2
-                          :concept :c2}]})
+(def test-db {:text-annotation {:profiles [{:id     :p1
+                                            :colors {:c1 "green"
+                                                     :c2 "red"}}
+                                           {:id     :p2
+                                            :colors {:c1 "blue"}}]
+                                :spans    [{:id    :s1
+                                            :ann   :a1
+                                            :start 0
+                                            :end   15}
+                                           {:id      :s2
+                                            :ann     :a2
+                                            :start   2
+                                            :end     3
+                                            :content "WRONG"}
+                                           {:id    :s3
+                                            :ann   :a1
+                                            :start 16
+                                            :end   45}]
+                                :docs     [{:id      :d1
+                                            :content "The quick brown fox jumped over the lazy dog."}
+                                           {:id      :d2
+                                            :content "WRONG"}]
+                                :anns     [{:id      :a1
+                                            :doc     :d1
+                                            :profile :p1
+                                            :concept :c1}
+                                           {:id      :a2
+                                            :doc     :d2
+                                            :profile :p2
+                                            :concept :c2}]}})
 
 (deftest realize-ann-node-test
   (testing "Realize simple ann-node"

@@ -3,30 +3,52 @@
             [clojure.string :as str]
             [day8.re-frame.tracing :refer-macros [fn-traced]]
             [day8.re-frame.undo :as undo :refer [undoable]]
+            [day8.re-frame.http-fx]
             [knowtator.db :as db]
             [knowtator.model :as model]
             [re-frame.core :as rf :refer [reg-event-db reg-event-fx]]
             [re-pressed.core :as rp]))
 
-(reg-event-db ::initialize-db
+(reg-event-fx ::initialize-db
   (fn-traced [_ _]
     (let [db db/default-db]
-      (-> db
-        (assoc-in [:graph :nodes]
-          (->> db
-            :anns
-            (map-indexed (fn [i ann]
-                           {:id  (keyword (str "n" (inc i)))
-                            :ann (:id ann)}))))
-        (update :graph
-          (fn [{:keys [nodes] :as graph}]
-            (assoc graph :edges
-              (->> (for [source (take 2 #_(int (/ (count nodes) 2)) (shuffle nodes))
-                         target (take 3 #_(int (/ (count nodes) 3)) (shuffle nodes))]
-                     {:from (:id source)
-                      :to   (:id target)})
-                (map-indexed (fn [i edge]
-                               (assoc edge :id (keyword (str "e" (inc i))))))))))))))
+      {:db         (-> db
+                     (assoc-in [:graph :nodes]
+                       (->> db
+                         :anns
+                         (map-indexed (fn [i ann]
+                                        {:id  (keyword (str "n" (inc i)))
+                                         :ann (:id ann)}))))
+                     (update :graph
+                       (fn [{:keys [nodes] :as graph}]
+                         (assoc graph :edges
+                           (->> (for [source (take 2 #_(int (/ (count nodes) 2)) (shuffle nodes))
+                                      target (take 3 #_(int (/ (count nodes) 3)) (shuffle nodes))]
+                                  {:from (:id source)
+                                   :to   (:id target)})
+                             (map-indexed (fn [i edge]
+                                            (assoc edge :id (keyword (str "e" (inc i))))))))))
+                     (assoc-in [:selection :doc] (-> db :text-annotation :docs first :id)))
+       :http-xhrio {:method          :get
+                    :uri             "/project/project/test_project_using_uris"
+                    :format          (ajax/transit-request-format)
+                    :response-format (ajax/transit-response-format)
+                    :on-success      [::set-project]
+                    :on-failure      [::report-failure]}})))
+
+(reg-event-db ::set-project
+  (fn [db [_ result]]
+    (-> db
+      (assoc :text-annotation result)
+      (assoc-in [:selection :docs] (->> result :docs (sort-by :id) first :id))
+      (assoc-in [:selection :profiles] (->> result :profiles (sort-by :id) first :id))
+      (assoc-in [:selection :concepts] (->> result :anns (sort-by :id) first :concept)))))
+
+(reg-event-db ::report-failure
+  (fn [db [_ result]]
+    (println "Error")
+    (println result)
+    db))
 
 (reg-event-fx ::navigate
   (fn-traced [_ [_ handler]]
@@ -64,6 +86,7 @@
   (fn [db [_ loc doc-id]]
     (let [{:keys [id ann]} (->> db
                              model/realize-spans
+                             :text-annotation
                              :spans
                              (filter #(model/in-restriction? %  {:doc [doc-id]}))
                              (model/spans-containing-loc loc)

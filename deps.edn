@@ -11,6 +11,8 @@
         selmer/selmer              {:mvn/version "1.12.33"}
         ring-webjars/ring-webjars  {:mvn/version "0.2.0"}
         luminus-undertow           {:mvn/version "0.1.7"}
+        meander/epsilon            {:mvn/version "0.0.602"}
+
 
         ;; ClojureScript client
         org.clojure/clojurescript {:mvn/version "1.10.773"
@@ -51,7 +53,10 @@
                                           ring/ring-devel {:mvn/version "1.9.2"}
                                           prone/prone     {:mvn/version "2020-01-17"}}
                             :extra-paths ["dev/clj"]
-                            :jvm-opts    ["-Dconf=dev-config.edn" ]}
+                            :jvm-opts    ["-Dconf=dev-config.edn" "-Xss10m"]}
            :shadow-cljs    {:main-opts ["-m" "shadow.cljs.devtools.cli"]}
 
-           :test {:extra-paths ["test/cljs"]}}}
+           :test {:extra-paths ["test/cljs"
+                                "test/clj"
+                                "test_resources"
+                                "/home/harrison/Downloads/concepts+assertions 3_2 copy"]}}}
