@@ -7,14 +7,14 @@
 
 (reg-event-db ::cycle
   (fn-traced [db [_ coll-id direction]]
-    (let [coll (case coll-id
-                 :spans (->> db
-                          model/realize-spans
-                          :text-annotation
-                          :spans
-                          (filter #(model/in-restriction? % {:filter-tye    :doc
-                                                             :filter-values #{(get-in db [:selection :docs])}})))
-                 identity)]
+    (let [coll (cond-> db
+                 (#{:spans :anns} coll-id)
+                 (->>
+                   model/realize-spans
+                   :text-annotation
+                   coll-id
+                   (filter #(model/in-restriction? % {:filter-tye    :doc
+                                                      :filter-values #{(get-in db [:selection :docs])}}))))]
       (model/cycle-selection db coll coll-id direction))))
 
 (reg-event-db ::grow-selected-span-start
