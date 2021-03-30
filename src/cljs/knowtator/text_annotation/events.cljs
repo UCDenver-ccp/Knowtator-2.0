@@ -71,28 +71,26 @@
         (assoc-in [:selection :anns] ann-id)
         (assoc-in [:selection :spans] span-id)))))
 
+(defn remove-selected-item
+  [db k]
+  (let [selected-id (get-in db [:selection k])]
+    (-> db
+      (update-in [:text-annotation k] (comp vals #(dissoc % selected-id) (partial util/map-with-key :id)))
+      (assoc-in [:selection k] nil))))
+
 (reg-event-db ::remove-selected-doc
   (undoable "Removing document")
   (fn [db [_]]
     (-> db
-      (update :docs dissoc (get-in db [:selection :docs]))
+      (remove-selected-item :docs)
       (assoc-in [:selection :docs] (-> db
                                      :docs
                                      keys
                                      first)))))
+
 (reg-event-db ::remove-selected-ann
   (undoable "Removing annotation")
   (fn [db [_]]
     (-> db
-      (update-in [:text-annotation :anns] (fn [spans]
-                                            (-> spans
-                                              (->> (util/map-with-key :id))
-                                              (dissoc (get-in db [:selection :anns]))
-                                              vals)))
-      (update-in [:text-annotation :spans] (fn [spans]
-                                             (-> spans
-                                               (->> (util/map-with-key :id))
-                                               (dissoc (get-in db [:selection :spans]))
-                                               vals)))
-      (assoc-in [:selection :anns] nil)
-      (assoc-in [:selection :spans] nil))))
+      (remove-selected-item :anns)
+      (remove-selected-item :spans))))
