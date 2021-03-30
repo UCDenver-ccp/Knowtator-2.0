@@ -18,6 +18,8 @@
   !fs
   !as
   !ann
+  !span
+  ?ann !spans
   !doc
   !file-name
   !file-name-id
@@ -95,13 +97,22 @@
 
 (defsyntax graph-space [{:keys [graph counter] :as args
                          :or   {graph   '_
-                                counter '(aotm -1)}}]
+                                counter '(atom -1)}}]
   `{:tag     :graph-space
     :attrs   {:id (m/app (partial verify-id ~counter "graph-space-") ~graph)}
     :content [(m/or
                 (annotation-node ~args)
                 (relation-annotation ~args))
               ...]})
+(defsyntax annotation [{:keys [ann counter profile span-ann] :as args
+                        :or   {ann      '_
+                               profile  '_
+                               span-ann '_
+                               counter  '(atom -1)}}]
+  `{:tag     :annotation
+    :attrs   {:id        (m/app (partial verify-id ~counter "annotation-") (m/and ~ann ~span-ann))
+              :annotator ~profile}
+    :content (m/scan (span ~args))})
 
 (defsyntax concept [{:keys [concept concept-label]
                      :or   {concept       '_
@@ -121,16 +132,16 @@
             :end   (m/app #(Integer/parseInt %) ~end)}})
 
 
-(defsyntax annotation [{:keys [ann profile counter] :as args
-                        :or   {ann     '_
-                               profile '_
-                               counter '(atom -1)}}]
-  `{:tag     :annotation
-    :attrs   {:id        (m/app (partial verify-id ~counter "annotation-") ~ann)
-              :annotator ~profile}
-    :content (m/scan (m/or
-                       (concept ~args)
-                       (span ~args)))})
+#_(defsyntax annotation [{:keys [ann profile counter] :as args
+                          :or   {ann     '_
+                                 profile '_
+                                 counter '(atom -1)}}]
+    `{:tag     :annotation
+      :attrs   {:id        (m/app (partial verify-id ~counter "annotation-") ~ann)
+                :annotator ~profile}
+      :content (m/scan (m/or
+                         (concept ~args)
+                         (span ~args)))})
 
 (defsyntax document [{:keys [doc file-name counter file-name-id] :as args
                       :or   {doc          '_
@@ -192,6 +203,40 @@
       (apply concat)
       (map #(update % :edges (partial remove nil?))))))
 
+(defn parse-annotations [counter xml]
+  (-> xml
+    (m/rewrites
+      (knowtator-project {:doc         !doc
+                          :profile     !profile
+                          :ann         !id
+                          :span        !span
+                          :start       !start
+                          :end         !end
+                          #_#_:concept !concept
+                          :counter     counter})
+      [{:id          !id
+        :profile     (m/app #(or (keyword %) :Default) !profile)
+        :doc         (m/app keyword !doc)
+        #_#_:concept [!concept ...]
+        :spans       [{:id    !span
+                       :start !start
+                       :end   !end}
+                      ...]}
+       ...])
+    (->>
+      (apply concat)
+      (reduce
+        (fn [annotations {:keys [id] :as ann}]
+          (let [id (verify-id counter "annotation-"
+                     (when-not (->> annotations
+                                 id
+                                 ((every-pred identity
+                                    (comp (partial vector ann) (partial map #(dissoc % :id)) (partial apply not=)))))
+                       id))]
+            (assoc annotations id (assoc ann :id id))))
+        {})
+      vals)))
+
 (defn read-articles [project-file]
   (letfn [(file-name [f]
             (str (.getName f)))
@@ -225,58 +270,25 @@
         (merge-with (partial merge-with (comp (partial some identity) vector)) articles)
         vals))))
 
+(defn parse-spans [anns]
+  (letfn [(fix-range [{:keys [start end] :as span}]
+            (assoc span
+              :start (min start end)
+              :end (max start end)))]
 
-(defn parse-annotations [counter xml]
-  (-> xml
-    (m/rewrites
-      (knowtator-project {:doc           !doc
-                          :ann           !id
-                          :profile       !profile
-                          :concept       !concept
-                          :concept-label !concept-label
-                          :counter       counter})
-      [{:id      !id
-        :doc     (m/app keyword !doc)
-        :profile (m/app #(or (keyword %) :Default) !profile)
-        :concept !concept}
-       ...])
-    (->> (apply concat)
-      (reduce
-        (fn [annotations {:keys [id] :as ann}]
-          (let [id (verify-id counter "annotation-"
-                     (when-not (->> annotations
-                                 id
-                                 ((every-pred identity
-                                    (comp (partial vector ann) (partial map #(dissoc % :id)) (partial apply not=)))))
-                       id))]
-            (assoc annotations id (assoc ann :id id))))
-        {})
-      vals)))
-
-(defn parse-spans [counter xml]
-  (-> xml
-    (m/rewrites
-      (knowtator-project {:ann     !ann
-                          :span    !id
-                          :start   !start
-                          :end     !end
-                          :counter counter})
-      [(m/app (fn [[id ann start end]]
-                {:id    id
-                 :ann   (keyword ann)
-                 :start (min start end)
-                 :end   (max start end)})
-         [!id !ann !start !end])
-       ...])
-    (->> (apply concat)
+    (->> anns
+      (mapcat (fn [{:keys [id spans]}]
+                (map #(assoc % :ann id) spans)))
+      (map fix-range)
       (group-by (juxt :ann :start :end))
       vals
       (map first))))
 
 (defn parse-project [articles xml]
-  (let [counter (atom 0)]
-    {:anns     (parse-annotations counter xml)
+  (let [counter (atom 0)
+        anns    (parse-annotations counter xml)]
+    {:anns     (map #(dissoc % :spans) anns)
      :docs     (parse-documents counter articles xml)
      :profiles (parse-profiles counter xml)
-     :spans    (parse-spans counter xml)
+     :spans    (parse-spans anns)
      :graphs   (parse-graph-spaces counter xml)}))

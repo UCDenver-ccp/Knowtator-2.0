@@ -98,7 +98,10 @@
     (is (= [{:id      :a1
              :profile :p1
              :concept "c1"
-             :doc     :d1}]
+             :doc     :d1
+             :spans   [{:id    :s1
+                        :start 0
+                        :end   1}]}]
           (sut/parse-annotations (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
@@ -108,16 +111,26 @@
                                              :annotator "p1"}
                                    :content [{:tag   :class
                                               :attrs {:label "cl1"
-                                                      :id    "c1"}}]}]}]}))))
+                                                      :id    "c1"}}
+                                             {:tag   :span
+                                              :attrs {:id    "s1"
+                                                      :start "0"
+                                                      :end   "1"}}]}]}]}))))
   (testing "Multiple annotations"
     (is (= [{:id      :a1
              :profile :p1
              :concept "c1"
-             :doc     :d1}
+             :doc     :d1
+             :spans   [{:id    :s1
+                        :start 0
+                        :end   1}]}
             {:id      :a2
              :profile :p1
              :concept "c1"
-             :doc     :d1}]
+             :doc     :d1
+             :spans   [{:id    :s1
+                        :start 0
+                        :end   1}]}]
           (sut/parse-annotations (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
@@ -127,13 +140,51 @@
                                              :annotator "p1"}
                                    :content [{:tag   :class
                                               :attrs {:label "cl1"
-                                                      :id    "c1"}}]}
+                                                      :id    "c1"}}
+                                             {:tag   :span
+                                              :attrs {:id    "s1"
+                                                      :start "0"
+                                                      :end   "1"}}]}
                                   {:tag     :annotation
                                    :attrs   {:id        "a2"
                                              :annotator "p1"}
                                    :content [{:tag   :class
                                               :attrs {:label "cl1"
-                                                      :id    "c1"}}]}]}]}))))
+                                                      :id    "c1"}}
+                                             {:tag   :span
+                                              :attrs {:id    "s1"
+                                                      :start "0"
+                                                      :end   "1"}}]}]}]}))))
+
+  (testing "Multiple spans"
+    (is (= [{:id      :a1
+             :profile :p1
+             :concept "c1"
+             :doc     :d1
+             :spans   [{:id    :s1
+                        :start 0
+                        :end   1}
+                       {:id    :s2
+                        :start 0
+                        :end   1}]}]
+          (sut/parse-annotations (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :document
+                        :attrs   {:id "d1"}
+                        :content [{:tag     :annotation
+                                   :attrs   {:id        "a1"
+                                             :annotator "p1"}
+                                   :content [{:tag   :class
+                                              :attrs {:label "cl1"
+                                                      :id    "c1"}}
+                                             {:tag   :span
+                                              :attrs {:id    "s1"
+                                                      :start "0"
+                                                      :end   "1"}}
+                                             {:tag   :span
+                                              :attrs {:id    "s2"
+                                                      :start "0"
+                                                      :end   "1"}}]}]}]}))))
   #_(testing "Multiple concepts"
       (is (= [{:id      :a1
                :profile :p1
@@ -156,7 +207,10 @@
     (is (= [{:id      :annotation-1
              :profile :p1
              :concept "c1"
-             :doc     :d1}]
+             :doc     :d1
+             :spans   [{:id    :s1
+                        :start 0
+                        :end   1}]}]
           (sut/parse-annotations (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
@@ -165,12 +219,40 @@
                                    :attrs   {:annotator "p1"}
                                    :content [{:tag   :class
                                               :attrs {:label "cl1"
-                                                      :id    "c1"}}]}]}]}))))
+                                                      :id    "c1"}}
+                                             {:tag   :span
+                                              :attrs {:id    "s1"
+                                                      :start "0"
+                                                      :end   "1"}}]}]}]}))))
+  (testing "Missing span ID"
+    (is (= [{:id      :annotation-1
+             :profile :p1
+             :concept "c1"
+             :doc     :d1
+             :spans   [{:id    :span-1
+                        :start 0
+                        :end   1}]}]
+          (sut/parse-annotations (atom 0)
+            {:tag     :knowtator-project
+             :content [{:tag     :document
+                        :attrs   {}
+                        :content [{:tag     :annotation
+                                   :attrs   {:id "a1"}
+                                   :content [{:tag   :span
+                                              :attrs {:start "0"
+                                                      :end   "1"}}
+                                             {:tag   :class
+                                              :attrs {:id    "c1"
+                                                      :label "cl1"}}]}]}]}))))
+
   (testing "Missing annotator"
     (is (= [{:id      :a1
              :profile :Default
              :concept "c1"
-             :doc     :d1}]
+             :doc     :d1
+             :spans   [{:id    :s1
+                        :start 0
+                        :end   1}]}]
           (sut/parse-annotations (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
@@ -179,7 +261,11 @@
                                    :attrs   {:id "a1"}
                                    :content [{:tag   :class
                                               :attrs {:label "cl1"
-                                                      :id    "c1"}}]}]}]}))))
+                                                      :id    "c1"}}
+                                             {:tag   :span
+                                              :attrs {:id    "s1"
+                                                      :start "0"
+                                                      :end   "1"}}]}]}]}))))
 
   (testing "Simple project"
     (is (= [{:id      :mention_0
@@ -530,35 +616,31 @@
              :ann   :a1
              :start 0
              :end   1}]
-          (sut/parse-spans (atom 0)
-            {:tag     :knowtator-project
-             :content [{:tag     :document
-                        :attrs   {}
-                        :content [{:tag     :annotation
-                                   :attrs   {:id "a1"}
-                                   :content [{:tag   :span
-                                              :attrs {:id    "s1"
-                                                      :start "0"
-                                                      :end   "1"}}]}]}]}))))
+          (sut/parse-spans
+            [{:id      :a1
+              :profile :p1
+              :concept "c1"
+              :doc     :d1
+              :spans   [{:id    :s1
+                         :start 0
+                         :end   1}]}]))))
   (testing "Multiple spans"
     (is (= [{:id    :s1
              :ann   :a1
              :start 0
              :end   1}]
-          (sut/parse-spans (atom 0)
-            {:tag     :knowtator-project
-             :content [{:tag     :document
-                        :attrs   {}
-                        :content [{:tag     :annotation
-                                   :attrs   {:id "a1"}
-                                   :content [{:tag   :span
-                                              :attrs {:id    "s1"
-                                                      :start "0"
-                                                      :end   "1"}}
-                                             {:tag   :span
-                                              :attrs {:id    "s2"
-                                                      :start "0"
-                                                      :end   "1"}}]}]}]})))
+          (sut/parse-spans
+            [{:id      :a1
+              :profile :p1
+              :concept "c1"
+              :doc     :d1
+              :spans   [{:id    :s1
+                         :start 0
+                         :end   1}
+                        {:id    :s2
+                         :start 0
+                         :end   1}]}])))
+
     (is (= [{:id    :s1
              :ann   :a1
              :start 0
@@ -567,97 +649,66 @@
              :ann   :a1
              :start 0
              :end   2}]
-          (sut/parse-spans (atom 0)
-            {:tag     :knowtator-project
-             :content [{:tag     :document
-                        :attrs   {}
-                        :content [{:tag     :annotation
-                                   :attrs   {:id "a1"}
-                                   :content [{:tag   :span
-                                              :attrs {:id    "s1"
-                                                      :start "0"
-                                                      :end   "1"}}
-                                             {:tag   :span
-                                              :attrs {:id    "s2"
-                                                      :start "0"
-                                                      :end   "2"}}]}]}]}))))
-  (testing "Multiple annotations"
-    (is (= [{:id :document3-11 :ann :mention_0 :start 0 :end 1}
-            {:id :document3-14 :ann :mention_1 :start 28 :end 36}
-            {:id :document3-17 :ann :mention_2 :start 28 :end 36}]
-          (->> {:tag     :knowtator-project
-                :content [{:tag     :document
-                           :attrs   {}
-                           :content [{:tag     :annotation
-                                      :attrs   {:annotator  "Default"
-                                                :id         "mention_0"
-                                                :motivation ""
-                                                :type       "identity"}
-                                      :content [{:tag   :span
-                                                 :attrs {:end   "1"
-                                                         :id    "document3-11"
-                                                         :start "0"}}]}
-                                     {:tag     :annotation
-                                      :attrs   {:annotator  "profile1"
-                                                :id         "mention_1"
-                                                :motivation ""
-                                                :type       "identity"}
-                                      :content [{:tag   :span
-                                                 :attrs {:end   "36"
-                                                         :id    "document3-14"
-                                                         :start "28"}}]}
-                                     {:tag     :annotation
-                                      :attrs   {:annotator  "Default"
-                                                :id         "mention_2"
-                                                :motivation ""
-                                                :type       "identity"}
-                                      :content [{:tag     :span
-                                                 :attrs   {:end   "36"
-                                                           :id    "document3-17"
-                                                           :start "28"}
-                                                 :content ["ppeared!"]}]}]}]}
-            (sut/parse-spans (atom 0))))))
+          (sut/parse-spans
+            [{:id      :a1
+              :profile :p1
+              :concept "c1"
+              :doc     :d1
+              :spans   [{:id    :s1
+                         :start 0
+                         :end   1}
+                        {:id    :s2
+                         :start 0
+                         :end   2}]}]))))
 
-  (testing "Missing ID"
-    (is (= [{:id    :span-1
-             :ann   :a1
-             :start 0
-             :end   1}]
-          (sut/parse-spans (atom 0)
-            {:tag     :knowtator-project
-             :content [{:tag     :document
-                        :attrs   {}
-                        :content [{:tag     :annotation
-                                   :attrs   {:id "a1"}
-                                   :content [{:tag   :span
-                                              :attrs {:start "0"
-                                                      :end   "1"}}]}]}]}))))
+  (testing "Multiple annotations"
+    (is (= [{:id :s1 :ann :a1 :start 0 :end 1}
+            {:id :s2 :ann :a2 :start 0 :end 2}
+            {:id :s3 :ann :a2 :start 0 :end 3}]
+          (->> [{:id      :a1
+                 :profile :p1
+                 :concept "c1"
+                 :doc     :d1
+                 :spans   [{:id    :s1
+                            :start 0
+                            :end   1}]}
+                {:id      :a2
+                 :profile :p1
+                 :concept "c1"
+                 :doc     :d1
+                 :spans   [{:id    :s2
+                            :start 0
+                            :end   2}
+                           {:id    :s3
+                            :start 0
+                            :end   3}]}]
+            sut/parse-spans))))
+
   (testing "Start greater than end"
     (is (= [{:id    :s1
              :ann   :a1
              :start 0
              :end   1}]
-          (sut/parse-spans (atom 0)
-            {:tag     :knowtator-project
-             :content [{:tag     :document
-                        :attrs   {}
-                        :content [{:tag     :annotation
-                                   :attrs   {:id "a1"}
-                                   :content [{:tag   :span
-                                              :attrs {:id    "s1"
-                                                      :end   "0"
-                                                      :start "1"}}]}]}]}))))
+          (sut/parse-spans
+            [{:id      :a1
+              :profile :p1
+              :concept "c1"
+              :doc     :d1
+              :spans   [{:id    :s1
+                         :start 1
+                         :end   0}]}]))))
 
   (testing "Simple project"
     (is (= [{:id :document1-26 :ann :mention_0 :start 0 :end 4}
             {:id :document1-28 :ann :mention_1 :start 10 :end 14}
-            {:id :document1-29 :ann :mention_1 :start 15 :end 24}
-            {:id :document3-11 :ann :mention_0 :start 0 :end 1}
-            {:id :document3-14 :ann :mention_1 :start 28 :end 36}
+            {:id :document1-29 :ann :annotation-4 :start 15 :end 24}
+            {:id :document3-11 :ann :annotation-7 :start 0 :end 1}
+            {:id :document3-14 :ann :annotation-6 :start 28 :end 36}
             {:id :document3-17 :ann :mention_2 :start 28 :end 36}
-            {:id :span-1 :ann :mention_3 :start 0 :end 3}]
+            {:id :span-1 :ann :annotation-8 :start 0 :end 3}]
           (->> project-xml
-            (sut/parse-spans (atom 0))
+            (sut/parse-annotations (atom 0))
+            sut/parse-spans
             (sort-by :id))))))
 
 (deftest parse-document-test
@@ -756,18 +807,6 @@
             :docs     [{:id        :d1
                         :file-name "tf.txt"
                         :content   "Hi"}]
-            :spans    [{:id    :s1
-                        :ann   :a1
-                        :start 0
-                        :end   1}
-                       {:id    :s2
-                        :ann   :a2
-                        :start 0
-                        :end   1}
-                       {:id    :span-7
-                        :ann   :a2
-                        :start 1
-                        :end   2}]
             :profiles [{:id     :p1
                         :colors {:c1 :default}}
                        {:id     :Default
@@ -899,9 +938,9 @@
                         {:id :document1-28 :ann :mention_1 :start 10 :end 14}
                         {:id :document1-29 :ann :mention_1 :start 15 :end 24}
                         {:id :span-15 :ann :mention_3 :start 0 :end 3}
-                        {:id :document3-11 :ann :mention_0 :start 0 :end 1}
-                        {:id :document3-14 :ann :mention_1 :start 28 :end 36}
-                        {:id :document3-17 :ann :mention_2 :start 28 :end 36}]]
+                        {:id :document3-11 :ann :annotation-4 :start 0 :end 1}
+                        {:id :document3-14 :ann :annotation-5 :start 28 :end 36}
+                        {:id :document3-17 :ann :annotation-6 :start 28 :end 36}]]
             :graphs [3 [{:id    :graph_0
                          :doc   :document1
                          :nodes [{:id  :node_0
