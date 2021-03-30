@@ -83,7 +83,7 @@
                               :on-failure      [:handle-failure]})))
 
 (reg-event-db ::select-span
-  (fn [db [_ loc doc-id]]
+  (fn-traced [db [_ loc doc-id]]
     (let [{:keys [id ann]} (->> db
                              model/realize-spans
                              :text-annotation
@@ -96,7 +96,7 @@
         (assoc-in [:selection :anns] ann)))))
 
 (reg-event-fx ::record-selection
-  (fn [{:keys [db]} [_ {:keys [start end] :as text-range} doc-id]]
+  (fn-traced [{:keys [db]} [_ {:keys [start end] :as text-range} doc-id]]
     (cond-> {:db (update db :selection merge text-range)}
       (= start end) (assoc :dispatch [::select-span start doc-id]))))
 

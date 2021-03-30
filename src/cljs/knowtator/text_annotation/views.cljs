@@ -1,11 +1,12 @@
 (ns knowtator.text-annotation.views
   (:require ["rangy/lib/rangy-textrange" :as rangy-txt]
             [knowtator.events :as events]
+            [knowtator.html-util :as html]
             [knowtator.subs :as subs]
             [knowtator.util :refer [<sub >evt]]
             [re-com.core :as re-com]
-            [reagent.core :as r]
-            [re-frame-datatable.core :as dt]))
+            [re-frame-datatable.core :as dt]
+            [reagent.core :as r]))
 
 (defn popup-text-annotation
   [{:keys [ann content id searched]}]
@@ -35,26 +36,13 @@
    {:style {:text-align   :justify
             :text-justify :inter-word}}
    (doall
-    (for [text paragraph]
-      (if (string? text)
-        text
-        ^{:key (str (random-uuid))}
-        [popup-text-annotation text])))])
-
-(defn class?
-  [e c]
-  (-> e .-classList (.contains c)))
-
-(defn get-parent-element-of-class
-  [e c]
-  (if (class? e c)
-    e
-    (recur (.-parentElement e) c)))
-
-(defn text-selection
-  [e c]
-  (let [e (get-parent-element-of-class e c)]
-    (-> rangy-txt .getSelection (.saveCharacterRanges e) (js->clj :keywordize-keys true) first :characterRange)))
+     (for [text paragraph]
+       (if (string? text)
+         (if (empty? text)
+           " "
+           text)
+         ^{:key (str (random-uuid))}
+         [popup-text-annotation text])))])
 
 (defn doc-header [doc-id]
   [re-com/title
@@ -66,13 +54,15 @@
   [re-com/scroller
    :height "300px"
    :child [:div.text-annotation-editor
-           {:on-click #(let [selection (text-selection (.-target %) "text-annotation-editor")]
+           {:on-click #(let [selection (html/text-selection (.-target %) "text-annotation-editor")]
                          (>evt [::events/record-selection selection doc-id]))
             :style    {:padding "10px"}}
            (doall
              (for [paragraph (<sub [::subs/highlighted-text])]
                ^{:key (str (random-uuid))}
-               [editor-paragraph paragraph]))]])
+               [:p
+                [editor-paragraph paragraph]
+                " "]))]])
 
 (defn annotation-info
   []
