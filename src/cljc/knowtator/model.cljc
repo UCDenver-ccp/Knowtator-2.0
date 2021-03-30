@@ -282,19 +282,19 @@
 (defn mod-span
   [db loc f]
   (let [s (get-in db [:selection :spans])]
-    (update db :spans (fn [spans]
-                        (let [spans    (zipmap (map :id spans) spans)
-                              new-span (let [new-span (-> spans
-                                                        (get s)
-                                                        (update loc f))]
-                                         (fn-if new-span
-                                           (comp (partial apply <)
-                                             (juxt :end :start))
-                                           #(set/rename-keys % {:start :end
-                                                                :end   :start})))]
-                          (-> spans
-                            (cond-> s (assoc s new-span))
-                            vals))))))
+    (update-in db [:text-annotation :spans] (fn [spans]
+                                              (let [spans    (zipmap (map :id spans) spans)
+                                                    new-span (let [new-span (-> spans
+                                                                              (get s)
+                                                                              (update loc f))]
+                                                               (fn-if new-span
+                                                                 (comp (partial apply <)
+                                                                   (juxt :end :start))
+                                                                 #(set/rename-keys % {:start :end
+                                                                                      :end   :start})))]
+                                                (-> spans
+                                                  (cond-> s (assoc s new-span))
+                                                  vals))))))
 
 
 #_(let [spans         [{:id :C :start 3 :end 7}
