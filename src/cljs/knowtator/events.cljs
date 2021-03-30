@@ -132,7 +132,8 @@
 (reg-event-db ::set-concept-color
   (undoable "Setting color for concept")
   (fn [db [_ color]]
-    (assoc-in db [:profiles
+    (assoc-in db [:text-annotation
+                  :profiles
                   (get-in db [:selection :profiles])
                   :colors
                   (get-in db [:selection :concepts])]
