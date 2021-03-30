@@ -65,7 +65,11 @@
 (reg-sub ::profile-restriction?
   #(get-in % [:selection :profile-restriction]))
 
+(reg-sub ::realized-anns-db
+  model/realize-anns)
+
 (reg-sub ::spans-with-spanned-text
+  :<- [::realized-anns-db]
   (fn [db _]
     (get-in (model/realize-spans db) [:text-annotation :spans])))
 

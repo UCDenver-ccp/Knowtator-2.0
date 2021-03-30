@@ -330,7 +330,10 @@
       (update-in [:text-annotation :spans] (partial map (partial realize-span doc-map ann-map))))))
 
 (defn realize-ann
-  [{{:keys [spans]} :text-annotation} profile-map {:keys [profile id concept] :as ann}]
+  [{{:keys [spans]} :text-annotation
+    {:keys [color]} :defaults}
+   profile-map
+   {:keys [profile id concept] :as ann}]
   (-> ann
     (assoc
       :content (->> spans
@@ -339,7 +342,7 @@
                  (map :content)
                  (interpose " ")
                  (apply str))
-      :color (get-in profile-map [profile :colors concept]))))
+      :color (get-in profile-map [profile :colors concept] color))))
 
 (defn realize-anns
   [{{:keys [profiles]} :text-annotation :as db}]
