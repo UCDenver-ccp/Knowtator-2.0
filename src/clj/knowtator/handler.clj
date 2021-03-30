@@ -11,7 +11,8 @@
             [reitit.ring.coercion :as rrc]
             [ring.middleware.content-type :refer [wrap-content-type]]
             [ring.middleware.webjars :refer [wrap-webjars]]
-            [schema.core :as s]))
+            [schema.core :as s]
+            [muuntaja.middleware :as muun-m]))
 
 (declare init-app)
 (mount/defstate init-app
@@ -20,15 +21,16 @@
 
 (defn project-routes []
   ["/project"
-   ["/project/:file-name" {:name ::whole-project
-                           :get  {:coercion   schema/coercion
-                                  :parameters {:path {:file-name s/Str}}
-                                  :handler    (fn [{{{:keys [file-name]} :path} :parameters}]
-                                                (let [project-file (io/resource file-name)
-                                                      project-xml  (kparser/read-project-xmls project-file)
-                                                      articles     (kparser/read-articles project-file)]
-                                                  {:status 200
-                                                   :body   (kparser/parse-project articles project-xml)}))}}]
+   ["/project/:file-name" {:name       ::whole-project
+                           :middleware [muun-m/wrap-format]
+                           :get        {:coercion   schema/coercion
+                                        :parameters {:path {:file-name s/Str}}
+                                        :handler    (fn [{{{:keys [file-name]} :path} :parameters}]
+                                                      (let [project-file (io/resource file-name)
+                                                            project-xml  (kparser/read-project-xmls project-file)
+                                                            articles     (kparser/read-articles project-file)]
+                                                        {:status 200
+                                                         :body   (kparser/parse-project articles project-xml)}))}}]
    ["/doc/:id" {:name ::single-doc
                 :get  {:coercion   schema/coercion
                        :parameters {:path {:id s/Int}}
