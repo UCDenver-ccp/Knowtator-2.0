@@ -116,10 +116,14 @@
 (reg-sub ::selected-ann
   #(get-in % [:selection :anns]))
 
-(reg-sub ::ann-info
+(reg-sub ::selected-ann-info
   :<- [::ann-map]
-  (fn [anns [_ ann-id]]
-    (get-in anns [ann-id])))
+  :<- [::selected-ann]
+  (fn [[anns ann-id] _]
+    (when ann-id
+      (->> anns
+        ann-id
+        (map (partial zipmap [:prop :val]))))))
 
 (reg-sub ::selected-concept
   #(get-in % [:selection :concepts]))

@@ -4,7 +4,8 @@
             [knowtator.subs :as subs]
             [knowtator.util :refer [<sub >evt]]
             [re-com.core :as re-com]
-            [reagent.core :as r]))
+            [reagent.core :as r]
+            [re-frame-datatable.core :as dt]))
 
 (defn popup-text-annotation
   [{:keys [ann content id searched]}]
@@ -74,17 +75,15 @@
                [editor-paragraph paragraph]))]])
 
 (defn annotation-info
-  [ann-id]
+  []
   [re-com/v-box
    :children [[re-com/title
                :label "Annotation"
                :level :level3]
-              (let [ann (<sub [::subs/ann-info ann-id])]
-                (for [[k v] ann]
-                  ^{:key (str (random-uuid))}
-                  [re-com/h-box
-                   :gap "10px"
-                   :children [[re-com/label
-                               :label (name k)]
-                              [re-com/label
-                               :label (str v)]]]))]])
+              [dt/datatable ::annotation-id [::subs/selected-ann-info]
+               [{::dt/column-key   [:prop]
+                 ::dt/sorting      {::dt/enabled? true}
+                 ::dt/column-label "Property"}
+                {::dt/column-key   [:val]
+                 ::dt/column-label "Value"}]
+               {::dt/table-classes ["table" "ui" "celled"]}]]])
