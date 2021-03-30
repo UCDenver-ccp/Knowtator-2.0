@@ -253,26 +253,26 @@
 (defn cycle-coll
   [id coll dir]
   ;; TODO sorting of spans needs to be handled by start and end locs
-  (let [docs (->> coll sort vec)
+  (let [coll (vec coll)
         f    (case dir
                :next #(let [val (inc %)]
-                        (if (<= (count docs) val)
+                        (if (<= (count coll) val)
                           0
                           val))
                :prev #(let [val (dec %)]
                         (if (neg? val)
-                          (dec (count docs))
+                          (dec (count coll))
                           val)))]
     (->> id
-      (.indexOf docs)
+      (.indexOf coll)
       f
-      (get docs))))
+      (get coll))))
 
 (defn cycle-selection
   [db coll coll-id dir]
-  (let [coll (->> coll
-               (map :id))]
-    (update-in db [:selection coll-id] cycle-coll coll dir)))
+  (-> db
+    (get-in [:selection coll-id])
+    (cycle-coll (map :id coll) dir)))
 
 (defn fn-if
   [v test-fn when-fn]

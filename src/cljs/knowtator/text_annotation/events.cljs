@@ -2,20 +2,44 @@
   (:require [day8.re-frame.undo :as undo :refer [undoable]]
             [day8.re-frame.tracing :refer-macros [fn-traced]]
             [knowtator.model :as model]
-            [re-frame.core :refer [reg-event-db]]
+            [re-frame.core :refer [reg-event-db reg-event-fx]]
             [knowtator.util :as util]))
 
-(reg-event-db ::cycle
-  (fn-traced [db [_ coll-id direction]]
-    (let [coll (cond-> db
-                 (#{:spans :anns} coll-id)
-                 (->>
-                   model/realize-spans
-                   :text-annotation
-                   coll-id
-                   (filter #(model/in-restriction? % {:filter-tye    :doc
-                                                      :filter-values #{(get-in db [:selection :docs])}}))))]
-      (model/cycle-selection db coll coll-id direction))))
+(defn filter-in-doc
+  [db coll-id]
+  (->> db
+    model/realize-spans
+    :text-annotation
+    coll-id
+    (filter #(model/in-restriction? % {:filter-tye    :doc
+                                       :filter-values #{(get-in db [:selection :docs])}}))))
+
+(reg-event-fx ::cycle
+  (fn-traced [{:keys [db]} [_ coll-id direction]]
+    (let [coll        (->> (cond-> db
+                             (#{:spans :anns} coll-id) (filter-in-doc coll-id))
+                        (sort-by (juxt :start :end :id)))
+          new-item-id (model/cycle-selection db coll coll-id direction)]
+      (cond (#{:spans} coll-id) {:db       db
+                                 :dispatch [::select-span new-item-id]}
+            :else               {:db (assoc-in db [:selection coll-id] new-item-id)}))))
+
+(reg-event-db ::select-span
+  (fn-traced [db [_ id]]
+    (let [{:keys [ann]}     (->> db
+                              :text-annotation
+                              :spans
+                              (util/map-with-key :id)
+                              id)
+          {:keys [concept]} (->> db
+                              :text-annotation
+                              :anns
+                              (util/map-with-key :id)
+                              ann)]
+      (-> db
+        (assoc-in [:selection :spans] id)
+        (assoc-in [:selection :anns] ann)
+        (assoc-in [:selection :concepts] concept)))))
 
 (reg-event-db ::grow-selected-span-start
   (undoable "Growing span start")

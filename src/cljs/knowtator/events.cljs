@@ -7,7 +7,8 @@
             [knowtator.db :as db]
             [knowtator.model :as model]
             [re-frame.core :as rf :refer [reg-event-db reg-event-fx]]
-            [re-pressed.core :as rp]))
+            [re-pressed.core :as rp]
+            [knowtator.util :as util]))
 
 (reg-event-fx ::initialize-db
   (fn-traced [_ _]
