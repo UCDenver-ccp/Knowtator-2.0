@@ -13,7 +13,6 @@
   (let [e-id (random-uuid)]
     (r/create-class
       {:reagent-render (fn []
-                         ;; TODO always scrolls e to top
                          (when-let [e (and (<sub [::subs/selected-span? id])
                                         (.getElementById js/document e-id))]
                            (.scrollIntoView e

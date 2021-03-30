@@ -252,7 +252,6 @@
 
 (defn cycle-coll
   [id coll dir]
-  ;; TODO sorting of spans needs to be handled by start and end locs
   (let [coll (vec coll)
         f    (case dir
                :next #(let [val (inc %)]
