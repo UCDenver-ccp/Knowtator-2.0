@@ -1,54 +1,55 @@
 (ns knowtator.db)
 
 (def default-db
-  {:name     "re-frame"
-   :spans    [{:id    :s1
-               :ann   :a1
-               :start 30
-               :end   35}
-              {:id    :s2
-               :ann   :a1
-               :start 36
-               :end   44}
-              {:id    :s3
-               :ann   :a2
-               :start 58
-               :end   65}
-              {:id    :s4
-               :ann   :a2
-               :start 83
-               :end   89}
-              {:id    :s5
-               :ann   :a1
-               :start 124
-               :end   132}
-              {:id    :s6
-               :ann   :a3
-               :start 0
-               :end   1}]
-   :anns     [{:id      :a1
-               :profile :p1
-               :concept :c1
-               :doc     :d1}
-              {:id      :a2
-               :profile :p2
-               :concept :c2
-               :doc     :d1}
-              {:id      :a3
-               :profile :p1
-               :concept :c1
-               :doc     :d2}]
-   :profiles [{:id     :p1
-               :colors {:c1 "blue"
-                        :c2 "green"}}
-              {:id     :p2
-               :colors {:c1 "red"
-                        :c2 "green"}}]
-   :docs     [{:id      :d2
-               :content "hey"}
-              {:id :d1
-               :content
-               "Complex trait analysis of the mouse striatum: independent QTLs modulate volume and neuron number
+  {:name            "re-frame"
+   :text-annotation {
+                     :spans    [{:id    :s1
+                                 :ann   :a1
+                                 :start 30
+                                 :end   35}
+                                {:id    :s2
+                                 :ann   :a1
+                                 :start 36
+                                 :end   44}
+                                {:id    :s3
+                                 :ann   :a2
+                                 :start 58
+                                 :end   65}
+                                {:id    :s4
+                                 :ann   :a2
+                                 :start 83
+                                 :end   89}
+                                {:id    :s5
+                                 :ann   :a1
+                                 :start 124
+                                 :end   132}
+                                {:id    :s6
+                                 :ann   :a3
+                                 :start 0
+                                 :end   1}]
+                     :anns     [{:id      :a1
+                                 :profile :p1
+                                 :concept :c1
+                                 :doc     :d1}
+                                {:id      :a2
+                                 :profile :p2
+                                 :concept :c2
+                                 :doc     :d1}
+                                {:id      :a3
+                                 :profile :p1
+                                 :concept :c1
+                                 :doc     :d2}]
+                     :profiles [{:id     :p1
+                                 :colors {:c1 "blue"
+                                          :c2 "green"}}
+                                {:id     :p2
+                                 :colors {:c1 "red"
+                                          :c2 "green"}}]
+                     :docs     [{:id      :d2
+                                 :content "hey"}
+                                {:id :d1
+                                 :content
+                                 "Complex trait analysis of the mouse striatum: independent QTLs modulate volume and neuron number
 
 Abstract
 
@@ -63,7 +64,7 @@ Brain weight, brain and striatal volume, neuron-packing density and number were 
 Conclusion
 
 We have discovered remarkable numerical and volumetric variation in the mouse striatum, and we have been able to map two QTLs that modulate independent anatomic parameters.
-"}]
+"}]}
    :selection {:docs        :d1
                :anns        nil
                :profiles    :p1

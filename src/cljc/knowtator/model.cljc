@@ -323,14 +323,14 @@
       (assoc :content content))))
 
 (defn realize-spans
-  [{:keys [docs anns] :as db}]
+  [{{:keys [docs anns]} :text-annotation :as db}]
   (let [ann-map (util/map-with-key :id anns)
         doc-map (util/map-with-key :id docs)]
     (-> db
-      (update :spans (partial map (partial realize-span doc-map ann-map))))))
+      (update-in [:text-annotation :spans] (partial map (partial realize-span doc-map ann-map))))))
 
 (defn realize-ann
-  [{:keys [spans]} profile-map {:keys [profile id concept] :as ann}]
+  [{{:keys [spans]} :text-annotation} profile-map {:keys [profile id concept] :as ann}]
   (-> ann
     (assoc
       :content (->> spans
@@ -342,15 +342,16 @@
       :color (get-in profile-map [profile :colors concept]))))
 
 (defn realize-anns
-  [{:keys [profiles] :as db}]
+  [{{:keys [profiles]} :text-annotation :as db}]
   (let [profile-map (util/map-with-key :id profiles)]
     (-> db
-      (update :anns (partial map (partial realize-ann (realize-spans db) profile-map))))))
+      (update-in [:text-annotation :anns] (partial map (partial realize-ann (realize-spans db) profile-map))))))
 
 (defn realize-ann-node
   [db {:keys [ann] :as node}]
   (let [realized-ann (->> db
                        realize-anns
+                       :text-annotation
                        :anns
                        (util/map-with-key :id)
                        ann)
