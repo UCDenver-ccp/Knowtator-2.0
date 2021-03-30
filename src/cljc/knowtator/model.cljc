@@ -244,10 +244,10 @@
         (<= (count ret) (count args))))
 
 (defn unique-id
-  [db k prefix suffix-num]
+  [coll prefix suffix-num]
   (let [id (->> suffix-num (str prefix) keyword)]
-    (if (contains? (get db k) id)
-      (recur db k prefix (inc suffix-num))
+    (if (contains? coll id)
+      (recur coll prefix (inc suffix-num))
       id)))
 
 (defn cycle-coll

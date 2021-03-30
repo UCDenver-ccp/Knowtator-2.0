@@ -1,7 +1,9 @@
 (ns knowtator.text-annotation.events
   (:require [day8.re-frame.undo :as undo :refer [undoable]]
+            [day8.re-frame.tracing :refer-macros [fn-traced]]
             [knowtator.model :as model]
-            [re-frame.core :refer [reg-event-db]]))
+            [re-frame.core :refer [reg-event-db]]
+            [knowtator.util :as util]))
 
 (reg-event-db ::cycle
   (fn [db [_ coll-id direction]]
@@ -43,28 +45,29 @@
 
 (reg-event-db ::add-doc
   (undoable "Adding document")
-  (fn [db [_]]
-    (let [doc-id (model/unique-id db :docs "d" (-> db :docs count))]
+  (fn-traced [{{:keys [docs]} :text-annotation :as db} [_]]
+    (let [doc-id (model/unique-id (util/map-with-key docs :id) "d" (count docs))]
       (-> db
-        (assoc-in [:docs doc-id]  {:id      doc-id
-                                   :content (str "I'm called " doc-id)})
+        (assoc-in [:text-annotation :docs doc-id]  {:id      doc-id
+                                                    :content (str "I'm called " doc-id)})
         (assoc-in [:selection :docs] doc-id)))))
 
 (reg-event-db ::add-ann
   (undoable "Adding annotation")
-  (fn [db [_]]
-    (let [span-id                                    (model/unique-id db :spans "s" (-> db :spans count))
-          ann-id                                     (model/unique-id db :anns "a" (-> db :anns count))
-          {:keys [profiles concepts docs end start]} (:selection db)]
+  (fn-traced [{{:keys [spans anns]}                       :text-annotation
+               {:keys [profiles concepts docs start end]} :selection
+               :as                                        db} [_]]
+    (let [span-id (model/unique-id (util/map-with-key :id spans) "s" (count spans))
+          ann-id  (model/unique-id (util/map-with-key :id anns) "a" (count anns))]
       (-> db
-        (assoc-in [:anns ann-id]  {:id      ann-id
-                                   :profile profiles
-                                   :concept concepts
-                                   :doc     docs})
-        (assoc-in [:spans span-id] {:id    span-id
-                                    :ann   ann-id
-                                    :end   end
-                                    :start start})
+        (update-in [:text-annotation :anns] conj  {:id      ann-id
+                                                   :profile profiles
+                                                   :concept concepts
+                                                   :doc     docs})
+        (update-in [:text-annotation :spans] conj {:id    span-id
+                                                   :ann   ann-id
+                                                   :end   end
+                                                   :start start})
         (assoc-in [:selection :anns] ann-id)
         (assoc-in [:selection :spans] span-id)))))
 
@@ -81,7 +84,15 @@
   (undoable "Removing annotation")
   (fn [db [_]]
     (-> db
-      (update :anns dissoc (get-in db [:selection :anns]))
-      (update :spans dissoc (get-in db [:selection :spans]))
+      (update-in [:text-annotation :anns] (fn [spans]
+                                            (-> spans
+                                              (->> (util/map-with-key :id))
+                                              (dissoc (get-in db [:selection :anns]))
+                                              vals)))
+      (update-in [:text-annotation :spans] (fn [spans]
+                                             (-> spans
+                                               (->> (util/map-with-key :id))
+                                               (dissoc (get-in db [:selection :spans]))
+                                               vals)))
       (assoc-in [:selection :anns] nil)
       (assoc-in [:selection :spans] nil))))
