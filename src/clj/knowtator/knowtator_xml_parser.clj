@@ -134,18 +134,6 @@
             :start (m/app #(Integer/parseInt %) ~start)
             :end   (m/app #(Integer/parseInt %) ~end)}})
 
-
-#_(defsyntax annotation [{:keys [ann profile counter] :as args
-                          :or   {ann     '_
-                                 profile '_
-                                 counter '(atom -1)}}]
-    `{:tag     :annotation
-      :attrs   {:id        (m/app (partial verify-id ~counter "annotation-") ~ann)
-                :annotator ~profile}
-      :content (m/scan (m/or
-                         (concept ~args)
-                         (span ~args)))})
-
 (defsyntax document [{:keys [doc file-name counter file-name-id] :as args
                       :or   {doc          '_
                              file-name    '_
