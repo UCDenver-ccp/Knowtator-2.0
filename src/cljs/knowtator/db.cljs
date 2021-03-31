@@ -2,8 +2,7 @@
 
 (def default-db
   {:name            "re-frame"
-   :text-annotation {
-                     :spans    [{:id    :s1
+   :text-annotation {:spans    [{:id    :s1
                                  :ann   :a1
                                  :start 30
                                  :end   35}
