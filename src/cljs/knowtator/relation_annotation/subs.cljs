@@ -9,7 +9,9 @@
 (reg-sub ::realized-graph
   (fn [db _]
     (-> db
-      :graph
+      :text-annotation
+      :graphs
+      first
       (update :nodes (partial map (partial model/realize-ann-node db))))))
 
 (reg-sub ::graph-physics
