@@ -7,24 +7,30 @@
 (reg-sub ::graph-spaces
   #(sort-by :id (get-in % [:text-annotation :graphs] [])))
 
-(reg-sub ::selected-graph-space
+(reg-sub ::selected-graph-space-id
   (fn [db _]
     (get-in db [:selection :graphs])))
+
+(reg-sub ::selected-graph-space
+  :<- [::selected-graph-space-id]
+  :<- [::graph-spaces]
+  (fn [[graph-id graphs] _]
+    (when graph-id
+      (-> graphs
+        (->> (util/map-with-key :id))
+        graph-id))))
 
 (reg-sub ::db
   identity)
 
 (reg-sub ::selected-realized-graph
   :<- [::selected-graph-space]
-  :<- [::graph-spaces]
   :<- [::db]
-  (fn [[id graphs db] _]
-    (when id
-      (-> graphs
-        (->> (util/map-with-key :id))
-        id
-        (update :nodes (partial map (partial model/realize-ann-node db)))))))
+  (fn [[graph db] _]
+    (when graph
+      (update graph :nodes (partial map (partial model/realize-ann-node db))))))
 
 (reg-sub ::graph-physics
-  (fn [db _]
-    (true? (get-in db [:graph :physics]))))
+  :<- [::selected-graph-space]
+  (fn [graph _]
+    (get graph :physics false)))

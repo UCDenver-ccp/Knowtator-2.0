@@ -35,7 +35,8 @@
              :physics      (<sub [::subs/graph-physics])
              :interaction  {:hover true}
              :manipulation {:add-node    (fn [node-data]
-                                           (>evt [::evts/add-node node-data]))
+                                           (println node-data)
+                                           (>evt [::evts/add-node (<sub [::subs/selected-graph-space-id]) node-data]))
                             :add-edge    (fn [edge-data]
                                            (println edge-data))
                             :edit-node   (fn [node-data]
@@ -48,4 +49,4 @@
                                            (println edge-ids))}}
    :events  {:click (fn [{:keys                   [nodes]
                          {{:keys [x y]} :canvas} :pointer}]
-                      (>evt [::evts/toggle-node-physics (first nodes) x y]))}])
+                      (>evt [::evts/toggle-node-physics (<sub [::subs/selected-graph-space-id]) (first nodes) x y]))}])

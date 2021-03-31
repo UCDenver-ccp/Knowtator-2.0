@@ -64,18 +64,11 @@
    :children [[about-title]
               [link-to-home-page]]])
 
-
 (defn graph-panel []
   [:div
    [re-com/v-box
-    :children [
-               [re-com/checkbox
-                :model (<sub [::ra-subs/graph-physics])
-                :label "Physics"
-                :on-change #(>evt [::ra-events/toggle-physics])]
-               [ra-controls/graph-space-controls]
+    :children [[ra-controls/graph-space-controls]
                [ra/graph]]]])
-
 
 (defn page-title []
   [re-com/h-box
