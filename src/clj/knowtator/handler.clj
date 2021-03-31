@@ -2,22 +2,34 @@
   (:require [clojure.java.io :as io]
             [knowtator.env :refer [defaults]]
             [knowtator.knowtator-xml-parser :as kparser]
-            [knowtator.layout :refer [error-page]]
+            [knowtator.layout :as layout :refer [error-page]]
             [knowtator.middleware :as middleware]
-            [knowtator.routes.home :refer [home-routes]]
             [mount.core :as mount]
+            [muuntaja.middleware :as muun-m]
             [reitit.coercion.schema :as schema]
+            [reitit.core :as r]
             [reitit.ring :as ring]
             [reitit.ring.coercion :as rrc]
             [ring.middleware.content-type :refer [wrap-content-type]]
             [ring.middleware.webjars :refer [wrap-webjars]]
-            [schema.core :as s]
-            [muuntaja.middleware :as muun-m]))
+            [schema.core :as s]))
 
 (declare init-app)
 (mount/defstate init-app
   :start ((or (:init defaults) (fn [])))
   :stop  ((or (:stop defaults) (fn []))))
+
+(defn home-page [request]
+  (layout/render request "index.html"))
+
+(defn home-routes []
+  [""
+   {:middleware [middleware/wrap-csrf
+                 middleware/wrap-formats]}
+   ["/"
+    ["" {:get home-page}]
+    ["annotation" {:get home-page}]
+    ["graph" {:get home-page}]]])
 
 (defn project-routes []
   ["/project"

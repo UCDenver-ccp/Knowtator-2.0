@@ -2,10 +2,13 @@
   (:require [knowtator.handler :as sut]
             [clojure.test :refer [testing deftest is]]
             [reitit.core :as r]
-            [muuntaja.middleware :as muun-m]
             [muuntaja.core :as m]))
 
 (deftest app-router-test
+  (testing "Enumerated routes"
+    (is (= ["/" "/project/project/:file-name" "/project/doc/:id"]
+          (map first (r/routes (sut/app-router))))))
+
   (testing "Project routes"
     (is (= {:id "123"}
           (:path-params (r/match-by-path (sut/app-router) "/project/doc/123"))))))
