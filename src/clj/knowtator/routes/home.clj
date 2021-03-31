@@ -12,14 +12,6 @@
   [""
    {:middleware [middleware/wrap-csrf
                  middleware/wrap-formats]}
-   ["/ontology"]
-   ["/" {:get home-page}]
-   ["/annotation" {:get home-page}]
-   ["/test" {:get (fn [_]
-                    (resource-response "html/test.html"))}]
-   ["/docs" {:get (fn [_]
-                    (-> "docs/docs.md"
-                      io/resource
-                      slurp
-                      response/ok
-                      (response/header "Content-Type" "text/plain; charset=utf-8")))}]])
+   ["/" {:get home-page}
+    ["annotation" {:get home-page}]
+    ["graph" {:get home-page}]]])

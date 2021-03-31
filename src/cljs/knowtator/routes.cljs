@@ -9,7 +9,7 @@
 
 (def routes
   (atom
-    ["/" {""           :graph
+    ["/" {""           :annotation
           "about"      :about
           "graph"      :graph
           "annotation" :annotation
