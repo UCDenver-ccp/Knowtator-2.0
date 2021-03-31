@@ -19,16 +19,17 @@
 
 (defn vis [id graph & {:keys [options events style]
                        :or   {style {:height "640px"}}}]
-  [(r/adapt-react-class visjs-graph)
-   {:graph   (<sub graph)
-    :options (-> options
-               (update :manipulation (partial util/map-vals manipulation-handler-fn))
-               (assoc-in [:manipulation :enabled] true))
-    :events  (util/map-vals handler-fn events)
-    :style   style}])
+  (when-let [graph (<sub graph)]
+    [(r/adapt-react-class visjs-graph)
+     {:graph   graph
+      :options (-> options
+                 (update :manipulation (partial util/map-vals manipulation-handler-fn))
+                 (assoc-in [:manipulation :enabled] true))
+      :events  (util/map-vals handler-fn events)
+      :style   style}]))
 
 (defn graph []
-  [vis :relation-annotation-graph [::subs/realized-graph]
+  [vis :relation-annotation-graph [::subs/selected-realized-graph]
    :options {:layout       {:hierarchical false}
              :edges        {:color "#000000"}
              :physics      (<sub [::subs/graph-physics])

@@ -30,3 +30,7 @@
 (reg-event-db ::toggle-physics
   (fn [db _]
     (update-in db [:graph :physics] not)))
+
+(reg-event-db ::select-graph-space
+  (fn [db [_ id]]
+    (assoc-in db [:selection :graphs] id)))

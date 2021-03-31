@@ -1,6 +1,7 @@
 (ns knowtator.views
   (:require [breaking-point.core :as bp]
             [knowtator.events :as evts]
+            [knowtator.relation-annotation.controls :as ra-controls]
             [knowtator.relation-annotation.events :as ra-events]
             [knowtator.relation-annotation.subs :as ra-subs]
             [knowtator.relation-annotation.views :as ra]
@@ -66,11 +67,14 @@
 
 (defn graph-panel []
   [:div
-   [re-com/checkbox
-    :model (<sub [::ra-subs/graph-physics])
-    :label "Physics"
-    :on-change #(>evt [::ra-events/toggle-physics])]
-   [ra/graph]])
+   [re-com/v-box
+    :children [
+               [re-com/checkbox
+                :model (<sub [::ra-subs/graph-physics])
+                :label "Physics"
+                :on-change #(>evt [::ra-events/toggle-physics])]
+               [ra-controls/graph-space-controls]
+               [ra/graph]]]])
 
 
 (defn page-title []

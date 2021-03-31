@@ -39,11 +39,13 @@
 
 (reg-event-db ::set-project
   (fn [db [_ result]]
+    db
     (-> db
       (assoc :text-annotation result)
       (assoc-in [:selection :docs] (->> result :docs (sort-by :id) first :id))
       (assoc-in [:selection :profiles] (->> result :profiles (sort-by :id) first :id))
-      (assoc-in [:selection :concepts] (->> result :anns (sort-by :id) first :concept)))))
+      (assoc-in [:selection :concepts] (->> result :anns (sort-by :id) first :concept))
+      (assoc-in [:selection :graphs] (->> result :graphs (sort-by :id) first :id)))))
 
 (reg-event-db ::report-failure
   (fn [db [_ result]]
