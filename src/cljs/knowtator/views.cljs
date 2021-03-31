@@ -73,6 +73,16 @@
    [ra/graph]])
 
 
+(defn page-title []
+  [re-com/h-box
+   :children [[:img (let [size "60px"]
+                      {:src   "https://avatars.githubusercontent.com/u/1854424?s=200&v=4"
+                       :style {:width  size
+                               :height size}})]
+              [re-com/title
+               :label "Knowtator"
+               :level :level1]]])
+
 (defn annotation-title []
   [re-com/title
    :label "Knowtator"
@@ -181,4 +191,5 @@
     [re-com/v-box
      :src      (at)
      :height   "100%"
-     :children [(routes/panels @active-panel)]]))
+     :children [[page-title]
+                (routes/panels @active-panel)]]))
