@@ -15,18 +15,31 @@
 
 (reg-event-db ::add-node
   (fn-traced [db [_ graph-id node]]
-    (println "here")
-    (let [new-node (merge node
-                     {:id      (verify-id db)
-                      :physics false
-                      :ann     :a1})]
-      (println graph-id node new-node)
-      (update-in db [:text-annotation :graphs]
-        (fn [graphs]
-          (-> graphs
-            (->> (util/map-with-key :id))
-            (update-in [graph-id :nodes] conj new-node)
-            vals))))))
+    (when-let [ann-id (get-in db [:selection :anns])]
+      (let [new-node (merge node
+                       {:id      (verify-id db)
+                        :physics false
+                        :ann     ann-id})]
+        (println graph-id node new-node)
+        (update-in db [:text-annotation :graphs]
+          (fn [graphs]
+            (-> graphs
+              (->> (util/map-with-key :id))
+              (update-in [graph-id :nodes] conj new-node)
+              vals)))))))
+
+(reg-event-db ::select-ann-node
+  (fn-traced [db [_ graph-id node-id]]
+    (let [node-id (keyword node-id)
+          ann-id  (-> db
+                    (get-in [:text-annotation :graphs])
+                    (->> (util/map-with-key :id))
+                    (get-in [graph-id :nodes])
+                    (->> (util/map-with-key :id))
+                    (get-in [node-id :ann]))]
+      (-> db
+        (assoc-in [:selection :nodes] node-id)
+        (assoc-in [:selection :anns] ann-id)))))
 
 (reg-event-db ::toggle-node-physics
   (fn-traced [db [_ graph-id id x y]]

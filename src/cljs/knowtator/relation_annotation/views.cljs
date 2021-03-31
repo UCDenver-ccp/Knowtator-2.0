@@ -47,6 +47,9 @@
                                            (println node-ids))
                             :delete-edge (fn [edge-ids]
                                            (println edge-ids))}}
-   :events  {:click (fn [{:keys                   [nodes]
-                         {{:keys [x y]} :canvas} :pointer}]
-                      (>evt [::evts/toggle-node-physics (<sub [::subs/selected-graph-space-id]) (first nodes) x y]))}])
+   :events  {:click       (fn [{:keys                   [nodes]
+                               {{:keys [x y]} :canvas} :pointer}]
+                            (>evt [::evts/toggle-node-physics (<sub [::subs/selected-graph-space-id]) (first nodes) x y]))
+             :select-node (fn [{:keys [nodes] :as data}]
+                            (println nodes data)
+                            (>evt [::evts/select-ann-node (<sub [::subs/selected-graph-space-id]) (first nodes)]))}])
