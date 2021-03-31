@@ -332,30 +332,36 @@
   [{{:keys [spans]} :text-annotation
     {:keys [color]} :defaults}
    profile-map
+   doc-map
+   ann-map
    {:keys [profile id concept] :as ann}]
   (-> ann
     (assoc
       :content (->> spans
                  (group-by :ann)
                  id
+                 (map (partial realize-span doc-map ann-map))
                  (map :content)
                  (interpose " ")
                  (apply str))
       :color (get-in profile-map [profile :colors concept] color))))
 
 (defn realize-anns
-  [{{:keys [profiles]} :text-annotation :as db}]
-  (let [profile-map (util/map-with-key :id profiles)]
+  [{{:keys [profiles docs anns]} :text-annotation :as db}]
+  (let [profile-map (util/map-with-key :id profiles)
+        doc-map     (util/map-with-key :id docs)
+        ann-map     (util/map-with-key :id anns)]
     (-> db
-      (update-in [:text-annotation :anns] (partial map (partial realize-ann (realize-spans db) profile-map))))))
+      (update-in [:text-annotation :anns] (partial map (partial realize-ann db profile-map doc-map ann-map))))))
 
 (defn realize-ann-node
-  [db {:keys [ann] :as node}]
-  (let [realized-ann (->> db
-                       realize-anns
-                       :text-annotation
-                       :anns
-                       (util/map-with-key :id)
-                       ann)
+  [db profile-map doc-map ann-map {:keys [ann] :as node}]
+  (let [realized-ann (->> ann-map
+                       ann
+                       (realize-ann db profile-map doc-map ann-map))
         node         (merge realized-ann node)]
     (assoc node :label (:content node))))
+
+(defn realize-ann-nodes
+  [db profile-map doc-map ann-map graph]
+  (update graph :nodes (partial map (partial realize-ann-node db profile-map doc-map ann-map))))

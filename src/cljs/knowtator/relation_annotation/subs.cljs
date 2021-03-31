@@ -2,7 +2,8 @@
   (:require
    [re-frame.core :refer [reg-sub]]
    [knowtator.model :as model]
-   [knowtator.util :as util]))
+   [knowtator.util :as util]
+   [knowtator.subs :as subs]))
 
 (reg-sub ::graph-spaces
   #(sort-by :id (get-in % [:text-annotation :graphs] [])))
@@ -26,9 +27,12 @@
 (reg-sub ::selected-realized-graph
   :<- [::selected-graph-space]
   :<- [::db]
-  (fn [[graph db] _]
+  :<- [::subs/profile-map]
+  :<- [::subs/doc-map]
+  :<- [::subs/ann-map]
+  (fn [[graph db profile-map doc-map ann-map] _]
     (when graph
-      (update graph :nodes (partial map (partial model/realize-ann-node db))))))
+      (model/realize-ann-nodes db profile-map doc-map ann-map graph))))
 
 (reg-sub ::graph-physics
   :<- [::selected-graph-space]
