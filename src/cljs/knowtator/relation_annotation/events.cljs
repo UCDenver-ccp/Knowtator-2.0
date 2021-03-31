@@ -29,7 +29,7 @@
             vals))))))
 
 (reg-event-db ::toggle-node-physics
-  (fn [db [_ graph-id id x y]]
+  (fn-traced [db [_ graph-id id x y]]
     (when id
       (update-in db [:text-annotation :graphs]
         (fn [graphs]
@@ -37,10 +37,13 @@
             (->> (util/map-with-key :id))
             (update-in [graph-id :nodes]
               (fn [nodes]
-                (let [nodes (util/map-with-key :id nodes)]
+                (let [nodes (util/map-with-key :id nodes)
+                      id    (keyword id)]
                   (-> nodes
                     (cond-> (contains? nodes id) (->
-                                                   (update-in [id :physics] not)
+                                                   (update-in [id :physics] (fn [val] (if (false? val)
+                                                                                       true
+                                                                                       false)))
                                                    (assoc-in [id :x] x)
                                                    (assoc-in [id :y] y)))
                     vals))))
