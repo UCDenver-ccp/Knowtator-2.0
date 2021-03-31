@@ -2,7 +2,8 @@
   (:require [clojure.string :as str]
             [knowtator.html-colors :as html-colors]
             [knowtator.model :as model]
-            [re-frame.core :as rf :refer [reg-sub]]))
+            [re-frame.core :as rf :refer [reg-sub]]
+            [knowtator.util :as util]))
 
 (defn ->db-map [k]
   (comp (partial apply zipmap) (juxt (partial map :id) identity) k :text-annotation))
@@ -65,11 +66,7 @@
 (reg-sub ::profile-restriction?
   #(get-in % [:selection :profile-restriction]))
 
-(reg-sub ::realized-anns-db
-  model/realize-anns)
-
 (reg-sub ::spans-with-spanned-text
-  :<- [::realized-anns-db]
   (fn [db _]
     (get-in (model/realize-spans db) [:text-annotation :spans])))
 
@@ -97,14 +94,6 @@
     (->> spans
       (model/resolve-span-content content)
       model/split-into-paragraphs)))
-
-(reg-sub ::ann-color
-  :<- [::ann-map]
-  :<- [::profiles]
-  (fn [[anns profiles] [_ ann]]
-    (cond (not (coll? ann))   (model/ann-color (get anns ann) profiles)
-          (empty? (rest ann)) (model/ann-color (get anns (first ann)) profiles)
-          :else               "grey")))
 
 (reg-sub ::selected-span-id
   #(get-in % [:selection :spans]))
@@ -135,6 +124,19 @@
 
 (reg-sub ::default-color
   #(get-in % [:defaults :color]))
+
+(reg-sub ::ann-color
+  :<- [::ann-map]
+  :<- [::profile-map]
+  :<- [::default-color]
+  (fn [[anns profiles default-color] [_ ann-id]]
+    (let [colors (->> (cond-> ann-id (not (coll? ann-id)) vector)
+                   (map anns)
+                   (map (fn [{:keys [profile concept]}]
+                          (get-in profiles [profile :colors concept] default-color))))]
+      (if (apply = colors)
+        (first colors)
+        :grey))))
 
 (reg-sub ::selected-color
   :<- [::selected-profile]

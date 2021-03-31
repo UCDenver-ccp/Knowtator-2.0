@@ -9,34 +9,37 @@
             [reagent.core :as r]))
 
 (defn popup-text-annotation
-  [{:keys [content id searched color]}]
+  [{:keys [content id ann]}]
   (let [e-id (random-uuid)]
     (r/create-class
       {:reagent-render (fn []
-                         (when-let [e (and (<sub [::subs/selected-span? id])
-                                        (.getElementById js/document e-id))]
-                           (.scrollIntoView e
-                             (clj->js {:behavior :smooth  #_ [:auto :smooth]
-                                       :block    :center  #_ [:start :center :end :nearest]
-                                       :inline   :nearest #_ [:start :center :end :nearest]})))
-                         [re-com/p-span
-                          {:id    e-id
-                           :style (cond-> {:background-color color
-                                           :border  :solid
-                                           :border-color (if (<sub [::subs/selected-span? id])
-                                                           :black
-                                                           color)
-                                           :cursor :pointer}
-                                    searched (assoc :color :red))}
-                          content])
+                         (let [selected? (some #(<sub [::subs/selected-span? %]) (cond-> id (not (coll? id)) vector))]
+                           (when-let [e (and selected?
+                                          (.getElementById js/document e-id))]
+                             (.scrollIntoView e
+                               (clj->js {:behavior :smooth  #_ [:auto :smooth]
+                                         :block    :center  #_ [:start :center :end :nearest]
+                                         :inline   :nearest #_ [:start :center :end :nearest]})))
+                           (let [color (<sub [::subs/ann-color ann])]
+                             [re-com/p-span
+                              {:id    e-id
+                               :style (cond-> {:background-color color
+                                               :border  :solid
+                                               :border-color color
+                                               :cursor :pointer}
+                                        (coll? id)   (assoc :border-color :grey)
+                                        selected?    (assoc :border-color :black)
+                                        #_#_searched (assoc :color :red))}
+                              content])))
        :component-did-mount
        (fn [_]
          (let [e (.getElementById js/document e-id)]
-           (when (and (<sub [::subs/un-searched?]) searched)
-             (>evt [::events/done-searching])
-             (.scrollIntoView e {:behavior :smooth  #_ [:auto :smooth]
-                                 :block    :end     #_ [:start :center :end :nearest]
-                                 :inline   :nearest #_ [:start :center :end :nearest]}))))})))
+           e
+           #_(when (and (<sub [::subs/un-searched?]) searched)
+               (>evt [::events/done-searching])
+               (.scrollIntoView e {:behavior :smooth  #_ [:auto :smooth]
+                                   :block    :end     #_ [:start :center :end :nearest]
+                                   :inline   :nearest #_ [:start :center :end :nearest]}))))})))
 
 (defn editor-paragraph [paragraph]
   [re-com/p

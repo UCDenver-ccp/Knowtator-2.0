@@ -86,11 +86,14 @@
 (reg-event-db ::select-span
   (fn-traced [db [_ loc doc-id]]
     (let [{:keys [id ann]}  (->> db
+                              :text-annotation
+                              :spans
+                              (model/spans-containing-loc loc)
+                              (assoc-in db [:text-annotation :spans])
                               model/realize-spans
                               :text-annotation
                               :spans
                               (filter #(model/in-restriction? %  {:doc [doc-id]}))
-                              (model/spans-containing-loc loc)
                               first)
           {:keys [concept]} (->> db
                               :text-annotation
