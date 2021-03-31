@@ -61,7 +61,6 @@
 (defn editor
   [doc-id]
   [re-com/scroller
-   :height "300px"
    :child [:div.text-annotation-editor
            {:on-click #(let [selection (html/text-selection (.-target %) "text-annotation-editor")]
                          (>evt [::events/record-selection selection doc-id]))

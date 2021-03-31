@@ -118,6 +118,7 @@
 
 (defn doc-display []
   [re-com/v-box
+   :height "300px"
    :children [[tav/doc-header (<sub [::subs/selected-doc])]
               [re-com/h-split
                :src (at)
@@ -130,13 +131,16 @@
    :src (at)
    :children [[annotation-title]
               [undo-controls]
-              [tac/profile-controls]
-              [color-controls]
-              [tac/doc-controls]
-              [tac/ann-controls]
-              [tac/span-controls]
-              [search-controls]
-              [doc-display]]])
+              [re-com/h-box
+               :children [[tac/profile-controls]
+                          [tac/doc-controls]]]
+              [re-com/h-box
+               :children [[color-controls]
+                          [tac/ann-controls]]]
+              [doc-display]
+              [re-com/h-box
+               :children [[tac/span-controls]
+                          [search-controls]]]]])
 
 (defn filter-controls []
   (let [showing? (r/atom false)]
