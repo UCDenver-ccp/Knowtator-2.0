@@ -34,12 +34,11 @@
        :component-did-mount
        (fn [_]
          (let [e (.getElementById js/document e-id)]
-           e
-           #_(when (and (<sub [::subs/un-searched?]) searched)
-               (>evt [::events/done-searching])
-               (.scrollIntoView e {:behavior :smooth  #_ [:auto :smooth]
-                                   :block    :end     #_ [:start :center :end :nearest]
-                                   :inline   :nearest #_ [:start :center :end :nearest]}))))})))
+           (when (and (<sub [::subs/un-searched?]) #_searched)
+             (>evt [::events/done-searching])
+             (.scrollIntoView e {:behavior :smooth  #_ [:auto :smooth]
+                                 :block    :end     #_ [:start :center :end :nearest]
+                                 :inline   :nearest #_ [:start :center :end :nearest]}))))})))
 
 (defn editor-paragraph [paragraph]
   [re-com/p
@@ -77,13 +76,16 @@
 (defn annotation-info
   []
   [re-com/v-box
+   :width "50%"
    :children [[re-com/title
                :label "Annotation"
                :level :level3]
-              [dt/datatable ::annotation-id [::subs/selected-ann-info]
-               [{::dt/column-key   [:prop]
-                 ::dt/sorting      {::dt/enabled? true}
-                 ::dt/column-label "Property"}
-                {::dt/column-key   [:val]
-                 ::dt/column-label "Value"}]
-               {::dt/table-classes ["table" "ui" "celled"]}]]])
+              [re-com/scroller
+               :width "min-content"
+               :child [dt/datatable ::annotation-id [::subs/selected-ann-info]
+                       [{::dt/column-key   [:prop]
+                         ::dt/sorting      {::dt/enabled? true}
+                         ::dt/column-label "Property"}
+                        {::dt/column-key   [:val]
+                         ::dt/column-label "Value"}]
+                       {::dt/table-classes ["table" "ui" "celled"]}]]]])

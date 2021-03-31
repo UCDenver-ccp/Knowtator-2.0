@@ -117,13 +117,13 @@
                :label (<sub [::subs/search-matches])]]])
 
 (defn doc-display []
-  [:div
-   [tav/doc-header (<sub [::subs/selected-doc])]
-   [re-com/h-split
-    :src (at)
-    :width (str (- (<sub [::bp/screen-width]) 50) "px")
-    :panel-1[tav/editor (<sub [::subs/selected-doc])]
-    :panel-2 [tav/annotation-info]]])
+  [re-com/v-box
+   :children [[tav/doc-header (<sub [::subs/selected-doc])]
+              [re-com/h-split
+               :src (at)
+               :initial-split 85
+               :panel-1[tav/editor (<sub [::subs/selected-doc])]
+               :panel-2 [tav/annotation-info]]]])
 
 (defn annotation-panel []
   [re-com/v-box
