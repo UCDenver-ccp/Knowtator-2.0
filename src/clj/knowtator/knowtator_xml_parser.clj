@@ -319,8 +319,8 @@
 (defn parse-project [articles xml]
   (let [counter (atom 0)
         anns    (parse-annotations counter xml)]
-    {:anns     (map #(dissoc % :spans) anns)
-     :docs     (parse-documents counter articles xml)
-     :profiles (parse-profiles counter xml)
-     :spans    (parse-spans anns)
-     :graphs   (parse-graph-spaces counter xml)}))
+    {:anns     (mapv #(dissoc % :spans) anns)
+     :docs     (vec (parse-documents counter articles xml))
+     :profiles (vec (parse-profiles counter xml))
+     :spans    (vec (parse-spans anns))
+     :graphs   (vec (parse-graph-spaces counter xml))}))

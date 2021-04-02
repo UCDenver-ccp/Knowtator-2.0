@@ -38,14 +38,22 @@
                            :get        {:coercion   schema/coercion
                                         :parameters {:path {:file-name s/Str}}
                                         :handler    (fn [{{{:keys [file-name]} :path} :parameters}]
-                                                      (let [project-file (io/resource "concepts+assertions 3_2 copy/")
-                                                            project-xml  (kparser/read-project-xmls project-file)
-                                                            articles     (kparser/read-articles project-file)]
-                                                        {:status 200
-                                                         :body   (as-> (kparser/parse-project articles project-xml) project
-                                                                   (update project :docs (comp (partial take 1) (partial sort-by :id)))
-                                                                   (update project :anns (partial filter (comp (->> project :docs (map :id) set) :doc)))
-                                                                   (update project :spans (partial filter (comp (->> project :anns (map :id) set) :ann))))}))}}]
+                                                      (if (= file-name "test_project_using_uris")
+                                                        (let [project-file (io/resource file-name)
+                                                              project-xml  (kparser/read-project-xmls project-file)
+                                                              articles     (kparser/read-articles project-file)]
+                                                          {:status 200
+                                                           :body   (kparser/parse-project articles project-xml)})
+                                                        (let [project-file (io/resource "concepts+assertions 3_2 copy/")
+                                                              project-xml  (kparser/read-project-xmls project-file)
+                                                              articles     (kparser/read-articles project-file)]
+                                                          {:status 200
+                                                           :body   (as-> (kparser/parse-project articles project-xml) project
+                                                                     (update project :docs (comp vec (partial take 1) (partial sort-by :id)))
+                                                                     (update project :anns (comp vec #_(partial take 100) reverse (partial sort-by :id) (partial filter (comp (->> project :docs (map :id) set) :doc))))
+                                                                     (update project :graphs (comp vec (partial take 100) reverse (partial sort-by :id) (partial filter (comp (->> project :docs (map :id) set) :doc))))
+                                                                     (update project :spans (comp vec #_(partial take 100) reverse (partial sort-by (juxt :ann :start)) (partial filter (comp (->> project :anns (map :id) set) :ann))))
+                                                                     (update project :profiles vec))})))}}]
    ["/doc/:id" {:name ::single-doc
                 :get  {:coercion   schema/coercion
                        :parameters {:path {:id s/Int}}
