@@ -77,24 +77,35 @@
     :attrs   {:id (m/app (partial verify-id ~counter "profile-") ~profile)}
     :content [(concept-color ~args) ...]})
 
-
 (defsyntax annotation-node [{:keys [node node-ann counter]
                              :or   {node     '_
                                     node-ann '_
                                     counter  '(atom -1)}}]
   `{:tag   :vertex
     :attrs {:id         (m/app (partial verify-id ~counter "node-") ~node)
-            :annotation ~node-ann}})
+            :annotation (m/app keyword ~node-ann)}})
 
-(defsyntax relation-annotation [{:keys [edge from to counter]
-                                 :or   {edge    '_
-                                        from    '_
-                                        to      '_
-                                        counter '(atom -1)}}]
+(defsyntax relation-annotation [{:keys [edge from to property counter ra-motivation ra-annotator polarity quantifier quantifier-value]
+                                 :or   {edge             '_
+                                        from             '_
+                                        to               '_
+                                        ra-motivation    '_
+                                        ra-annotator     '_
+                                        property         '_
+                                        quantifier       '_
+                                        quantifier-value '_
+                                        counter          '(atom -1)
+                                        polarity         '_}}]
   `{:tag   :triple
-    :attrs {:id      (m/app (partial verify-id ~counter "edge-") ~edge)
-            :subject ~from
-            :object  ~to}})
+    :attrs {:id         (m/app (partial verify-id ~counter "edge-") ~edge)
+            :subject    ~from
+            :object     ~to
+            :property   ~property
+            :motivation ~ra-motivation
+            :annotator  ~ra-annotator
+            :polarity   (m/app keyword ~polarity)
+            :quantifier (m/app #(if (empty? %) :some (keyword %)) ~quantifier)
+            :value      (m/app #(when ((complement empty?) %) (Integer/parseInt %)) ~quantifier-value)}})
 
 (defsyntax graph-space [{:keys [graph counter] :as args
                          :or   {graph   '_
@@ -105,13 +116,18 @@
                 (annotation-node ~args)
                 (relation-annotation ~args))
               ...]})
-(defsyntax annotation [{:keys [ann counter profile] :as args
-                        :or   {ann     '_
-                               profile '_
-                               counter '(atom -1)}}]
+
+(defsyntax annotation [{:keys [ann counter profile ca-motivation ann-type] :as args
+                        :or   {ann           '_
+                               profile       '_
+                               ann-type      '_
+                               ca-motivation '_
+                               counter       '(atom -1)}}]
   `{:tag     :annotation
-    :attrs   {:id        (m/app (partial verify-id ~counter "annotation-") ~ann)
-              :annotator ~profile}
+    :attrs   {:id         (m/app (partial verify-id ~counter "annotation-") ~ann)
+              :motivation ~ca-motivation
+              :type       ~ann-type
+              :annotator  ~profile}
     :content [(m/or
                 (span ~args)
                 (concept ~args))
@@ -134,10 +150,11 @@
             :start (m/app #(Integer/parseInt %) ~start)
             :end   (m/app #(Integer/parseInt %) ~end)}})
 
-(defsyntax document [{:keys [doc file-name counter file-name-id] :as args
+(defsyntax document [{:keys [doc file-name counter file-name-id graph] :as args
                       :or   {doc          '_
                              file-name    '_
                              file-name-id '_
+                             graph        '_
                              counter      '(atom -1)}}]
   `{:tag     :document
     :attrs   {:id        (m/app (partial verify-id ~counter "document-") (m/and ~doc ~file-name-id))
@@ -145,7 +162,7 @@
     :content (m/or (m/pred empty?)
                (m/scan (m/or
                          (annotation ~args)
-                         (graph-space ~args))))})
+                         {:tag :graph-space :as ~graph})))})
 
 (defsyntax knowtator-project [args]
   `{:tag     :knowtator-project
@@ -165,34 +182,85 @@
        ...])
     (->> (apply concat))))
 
+
+
+
 (defn parse-graph-spaces [counter xml]
   (-> xml
     (m/rewrites
       (knowtator-project {:doc      !doc
-                          :graph    !id
+                          :graph    !graph
                           :node     !vs
                           :node-ann !as
-                          :edge     !es
-                          :from     !fs
-                          :to       !ts
                           :counter  counter})
-      [{:id    !id
-        :doc   (m/app keyword !doc)
+      [{:doc   !doc
+        :graph !graph}
+       ...])
+    (->> (apply concat))
+    (m/rewrites
+      (m/scan {:doc   !doc
+               :graph (graph-space {:graph            !ids
+                                    :node             !vs
+                                    :node-ann         !as
+                                    :edge             !es
+                                    :from             !fs
+                                    :to               !ts
+                                    :property         !ps
+                                    :quantifier       !qs
+                                    :quantifier-value !qvs
+                                    :polarity         !pols
+                                    :counter          counter})})
+      [{:id    !ids
+        :doc   !doc
         :nodes [{:id  !vs
-                 :ann (m/app keyword !as)}
+                 :ann !as}
                 ...]
         :edges [(m/app (fn [{:keys [from to] :as e}]
                          (let [vs (set (map keyword !vs))]
                            (when (and (vs from) (vs to))
                              e)))
-                  {:id   !es
-                   :from (m/app keyword !fs)
-                   :to   (m/app keyword !ts)})
+                  {:id    !es
+                   :from  (m/app keyword !fs)
+                   :to    (m/app keyword !ts)
+                   :value {:property   !ps
+                           :polarity   !pols
+                           :quantifier {:type  !qs
+                                        :value !qvs}}})
                 ...]}
        ...])
     (->>
       (apply concat)
       (map #(update % :edges (partial remove nil?))))))
+
+(defn parse-relation-annotations [counter xml]
+  (-> xml
+    #_(m/rewrites
+        (knowtator-project {:from             !fs
+                            :to               !ts
+                            :node             !vs
+                            :graph            !graphs
+                            :property         !ps
+                            :edge             !ids
+                            :quantifier       !qs
+                            :quantifier-value !qvs
+                            :polarity         !pols
+                            :counter          counter})
+        [(m/app (fn [{:keys [from to] :as e}]
+                  (let [vs (set (map keyword !vs))]
+                    (when (and (vs from) (vs to))
+                      e)))
+           {:id    !ids
+            :graph !graphs
+            :from  (m/app keyword !fs)
+            :to    (m/app keyword !ts)
+            :value {:property   !ps
+                    :polarity   !pols
+                    :quantifier {:type  !qs
+                                 :value !qvs}}})
+         ...])
+    (->>
+      (apply concat)
+      #_(remove nil?))))
 
 (defn parse-annotations [counter xml]
   (-> xml

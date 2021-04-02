@@ -329,9 +329,13 @@
                       :ann :a1}
                      {:id  :n2
                       :ann :a2}]
-             :edges [{:id   :e1
-                      :from :n1
-                      :to   :n2}]}]
+             :edges [{:id    :e1
+                      :from  :n1
+                      :to    :n2
+                      :value {:polarity   :pol1
+                              :property   "p1"
+                              :quantifier {:type  :q1
+                                           :value 1}}}]}]
           (sut/parse-graph-spaces (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
@@ -345,9 +349,13 @@
                                               :attrs {:annotation "a2"
                                                       :id         "n2"}}
                                              {:tag   :triple
-                                              :attrs {:subject "n1"
-                                                      :object  "n2"
-                                                      :id      "e1"}}]}]}]}))))
+                                              :attrs {:subject    "n1"
+                                                      :object     "n2"
+                                                      :id         "e1"
+                                                      :value      "1"
+                                                      :quantifier "q1"
+                                                      :property   "p1"
+                                                      :polarity   "pol1"}}]}]}]}))))
   (testing "Multiple graph spaces"
     (is (= [{:id    :g1
              :doc   :d1
@@ -355,18 +363,26 @@
                       :ann :a1}
                      {:id  :n2
                       :ann :a2}]
-             :edges [{:id   :e1
-                      :to   :n2
-                      :from :n1}]}
+             :edges [{:id    :e1
+                      :from  :n1
+                      :to    :n2
+                      :value {:polarity   :pol1
+                              :property   "p1"
+                              :quantifier {:type  :q1
+                                           :value 1}}}]}
             {:id    :g2
              :doc   :d1
              :nodes [{:id  :n1
                       :ann :a1}
                      {:id  :n2
                       :ann :a2}]
-             :edges [{:id   :e1
-                      :from :n1
-                      :to   :n2}]}]
+             :edges [{:id    :e1
+                      :from  :n1
+                      :to    :n2
+                      :value {:polarity   :pol1
+                              :property   "p1"
+                              :quantifier {:type  :q1
+                                           :value 1}}}]}]
           (sut/parse-graph-spaces (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
@@ -380,9 +396,13 @@
                                               :attrs {:annotation "a2"
                                                       :id         "n2"}}
                                              {:tag   :triple
-                                              :attrs {:subject "n1"
-                                                      :object  "n2"
-                                                      :id      "e1"}}]}
+                                              :attrs {:subject    "n1"
+                                                      :object     "n2"
+                                                      :id         "e1"
+                                                      :value      "1"
+                                                      :quantifier "q1"
+                                                      :property   "p1"
+                                                      :polarity   "pol1"}}]}
                                   {:tag     :graph-space
                                    :attrs   {:id "g2"}
                                    :content [{:tag   :vertex
@@ -392,9 +412,13 @@
                                               :attrs {:annotation "a2"
                                                       :id         "n2"}}
                                              {:tag   :triple
-                                              :attrs {:subject "n1"
-                                                      :object  "n2"
-                                                      :id      "e1"}}]}]}]}))))
+                                              :attrs {:subject    "n1"
+                                                      :object     "n2"
+                                                      :id         "e1"
+                                                      :value      "1"
+                                                      :quantifier "q1"
+                                                      :property   "p1"
+                                                      :polarity   "pol1"}}]}]}]}))))
 
   (testing "Missing ID"
     (is (= [{:id    :graph-space-1
@@ -403,9 +427,13 @@
                       :ann :a1}
                      {:id  :n2
                       :ann :a2}]
-             :edges [{:id   :e1
-                      :from :n1
-                      :to   :n2}]}]
+             :edges [{:id    :e1
+                      :from  :n1
+                      :to    :n2
+                      :value {:polarity   :pol1
+                              :property   "p1"
+                              :quantifier {:type  :q1
+                                           :value 1}}}]}]
           (sut/parse-graph-spaces (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
@@ -419,9 +447,13 @@
                                               :attrs {:annotation "a2"
                                                       :id         "n2"}}
                                              {:tag   :triple
-                                              :attrs {:subject "n1"
-                                                      :object  "n2"
-                                                      :id      "e1"}}]}]}]}))))
+                                              :attrs {:subject    "n1"
+                                                      :object     "n2"
+                                                      :id         "e1"
+                                                      :value      "1"
+                                                      :quantifier "q1"
+                                                      :property   "p1"
+                                                      :polarity   "pol1"}}]}]}]}))))
 
   (testing "Missing nodes from edges"
     (is (= [{:id    :g1
@@ -439,9 +471,13 @@
                                               :attrs {:annotation "a1"
                                                       :id         "n1"}}
                                              {:tag   :triple
-                                              :attrs {:subject "n1"
-                                                      :object  "n2"
-                                                      :id      "e1"}}]}]}]}))))
+                                              :attrs {:subject    "n1"
+                                                      :object     "n2"
+                                                      :id         "e1"
+                                                      :value      "1"
+                                                      :quantifier "q1"
+                                                      :property   "p1"
+                                                      :polarity   "pol1"}}]}]}]}))))
   #_(testing "Disconnected nodes"
       (is (= [{:id    :g1
                :doc   :d1
@@ -478,9 +514,13 @@
                       :ann :a1}
                      {:id  :n2
                       :ann :a1}]
-             :edges [{:id   :e1
-                      :from :n1
-                      :to   :n2}]}]
+             :edges [{:id    :e1
+                      :from  :n1
+                      :to    :n2
+                      :value {:polarity   :pol1
+                              :property   "p1"
+                              :quantifier {:type  :q1
+                                           :value 1}}}]}]
           (sut/parse-graph-spaces (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
@@ -491,9 +531,13 @@
                                               :attrs {:annotation "a1"
                                                       :id         "n1"}}
                                              {:tag   :triple
-                                              :attrs {:subject "n1"
-                                                      :object  "n2"
-                                                      :id      "e1"}}
+                                              :attrs {:subject    "n1"
+                                                      :object     "n2"
+                                                      :id         "e1"
+                                                      :value      "1"
+                                                      :quantifier "q1"
+                                                      :property   "p1"
+                                                      :polarity   "pol1"}}
                                              {:tag   :vertex
                                               :attrs {:annotation "a1"
                                                       :id         "n2"}}]}]}]})))
@@ -503,9 +547,13 @@
                       :ann :a1}
                      {:id  :n2
                       :ann :a1}]
-             :edges [{:id   :e1
-                      :from :n1
-                      :to   :n2}]}]
+             :edges [{:id    :e1
+                      :from  :n1
+                      :to    :n2
+                      :value {:polarity   :pol1
+                              :property   "p1"
+                              :quantifier {:type  :q1
+                                           :value 1}}}]}]
           (sut/parse-graph-spaces (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
@@ -513,9 +561,13 @@
                         :content [{:tag     :graph-space
                                    :attrs   {:id "g1"}
                                    :content [{:tag   :triple
-                                              :attrs {:subject "n1"
-                                                      :object  "n2"
-                                                      :id      "e1"}}
+                                              :attrs {:subject    "n1"
+                                                      :object     "n2"
+                                                      :id         "e1"
+                                                      :value      "1"
+                                                      :quantifier "q1"
+                                                      :property   "p1"
+                                                      :polarity   "pol1"}}
                                              {:tag   :vertex
                                               :attrs {:annotation "a1"
                                                       :id         "n1"}}
@@ -528,12 +580,20 @@
                       :ann :a1}
                      {:id  :n2
                       :ann :a1}]
-             :edges [{:id   :e1
-                      :from :n1
-                      :to   :n2}
-                     {:id   :e2
-                      :from :n1
-                      :to   :n2}]}]
+             :edges [{:id    :e1
+                      :from  :n1
+                      :to    :n2
+                      :value {:polarity   :pol1
+                              :property   "p1"
+                              :quantifier {:type  :q1
+                                           :value 1}}}
+                     {:id    :e2
+                      :from  :n1
+                      :to    :n2
+                      :value {:polarity   :pol1
+                              :property   "p1"
+                              :quantifier {:type  :q1
+                                           :value 1}}}]}]
           (sut/parse-graph-spaces (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
@@ -541,13 +601,21 @@
                         :content [{:tag     :graph-space
                                    :attrs   {:id "g1"}
                                    :content [{:tag   :triple
-                                              :attrs {:subject "n1"
-                                                      :object  "n2"
-                                                      :id      "e1"}}
+                                              :attrs {:subject    "n1"
+                                                      :object     "n2"
+                                                      :id         "e1"
+                                                      :value      "1"
+                                                      :quantifier "q1"
+                                                      :property   "p1"
+                                                      :polarity   "pol1"}}
                                              {:tag   :triple
-                                              :attrs {:subject "n1"
-                                                      :object  "n2"
-                                                      :id      "e2"}}
+                                              :attrs {:subject    "n1"
+                                                      :object     "n2"
+                                                      :id         "e2"
+                                                      :value      "1"
+                                                      :quantifier "q1"
+                                                      :property   "p1"
+                                                      :polarity   "pol1"}}
                                              {:tag   :vertex
                                               :attrs {:annotation "a1"
                                                       :id         "n1"}}
@@ -560,12 +628,20 @@
                       :ann :a1}
                      {:id  :n2
                       :ann :a1}]
-             :edges [{:id   :e1
-                      :from :n1
-                      :to   :n2}
-                     {:id   :e2
-                      :from :n1
-                      :to   :n2}]}]
+             :edges [{:id    :e1
+                      :from  :n1
+                      :to    :n2
+                      :value {:polarity   :pol1
+                              :property   "p1"
+                              :quantifier {:type  :q1
+                                           :value 1}}}
+                     {:id    :e2
+                      :from  :n1
+                      :to    :n2
+                      :value {:polarity   :pol1
+                              :property   "p1"
+                              :quantifier {:type  :q1
+                                           :value 1}}}]}]
           (sut/parse-graph-spaces (atom 0)
             {:tag     :knowtator-project
              :content [{:tag     :document
@@ -573,9 +649,13 @@
                         :content [{:tag     :graph-space
                                    :attrs   {:id "g1"}
                                    :content [{:tag   :triple
-                                              :attrs {:subject "n1"
-                                                      :object  "n2"
-                                                      :id      "e1"}}
+                                              :attrs {:subject    "n1"
+                                                      :object     "n2"
+                                                      :id         "e1"
+                                                      :value      "1"
+                                                      :quantifier "q1"
+                                                      :property   "p1"
+                                                      :polarity   "pol1"}}
                                              {:tag   :vertex
                                               :attrs {:annotation "a1"
                                                       :id         "n1"}}
@@ -583,9 +663,13 @@
                                               :attrs {:annotation "a1"
                                                       :id         "n2"}}
                                              {:tag   :triple
-                                              :attrs {:subject "n1"
-                                                      :object  "n2"
-                                                      :id      "e2"}}]}]}]}))))
+                                              :attrs {:subject    "n1"
+                                                      :object     "n2"
+                                                      :id         "e2"
+                                                      :value      "1"
+                                                      :quantifier "q1"
+                                                      :property   "p1"
+                                                      :polarity   "pol1"}}]}]}]}))))
 
   (testing "Simple project"
     (is (= [{:id    :graph_0
@@ -594,19 +678,26 @@
                       :ann :mention_0}
                      {:id  :node_1
                       :ann :mention_1}]
-             :edges [{:id :edge_0
-
-                      :from :node_0
-                      :to   :node_1}]}
+             :edges [{:id    :edge_0
+                      :from  :node_0
+                      :to    :node_1
+                      :value {:polarity   :positive
+                              :property   "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasBase"
+                              :quantifier {:type  :some
+                                           :value nil}}}]}
             {:id    :graph_2
              :doc   :document2
              :nodes [{:id  :node_0
                       :ann :mention_3}
                      {:id  :node_1
                       :ann :mention_3}]
-             :edges [{:id   :edge_0
-                      :to   :node_1
-                      :from :node_0}]}
+             :edges [{:id    :edge_0
+                      :to    :node_1
+                      :from  :node_0
+                      :value {:polarity   nil
+                              :property   "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasBase"
+                              :quantifier {:type  :some
+                                           :value nil}}}]}
             {:id    (keyword "Old Knowtator Relations")
              :doc   :document3
              :nodes [{:id  :document3-19
@@ -615,12 +706,20 @@
                       :ann :mention_1}
                      {:id  :document3-22
                       :ann :mention_2}]
-             :edges [{:id   :document3-21
-                      :to   :document3-20
-                      :from :document3-19}
-                     {:id   :document3-23
-                      :from :document3-19
-                      :to   :document3-22}]}]
+             :edges [{:id    :document3-21
+                      :to    :document3-20
+                      :from  :document3-19
+                      :value {:polarity   :positive
+                              :property   "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasIngredient"
+                              :quantifier {:type  :some
+                                           :value nil}}}
+                     {:id    :document3-23
+                      :from  :document3-19
+                      :to    :document3-22
+                      :value {:polarity   :positive
+                              :property   "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasIngredient"
+                              :quantifier {:type  :some
+                                           :value nil}}}]}]
           (sut/parse-graph-spaces (atom 0) project-xml)))))
 
 (deftest parse-span-test
@@ -843,12 +942,15 @@
                         :doc   :d1
                         :nodes [{:id  :n1
                                  :ann :a1}
-                                {:id  :node-8
+                                {:id  :node-5
                                  :ann :a2}]
                         :edges [{:id        :e1
                                  :from      :n1
-                                 :to        :node-8
-                                 #_#_:label :ep1}]}]}
+                                 :to        :node-5
+                                 :value {:polarity :positive
+                                         :property "p1"
+                                         :quantifier {:value 1
+                                                      :type :some}}}]}]}
           (sut/parse-project [{:id      :d1
                                :content "Hi"}]
             {:tag     :knowtator-project
@@ -909,12 +1011,12 @@
                                               :attrs {:annotator  "Default"
                                                       :id         "e1"
                                                       :motivation ""
-                                                      :object     "node-8"
+                                                      :object     "node-5"
                                                       :polarity   "positive"
-                                                      :property   "ep1"
+                                                      :property   "p1"
                                                       :quantifier "some"
                                                       :subject    "n1"
-                                                      :value      ""}}]}]}]}))))
+                                                      :value      "1"}}]}]}]}))))
 
   (testing "Simple project"
     (is (= {:anns   [#_6 9 [{:id      :mention_0,
@@ -978,38 +1080,53 @@
                              {:id :span-2, :start 28, :end 36, :ann :annotation-7}
                              {:id :span-3, :start 28, :end 36, :ann :annotation-8}]]
             :graphs [3 [{:id    :graph_0
-                         :doc   :document1
-                         :nodes [{:id  :node_0
-                                  :ann :mention_0}
-                                 {:id  :node_1
-                                  :ann :mention_1}]
-                         :edges [{:id :edge_0
-
-                                  :from :node_0
-                                  :to   :node_1}]}
-                        {:id    :graph_2
-                         :doc   :document2
-                         :nodes [{:id  :node_0
-                                  :ann :mention_3}
-                                 {:id  :node_1
-                                  :ann :mention_3}]
-                         :edges [{:id   :edge_0
-                                  :to   :node_1
-                                  :from :node_0}]}
-                        {:id    (keyword "Old Knowtator Relations")
-                         :doc   :document3
-                         :nodes [{:id  :document3-19
-                                  :ann :mention_0}
-                                 {:id  :document3-20
-                                  :ann :mention_1}
-                                 {:id  :document3-22
-                                  :ann :mention_2}]
-                         :edges [{:id   :document3-21
-                                  :to   :document3-20
-                                  :from :document3-19}
-                                 {:id   :document3-23
-                                  :from :document3-19
-                                  :to   :document3-22}]}]]
+             :doc   :document1
+             :nodes [{:id  :node_0
+                      :ann :mention_0}
+                     {:id  :node_1
+                      :ann :mention_1}]
+             :edges [{:id    :edge_0
+                      :from  :node_0
+                      :to    :node_1
+                      :value {:polarity   :positive
+                              :property   "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasBase"
+                              :quantifier {:type  :some
+                                           :value nil}}}]}
+            {:id    :graph_2
+             :doc   :document2
+             :nodes [{:id  :node_0
+                      :ann :mention_3}
+                     {:id  :node_1
+                      :ann :mention_3}]
+             :edges [{:id    :edge_0
+                      :to    :node_1
+                      :from  :node_0
+                      :value {:polarity   nil
+                              :property   "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasBase"
+                              :quantifier {:type  :some
+                                           :value nil}}}]}
+            {:id    (keyword "Old Knowtator Relations")
+             :doc   :document3
+             :nodes [{:id  :document3-19
+                      :ann :mention_0}
+                     {:id  :document3-20
+                      :ann :mention_1}
+                     {:id  :document3-22
+                      :ann :mention_2}]
+             :edges [{:id    :document3-21
+                      :to    :document3-20
+                      :from  :document3-19
+                      :value {:polarity   :positive
+                              :property   "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasIngredient"
+                              :quantifier {:type  :some
+                                           :value nil}}}
+                     {:id    :document3-23
+                      :from  :document3-19
+                      :to    :document3-22
+                      :value {:polarity   :positive
+                              :property   "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasIngredient"
+                              :quantifier {:type  :some
+                                           :value nil}}}]}]]
             :profiles [2 [{:id :Default
                            :colors
                            {"http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza" "#ff0000"}}
@@ -1035,16 +1152,7 @@
       (is (= {:anns 5263, :profiles 1, :spans 5319, :graphs 497}
             (-> (sut/parse-project articles project-xml)
               (dissoc :docs)
-              (->> (util/map-vals count)))))
-      (is (= {:anns 5264, :profiles 1, :spans 5320, :graphs 497}
-            (->> {:text-annotation (sut/parse-project articles project-xml)}
-              model/realize-spans
-              :text-annotation
-              :spans
-              (take 1)
-              #_(filter #(model/in-restriction? % {:filter-type   :doc
-                                                   :filter-values #{:15876356}}))
-              #_(->> (util/map-vals count))))))))
+              (->> (util/map-vals count))))))))
 
 ;; public static final ProjectCounts defaultCounts = new ProjectCounts(5 6 7 3 2 3 7 4 0);
 ;; defaultExpectedStructureAnnotations = 0;
