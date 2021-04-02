@@ -7,27 +7,31 @@
             [meander.epsilon :as m :refer [defsyntax]]))
 
 (declare
-  !id
+  !quants
+  !quant-vals
+  !properties
+  !polarities
+  !ids
+  !graphs
   !concepts
-  !concept
+  !concepts
   !colors
-  !vs
-  !es
-  !ns
-  !ts
-  !fs
-  !as
-  !ann
-  !span
-  ?ann !spans
-  !doc
-  !file-name
-  !file-name-id
-  !profile
-  !start
-  !end
-  !content
-  !concept-label)
+  !concept-ann-nodes
+  !assertion-anns
+  !tos
+  !froms
+  !node-concept-anns
+  !concept-anns
+  !spans
+  ?concept-ann
+  !docs
+  !file-names
+  !file-name-ids
+  !profiles
+  !starts
+  !ends
+  !contents
+  !concept-labels)
 
 (defn verify-id [counter prefix id]
   (if (keyword? id)
@@ -173,11 +177,11 @@
 (defn parse-profiles [counter xml]
   (-> xml
     (m/rewrites
-      (knowtator-project {:profile  !id
+      (knowtator-project {:profile  !ids
                           :concepts !concepts
                           :colors   !colors
                           :counter  counter})
-      [{:id     !id
+      [{:id     !ids
         :colors (m/map-of !concepts !colors)}
        ...])
     (->> (apply concat))))
@@ -188,98 +192,68 @@
 (defn parse-graph-spaces [counter xml]
   (-> xml
     (m/rewrites
-      (knowtator-project {:doc      !doc
-                          :graph    !graph
-                          :node     !vs
-                          :node-ann !as
+      (knowtator-project {:doc      !docs
+                          :graph    !graphs
+                          :node     !concept-ann-nodes
+                          :node-ann !node-concept-anns
                           :counter  counter})
-      [{:doc   !doc
-        :graph !graph}
+      [{:doc   !docs
+        :graph !graphs}
        ...])
     (->> (apply concat))
     (m/rewrites
-      (m/scan {:doc   !doc
+      (m/scan {:doc   !docs
                :graph (graph-space {:graph            !ids
-                                    :node             !vs
-                                    :node-ann         !as
-                                    :edge             !es
-                                    :from             !fs
-                                    :to               !ts
-                                    :property         !ps
-                                    :quantifier       !qs
-                                    :quantifier-value !qvs
-                                    :polarity         !pols
+                                    :node             !concept-ann-nodes
+                                    :node-ann         !node-concept-anns
+                                    :edge             !assertion-anns
+                                    :from             !froms
+                                    :to               !tos
+                                    :property         !properties
+                                    :quantifier       !quants
+                                    :quantifier-value !quant-vals
+                                    :polarity         !polarities
                                     :counter          counter})})
       [{:id    !ids
-        :doc   !doc
-        :nodes [{:id  !vs
-                 :ann !as}
+        :doc   !docs
+        :nodes [{:id  !concept-ann-nodes
+                 :ann !node-concept-anns}
                 ...]
         :edges [(m/app (fn [{:keys [from to] :as e}]
-                         (let [vs (set (map keyword !vs))]
+                         (let [vs (set (map keyword !concept-ann-nodes))]
                            (when (and (vs from) (vs to))
                              e)))
-                  {:id    !es
-                   :from  (m/app keyword !fs)
-                   :to    (m/app keyword !ts)
-                   :value {:property   !ps
-                           :polarity   !pols
-                           :quantifier {:type  !qs
-                                        :value !qvs}}})
+                  {:id    !assertion-anns
+                   :from  (m/app keyword !froms)
+                   :to    (m/app keyword !tos)
+                   :value {:property   !properties
+                           :polarity   !polarities
+                           :quantifier {:type  !quants
+                                        :value !quant-vals}}})
                 ...]}
        ...])
     (->>
       (apply concat)
       (map #(update % :edges (partial remove nil?))))))
 
-(defn parse-relation-annotations [counter xml]
-  (-> xml
-    #_(m/rewrites
-        (knowtator-project {:from             !fs
-                            :to               !ts
-                            :node             !vs
-                            :graph            !graphs
-                            :property         !ps
-                            :edge             !ids
-                            :quantifier       !qs
-                            :quantifier-value !qvs
-                            :polarity         !pols
-                            :counter          counter})
-        [(m/app (fn [{:keys [from to] :as e}]
-                  (let [vs (set (map keyword !vs))]
-                    (when (and (vs from) (vs to))
-                      e)))
-           {:id    !ids
-            :graph !graphs
-            :from  (m/app keyword !fs)
-            :to    (m/app keyword !ts)
-            :value {:property   !ps
-                    :polarity   !pols
-                    :quantifier {:type  !qs
-                                 :value !qvs}}})
-         ...])
-    (->>
-      (apply concat)
-      #_(remove nil?))))
-
 (defn parse-annotations [counter xml]
   (-> xml
     (m/rewrites
-      (knowtator-project {:doc     !doc
-                          :profile !profile
-                          :ann     !id
-                          :span    !span
-                          :start   !start
-                          :end     !end
-                          :concept !concept
+      (knowtator-project {:doc     !docs
+                          :profile !profiles
+                          :ann     !ids
+                          :span    !spans
+                          :start   !starts
+                          :end     !ends
+                          :concept !concepts
                           :counter counter})
-      [{:id      !id
-        :profile (m/app #(or (keyword %) :Default) !profile)
-        :doc     (m/app keyword !doc)
-        :concept !concept
-        :spans   [{:id    !span
-                   :start !start
-                   :end   !end}
+      [{:id      !ids
+        :profile (m/app #(or (keyword %) :Default) !profiles)
+        :doc     (m/app keyword !docs)
+        :concept !concepts
+        :spans   [{:id    !spans
+                   :start !starts
+                   :end   !ends}
                   ...]}
        ...])
     (->>
@@ -314,14 +288,14 @@
   (let [articles (util/map-with-key :id articles)]
     (-> xml
       (m/rewrites
-        (knowtator-project {:doc          !id
-                            :file-name    !file-name
-                            :file-name-id !file-name-id
+        (knowtator-project {:doc          !ids
+                            :file-name    !file-names
+                            :file-name-id !file-name-ids
                             :counter      counter})
-        [{:id        !id
+        [{:id        !ids
           :file-name (m/app (fn [[id file-name]]
                               (or file-name (str (str (name id)) ".txt")))
-                       [!file-name-id !file-name])}
+                       [!file-name-ids !file-names])}
          ...])
       (->> (apply concat)
         (util/map-with-key :id)
