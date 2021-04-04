@@ -24,3 +24,8 @@
      1. In terminal =clj -M:cljs-dev:shadow-cljs server=
      2. In Emacs =sesman-start= =cider-connect-cljs knowtator:localhost:8777=
      3. Open browser to localhost:3000
+
+** How it works
+
+*** Selection
+    Text selection is handled using [[https://github.com/timdown/rangy/wiki/Text-Range-Module][rangy-textrange]]. This allows us to record selection events in the text annotation area which are converted into annotation selections.
