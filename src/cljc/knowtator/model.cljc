@@ -1,10 +1,10 @@
 (ns knowtator.model
-  (:require [clojure.spec.alpha :as s]
+  (:require [clojure.set :as set]
+            [clojure.spec.alpha :as s]
             [clojure.spec.gen.alpha :as gen]
             [clojure.string :as str]
             [knowtator.specs :as specs]
-            [knowtator.util :as util]
-            [clojure.set :as set]))
+            [knowtator.util :as util]))
 
 (defn ann-color
   [{:keys [profile concept]} profiles]
@@ -363,5 +363,24 @@
     (assoc node :label (:content node))))
 
 (defn realize-ann-nodes
-  [db profile-map doc-map ann-map graph]
+  [graph db profile-map doc-map ann-map]
   (update graph :nodes (partial map (partial realize-ann-node db profile-map doc-map ann-map))))
+
+(defn realize-relation-ann
+  [{{:keys                [property polarity]
+     {:keys [type value]} :quantifier} :predicate
+    :as                                relation-ann}]
+  (-> relation-ann
+    (assoc :label (->> (or
+                         [type property]
+                         [value type property])
+                    (interpose " ")
+                    (apply str)))
+    (assoc :color (case polarity
+                    :positive :black
+                    :negative :red
+                    :yellow))))
+
+(defn realize-relation-anns
+  [graph]
+  (update graph :edges (partial map realize-relation-ann)))

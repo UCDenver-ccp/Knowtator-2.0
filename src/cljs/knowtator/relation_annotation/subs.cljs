@@ -32,7 +32,9 @@
   :<- [::subs/ann-map]
   (fn [[graph db profile-map doc-map ann-map] _]
     (when graph
-      (model/realize-ann-nodes db profile-map doc-map ann-map graph))))
+      (-> graph
+        (model/realize-ann-nodes db profile-map doc-map ann-map)
+        model/realize-relation-anns))))
 
 (reg-sub ::graph-physics
   :<- [::selected-graph-space]

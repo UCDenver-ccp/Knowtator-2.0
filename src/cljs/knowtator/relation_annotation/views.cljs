@@ -38,7 +38,8 @@
                                            (println node-data)
                                            (>evt [::evts/add-node (<sub [::subs/selected-graph-space-id]) node-data]))
                             :add-edge    (fn [edge-data]
-                                           (println edge-data))
+                                           (println edge-data)
+                                           (>evt [::evts/add-edge (<sub [::subs/selected-graph-space-id]) edge-data]))
                             :edit-node   (fn [node-data]
                                            (println node-data))
                             :edit-edge   (fn [edge-data]

@@ -3,21 +3,22 @@
             [day8.re-frame.tracing :refer-macros [fn-traced]]
             [re-frame.core :refer [reg-event-db]]))
 
-(defn verify-id [db]
+(defn verify-id [db k prefix]
   (->> db
     :text-annotation
     :graphs
-    (map (comp count :nodes))
+    (map (comp count k))
     (reduce +)
     inc
-    (str "n")
+    (str prefix)
     keyword))
 
 (reg-event-db ::add-node
   (fn-traced [db [_ graph-id node]]
     (when-let [ann-id (get-in db [:selection :anns])]
       (let [new-node (merge node
-                       {:id      (verify-id db)
+                       {:id      (verify-id db :nodes "n")
+                        :label "test"
                         :physics false
                         :ann     ann-id})]
         (println graph-id node new-node)
@@ -27,6 +28,17 @@
               (->> (util/map-with-key :id))
               (update-in [graph-id :nodes] conj new-node)
               vals)))))))
+
+(reg-event-db ::add-edge
+  (fn-traced [db [_ graph-id edge]]
+    (let [new-edge (merge edge
+                     {:id (verify-id db :edges "e")})]
+      (update-in db [:text-annotation :graphs]
+        (fn [graphs]
+          (-> graphs
+            (->> (util/map-with-key :id))
+            (update-in [graph-id :edges] conj new-edge)
+            vals))))))
 
 (reg-event-db ::select-ann-node
   (fn-traced [db [_ graph-id node-id]]
