@@ -223,13 +223,13 @@
                          (let [vs (set (map keyword !concept-ann-nodes))]
                            (when (and (vs from) (vs to))
                              e)))
-                  {:id    !assertion-anns
-                   :from  (m/app keyword !froms)
-                   :to    (m/app keyword !tos)
-                   :value {:property   !properties
-                           :polarity   !polarities
-                           :quantifier {:type  !quants
-                                        :value !quant-vals}}})
+                  {:id        !assertion-anns
+                   :from      (m/app keyword !froms)
+                   :to        (m/app keyword !tos)
+                   :predicate {:property   !properties
+                               :polarity   !polarities
+                               :quantifier {:type  !quants
+                                            :value !quant-vals}}})
                 ...]}
        ...])
     (->>
