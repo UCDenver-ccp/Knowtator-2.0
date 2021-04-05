@@ -30,6 +30,10 @@
                            :model (<sub [::subs/selected-graph-space-id])
                            :on-change #(>evt [::evts/select-graph-space %])]]]
               [re-com/checkbox
+               :model (<sub [::subs/display-ann-node-owl-class?])
+               :label "Display OWL class"
+               :on-change #(>evt [::evts/toggle-display-ann-node-owl-class])]
+              [re-com/checkbox
                :model (<sub [::subs/graph-physics])
                :label "Physics"
                :on-change #(>evt [::evts/toggle-physics])]]])

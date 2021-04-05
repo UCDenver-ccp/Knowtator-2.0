@@ -84,6 +84,16 @@
             (update-in [graph-id :physics] not)
             vals))))))
 
+(reg-event-db ::toggle-display-ann-node-owl-class
+  (fn [db _]
+    (let [graph-id (get-in db [:selection :graphs])]
+      (update-in db [:text-annotation :graphs]
+        (fn [graphs]
+          (-> graphs
+            (->> (util/map-with-key :id))
+            (update-in [graph-id :display-owl-class?] not)
+            vals))))))
+
 (reg-event-db ::select-graph-space
   (fn [db [_ id]]
     (assoc-in db [:selection :graphs] id)))
