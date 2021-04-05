@@ -43,14 +43,15 @@
     ^{:key (str (random-uuid))} [zipper-hierarchy (assoc args :node root)]]))
 
 (defn owl-hierarchy []
-  (re-com/v-box
-    :children [(let [hs (<sub [::subs/class-hierarchy-zippers])]
-                 (for [h hs]
-                   ^{:key (str (random-uuid))}
-                   [zipper-hierarchy h {:model          [::subs/selected-concept]
-                                        :collapse-model [::subs/collapsed?]
-                                        :collapse-fn    #(>evt [::evts/toggle-collapse-owl-class %])
-                                        :select-node-fn #(>evt [::evts/select-owl-class %])}]))]))
+  [re-com/scroller
+   :child [re-com/v-box
+           :children [(let [hs (<sub [::subs/class-hierarchy-zippers])]
+                        (for [h hs]
+                          ^{:key (str (random-uuid))}
+                          [zipper-hierarchy h {:model          [::subs/selected-concept]
+                                               :collapse-model [::subs/collapsed?]
+                                               :collapse-fn    #(>evt [::evts/toggle-collapse-owl-class %])
+                                               :select-node-fn #(>evt [::evts/select-owl-class %])}]))]]])
 
 (defn owl-controls []
   [re-com/h-box
