@@ -9,14 +9,14 @@
 (defn collapse-data [[type & vs]]
   (cond
     (#{:annotation :label :comment} type)      (->> [:type type]
-                                                  (conj vs)
-                                                  (reduce
-                                                    (fn [m [id & vs]]
-                                                      (let [vs (cond (= :literal id)    (apply hash-map (conj vs :value))
-                                                                     (empty? (rest vs)) (first vs)
-                                                                     :else              vs)]
-                                                        (assoc m id vs)))
-                                                    {}))
+                                                 (conj vs)
+                                                 (reduce
+                                                   (fn [m [id & vs]]
+                                                     (let [vs (cond (= :literal id)    (apply hash-map (conj vs :value))
+                                                                    (empty? (rest vs)) (first vs)
+                                                                    :else              vs)]
+                                                       (assoc m id vs)))
+                                                   {}))
     (#{:iri} type)                             (first vs)
     (#{:some :and :not :or :only :oneof} type) {:type type
                                                 :data (->> vs
@@ -34,26 +34,29 @@
                                                          set)}
     :else                                      [type vs]))
 
-(defn into-map [c ks]
-  (reduce (fn [m k]
-            (cond-> m (contains? m k)
-                    (update k (partial mapv collapse-data))))
-    (-> c
-      tq/into-map
-      (assoc :iri (-> c
-                    tp/as-iri
-                    str))
-      (update :type first))
-    ks))
+(defn ->iri [e]
+  (-> e tp/as-iri str))
+
+(defn into-map [c ks singles]
+  (as-> c m
+    (tq/into-map m)
+    (assoc m :iri (->iri c))
+    (reduce (fn [m k]
+              (cond-> m (contains? m k) (update k (partial mapv collapse-data))))
+      m ks)
+    (reduce
+      (fn [m k]
+        (cond-> m (contains? m k) (update k first)))
+      m singles)))
 
 (defn parse-ontology [ontology]
-  (let [owl-groups {:obj-props   tq/obj-props
-                    :classes     tq/classes
-                    :ann-props   tq/ann-props
-                    :data-props  tq/data-props
-                    :individuals tq/individuals}]
+  (let [owl-groups {:obj-props   [tq/obj-props [:inverse :super :annotation :domain :range] [:characteristic :type :inverse]]
+                    :classes     [tq/classes [:annotation :disjoint :super :equivalent] [:type]]
+                    :ann-props   [tq/ann-props [] [:type]]
+                    :data-props  [tq/data-props [] []]
+                    :individuals [tq/individuals [] []]}]
     (->> owl-groups
-      (map (fn [[k f]] [k (->> ontology
-                           f
-                           (map #(into-map % [:annotation :disjoint :super :equivalent])))]))
-      (into {:ontology (into-map ontology [:annotation])}))))
+      (map (fn [[k [f ks singles]]] [k (->> ontology
+                                        f
+                                        (map #(into-map % ks singles)))]))
+      (into {:ontology (into-map ontology [:annotation] [:type])}))))

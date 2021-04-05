@@ -62,7 +62,7 @@
       (testing "Assertion types"
         (t/are [_ iri f expected] (= expected (-> owl-ontology
                                                 (to/entity-for-iri (to/iri iri))
-                                                (sut/into-map [:annotation :disjoint :super :equivalent])
+                                                (sut/into-map [:annotation :disjoint :super :equivalent] [:type])
                                                 f))
           :some      "http://www.co-ode.org/ontologies/pizza/pizza.owl#ParmaHamTopping" :super
           ["http://www.co-ode.org/ontologies/pizza/pizza.owl#HamTopping"
@@ -238,130 +238,57 @@
                                          :lang  "en"}}
                               {:type    :label
                                :literal {:value "CoberturaDeQueijoComVegetais"
-                                         :lang  "pt"}}]}
-                {:disjoint   ["http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream"
-                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#PizzaTopping"
-                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"
-                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#PizzaBase"]
-                 :super      [{:type :some
-                               :data #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#hasBase"
-                                       "http://www.co-ode.org/ontologies/pizza/pizza.owl#PizzaBase"}}
-                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"]
-                 :type       :class
-                 :iri        "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"
-                 :annotation [{:type    :annotation
-                               :iri     "http://www.w3.org/2004/02/skos/core#prefLabel"
-                               :literal {:value "Pizza"
-                                         :lang  "en"}}
-                              {:type :annotation
-                               :iri  "https://en.wikipedia.org/wiki/Pizza"}
-                              {:type    :label
-                               :literal {:value "Pizza"
-                                         :lang  "en"}}]}
-                {:type       :class
-                 :iri        "http://www.co-ode.org/ontologies/pizza/pizza.owl#ThinAndCrispyPizza"
-                 :annotation [{:type    :annotation
-                               :iri     "http://www.w3.org/2004/02/skos/core#prefLabel"
-                               :literal {:value "Thin And Crispy Pizza"
-                                         :lang  "en"}}
-                              {:type    :label
-                               :literal {:value "ThinAndCrispyPizza"
-                                         :lang  "en"}}]
-                 :equivalent [{:type :and
-                               :data #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"
-                                       {:type :only
-                                        :data #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#hasBase"
-                                                "http://www.co-ode.org/ontologies/pizza/pizza.owl#ThinAndCrispyBase"}}}}]}
-                {:type       :class
-                 :iri        "http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetarianTopping"
-                 :annotation [{:type    :annotation
-                               :iri     "http://www.w3.org/2004/02/skos/core#prefLabel"
-                               :literal {:value "Vegetarian Topping"
-                                         :lang  "en"}}
-                              {:type    :comment
-                               :literal {:value
-                                         "An example of a covering axiom. VegetarianTopping is equivalent to the union of all toppings in the given axiom. VegetarianToppings can only be Cheese or Vegetable or....etc."
-                                         :lang "en"}}
-                              {:type    :label
-                               :literal {:value "VegetarianTopping"
-                                         :lang  "en"}}
-                              {:type    :label
-                               :literal {:value "CoberturaVegetariana"
-                                         :lang  "pt"}}]
-                 :equivalent [{:type :and
-                               :data #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#PizzaTopping"
-                                       {:type :or
-                                        :data #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetableTopping"
-                                                "http://www.co-ode.org/ontologies/pizza/pizza.owl#NutTopping"
-                                                "http://www.co-ode.org/ontologies/pizza/pizza.owl#FruitTopping"
-                                                "http://www.co-ode.org/ontologies/pizza/pizza.owl#SauceTopping"
-                                                "http://www.co-ode.org/ontologies/pizza/pizza.owl#CheeseTopping"
-                                                "http://www.co-ode.org/ontologies/pizza/pizza.owl#HerbSpiceTopping"}}}}]}
-                {:super      ["http://www.co-ode.org/ontologies/pizza/pizza.owl#ValuePartition"]
-                 :type       :class
-                 :iri        "http://www.co-ode.org/ontologies/pizza/pizza.owl#Spiciness"
-                 :annotation [{:type    :annotation
-                               :iri     "http://www.w3.org/2004/02/skos/core#prefLabel"
-                               :literal {:value "Spiciness"
-                                         :lang  "en"}}
-                              {:type    :comment
-                               :literal {:value "A ValuePartition that describes only values from Hot, Medium or Mild. NB Subclasses can themselves be divided up into further partitions."
-                                         :lang  "en"}}
-                              {:type    :label
-                               :literal {:value "Tempero"
-                                         :lang  "pt"}}
-                              {:type    :label
-                               :literal {:value "Spiciness"
-                                         :lang  "en"}}]
-                 :equivalent [{:type :or
-                               :data #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#Medium"
-                                       "http://www.co-ode.org/ontologies/pizza/pizza.owl#Mild"
-                                       "http://www.co-ode.org/ontologies/pizza/pizza.owl#Hot"}}]}
-                {:disjoint   ["http://www.co-ode.org/ontologies/pizza/pizza.owl#MixedSeafoodTopping"
-                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#AnchoviesTopping"
-                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#PrawnsTopping"]
-                 :super      ["http://www.co-ode.org/ontologies/pizza/pizza.owl#FishTopping"]
-                 :type       :class
-                 :iri        "http://www.co-ode.org/ontologies/pizza/pizza.owl#AnchoviesTopping"
-                 :annotation [{:type    :annotation
-                               :iri     "http://www.w3.org/2004/02/skos/core#prefLabel"
-                               :literal {:value "Anchovies" :lang "en"}}
-                              {:type    :label
-                               :literal {:value "CoberturaDeAnchovies"
-                                         :lang  "pt"}}
-                              {:type    :label
-                               :literal {:value "AnchoviesTopping"
-                                         :lang  "en"}}]}
-                {:disjoint   ["http://www.co-ode.org/ontologies/pizza/pizza.owl#CaperTopping"
-                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#GarlicTopping"
-                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#OliveTopping"
-                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#TomatoTopping"
-                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#SpinachTopping"
-                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#OnionTopping"
-                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#PepperTopping"
-                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#LeekTopping"
-                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#MushroomTopping"
-                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#PetitPoisTopping"
-                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#ArtichokeTopping"
-                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#RocketTopping"
-                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#AsparagusTopping"]
-                 :super      ["http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetableTopping"
-                              {:type :some
-                               :data #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#Mild"
-                                       "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasSpiciness"}}]
-                 :type       :class
-                 :iri        "http://www.co-ode.org/ontologies/pizza/pizza.owl#ArtichokeTopping"
-                 :annotation [{:type    :annotation
-                               :iri     "http://www.w3.org/2004/02/skos/core#prefLabel"
-                               :literal {:value "Artichoke"
-                                         :lang  "en"}}
-                              {:type    :label
-                               :literal {:value "CoberturaDeArtichoke"
-                                         :lang  "pt"}}
-                              {:type
-                               :label
-                               :literal {:value "ArtichokeTopping"
-                                         :lang  "en"}}]}]
+                                         :lang  "pt"}}]}]
               (->> ontology
                 :classes
-                (take 10))))))))
+                (take 4)))))
+
+      (testing "OWL annotation properties"
+        (is (= [{:type :aproperty
+                 :iri  "http://www.w3.org/2004/02/skos/core#prefLabel"}
+                {:type :aproperty
+                 :iri  "http://www.w3.org/2000/01/rdf-schema#comment"}
+                {:type :aproperty
+                 :iri  "http://www.w3.org/2004/02/skos/core#definition"}
+                {:type :aproperty
+                 :iri  "http://purl.org/dc/elements/1.1/title"}]
+              (->> ontology
+                :ann-props
+                (take 4)))))
+
+      (testing "OWL object properties"
+        (is (= [{:inverse        "http://www.co-ode.org/ontologies/pizza/pizza.owl#isToppingOf"
+                 :super          ["http://www.co-ode.org/ontologies/pizza/pizza.owl#hasIngredient"]
+                 :type           :oproperty
+                 :characteristic :inversefunctional
+                 :iri            "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasTopping"
+                 :domain         ["http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"]
+                 :annotation     [{:type :comment
+                                   :literal
+                                   {:value
+                                    "Note that hasTopping is inverse functional because isToppingOf is functional"
+                                    :lang "en"}}]
+                 :range          ["http://www.co-ode.org/ontologies/pizza/pizza.owl#PizzaTopping"]}
+                {:type           :oproperty
+                 :characteristic :functional
+                 :iri            "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasSpiciness"
+                 :annotation     [{:type    :comment
+                                   :literal {:value
+                                             "A property created to be used with the ValuePartition - Spiciness."
+                                             :lang "en"}}]
+                 :range          ["http://www.co-ode.org/ontologies/pizza/pizza.owl#Spiciness"]}
+                {:inverse        "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasIngredient"
+                 :type           :oproperty
+                 :characteristic :transitive
+                 :iri            "http://www.co-ode.org/ontologies/pizza/pizza.owl#isIngredientOf"
+                 :annotation     [{:type    :comment
+                                   :literal {:value "The inverse property tree to hasIngredient - all subproperties and attributes of the properties should reflect those under hasIngredient."
+                                             :lang  "en"}}]}
+                {:inverse        "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasBase"
+                 :super          ["http://www.co-ode.org/ontologies/pizza/pizza.owl#isIngredientOf"]
+                 :type           :oproperty
+                 :characteristic :functional
+                 :iri            "http://www.co-ode.org/ontologies/pizza/pizza.owl#isBaseOf"}]
+              (->> ontology
+                :obj-props
+                (take 4))))))))
