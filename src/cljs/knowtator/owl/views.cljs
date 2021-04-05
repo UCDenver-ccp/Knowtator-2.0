@@ -44,6 +44,10 @@
 
 (defn owl-hierarchy []
   [re-com/scroller
+   :height "500px"
+   :size "initial"
+   :align :start
+   :src (at)
    :child [re-com/v-box
            :children [(let [hs (<sub [::subs/class-hierarchy-zippers])]
                         (for [h hs]
