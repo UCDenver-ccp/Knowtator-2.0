@@ -16,11 +16,18 @@
 
 (deftest hierarchy-zipper
   (is (= [:A nil]
-        (first (sut/hierarchy-zippers test-hierarchy))))
+        (first (sut/hierarchy-zippers identity identity test-hierarchy))))
 
   (is (= [:A :B :D :E :C :F]
         (->> test-hierarchy
-          sut/hierarchy-zippers
+          (sut/hierarchy-zippers identity identity)
+          first
+          (tree-seq zip/branch? sut/child-nodes)
+          (map zip/node))))
+
+  (is (= [{:id :A} {:id :B} {:id :D} {:id :E} {:id :C} {:id :F}]
+        (->> test-hierarchy
+          (sut/hierarchy-zippers :id (partial hash-map :id))
           first
           (tree-seq zip/branch? sut/child-nodes)
           (map zip/node)))))

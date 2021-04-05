@@ -114,3 +114,7 @@
           (->> (util/map-with-key (comp (partial apply str) (juxt :namespace :fragment) :iri)))
           (update-in [iri :collapsed?] not)
           vals)))))
+
+(reg-event-db ::select-owl-class
+  (fn [db [_ iri]]
+    (assoc-in db [:selection :concepts] iri)))

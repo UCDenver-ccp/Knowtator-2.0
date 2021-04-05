@@ -1,10 +1,9 @@
 (ns knowtator.relation-annotation.subs
-  (:require
-   [re-frame.core :refer [reg-sub]]
-   [knowtator.model :as model]
-   [knowtator.util :as util]
-   [knowtator.subs :as subs]
-   [knowtator.hierarchy :as h]))
+  (:require [knowtator.hierarchy :as h]
+            [knowtator.model :as model]
+            [knowtator.subs :as subs]
+            [knowtator.util :as util]
+            [re-frame.core :refer [reg-sub]]))
 
 (reg-sub ::graph-spaces
   (comp #(or % []) (partial sort-by (comp name :id) util/compare-alpha-num) :graphs :text-annotation))
@@ -93,18 +92,27 @@
   (fn [db _]
     (get-in db [:selection :edge-length] 95)))
 
-(reg-sub ::class-hierarchy-zippers
+(reg-sub ::class-hierarchy
   (fn [db _]
-    (-> db
+    (->> db
       :ontology
-      :hierarchy
-      h/hierarchy-zippers)))
+      :hierarchy)))
+
+(reg-sub ::class-hierarchy-zippers
+  :<- [::class-hierarchy]
+  (fn [h _]
+    (h/hierarchy-zippers identity identity h)))
+
+(reg-sub ::class-map
+  :<- [::classes]
+  (fn [classes _]
+    (->> classes
+      (util/map-with-key (comp (partial apply str) (juxt :namespace :fragment) :iri)))))
 
 (reg-sub ::collapsed?
-  :<- [::classes]
-  (fn [classes [_ iri]]
-    (-> classes
-      (->> (util/map-with-key (comp (partial apply str) (juxt :namespace :fragment):iri)))
+  :<- [::class-map]
+  (fn [class-map [_ iri]]
+    (-> class-map
       (get-in [iri :collapsed?]))))
 
 (reg-sub ::owl-class-label

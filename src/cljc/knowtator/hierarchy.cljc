@@ -13,12 +13,13 @@
     (descendants h)
     (filter #(contains? (parents h %) tag))))
 
-(defn hierarchy-zippers [h]
+(defn hierarchy-zippers [id-fn node-fn h]
   (->> h
     roots
+    (map node-fn)
     (map (partial zip/zipper
-           (partial descendants h)
-           (partial direct-descendants h)
+           (comp (partial descendants h) id-fn)
+           (comp (partial map node-fn) (partial direct-descendants h) id-fn)
            second))))
 
 (defn right-nodes [loc]
