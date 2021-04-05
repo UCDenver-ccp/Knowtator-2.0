@@ -6,7 +6,7 @@
    [knowtator.subs :as subs]))
 
 (reg-sub ::graph-spaces
-  #(sort-by (comp name :id) util/compare-alpha-num (get-in % [:text-annotation :graphs] [])))
+  (comp #(or % []) (partial sort-by (comp name :id) util/compare-alpha-num) :graphs :text-annotation))
 
 (reg-sub ::selected-graph-space-id
   (fn [db _]

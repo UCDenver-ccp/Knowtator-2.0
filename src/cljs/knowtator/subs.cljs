@@ -151,7 +151,7 @@
           default-color)))))
 
 (reg-sub ::docs
-  (comp (partial sort-by :id) :docs :text-annotation))
+  (comp (partial sort-by (comp name :id) util/compare-alpha-num) :docs :text-annotation))
 
 (reg-sub ::spans
   (comp :spans :text-annotation))
