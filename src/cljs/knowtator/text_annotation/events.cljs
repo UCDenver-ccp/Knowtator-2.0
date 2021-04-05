@@ -1,9 +1,10 @@
 (ns knowtator.text-annotation.events
-  (:require [day8.re-frame.undo :as undo :refer [undoable]]
-            [day8.re-frame.tracing :refer-macros [fn-traced]]
+  (:require [day8.re-frame.tracing :refer-macros [fn-traced]]
+            [day8.re-frame.undo :as undo :refer [undoable]]
             [knowtator.model :as model]
-            [re-frame.core :refer [reg-event-db reg-event-fx]]
-            [knowtator.util :as util]))
+            [knowtator.owl.events :as owl-evts]
+            [knowtator.util :as util]
+            [re-frame.core :refer [reg-event-db reg-event-fx]]))
 
 (defn filter-in-doc
   [db coll-id]
@@ -24,22 +25,25 @@
                                  :dispatch [::select-span new-item-id]}
             :else               {:db (assoc-in db [:selection coll-id] new-item-id)}))))
 
-(reg-event-db ::select-span
-  (fn-traced [db [_ id]]
-    (let [{:keys [ann]}     (->> db
-                              :text-annotation
-                              :spans
-                              (util/map-with-key :id)
-                              id)
-          {:keys [concept]} (->> db
+(reg-event-fx ::select-span
+  (fn-traced [{:keys [db]} [_ id]]
+    (let [{:keys [ann]} (->> db
+                          :text-annotation
+                          :spans
+                          (util/map-with-key :id)
+                          id)]
+      {:db       (assoc-in db [:selection :spans] id)
+       :dispatch [::select-annotation ann]})))
+
+(reg-event-fx ::select-annotation
+  (fn-traced [{:keys [db]} [_ id]]
+    (let [{:keys [concept]} (->> db
                               :text-annotation
                               :anns
                               (util/map-with-key :id)
-                              ann)]
-      (-> db
-        (assoc-in [:selection :spans] id)
-        (assoc-in [:selection :anns] ann)
-        (assoc-in [:selection :concepts] concept)))))
+                              id)]
+      {:db       (assoc-in db [:selection :anns] id)
+       :dispatch [::owl-evts/select-owl-class concept]})))
 
 (reg-event-db ::grow-selected-span-start
   (undoable "Growing span start")

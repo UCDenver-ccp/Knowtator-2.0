@@ -118,10 +118,6 @@
         ann-id
         (map (partial zipmap [:prop :val]))))))
 
-(reg-sub ::selected-concept
-  (fn [db _]
-    (get-in db [:selection :concepts])))
-
 (reg-sub ::default-color
   #(get-in % [:defaults :color]))
 

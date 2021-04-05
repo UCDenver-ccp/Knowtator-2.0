@@ -33,19 +33,6 @@
                                        :model (<sub [::subs/selected-graph-space-id])
                                        :on-change #(>evt [::evts/select-graph-space %])]]]]]]])
 
-(defn owl-controls []
-  [re-com/h-box
-   :src (at)
-   :children [[re-com/label
-               :label "Annotation properties"]
-              [re-com/single-dropdown
-               :src (at)
-               :choices (<sub [::subs/ann-props])
-               :label-fn  (comp :fragment :iri)
-               :id-fn (comp (partial apply str) (juxt :namespace :fragment) :iri)
-               :model (<sub [::subs/selected-ann-prop])
-               :on-change #(>evt [::evts/select-ann-prop %])]]])
-
 (defn node-controls []
   [re-com/h-box
    :src (at)

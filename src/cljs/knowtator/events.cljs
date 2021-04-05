@@ -97,6 +97,7 @@
                               :on-success      [:add-ontology]
                               :on-failure      [:handle-failure]})))
 
+;; TODO there are two of these
 (reg-event-db ::select-span
   (fn-traced [db [_ loc doc-id]]
     (let [{:keys [id ann]}  (->> db

@@ -1,7 +1,8 @@
 (ns knowtator.relation-annotation.events
   (:require [knowtator.util :as util]
             [day8.re-frame.tracing :refer-macros [fn-traced]]
-            [re-frame.core :refer [reg-event-db]]))
+            [re-frame.core :refer [reg-event-db reg-event-fx]]
+            [knowtator.text-annotation.events :as txt-evts]))
 
 (defn verify-id [db k prefix]
   (->> db
@@ -40,8 +41,8 @@
             (update-in [graph-id :edges] conj new-edge)
             vals))))))
 
-(reg-event-db ::select-ann-node
-  (fn-traced [db [_ graph-id node-id]]
+(reg-event-fx ::select-ann-node
+  (fn-traced [{:keys [db]} [_ graph-id node-id]]
     (let [node-id (keyword node-id)
           ann-id  (-> db
                     (get-in [:text-annotation :graphs])
@@ -49,9 +50,10 @@
                     (get-in [graph-id :nodes])
                     (->> (util/map-with-key :id))
                     (get-in [node-id :ann]))]
-      (-> db
-        (assoc-in [:selection :nodes] node-id)
-        (assoc-in [:selection :anns] ann-id)))))
+      {:db       (-> db
+                   (assoc-in [:selection :nodes] node-id)
+                   (assoc-in [:selection :anns] ann-id))
+       :dispatch [::txt-evts/select-annotation ann-id]})))
 
 (reg-event-db ::toggle-node-physics
   (fn-traced [db [_ graph-id id x y]]
@@ -98,23 +100,6 @@
   (fn [db [_ id]]
     (assoc-in db [:selection :graphs] id)))
 
-(reg-event-db ::select-ann-prop
-  (fn [db [_ id]]
-    (assoc-in db [:selection :ann-props] id)))
-
 (reg-event-db ::set-edge-length
   (fn [db [_ v]]
     (assoc-in db [:selection :edge-length] v)))
-
-(reg-event-db ::toggle-collapse-owl-class
-  (fn [db [_ iri]]
-    (update-in db [:ontology :classes]
-      (fn [classes]
-        (-> classes
-          (->> (util/map-with-key (comp (partial apply str) (juxt :namespace :fragment) :iri)))
-          (update-in [iri :collapsed?] not)
-          vals)))))
-
-(reg-event-db ::select-owl-class
-  (fn [db [_ iri]]
-    (assoc-in db [:selection :concepts] iri)))

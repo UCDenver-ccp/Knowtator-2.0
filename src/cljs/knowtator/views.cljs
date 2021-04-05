@@ -13,7 +13,8 @@
             [knowtator.util :refer [<sub >evt]]
             [re-com.core :as re-com :refer [at]]
             [re-frame.core :as rf]
-            [reagent.core :as r]))
+            [reagent.core :as r]
+            [knowtator.owl.views :as owl]))
 
 (defn display-re-pressed-example []
   (let [re-pressed-example (<sub [::subs/re-pressed-example])]
@@ -67,12 +68,12 @@
 (defn graph-panel []
   [:div
    [re-com/v-box
-    :children [[ra-controls/owl-controls]
+    :children [[owl/owl-controls]
                [ra-controls/graph-space-controls]
                [ra-controls/node-controls]
                [ra-controls/edge-controls]
                [re-com/h-box
-                :children [[ra/owl-hierarchy]
+                :children [[owl/owl-hierarchy]
                            [ra/graph]]]]]])
 
 (defn page-title []

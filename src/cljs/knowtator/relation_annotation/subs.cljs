@@ -1,6 +1,6 @@
 (ns knowtator.relation-annotation.subs
-  (:require [knowtator.hierarchy :as h]
-            [knowtator.model :as model]
+  (:require [knowtator.model :as model]
+            [knowtator.owl.subs :as owl]
             [knowtator.subs :as subs]
             [knowtator.util :as util]
             [re-frame.core :refer [reg-sub]]))
@@ -24,50 +24,16 @@
 (reg-sub ::db
   identity)
 
-(reg-sub ::obj-props
-  (comp :obj-props :ontology))
-
-(reg-sub ::ann-props
-  (comp :ann-props :ontology))
-
-(reg-sub ::classes
-  (comp :classes :ontology))
-
-(defn make-uri->label-map [owl-entities annotation-iri]
-  (->> owl-entities
-    (map (fn [{:keys                        [annotation]
-              {:keys [namespace fragment]} :iri}]
-           [(str namespace fragment)
-            (or (->> annotation
-                  (filter (fn [{:keys [iri]}] (and iri (= iri annotation-iri))))
-                  first
-                  :literal
-                  :value)
-              fragment)]))
-    (into {})))
-
-(reg-sub ::obj-prop-uri->label
-  :<- [::obj-props]
-  :<- [::selected-ann-prop]
-  (fn [[obj-props ann-prop] _]
-    (make-uri->label-map obj-props ann-prop)))
-
-(reg-sub ::classes-uri->label
-  :<- [::classes]
-  :<- [::selected-ann-prop]
-  (fn [[classes ann-prop] _]
-    (make-uri->label-map classes ann-prop)))
-
 (reg-sub ::selected-realized-graph
   :<- [::selected-graph-space]
   :<- [::db]
   :<- [::subs/profile-map]
   :<- [::subs/doc-map]
   :<- [::subs/ann-map]
-  :<- [::classes-uri->label]
+  :<- [::owl/classes-uri->label]
   :<- [::display-ann-node-owl-class?]
 
-  :<- [::obj-prop-uri->label]
+  :<- [::owl/obj-prop-uri->label]
   (fn [[graph db profile-map doc-map ann-map class-map display-owl-class? property-map] _]
     (when graph
       (-> graph
@@ -84,38 +50,6 @@
   (fn [graph _]
     (get graph :display-owl-class?)))
 
-(reg-sub ::selected-ann-prop
-  (fn [db _]
-    (get-in db [:selection :ann-props])))
-
 (reg-sub ::edge-length
   (fn [db _]
     (get-in db [:selection :edge-length] 95)))
-
-(reg-sub ::class-hierarchy
-  (fn [db _]
-    (->> db
-      :ontology
-      :hierarchy)))
-
-(reg-sub ::class-hierarchy-zippers
-  :<- [::class-hierarchy]
-  (fn [h _]
-    (h/hierarchy-zippers identity identity h)))
-
-(reg-sub ::class-map
-  :<- [::classes]
-  (fn [classes _]
-    (->> classes
-      (util/map-with-key (comp (partial apply str) (juxt :namespace :fragment) :iri)))))
-
-(reg-sub ::collapsed?
-  :<- [::class-map]
-  (fn [class-map [_ iri]]
-    (-> class-map
-      (get-in [iri :collapsed?]))))
-
-(reg-sub ::owl-class-label
-  :<- [::classes-uri->label]
-  (fn [class-map [_ iri]]
-    (get class-map iri)))
