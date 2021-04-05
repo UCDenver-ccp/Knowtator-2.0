@@ -27,25 +27,36 @@
 (reg-sub ::obj-props
   (comp :obj-props :ontology))
 
+(reg-sub ::ann-props
+  (comp :ann-props :ontology))
+
 (reg-sub ::classes
   (comp :classes :ontology))
 
-(defn make-uri->label-map [owl-entities annotation-uri]
+(defn make-uri->label-map [owl-entities annotation-iri]
   (->> owl-entities
     (map (fn [{:keys                        [annotation]
               {:keys [namespace fragment]} :iri}]
-           [(str namespace fragment) fragment]))
+           [(str namespace fragment)
+            (or (->> annotation
+                  (filter (fn [{:keys [iri]}] (= iri annotation-iri)))
+                  first
+                  :literal
+                  :value)
+              fragment)]))
     (into {})))
 
 (reg-sub ::obj-prop-uri->label
   :<- [::obj-props]
-  (fn [obj-props _]
+  :<- [::selected-ann-prop]
+  (fn [[obj-props ann-prop] _]
     (make-uri->label-map obj-props nil)))
 
 (reg-sub ::classes-uri->label
   :<- [::classes]
-  (fn [classes _]
-    (make-uri->label-map classes nil)))
+  :<- [::selected-ann-prop]
+  (fn [[classes ann-prop] _]
+    (make-uri->label-map classes ann-prop)))
 
 (reg-sub ::selected-realized-graph
   :<- [::selected-graph-space]
@@ -72,3 +83,7 @@
   :<- [::selected-graph-space]
   (fn [graph _]
     (get graph :display-owl-class?)))
+
+(reg-sub ::selected-ann-prop
+  (fn [db _]
+    (get-in db [:selection :ann-props])))

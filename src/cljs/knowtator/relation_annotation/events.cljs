@@ -97,3 +97,7 @@
 (reg-event-db ::select-graph-space
   (fn [db [_ id]]
     (assoc-in db [:selection :graphs] id)))
+
+(reg-event-db ::select-ann-prop
+  (fn [db [_ id]]
+    (assoc-in db [:selection :ann-props] id)))

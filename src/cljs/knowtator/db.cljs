@@ -69,5 +69,18 @@ We have discovered remarkable numerical and volumetric variation in the mouse st
                :profiles    :p1
                :concepts    :c1
                :spans       nil
-               :review-type :anns}
-   :defaults  {:color "#00ffff"}})
+               :review-type :anns
+               :ann-props "http://www.w3.org/2004/02/skos/core#prefLabel"}
+   :defaults  {:color "#00ffff"}
+   :ontology  {:ann-props [{:type :aproperty,
+                            :iri  {:fragment  "prefLabel",
+                                   :namespace "http://www.w3.org/2004/02/skos/core#"}}
+                           {:type :aproperty,
+                            :iri  {:fragment  "comment",
+                                   :namespace "http://www.w3.org/2000/01/rdf-schema#"}}
+                           {:type :aproperty,
+                            :iri  {:fragment  "definition",
+                                   :namespace "http://www.w3.org/2004/02/skos/core#"}}
+                           {:type :aproperty,
+                            :iri  {:fragment  "title"
+                                   :namespace "http://purl.org/dc/elements/1.1/"}}]}})
