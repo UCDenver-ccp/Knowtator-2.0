@@ -3,8 +3,8 @@
             [clojure.string :as str]
             [clojure.test :as t :refer [deftest is testing]]
             [knowtator.owl-parser :as sut]
-            [tawny.owl :as to]
-            [knowtator.util :as util]))
+            [knowtator.util :as util]
+            [tawny.owl :as to]))
 
 (deftest parse-ontology-test
   (testing "Parse basic ontology"

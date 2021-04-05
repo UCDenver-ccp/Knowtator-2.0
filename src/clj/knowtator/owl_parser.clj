@@ -1,8 +1,8 @@
 (ns knowtator.owl-parser
-  (:require [tawny.owl :as to]
-            [tawny.query :as tq]
+  (:require [knowtator.util :as util]
+            [tawny.owl :as to]
             [tawny.protocol :as tp]
-            [knowtator.util :as util]))
+            [tawny.query :as tq]))
 
 (defn load-ontology [f]
   (.loadOntologyFromOntologyDocument (to/owl-ontology-manager) (to/iri f)))
