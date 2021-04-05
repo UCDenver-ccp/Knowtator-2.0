@@ -57,7 +57,7 @@
   (fn [db [_ result]]
     (-> db
       (assoc :ontology result)
-      (assoc-in [:selection :ann-props] (->> result :ann-props :iri vals (apply str))))))
+      (assoc-in [:selection :ann-props] (->> result :ann-props first ((comp (partial apply str) (juxt :namespace :fragment) :iri)))))))
 
 (reg-event-db ::report-failure
   (fn [db [_ result]]
