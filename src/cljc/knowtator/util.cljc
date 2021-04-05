@@ -43,3 +43,24 @@
   "remove elem in coll"
   [coll pos]
   (vec (concat (subvec coll 0 pos) (subvec coll (inc pos)))))
+
+(defn compare-alpha-num [a b]
+  (let [num-re #"\d+|\D+"
+        apart  (re-seq num-re a)
+        bpart  (re-seq num-re b)
+        result (->> bpart
+                 (map vector apart)
+                 (filter (partial apply not=))
+                 first)
+        nums   (when result
+                 #?(:cljs (->> result
+                            (map #(js/parseInt %))
+                            (remove #(js/isNaN %)))
+                    :clj (try (->> result
+                                (map #(Integer/parseInt %))
+                                doall)
+                              (catch Exception _
+                                nil))))]
+    (cond (seq nums) (apply - nums)
+          result     (apply compare result)
+          :else      (apply < (map count [apart bpart])))))
