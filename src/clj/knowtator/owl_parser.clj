@@ -36,7 +36,8 @@
 
 (defn into-map [c ks]
   (reduce (fn [m k]
-            (update m k (partial mapv collapse-data)))
+            (cond-> m (contains? m k)
+                    (update k (partial mapv collapse-data))))
     (-> c
       tq/into-map
       (assoc :iri (-> c

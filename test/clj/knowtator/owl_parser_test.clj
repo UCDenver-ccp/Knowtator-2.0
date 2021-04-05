@@ -153,8 +153,7 @@
                  "http://www.w3.org/2002/07/owl#Thing"}}}}]))
 
       (testing "OWL classes"
-        (is (= [{:disjoint   []
-                 :super      ["http://www.co-ode.org/ontologies/pizza/pizza.owl#HamTopping"
+        (is (= [{:super      ["http://www.co-ode.org/ontologies/pizza/pizza.owl#HamTopping"
                               {:type :some
                                :data #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#Mild"
                                        "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasSpiciness"}}]
@@ -169,8 +168,7 @@
                                          :lang  "en"}}
                               {:type    :label
                                :literal {:value "CoberturaDePrezuntoParma"
-                                         :lang  "pt"}}]
-                 :equivalent []}
+                                         :lang  "pt"}}]}
                 {:disjoint   ["http://www.co-ode.org/ontologies/pizza/pizza.owl#CaperTopping"
                               "http://www.co-ode.org/ontologies/pizza/pizza.owl#GarlicTopping"
                               "http://www.co-ode.org/ontologies/pizza/pizza.owl#OliveTopping"
@@ -199,8 +197,7 @@
                                          :lang  "en"}}
                               {:type    :label
                                :literal {:value "CoberturaDeLeek"
-                                         :lang  "pt"}}]
-                 :equivalent []}
+                                         :lang  "pt"}}]}
                 {:disjoint   ["http://www.co-ode.org/ontologies/pizza/pizza.owl#CaperTopping"
                               "http://www.co-ode.org/ontologies/pizza/pizza.owl#GarlicTopping"
                               "http://www.co-ode.org/ontologies/pizza/pizza.owl#OliveTopping"
@@ -228,10 +225,8 @@
                                          :lang  "en"}}
                               {:type    :label
                                :literal {:value "CoberturaDeCaper"
-                                         :lang  "pt"}}]
-                 :equivalent []}
-                {:disjoint   []
-                 :super      ["http://www.co-ode.org/ontologies/pizza/pizza.owl#CheeseTopping"
+                                         :lang  "pt"}}]}
+                {:super      ["http://www.co-ode.org/ontologies/pizza/pizza.owl#CheeseTopping"
                               "http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetableTopping"]
                  :type       :class
                  :iri        "http://www.co-ode.org/ontologies/pizza/pizza.owl#CheeseyVegetableTopping"
@@ -243,8 +238,7 @@
                                          :lang  "en"}}
                               {:type    :label
                                :literal {:value "CoberturaDeQueijoComVegetais"
-                                         :lang  "pt"}}]
-                 :equivalent []}
+                                         :lang  "pt"}}]}
                 {:disjoint   ["http://www.co-ode.org/ontologies/pizza/pizza.owl#IceCream"
                               "http://www.co-ode.org/ontologies/pizza/pizza.owl#PizzaTopping"
                               "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"
@@ -263,11 +257,8 @@
                                :iri  "https://en.wikipedia.org/wiki/Pizza"}
                               {:type    :label
                                :literal {:value "Pizza"
-                                         :lang  "en"}}]
-                 :equivalent []}
-                {:disjoint   []
-                 :super      []
-                 :type       :class
+                                         :lang  "en"}}]}
+                {:type       :class
                  :iri        "http://www.co-ode.org/ontologies/pizza/pizza.owl#ThinAndCrispyPizza"
                  :annotation [{:type    :annotation
                                :iri     "http://www.w3.org/2004/02/skos/core#prefLabel"
@@ -281,9 +272,7 @@
                                        {:type :only
                                         :data #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#hasBase"
                                                 "http://www.co-ode.org/ontologies/pizza/pizza.owl#ThinAndCrispyBase"}}}}]}
-                {:disjoint   []
-                 :super      []
-                 :type       :class
+                {:type       :class
                  :iri        "http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetarianTopping"
                  :annotation [{:type    :annotation
                                :iri     "http://www.w3.org/2004/02/skos/core#prefLabel"
@@ -308,8 +297,7 @@
                                                 "http://www.co-ode.org/ontologies/pizza/pizza.owl#SauceTopping"
                                                 "http://www.co-ode.org/ontologies/pizza/pizza.owl#CheeseTopping"
                                                 "http://www.co-ode.org/ontologies/pizza/pizza.owl#HerbSpiceTopping"}}}}]}
-                {:disjoint   []
-                 :super      ["http://www.co-ode.org/ontologies/pizza/pizza.owl#ValuePartition"]
+                {:super      ["http://www.co-ode.org/ontologies/pizza/pizza.owl#ValuePartition"]
                  :type       :class
                  :iri        "http://www.co-ode.org/ontologies/pizza/pizza.owl#Spiciness"
                  :annotation [{:type    :annotation
@@ -343,8 +331,7 @@
                                          :lang  "pt"}}
                               {:type    :label
                                :literal {:value "AnchoviesTopping"
-                                         :lang  "en"}}]
-                 :equivalent []}
+                                         :lang  "en"}}]}
                 {:disjoint   ["http://www.co-ode.org/ontologies/pizza/pizza.owl#CaperTopping"
                               "http://www.co-ode.org/ontologies/pizza/pizza.owl#GarlicTopping"
                               "http://www.co-ode.org/ontologies/pizza/pizza.owl#OliveTopping"
@@ -374,8 +361,7 @@
                               {:type
                                :label
                                :literal {:value "ArtichokeTopping"
-                                         :lang  "en"}}]
-                 :equivalent []}]
+                                         :lang  "en"}}]}]
               (->> ontology
                 :classes
                 (take 10))))))))
