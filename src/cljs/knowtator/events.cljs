@@ -8,7 +8,8 @@
             [knowtator.model :as model]
             [re-frame.core :as rf :refer [reg-event-db reg-event-fx]]
             [re-pressed.core :as rp]
-            [knowtator.util :as util]))
+            [knowtator.util :as util]
+            [knowtator.owl.events :as owl]))
 
 (reg-event-fx ::initialize-db
   (fn-traced [_ _]
@@ -41,7 +42,7 @@
                        :uri             (str "/project/ontology/" project)
                        :format          (ajax/transit-request-format)
                        :response-format (ajax/transit-response-format)
-                       :on-success      [::set-ontology]
+                       :on-success      [::owl/set-ontology]
                        :on-failure      [::report-failure]}])})))
 
 (reg-event-db ::set-project
@@ -52,12 +53,6 @@
       (assoc-in [:selection :profiles] (->> result :profiles (sort-by :id) first :id))
       (assoc-in [:selection :concepts] (->> result :anns (sort-by :id) first :concept))
       (assoc-in [:selection :graphs] (->> result :graphs (sort-by :id) first :id)))))
-
-(reg-event-db ::set-ontology
-  (fn [db [_ result]]
-    (-> db
-      (assoc :ontology result)
-      (assoc-in [:selection :ann-props] (->> result :ann-props first ((comp (partial apply str) (juxt :namespace :fragment) :iri)))))))
 
 (reg-event-db ::report-failure
   (fn [db [_ result]]

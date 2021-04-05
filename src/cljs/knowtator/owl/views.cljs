@@ -7,13 +7,15 @@
             [knowtator.owl.events :as evts]))
 
 (defn zipper-hierarchy
-  ([{:keys [node model
+  ([{:keys [node
+            label-fn
+            selection-model
             collapse-model collapse-fn
             select-node-fn]
      :as   args}]
    (let [id         (zip/node node)
          collapsed? (<sub (conj collapse-model id))
-         selected?  (= id (<sub model))]
+         selected?  (= id (<sub selection-model))]
      [:li
       [re-com/h-box
        :children [[re-com/md-icon-button
@@ -22,7 +24,7 @@
                                        :else                           "zmdi-caret-down")
                    :on-click #(collapse-fn id)]
                   [re-com/hyperlink
-                   :label (<sub [::subs/owl-class-label id])
+                   :label (label-fn id)
                    :on-click #(select-node-fn id)
                    :style {:font-weight (if selected?
                                           :bold
@@ -35,27 +37,40 @@
          (for [c (h/child-nodes node)]
            ^{:key (str (random-uuid))}
            [zipper-hierarchy (assoc args :node c)])])]))
-  ([root args]
-   [:ul {:style {:list-style-type :none
-                 :padding-top     0
-                 :padding-bottom  0
-                 :padding-left    10}}
-    ^{:key (str (random-uuid))} [zipper-hierarchy (assoc args :node root)]]))
-
-(defn owl-hierarchy []
-  [re-com/scroller
-   :height "500px"
-   :size "initial"
-   :align :start
-   :src (at)
-   :child [re-com/v-box
-           :children [(let [hs (<sub [::subs/class-hierarchy-zippers])]
-                        (for [h hs]
+  ([id {:as   args
+        :keys [model]}]
+   [re-com/scroller
+    :height "500px"
+    :size "initial"
+    :align :start
+    :src (at)
+    :child [re-com/v-box
+            :children [(for [root (<sub model)]
+                         ^{:key (str (random-uuid))}
+                         [:ul {:style {:list-style-type :none
+                                       :padding-top     0
+                                       :padding-bottom  0
+                                       :padding-left    10}}
                           ^{:key (str (random-uuid))}
-                          [zipper-hierarchy h {:model          [::subs/selected-concept]
-                                               :collapse-model [::subs/collapsed?]
-                                               :collapse-fn    #(>evt [::evts/toggle-collapse-owl-class %])
-                                               :select-node-fn #(>evt [::evts/select-owl-class %])}]))]]])
+                          [zipper-hierarchy (assoc args :node root)]])]]]))
+
+(defn owl-class-hierarchy []
+  [zipper-hierarchy :owl-class-hierarchy
+   {:model           [::subs/class-hierarchy-zippers]
+    :label-fn        #(<sub [::subs/owl-class-label %])
+    :selection-model [::subs/selected-concept]
+    :collapse-model  [::subs/class-collapsed?]
+    :collapse-fn     #(>evt [::evts/toggle-collapse-owl-class %])
+    :select-node-fn  #(>evt [::evts/select-owl-class %])}])
+
+(defn owl-obj-prop-hierarchy []
+  [zipper-hierarchy :owl-obj-prop-hierarchy
+   {:model           [::subs/obj-prop-hierarchy-zippers]
+    :label-fn        #(<sub [::subs/owl-obj-prop-label %])
+    :selection-model [::subs/selected-obj-prop]
+    :collapse-model  [::subs/obj-prop-collapsed?]
+    :collapse-fn     #(>evt [::evts/toggle-collapse-owl-obj-prop %])
+    :select-node-fn  #(>evt [::evts/select-owl-obj-prop %])}])
 
 (defn owl-controls []
   [re-com/h-box

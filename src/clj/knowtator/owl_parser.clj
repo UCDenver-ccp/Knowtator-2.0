@@ -90,4 +90,6 @@
                                                          f
                                                          (map #(into-map % ks singles)))]))
                        (into {:ontology (into-map ontology [:annotation] [:type])}))]
-    (assoc ontology-map :hierarchy (make-owl-hierarchy (:classes ontology-map)))))
+    (-> ontology-map
+      (assoc :class-hierarchy (make-owl-hierarchy (:classes ontology-map)))
+      (assoc :obj-prop-hierarchy (make-owl-hierarchy (:obj-props ontology-map))))))

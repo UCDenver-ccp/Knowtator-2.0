@@ -52,6 +52,7 @@
    :events  {:click       (fn [{:keys                   [nodes]
                                {{:keys [x y]} :canvas} :pointer}]
                             (>evt [::evts/toggle-node-physics (<sub [::subs/selected-graph-space-id]) (first nodes) x y]))
-             :select-node (fn [{:keys [nodes] :as data}]
-                            (println nodes data)
-                            (>evt [::evts/select-ann-node (<sub [::subs/selected-graph-space-id]) (first nodes)]))}])
+             :select-node (fn [{:keys [nodes]}]
+                            (>evt [::evts/select-ann-node (<sub [::subs/selected-graph-space-id]) (first nodes)]))
+             :select-edge (fn [{:keys [edges]}]
+                            (>evt [::evts/select-relation-ann (<sub [::subs/selected-graph-space-id]) (first edges)]))}])

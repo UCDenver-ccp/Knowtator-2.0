@@ -73,7 +73,7 @@
                [ra-controls/node-controls]
                [ra-controls/edge-controls]
                [re-com/h-box
-                :children [[owl/owl-hierarchy]
+                :children [[owl/owl-obj-prop-hierarchy]
                            [ra/graph]]]]]])
 
 (defn page-title []
