@@ -4,6 +4,7 @@
             [knowtator.knowtator-xml-parser :as kparser]
             [knowtator.layout :as layout :refer [error-page]]
             [knowtator.middleware :as middleware]
+            [knowtator.owl-parser :as oparser]
             [mount.core :as mount]
             [muuntaja.middleware :as muun-m]
             [reitit.coercion.schema :as schema]
@@ -62,7 +63,19 @@
                        :handler    (fn [{{{:keys [id]} :path} :parameters}]
                                      {:status 200
                                       :body   {:id      id
-                                               :content "hello" #_ (slurp "/home/harrison/Downloads/concepts+assertions 3_2 copy/concepts+assertions 3_2 copy/Articles/11319941.txt")}})}}]])
+                                               :content "hello" #_ (slurp "/home/harrison/Downloads/concepts+assertions 3_2 copy/concepts+assertions 3_2 copy/Articles/11319941.txt")}})}}]
+   ["/ontology/:file-name" {:name       ::ontology
+                            :middleware [muun-m/wrap-format]
+                            :get        {:coercion   schema/coercion
+                                         :parameters {:path {:file-name s/Str}}
+                                         :handler    (fn [{{{:keys [file-name]} :path} :parameters}]
+                                                       (if (= file-name "test_project_using_uris")
+                                                         (let [ontology-file (io/file (io/resource file-name) "Ontologies" "pizza.owl")
+                                                               owl-ontology  (oparser/load-ontology ontology-file)
+                                                               ontology      (oparser/parse-ontology owl-ontology)]
+                                                           {:status 200
+                                                            :body   ontology})
+                                                         nil))}}]])
 
 (defn app-router []
   (ring/router [(home-routes)
